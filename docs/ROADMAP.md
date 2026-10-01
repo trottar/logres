@@ -14,11 +14,13 @@ Purpose: establish the repository, memory discipline, development environment, d
 - [x] WSL on Windows 11 recorded as canonical development environment.
 - [x] User-controlled commit/push boundary recorded.
 - [x] Negative-result retention required.
-- [ ] Memory bootstrap committed and pushed.
-- [ ] Memory health checker run successfully on the committed bootstrap.
+- [x] Memory bootstrap committed and pushed (`353c5b0`).
+- [x] Memory health checker passed on the bootstrap before commit.
 
 ### 0.2 WoW Forever capability audit
-Verify, with primary/current sources and later in-client probes where needed:
+**Status: ACTIVE — source/documentation pass complete; runtime probe next.**
+
+Verify, with primary/current sources and in-client probes where needed:
 - project/interface identification and TOC requirements;
 - event surface relevant to Logres;
 - player health and resource display mechanisms;

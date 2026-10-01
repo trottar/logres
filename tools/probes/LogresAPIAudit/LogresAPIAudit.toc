@@ -1,0 +1,8 @@
+## Interface: 16001
+## Title: Logres API Audit
+## Notes: Temporary Phase 0 diagnostic probe for Project Logres.
+## Author: Project Logres
+## Version: 0.1.0
+## SavedVariables: LogresAPIAuditDB
+
+LogresAPIAudit.lua

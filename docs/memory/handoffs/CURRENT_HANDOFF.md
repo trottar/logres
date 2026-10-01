@@ -2,12 +2,18 @@
 
 Authoritative state: `../CURRENT.md`. Start there.
 
-Project Logres is in **Phase 0 — Foundation**.
+Project Logres is in **Phase 0 — Foundation**, work item **0.2 WoW Forever API capability audit**.
 
-Current checkpoint: install/validate/commit/push the initial memory bootstrap. After that, begin the WoW Forever API capability audit (`../investigations/FOREVER_API_CAPABILITY_AUDIT.md`).
+The source/documentation pass is complete. Current task: run the temporary diagnostic addon under `tools/probes/LogresAPIAudit` and preserve its sanitized SavedVariables evidence.
 
-Key operating boundaries:
+Important source-pass findings:
+- Forever currently appears as MAINLINE through Blizzard `WOW_PROJECT_ID`; do not use that constant alone to identify Retail.
+- Modern secret values apply; health/power UI must be secret-safe.
+- Health vignette may be feasible through native curves + secret-capable bar/alpha/color aspects.
+- map position/facing are unavailable in instances, matching the compass suspension design.
+- secure action cluster reconfiguration is constrained in combat.
+
+Operating boundaries:
 - Windows 11 + WSL;
-- repository in WSL Linux filesystem;
 - user performs all commits/pushes;
-- failures and rejected approaches are recorded as durable learning.
+- failures and rejected approaches are durable evidence.
