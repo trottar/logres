@@ -12,11 +12,9 @@ project: logres
 
 ## Current Work Item
 
-**C.2 — Primary Action Cluster.**
+**C.3 — Secondary / Utility Clusters.**
 
-P0032 runtime failed on secure action execution.
-
-P0033 fix is prepared.
+C.2 is complete after P0033 corrected P0032's secure execution failure.
 
 ## Verified State
 
@@ -24,73 +22,62 @@ P0033 fix is prepared.
 - Phase A complete.
 - Phase B complete.
 - C.1 complete.
-- P0032 pushed at `9f9f97d`.
-- P0032 cluster rendering: PASS.
-- P0032 range tint: PASS.
-- P0032 mouse action execution: FAIL.
-- P0032 routed key execution: FAIL.
-- P0032 automatic override routing interfered with normal action keys.
-- P0033 changes key routing to fail-open/opt-in.
-- P0033 removes duplicate internal `1–12` labels.
+- C.2 complete.
+- P0033 pushed at `405c599`.
+- primary 4 x 3 secure cluster renders.
+- mouse secure action execution: PASS.
+- existing-key secure action execution: PASS.
+- out-of-range red feedback: PASS.
+- redundant internal slot-number labels removed.
 - stock Blizzard action bars remain visible.
+- P0032 failed automatic key takeover is retained as negative evidence.
+- known visual debt: cast/channel cues still appear but color differentiation
+  became imperceptible during P0033; cause unknown.
 
 ## Next Action
 
-Install/review/commit/push P0033.
+Design/source-resolve C.3 before implementation.
 
-Because runtime code changes, deploy explicitly:
+Resolve:
+1. secondary/utility action-slot mapping;
+2. stable mapping across stock bar/page semantics;
+3. shared secure-button/cluster abstraction instead of duplicating Primary.lua;
+4. binding domains for secondary/utility actions;
+5. combat-lockdown-safe cluster visibility boundaries;
+6. geometry relative to Phase B HUD and Primary Cluster;
+7. diagnostics for multiple clusters;
+8. stock-bar surfaces that must remain until each replacement path is proven.
 
-```bash
-cd ~/Projects/logres
+C.3 should establish secure cluster structure.
 
-WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
-ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
-
-./tools/deploy_logres.sh "$ADDONS"
-```
-
-Then `/reload`.
-
-Confirm:
-- version `0.0.15-dev`;
-- Run All / Action Check PASS;
-- no duplicate `1–12` labels.
-
-Test both:
-1. Action Keys OFF: normal stock keys work;
-2. mouse-click Logres actions;
-3. Action Keys ON: existing keys execute via Logres;
-4. Action Keys OFF: routing releases cleanly;
-5. ordinary combat mouse + keyboard execution;
-6. cooldown/range/count presentation.
-
-Report any protected-action, taint, Lua, or secret error.
+C.4 remains responsible for broader contextual visibility behavior.
 
 ## Success Criteria
 
-C.2 succeeds when:
-- Logres mouse execution works;
-- opt-in existing-key execution works;
-- routing can be safely released;
-- ordinary combat execution works;
-- existing presentation remains correct;
-- no protected/taint/Lua/secret error occurs;
-- stock action bars remain available.
+C.3 succeeds when:
+- secondary/utility secure clusters are implemented;
+- common secure action-button behavior is reusable;
+- mouse/key execution is proven;
+- binding changes remain fail-open;
+- no protected/taint/secret failures occur;
+- action constellation remains readable with the Phase B HUD;
+- stock bars remain available until later suppression proof.
 
 ## Do Not Reopen Without New Evidence
 
-- **P0032 execution:** failed.
-- **P0032 presentation/range:** partially proven.
-- **Automatic critical-input takeover before proof:** rejected by L-011.
+- **C.1:** complete.
+- **C.2:** complete.
+- **P0032 execution:** failed historical evidence; do not erase.
+- **Cast cue colors:** open visual debt, not fixed.
+- **Combat-time page remap:** still known debt for later secure paging.
 - **Stock action bars:** remain visible.
-- **Combat-time page remap:** still deferred until combat ends.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
+- `docs/memory/evidence/C2_PRIMARY_ACTION_CLUSTER_RUNTIME_PROOF_2026-10-01.md`
 - `docs/memory/evidence/C2_P0032_RUNTIME_FAILURE_2026-10-01.md`
-- `docs/memory/LEARNINGS.md`
+- `docs/memory/evidence/CAST_CUE_COLOR_REGRESSION_2026-10-01.md`
+- `docs/memory/investigations/C3_SECONDARY_UTILITY_CLUSTERS.md`
+- `docs/memory/architecture/ACTION_CLUSTERS.md`
 - `docs/memory/decisions/D-018_SECURE_ACTION_INTERFACE_CONTRACT.md`
-- `docs/memory/investigations/C2_PRIMARY_ACTION_CLUSTER.md`
-- `Logres/Actions/Primary.lua`
-- `tools/check_action_contract.py`

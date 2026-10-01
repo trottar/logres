@@ -171,3 +171,33 @@ complete.
 The test still covers both mouse and keyboard execution.
 
 The toggle exists to guarantee fail-open recovery, not to reduce test scope.
+## C.2 final result
+
+C.2 secure primary action execution is production-proven after the P0033
+correction.
+
+Verified:
+- mouse secure execution;
+- existing-key secure execution;
+- range presentation;
+- 4 x 3 primary geometry.
+
+P0032's failed automatic key takeover is retained as negative evidence.
+
+P0033's fail-open Action Keys controls remain the safe development model.
+
+Known non-blocking visual debt:
+cast/channel cues still appear but their color differentiation became
+imperceptible during the P0033 test. Cause remains unisolated.
+
+## C.3 entry
+
+C.3 extends the proven secure-button architecture to secondary/utility action
+domains.
+
+Implementation should first refactor common secure action-button behavior into
+reusable cluster primitives rather than cloning the primary module.
+
+Contextual visibility policy remains primarily C.4 work.
+
+Stock Blizzard bars remain visible during C.3 proof.

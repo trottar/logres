@@ -36,7 +36,7 @@ Use source evidence before choosing architecture.
 
 ## C.2 — Primary action cluster
 
-**Status: P0032 RUNTIME FAILED; P0033 FIX PREPARED.**
+**Status: COMPLETE.**
 
 Implement the first secure rectangular/square cluster.
 
@@ -80,10 +80,24 @@ P0033:
 - adds secure actionrelease/down-click configuration;
 - removes internal slot-number labels;
 - makes Logres key routing opt-in with Action Keys ON/OFF;
-- keeps both mouse and keyboard execution in the required runtime test.
+- keeps both mouse and keyboard execution in the required runtime test.### C.2 final runtime result
+
+P0033:
+- mouse execution PASS;
+- existing-key execution PASS;
+- range feedback PASS.
+
+C.2 closes.
+
+Known non-blocking debt:
+- combat-time page remapping still defers until combat ends;
+- cast/channel cue color differentiation became imperceptible during P0033 and
+  remains recorded for later visual investigation.
 
 
 ## C.3 — Secondary / utility clusters
+
+**Status: ACTIVE.**
 
 Add:
 - secondary/tertiary actions;

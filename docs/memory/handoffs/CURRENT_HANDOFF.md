@@ -2,21 +2,23 @@
 
 Authoritative state: `../CURRENT.md`.
 
+C.2 is complete.
+
+P0033 runtime proved both mouse and keyboard secure action execution.
+
+Current phase:
+**Phase C — Action Interface**
+
 Current work:
-**C.2 — Primary Action Cluster**
+**C.3 — Secondary / Utility Clusters**
 
-P0032 failed secure mouse and keyboard execution but proved presentation/range
-updates.
+Before implementation:
+resolve slot domains, shared cluster abstraction, binding domains, and layout.
 
-P0033 is the corrective runtime patch.
+Known visual debt:
+cast/channel cues still appear but their distinct colors became imperceptible
+during P0033. Do not silently mark this fixed.
 
-Version:
-`0.0.15-dev`
-
-Test both mouse and keyboard execution.
-
-Action Keys ON/OFF exists only as a fail-open safety control.
-
-P0033 changes runtime code; full deploy block is mandatory.
+P0034 is documentation/evidence only; no WoW redeploy required.
 
 User performs all commits/pushes.

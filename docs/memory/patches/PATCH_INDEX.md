@@ -34,6 +34,7 @@
 | P0030 | 2026-10-01 | INSTALLED / PUSHED | Record B.6 integrated proof; close Phase B; open Phase C; clarify stock-UI suppression ownership (`74ccfc3`) |
 | P0031 | 2026-10-01 | INSTALLED / PUSHED | Resolve C.1 secure action architecture; open C.2 primary action cluster (`6d0a5b1`) |
 | P0032 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME FAILED | C.2 secure primary action cluster + P0029 slash fallback fix (`9f9f97d`) |
-| P0033 | 2026-10-01 | PREPARED | Fix C.2 secure execution; add fail-open key routing |
+| P0033 | 2026-10-01 | INSTALLED / PUSHED | Fix C.2 secure execution; add fail-open key routing (`405c599`) |
+| P0034 | 2026-10-01 | PREPARED | Record C.2 secure execution proof; cast-cue color debt; open C.3 |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

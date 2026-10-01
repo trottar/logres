@@ -7,10 +7,7 @@ As of 2026-10-01.
 **Phase C — Action Interface**
 
 Active work item:
-**C.2 Primary Action Cluster**
-
-State:
-**P0032 RUNTIME FAILED; P0033 FIX PREPARED**
+**C.3 Secondary / Utility Clusters**
 
 ## Phase status
 
@@ -19,22 +16,31 @@ State:
 | 0 — Foundation | COMPLETE |
 | A — Core State Engine | COMPLETE |
 | B — Core HUD | COMPLETE |
-| C — Action Interface | ACTIVE — C.2 |
+| C — Action Interface | ACTIVE — C.3 |
 | D — Immersion Controller | QUEUED |
 | E — Compass and Navigation | QUEUED |
 | F — Quest Experience | QUEUED |
 | G — Cinematic Camera | QUEUED |
 | H — Integration and Polish | QUEUED |
 
-## C.2 evidence
+## Phase C sequence
 
-P0032:
-- rendering PASS;
-- range feedback PASS;
-- mouse execution FAIL;
-- routed keyboard execution FAIL.
+| Item | State |
+| --- | --- |
+| C.1 Secure action capability/source review | COMPLETE |
+| C.2 Primary action cluster | COMPLETE |
+| C.3 Secondary / utility clusters | ACTIVE |
+| C.4 Contextual visibility / secure paging | QUEUED |
+| C.5 Stock action-bar replacement | QUEUED |
+| C.6 Action interface integration validation | QUEUED |
+
+## C.2 final result
 
 P0033:
-- secure click/release correction;
-- Action Keys ON/OFF fail-open routing;
-- duplicate slot-number labels removed.
+- mouse execution PASS;
+- keyboard execution PASS;
+- range presentation PASS.
+
+Known debt:
+- combat-time page remap defers;
+- cast/channel cue colors currently imperceptible though cues still appear.

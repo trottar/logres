@@ -1,13 +1,13 @@
 # Active Investigations
 
-## C.2 — Primary Action Cluster
+## C.3 — Secondary / Utility Clusters
 
 Status:
-**P0032 RUNTIME FAILED; P0033 FIX PREPARED**
+**ACTIVE**
 
 Canonical:
-`C2_PRIMARY_ACTION_CLUSTER.md`
+`C3_SECONDARY_UTILITY_CLUSTERS.md`
 
 Next:
-runtime-prove P0033 mouse + keyboard secure execution while preserving the
-fail-open ability to release temporary key routing.
+design/source-resolve reusable secure cluster architecture and secondary/utility
+slot/binding mapping before writing C.3 runtime code.
