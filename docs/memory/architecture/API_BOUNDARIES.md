@@ -114,9 +114,13 @@ Therefore compass behavior is:
 
 ## PvP
 
-`UnitIsPVP("player")` read path is runtime verified in the false/unflagged state.
+`UnitIsPVP("player")` is runtime verified in both:
+- false/unflagged state;
+- a real player PvP flag transition during Phase A.5.
 
-Flagged transition remains deferred to Phase A state-engine testing.
+The central state engine successfully reflected the flagged transition.
+
+PvP remains a presentation modifier, not a reason for subsystems to invent a separate global mode.
 
 ## Quest waypoint
 

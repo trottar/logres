@@ -4,51 +4,45 @@ As of 2026-09-30.
 
 ## Active
 
-**Phase A — Core State Engine**
+**Phase B — Core HUD**
 
-Active work item: **A.5 Transition Validation**
-
-State: **ACTIVE — TARGETED GAP VALIDATION**
+Active work item:
+**B.1 HUD root + player health vignette**
 
 ## Phase status
 
 | Phase | State |
 | --- | --- |
 | 0 — Foundation | COMPLETE |
-| A — Core State Engine | ACTIVE — A.5 |
-| B — Core HUD | BLOCKED on Phase A |
-| C — Action Interface | BLOCKED on Phase A/B |
-| D — Immersion Controller | BLOCKED on Phase A |
-| E — Compass and Navigation | BLOCKED on Phase A/D |
-| F — Quest Experience | BLOCKED on Phase A/D |
-| G — Cinematic Camera | BLOCKED on Phase A; requires current DynamicCam profile |
+| A — Core State Engine | COMPLETE |
+| B — Core HUD | ACTIVE — B.1 |
+| C — Action Interface | BLOCKED on Phase B |
+| D — Immersion Controller | BLOCKED on core HUD/state consumers |
+| E — Compass and Navigation | QUEUED after core integration dependencies |
+| F — Quest Experience | QUEUED |
+| G — Cinematic Camera | QUEUED; requires current DynamicCam profile |
 | H — Integration and Polish | BLOCKED on prior phases |
 
-## Phase A sequence
+## Phase A final result
 
-| Item | State |
-| --- | --- |
-| A.1 State contract hardening | COMPLETE |
-| A.2 Additional context sensors | COMPLETE WITH ENVIRONMENTAL DEFERRAL |
-| A.3 User-controlled state | COMPLETE |
-| A.4 Module lifecycle contract | COMPLETE (`f5a12d4` corrected runtime proof) |
-| A.5 Transition validation | ACTIVE |
-
-## A.5 evidence policy
-
-Already covered:
-- load/reload;
-- persistence;
+Covered:
+- load/reload/persistence;
 - world/instance/combat;
-- state contract;
+- real PvP flag transition;
 - resting/taxi/interaction;
+- state contract;
 - preference contract/persistence;
 - module lifecycle.
 
-Open gap:
-- real PvP flagged transition.
-
-Environmental deferral:
+Environmental deferral retained:
 - ordinary mounted=true.
 
-Do not repeat already-proven travel-heavy scenarios without new evidence.
+## Phase B entry
+
+B.1 begins with:
+- real HUD module;
+- HUD root;
+- production secret-safe player health vignette;
+- immersion preference integration.
+
+No action-cluster implementation belongs in B.1.

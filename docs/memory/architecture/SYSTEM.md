@@ -4,7 +4,7 @@
 
 Logres behaves as one coherent interface system rather than a bundle of independent addons that each invent their own state and visibility rules.
 
-## Runtime source layout — Phase 0.3
+## Runtime source layout — Phase A complete
 
 ```text
 Logres/
@@ -12,60 +12,97 @@ Logres/
   Core/
     Bootstrap.lua
     Database.lua
+    Preferences.lua
     State.lua
+    Modules.lua
     Commands.lua
     Lifecycle.lua
 ```
 
-This is the first real addon runtime.
+Phase B begins adding feature modules on top of these Core contracts.
 
-### Bootstrap
+## Bootstrap
 
 Owns:
 - addon namespace constants;
-- one shared Blizzard event frame;
+- shared Blizzard event frame;
 - event registration/dispatch;
-- internal callback registration/dispatch;
+- internal callbacks;
 - development logging.
 
-Modules do not create competing global event systems unless a future subsystem has a concrete reason.
-
-### Database
+## Database
 
 Owns:
 - `LogresDB`;
 - schema/default initialization;
-- development debug setting;
-- non-sensitive lifecycle metadata such as load count/build/interface.
+- migrations;
+- persistent preferences/settings;
+- non-sensitive lifecycle metadata.
 
-It does not persist secret combat values, character names, targets, or session telemetry.
+Current schema:
+`2`
 
-### State
+Never persist secret combat values.
 
-Owns the central observed runtime facts required by later presentation systems.
+## Preferences
 
-Phase 0.3 fields:
-- context (`world` or `instance`);
-- combat lockdown state;
+Owns durable user choice separately from observed game state.
+
+Current preference:
+- `immersionEnabled`.
+
+Consumer contract:
+- `GetPreferences`;
+- `GetPreference`;
+- `SetPreference`;
+- `SubscribePreferences`.
+
+## State
+
+Owns observed runtime facts.
+
+Canonical fields include:
+- context;
+- combat;
 - PvP flag;
-- instance boolean/type;
-- state revision and last triggering event.
+- instance state/type;
+- mounted;
+- resting;
+- taxi;
+- interaction/type;
+- revision/transition metadata.
 
-Later phases may add orthogonal fields such as interaction, mounted/travel, resting, and immersion enablement.
+Consumers use snapshots/subscriptions, not the mutable authority.
 
-### Commands
+## Modules
 
-Provides development-only text commands. It is not product UI.
+Owns lightweight feature lifecycle:
+- registration order;
+- one-time initialization;
+- idempotent enable/disable;
+- LIFO cleanup;
+- owned state/preference subscriptions.
 
-Current command:
-`/logres status`
+It is not a general addon framework.
 
-### Lifecycle
+## Commands
 
-Initializes SavedVariables and emits a single development load confirmation.
+Development diagnostics and explicit test controls.
+
+It is not product UI.
+
+## Lifecycle
+
+Coordinates:
+- database readiness;
+- state initialization ordering;
+- module initialization;
+- default module enabling.
 
 ## Separation rule
 
-Core detects and publishes state.
+Core detects/persists/publishes facts and user choice.
 
-HUD, Actions, Immersion, Compass, Questing, Social, and Camera modules will consume that state later. They must not duplicate global state ownership.
+Feature modules consume those contracts.
+
+Phase B HUD, Phase C Actions, Phase D Immersion, Compass, Questing, Social, and Camera must not duplicate global state ownership.

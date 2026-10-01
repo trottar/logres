@@ -1,6 +1,6 @@
 # Phase A — Core State Engine
 
-Status: ACTIVE  
+Status: COMPLETE  
 Opened: 2026-09-30
 
 ## Purpose
@@ -146,7 +146,17 @@ Runtime result:
 
 ## A.5 — Transition validation
 
-Runtime-test the state contract using the smallest useful scenario matrix.
+**Status: COMPLETE.**
+
+The final evidence matrix is recorded in:
+
+`../evidence/A5_PHASE_A_TRANSITION_VALIDATION_2026-09-30.md`
+
+The remaining real PvP flag transition was runtime verified using the existing state engine.
+
+Ordinary `mounted=true` remains an explicit environmental deferral.
+
+No already-proven travel-heavy scenario was repeated unnecessarily.
 
 Required evidence should include:
 - load/reload;
@@ -161,7 +171,7 @@ Where manual travel is expensive, prefer:
 - one combined scenario that exercises multiple orthogonal flags;
 - deferred testing when an owning phase will naturally exercise the path.
 
-## Exit criteria
+## Exit criteria — SATISFIED
 
 Phase A completes when:
 - state schema is stable enough for HUD/Immersion consumers;
@@ -171,3 +181,21 @@ Phase A completes when:
 - module lifecycle is sufficient for subsequent phases;
 - known failures/deferrals are recorded;
 - no product HUD is required to prove the engine.
+
+
+## Final result
+
+Phase A completed on 2026-09-30 project-local date.
+
+Runtime established:
+- observed state contract;
+- additional context sensors;
+- persisted user preference contract;
+- module lifecycle;
+- integrated transition matrix including real PvP flag transition.
+
+Environmental deferral retained:
+- ordinary `mounted=true`.
+
+Next phase:
+**Phase B — Core HUD**

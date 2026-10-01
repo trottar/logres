@@ -8,95 +8,92 @@ project: logres
 
 ## Active Objective
 
-**Phase A — Core State Engine.** Complete integrated transition validation for the observed-state, preference, and lifecycle contracts.
+**Phase B — Core HUD.** Build Logres' identity-defining awareness layer on top of the completed Phase A contracts.
 
 ## Current Work Item
 
-**A.5 — Transition Validation.**
+**B.1 — HUD root + player health vignette.**
 
-A.4 is complete.
+The first Phase B patch should create the real HUD module and move the already-proven secret-safe player-health transport into production Logres code.
 
-A.5 is explicitly evidence-driven: do not repeat runtime scenarios already proven unless new evidence exposes a discrepancy.
-
-Existing evidence already covers:
-- load/reload;
-- SavedVariables persistence;
-- world/instance entry/exit;
-- combat observation and transition ordering;
-- state contract behavior;
-- resting;
-- taxi;
-- interaction;
-- preference persistence;
-- module lifecycle.
-
-Known environmental deferral:
-- ordinary `mounted=true`.
-
-Primary open gap:
-- real `pvpFlagged=true` transition has not yet been captured.
+Required architecture:
+- register a `HUD` module through D-011;
+- own HUD frames/textures through that module;
+- use D-008 secret-safe health flow;
+- avoid Lua arithmetic/comparison on health;
+- integrate `immersionEnabled` without adding user preference to observed State;
+- no conventional player health bar/numbers;
+- no action clusters yet.
 
 ## Verified State
 
-- Phase 0 complete.
-- A.1 complete.
-- A.2 complete with mounted=true environmental deferral.
-- A.3 complete.
-- P0014 module lifecycle pushed at `2b40d0c`.
-- P0014 lifecycle behavior was correct but its diagnostic had a cleanup-count false negative.
-- P0015 diagnostic fix pushed at `f5a12d4`.
-- corrected P0015 runtime validation passed with no issue reported.
-- A.4 module lifecycle is complete.
-- A.5 evidence matrix is defined in `roadmap/PHASE_A5_TRANSITION_VALIDATION.md`.
+- Phase 0 — Foundation complete.
+- Phase A — Core State Engine complete.
+- A.1 observed-state contract runtime proven.
+- A.2 context sensors runtime proven, with ordinary mounted=true deferred by environment.
+- A.3 preference contract/persistence runtime proven.
+- A.4 module lifecycle runtime proven after P0015 diagnostic fix.
+- A.5 real PvP flag transition runtime proven.
+- integrated Phase A evidence matrix is complete.
+- P0016 Phase A.5 activation pushed at `7296d1f`.
+- current runtime version remains `0.0.6-dev`.
+- D-008 proves the required secret-safe health-vignette transport in Forever.
+- Phase B is now active.
 
 ## Next Action
 
-Perform a **minimal PvP flag capability/transition check** before writing more code.
+Prepare B.1 implementation.
 
-First determine whether the current Forever beta allows a local player PvP flag transition without battleground/arena travel.
+Before coding:
+1. use D-002 and D-008 as hard constraints;
+2. define the HUD module/frame ownership boundary;
+3. choose the smallest production version of the edge vignette that proves the secret-safe transport;
+4. keep initial art assets procedural/native where practical so architecture can be validated before asset polish;
+5. make immersion off/on testable without travel;
+6. include full deploy commands because B.1 will change runtime addon code.
 
-If practical:
-1. record `/logres status` before;
-2. trigger the normal game PvP flag action;
-3. record `/logres status` after `PLAYER_FLAGS_CHANGED` settles;
-4. confirm `pvp=true`;
-5. do not wait through a long de-flag timer solely for testing if the game intentionally delays clearing; record the behavior instead.
-
-If the current beta/character cannot practically produce the transition:
-- record an environmental deferral;
-- define the retry condition;
-- do not block Phase A indefinitely.
-
-Do not add a new runtime diagnostic unless existing `/logres status` proves insufficient.
+A practical first runtime test should not require deliberately reaching near-death health. It should prove:
+- module loads;
+- healthy state is unobtrusive;
+- taking ordinary damage changes the vignette;
+- healing reduces/removes it;
+- immersion off hides it;
+- immersion on restores behavior;
+- no Lua/secret-value errors occur.
 
 ## Success Criteria
 
-A.5 succeeds when:
-- the integrated Phase A evidence matrix is durable;
-- existing proven scenarios are not needlessly repeated;
-- `pvpFlagged` true transition is either runtime verified or explicitly deferred by environment;
-- mounted=true remains explicitly deferred until a mount-capable environment exists;
-- no unresolved state/preference/lifecycle integration regression remains;
-- static checks pass;
-- Phase A exit status is documented.
+B.1 succeeds when:
+- a real HUD module exists;
+- screen-edge health vignette is production code, not only audit code;
+- health transport uses native secret-safe path;
+- no conventional player health bar/numbers are introduced;
+- immersion preference cleanly disables/enables presentation;
+- lifecycle cleanup is correct;
+- static checks enforce key secret-safe constraints where practical;
+- runtime proof covers ordinary damage/heal behavior without unnecessary risk;
+- failures/visual limitations are durable.
 
 ## Do Not Reopen Without New Evidence
 
-- **A.1:** complete.
-- **A.2:** complete; mounted=true deferred by environment.
-- **A.3:** complete.
-- **A.4:** complete; corrected lifecyclecheck passed.
-- **P0014 false negative:** diagnostic defect, not lifecycle failure.
-- **A.5 policy:** targeted gaps only; no repetitive travel-heavy validation.
-- **Deployment:** full deploy block required only when runtime code changes.
+- **Phase A:** complete.
+- **mounted=true:** environmental deferral remains valid.
+- **Observed state:** consume Phase A contract; do not duplicate.
+- **Preferences:** consume D-010 contract.
+- **Lifecycle:** consume D-011 contract.
+- **Health:** D-002 + D-008 are authoritative.
+- **Enemy disclosure:** D-003 remains authoritative.
+- **Actions:** Phase C, not B.1.
+- **Deployment:** runtime-code patch instructions must include full deploy block.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/roadmap/PHASE_A5_TRANSITION_VALIDATION.md`
-- `docs/memory/evidence/A4_MODULE_LIFECYCLE_RUNTIME_PROOF_2026-09-30.md`
-- `docs/memory/evidence/A4_LIFECYCLECHECK_FAILURE_2026-09-30.md`
-- `docs/memory/evidence/A3_USER_PREFERENCE_RUNTIME_PROOF_2026-09-30.md`
-- `docs/memory/evidence/A2_CONTEXT_SENSOR_RUNTIME_PROOF_2026-09-30.md`
-- `docs/memory/evidence/PHASE_0_3_RUNTIME_PROOF_2026-09-30.md`
-- `docs/memory/decisions/D-011_MODULE_LIFECYCLE_CONTRACT.md`
+- `docs/memory/roadmap/PHASE_B_CORE_HUD.md`
+- `docs/memory/evidence/A5_PHASE_A_TRANSITION_VALIDATION_2026-09-30.md`
+- `docs/memory/decisions/D-002_PLAYER_HEALTH_PRESENTATION.md`
+- `docs/memory/decisions/D-008_SECRET_SAFE_HEALTH_AND_RESOURCE_PATH.md`
+- `docs/memory/decisions/D-003_ENEMY_INFORMATION_DISCLOSURE.md`
+- `docs/memory/architecture/HUD.md`
+- `docs/memory/architecture/SYSTEM.md`
+- `docs/memory/architecture/API_BOUNDARIES.md`

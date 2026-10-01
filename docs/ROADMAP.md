@@ -2,83 +2,52 @@
 
 Project Logres is an immersive, world-first interface addon for World of Warcraft Forever.
 
-The roadmap is intentionally capability-gated. A phase does not advance because code exists; it advances when its success criteria are satisfied and the repository memory is synchronized.
+The roadmap is capability-gated. A phase advances only when its success criteria are satisfied and repository memory is synchronized.
 
 ## Phase 0 — Foundation
 
 **Status: COMPLETE.**
 
-Purpose: establish the repository, memory discipline, development environment, design invariants, and verified WoW Forever API boundaries before addon implementation depends on assumptions.
-
-### 0.1 Repository and durable memory
-- [x] Git repository created.
-- [x] Repository-native memory architecture defined.
-- [x] WSL on Windows 11 recorded as canonical development environment.
-- [x] User-controlled commit/push boundary recorded.
-- [x] Negative-result retention required.
-- [x] Memory bootstrap committed and pushed (`353c5b0`).
-- [x] Memory health checker passed on the bootstrap before commit.
-
-### 0.2 WoW Forever capability audit
-**Status: COMPLETE WITH EXPLICIT DEFERRALS.**
-
-Verify, with primary/current sources and in-client probes where needed:
-- project/interface identification and TOC requirements;
-- event surface relevant to Logres;
-- player health and resource display mechanisms;
-- unit health/power percentages and secret-value restrictions;
-- target level/classification information;
-- cast/channel information and combat restrictions;
-- secure action buttons and combat lockdown;
-- chat/social APIs and addon restrictions;
-- map/player position APIs and instance restrictions;
-- quest/objective APIs;
-- camera CVars/functions and protected/restricted behavior;
-- PvP flag state;
-- instance state and transitions.
-
-Deliverables:
-- `docs/memory/investigations/FOREVER_API_CAPABILITY_AUDIT.md`
-- evidence/source notes under `docs/memory/evidence/`
-- decisions for any implementation boundary that becomes settled.
-
-### 0.3 Addon skeleton
-**Status: ACTIVE.**
-
-The API audit established the baseline required to begin:
-- create `Logres/Logres.toc`;
-- establish addon namespace and saved-variable policy;
-- create Core event/state infrastructure;
-- add a minimal load confirmation with no permanent UI;
-- prove load/reload behavior in WoW Forever.
+Established:
+- repository and durable memory;
+- WSL/Windows development workflow;
+- user-owned Git checkpoint boundary;
+- Forever API capability audit;
+- minimal real addon skeleton;
+- load/reload and SavedVariables proof.
 
 ## Phase A — Core State Engine
 
-**Status: ACTIVE — A.1 State contract hardening.**
+**Status: COMPLETE.**
 
-Implement the central context model rather than independent modules making conflicting visibility decisions.
+Established:
+- private observed-state authority;
+- snapshot/subscription consumer contract;
+- world/instance/combat/PvP/resting/taxi/interaction facts;
+- separate persisted user preference contract;
+- lightweight module lifecycle;
+- integrated transition evidence matrix.
 
-Primary state inputs:
-- immersion enabled/disabled;
-- world vs instance;
-- combat;
-- PvP flag;
-- NPC interaction;
-- mounted/travel state;
-- resting;
-- other later contextual modifiers.
+Known environmental deferral:
+- ordinary `mounted=true` runtime path.
 
-Success requires deterministic transitions and no subsystem independently inventing a competing global mode.
+Canonical phase record:
+`memory/roadmap/PHASE_A_CORE_STATE_ENGINE.md`
 
 ## Phase B — Core HUD
 
-Implement the identity-defining presentation:
+**Status: ACTIVE — B.1 HUD root + player health vignette.**
+
+Implement the identity-defining awareness layer:
 - no conventional player health bar;
 - screen-edge health vignette;
 - compact resource percentage;
 - minimal target information;
 - minimal ally/pet information;
 - cast confirmation without a cast bar.
+
+Canonical phase record:
+`memory/roadmap/PHASE_B_CORE_HUD.md`
 
 ## Phase C — Action Interface
 

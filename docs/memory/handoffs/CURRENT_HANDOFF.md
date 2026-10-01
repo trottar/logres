@@ -2,20 +2,25 @@
 
 Authoritative state: `../CURRENT.md`. Start there.
 
+Phase A is complete.
+
+Final A.5 gap:
+real `pvpFlagged` transition — PASS.
+
+Current phase:
+**Phase B — Core HUD**
+
 Current work:
-**A.5 — Transition Validation**
+**B.1 — HUD root + player health vignette**
 
-A.4 is complete after corrected P0015 `/logres lifecyclecheck` passed.
+Use:
+- D-002 player health presentation;
+- D-008 secret-safe health/resource path;
+- D-011 module lifecycle;
+- D-010 preference contract.
 
-A.5 should not repeat prior travel-heavy proofs.
+The first B.1 runtime patch must include the full deploy block before in-game tests.
 
-Primary remaining gap:
-**real `pvpFlagged` transition**
-
-First investigate whether the current Forever beta permits a local `/pvp`-style flag transition using existing `/logres status`.
-
-Ordinary mounted=true remains deferred by the beta environment.
-
-No code change is currently required, so no WoW redeploy is needed for P0016.
+No redeploy is required for P0017 because it is documentation/evidence only.
 
 User performs all commits/pushes.
