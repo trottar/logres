@@ -313,3 +313,28 @@ Neither uses a conventional cast bar.
 The prior statement that enemy casting should remain deferred unless later justified is superseded by D-014.
 
 Only target-caster **runtime proof** may defer by environment when no caster is available.
+## B.4 implementation boundary
+
+P0025 implements player and current-target cast cues through spellcast lifecycle events only.
+
+It intentionally does not query:
+- `UnitCastingInfo`;
+- `UnitChannelInfo`.
+
+Reason:
+target cast information may be secret-restricted.
+
+The target event frame is registered directly for `"target"` and ignores all spellcast payload fields.
+
+Visual state:
+- player cast: amber;
+- player channel: blue;
+- target cast: orange;
+- target channel: violet;
+- interrupt/failure: brief red snap.
+
+There is no:
+- cast timing;
+- progress bar;
+- spell text;
+- target cast metadata inspection.

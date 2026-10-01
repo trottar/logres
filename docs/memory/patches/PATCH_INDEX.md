@@ -25,6 +25,7 @@
 | P0021 | 2026-10-01 | INSTALLED / PUSHED | B.2 secret-safe primary resource percentage (`66b27a3`) |
 | P0022 | 2026-10-01 | INSTALLED / PUSHED | Record B.2 proof; close B.2 and open B.3 (`f89f43f`) |
 | P0023 | 2026-10-01 | INSTALLED / PUSHED | B.3 sparse target name + secret-safe health percentage (`67acfa9`) |
-| P0024 | 2026-10-01 | PREPARED | Record B.3 proof; open B.4 with player + target cast scope |
+| P0024 | 2026-10-01 | INSTALLED / PUSHED | Record B.3 proof; correct B.4 player + target cast scope (`8fb567f`) |
+| P0025 | 2026-10-01 | PREPARED | B.4 event-driven player + target cast/channel cues |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

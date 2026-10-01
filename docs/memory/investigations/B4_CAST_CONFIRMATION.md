@@ -1,6 +1,6 @@
 # B.4 — Cast Confirmation
 
-Status: ACTIVE
+Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT
 Opened: 2026-10-01
 
 ## Goal
@@ -11,68 +11,91 @@ Add minimal cast/channel cues for:
 
 No conventional cast bars.
 
-## Corrected scope
+## Source resolution
 
-Earlier roadmap text said enemy cast UI remained deferred unless later justified.
+Forever spellcast APIs/events are subject to `SecretWhenUnitSpellCastRestricted`.
 
-That wording was incorrect relative to the intended product direction.
+For non-player units, spellcast query/event payload information may therefore be secret.
 
-B.4 explicitly includes current-target cast/channel presentation.
+P0025 avoids querying cast metadata entirely.
 
-Only the runtime proof of the target-caster true path may defer when the environment provides no caster.
+Instead:
+- player spellcast events are registered on a unit-filtered `"player"` frame;
+- target spellcast events are registered on a unit-filtered `"target"` frame;
+- handlers consume only the event name;
+- `unitTarget`, `castGUID`, `spellID`, `interruptedBy`, and other event payloads are ignored.
 
-## Player cue
+This gives Logres the cast lifecycle signal without inspecting restricted target cast data.
 
-Initial direction:
-- small rune/glyph near the existing player resource text;
-- visible while casting/channeling;
-- simple active animation or brightness change;
-- completion disappearance;
-- interruption/failure snap/fade if practical.
+## Event set
 
-## Target cue
+P0025 listens for:
+- `UNIT_SPELLCAST_START`;
+- `UNIT_SPELLCAST_STOP`;
+- `UNIT_SPELLCAST_FAILED`;
+- `UNIT_SPELLCAST_FAILED_QUIET`;
+- `UNIT_SPELLCAST_INTERRUPTED`;
+- `UNIT_SPELLCAST_CHANNEL_START`;
+- `UNIT_SPELLCAST_CHANNEL_STOP`.
 
-Initial direction:
-- similarly restrained cue associated with the sparse target block;
-- visible while current target casts/channels;
-- no horizontal timing bar;
-- disappears on completion/interruption/target loss.
+No progress/timing events are required because Logres does not show cast progress.
 
-## Existing evidence
+## Visual states
 
-I-001 already proved player:
-- `UnitCastingInfo("player")`;
-- `UnitChannelInfo("player")`;
-- cast/channel event paths.
+### Player
 
-Current-target cast metadata was not captured.
+Cue sits immediately left of the existing resource percentage.
 
-## Source questions before implementation
+- cast: warm amber;
+- channel: cool blue;
+- interrupted/failed: brief red snap;
+- stop/channel-stop: hidden.
 
-Resolve:
-1. exact player cast/channel event set;
-2. exact target cast/channel event set;
-3. current `UnitCastingInfo("target")` / `UnitChannelInfo("target")` behavior on Forever;
-4. whether cast/channel metadata can become secret and which parts may safely be forwarded;
-5. minimal visual state machine for start/stop/interrupted/failed/channel;
-6. cue placement relative to player resource and target block.
+### Current target
 
-## Runtime strategy
+Cue sits immediately right of the sparse target block.
 
-Player side:
-- must be tested immediately with available player casts/channels.
+- cast: warm orange;
+- channel: violet;
+- interrupted/failed: brief red snap;
+- stop/channel-stop: hidden;
+- target change: forcibly hidden.
 
-Target side:
-- implement the target-cast path;
-- test if a nearby/current target naturally casts;
-- otherwise mark true-path runtime proof `DEFERRED BY ENVIRONMENT`;
-- do not remove target-cast support;
-- do not require travel solely to obtain a caster.
+## Interruption snap
+
+`C_Timer.After(0.18, ...)` clears the brief red interruption state.
+
+A generation counter prevents an old interruption timer from hiding a newly started cast.
+
+## Important limitation
+
+Because P0025 does not query restricted cast state, acquiring a target already in the middle of a cast may not immediately show a cue.
+
+The cue is guaranteed from subsequent spellcast lifecycle events while that unit is the current target.
+
+This limitation is preferred to inspecting secret target cast metadata.
+
+Revisit only if a native secret-safe visibility mechanism is proven necessary.
+
+## Runtime plan
+
+After deploy:
+1. confirm `0.0.11-dev`;
+2. existing checks + `/logres hudcheck` pass;
+3. player normal cast -> amber cue appears, then disappears;
+4. player channel -> blue cue appears, then disappears, if current character has an accessible channel;
+5. interrupt/fail a player cast if practical -> red snap;
+6. immersion off/on during a cast -> cue follows HUD root;
+7. target cue geometry/event path is tested if a convenient caster exists;
+8. otherwise record target-cast true-path `DEFERRED BY ENVIRONMENT`.
+
+No travel is required solely to locate an enemy caster.
 
 ## Exit
 
 B.4 completes when:
-- player cue is production-proven;
-- target cue is implemented;
-- target cue is either runtime-proven or carries an explicit environmental deferral with retry condition;
-- no conventional cast bar is introduced.
+- player cue is runtime proven;
+- target cue implementation is structurally present;
+- target true-path is either proven or environmentally deferred;
+- no conventional cast bar is introduced;
+- no secret-value/Lua error occurs.

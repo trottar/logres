@@ -65,9 +65,130 @@ local HEALTH_BANDS = {
             { 1.00, 0.00 },
         },
     },
+
 }
 
+local CAST_EVENTS = {
+    "UNIT_SPELLCAST_START",
+    "UNIT_SPELLCAST_STOP",
+    "UNIT_SPELLCAST_FAILED",
+    "UNIT_SPELLCAST_FAILED_QUIET",
+    "UNIT_SPELLCAST_INTERRUPTED",
+    "UNIT_SPELLCAST_CHANNEL_START",
+    "UNIT_SPELLCAST_CHANNEL_STOP",
+}
+
+local function createCastCue(parent, name)
+    local cue = CreateFrame("Frame", name, parent)
+    cue:SetSize(18, 18)
+    cue:Hide()
+
+    local border = cue:CreateTexture(nil, "OVERLAY")
+    border:SetAllPoints(cue)
+    border:SetColorTexture(0.04, 0.03, 0.02, 0.92)
+
+    local inner = cue:CreateTexture(nil, "OVERLAY")
+    inner:SetPoint("TOPLEFT", cue, "TOPLEFT", 3, -3)
+    inner:SetPoint("BOTTOMRIGHT", cue, "BOTTOMRIGHT", -3, 3)
+
+    local core = cue:CreateTexture(nil, "OVERLAY")
+    core:SetSize(4, 4)
+    core:SetPoint("CENTER", cue, "CENTER", 0, 0)
+
+    cue.border = border
+    cue.inner = inner
+    cue.core = core
+    cue.generation = 0
+    cue.terminalHold = false
+
+    return cue
+end
+
+local function styleCastCue(cue, state, scope)
+    if state == "channel" then
+        if scope == "player" then
+            cue.inner:SetColorTexture(0.18, 0.55, 0.82, 0.95)
+            cue.core:SetColorTexture(0.72, 0.88, 1.00, 1.00)
+        else
+            cue.inner:SetColorTexture(0.42, 0.30, 0.72, 0.95)
+            cue.core:SetColorTexture(0.82, 0.72, 1.00, 1.00)
+        end
+        return
+    end
+
+    if state == "interrupted" then
+        cue.inner:SetColorTexture(0.68, 0.04, 0.025, 1.00)
+        cue.core:SetColorTexture(1.00, 0.42, 0.22, 1.00)
+        return
+    end
+
+    if scope == "player" then
+        cue.inner:SetColorTexture(0.70, 0.48, 0.12, 0.95)
+        cue.core:SetColorTexture(1.00, 0.85, 0.42, 1.00)
+    else
+        cue.inner:SetColorTexture(0.68, 0.28, 0.08, 0.95)
+        cue.core:SetColorTexture(1.00, 0.66, 0.28, 1.00)
+    end
+end
+
+local function showCastCue(cue, state, scope)
+    cue.generation = cue.generation + 1
+    cue.terminalHold = false
+    styleCastCue(cue, state, scope)
+    cue:Show()
+end
+
+local function hideCastCue(cue, force)
+    if cue.terminalHold and not force then
+        return
+    end
+
+    cue.generation = cue.generation + 1
+    cue.terminalHold = false
+    cue:Hide()
+end
+
+local function interruptCastCue(cue, scope)
+    cue.generation = cue.generation + 1
+    local generation = cue.generation
+
+    cue.terminalHold = true
+    styleCastCue(cue, "interrupted", scope)
+    cue:Show()
+
+    C_Timer.After(0.18, function()
+        if cue.generation ~= generation then
+            return
+        end
+
+        cue.terminalHold = false
+        cue:Hide()
+    end)
+end
+
+local function handleCastEvent(cue, event, scope)
+    if event == "UNIT_SPELLCAST_START" then
+        showCastCue(cue, "cast", scope)
+        return
+    end
+
+    if event == "UNIT_SPELLCAST_CHANNEL_START" then
+        showCastCue(cue, "channel", scope)
+        return
+    end
+
+    if event == "UNIT_SPELLCAST_INTERRUPTED"
+        or event == "UNIT_SPELLCAST_FAILED"
+    then
+        interruptCastCue(cue, scope)
+        return
+    end
+
+    hideCastCue(cue, false)
+end
+
 local function createCurve(points)
+
     local curve = C_CurveUtil.CreateCurve()
     curve:SetType(Enum.LuaCurveType.Linear)
 
@@ -254,6 +375,10 @@ function HUD:GetDebugStatus()
         targetNameTextReady = self.targetNameText ~= nil,
         targetHealthTextReady = self.targetHealthText ~= nil,
         targetEventFrameReady = self.targetEventFrame ~= nil,
+        playerCastCueReady = self.playerCastCue ~= nil,
+        targetCastCueReady = self.targetCastCue ~= nil,
+        playerCastEventFrameReady = self.playerCastEventFrame ~= nil,
+        targetCastEventFrameReady = self.targetCastEventFrame ~= nil,
     }
 end
 
@@ -334,6 +459,18 @@ function HUD:OnInitialize()
     self.targetNameText = targetNameText
     self.targetHealthText = targetHealthText
 
+    local playerCastCue = createCastCue(root, "LogresHUDPlayerCastCue")
+    playerCastCue:SetPoint("RIGHT", resourceText, "LEFT", -12, 0)
+
+    local targetCastCue = createCastCue(
+        targetFrame,
+        "LogresHUDTargetCastCue"
+    )
+    targetCastCue:SetPoint("LEFT", targetFrame, "RIGHT", 8, 8)
+
+    self.playerCastCue = playerCastCue
+    self.targetCastCue = targetCastCue
+
     local healthEventFrame = CreateFrame("Frame")
     healthEventFrame:SetScript("OnEvent", function(_, _, unit)
         if unit and unit ~= "player" then
@@ -366,6 +503,29 @@ function HUD:OnInitialize()
     end)
 
     self.targetEventFrame = targetEventFrame
+
+    local playerCastEventFrame = CreateFrame("Frame")
+    playerCastEventFrame:SetScript("OnEvent", function(_, event)
+        -- The frame is unit-filtered for "player"; spellcast payload fields
+        -- are intentionally ignored.
+        handleCastEvent(self.playerCastCue, event, "player")
+    end)
+
+    local targetCastEventFrame = CreateFrame("Frame")
+    targetCastEventFrame:SetScript("OnEvent", function(_, event)
+        if event == "PLAYER_TARGET_CHANGED" then
+            hideCastCue(self.targetCastCue, true)
+            return
+        end
+
+        -- Target spellcast payload fields may be secret on Forever.
+        -- The frame is unit-filtered for "target", so Logres consumes only
+        -- the ordinary event type and never inspects castGUID/spellID/etc.
+        handleCastEvent(self.targetCastCue, event, "target")
+    end)
+
+    self.playerCastEventFrame = playerCastEventFrame
+    self.targetCastEventFrame = targetCastEventFrame
 end
 
 function HUD:OnEnable()
@@ -386,10 +546,20 @@ function HUD:OnEnable()
     self.targetEventFrame:RegisterUnitEvent("UNIT_MAXHEALTH", "target")
     self.targetEventFrame:RegisterUnitEvent("UNIT_NAME_UPDATE", "target")
 
+    for index = 1, #CAST_EVENTS do
+        local event = CAST_EVENTS[index]
+        self.playerCastEventFrame:RegisterUnitEvent(event, "player")
+        self.targetCastEventFrame:RegisterUnitEvent(event, "target")
+    end
+
+    self.targetCastEventFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
+
     self:OwnCleanup(function()
         self.healthEventFrame:UnregisterAllEvents()
         self.resourceEventFrame:UnregisterAllEvents()
         self.targetEventFrame:UnregisterAllEvents()
+        self.playerCastEventFrame:UnregisterAllEvents()
+        self.targetCastEventFrame:UnregisterAllEvents()
     end)
 
     self:SubscribePreferences(function(current)
@@ -401,6 +571,8 @@ end
 
 function HUD:OnDisable()
     self.previewEnabled = false
+    hideCastCue(self.playerCastCue, true)
+    hideCastCue(self.targetCastCue, true)
     self.targetFrame:Hide()
     self.root:Hide()
 end

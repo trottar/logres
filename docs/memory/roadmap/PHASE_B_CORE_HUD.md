@@ -135,7 +135,7 @@ Initial production target block:
 
 ## B.4 — Cast confirmation
 
-**Status: ACTIVE.**
+**Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
 
 Implement minimal cast/channel cues for both:
 - the player;
@@ -154,6 +154,15 @@ Current-target cast/channel:
 - no conventional enemy cast bar.
 
 Current-target true-path runtime proof may be deferred by environment if no caster is conveniently available. That defers testing, not the feature.
+
+### P0025 implementation
+
+- event-driven player cast/channel cue;
+- event-driven current-target cast/channel cue;
+- target spellcast payloads ignored;
+- no `UnitCastingInfo`/`UnitChannelInfo` queries in production cue;
+- no progress/timing bar;
+- brief red interruption/failure snap.
 
 Canonical decision:
 `../decisions/D-014_CAST_PRESENTATION_CONTRACT.md`

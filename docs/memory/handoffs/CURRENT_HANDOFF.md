@@ -2,21 +2,25 @@
 
 Authoritative state: `../CURRENT.md`. Start there.
 
-Current phase:
-**Phase B — Core HUD**
-
-B.3 is complete.
-
 Current work:
 **B.4 — Cast Confirmation**
 
-Important correction:
-B.4 includes both player and current-target cast/channel cues.
+P0025 is prepared.
 
-The earlier "enemy cast UI deferred unless justified" wording is superseded.
+Runtime adds:
+- player cast/channel cue;
+- target cast/channel cue;
+- brief interruption/failure red snap;
+- event-driven target handling with no secret payload inspection.
 
-Only runtime proof of the target-caster true path may defer if the environment provides no caster.
+Version:
+`0.0.11-dev`
 
-P0024 is documentation/evidence only; no WoW redeploy required.
+Current environment has no convenient enemy caster.
+
+Player side must be tested now.
+Target true-path may be recorded as environmental deferral.
+
+P0025 changes runtime code, so deploy explicitly before testing.
 
 User performs all commits/pushes.

@@ -9,6 +9,9 @@ As of 2026-10-01.
 Active work item:
 **B.4 Cast Confirmation**
 
+State:
+**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+
 ## Phase status
 
 | Phase | State |
@@ -30,16 +33,17 @@ Active work item:
 | B.1 HUD root + player health vignette | COMPLETE |
 | B.2 Resource presentation | COMPLETE |
 | B.3 Target presentation | COMPLETE |
-| B.4 Cast confirmation | ACTIVE |
+| B.4 Cast confirmation | ACTIVE — implementation prepared |
 | B.5 Allies and pets | QUEUED |
 | B.6 HUD integration validation | QUEUED |
 
-## B.4 scope
+## B.4 implementation
 
-Required:
+P0025:
 - player cast/channel cue;
-- current-target cast/channel cue.
+- target cast/channel cue;
+- event-driven;
+- no target cast payload inspection;
+- no cast bar.
 
-No conventional cast bars.
-
-Target-caster true-path runtime proof may defer by environment if no caster is available.
+Target-caster true-path runtime proof may defer by environment.

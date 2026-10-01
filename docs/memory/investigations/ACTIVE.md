@@ -3,14 +3,11 @@
 ## B.4 — Cast Confirmation
 
 Status:
-**ACTIVE**
+**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
 
 Canonical record:
 `B4_CAST_CONFIRMATION.md`
 
-Scope:
-- player cast/channel cue;
-- current-target cast/channel cue;
-- no conventional cast bars.
+P0025 implements event-driven player and current-target cast/channel cues.
 
 Target true-path runtime proof may defer by environment.
