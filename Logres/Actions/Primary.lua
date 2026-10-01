@@ -333,6 +333,8 @@ function Primary:GetDebugStatus()
         clusterAlpha = self.cluster and self.cluster:GetAlpha() or nil,
         buttonCount = self.buttons and #self.buttons or 0,
         registeredCount = self.registeredCount or 0,
+        activationFeedbackReadyCount =
+            ActionButton.CountFeedbackReady(self.buttons),
         currentPage = self.currentPage,
         securePage = securePage,
         firstActionSlot = self.firstActionSlot,

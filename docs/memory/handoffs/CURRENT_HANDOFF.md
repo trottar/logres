@@ -3,23 +3,20 @@
 Authoritative state: `../CURRENT.md`.
 
 Current work:
-**C.4 — Contextual Visibility / Secure Paging**
+**C.4 action-interface completion**
 
-P0039 is prepared.
+P0039 contextual alpha passed.
+
+P0040 is prepared to add the missing per-button action-use response:
+- pressed state;
+- activation pulse.
 
 Version:
-`0.0.17-dev`
+`0.0.18-dev`
 
-Adds:
-- state-driven action-role alpha;
-- secure normal Primary actionpage driver;
-- presentation-only page registration;
-- expanded Action Check.
+This must be proven by mouse and routed keyboard before C.5 stock-bar
+suppression starts.
 
-Special form/vehicle/override/possess paging is not claimed.
-
-Stock bars remain visible.
-
-P0039 changes runtime code; full deploy block is mandatory.
+P0040 changes runtime code; full deploy block is mandatory.
 
 User performs all commits/pushes.

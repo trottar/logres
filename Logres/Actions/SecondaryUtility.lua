@@ -322,6 +322,8 @@ function SecondaryUtility:GetClusterDebugStatus(key)
         shown = cluster.frame and cluster.frame:IsShown() or false,
         buttonCount = cluster.buttons and #cluster.buttons or 0,
         registeredCount = cluster.registeredCount or 0,
+        activationFeedbackReadyCount =
+            ActionButton.CountFeedbackReady(cluster.buttons),
         firstActionSlot = cluster.firstActionSlot,
         lastActionSlot = cluster.lastActionSlot,
         bindingRoutingEnabled =

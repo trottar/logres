@@ -361,3 +361,21 @@ Current capability gate:
 
 Special bonus/form/vehicle/override/possess action states remain stock-fallback
 territory until proven.
+## Action activation feedback
+
+D-022 establishes local activation feedback as a required action-interface
+capability.
+
+The shared Logres ActionButton primitive now provides:
+- pushed-state texture;
+- short activation pulse.
+
+Primary, Secondary, Utility, and future profile-driven clusters inherit the
+same behavior.
+
+The pulse confirms secure button activation only.
+
+Logres does not infer ongoing button-specific cast state from restricted
+spellcast payloads.
+
+This feedback must be runtime-proven before stock action-bar suppression.

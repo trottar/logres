@@ -146,7 +146,7 @@ roles/sizes/shapes, including compact groups such as a six-slot utility bar.
 
 ## C.4 — Contextual visibility
 
-**Status: P0039 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
+**Status: CONTEXT PASS; P0040 ACTIVATION FEEDBACK PROOF NEXT.**
 
 Integrate with observed state:
 - world;
@@ -179,7 +179,21 @@ Primary paging:
 - presentation synchronized separately;
 - special page coverage explicitly remains `normal-pages-only`.
 
-Stock Blizzard bars remain visible.
+Stock Blizzard bars remain visible.### P0040 action activation feedback
+
+P0039 context runtime:
+- world PASS;
+- combat PASS;
+- PvP PASS;
+- Utility intentionally more subdued.
+
+Before C.5 stock-bar suppression, P0040 adds the missing local action-use
+feedback:
+- pushed/depressed state;
+- brief activation flash on secure PostClick;
+- mouse + routed-key proof.
+
+C.4 remains open until this action feedback is runtime-proven.
 
 
 ## C.5 — Stock action-bar replacement

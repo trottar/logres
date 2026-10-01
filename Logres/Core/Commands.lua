@@ -490,6 +490,7 @@ local function runActionCheck()
         and primaryDebug.clusterShown == true
         and primaryDebug.buttonCount == 12
         and primaryDebug.registeredCount == 12
+        and primaryDebug.activationFeedbackReadyCount == 12
         and primaryDebug.currentPage ~= nil
         and primaryDebug.firstActionSlot ~= nil
         and primaryDebug.lastActionSlot ~= nil
@@ -502,12 +503,14 @@ local function runActionCheck()
         and secondary.shown == true
         and secondary.buttonCount == 12
         and secondary.registeredCount == 12
+        and secondary.activationFeedbackReadyCount == 12
         and secondary.firstActionSlot == 61
         and secondary.lastActionSlot == 72
         and secondaryDeferredOK
         and utility.shown == true
         and utility.buttonCount == 12
         and utility.registeredCount == 12
+        and utility.activationFeedbackReadyCount == 12
         and utility.firstActionSlot == 49
         and utility.lastActionSlot == 60
         and utilityDeferredOK
@@ -523,7 +526,7 @@ local function runActionCheck()
 
     if passed then
         emit(string.format(
-            "Logres actioncheck: PASS (primary=12 page=%s securePage=%s driver=12 slots=%s-%s keys=%s/%s secondary=12 slots=61-72 alpha=%.2f keys=%s/%s utility=12 slots=49-60 alpha=%.2f keys=%s/%s policy=%s primaryAlpha=%.2f specialPaging=%s stockBarsSuppressed=false)",
+            "Logres actioncheck: PASS (primary=12 feedback=12 page=%s securePage=%s driver=12 slots=%s-%s keys=%s/%s secondary=12 feedback=12 slots=61-72 alpha=%.2f keys=%s/%s utility=12 feedback=12 slots=49-60 alpha=%.2f keys=%s/%s policy=%s primaryAlpha=%.2f specialPaging=%s stockBarsSuppressed=false)",
             tostring(primaryDebug.currentPage),
             tostring(primaryDebug.securePage),
             tostring(primaryDebug.firstActionSlot),
@@ -544,12 +547,13 @@ local function runActionCheck()
     end
 
     emit(string.format(
-        "Logres actioncheck: FAIL (primary init=%s enabled=%s shown=%s buttons=%s registered=%s page=%s securePage=%s driverReady=%s drivers=%s slots=%s-%s secondary init=%s enabled=%s shown=%s registered=%s utility shown=%s registered=%s context init=%s enabled=%s policy=%s alphas=%.2f/%.2f/%.2f alphaZero=%s stockSuppressed=%s/%s)",
+        "Logres actioncheck: FAIL (primary init=%s enabled=%s shown=%s buttons=%s registered=%s feedback=%s page=%s securePage=%s driverReady=%s drivers=%s slots=%s-%s secondary init=%s enabled=%s shown=%s registered=%s feedback=%s utility shown=%s registered=%s feedback=%s context init=%s enabled=%s policy=%s alphas=%.2f/%.2f/%.2f alphaZero=%s stockSuppressed=%s/%s)",
         tostring(primaryStatus.initialized),
         tostring(primaryStatus.enabled),
         tostring(primaryDebug.clusterShown),
         tostring(primaryDebug.buttonCount),
         tostring(primaryDebug.registeredCount),
+        tostring(primaryDebug.activationFeedbackReadyCount),
         tostring(primaryDebug.currentPage),
         tostring(primaryDebug.securePage),
         tostring(primaryDebug.securePagingReady),
@@ -560,8 +564,10 @@ local function runActionCheck()
         tostring(sideStatus.enabled),
         tostring(secondary.shown),
         tostring(secondary.registeredCount),
+        tostring(secondary.activationFeedbackReadyCount),
         tostring(utility.shown),
         tostring(utility.registeredCount),
+        tostring(utility.activationFeedbackReadyCount),
         tostring(contextStatus.initialized),
         tostring(contextStatus.enabled),
         tostring(contextDebug.policyName),

@@ -101,6 +101,53 @@ function ActionButton.Create(
     checked:SetColorTexture(0.84, 0.68, 0.30, 0.22)
     button:SetCheckedTexture(checked)
 
+    -- Our hand-built secure buttons do not inherit Blizzard's full
+    -- ActionButtonTemplate, so explicitly provide the missing pressed state.
+    button:SetPushedTexture(
+        "Interface\\Buttons\\UI-Quickslot-Depress"
+    )
+    local pushedTexture = button:GetPushedTexture()
+    pushedTexture:SetAllPoints(button)
+
+    -- Keyboard override clicks may not present a useful held-down state.
+    -- Provide a short, presentation-only activation pulse on every secure
+    -- click path so both mouse and keyboard use have immediate feedback.
+    local activationFlash =
+        button:CreateTexture(nil, "OVERLAY")
+    activationFlash:SetPoint("TOPLEFT", icon, "TOPLEFT", 0, 0)
+    activationFlash:SetPoint(
+        "BOTTOMRIGHT",
+        icon,
+        "BOTTOMRIGHT",
+        0,
+        0
+    )
+    activationFlash:SetColorTexture(1.00, 0.90, 0.66, 1.00)
+    activationFlash:SetBlendMode("ADD")
+    activationFlash:SetAlpha(0)
+
+    local activationAnimation =
+        activationFlash:CreateAnimationGroup()
+
+    local activationFade =
+        activationAnimation:CreateAnimation("Alpha")
+    activationFade:SetFromAlpha(0.72)
+    activationFade:SetToAlpha(0)
+    activationFade:SetDuration(0.18)
+    activationFade:SetSmoothing("OUT")
+
+    activationAnimation:SetScript("OnFinished", function()
+        activationFlash:SetAlpha(0)
+    end)
+
+    button:SetScript("PostClick", function(current)
+        local animation = current.activationAnimation
+
+        animation:Stop()
+        current.activationFlash:SetAlpha(0.72)
+        animation:Play()
+    end)
+
     local hotkeyText = button:CreateFontString(
         nil,
         "OVERLAY",
@@ -126,8 +173,30 @@ function ActionButton.Create(
     button.cooldown = cooldown
     button.hotkeyText = hotkeyText
     button.countText = countText
+    button.activationFlash = activationFlash
+    button.activationAnimation = activationAnimation
+    button.activationFeedbackReady = true
 
     return button
+end
+
+function ActionButton.CountFeedbackReady(buttons)
+    local count = 0
+
+    for index = 1, #buttons do
+        local button = buttons[index]
+
+        if (
+            button.activationFeedbackReady == true
+            and button.activationFlash ~= nil
+            and button.activationAnimation ~= nil
+            and button:GetPushedTexture() ~= nil
+        ) then
+            count = count + 1
+        end
+    end
+
+    return count
 end
 
 function ActionButton.RegisterPresentation(button, actionSlot)

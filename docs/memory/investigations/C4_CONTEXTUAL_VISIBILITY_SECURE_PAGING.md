@@ -168,3 +168,28 @@ C.4 remains open until:
 - context weighting is runtime-proven;
 - normal secure paging execution/presentation is runtime-proven;
 - unsupported special pages retain explicit safe fallback.
+## P0039 runtime result / P0040 activation-feedback gate
+
+P0039 context runtime passed:
+- world/default weighting;
+- combat weighting;
+- PvP modifier.
+
+Utility remains intentionally more subdued and is accepted as first-pass
+tuning.
+
+The user does not use normal primary page switching, so that compatibility
+path is not a current workflow exit gate.
+
+A separate missing action-interface capability was then identified:
+
+- range feedback works;
+- GCD/cooldown works;
+- secure execution works;
+- **using the action has no local per-button response**.
+
+P0040 adds D-022 activation feedback:
+- pressed state;
+- short PostClick activation pulse.
+
+C.4 remains active until P0040 runtime proof.

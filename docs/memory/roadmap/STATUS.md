@@ -7,10 +7,10 @@ As of 2026-10-01.
 **Phase C — Action Interface**
 
 Active work item:
-**C.4 Contextual Visibility / Secure Paging**
+**C.4 contextual action interface completion**
 
 State:
-**P0039 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**P0039 CONTEXT PASS; P0040 ACTIVATION FEEDBACK PREPARED**
 
 ## Phase status
 
@@ -33,20 +33,16 @@ State:
 | C.1 Secure action capability/source review | COMPLETE |
 | C.2 Primary action cluster | COMPLETE |
 | C.3 Secondary / utility clusters | COMPLETE |
-| C.4 Contextual visibility / secure paging | ACTIVE — P0039 prepared |
+| C.4 Contextual visibility / secure paging | ACTIVE — activation feedback proof |
 | C.5 Stock action-bar replacement | QUEUED |
 | C.6 Action interface integration validation | QUEUED |
 
-## P0039
+## P0040 gate
 
-Context:
-- Primary always full;
-- Secondary/Utility non-zero state-driven alpha;
-- world/PvP/instance/combat policy.
+Before C.5:
+- pressed action state;
+- local activation pulse;
+- mouse activation proof;
+- routed-key activation proof.
 
-Paging:
-- secure normal pages 1–6;
-- presentation follows driven page;
-- special paging remains capability-gated.
-
-Stock action bars remain visible.
+Stock Blizzard action bars remain visible.

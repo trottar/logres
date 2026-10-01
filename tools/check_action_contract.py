@@ -47,6 +47,13 @@ if BUTTON_PATH.is_file():
         "C_ActionBar.GetActionDisplayCount(",
         "C_ActionBar.IsUsableAction(",
         "C_ActionBar.IsActionInRange(",
+        'button:SetPushedTexture(',
+        '"Interface\\\\Buttons\\\\UI-Quickslot-Depress"',
+        'button:SetScript("PostClick", function(current)',
+        'activationFlash:CreateAnimationGroup()',
+        'activationFade:SetDuration(0.18)',
+        "function ActionButton.CountFeedbackReady(buttons)",
+        "activationFeedbackReady = true",
     ]
 
     for fragment in required:
@@ -111,6 +118,7 @@ if PRIMARY_PATH.is_file():
         "InCombatLockdown()",
         "pendingBindingRefresh",
         "stockBarsSuppressed = false",
+        "activationFeedbackReadyCount",
     ]
 
     for fragment in required:
@@ -151,6 +159,7 @@ if SIDE_PATH.is_file():
         'event == "PLAYER_REGEN_ENABLED"',
         "InCombatLockdown()",
         "stockBarsSuppressed = false",
+        "activationFeedbackReadyCount",
     ]
 
     for fragment in required:
@@ -181,6 +190,9 @@ if COMMANDS_PATH.is_file():
         '"Utility Keys OFF"',
         'if command == "secondarybindings" then',
         'if command == "utilitybindings" then',
+        "primaryDebug.activationFeedbackReadyCount",
+        "secondary.activationFeedbackReadyCount",
+        "utility.activationFeedbackReadyCount",
         "runActionCheck()",
     ]
 
