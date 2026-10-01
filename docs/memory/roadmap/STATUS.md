@@ -4,13 +4,10 @@ As of 2026-10-01.
 
 ## Active
 
-**Phase B — Core HUD**
+**Phase C — Action Interface**
 
 Active work item:
-**B.6 HUD Integration Validation**
-
-State:
-**DEVELOPER PANEL PREPARED; INTEGRATED RUNTIME VALIDATION NEXT**
+**C.1 Secure Action Capability / Source Review**
 
 ## Phase status
 
@@ -18,34 +15,35 @@ State:
 | --- | --- |
 | 0 — Foundation | COMPLETE |
 | A — Core State Engine | COMPLETE |
-| B — Core HUD | ACTIVE — B.6 |
-| C — Action Interface | BLOCKED on Phase B |
-| D — Immersion Controller | BLOCKED on core HUD/state consumers |
+| B — Core HUD | COMPLETE |
+| C — Action Interface | ACTIVE — C.1 |
+| D — Immersion Controller | QUEUED after Phase C foundation |
 | E — Compass and Navigation | QUEUED |
 | F — Quest Experience | QUEUED |
 | G — Cinematic Camera | QUEUED; requires current DynamicCam profile |
 | H — Integration and Polish | BLOCKED on prior phases |
 
-## Phase B sequence
+## Phase B final result
 
-| Item | State |
-| --- | --- |
-| B.1 HUD root + player health vignette | COMPLETE |
-| B.2 Resource presentation | COMPLETE |
-| B.3 Target presentation | COMPLETE |
-| B.4 Cast confirmation | COMPLETE — target true-path environmentally deferred |
-| B.5 Allies and pets | COMPLETE |
-| B.6 HUD integration validation | ACTIVE — P0029 developer panel prepared |
+Runtime-proven:
+- health vignette;
+- resource percentage;
+- target presentation;
+- player cast/channel/interruption cues;
+- pet/party presentation;
+- integrated immersion behavior;
+- in-game developer/control panel.
 
-## B.6 validation surface
+Environmental deferral:
+- current-target cast true-path.
 
-P0029 adds a movable in-game Logres Control / Diagnostics panel.
+## Stock Blizzard UI
 
-It reuses the existing command implementations and provides:
-- Run All;
-- individual recurring diagnostics;
-- immersion ON/OFF;
-- HUD preview controls;
-- scrolling results.
+Stock UI remains visible at Phase B close by design.
 
-Integrated runtime validation follows.
+D-017 assigns suppression/restoration:
+- action bars: Phase C replacement + Phase D orchestration;
+- player/target/party frames: Phase D;
+- chat/tabs: Phase D;
+- minimap/navigation: Phase E;
+- quest/XP surfaces: Phase F.

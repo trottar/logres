@@ -8,109 +8,78 @@ project: logres
 
 ## Active Objective
 
-**Phase B — Core HUD.**
+**Phase C — Action Interface.**
 
 ## Current Work Item
 
-**B.6 — HUD Integration Validation.**
+**C.1 — Secure Action Capability / Source Review.**
 
-P0029 prepares an in-game developer/control panel so B.6 no longer depends on repeatedly copy/pasting slash commands.
+Phase B is complete.
 
-The panel reuses the existing command implementations and adds no parallel diagnostic logic.
+P0029's developer/control panel and the complete Phase B HUD passed integrated runtime validation.
 
 ## Verified State
 
-- Phase A complete.
-- B.1 health vignette complete.
-- B.2 primary resource percentage complete.
-- B.3 target presentation complete.
-- B.4 cast confirmation complete with current-target caster true-path environmental deferral.
-- B.5 allies and pets complete.
-- P0028 pushed at `22e1ff1`.
-- runtime baseline before P0029: `0.0.12-dev`.
-- P0029 version: `0.0.13-dev`.
-- developer-panel static contract passes.
-- B.6 integrated runtime validation still pending.
+- Phase 0 Foundation complete.
+- Phase A Core State Engine complete.
+- Phase B Core HUD complete.
+- P0029 pushed at `90491fe`.
+- current runtime version: `0.0.13-dev`.
+- B.6 integrated HUD validation: PASS.
+- developer/control panel: PASS and preferred recurring validation surface.
+- no reported Lua/secret errors in B.6.
+- no stale-state regression reported.
+- no layout issue severe enough to block continuation.
+- current-target cast true-path remains environmentally deferred.
+- stock Blizzard UI remains visible intentionally at Phase B close.
+- D-017 now explicitly defines later suppression/restoration ownership.
 
 ## Next Action
 
-Install/review/commit/push P0029.
+Perform C.1 current-source review before writing secure action-button runtime code.
 
-Because runtime code changes, deploy explicitly:
+Resolve:
+1. secure action-button template/API available on Forever;
+2. action-slot attribute model;
+3. combat-lockdown restrictions;
+4. secure visibility/state-driver options;
+5. cooldown/icon/count/range update sources;
+6. keybind handling;
+7. drag/drop/edit constraints;
+8. protected layout mutation rules;
+9. safe stock action-bar suppression/restoration;
+10. operations that must defer until combat ends.
 
-```bash
-cd ~/Projects/logres
+Use narrow source evidence before implementation.
 
-WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
-ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
-
-./tools/deploy_logres.sh "$ADDONS"
-```
-
-Then `/reload`.
-
-The Logres Control / Diagnostics panel should auto-open.
-
-Use **Run All** instead of manually issuing each diagnostic command.
-
-Verify:
-1. panel displays `0.0.13-dev`;
-2. panel is movable and closeable;
-3. Run All shows PASS results for the recurring checks;
-4. individual check buttons work;
-5. Immersion OFF hides the Logres HUD but leaves the panel visible;
-6. Immersion ON restores the HUD.
-
-Then rerun the B.6 integrated HUD scenario through the panel:
-- healthy idle;
-- target acquisition/damage;
-- player resource change;
-- player cast/channel/interruption;
-- safe player damage/vignette;
-- pet/party updates if present;
-- target change/clear cleanup;
-- integrated immersion OFF/ON;
-- combat exit.
-
-Classify any finding as:
-- functional bug;
-- stale-state regression;
-- Lua/secret error;
-- layout/readability debt.
-
-Do not require a target caster solely for B.6.
+Phase C diagnostics should register in the existing developer/control panel.
 
 ## Success Criteria
 
-B.6 succeeds when:
-- developer panel is a functional reusable validation surface;
-- Run All and individual diagnostics work;
-- panel survives immersion OFF;
-- Phase B HUD components coexist without functional regressions;
-- target/cast lifecycle cleanup leaves no stale cues;
-- integrated immersion hide/restore is correct;
-- no Lua/secret-value errors occur;
-- layout is usable enough to proceed;
-- visual polish debt remains explicitly separate.
+C.1 succeeds when:
+- secure action APIs/templates are source-verified;
+- protected operations are clearly separated from ordinary presentation updates;
+- first primary-cluster architecture is documented;
+- combat-time mutation rules are explicit;
+- stock action-bar suppression is gated behind proven Logres secure controls;
+- no action-interface implementation depends on unverified assumptions.
 
 ## Do Not Reopen Without New Evidence
 
-- **B.1:** complete.
-- **B.2:** complete.
-- **B.3:** complete.
-- **B.4:** complete with target-caster true-path environmental deferral.
-- **B.5:** complete.
-- **Developer panel:** shared command execution; no duplicate check logic.
-- **Target caster:** retry naturally; do not force travel solely for proof.
-- **Deployment:** full deploy block required for P0029 runtime validation.
+- **Phase A:** complete.
+- **Phase B:** complete.
+- **Target caster true-path:** deferred until natural opportunity.
+- **Developer panel:** keep shared command execution; extend rather than duplicate.
+- **Stock UI suppression:** D-017 capability-gated ownership is canonical.
+- **Action bars:** do not hide until Phase C secure replacement is proven.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/decisions/D-016_DEVELOPER_CONTROL_PANEL.md`
-- `docs/memory/architecture/DEV_PANEL.md`
-- `docs/memory/investigations/B6_HUD_INTEGRATION_VALIDATION.md`
-- `docs/memory/evidence/B5_ALLIES_PETS_RUNTIME_PROOF_2026-10-01.md`
-- `Logres/Dev/Panel.lua`
-- `Logres/Core/Commands.lua`
-- `tools/check_dev_panel_contract.py`
+- `docs/memory/evidence/B6_HUD_INTEGRATION_RUNTIME_PROOF_2026-10-01.md`
+- `docs/memory/decisions/D-017_BLIZZARD_UI_SUPPRESSION_AND_RESTORATION.md`
+- `docs/memory/architecture/BLIZZARD_UI_SUPPRESSION.md`
+- `docs/memory/architecture/ACTION_CLUSTERS.md`
+- `docs/memory/investigations/C1_SECURE_ACTION_INTERFACE.md`
+- `docs/memory/roadmap/PHASE_C_ACTION_INTERFACE.md`
+- `docs/ROADMAP.md`

@@ -1,14 +1,12 @@
 # Active Investigations
 
-## B.6 — HUD Integration Validation
+## C.1 — Secure Action Interface
 
 Status:
-**DEVELOPER PANEL PREPARED; INTEGRATED RUNTIME VALIDATION NEXT**
+**ACTIVE**
 
 Canonical record:
-`B6_HUD_INTEGRATION_VALIDATION.md`
+`C1_SECURE_ACTION_INTERFACE.md`
 
-P0029 adds the in-game validation/control panel.
-
-Next:
-runtime-prove the panel, then use it for the B.6 integrated HUD pass.
+Goal:
+resolve Forever secure action-button, combat-lockdown, visibility, binding, and stock-bar suppression constraints before implementing the first Logres action cluster.

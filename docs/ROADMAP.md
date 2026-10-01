@@ -36,7 +36,7 @@ Canonical phase record:
 
 ## Phase B — Core HUD
 
-**Status: ACTIVE — B.1 HUD root + player health vignette.**
+**Status: COMPLETE.**
 
 Implement the identity-defining awareness layer:
 - no conventional player health bar;
@@ -49,7 +49,19 @@ Implement the identity-defining awareness layer:
 Canonical phase record:
 `memory/roadmap/PHASE_B_CORE_HUD.md`
 
+Phase B runtime-proven:
+- health vignette;
+- resource percentage;
+- sparse target;
+- cast/channel cues;
+- pet/party rows;
+- in-game diagnostic/control panel.
+
+Stock Blizzard UI remains visible at this checkpoint by design. Suppression/restoration is capability-gated and assigned explicitly by D-017.
+
 ## Phase C — Action Interface
+
+**Status: ACTIVE — C.1 Secure action capability/source review.**
 
 Implement rectangular/square action clusters:
 - primary cluster always legible;
@@ -58,6 +70,11 @@ Implement rectangular/square action clusters:
 - combat and PvP modifiers;
 - secure-action/combat-lockdown compliance.
 
+Action-bar replacement is capability-gated: prove Logres secure controls first, then suppress/restore Blizzard action bars.
+
+Canonical phase record:
+`memory/roadmap/PHASE_C_ACTION_INTERFACE.md`
+
 ## Phase D — Immersion Controller
 
 Implement full immersion orchestration:
@@ -65,7 +82,9 @@ Implement full immersion orchestration:
 - contextual HUD fades;
 - PvP-aware immersion;
 - automatic instance behavior;
-- module-level restoration when immersion is suspended.
+- module-level restoration when immersion is suspended;
+- suppression/restoration orchestration for Blizzard player/target/party frames;
+- stock action-bar suppression/restoration once Phase C replacement is proven.
 
 ## Phase E — Compass and Navigation
 
@@ -73,7 +92,8 @@ Implement a Warcraft-aesthetic horizontal compass:
 - world/exploration use;
 - selected quest/user waypoint markers where APIs permit;
 - automatic suspension in instances;
-- graceful degradation whenever position/bearing data is unavailable.
+- graceful degradation whenever position/bearing data is unavailable;
+- minimap suppression only after Logres navigation is sufficient for the active context.
 
 ## Phase F — Quest Experience
 
@@ -81,7 +101,8 @@ Implement:
 - immersive NPC quest presentation;
 - restrained objective updates;
 - aesthetic quest helper;
-- contextual XP presentation.
+- contextual XP presentation;
+- stock quest/XP surface suppression only after equivalent Logres presentation is proven.
 
 ## Phase G — Cinematic Camera
 

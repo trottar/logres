@@ -1,5 +1,7 @@
 # Phase B — Core HUD
 
+**Status: COMPLETE.**
+
 Status: ACTIVE
 Opened: 2026-09-30
 
@@ -190,7 +192,7 @@ No portrait, health bar, role/class/level metadata, raid grid, or secure click-c
 
 ## B.6 — HUD integration validation
 
-**Status: ACTIVE.**
+**Status: COMPLETE.**
 
 Validate:
 - world;
@@ -227,3 +229,24 @@ Phase B completes when:
 - HUD uses Phase A contracts rather than duplicate state detection;
 - runtime limitations/failures are durable;
 - no action-cluster implementation has leaked into Phase B.
+## Phase B final result
+
+Phase B is complete.
+
+Runtime-proven default HUD:
+- player health vignette;
+- primary-resource percentage;
+- sparse target name + health percentage;
+- player cast/channel/interruption cues;
+- implemented target cast/channel cue;
+- pet + party compact name/health rows;
+- reusable in-game developer/control panel.
+
+Environmental deferral retained:
+- current-target cast true-path until a natural caster is available.
+
+Known visual debt remains non-blocking and may be refined later.
+
+Blizzard stock UI remains visible intentionally at Phase B close.
+
+D-017 now explicitly assigns suppression/replacement ownership to later phases.

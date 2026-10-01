@@ -2,23 +2,23 @@
 
 Authoritative state: `../CURRENT.md`. Start there.
 
+Phase B is complete.
+
+Integrated B.6 runtime validation passed on P0029.
+
 Current phase:
-**Phase B — Core HUD**
+**Phase C — Action Interface**
 
 Current work:
-**B.6 — HUD Integration Validation**
+**C.1 — Secure Action Capability / Source Review**
 
-P0029 is prepared.
+Do not write secure action runtime code until current Forever source constraints are resolved.
 
-It adds a rudimentary in-game Logres Control / Diagnostics panel so recurring runtime validation no longer requires copying many slash commands.
+Important roadmap clarification:
+stock Blizzard UI suppression is now explicit and capability-gated by D-017.
 
-Version:
-`0.0.13-dev`
+The developer/control panel remains the preferred recurring runtime validation surface.
 
-The panel auto-opens after reload and remains visible when immersion is turned off.
-
-Use **Run All** for the recurring diagnostics, then perform the integrated HUD scenario.
-
-P0029 changes runtime code, so the full deploy block is mandatory before testing.
+P0030 is documentation/evidence only; no WoW redeploy required.
 
 User performs all commits/pushes.
