@@ -109,7 +109,7 @@ Environmental deferral:
 
 ## A.3 — User-controlled state
 
-**Status: ACTIVE.**
+**Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
 
 Introduce durable configuration state separately from observed game state.
 

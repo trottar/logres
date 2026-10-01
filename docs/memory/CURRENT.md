@@ -8,94 +8,116 @@ project: logres
 
 ## Active Objective
 
-**Phase A — Core State Engine.** Establish the stable state/lifecycle contract, orthogonal observed context, and user-controlled state required by later Logres modules.
+**Phase A — Core State Engine.** Establish the stable observed-state, user-preference, and lifecycle contracts required by later Logres modules.
 
 ## Current Work Item
 
 **A.3 — User-Controlled State.**
 
-A.2 is complete with one explicit environmental deferral.
+P0012 prepares the A.3 preference contract.
 
-The next work separates durable user preference from observed game facts.
+Observed game state remains separate.
 
-Initial A.3 target:
+User preference API:
 
 ```text
-immersionEnabled: boolean
+GetPreferences
+GetPreference
+SetPreference
+SubscribePreferences
 ```
 
-This preference should be persisted in `LogresDB` and exposed to consumers without pretending it is an observed Blizzard state.
+Initial persisted preference:
 
-The design must answer:
-- where user-controlled state lives;
-- how consumers read it;
-- how changes publish;
-- whether it belongs in the same snapshot as observed state or in a clearly separated configuration/effective-state layer;
-- how defaults/migrations work.
+```text
+immersionEnabled = true
+```
 
-No HUD/settings panel is required for A.3. A slash-command development control is sufficient for proof.
+Database schema advances from 1 to 2 with an additive migration.
 
 ## Verified State
 
-- Phase 0 — Foundation complete.
-- A.1 state consumer contract complete and runtime proven.
-- P0010 A.2 implementation pushed at `a1f119a`.
-- A.2 runtime proof passed for tested sensors.
-- resting true in Ironforge and false after leaving the resting area is runtime verified.
-- real taxi true/false behavior is runtime verified.
-- interaction open/close behavior is runtime verified.
-- taxi remains separate from ordinary mounting under the intended state semantics.
-- ordinary `mounted=true` is **not runtime verified** because the current beta/character environment cannot provide a practical mount test.
-- that mount true-path is deferred by environment, not failed.
-- A.2 is complete.
+- Phase 0 complete.
+- A.1 complete and runtime proven.
+- A.2 complete with ordinary mounted=true deferred by environment.
+- P0011 A.2 closure pushed at `7ff61b0`.
+- P0012 preference implementation/static validation is prepared but not yet runtime proven.
+- observed state does not include `immersionEnabled`.
+- A.3 design is captured by D-010.
 
 ## Next Action
 
-Design A.3 before changing runtime code.
+Install/review/commit/push P0012 and redeploy.
 
-Required questions:
-1. Should persisted user preference be exposed through a separate configuration API or included as a clearly named user-controlled field in an effective state snapshot?
-2. What is the default for `immersionEnabled`? Current design intent is enabled by default unless a later decision overrides it.
-3. What callback semantics apply when the user changes a preference?
-4. How should schema/default migration remain safe for existing `LogresDB`?
-5. What development command should prove persistence across `/reload` without needing a settings UI?
+Then run:
 
-Prefer the smallest contract that later Immersion/HUD modules can consume without conflating preference with observed game state.
+```text
+/reload
+/logres statecheck
+/logres preferencecheck
+/logres immersion
+```
+
+The first `/logres immersion` should show:
+- schema 2;
+- `immersionEnabled=true` unless the existing database already contains an explicit value.
+
+Persistence proof:
+
+```text
+/logres immersion off
+/reload
+/logres immersion
+```
+
+Confirm false.
+
+Then restore the intended default/current choice:
+
+```text
+/logres immersion on
+/reload
+/logres immersion
+```
+
+Confirm true.
+
+No travel is required.
 
 ## Success Criteria
 
 A.3 succeeds when:
-- user-controlled state is explicitly separated from observed facts;
-- `immersionEnabled` has a durable default and persistence path;
-- consumers have a supported read API;
-- preference changes publish deterministically;
-- `/reload` preserves the chosen value;
-- existing state contract is not weakened;
-- no settings UI is required;
+- schema 1 database migrates safely to schema 2;
+- default `immersionEnabled=true` is established when absent;
+- observed State remains separate;
+- preference snapshots are isolated;
+- no-op writes do not publish or advance revision;
+- actual preference changes publish deterministically;
+- off persists across reload;
+- on persists across reload;
 - static checks pass;
-- travel-free runtime validation passes;
-- failures/limitations are recorded.
+- no Lua errors occur in tested scope;
+- runtime evidence is recorded.
 
 ## Do Not Reopen Without New Evidence
 
 - **A.1:** complete.
-- **A.2:** complete with mounted=true environmental deferral.
-- **State authority:** observed mutable state private to `Core/State.lua`.
-- **State access:** `GetState()` / `SubscribeState()`.
-- **Observed vs user-controlled:** do not conflate them.
-- **mounted:** excludes taxi; mounted=true runtime proof deferred.
-- **resting:** literal Blizzard state.
-- **taxi:** independent orthogonal state.
-- **interaction:** event-latched Blizzard interaction type.
-- **generic traveling:** rejected.
+- **A.2:** complete with mount true-path environmental deferral.
+- **Observed state:** `GetState()` / `SubscribeState()`.
+- **User preferences:** separate contract; see D-010.
+- **immersionEnabled:** boolean, default true.
+- **Preference revision:** session-local; value persists.
+- **Database schema:** A.3 target schema 2.
+- **Generic traveling:** rejected.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/A2_CONTEXT_SENSOR_RUNTIME_PROOF_2026-09-30.md`
-- `docs/memory/investigations/A2_CONTEXT_SENSORS.md`
-- `docs/memory/roadmap/PHASE_A_CORE_STATE_ENGINE.md`
+- `docs/memory/decisions/D-010_USER_PREFERENCE_CONTRACT.md`
+- `docs/memory/architecture/PREFERENCES.md`
 - `docs/memory/decisions/D-009_STATE_CONSUMER_CONTRACT.md`
-- `docs/memory/architecture/STATE_ENGINE.md`
+- `docs/memory/roadmap/PHASE_A_CORE_STATE_ENGINE.md`
 - `Logres/Core/Database.lua`
-- `Logres/Core/State.lua`
+- `Logres/Core/Preferences.lua`
+- `Logres/Core/Commands.lua`
+- `tools/check_preference_contract.py`

@@ -1,9 +1,12 @@
 local _, Logres = ...
 
+local CURRENT_SCHEMA = 2
+
 local DEFAULTS = {
-    schema = 1,
+    schema = CURRENT_SCHEMA,
     settings = {
         debug = true,
+        immersionEnabled = true,
     },
     meta = {
         loadCount = 0,
@@ -23,11 +26,48 @@ local function applyDefaults(target, defaults)
     end
 end
 
+local function migrateDatabase(db)
+    local schema = tonumber(db.schema)
+
+    if schema == nil then
+        -- The only pre-schema data Logres can have at this stage came from the
+        -- Phase 0/early Phase A database shape, which is treated as schema 1.
+        schema = next(db) == nil and CURRENT_SCHEMA or 1
+    end
+
+    if schema < 1 then
+        error("LogresDB schema is invalid: " .. tostring(schema))
+    end
+
+    if schema > CURRENT_SCHEMA then
+        error(string.format(
+            "LogresDB schema %s is newer than supported schema %s",
+            tostring(schema),
+            tostring(CURRENT_SCHEMA)
+        ))
+    end
+
+    if schema < 2 then
+        if type(db.settings) ~= "table" then
+            db.settings = {}
+        end
+
+        if db.settings.immersionEnabled == nil then
+            db.settings.immersionEnabled = true
+        end
+
+        schema = 2
+    end
+
+    db.schema = schema
+end
+
 function Logres:InitializeDatabase()
     if type(LogresDB) ~= "table" then
         LogresDB = {}
     end
 
+    migrateDatabase(LogresDB)
     applyDefaults(LogresDB, DEFAULTS)
 
     local version, build, _, interfaceVersion = GetBuildInfo()

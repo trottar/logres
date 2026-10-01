@@ -2,26 +2,27 @@
 
 Authoritative state: `../CURRENT.md`. Start there.
 
-Current phase:
-**Phase A — Core State Engine**
-
-A.2 is complete.
-
-Runtime verified:
-- resting true/false;
-- taxi transition;
-- interaction transition.
-
-Mounted=true remains deferred because the current beta/character environment cannot produce a mount test. This is not a failure.
-
 Current work:
 **A.3 — User-Controlled State**
 
-First target:
-`immersionEnabled`
+P0012 is prepared.
 
-The next patch should define a clean persisted-preference contract without conflating user choice with observed game state.
+New persisted preference:
+`immersionEnabled = true`
 
-No settings UI is required yet.
+Preferences are deliberately separate from observed game state.
+
+New development commands:
+- `/logres preferencecheck`
+- `/logres immersion [on|off|toggle]`
+
+Runtime proof:
+1. preferencecheck;
+2. set off;
+3. reload and confirm off;
+4. set on;
+5. reload and confirm on.
+
+No travel required.
 
 User performs all commits/pushes.

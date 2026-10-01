@@ -8,6 +8,8 @@ As of 2026-09-30.
 
 Active work item: **A.3 User-Controlled State**
 
+State: **IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+
 ## Phase status
 
 | Phase | State |
@@ -28,29 +30,19 @@ Active work item: **A.3 User-Controlled State**
 | --- | --- |
 | A.1 State contract hardening | COMPLETE |
 | A.2 Additional context sensors | COMPLETE WITH ENVIRONMENTAL DEFERRAL |
-| A.3 User-controlled state | ACTIVE |
+| A.3 User-controlled state | ACTIVE — implementation prepared |
 | A.4 Module lifecycle contract | QUEUED |
 | A.5 Transition validation | QUEUED |
 
-## A.2 result
+## A.3 implementation
 
-Runtime verified:
-- resting true/false;
-- taxi true/false;
-- interaction open/close;
-- taxi separated from ordinary mount state.
+P0012 adds:
+- separate preference API;
+- `immersionEnabled=true` default;
+- database schema 2;
+- additive schema 1 -> 2 migration;
+- preference transition subscriptions;
+- `/logres preferencecheck`;
+- `/logres immersion ...`.
 
-Deferred by environment:
-- ordinary mounted=true path.
-
-The current beta/character test environment cannot practically produce a mount test, so A.2 is not held open for that path.
-
-## A.3 target
-
-First user-controlled value:
-
-```text
-immersionEnabled
-```
-
-Persist it separately from observed game facts and prove change + reload behavior without requiring a settings UI.
+Runtime validation is entirely travel-free.

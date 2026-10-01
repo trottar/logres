@@ -16,6 +16,7 @@ Static checks:
 python3 tools/check_memory_health.py
 python3 tools/check_addon_structure.py
 python3 tools/check_state_contract.py
+python3 tools/check_preference_contract.py
 ```
 
 Deploy the development addon to a Forever AddOns directory:
@@ -31,6 +32,8 @@ Then in game:
 /logres status
 /logres statecheck
 /logres sensorcheck
+/logres preferencecheck
+/logres immersion
 ```
 
 The Phase 0.3 skeleton currently provides lifecycle, SavedVariables, and basic state observation only.

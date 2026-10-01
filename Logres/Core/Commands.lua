@@ -29,16 +29,25 @@ local function printStatus()
     ))
 end
 
+local function printPreferences()
+    local preferences = Logres:GetPreferences()
+
+    print(string.format(
+        "Logres preferences: schema=%s revision=%s immersionEnabled=%s",
+        tostring(Logres.db and Logres.db.schema or "?"),
+        tostring(preferences.revision),
+        boolText(preferences.immersionEnabled)
+    ))
+end
+
 local function runStateCheck()
     local before = Logres:GetState()
     local expectedContext = before.context
 
-    -- Consumer snapshots must be safe to mutate without touching authoritative state.
     before.context = "__consumer_mutation_test__"
     local afterMutation = Logres:GetState()
     local snapshotIsolation = afterMutation.context == expectedContext
 
-    -- A refresh with no observed state change must not advance revision or notify.
     local revisionBefore = afterMutation.revision
     local callbackCount = 0
 
@@ -112,11 +121,116 @@ local function runSensorCheck()
     ))
 end
 
+local function runPreferenceCheck()
+    local original = Logres:GetPreferences()
+    local originalValue = original.immersionEnabled
+
+    -- Consumer snapshots must be isolated.
+    original.immersionEnabled = not originalValue
+    local afterMutation = Logres:GetPreferences()
+    local snapshotIsolation = afterMutation.immersionEnabled == originalValue
+
+    -- No-op writes must not advance revision or publish.
+    local callbackCount = 0
+    local unsubscribe = Logres:SubscribePreferences(function()
+        callbackCount = callbackCount + 1
+    end)
+
+    local noopChanged = Logres:SetPreference(
+        "immersionEnabled",
+        originalValue,
+        "DEV_PREFERENCECHECK_NOOP"
+    )
+
+    local afterNoop = Logres:GetPreferences()
+    local noopStable =
+        noopChanged == false
+        and afterNoop.revision == afterMutation.revision
+        and callbackCount == 0
+
+    -- Two real changes should publish twice and restore the original persisted value.
+    local changedAway = Logres:SetPreference(
+        "immersionEnabled",
+        not originalValue,
+        "DEV_PREFERENCECHECK_CHANGE"
+    )
+    local changedBack = Logres:SetPreference(
+        "immersionEnabled",
+        originalValue,
+        "DEV_PREFERENCECHECK_RESTORE"
+    )
+
+    unsubscribe()
+
+    local final = Logres:GetPreferences()
+
+    local changeSemantics =
+        changedAway == true
+        and changedBack == true
+        and callbackCount == 2
+        and final.immersionEnabled == originalValue
+        and final.revision == afterNoop.revision + 2
+
+    if snapshotIsolation and noopStable and changeSemantics then
+        print(string.format(
+            "Logres preferencecheck: PASS (snapshot isolation=true, callbacks=2, revision=%s, immersionEnabled=%s)",
+            tostring(final.revision),
+            boolText(final.immersionEnabled)
+        ))
+        return
+    end
+
+    print(string.format(
+        "Logres preferencecheck: FAIL (snapshotIsolation=%s noopStable=%s changeSemantics=%s callbacks=%s revision=%s immersionEnabled=%s)",
+        tostring(snapshotIsolation),
+        tostring(noopStable),
+        tostring(changeSemantics),
+        tostring(callbackCount),
+        tostring(final.revision),
+        boolText(final.immersionEnabled)
+    ))
+end
+
+local function handleImmersion(argument)
+    if argument == "" or argument == "status" then
+        printPreferences()
+        return
+    end
+
+    local current = Logres:GetPreference("immersionEnabled")
+    local newValue
+
+    if argument == "on" then
+        newValue = true
+    elseif argument == "off" then
+        newValue = false
+    elseif argument == "toggle" then
+        newValue = not current
+    else
+        print("Usage: /logres immersion [on|off|toggle]")
+        return
+    end
+
+    local changed = Logres:SetPreference(
+        "immersionEnabled",
+        newValue,
+        "SLASH_IMMERSION"
+    )
+
+    print(string.format(
+        "Logres: immersionEnabled=%s%s",
+        boolText(newValue),
+        changed and "" or " (unchanged)"
+    ))
+end
+
 local function printHelp()
     print("Logres development commands:")
     print("  /logres status")
     print("  /logres statecheck")
     print("  /logres sensorcheck")
+    print("  /logres preferencecheck")
+    print("  /logres immersion [on|off|toggle]")
     print("  /logres debug on")
     print("  /logres debug off")
 end
@@ -137,6 +251,16 @@ SlashCmdList.LOGRES = function(message)
 
     if command == "sensorcheck" then
         runSensorCheck()
+        return
+    end
+
+    if command == "preferencecheck" then
+        runPreferenceCheck()
+        return
+    end
+
+    if command == "immersion" then
+        handleImmersion(argument)
         return
     end
 
