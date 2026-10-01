@@ -43,3 +43,13 @@ The edit box remains Blizzard-owned; Logres only makes it ignore parent alpha
 while Quiet Mode is active so intentional chat can remain visible.
 
 Controller policy and chat presentation mechanics remain separate.
+
+## D.3 runtime result
+
+P0050 runtime passed for the user's normal world workflow.
+
+Passive chat/social presentation is quiet while intentional chat input remains
+available.
+
+Instance transition behavior remains an environmental deferral and should be
+retried only when naturally encountered.

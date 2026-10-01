@@ -74,6 +74,8 @@ D.2 closes.
 
 ## D.3 — Quiet Mode runtime suppression
 
+**Status: COMPLETE — INSTANCE TRANSITION PROOF DEFERRED BY ENVIRONMENT.**
+
 Implement runtime visual silence:
 - chat frames;
 - chat tabs;
@@ -117,7 +119,26 @@ Quiet Mode now:
 
 Runtime proof is next.
 
+### D.3 final runtime result
+
+P0050 runtime passed on `0.0.22-dev`.
+
+Verified:
+- passive chat/social presentation is quiet in the world;
+- intentional chat input remains available;
+- immersion restoration/reapplication works;
+- no reported runtime regression.
+
+Instance transition proof is deferred by environment because no nearby
+instance was naturally available.
+
+Do not require travel solely to manufacture this proof.
+
+D.3 closes.
+
 ## D.4 — Unit-frame interaction + selective suppression
+
+**Status: ACTIVE — SOURCE / DESIGN RESOLUTION NEXT.**
 
 Before suppression, complete the missing capability.
 
@@ -140,6 +161,14 @@ Add/prove secure party targeting/menu interaction and account for:
 - required group context.
 
 No blanket unit-frame hide.
+
+### D.4 source review
+
+Active investigation:
+`../investigations/D4_UNIT_FRAME_INTERACTION_SUPPRESSION_REVIEW.md`
+
+Resolve a capability ladder for Player/Target/Party rather than blanket
+frame hiding.
 
 ## D.5 — Context / PvP / instance orchestration
 

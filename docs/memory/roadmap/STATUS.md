@@ -7,10 +7,10 @@ As of 2026-10-01.
 **Phase D — Immersion Controller**
 
 Active work item:
-**D.3 Quiet Mode runtime suppression**
+**D.4 Unit-frame interaction + selective suppression review**
 
 State:
-**P0050 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**SOURCE / DESIGN RESOLUTION NEXT**
 
 ## Phase status
 
@@ -20,7 +20,7 @@ State:
 | A — Core State Engine | COMPLETE |
 | B — Core HUD | COMPLETE |
 | C — Action Interface | COMPLETE |
-| D — Immersion Controller | ACTIVE — D.3 |
+| D — Immersion Controller | ACTIVE — D.4 |
 | E — Compass and Navigation | QUEUED |
 | F — Quest Experience | QUEUED |
 | G — Cinematic Camera | QUEUED |
@@ -32,7 +32,7 @@ State:
 | --- | --- |
 | D.1 Orchestration contract/source review | COMPLETE |
 | D.2 Immersion Controller foundation | COMPLETE |
-| D.3 Quiet Mode runtime suppression | P0050 PREPARED |
-| D.4 Unit-frame interaction/selective suppression | QUEUED |
+| D.3 Quiet Mode runtime suppression | COMPLETE — instance proof deferred by environment |
+| D.4 Unit-frame interaction/selective suppression | ACTIVE — source/design review |
 | D.5 Context/PvP/instance orchestration | QUEUED |
 | D.6 Restoration/integration validation | QUEUED |

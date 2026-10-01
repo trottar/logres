@@ -12,9 +12,9 @@ project: logres
 
 ## Current Work Item
 
-**D.3 — Quiet Mode runtime suppression.**
+**D.4 — Unit-frame interaction + selective suppression source/design review.**
 
-P0050 implementation is prepared.
+D.3 is complete with instance-transition proof deferred by environment.
 
 ## Verified State
 
@@ -24,74 +24,56 @@ P0050 implementation is prepared.
 - Phase C complete.
 - D.1 complete.
 - D.2 complete.
-- P0049 pushed at `c06d9cd`.
-- runtime before P0050: `0.0.21-dev`.
-- P0050 target: `0.0.22-dev`.
-- D-025 remains canonical.
-- Quiet Mode follows Immersion ON + world policy.
-- direct ChatFrame Hide/Show remains forbidden.
-- P0050 uses runtime alpha/mouse suppression.
-- chat edit boxes use IgnoreParentAlpha while Quiet Mode is active.
-- saved ChatWindowShown is not intentionally mutated.
-- Player/Target/Party suppression remains capability-gated.
+- D.3 complete.
+- P0050 pushed at `57c682c`.
+- P0050 Quiet Mode runtime PASS in the tested world workflow.
+- passive chat/social presentation is suppressed under world immersion.
+- intentional chat input remains available by design.
+- instance Quiet Mode transition proof is DEFERRED BY ENVIRONMENT.
+- do not require travel solely to manufacture the instance proof.
+- runtime remains `0.0.22-dev`.
+- full Player/Target/Party suppression remains capability-gated.
 - Primary replacement/routing ownership remains deferred.
+- D-020 live action editing remains deferred.
+- cast cue color regression remains open visual debt.
 
 ## Next Action
 
-Install/review/commit/push P0050.
+Source/design-resolve D.4 before unit-frame suppression code.
 
-Because runtime code changes, deploy explicitly:
+Review exact Blizzard source and current Logres capability for:
 
-```bash
-cd ~/Projects/logres
+1. PlayerFrame conventional shell vs required child resources;
+2. PlayerFrame secure interaction requirements;
+3. TargetFrame shell vs auras/dependent children;
+4. secure target click/menu behavior;
+5. normal PartyFrame secure interaction;
+6. CompactPartyFrame raid-style path;
+7. party aura/debuff/role information;
+8. combat-lockdown constraints;
+9. exact restoration ownership;
+10. smallest capability-safe suppression subset for each domain.
 
-WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
-ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
-
-./tools/deploy_logres.sh "$ADDONS"
-```
-
-Then `/reload`.
-
-Runtime proof:
-1. confirm `0.0.22-dev`;
-2. with Immersion ON in world, passive chat/tabs disappear;
-3. old chat/tab areas do not intercept mouse;
-4. Quiet Check PASS;
-5. Immersion Check PASS;
-6. Run All PASS;
-7. press Enter and confirm chat edit box is visible;
-8. send an intentional chat message successfully;
-9. passive chat remains quiet afterward;
-10. Immersion OFF restores normal chat/tabs/interactions;
-11. Quiet Check PASS;
-12. Immersion ON reapplies Quiet Mode;
-13. PvP flag alone does not restore chat;
-14. if naturally entering an instance, chat restores there and Quiet Mode
-    reapplies after returning to world;
-15. Blizzard chat-window shown/layout configuration remains intact;
-16. no Lua/taint/secret error.
-
-Do not enter an instance solely to manufacture proof.
+Prefer selective shell suppression or explicit deferral over blanket frame hide.
 
 ## Success Criteria
 
-P0050 succeeds when:
-- passive world chat is visually quiet under immersion;
-- no invisible chat interaction remains;
-- intentional outbound chat stays usable;
-- OFF restoration is exact;
-- chat-update reconciliation does not leak passive chat;
-- saved Blizzard chat configuration is preserved;
-- context/PvP policy matches D-025.
+D.4 source review succeeds when Player, Target, and Party each have an explicit
+decision:
+- supported selective suppression;
+- required replacement capability first;
+- or deferred stock ownership;
+
+with combat/restoration/runtime-proof rules.
 
 ## Do Not Reopen Without New Evidence
 
 - **Phase C:** complete.
-- **D.1:** complete.
-- **D.2:** complete.
+- **D.1–D.3:** complete.
+- **D.3 instance transition:** environmental deferral; retry naturally.
 - **Direct ChatFrame Hide/Show for Quiet Mode:** rejected.
-- **Player/Target/Party blanket suppression:** blocked.
+- **Blanket Player/Target/Party suppression:** rejected pending D.4 selective
+  capability resolution.
 - **Primary replacement/routing ownership:** deferred.
 - **Auto replies:** not promised.
 - **D-020 live action editing:** deferred.
@@ -99,9 +81,8 @@ P0050 succeeds when:
 
 ## Relevant References
 
-- `docs/memory/evidence/D3_P0050_QUIET_MODE_IMPLEMENTATION_2026-10-01.md`
-- `docs/memory/evidence/D3_QUIET_MODE_SOURCE_REVIEW_2026-10-01.md`
+- `docs/memory/evidence/D3_P0050_QUIET_MODE_RUNTIME_PROOF_2026-10-01.md`
 - `docs/memory/decisions/D-025_QUIET_MODE_RUNTIME_SUPPRESSION.md`
-- `docs/memory/investigations/D3_QUIET_MODE_RUNTIME_SUPPRESSION.md`
-- `Logres/Immersion/QuietMode.lua`
-- `tools/check_quiet_mode_contract.py`
+- `docs/memory/investigations/D4_UNIT_FRAME_INTERACTION_SUPPRESSION_REVIEW.md`
+- `docs/memory/roadmap/PHASE_D_IMMERSION_CONTROLLER.md`
+- `docs/memory/evidence/D1_IMMERSION_ORCHESTRATION_SOURCE_REVIEW_2026-10-01.md`

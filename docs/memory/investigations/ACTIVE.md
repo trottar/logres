@@ -1,16 +1,13 @@
 # Active Investigations
 
-## D.3 — Quiet Mode runtime suppression
+## D.4 — Unit-frame interaction + selective suppression
 
 Status:
-**P0050 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**SOURCE / DESIGN RESOLUTION NEXT**
 
 Canonical:
-`D3_QUIET_MODE_RUNTIME_SUPPRESSION.md`
-
-Decision:
-`../decisions/D-025_QUIET_MODE_RUNTIME_SUPPRESSION.md`
+`D4_UNIT_FRAME_INTERACTION_SUPPRESSION_REVIEW.md`
 
 Next:
-runtime-prove passive chat suppression, intentional edit-box visibility,
-restoration, and saved-setting preservation.
+source-resolve Player/Target/Party selective suppression, secure interaction,
+dependent child surfaces, combat constraints, and restoration.

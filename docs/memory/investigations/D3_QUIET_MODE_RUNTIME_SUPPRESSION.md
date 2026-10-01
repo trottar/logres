@@ -1,6 +1,6 @@
 # D.3 — Quiet Mode Runtime Suppression
 
-Status: P0050 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT
+Status: COMPLETE — INSTANCE TRANSITION PROOF DEFERRED BY ENVIRONMENT
 Opened: 2026-10-01
 
 ## Canonical decision
@@ -49,3 +49,18 @@ Adds runtime Quiet Mode with:
 - Quiet Check diagnostics.
 
 Runtime proof is next.
+
+## Runtime result
+
+P0050 runtime passed for the world/restore workflow.
+
+User observation:
+the chat input surface remains available while passive chat/social
+presentation is gone.
+
+This matches D-025.
+
+Instance transition proof is deferred by environment because no nearby
+instance was naturally available.
+
+D.3 closes.
