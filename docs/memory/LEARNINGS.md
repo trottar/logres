@@ -71,3 +71,19 @@ For every patch that changes addon runtime code, validation instructions must ex
 5. in-game validation commands.
 
 Do not rely on "deploy as usual" or assume deployment is implied by a prior patch.
+
+## L-008 — Lifecycle diagnostics must distinguish cleanup-stack size from instrumented cleanup counters
+
+P0014's lifecycle probe owned two cleanup callbacks but only one incremented the explicit `cleanupCount` test counter.
+
+The diagnostic incorrectly expected the counter to increase by two, even though:
+- the cleanup stack was emptied;
+- the preference unsubscribe function worked;
+- the explicit counted cleanup ran once.
+
+When a test mixes functional cleanup assertions with instrumented counters, each assertion must match exactly what is instrumented.
+
+For module cleanup, prefer multiple independent proofs:
+- explicit counted cleanup ran;
+- owned cleanup stack became empty;
+- subscription no longer receives callbacks.

@@ -8,7 +8,7 @@ As of 2026-09-30.
 
 Active work item: **A.4 Module Lifecycle Contract**
 
-State: **IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+State: **RUNTIME DIAGNOSTIC FIX PREPARED**
 
 ## Phase status
 
@@ -31,18 +31,13 @@ State: **IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
 | A.1 State contract hardening | COMPLETE |
 | A.2 Additional context sensors | COMPLETE WITH ENVIRONMENTAL DEFERRAL |
 | A.3 User-controlled state | COMPLETE |
-| A.4 Module lifecycle contract | ACTIVE — implementation prepared |
+| A.4 Module lifecycle contract | ACTIVE — diagnostic fix prepared |
 | A.5 Transition validation | QUEUED |
 
-## A.4 implementation
+## A.4 runtime result so far
 
-P0014 adds:
-- module registration/order;
-- one-time initialization;
-- idempotent enable/disable;
-- LIFO cleanup ownership;
-- owned state/preference subscriptions;
-- lifecycle error cleanup and rethrow;
-- `/logres lifecyclecheck`.
+P0014's observed lifecycle values matched intended behavior, but the diagnostic incorrectly expected its explicit cleanup counter to increase by two.
 
-Runtime validation is travel-free.
+P0015 corrects the expected counter increase to one.
+
+A.4 closes only after the corrected in-client diagnostic reports PASS.

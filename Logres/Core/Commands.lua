@@ -285,7 +285,7 @@ local function runLifecycleCheck()
         and disabledFirst == true
         and disabledSecond == false
         and lifecycleProbe.disableCount == disableBefore + 1
-        and lifecycleProbe.cleanupCount == cleanupBefore + 2
+        and lifecycleProbe.cleanupCount == cleanupBefore + 1
         and callbacksWhileDisabled == 0
         and after.initialized == true
         and after.enabled == false

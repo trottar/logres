@@ -5,22 +5,19 @@ Authoritative state: `../CURRENT.md`. Start there.
 Current work:
 **A.4 — Module Lifecycle Contract**
 
-P0014 is prepared.
+P0014 is pushed at `2b40d0c`.
 
-New runtime file:
-`Logres/Core/Modules.lua`
+Its runtime diagnostic reported FAIL, but the detailed values proved the lifecycle behavior itself matched the contract.
 
-New diagnostic:
-`/logres lifecyclecheck`
+Root cause:
+the test expected `cleanupCount + 2`, while only one owned cleanup is instrumented by that counter.
 
-The lifecycle remains intentionally small:
-- deterministic registration order;
-- initialize once;
-- idempotent enable/disable;
-- owned LIFO cleanup;
-- automatic subscription cleanup.
+P0015 changes the expectation to `+1` and bumps Logres to `0.0.6-dev`.
 
-Important:
-P0014 changes runtime code, so the next validation instructions MUST include the full deploy command before `/reload`.
+Next runtime proof:
+- deploy P0015 explicitly;
+- `/reload`;
+- confirm `/logres status` says `0.0.6-dev`;
+- run `/logres lifecyclecheck`.
 
 User performs all commits/pushes.
