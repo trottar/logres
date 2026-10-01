@@ -843,12 +843,12 @@ local function runImmersionCheck()
 
     local expectedActionReplacement =
         preferences.immersionEnabled == true
-
     local expectedQuietMode =
         preferences.immersionEnabled == true
         and state.context == "world"
-
     local expectedPlayerFrame =
+        preferences.immersionEnabled == true
+    local expectedTargetFrame =
         preferences.immersionEnabled == true
 
     local desiredMatches =
@@ -861,6 +861,8 @@ local function runImmersionCheck()
             == expectedQuietMode
         and debugStatus.playerFrameSuppressionDesired
             == expectedPlayerFrame
+        and debugStatus.targetFrameSuppressionDesired
+            == expectedTargetFrame
 
     local replacementMatches =
         debugStatus.actionReplacementRequested
@@ -894,9 +896,21 @@ local function runImmersionCheck()
             )
         )
 
+    local targetMatches =
+        debugStatus.targetFrameSuppressionImplemented == true
+        and debugStatus.targetFrameSuppressionRequested
+            == expectedTargetFrame
+        and (
+            debugStatus.targetFrameSuppressionApplied
+                == expectedTargetFrame
+            or (
+                debugStatus.targetFrameSuppressionPending
+                and InCombatLockdown()
+            )
+        )
+
     local capabilityGatesSafe =
-        debugStatus.targetFrameSuppressionDesired == false
-        and debugStatus.partyFrameSuppressionDesired == false
+        debugStatus.partyFrameSuppressionDesired == false
         and debugStatus.primaryActionRoutingOwned == false
 
     local passed =
@@ -907,14 +921,16 @@ local function runImmersionCheck()
         and replacementMatches
         and quietMatches
         and playerMatches
+        and targetMatches
         and capabilityGatesSafe
         and debugStatus.lastActionError == nil
         and debugStatus.lastQuietError == nil
         and debugStatus.lastPlayerError == nil
+        and debugStatus.lastTargetError == nil
 
     if passed then
         emit(string.format(
-            "Logres immersioncheck: PASS (immersion=%s context=%s pvp=%s action=%s/%s/%s/%s quiet=%s/%s/%s player=%s/%s/%s/%s target=false party=false primaryRoutingOwned=false reason=%s actionResult=%s quietResult=%s playerResult=%s)",
+            "Logres immersioncheck: PASS (immersion=%s context=%s pvp=%s action=%s/%s/%s/%s quiet=%s/%s/%s player=%s/%s/%s/%s target=%s/%s/%s/%s party=false primaryRoutingOwned=false reason=%s actionResult=%s quietResult=%s playerResult=%s targetResult=%s)",
             boolText(debugStatus.immersionEnabled),
             tostring(debugStatus.context),
             boolText(debugStatus.pvpFlagged),
@@ -929,16 +945,21 @@ local function runImmersionCheck()
             boolText(debugStatus.playerFrameSuppressionRequested),
             boolText(debugStatus.playerFrameSuppressionApplied),
             boolText(debugStatus.playerFrameSuppressionPending),
+            boolText(debugStatus.targetFrameSuppressionDesired),
+            boolText(debugStatus.targetFrameSuppressionRequested),
+            boolText(debugStatus.targetFrameSuppressionApplied),
+            boolText(debugStatus.targetFrameSuppressionPending),
             tostring(debugStatus.lastReconcileReason),
             tostring(debugStatus.lastActionResult),
             tostring(debugStatus.lastQuietResult),
-            tostring(debugStatus.lastPlayerResult)
+            tostring(debugStatus.lastPlayerResult),
+            tostring(debugStatus.lastTargetResult)
         ))
         return
     end
 
     emit(string.format(
-        "Logres immersioncheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s desiredMatches=%s replacementMatches=%s quietMatches=%s playerMatches=%s gatesSafe=%s immersion=%s context=%s player=%s/%s/%s/%s target=%s party=%s reason=%s actionError=%s quietError=%s playerError=%s)",
+        "Logres immersioncheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s desiredMatches=%s replacementMatches=%s quietMatches=%s playerMatches=%s targetMatches=%s gatesSafe=%s immersion=%s context=%s player=%s/%s/%s/%s target=%s/%s/%s/%s party=%s reason=%s actionError=%s quietError=%s playerError=%s targetError=%s)",
         tostring(status.initialized),
         tostring(status.enabled),
         tostring(debugStatus.moduleEnabled),
@@ -946,6 +967,7 @@ local function runImmersionCheck()
         tostring(replacementMatches),
         tostring(quietMatches),
         tostring(playerMatches),
+        tostring(targetMatches),
         tostring(capabilityGatesSafe),
         tostring(debugStatus.immersionEnabled),
         tostring(debugStatus.context),
@@ -954,11 +976,15 @@ local function runImmersionCheck()
         tostring(debugStatus.playerFrameSuppressionApplied),
         tostring(debugStatus.playerFrameSuppressionPending),
         tostring(debugStatus.targetFrameSuppressionDesired),
+        tostring(debugStatus.targetFrameSuppressionRequested),
+        tostring(debugStatus.targetFrameSuppressionApplied),
+        tostring(debugStatus.targetFrameSuppressionPending),
         tostring(debugStatus.partyFrameSuppressionDesired),
         tostring(debugStatus.lastReconcileReason),
         tostring(debugStatus.lastActionError),
         tostring(debugStatus.lastQuietError),
-        tostring(debugStatus.lastPlayerError)
+        tostring(debugStatus.lastPlayerError),
+        tostring(debugStatus.lastTargetError)
     ))
 end
 
@@ -1175,6 +1201,141 @@ local function runPlayerFrameCheck()
     ))
 end
 
+local function runTargetFrameCheck()
+    local status =
+        Logres:GetModuleStatus("TargetFrameReplacement")
+    local replacement =
+        Logres:GetModule("TargetFrameReplacement")
+    local debugStatus =
+        replacement:GetDebugStatus()
+
+    local expected =
+        Logres:GetPreference("immersionEnabled") == true
+
+    local stateMatches =
+        debugStatus.requestedEnabled == expected
+        and (
+            debugStatus.appliedEnabled == expected
+            or (
+                debugStatus.pending
+                and InCombatLockdown()
+            )
+        )
+
+    local presentationMatches = true
+
+    if not debugStatus.pending and expected then
+        presentationMatches =
+            debugStatus.targetFrameFound == true
+            and debugStatus.containerFound == true
+            and debugStatus.contentMainFound == true
+            and debugStatus.contextualFound == true
+            and debugStatus.containerAlpha == 0
+            and debugStatus.contentMainAlpha == 0
+            and debugStatus.contextualAlpha == 0
+            and debugStatus.targetFrameMouseEnabled == false
+            and debugStatus.preservedCount == 4
+            and debugStatus.preservedIgnoreParentCount == 4
+            and debugStatus.interactionReady == true
+            and debugStatus.unitWatchRegistered == true
+            and debugStatus.interactionMouseEnabled == true
+            and debugStatus.interactionUnit == "target"
+            and debugStatus.interactionLeftType == "target"
+            and debugStatus.interactionRightType == "togglemenu"
+            and debugStatus.snapshotReady == true
+    elseif not debugStatus.pending then
+        presentationMatches =
+            debugStatus.appliedEnabled == false
+            and debugStatus.snapshotReady == false
+            and debugStatus.unitWatchRegistered == false
+            and debugStatus.interactionMouseEnabled == false
+    end
+
+    local preservationSafe =
+        debugStatus.wholeTargetFrameSuppressedByLogres == false
+        and debugStatus.targetOfTargetSuppressedByLogres == false
+        and debugStatus.focusFrameSuppressedByLogres == false
+        and debugStatus.bossFramesSuppressedByLogres == false
+        and debugStatus.partyFramesSuppressedByLogres == false
+
+    local passed =
+        status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and stateMatches
+        and presentationMatches
+        and preservationSafe
+        and debugStatus.lastError == nil
+
+    if passed then
+        emit(string.format(
+            "Logres targetframecheck: PASS (expected=%s applied=%s pending=%s frame=%s container=%s main=%s contextual=%s alpha=%s/%s/%s stockMouse=%s preserved=%s/%s interactionReady=%s watch=%s mouse=%s unit=%s types=%s/%s wholeFrame=false tot=false focus=false boss=false party=false reason=%s)",
+            boolText(expected),
+            boolText(debugStatus.appliedEnabled),
+            boolText(debugStatus.pending),
+            boolText(debugStatus.targetFrameFound),
+            boolText(debugStatus.containerFound),
+            boolText(debugStatus.contentMainFound),
+            boolText(debugStatus.contextualFound),
+            tostring(debugStatus.containerAlpha),
+            tostring(debugStatus.contentMainAlpha),
+            tostring(debugStatus.contextualAlpha),
+            tostring(debugStatus.targetFrameMouseEnabled),
+            tostring(debugStatus.preservedIgnoreParentCount),
+            tostring(debugStatus.preservedCount),
+            boolText(debugStatus.interactionReady),
+            boolText(debugStatus.unitWatchRegistered),
+            boolText(debugStatus.interactionMouseEnabled),
+            tostring(debugStatus.interactionUnit),
+            tostring(debugStatus.interactionLeftType),
+            tostring(debugStatus.interactionRightType),
+            tostring(debugStatus.lastReason)
+        ))
+        return
+    end
+
+    emit(string.format(
+        "Logres targetframecheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s expected=%s requested=%s applied=%s pending=%s stateMatches=%s presentationMatches=%s preservationSafe=%s frame=%s container=%s main=%s contextual=%s alpha=%s/%s/%s stockMouse=%s click=%s motion=%s preserved=%s/%s interactionReady=%s watch=%s shown=%s mouse=%s unit=%s types=%s/%s snapshot=%s wholeFrame=%s tot=%s focus=%s boss=%s party=%s reason=%s error=%s)",
+        tostring(status.initialized),
+        tostring(status.enabled),
+        tostring(debugStatus.moduleEnabled),
+        tostring(expected),
+        tostring(debugStatus.requestedEnabled),
+        tostring(debugStatus.appliedEnabled),
+        tostring(debugStatus.pending),
+        tostring(stateMatches),
+        tostring(presentationMatches),
+        tostring(preservationSafe),
+        tostring(debugStatus.targetFrameFound),
+        tostring(debugStatus.containerFound),
+        tostring(debugStatus.contentMainFound),
+        tostring(debugStatus.contextualFound),
+        tostring(debugStatus.containerAlpha),
+        tostring(debugStatus.contentMainAlpha),
+        tostring(debugStatus.contextualAlpha),
+        tostring(debugStatus.targetFrameMouseEnabled),
+        tostring(debugStatus.targetFrameMouseClickEnabled),
+        tostring(debugStatus.targetFrameMouseMotionEnabled),
+        tostring(debugStatus.preservedIgnoreParentCount),
+        tostring(debugStatus.preservedCount),
+        tostring(debugStatus.interactionReady),
+        tostring(debugStatus.unitWatchRegistered),
+        tostring(debugStatus.interactionShown),
+        tostring(debugStatus.interactionMouseEnabled),
+        tostring(debugStatus.interactionUnit),
+        tostring(debugStatus.interactionLeftType),
+        tostring(debugStatus.interactionRightType),
+        tostring(debugStatus.snapshotReady),
+        tostring(debugStatus.wholeTargetFrameSuppressedByLogres),
+        tostring(debugStatus.targetOfTargetSuppressedByLogres),
+        tostring(debugStatus.focusFrameSuppressedByLogres),
+        tostring(debugStatus.bossFramesSuppressedByLogres),
+        tostring(debugStatus.partyFramesSuppressedByLogres),
+        tostring(debugStatus.lastReason),
+        tostring(debugStatus.lastError)
+    ))
+end
+
 local function runAllChecks()
     emit("Logres checkall: beginning")
     printStatus()
@@ -1188,6 +1349,7 @@ local function runAllChecks()
     runImmersionCheck()
     runQuietModeCheck()
     runPlayerFrameCheck()
+    runTargetFrameCheck()
     emit("Logres checkall: complete")
 end
 
@@ -1262,6 +1424,7 @@ local function printHelp()
     emit("  /logres immersioncheck")
     emit("  /logres quietcheck")
     emit("  /logres playerframecheck")
+    emit("  /logres targetframecheck")
     emit("  /logres hudpreview [on|off]")
     emit("  /logres immersion [on|off|toggle]")
     emit("  /logres debug on")
@@ -1372,6 +1535,11 @@ local function handleCommand(message)
 
     if command == "playerframecheck" then
         runPlayerFrameCheck()
+        return
+    end
+
+    if command == "targetframecheck" then
+        runTargetFrameCheck()
         return
     end
 
@@ -1493,6 +1661,11 @@ Logres:RegisterDevPanelAction(
     "playerFrameCheck",
     "Player Frame Check",
     "playerframecheck"
+)
+Logres:RegisterDevPanelAction(
+    "targetFrameCheck",
+    "Target Frame Check",
+    "targetframecheck"
 )
 Logres:RegisterDevPanelAction(
     "immersionOn",

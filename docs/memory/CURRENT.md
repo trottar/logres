@@ -12,9 +12,9 @@ project: logres
 
 ## Current Work Item
 
-**D.4 — Target selective replacement runtime implementation.**
+**D.4 — Target selective replacement runtime proof.**
 
-Target source/design review is complete.
+P0056 implementation is prepared.
 
 ## Verified State
 
@@ -26,21 +26,14 @@ Target source/design review is complete.
 - D.2 complete.
 - D.3 complete.
 - D.4 Player selective replacement runtime PASS.
-- P0054 pushed at `d971459`.
-- runtime remains `0.0.23-dev`.
-- D-026 remains the broad selective unit-frame contract.
-- D-027 Target selective suppression contract accepted.
-- TargetFrame blanket suppression remains rejected.
-- Target conventional container/main content are suppressible.
-- Target contextual parent may be suppressed while preserving:
-  - Auras;
-  - RaidTargetIcon;
-  - QuestIcon;
-  - PingIconFrame;
-  through IgnoreParentAlpha.
-- secure Logres target interaction will use a UIParent secure unit button aligned
-  with the existing 260x54 Logres target block.
-- target existence will use RegisterUnitWatch after OOC configuration.
+- D.4 Target source review complete.
+- P0055 pushed at `0c46f19`.
+- runtime before P0056: `0.0.23-dev`.
+- P0056 target: `0.0.24-dev`.
+- D-027 remains canonical.
+- P0056 adds secure unit-watched Logres target interaction.
+- P0056 suppresses Target container/main/contextual parent, not whole TargetFrame.
+- P0056 preserves Auras/RaidTargetIcon/QuestIcon/PingIconFrame.
 - target-of-target remains Blizzard-owned.
 - Focus/boss target frames remain untouched.
 - Party/CompactPartyFrame suppression remains deferred.
@@ -51,39 +44,45 @@ Target source/design review is complete.
 
 ## Next Action
 
-Implement P0056 Target selective replacement.
+Install/review/commit/push P0056.
 
-Runtime target:
-1. create secure `target` interaction button at Logres target block geometry;
-2. configure left target / right togglemenu / AnyUp;
-3. RegisterUnitWatch while active;
-4. snapshot TargetFrame container/main/context alpha;
-5. snapshot stock target mouse/click/motion state;
-6. snapshot IgnoreParentAlpha for Aura/RaidTarget/Quest/Ping preserved children;
-7. apply selective suppression + preserved child overrides;
-8. disable stock TargetFrame mouse region;
-9. exact Immersion OFF restoration;
-10. combat deferral;
-11. Target Frame Check diagnostics.
+Because runtime code changes, deploy explicitly:
 
-Do not suppress:
-- target-of-target;
-- FocusFrame;
-- boss target frames;
-- Party/CompactPartyFrame.
+```bash
+cd ~/Projects/logres
+
+WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
+ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
+
+./tools/deploy_logres.sh "$ADDONS"
+```
+
+Then `/reload`.
+
+Runtime proof:
+1. confirm `0.0.24-dev`;
+2. Immersion ON + target removes conventional stock TargetFrame shell/metadata;
+3. Logres target name/health/cast presentation remains;
+4. left-click Logres target block -> target interaction works;
+5. right-click Logres target block -> target menu opens;
+6. old stock TargetFrame area does not intercept mouse;
+7. target auras remain visible/usable when present;
+8. Target Frame Check PASS;
+9. Immersion Check PASS;
+10. Run All PASS;
+11. Immersion OFF restores stock TargetFrame + mouse;
+12. Target Frame Check PASS;
+13. toggle immersion during combat and confirm transition defers;
+14. no protected/taint/Lua/secret error.
+
+Natural-only raid marker, quest icon, ping, target-of-target, or unusual aura
+paths may be deferred if not encountered.
 
 ## Success Criteria
 
-P0056 succeeds when:
-- conventional stock TargetFrame shell/metadata disappears under immersion;
-- Logres target presentation remains;
-- secure Logres left/right target interaction works;
-- stock target area is not an invisible click zone;
-- target auras remain available;
-- useful preserved context survives when naturally present;
-- OFF restoration is exact;
-- combat transitions defer safely;
-- no protected/taint/Lua/secret regression occurs.
+P0056 succeeds when selective target suppression, secure interaction,
+preserved context, exact restoration, and combat deferral all work without
+touching excluded unit-frame domains.
 
 ## Do Not Reopen Without New Evidence
 
@@ -98,7 +97,9 @@ P0056 succeeds when:
 
 ## Relevant References
 
+- `docs/memory/evidence/D4_P0056_TARGET_REPLACEMENT_IMPLEMENTATION_2026-10-01.md`
 - `docs/memory/evidence/D4_TARGET_SELECTIVE_SUPPRESSION_SOURCE_REVIEW_2026-10-01.md`
 - `docs/memory/decisions/D-027_TARGET_SELECTIVE_SUPPRESSION.md`
 - `docs/memory/investigations/D4_TARGET_RUNTIME_PROOF.md`
-- `docs/memory/roadmap/PHASE_D_IMMERSION_CONTROLLER.md`
+- `Logres/Immersion/TargetFrameReplacement.lua`
+- `tools/check_target_frame_replacement_contract.py`

@@ -138,3 +138,13 @@ children explicitly ignore parent alpha.
 
 This avoids chasing Blizzard metadata Show/Hide updates while retaining auras,
 raid marker, quest context, and pings.
+
+## P0056 Target selective replacement
+
+Target replacement remains selective.
+
+The contextual parent is alpha-suppressed while useful unreplaced children
+ignore parent alpha.
+
+A separate secure unit-watched target button over the Logres target block
+replaces the stock TargetFrame hit region while immersion is active.

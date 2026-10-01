@@ -1,24 +1,22 @@
 #!/usr/bin/env python3
-# Static contract checks for Phase D Immersion Controller.
-
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 QUIET = ROOT / "Logres" / "Immersion" / "QuietMode.lua"
 PLAYER = ROOT / "Logres" / "Immersion" / "PlayerFrameReplacement.lua"
+TARGET = ROOT / "Logres" / "Immersion" / "TargetFrameReplacement.lua"
 CONTROLLER = ROOT / "Logres" / "Immersion" / "Controller.lua"
 COMMANDS = ROOT / "Logres" / "Core" / "Commands.lua"
 TOC = ROOT / "Logres" / "Logres.toc"
 
 errors = []
 
-for path in (QUIET, PLAYER, CONTROLLER, COMMANDS, TOC):
+for path in (QUIET, PLAYER, TARGET, CONTROLLER, COMMANDS, TOC):
     if not path.is_file():
         errors.append(f"missing required file: {path.relative_to(ROOT)}")
 
 if CONTROLLER.is_file():
     source = CONTROLLER.read_text(encoding="utf-8")
-
     required = [
         'Logres:RegisterModule("ImmersionController"',
         "self:SubscribePreferences(",
@@ -29,18 +27,16 @@ if CONTROLLER.is_file():
         'Logres:GetModule("StockActionReplacement")',
         'Logres:GetModule("QuietMode")',
         'Logres:GetModule("PlayerFrameReplacement")',
-        "replacement:RequestEnabled(desired)",
+        'Logres:GetModule("TargetFrameReplacement")',
         "quietMode:RequestEnabled(",
-        "playerReplacement:RequestEnabled(",
-        'state.context == "world"',
         "playerFrameSuppressionDesired =",
         "playerFrameSuppressionImplemented = true",
-        "targetFrameSuppressionDesired = false",
+        "targetFrameSuppressionDesired =",
+        "targetFrameSuppressionImplemented = true",
         "partyFrameSuppressionDesired = false",
         "primaryActionRoutingOwned = false",
         "quietModeImplemented = true",
     ]
-
     for fragment in required:
         if fragment not in source:
             errors.append(f"Controller.lua missing: {fragment}")
@@ -56,7 +52,6 @@ if CONTROLLER.is_file():
         "SetChatWindowShown(",
         "SaveBindings(",
     ]
-
     for fragment in forbidden:
         if fragment in source:
             errors.append(
@@ -65,30 +60,33 @@ if CONTROLLER.is_file():
 
 if COMMANDS.is_file():
     source = COMMANDS.read_text(encoding="utf-8")
-
     for fragment in (
         "local function runImmersionCheck()",
         "local function runQuietModeCheck()",
         "local function runPlayerFrameCheck()",
+        "local function runTargetFrameCheck()",
         'if command == "immersioncheck" then',
         'if command == "quietcheck" then',
         'if command == "playerframecheck" then',
+        'if command == "targetframecheck" then',
         '"Immersion Check"',
         '"Quiet Check"',
         '"Player Frame Check"',
+        '"Target Frame Check"',
         "runImmersionCheck()",
         "runQuietModeCheck()",
         "runPlayerFrameCheck()",
+        "runTargetFrameCheck()",
     ):
         if fragment not in source:
             errors.append(f"Commands.lua missing Phase D diagnostic: {fragment}")
 
 if TOC.is_file():
     source = TOC.read_text(encoding="utf-8")
-
     replacement_index = source.find("Actions\\StockReplacement.lua")
     quiet_index = source.find("Immersion\\QuietMode.lua")
     player_index = source.find("Immersion\\PlayerFrameReplacement.lua")
+    target_index = source.find("Immersion\\TargetFrameReplacement.lua")
     controller_index = source.find("Immersion\\Controller.lua")
     commands_index = source.find("Core\\Commands.lua")
     lifecycle_index = source.find("Core\\Lifecycle.lua")
@@ -97,6 +95,7 @@ if TOC.is_file():
         replacement_index,
         quiet_index,
         player_index,
+        target_index,
         controller_index,
         commands_index,
         lifecycle_index,
@@ -106,6 +105,7 @@ if TOC.is_file():
         replacement_index
         < quiet_index
         < player_index
+        < target_index
         < controller_index
         < commands_index
         < lifecycle_index

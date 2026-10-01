@@ -56,6 +56,7 @@
 | P0052 | 2026-10-01 | INSTALLED / PUSHED | Resolve D.4 selective unit-frame contract; open Player shell implementation (`f5bda1e`) |
 | P0053 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME PASS | Implement secure Player interaction and selective PlayerFrame shell suppression (`361cea7`) |
 | P0054 | 2026-10-01 | INSTALLED / PUSHED | Record Player shell runtime PASS; open Target selective suppression review (`d971459`) |
-| P0055 | 2026-10-01 | PREPARED | Resolve Target selective suppression contract and open runtime implementation |
+| P0055 | 2026-10-01 | INSTALLED / PUSHED | Resolve Target selective suppression contract and open runtime implementation (`0c46f19`) |
+| P0056 | 2026-10-01 | PREPARED | Implement secure Target interaction and selective TargetFrame replacement |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

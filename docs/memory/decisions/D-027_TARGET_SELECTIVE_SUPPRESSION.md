@@ -110,3 +110,15 @@ Any missing child path, secure registration failure, or suppression failure
 leaves/restores the stock TargetFrame and reports diagnostic failure.
 
 No blanket TargetFrame Hide/Show fallback is allowed.
+
+## P0056 implementation binding
+
+P0056 binds D-027 to `Immersion/TargetFrameReplacement.lua`.
+
+ImmersionController owns desired state.
+
+TargetFrameReplacement owns secure target interaction, unit-watch registration,
+selective presentation snapshots, contextual child preservation, stock mouse
+suppression, combat deferral, and exact restoration.
+
+Target-of-target, Focus, boss targets, and Party remain outside ownership.

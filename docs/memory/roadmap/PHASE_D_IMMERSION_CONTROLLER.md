@@ -138,7 +138,7 @@ D.3 closes.
 
 ## D.4 — Unit-frame interaction + selective suppression
 
-**Status: PLAYER SHELL PASS; TARGET SOURCE-RESOLVED; IMPLEMENTATION NEXT.**
+**Status: P0056 TARGET IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
 
 Before suppression, complete the missing capability.
 
@@ -255,6 +255,16 @@ TargetFrame mouse removal.
 Leave target-of-target, Focus, boss frames, and Party untouched.
 
 **P0056 runtime implementation next.**
+
+### D.4 P0056 Target implementation
+
+Version `0.0.24-dev`.
+
+Implements D-027 with secure unit-watched target interaction, selective TargetFrame container/main/context suppression, preserved Auras/RaidTargetIcon/QuestIcon/PingIconFrame, stock mouse removal, exact restoration, and combat deferral.
+
+Target-of-target, Focus, boss targets, and Party remain untouched.
+
+Runtime proof is next.
 
 ## D.5 — Context / PvP / instance orchestration
 

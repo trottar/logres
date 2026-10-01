@@ -77,7 +77,7 @@ Canonical phase record:
 
 ## Phase D — Immersion Controller
 
-**Status: ACTIVE — D.4 Target selective replacement implementation.**
+**Status: ACTIVE — D.4 Target selective replacement runtime proof.**
 
 Implement full immersion orchestration:
 - Quiet/social immersion mode;

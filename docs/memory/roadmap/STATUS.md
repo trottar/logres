@@ -7,10 +7,10 @@ As of 2026-10-01.
 **Phase D — Immersion Controller**
 
 Active work item:
-**D.4 Target selective replacement runtime implementation**
+**D.4 Target selective replacement runtime proof**
 
 State:
-**TARGET SOURCE-RESOLVED; IMPLEMENTATION NEXT**
+**P0056 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
 
 ## Phase status
 
@@ -31,6 +31,6 @@ State:
 | Domain | State |
 | --- | --- |
 | Player selective shell | RUNTIME PASS |
-| Target selective suppression | SOURCE-RESOLVED — implementation next |
+| Target selective suppression | P0056 PREPARED |
 | Target-of-target | Blizzard-owned / separate capability |
 | Party / compact party | DEFERRED |
