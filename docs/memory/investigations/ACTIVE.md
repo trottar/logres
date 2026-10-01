@@ -1,18 +1,21 @@
 # Active Investigations
 
-## Phase 0
+No standalone technical investigation is currently active.
+
+## Recently completed
 
 ### I-001 — WoW Forever API capability audit
 
-Status: **ACTIVE — source pass complete; runtime probe next**
+Status: COMPLETE WITH EXPLICIT DEFERRALS
 
 Canonical record:
 `FOREVER_API_CAPABILITY_AUDIT.md`
 
-Current evidence:
-`../evidence/I001_SOURCE_AUDIT_2026-09-30.md`
+Runtime evidence:
+- `../evidence/I001_RUNTIME_PASS_01_2026-09-30.md`
+- `../evidence/I001_RUNTIME_PASS_02_2026-09-30.md`
 
-Current task:
-run the temporary `tools/probes/LogresAPIAudit` addon on the user's current Forever client and preserve the sanitized SavedVariables output.
+Next project work item:
+**Phase 0.3 — Minimal addon skeleton/load proof.**
 
-No other technical investigation is currently authoritative.
+Deferred questions reopen inside the phase that owns them rather than extending I-001 indefinitely.

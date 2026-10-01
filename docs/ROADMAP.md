@@ -18,7 +18,7 @@ Purpose: establish the repository, memory discipline, development environment, d
 - [x] Memory health checker passed on the bootstrap before commit.
 
 ### 0.2 WoW Forever capability audit
-**Status: ACTIVE — source/documentation pass complete; runtime probe next.**
+**Status: COMPLETE WITH EXPLICIT DEFERRALS.**
 
 Verify, with primary/current sources and in-client probes where needed:
 - project/interface identification and TOC requirements;
@@ -41,7 +41,9 @@ Deliverables:
 - decisions for any implementation boundary that becomes settled.
 
 ### 0.3 Addon skeleton
-After the API audit establishes a safe baseline:
+**Status: ACTIVE.**
+
+The API audit established the baseline required to begin:
 - create `Logres/Logres.toc`;
 - establish addon namespace and saved-variable policy;
 - create Core event/state infrastructure;
