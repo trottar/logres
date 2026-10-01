@@ -53,6 +53,7 @@ local Primary = Logres:RegisterModule("PrimaryActions", {
         self.firstActionSlot = nil
         self.lastActionSlot = nil
         self.registeredCount = 0
+        self.bindingRoutingEnabled = false
         self.bindingsApplied = false
         self.bindingKeyCounts = {}
         self.pendingPageRefresh = false
@@ -68,8 +69,16 @@ local Primary = Logres:RegisterModule("PrimaryActions", {
             )
 
             button:SetSize(BUTTON_SIZE, BUTTON_SIZE)
-            button:RegisterForClicks("AnyUp")
+            button:RegisterForClicks(
+                "AnyUp",
+                "LeftButtonDown",
+                "RightButtonDown"
+            )
             button:SetAttribute("type", "action")
+            button:SetAttribute("typerelease", "actionrelease")
+            button:SetAttribute("checkselfcast", true)
+            button:SetAttribute("checkfocuscast", true)
+            button:SetAttribute("checkmouseovercast", true)
 
             local zeroIndex = index - 1
             local column = zeroIndex % COLUMNS
@@ -130,14 +139,6 @@ local Primary = Logres:RegisterModule("PrimaryActions", {
             countText:SetJustifyH("RIGHT")
             countText:SetTextColor(0.96, 0.92, 0.82, 1.00)
 
-            local slotText = button:CreateFontString(
-                nil,
-                "OVERLAY",
-                "GameFontDisableSmall"
-            )
-            slotText:SetPoint("BOTTOMLEFT", button, "BOTTOMLEFT", 3, 3)
-            slotText:SetText(tostring(index))
-
             button.logresIndex = index
             button.actionSlot = nil
             button.registeredActionSlot = nil
@@ -145,7 +146,6 @@ local Primary = Logres:RegisterModule("PrimaryActions", {
             button.cooldown = cooldown
             button.hotkeyText = hotkeyText
             button.countText = countText
-            button.slotText = slotText
 
             self.buttons[index] = button
         end
@@ -168,7 +168,7 @@ local Primary = Logres:RegisterModule("PrimaryActions", {
         end)
 
         self:ApplyActionPage()
-        self:ApplyBindings()
+        self:RefreshBindingLabels()
         self.cluster:Show()
         self:UpdateAll()
     end,
@@ -255,25 +255,7 @@ function Primary:ApplyActionPage()
     return true
 end
 
-function Primary:ClearBindings()
-    if InCombatLockdown() then
-        self.pendingBindingRefresh = true
-        return false
-    end
-
-    ClearOverrideBindings(self.bindingOwner)
-    self.bindingsApplied = false
-    return true
-end
-
-function Primary:ApplyBindings()
-    if InCombatLockdown() then
-        self.pendingBindingRefresh = true
-        return false
-    end
-
-    ClearOverrideBindings(self.bindingOwner)
-
+function Primary:RefreshBindingLabels()
     for index = 1, #self.buttons do
         local button = self.buttons[index]
         local command = "ACTIONBUTTON" .. index
@@ -281,22 +263,59 @@ function Primary:ApplyBindings()
 
         self.bindingKeyCounts[index] = #keys
         button.hotkeyText:SetText(keys[1] or "")
+    end
+end
 
-        for keyIndex = 1, #keys do
-            SetOverrideBindingClick(
-                self.bindingOwner,
-                false,
-                keys[keyIndex],
-                button:GetName(),
-                "LeftButton"
-            )
-        end
+function Primary:RefreshOverrideBindings()
+    if InCombatLockdown() then
+        self.pendingBindingRefresh = true
+        return false
     end
 
-    self.bindingsApplied = true
+    ClearOverrideBindings(self.bindingOwner)
+    self.bindingsApplied = false
+
+    if self.bindingRoutingEnabled then
+        for index = 1, #self.buttons do
+            local button = self.buttons[index]
+            local command = "ACTIONBUTTON" .. index
+            local keys = { GetBindingKey(command) }
+
+            for keyIndex = 1, #keys do
+                SetOverrideBindingClick(
+                    self.bindingOwner,
+                    false,
+                    keys[keyIndex],
+                    button:GetName(),
+                    "LeftButton"
+                )
+            end
+        end
+
+        self.bindingsApplied = true
+    end
+
     self.pendingBindingRefresh = false
     return true
 end
+
+function Primary:SetBindingRoutingEnabled(enabled)
+    self.bindingRoutingEnabled = enabled == true
+    self:RefreshBindingLabels()
+
+    if InCombatLockdown() then
+        self.pendingBindingRefresh = true
+        return false
+    end
+
+    return self:RefreshOverrideBindings()
+end
+
+function Primary:ClearBindings()
+    self.bindingRoutingEnabled = false
+    return self:RefreshOverrideBindings()
+end
+
 
 function Primary:UpdateIcon(button)
     local actionSlot = button.actionSlot
@@ -392,7 +411,7 @@ function Primary:HandleEvent(event, ...)
         end
 
         if self.pendingBindingRefresh then
-            self:ApplyBindings()
+            self:RefreshOverrideBindings()
         end
 
         return
@@ -404,7 +423,12 @@ function Primary:HandleEvent(event, ...)
     end
 
     if event == "UPDATE_BINDINGS" then
-        self:ApplyBindings()
+        self:RefreshBindingLabels()
+
+        if self.bindingRoutingEnabled or self.bindingsApplied then
+            self:RefreshOverrideBindings()
+        end
+
         return
     end
 
@@ -446,6 +470,7 @@ function Primary:GetDebugStatus()
         currentPage = self.currentPage,
         firstActionSlot = self.firstActionSlot,
         lastActionSlot = self.lastActionSlot,
+        bindingRoutingEnabled = self.bindingRoutingEnabled == true,
         bindingsApplied = self.bindingsApplied == true,
         boundButtonCount = boundButtonCount,
         pendingPageRefresh = self.pendingPageRefresh == true,

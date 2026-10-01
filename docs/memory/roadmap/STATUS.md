@@ -10,7 +10,7 @@ Active work item:
 **C.2 Primary Action Cluster**
 
 State:
-**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**P0032 RUNTIME FAILED; P0033 FIX PREPARED**
 
 ## Phase status
 
@@ -20,34 +20,21 @@ State:
 | A — Core State Engine | COMPLETE |
 | B — Core HUD | COMPLETE |
 | C — Action Interface | ACTIVE — C.2 |
-| D — Immersion Controller | QUEUED after Phase C foundation |
+| D — Immersion Controller | QUEUED |
 | E — Compass and Navigation | QUEUED |
 | F — Quest Experience | QUEUED |
-| G — Cinematic Camera | QUEUED; requires current DynamicCam profile |
-| H — Integration and Polish | BLOCKED on prior phases |
+| G — Cinematic Camera | QUEUED |
+| H — Integration and Polish | QUEUED |
 
-## Phase C sequence
-
-| Item | State |
-| --- | --- |
-| C.1 Secure action capability/source review | COMPLETE |
-| C.2 Primary action cluster | ACTIVE — implementation prepared |
-| C.3 Secondary / utility clusters | QUEUED |
-| C.4 Contextual visibility / secure paging | QUEUED |
-| C.5 Stock action-bar replacement | QUEUED |
-| C.6 Action interface integration validation | QUEUED |
-
-## C.2 implementation
+## C.2 evidence
 
 P0032:
-- 12 secure buttons;
-- 4 x 3 cluster;
-- current primary action page;
-- temporary existing-key override clicks;
-- secret-safe cooldown/count;
-- usability/range presentation;
-- Action Check diagnostic;
-- stock bars retained.
+- rendering PASS;
+- range feedback PASS;
+- mouse execution FAIL;
+- routed keyboard execution FAIL.
 
-Known limitation:
-combat-time action-page remapping is deferred until combat ends.
+P0033:
+- secure click/release correction;
+- Action Keys ON/OFF fail-open routing;
+- duplicate slot-number labels removed.

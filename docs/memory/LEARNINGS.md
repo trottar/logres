@@ -131,3 +131,22 @@ For Logres:
 - panel output sink must work;
 - ordinary slash/chat fallback must work;
 - static tooling should reject recursive fallback wiring.
+## L-011 — Protected control replacement must fail open
+
+P0032 automatically redirected the user's primary action keys to Logres before
+the new secure buttons had been runtime-proven.
+
+When secure execution failed, the user's normal keys also stopped working.
+
+Rule:
+new protected-control replacements must not seize a critical existing input
+path before the replacement has runtime proof and an immediate restoration
+path.
+
+For Phase C:
+- stock controls remain available;
+- temporary key takeover is opt-in during proof;
+- release/restoration controls must be accessible;
+- automatic routing can be considered only after execution is proven.
+
+This is the input-control analogue of D-017's UI suppression capability gate.

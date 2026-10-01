@@ -14,25 +14,29 @@ project: logres
 
 **C.2 — Primary Action Cluster.**
 
-P0032 prepares the first live secure action cluster.
+P0032 runtime failed on secure action execution.
+
+P0033 fix is prepared.
 
 ## Verified State
 
-- Phase 0 Foundation complete.
-- Phase A Core State Engine complete.
-- Phase B Core HUD complete.
-- C.1 secure action source review complete.
-- P0031 pushed at `6d0a5b1`.
-- runtime baseline before P0032: `0.0.13-dev`.
-- P0032 runtime version: `0.0.14-dev`.
-- D-018 secure-action contract is authoritative.
-- P0032 static action contract passes.
+- Phase 0 complete.
+- Phase A complete.
+- Phase B complete.
+- C.1 complete.
+- P0032 pushed at `9f9f97d`.
+- P0032 cluster rendering: PASS.
+- P0032 range tint: PASS.
+- P0032 mouse action execution: FAIL.
+- P0032 routed key execution: FAIL.
+- P0032 automatic override routing interfered with normal action keys.
+- P0033 changes key routing to fail-open/opt-in.
+- P0033 removes duplicate internal `1–12` labels.
 - stock Blizzard action bars remain visible.
-- P0029 slash-output fallback regression was discovered by source inspection and fixed in P0032.
 
 ## Next Action
 
-Install/review/commit/push P0032.
+Install/review/commit/push P0033.
 
 Because runtime code changes, deploy explicitly:
 
@@ -47,69 +51,46 @@ ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
 
 Then `/reload`.
 
-Use the in-game developer panel:
-- Run All;
-- Action Check.
-
 Confirm:
-- `0.0.14-dev`;
-- Action Check PASS;
-- 12-button 4x3 cluster visible.
+- version `0.0.15-dev`;
+- Run All / Action Check PASS;
+- no duplicate `1–12` labels.
 
-Runtime proof:
-1. compare Logres actions/icons with current primary Blizzard page;
-2. mouse-click a safe Logres action;
-3. use the action's existing keyboard key;
-4. trigger cooldown;
-5. observe count/charge if naturally present;
-6. observe usability/range tint if convenient;
-7. fight normally and confirm mouse + key execution still work;
-8. report any protected-action/taint/Lua/secret errors;
-9. keep Blizzard action bars visible.
+Test both:
+1. Action Keys OFF: normal stock keys work;
+2. mouse-click Logres actions;
+3. Action Keys ON: existing keys execute via Logres;
+4. Action Keys OFF: routing releases cleanly;
+5. ordinary combat mouse + keyboard execution;
+6. cooldown/range/count presentation.
 
-Also test the repaired slash fallback once:
-
-```text
-/logres status
-```
-
-It should print normally rather than recurse.
-
-Optional:
-out-of-combat primary page change should remap the Logres cluster.
-
-Do not require a combat-time page-change scenario for C.2.
+Report any protected-action, taint, Lua, or secret error.
 
 ## Success Criteria
 
 C.2 succeeds when:
-- 12 secure buttons render correctly;
-- mouse execution works;
-- existing primary action key execution works;
-- icons/cooldown/count presentation is error-free;
-- actions continue working in ordinary combat;
-- no forbidden protected mutation occurs;
-- no secret-value error occurs;
-- stock Blizzard action bars remain available;
-- repaired slash fallback prints normally.
+- Logres mouse execution works;
+- opt-in existing-key execution works;
+- routing can be safely released;
+- ordinary combat execution works;
+- existing presentation remains correct;
+- no protected/taint/Lua/secret error occurs;
+- stock action bars remain available.
 
 ## Do Not Reopen Without New Evidence
 
-- **Phase B:** complete.
-- **C.1:** complete.
-- **Secure action contract:** D-018 canonical.
-- **Saved bindings:** never rewritten automatically.
-- **Stock action bars:** remain visible in C.2.
-- **Combat-time action paging:** known C.2 limitation; requires later secure driver work.
-- **Drag/drop editing:** deferred.
-- **Deployment:** full deploy block required.
+- **P0032 execution:** failed.
+- **P0032 presentation/range:** partially proven.
+- **Automatic critical-input takeover before proof:** rejected by L-011.
+- **Stock action bars:** remain visible.
+- **Combat-time page remap:** still deferred until combat ends.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
+- `docs/memory/evidence/C2_P0032_RUNTIME_FAILURE_2026-10-01.md`
+- `docs/memory/LEARNINGS.md`
 - `docs/memory/decisions/D-018_SECURE_ACTION_INTERFACE_CONTRACT.md`
 - `docs/memory/investigations/C2_PRIMARY_ACTION_CLUSTER.md`
-- `docs/memory/architecture/ACTION_CLUSTERS.md`
-- `docs/memory/evidence/P0029_SLASH_FALLBACK_REGRESSION_2026-10-01.md`
 - `Logres/Actions/Primary.lua`
 - `tools/check_action_contract.py`

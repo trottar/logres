@@ -36,7 +36,7 @@ Use source evidence before choosing architecture.
 
 ## C.2 — Primary action cluster
 
-**Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
+**Status: P0032 RUNTIME FAILED; P0033 FIX PREPARED.**
 
 Implement the first secure rectangular/square cluster.
 
@@ -69,7 +69,18 @@ Do not suppress stock action bars until this replacement is proven.### P0032 imp
 Known limitation:
 combat-time action-page changes defer Logres page remapping until combat ends.
 A later secure paging/state-driver work item is required before stock-bar
-suppression.
+suppression.### P0033 execution correction
+
+P0032 runtime:
+- presentation/range updates PASS;
+- mouse execution FAIL;
+- routed key execution FAIL.
+
+P0033:
+- adds secure actionrelease/down-click configuration;
+- removes internal slot-number labels;
+- makes Logres key routing opt-in with Action Keys ON/OFF;
+- keeps both mouse and keyboard execution in the required runtime test.
 
 
 ## C.3 — Secondary / utility clusters

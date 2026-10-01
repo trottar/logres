@@ -151,3 +151,23 @@ combat-time primary-page changes are not yet secure-driven and therefore do
 not reconfigure Logres buttons until `PLAYER_REGEN_ENABLED`.
 
 This limitation blocks stock action-bar suppression, not the C.2 proof.
+## C.2 execution failure correction
+
+P0032 demonstrated that presentation and secure execution are separate proof
+domains.
+
+Presentation updated correctly while secure action execution was inert.
+
+P0033 aligns the click/release setup with Blizzard action-button precedent:
+- `type = action`;
+- `typerelease = actionrelease`;
+- `AnyUp`;
+- `LeftButtonDown`;
+- `RightButtonDown`.
+
+P0033 also makes temporary primary-key routing opt-in until runtime proof is
+complete.
+
+The test still covers both mouse and keyboard execution.
+
+The toggle exists to guarantee fail-open recovery, not to reduce test scope.

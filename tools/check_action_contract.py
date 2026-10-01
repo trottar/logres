@@ -23,6 +23,9 @@ if SOURCE_PATH.is_file():
         'local BUTTON_COUNT = 12',
         '"SecureActionButtonTemplate"',
         'button:SetAttribute("type", "action")',
+        'button:SetAttribute("typerelease", "actionrelease")',
+        '"LeftButtonDown"',
+        '"RightButtonDown"',
         'button:SetAttribute("action", actionSlot)',
         "C_ActionBar.GetActionBarPage()",
         "C_ActionBar.RegisterActionUIButton(",
@@ -36,6 +39,9 @@ if SOURCE_PATH.is_file():
         "C_ActionBar.IsActionInRange(",
         "SetOverrideBindingClick(",
         "ClearOverrideBindings(",
+        "function Primary:SetBindingRoutingEnabled(enabled)",
+        "function Primary:RefreshBindingLabels()",
+        "bindingRoutingEnabled = false",
         'GetBindingKey(command)',
         'event == "ACTIONBAR_PAGE_CHANGED"',
         'event == "UPDATE_BINDINGS"',
@@ -60,6 +66,7 @@ if SOURCE_PATH.is_file():
         "GetActionCount(",
         "C_ActionBar.GetActionUseCount(",
         "C_ActionBar.GetActionCharges(",
+        "slotText",
     ]
 
     for fragment in forbidden:
@@ -91,6 +98,9 @@ if COMMANDS_PATH.is_file():
         '"Logres actioncheck: PASS',
         'if command == "actioncheck" then',
         'Logres:RegisterDevPanelAction("action", "Action Check", "actioncheck")',
+        '"Action Keys ON"',
+        '"Action Keys OFF"',
+        'if command == "actionbindings" then',
         "runActionCheck()",
     ]
 

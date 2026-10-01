@@ -475,7 +475,6 @@ local function runActionCheck()
         and debugStatus.currentPage ~= nil
         and debugStatus.firstActionSlot ~= nil
         and debugStatus.lastActionSlot ~= nil
-        and debugStatus.bindingsApplied == true
         and debugStatus.stockBarsSuppressed == false
         and (
             (
@@ -487,11 +486,12 @@ local function runActionCheck()
 
     if passed then
         emit(string.format(
-            "Logres actioncheck: PASS (buttons=12 registered=12 page=%s slots=%s-%s boundButtons=%s bindings=%s deferredPage=%s deferredBindings=%s stockBarsSuppressed=false)",
+            "Logres actioncheck: PASS (buttons=12 registered=12 page=%s slots=%s-%s boundButtons=%s keyRouting=%s overrides=%s deferredPage=%s deferredBindings=%s stockBarsSuppressed=false)",
             tostring(debugStatus.currentPage),
             tostring(debugStatus.firstActionSlot),
             tostring(debugStatus.lastActionSlot),
             tostring(debugStatus.boundButtonCount),
+            boolText(debugStatus.bindingRoutingEnabled),
             boolText(debugStatus.bindingsApplied),
             boolText(debugStatus.pendingPageRefresh),
             boolText(debugStatus.pendingBindingRefresh)
@@ -500,7 +500,7 @@ local function runActionCheck()
     end
 
     emit(string.format(
-        "Logres actioncheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s shown=%s buttons=%s registered=%s page=%s slots=%s-%s boundButtons=%s bindings=%s deferredPage=%s deferredBindings=%s stockBarsSuppressed=%s)",
+        "Logres actioncheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s shown=%s buttons=%s registered=%s page=%s slots=%s-%s boundButtons=%s keyRouting=%s overrides=%s deferredPage=%s deferredBindings=%s stockBarsSuppressed=%s)",
         tostring(status.initialized),
         tostring(status.enabled),
         tostring(debugStatus.moduleEnabled),
@@ -511,10 +511,58 @@ local function runActionCheck()
         tostring(debugStatus.firstActionSlot),
         tostring(debugStatus.lastActionSlot),
         tostring(debugStatus.boundButtonCount),
+        tostring(debugStatus.bindingRoutingEnabled),
         tostring(debugStatus.bindingsApplied),
         tostring(debugStatus.pendingPageRefresh),
         tostring(debugStatus.pendingBindingRefresh),
         tostring(debugStatus.stockBarsSuppressed)
+    ))
+end
+
+
+local function handleActionBindings(argument)
+    local actions = Logres:GetModule("PrimaryActions")
+
+    if argument == "on" then
+        local applied = actions:SetBindingRoutingEnabled(true)
+
+        if applied then
+            emit(
+                "Logres: Action Keys ON. Existing ACTIONBUTTON keys "
+                .. "temporarily route through Logres."
+            )
+        else
+            emit(
+                "Logres: Action Keys ON deferred until combat ends."
+            )
+        end
+
+        return
+    end
+
+    if argument == "off" then
+        local applied = actions:SetBindingRoutingEnabled(false)
+
+        if applied then
+            emit(
+                "Logres: Action Keys OFF. Normal stock action bindings "
+                .. "are active."
+            )
+        else
+            emit(
+                "Logres: Action Keys OFF deferred until combat ends."
+            )
+        end
+
+        return
+    end
+
+    local debugStatus = actions:GetDebugStatus()
+    emit(string.format(
+        "Logres actionbindings: keyRouting=%s overrides=%s pending=%s",
+        boolText(debugStatus.bindingRoutingEnabled),
+        boolText(debugStatus.bindingsApplied),
+        boolText(debugStatus.pendingBindingRefresh)
     ))
 end
 
@@ -592,6 +640,7 @@ local function printHelp()
     emit("  /logres lifecyclecheck")
     emit("  /logres hudcheck")
     emit("  /logres actioncheck")
+    emit("  /logres actionbindings [on|off]")
     emit("  /logres hudpreview [on|off]")
     emit("  /logres immersion [on|off|toggle]")
     emit("  /logres debug on")
@@ -657,6 +706,11 @@ local function handleCommand(message)
 
     if command == "actioncheck" then
         runActionCheck()
+        return
+    end
+
+    if command == "actionbindings" then
+        handleActionBindings(argument)
         return
     end
 
@@ -726,6 +780,8 @@ Logres:RegisterDevPanelAction(
 )
 Logres:RegisterDevPanelAction("hud", "HUD Check", "hudcheck")
 Logres:RegisterDevPanelAction("action", "Action Check", "actioncheck")
+Logres:RegisterDevPanelAction("actionKeysOn", "Action Keys ON", "actionbindings on")
+Logres:RegisterDevPanelAction("actionKeysOff", "Action Keys OFF", "actionbindings off")
 Logres:RegisterDevPanelAction(
     "immersionOn",
     "Immersion ON",
