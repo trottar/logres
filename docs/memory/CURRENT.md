@@ -8,60 +8,79 @@ project: logres
 
 ## Active Objective
 
-**Phase 0 — Foundation.** Establish Project Logres as a repository-native, memory-driven WoW Forever addon project before implementation begins.
+**Phase 0 — Foundation.** Establish the first real Logres addon runtime and prove that its lifecycle/state foundation works on WoW Forever.
 
 ## Current Work Item
 
 **0.3 — Minimal addon skeleton/load proof.**
 
-I-001 / Phase 0.2 is complete with explicit phase-specific deferrals.
+P0005 prepares the first real `Logres/` addon:
+- Forever TOC;
+- shared addon namespace/event dispatcher;
+- `LogresDB` initialization;
+- central world/combat/instance/PvP state;
+- development status command;
+- WSL deployment helper;
+- static addon-structure checker.
 
-The next implementation work creates the smallest real `Logres` addon that:
-- loads on Forever interface 16001;
-- establishes the addon namespace;
-- establishes saved-variable policy;
-- creates Core event/state foundations without product HUD;
-- emits a minimal development-only load confirmation;
-- can be deployed from WSL into `_classic_beta_/Interface/AddOns/Logres`;
-- survives `/reload`.
+No product HUD feature is implemented in this checkpoint.
 
 ## Verified State
 
 - P0001 memory bootstrap pushed at `353c5b0`.
 - P0002 source audit/probe pushed at `48a7d28`.
 - P0003 first runtime evidence pushed at `ad3a660`.
+- P0004 I-001 closure pushed at `477df5b`.
+- I-001 is complete with explicit phase-specific deferrals.
 - Forever runtime: 1.60.1 build 70124 / interface 16001.
 - Forever reports `WOW_PROJECT_ID == WOW_PROJECT_MAINLINE == 1`.
-- player and target health/power percentages are secret-capable and must use secret-safe display transport.
-- custom Logres health curve -> secret status-bar value/alpha is runtime verified.
-- player cast/channel APIs are runtime verified for self-confirmation.
-- ordinary and elite target level/classification are readable even in tested combat/instance contexts, but remain intentionally hidden according to product policy.
-- open-world map position/facing works.
-- instance map position/facing is unavailable; world values restore after instance exit.
-- combat lockdown exists and event ordering requires transition tolerance.
-- diagnostic SavedVariables persisted across reload and instance transitions.
-- I-001 is closed with explicit deferrals for phase-specific tests.
+- secret-safe health/resource architecture is settled by D-008.
+- compass inputs are world-only in the tested client; instances remove map position/facing.
+- combat restriction state may settle across multiple events.
+- the minimal skeleton source is prepared but **not yet runtime proven**.
 
 ## Next Action
 
-Prepare P0004, commit/push the I-001 closure records, then design and generate the Phase 0.3 minimal addon skeleton.
+Install P0005, run:
 
-The skeleton must not yet implement the health vignette, target HUD, compass, action clusters, Quiet Mode, or camera behavior.
+```text
+python3 tools/check_memory_health.py
+python3 tools/check_addon_structure.py
+git diff --check
+```
 
-First proof should be load/lifecycle/state infrastructure only.
+Review, commit, and push P0005.
+
+Then deploy:
+
+```text
+./tools/deploy_logres.sh "<Forever Interface/AddOns directory>"
+```
+
+In game:
+1. enable `Logres`;
+2. `/reload`;
+3. confirm one development load message and no Lua error;
+4. run `/logres status`;
+5. run `/reload` again and confirm `loadCount` increases;
+6. enter/leave ordinary combat and inspect `/logres status`;
+7. enter/leave an instance if convenient and inspect `/logres status`.
+
+Preserve any failure before changing code.
 
 ## Success Criteria
 
 Phase 0.3 succeeds when:
-- `Logres/Logres.toc` is valid for Forever;
+- `Logres/Logres.toc` loads on Forever interface 16001;
 - addon namespace/bootstrap loads without Lua errors;
-- SavedVariables initialize safely;
-- central state module can observe basic world/combat/instance/PvP inputs without presenting product UI;
+- `LogresDB` initializes safely;
+- `loadCount` persists/increments through `/reload`;
+- central state reports world/combat/instance/PvP inputs correctly for tested contexts;
 - deployment from WSL is repeatable;
-- `/reload` preserves expected saved state;
-- load proof is recorded as runtime evidence;
+- static structure and memory checks pass;
+- runtime load/state proof is recorded under `docs/memory/evidence/`;
 - failures are preserved;
-- memory and roadmap are synchronized.
+- memory/roadmap are synchronized.
 
 ## Do Not Reopen Without New Evidence
 
@@ -72,17 +91,20 @@ Phase 0.3 succeeds when:
 - **Forever identity:** interface 16001 currently collides with MAINLINE project ID.
 - **Health/resource architecture:** secret-safe native transforms/display only; see D-008.
 - **No conventional player health bar.**
-- **Enemy disclosure:** level/elite metadata remains intentionally hidden by default even though runtime proved it is available.
+- **Enemy disclosure:** level/elite metadata remains intentionally hidden by default.
 - **Action layout:** rectangular/square clusters.
-- **Compass context:** world-only where map/facing data exists; suspend in instances.
+- **Compass context:** world-only where data exists; suspend in instances.
 - **PvP:** state modifier, not immersion-off.
+- **Phase 0.3 scope:** lifecycle/state foundation only; no product HUD yet.
 
 ## Relevant References
 
-- `docs/memory/investigations/FOREVER_API_CAPABILITY_AUDIT.md`
-- `docs/memory/evidence/I001_RUNTIME_PASS_01_2026-09-30.md`
-- `docs/memory/evidence/I001_RUNTIME_PASS_02_2026-09-30.md`
+- `docs/memory/architecture/SYSTEM.md`
+- `docs/memory/architecture/STATE_ENGINE.md`
 - `docs/memory/architecture/API_BOUNDARIES.md`
 - `docs/memory/decisions/D-008_SECRET_SAFE_HEALTH_AND_RESOURCE_PATH.md`
+- `docs/memory/evidence/I001_RUNTIME_PASS_02_2026-09-30.md`
 - `docs/memory/roadmap/STATUS.md`
-- `docs/ROADMAP.md`
+- `Logres/`
+- `tools/deploy_logres.sh`
+- `tools/check_addon_structure.py`

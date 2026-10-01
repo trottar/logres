@@ -8,12 +8,14 @@ As of 2026-09-30.
 
 Active work item: **0.3 Minimal addon skeleton/load proof**
 
+State: **SKELETON PREPARED; RUNTIME PROOF PENDING**
+
 ## Phase status
 
 | Phase | State |
 | --- | --- |
 | 0 — Foundation | ACTIVE — 0.3 |
-| A — Core State Engine | BLOCKED on 0.3 |
+| A — Core State Engine | BLOCKED on 0.3 runtime proof |
 | B — Core HUD | BLOCKED on Phase A |
 | C — Action Interface | BLOCKED on Phase A/B |
 | D — Immersion Controller | BLOCKED on Phase A |
@@ -27,29 +29,27 @@ Active work item: **0.3 Minimal addon skeleton/load proof**
 | Item | State |
 | --- | --- |
 | 0.1 Repository + durable memory | COMPLETE (`353c5b0`) |
-| 0.2 Forever API capability audit | COMPLETE WITH DEFERRALS |
-| 0.3 Minimal addon skeleton/load proof | ACTIVE |
+| 0.2 Forever API capability audit | COMPLETE WITH DEFERRALS (`477df5b`) |
+| 0.3 Minimal addon skeleton/load proof | ACTIVE — source prepared |
 
-## Phase 0.2 closure
+## 0.3 source prepared
 
-Runtime established:
-- Forever identity/project-ID behavior;
-- secret-safe health/resource architecture;
-- custom vignette curve viability;
-- player cast/channel feasibility;
-- normal and elite metadata in combat;
-- instance navigation restriction/restoration;
-- combat-lockdown timing;
-- SavedVariables persistence.
+P0005 adds:
+- real `Logres/Logres.toc`;
+- core namespace/event bus;
+- SavedVariables initialization;
+- central state observation;
+- development status/debug commands;
+- WSL deployment helper;
+- static addon-structure checker.
 
-Deferred to owning phases:
-- enemy cast presentation;
-- PvP flagged transition;
-- quest waypoint semantics;
-- secure action mutation;
-- outbound chat automation;
-- camera mutation/restore.
+## Gate to Phase A
 
-## Next
+Do not begin Phase A until runtime proves:
+- clean addon load;
+- clean `/reload`;
+- SavedVariables persistence;
+- basic state transitions;
+- repeatable WSL deployment.
 
-Create and runtime-prove the minimal Logres addon skeleton without implementing product HUD features.
+No HUD presentation is part of this gate.

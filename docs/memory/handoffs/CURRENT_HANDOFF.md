@@ -4,22 +4,23 @@ Authoritative state: `../CURRENT.md`. Start there.
 
 Project Logres is in **Phase 0 / 0.3 — Minimal addon skeleton/load proof**.
 
-I-001 is complete.
+P0005 prepares the first actual addon runtime:
+- `Logres.toc`;
+- namespace/event bus;
+- database initialization;
+- central state;
+- `/logres status`;
+- WSL deployment/check tooling.
 
-Key runtime conclusions:
-- Forever 1.60.1 build 70124 / interface 16001 reports MAINLINE project ID;
-- health/power percentages are secret-capable;
-- custom secret-safe health curves can drive bar value/alpha in combat and instances;
-- player cast/channel confirmation is feasible;
-- normal/elite level/classification metadata is readable even in tested combat/instance contexts but intentionally hidden by design;
-- compass inputs work in world and disappear in instances, then restore after exit;
-- combat state/restrictions settle asynchronously across events;
-- SavedVariables persist through reload/instance transitions.
-
-Negative result retained:
-- `table.pack` unavailable in Forever Lua.
+It intentionally contains no product HUD.
 
 Next:
-create the smallest real Logres addon skeleton and prove lifecycle/state/SavedVariables behavior.
+1. commit/push P0005;
+2. deploy to Forever;
+3. `/reload`;
+4. verify load message and `/logres status`;
+5. verify `loadCount` increments across another reload;
+6. exercise basic combat/instance state;
+7. record runtime evidence or failures.
 
 User performs all commits/pushes.

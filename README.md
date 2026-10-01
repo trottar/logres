@@ -2,6 +2,32 @@
 
 **Project Logres** is an immersive, world-first interface addon for World of Warcraft Forever.
 
-The project is currently in **Phase 0 — Foundation**.
+The project is currently in **Phase 0 — Foundation**. The first real addon skeleton now exists, but product HUD features are intentionally not implemented yet.
 
 Design decisions, technical findings, failures, rejected approaches, evidence, and active development state are maintained as repository-native durable memory under `docs/memory/`.
+
+## Development environment
+
+Canonical development uses Windows 11 + WSL, with the repository stored in the WSL Linux filesystem.
+
+Static checks:
+
+```bash
+python3 tools/check_memory_health.py
+python3 tools/check_addon_structure.py
+```
+
+Deploy the development addon to a Forever AddOns directory:
+
+```bash
+./tools/deploy_logres.sh "/mnt/c/.../_classic_beta_/Interface/AddOns"
+```
+
+Then in game:
+
+```text
+/reload
+/logres status
+```
+
+The Phase 0.3 skeleton currently provides lifecycle, SavedVariables, and basic state observation only.

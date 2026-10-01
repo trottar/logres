@@ -5,46 +5,93 @@
 Logres separates **state detection** from **presentation policy**.
 
 State detection answers facts:
-- Is the player in combat?
+- Is the player in combat lockdown?
 - In an instance?
+- What instance type?
 - PvP flagged?
-- Interacting with an NPC?
-- Mounted?
-- Is immersion enabled?
 
-Presentation policy answers:
+Presentation policy later answers:
 - Should the compass exist?
-- How opaque is the secondary action cluster?
-- Which target information is visible?
-- Which camera profile applies?
+- How opaque is an action cluster?
+- Which target information is shown?
+- Which camera behavior applies?
 
-## Initial conceptual model
+## Phase 0.3 implementation
+
+The real skeleton exposes:
 
 ```lua
-State = {
-    immersion = true,
-    context = "world",
+Logres.State = {
+    initialized = false,
+    revision = 0,
+
+    context = "unknown", -- later world / instance
     combat = false,
     pvpFlagged = false,
-    mounted = false,
-    resting = false,
+    inInstance = false,
+    instanceType = "none",
+
+    lastEvent = "bootstrap",
 }
 ```
 
-This is illustrative, not yet implementation source.
+The table is runtime source state, not SavedVariables.
 
-## Constraint
+## Inputs
 
-Do not model every combination as a separate monolithic mode (`WorldPvPCombat`, `WorldCombat`, etc.) unless evidence proves modifiers cannot remain composable.
+Phase 0.3 refreshes from:
+- `PLAYER_LOGIN`;
+- `PLAYER_ENTERING_WORLD`;
+- `ZONE_CHANGED_NEW_AREA`;
+- `PLAYER_REGEN_DISABLED`;
+- `PLAYER_REGEN_ENABLED`;
+- `PLAYER_FLAGS_CHANGED`;
+- `ADDON_RESTRICTION_STATE_CHANGED`.
 
-## Priority concept
+Observed values come from:
+- `InCombatLockdown()`;
+- `IsInInstance()`;
+- `UnitIsPVP("player")`.
 
-Some contexts may override presentation more strongly:
-1. protected/technical restrictions;
-2. instance requirements;
-3. combat;
-4. PvP flag;
-5. interaction/travel;
-6. ordinary immersion/world defaults.
+## Combat transition rule
 
-Exact priorities remain an implementation decision after the API audit.
+I-001 runtime evidence falsified the assumption that `PLAYER_REGEN_DISABLED` means every combat/restriction API has already settled inside that callback.
+
+Therefore:
+- no single combat event is treated as final truth;
+- each authoritative transition signal triggers a fresh observation;
+- later restriction-state events may update state again;
+- consumers react to state revisions, not assumptions about one event's timing.
+
+## Change publication
+
+`RefreshState()` increments `revision` only when tracked state changes, then fires:
+
+```text
+STATE_CHANGED
+```
+
+through the internal callback bus.
+
+Later modules subscribe to state rather than registering redundant global context logic.
+
+## Orthogonal-state constraint
+
+Do not model every combination as a monolithic mode such as:
+- `WorldPvPCombat`;
+- `InstanceCombat`;
+- `WorldInteractionPvP`.
+
+Prefer independent facts/modifiers and derive presentation from them.
+
+## Deferred fields
+
+Not part of the Phase 0.3 skeleton:
+- immersion enabled;
+- NPC interaction;
+- mounted/travel;
+- resting;
+- camera situation;
+- quest/navigation availability.
+
+Add them only when their owning phase needs them and evidence defines their event/API behavior.
