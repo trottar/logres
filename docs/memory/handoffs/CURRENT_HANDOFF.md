@@ -2,25 +2,23 @@
 
 Authoritative state: `../CURRENT.md`. Start there.
 
-Current phase:
-**Phase B — Core HUD**
-
-B.2 is complete.
-
-P0021 primary-resource percentage runtime proof passed:
-- visible;
-- responsive;
-- immersion off/on correct;
-- no secret-value error reported.
-
 Current work:
 **B.3 — Target Presentation**
 
-Before coding:
-- verify target-name API/events;
-- reuse native secret-safe percentage formatting;
-- preserve D-003 disclosure limits.
+P0023 is prepared.
 
-P0022 is documentation/evidence only; no WoW redeploy required.
+Adds to existing HUD:
+- sparse target name;
+- target health percentage;
+- target acquisition/loss/update events;
+- no target resource yet.
+
+D-003 remains enforced:
+no level, classification, portrait, or target bar.
+
+Version:
+`0.0.10-dev`
+
+P0023 changes runtime code, so deploy explicitly before testing.
 
 User performs all commits/pushes.

@@ -14,75 +14,96 @@ project: logres
 
 **B.3 — Target Presentation.**
 
-B.2 is complete.
+P0023 prepares sparse current-target presentation:
 
-The production primary-resource percentage is runtime proven on P0021:
-- visible lower-center percentage;
-- updates while resource changes;
-- immersion off hides it;
-- immersion on restores it;
-- no secret-value/Lua error reported.
+```text
+Target Name
+Health %
+```
 
-B.3 now owns sparse current-target presentation.
+No numeric level, classification, portrait, or target health bar is introduced.
 
 ## Verified State
 
 - Phase A complete.
-- B.1 player health vignette complete.
+- B.1 health vignette complete.
 - B.2 primary resource percentage complete.
-- P0021 pushed at `66b27a3`.
-- current runtime version: `0.0.9-dev`.
-- target level/classification are technically available from prior audit evidence.
-- product policy intentionally withholds numeric level and elite/rare classification by default.
-- target health/power percentages are secret-capable.
+- P0022 B.2 closure pushed at `f89f43f`.
+- current runtime baseline before P0023: `0.0.9-dev`.
+- `UnitName("target")` is available on Forever and may become secret under identity restrictions.
+- `FontString:SetText` accepts secret text arguments.
+- target health percentage can reuse the native 0–100 secret-safe percentage curve.
+- `UnitExists("target")` provides ordinary show/hide control.
+- target resource is deliberately deferred from the initial B.3 patch.
 
 ## Next Action
 
-Design/source-check B.3 before implementing it.
+Install/review/commit/push P0023.
 
-Resolve:
-1. target-name API/event path on Forever;
-2. secret-safe target health percentage formatting;
-3. minimal target update events;
-4. whether target resource percentage belongs in the initial patch or should remain optional;
-5. no-target/target-change visibility behavior;
-6. initial anchor relative to player resource/cast-confirmation space.
+Because runtime code changes, deploy explicitly:
 
-Hard rule:
-do not expose numeric level or elite/rare classification in default target UI.
+```bash
+WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
+ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
 
-Do not build a conventional target frame.
+./tools/deploy_logres.sh "$ADDONS"
+```
 
-When B.3 runtime code is prepared, include the full deploy block before in-game validation.
+Then:
+
+```text
+/reload
+/logres status
+/logres statecheck
+/logres preferencecheck
+/logres lifecyclecheck
+/logres hudcheck
+```
+
+Confirm version:
+`0.0.10-dev`
+
+B.3 runtime proof:
+1. no target -> target block absent;
+2. acquire target -> name + health % appear;
+3. damage an ordinary target -> health % updates;
+4. switch targets -> text updates;
+5. clear target -> block disappears;
+6. immersion off/on -> hide/restore current target;
+7. during ordinary combat, confirm target name/health remain functional with no secret-value errors;
+8. if an elite target is naturally available, confirm no numeric level/classification is shown.
+
+No dungeon travel is required solely for B.3.
 
 ## Success Criteria
 
 B.3 succeeds when:
-- no target -> presentation absent;
-- target acquisition shows sparse name + health percentage;
-- target health updates correctly;
-- target changes/clears cleanly;
-- immersion off/on hides/restores presentation;
-- default UI exposes no numeric level/classification;
-- no portrait-heavy frame or health bar is added;
-- no secret-value/Lua errors occur.
+- sparse target name + health percentage render;
+- target acquisition/change/loss update correctly;
+- health percentage updates;
+- ordinary combat does not produce secret/Lua errors;
+- immersion hide/restore works;
+- no level/classification/portrait/bar is exposed;
+- target resource remains optional/deferred unless new evidence justifies it.
 
 ## Do Not Reopen Without New Evidence
 
 - **B.1:** complete.
 - **B.2:** complete.
-- **Player resource:** current-character primary-resource path proven.
-- **Target disclosure:** D-003 is authoritative.
-- **Target health/power:** secret-capable.
+- **Target disclosure:** D-003 + D-013.
+- **Target identity:** may be secret; direct native text forwarding only.
+- **Target health:** native curve + SetFormattedText only.
+- **Target resource:** deferred from initial B.3.
 - **Actions:** Phase C.
-- **Deployment:** full deploy block required for runtime-code tests.
+- **Deployment:** full deploy block required.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/B2_RESOURCE_PRESENTATION_RUNTIME_PROOF_2026-10-01.md`
+- `docs/memory/decisions/D-013_TARGET_PRESENTATION_CONTRACT.md`
 - `docs/memory/investigations/B3_TARGET_PRESENTATION.md`
 - `docs/memory/decisions/D-003_ENEMY_INFORMATION_DISCLOSURE.md`
 - `docs/memory/decisions/D-008_SECRET_SAFE_HEALTH_AND_RESOURCE_PATH.md`
 - `docs/memory/architecture/HUD.md`
-- `docs/memory/evidence/I001_RUNTIME_PASS_02_2026-09-30.md`
+- `Logres/HUD/HUD.lua`
+- `tools/check_hud_contract.py`

@@ -108,7 +108,7 @@ Do not add a conventional resource bar unless later accessibility work explicitl
 
 ## B.3 — Target presentation
 
-**Status: ACTIVE.**
+**Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
 
 Default target information:
 - name;
@@ -121,6 +121,17 @@ Do not show:
 - portrait-heavy conventional target frame.
 
 Any relative-difficulty styling requires a separate design decision if used.
+
+### P0023 implementation
+
+Initial production target block:
+- target name;
+- target health percentage;
+- no target resource yet;
+- no level/classification;
+- no portrait/bar;
+- target identity forwarded directly to secret-safe FontString text;
+- target health forwarded through native percent curve to `SetFormattedText`.
 
 ## B.4 — Cast confirmation
 

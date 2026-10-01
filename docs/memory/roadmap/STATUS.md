@@ -9,6 +9,9 @@ As of 2026-10-01.
 Active work item:
 **B.3 Target Presentation**
 
+State:
+**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+
 ## Phase status
 
 | Phase | State |
@@ -29,17 +32,7 @@ Active work item:
 | --- | --- |
 | B.1 HUD root + player health vignette | COMPLETE |
 | B.2 Resource presentation | COMPLETE |
-| B.3 Target presentation | ACTIVE |
+| B.3 Target presentation | ACTIVE — implementation prepared |
 | B.4 Cast confirmation | QUEUED |
 | B.5 Allies and pets | QUEUED |
 | B.6 HUD integration validation | QUEUED |
-
-## B.2 final result
-
-P0021 runtime proof:
-- resource percentage visible;
-- updates correctly;
-- immersion off/on correct;
-- no runtime/secret-value error reported.
-
-Current-character primary-resource path is production proven.

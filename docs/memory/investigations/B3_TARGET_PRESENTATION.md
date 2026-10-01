@@ -1,94 +1,124 @@
 # B.3 — Target Presentation
 
-Status: ACTIVE
+Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT
 Opened: 2026-10-01
 
 ## Goal
 
 Add the minimum target information necessary for combat/world awareness without restoring a conventional target frame.
 
-## Product contract
+## Source resolution
 
-Default target presentation:
-- target name;
-- target health percentage;
-- optional target resource percentage where useful.
+### Target identity
 
-Do not show by default:
-- numeric level;
-- elite/rare classification;
+`UnitName("target")` is available on Forever 1.60.1.
+
+The name can become secret when unit-identity restrictions apply.
+
+`FontString:SetText` accepts secret text arguments and adds the native Text secret aspect.
+
+Therefore:
+
+```text
+UnitName("target")
+    -> targetNameText:SetText(secretOrOrdinaryName)
+```
+
+No Lua inspection/conversion is required.
+
+### Target existence
+
+`UnitExists("target")` provides the ordinary existence branch used to show/hide the target block.
+
+No target-name value is used for control flow.
+
+### Target health
+
+Use the native percent scale curve already introduced by B.2:
+
+```text
+UnitHealthPercent("target", true, percentScaleCurve)
+    -> targetHealthText:SetFormattedText("%.0f%%", secretPercent)
+```
+
+### Events
+
+Initial implementation refreshes on:
+- `PLAYER_TARGET_CHANGED`;
+- `UNIT_HEALTH` for target;
+- `UNIT_MAXHEALTH` for target;
+- `UNIT_NAME_UPDATE` for target.
+
+## P0023 implementation
+
+Adds to the existing HUD module:
+- `LogresHUDTarget`;
+- target name FontString;
+- target health percentage FontString;
+- target event frame;
+- `UpdateTarget`;
+- immersion re-enable refresh;
+- hudcheck structural coverage.
+
+Also renames the B.2 internal curve field from `resourceScaleCurve` to the more accurate `percentScaleCurve`, since B.3 shares it.
+
+## Layout
+
+First pass:
+
+```text
+center y=-54:
+    Target Name
+    Health %
+
+center y=-118:
+    Player Resource %
+```
+
+This leaves space for future cast-confirmation/action layout work.
+
+## Disclosure
+
+P0023 intentionally does not call:
+- `UnitLevel`;
+- `UnitClassification`.
+
+It does not create:
 - portrait;
-- large health bar;
-- explicit difficulty label.
+- StatusBar;
+- classification label.
 
-D-003 remains authoritative even though level/classification are technically readable.
+Static HUD checks guard these boundaries.
 
-## Secret-safe boundary
+## Target resource
 
-Target health and power percentages are secret-capable.
+Deferred from initial B.3.
 
-Expected production paths:
+Reason:
+name + health percentage satisfies the minimum product need and avoids clutter/scope expansion.
 
-```text
-UnitHealthPercent("target", ...)
-    -> native scale/formatting
-    -> FontString:SetFormattedText
-```
+## Runtime plan
 
-and, if target resource is included:
+After deploy:
+1. confirm `0.0.10-dev`;
+2. existing checks + `/logres hudcheck` pass;
+3. clear target -> target block absent;
+4. acquire ordinary target -> name + health % appear;
+5. damage target -> health % updates;
+6. switch target -> name/health update;
+7. clear target -> block disappears;
+8. immersion off/on -> hides/restores current target;
+9. inspect an elite target if one is naturally convenient and confirm no level/classification is shown;
+10. report any secret/Lua errors.
 
-```text
-UnitPowerPercent("target", ...)
-    -> native scale/formatting
-    -> FontString:SetFormattedText
-```
+No dungeon travel is required solely to test elite disclosure.
 
-Do not perform Lua arithmetic/comparison/stringification over target percentage values.
+## Coverage
 
-## Ordinary target facts
+Target identity may become secret in combat.
 
-Target name may be read through the ordinary unit-name API if current source verification confirms the expected Forever behavior.
-
-Name display should disappear cleanly when no valid target exists.
-
-Do not use target classification or level to alter default disclosure during B.3.
-
-## Initial layout direction
-
-Keep the target block sparse and close to the center-HUD language rather than recreating Blizzard's upper-left frame.
-
-Candidate first-pass structure:
-
-```text
-Target Name
-72%
-```
-
-Optional target resource percentage should not be included unless it materially improves the first implementation and remains visually restrained.
-
-## Source questions before implementation
-
-Resolve:
-1. exact target-name API/event path;
-2. target health secret-safe formatting path;
-3. minimal target health/update events;
-4. whether target resource should ship in initial B.3 or remain optional;
-5. how target disappearance is handled without reading secret presentation text;
-6. anchor relation to the existing player resource text and future cast glyph.
-
-## Runtime proof target
-
-Using ordinary open-world targets where possible:
-- no target -> target block absent;
-- acquire target -> name + health % appear;
-- damage target -> percentage updates;
-- clear/change target -> block updates correctly;
-- immersion off/on hides/restores it;
-- normal and elite targets do not expose level/classification;
-- no secret-value/Lua errors.
-
-An instance is not required solely to prove elite-disclosure policy because D-003 and prior runtime evidence already establish classification availability/withholding.
+The runtime proof should include ordinary combat if practical so name/health forwarding is exercised under the restrictions that matter.
 
 ## Exit
 
-B.3 completes when sparse target presentation is production-viable and preserves the disclosure contract.
+B.3 completes when sparse target name + health percentage is runtime proven and D-003 disclosure remains intact.

@@ -259,3 +259,37 @@ D-003 remains authoritative:
 - no portrait-heavy conventional target frame.
 
 Target health/power remain secret-capable and must use native safe display paths.
+## B.3 implementation boundary
+
+P0023 adds sparse target presentation to the existing HUD module:
+
+```text
+Target Name
+Health %
+```
+
+Target identity path:
+
+```text
+UnitName("target")
+    -> FontString:SetText
+```
+
+The name may be secret; Logres does not inspect/read it back.
+
+Target health path:
+
+```text
+UnitHealthPercent("target", true, percentScaleCurve)
+    -> FontString:SetFormattedText("%.0f%%", secretPercent)
+```
+
+The target block is shown/hidden from `UnitExists("target")`, not from secret text/health values.
+
+D-003 is statically reinforced:
+- no UnitLevel;
+- no UnitClassification;
+- no portrait;
+- no conventional target bar.
+
+Target resource remains deferred from initial B.3.

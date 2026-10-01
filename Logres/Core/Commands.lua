@@ -344,11 +344,15 @@ local function runHUDCheck()
         and debugStatus.curvesReady == true
         and debugStatus.resourceTextReady == true
         and debugStatus.resourceCurveReady == true
+        and debugStatus.targetFrameReady == true
+        and debugStatus.targetNameTextReady == true
+        and debugStatus.targetHealthTextReady == true
+        and debugStatus.targetEventFrameReady == true
         and visibilityMatchesPreference
 
     if passed then
         print(string.format(
-            "Logres hudcheck: PASS (bands=4 textures=16 curves=true resourceText=true resourceCurve=true immersion=%s visible=%s)",
+            "Logres hudcheck: PASS (bands=4 textures=16 curves=true resourceText=true resourceCurve=true target=true immersion=%s visible=%s)",
             boolText(debugStatus.immersionEnabled),
             boolText(debugStatus.rootShown)
         ))
@@ -356,7 +360,7 @@ local function runHUDCheck()
     end
 
     print(string.format(
-        "Logres hudcheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s bands=%s textures=%s curves=%s resourceText=%s resourceCurve=%s immersion=%s visible=%s visibilityMatches=%s)",
+        "Logres hudcheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s bands=%s textures=%s curves=%s resourceText=%s resourceCurve=%s targetFrame=%s targetName=%s targetHealth=%s targetEvents=%s immersion=%s visible=%s visibilityMatches=%s)",
         tostring(status.initialized),
         tostring(status.enabled),
         tostring(debugStatus.moduleEnabled),
@@ -365,6 +369,10 @@ local function runHUDCheck()
         tostring(debugStatus.curvesReady),
         tostring(debugStatus.resourceTextReady),
         tostring(debugStatus.resourceCurveReady),
+        tostring(debugStatus.targetFrameReady),
+        tostring(debugStatus.targetNameTextReady),
+        tostring(debugStatus.targetHealthTextReady),
+        tostring(debugStatus.targetEventFrameReady),
         tostring(debugStatus.immersionEnabled),
         tostring(debugStatus.rootShown),
         tostring(visibilityMatchesPreference)

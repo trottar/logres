@@ -186,10 +186,38 @@ function HUD:UpdateResource()
         "player",
         nil,
         false,
-        self.resourceScaleCurve
+        self.percentScaleCurve
     )
 
     self.resourceText:SetFormattedText("%.0f%%", percent)
+end
+
+
+function HUD:UpdateTarget()
+    if not self.root or not self.root:IsShown() then
+        return
+    end
+
+    if not UnitExists("target") then
+        self.targetFrame:Hide()
+        return
+    end
+
+    -- Target identity can become secret under unit-identity restrictions.
+    -- Forward it directly to the native FontString consumer. Do not inspect,
+    -- concatenate, stringify, or branch on the returned name in Lua.
+    self.targetNameText:SetText(UnitName("target"))
+
+    -- Target health is secret-capable. Scale it to 0-100 inside the native
+    -- curve system and forward the result directly to SetFormattedText.
+    local percent = UnitHealthPercent(
+        "target",
+        true,
+        self.percentScaleCurve
+    )
+
+    self.targetHealthText:SetFormattedText("%.0f%%", percent)
+    self.targetFrame:Show()
 end
 
 function HUD:ApplyImmersionPreference(preferences)
@@ -203,6 +231,7 @@ function HUD:ApplyImmersionPreference(preferences)
         end
 
         self:UpdateResource()
+        self:UpdateTarget()
     else
         self.root:Hide()
     end
@@ -220,7 +249,11 @@ function HUD:GetDebugStatus()
         textureCount = self.healthTextureCount or 0,
         curvesReady = self.curvesReady and true or false,
         resourceTextReady = self.resourceText ~= nil,
-        resourceCurveReady = self.resourceScaleCurve ~= nil,
+        resourceCurveReady = self.percentScaleCurve ~= nil,
+        targetFrameReady = self.targetFrame ~= nil,
+        targetNameTextReady = self.targetNameText ~= nil,
+        targetHealthTextReady = self.targetHealthText ~= nil,
+        targetEventFrameReady = self.targetEventFrame ~= nil,
     }
 end
 
@@ -253,7 +286,7 @@ function HUD:OnInitialize()
 
     self.curvesReady = #self.healthBands == #HEALTH_BANDS
 
-    self.resourceScaleCurve = createScaleTo100Curve()
+    self.percentScaleCurve = createScaleTo100Curve()
 
     local resourceText = root:CreateFontString(
         "LogresHUDResourceText",
@@ -268,6 +301,38 @@ function HUD:OnInitialize()
     resourceText:ClearText()
 
     self.resourceText = resourceText
+
+    local targetFrame = CreateFrame("Frame", "LogresHUDTarget", root)
+    targetFrame:SetSize(260, 54)
+    targetFrame:SetPoint("CENTER", root, "CENTER", 0, -54)
+    targetFrame:Hide()
+
+    local targetNameText = targetFrame:CreateFontString(
+        "LogresHUDTargetName",
+        "OVERLAY",
+        "GameFontNormal"
+    )
+    targetNameText:SetPoint("TOP", targetFrame, "TOP", 0, 0)
+    targetNameText:SetTextColor(0.88, 0.83, 0.74, 0.95)
+    targetNameText:SetShadowColor(0, 0, 0, 0.85)
+    targetNameText:SetShadowOffset(1, -1)
+    targetNameText:SetJustifyH("CENTER")
+    targetNameText:SetWidth(250)
+
+    local targetHealthText = targetFrame:CreateFontString(
+        "LogresHUDTargetHealthText",
+        "OVERLAY",
+        "GameFontNormalLarge"
+    )
+    targetHealthText:SetPoint("TOP", targetNameText, "BOTTOM", 0, -2)
+    targetHealthText:SetTextColor(0.76, 0.72, 0.66, 0.95)
+    targetHealthText:SetShadowColor(0, 0, 0, 0.85)
+    targetHealthText:SetShadowOffset(1, -1)
+    targetHealthText:SetJustifyH("CENTER")
+
+    self.targetFrame = targetFrame
+    self.targetNameText = targetNameText
+    self.targetHealthText = targetHealthText
 
     local healthEventFrame = CreateFrame("Frame")
     healthEventFrame:SetScript("OnEvent", function(_, _, unit)
@@ -290,6 +355,17 @@ function HUD:OnInitialize()
     end)
 
     self.resourceEventFrame = resourceEventFrame
+
+    local targetEventFrame = CreateFrame("Frame")
+    targetEventFrame:SetScript("OnEvent", function(_, _, unit)
+        if unit and unit ~= "target" then
+            return
+        end
+
+        self:UpdateTarget()
+    end)
+
+    self.targetEventFrame = targetEventFrame
 end
 
 function HUD:OnEnable()
@@ -305,9 +381,15 @@ function HUD:OnEnable()
         "player"
     )
 
+    self.targetEventFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
+    self.targetEventFrame:RegisterUnitEvent("UNIT_HEALTH", "target")
+    self.targetEventFrame:RegisterUnitEvent("UNIT_MAXHEALTH", "target")
+    self.targetEventFrame:RegisterUnitEvent("UNIT_NAME_UPDATE", "target")
+
     self:OwnCleanup(function()
         self.healthEventFrame:UnregisterAllEvents()
         self.resourceEventFrame:UnregisterAllEvents()
+        self.targetEventFrame:UnregisterAllEvents()
     end)
 
     self:SubscribePreferences(function(current)
@@ -319,5 +401,6 @@ end
 
 function HUD:OnDisable()
     self.previewEnabled = false
+    self.targetFrame:Hide()
     self.root:Hide()
 end

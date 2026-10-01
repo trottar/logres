@@ -28,6 +28,14 @@ required_hud_fragments = [
     "function HUD:UpdateResource()",
     'UnitPowerPercent(',
     'self.resourceText:SetFormattedText("%.0f%%", percent)',
+    "function HUD:UpdateTarget()",
+    'UnitExists("target")',
+    'self.targetNameText:SetText(UnitName("target"))',
+    'UnitHealthPercent(',
+    '"target"',
+    'self.targetHealthText:SetFormattedText("%.0f%%", percent)',
+    '"PLAYER_TARGET_CHANGED"',
+    '"UNIT_NAME_UPDATE"',
     '"UNIT_POWER_FREQUENT"',
     '"UNIT_MAXPOWER"',
     "self:SubscribePreferences(function(current)",
@@ -44,6 +52,9 @@ for forbidden in [
     'UnitHealthMax("player"',
     'UnitPower("player"',
     'UnitPowerMax("player"',
+    "UnitLevel(",
+    "UnitClassification(",
+    "SetPortraitTexture",
     "LogresDB",
 ]:
     if forbidden in hud:
@@ -69,6 +80,8 @@ for forbidden in [
     "percent +",
     "percent -",
     "resourceText:GetText",
+    "targetNameText:GetText",
+    "targetHealthText:GetText",
 ]:
     if forbidden in hud:
         errors.append(f"HUD.lua inspects secret-derived alpha in Lua: {forbidden}")

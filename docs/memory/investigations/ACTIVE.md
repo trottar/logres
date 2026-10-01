@@ -3,12 +3,9 @@
 ## B.3 — Target Presentation
 
 Status:
-**ACTIVE**
+**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
 
 Canonical record:
 `B3_TARGET_PRESENTATION.md`
 
-Goal:
-sparse target name + health percentage while preserving deliberate information withholding.
-
-Source/design confirmation is next before runtime implementation.
+P0023 implements sparse target name + secret-safe health percentage while preserving D-003 disclosure limits.
