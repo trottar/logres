@@ -125,3 +125,12 @@ PlayerFrameReplacement owns:
 - exact restoration.
 
 Target and Party remain capability-gated.
+
+## Target refinement
+
+D-027 defines the target-specific selective replacement.
+
+The contextual parent is alpha-suppressed while auras, raid marker, quest icon,
+and ping ignore parent alpha and remain Blizzard-owned.
+
+Target-of-target is not included in this replacement capability.

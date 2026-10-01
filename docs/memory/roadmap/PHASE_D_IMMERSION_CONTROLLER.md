@@ -138,7 +138,7 @@ D.3 closes.
 
 ## D.4 — Unit-frame interaction + selective suppression
 
-**Status: PLAYER SHELL PASS; TARGET SELECTIVE REVIEW ACTIVE.**
+**Status: PLAYER SHELL PASS; TARGET SOURCE-RESOLVED; IMPLEMENTATION NEXT.**
 
 Before suppression, complete the missing capability.
 
@@ -231,6 +231,30 @@ follow-ups rather than blockers.
 
 Resolve exact TargetFrame suppress/preserve child paths before runtime code.
 Party remains deferred.
+
+### D.4 Target source result
+
+D-027 is canonical.
+
+Target selective replacement is source-resolved.
+
+Suppress:
+- TargetFrameContainer;
+- TargetFrameContentMain;
+- TargetFrameContentContextual parent alpha.
+
+Preserve through IgnoreParentAlpha:
+- Auras;
+- RaidTargetIcon;
+- QuestIcon;
+- PingIconFrame.
+
+Add secure Logres target interaction with RegisterUnitWatch before stock
+TargetFrame mouse removal.
+
+Leave target-of-target, Focus, boss frames, and Party untouched.
+
+**P0056 runtime implementation next.**
 
 ## D.5 — Context / PvP / instance orchestration
 

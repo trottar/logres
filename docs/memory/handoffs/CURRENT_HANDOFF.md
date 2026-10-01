@@ -2,19 +2,25 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0053 is verified pushed at `361cea7` and runtime-proven.
+P0054 is verified pushed at `d971459`.
 
-Player selective replacement works well in the tested workflow.
+D.4 Target source/design review is complete.
+
+D-027 is canonical.
 
 Current work:
-**D.4 Target selective suppression source/design review**
+**P0056 — Target selective replacement runtime implementation**
 
-Next:
-source-resolve exact TargetFrame children to suppress vs preserve, plus secure
-Logres target interaction and restoration.
+Use contextual-parent alpha suppression plus IgnoreParentAlpha preservation for:
+- Auras;
+- RaidTargetIcon;
+- QuestIcon;
+- PingIconFrame.
 
-Party remains deferred.
+Add a secure unit-watched target interaction at the existing Logres target block.
 
-P0054 is documentation-only; no WoW redeploy required.
+Do not suppress target-of-target, Focus, boss targets, or Party.
+
+P0055 is documentation/source-evidence only; no WoW redeploy required.
 
 User performs all commits/pushes.

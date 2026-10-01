@@ -1,16 +1,16 @@
 # Active Investigations
 
-## D.4 — Target selective suppression
+## D.4 — Target selective replacement runtime proof
 
 Status:
-**SOURCE / DESIGN RESOLUTION NEXT**
+**IMPLEMENTATION NEXT**
 
 Canonical:
-`D4_TARGET_SELECTIVE_SUPPRESSION_REVIEW.md`
+`D4_TARGET_RUNTIME_PROOF.md`
 
 Decision:
-`../decisions/D-026_SELECTIVE_UNIT_FRAME_SUPPRESSION.md`
+`../decisions/D-027_TARGET_SELECTIVE_SUPPRESSION.md`
 
 Next:
-resolve TargetFrame suppress/preserve child paths, secure target interaction,
-unit-watch behavior, combat constraints, and exact restoration.
+implement secure unit-watched Logres target interaction, selective stock target
+suppression, preserved contextual children, combat deferral, and restoration.

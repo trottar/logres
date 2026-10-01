@@ -127,3 +127,14 @@ proven for the tested workflow.
 
 D.4 continues with Target selective suppression rather than expanding to
 whole-frame ownership.
+
+## D-027 Target selective replacement
+
+Target replacement uses the same capability-safe pattern proven by Player, but
+with a mixed contextual subtree.
+
+The stock contextual parent is suppressed as a group; useful unreplaced
+children explicitly ignore parent alpha.
+
+This avoids chasing Blizzard metadata Show/Hide updates while retaining auras,
+raid marker, quest context, and pings.

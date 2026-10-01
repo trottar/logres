@@ -12,9 +12,9 @@ project: logres
 
 ## Current Work Item
 
-**D.4 — Target selective suppression source/design review.**
+**D.4 — Target selective replacement runtime implementation.**
 
-Player selective replacement is runtime-proven.
+Target source/design review is complete.
 
 ## Verified State
 
@@ -25,17 +25,24 @@ Player selective replacement is runtime-proven.
 - D.1 complete.
 - D.2 complete.
 - D.3 complete.
-- D.4 source contract D-026 accepted.
-- P0053 pushed at `361cea7`.
-- P0053 Player selective replacement runtime PASS.
+- D.4 Player selective replacement runtime PASS.
+- P0054 pushed at `d971459`.
 - runtime remains `0.0.23-dev`.
-- conventional PlayerFrame shell suppression works in the tested workflow.
-- secure Logres player interaction works in the tested workflow.
-- stock PlayerFrame restoration works in the tested workflow.
-- whole PlayerFrame suppression remains forbidden.
-- class/spec/context-specific direct PlayerFrame child proof may be deferred by
-  environment when those surfaces do not appear naturally.
-- TargetFrame suppression is the next D.4 capability step.
+- D-026 remains the broad selective unit-frame contract.
+- D-027 Target selective suppression contract accepted.
+- TargetFrame blanket suppression remains rejected.
+- Target conventional container/main content are suppressible.
+- Target contextual parent may be suppressed while preserving:
+  - Auras;
+  - RaidTargetIcon;
+  - QuestIcon;
+  - PingIconFrame;
+  through IgnoreParentAlpha.
+- secure Logres target interaction will use a UIParent secure unit button aligned
+  with the existing 260x54 Logres target block.
+- target existence will use RegisterUnitWatch after OOC configuration.
+- target-of-target remains Blizzard-owned.
+- Focus/boss target frames remain untouched.
 - Party/CompactPartyFrame suppression remains deferred.
 - D.3 instance Quiet Mode transition remains environmental deferral.
 - Primary replacement/routing ownership remains deferred.
@@ -44,49 +51,54 @@ Player selective replacement is runtime-proven.
 
 ## Next Action
 
-Source/design-resolve Target selective suppression before runtime code.
+Implement P0056 Target selective replacement.
 
-Resolve exact TargetFrame child ownership for:
-1. conventional portrait/frame shell;
-2. health/power main content;
-3. target aura container;
-4. raid-target marker;
-5. high-level/classification/difficulty-style indicators;
-6. threat/context indicators;
-7. stock secure mouse interaction;
-8. Logres secure target interaction;
-9. secure unit-watch visibility;
-10. combat deferral and exact restoration.
+Runtime target:
+1. create secure `target` interaction button at Logres target block geometry;
+2. configure left target / right togglemenu / AnyUp;
+3. RegisterUnitWatch while active;
+4. snapshot TargetFrame container/main/context alpha;
+5. snapshot stock target mouse/click/motion state;
+6. snapshot IgnoreParentAlpha for Aura/RaidTarget/Quest/Ping preserved children;
+7. apply selective suppression + preserved child overrides;
+8. disable stock TargetFrame mouse region;
+9. exact Immersion OFF restoration;
+10. combat deferral;
+11. Target Frame Check diagnostics.
 
-Goal:
-preserve useful target auras/raid coordination while removing stock target
-metadata that conflicts with Logres information-hiding policy.
+Do not suppress:
+- target-of-target;
+- FocusFrame;
+- boss target frames;
+- Party/CompactPartyFrame.
 
 ## Success Criteria
 
-Target source/design review succeeds when there is an exact contract for:
-- suppress child paths;
-- preserve child paths;
-- secure Logres target interaction;
-- dynamic visibility;
-- combat safety;
-- restoration;
-- runtime proof.
+P0056 succeeds when:
+- conventional stock TargetFrame shell/metadata disappears under immersion;
+- Logres target presentation remains;
+- secure Logres left/right target interaction works;
+- stock target area is not an invisible click zone;
+- target auras remain available;
+- useful preserved context survives when naturally present;
+- OFF restoration is exact;
+- combat transitions defer safely;
+- no protected/taint/Lua/secret regression occurs.
 
 ## Do Not Reopen Without New Evidence
 
 - **D.1–D.3:** complete.
 - **D.4 Player selective replacement:** runtime PASS.
-- **Whole PlayerFrame suppression:** rejected.
-- **Target blanket suppression:** rejected; selective review active.
+- **D.4 Target source review:** complete.
+- **Whole PlayerFrame / TargetFrame suppression:** rejected.
+- **Target-of-target:** separately Blizzard-owned.
 - **Party suppression:** deferred.
 - **D.3 instance transition:** environmental deferral.
-- **Primary replacement/routing:** deferred.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/D4_P0053_PLAYER_SHELL_RUNTIME_PROOF_2026-10-01.md`
-- `docs/memory/decisions/D-026_SELECTIVE_UNIT_FRAME_SUPPRESSION.md`
-- `docs/memory/investigations/D4_TARGET_SELECTIVE_SUPPRESSION_REVIEW.md`
+- `docs/memory/evidence/D4_TARGET_SELECTIVE_SUPPRESSION_SOURCE_REVIEW_2026-10-01.md`
+- `docs/memory/decisions/D-027_TARGET_SELECTIVE_SUPPRESSION.md`
+- `docs/memory/investigations/D4_TARGET_RUNTIME_PROOF.md`
 - `docs/memory/roadmap/PHASE_D_IMMERSION_CONTROLLER.md`

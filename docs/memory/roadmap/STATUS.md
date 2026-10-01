@@ -7,10 +7,10 @@ As of 2026-10-01.
 **Phase D — Immersion Controller**
 
 Active work item:
-**D.4 Target selective suppression source/design review**
+**D.4 Target selective replacement runtime implementation**
 
 State:
-**PLAYER SHELL PASS; TARGET SOURCE REVIEW ACTIVE**
+**TARGET SOURCE-RESOLVED; IMPLEMENTATION NEXT**
 
 ## Phase status
 
@@ -31,7 +31,6 @@ State:
 | Domain | State |
 | --- | --- |
 | Player selective shell | RUNTIME PASS |
-| Target selective suppression | ACTIVE — source/design review |
+| Target selective suppression | SOURCE-RESOLVED — implementation next |
+| Target-of-target | Blizzard-owned / separate capability |
 | Party / compact party | DEFERRED |
-
-Whole-frame unit suppression remains rejected.
