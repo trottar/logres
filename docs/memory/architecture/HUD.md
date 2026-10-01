@@ -1,6 +1,6 @@
 # HUD Architecture
 
-Status: PHASE B / B.1 ACTIVE — VISUAL TUNING FIX PREPARED
+Status: PHASE B / B.2 ACTIVE
 
 ## Intent
 
@@ -165,3 +165,51 @@ The curve x scale was correct; normalized percentage input is 0–1.
 P0019 strengthens curve outputs/source color and adds a non-secret preview presentation.
 
 The preview is diagnostic only. It does not alter the production secret-health boundary.
+
+
+## B.1 final result
+
+B.1 production proof passed on P0019.
+
+Verified:
+- health-driven progression visible;
+- immersion off hides presentation;
+- immersion on restores current injury state;
+- healing reduces/removes the vignette.
+
+The procedural rectangular bands remain visual-polish debt.
+
+The transport and ownership boundary are now production-proven.
+
+## B.2 entry
+
+Next HUD subdomain:
+**player resource percentage**
+
+Use D-008:
+`UnitPowerPercent` -> secret-safe formatter -> `FontString:SetText`.
+
+Do not introduce a conventional resource bar by default.
+## B.1 final result
+
+B.1 production proof passed on P0019.
+
+Verified:
+- health-driven progression visible;
+- immersion off hides presentation;
+- immersion on restores current injury state;
+- healing reduces/removes the vignette.
+
+The procedural rectangular bands remain visual-polish debt.
+
+The transport and ownership boundary are now production-proven.
+
+## B.2 entry
+
+Next HUD subdomain:
+**player resource percentage**
+
+Use D-008:
+`UnitPowerPercent` -> secret-safe formatter -> `FontString:SetText`.
+
+Do not introduce a conventional resource bar by default.

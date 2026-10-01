@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-09-30
+as_of: 2026-10-01
 project: logres
 ---
 
@@ -12,83 +12,83 @@ project: logres
 
 ## Current Work Item
 
-**B.1 — HUD root + player health vignette.**
+**B.2 — Resource Presentation.**
 
-P0018 is pushed at `fa342ad`.
+B.1 is complete.
 
-Its first runtime visual did not satisfy B.1:
-- no perceptible vignette during ordinary injury;
-- a red pulse appeared only at very low health;
-- that pulse may be Blizzard's own low-health effect.
+The production player health vignette is runtime proven on P0019:
+- health-driven progression is visible;
+- immersion off hides it;
+- immersion on restores current injury presentation;
+- healing makes it recede/disappear.
 
-The secret-safe transport is not yet considered failed because P0018 used the already-proven native path and no transport error was reported.
+The rough rectangular edge bands are accepted as temporary visual-polish debt.
 
-Current API/curve evidence confirms P0018's 0–1 curve x scale was correct.
-
-P0019 prepares stronger visual tuning plus a full-health preview command to isolate Logres geometry from health input.
+B.2 now owns the restrained player-resource percentage.
 
 ## Verified State
 
 - Phase A complete.
-- production HUD module exists.
-- P0018 static HUD contract passed.
-- P0018 visual progression did not pass user observation.
-- normalized curve x scale 0–1 is confirmed.
-- B.1 remains active.
+- B.1 complete.
+- P0018 first health-vignette visual was too weak.
+- P0019 pushed at `5ae500d`.
+- P0019 production health progression passed runtime observation.
+- secret-safe health transport works in the real HUD module.
+- immersion preference integration works in the real HUD module.
+- current runtime version: `0.0.8-dev`.
 
 ## Next Action
 
-Install/review/commit/push P0019.
+Design B.2 before implementing it.
 
-Deploy explicitly, confirm version `0.0.8-dev`, then at full health:
+Use D-008 as a hard boundary.
 
-```text
-/logres hudpreview on
-```
-
-Confirm a clear static Logres edge treatment appears.
-
-Then:
+Determine the exact Forever-safe text path for:
 
 ```text
-/logres hudpreview off
+UnitPowerPercent("player")
+    -> formatted percentage
+    -> FontString:SetText
 ```
 
-Confirm it disappears.
+Resolve:
+1. the formatter/API that can consume secret percentage values;
+2. relevant player power update events;
+3. default power-type behavior across the tested character;
+4. initial HUD anchor near center/character;
+5. suppression rules, if any, without Lua branching on secret resource value.
 
-Next take ordinary safe damage and determine whether the health-driven vignette becomes visible before low-health emergency state.
+Do not add a resource bar.
 
-While injured:
-- immersion off must hide it;
-- immersion on must restore it;
-- healing must reduce/remove it.
-
-Do not intentionally reach near death.
+When B.2 runtime code is prepared, include the full deploy block before in-game validation.
 
 ## Success Criteria
 
-B.1 succeeds only when:
-- preview proves HUD geometry is visibly present;
-- health-driven vignette becomes perceptible during ordinary injury;
-- healthy state remains unobtrusive;
-- damage/healing progression behaves;
-- immersion off/on behaves;
-- no secret-value/Lua errors occur;
-- visual tuning is usable enough to proceed.
+B.2 succeeds when:
+- a restrained resource percentage is production code;
+- it uses a secret-safe formatting path;
+- it updates as resource changes;
+- immersion off/on hides/restores it;
+- no conventional resource bar is introduced;
+- no Lua arithmetic/comparison/stringification over secret resource percentage occurs;
+- class/form limitations are explicitly recorded where the current environment cannot test them.
 
 ## Do Not Reopen Without New Evidence
 
-- **Curve input scale:** normalized 0–1.
-- **P0018:** visual failure, not silently reclassified as success.
-- **Health transport:** D-008 remains authoritative until production evidence disproves it.
-- **No near-death requirement:** preview exists to avoid risky testing.
-- **Deployment:** full deploy block required.
+- **Phase A:** complete.
+- **B.1:** complete.
+- **Health architecture:** production proven; rectangles are polish debt.
+- **Resource path:** D-008.
+- **No resource bar:** default remains percentage-oriented.
+- **Actions:** Phase C.
+- **Deployment:** full deploy block required for runtime-code tests.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
+- `docs/memory/evidence/B1_HEALTH_VIGNETTE_RUNTIME_PROOF_2026-10-01.md`
 - `docs/memory/evidence/B1_HEALTH_VIGNETTE_RUNTIME_PASS01_2026-09-30.md`
-- `docs/memory/investigations/B1_HEALTH_VIGNETTE.md`
+- `docs/memory/investigations/B2_RESOURCE_PRESENTATION.md`
 - `docs/memory/decisions/D-008_SECRET_SAFE_HEALTH_AND_RESOURCE_PATH.md`
 - `docs/memory/architecture/HUD.md`
-- `Logres/HUD/HUD.lua`
+- `docs/memory/roadmap/PHASE_B_CORE_HUD.md`

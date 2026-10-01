@@ -1,15 +1,14 @@
 # Active Investigations
 
-## B.1 — HUD Root + Player Health Vignette
+## B.2 — Resource Presentation
 
 Status:
-**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**ACTIVE**
 
 Canonical record:
-`B1_HEALTH_VIGNETTE.md`
+`B2_RESOURCE_PRESENTATION.md`
 
-P0018 moves the I-001 secret-safe health transport into the real HUD module.
+Goal:
+production secret-safe player resource percentage without a conventional resource bar.
 
-Runtime proof is intentionally limited to ordinary safe damage/healing plus immersion off/on.
-
-No near-death test is required.
+Before coding, verify the exact Forever-safe formatting/event path.

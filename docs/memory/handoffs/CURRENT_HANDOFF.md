@@ -2,22 +2,23 @@
 
 Authoritative state: `../CURRENT.md`. Start there.
 
+Current phase:
+**Phase B — Core HUD**
+
+B.1 is complete.
+
+P0019 production health-vignette proof passed:
+- progression visible;
+- immersion off/on correct;
+- healing recession correct.
+
+The rough rectangular bands are temporary visual-polish debt.
+
 Current work:
-**B.1 — HUD root + player health vignette**
+**B.2 — Resource Presentation**
 
-P0018 is pushed at `fa342ad`.
+Next step is source/design confirmation for the secret-safe percentage text path before runtime implementation.
 
-Runtime result:
-the vignette was not perceptible during ordinary injury.
-
-Do not interpret the low-health red pulse as Logres without isolation; it may be Blizzard's own effect.
-
-P0019 is prepared:
-- stronger curve outputs;
-- stronger red layer;
-- `/logres hudpreview on|off`;
-- version `0.0.8-dev`.
-
-First runtime test after deploy is preview at full health.
+P0020 is documentation/evidence only; no WoW redeploy required.
 
 User performs all commits/pushes.

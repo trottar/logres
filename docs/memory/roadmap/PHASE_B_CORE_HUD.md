@@ -31,7 +31,7 @@ Canonical decisions:
 
 ## B.1 — HUD root + player health vignette
 
-**Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
+**Status: COMPLETE.**
 
 Goal:
 establish the first real presentation module and prove the production secret-safe health transport in Logres itself.
@@ -67,6 +67,12 @@ Initial visual target:
 
 Exact art tuning may iterate; the architecture must be correct first.
 
+P0019 runtime result:
+- health-driven progression visible;
+- immersion off/on hides/restores correctly;
+- healing recedes/removes the effect;
+- procedural rectangles remain polish debt.
+
 Success:
 - no conventional player health bar/numbers;
 - health-vignette transport runs in the real Logres HUD module;
@@ -77,6 +83,8 @@ Success:
 - runtime proof covers healthy/injured path as practical without intentionally risking character death.
 
 ## B.2 — Resource presentation
+
+**Status: ACTIVE.**
 
 Goal:
 add compact player resource percentage near the character/center HUD language.
