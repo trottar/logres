@@ -98,3 +98,36 @@ For future secret-safe presentation:
 - separate transport correctness from visual salience;
 - include a non-secret preview/test presentation when it helps isolate geometry from secret input;
 - do not force dangerous gameplay states merely to verify whether UI geometry exists.
+## L-010 — Shared diagnostic routing must test both GUI and fallback sinks
+
+P0029 refactored slash-command diagnostics so the new developer panel could
+capture output through a shared `emit()` function.
+
+The GUI path worked because it installed an output sink.
+
+However, the no-sink fallback had accidentally become:
+
+```lua
+emit(message)
+```
+
+inside `emit()` itself instead of:
+
+```lua
+print(message)
+```
+
+That creates unbounded recursion for ordinary slash-command output.
+
+B.6 did not reveal the defect because validation used the new GUI path.
+
+The defect was found by source inspection while preparing C.2.
+
+Reusable rule:
+when one diagnostic implementation supports multiple output transports, test
+or statically assert every transport independently.
+
+For Logres:
+- panel output sink must work;
+- ordinary slash/chat fallback must work;
+- static tooling should reject recursive fallback wiring.

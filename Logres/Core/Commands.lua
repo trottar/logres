@@ -12,7 +12,7 @@ local function emit(message)
         return
     end
 
-    emit(message)
+    print(message)
 end
 
 function Logres:RegisterDevPanelAction(id, label, command)
@@ -452,6 +452,72 @@ end
 
 
 
+
+local function runActionCheck()
+    local status = Logres:GetModuleStatus("PrimaryActions")
+    local actions = Logres:GetModule("PrimaryActions")
+    local debugStatus = actions:GetDebugStatus()
+
+    local deferredOnlyBecauseCombat =
+        InCombatLockdown()
+        and (
+            debugStatus.pendingPageRefresh
+            or debugStatus.pendingBindingRefresh
+        )
+
+    local passed =
+        status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and debugStatus.clusterShown == true
+        and debugStatus.buttonCount == 12
+        and debugStatus.registeredCount == 12
+        and debugStatus.currentPage ~= nil
+        and debugStatus.firstActionSlot ~= nil
+        and debugStatus.lastActionSlot ~= nil
+        and debugStatus.bindingsApplied == true
+        and debugStatus.stockBarsSuppressed == false
+        and (
+            (
+                debugStatus.pendingPageRefresh == false
+                and debugStatus.pendingBindingRefresh == false
+            )
+            or deferredOnlyBecauseCombat
+        )
+
+    if passed then
+        emit(string.format(
+            "Logres actioncheck: PASS (buttons=12 registered=12 page=%s slots=%s-%s boundButtons=%s bindings=%s deferredPage=%s deferredBindings=%s stockBarsSuppressed=false)",
+            tostring(debugStatus.currentPage),
+            tostring(debugStatus.firstActionSlot),
+            tostring(debugStatus.lastActionSlot),
+            tostring(debugStatus.boundButtonCount),
+            boolText(debugStatus.bindingsApplied),
+            boolText(debugStatus.pendingPageRefresh),
+            boolText(debugStatus.pendingBindingRefresh)
+        ))
+        return
+    end
+
+    emit(string.format(
+        "Logres actioncheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s shown=%s buttons=%s registered=%s page=%s slots=%s-%s boundButtons=%s bindings=%s deferredPage=%s deferredBindings=%s stockBarsSuppressed=%s)",
+        tostring(status.initialized),
+        tostring(status.enabled),
+        tostring(debugStatus.moduleEnabled),
+        tostring(debugStatus.clusterShown),
+        tostring(debugStatus.buttonCount),
+        tostring(debugStatus.registeredCount),
+        tostring(debugStatus.currentPage),
+        tostring(debugStatus.firstActionSlot),
+        tostring(debugStatus.lastActionSlot),
+        tostring(debugStatus.boundButtonCount),
+        tostring(debugStatus.bindingsApplied),
+        tostring(debugStatus.pendingPageRefresh),
+        tostring(debugStatus.pendingBindingRefresh),
+        tostring(debugStatus.stockBarsSuppressed)
+    ))
+end
+
 local function runAllChecks()
     emit("Logres checkall: beginning")
     printStatus()
@@ -460,6 +526,7 @@ local function runAllChecks()
     runPreferenceCheck()
     runLifecycleCheck()
     runHUDCheck()
+    runActionCheck()
     emit("Logres checkall: complete")
 end
 
@@ -524,6 +591,7 @@ local function printHelp()
     emit("  /logres preferencecheck")
     emit("  /logres lifecyclecheck")
     emit("  /logres hudcheck")
+    emit("  /logres actioncheck")
     emit("  /logres hudpreview [on|off]")
     emit("  /logres immersion [on|off|toggle]")
     emit("  /logres debug on")
@@ -584,6 +652,11 @@ local function handleCommand(message)
 
     if command == "hudcheck" then
         runHUDCheck()
+        return
+    end
+
+    if command == "actioncheck" then
+        runActionCheck()
         return
     end
 
@@ -652,6 +725,7 @@ Logres:RegisterDevPanelAction(
     "lifecyclecheck"
 )
 Logres:RegisterDevPanelAction("hud", "HUD Check", "hudcheck")
+Logres:RegisterDevPanelAction("action", "Action Check", "actioncheck")
 Logres:RegisterDevPanelAction(
     "immersionOn",
     "Immersion ON",

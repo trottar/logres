@@ -36,7 +36,7 @@ Use source evidence before choosing architecture.
 
 ## C.2 — Primary action cluster
 
-**Status: ACTIVE.**
+**Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
 
 Implement the first secure rectangular/square cluster.
 
@@ -55,7 +55,22 @@ Success:
 - combat lockdown produces no forbidden mutation;
 - layout is visually legible.
 
-Do not suppress stock action bars until this replacement is proven.
+Do not suppress stock action bars until this replacement is proven.### P0032 implementation
+
+- 12 secure primary action buttons;
+- 4 x 3 layout;
+- current primary action page mapping;
+- native action-button registration;
+- icon/cooldown/count/usability/range presentation;
+- session-only preservation of existing ACTIONBUTTON1–12 keys;
+- `Action Check` developer-panel diagnostic;
+- stock Blizzard action bars remain visible.
+
+Known limitation:
+combat-time action-page changes defer Logres page remapping until combat ends.
+A later secure paging/state-driver work item is required before stock-bar
+suppression.
+
 
 ## C.3 — Secondary / utility clusters
 

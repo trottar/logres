@@ -9,6 +9,9 @@ As of 2026-10-01.
 Active work item:
 **C.2 Primary Action Cluster**
 
+State:
+**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+
 ## Phase status
 
 | Phase | State |
@@ -28,19 +31,23 @@ Active work item:
 | Item | State |
 | --- | --- |
 | C.1 Secure action capability/source review | COMPLETE |
-| C.2 Primary action cluster | ACTIVE |
+| C.2 Primary action cluster | ACTIVE — implementation prepared |
 | C.3 Secondary / utility clusters | QUEUED |
-| C.4 Contextual visibility | QUEUED |
+| C.4 Contextual visibility / secure paging | QUEUED |
 | C.5 Stock action-bar replacement | QUEUED |
 | C.6 Action interface integration validation | QUEUED |
 
-## C.1 result
+## C.2 implementation
 
-Resolved:
-- secure protected action path;
-- combat-lockdown boundary;
-- secure driver option;
-- current action presentation APIs;
-- secret-safe cooldown/count paths;
-- session override binding strategy;
-- edit-mode no-combat boundary.
+P0032:
+- 12 secure buttons;
+- 4 x 3 cluster;
+- current primary action page;
+- temporary existing-key override clicks;
+- secret-safe cooldown/count;
+- usability/range presentation;
+- Action Check diagnostic;
+- stock bars retained.
+
+Known limitation:
+combat-time action-page remapping is deferred until combat ends.

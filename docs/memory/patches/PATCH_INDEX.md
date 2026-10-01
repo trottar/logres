@@ -30,8 +30,9 @@
 | P0026 | 2026-10-01 | INSTALLED / PUSHED | Record B.4 proof/target deferral; close B.4 and open B.5 (`8a89a35`) |
 | P0027 | 2026-10-01 | INSTALLED / PUSHED | B.5 compact pet + party1–party4 name/health rows (`42aa8d6`) |
 | P0028 | 2026-10-01 | INSTALLED / PUSHED | Record B.5 proof; close B.5 and open B.6 (`22e1ff1`) |
-| P0029 | 2026-10-01 | PREPARED | B.6 reusable in-game developer/control panel |
-| P0030 | 2026-10-01 | PREPARED | Record B.6 integrated proof; close Phase B; open Phase C; clarify stock-UI suppression ownership |
-| P0031 | 2026-10-01 | PREPARED | Resolve C.1 secure action architecture; open C.2 primary action cluster |
+| P0029 | 2026-10-01 | INSTALLED / PUSHED | B.6 reusable in-game developer/control panel (`90491fe`) |
+| P0030 | 2026-10-01 | INSTALLED / PUSHED | Record B.6 integrated proof; close Phase B; open Phase C; clarify stock-UI suppression ownership (`74ccfc3`) |
+| P0031 | 2026-10-01 | INSTALLED / PUSHED | Resolve C.1 secure action architecture; open C.2 primary action cluster (`6d0a5b1`) |
+| P0032 | 2026-10-01 | PREPARED | C.2 secure primary action cluster + P0029 slash fallback fix |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

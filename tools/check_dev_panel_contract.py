@@ -35,6 +35,27 @@ if COMMANDS.is_file():
         if fragment not in source:
             errors.append(f"Commands.lua missing: {fragment}")
 
+    emit_start = source.find("local function emit(message)")
+    emit_end = source.find(
+        "function Logres:RegisterDevPanelAction",
+        emit_start,
+    )
+
+    if emit_start == -1 or emit_end == -1:
+        errors.append("Commands.lua emit() function could not be isolated")
+    else:
+        emit_source = source[emit_start:emit_end]
+
+        if "print(message)" not in emit_source:
+            errors.append(
+                "Commands.lua emit() must fall back to print(message)"
+            )
+
+        if "\n    emit(message)\n" in emit_source:
+            errors.append(
+                "Commands.lua emit() recursively calls itself without a sink"
+            )
+
 if PANEL.is_file():
     source = PANEL.read_text(encoding="utf-8")
 

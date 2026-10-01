@@ -3,13 +3,11 @@
 ## C.2 — Primary Action Cluster
 
 Status:
-**ACTIVE**
+**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
 
-C.1 source resolution:
-`C1_SECURE_ACTION_INTERFACE.md`
-
-Canonical secure contract:
-`../decisions/D-018_SECURE_ACTION_INTERFACE_CONTRACT.md`
+Canonical record:
+`C2_PRIMARY_ACTION_CLUSTER.md`
 
 Next:
-implement and runtime-prove the first 12-button secure primary action cluster without suppressing Blizzard's stock action bars.
+runtime-prove P0032 secure mouse/key execution, action presentation, combat
+behavior, and repaired slash fallback while stock Blizzard bars remain visible.

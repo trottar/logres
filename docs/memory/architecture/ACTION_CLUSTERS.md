@@ -115,3 +115,39 @@ Action bars stay visible until Logres:
 - preserves keybinds;
 - handles required page/special-bar behavior;
 - provides restoration.
+## C.2 implementation boundary
+
+P0032 implements the first live secure cluster.
+
+Geometry:
+- 12 buttons;
+- 4 x 3;
+- lower center;
+- stock Blizzard action bars retained.
+
+The current primary action page is mapped to 12 secure action attributes
+out of combat.
+
+Binding:
+- reads `ACTIONBUTTON1` through `ACTIONBUTTON12`;
+- applies temporary override clicks;
+- displays the first existing key;
+- never saves/reassigns the user's persistent bindings.
+
+Presentation:
+- icon;
+- native cooldown DurationObject;
+- direct display count;
+- usability tint;
+- range tint;
+- native checked-state registration.
+
+Combat:
+- action execution remains secure;
+- ordinary page/binding protected mutation is deferred until combat ends.
+
+Known C.2 limitation:
+combat-time primary-page changes are not yet secure-driven and therefore do
+not reconfigure Logres buttons until `PLAYER_REGEN_ENABLED`.
+
+This limitation blocks stock action-bar suppression, not the C.2 proof.
