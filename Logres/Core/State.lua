@@ -1,5 +1,8 @@
 local _, Logres = ...
 
+local INTERACTION_NONE = 0
+local activeInteractionType = INTERACTION_NONE
+
 local State = {
     initialized = false,
     revision = 0,
@@ -10,6 +13,13 @@ local State = {
     inInstance = false,
     instanceType = "none",
 
+    mounted = false,
+    resting = false,
+    onTaxi = false,
+
+    interacting = false,
+    interactionType = INTERACTION_NONE,
+
     changedBy = "bootstrap",
 }
 
@@ -19,6 +29,13 @@ local TRACKED_FIELDS = {
     "pvpFlagged",
     "inInstance",
     "instanceType",
+
+    "mounted",
+    "resting",
+    "onTaxi",
+
+    "interacting",
+    "interactionType",
 }
 
 local stateListeners = {}
@@ -33,6 +50,13 @@ local function copyState(source)
         pvpFlagged = source.pvpFlagged,
         inInstance = source.inInstance,
         instanceType = source.instanceType,
+
+        mounted = source.mounted,
+        resting = source.resting,
+        onTaxi = source.onTaxi,
+
+        interacting = source.interacting,
+        interactionType = source.interactionType,
 
         changedBy = source.changedBy,
     }
@@ -57,12 +81,22 @@ local function captureState()
     inInstance = inInstance and true or false
     instanceType = instanceType or "none"
 
+    local onTaxi = UnitOnTaxi("player") and true or false
+    local mounted = IsMounted() and not onTaxi
+
     return {
         context = inInstance and "instance" or "world",
         combat = InCombatLockdown() and true or false,
         pvpFlagged = UnitIsPVP("player") and true or false,
         inInstance = inInstance,
         instanceType = instanceType,
+
+        mounted = mounted and true or false,
+        resting = IsResting() and true or false,
+        onTaxi = onTaxi,
+
+        interacting = activeInteractionType ~= INTERACTION_NONE,
+        interactionType = activeInteractionType,
     }
 end
 
@@ -160,16 +194,43 @@ function Logres:RefreshState(reason)
 end
 
 local function refreshFromEvent(event, ...)
-    if event == "PLAYER_FLAGS_CHANGED" then
+    if event == "PLAYER_FLAGS_CHANGED" or event == "UNIT_AURA" then
         local unit = ...
         if unit and unit ~= "player" then
             return
         end
     end
 
+    if event == "PLAYER_ENTERING_WORLD" then
+        -- Interactions should not survive world transitions. This also gives
+        -- reload/login a conservative known baseline until a SHOW event arrives.
+        activeInteractionType = INTERACTION_NONE
+    end
+
     -- I-001 proved that combat-related state can settle across multiple events.
     -- Refresh from each authoritative signal rather than assuming one event is final.
     Logres:RefreshState(event)
+end
+
+local function interactionShow(event, interactionType)
+    local numericType = tonumber(interactionType)
+
+    if numericType == nil then
+        -- Do not invent an interaction type when the documented payload is absent.
+        return
+    end
+
+    activeInteractionType = numericType
+    Logres:RefreshState(event)
+end
+
+local function interactionHide(event, interactionType)
+    local numericType = tonumber(interactionType)
+
+    if numericType ~= nil and numericType == activeInteractionType then
+        activeInteractionType = INTERACTION_NONE
+        Logres:RefreshState(event)
+    end
 end
 
 local EVENTS = {
@@ -180,8 +241,17 @@ local EVENTS = {
     "PLAYER_REGEN_ENABLED",
     "PLAYER_FLAGS_CHANGED",
     "ADDON_RESTRICTION_STATE_CHANGED",
+
+    "PLAYER_MOUNT_DISPLAY_CHANGED",
+    "UNIT_AURA",
+    "PLAYER_UPDATE_RESTING",
+    "PLAYER_CONTROL_LOST",
+    "PLAYER_CONTROL_GAINED",
 }
 
 for index = 1, #EVENTS do
     Logres:RegisterEvent(EVENTS[index], refreshFromEvent)
 end
+
+Logres:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", interactionShow)
+Logres:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE", interactionHide)

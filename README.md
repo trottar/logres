@@ -30,6 +30,7 @@ Then in game:
 /reload
 /logres status
 /logres statecheck
+/logres sensorcheck
 ```
 
 The Phase 0.3 skeleton currently provides lifecycle, SavedVariables, and basic state observation only.

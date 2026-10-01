@@ -4,17 +4,8 @@
 
 Logres separates **state detection** from **presentation policy**.
 
-State detection answers facts:
-- Is the player in combat lockdown?
-- In an instance?
-- What instance type?
-- PvP flagged?
-
-Presentation policy later answers:
-- Should the compass exist?
-- How opaque is an action cluster?
-- Which target information is shown?
-- Which camera behavior applies?
+State detection answers facts.
+Presentation policy later decides what those facts mean visually.
 
 ## Authority boundary
 
@@ -30,15 +21,12 @@ and optionally:
 
 ```lua
 local unsubscribe = Logres:SubscribeState(function(current, previous, changes, reason)
-    -- react to transition
 end)
 ```
 
-No consumer should access `Logres.State`.
-
 See D-009 for the canonical consumer contract.
 
-## A.1 canonical snapshot
+## A.2 canonical snapshot
 
 ```lua
 {
@@ -51,100 +39,127 @@ See D-009 for the canonical consumer contract.
     inInstance = boolean,
     instanceType = string,
 
+    mounted = boolean,
+    resting = boolean,
+    onTaxi = boolean,
+
+    interacting = boolean,
+    interactionType = number,
+
     changedBy = string,
 }
 ```
 
 All values are scalar.
 
-A snapshot is a copy. Consumer mutation cannot change authoritative state.
+## Sensor semantics
 
-## Revision semantics
+### mounted
 
-- starts at `0`;
-- first initialization -> `1`;
-- increments exactly once per actual canonical state transition;
-- no-op observations do not increment revision;
-- no-op observations do not emit state notifications.
+Player-controlled mount state.
 
-`changedBy` changes only with a real transition.
-
-## Transition notification
-
-Subscriber signature:
+Implementation:
 
 ```text
-handler(current, previous, changes, reason)
+IsMounted() and not UnitOnTaxi("player")
 ```
 
-- `current`: fresh post-transition snapshot;
-- `previous`: fresh pre-transition snapshot or nil on initialization;
-- `changes`: changed observed fields only;
-- `reason`: event/manual trigger that produced the transition.
+Taxi is deliberately excluded.
 
-Each subscriber receives separate copies.
+### resting
 
-## Initialization
+Literal:
 
-First successful observation is a transition:
-- previous is nil;
-- all canonical observed fields are listed as changing from nil;
-- revision becomes 1.
+```text
+IsResting()
+```
 
-Subscription itself is not a transition and does not replay state automatically.
+Do not reinterpret as city/inn/safe.
 
-## Current observed inputs
+### onTaxi
 
-Phase A.1 still observes:
-- `InCombatLockdown()`;
-- `IsInInstance()`;
-- `UnitIsPVP("player")`.
+Literal:
 
-Refresh signals:
+```text
+UnitOnTaxi("player")
+```
+
+`PLAYER_CONTROL_LOST/GAINED` are refresh signals only.
+
+### interacting / interactionType
+
+Interaction Manager event-latch state.
+
+`PLAYER_INTERACTION_MANAGER_FRAME_SHOW(type)`:
+- stores `type`;
+- refreshes state.
+
+`PLAYER_INTERACTION_MANAGER_FRAME_HIDE(type)`:
+- clears only when `type` matches the currently active interaction type;
+- refreshes state.
+
+No undocumented current-type getter is assumed.
+
+On `PLAYER_ENTERING_WORLD`, the latch resets to none as a conservative world-transition baseline.
+
+## Refresh events
+
+Existing:
 - `PLAYER_LOGIN`;
 - `PLAYER_ENTERING_WORLD`;
 - `ZONE_CHANGED_NEW_AREA`;
-- `PLAYER_REGEN_DISABLED`;
-- `PLAYER_REGEN_ENABLED`;
-- `PLAYER_FLAGS_CHANGED`;
-- `ADDON_RESTRICTION_STATE_CHANGED`.
+- combat/restriction signals;
+- player flags.
 
-## Combat transition rule
+A.2 adds:
+- `PLAYER_MOUNT_DISPLAY_CHANGED`;
+- player-filtered `UNIT_AURA`;
+- `PLAYER_UPDATE_RESTING`;
+- `PLAYER_CONTROL_LOST`;
+- `PLAYER_CONTROL_GAINED`;
+- Interaction Manager SHOW/HIDE.
 
-I-001 runtime evidence falsified the assumption that `PLAYER_REGEN_DISABLED` means every combat/restriction API has already settled inside that callback.
+## Revision semantics
 
-Therefore:
-- no single combat event is final truth;
-- each authoritative transition signal triggers a fresh observation;
-- a refresh only publishes when observed canonical state actually differs;
-- consumers do not depend on Blizzard event ordering.
+Unchanged from D-009:
+- first initialization -> revision 1;
+- +1 per actual canonical transition;
+- no-op observations do not increment or publish.
 
 ## Orthogonal-state constraint
 
-Do not model combinations as monolithic modes such as:
-- `WorldPvPCombat`;
-- `InstanceCombat`;
-- `WorldInteractionPvP`.
+Do not collapse:
 
-Prefer independent facts/modifiers and derive presentation later.
+```text
+mounted + onTaxi + resting + interacting
+```
+
+into `traveling`, `cityMode`, or other combinatorial modes.
+
+Consumers compose facts.
 
 ## Development validation
 
-`/logres statecheck` provides a travel-free contract check:
-- consumer snapshot mutation cannot alter authoritative state;
-- a no-op refresh does not advance revision;
-- a no-op refresh does not notify subscribers.
+### `/logres statecheck`
 
-This does not replace real transition testing when a sensor's behavior changes.
+Validates state consumer contract.
 
-## Deferred fields
+### `/logres sensorcheck`
 
-Not part of A.1:
-- immersion enabled;
-- NPC interaction;
-- mounted/travel;
+Compares snapshot values to current APIs for:
+- mounted;
 - resting;
-- camera situation;
-- quest/navigation availability.
+- taxi.
 
-Those belong to subsequent Phase A work.
+Also verifies interaction boolean/type consistency.
+
+It does not claim to prove that no untracked interaction exists, because there is no universal documented current-interaction getter.
+
+## Current deferrals
+
+- flying/airborne;
+- vehicle;
+- druid travel form;
+- generic loss of control.
+
+These remain outside A.2 unless a future owner requires them.

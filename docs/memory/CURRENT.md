@@ -8,90 +8,86 @@ project: logres
 
 ## Active Objective
 
-**Phase A — Core State Engine.** Establish the stable state/lifecycle contract and the minimal orthogonal context sensors required by later Logres modules.
+**Phase A — Core State Engine.** Establish the stable state/lifecycle contract and minimal orthogonal context sensors required by later Logres modules.
 
 ## Current Work Item
 
 **A.2 — Additional Context Sensors.**
 
-The A.2 source review is complete enough to define the implementation.
+P0010 prepares the implementation for:
+- mounted;
+- resting;
+- onTaxi;
+- interacting;
+- interactionType.
 
-Accepted fields:
-- `mounted`;
-- `resting`;
-- `onTaxi`;
-- `interacting`;
-- `interactionType`.
+The implementation preserves D-009 and adds `/logres sensorcheck`.
 
-Rejected/deferred:
-- generic `traveling` rejected;
-- flying/airborne deferred;
-- vehicle deferred;
-- druid travel form deferred;
-- generic loss-of-control state deferred.
-
-No HUD behavior belongs in A.2.
+No HUD behavior is included.
 
 ## Verified State
 
-- Phase 0 — Foundation complete.
+- Phase 0 complete.
 - A.1 complete and runtime proven.
-- P0008 A.1 closure pushed at `c7dd8e8`.
-- current documentation marks `IsMounted`, `IsResting`, and `UnitOnTaxi` available on Forever 1.60.1.
-- current documentation marks PlayerInteractionManager SHOW/HIDE events available on Forever with `Enum.PlayerInteractionType` payload.
-- current documentation marks `C_PlayerInteractionManager.IsInteractingWithNpcOfType` available on Forever.
-- current maintained Forever-aware DynamicCam uses:
-  - mounted via `IsMounted()` excluding `UnitOnTaxi("player")`;
-  - `PLAYER_MOUNT_DISPLAY_CHANGED` / `UNIT_AURA`;
-  - resting via `PLAYER_UPDATE_RESTING` / `IsResting()`;
-  - taxi via `PLAYER_CONTROL_LOST` / `PLAYER_CONTROL_GAINED` / `UnitOnTaxi("player")`.
-- these A.2 findings are source/documentation evidence, not yet Logres runtime proof.
+- P0009 source review pushed at `dd6c4d7`.
+- A.2 sensor semantics are source/documentation backed.
+- P0010 implementation/static checks are prepared but not yet runtime proven.
+- user is currently near the Ironforge flight path, allowing an efficient taxi true-path test without a dedicated trip.
 
 ## Next Action
 
-Prepare the A.2 implementation patch.
+Install/review/commit/push P0010 and redeploy Logres.
 
-Implementation requirements:
-1. add the five accepted fields through the existing D-009 contract;
-2. preserve state authority privacy;
-3. filter `UNIT_AURA` to the player;
-4. treat `PLAYER_CONTROL_LOST/GAINED` only as taxi refresh signals;
-5. use Interaction Manager SHOW/HIDE payload as interaction-type authority;
-6. clear interaction only when HIDE matches the current type;
-7. add a travel-free sensor consistency diagnostic;
-8. do not require a dedicated taxi trip.
+In game:
+
+```text
+/reload
+/logres statecheck
+/logres sensorcheck
+/logres status
+```
+
+Then use the current Ironforge location for efficient validation:
+1. mount/dismount locally where mounting is permitted;
+2. open/close a nearby normal interaction frame;
+3. take any convenient short taxi flight;
+4. during flight verify `taxi=true` and `mounted=false`;
+5. after landing verify `taxi=false`;
+6. note the resting value in the current/resting areas encountered.
+
+No separate world/instance travel is required.
 
 ## Success Criteria
 
 A.2 succeeds when:
-- accepted sensors are implemented with the documented semantics;
-- fields publish through D-009;
-- no combinatorial mega-states are introduced;
-- static checks pass;
-- travel-free consistency check passes;
-- mounted transition is runtime proven locally;
-- interaction/resting true paths are tested when convenient or explicitly deferred with rationale;
-- taxi true path may be deferred until naturally encountered / Phase G;
-- failures and partial verification are recorded.
+- `/logres statecheck` still passes;
+- `/logres sensorcheck` passes;
+- mounted transition is observed;
+- taxi transition is observed if the currently convenient flight path is used;
+- mounted remains false on taxi;
+- one interaction transition is observed if a suitable nearby interaction uses Interaction Manager events;
+- resting state agrees with the direct API diagnostic;
+- no Lua errors occur in tested scope;
+- any unobserved true-path is explicitly deferred;
+- failures/quirks are preserved.
 
 ## Do Not Reopen Without New Evidence
 
 - **A.1:** complete.
-- **State authority:** private to `Core/State.lua`.
+- **State authority:** private.
 - **State access:** `GetState()` / `SubscribeState()`.
-- **Revision:** actual canonical transitions only.
-- **No generic traveling state:** use orthogonal facts.
 - **mounted:** excludes taxi.
-- **resting:** literal `IsResting`, not a city alias.
-- **onTaxi:** authority is `UnitOnTaxi("player")`, not control-loss events.
-- **interaction:** preserve Blizzard interaction type rather than inventing a mega-category.
+- **resting:** literal Blizzard state.
+- **taxi:** authority is `UnitOnTaxi`, not control-loss event alone.
+- **interaction:** event-latched Blizzard interaction type.
+- **generic traveling:** rejected.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
 - `docs/memory/investigations/A2_CONTEXT_SENSORS.md`
 - `docs/memory/evidence/A2_CONTEXT_SENSOR_SOURCE_AUDIT_2026-09-30.md`
-- `docs/memory/decisions/D-009_STATE_CONSUMER_CONTRACT.md`
 - `docs/memory/architecture/STATE_ENGINE.md`
-- `docs/memory/roadmap/PHASE_A_CORE_STATE_ENGINE.md`
+- `docs/memory/decisions/D-009_STATE_CONSUMER_CONTRACT.md`
 - `Logres/Core/State.lua`
+- `Logres/Core/Commands.lua`

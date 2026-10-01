@@ -28,8 +28,43 @@ for fragment in required_state_fragments:
     if fragment not in state_source:
         errors.append(f"State.lua missing contract fragment: {fragment}")
 
+required_fields = [
+    "mounted",
+    "resting",
+    "onTaxi",
+    "interacting",
+    "interactionType",
+]
+
+for field in required_fields:
+    if f'{field} =' not in state_source and f'"{field}"' not in state_source:
+        errors.append(f"State.lua missing A.2 field: {field}")
+
+required_events = [
+    "PLAYER_MOUNT_DISPLAY_CHANGED",
+    "UNIT_AURA",
+    "PLAYER_UPDATE_RESTING",
+    "PLAYER_CONTROL_LOST",
+    "PLAYER_CONTROL_GAINED",
+    "PLAYER_INTERACTION_MANAGER_FRAME_SHOW",
+    "PLAYER_INTERACTION_MANAGER_FRAME_HIDE",
+]
+
+for event in required_events:
+    if event not in state_source:
+        errors.append(f"State.lua missing A.2 refresh event: {event}")
+
 if "Logres.State =" in state_source:
     errors.append("authoritative state must not be exposed as Logres.State")
+
+if 'IsMounted() and not onTaxi' not in state_source:
+    errors.append("mounted semantics must explicitly exclude taxi")
+
+if 'UnitOnTaxi("player")' not in state_source:
+    errors.append("onTaxi must derive from UnitOnTaxi(\"player\")")
+
+if "IsResting()" not in state_source:
+    errors.append("resting must derive from IsResting()")
 
 for lua_path in sorted(ADDON.rglob("*.lua")):
     source = lua_path.read_text(encoding="utf-8")
@@ -45,6 +80,8 @@ if COMMANDS.is_file():
         errors.append("Commands.lua must consume state through Logres:GetState()")
     if "/logres statecheck" not in commands_source:
         errors.append("Commands.lua must expose the development statecheck command")
+    if "/logres sensorcheck" not in commands_source:
+        errors.append("Commands.lua must expose the A.2 sensorcheck command")
 else:
     errors.append("missing Logres/Core/Commands.lua")
 

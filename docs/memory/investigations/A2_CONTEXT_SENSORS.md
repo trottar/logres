@@ -1,16 +1,12 @@
 # A.2 — Additional Context Sensors
 
-Status: ACTIVE — SOURCE REVIEW COMPLETE; IMPLEMENTATION NEXT  
+Status: ACTIVE — IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT  
 Phase: A.2  
 Opened: 2026-09-30
 
-## Question
-
-Which additional orthogonal facts should the Core State Engine expose now, and what current Forever APIs/events justify them?
-
 ## Accepted sensors
 
-Source review accepts:
+Implemented by P0010:
 
 ```text
 mounted
@@ -20,72 +16,74 @@ interacting
 interactionType
 ```
 
-Canonical source evidence:
-
+Source evidence:
 `../evidence/A2_CONTEXT_SENSOR_SOURCE_AUDIT_2026-09-30.md`
 
 ## Semantics
 
-### mounted
+- mounted = player-controlled mount, excluding taxi;
+- resting = literal `IsResting()`;
+- onTaxi = literal `UnitOnTaxi("player")`;
+- interaction type = PlayerInteractionManager SHOW/HIDE payload.
 
-Player-controlled mount state.
+## Implementation details
 
-Derived from:
-- `IsMounted()`;
-- excluding taxi with `not UnitOnTaxi("player")`.
+Refresh signals:
+- mount display;
+- player aura;
+- resting update;
+- control lost/gained;
+- interaction manager show/hide.
 
-### resting
+Interaction state is event-latched because no universal documented current-type getter is assumed.
 
-Literal `IsResting()` state.
+A mismatched HIDE does not clear a newer active type.
 
-Do not reinterpret as "city".
+## Development diagnostic
 
-### onTaxi
+P0010 adds:
 
-Literal `UnitOnTaxi("player")` flight-path state.
+```text
+/logres sensorcheck
+```
 
-`PLAYER_CONTROL_LOST/GAINED` are refresh signals, not authority.
+It compares current snapshot values with direct mounted/resting/taxi APIs and checks interaction field consistency.
 
-### interacting / interactionType
+## Runtime plan — optimized for current player location
 
-Event-driven PlayerInteractionManager state.
+The user reported being in Ironforge, next to a flight path, with a Thunderbrew hearth.
 
-SHOW payload establishes the current type.
-HIDE clears only the matching active type.
+Use the existing location rather than creating a travel-heavy matrix.
 
-`interactionType` preserves Blizzard's enum value rather than inventing a Logres category.
+1. `/reload`
+2. `/logres statecheck`
+3. `/logres sensorcheck`
+4. `/logres status`
+5. mount/dismount where permitted, checking status
+6. open/close any nearby ordinary interaction frame and check status
+7. take any convenient short flight path:
+   - during flight: `onTaxi=true`;
+   - `mounted=false` by Logres semantics
+8. after landing: verify taxi returns false
+9. resting true/false observations are accepted wherever naturally encountered; no dedicated detour required.
 
-## Deferred/rejected
+## Completion rule
 
-Rejected:
-- generic `traveling`.
+A.2 does not require every sensor true-path to be forced artificially.
 
-Deferred:
+Minimum desired runtime evidence:
+- diagnostic passes;
+- mounted transition;
+- taxi transition if convenient (currently convenient);
+- one interaction transition if nearby;
+- resting current state agrees with direct API.
+
+Any missing true-path is explicitly deferred.
+
+## Deferred sensors
+
+- generic traveling: rejected;
 - flying/airborne;
 - vehicle;
 - druid travel form;
 - generic loss of control.
-
-## Implementation constraints
-
-- preserve D-009 snapshot/subscription contract;
-- state authority remains private;
-- no HUD behavior;
-- no mega-state;
-- noisy `UNIT_AURA` refresh must filter to player;
-- interaction state must not depend on undocumented `GetCurrentInteractionType`;
-- no dedicated taxi trip required for completion.
-
-## Next implementation
-
-Add the five fields to the canonical state snapshot and event wiring.
-
-Add a development sensor diagnostic that can verify current API/state consistency without travel.
-
-Then perform minimal runtime proof:
-- `/reload`;
-- sensor consistency diagnostic;
-- mount/dismount locally;
-- interaction/resting only when convenient.
-
-Record taxi true-path as deferred if not naturally encountered.

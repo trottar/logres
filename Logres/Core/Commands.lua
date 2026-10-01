@@ -10,7 +10,7 @@ local function printStatus()
     local _, _, _, interfaceVersion = GetBuildInfo()
 
     print(string.format(
-        "Logres %s: loadCount=%s revision=%s context=%s combat=%s pvp=%s instance=%s/%s changedBy=%s interface=%s",
+        "Logres %s: loadCount=%s revision=%s context=%s combat=%s pvp=%s instance=%s/%s mounted=%s resting=%s taxi=%s interact=%s/%s changedBy=%s interface=%s",
         tostring(Logres.VERSION),
         tostring(db and db.meta and db.meta.loadCount or "?"),
         tostring(state.revision),
@@ -19,6 +19,11 @@ local function printStatus()
         boolText(state.pvpFlagged),
         boolText(state.inInstance),
         tostring(state.instanceType),
+        boolText(state.mounted),
+        boolText(state.resting),
+        boolText(state.onTaxi),
+        boolText(state.interacting),
+        tostring(state.interactionType),
         tostring(state.changedBy),
         tostring(interfaceVersion)
     ))
@@ -69,10 +74,49 @@ local function runStateCheck()
     ))
 end
 
+local function runSensorCheck()
+    local state = Logres:GetState()
+
+    local apiTaxi = UnitOnTaxi("player") and true or false
+    local apiMounted = IsMounted() and not apiTaxi
+    local apiResting = IsResting() and true or false
+
+    local mountedOK = state.mounted == (apiMounted and true or false)
+    local restingOK = state.resting == apiResting
+    local taxiOK = state.onTaxi == apiTaxi
+    local interactionShapeOK =
+        state.interacting == (state.interactionType ~= 0)
+
+    if mountedOK and restingOK and taxiOK and interactionShapeOK then
+        print(string.format(
+            "Logres sensorcheck: PASS (mounted=%s resting=%s taxi=%s interact=%s/%s)",
+            boolText(state.mounted),
+            boolText(state.resting),
+            boolText(state.onTaxi),
+            boolText(state.interacting),
+            tostring(state.interactionType)
+        ))
+        return
+    end
+
+    print(string.format(
+        "Logres sensorcheck: FAIL (mounted=%s/%s resting=%s/%s taxi=%s/%s interact=%s/%s)",
+        boolText(state.mounted),
+        boolText(apiMounted),
+        boolText(state.resting),
+        boolText(apiResting),
+        boolText(state.onTaxi),
+        boolText(apiTaxi),
+        boolText(state.interacting),
+        tostring(state.interactionType)
+    ))
+end
+
 local function printHelp()
     print("Logres development commands:")
     print("  /logres status")
     print("  /logres statecheck")
+    print("  /logres sensorcheck")
     print("  /logres debug on")
     print("  /logres debug off")
 end
@@ -88,6 +132,11 @@ SlashCmdList.LOGRES = function(message)
 
     if command == "statecheck" then
         runStateCheck()
+        return
+    end
+
+    if command == "sensorcheck" then
+        runSensorCheck()
         return
     end
 

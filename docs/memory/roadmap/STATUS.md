@@ -8,7 +8,7 @@ As of 2026-09-30.
 
 Active work item: **A.2 Additional Context Sensors**
 
-State: **SOURCE REVIEW COMPLETE; IMPLEMENTATION NEXT**
+State: **IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
 
 ## Phase status
 
@@ -29,22 +29,19 @@ State: **SOURCE REVIEW COMPLETE; IMPLEMENTATION NEXT**
 | Item | State |
 | --- | --- |
 | A.1 State contract hardening | COMPLETE |
-| A.2 Additional context sensors | ACTIVE — source review complete |
+| A.2 Additional context sensors | ACTIVE — implementation prepared |
 | A.3 User-controlled state | QUEUED |
 | A.4 Module lifecycle contract | QUEUED |
 | A.5 Transition validation | QUEUED |
 
-## A.2 selected facts
+## A.2 implementation
 
-Accepted:
+P0010 adds:
 - mounted;
 - resting;
 - onTaxi;
 - interacting;
-- interactionType.
+- interactionType;
+- travel-free `/logres sensorcheck`.
 
-Rejected/deferred:
-- generic traveling rejected;
-- flying/vehicle/travel-form/loss-of-control deferred.
-
-Implementation must preserve orthogonal state and avoid expensive required travel for proof.
+Runtime proof can use the user's current Ironforge/flight-path location.
