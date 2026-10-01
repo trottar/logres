@@ -1,91 +1,42 @@
 # D.1 — Immersion Orchestration Source Review
 
-Status: ACTIVE
+Status: COMPLETE
 Opened: 2026-10-01
+Closed: 2026-10-01
 
-## Question
+## Result
 
-How should Logres centrally orchestrate immersion ON/OFF and contextual
-exceptions while safely suppressing/restoring proven Blizzard surfaces?
+D-024 is canonical.
 
-## Existing contracts
+Source review established:
+- controller consumes preference + observed state;
+- Phase C Bar 2–3 replacement can be automatically orchestrated;
+- Quiet Mode can proceed as runtime-only chat/tab suppression;
+- blanket Player/Target/Party suppression is not yet capability-safe.
 
-Use as constraints:
-- D-009 observed state;
-- D-010 persisted immersion preference;
-- D-011 module lifecycle;
-- D-017 Blizzard UI suppression/restoration ownership;
-- D-020 action layout customization direction;
-- D-023 selective stock action replacement;
-- Phase C runtime evidence.
+## Blocking unit-frame findings
 
-## Source review targets
+### Player
 
-### Blizzard unit frames
-Resolve exact frame/module ownership and restoration behavior for:
-- player;
-- target;
-- party;
-- focus only if later justified.
+Full PlayerFrame suppression would also suppress Blizzard children including
+class-resource / rune / totem / pet surfaces that Logres does not fully replace.
 
-Determine:
-- protected status;
-- combat-lockdown implications;
-- Blizzard re-show/update behavior;
-- safe suppression mechanism;
-- exact restoration snapshot requirements.
+### Target
 
-### Chat / Quiet Mode
-Resolve:
-- chat frame/tab visibility mechanics;
-- social notification surfaces;
-- combat restrictions if any;
-- restoration;
-- what can be visually silenced without changing communication status.
+TargetFrame is a secure unit button and also carries aura/context presentation.
 
-### Action replacement integration
-Phase C proves automatic replacement only for:
-- stock Bar 2;
-- stock Bar 3.
+Current Logres target display does not replace all of those functions.
 
-D.1 must define how immersion orchestration requests that capability without
-duplicating its internal routing/snapshot logic.
+### Party
 
-Primary routing remains manual while Primary stock replacement is unsupported.
+Normal and raid-style party member frames are secure unit buttons.
 
-### Preference + state orchestration
-`immersionEnabled` remains a preference, not observed state.
+Current Logres party rows do not replace secure click targeting/menu behavior.
 
-Controller policy consumes:
-- preference snapshot;
-- observed state snapshot.
+## Next
 
-It produces presentation/suppression decisions.
+D.2:
+implement the Immersion Controller runtime foundation and integrate the proven
+Phase C selective action replacement.
 
-Do not merge preference into State.
-
-### Combat deferral
-Resolve whether each suppression target:
-- can transition freely in combat;
-- must defer until `PLAYER_REGEN_ENABLED`;
-- needs a secure driver;
-- must remain unchanged until safe.
-
-### Recovery
-Developer panel remains independent from immersion suppression during
-development.
-
-There must always be a recovery path back to visible Blizzard UI.
-
-## Deliverable
-
-D.1 source/design decision should define:
-- controller inputs;
-- owned outputs;
-- supported suppression targets;
-- per-target transition constraints;
-- restoration ownership;
-- fail-open behavior;
-- initial Phase D implementation order.
-
-No broad runtime suppression before this review closes.
+No new Player/Target/Party suppression in D.2.

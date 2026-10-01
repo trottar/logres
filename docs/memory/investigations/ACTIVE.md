@@ -1,14 +1,18 @@
 # Active Investigations
 
-## D.1 — Immersion Orchestration Source Review
+## D.2 — Immersion Controller runtime foundation
 
 Status:
-**ACTIVE**
+**IMPLEMENTATION NEXT**
 
-Canonical:
-`D1_IMMERSION_ORCHESTRATION_SOURCE_REVIEW.md`
+Contract:
+`../decisions/D-024_IMMERSION_ORCHESTRATION_CONTRACT.md`
+
+Source evidence:
+`../evidence/D1_IMMERSION_ORCHESTRATION_SOURCE_REVIEW_2026-10-01.md`
 
 Next:
-resolve exact Blizzard player/target/party/chat suppression/restoration
-mechanics, combat constraints, and integration with the proven Phase C
-selective action replacement.
+implement preference/state-driven orchestration of the proven Phase C selective
+action replacement with diagnostics.
+
+No unit-frame suppression in D.2.

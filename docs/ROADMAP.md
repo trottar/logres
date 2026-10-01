@@ -77,7 +77,7 @@ Canonical phase record:
 
 ## Phase D — Immersion Controller
 
-**Status: ACTIVE — D.1 source/design resolution.**
+**Status: ACTIVE — D.2 Immersion Controller runtime foundation.**
 
 Implement full immersion orchestration:
 - Quiet/social immersion mode;

@@ -12,9 +12,9 @@ project: logres
 
 ## Current Work Item
 
-**D.1 — Immersion orchestration contract / source review.**
+**D.2 — Immersion Controller runtime foundation.**
 
-Phase C is complete.
+D.1 source/design review is complete.
 
 ## Verified State
 
@@ -22,76 +22,73 @@ Phase C is complete.
 - Phase A complete.
 - Phase B complete.
 - Phase C complete.
-- P0045 pushed at `e3c8602`.
-- C.6 integrated runtime validation PASS on `0.0.20-dev`.
-- world/combat/PvP action integration works.
-- secure mouse and routed-key action execution works.
-- selective stock Bar 2–3 replacement/restoration works.
-- Phase B HUD and Phase C action interface coexist in tested play.
-- Primary Action Keys reset OFF after reload by design.
-- manual Primary routing remains fail-open while MainActionBar replacement is
+- P0046 pushed at `8ad0f01`.
+- runtime remains `0.0.20-dev`.
+- D-024 immersion orchestration contract accepted.
+- Phase C Bar 2–3 replacement is safe for automatic Phase D orchestration.
+- Quiet Mode first pass can use runtime-only chat/tab suppression without
+  changing saved chat settings.
+- full PlayerFrame suppression is BLOCKED by un-replaced child resources.
+- full TargetFrame suppression is BLOCKED by secure interaction + aura policy.
+- full PartyFrame/CompactPartyFrame suppression is BLOCKED by secure
+  interaction and additional group context.
+- Primary action routing remains manual while Primary stock replacement is
   unsupported.
-- MainActionBar suppression remains deferred.
-- Bars 4–5 suppression remains deferred.
-- live action move/swap/remove editing remains deferred under D-020.
-- cast/channel cue color regression remains open visual debt.
+- live action editing remains deferred under D-020.
+- cast cue color regression remains open visual debt.
 
 ## Next Action
 
-Source/design-resolve D.1 before broad suppression code.
+Implement D.2.
 
-Review exact Forever/Blizzard ownership and safe suppression/restoration for:
-1. player frame;
-2. target frame;
-3. party frames;
-4. chat frames/tabs and supported Quiet Mode surfaces;
-5. integration of Phase C selective Bar 2–3 replacement;
-6. combat-deferred transitions;
-7. reload/login initialization ordering;
-8. PvP/context/instance exceptions;
-9. Immersion OFF restoration;
-10. developer recovery/diagnostics.
+Runtime target:
+1. add `ImmersionController` module;
+2. consume preference snapshot/subscription;
+3. consume State snapshot/subscription;
+4. compute desired orchestration policy;
+5. when immersion ON, automatically request Phase C Bar 2–3 replacement;
+6. when immersion OFF, restore that replacement;
+7. expose desired Quiet Mode state diagnostically;
+8. add `Immersion Check`;
+9. do not suppress Player/Target/Party yet.
 
-`immersionEnabled` remains a persisted preference, not observed state.
-
-Do not suppress:
-- focus without a justified Logres replacement;
-- MainActionBar;
-- Bars 4–5;
-- minimap/navigation;
-- quest/XP surfaces;
-
-outside their capability owners.
+Expected policy:
+- action replacement follows `immersionEnabled`;
+- Quiet Mode desired in world while immersion ON;
+- Quiet Mode desired OFF in instances for first conservative pass;
+- PvP does not turn immersion off.
 
 ## Success Criteria
 
-D.1 succeeds when the repository has a source-backed orchestration contract
-covering:
-- controller inputs;
-- supported suppression targets;
-- transition constraints;
-- restoration;
-- combat deferral;
-- context exceptions;
-- fail-open recovery.
-
-Only then implement Phase D runtime suppression.
+D.2 succeeds when:
+- reload with persisted immersion ON automatically applies supported Bar 2–3
+  replacement;
+- immersion OFF restores Bars 2–3;
+- immersion ON reapplies them;
+- combat-time preference changes safely defer through the existing replacement
+  module;
+- Primary keys are not seized automatically;
+- unit frames remain untouched;
+- controller diagnostics explain desired/applied state;
+- no protected/taint/Lua/secret regression occurs.
 
 ## Do Not Reopen Without New Evidence
 
 - **Phase C:** complete.
-- **C.6 manual Primary Action Keys after reload:** expected current behavior.
-- **MainActionBar suppression:** deferred.
-- **Bars 4–5 suppression:** deferred.
+- **D.1:** complete.
+- **Full PlayerFrame suppression:** blocked pending child-resource-safe design.
+- **Full TargetFrame suppression:** blocked pending secure interaction/aura
+  design.
+- **Party suppression:** blocked pending secure interaction + normal/compact
+  coverage.
+- **Primary replacement/routing:** deferred.
 - **D-020 live action editing:** deferred.
-- **Cast cue colors:** open visual debt.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/C6_ACTION_INTERFACE_INTEGRATION_RUNTIME_PROOF_2026-10-01.md`
+- `docs/memory/evidence/D1_IMMERSION_ORCHESTRATION_SOURCE_REVIEW_2026-10-01.md`
+- `docs/memory/decisions/D-024_IMMERSION_ORCHESTRATION_CONTRACT.md`
 - `docs/memory/roadmap/PHASE_D_IMMERSION_CONTROLLER.md`
 - `docs/memory/investigations/D1_IMMERSION_ORCHESTRATION_SOURCE_REVIEW.md`
 - `docs/memory/decisions/D-017_BLIZZARD_UI_SUPPRESSION_AND_RESTORATION.md`
-- `docs/memory/decisions/D-023_SELECTIVE_STOCK_ACTION_REPLACEMENT.md`
-- `docs/memory/architecture/ACTION_CLUSTERS.md`

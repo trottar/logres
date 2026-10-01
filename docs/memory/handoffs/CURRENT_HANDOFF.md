@@ -2,23 +2,24 @@
 
 Authoritative state: `../CURRENT.md`.
 
-Phase C is complete.
+P0046 is verified pushed at `8ad0f01`.
 
-C.6 integrated validation passed on `0.0.20-dev`.
+D.1 source review is complete.
 
-Important boundary:
-Primary `Action Keys` still default OFF after reload because Blizzard Primary
-remains visible and Primary stock replacement is unsupported.
-
-This is expected fail-open behavior.
+D-024 is canonical.
 
 Current work:
-**Phase D / D.1 — Immersion orchestration source/design review**
+**D.2 — Immersion Controller runtime foundation**
 
-Next:
-source-resolve player/target/party/chat suppression and global restoration
-policy before implementing broad Immersion Controller behavior.
+Implement automatic orchestration of the already-proven Phase C Bar 2–3
+replacement from persisted `immersionEnabled`.
 
-P0046 is documentation-only; no WoW redeploy required.
+Do not suppress Player/Target/Party in D.2.
+
+Important source finding:
+full PlayerFrame suppression would also hide un-replaced class-resource/rune/
+totem/pet children.
+
+P0047 is documentation/source-evidence only; no WoW redeploy required.
 
 User performs all commits/pushes.

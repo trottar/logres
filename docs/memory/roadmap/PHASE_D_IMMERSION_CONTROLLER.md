@@ -4,94 +4,98 @@ Status: ACTIVE
 
 ## Objective
 
-Turn the individually proven Logres capabilities into a coherent immersion
-controller that can suppress and restore Blizzard UI safely according to
-preference and context.
+Turn proven Logres capabilities into coherent immersion orchestration while
+preserving fail-open access to Blizzard controls and information that Logres
+does not yet replace.
 
-D-017 is authoritative.
-
-Core rule:
-
-**A Blizzard surface is suppressed only when Logres has a proven replacement
-or a deliberate safe exception.**
-
-Restoration must remain reliable and fail-open.
+D-017 and D-024 are authoritative.
 
 ## D.1 — Immersion orchestration contract / source review
 
-**Status: ACTIVE — SOURCE / DESIGN RESOLUTION NEXT.**
+**Status: COMPLETE.**
 
-Resolve before implementation:
-- controller ownership and module boundaries;
-- how persisted `immersionEnabled` drives orchestration without becoming
-  observed state;
-- exact Blizzard player / target / party frame ownership;
-- suppression/restoration methods and combat restrictions;
-- action replacement integration from Phase C;
-- Quiet Mode chat/tab suppression APIs and restoration;
-- instance/PvP exceptions;
-- deferred transition handling during combat;
-- reload/login initialization ordering;
-- diagnostics and recovery path.
+Resolved:
+- preference/state separation;
+- controller boundary;
+- Phase C action replacement integration;
+- Quiet Mode first-pass boundary;
+- protected unit-frame security/interaction;
+- PlayerFrame child-resource dependency;
+- target aura/control dependency;
+- normal + compact party-frame paths;
+- fail-open restoration.
 
-Do not implement broad suppression before this contract is source-resolved.
+## D.2 — Immersion Controller runtime foundation
 
-## D.2 — Core stock unit-frame suppression/restoration
+**Status: ACTIVE — IMPLEMENTATION NEXT.**
 
-Targets only where Logres replacement is already proven:
-- Blizzard player frame;
-- Blizzard target frame;
-- Blizzard party frames while Logres party presentation is active.
+Implement:
+- `ImmersionController` module;
+- subscribe to D-010 preferences;
+- subscribe to observed state;
+- derive desired policy;
+- automatically request proven Bar 2–3 replacement when immersion is ON;
+- restore Bar 2–3 replacement when immersion is OFF;
+- world/instance Quiet Mode desired flag in diagnostics, but do not yet hide
+  chat until D.3;
+- developer `Immersion Check`.
 
-Focus/related frames require separate justification before suppression.
+Do not suppress Player/Target/Party in D.2.
 
-Requirements:
-- exact prior state restoration;
-- combat-safe transitions;
-- fail-open recovery;
-- developer panel remains available.
+Primary action routing remains manual because Primary replacement remains
+unsupported.
 
-## D.3 — Quiet Mode / social visual suppression
+## D.3 — Quiet Mode runtime suppression
 
-Implement visual silence where APIs permit:
-- chat frame visibility;
+Implement runtime visual silence:
+- chat frames;
 - chat tabs;
-- supported social notification surfaces.
+- selected safe social visual surfaces after source confirmation.
 
-Quiet Mode is presentation policy, not communication-status mutation.
+Rules:
+- do not change saved chat visibility/dock configuration;
+- do not alter communication status;
+- preserve intentional edit-box use;
+- world default ON while immersion is enabled;
+- conservative instance default OFF;
+- restore/reconcile after chat-window updates.
 
-Do not promise outbound auto-replies without a separate API capability decision.
+## D.4 — Unit-frame interaction + selective suppression
 
-## D.4 — Context / PvP / instance orchestration
+Before suppression, complete the missing capability.
 
-Integrate existing orthogonal state:
-- `context`;
-- `combat`;
-- `pvpFlagged`;
-- related proven sensor flags.
+### Player
+Resolve a safe conventional-shell suppression that preserves required:
+- class resources;
+- rune/totem resources;
+- pet/managed children;
 
-PvP remains a modifier, not an immersion-off mode.
+or provide Logres replacements first.
 
-Instance policy may restore or suppress surfaces selectively based on proven
-replacement capability.
+### Target
+Add/prove equivalent secure unit interaction and resolve target aura policy
+before suppressing the stock target surface.
 
-## D.5 — Phase C action replacement integration
+### Party
+Add/prove secure party targeting/menu interaction and account for:
+- normal PartyFrame;
+- CompactPartyFrame raid-style mode;
+- required group context.
 
-Integrate the proven selective action replacement into immersion orchestration.
+No blanket unit-frame hide.
 
-Current supported automatic replacement scope:
-- stock Bar 2;
-- stock Bar 3.
+## D.5 — Context / PvP / instance orchestration
 
-Do not broaden suppression to:
-- MainActionBar;
-- Bars 4–5;
-- special vehicle/override/form action surfaces;
+Integrate orthogonal state:
+- context;
+- combat;
+- PvP;
+- relevant later flags.
 
-until their independent capability gates are satisfied.
+PvP remains a modifier, not immersion OFF.
 
-Primary Action Keys remain manual/session-only while Primary stock replacement
-is unsupported.
+Context policy may restore unsupported stock surfaces whenever Logres cannot
+safely replace them.
 
 ## D.6 — Restoration / integration validation
 
@@ -101,18 +105,18 @@ Validate:
 - reload/login;
 - combat-deferred changes;
 - PvP;
-- world/instance transitions where naturally available;
+- natural world/instance transitions;
 - module disable/restore;
-- developer recovery controls;
-- no required control or awareness surface is lost.
+- developer recovery;
+- no required control/information lost.
 
 ## Phase D exit
 
 Phase D completes when:
-- supported stock surfaces suppress coherently under immersion;
-- Immersion OFF restores them reliably;
-- context/PvP/instance policies are deterministic;
-- Quiet Mode visual suppression is proven where supported;
-- Phase C selective action replacement integrates without widening unsupported
-  suppression;
+- all suppression it claims is capability-safe;
+- Immersion OFF reliably restores stock UI;
+- Quiet Mode is reversible and does not alter communication status;
+- Phase C selective action replacement is automatically orchestrated;
+- supported unit-frame suppression preserves required controls/resources;
+- context/PvP/instance behavior is deterministic;
 - no protected/taint/Lua/secret regression occurs.

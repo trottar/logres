@@ -47,6 +47,7 @@
 | P0043 | 2026-10-01 | INSTALLED / PUSHED | Resolve selective stock Bar 2–3 replacement contract (`66ea513`) |
 | P0044 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME PASS | Implement session-only selective stock Bar 2–3 replacement (`1d4f811`) |
 | P0045 | 2026-10-01 | INSTALLED / PUSHED | Close C.5; record live editing gap; open C.6 integration validation (`e3c8602`) |
-| P0046 | 2026-10-01 | PREPARED | Close Phase C; record Primary routing reload boundary; open Phase D / D.1 |
+| P0046 | 2026-10-01 | INSTALLED / PUSHED | Close Phase C; open Phase D / D.1 (`8ad0f01`) |
+| P0047 | 2026-10-01 | PREPARED | Resolve D.1 immersion orchestration and unit-frame capability gates |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

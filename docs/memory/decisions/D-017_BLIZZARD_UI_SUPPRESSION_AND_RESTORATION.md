@@ -95,3 +95,17 @@ Current Phase B state is expected to show both:
 That is not the intended final presentation.
 
 It is the validated transitional state before Phases C/D begin replacement and orchestration.
+
+## D.1 refinement
+
+Phase D source review found that "replacement exists" must include interaction
+and dependent-child capability, not only visual information.
+
+Stock unit frames are secure click surfaces.
+
+Full PlayerFrame suppression would also suppress class-resource / rune / totem /
+pet children.
+
+Therefore D.2 does not immediately hide Player/Target/Party.
+
+D-024 defines the capability gate and revised implementation order.

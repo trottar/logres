@@ -7,10 +7,10 @@ As of 2026-10-01.
 **Phase D — Immersion Controller**
 
 Active work item:
-**D.1 Immersion orchestration contract / source review**
+**D.2 Immersion Controller runtime foundation**
 
 State:
-**SOURCE / DESIGN RESOLUTION NEXT**
+**D.1 SOURCE-RESOLVED; D.2 IMPLEMENTATION NEXT**
 
 ## Phase status
 
@@ -20,28 +20,23 @@ State:
 | A — Core State Engine | COMPLETE |
 | B — Core HUD | COMPLETE |
 | C — Action Interface | COMPLETE |
-| D — Immersion Controller | ACTIVE — D.1 |
+| D — Immersion Controller | ACTIVE — D.2 |
 | E — Compass and Navigation | QUEUED |
 | F — Quest Experience | QUEUED |
 | G — Cinematic Camera | QUEUED |
 | H — Integration and Polish | QUEUED |
 
-## Phase C final boundary
+## D.1 result
 
-Proven:
-- secure Primary/Secondary/Utility clusters;
-- context/PvP behavior;
-- action activation feedback;
-- selective stock Bar 2–3 replacement/restoration.
+Safe immediate orchestration:
+- persisted immersion preference;
+- Phase C selective Bar 2–3 replacement;
+- Quiet Mode runtime chat/tab suppression in D.3.
 
-Deferred:
-- Primary stock replacement;
-- Bars 4–5;
-- special action states;
-- persistent replacement;
-- live action layout editing.
-
-## D.1 next
-
-Resolve the global immersion suppression/restoration contract before runtime
-implementation.
+Capability-gated:
+- full PlayerFrame;
+- full TargetFrame;
+- PartyFrame / CompactPartyFrame;
+- focus;
+- MainActionBar;
+- Bars 4–5.
