@@ -2,24 +2,27 @@
 
 Authoritative state: `../CURRENT.md`.
 
-C.4 is complete.
-
-P0041 runtime:
-- mouse activation feedback PASS;
-- Logres-routed keyboard feedback PASS.
-
 Current work:
 **C.5 — Stock Action-Bar Replacement**
 
-Critical rule:
-stock-bar suppression and Logres key routing are one replacement capability.
+P0043 resolves the first replacement contract.
 
-Do not hide a stock action domain while its keys still depend on the stock
-binding path.
+First runtime implementation:
+- stock Bar 2 only;
+- stock Bar 3 only;
+- alpha/mouse suppression;
+- automatic matching Logres key routing;
+- exact restoration;
+- OOC-only transitions;
+- combat deferral;
+- replacement defaults OFF after reload.
 
-Do not globally hide Bars 4–5; current Logres does not yet represent all action
-domains the user uses.
+Do not suppress:
+- MainActionBar;
+- OverrideActionBar;
+- Bars 4–5;
+- special action surfaces.
 
-P0042 is documentation-only; no WoW redeploy required.
+P0043 is documentation/source-evidence only; no WoW redeploy required.
 
 User performs all commits/pushes.

@@ -14,7 +14,9 @@ project: logres
 
 **C.5 — Stock Action-Bar Replacement.**
 
-C.4 is complete.
+First-pass source/design resolution is complete.
+
+Implementation is next.
 
 ## Verified State
 
@@ -25,70 +27,78 @@ C.4 is complete.
 - C.2 complete.
 - C.3 complete.
 - C.4 complete.
-- P0041 pushed at `c020ab1`.
-- world contextual action weighting: PASS.
-- combat contextual weighting: PASS.
-- PvP modifier: PASS.
-- Utility subdued weighting accepted as first-pass tuning.
-- mouse action activation feedback: PASS.
-- Logres-routed keyboard activation feedback: PASS.
-- stock bindings bypass Logres feedback unless Logres routing is enabled.
-- normal Primary page switching is not part of the user's workflow.
-- special action states remain capability-gated.
-- stock Blizzard action bars are still visible.
-- current Logres coverage does not yet represent every stock bar the user uses.
+- P0042 pushed at `8f5326a`.
+- P0041 routed-key activation proof remains valid.
+- stock Bar 2 source frame: `MultiBarBottomLeft`.
+- stock Bar 3 source frame: `MultiBarBottomRight`.
+- Bar 2 maps to slots 61–72 / Logres Secondary.
+- Bar 3 maps to slots 49–60 / Logres Utility.
+- Blizzard retains Show/Hide ownership of multi-bars.
+- MainActionBar is reused for special action states and is excluded from first
+  suppression.
+- Bars 4–5 remain outside current Logres coverage and stay visible.
+- D-023 selective replacement contract accepted.
+- stock Blizzard action bars are still visible in current runtime.
 
 ## Next Action
 
-Source/design-resolve C.5 before hiding any Blizzard action surface.
+Implement first selective C.5 runtime proof.
 
-Resolve:
-1. exact Forever Blizzard frame ownership for proven action domains;
-2. safe suppression/restoration mechanics;
-3. combat-lockdown boundaries;
-4. replacement-state lifecycle;
-5. coupling between suppression and Logres key routing;
-6. reload persistence;
-7. Immersion OFF restoration;
-8. special vehicle/override/form fallback;
-9. selective handling of unsupported Bars 4–5;
-10. diagnostics for suppression + restoration.
+Add session-only developer controls:
+- Stock Bars Replace ON;
+- Stock Bars Replace OFF.
 
-Do not implement global action-bar suppression.
+ON, out of combat:
+1. snapshot Bar 2 / Bar 3 alpha and mouse states;
+2. enable Secondary and Utility Logres key routing;
+3. if routing succeeded, set Bar 2 / Bar 3 alpha to 0;
+4. disable mouse input on those stock bars and action buttons.
 
-Do not hide Bars 4–5 while they remain outside current Logres coverage.
+OFF, out of combat:
+1. restore exact stock alpha/mouse snapshots;
+2. restore prior Secondary/Utility routing state.
+
+Combat-time requests defer until `PLAYER_REGEN_ENABLED`.
+
+Do not suppress:
+- MainActionBar;
+- OverrideActionBar;
+- Bars 4–5;
+- special action surfaces.
+
+First proof defaults replacement OFF after `/reload`.
 
 ## Success Criteria
 
-C.5 succeeds when:
-- only proven replacement domains are suppressed;
-- corresponding Logres key routing is active whenever suppression is active;
-- stock bindings/surfaces restore reliably;
-- replacement fails open;
-- unsupported domains remain accessible;
-- special states preserve a safe fallback;
+First selective C.5 runtime pass succeeds when:
+- Bar 2 and Bar 3 are visually absent when replacement ON;
+- no invisible stock mouse zones remain;
+- Secondary/Utility keyboard actions route through Logres;
+- activation feedback works;
+- Primary remains stock-visible;
+- Bars 4–5 remain stock-visible;
+- replacement OFF restores stock bars exactly;
+- prior routing state is restored;
+- combat-time transition requests defer safely;
 - no protected/taint/Lua/secret regression occurs.
 
 ## Do Not Reopen Without New Evidence
 
-- **C.1:** complete.
-- **C.2:** complete.
-- **C.3:** complete.
-- **C.4:** complete.
-- **P0040:** real visual failure retained as evidence.
-- **P0041:** activation feedback runtime-proven.
-- **Utility fade:** accepted first-pass tuning.
-- **Normal page switching:** not a user workflow.
-- **Bars 4–5:** cannot be suppressed yet.
-- **Stock bars:** still visible until C.5 capability proof.
+- **C.1–C.4:** complete.
+- **P0040:** retained real visual failure.
+- **P0041:** feedback proof complete.
+- **MainActionBar suppression:** explicitly deferred by D-023.
+- **Bars 4–5:** remain visible.
+- **Stock Settings:** must not be rewritten for suppression.
+- **Replacement persistence:** deferred until restoration proof.
 - **Cast cue colors:** open visual debt.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/P0041_ACTION_FEEDBACK_RUNTIME_PROOF_2026-10-01.md`
+- `docs/memory/evidence/C5_STOCK_ACTION_BAR_REPLACEMENT_SOURCE_REVIEW_2026-10-01.md`
+- `docs/memory/decisions/D-023_SELECTIVE_STOCK_ACTION_REPLACEMENT.md`
 - `docs/memory/investigations/C5_STOCK_ACTION_BAR_REPLACEMENT.md`
 - `docs/memory/decisions/D-017_BLIZZARD_UI_SUPPRESSION_AND_RESTORATION.md`
-- `docs/memory/decisions/D-022_ACTION_ACTIVATION_FEEDBACK.md`
 - `docs/memory/decisions/D-020_ACTION_LAYOUT_CUSTOMIZATION_DIRECTION.md`
 - `docs/memory/architecture/ACTION_CLUSTERS.md`

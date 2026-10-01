@@ -60,3 +60,18 @@ That allowed:
 - safer debugging.
 
 Phase C begins the first stock-control replacement domain: action bars.
+
+## Phase C selective action-bar suppression
+
+D-023 narrows the first Phase C suppression proof to stock Bars 2–3.
+
+Do not modify the player's `PROXY_SHOW_ACTIONBAR_*` configuration.
+
+First proof uses presentation/interactivity suppression:
+- alpha 0;
+- mouse disabled;
+- matching Logres key routing active.
+
+Transitions occur only out of combat and restore exact captured state.
+
+MainActionBar and unsupported Bars 4–5 remain Blizzard-visible.

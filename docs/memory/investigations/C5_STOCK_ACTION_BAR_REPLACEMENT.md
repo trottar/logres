@@ -1,6 +1,6 @@
 # C.5 — Stock Action-Bar Replacement
 
-Status: ACTIVE — SOURCE / DESIGN RESOLUTION NEXT
+Status: FIRST-PASS SOURCE-RESOLVED; IMPLEMENTATION NEXT
 Opened: 2026-10-01
 
 ## Goal
@@ -116,3 +116,32 @@ C.5 completes when:
 - unsupported action domains remain available;
 - special action states have explicit fallback behavior;
 - no protected/taint regression occurs.
+
+## P0043 resolution
+
+Canonical source evidence:
+`../evidence/C5_STOCK_ACTION_BAR_REPLACEMENT_SOURCE_REVIEW_2026-10-01.md`
+
+Canonical decision:
+`../decisions/D-023_SELECTIVE_STOCK_ACTION_REPLACEMENT.md`
+
+First runtime pass replaces only:
+- `MultiBarBottomLeft` / stock Bar 2;
+- `MultiBarBottomRight` / stock Bar 3.
+
+It explicitly does not suppress:
+- `MainActionBar`;
+- `OverrideActionBar`;
+- stock Bars 4–5;
+- special action surfaces.
+
+First suppression mechanism:
+- preserve Blizzard Show/Hide ownership;
+- alpha 0;
+- mouse disabled on stock frame/buttons;
+- matching Logres routing automatically active;
+- exact restoration from snapshots;
+- OOC-only transitions;
+- session-only, fail-open default OFF after reload.
+
+Implementation next.

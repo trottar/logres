@@ -10,7 +10,7 @@ Active work item:
 **C.5 Stock Action-Bar Replacement**
 
 State:
-**SOURCE / DESIGN RESOLUTION NEXT**
+**FIRST-PASS SOURCE-RESOLVED; IMPLEMENTATION NEXT**
 
 ## Phase status
 
@@ -34,14 +34,19 @@ State:
 | C.2 Primary action cluster | COMPLETE |
 | C.3 Secondary / utility clusters | COMPLETE |
 | C.4 Contextual visibility / secure paging | COMPLETE |
-| C.5 Stock action-bar replacement | ACTIVE |
+| C.5 Stock action-bar replacement | ACTIVE — first-pass contract resolved |
 | C.6 Action interface integration validation | QUEUED |
 
-## C.5 gate
+## C.5 first runtime scope
 
-No global suppression.
+Replace only:
+- stock Bar 2 / `MultiBarBottomLeft`;
+- stock Bar 3 / `MultiBarBottomRight`.
 
-Only a stock action domain with proven execution, feedback, key routing, and
-restoration may be suppressed.
+Keep visible:
+- MainActionBar;
+- special action bars;
+- Bars 4–5;
+- unsupported extra bars.
 
-Bars outside current Logres coverage remain visible.
+Replacement is session-only and fail-open during first proof.

@@ -412,3 +412,23 @@ C.5 must manage those as one capability.
 
 Developer-only routing defaults are not sufficient once a stock bar is actually
 suppressed.
+
+## Selective stock replacement
+
+D-023 defines the first stock replacement boundary.
+
+Supported first-pass stock surfaces:
+- `MultiBarBottomLeft` -> Secondary;
+- `MultiBarBottomRight` -> Utility.
+
+Do not take ownership of Blizzard's own shown/hidden state.
+
+Instead, while replacement is enabled:
+- preserve frame existence and Blizzard visibility lifecycle;
+- make supported stock bars visually transparent;
+- remove their mouse interaction;
+- route their keys through the Logres secure buttons.
+
+Restoration restores exact captured values.
+
+MainActionBar remains Blizzard-owned until special-state fallback is proven.

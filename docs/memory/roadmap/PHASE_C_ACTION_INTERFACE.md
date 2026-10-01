@@ -242,6 +242,24 @@ After Logres secure clusters are runtime proven:
 
 D-017 governs ownership and safety.
 
+### C.5 first-pass source resolution
+
+D-023:
+- first replacement scope is stock Bar 2 + Bar 3 only;
+- `MultiBarBottomLeft` maps to Secondary slots 61–72;
+- `MultiBarBottomRight` maps to Utility slots 49–60;
+- preserve Blizzard Show/Hide ownership;
+- suppress through alpha 0 + mouse disable;
+- matching Logres routing must be active before suppression;
+- restore exact prior presentation/routing state;
+- transitions are OOC-only with combat deferral;
+- first proof is session-only and defaults OFF after reload.
+
+MainActionBar remains Blizzard-visible because Blizzard reuses it for
+special action states.
+
+Bars 4–5 remain visible because current Logres does not replace them.
+
 ## C.6 — Action interface integration validation
 
 Validate:
