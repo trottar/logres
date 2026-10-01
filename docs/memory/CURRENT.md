@@ -8,89 +8,90 @@ project: logres
 
 ## Active Objective
 
-**Phase C — Action Interface.**
+**Phase D — Immersion Controller.**
 
 ## Current Work Item
 
-**C.6 — Action Interface Integration Validation.**
+**D.1 — Immersion orchestration contract / source review.**
 
-C.5 is complete.
+Phase C is complete.
 
 ## Verified State
 
 - Phase 0 complete.
 - Phase A complete.
 - Phase B complete.
-- C.1 complete.
-- C.2 complete.
-- C.3 complete.
-- C.4 complete.
-- C.5 complete.
-- P0044 pushed at `1d4f811`.
-- selective stock Bar 2–3 replacement runtime PASS.
-- replacement/routing/restoration work in the tested workflow.
-- no protected/taint/Lua/secret error reported from P0044 validation.
-- MainActionBar remains unsuppressed by design.
-- Bars 4–5 remain unsuppressed by design.
-- persistent replacement remains deferred.
-- live action move/swap/remove editing is now an explicit D-020 requirement.
+- Phase C complete.
+- P0045 pushed at `e3c8602`.
+- C.6 integrated runtime validation PASS on `0.0.20-dev`.
+- world/combat/PvP action integration works.
+- secure mouse and routed-key action execution works.
+- selective stock Bar 2–3 replacement/restoration works.
+- Phase B HUD and Phase C action interface coexist in tested play.
+- Primary Action Keys reset OFF after reload by design.
+- manual Primary routing remains fail-open while MainActionBar replacement is
+  unsupported.
+- MainActionBar suppression remains deferred.
+- Bars 4–5 suppression remains deferred.
+- live action move/swap/remove editing remains deferred under D-020.
 - cast/channel cue color regression remains open visual debt.
 
 ## Next Action
 
-Run C.6 as an integrated Phase C validation pass.
+Source/design-resolve D.1 before broad suppression code.
 
-Use the current runtime build `0.0.20-dev`.
+Review exact Forever/Blizzard ownership and safe suppression/restoration for:
+1. player frame;
+2. target frame;
+3. party frames;
+4. chat frames/tabs and supported Quiet Mode surfaces;
+5. integration of Phase C selective Bar 2–3 replacement;
+6. combat-deferred transitions;
+7. reload/login initialization ordering;
+8. PvP/context/instance exceptions;
+9. Immersion OFF restoration;
+10. developer recovery/diagnostics.
 
-Validate:
-1. reload / fail-open baseline;
-2. Run All;
-3. normal world action use;
-4. routed keyboard use + activation feedback;
-5. combat context + action execution;
-6. PvP modifier;
-7. Stock Replace ON/OFF;
-8. selective replacement restoration;
-9. Phase B HUD coexistence;
-10. no protected/taint/Lua/secret errors.
+`immersionEnabled` remains a persisted preference, not observed state.
 
-Do not expand suppression scope during C.6.
+Do not suppress:
+- focus without a justified Logres replacement;
+- MainActionBar;
+- Bars 4–5;
+- minimap/navigation;
+- quest/XP surfaces;
 
-Do not require:
-- MainActionBar replacement;
-- Bars 4–5 replacement;
-- persistent replacement;
-- live action-layout editing;
-- vehicle/override/form scenarios.
-
-Those remain separate explicit capability gates.
+outside their capability owners.
 
 ## Success Criteria
 
-C.6 succeeds when:
-- Phase C features work together in normal play;
-- secure execution remains stable;
-- context policy remains coherent;
-- routed keys remain correct;
-- selective replacement remains reversible;
-- unsupported action domains remain accessible;
-- Phase B HUD coexists with the action interface;
-- no required player control is lost.
+D.1 succeeds when the repository has a source-backed orchestration contract
+covering:
+- controller inputs;
+- supported suppression targets;
+- transition constraints;
+- restoration;
+- combat deferral;
+- context exceptions;
+- fail-open recovery.
+
+Only then implement Phase D runtime suppression.
 
 ## Do Not Reopen Without New Evidence
 
-- **C.1–C.5:** complete.
+- **Phase C:** complete.
+- **C.6 manual Primary Action Keys after reload:** expected current behavior.
 - **MainActionBar suppression:** deferred.
 - **Bars 4–5 suppression:** deferred.
-- **Persistent replacement:** deferred.
-- **D-020 live action editing:** deferred product capability.
+- **D-020 live action editing:** deferred.
 - **Cast cue colors:** open visual debt.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/C5_P0044_SELECTIVE_REPLACEMENT_RUNTIME_PROOF_2026-10-01.md`
-- `docs/memory/evidence/ACTION_LAYOUT_EDITING_RUNTIME_GAP_2026-10-01.md`
-- `docs/memory/investigations/C6_ACTION_INTERFACE_INTEGRATION_VALIDATION.md`
-- `docs/memory/decisions/D-020_ACTION_LAYOUT_CUSTOMIZATION_DIRECTION.md`
+- `docs/memory/evidence/C6_ACTION_INTERFACE_INTEGRATION_RUNTIME_PROOF_2026-10-01.md`
+- `docs/memory/roadmap/PHASE_D_IMMERSION_CONTROLLER.md`
+- `docs/memory/investigations/D1_IMMERSION_ORCHESTRATION_SOURCE_REVIEW.md`
+- `docs/memory/decisions/D-017_BLIZZARD_UI_SUPPRESSION_AND_RESTORATION.md`
 - `docs/memory/decisions/D-023_SELECTIVE_STOCK_ACTION_REPLACEMENT.md`
+- `docs/memory/architecture/ACTION_CLUSTERS.md`

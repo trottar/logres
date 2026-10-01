@@ -1,20 +1,14 @@
 # Active Investigations
 
-## C.6 — Action Interface Integration Validation
+## D.1 — Immersion Orchestration Source Review
 
 Status:
 **ACTIVE**
 
 Canonical:
-`C6_ACTION_INTERFACE_INTEGRATION_VALIDATION.md`
+`D1_IMMERSION_ORCHESTRATION_SOURCE_REVIEW.md`
 
 Next:
-run the integrated Phase C validation matrix on `0.0.20-dev`.
-
-## Deferred — Live action layout editing
-
-Tracked by:
-- D-020;
-- `../evidence/ACTION_LAYOUT_EDITING_RUNTIME_GAP_2026-10-01.md`.
-
-Not a C.6 implementation task.
+resolve exact Blizzard player/target/party/chat suppression/restoration
+mechanics, combat constraints, and integration with the proven Phase C
+selective action replacement.

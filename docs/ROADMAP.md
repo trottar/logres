@@ -61,7 +61,7 @@ Stock Blizzard UI remains visible at this checkpoint by design. Suppression/rest
 
 ## Phase C — Action Interface
 
-**Status: ACTIVE — C.1 Secure action capability/source review.**
+**Status: COMPLETE.**
 
 Implement rectangular/square action clusters:
 - primary cluster always legible;
@@ -77,6 +77,8 @@ Canonical phase record:
 
 ## Phase D — Immersion Controller
 
+**Status: ACTIVE — D.1 source/design resolution.**
+
 Implement full immersion orchestration:
 - Quiet/social immersion mode;
 - contextual HUD fades;
@@ -85,6 +87,9 @@ Implement full immersion orchestration:
 - module-level restoration when immersion is suspended;
 - suppression/restoration orchestration for Blizzard player/target/party frames;
 - stock action-bar suppression/restoration once Phase C replacement is proven.
+
+Canonical phase record:
+`memory/roadmap/PHASE_D_IMMERSION_CONTROLLER.md`
 
 ## Phase E — Compass and Navigation
 

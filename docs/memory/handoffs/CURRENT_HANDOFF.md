@@ -2,25 +2,23 @@
 
 Authoritative state: `../CURRENT.md`.
 
-C.5 is complete.
+Phase C is complete.
 
-P0044 runtime:
-- selective stock Bar 2–3 replacement PASS;
-- routing coupling PASS;
-- restoration PASS.
+C.6 integrated validation passed on `0.0.20-dev`.
 
-New deferred product requirement:
-Logres needs a complete live action move/swap/remove/reorder workflow under
-D-020.
+Important boundary:
+Primary `Action Keys` still default OFF after reload because Blizzard Primary
+remains visible and Primary stock replacement is unsupported.
+
+This is expected fail-open behavior.
 
 Current work:
-**C.6 — Action Interface Integration Validation**
+**Phase D / D.1 — Immersion orchestration source/design review**
 
-No new runtime code in P0045.
+Next:
+source-resolve player/target/party/chat suppression and global restoration
+policy before implementing broad Immersion Controller behavior.
 
-Use current version:
-`0.0.20-dev`.
-
-P0045 is documentation-only; no WoW redeploy required.
+P0046 is documentation-only; no WoW redeploy required.
 
 User performs all commits/pushes.

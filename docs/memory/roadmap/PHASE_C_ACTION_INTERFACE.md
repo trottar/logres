@@ -1,7 +1,6 @@
 # Phase C — Action Interface
 
-Status: ACTIVE
-
+Status: COMPLETE
 ## Objective
 
 Replace the conventional horizontal action-bar experience with Logres' compact square/rectangular action constellation while preserving secure-action correctness.
@@ -281,7 +280,7 @@ attached to D-020 and does not reopen C.5.
 
 ## C.6 — Action interface integration validation
 
-**Status: ACTIVE.**
+**Status: COMPLETE.**
 
 Validate:
 - combat transitions;
@@ -290,6 +289,30 @@ Validate:
 - keybind/action correctness;
 - stock-bar suppression/restoration;
 - coexistence with Phase B HUD.
+
+### C.6 final runtime result
+
+Integrated `0.0.20-dev` runtime validation passed.
+
+Verified together:
+- world/combat/PvP context policy;
+- secure mouse execution;
+- Logres-routed keyboard execution;
+- activation feedback;
+- selective stock Bar 2–3 replacement/restoration;
+- coexistence with Phase B HUD.
+
+After reload, Primary Action Keys required manual `Action Keys ON`.
+
+This is expected fail-open behavior because MainActionBar remains
+Blizzard-visible and Primary replacement is not yet supported.
+
+Primary routing must become automatic only when a future Primary
+replacement transaction owns the corresponding stock surface.
+
+C.6 closes.
+
+**Phase C closes.**
 
 ## Phase C exit
 

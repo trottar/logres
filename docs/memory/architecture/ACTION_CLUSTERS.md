@@ -449,3 +449,24 @@ A replaced stock domain cannot have its Logres routing manually disabled while
 suppression is applied.
 
 MainActionBar and unsupported stock domains remain outside this module's scope.
+
+## Primary routing remains fail-open after reload
+
+C.6 integrated runtime validation confirmed that Primary `Action Keys` must be
+manually enabled again after reload.
+
+This is intentional at the current capability boundary.
+
+Primary stock UI is still Blizzard-owned and visible, so Logres does not
+automatically seize `ACTIONBUTTON1–12` during addon initialization.
+
+Automatic routing belongs to a replacement transaction, not merely to addon
+load.
+
+Current rule:
+- Primary not replaced -> routing may remain manual/session-only;
+- supported stock domain replaced -> matching Logres routing is automatic;
+- future Primary replacement -> routing must become atomic with that
+  replacement and restoration.
+
+This preserves L-011 fail-open behavior.

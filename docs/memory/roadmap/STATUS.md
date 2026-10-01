@@ -4,10 +4,13 @@ As of 2026-10-01.
 
 ## Active
 
-**Phase C — Action Interface**
+**Phase D — Immersion Controller**
 
 Active work item:
-**C.6 Action Interface Integration Validation**
+**D.1 Immersion orchestration contract / source review**
+
+State:
+**SOURCE / DESIGN RESOLUTION NEXT**
 
 ## Phase status
 
@@ -16,32 +19,29 @@ Active work item:
 | 0 — Foundation | COMPLETE |
 | A — Core State Engine | COMPLETE |
 | B — Core HUD | COMPLETE |
-| C — Action Interface | ACTIVE — C.6 |
-| D — Immersion Controller | QUEUED |
+| C — Action Interface | COMPLETE |
+| D — Immersion Controller | ACTIVE — D.1 |
 | E — Compass and Navigation | QUEUED |
 | F — Quest Experience | QUEUED |
 | G — Cinematic Camera | QUEUED |
 | H — Integration and Polish | QUEUED |
 
-## Phase C sequence
+## Phase C final boundary
 
-| Item | State |
-| --- | --- |
-| C.1 Secure action capability/source review | COMPLETE |
-| C.2 Primary action cluster | COMPLETE |
-| C.3 Secondary / utility clusters | COMPLETE |
-| C.4 Contextual visibility / secure paging | COMPLETE |
-| C.5 Stock action-bar replacement | COMPLETE |
-| C.6 Action interface integration validation | ACTIVE |
+Proven:
+- secure Primary/Secondary/Utility clusters;
+- context/PvP behavior;
+- action activation feedback;
+- selective stock Bar 2–3 replacement/restoration.
 
-## Deferred action-layout capability
+Deferred:
+- Primary stock replacement;
+- Bars 4–5;
+- special action states;
+- persistent replacement;
+- live action layout editing.
 
-D-020 now explicitly includes:
-- move;
-- swap;
-- clear/remove;
-- reorder;
+## D.1 next
 
-for future Logres live action editing.
-
-This does not reopen C.5.
+Resolve the global immersion suppression/restoration contract before runtime
+implementation.
