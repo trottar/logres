@@ -367,6 +367,25 @@ local function runHUDCheck()
     ))
 end
 
+
+local function handleHUDPreview(argument)
+    local hud = Logres:GetModule("HUD")
+
+    if argument == "on" then
+        hud:SetPreviewEnabled(true)
+    elseif argument == "off" then
+        hud:SetPreviewEnabled(false)
+    else
+        print("Usage: /logres hudpreview [on|off]")
+        return
+    end
+
+    print(string.format(
+        "Logres: HUD preview=%s",
+        argument
+    ))
+end
+
 local function handleImmersion(argument)
     if argument == "" or argument == "status" then
         printPreferences()
@@ -408,6 +427,7 @@ local function printHelp()
     print("  /logres preferencecheck")
     print("  /logres lifecyclecheck")
     print("  /logres hudcheck")
+    print("  /logres hudpreview [on|off]")
     print("  /logres immersion [on|off|toggle]")
     print("  /logres debug on")
     print("  /logres debug off")
@@ -444,6 +464,11 @@ SlashCmdList.LOGRES = function(message)
 
     if command == "hudcheck" then
         runHUDCheck()
+        return
+    end
+
+    if command == "hudpreview" then
+        handleHUDPreview(argument)
         return
     end
 

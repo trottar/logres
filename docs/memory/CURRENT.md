@@ -8,102 +8,87 @@ project: logres
 
 ## Active Objective
 
-**Phase B — Core HUD.** Build Logres' identity-defining awareness layer on top of the completed Phase A contracts.
+**Phase B — Core HUD.**
 
 ## Current Work Item
 
 **B.1 — HUD root + player health vignette.**
 
-P0018 prepares the first real HUD module.
+P0018 is pushed at `fa342ad`.
 
-Implementation:
-- `HUD` module via D-011;
-- `LogresHUDRoot`;
-- four native curve-driven edge bands;
-- 16 procedural textures;
-- secret health transported directly from `UnitHealthPercent(..., curve)` to `Texture:SetAlpha`;
-- player health event refresh;
-- `immersionEnabled` visibility integration;
-- `/logres hudcheck`;
-- static secret-boundary checker.
+Its first runtime visual did not satisfy B.1:
+- no perceptible vignette during ordinary injury;
+- a red pulse appeared only at very low health;
+- that pulse may be Blizzard's own low-health effect.
 
-No conventional health bar or numeric player health is added.
+The secret-safe transport is not yet considered failed because P0018 used the already-proven native path and no transport error was reported.
+
+Current API/curve evidence confirms P0018's 0–1 curve x scale was correct.
+
+P0019 prepares stronger visual tuning plus a full-health preview command to isolate Logres geometry from health input.
 
 ## Verified State
 
-- Phase 0 complete.
 - Phase A complete.
-- P0017 Phase A closure pushed at `840b40f`.
-- D-008 runtime evidence proves custom curves + secret texture alpha work on Forever.
-- current public API documentation still shows `UnitHealthPercent(unit, usePredicted, curve)` and `C_CurveUtil.CreateCurve()` on Forever 1.60.1.
-- P0018 source/static validation is prepared but production HUD runtime proof is pending.
+- production HUD module exists.
+- P0018 static HUD contract passed.
+- P0018 visual progression did not pass user observation.
+- normalized curve x scale 0–1 is confirmed.
+- B.1 remains active.
 
 ## Next Action
 
-Install/review/commit/push P0018.
+Install/review/commit/push P0019.
 
-Because runtime addon code changes, explicitly deploy:
+Deploy explicitly, confirm version `0.0.8-dev`, then at full health:
 
-```bash
-WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
-ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
-
-./tools/deploy_logres.sh "$ADDONS"
+```text
+/logres hudpreview on
 ```
+
+Confirm a clear static Logres edge treatment appears.
 
 Then:
 
 ```text
-/reload
-/logres status
-/logres statecheck
-/logres preferencecheck
-/logres lifecyclecheck
-/logres hudcheck
+/logres hudpreview off
 ```
 
-Confirm version `0.0.7-dev`.
+Confirm it disappears.
 
-Visual proof:
-1. at healthy health, vignette should be effectively absent;
-2. take ordinary safe damage until the edge effect becomes visible;
-3. while injured, turn immersion off and confirm it hides;
-4. turn immersion on and confirm current injury effect returns;
-5. heal/eat and confirm the effect recedes/disappears.
+Next take ordinary safe damage and determine whether the health-driven vignette becomes visible before low-health emergency state.
 
-Do not intentionally approach near death for this test.
+While injured:
+- immersion off must hide it;
+- immersion on must restore it;
+- healing must reduce/remove it.
+
+Do not intentionally reach near death.
 
 ## Success Criteria
 
-B.1 succeeds when:
-- `HUD` module loads and `/logres hudcheck` passes;
-- existing state/preference/lifecycle checks remain green;
-- healthy state is unobtrusive;
-- ordinary damage visibly increases edge pressure;
-- healing reduces/removes the effect;
-- immersion off/on cleanly hides/restores presentation;
+B.1 succeeds only when:
+- preview proves HUD geometry is visibly present;
+- health-driven vignette becomes perceptible during ordinary injury;
+- healthy state remains unobtrusive;
+- damage/healing progression behaves;
+- immersion off/on behaves;
 - no secret-value/Lua errors occur;
-- no player health numbers/bar are introduced;
-- any visual tuning limitation is recorded separately from transport correctness.
+- visual tuning is usable enough to proceed.
 
 ## Do Not Reopen Without New Evidence
 
-- **Phase A:** complete.
-- **Health path:** D-008 native secret-safe transport only.
-- **No Lua health thresholds:** thresholds live in native curves.
-- **Player health UI:** vignette, not conventional bar/numbers.
-- **Preferences:** D-010.
-- **Lifecycle:** D-011.
-- **Actions:** Phase C, not B.1.
-- **Deployment:** full deploy block required for runtime-code tests.
+- **Curve input scale:** normalized 0–1.
+- **P0018:** visual failure, not silently reclassified as success.
+- **Health transport:** D-008 remains authoritative until production evidence disproves it.
+- **No near-death requirement:** preview exists to avoid risky testing.
+- **Deployment:** full deploy block required.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
+- `docs/memory/evidence/B1_HEALTH_VIGNETTE_RUNTIME_PASS01_2026-09-30.md`
 - `docs/memory/investigations/B1_HEALTH_VIGNETTE.md`
-- `docs/memory/decisions/D-002_PLAYER_HEALTH_PRESENTATION.md`
 - `docs/memory/decisions/D-008_SECRET_SAFE_HEALTH_AND_RESOURCE_PATH.md`
 - `docs/memory/architecture/HUD.md`
-- `docs/memory/evidence/I001_RUNTIME_PASS_02_2026-09-30.md`
 - `Logres/HUD/HUD.lua`
-- `tools/check_hud_contract.py`

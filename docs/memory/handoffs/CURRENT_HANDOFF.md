@@ -2,24 +2,22 @@
 
 Authoritative state: `../CURRENT.md`. Start there.
 
-Current phase:
-**Phase B — Core HUD**
-
 Current work:
 **B.1 — HUD root + player health vignette**
 
-P0018 is prepared.
+P0018 is pushed at `fa342ad`.
 
-New runtime:
-- `Logres/HUD/HUD.lua`
-- HUD lifecycle module
-- four native health curves
-- 16 edge textures
-- `/logres hudcheck`
+Runtime result:
+the vignette was not perceptible during ordinary injury.
 
-Important:
-P0018 changes runtime addon code, so deploy explicitly before testing.
+Do not interpret the low-health red pulse as Logres without isolation; it may be Blizzard's own effect.
 
-Runtime proof should use ordinary safe damage and healing only. Do not require a near-death test.
+P0019 is prepared:
+- stronger curve outputs;
+- stronger red layer;
+- `/logres hudpreview on|off`;
+- version `0.0.8-dev`.
+
+First runtime test after deploy is preview at full health.
 
 User performs all commits/pushes.

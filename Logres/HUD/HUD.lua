@@ -8,13 +8,15 @@ local HEALTH_BANDS = {
     {
         name = "outerDark",
         inset = 0,
-        thickness = 52,
-        color = { 0.02, 0.01, 0.01 },
+        thickness = 56,
+        color = { 0.00, 0.00, 0.00 },
+        previewAlpha = 0.18,
         points = {
-            { 0.00, 0.30 },
-            { 0.15, 0.23 },
-            { 0.30, 0.16 },
-            { 0.50, 0.08 },
+            { 0.00, 0.46 },
+            { 0.15, 0.38 },
+            { 0.30, 0.28 },
+            { 0.50, 0.16 },
+            { 0.60, 0.08 },
             { 0.70, 0.00 },
             { 1.00, 0.00 },
         },
@@ -22,12 +24,14 @@ local HEALTH_BANDS = {
     {
         name = "injuryRed",
         inset = 18,
-        thickness = 92,
-        color = { 0.22, 0.01, 0.01 },
+        thickness = 96,
+        color = { 0.45, 0.015, 0.01 },
+        previewAlpha = 0.16,
         points = {
-            { 0.00, 0.24 },
-            { 0.15, 0.16 },
-            { 0.30, 0.08 },
+            { 0.00, 0.38 },
+            { 0.15, 0.30 },
+            { 0.30, 0.18 },
+            { 0.40, 0.09 },
             { 0.50, 0.00 },
             { 1.00, 0.00 },
         },
@@ -35,11 +39,14 @@ local HEALTH_BANDS = {
     {
         name = "criticalPressure",
         inset = 48,
-        thickness = 150,
-        color = { 0.16, 0.00, 0.00 },
+        thickness = 156,
+        color = { 0.25, 0.00, 0.00 },
+        previewAlpha = 0.12,
         points = {
-            { 0.00, 0.16 },
-            { 0.15, 0.06 },
+            { 0.00, 0.32 },
+            { 0.08, 0.26 },
+            { 0.15, 0.18 },
+            { 0.22, 0.09 },
             { 0.30, 0.00 },
             { 1.00, 0.00 },
         },
@@ -47,11 +54,13 @@ local HEALTH_BANDS = {
     {
         name = "nearDeathTunnel",
         inset = 96,
-        thickness = 230,
-        color = { 0.08, 0.00, 0.00 },
+        thickness = 238,
+        color = { 0.05, 0.00, 0.00 },
+        previewAlpha = 0.10,
         points = {
-            { 0.00, 0.18 },
-            { 0.08, 0.10 },
+            { 0.00, 0.35 },
+            { 0.05, 0.28 },
+            { 0.10, 0.16 },
             { 0.15, 0.00 },
             { 1.00, 0.00 },
         },
@@ -111,8 +120,32 @@ local function createEdgeTextures(root, band)
     return textures
 end
 
-function HUD:UpdateHealthVignette()
+function HUD:ApplyPreview()
+    for index = 1, #self.healthBands do
+        local band = self.healthBands[index]
+
+        for textureIndex = 1, #band.textures do
+            band.textures[textureIndex]:SetAlpha(band.previewAlpha)
+        end
+    end
+end
+
+function HUD:SetPreviewEnabled(enabled)
+    self.previewEnabled = enabled and true or false
+
     if not self.root or not self.root:IsShown() then
+        return
+    end
+
+    if self.previewEnabled then
+        self:ApplyPreview()
+    else
+        self:UpdateHealthVignette()
+    end
+end
+
+function HUD:UpdateHealthVignette()
+    if not self.root or not self.root:IsShown() or self.previewEnabled then
         return
     end
 
@@ -134,7 +167,12 @@ end
 function HUD:ApplyImmersionPreference(preferences)
     if preferences.immersionEnabled then
         self.root:Show()
-        self:UpdateHealthVignette()
+
+        if self.previewEnabled then
+            self:ApplyPreview()
+        else
+            self:UpdateHealthVignette()
+        end
     else
         self.root:Hide()
     end
@@ -147,6 +185,7 @@ function HUD:GetDebugStatus()
         moduleEnabled = self:IsEnabled(),
         rootShown = self.root and self.root:IsShown() or false,
         immersionEnabled = preferences.immersionEnabled,
+        previewEnabled = self.previewEnabled and true or false,
         bandCount = self.healthBands and #self.healthBands or 0,
         textureCount = self.healthTextureCount or 0,
         curvesReady = self.curvesReady and true or false,
@@ -161,6 +200,7 @@ function HUD:OnInitialize()
     root:Hide()
 
     self.root = root
+    self.previewEnabled = false
     self.healthBands = {}
     self.healthTextureCount = 0
 
@@ -168,6 +208,7 @@ function HUD:OnInitialize()
         local spec = HEALTH_BANDS[index]
         local band = {
             name = spec.name,
+            previewAlpha = spec.previewAlpha,
             curve = createCurve(spec.points),
             textures = createEdgeTextures(root, spec),
         }
@@ -208,5 +249,6 @@ function HUD:OnEnable()
 end
 
 function HUD:OnDisable()
+    self.previewEnabled = false
     self.root:Hide()
 end

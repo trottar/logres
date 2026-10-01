@@ -87,3 +87,14 @@ For module cleanup, prefer multiple independent proofs:
 - explicit counted cleanup ran;
 - owned cleanup stack became empty;
 - subscription no longer receives callbacks.
+
+## L-009 — A secret-safe transport proof is not a visual usability proof
+
+P0018 used the technically proven `UnitHealthPercent(..., curve) -> Texture:SetAlpha(secret)` path, but its first production vignette was not perceptible during ordinary injury.
+
+The initial alpha/color choices were too conservative to satisfy the product behavior even if the transport was functioning.
+
+For future secret-safe presentation:
+- separate transport correctness from visual salience;
+- include a non-secret preview/test presentation when it helps isolate geometry from secret input;
+- do not force dangerous gameplay states merely to verify whether UI geometry exists.

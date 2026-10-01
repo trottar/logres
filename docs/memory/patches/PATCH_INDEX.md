@@ -19,6 +19,7 @@
 | P0015 | 2026-09-30 | INSTALLED / PUSHED | Fix lifecyclecheck cleanup-count false negative (`f5a12d4`) |
 | P0016 | 2026-09-30 | INSTALLED / PUSHED | Record A.4 proof; close A.4 and open A.5 (`7296d1f`) |
 | P0017 | 2026-09-30 | INSTALLED / PUSHED | Record PvP transition; close Phase A; open Phase B (`840b40f`) |
-| P0018 | 2026-09-30 | PREPARED | B.1 production HUD root + secret-safe health vignette |
+| P0018 | 2026-09-30 | INSTALLED / PUSHED | B.1 production HUD root + secret-safe health vignette (`fa342ad`) |
+| P0019 | 2026-09-30 | PREPARED | Record P0018 visual failure; strengthen vignette + add preview |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

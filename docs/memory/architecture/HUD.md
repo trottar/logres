@@ -1,6 +1,6 @@
 # HUD Architecture
 
-Status: PHASE B / B.1 IMPLEMENTATION PREPARED
+Status: PHASE B / B.1 ACTIVE — VISUAL TUNING FIX PREPARED
 
 ## Intent
 
@@ -154,3 +154,14 @@ Runtime availability of those fields does not supersede disclosure policy.
 Phase B may style and reveal awareness information.
 
 It must not implement Phase C secure action clusters.
+
+
+## P0018 runtime correction
+
+P0018's first visual tuning was not perceptible during ordinary injury.
+
+The curve x scale was correct; normalized percentage input is 0–1.
+
+P0019 strengthens curve outputs/source color and adds a non-secret preview presentation.
+
+The preview is diagnostic only. It does not alter the production secret-health boundary.

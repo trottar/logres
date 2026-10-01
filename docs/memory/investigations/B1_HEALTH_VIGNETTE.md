@@ -1,86 +1,85 @@
 # B.1 — HUD Root + Player Health Vignette
 
-Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT
+Status: ACTIVE — P0018 VISUAL FAILURE; P0019 FIX PREPARED
 Opened: 2026-09-30
 
 ## Goal
 
 Move the secret-safe player-health transport proven by I-001 into the real production HUD module.
 
-## Production path
+## P0018 result
+
+P0018 was pushed at:
+
+`fa342adaf21230d1ad56a83e627084b386a60527`
+
+Runtime observation:
+the intended vignette was not perceptible through ordinary injury.
+
+The only red pulse noticed occurred at very low health and may have been Blizzard's own effect.
+
+Therefore B.1 remains open.
+
+Canonical evidence:
+`../evidence/B1_HEALTH_VIGNETTE_RUNTIME_PASS01_2026-09-30.md`
+
+## Curve scale
+
+Verified:
+health percentage curve input is normalized 0–1.
+
+P0018's 0.70/0.50/0.30/0.15 x points were correctly scaled.
+
+## P0019 hypothesis
+
+The P0018 visual amplitudes/colors were too weak.
+
+P0019:
+- strengthens edge alpha curves;
+- strengthens the injury-red color;
+- keeps the same secret-safe transport;
+- adds a fixed `/logres hudpreview on|off` presentation.
+
+## P0019 runtime plan
+
+At full health:
 
 ```text
-UnitHealthPercent("player", true, curve)
-    -> secret curve-evaluated alpha
-    -> Texture:SetAlpha(secret)
+/logres hudpreview on
 ```
 
-No Lua health threshold logic.
-
-## Implementation
-
-P0018 adds:
-- `Logres/HUD/HUD.lua`;
-- real `HUD` lifecycle module;
-- full-screen `LogresHUDRoot`;
-- four native curve-driven edge bands;
-- 16 procedural edge textures;
-- player UNIT_HEALTH / UNIT_MAXHEALTH refresh;
-- `immersionEnabled` presentation gating;
-- `/logres hudcheck`;
-- `tools/check_hud_contract.py`.
-
-## Visual model
-
-The initial layer model maps the intended thresholds in native curves:
-- ~70%: dark outer edge begins;
-- ~50%: red layer begins;
-- ~30%: wider critical pressure begins;
-- ~15%: widest near-death layer begins.
-
-These thresholds are encoded as curve points, not Lua comparisons.
-
-## Runtime plan
-
-After deploy:
-
-```text
-/reload
-/logres status
-/logres statecheck
-/logres preferencecheck
-/logres lifecyclecheck
-/logres hudcheck
-```
-
-Confirm version:
-`0.0.7-dev`
+A clear static multi-band edge treatment must appear.
 
 Then:
-1. observe healthy screen — vignette should be absent;
-2. take ordinary safe damage until edge pressure becomes clearly visible;
-3. if practical, take somewhat more damage but do not intentionally approach death;
-4. while still injured, `/logres immersion off` — vignette should hide;
-5. `/logres immersion on` — current injury vignette should return;
-6. heal/eat — vignette should reduce and disappear as health recovers.
 
-## Evidence discipline
+```text
+/logres hudpreview off
+```
 
-If:
-- curve creation errors;
-- SetAlpha rejects the secret value;
-- health events do not update;
-- immersion toggling leaves stale visuals;
-- the visual thresholds are clearly unusable;
+It must disappear and return control to health-driven curves.
 
-record the exact result before changing architecture.
+Only after preview proves geometry:
+- take ordinary safe damage;
+- observe whether health-driven edge pressure now appears in the intended 70–50 / 50–30 progression;
+- test immersion off/on while injured;
+- heal and observe recession.
 
-Visual tuning is not the same as transport failure.
+No near-death test required.
+
+## Decision tree
+
+### Preview invisible
+
+Investigate frame/root/draw-layer presentation.
+
+### Preview visible, health-driven invisible
+
+Investigate health event / curve / secret SetAlpha production path.
+
+### Preview visible, health-driven visible
+
+P0018 was a visual tuning failure. Continue B.1 refinement from P0019.
 
 ## Exit
 
-B.1 can complete when:
-- the production secret-safe path works;
-- the HUD module/lifecycle/persistence boundaries behave;
-- the visual is usable enough for continued development;
-- any art/tuning limitations are explicitly recorded.
+B.1 remains open until the production health-driven vignette is visibly proven.

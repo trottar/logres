@@ -10,7 +10,7 @@ Active work item:
 **B.1 HUD root + player health vignette**
 
 State:
-**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**ACTIVE — P0018 visual failure; P0019 visibility fix prepared**
 
 ## Phase status
 
@@ -26,17 +26,16 @@ State:
 | G — Cinematic Camera | QUEUED; requires current DynamicCam profile |
 | H — Integration and Polish | BLOCKED on prior phases |
 
-## B.1 implementation
+## B.1 evidence
 
-P0018 adds:
-- production HUD module;
-- HUD root;
-- four native secret-safe health-vignette curves;
-- 16 procedural edge textures;
-- player health event refresh;
-- immersion preference integration;
-- HUD structural diagnostic/static check.
+P0018:
+- production module: present;
+- static secret boundary: pass;
+- ordinary-injury visual progression: fail/not perceptible.
 
-Runtime proof is next.
+P0019:
+- stronger visual tuning;
+- full-health `/logres hudpreview on|off`;
+- production health path unchanged.
 
-No action-cluster work is included.
+B.1 remains open.

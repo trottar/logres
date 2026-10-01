@@ -23,6 +23,8 @@ required_hud_fragments = [
     "band.textures[textureIndex]:SetAlpha(alpha)",
     "function HUD:UpdateHealthVignette()",
     "function HUD:ApplyImmersionPreference(preferences)",
+    "function HUD:SetPreviewEnabled(enabled)",
+    "function HUD:ApplyPreview()",
     "self:SubscribePreferences(function(current)",
     'RegisterUnitEvent("UNIT_HEALTH", "player")',
     'RegisterUnitEvent("UNIT_MAXHEALTH", "player")',
@@ -73,6 +75,9 @@ elif not (modules_index < hud_index < commands_index < lifecycle_index):
 
 if "/logres hudcheck" not in commands:
     errors.append("Commands.lua must expose /logres hudcheck")
+
+if "/logres hudpreview [on|off]" not in commands:
+    errors.append("Commands.lua must expose /logres hudpreview [on|off]")
 
 print("Logres HUD contract")
 print("===================")

@@ -37,6 +37,8 @@ Then in game:
 /logres preferencecheck
 /logres lifecyclecheck
 /logres hudcheck
+/logres hudpreview on
+/logres hudpreview off
 /logres immersion
 ```
 
