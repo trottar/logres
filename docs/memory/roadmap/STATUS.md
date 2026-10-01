@@ -9,6 +9,9 @@ As of 2026-10-01.
 Active work item:
 **B.2 Resource Presentation**
 
+State:
+**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+
 ## Phase status
 
 | Phase | State |
@@ -28,18 +31,8 @@ Active work item:
 | Item | State |
 | --- | --- |
 | B.1 HUD root + player health vignette | COMPLETE |
-| B.2 Resource presentation | ACTIVE |
+| B.2 Resource presentation | ACTIVE — implementation prepared |
 | B.3 Target presentation | QUEUED |
 | B.4 Cast confirmation | QUEUED |
 | B.5 Allies and pets | QUEUED |
 | B.6 HUD integration validation | QUEUED |
-
-## B.1 final result
-
-Production proof on P0019:
-- injury progression visible;
-- immersion off/on correct;
-- healing recession correct.
-
-Remaining:
-- procedural rectangular band styling is visual-polish debt.

@@ -79,6 +79,14 @@ local function createCurve(points)
     return curve
 end
 
+local function createScaleTo100Curve()
+    local curve = C_CurveUtil.CreateCurve()
+    curve:SetType(Enum.LuaCurveType.Linear)
+    curve:AddPoint(0.0, 0)
+    curve:AddPoint(1.0, 100)
+    return curve
+end
+
 local function createEdgeTextures(root, band)
     local textures = {}
     local r, g, b = band.color[1], band.color[2], band.color[3]
@@ -164,6 +172,26 @@ function HUD:UpdateHealthVignette()
     end
 end
 
+
+function HUD:UpdateResource()
+    if not self.root or not self.root:IsShown() then
+        return
+    end
+
+    -- Primary player power may be secret on Forever. Scale it to 0-100
+    -- inside the native curve system and pass the resulting secret number
+    -- directly to SetFormattedText. Never perform arithmetic, comparison,
+    -- tostring/string.format, or persistence on the value in Lua.
+    local percent = UnitPowerPercent(
+        "player",
+        nil,
+        false,
+        self.resourceScaleCurve
+    )
+
+    self.resourceText:SetFormattedText("%.0f%%", percent)
+end
+
 function HUD:ApplyImmersionPreference(preferences)
     if preferences.immersionEnabled then
         self.root:Show()
@@ -173,6 +201,8 @@ function HUD:ApplyImmersionPreference(preferences)
         else
             self:UpdateHealthVignette()
         end
+
+        self:UpdateResource()
     else
         self.root:Hide()
     end
@@ -189,6 +219,8 @@ function HUD:GetDebugStatus()
         bandCount = self.healthBands and #self.healthBands or 0,
         textureCount = self.healthTextureCount or 0,
         curvesReady = self.curvesReady and true or false,
+        resourceTextReady = self.resourceText ~= nil,
+        resourceCurveReady = self.resourceScaleCurve ~= nil,
     }
 end
 
@@ -221,6 +253,22 @@ function HUD:OnInitialize()
 
     self.curvesReady = #self.healthBands == #HEALTH_BANDS
 
+    self.resourceScaleCurve = createScaleTo100Curve()
+
+    local resourceText = root:CreateFontString(
+        "LogresHUDResourceText",
+        "OVERLAY",
+        "GameFontNormalLarge"
+    )
+    resourceText:SetPoint("CENTER", root, "CENTER", 0, -118)
+    resourceText:SetTextColor(0.82, 0.78, 0.68, 0.92)
+    resourceText:SetShadowColor(0, 0, 0, 0.85)
+    resourceText:SetShadowOffset(1, -1)
+    resourceText:SetJustifyH("CENTER")
+    resourceText:ClearText()
+
+    self.resourceText = resourceText
+
     local healthEventFrame = CreateFrame("Frame")
     healthEventFrame:SetScript("OnEvent", function(_, _, unit)
         if unit and unit ~= "player" then
@@ -231,14 +279,35 @@ function HUD:OnInitialize()
     end)
 
     self.healthEventFrame = healthEventFrame
+
+    local resourceEventFrame = CreateFrame("Frame")
+    resourceEventFrame:SetScript("OnEvent", function(_, _, unit)
+        if unit and unit ~= "player" then
+            return
+        end
+
+        self:UpdateResource()
+    end)
+
+    self.resourceEventFrame = resourceEventFrame
 end
 
 function HUD:OnEnable()
     self.healthEventFrame:RegisterUnitEvent("UNIT_HEALTH", "player")
     self.healthEventFrame:RegisterUnitEvent("UNIT_MAXHEALTH", "player")
 
+    self.resourceEventFrame:RegisterUnitEvent(
+        "UNIT_POWER_FREQUENT",
+        "player"
+    )
+    self.resourceEventFrame:RegisterUnitEvent(
+        "UNIT_MAXPOWER",
+        "player"
+    )
+
     self:OwnCleanup(function()
         self.healthEventFrame:UnregisterAllEvents()
+        self.resourceEventFrame:UnregisterAllEvents()
     end)
 
     self:SubscribePreferences(function(current)

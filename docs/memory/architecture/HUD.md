@@ -213,3 +213,23 @@ Use D-008:
 `UnitPowerPercent` -> secret-safe formatter -> `FontString:SetText`.
 
 Do not introduce a conventional resource bar by default.
+## B.2 implementation boundary
+
+P0021 adds the default primary-resource percentage to the existing HUD module.
+
+Secret-safe flow:
+
+```text
+UnitPowerPercent("player", nil, false, scaleTo100Curve)
+    -> FontString:SetFormattedText("%.0f%%", secretPercent)
+```
+
+The fontstring text becomes a secret Text aspect and is never read back for logic.
+
+Resource events:
+- `UNIT_POWER_FREQUENT`;
+- `UNIT_MAXPOWER`.
+
+The initial readout is lower-center text only.
+
+No resource bar and no percentage-based Lua threshold styling are introduced.

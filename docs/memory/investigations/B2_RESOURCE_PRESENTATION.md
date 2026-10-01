@@ -1,70 +1,102 @@
 # B.2 — Resource Presentation
 
-Status: ACTIVE
+Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT
 Opened: 2026-10-01
 
 ## Goal
 
-Add a restrained player-resource display near the character/center HUD language without introducing a conventional resource bar.
+Add a restrained player-resource percentage near the character/center HUD language without introducing a conventional resource bar.
 
-## Product intent
+## Source resolution
 
-Default presentation:
-- simple percentage;
-- low/center near character;
-- visually quieter than primary action information;
-- optional subtle class/resource color/ornament later.
-
-Do not create a persistent horizontal mana/energy/rage bar by default.
-
-## Secret-safe boundary
-
-D-008 remains authoritative.
-
-Use:
+Forever 1.60.1 exposes:
 
 ```text
-UnitPowerPercent("player")
-    -> secret-safe formatting
-    -> FontString:SetText
+UnitPowerPercent(unitToken [, powerType [, unmodified [, curve]]])
 ```
 
-Do not:
-- perform Lua arithmetic on the returned percentage;
-- compare it against thresholds;
-- stringify it with ordinary Lua conversion;
-- persist it.
+The returned percentage can be secret when unit-power restrictions apply.
 
-## Initial B.2 scope
+Native curves operate on normalized percentage input `[0, 1]`.
 
-First implementation should prove:
-- real HUD-owned resource `FontString`;
-- secret-safe percentage text;
-- updates on relevant player power events;
-- clean hide/show under `immersionEnabled`;
-- no duplicate global state detection;
-- no conventional bar.
+The documented `ScaleTo100` pattern is:
 
-## Open implementation questions
+```text
+0.0 -> 0
+1.0 -> 100
+```
 
-Before coding, settle:
-- exact secret-safe formatter available on Forever for percentage text;
-- whether `UnitPowerPercent("player")` default power type is sufficient across classes/forms;
-- which power update events are necessary/minimal;
-- whether zero/empty/alternate resources require contextual suppression;
-- initial anchor relative to future cast glyph/action constellation.
+`FontString:SetFormattedText` accepts secret arguments and applies the Text secret aspect.
 
-## Runtime proof target
+Therefore the production path is:
 
-Travel-free where possible:
-- resource text visible when immersion is on;
-- immersion off/on hides/restores it;
-- spending/gaining resource updates text;
-- no secret-value/Lua errors;
-- no persistent bar introduced.
+```text
+UnitPowerPercent("player", nil, false, scaleTo100Curve)
+    -> FontString:SetFormattedText("%.0f%%", secretPercent)
+```
 
-Class/form-specific edge cases may be deferred if the current character cannot produce them.
+No Lua arithmetic or conversion is required.
+
+## Events
+
+`UNIT_POWER_FREQUENT` is preferred over `UNIT_POWER_UPDATE` because it fires responsively while power regenerates/decays.
+
+Also refresh on:
+- `UNIT_MAXPOWER`;
+- HUD enable;
+- immersion re-enable.
+
+## P0021 implementation
+
+Adds to the existing HUD module:
+- native 0–100 resource curve;
+- `LogresHUDResourceText`;
+- lower-center anchor;
+- resource event frame;
+- `UpdateResource`;
+- structural hudcheck coverage.
+
+No new module is created because resource presentation belongs to the existing HUD lifecycle/visibility boundary.
+
+## Initial position/style
+
+Anchor:
+
+```text
+CENTER of HUD root
+x = 0
+y = -118
+```
+
+Text:
+- percentage only;
+- restrained warm neutral;
+- normal large WoW font;
+- light shadow.
+
+This is a first-pass layout coordinate and may move when cast confirmation/action constellation geometry becomes concrete.
+
+## Runtime plan
+
+After deploy:
+1. confirm `0.0.9-dev`;
+2. `/logres hudcheck` passes;
+3. resource percentage appears with immersion on;
+4. spend/gain primary resource and observe text updates;
+5. immersion off hides it;
+6. immersion on restores current value;
+7. no secret-value/Lua error occurs.
+
+No travel required.
+
+## Coverage limits
+
+The current test proves the current character's primary resource.
+
+Druid/form or other primary-resource switching is not claimed unless exercised.
+
+Secondary resources are out of scope for initial B.2.
 
 ## Exit
 
-B.2 completes when the default player resource percentage is production-viable and secret-safe.
+B.2 completes when the primary percentage is runtime proven and visually acceptable enough to continue.

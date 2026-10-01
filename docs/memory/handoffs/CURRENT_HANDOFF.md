@@ -2,23 +2,20 @@
 
 Authoritative state: `../CURRENT.md`. Start there.
 
-Current phase:
-**Phase B — Core HUD**
-
-B.1 is complete.
-
-P0019 production health-vignette proof passed:
-- progression visible;
-- immersion off/on correct;
-- healing recession correct.
-
-The rough rectangular bands are temporary visual-polish debt.
-
 Current work:
 **B.2 — Resource Presentation**
 
-Next step is source/design confirmation for the secret-safe percentage text path before runtime implementation.
+P0021 is prepared.
 
-P0020 is documentation/evidence only; no WoW redeploy required.
+Adds to the existing HUD:
+- primary resource percentage;
+- native secret-safe 0–100 curve;
+- secret-safe `SetFormattedText`;
+- responsive power events.
+
+Version:
+`0.0.9-dev`
+
+P0021 changes runtime code, so deploy explicitly before testing.
 
 User performs all commits/pushes.

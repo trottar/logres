@@ -3,12 +3,9 @@
 ## B.2 — Resource Presentation
 
 Status:
-**ACTIVE**
+**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
 
 Canonical record:
 `B2_RESOURCE_PRESENTATION.md`
 
-Goal:
-production secret-safe player resource percentage without a conventional resource bar.
-
-Before coding, verify the exact Forever-safe formatting/event path.
+P0021 implements the source-resolved secret-safe primary-resource percentage.

@@ -342,11 +342,13 @@ local function runHUDCheck()
         and debugStatus.bandCount == 4
         and debugStatus.textureCount == 16
         and debugStatus.curvesReady == true
+        and debugStatus.resourceTextReady == true
+        and debugStatus.resourceCurveReady == true
         and visibilityMatchesPreference
 
     if passed then
         print(string.format(
-            "Logres hudcheck: PASS (bands=4 textures=16 curves=true immersion=%s visible=%s)",
+            "Logres hudcheck: PASS (bands=4 textures=16 curves=true resourceText=true resourceCurve=true immersion=%s visible=%s)",
             boolText(debugStatus.immersionEnabled),
             boolText(debugStatus.rootShown)
         ))
@@ -354,13 +356,15 @@ local function runHUDCheck()
     end
 
     print(string.format(
-        "Logres hudcheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s bands=%s textures=%s curves=%s immersion=%s visible=%s visibilityMatches=%s)",
+        "Logres hudcheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s bands=%s textures=%s curves=%s resourceText=%s resourceCurve=%s immersion=%s visible=%s visibilityMatches=%s)",
         tostring(status.initialized),
         tostring(status.enabled),
         tostring(debugStatus.moduleEnabled),
         tostring(debugStatus.bandCount),
         tostring(debugStatus.textureCount),
         tostring(debugStatus.curvesReady),
+        tostring(debugStatus.resourceTextReady),
+        tostring(debugStatus.resourceCurveReady),
         tostring(debugStatus.immersionEnabled),
         tostring(debugStatus.rootShown),
         tostring(visibilityMatchesPreference)

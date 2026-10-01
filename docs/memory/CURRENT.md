@@ -14,81 +14,93 @@ project: logres
 
 **B.2 — Resource Presentation.**
 
-B.1 is complete.
+P0021 prepares the production primary-resource percentage.
 
-The production player health vignette is runtime proven on P0019:
-- health-driven progression is visible;
-- immersion off hides it;
-- immersion on restores current injury presentation;
-- healing makes it recede/disappear.
+Secret-safe path:
 
-The rough rectangular edge bands are accepted as temporary visual-polish debt.
+```text
+UnitPowerPercent("player", nil, false, nativeScaleTo100Curve)
+    -> FontString:SetFormattedText("%.0f%%", secretPercent)
+```
 
-B.2 now owns the restrained player-resource percentage.
+No Lua arithmetic/comparison/stringification is performed on the resource percentage.
 
 ## Verified State
 
 - Phase A complete.
 - B.1 complete.
-- P0018 first health-vignette visual was too weak.
-- P0019 pushed at `5ae500d`.
-- P0019 production health progression passed runtime observation.
-- secret-safe health transport works in the real HUD module.
-- immersion preference integration works in the real HUD module.
-- current runtime version: `0.0.8-dev`.
+- P0020 B.1 closure pushed at `893ab6c`.
+- current runtime baseline before P0021: `0.0.8-dev`.
+- current Forever docs confirm `UnitPowerPercent` on Forever 1.60.1.
+- native percentage curves use normalized 0–1 input.
+- `FontString:SetFormattedText` accepts secret arguments.
+- `UNIT_POWER_FREQUENT` and `UNIT_MAXPOWER` provide the required update signals.
+- P0021 source/static checks are prepared; runtime proof pending.
 
 ## Next Action
 
-Design B.2 before implementing it.
+Install/review/commit/push P0021.
 
-Use D-008 as a hard boundary.
+Because runtime code changes, deploy explicitly:
 
-Determine the exact Forever-safe text path for:
+```bash
+WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
+ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
 
-```text
-UnitPowerPercent("player")
-    -> formatted percentage
-    -> FontString:SetText
+./tools/deploy_logres.sh "$ADDONS"
 ```
 
-Resolve:
-1. the formatter/API that can consume secret percentage values;
-2. relevant player power update events;
-3. default power-type behavior across the tested character;
-4. initial HUD anchor near center/character;
-5. suppression rules, if any, without Lua branching on secret resource value.
+Then:
 
-Do not add a resource bar.
+```text
+/reload
+/logres status
+/logres statecheck
+/logres preferencecheck
+/logres lifecyclecheck
+/logres hudcheck
+```
 
-When B.2 runtime code is prepared, include the full deploy block before in-game validation.
+Confirm version:
+`0.0.9-dev`
+
+Runtime B.2:
+1. confirm a lower-center percentage is visible;
+2. spend/gain the current primary resource and confirm it updates;
+3. `/logres immersion off` hides HUD/resource;
+4. `/logres immersion on` restores HUD/resource with current percentage;
+5. report any Lua/secret error;
+6. report whether the text placement/size is usable as a first pass.
+
+No travel is required.
 
 ## Success Criteria
 
 B.2 succeeds when:
-- a restrained resource percentage is production code;
-- it uses a secret-safe formatting path;
-- it updates as resource changes;
+- primary resource percentage renders;
+- it updates while resource changes;
+- no secret-value/Lua errors occur;
 - immersion off/on hides/restores it;
-- no conventional resource bar is introduced;
-- no Lua arithmetic/comparison/stringification over secret resource percentage occurs;
-- class/form limitations are explicitly recorded where the current environment cannot test them.
+- no conventional resource bar exists;
+- HUD structural check remains green;
+- current-character primary-resource path is runtime proven;
+- untested form/class switching is recorded rather than assumed.
 
 ## Do Not Reopen Without New Evidence
 
-- **Phase A:** complete.
 - **B.1:** complete.
-- **Health architecture:** production proven; rectangles are polish debt.
-- **Resource path:** D-008.
-- **No resource bar:** default remains percentage-oriented.
-- **Actions:** Phase C.
-- **Deployment:** full deploy block required for runtime-code tests.
+- **Resource secret path:** D-012 + D-008.
+- **No Lua scaling:** native curve handles 0–100 conversion.
+- **No resource bar:** percentage-only default.
+- **Secondary resources:** outside initial B.2.
+- **Deployment:** full deploy block required.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/B1_HEALTH_VIGNETTE_RUNTIME_PROOF_2026-10-01.md`
-- `docs/memory/evidence/B1_HEALTH_VIGNETTE_RUNTIME_PASS01_2026-09-30.md`
+- `docs/memory/decisions/D-012_RESOURCE_PRESENTATION_CONTRACT.md`
 - `docs/memory/investigations/B2_RESOURCE_PRESENTATION.md`
 - `docs/memory/decisions/D-008_SECRET_SAFE_HEALTH_AND_RESOURCE_PATH.md`
 - `docs/memory/architecture/HUD.md`
-- `docs/memory/roadmap/PHASE_B_CORE_HUD.md`
+- `Logres/HUD/HUD.lua`
+- `tools/check_hud_contract.py`

@@ -84,7 +84,7 @@ Success:
 
 ## B.2 — Resource presentation
 
-**Status: ACTIVE.**
+**Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
 
 Goal:
 add compact player resource percentage near the character/center HUD language.
@@ -95,6 +95,16 @@ Use:
 - `FontString:SetText`.
 
 Do not add a conventional resource bar unless later accessibility work explicitly requires one.
+
+### P0021 implementation
+
+- primary resource percentage only;
+- native 0–100 scale curve;
+- secret value passed directly to `FontString:SetFormattedText`;
+- `UNIT_POWER_FREQUENT` + `UNIT_MAXPOWER`;
+- owned by existing HUD root;
+- immersion preference inherited from HUD visibility;
+- no secondary-resource modeling yet.
 
 ## B.3 — Target presentation
 
