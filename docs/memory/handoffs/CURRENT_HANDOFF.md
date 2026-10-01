@@ -2,26 +2,21 @@
 
 Authoritative state: `../CURRENT.md`.
 
+C.3 is complete.
+
+P0036 runtime passed for Primary + Secondary + Utility.
+
 Current work:
-**C.3 — Secondary / Utility Clusters**
+**C.4 — Contextual Visibility / Secure Paging**
 
-P0036 is prepared.
+Before implementation:
+source-resolve combat-safe visibility and Primary paging.
 
-Version:
-`0.0.16-dev`
+D-020 is now canonical:
+the current hardcoded constellation is only a proof layout. Future Logres action
+profiles must support variable action domains, cluster shapes/sizes, and compact
+groups such as six-slot utility clusters.
 
-Adds:
-- shared secure action-button presentation primitive;
-- Secondary fixed cluster, slots 61–72;
-- Utility fixed cluster, slots 49–60;
-- separate Secondary/Utility key-routing controls;
-- expanded Action Check;
-- larger diagnostics panel.
-
-Primary's proven page/binding orchestration is retained.
-
-Stock bars remain visible.
-
-P0036 changes runtime code; full deploy block is mandatory.
+P0037 is documentation/evidence only; no WoW redeploy required.
 
 User performs all commits/pushes.

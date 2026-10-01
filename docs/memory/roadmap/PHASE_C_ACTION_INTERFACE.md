@@ -97,7 +97,7 @@ Known non-blocking debt:
 
 ## C.3 — Secondary / utility clusters
 
-**Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
+**Status: COMPLETE.**
 
 Add:
 - secondary/tertiary actions;
@@ -126,10 +126,27 @@ Bars 4–8 remain outside the first C.3 proof.### P0036 implementation
 - expanded Action Check;
 - stock action bars remain visible.
 
-Dynamic context visibility remains C.4.
+Dynamic context visibility remains C.4.### C.3 final runtime result
+
+P0036 runtime passed.
+
+Verified:
+- Primary remains functional;
+- Secondary works;
+- Utility works;
+- three-cluster constellation is viable;
+- no reported protected/taint/Lua/secret error.
+
+C.3 closes.
+
+D-020 records the important product requirement that this hardcoded geometry is
+only a proof layout. Future Logres action layouts must support variable cluster
+roles/sizes/shapes, including compact groups such as a six-slot utility bar.
 
 
 ## C.4 — Contextual visibility
+
+**Status: ACTIVE.**
 
 Integrate with observed state:
 - world;
@@ -166,3 +183,17 @@ Phase C completes when:
 - stock action bars can be safely suppressed/restored;
 - Phase B HUD and action constellation coexist;
 - no required player control is lost.
+## Deferred layout-profile requirement
+
+D-020 is canonical.
+
+Phase C architecture must remain compatible with future configurable action
+layout profiles:
+- action domain assignment;
+- role assignment;
+- variable rows/columns/visible slot count;
+- compact six-slot clusters;
+- position/spacing/scale;
+- contextual visibility policy.
+
+The full in-game layout editor is not required to complete C.4.

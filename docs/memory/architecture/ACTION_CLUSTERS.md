@@ -263,3 +263,38 @@ Static alpha weighting is presentation-only.
 C.4 remains responsible for context-driven visibility.
 
 No stock bar suppression occurs in P0036.
+## Action layout customization direction
+
+D-020 makes the current hardcoded constellation explicitly provisional.
+
+The product model must eventually allow variable cluster definitions.
+
+A cluster definition should be conceptually data-driven:
+
+```text
+ClusterDefinition = {
+    source = <action domain>,
+    role = <primary|secondary|utility|...>,
+    slots = <range/list>,
+    rows = <n>,
+    columns = <n>,
+    visibleSlotCount = <n>,
+    anchor = <position>,
+    spacing = <n>,
+    scale = <n>,
+    visibilityPolicy = <policy>,
+}
+```
+
+This is architectural direction, not a frozen Lua schema.
+
+Important example:
+the user's current Forever setup includes a useful six-slot fifth bar.
+
+Logres must be capable of representing that as a genuine compact cluster
+rather than forcing all domains into 12-button geometry.
+
+C.2/C.3 runtime modules remain valid secure-action proofs.
+
+Future refactoring may turn their hardcoded definitions into profile-driven
+cluster data after C.4 establishes safe contextual visibility behavior.

@@ -7,10 +7,7 @@ As of 2026-10-01.
 **Phase C — Action Interface**
 
 Active work item:
-**C.3 Secondary / Utility Clusters**
-
-State:
-**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**C.4 Contextual Visibility / Secure Paging**
 
 ## Phase status
 
@@ -19,7 +16,7 @@ State:
 | 0 — Foundation | COMPLETE |
 | A — Core State Engine | COMPLETE |
 | B — Core HUD | COMPLETE |
-| C — Action Interface | ACTIVE — C.3 |
+| C — Action Interface | ACTIVE — C.4 |
 | D — Immersion Controller | QUEUED |
 | E — Compass and Navigation | QUEUED |
 | F — Quest Experience | QUEUED |
@@ -32,16 +29,27 @@ State:
 | --- | --- |
 | C.1 Secure action capability/source review | COMPLETE |
 | C.2 Primary action cluster | COMPLETE |
-| C.3 Secondary / utility clusters | ACTIVE — implementation prepared |
-| C.4 Contextual visibility / secure paging | QUEUED |
+| C.3 Secondary / utility clusters | COMPLETE |
+| C.4 Contextual visibility / secure paging | ACTIVE |
 | C.5 Stock action-bar replacement | QUEUED |
 | C.6 Action interface integration validation | QUEUED |
 
-## P0036
+## C.3 final result
 
-Constellation:
-- Secondary 3 x 4: slots 61–72;
-- Primary 4 x 3: current primary page;
-- Utility 3 x 4: slots 49–60.
+P0036:
+- Primary PASS;
+- Secondary PASS;
+- Utility PASS;
+- combined layout PASS.
 
-All stock action bars remain visible.
+## Future action-layout profiles
+
+D-020 records that the current three-cluster arrangement is a proof layout.
+
+Future customization must permit:
+- variable cluster role;
+- action-domain assignment;
+- rows/columns/visible slot count;
+- compact six-slot groups;
+- anchor/spacing/scale;
+- contextual visibility policy.

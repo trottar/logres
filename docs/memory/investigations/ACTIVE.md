@@ -1,13 +1,13 @@
 # Active Investigations
 
-## C.3 — Secondary / Utility Clusters
+## C.4 — Contextual Visibility / Secure Paging
 
 Status:
-**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**ACTIVE**
 
 Canonical:
-`C3_SECONDARY_UTILITY_CLUSTERS.md`
+`C4_CONTEXTUAL_VISIBILITY_SECURE_PAGING.md`
 
 Next:
-runtime-prove P0036 fixed-slot mapping, mouse/key execution, Primary
-regression safety, and layout.
+resolve secure visibility, contextual alpha/interaction policy, and combat-time
+Primary paging before implementation.

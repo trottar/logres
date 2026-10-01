@@ -12,9 +12,9 @@ project: logres
 
 ## Current Work Item
 
-**C.3 — Secondary / Utility Clusters.**
+**C.4 — Contextual Visibility / Secure Paging.**
 
-P0036 implementation is prepared.
+C.3 is complete.
 
 ## Verified State
 
@@ -23,85 +23,63 @@ P0036 implementation is prepared.
 - Phase B complete.
 - C.1 complete.
 - C.2 complete.
-- P0035 pushed at `fccaabd`.
-- primary secure cluster remains proven.
+- C.3 complete.
+- P0036 pushed at `f192557`.
+- Primary secure cluster works.
+- Secondary fixed-slot cluster works.
+- Utility fixed-slot cluster works.
+- three-cluster constellation works together.
+- no reported protected/taint/Lua/secret error in C.3.
+- stock Blizzard action bars remain visible.
 - cast/channel cue color loss remains open visual debt.
-- P0036 static action contract passes.
-- Secondary candidate domain: slots 61–72 /
-  MULTIACTIONBAR1BUTTON1–12.
-- Utility candidate domain: slots 49–60 /
-  MULTIACTIONBAR2BUTTON1–12.
-- stock bars remain visible.
+- D-020 records future configurable action-layout profiles.
+- current hardcoded 3-cluster geometry is explicitly provisional.
 
 ## Next Action
 
-Install/review/commit/push P0036.
+Source/design-resolve C.4 before changing protected visibility or paging.
 
-Because runtime code changes, deploy explicitly:
+Resolve:
+1. presentation-only alpha vs protected Show/Hide boundaries;
+2. secure visibility/state-driver APIs and Forever constraints;
+3. safe interaction behavior for faded protected buttons;
+4. combat/world/PvP/instance visibility policy;
+5. PvP as an orthogonal modifier;
+6. Primary combat-time page changes;
+7. class/form/override/vehicle action-page states;
+8. capability gates before stock action-bar suppression;
+9. data model that future D-020 layout profiles can consume.
 
-```bash
-cd ~/Projects/logres
-
-WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
-ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
-
-./tools/deploy_logres.sh "$ADDONS"
-```
-
-Then `/reload`.
-
-Confirm:
-- version `0.0.16-dev`;
-- Run All / Action Check PASS;
-- three clusters visible.
-
-Runtime:
-1. Primary mouse/key regression check;
-2. Secondary maps expected stock Action Bar 2 actions;
-3. Utility maps expected stock Action Bar 3 actions;
-4. mouse execution on both new clusters;
-5. Secondary Keys ON/OFF routing if keys exist;
-6. Utility Keys ON/OFF routing if keys exist;
-7. cooldown/range/count/usability behavior;
-8. ordinary combat execution;
-9. no protected/taint/Lua/secret error;
-10. layout/readability with Phase B HUD.
-
-If current Forever slot or binding mapping differs from D-019, record the
-exact mismatch rather than forcing the source-derived assumption.
+Do not build the full action-layout editor during C.4.
 
 ## Success Criteria
 
-C.3 succeeds when:
-- both fixed-slot domains map correctly;
-- mouse execution works on both;
-- keyboard routing is proven where bindings are available;
-- release/fail-open behavior works;
-- Primary remains regression-free;
-- shared action-button primitive causes no regression;
-- no protected/taint/Lua/secret errors occur;
-- layout is usable;
-- stock bars remain visible.
+C.4 succeeds when:
+- Primary remains reliably accessible;
+- Secondary/Utility context emphasis is proven;
+- combat transitions cause no protected mutation errors;
+- PvP modifier behavior is distinct from combat state;
+- Primary combat-time paging is secure or precisely capability-gated;
+- unsupported special action states keep a safe stock fallback;
+- future configurable cluster definitions can reuse the policy model.
 
 ## Do Not Reopen Without New Evidence
 
 - **C.1:** complete.
 - **C.2:** complete.
-- **P0032 failure:** retained.
+- **C.3:** complete.
+- **P0032 failure:** historical evidence retained.
 - **Cast cue colors:** open visual debt.
-- **C.3 slot/binding mapping:** source-derived until runtime-proven.
-- **Bars 4–8:** not represented.
-- **Dynamic visibility:** C.4.
-- **Stock bars:** remain visible.
+- **Current 3-cluster geometry:** proof layout, not final product lock.
+- **D-020:** future layout customization requirement is canonical.
+- **Stock action bars:** remain visible until capability gates are satisfied.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/C3_SECONDARY_UTILITY_SOURCE_REVIEW_2026-10-01.md`
-- `docs/memory/decisions/D-019_SECONDARY_UTILITY_CLUSTER_CONTRACT.md`
-- `docs/memory/investigations/C3_SECONDARY_UTILITY_CLUSTERS.md`
+- `docs/memory/evidence/C3_SECONDARY_UTILITY_RUNTIME_PROOF_2026-10-01.md`
+- `docs/memory/decisions/D-020_ACTION_LAYOUT_CUSTOMIZATION_DIRECTION.md`
+- `docs/memory/investigations/C4_CONTEXTUAL_VISIBILITY_SECURE_PAGING.md`
 - `docs/memory/architecture/ACTION_CLUSTERS.md`
-- `Logres/Actions/Button.lua`
-- `Logres/Actions/Primary.lua`
-- `Logres/Actions/SecondaryUtility.lua`
-- `tools/check_action_contract.py`
+- `docs/memory/decisions/D-017_BLIZZARD_UI_SUPPRESSION_AND_RESTORATION.md`
+- `docs/memory/decisions/D-018_SECURE_ACTION_INTERFACE_CONTRACT.md`
