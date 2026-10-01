@@ -5,19 +5,20 @@ Authoritative state: `../CURRENT.md`. Start there.
 Current phase:
 **Phase B — Core HUD**
 
-B.5 is complete.
-
-Pet + party presentation both passed real runtime testing, including combat health updates and immersion hide/restore.
-
 Current work:
 **B.6 — HUD Integration Validation**
 
-No new HUD feature is planned by default.
+P0029 is prepared.
 
-Next step is an integrated pass on the existing `0.0.12-dev` HUD.
+It adds a rudimentary in-game Logres Control / Diagnostics panel so recurring runtime validation no longer requires copying many slash commands.
 
-Any runtime validation handoff must repeat the full WoW deploy block before in-game commands.
+Version:
+`0.0.13-dev`
 
-P0028 is documentation/evidence only; no WoW redeploy is required merely to install P0028.
+The panel auto-opens after reload and remains visible when immersion is turned off.
+
+Use **Run All** for the recurring diagnostics, then perform the integrated HUD scenario.
+
+P0029 changes runtime code, so the full deploy block is mandatory before testing.
 
 User performs all commits/pushes.

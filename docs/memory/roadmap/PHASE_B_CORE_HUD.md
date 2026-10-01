@@ -202,7 +202,19 @@ Validate:
 - no regression in state/preference contracts;
 - no secret-value violations.
 
-Avoid forcing scenarios already proven unless HUD behavior itself depends on them.
+Avoid forcing scenarios already proven unless HUD behavior itself depends on them.### P0029 developer validation panel
+
+Before the final B.6 integrated pass, add a rudimentary in-game Logres control/diagnostic panel.
+
+The panel:
+- reuses existing slash-command implementations;
+- exposes Run All + individual diagnostics;
+- exposes immersion ON/OFF;
+- remains visible while immersion is off;
+- is extensible for future development checks.
+
+This is a development validation surface and a possible precursor to the later real in-game menu.
+
 
 ## Phase B exit criteria
 

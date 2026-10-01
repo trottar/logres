@@ -9,6 +9,9 @@ As of 2026-10-01.
 Active work item:
 **B.6 HUD Integration Validation**
 
+State:
+**DEVELOPER PANEL PREPARED; INTEGRATED RUNTIME VALIDATION NEXT**
+
 ## Phase status
 
 | Phase | State |
@@ -32,14 +35,17 @@ Active work item:
 | B.3 Target presentation | COMPLETE |
 | B.4 Cast confirmation | COMPLETE — target true-path environmentally deferred |
 | B.5 Allies and pets | COMPLETE |
-| B.6 HUD integration validation | ACTIVE |
+| B.6 HUD integration validation | ACTIVE — P0029 developer panel prepared |
 
-## B.5 final result
+## B.6 validation surface
 
-Runtime proof:
-- pet row PASS;
-- party row PASS;
-- combat health updates PASS;
-- immersion off/on PASS.
+P0029 adds a movable in-game Logres Control / Diagnostics panel.
 
-No B.5 environmental deferral remains.
+It reuses the existing command implementations and provides:
+- Run All;
+- individual recurring diagnostics;
+- immersion ON/OFF;
+- HUD preview controls;
+- scrolling results.
+
+Integrated runtime validation follows.

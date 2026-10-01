@@ -1,6 +1,6 @@
 # B.6 — HUD Integration Validation
 
-Status: ACTIVE
+Status: DEVELOPER PANEL PREPARED; INTEGRATED RUNTIME VALIDATION NEXT
 Opened: 2026-10-01
 
 ## Goal
@@ -10,6 +10,30 @@ Validate the completed Phase B HUD pieces as one coherent system before Phase B 
 B.6 is primarily an integration/transition validation item.
 
 It should not add another HUD feature unless testing exposes a concrete defect.
+
+## Validation-surface improvement — P0029
+
+Repeated copy/paste of slash-command diagnostics created unnecessary friction.
+
+P0029 adds a rudimentary movable in-game Logres control/diagnostic panel.
+
+The panel is now the preferred B.6 validation surface.
+
+It exposes:
+- Run All;
+- Status;
+- State Check;
+- Sensor Check;
+- Preference Check;
+- Lifecycle Check;
+- HUD Check;
+- Immersion ON/OFF;
+- HUD Preview ON/OFF;
+- scrolling results.
+
+Slash commands remain available.
+
+The panel calls the same command implementation rather than duplicating checks.
 
 ## Components under validation
 
@@ -21,9 +45,31 @@ Phase B currently includes:
 - current-target cast/channel cue;
 - pet + party1–party4 compact name/health rows.
 
-## Core integration questions
+## B.6 runtime sequence after P0029
 
-### Healthy world baseline
+### 1. Panel baseline
+
+After reload:
+- `Logres Control / Diagnostics` should open;
+- version should be `0.0.13-dev`;
+- panel should be movable/closable;
+- Run All should display results for the current registered checks;
+- individual buttons should display their corresponding results.
+
+Expected:
+all static/runtime diagnostics PASS.
+
+### 2. Immersion controls
+
+Use panel buttons:
+- Immersion OFF;
+- Immersion ON.
+
+The Phase B HUD should hide/restore.
+
+The developer panel itself must remain visible.
+
+### 3. Healthy world baseline
 
 Confirm:
 - no player-health vignette at healthy state;
@@ -32,9 +78,9 @@ Confirm:
 - no stale cast cue;
 - only real pet/party rows shown.
 
-### Combat + target
+### 4. Combat + target
 
-Confirm during ordinary combat:
+During ordinary combat:
 - health vignette responds to injury;
 - target health depletes;
 - player resource updates;
@@ -42,7 +88,7 @@ Confirm during ordinary combat:
 - pet/party health rows continue updating;
 - no obvious overlap makes the central HUD unreadable.
 
-### Target lifecycle
+### 5. Target lifecycle
 
 Confirm:
 - acquire target -> target block appears;
@@ -52,7 +98,7 @@ Confirm:
 
 Target-caster true-path runtime proof remains deferred until a natural caster appears.
 
-### Cast lifecycle
+### 6. Cast lifecycle
 
 Player:
 - cast start/stop;
@@ -61,46 +107,45 @@ Player:
 
 Confirm no stale cue remains after the lifecycle ends.
 
-### Party/pet lifecycle
+### 7. Party/pet lifecycle
 
 Where practical:
 - party row persists correctly during combat;
 - pet row persists correctly during combat;
 - health updates remain responsive.
 
-Join/leave or pet summon/despawn transition should be exercised if naturally convenient, but B.5 already proves real pet/party presence and health transport.
+B.5 already proves real pet and party true paths.
 
-### Immersion preference
+### 8. Integrated immersion
 
-With several HUD elements active:
-- `/logres immersion off` hides the whole Logres HUD;
-- `/logres immersion on` restores presentation from current state;
-- no stale target/health/ally state appears after restoration.
+With multiple HUD elements active, use panel:
+- Immersion OFF;
+- Immersion ON.
 
-### Existing state transitions
+Confirm:
+- Logres HUD hides;
+- developer panel remains accessible;
+- current HUD state restores correctly;
+- no stale presentation appears.
 
-Regression-check the HUD across at least:
-- world idle;
-- ordinary combat;
-- combat end.
+### 9. Combat exit
 
-If an instance transition is naturally convenient, observe it, but do not require travel solely for B.6 unless a specific defect needs it.
+Confirm cleanup remains sane after combat ends.
 
 ## Visual integration
 
-B.6 should classify visual issues separately from architecture/runtime defects.
+B.6 classifies visual issues separately from architecture/runtime defects.
 
 Known visual debt:
 - health vignette uses rough procedural rectangles;
 - exact central spacing is provisional;
-- ally/pet stack placement is provisional ahead of Phase C action clusters;
-- cast cues are first-pass geometric runes.
+- ally/pet stack placement is provisional ahead of Phase C;
+- cast cues are first-pass geometric runes;
+- developer panel is intentionally utilitarian.
 
 A visual issue blocks Phase B only if it makes the HUD materially unusable or ambiguous.
 
 ## Deferred evidence that remains valid
-
-Do not incorrectly turn existing environmental deferrals into Phase B failures.
 
 Still deferred:
 - ordinary mounted=true sensor from Phase A.2;
@@ -111,6 +156,7 @@ These have explicit retry conditions.
 ## Phase B exit target
 
 Phase B can close when:
+- the developer panel successfully runs recurring validation;
 - all implemented HUD components coexist without functional regressions;
 - no stale presentation survives target/cast/immersion transitions;
 - secret-safe transports remain error-free;

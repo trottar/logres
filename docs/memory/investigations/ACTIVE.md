@@ -3,10 +3,12 @@
 ## B.6 — HUD Integration Validation
 
 Status:
-**ACTIVE**
+**DEVELOPER PANEL PREPARED; INTEGRATED RUNTIME VALIDATION NEXT**
 
 Canonical record:
 `B6_HUD_INTEGRATION_VALIDATION.md`
 
-Goal:
-validate all completed Phase B HUD components together and close Phase B if the integrated runtime remains stable and usable.
+P0029 adds the in-game validation/control panel.
+
+Next:
+runtime-prove the panel, then use it for the B.6 integrated HUD pass.

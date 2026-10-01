@@ -1,5 +1,62 @@
 local _, Logres = ...
 
+local activeOutput
+local devPanelActions = {}
+local devPanelActionsByID = {}
+
+local function emit(message)
+    message = tostring(message)
+
+    if activeOutput then
+        activeOutput(message)
+        return
+    end
+
+    emit(message)
+end
+
+function Logres:RegisterDevPanelAction(id, label, command)
+    if type(id) ~= "string" or id == "" then
+        error("Logres:RegisterDevPanelAction requires a non-empty id")
+    end
+
+    if type(label) ~= "string" or label == "" then
+        error("Logres:RegisterDevPanelAction requires a non-empty label")
+    end
+
+    if type(command) ~= "string" or command == "" then
+        error("Logres:RegisterDevPanelAction requires a non-empty command")
+    end
+
+    if devPanelActionsByID[id] then
+        error("Duplicate Logres dev-panel action: " .. id)
+    end
+
+    local action = {
+        id = id,
+        label = label,
+        command = command,
+    }
+
+    devPanelActionsByID[id] = action
+    devPanelActions[#devPanelActions + 1] = action
+end
+
+function Logres:GetDevPanelActions()
+    local copy = {}
+
+    for index = 1, #devPanelActions do
+        local action = devPanelActions[index]
+        copy[index] = {
+            id = action.id,
+            label = action.label,
+            command = action.command,
+        }
+    end
+
+    return copy
+end
+
 local function boolText(value)
     return value and "true" or "false"
 end
@@ -42,7 +99,7 @@ local function printStatus()
     local db = Logres.db
     local _, _, _, interfaceVersion = GetBuildInfo()
 
-    print(string.format(
+    emit(string.format(
         "Logres %s: loadCount=%s revision=%s context=%s combat=%s pvp=%s instance=%s/%s mounted=%s resting=%s taxi=%s interact=%s/%s changedBy=%s interface=%s",
         tostring(Logres.VERSION),
         tostring(db and db.meta and db.meta.loadCount or "?"),
@@ -65,7 +122,7 @@ end
 local function printPreferences()
     local preferences = Logres:GetPreferences()
 
-    print(string.format(
+    emit(string.format(
         "Logres preferences: schema=%s revision=%s immersionEnabled=%s",
         tostring(Logres.db and Logres.db.schema or "?"),
         tostring(preferences.revision),
@@ -99,14 +156,14 @@ local function runStateCheck()
         and callbackCount == 0
 
     if snapshotIsolation and noopStable then
-        print(string.format(
+        emit(string.format(
             "Logres statecheck: PASS (snapshot isolation=true, no-op revision=%s, callbacks=0)",
             tostring(afterRefresh.revision)
         ))
         return
     end
 
-    print(string.format(
+    emit(string.format(
         "Logres statecheck: FAIL (snapshotIsolation=%s changed=%s revisionBefore=%s revisionAfter=%s callbacks=%s)",
         tostring(snapshotIsolation),
         tostring(changed),
@@ -130,7 +187,7 @@ local function runSensorCheck()
         state.interacting == (state.interactionType ~= 0)
 
     if mountedOK and restingOK and taxiOK and interactionShapeOK then
-        print(string.format(
+        emit(string.format(
             "Logres sensorcheck: PASS (mounted=%s resting=%s taxi=%s interact=%s/%s)",
             boolText(state.mounted),
             boolText(state.resting),
@@ -141,7 +198,7 @@ local function runSensorCheck()
         return
     end
 
-    print(string.format(
+    emit(string.format(
         "Logres sensorcheck: FAIL (mounted=%s/%s resting=%s/%s taxi=%s/%s interact=%s/%s)",
         boolText(state.mounted),
         boolText(apiMounted),
@@ -202,7 +259,7 @@ local function runPreferenceCheck()
         and final.revision == afterNoop.revision + 2
 
     if snapshotIsolation and noopStable and changeSemantics then
-        print(string.format(
+        emit(string.format(
             "Logres preferencecheck: PASS (snapshot isolation=true, callbacks=2, revision=%s, immersionEnabled=%s)",
             tostring(final.revision),
             boolText(final.immersionEnabled)
@@ -210,7 +267,7 @@ local function runPreferenceCheck()
         return
     end
 
-    print(string.format(
+    emit(string.format(
         "Logres preferencecheck: FAIL (snapshotIsolation=%s noopStable=%s changeSemantics=%s callbacks=%s revision=%s immersionEnabled=%s)",
         tostring(snapshotIsolation),
         tostring(noopStable),
@@ -292,7 +349,7 @@ local function runLifecycleCheck()
         and after.cleanupCount == 0
 
     if passed then
-        print(string.format(
+        emit(string.format(
             "Logres lifecyclecheck: PASS (init=%s enable=%s disable=%s cleanup=%s prefCallbacksWhileEnabled=2 prefCallbacksWhileDisabled=0)",
             tostring(lifecycleProbe.initializeCount),
             tostring(lifecycleProbe.enableCount),
@@ -302,7 +359,7 @@ local function runLifecycleCheck()
         return
     end
 
-    print(string.format(
+    emit(string.format(
         "Logres lifecyclecheck: FAIL (beforeInit=%s beforeEnabled=%s initializedAgain=%s enabled=%s/%s disabled=%s/%s init=%s->%s enable=%s->%s disable=%s->%s cleanup=%s->%s prefEnabled=%s prefDisabled=%s afterEnabled=%s afterCleanup=%s)",
         tostring(before.initialized),
         tostring(before.enabled),
@@ -358,7 +415,7 @@ local function runHUDCheck()
         and visibilityMatchesPreference
 
     if passed then
-        print(string.format(
+        emit(string.format(
             "Logres hudcheck: PASS (bands=4 textures=16 curves=true resourceText=true resourceCurve=true target=true casts=true allies=5 immersion=%s visible=%s)",
             boolText(debugStatus.immersionEnabled),
             boolText(debugStatus.rootShown)
@@ -366,7 +423,7 @@ local function runHUDCheck()
         return
     end
 
-    print(string.format(
+    emit(string.format(
         "Logres hudcheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s bands=%s textures=%s curves=%s resourceText=%s resourceCurve=%s targetFrame=%s targetName=%s targetHealth=%s targetEvents=%s playerCast=%s targetCast=%s playerCastEvents=%s targetCastEvents=%s allyRows=%s allyEvents=%s allyRoster=%s immersion=%s visible=%s visibilityMatches=%s)",
         tostring(status.initialized),
         tostring(status.enabled),
@@ -394,6 +451,18 @@ local function runHUDCheck()
 end
 
 
+
+local function runAllChecks()
+    emit("Logres checkall: beginning")
+    printStatus()
+    runStateCheck()
+    runSensorCheck()
+    runPreferenceCheck()
+    runLifecycleCheck()
+    runHUDCheck()
+    emit("Logres checkall: complete")
+end
+
 local function handleHUDPreview(argument)
     local hud = Logres:GetModule("HUD")
 
@@ -402,11 +471,11 @@ local function handleHUDPreview(argument)
     elseif argument == "off" then
         hud:SetPreviewEnabled(false)
     else
-        print("Usage: /logres hudpreview [on|off]")
+        emit("Usage: /logres hudpreview [on|off]")
         return
     end
 
-    print(string.format(
+    emit(string.format(
         "Logres: HUD preview=%s",
         argument
     ))
@@ -428,17 +497,17 @@ local function handleImmersion(argument)
     elseif argument == "toggle" then
         newValue = not current
     else
-        print("Usage: /logres immersion [on|off|toggle]")
+        emit("Usage: /logres immersion [on|off|toggle]")
         return
     end
 
     local changed = Logres:SetPreference(
         "immersionEnabled",
         newValue,
-        "SLASH_IMMERSION"
+        "COMMAND_IMMERSION"
     )
 
-    print(string.format(
+    emit(string.format(
         "Logres: immersionEnabled=%s%s",
         boolText(newValue),
         changed and "" or " (unchanged)"
@@ -446,24 +515,49 @@ local function handleImmersion(argument)
 end
 
 local function printHelp()
-    print("Logres development commands:")
-    print("  /logres status")
-    print("  /logres statecheck")
-    print("  /logres sensorcheck")
-    print("  /logres preferencecheck")
-    print("  /logres lifecyclecheck")
-    print("  /logres hudcheck")
-    print("  /logres hudpreview [on|off]")
-    print("  /logres immersion [on|off|toggle]")
-    print("  /logres debug on")
-    print("  /logres debug off")
+    emit("Logres development commands:")
+    emit("  /logres panel")
+    emit("  /logres checkall")
+    emit("  /logres status")
+    emit("  /logres statecheck")
+    emit("  /logres sensorcheck")
+    emit("  /logres preferencecheck")
+    emit("  /logres lifecyclecheck")
+    emit("  /logres hudcheck")
+    emit("  /logres hudpreview [on|off]")
+    emit("  /logres immersion [on|off|toggle]")
+    emit("  /logres debug on")
+    emit("  /logres debug off")
 end
 
-SLASH_LOGRES1 = "/logres"
-SlashCmdList.LOGRES = function(message)
-    local command, argument = (message or ""):lower():match("^%s*(%S*)%s*(.-)%s*$")
+local function handleCommand(message)
+    local command, argument =
+        (message or ""):lower():match("^%s*(%S*)%s*(.-)%s*$")
 
-    if command == "" or command == "status" then
+    if command == "" then
+        if Logres.ToggleDevPanel then
+            Logres:ToggleDevPanel()
+        else
+            printStatus()
+        end
+        return
+    end
+
+    if command == "panel" then
+        if Logres.ToggleDevPanel then
+            Logres:ToggleDevPanel()
+        else
+            emit("Logres: development panel is not available yet.")
+        end
+        return
+    end
+
+    if command == "checkall" then
+        runAllChecks()
+        return
+    end
+
+    if command == "status" then
         printStatus()
         return
     end
@@ -505,20 +599,81 @@ SlashCmdList.LOGRES = function(message)
 
     if command == "debug" then
         if not Logres.db then
-            print("Logres: database is not initialized yet.")
+            emit("Logres: database is not initialized yet.")
             return
         end
 
         if argument == "on" then
             Logres.db.settings.debug = true
-            print("Logres: development messages enabled.")
+            emit("Logres: development messages enabled.")
             return
         elseif argument == "off" then
             Logres.db.settings.debug = false
-            print("Logres: development messages disabled.")
+            emit("Logres: development messages disabled.")
             return
         end
     end
 
     printHelp()
+end
+
+function Logres:RunDevCommand(message, output)
+    local previousOutput = activeOutput
+    activeOutput = output
+
+    local ok, commandError = pcall(handleCommand, message)
+
+    activeOutput = previousOutput
+
+    if not ok then
+        if output then
+            output("Logres command error: " .. tostring(commandError))
+            return false, commandError
+        end
+
+        error(commandError, 0)
+    end
+
+    return true
+end
+
+Logres:RegisterDevPanelAction("runall", "Run All", "checkall")
+Logres:RegisterDevPanelAction("status", "Status", "status")
+Logres:RegisterDevPanelAction("state", "State Check", "statecheck")
+Logres:RegisterDevPanelAction("sensor", "Sensor Check", "sensorcheck")
+Logres:RegisterDevPanelAction(
+    "preference",
+    "Preference Check",
+    "preferencecheck"
+)
+Logres:RegisterDevPanelAction(
+    "lifecycle",
+    "Lifecycle Check",
+    "lifecyclecheck"
+)
+Logres:RegisterDevPanelAction("hud", "HUD Check", "hudcheck")
+Logres:RegisterDevPanelAction(
+    "immersionOn",
+    "Immersion ON",
+    "immersion on"
+)
+Logres:RegisterDevPanelAction(
+    "immersionOff",
+    "Immersion OFF",
+    "immersion off"
+)
+Logres:RegisterDevPanelAction(
+    "previewOn",
+    "HUD Preview ON",
+    "hudpreview on"
+)
+Logres:RegisterDevPanelAction(
+    "previewOff",
+    "HUD Preview OFF",
+    "hudpreview off"
+)
+
+SLASH_LOGRES1 = "/logres"
+SlashCmdList.LOGRES = function(message)
+    Logres:RunDevCommand(message)
 end
