@@ -12,9 +12,9 @@ project: logres
 
 ## Current Work Item
 
-**D.4 — Unit-frame interaction + selective suppression source/design review.**
+**D.4 — Player secure interaction + selective PlayerFrame shell suppression.**
 
-D.3 is complete with instance-transition proof deferred by environment.
+D.4 source/design review is complete.
 
 ## Verified State
 
@@ -25,64 +25,71 @@ D.3 is complete with instance-transition proof deferred by environment.
 - D.1 complete.
 - D.2 complete.
 - D.3 complete.
-- P0050 pushed at `57c682c`.
-- P0050 Quiet Mode runtime PASS in the tested world workflow.
-- passive chat/social presentation is suppressed under world immersion.
-- intentional chat input remains available by design.
-- instance Quiet Mode transition proof is DEFERRED BY ENVIRONMENT.
-- do not require travel solely to manufacture the instance proof.
+- P0051 pushed at `d25430f`.
 - runtime remains `0.0.22-dev`.
-- full Player/Target/Party suppression remains capability-gated.
+- D-026 selective unit-frame suppression contract accepted.
+- PlayerFrame blanket hide remains rejected.
+- first supported Player suppression subset:
+  - `PlayerFrameContainer`;
+  - `PlayerFrameContent.PlayerFrameContentMain`.
+- preserve Player alternate power area and direct class/rune/totem/pet children.
+- secure Logres player interaction is required before stock PlayerFrame mouse
+  suppression.
+- TargetFrame suppression remains gated on secure interaction + aura /
+  raid-marker preservation + contextual metadata filtering.
+- Party suppression remains deferred pending normal + compact secure coverage.
+- D.3 instance Quiet Mode transition remains environmental deferral.
 - Primary replacement/routing ownership remains deferred.
 - D-020 live action editing remains deferred.
 - cast cue color regression remains open visual debt.
 
 ## Next Action
 
-Source/design-resolve D.4 before unit-frame suppression code.
+Implement first D.4 runtime pass.
 
-Review exact Blizzard source and current Logres capability for:
+Add:
+1. secure Logres `player` interaction button associated with visible Logres
+   player/resource presentation;
+2. left click target;
+3. right click togglemenu;
+4. selective snapshot/suppression of PlayerFrameContainer and
+   PlayerFrameContentMain;
+5. stock PlayerFrame mouse disable while suppression is active;
+6. exact Immersion OFF restoration;
+7. combat deferral;
+8. diagnostics.
 
-1. PlayerFrame conventional shell vs required child resources;
-2. PlayerFrame secure interaction requirements;
-3. TargetFrame shell vs auras/dependent children;
-4. secure target click/menu behavior;
-5. normal PartyFrame secure interaction;
-6. CompactPartyFrame raid-style path;
-7. party aura/debuff/role information;
-8. combat-lockdown constraints;
-9. exact restoration ownership;
-10. smallest capability-safe suppression subset for each domain.
-
-Prefer selective shell suppression or explicit deferral over blanket frame hide.
+Do not:
+- hide the whole PlayerFrame;
+- suppress alternate power/class/rune/totem/pet children;
+- suppress TargetFrame yet;
+- suppress Party/CompactPartyFrame yet.
 
 ## Success Criteria
 
-D.4 source review succeeds when Player, Target, and Party each have an explicit
-decision:
-- supported selective suppression;
-- required replacement capability first;
-- or deferred stock ownership;
-
-with combat/restoration/runtime-proof rules.
+First D.4 runtime pass succeeds when:
+- conventional stock PlayerFrame shell disappears under immersion;
+- required direct PlayerFrame children remain available;
+- visible Logres player affordance preserves secure left/right click behavior;
+- old stock frame area is not an invisible click zone;
+- Immersion OFF restores exact stock shell + mouse behavior;
+- combat transition defers safely;
+- no protected/taint/Lua/secret regression occurs.
 
 ## Do Not Reopen Without New Evidence
 
-- **Phase C:** complete.
 - **D.1–D.3:** complete.
+- **D.4 source review:** complete.
+- **Whole PlayerFrame suppression:** rejected.
+- **Target suppression:** later D.4 capability step.
+- **Party suppression:** deferred.
 - **D.3 instance transition:** environmental deferral; retry naturally.
-- **Direct ChatFrame Hide/Show for Quiet Mode:** rejected.
-- **Blanket Player/Target/Party suppression:** rejected pending D.4 selective
-  capability resolution.
-- **Primary replacement/routing ownership:** deferred.
-- **Auto replies:** not promised.
-- **D-020 live action editing:** deferred.
+- **Primary replacement/routing:** deferred.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/D3_P0050_QUIET_MODE_RUNTIME_PROOF_2026-10-01.md`
-- `docs/memory/decisions/D-025_QUIET_MODE_RUNTIME_SUPPRESSION.md`
-- `docs/memory/investigations/D4_UNIT_FRAME_INTERACTION_SUPPRESSION_REVIEW.md`
+- `docs/memory/evidence/D4_UNIT_FRAME_SELECTIVE_SUPPRESSION_SOURCE_REVIEW_2026-10-01.md`
+- `docs/memory/decisions/D-026_SELECTIVE_UNIT_FRAME_SUPPRESSION.md`
+- `docs/memory/investigations/D4_PLAYER_SHELL_RUNTIME_PROOF.md`
 - `docs/memory/roadmap/PHASE_D_IMMERSION_CONTROLLER.md`
-- `docs/memory/evidence/D1_IMMERSION_ORCHESTRATION_SOURCE_REVIEW_2026-10-01.md`

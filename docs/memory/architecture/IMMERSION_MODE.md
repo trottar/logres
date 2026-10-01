@@ -90,3 +90,20 @@ D-025 selects:
 
 The controller still owns desired policy; the Quiet Mode module owns chat
 presentation mechanics.
+
+## D.4 unit-frame capability ladder
+
+Unit-frame suppression is incremental.
+
+First target:
+- Player conventional shell only.
+
+Required atomic pieces:
+- visible Logres player presentation;
+- secure Logres player target/menu interaction;
+- selective stock shell suppression;
+- stock mouse removal;
+- exact restoration.
+
+Target and Party remain gated behind their own interaction/context
+requirements.

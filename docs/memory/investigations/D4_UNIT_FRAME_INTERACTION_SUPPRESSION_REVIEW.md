@@ -1,104 +1,37 @@
 # D.4 — Unit-Frame Interaction + Selective Suppression Review
 
-Status: ACTIVE — SOURCE / DESIGN RESOLUTION NEXT
+Status: SOURCE-RESOLVED
 Opened: 2026-10-01
+Resolved: 2026-10-01
 
-## Goal
+## Result
 
-Determine the smallest capability-safe unit-frame suppression that advances
-immersion without removing Blizzard controls, resources, aura information, or
-secure interaction that Logres has not replaced.
-
-D.1 already rejected blanket Player/Target/Party suppression.
-
-D.4 must resolve selective ownership per surface.
-
-## Constraints
+D-026 is canonical.
 
 ### Player
 
-Do not hide or alpha-zero the full PlayerFrame.
-
-Current unresolved dependencies include:
-- class resources;
-- runes;
-- totems;
-- pet/managed children;
-- other PlayerFrame-parented gameplay surfaces.
-
-D.4 must determine whether the conventional player portrait/health/power shell
-can be suppressed independently while those children remain functional.
-
-If not, stock PlayerFrame remains visible until Logres replaces the missing
-dependencies.
+Supported first runtime target:
+- secure Logres player interaction;
+- selective conventional PlayerFrame shell suppression;
+- preserve alternate/class/rune/totem/pet children.
 
 ### Target
 
-Current Logres target block replaces:
-- target name;
-- target health percent;
-- target cast cue.
+Selective suppression is source-feasible but remains gated on:
+- secure Logres target interaction;
+- aura + raid-marker preservation;
+- contextual metadata filtering.
 
-It does not yet replace all stock TargetFrame behavior.
-
-D.4 must source-resolve:
-- secure left-click targeting behavior;
-- right-click unit menu behavior;
-- target aura/buff/debuff presentation;
-- target-of-target or dependent target surfaces where applicable;
-- whether the conventional shell can be selectively suppressed without
-  destroying required children.
+No TargetFrame suppression in the first runtime pass.
 
 ### Party
 
-Current Logres ally rows replace compact name/health awareness.
+Suppression deferred.
 
-They do not yet provide equivalent secure party interaction.
+Both normal and compact party-frame systems must be covered along with secure
+interaction and aura/group-context policy.
 
-D.4 must source-resolve:
-- secure click targeting/menu behavior;
-- normal PartyFrame ownership;
-- CompactPartyFrame / raid-style party ownership;
-- aura/debuff/group-role context;
-- pet/vehicle/group special cases where relevant.
+## Next
 
-## Design preference
-
-Prefer a capability ladder rather than an all-or-nothing frame hide.
-
-Possible outcomes:
-1. suppress only decorative/conventional shell regions;
-2. preserve required Blizzard children/interactions;
-3. add narrowly scoped secure Logres interaction where needed;
-4. retain stock surface where replacement would otherwise be incomplete.
-
-## Combat
-
-Any protected-frame mutation must be:
-- performed out of combat;
-- deferred;
-- or driven by a source-proven secure mechanism.
-
-Do not ordinary-Lua mutate protected unit-frame ownership during lockdown.
-
-## Recovery
-
-Immersion OFF must restore every selectively suppressed stock region exactly.
-
-Developer panel remains independent.
-
-## Exit
-
-D.4 source/design review closes when it has a documented per-domain decision:
-
-- Player: suppressible subset or explicit deferral;
-- Target: suppressible subset / required secure replacement / explicit deferral;
-- Party: suppressible subset / required secure replacement / explicit deferral;
-
-with:
-- combat constraints;
-- restoration ownership;
-- interaction preservation;
-- runtime proof plan.
-
-Do not implement blanket unit-frame suppression before this review closes.
+Implement the first D.4 runtime pass:
+**Player secure interaction + selective PlayerFrame shell suppression.**

@@ -77,7 +77,7 @@ Canonical phase record:
 
 ## Phase D — Immersion Controller
 
-**Status: ACTIVE — D.4 unit-frame interaction/selective suppression review.**
+**Status: ACTIVE — D.4 Player selective shell implementation.**
 
 Implement full immersion orchestration:
 - Quiet/social immersion mode;

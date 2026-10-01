@@ -109,3 +109,16 @@ pet children.
 Therefore D.2 does not immediately hide Player/Target/Party.
 
 D-024 defines the capability gate and revised implementation order.
+
+## D.4 selective unit-frame refinement
+
+D-026 replaces the idea of monolithic unit-frame suppression with
+capability-selective ownership.
+
+For PlayerFrame, only the conventional shell/main content is the first
+supported suppression target.
+
+Direct resource/pet children remain Blizzard-owned until separately replaced.
+
+A stock secure unit-button mouse region is not disabled until Logres provides
+equivalent visible secure interaction.

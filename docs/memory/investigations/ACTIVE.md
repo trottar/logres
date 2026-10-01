@@ -1,13 +1,16 @@
 # Active Investigations
 
-## D.4 — Unit-frame interaction + selective suppression
+## D.4 — Player shell runtime proof
 
 Status:
-**SOURCE / DESIGN RESOLUTION NEXT**
+**IMPLEMENTATION NEXT**
 
 Canonical:
-`D4_UNIT_FRAME_INTERACTION_SUPPRESSION_REVIEW.md`
+`D4_PLAYER_SHELL_RUNTIME_PROOF.md`
+
+Decision:
+`../decisions/D-026_SELECTIVE_UNIT_FRAME_SUPPRESSION.md`
 
 Next:
-source-resolve Player/Target/Party selective suppression, secure interaction,
-dependent child surfaces, combat constraints, and restoration.
+implement secure Logres player target/menu interaction plus selective
+PlayerFrame conventional-shell suppression and restoration.

@@ -52,6 +52,7 @@
 | P0048 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME PASS | Add Immersion Controller and automatic proven action replacement (`ed5af75`) |
 | P0049 | 2026-10-01 | INSTALLED / PUSHED | Close D.2; resolve D.3 Quiet Mode runtime suppression contract (`c06d9cd`) |
 | P0050 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME PASS | Implement D.3 runtime Quiet Mode without saved chat mutation (`57c682c`) |
-| P0051 | 2026-10-01 | PREPARED | Close D.3 with instance deferral; open D.4 unit-frame source review |
+| P0051 | 2026-10-01 | INSTALLED / PUSHED | Close D.3 with instance deferral; open D.4 unit-frame source review (`d25430f`) |
+| P0052 | 2026-10-01 | PREPARED | Resolve D.4 selective unit-frame contract; open Player shell implementation |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

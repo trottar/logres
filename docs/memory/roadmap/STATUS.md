@@ -7,10 +7,10 @@ As of 2026-10-01.
 **Phase D — Immersion Controller**
 
 Active work item:
-**D.4 Unit-frame interaction + selective suppression review**
+**D.4 Player secure interaction + selective PlayerFrame shell suppression**
 
 State:
-**SOURCE / DESIGN RESOLUTION NEXT**
+**SOURCE-RESOLVED; IMPLEMENTATION NEXT**
 
 ## Phase status
 
@@ -26,13 +26,12 @@ State:
 | G — Cinematic Camera | QUEUED |
 | H — Integration and Polish | QUEUED |
 
-## Phase D
+## D.4 source result
 
-| Item | State |
+| Domain | Decision |
 | --- | --- |
-| D.1 Orchestration contract/source review | COMPLETE |
-| D.2 Immersion Controller foundation | COMPLETE |
-| D.3 Quiet Mode runtime suppression | COMPLETE — instance proof deferred by environment |
-| D.4 Unit-frame interaction/selective suppression | ACTIVE — source/design review |
-| D.5 Context/PvP/instance orchestration | QUEUED |
-| D.6 Restoration/integration validation | QUEUED |
+| Player | First supported selective runtime target |
+| Target | Deferred until secure interaction + aura/marker policy proof |
+| Party | Deferred until normal + compact interaction/context coverage |
+
+Player first-pass suppression is shell-only, not whole-frame hiding.

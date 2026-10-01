@@ -138,7 +138,7 @@ D.3 closes.
 
 ## D.4 — Unit-frame interaction + selective suppression
 
-**Status: ACTIVE — SOURCE / DESIGN RESOLUTION NEXT.**
+**Status: SOURCE-RESOLVED; PLAYER SHELL IMPLEMENTATION NEXT.**
 
 Before suppression, complete the missing capability.
 
@@ -169,6 +169,29 @@ Active investigation:
 
 Resolve a capability ladder for Player/Target/Party rather than blanket
 frame hiding.
+
+### D.4 source result
+
+D-026 is canonical.
+
+Player:
+- first supported selective suppression target;
+- suppress conventional PlayerFrame container + main content only;
+- preserve alternate/class/rune/totem/pet children;
+- add secure Logres player interaction before disabling stock mouse.
+
+Target:
+- source-feasible but deferred from first runtime pass;
+- requires secure Logres target interaction plus aura/raid-marker
+  preservation and contextual metadata filtering.
+
+Party:
+- deferred;
+- must cover both normal and compact secure party paths plus aura/group
+  context.
+
+First runtime implementation:
+**Player secure interaction + selective shell suppression.**
 
 ## D.5 — Context / PvP / instance orchestration
 
