@@ -1,11 +1,16 @@
 # Active Investigations
 
-## B.3 — Target Presentation
+## B.4 — Cast Confirmation
 
 Status:
-**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**ACTIVE**
 
 Canonical record:
-`B3_TARGET_PRESENTATION.md`
+`B4_CAST_CONFIRMATION.md`
 
-P0023 implements sparse target name + secret-safe health percentage while preserving D-003 disclosure limits.
+Scope:
+- player cast/channel cue;
+- current-target cast/channel cue;
+- no conventional cast bars.
+
+Target true-path runtime proof may defer by environment.

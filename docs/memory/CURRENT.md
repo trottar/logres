@@ -12,98 +12,82 @@ project: logres
 
 ## Current Work Item
 
-**B.3 — Target Presentation.**
+**B.4 — Cast Confirmation.**
 
-P0023 prepares sparse current-target presentation:
+B.3 is complete.
 
-```text
-Target Name
-Health %
-```
+The production target block is runtime proven:
+- sparse target name + health percentage;
+- health depletes correctly;
+- clear target hides it;
+- immersion off/on hides/restores it;
+- no extra disclosure.
 
-No numeric level, classification, portrait, or target health bar is introduced.
+B.4 scope is corrected and explicit:
+- player cast/channel cue;
+- current-target cast/channel cue;
+- no conventional cast bars.
 
 ## Verified State
 
 - Phase A complete.
 - B.1 health vignette complete.
 - B.2 primary resource percentage complete.
-- P0022 B.2 closure pushed at `f89f43f`.
-- current runtime baseline before P0023: `0.0.9-dev`.
-- `UnitName("target")` is available on Forever and may become secret under identity restrictions.
-- `FontString:SetText` accepts secret text arguments.
-- target health percentage can reuse the native 0–100 secret-safe percentage curve.
-- `UnitExists("target")` provides ordinary show/hide control.
-- target resource is deliberately deferred from the initial B.3 patch.
+- B.3 target presentation complete.
+- P0023 pushed at `67acfa9`.
+- player cast/channel APIs were runtime observed during I-001.
+- current-target cast/channel true path has not yet been captured.
+- current environment presently has no convenient enemy caster.
+- target-cast proof may defer by environment; target-cast feature itself does not defer.
 
 ## Next Action
 
-Install/review/commit/push P0023.
+Source-check and design B.4 implementation.
 
-Because runtime code changes, deploy explicitly:
+Use D-014.
 
-```bash
-WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
-ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
+Resolve:
+1. player cast/channel events and query path;
+2. target cast/channel events and query path;
+3. metadata secrecy restrictions;
+4. minimal visual state machine;
+5. player cue placement near resource;
+6. target cue placement near target block.
 
-./tools/deploy_logres.sh "$ADDONS"
-```
+Implementation should include both player and current-target cues.
 
-Then:
+Runtime plan:
+- prove player cue immediately;
+- prove target cue if a caster is naturally available;
+- otherwise record target true-path as environmental deferral with a retry condition.
 
-```text
-/reload
-/logres status
-/logres statecheck
-/logres preferencecheck
-/logres lifecyclecheck
-/logres hudcheck
-```
-
-Confirm version:
-`0.0.10-dev`
-
-B.3 runtime proof:
-1. no target -> target block absent;
-2. acquire target -> name + health % appear;
-3. damage an ordinary target -> health % updates;
-4. switch targets -> text updates;
-5. clear target -> block disappears;
-6. immersion off/on -> hide/restore current target;
-7. during ordinary combat, confirm target name/health remain functional with no secret-value errors;
-8. if an elite target is naturally available, confirm no numeric level/classification is shown.
-
-No dungeon travel is required solely for B.3.
+Do not require dungeon travel solely to obtain an enemy caster.
 
 ## Success Criteria
 
-B.3 succeeds when:
-- sparse target name + health percentage render;
-- target acquisition/change/loss update correctly;
-- health percentage updates;
-- ordinary combat does not produce secret/Lua errors;
-- immersion hide/restore works;
-- no level/classification/portrait/bar is exposed;
-- target resource remains optional/deferred unless new evidence justifies it.
+B.4 succeeds when:
+- player cast/channel cue exists and works;
+- current-target cast/channel cue is implemented;
+- no conventional cast bar is introduced;
+- completion/interruption/target-loss cleanup behaves;
+- target-cast true path is either runtime proven or explicitly deferred by environment;
+- no secret-value/Lua errors occur.
 
 ## Do Not Reopen Without New Evidence
 
 - **B.1:** complete.
 - **B.2:** complete.
-- **Target disclosure:** D-003 + D-013.
-- **Target identity:** may be secret; direct native text forwarding only.
-- **Target health:** native curve + SetFormattedText only.
-- **Target resource:** deferred from initial B.3.
-- **Actions:** Phase C.
-- **Deployment:** full deploy block required.
+- **B.3:** complete.
+- **Cast scope:** D-014 includes player + current target.
+- **Enemy/target casts:** feature required; only runtime proof may defer.
+- **No cast bars:** default product rule.
+- **Deployment:** full deploy block required for runtime-code tests.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/decisions/D-013_TARGET_PRESENTATION_CONTRACT.md`
-- `docs/memory/investigations/B3_TARGET_PRESENTATION.md`
-- `docs/memory/decisions/D-003_ENEMY_INFORMATION_DISCLOSURE.md`
-- `docs/memory/decisions/D-008_SECRET_SAFE_HEALTH_AND_RESOURCE_PATH.md`
+- `docs/memory/evidence/B3_TARGET_PRESENTATION_RUNTIME_PROOF_2026-10-01.md`
+- `docs/memory/decisions/D-014_CAST_PRESENTATION_CONTRACT.md`
+- `docs/memory/investigations/B4_CAST_CONFIRMATION.md`
+- `docs/memory/evidence/I001_RUNTIME_PASS_02_2026-09-30.md`
 - `docs/memory/architecture/HUD.md`
-- `Logres/HUD/HUD.lua`
-- `tools/check_hud_contract.py`

@@ -108,7 +108,7 @@ Do not add a conventional resource bar unless later accessibility work explicitl
 
 ## B.3 — Target presentation
 
-**Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
+**Status: COMPLETE.**
 
 Default target information:
 - name;
@@ -135,13 +135,28 @@ Initial production target block:
 
 ## B.4 — Cast confirmation
 
-Player self-cast/channel confirmation:
+**Status: ACTIVE.**
+
+Implement minimal cast/channel cues for both:
+- the player;
+- the current target.
+
+Player self-cast/channel:
 - small glyph/rune near resource;
-- appears while casting/channeling;
-- confirms completion/interrupt state;
+- active while casting/channeling;
+- resolves/disappears on completion;
+- interruption/failure snap/fade where practical;
 - no cast progress bar.
 
-Enemy cast UI remains deferred unless a later concrete combat need justifies it.
+Current-target cast/channel:
+- similarly restrained cue associated with target presentation;
+- visible while the current target casts/channels;
+- no conventional enemy cast bar.
+
+Current-target true-path runtime proof may be deferred by environment if no caster is conveniently available. That defers testing, not the feature.
+
+Canonical decision:
+`../decisions/D-014_CAST_PRESENTATION_CONTRACT.md`
 
 ## B.5 — Allies and pets
 

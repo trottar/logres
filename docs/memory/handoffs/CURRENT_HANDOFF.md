@@ -2,23 +2,21 @@
 
 Authoritative state: `../CURRENT.md`. Start there.
 
+Current phase:
+**Phase B — Core HUD**
+
+B.3 is complete.
+
 Current work:
-**B.3 — Target Presentation**
+**B.4 — Cast Confirmation**
 
-P0023 is prepared.
+Important correction:
+B.4 includes both player and current-target cast/channel cues.
 
-Adds to existing HUD:
-- sparse target name;
-- target health percentage;
-- target acquisition/loss/update events;
-- no target resource yet.
+The earlier "enemy cast UI deferred unless justified" wording is superseded.
 
-D-003 remains enforced:
-no level, classification, portrait, or target bar.
+Only runtime proof of the target-caster true path may defer if the environment provides no caster.
 
-Version:
-`0.0.10-dev`
-
-P0023 changes runtime code, so deploy explicitly before testing.
+P0024 is documentation/evidence only; no WoW redeploy required.
 
 User performs all commits/pushes.

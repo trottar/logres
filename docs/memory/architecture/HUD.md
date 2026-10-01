@@ -293,3 +293,23 @@ D-003 is statically reinforced:
 - no conventional target bar.
 
 Target resource remains deferred from initial B.3.
+## B.3 final result
+
+B.3 sparse target presentation is production-proven:
+- target name;
+- target health percentage;
+- target loss/change handling;
+- immersion hide/restore;
+- no extra level/classification/portrait/bar disclosure.
+
+## B.4 entry
+
+Cast presentation includes both:
+- player self cast/channel cue;
+- current-target cast/channel cue.
+
+Neither uses a conventional cast bar.
+
+The prior statement that enemy casting should remain deferred unless later justified is superseded by D-014.
+
+Only target-caster **runtime proof** may defer by environment when no caster is available.
