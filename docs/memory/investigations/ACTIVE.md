@@ -1,13 +1,10 @@
 # Active Investigations
 
-## C.4 — Contextual Visibility / Secure Paging
+## C.4 — Action activation feedback
 
 Status:
-**CONTEXT PASS; P0040 ACTIVATION FEEDBACK PROOF NEXT**
+**P0040 RUNTIME FAILED; P0041 FIX PREPARED**
 
-Canonical:
-`C4_CONTEXTUAL_VISIBILITY_SECURE_PAGING.md`
-
-New gate:
-runtime-prove D-022 local activation feedback before stock action-bar
-suppression.
+Next:
+runtime-prove the independent feedback overlay with Feedback Test, then mouse
+and routed-key activation.

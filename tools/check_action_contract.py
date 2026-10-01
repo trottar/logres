@@ -49,9 +49,9 @@ if BUTTON_PATH.is_file():
         "C_ActionBar.IsActionInRange(",
         'button:SetPushedTexture(',
         '"Interface\\\\Buttons\\\\UI-Quickslot-Depress"',
-        'button:SetScript("PostClick", function(current)',
+        'button:HookScript("PostClick", function(current)',
         'activationFlash:CreateAnimationGroup()',
-        'activationFade:SetDuration(0.18)',
+        'activationFade:SetDuration(0.24)',
         "function ActionButton.CountFeedbackReady(buttons)",
         "activationFeedbackReady = true",
     ]

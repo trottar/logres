@@ -379,3 +379,12 @@ Logres does not infer ongoing button-specific cast state from restricted
 spellcast payloads.
 
 This feedback must be runtime-proven before stock action-bar suppression.
+
+## Activation feedback isolation
+
+P0040 proved that a feedback cue must not inherit the same contextual fade it
+is supposed to confirm.
+
+P0041 separates action-feedback presentation from the secure button's cluster
+hierarchy. The feedback overlay is unprotected, parented to UIParent, anchored
+to the secure button, and visually independent from Utility/Secondary alpha.

@@ -2,21 +2,20 @@
 
 Authoritative state: `../CURRENT.md`.
 
+P0040 activation feedback failed visually on the correct deployed build.
+
 Current work:
-**C.4 action-interface completion**
-
-P0039 contextual alpha passed.
-
-P0040 is prepared to add the missing per-button action-use response:
-- pressed state;
-- activation pulse.
+**P0041 — independent action-feedback overlay**
 
 Version:
-`0.0.18-dev`
+`0.0.19-dev`
 
-This must be proven by mouse and routed keyboard before C.5 stock-bar
-suppression starts.
+Key diagnostic:
+**Feedback Test**
 
-P0040 changes runtime code; full deploy block is mandatory.
+The manual test must visibly pulse Primary, Secondary, and Utility before the
+secure click path is evaluated.
+
+P0041 changes runtime code; full deploy block is mandatory.
 
 User performs all commits/pushes.

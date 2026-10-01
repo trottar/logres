@@ -193,3 +193,13 @@ P0040 adds D-022 activation feedback:
 - short PostClick activation pulse.
 
 C.4 remains active until P0040 runtime proof.
+
+## P0040 runtime failure / P0041 correction
+
+P0040 was deployed at the correct version but produced no perceptible action
+feedback. Execution, range red, and GCD remained functional.
+
+Classification: **visual activation-feedback failure**.
+
+P0041 moves feedback onto an independent UIParent overlay and adds an explicit
+Feedback Test diagnostic. C.4 remains open until P0041 is visually proven.

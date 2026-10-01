@@ -146,7 +146,7 @@ roles/sizes/shapes, including compact groups such as a six-slot utility bar.
 
 ## C.4 — Contextual visibility
 
-**Status: CONTEXT PASS; P0040 ACTIVATION FEEDBACK PROOF NEXT.**
+**Status: P0040 FEEDBACK FAILED; P0041 FIX PREPARED.**
 
 Integrate with observed state:
 - world;
@@ -195,6 +195,20 @@ feedback:
 
 C.4 remains open until this action feedback is runtime-proven.
 
+### P0041 feedback isolation fix
+
+P0040:
+- correct version deployed;
+- execution PASS;
+- range/GCD PASS;
+- visible activation feedback FAIL.
+
+P0041:
+- unprotected UIParent feedback overlay;
+- independent of contextual cluster alpha;
+- explicit hidden-at-rest/show-on-use pulse;
+- explicit mouse pressed overlay;
+- developer-panel Feedback Test.
 
 ## C.5 — Stock action-bar replacement
 

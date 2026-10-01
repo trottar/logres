@@ -581,6 +581,20 @@ local function runActionCheck()
 end
 
 
+local function runActionFeedbackTest()
+    local primary = Logres:GetModule("PrimaryActions")
+    local sides = Logres:GetModule("SecondaryUtilityActions")
+
+    Logres.ActionButton.Pulse(primary.buttons[1])
+    Logres.ActionButton.Pulse(sides.clusters.secondary.buttons[1])
+    Logres.ActionButton.Pulse(sides.clusters.utility.buttons[1])
+
+    emit(
+        "Logres actionfeedback: pulsed first Primary, Secondary, "
+        .. "and Utility buttons."
+    )
+end
+
 local function handleActionBindings(argument)
     local actions = Logres:GetModule("PrimaryActions")
 
@@ -754,6 +768,7 @@ local function printHelp()
     emit("  /logres lifecyclecheck")
     emit("  /logres hudcheck")
     emit("  /logres actioncheck")
+    emit("  /logres actionfeedback")
     emit("  /logres actionbindings [on|off]")
     emit("  /logres secondarybindings [on|off]")
     emit("  /logres utilitybindings [on|off]")
@@ -822,6 +837,11 @@ local function handleCommand(message)
 
     if command == "actioncheck" then
         runActionCheck()
+        return
+    end
+
+    if command == "actionfeedback" then
+        runActionFeedbackTest()
         return
     end
 
@@ -906,6 +926,7 @@ Logres:RegisterDevPanelAction(
 )
 Logres:RegisterDevPanelAction("hud", "HUD Check", "hudcheck")
 Logres:RegisterDevPanelAction("action", "Action Check", "actioncheck")
+Logres:RegisterDevPanelAction("actionFeedback", "Feedback Test", "actionfeedback")
 Logres:RegisterDevPanelAction("actionKeysOn", "Action Keys ON", "actionbindings on")
 Logres:RegisterDevPanelAction("actionKeysOff", "Action Keys OFF", "actionbindings off")
 Logres:RegisterDevPanelAction(

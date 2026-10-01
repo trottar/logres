@@ -101,52 +101,65 @@ function ActionButton.Create(
     checked:SetColorTexture(0.84, 0.68, 0.30, 0.22)
     button:SetCheckedTexture(checked)
 
-    -- Our hand-built secure buttons do not inherit Blizzard's full
-    -- ActionButtonTemplate, so explicitly provide the missing pressed state.
-    button:SetPushedTexture(
-        "Interface\\Buttons\\UI-Quickslot-Depress"
-    )
-    local pushedTexture = button:GetPushedTexture()
-    pushedTexture:SetAllPoints(button)
+-- Keep a conventional pushed texture as an extra mouse affordance.
+button:SetPushedTexture(
+    "Interface\\Buttons\\UI-Quickslot-Depress"
+)
+local pushedTexture = button:GetPushedTexture()
+pushedTexture:SetAllPoints(button)
 
-    -- Keyboard override clicks may not present a useful held-down state.
-    -- Provide a short, presentation-only activation pulse on every secure
-    -- click path so both mouse and keyboard use have immediate feedback.
-    local activationFlash =
-        button:CreateTexture(nil, "OVERLAY")
-    activationFlash:SetPoint("TOPLEFT", icon, "TOPLEFT", 0, 0)
-    activationFlash:SetPoint(
-        "BOTTOMRIGHT",
-        icon,
-        "BOTTOMRIGHT",
-        0,
-        0
-    )
-    activationFlash:SetColorTexture(1.00, 0.90, 0.66, 1.00)
-    activationFlash:SetBlendMode("ADD")
-    activationFlash:SetAlpha(0)
+-- Activation feedback is outside the faded action-cluster hierarchy.
+-- It stays visually strong even when Secondary/Utility are subdued.
+local feedbackFrame = CreateFrame("Frame", nil, UIParent)
+feedbackFrame:SetAllPoints(button)
+feedbackFrame:SetFrameStrata("HIGH")
+feedbackFrame:EnableMouse(false)
 
-    local activationAnimation =
-        activationFlash:CreateAnimationGroup()
+local pressedOverlay = feedbackFrame:CreateTexture(nil, "OVERLAY")
+pressedOverlay:SetAllPoints(feedbackFrame)
+pressedOverlay:SetColorTexture(0.08, 0.055, 0.025, 0.68)
+pressedOverlay:Hide()
 
-    local activationFade =
-        activationAnimation:CreateAnimation("Alpha")
-    activationFade:SetFromAlpha(0.72)
-    activationFade:SetToAlpha(0)
-    activationFade:SetDuration(0.18)
-    activationFade:SetSmoothing("OUT")
+local activationFlash = feedbackFrame:CreateTexture(nil, "OVERLAY")
+activationFlash:SetPoint("TOPLEFT", feedbackFrame, "TOPLEFT", -2, 2)
+activationFlash:SetPoint("BOTTOMRIGHT", feedbackFrame, "BOTTOMRIGHT", 2, -2)
+activationFlash:SetColorTexture(1.00, 0.84, 0.38, 0.92)
+activationFlash:SetBlendMode("ADD")
+activationFlash:SetAlpha(1)
+activationFlash:Hide()
 
-    activationAnimation:SetScript("OnFinished", function()
-        activationFlash:SetAlpha(0)
-    end)
+local activationAnimation = activationFlash:CreateAnimationGroup()
+local activationFade = activationAnimation:CreateAnimation("Alpha")
+activationFade:SetFromAlpha(1)
+activationFade:SetToAlpha(0)
+activationFade:SetDuration(0.24)
+activationFade:SetSmoothing("OUT")
 
-    button:SetScript("PostClick", function(current)
-        local animation = current.activationAnimation
+activationAnimation:SetScript("OnFinished", function()
+    activationFlash:Hide()
+    activationFlash:SetAlpha(1)
+end)
 
-        animation:Stop()
-        current.activationFlash:SetAlpha(0.72)
-        animation:Play()
-    end)
+activationAnimation:SetScript("OnStop", function()
+    activationFlash:Hide()
+    activationFlash:SetAlpha(1)
+end)
+
+button:HookScript("OnMouseDown", function(current)
+    current.activationPressedOverlay:Show()
+end)
+
+button:HookScript("OnMouseUp", function(current)
+    current.activationPressedOverlay:Hide()
+end)
+
+button:HookScript("OnLeave", function(current)
+    current.activationPressedOverlay:Hide()
+end)
+
+button:HookScript("PostClick", function(current)
+    ActionButton.Pulse(current)
+end)
 
     local hotkeyText = button:CreateFontString(
         nil,
@@ -173,11 +186,23 @@ function ActionButton.Create(
     button.cooldown = cooldown
     button.hotkeyText = hotkeyText
     button.countText = countText
+button.activationFeedbackFrame = feedbackFrame
+    button.activationPressedOverlay = pressedOverlay
     button.activationFlash = activationFlash
     button.activationAnimation = activationAnimation
     button.activationFeedbackReady = true
 
     return button
+end
+
+function ActionButton.Pulse(button)
+    local animation = button.activationAnimation
+    local flash = button.activationFlash
+
+    animation:Stop()
+    flash:SetAlpha(1)
+    flash:Show()
+    animation:Play()
 end
 
 function ActionButton.CountFeedbackReady(buttons)
@@ -188,9 +213,10 @@ function ActionButton.CountFeedbackReady(buttons)
 
         if (
             button.activationFeedbackReady == true
+            and button.activationFeedbackFrame ~= nil
+            and button.activationPressedOverlay ~= nil
             and button.activationFlash ~= nil
             and button.activationAnimation ~= nil
-            and button:GetPushedTexture() ~= nil
         ) then
             count = count + 1
         end

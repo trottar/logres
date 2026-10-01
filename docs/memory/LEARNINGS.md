@@ -150,3 +150,16 @@ For Phase C:
 - automatic routing can be considered only after execution is proven.
 
 This is the input-control analogue of D-017's UI suppression capability gate.
+
+## L-012 — Feedback must survive its parent presentation policy
+
+P0040 added activation feedback in code, but the user saw no perceptible
+difference on the correct deployed version.
+
+Critical feedback must be visually independent from the contextual fade policy
+it is meant to confirm. A cue can exist in code and still be unusable if its
+resting alpha, inherited alpha, or layering prevents perception.
+
+Provide a diagnostic that can trigger the visual mechanism without depending
+on secure action execution, so rendering and click-path failures can be
+distinguished.
