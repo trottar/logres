@@ -8,6 +8,8 @@ As of 2026-09-30.
 
 Active work item: **A.1 State contract hardening**
 
+State: **IMPLEMENTATION PREPARED; RUNTIME PROOF PENDING**
+
 ## Phase status
 
 | Phase | State |
@@ -22,32 +24,25 @@ Active work item: **A.1 State contract hardening**
 | G — Cinematic Camera | BLOCKED on Phase A; requires current DynamicCam profile |
 | H — Integration and Polish | BLOCKED on prior phases |
 
-## Foundation result
-
-| Item | State |
-| --- | --- |
-| 0.1 Repository + durable memory | COMPLETE (`353c5b0`) |
-| 0.2 Forever API capability audit | COMPLETE WITH DEFERRALS (`477df5b`) |
-| 0.3 Minimal addon skeleton/load proof | COMPLETE (`ce4f1b0` + runtime proof) |
-
-Phase 0.3 runtime proof established:
-- clean addon load in tested scope;
-- development status command;
-- SavedVariables/loadCount persistence;
-- correct transition into combined instance + combat state;
-- correct restoration after leaving instance.
-
-Separate world-combat retest was intentionally omitted as redundant for this checkpoint.
-
 ## Phase A sequence
 
 | Item | State |
 | --- | --- |
-| A.1 State contract hardening | ACTIVE |
+| A.1 State contract hardening | ACTIVE — implementation prepared |
 | A.2 Additional context sensors | QUEUED |
 | A.3 User-controlled state | QUEUED |
 | A.4 Module lifecycle contract | QUEUED |
 | A.5 Transition validation | QUEUED |
 
-Canonical Phase A plan:
-`PHASE_A_CORE_STATE_ENGINE.md`
+## A.1 contract
+
+- mutable authoritative state is private;
+- `GetState()` returns snapshots;
+- `SubscribeState()` provides transition notifications/unsubscribe;
+- revisions advance only for actual canonical changes;
+- no-op observations do not publish;
+- `/logres statecheck` provides travel-free runtime validation;
+- static checker rejects direct `Logres.State` consumer access.
+
+Canonical decision:
+`../decisions/D-009_STATE_CONSUMER_CONTRACT.md`

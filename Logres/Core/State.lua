@@ -10,10 +10,8 @@ local State = {
     inInstance = false,
     instanceType = "none",
 
-    lastEvent = "bootstrap",
+    changedBy = "bootstrap",
 }
-
-Logres.State = State
 
 local TRACKED_FIELDS = {
     "context",
@@ -22,6 +20,36 @@ local TRACKED_FIELDS = {
     "inInstance",
     "instanceType",
 }
+
+local stateListeners = {}
+
+local function copyState(source)
+    return {
+        initialized = source.initialized,
+        revision = source.revision,
+
+        context = source.context,
+        combat = source.combat,
+        pvpFlagged = source.pvpFlagged,
+        inInstance = source.inInstance,
+        instanceType = source.instanceType,
+
+        changedBy = source.changedBy,
+    }
+end
+
+local function copyChanges(source)
+    local result = {}
+
+    for key, change in pairs(source) do
+        result[key] = {
+            old = change.old,
+            new = change.new,
+        }
+    end
+
+    return result
+end
 
 local function captureState()
     local inInstance, instanceType = IsInInstance()
@@ -38,10 +66,72 @@ local function captureState()
     }
 end
 
+local function publishStateChange(previous, changes, reason)
+    local current = copyState(State)
+
+    for index = 1, #stateListeners do
+        local subscription = stateListeners[index]
+
+        if subscription.active then
+            subscription.handler(
+                copyState(current),
+                previous and copyState(previous) or nil,
+                copyChanges(changes),
+                reason
+            )
+        end
+    end
+end
+
+function Logres:GetState()
+    return copyState(State)
+end
+
+function Logres:SubscribeState(handler)
+    if type(handler) ~= "function" then
+        error("Logres:SubscribeState requires a function handler")
+    end
+
+    local subscription = {
+        active = true,
+        handler = handler,
+    }
+
+    stateListeners[#stateListeners + 1] = subscription
+
+    local function unsubscribe()
+        subscription.active = false
+    end
+
+    return unsubscribe
+end
+
 function Logres:RefreshState(reason)
+    reason = reason or "manual"
+
     local observed = captureState()
     local changes = {}
-    local changed = not State.initialized
+
+    if not State.initialized then
+        for index = 1, #TRACKED_FIELDS do
+            local key = TRACKED_FIELDS[index]
+            changes[key] = {
+                old = nil,
+                new = observed[key],
+            }
+            State[key] = observed[key]
+        end
+
+        State.initialized = true
+        State.revision = 1
+        State.changedBy = reason
+
+        publishStateChange(nil, changes, reason)
+        return true
+    end
+
+    local previous = copyState(State)
+    local changed = false
 
     for index = 1, #TRACKED_FIELDS do
         local key = TRACKED_FIELDS[index]
@@ -58,15 +148,15 @@ function Logres:RefreshState(reason)
         end
     end
 
-    State.initialized = true
-    State.lastEvent = reason or "manual"
-
-    if changed then
-        State.revision = State.revision + 1
-        self:FireCallback("STATE_CHANGED", State, changes)
+    if not changed then
+        return false
     end
 
-    return changed
+    State.revision = State.revision + 1
+    State.changedBy = reason
+
+    publishStateChange(previous, changes, reason)
+    return true
 end
 
 local function refreshFromEvent(event, ...)
@@ -78,8 +168,7 @@ local function refreshFromEvent(event, ...)
     end
 
     -- I-001 proved that combat-related state can settle across multiple events.
-    -- We therefore refresh from each authoritative signal instead of assuming
-    -- PLAYER_REGEN_DISABLED alone represents the final restriction state.
+    -- Refresh from each authoritative signal rather than assuming one event is final.
     Logres:RefreshState(event)
 end
 

@@ -43,6 +43,8 @@ Runtime proved:
 
 ## A.1 — State contract hardening
 
+**Status: IMPLEMENTATION PREPARED; RUNTIME PROOF PENDING.**
+
 Goal: define a stable consumer-facing state API before additional modules depend on internal tables.
 
 Work:
@@ -55,11 +57,21 @@ Work:
 - prevent accidental external mutation of authoritative state where practical;
 - add development diagnostics that expose state without becoming product UI.
 
+Implementation:
+- authoritative mutable table remains private to `Core/State.lua`;
+- `Logres:GetState()` returns a fresh snapshot;
+- `Logres:SubscribeState(handler)` publishes only real transitions and returns unsubscribe;
+- callback payload is `(current, previous, changes, reason)`;
+- revision advances only for actual canonical changes;
+- `/logres statecheck` verifies snapshot isolation and no-op semantics without travel.
+
 Success:
 - one documented authoritative state contract;
-- deterministic `STATE_CHANGED` semantics;
+- deterministic transition semantics;
 - existing world/instance/combat/PvP behavior preserved;
-- no consumer needs direct event knowledge.
+- no consumer needs direct event knowledge;
+- static state-contract check passes;
+- travel-free runtime statecheck passes.
 
 ## A.2 — Additional context sensors
 
