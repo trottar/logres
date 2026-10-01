@@ -1,0 +1,29 @@
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Python tooling
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local logs / scratch
+logs/
+tmp/
+*.tmp
+
+# Packaging / local deployment output
+dist/
+build/
+*.zip
+
+# Never commit local WoW installation paths or machine-specific deployment config
+.env
+.env.*
+local/
