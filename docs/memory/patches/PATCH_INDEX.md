@@ -57,6 +57,7 @@
 | P0053 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME PASS | Implement secure Player interaction and selective PlayerFrame shell suppression (`361cea7`) |
 | P0054 | 2026-10-01 | INSTALLED / PUSHED | Record Player shell runtime PASS; open Target selective suppression review (`d971459`) |
 | P0055 | 2026-10-01 | INSTALLED / PUSHED | Resolve Target selective suppression contract and open runtime implementation (`0c46f19`) |
-| P0056 | 2026-10-01 | PREPARED | Implement secure Target interaction and selective TargetFrame replacement |
+| P0056 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME DIAGNOSTIC FAIL | Target selective replacement (`4d7b6b1`); Target Frame Check hit secret boolean branch |
+| P0057 | 2026-10-01 | PREPARED | Make TargetFrame restoration/diagnostics secret-safe |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

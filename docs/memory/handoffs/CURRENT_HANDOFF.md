@@ -2,20 +2,22 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0055 is verified pushed at `0c46f19`.
+P0056 is verified pushed at `4d7b6b1`.
 
-Current work:
-**D.4 Target selective replacement runtime proof**
+Runtime failure:
+`/logres targetframecheck` branched on a secret boolean from
+`IsIgnoringParentAlpha()`.
 
-P0056 target:
-`0.0.24-dev`
+P0057 is the secret-safe diagnostic hotfix.
 
-Adds TargetFrameReplacement, secure unit-watched target interaction, selective
-stock target suppression, preserved aura/raid/quest/ping context, exact
-restoration/combat deferral, and Target Frame Check.
+It:
+- transports captured secret-capable restoration values opaquely;
+- removes protected readback from Target diagnostics;
+- tracks Logres-owned application state instead;
+- adds a static guard against reintroducing the secret branch.
 
-Does not suppress target-of-target, Focus, boss targets, or Party.
+Target runtime proof remains open.
 
-P0056 changes runtime code; full deploy block is mandatory.
+P0057 changes runtime code; full deploy block is mandatory.
 
 User performs all commits/pushes.

@@ -148,3 +148,13 @@ ignore parent alpha.
 
 A separate secure unit-watched target button over the Logres target block
 replaces the stock TargetFrame hit region while immersion is active.
+
+## Secret-safe unit-frame diagnostics
+
+Protected unit-frame diagnostics must not read state merely to verify a native
+mutation.
+
+Where restoration needs a secret-capable getter result, treat it as an opaque
+token.
+
+Diagnostics use addon-owned state and runtime visual evidence instead.

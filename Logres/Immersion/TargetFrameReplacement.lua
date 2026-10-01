@@ -8,6 +8,11 @@ local TargetFrameReplacement =
             self.pending = false
             self.snapshot = nil
             self.unitWatchRegistered = false
+            self.interactionConfigured = false
+            self.interactionMouseOwnedByLogres = false
+            self.stockPresentationSuppressed = false
+            self.stockMouseSuppressed = false
+            self.preservedOverrideCount = 0
             self.lastError = nil
             self.lastReason = "not-yet-requested"
 
@@ -30,6 +35,7 @@ local TargetFrameReplacement =
             interaction:Hide()
 
             self.interaction = interaction
+            self.interactionConfigured = true
 
             local eventFrame = CreateFrame("Frame")
             eventFrame:SetScript("OnEvent", function(_, event)
@@ -72,7 +78,9 @@ local PRESERVED_CONTEXT_KEYS = {
     "PingIconFrame",
 }
 
-local function getMouseState(frame)
+-- Values returned by these protected/secret-capable frame queries are treated
+-- as opaque restoration tokens. Do not branch, compare, format, or inspect them.
+local function captureMouseState(frame)
     local state = {
         enabled = nil,
         clickEnabled = nil,
@@ -80,15 +88,15 @@ local function getMouseState(frame)
     }
 
     if type(frame.IsMouseEnabled) == "function" then
-        state.enabled = frame:IsMouseEnabled() == true
+        state.enabled = frame:IsMouseEnabled()
     end
 
     if type(frame.IsMouseClickEnabled) == "function" then
-        state.clickEnabled = frame:IsMouseClickEnabled() == true
+        state.clickEnabled = frame:IsMouseClickEnabled()
     end
 
     if type(frame.IsMouseMotionEnabled) == "function" then
-        state.motionEnabled = frame:IsMouseMotionEnabled() == true
+        state.motionEnabled = frame:IsMouseMotionEnabled()
     end
 
     return state
@@ -194,14 +202,10 @@ function TargetFrameReplacement:GetStockFrames()
 end
 
 function TargetFrameReplacement:IsInteractionReady()
-    local interaction = self.interaction
-
-    return interaction ~= nil
+    return self.interaction ~= nil
+        and self.interactionConfigured == true
         and type(RegisterUnitWatch) == "function"
         and type(UnregisterUnitWatch) == "function"
-        and interaction:GetAttribute("unit") == "target"
-        and interaction:GetAttribute("*type1") == "target"
-        and interaction:GetAttribute("*type2") == "togglemenu"
 end
 
 function TargetFrameReplacement:CaptureStock()
@@ -224,8 +228,10 @@ function TargetFrameReplacement:CaptureStock()
         preserved[index] = {
             key = entry.key,
             region = entry.region,
+
+            -- Opaque secret-capable boolean. Transport only.
             ignoreParentAlpha =
-                entry.region:IsIgnoringParentAlpha() == true,
+                entry.region:IsIgnoringParentAlpha(),
         }
     end
 
@@ -236,21 +242,25 @@ function TargetFrameReplacement:CaptureStock()
         contextual = frames.contextual,
         preserved = preserved,
 
+        -- Alpha values are restoration tokens here; do not inspect them.
         containerAlpha = frames.container:GetAlpha(),
         contentMainAlpha = frames.contentMain:GetAlpha(),
         contextualAlpha = frames.contextual:GetAlpha(),
 
-        mouse = getMouseState(frames.targetFrame),
+        mouse = captureMouseState(frames.targetFrame),
     }
 end
 
 function TargetFrameReplacement:EnableInteraction()
     if self.unitWatchRegistered then
         self.interaction:EnableMouse(true)
+        self.interactionMouseOwnedByLogres = true
         return
     end
 
     self.interaction:EnableMouse(true)
+    self.interactionMouseOwnedByLogres = true
+
     RegisterUnitWatch(self.interaction)
     self.unitWatchRegistered = true
 end
@@ -262,18 +272,26 @@ function TargetFrameReplacement:DisableInteraction()
     end
 
     self.interaction:EnableMouse(false)
+    self.interactionMouseOwnedByLogres = false
     self.interaction:Hide()
 end
 
 function TargetFrameReplacement:SuppressStock(snapshot)
+    self.preservedOverrideCount = 0
+
     for index = 1, #snapshot.preserved do
         snapshot.preserved[index].region:SetIgnoreParentAlpha(true)
+        self.preservedOverrideCount =
+            self.preservedOverrideCount + 1
     end
 
     snapshot.container:SetAlpha(0)
     snapshot.contentMain:SetAlpha(0)
     snapshot.contextual:SetAlpha(0)
+    self.stockPresentationSuppressed = true
+
     suppressMouse(snapshot.targetFrame)
+    self.stockMouseSuppressed = true
 end
 
 function TargetFrameReplacement:RestoreStock(snapshot)
@@ -283,10 +301,16 @@ function TargetFrameReplacement:RestoreStock(snapshot)
 
     for index = 1, #snapshot.preserved do
         local entry = snapshot.preserved[index]
+
+        -- Feed the opaque captured value directly back to the native API.
         entry.region:SetIgnoreParentAlpha(entry.ignoreParentAlpha)
     end
 
     restoreMouse(snapshot.targetFrame, snapshot.mouse)
+
+    self.preservedOverrideCount = 0
+    self.stockPresentationSuppressed = false
+    self.stockMouseSuppressed = false
 end
 
 function TargetFrameReplacement:EnableReplacement(reason)
@@ -390,6 +414,10 @@ function TargetFrameReplacement:DisableReplacement(reason)
             self:DisableInteraction()
         end)
 
+        self.preservedOverrideCount = 0
+        self.stockPresentationSuppressed = false
+        self.stockMouseSuppressed = false
+
         return true
     end
 
@@ -486,37 +514,6 @@ end
 function TargetFrameReplacement:GetDebugStatus()
     local frames, frameError = self:GetStockFrames()
 
-    local targetFrame = frames and frames.targetFrame or nil
-    local container = frames and frames.container or nil
-    local contentMain = frames and frames.contentMain or nil
-    local contextual = frames and frames.contextual or nil
-
-    local mouse =
-        targetFrame and getMouseState(targetFrame)
-        or {
-            enabled = nil,
-            clickEnabled = nil,
-            motionEnabled = nil,
-        }
-
-    local preservedCount = 0
-    local preservedIgnoreParentCount = 0
-
-    if frames then
-        preservedCount = #frames.preserved
-
-        for index = 1, #frames.preserved do
-            local region = frames.preserved[index].region
-
-            if region:IsIgnoringParentAlpha() then
-                preservedIgnoreParentCount =
-                    preservedIgnoreParentCount + 1
-            end
-        end
-    end
-
-    local interaction = self.interaction
-
     return {
         moduleEnabled = self:IsEnabled(),
 
@@ -528,46 +525,37 @@ function TargetFrameReplacement:GetDebugStatus()
         lastReason = self.lastReason,
         lastError = self.lastError or frameError,
 
-        targetFrameFound = targetFrame ~= nil,
-        containerFound = container ~= nil,
-        contentMainFound = contentMain ~= nil,
-        contextualFound = contextual ~= nil,
+        targetFrameFound =
+            frames and frames.targetFrame ~= nil or false,
+        containerFound =
+            frames and frames.container ~= nil or false,
+        contentMainFound =
+            frames and frames.contentMain ~= nil or false,
+        contextualFound =
+            frames and frames.contextual ~= nil or false,
 
-        containerAlpha =
-            container and container:GetAlpha() or nil,
-        contentMainAlpha =
-            contentMain and contentMain:GetAlpha() or nil,
-        contextualAlpha =
-            contextual and contextual:GetAlpha() or nil,
+        preservedCount =
+            frames and #frames.preserved or 0,
+        preservedOverrideCount =
+            self.preservedOverrideCount,
 
-        targetFrameMouseEnabled = mouse.enabled,
-        targetFrameMouseClickEnabled = mouse.clickEnabled,
-        targetFrameMouseMotionEnabled = mouse.motionEnabled,
+        stockPresentationSuppressed =
+            self.stockPresentationSuppressed == true,
+        stockMouseSuppressed =
+            self.stockMouseSuppressed == true,
 
-        preservedCount = preservedCount,
-        preservedIgnoreParentCount = preservedIgnoreParentCount,
+        interactionReady =
+            self:IsInteractionReady(),
+        interactionConfigured =
+            self.interactionConfigured == true,
+        unitWatchRegistered =
+            self.unitWatchRegistered == true,
+        interactionMouseOwnedByLogres =
+            self.interactionMouseOwnedByLogres == true,
 
-        interactionReady = self:IsInteractionReady(),
-        unitWatchRegistered = self.unitWatchRegistered == true,
-        interactionShown =
-            interaction and interaction:IsShown() or false,
-        interactionMouseEnabled =
-            interaction
-            and interaction:IsMouseEnabled() == true
-            or false,
-
-        interactionUnit =
-            interaction
-            and interaction:GetAttribute("unit")
-            or nil,
-        interactionLeftType =
-            interaction
-            and interaction:GetAttribute("*type1")
-            or nil,
-        interactionRightType =
-            interaction
-            and interaction:GetAttribute("*type2")
-            or nil,
+        interactionUnit = "target",
+        interactionLeftType = "target",
+        interactionRightType = "togglemenu",
 
         targetOfTargetFound =
             frames and frames.targetOfTarget ~= nil or false,

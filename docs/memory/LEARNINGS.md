@@ -163,3 +163,25 @@ resting alpha, inherited alpha, or layering prevents perception.
 Provide a diagnostic that can trigger the visual mechanism without depending
 on secure action execution, so rendering and click-path failures can be
 distinguished.
+
+## L-013 — Secret-safe transport does not make diagnostic inspection safe
+
+A protected/secret-capable value may be usable as an opaque token passed back
+to a native UI API while still being illegal to inspect in Lua.
+
+P0056 captured TargetFrame parent-alpha state successfully, but Target Frame
+Check later did:
+
+```lua
+if region:IsIgnoringParentAlpha() then
+```
+
+and failed with a secret boolean error.
+
+Rule:
+- capture only when restoration requires it;
+- store the value opaquely;
+- pass it directly back to the matching native setter;
+- never branch, compare, stringify, count, or otherwise inspect it;
+- diagnostics should use addon-owned mutation state and visual/runtime proof
+  instead of protected readback.

@@ -3,109 +3,95 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TARGET = ROOT / "Logres" / "Immersion" / "TargetFrameReplacement.lua"
-CONTROLLER = ROOT / "Logres" / "Immersion" / "Controller.lua"
 COMMANDS = ROOT / "Logres" / "Core" / "Commands.lua"
-TOC = ROOT / "Logres" / "Logres.toc"
 
 errors = []
 
-for path in (TARGET, CONTROLLER, COMMANDS, TOC):
+for path in (TARGET, COMMANDS):
     if not path.is_file():
         errors.append(f"missing required file: {path.relative_to(ROOT)}")
 
 if TARGET.is_file():
     source = TARGET.read_text(encoding="utf-8")
+
     required = [
         'Logres:RegisterModule("TargetFrameReplacement"',
         '"SecureUnitButtonTemplate"',
-        'interaction:SetAttribute("unit", "target")',
-        'interaction:SetAttribute("*type1", "target")',
-        'interaction:SetAttribute("*type2", "togglemenu")',
-        'interaction:RegisterForClicks("AnyUp")',
         "RegisterUnitWatch(self.interaction)",
         "UnregisterUnitWatch(self.interaction)",
-        "targetFrame.TargetFrameContainer",
-        "content.TargetFrameContentMain",
-        "content.TargetFrameContentContextual",
-        '"Auras"',
-        '"RaidTargetIcon"',
-        '"QuestIcon"',
-        '"PingIconFrame"',
-        "SetIgnoreParentAlpha(true)",
-        "snapshot.container:SetAlpha(0)",
-        "snapshot.contentMain:SetAlpha(0)",
-        "snapshot.contextual:SetAlpha(0)",
-        "suppressMouse(snapshot.targetFrame)",
-        "function TargetFrameReplacement:RequestEnabled(",
-        "function TargetFrameReplacement:GetDebugStatus()",
+        "ignoreParentAlpha =",
+        "entry.region:IsIgnoringParentAlpha(),",
+        "entry.region:SetIgnoreParentAlpha(entry.ignoreParentAlpha)",
+        "self.preservedOverrideCount",
+        "self.stockPresentationSuppressed",
+        "self.stockMouseSuppressed",
+        "self.interactionMouseOwnedByLogres",
+        "preservedOverrideCount =",
+        "stockPresentationSuppressed =",
+        "stockMouseSuppressed =",
+        "interactionMouseOwnedByLogres =",
         "wholeTargetFrameSuppressedByLogres = false",
         "targetOfTargetSuppressedByLogres = false",
-        "focusFrameSuppressedByLogres = false",
-        "bossFramesSuppressedByLogres = false",
-        "partyFramesSuppressedByLogres = false",
     ]
+
     for fragment in required:
         if fragment not in source:
-            errors.append(f"TargetFrameReplacement.lua missing: {fragment}")
+            errors.append(
+                f"TargetFrameReplacement.lua missing: {fragment}"
+            )
 
     forbidden = [
+        "if region:IsIgnoringParentAlpha()",
+        "IsIgnoringParentAlpha() == true",
+        "interaction:IsShown()",
+        "interaction:IsMouseEnabled()",
         "TargetFrame:Hide(",
         "TargetFrame:SetAlpha(",
-        "TargetFrameToT:Hide(",
-        "FocusFrame:Hide(",
-        "Boss1TargetFrame:Hide(",
-        "PartyFrame:Hide(",
-        "CompactPartyFrame:Hide(",
     ]
+
     for fragment in forbidden:
         if fragment in source:
             errors.append(
-                f"TargetFrameReplacement.lua forbidden blanket/deferred path: {fragment}"
+                f"TargetFrameReplacement.lua secret-unsafe/forbidden path: {fragment}"
             )
 
-if CONTROLLER.is_file():
-    source = CONTROLLER.read_text(encoding="utf-8")
-    for fragment in (
-        'Logres:GetModule("TargetFrameReplacement")',
-        "targetFrameSuppressionDesired =",
-        "replacement:RequestEnabled(desired, reason)",
-        "targetFrameSuppressionImplemented = true",
-        "targetFrameSuppressionRequested =",
-        "targetFrameSuppressionApplied =",
-        "targetFrameSuppressionPending =",
-        "partyFrameSuppressionDesired = false",
-    ):
-        if fragment not in source:
-            errors.append(
-                f"Controller.lua missing TargetFrame ownership: {fragment}"
-            )
+    if source.count("IsIgnoringParentAlpha()") != 1:
+        errors.append(
+            "IsIgnoringParentAlpha must appear exactly once as opaque capture"
+        )
 
 if COMMANDS.is_file():
     source = COMMANDS.read_text(encoding="utf-8")
-    for fragment in (
+
+    required = [
         "local function runTargetFrameCheck()",
-        'if command == "targetframecheck" then',
-        '"Target Frame Check"',
-        "runTargetFrameCheck()",
-    ):
+        "debugStatus.stockPresentationSuppressed == true",
+        "debugStatus.stockMouseSuppressed == true",
+        "debugStatus.preservedOverrideCount == 4",
+        "debugStatus.interactionMouseOwnedByLogres == true",
+    ]
+
+    for fragment in required:
         if fragment not in source:
             errors.append(
-                f"Commands.lua missing TargetFrame diagnostic: {fragment}"
+                f"Commands.lua missing secret-safe target diagnostic: {fragment}"
             )
 
-if TOC.is_file():
-    source = TOC.read_text(encoding="utf-8")
-    player_index = source.find("Immersion\\PlayerFrameReplacement.lua")
-    target_index = source.find("Immersion\\TargetFrameReplacement.lua")
-    controller_index = source.find("Immersion\\Controller.lua")
-    commands_index = source.find("Core\\Commands.lua")
+    forbidden = [
+        "debugStatus.containerAlpha",
+        "debugStatus.contentMainAlpha",
+        "debugStatus.contextualAlpha",
+        "debugStatus.targetFrameMouseEnabled",
+        "debugStatus.preservedIgnoreParentCount",
+        "debugStatus.interactionShown",
+        "debugStatus.interactionMouseEnabled",
+    ]
 
-    if min(player_index, target_index, controller_index, commands_index) == -1:
-        errors.append("Logres.toc missing TargetFrame replacement load entries")
-    elif not player_index < target_index < controller_index < commands_index:
-        errors.append(
-            "TargetFrameReplacement must load before ImmersionController/Commands"
-        )
+    for fragment in forbidden:
+        if fragment in source:
+            errors.append(
+                f"Commands.lua still inspects secret-capable target state: {fragment}"
+            )
 
 print("Logres TargetFrame replacement contract")
 print("=======================================")

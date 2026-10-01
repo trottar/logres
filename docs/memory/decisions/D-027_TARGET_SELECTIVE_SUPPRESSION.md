@@ -122,3 +122,17 @@ selective presentation snapshots, contextual child preservation, stock mouse
 suppression, combat deferral, and exact restoration.
 
 Target-of-target, Focus, boss targets, and Party remain outside ownership.
+
+## Secret-safe restoration refinement
+
+Some TargetFrame presentation getters are secret-capable under addon execution.
+
+Exact restoration values may be captured and transported opaquely to their
+native setters, but Logres must not inspect those values in Lua.
+
+D-027 diagnostics therefore prove replacement through:
+- structure;
+- Logres-owned mutation state;
+- runtime visual/interaction evidence;
+
+not protected readback.

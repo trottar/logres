@@ -10,7 +10,7 @@ Active work item:
 **D.4 Target selective replacement runtime proof**
 
 State:
-**P0056 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**P0056 DIAGNOSTIC FAILURE; P0057 SECRET-SAFE FIX PREPARED**
 
 ## Phase status
 
@@ -31,6 +31,6 @@ State:
 | Domain | State |
 | --- | --- |
 | Player selective shell | RUNTIME PASS |
-| Target selective suppression | P0056 PREPARED |
+| Target selective suppression | P0057 FIX PREPARED; proof open |
 | Target-of-target | Blizzard-owned / separate capability |
 | Party / compact party | DEFERRED |

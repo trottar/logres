@@ -1,6 +1,6 @@
 # D.4 — Target Selective Replacement Runtime Proof
 
-Status: P0056 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT
+Status: P0056 DIAGNOSTIC FAILURE; P0057 FIX PREPARED
 Opened: 2026-10-01
 
 ## Goal
@@ -36,3 +36,22 @@ With a normal target under Immersion ON:
 Immersion OFF restores stock TargetFrame exactly.
 
 Combat-time ON/OFF requests defer.
+
+## P0056 diagnostic failure
+
+`/logres targetframecheck` failed on `0.0.24-dev` because
+`GetDebugStatus()` branched on the secret-capable return from
+`IsIgnoringParentAlpha()`.
+
+This is a real runtime diagnostic failure.
+
+## P0057 fix
+
+Target diagnostic readback is now secret-safe.
+
+Secret-capable values used for restoration remain opaque transport tokens.
+
+Diagnostics report only Logres-owned non-secret mutation state plus frame
+structure.
+
+Runtime proof remains open.

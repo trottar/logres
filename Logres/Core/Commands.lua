@@ -1230,15 +1230,14 @@ local function runTargetFrameCheck()
             and debugStatus.containerFound == true
             and debugStatus.contentMainFound == true
             and debugStatus.contextualFound == true
-            and debugStatus.containerAlpha == 0
-            and debugStatus.contentMainAlpha == 0
-            and debugStatus.contextualAlpha == 0
-            and debugStatus.targetFrameMouseEnabled == false
+            and debugStatus.stockPresentationSuppressed == true
+            and debugStatus.stockMouseSuppressed == true
             and debugStatus.preservedCount == 4
-            and debugStatus.preservedIgnoreParentCount == 4
+            and debugStatus.preservedOverrideCount == 4
             and debugStatus.interactionReady == true
+            and debugStatus.interactionConfigured == true
             and debugStatus.unitWatchRegistered == true
-            and debugStatus.interactionMouseEnabled == true
+            and debugStatus.interactionMouseOwnedByLogres == true
             and debugStatus.interactionUnit == "target"
             and debugStatus.interactionLeftType == "target"
             and debugStatus.interactionRightType == "togglemenu"
@@ -1248,7 +1247,10 @@ local function runTargetFrameCheck()
             debugStatus.appliedEnabled == false
             and debugStatus.snapshotReady == false
             and debugStatus.unitWatchRegistered == false
-            and debugStatus.interactionMouseEnabled == false
+            and debugStatus.interactionMouseOwnedByLogres == false
+            and debugStatus.stockPresentationSuppressed == false
+            and debugStatus.stockMouseSuppressed == false
+            and debugStatus.preservedOverrideCount == 0
     end
 
     local preservationSafe =
@@ -1269,7 +1271,7 @@ local function runTargetFrameCheck()
 
     if passed then
         emit(string.format(
-            "Logres targetframecheck: PASS (expected=%s applied=%s pending=%s frame=%s container=%s main=%s contextual=%s alpha=%s/%s/%s stockMouse=%s preserved=%s/%s interactionReady=%s watch=%s mouse=%s unit=%s types=%s/%s wholeFrame=false tot=false focus=false boss=false party=false reason=%s)",
+            "Logres targetframecheck: PASS (expected=%s applied=%s pending=%s frame=%s container=%s main=%s contextual=%s stockPresentation=%s stockMouseSuppressed=%s preservedOverrides=%s/%s interactionReady=%s configured=%s watch=%s mouseOwned=%s unit=%s types=%s/%s wholeFrame=false tot=false focus=false boss=false party=false reason=%s)",
             boolText(expected),
             boolText(debugStatus.appliedEnabled),
             boolText(debugStatus.pending),
@@ -1277,15 +1279,14 @@ local function runTargetFrameCheck()
             boolText(debugStatus.containerFound),
             boolText(debugStatus.contentMainFound),
             boolText(debugStatus.contextualFound),
-            tostring(debugStatus.containerAlpha),
-            tostring(debugStatus.contentMainAlpha),
-            tostring(debugStatus.contextualAlpha),
-            tostring(debugStatus.targetFrameMouseEnabled),
-            tostring(debugStatus.preservedIgnoreParentCount),
+            boolText(debugStatus.stockPresentationSuppressed),
+            boolText(debugStatus.stockMouseSuppressed),
+            tostring(debugStatus.preservedOverrideCount),
             tostring(debugStatus.preservedCount),
             boolText(debugStatus.interactionReady),
+            boolText(debugStatus.interactionConfigured),
             boolText(debugStatus.unitWatchRegistered),
-            boolText(debugStatus.interactionMouseEnabled),
+            boolText(debugStatus.interactionMouseOwnedByLogres),
             tostring(debugStatus.interactionUnit),
             tostring(debugStatus.interactionLeftType),
             tostring(debugStatus.interactionRightType),
@@ -1295,7 +1296,7 @@ local function runTargetFrameCheck()
     end
 
     emit(string.format(
-        "Logres targetframecheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s expected=%s requested=%s applied=%s pending=%s stateMatches=%s presentationMatches=%s preservationSafe=%s frame=%s container=%s main=%s contextual=%s alpha=%s/%s/%s stockMouse=%s click=%s motion=%s preserved=%s/%s interactionReady=%s watch=%s shown=%s mouse=%s unit=%s types=%s/%s snapshot=%s wholeFrame=%s tot=%s focus=%s boss=%s party=%s reason=%s error=%s)",
+        "Logres targetframecheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s expected=%s requested=%s applied=%s pending=%s stateMatches=%s presentationMatches=%s preservationSafe=%s frame=%s container=%s main=%s contextual=%s stockPresentation=%s stockMouseSuppressed=%s preservedOverrides=%s/%s interactionReady=%s configured=%s watch=%s mouseOwned=%s unit=%s types=%s/%s snapshot=%s wholeFrame=%s tot=%s focus=%s boss=%s party=%s reason=%s error=%s)",
         tostring(status.initialized),
         tostring(status.enabled),
         tostring(debugStatus.moduleEnabled),
@@ -1310,18 +1311,14 @@ local function runTargetFrameCheck()
         tostring(debugStatus.containerFound),
         tostring(debugStatus.contentMainFound),
         tostring(debugStatus.contextualFound),
-        tostring(debugStatus.containerAlpha),
-        tostring(debugStatus.contentMainAlpha),
-        tostring(debugStatus.contextualAlpha),
-        tostring(debugStatus.targetFrameMouseEnabled),
-        tostring(debugStatus.targetFrameMouseClickEnabled),
-        tostring(debugStatus.targetFrameMouseMotionEnabled),
-        tostring(debugStatus.preservedIgnoreParentCount),
+        tostring(debugStatus.stockPresentationSuppressed),
+        tostring(debugStatus.stockMouseSuppressed),
+        tostring(debugStatus.preservedOverrideCount),
         tostring(debugStatus.preservedCount),
         tostring(debugStatus.interactionReady),
+        tostring(debugStatus.interactionConfigured),
         tostring(debugStatus.unitWatchRegistered),
-        tostring(debugStatus.interactionShown),
-        tostring(debugStatus.interactionMouseEnabled),
+        tostring(debugStatus.interactionMouseOwnedByLogres),
         tostring(debugStatus.interactionUnit),
         tostring(debugStatus.interactionLeftType),
         tostring(debugStatus.interactionRightType),

@@ -14,7 +14,8 @@ project: logres
 
 **D.4 — Target selective replacement runtime proof.**
 
-P0056 implementation is prepared.
+P0056 produced a verified secret-boolean diagnostic failure.
+P0057 secret-safe diagnostic hotfix is prepared.
 
 ## Verified State
 
@@ -27,13 +28,18 @@ P0056 implementation is prepared.
 - D.3 complete.
 - D.4 Player selective replacement runtime PASS.
 - D.4 Target source review complete.
-- P0055 pushed at `0c46f19`.
-- runtime before P0056: `0.0.23-dev`.
-- P0056 target: `0.0.24-dev`.
-- D-027 remains canonical.
-- P0056 adds secure unit-watched Logres target interaction.
-- P0056 suppresses Target container/main/contextual parent, not whole TargetFrame.
-- P0056 preserves Auras/RaidTargetIcon/QuestIcon/PingIconFrame.
+- P0056 pushed at `4d7b6b1`.
+- P0056 runtime version `0.0.24-dev`.
+- `/logres status` works on P0056.
+- `/logres targetframecheck` FAILS on P0056:
+  secret boolean branch in `TargetFrameReplacement.lua`.
+- exact failure is durable evidence.
+- root cause: diagnostic branching on `IsIgnoringParentAlpha()`.
+- P0057 target: `0.0.25-dev`.
+- P0057 treats captured secret-capable values as opaque restoration tokens.
+- P0057 target diagnostics use Logres-owned non-secret state instead of
+  protected readback.
+- Target runtime proof remains OPEN.
 - target-of-target remains Blizzard-owned.
 - Focus/boss target frames remain untouched.
 - Party/CompactPartyFrame suppression remains deferred.
@@ -44,7 +50,7 @@ P0056 implementation is prepared.
 
 ## Next Action
 
-Install/review/commit/push P0056.
+Install/review/commit/push P0057.
 
 Because runtime code changes, deploy explicitly:
 
@@ -59,47 +65,40 @@ ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
 
 Then `/reload`.
 
-Runtime proof:
-1. confirm `0.0.24-dev`;
-2. Immersion ON + target removes conventional stock TargetFrame shell/metadata;
-3. Logres target name/health/cast presentation remains;
-4. left-click Logres target block -> target interaction works;
-5. right-click Logres target block -> target menu opens;
-6. old stock TargetFrame area does not intercept mouse;
-7. target auras remain visible/usable when present;
-8. Target Frame Check PASS;
-9. Immersion Check PASS;
-10. Run All PASS;
-11. Immersion OFF restores stock TargetFrame + mouse;
-12. Target Frame Check PASS;
-13. toggle immersion during combat and confirm transition defers;
-14. no protected/taint/Lua/secret error.
+Run:
+1. `/logres status` and confirm `0.0.25-dev`;
+2. `/logres targetframecheck`;
+3. `/logres immersioncheck`;
+4. Run All.
 
-Natural-only raid marker, quest icon, ping, target-of-target, or unusual aura
-paths may be deferred if not encountered.
+Then continue the P0056 visual/interaction proof:
+- stock target shell absent under immersion;
+- Logres target interaction works;
+- auras remain usable;
+- OFF restores stock target;
+- combat transition defers safely.
 
 ## Success Criteria
 
-P0056 succeeds when selective target suppression, secure interaction,
-preserved context, exact restoration, and combat deferral all work without
-touching excluded unit-frame domains.
+P0057 succeeds when diagnostics no longer branch on secret-capable target frame
+state and Target Frame Check can run to completion.
+
+D.4 Target runtime proof still requires the visual/interaction/restoration
+checks after the diagnostic fix.
 
 ## Do Not Reopen Without New Evidence
 
-- **D.1–D.3:** complete.
-- **D.4 Player selective replacement:** runtime PASS.
-- **D.4 Target source review:** complete.
-- **Whole PlayerFrame / TargetFrame suppression:** rejected.
+- **P0056 targetframecheck result:** verified failure.
+- **Root cause:** secret boolean diagnostic branch.
+- **Whole TargetFrame suppression:** rejected.
 - **Target-of-target:** separately Blizzard-owned.
 - **Party suppression:** deferred.
-- **D.3 instance transition:** environmental deferral.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/D4_P0056_TARGET_REPLACEMENT_IMPLEMENTATION_2026-10-01.md`
-- `docs/memory/evidence/D4_TARGET_SELECTIVE_SUPPRESSION_SOURCE_REVIEW_2026-10-01.md`
-- `docs/memory/decisions/D-027_TARGET_SELECTIVE_SUPPRESSION.md`
+- `docs/memory/evidence/D4_P0056_TARGETFRAMECHECK_SECRET_BOOLEAN_FAILURE_2026-10-01.md`
 - `docs/memory/investigations/D4_TARGET_RUNTIME_PROOF.md`
+- `docs/memory/decisions/D-027_TARGET_SELECTIVE_SUPPRESSION.md`
 - `Logres/Immersion/TargetFrameReplacement.lua`
 - `tools/check_target_frame_replacement_contract.py`

@@ -138,7 +138,7 @@ D.3 closes.
 
 ## D.4 — Unit-frame interaction + selective suppression
 
-**Status: P0056 TARGET IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
+**Status: P0056 DIAGNOSTIC FAILURE; P0057 FIX PREPARED.**
 
 Before suppression, complete the missing capability.
 
@@ -265,6 +265,20 @@ Implements D-027 with secure unit-watched target interaction, selective TargetFr
 Target-of-target, Focus, boss targets, and Party remain untouched.
 
 Runtime proof is next.
+
+### D.4 P0057 secret-safe diagnostic fix
+
+P0056 runtime reached `0.0.24-dev`, but Target Frame Check failed because
+diagnostic Lua branched on the secret-capable result of
+`IsIgnoringParentAlpha()`.
+
+P0057:
+- treats captured protected values as opaque restoration tokens;
+- removes protected readback from Target diagnostics;
+- tracks Logres-owned mutation state;
+- adds static guards against secret boolean inspection.
+
+Runtime proof remains open.
 
 ## D.5 — Context / PvP / instance orchestration
 
