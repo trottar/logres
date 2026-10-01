@@ -338,3 +338,43 @@ There is no:
 - progress bar;
 - spell text;
 - target cast metadata inspection.
+## B.4 final result
+
+B.4 player cast presentation is production-proven:
+- cast;
+- channel;
+- interruption/failure snap.
+
+The current-target cast cue remains implemented but its true-path runtime proof is deferred by environment because no convenient caster was available.
+
+This does not reopen or remove the target-cast feature.
+
+## B.5 entry
+
+Next HUD subdomain:
+**allies and pets**
+
+Default direction:
+- name;
+- health percentage;
+- compact condition awareness.
+
+Expected secret-safe paths:
+
+```text
+UnitName(unit)
+    -> FontString:SetText
+```
+
+and:
+
+```text
+UnitHealthPercent(unit, true, percentScaleCurve)
+    -> FontString:SetFormattedText("%.0f%%", secretPercent)
+```
+
+Initial candidate units:
+- pet;
+- party1–party4.
+
+No portraits, dense raid grid, or conventional large party bars by default.

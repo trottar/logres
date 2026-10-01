@@ -135,7 +135,7 @@ Initial production target block:
 
 ## B.4 — Cast confirmation
 
-**Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
+**Status: COMPLETE WITH TARGET TRUE-PATH ENVIRONMENTAL DEFERRAL.**
 
 Implement minimal cast/channel cues for both:
 - the player;
@@ -168,6 +168,8 @@ Canonical decision:
 `../decisions/D-014_CAST_PRESENTATION_CONTRACT.md`
 
 ## B.5 — Allies and pets
+
+**Status: ACTIVE.**
 
 Implement restrained ally/pet presentation:
 - name;

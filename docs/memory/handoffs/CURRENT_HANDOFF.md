@@ -2,25 +2,21 @@
 
 Authoritative state: `../CURRENT.md`. Start there.
 
+Current phase:
+**Phase B — Core HUD**
+
+B.4 is complete.
+
+Player cast/channel/interruption cues passed runtime testing.
+
+Current-target cue remains implemented; its true-path proof is deferred by environment until a natural caster is available.
+
 Current work:
-**B.4 — Cast Confirmation**
+**B.5 — Allies and Pets**
 
-P0025 is prepared.
+Next step:
+source/design confirmation for compact pet + party name/health presentation.
 
-Runtime adds:
-- player cast/channel cue;
-- target cast/channel cue;
-- brief interruption/failure red snap;
-- event-driven target handling with no secret payload inspection.
-
-Version:
-`0.0.11-dev`
-
-Current environment has no convenient enemy caster.
-
-Player side must be tested now.
-Target true-path may be recorded as environmental deferral.
-
-P0025 changes runtime code, so deploy explicitly before testing.
+P0026 is documentation/evidence only; no WoW redeploy required.
 
 User performs all commits/pushes.

@@ -12,13 +12,16 @@ project: logres
 
 ## Current Work Item
 
-**B.4 — Cast Confirmation.**
+**B.5 — Allies and Pets.**
 
-P0025 prepares both:
-- player cast/channel cue;
-- current-target cast/channel cue.
+B.4 is complete with an explicit environmental deferral for the current-target caster true path.
 
-The implementation is event-driven and does not query target cast metadata.
+Player cast presentation is runtime proven:
+- normal cast cue;
+- channel cue;
+- interruption/failure snap.
+
+The current-target cast cue remains implemented and should be retried when a natural caster is available.
 
 ## Verified State
 
@@ -26,81 +29,69 @@ The implementation is event-driven and does not query target cast metadata.
 - B.1 health vignette complete.
 - B.2 primary resource percentage complete.
 - B.3 target presentation complete.
-- P0024 corrected cast scope pushed at `8fb567f`.
-- player self cast/channel was previously observed during I-001.
-- Forever spellcast events/queries may be secret-restricted for target units.
-- current environment has no convenient enemy caster.
-- target-cast implementation is required; true-path runtime proof may defer by environment.
-- P0025 static checks pass; runtime proof pending.
+- B.4 cast confirmation complete with target-caster true-path environmental deferral.
+- P0025 pushed at `4c27c6c`.
+- current runtime version: `0.0.11-dev`.
+- player cast/channel/interruption behavior passed runtime testing.
+- no conventional cast bar exists.
+- no reported secret-value/Lua error in tested B.4 paths.
 
 ## Next Action
 
-Install/review/commit/push P0025.
+Design/source-check B.5 before implementing it.
 
-Because runtime code changes, deploy explicitly:
+Initial candidate unit scope:
+- pet;
+- party1;
+- party2;
+- party3;
+- party4.
 
-```bash
-WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
-ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
+Resolve:
+1. party/pet roster/existence event coverage;
+2. per-unit health/name update events;
+3. secret-safe name/health forwarding;
+4. compact row ownership;
+5. layout that preserves future action-cluster space;
+6. environmental coverage for party/pet true paths.
 
-./tools/deploy_logres.sh "$ADDONS"
-```
+Default presentation remains:
+- name;
+- health percentage;
+- compact condition awareness.
 
-Then:
+Do not build conventional party frames or portrait/bar-heavy unit frames.
 
-```text
-/reload
-/logres status
-/logres statecheck
-/logres preferencecheck
-/logres lifecyclecheck
-/logres hudcheck
-```
-
-Confirm version:
-`0.0.11-dev`
-
-B.4 runtime:
-1. use an ordinary player cast with cast time;
-2. confirm the amber player cue appears beside resource and disappears when cast ends;
-3. use a player channel if readily available and confirm blue cue;
-4. interrupt/fail a cast if practical and observe brief red snap;
-5. immersion off/on during an active cast should hide/show with the HUD root;
-6. if a current-target caster is naturally available, observe target orange/violet cue;
-7. otherwise report target-caster true path as unavailable in the current environment.
-
-Do not travel solely to locate an enemy caster.
+When B.5 runtime code is prepared, include the full deploy block before in-game validation.
 
 ## Success Criteria
 
-B.4 succeeds when:
-- player cast cue is runtime proven;
-- player channel cue is proven if readily available or prior I-001 evidence remains sufficient for channel API viability;
-- current-target cue implementation exists;
-- target true path is either runtime proven or environmentally deferred;
-- stop/interruption cleanup behaves;
-- immersion root behavior is correct;
-- no secret-value/Lua errors occur;
-- no conventional cast bar is introduced.
+B.5 succeeds when:
+- compact ally/pet presentation is implemented;
+- available party/pet units show name + health percentage;
+- health/name updates behave;
+- unit creation/loss/roster changes behave;
+- immersion hide/restore works through the shared HUD root;
+- no conventional party frame is introduced;
+- unavailable true paths are explicitly deferred by environment/class constraints;
+- no secret-value/Lua errors occur.
 
 ## Do Not Reopen Without New Evidence
 
 - **B.1:** complete.
 - **B.2:** complete.
 - **B.3:** complete.
-- **Cast scope:** player + current target.
-- **Cast metadata:** P0025 avoids target queries/payload inspection.
-- **Target true-path:** may defer by environment only.
-- **No cast bars:** fixed product rule.
-- **Deployment:** full deploy block required.
+- **B.4:** complete with target true-path environmental deferral.
+- **Target caster:** retry naturally; no travel required solely for proof.
+- **Allies/pets:** sparse name + health percentage default.
+- **Accessibility/healer mode:** separate future concern.
+- **Deployment:** full deploy block required for runtime-code tests.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
+- `docs/memory/evidence/B4_CAST_CONFIRMATION_RUNTIME_PROOF_2026-10-01.md`
 - `docs/memory/decisions/D-014_CAST_PRESENTATION_CONTRACT.md`
-- `docs/memory/investigations/B4_CAST_CONFIRMATION.md`
-- `docs/memory/evidence/B4_CAST_SOURCE_RESOLUTION_2026-10-01.md`
-- `docs/memory/evidence/I001_RUNTIME_PASS_02_2026-09-30.md`
+- `docs/memory/investigations/B5_ALLIES_AND_PETS.md`
 - `docs/memory/architecture/HUD.md`
-- `Logres/HUD/HUD.lua`
-- `tools/check_hud_contract.py`
+- `docs/memory/roadmap/PHASE_B_CORE_HUD.md`

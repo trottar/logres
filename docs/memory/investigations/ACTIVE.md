@@ -1,13 +1,14 @@
 # Active Investigations
 
-## B.4 — Cast Confirmation
+## B.5 — Allies and Pets
 
 Status:
-**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**ACTIVE**
 
 Canonical record:
-`B4_CAST_CONFIRMATION.md`
+`B5_ALLIES_AND_PETS.md`
 
-P0025 implements event-driven player and current-target cast/channel cues.
+Goal:
+compact pet + party condition awareness using sparse name + health percentage presentation.
 
-Target true-path runtime proof may defer by environment.
+Source/design confirmation is next before runtime implementation.
