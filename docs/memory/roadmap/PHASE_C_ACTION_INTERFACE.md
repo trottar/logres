@@ -146,7 +146,7 @@ roles/sizes/shapes, including compact groups such as a six-slot utility bar.
 
 ## C.4 — Contextual visibility
 
-**Status: P0040 FEEDBACK FAILED; P0041 FIX PREPARED.**
+**Status: COMPLETE.**
 
 Integrate with observed state:
 - world;
@@ -210,6 +210,29 @@ P0041:
 - explicit mouse pressed overlay;
 - developer-panel Feedback Test.
 
+### C.4 final runtime result
+
+Context:
+- world PASS;
+- combat PASS;
+- PvP PASS;
+- Utility remains intentionally more subdued.
+
+Activation:
+- P0040 visual attempt FAILED;
+- P0041 rendering fix PASS;
+- mouse activation feedback PASS;
+- Logres-routed keyboard feedback PASS.
+
+Normal Blizzard stock bindings bypass Logres feedback. Enabling Logres
+Action Keys routes execution through Logres and restores the activation-
+feedback path. This becomes a C.5 replacement requirement.
+
+Normal Primary page switching is not part of the user's workflow.
+Special paging remains capability-gated with stock fallback.
+
+C.4 closes.
+
 ## C.5 — Stock action-bar replacement
 
 After Logres secure clusters are runtime proven:
@@ -251,3 +274,17 @@ layout profiles:
 - contextual visibility policy.
 
 The full in-game layout editor is not required to complete C.4.
+
+
+### C.5 replacement boundary
+
+Stock suppression is selective.
+
+Suppression requires:
+- proven Logres action execution;
+- proven local feedback;
+- active Logres key routing;
+- reliable stock restoration.
+
+Current user layout uses more stock action domains than Logres currently
+represents, so Bars 4–5 remain visible until later coverage/profile work.

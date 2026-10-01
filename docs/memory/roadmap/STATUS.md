@@ -7,10 +7,10 @@ As of 2026-10-01.
 **Phase C — Action Interface**
 
 Active work item:
-**C.4 activation-feedback completion**
+**C.5 Stock Action-Bar Replacement**
 
 State:
-**P0040 RUNTIME FAILED; P0041 FIX PREPARED**
+**SOURCE / DESIGN RESOLUTION NEXT**
 
 ## Phase status
 
@@ -19,7 +19,7 @@ State:
 | 0 — Foundation | COMPLETE |
 | A — Core State Engine | COMPLETE |
 | B — Core HUD | COMPLETE |
-| C — Action Interface | ACTIVE — C.4 |
+| C — Action Interface | ACTIVE — C.5 |
 | D — Immersion Controller | QUEUED |
 | E — Compass and Navigation | QUEUED |
 | F — Quest Experience | QUEUED |
@@ -33,8 +33,15 @@ State:
 | C.1 Secure action capability/source review | COMPLETE |
 | C.2 Primary action cluster | COMPLETE |
 | C.3 Secondary / utility clusters | COMPLETE |
-| C.4 Contextual visibility / secure paging | ACTIVE — P0041 feedback fix |
-| C.5 Stock action-bar replacement | QUEUED |
+| C.4 Contextual visibility / secure paging | COMPLETE |
+| C.5 Stock action-bar replacement | ACTIVE |
 | C.6 Action interface integration validation | QUEUED |
 
-Stock Blizzard action bars remain visible.
+## C.5 gate
+
+No global suppression.
+
+Only a stock action domain with proven execution, feedback, key routing, and
+restoration may be suppressed.
+
+Bars outside current Logres coverage remain visible.

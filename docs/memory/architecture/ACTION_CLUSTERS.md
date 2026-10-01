@@ -388,3 +388,27 @@ is supposed to confirm.
 P0041 separates action-feedback presentation from the secure button's cluster
 hierarchy. The feedback overlay is unprotected, parented to UIParent, anchored
 to the secure button, and visually independent from Utility/Secondary alpha.
+
+## Replacement couples suppression and key routing
+
+P0041 runtime proved that a stock binding can execute an action without passing
+through Logres' button-feedback path.
+
+When Logres key routing is enabled, the same key executes through the Logres
+secure button and local activation feedback is present.
+
+Therefore a stock action domain is not functionally replaced merely because
+its buttons can be hidden.
+
+Replacement ownership includes:
+- visible Logres controls;
+- secure execution;
+- local activation feedback;
+- matching key routing;
+- reload/reinitialization behavior;
+- stock restoration.
+
+C.5 must manage those as one capability.
+
+Developer-only routing defaults are not sufficient once a stock bar is actually
+suppressed.

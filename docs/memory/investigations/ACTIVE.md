@@ -1,10 +1,13 @@
 # Active Investigations
 
-## C.4 — Action activation feedback
+## C.5 — Stock Action-Bar Replacement
 
 Status:
-**P0040 RUNTIME FAILED; P0041 FIX PREPARED**
+**ACTIVE — SOURCE / DESIGN RESOLUTION NEXT**
+
+Canonical:
+`C5_STOCK_ACTION_BAR_REPLACEMENT.md`
 
 Next:
-runtime-prove the independent feedback overlay with Feedback Test, then mouse
-and routed-key activation.
+resolve exact Forever stock frame ownership, suppression/restoration safety,
+and the coupling of replacement state with Logres key routing.

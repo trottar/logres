@@ -42,6 +42,7 @@
 | P0038 | 2026-10-01 | INSTALLED / PUSHED | Resolve C.4 contextual alpha and secure Primary paging contract (`1dbc3cf`) |
 | P0039 | 2026-10-01 | INSTALLED / PUSHED — CONTEXT PASS | C.4 context alpha + secure normal Primary paging (`9ca10a7`) |
 | P0040 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME VISUAL FAIL | Add per-button pressed/activation feedback (`6c21344`) |
-| P0041 | 2026-10-01 | PREPARED | Fix activation feedback with independent overlay + manual diagnostic |
+| P0041 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME PASS | Fix activation feedback with independent overlay + manual diagnostic (`c020ab1`) |
+| P0042 | 2026-10-01 | PREPARED | Close C.4; record routed-key proof; open C.5 stock replacement |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

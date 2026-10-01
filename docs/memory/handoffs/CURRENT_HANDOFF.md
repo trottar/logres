@@ -2,20 +2,24 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0040 activation feedback failed visually on the correct deployed build.
+C.4 is complete.
+
+P0041 runtime:
+- mouse activation feedback PASS;
+- Logres-routed keyboard feedback PASS.
 
 Current work:
-**P0041 — independent action-feedback overlay**
+**C.5 — Stock Action-Bar Replacement**
 
-Version:
-`0.0.19-dev`
+Critical rule:
+stock-bar suppression and Logres key routing are one replacement capability.
 
-Key diagnostic:
-**Feedback Test**
+Do not hide a stock action domain while its keys still depend on the stock
+binding path.
 
-The manual test must visibly pulse Primary, Secondary, and Utility before the
-secure click path is evaluated.
+Do not globally hide Bars 4–5; current Logres does not yet represent all action
+domains the user uses.
 
-P0041 changes runtime code; full deploy block is mandatory.
+P0042 is documentation-only; no WoW redeploy required.
 
 User performs all commits/pushes.
