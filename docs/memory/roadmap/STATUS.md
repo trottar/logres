@@ -6,16 +6,16 @@ As of 2026-09-30.
 
 **Phase A — Core State Engine**
 
-Active work item: **A.4 Module Lifecycle Contract**
+Active work item: **A.5 Transition Validation**
 
-State: **RUNTIME DIAGNOSTIC FIX PREPARED**
+State: **ACTIVE — TARGETED GAP VALIDATION**
 
 ## Phase status
 
 | Phase | State |
 | --- | --- |
 | 0 — Foundation | COMPLETE |
-| A — Core State Engine | ACTIVE — A.4 |
+| A — Core State Engine | ACTIVE — A.5 |
 | B — Core HUD | BLOCKED on Phase A |
 | C — Action Interface | BLOCKED on Phase A/B |
 | D — Immersion Controller | BLOCKED on Phase A |
@@ -31,13 +31,24 @@ State: **RUNTIME DIAGNOSTIC FIX PREPARED**
 | A.1 State contract hardening | COMPLETE |
 | A.2 Additional context sensors | COMPLETE WITH ENVIRONMENTAL DEFERRAL |
 | A.3 User-controlled state | COMPLETE |
-| A.4 Module lifecycle contract | ACTIVE — diagnostic fix prepared |
-| A.5 Transition validation | QUEUED |
+| A.4 Module lifecycle contract | COMPLETE (`f5a12d4` corrected runtime proof) |
+| A.5 Transition validation | ACTIVE |
 
-## A.4 runtime result so far
+## A.5 evidence policy
 
-P0014's observed lifecycle values matched intended behavior, but the diagnostic incorrectly expected its explicit cleanup counter to increase by two.
+Already covered:
+- load/reload;
+- persistence;
+- world/instance/combat;
+- state contract;
+- resting/taxi/interaction;
+- preference contract/persistence;
+- module lifecycle.
 
-P0015 corrects the expected counter increase to one.
+Open gap:
+- real PvP flagged transition.
 
-A.4 closes only after the corrected in-client diagnostic reports PASS.
+Environmental deferral:
+- ordinary mounted=true.
+
+Do not repeat already-proven travel-heavy scenarios without new evidence.

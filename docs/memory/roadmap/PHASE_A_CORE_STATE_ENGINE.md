@@ -124,7 +124,7 @@ Requirements:
 
 ## A.4 — Module lifecycle contract
 
-**Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
+**Status: COMPLETE.**
 
 Implemented contract:
 - unique registration in deterministic order;
@@ -138,7 +138,11 @@ Implemented contract:
 
 The lifecycle remains intentionally smaller than a general addon framework.
 
-Runtime proof still required through `/logres lifecyclecheck`.
+Runtime result:
+- P0014 first diagnostic exposed a test assertion defect;
+- P0015 corrected the assertion;
+- corrected `/logres lifecyclecheck` passed in-client;
+- module lifecycle contract is complete.
 
 ## A.5 — Transition validation
 

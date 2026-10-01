@@ -3,21 +3,19 @@
 Authoritative state: `../CURRENT.md`. Start there.
 
 Current work:
-**A.4 — Module Lifecycle Contract**
+**A.5 — Transition Validation**
 
-P0014 is pushed at `2b40d0c`.
+A.4 is complete after corrected P0015 `/logres lifecyclecheck` passed.
 
-Its runtime diagnostic reported FAIL, but the detailed values proved the lifecycle behavior itself matched the contract.
+A.5 should not repeat prior travel-heavy proofs.
 
-Root cause:
-the test expected `cleanupCount + 2`, while only one owned cleanup is instrumented by that counter.
+Primary remaining gap:
+**real `pvpFlagged` transition**
 
-P0015 changes the expectation to `+1` and bumps Logres to `0.0.6-dev`.
+First investigate whether the current Forever beta permits a local `/pvp`-style flag transition using existing `/logres status`.
 
-Next runtime proof:
-- deploy P0015 explicitly;
-- `/reload`;
-- confirm `/logres status` says `0.0.6-dev`;
-- run `/logres lifecyclecheck`.
+Ordinary mounted=true remains deferred by the beta environment.
+
+No code change is currently required, so no WoW redeploy is needed for P0016.
 
 User performs all commits/pushes.
