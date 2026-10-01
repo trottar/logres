@@ -185,3 +185,18 @@ Rule:
 - never branch, compare, stringify, count, or otherwise inspect it;
 - diagnostics should use addon-owned mutation state and visual/runtime proof
   instead of protected readback.
+
+## L-014 — Unreproduced Blizzard reassertion is evidence, not a license to poll
+
+A stock surface may occasionally reappear after Logres suppresses it.
+
+If the issue is not reproducible, record it and capture diagnostics on
+recurrence.
+
+Do not immediately add periodic alpha forcing, broad hooks, or event spam.
+
+Prefer:
+1. capture exact trigger;
+2. inspect whether Logres still believes suppression is applied;
+3. identify the Blizzard ownership path;
+4. add the narrowest reconciliation hook only after evidence.

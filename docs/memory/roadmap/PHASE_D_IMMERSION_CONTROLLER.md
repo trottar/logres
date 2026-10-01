@@ -138,7 +138,7 @@ D.3 closes.
 
 ## D.4 — Unit-frame interaction + selective suppression
 
-**Status: P0056 DIAGNOSTIC FAILURE; P0057 FIX PREPARED.**
+**Status: COMPLETE — PLAYER/TARGET PROVEN; PARTY CAPABILITY-DEFERRED.**
 
 Before suppression, complete the missing capability.
 
@@ -280,7 +280,32 @@ P0057:
 
 Runtime proof remains open.
 
+### D.4 final runtime result
+
+P0057 runtime passed on `0.0.25-dev`.
+
+Verified:
+- Player selective replacement remains proven;
+- Target Frame Check PASS;
+- Immersion Check PASS;
+- Run All PASS;
+- P0056 secret-boolean diagnostic failure fixed.
+
+Party/CompactPartyFrame suppression remains capability-deferred and does not
+block D.4 closure.
+
+One TargetFrame visual reappearance is tracked as OPEN / INTERMITTENT /
+UNREPRODUCED. Do not add speculative periodic forcing without a repeatable
+trigger.
+
+Player/Target aura/status presentation remains stock-owned and is recorded
+as a future dedicated design domain.
+
+D.4 closes.
+
 ## D.5 — Context / PvP / instance orchestration
+
+**Status: ACTIVE — SOURCE / DESIGN RESOLUTION NEXT.**
 
 Integrate orthogonal state:
 - context;

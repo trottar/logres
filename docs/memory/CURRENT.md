@@ -12,10 +12,9 @@ project: logres
 
 ## Current Work Item
 
-**D.4 — Target selective replacement runtime proof.**
+**D.5 — Context / PvP / instance orchestration source/design review.**
 
-P0056 produced a verified secret-boolean diagnostic failure.
-P0057 secret-safe diagnostic hotfix is prepared.
+D.4 is complete for supported selective unit-frame capabilities.
 
 ## Verified State
 
@@ -26,23 +25,22 @@ P0057 secret-safe diagnostic hotfix is prepared.
 - D.1 complete.
 - D.2 complete.
 - D.3 complete.
-- D.4 Player selective replacement runtime PASS.
-- D.4 Target source review complete.
-- P0056 pushed at `4d7b6b1`.
-- P0056 runtime version `0.0.24-dev`.
-- `/logres status` works on P0056.
-- `/logres targetframecheck` FAILS on P0056:
-  secret boolean branch in `TargetFrameReplacement.lua`.
-- exact failure is durable evidence.
-- root cause: diagnostic branching on `IsIgnoringParentAlpha()`.
-- P0057 target: `0.0.25-dev`.
-- P0057 treats captured secret-capable values as opaque restoration tokens.
-- P0057 target diagnostics use Logres-owned non-secret state instead of
-  protected readback.
-- Target runtime proof remains OPEN.
-- target-of-target remains Blizzard-owned.
-- Focus/boss target frames remain untouched.
-- Party/CompactPartyFrame suppression remains deferred.
+- D.4 complete for supported Player + Target selective replacement.
+- Party/CompactPartyFrame suppression remains deferred by capability gate.
+- P0057 pushed at `fc848b9`.
+- runtime remains `0.0.25-dev`.
+- Target Frame Check PASS after P0057.
+- Immersion Check PASS after P0057.
+- Run All PASS after P0057.
+- P0056 secret-boolean diagnostic failure is fixed.
+- one stock TargetFrame reappearance was observed once and is OPEN /
+  INTERMITTENT / UNREPRODUCED.
+- `/reload` restored expected target suppression.
+- do not add periodic target suppression forcing without a reproducible trigger.
+- target buffs/status remain visible intentionally under D-027.
+- player buffs/status remain visible intentionally outside current Player shell
+  ownership.
+- future Aura / Status Presentation domain is recorded.
 - D.3 instance Quiet Mode transition remains environmental deferral.
 - Primary replacement/routing ownership remains deferred.
 - D-020 live action editing remains deferred.
@@ -50,55 +48,63 @@ P0057 secret-safe diagnostic hotfix is prepared.
 
 ## Next Action
 
-Install/review/commit/push P0057.
+Source/design-resolve D.5.
 
-Because runtime code changes, deploy explicitly:
+Use current orthogonal state:
+- `context`;
+- `inInstance`;
+- `instanceType`;
+- `combat`;
+- `pvpFlagged`;
+- mounted/resting/taxi/interacting only where a policy actually needs them.
 
-```bash
-cd ~/Projects/logres
+Resolve a deterministic policy matrix for currently supported immersion
+domains:
+1. Bar 2–3 replacement;
+2. Quiet Mode;
+3. Player selective replacement;
+4. Target selective replacement;
+5. future/unsupported Party remains stock;
+6. later Compass/Quest/Camera domains should have explicit hooks but are not
+   implemented in Phase D.
 
-WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
-ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
-
-./tools/deploy_logres.sh "$ADDONS"
-```
-
-Then `/reload`.
-
-Run:
-1. `/logres status` and confirm `0.0.25-dev`;
-2. `/logres targetframecheck`;
-3. `/logres immersioncheck`;
-4. Run All.
-
-Then continue the P0056 visual/interaction proof:
-- stock target shell absent under immersion;
-- Logres target interaction works;
-- auras remain usable;
-- OFF restores stock target;
-- combat transition defers safely.
+Questions:
+- should Player/Target selective replacement remain active in instances?
+- should action replacement remain active in instances?
+- Quiet Mode currently restores in instances; keep or refine by instance type?
+- how does PvP flagging modify presentation without becoming immersion OFF?
+- which state has precedence when combat/PvP/context overlap?
+- which transitions require no mutation because domain policy stays unchanged?
+- how should unsupported/deferred surfaces fail open?
 
 ## Success Criteria
 
-P0057 succeeds when diagnostics no longer branch on secret-capable target frame
-state and Target Frame Check can run to completion.
-
-D.4 Target runtime proof still requires the visual/interaction/restoration
-checks after the diagnostic fix.
+D.5 source/design review succeeds when there is one explicit policy matrix with:
+- world idle;
+- world combat;
+- PvP flagged idle/combat;
+- instance idle/combat;
+- precedence rules;
+- supported-domain desired state;
+- unsupported-domain fallback;
+- runtime transition proof plan.
 
 ## Do Not Reopen Without New Evidence
 
-- **P0056 targetframecheck result:** verified failure.
-- **Root cause:** secret boolean diagnostic branch.
-- **Whole TargetFrame suppression:** rejected.
-- **Target-of-target:** separately Blizzard-owned.
-- **Party suppression:** deferred.
+- **D.1–D.4 supported scope:** complete.
+- **Party suppression:** capability-deferred.
+- **TargetFrame intermittent reappearance:** open/unreproduced; capture on
+  recurrence.
+- **Aura/status suppression:** deferred design domain.
+- **Whole PlayerFrame / TargetFrame suppression:** rejected.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/D4_P0056_TARGETFRAMECHECK_SECRET_BOOLEAN_FAILURE_2026-10-01.md`
-- `docs/memory/investigations/D4_TARGET_RUNTIME_PROOF.md`
-- `docs/memory/decisions/D-027_TARGET_SELECTIVE_SUPPRESSION.md`
-- `Logres/Immersion/TargetFrameReplacement.lua`
-- `tools/check_target_frame_replacement_contract.py`
+- `docs/memory/evidence/D4_P0057_TARGET_RUNTIME_PROOF_2026-10-01.md`
+- `docs/memory/investigations/D4_TARGETFRAME_REASSERTION_INTERMITTENT.md`
+- `docs/memory/investigations/FUTURE_AURA_STATUS_PRESENTATION.md`
+- `docs/memory/roadmap/PHASE_D_IMMERSION_CONTROLLER.md`
+- `docs/memory/decisions/D-024_IMMERSION_ORCHESTRATION_CONTRACT.md`
+- `Logres/Core/State.lua`
+- `Logres/Immersion/Controller.lua`

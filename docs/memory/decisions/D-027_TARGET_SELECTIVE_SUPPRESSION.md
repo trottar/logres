@@ -136,3 +136,14 @@ D-027 diagnostics therefore prove replacement through:
 - runtime visual/interaction evidence;
 
 not protected readback.
+
+## Runtime follow-up
+
+P0057 runtime passed.
+
+One unreproduced stock TargetFrame reappearance remains tracked separately.
+
+This does not change D-027 suppression semantics.
+
+Do not add periodic TargetFrame forcing without evidence of the reassertion
+path.

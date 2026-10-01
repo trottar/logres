@@ -77,7 +77,7 @@ Canonical phase record:
 
 ## Phase D — Immersion Controller
 
-**Status: ACTIVE — D.4 Target runtime proof; P0057 secret-safe fix.**
+**Status: ACTIVE — D.5 context/PvP/instance orchestration review.**
 
 Implement full immersion orchestration:
 - Quiet/social immersion mode;

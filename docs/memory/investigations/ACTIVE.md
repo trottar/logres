@@ -1,16 +1,18 @@
 # Active Investigations
 
-## D.4 — Target selective replacement runtime proof
+## D.5 — Context / PvP / instance orchestration
 
 Status:
-**P0056 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**SOURCE / DESIGN RESOLUTION NEXT**
 
-Canonical:
-`D4_TARGET_RUNTIME_PROOF.md`
+Resolve deterministic policy and precedence across:
+- world vs instance;
+- combat;
+- PvP flag;
+- supported replacement domains;
+- unsupported fail-open surfaces.
 
-Decision:
-`../decisions/D-027_TARGET_SELECTIVE_SUPPRESSION.md`
+## Tracked non-blocking defects / deferred domains
 
-Next:
-runtime-prove secure target interaction, selective stock target suppression,
-preserved contextual children, restoration, and combat deferral.
+- `D4_TARGETFRAME_REASSERTION_INTERMITTENT.md`
+- `FUTURE_AURA_STATUS_PRESENTATION.md`

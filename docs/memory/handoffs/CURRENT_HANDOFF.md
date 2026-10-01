@@ -2,22 +2,21 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0056 is verified pushed at `4d7b6b1`.
+P0057 is verified pushed at `fc848b9` and runtime-proven:
+- Target Frame Check PASS;
+- Immersion Check PASS;
+- Run All PASS.
 
-Runtime failure:
-`/logres targetframecheck` branched on a secret boolean from
-`IsIgnoringParentAlpha()`.
+D.4 supported scope closes.
 
-P0057 is the secret-safe diagnostic hotfix.
+Tracked follow-ups:
+- one unreproduced intermittent TargetFrame reappearance;
+- future Aura / Status Presentation domain;
+- Party suppression remains capability-deferred.
 
-It:
-- transports captured secret-capable restoration values opaquely;
-- removes protected readback from Target diagnostics;
-- tracks Logres-owned application state instead;
-- adds a static guard against reintroducing the secret branch.
+Current work:
+**D.5 — Context / PvP / instance orchestration source/design review**
 
-Target runtime proof remains open.
-
-P0057 changes runtime code; full deploy block is mandatory.
+P0058 is documentation-only; no WoW redeploy required.
 
 User performs all commits/pushes.
