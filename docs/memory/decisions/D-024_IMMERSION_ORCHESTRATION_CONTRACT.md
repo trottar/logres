@@ -232,3 +232,18 @@ updates saved ChatWindowShown state.
 
 Quiet Mode therefore uses presentation suppression rather than visibility
 mutation for ChatFrame objects.
+
+## D.5 context matrix refinement
+
+D-028 defines the resolved first-pass context matrix.
+
+The important refinement is that context and presentation modifiers are
+domain-specific rather than one global mode precedence.
+
+Quiet Mode consumes world/instance context.
+
+Action presentation consumes combat/PvP/context with
+`combat > PvP > instance > world`.
+
+Supported Bar 2–3, Player, and Target replacement ownership follows only the
+immersion preference in the first pass.

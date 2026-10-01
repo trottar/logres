@@ -2,21 +2,28 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0057 is verified pushed at `fc848b9` and runtime-proven:
-- Target Frame Check PASS;
-- Immersion Check PASS;
-- Run All PASS.
+P0058 is verified pushed at `eba9998`.
 
-D.4 supported scope closes.
+D.5 source/design review is complete.
 
-Tracked follow-ups:
-- one unreproduced intermittent TargetFrame reappearance;
-- future Aura / Status Presentation domain;
-- Party suppression remains capability-deferred.
+D-028 is canonical.
 
-Current work:
-**D.5 — Context / PvP / instance orchestration source/design review**
+Selected current matrix:
+- action replacement follows immersion preference;
+- Player replacement follows immersion preference;
+- Target replacement follows immersion preference;
+- Quiet Mode = immersion ON + world context;
+- Party suppression = false;
+- ActionContext presentation precedence =
+  combat > PvP > instance > world.
 
-P0058 is documentation-only; no WoW redeploy required.
+No instanceType-specific branch in the first pass.
+
+Current runtime behavior already matches this matrix.
+
+Next patch should add integrated Context Policy Check diagnostics rather than
+inventing new suppression behavior.
+
+P0059 is documentation/source-design only; no WoW redeploy required.
 
 User performs all commits/pushes.

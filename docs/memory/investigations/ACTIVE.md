@@ -1,16 +1,19 @@
 # Active Investigations
 
-## D.5 — Context / PvP / instance orchestration
+## D.5 — Context / PvP / instance orchestration runtime validation
 
 Status:
-**SOURCE / DESIGN RESOLUTION NEXT**
+**INTEGRATED DIAGNOSTIC NEXT**
 
-Resolve deterministic policy and precedence across:
-- world vs instance;
-- combat;
-- PvP flag;
-- supported replacement domains;
-- unsupported fail-open surfaces.
+Canonical:
+`D5_CONTEXT_PVP_INSTANCE_ORCHESTRATION.md`
+
+Decision:
+`../decisions/D-028_CONTEXT_ORCHESTRATION_MATRIX.md`
+
+Next:
+add a Context Policy Check that validates State + ImmersionController +
+ActionContext without secret/protected readback.
 
 ## Tracked non-blocking defects / deferred domains
 

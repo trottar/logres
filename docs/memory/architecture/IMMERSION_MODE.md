@@ -158,3 +158,24 @@ Where restoration needs a secret-capable getter result, treat it as an opaque
 token.
 
 Diagnostics use addon-owned state and runtime visual evidence instead.
+
+## D-028 context orchestration matrix
+
+Current suppression ownership is intentionally simpler than presentation
+emphasis.
+
+With immersion ON:
+- supported action replacement stays active;
+- Player replacement stays active;
+- Target replacement stays active;
+- Quiet Mode alone changes on world/instance context;
+- Party remains stock.
+
+Action presentation independently resolves:
+
+```text
+combat > PvP > instance > world
+```
+
+This prevents combat/PvP state changes from causing unnecessary protected
+replacement churn.

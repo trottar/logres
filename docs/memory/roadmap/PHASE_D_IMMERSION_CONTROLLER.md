@@ -305,7 +305,7 @@ D.4 closes.
 
 ## D.5 — Context / PvP / instance orchestration
 
-**Status: ACTIVE — SOURCE / DESIGN RESOLUTION NEXT.**
+**Status: SOURCE / DESIGN RESOLVED; INTEGRATED DIAGNOSTIC NEXT.**
 
 Integrate orthogonal state:
 - context;
@@ -317,6 +317,35 @@ PvP remains a modifier, not immersion OFF.
 
 Context policy may restore unsupported stock surfaces whenever Logres cannot
 safely replace them.
+
+### D.5 D-028 policy result
+
+D-028 is canonical.
+
+Immersion ON:
+- Bar 2–3 replacement stays ON across world/instance/combat/PvP;
+- Player selective replacement stays ON;
+- Target selective replacement stays ON;
+- Quiet Mode is ON in world and OFF in instances;
+- Party suppression remains OFF.
+
+ActionContext presentation precedence remains:
+
+```text
+combat > PvP > instance > world
+```
+
+Combat/PvP transitions should not churn protected replacement ownership.
+
+World/instance transition changes only Quiet Mode among currently supported
+Phase D replacement domains.
+
+`instanceType` does not branch first-pass policy.
+
+Current controller behavior already matches this matrix.
+
+Next:
+add integrated Context Policy Check runtime diagnostics.
 
 ## D.6 — Restoration / integration validation
 

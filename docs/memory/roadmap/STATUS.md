@@ -7,10 +7,10 @@ As of 2026-10-01.
 **Phase D — Immersion Controller**
 
 Active work item:
-**D.5 Context / PvP / instance orchestration source/design review**
+**D.5 Context / PvP / instance orchestration runtime validation**
 
 State:
-**D.4 COMPLETE; D.5 ACTIVE**
+**SOURCE / DESIGN RESOLVED; INTEGRATED DIAGNOSTIC NEXT**
 
 ## Phase status
 
@@ -34,5 +34,5 @@ State:
 | D.2 Immersion Controller foundation | COMPLETE |
 | D.3 Quiet Mode runtime suppression | COMPLETE — instance proof deferred |
 | D.4 Unit-frame selective suppression | COMPLETE — Player/Target proven; Party deferred |
-| D.5 Context/PvP/instance orchestration | ACTIVE — source/design review |
+| D.5 Context/PvP/instance orchestration | SOURCE-RESOLVED — diagnostic proof next |
 | D.6 Restoration/integration validation | QUEUED |

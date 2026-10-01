@@ -77,7 +77,7 @@ Canonical phase record:
 
 ## Phase D — Immersion Controller
 
-**Status: ACTIVE — D.5 context/PvP/instance orchestration review.**
+**Status: ACTIVE — D.5 context orchestration diagnostic validation.**
 
 Implement full immersion orchestration:
 - Quiet/social immersion mode;

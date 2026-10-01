@@ -12,9 +12,9 @@ project: logres
 
 ## Current Work Item
 
-**D.5 — Context / PvP / instance orchestration source/design review.**
+**D.5 — Context / PvP / instance orchestration runtime validation.**
 
-D.4 is complete for supported selective unit-frame capabilities.
+D.5 source/design review is complete.
 
 ## Verified State
 
@@ -26,85 +26,83 @@ D.4 is complete for supported selective unit-frame capabilities.
 - D.2 complete.
 - D.3 complete.
 - D.4 complete for supported Player + Target selective replacement.
-- Party/CompactPartyFrame suppression remains deferred by capability gate.
-- P0057 pushed at `fc848b9`.
+- Party/CompactPartyFrame suppression remains capability-deferred.
+- P0058 pushed at `eba9998`.
 - runtime remains `0.0.25-dev`.
-- Target Frame Check PASS after P0057.
-- Immersion Check PASS after P0057.
-- Run All PASS after P0057.
-- P0056 secret-boolean diagnostic failure is fixed.
-- one stock TargetFrame reappearance was observed once and is OPEN /
-  INTERMITTENT / UNREPRODUCED.
-- `/reload` restored expected target suppression.
-- do not add periodic target suppression forcing without a reproducible trigger.
-- target buffs/status remain visible intentionally under D-027.
-- player buffs/status remain visible intentionally outside current Player shell
-  ownership.
-- future Aura / Status Presentation domain is recorded.
-- D.3 instance Quiet Mode transition remains environmental deferral.
+- D-028 context orchestration matrix accepted.
+- current ImmersionController already matches the first-pass D-028 ownership
+  matrix.
+- Bar 2–3 replacement remains ON across world/instance/combat/PvP whenever
+  immersion is ON.
+- Player selective replacement remains ON across those states whenever
+  immersion is ON.
+- Target selective replacement remains ON across those states whenever
+  immersion is ON.
+- Quiet Mode is ON only in world context while immersion is ON.
+- Party suppression remains OFF in all states.
+- ActionContext precedence remains:
+  `combat > PvP > instance > world`.
+- `instanceType` remains observed but does not alter D.5 first-pass policy.
+- mounted/resting/taxi/interacting do not alter current Phase D suppression.
+- TargetFrame intermittent reappearance remains OPEN / UNREPRODUCED.
+- future Aura / Status Presentation domain remains deferred.
 - Primary replacement/routing ownership remains deferred.
 - D-020 live action editing remains deferred.
 - cast cue color regression remains open visual debt.
 
 ## Next Action
 
-Source/design-resolve D.5.
+Implement D.5 integrated runtime diagnostics.
 
-Use current orthogonal state:
-- `context`;
-- `inInstance`;
-- `instanceType`;
-- `combat`;
-- `pvpFlagged`;
-- mounted/resting/taxi/interacting only where a policy actually needs them.
+Add a `Context Policy Check` to the developer panel / command path.
 
-Resolve a deterministic policy matrix for currently supported immersion
-domains:
-1. Bar 2–3 replacement;
-2. Quiet Mode;
-3. Player selective replacement;
-4. Target selective replacement;
-5. future/unsupported Party remains stock;
-6. later Compass/Quest/Camera domains should have explicit hooks but are not
-   implemented in Phase D.
+It should validate:
+1. State context/combat/PvP snapshot exists;
+2. ImmersionController desired action ownership matches immersion preference;
+3. Quiet Mode desired state is `immersion && context == world`;
+4. Player desired ownership matches immersion preference;
+5. Target desired ownership matches immersion preference;
+6. Party desired ownership is false;
+7. ActionContext policy matches:
+   - combat first;
+   - then PvP;
+   - then instance;
+   - otherwise world;
+8. no secret/protected UI state is inspected.
 
-Questions:
-- should Player/Target selective replacement remain active in instances?
-- should action replacement remain active in instances?
-- Quiet Mode currently restores in instances; keep or refine by instance type?
-- how does PvP flagging modify presentation without becoming immersion OFF?
-- which state has precedence when combat/PvP/context overlap?
-- which transitions require no mutation because domain policy stays unchanged?
-- how should unsupported/deferred surfaces fail open?
+No behavioral policy change is required unless runtime proof exposes one.
 
 ## Success Criteria
 
-D.5 source/design review succeeds when there is one explicit policy matrix with:
-- world idle;
-- world combat;
-- PvP flagged idle/combat;
-- instance idle/combat;
-- precedence rules;
-- supported-domain desired state;
-- unsupported-domain fallback;
-- runtime transition proof plan.
+D.5 runtime validation succeeds when:
+- world idle policy passes;
+- combat transition resolves combat presentation without replacement churn;
+- PvP transition resolves PvP presentation when not in combat;
+- world/instance transition changes Quiet Mode only among current supported
+  replacement domains;
+- unsupported Party remains stock;
+- Immersion OFF restores supported replacement ownership;
+- no Lua/taint/secret regression occurs.
+
+Instance proof may remain environmental if no natural instance transition is
+available.
 
 ## Do Not Reopen Without New Evidence
 
 - **D.1–D.4 supported scope:** complete.
+- **D.5 source/design:** complete; D-028 canonical.
 - **Party suppression:** capability-deferred.
-- **TargetFrame intermittent reappearance:** open/unreproduced; capture on
-  recurrence.
+- **TargetFrame intermittent reappearance:** open/unreproduced.
 - **Aura/status suppression:** deferred design domain.
 - **Whole PlayerFrame / TargetFrame suppression:** rejected.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/D4_P0057_TARGET_RUNTIME_PROOF_2026-10-01.md`
-- `docs/memory/investigations/D4_TARGETFRAME_REASSERTION_INTERMITTENT.md`
-- `docs/memory/investigations/FUTURE_AURA_STATUS_PRESENTATION.md`
-- `docs/memory/roadmap/PHASE_D_IMMERSION_CONTROLLER.md`
-- `docs/memory/decisions/D-024_IMMERSION_ORCHESTRATION_CONTRACT.md`
+- `docs/memory/evidence/D5_CONTEXT_ORCHESTRATION_SOURCE_REVIEW_2026-10-01.md`
+- `docs/memory/decisions/D-028_CONTEXT_ORCHESTRATION_MATRIX.md`
+- `docs/memory/investigations/D5_CONTEXT_PVP_INSTANCE_ORCHESTRATION.md`
 - `Logres/Core/State.lua`
 - `Logres/Immersion/Controller.lua`
+- `Logres/Actions/Context.lua`
+- `docs/memory/DESIGN_PRINCIPLES.md`
