@@ -14,90 +14,90 @@ project: logres
 
 **A.4 — Module Lifecycle Contract.**
 
-A.3 is complete.
+P0014 prepares the A.4 implementation.
 
-The next work defines the smallest lifecycle boundary future modules need before HUD/Immersion implementation begins.
+The lifecycle provides:
+- unique ordered module registration;
+- one-time initialization;
+- default enable after all module initialization;
+- idempotent enable/disable;
+- LIFO cleanup ownership;
+- owned state/preference subscriptions;
+- cleanup before surfacing enable/disable errors.
 
-Required capabilities:
-- module registration;
-- deterministic initialization;
-- enable/disable;
-- state/preference subscription ownership;
-- cleanup/unsubscribe on disable;
-- no duplicate initialization;
-- clear ordering relative to database/state startup.
-
-Do not build a general-purpose addon framework.
-
-No HUD behavior belongs in A.4.
+The lifecycle does not add presentation behavior or global combat gating.
 
 ## Verified State
 
 - Phase 0 complete.
-- A.1 state consumer contract complete and runtime proven.
-- A.2 context sensors complete with ordinary mounted=true deferred by environment.
-- P0012 preference contract pushed at `6a01f85`.
-- A.3 runtime validation passed after correct redeploy.
-- preference contract check passed with no issue reported.
-- `immersionEnabled` persisted through off/reload and on/reload testing.
-- database schema 2 loaded/migrated without reported issue in the tested path.
-- observed state remained separate from user preference.
-- the initial command-list result was caused by failing to redeploy P0012, not by a product defect.
-- L-007 now requires explicit deployment commands for every runtime-code validation handoff.
-- A.3 is complete.
+- A.1 state contract complete.
+- A.2 context sensors complete with mounted=true environmental deferral.
+- A.3 user preference contract complete.
+- P0013 A.3 closure pushed at `73a8494`.
+- deployment workflow rule L-007 is active.
+- P0014 source/static validation is prepared but not runtime proven.
 
 ## Next Action
 
-Design A.4 before adding a module implementation.
+Install/review/commit/push P0014.
 
-Specify:
-1. what constitutes a Logres module;
-2. registration semantics;
-3. initialization order;
-4. enable/disable semantics;
-5. how a module owns and releases state/preference subscriptions;
-6. whether modules may be disabled while in combat;
-7. how lifecycle errors surface during development;
-8. what minimum development diagnostic proves lifecycle correctness.
+Because P0014 changes runtime addon files, explicitly redeploy:
 
-Prefer a small explicit contract over an AceAddon-like framework.
+```bash
+WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
+ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
 
-For any later runtime-code patch, always include the complete deployment block before in-game test commands.
+./tools/deploy_logres.sh "$ADDONS"
+```
+
+Then in game:
+
+```text
+/reload
+/logres status
+/logres statecheck
+/logres preferencecheck
+/logres lifecyclecheck
+```
+
+No travel or combat is required.
+
+The lifecycle check temporarily changes and restores `immersionEnabled` to prove module-owned preference subscription cleanup.
 
 ## Success Criteria
 
 A.4 succeeds when:
-- module lifecycle semantics are documented;
-- initialization order is deterministic;
-- duplicate registration/initialization is rejected;
-- enable/disable are idempotent or explicitly defined;
-- subscriptions/resources can be released reliably;
-- lifecycle does not silently swallow development errors;
-- static validation exists for the agreed contract;
-- travel-free runtime proof passes;
-- no unnecessary framework features are added;
-- deployment instructions explicitly precede runtime validation.
+- D-011 is durable;
+- duplicate registration is rejected by contract/static enforcement;
+- modules initialize once in deterministic order;
+- all initialization precedes default enabling;
+- enable/disable are idempotent;
+- owned cleanup runs and is cleared;
+- owned preference subscription receives changes only while enabled;
+- lifecycle errors are not silently swallowed;
+- existing state/preference checks still pass;
+- `/logres lifecyclecheck` passes;
+- no Lua errors are reported in the test scope;
+- full deploy commands precede runtime validation.
 
 ## Do Not Reopen Without New Evidence
 
 - **A.1:** complete.
 - **A.2:** complete with mounted=true environmental deferral.
 - **A.3:** complete.
-- **Observed state:** `GetState()` / `SubscribeState()`.
-- **User preferences:** separate D-010 contract.
-- **immersionEnabled:** boolean, default true, persistence runtime proven.
-- **Database schema:** 2.
-- **Deployment:** every runtime-code test handoff repeats deploy commands; see L-007.
+- **Module lifecycle:** keep lightweight; see D-011.
+- **Combat:** no global lifecycle gating.
+- **Cleanup:** module-owned, LIFO, released on disable/failed enable.
+- **Deployment:** explicit deploy block required for runtime-code tests.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/A3_USER_PREFERENCE_RUNTIME_PROOF_2026-09-30.md`
-- `docs/memory/decisions/D-010_USER_PREFERENCE_CONTRACT.md`
-- `docs/memory/architecture/PREFERENCES.md`
+- `docs/memory/decisions/D-011_MODULE_LIFECYCLE_CONTRACT.md`
+- `docs/memory/architecture/MODULES.md`
 - `docs/memory/roadmap/PHASE_A_CORE_STATE_ENGINE.md`
 - `docs/memory/LEARNINGS.md`
-- `docs/memory/MAINTENANCE.md`
-- `Logres/Core/Bootstrap.lua`
-- `Logres/Core/State.lua`
-- `Logres/Core/Preferences.lua`
+- `Logres/Core/Modules.lua`
+- `Logres/Core/Lifecycle.lua`
+- `Logres/Core/Commands.lua`
+- `tools/check_module_contract.py`

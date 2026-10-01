@@ -4,6 +4,39 @@ local function boolText(value)
     return value and "true" or "false"
 end
 
+local lifecycleProbe = {
+    initializeCount = 0,
+    enableCount = 0,
+    disableCount = 0,
+    cleanupCount = 0,
+    preferenceCallbackCount = 0,
+}
+
+local lifecycleProbeModule = Logres:RegisterModule("DevLifecycleProbe", {
+    autoEnable = false,
+
+    OnInitialize = function()
+        lifecycleProbe.initializeCount = lifecycleProbe.initializeCount + 1
+    end,
+
+    OnEnable = function(self)
+        lifecycleProbe.enableCount = lifecycleProbe.enableCount + 1
+
+        self:OwnCleanup(function()
+            lifecycleProbe.cleanupCount = lifecycleProbe.cleanupCount + 1
+        end)
+
+        self:SubscribePreferences(function()
+            lifecycleProbe.preferenceCallbackCount =
+                lifecycleProbe.preferenceCallbackCount + 1
+        end)
+    end,
+
+    OnDisable = function()
+        lifecycleProbe.disableCount = lifecycleProbe.disableCount + 1
+    end,
+})
+
 local function printStatus()
     local state = Logres:GetState()
     local db = Logres.db
@@ -125,12 +158,10 @@ local function runPreferenceCheck()
     local original = Logres:GetPreferences()
     local originalValue = original.immersionEnabled
 
-    -- Consumer snapshots must be isolated.
     original.immersionEnabled = not originalValue
     local afterMutation = Logres:GetPreferences()
     local snapshotIsolation = afterMutation.immersionEnabled == originalValue
 
-    -- No-op writes must not advance revision or publish.
     local callbackCount = 0
     local unsubscribe = Logres:SubscribePreferences(function()
         callbackCount = callbackCount + 1
@@ -148,7 +179,6 @@ local function runPreferenceCheck()
         and afterNoop.revision == afterMutation.revision
         and callbackCount == 0
 
-    -- Two real changes should publish twice and restore the original persisted value.
     local changedAway = Logres:SetPreference(
         "immersionEnabled",
         not originalValue,
@@ -191,6 +221,111 @@ local function runPreferenceCheck()
     ))
 end
 
+local function runLifecycleCheck()
+    local moduleName = lifecycleProbeModule.name
+    local before = Logres:GetModuleStatus(moduleName)
+
+    local initBefore = lifecycleProbe.initializeCount
+    local enableBefore = lifecycleProbe.enableCount
+    local disableBefore = lifecycleProbe.disableCount
+    local cleanupBefore = lifecycleProbe.cleanupCount
+    local preferenceCallbackBefore = lifecycleProbe.preferenceCallbackCount
+
+    local initializedAgain = Logres:InitializeModule(moduleName)
+
+    local enabledFirst = Logres:EnableModule(moduleName)
+    local enabledSecond = Logres:EnableModule(moduleName)
+
+    local originalImmersion = Logres:GetPreference("immersionEnabled")
+
+    Logres:SetPreference(
+        "immersionEnabled",
+        not originalImmersion,
+        "DEV_LIFECYCLECHECK_ENABLED_CHANGE"
+    )
+    Logres:SetPreference(
+        "immersionEnabled",
+        originalImmersion,
+        "DEV_LIFECYCLECHECK_ENABLED_RESTORE"
+    )
+
+    local callbacksWhileEnabled =
+        lifecycleProbe.preferenceCallbackCount - preferenceCallbackBefore
+
+    local disabledFirst = Logres:DisableModule(moduleName)
+    local disabledSecond = Logres:DisableModule(moduleName)
+
+    local callbacksBeforeDisabledChanges = lifecycleProbe.preferenceCallbackCount
+
+    Logres:SetPreference(
+        "immersionEnabled",
+        not originalImmersion,
+        "DEV_LIFECYCLECHECK_DISABLED_CHANGE"
+    )
+    Logres:SetPreference(
+        "immersionEnabled",
+        originalImmersion,
+        "DEV_LIFECYCLECHECK_DISABLED_RESTORE"
+    )
+
+    local callbacksWhileDisabled =
+        lifecycleProbe.preferenceCallbackCount - callbacksBeforeDisabledChanges
+
+    local after = Logres:GetModuleStatus(moduleName)
+
+    local passed =
+        before.initialized == true
+        and before.enabled == false
+        and initializedAgain == false
+        and lifecycleProbe.initializeCount == initBefore
+        and enabledFirst == true
+        and enabledSecond == false
+        and lifecycleProbe.enableCount == enableBefore + 1
+        and callbacksWhileEnabled == 2
+        and disabledFirst == true
+        and disabledSecond == false
+        and lifecycleProbe.disableCount == disableBefore + 1
+        and lifecycleProbe.cleanupCount == cleanupBefore + 2
+        and callbacksWhileDisabled == 0
+        and after.initialized == true
+        and after.enabled == false
+        and after.cleanupCount == 0
+
+    if passed then
+        print(string.format(
+            "Logres lifecyclecheck: PASS (init=%s enable=%s disable=%s cleanup=%s prefCallbacksWhileEnabled=2 prefCallbacksWhileDisabled=0)",
+            tostring(lifecycleProbe.initializeCount),
+            tostring(lifecycleProbe.enableCount),
+            tostring(lifecycleProbe.disableCount),
+            tostring(lifecycleProbe.cleanupCount)
+        ))
+        return
+    end
+
+    print(string.format(
+        "Logres lifecyclecheck: FAIL (beforeInit=%s beforeEnabled=%s initializedAgain=%s enabled=%s/%s disabled=%s/%s init=%s->%s enable=%s->%s disable=%s->%s cleanup=%s->%s prefEnabled=%s prefDisabled=%s afterEnabled=%s afterCleanup=%s)",
+        tostring(before.initialized),
+        tostring(before.enabled),
+        tostring(initializedAgain),
+        tostring(enabledFirst),
+        tostring(enabledSecond),
+        tostring(disabledFirst),
+        tostring(disabledSecond),
+        tostring(initBefore),
+        tostring(lifecycleProbe.initializeCount),
+        tostring(enableBefore),
+        tostring(lifecycleProbe.enableCount),
+        tostring(disableBefore),
+        tostring(lifecycleProbe.disableCount),
+        tostring(cleanupBefore),
+        tostring(lifecycleProbe.cleanupCount),
+        tostring(callbacksWhileEnabled),
+        tostring(callbacksWhileDisabled),
+        tostring(after.enabled),
+        tostring(after.cleanupCount)
+    ))
+end
+
 local function handleImmersion(argument)
     if argument == "" or argument == "status" then
         printPreferences()
@@ -230,6 +365,7 @@ local function printHelp()
     print("  /logres statecheck")
     print("  /logres sensorcheck")
     print("  /logres preferencecheck")
+    print("  /logres lifecyclecheck")
     print("  /logres immersion [on|off|toggle]")
     print("  /logres debug on")
     print("  /logres debug off")
@@ -256,6 +392,11 @@ SlashCmdList.LOGRES = function(message)
 
     if command == "preferencecheck" then
         runPreferenceCheck()
+        return
+    end
+
+    if command == "lifecyclecheck" then
+        runLifecycleCheck()
         return
     end
 

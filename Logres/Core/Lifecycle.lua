@@ -14,6 +14,11 @@ Logres:RegisterEvent("PLAYER_LOGIN", function()
         Logres:InitializeDatabase()
     end
 
+    -- State.lua registers PLAYER_LOGIN before Lifecycle.lua, so the observed
+    -- state snapshot is initialized before modules enter their lifecycle.
+    Logres:InitializeModules()
+    Logres:EnableDefaultModules()
+
     local _, build, _, interfaceVersion = GetBuildInfo()
 
     Logres:DevPrint(string.format(

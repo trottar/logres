@@ -124,17 +124,21 @@ Requirements:
 
 ## A.4 — Module lifecycle contract
 
-**Status: ACTIVE.**
+**Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
 
-Define how future Logres modules:
-- register;
-- initialize;
-- enable;
-- disable;
-- subscribe to state;
-- release temporary resources.
+Implemented contract:
+- unique registration in deterministic order;
+- one-time initialization;
+- default enable after all modules initialize;
+- idempotent enable/disable;
+- LIFO owned cleanup;
+- owned state/preference subscriptions;
+- cleanup-before-rethrow on lifecycle errors;
+- no global combat gating.
 
-The lifecycle contract must remain lightweight. Do not build a framework larger than the addon requires.
+The lifecycle remains intentionally smaller than a general addon framework.
+
+Runtime proof still required through `/logres lifecyclecheck`.
 
 ## A.5 — Transition validation
 

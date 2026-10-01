@@ -8,6 +8,8 @@ As of 2026-09-30.
 
 Active work item: **A.4 Module Lifecycle Contract**
 
+State: **IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+
 ## Phase status
 
 | Phase | State |
@@ -28,18 +30,19 @@ Active work item: **A.4 Module Lifecycle Contract**
 | --- | --- |
 | A.1 State contract hardening | COMPLETE |
 | A.2 Additional context sensors | COMPLETE WITH ENVIRONMENTAL DEFERRAL |
-| A.3 User-controlled state | COMPLETE (`6a01f85` + runtime proof) |
-| A.4 Module lifecycle contract | ACTIVE |
+| A.3 User-controlled state | COMPLETE |
+| A.4 Module lifecycle contract | ACTIVE — implementation prepared |
 | A.5 Transition validation | QUEUED |
 
-## A.3 result
+## A.4 implementation
 
-Runtime verified after correct deployment:
-- preference contract check;
-- schema 2 load/migration path;
-- immersion off persistence across reload;
-- immersion on persistence across reload;
-- observed-state separation retained.
+P0014 adds:
+- module registration/order;
+- one-time initialization;
+- idempotent enable/disable;
+- LIFO cleanup ownership;
+- owned state/preference subscriptions;
+- lifecycle error cleanup and rethrow;
+- `/logres lifecyclecheck`.
 
-Workflow lesson:
-runtime code must be explicitly redeployed before every in-game validation sequence.
+Runtime validation is travel-free.
