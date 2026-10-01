@@ -7,10 +7,7 @@ As of 2026-10-01.
 **Phase B — Core HUD**
 
 Active work item:
-**B.5 Allies and Pets**
-
-State:
-**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**B.6 HUD Integration Validation**
 
 ## Phase status
 
@@ -18,7 +15,7 @@ State:
 | --- | --- |
 | 0 — Foundation | COMPLETE |
 | A — Core State Engine | COMPLETE |
-| B — Core HUD | ACTIVE — B.5 |
+| B — Core HUD | ACTIVE — B.6 |
 | C — Action Interface | BLOCKED on Phase B |
 | D — Immersion Controller | BLOCKED on core HUD/state consumers |
 | E — Compass and Navigation | QUEUED |
@@ -34,5 +31,15 @@ State:
 | B.2 Resource presentation | COMPLETE |
 | B.3 Target presentation | COMPLETE |
 | B.4 Cast confirmation | COMPLETE — target true-path environmentally deferred |
-| B.5 Allies and pets | ACTIVE — implementation prepared |
-| B.6 HUD integration validation | QUEUED |
+| B.5 Allies and pets | COMPLETE |
+| B.6 HUD integration validation | ACTIVE |
+
+## B.5 final result
+
+Runtime proof:
+- pet row PASS;
+- party row PASS;
+- combat health updates PASS;
+- immersion off/on PASS.
+
+No B.5 environmental deferral remains.

@@ -2,23 +2,22 @@
 
 Authoritative state: `../CURRENT.md`. Start there.
 
+Current phase:
+**Phase B — Core HUD**
+
+B.5 is complete.
+
+Pet + party presentation both passed real runtime testing, including combat health updates and immersion hide/restore.
+
 Current work:
-**B.5 — Allies and Pets**
+**B.6 — HUD Integration Validation**
 
-P0027 is prepared.
+No new HUD feature is planned by default.
 
-Adds to existing HUD:
-- pet row;
-- party1–party4 rows;
-- name + health percentage only;
-- roster/pet structural refresh;
-- per-unit name/health refresh.
+Next step is an integrated pass on the existing `0.0.12-dev` HUD.
 
-Version:
-`0.0.12-dev`
+Any runtime validation handoff must repeat the full WoW deploy block before in-game commands.
 
-Pet and party true paths may be environmentally deferred if unavailable.
-
-P0027 changes runtime code, so deploy explicitly before testing.
+P0028 is documentation/evidence only; no WoW redeploy is required merely to install P0028.
 
 User performs all commits/pushes.

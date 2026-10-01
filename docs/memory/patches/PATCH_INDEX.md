@@ -28,6 +28,7 @@
 | P0024 | 2026-10-01 | INSTALLED / PUSHED | Record B.3 proof; correct B.4 player + target cast scope (`8fb567f`) |
 | P0025 | 2026-10-01 | INSTALLED / PUSHED | B.4 event-driven player + target cast/channel cues (`4c27c6c`) |
 | P0026 | 2026-10-01 | INSTALLED / PUSHED | Record B.4 proof/target deferral; close B.4 and open B.5 (`8a89a35`) |
-| P0027 | 2026-10-01 | PREPARED | B.5 compact pet + party1–party4 name/health rows |
+| P0027 | 2026-10-01 | INSTALLED / PUSHED | B.5 compact pet + party1–party4 name/health rows (`42aa8d6`) |
+| P0028 | 2026-10-01 | PREPARED | Record B.5 proof; close B.5 and open B.6 HUD integration validation |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

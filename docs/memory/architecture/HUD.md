@@ -409,3 +409,30 @@ No:
 - role/class/level metadata;
 - secure click-casting;
 - raid grid.
+## B.5 final result
+
+B.5 pet and party presentation is production-proven.
+
+Verified:
+- real pet row;
+- real party row;
+- combat health updates;
+- immersion hide/restore.
+
+No pet/party environmental deferral remains.
+
+## B.6 entry
+
+B.6 validates the Phase B HUD as a single integrated system.
+
+No new HUD feature is planned by default.
+
+Validation focuses on:
+- coexistence;
+- target/cast lifecycle cleanup;
+- combat updates;
+- immersion hide/restore;
+- stale-state prevention;
+- usable spacing.
+
+Known visual polish debt remains separate from functional correctness.

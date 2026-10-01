@@ -1,13 +1,12 @@
 # Active Investigations
 
-## B.5 — Allies and Pets
+## B.6 — HUD Integration Validation
 
 Status:
-**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**ACTIVE**
 
 Canonical record:
-`B5_ALLIES_AND_PETS.md`
+`B6_HUD_INTEGRATION_VALIDATION.md`
 
-P0027 implements compact pet + party1–party4 name/health rows.
-
-Unavailable true paths may defer by environment.
+Goal:
+validate all completed Phase B HUD components together and close Phase B if the integrated runtime remains stable and usable.

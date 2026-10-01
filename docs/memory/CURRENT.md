@@ -12,15 +12,17 @@ project: logres
 
 ## Current Work Item
 
-**B.5 — Allies and Pets.**
+**B.6 — HUD Integration Validation.**
 
-P0027 prepares compact ally/pet condition rows for:
-- `pet`;
-- `party1`–`party4`.
+B.5 is complete.
 
-Each existing unit shows only:
-- name;
-- health percentage.
+Pet and party presentation are both runtime proven:
+- real pet row;
+- real party row;
+- health updates during combat;
+- immersion hide/restore.
+
+B.6 now validates the completed Phase B HUD pieces together before Phase B closes.
 
 ## Verified State
 
@@ -28,77 +30,71 @@ Each existing unit shows only:
 - B.1 health vignette complete.
 - B.2 primary resource percentage complete.
 - B.3 target presentation complete.
-- B.4 cast confirmation complete with target-caster true-path environmental deferral.
-- P0026 B.4 closure pushed at `8a89a35`.
-- current runtime baseline before P0027: `0.0.11-dev`.
-- group/pet source review supports `GROUP_ROSTER_UPDATE`, `UNIT_PET`, unit name, and per-unit health update signals.
-- P0027 static checks pass; runtime proof pending.
+- B.4 cast confirmation complete with current-target caster true-path environmental deferral.
+- B.5 allies and pets complete.
+- P0027 pushed at `42aa8d6`.
+- current runtime version: `0.0.12-dev`.
+- pet true path: PASS.
+- party true path: PASS.
+- ally/pet health updates during combat: PASS.
+- ally/pet immersion hide/restore: PASS.
 
 ## Next Action
 
-Install/review/commit/push P0027.
+Run B.6 integrated HUD validation on the existing `0.0.12-dev` runtime.
 
-Because runtime code changes, deploy explicitly:
+The validation should combine ordinary scenarios rather than test each component only in isolation.
 
-```bash
-WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
-ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
+Minimum integrated pass:
+1. healthy world idle baseline;
+2. acquire a target;
+3. ordinary combat with target damage;
+4. player casts/channels during combat;
+5. take safe damage so the health vignette participates;
+6. observe resource changes;
+7. keep pet and/or party row visible if currently available;
+8. clear/switch target and confirm no stale target/cast presentation;
+9. immersion off/on while multiple HUD components have active state;
+10. combat end cleanup.
 
-./tools/deploy_logres.sh "$ADDONS"
-```
+Classify:
+- functional/runtime defects;
+- secret-value errors;
+- stale-state regressions;
+- visual/layout debt.
 
-Then:
+Do not require a target caster solely for B.6. Its true path remains environmentally deferred until naturally available.
 
-```text
-/reload
-/logres status
-/logres statecheck
-/logres preferencecheck
-/logres lifecyclecheck
-/logres hudcheck
-```
-
-Confirm version:
-`0.0.12-dev`
-
-B.5 runtime:
-1. absent pet/party units must not leave empty rows;
-2. if a pet exists, verify its name + health percentage and health updates;
-3. if party members are available, verify visible rows and health updates;
-4. join/leave changes should add/remove rows if practical;
-5. immersion off/on should hide/restore available rows;
-6. report any Lua/secret-value error.
-
-If pet or party true paths are unavailable, report that directly; environmental deferral is allowed.
+When giving the runtime validation handoff, include the full deploy block before in-game commands.
 
 ## Success Criteria
 
-B.5 succeeds when:
-- five candidate slots exist structurally;
-- only existing units are shown;
-- available pet/party name + health paths work;
-- available health/roster updates work;
-- immersion root behavior remains correct;
-- unavailable pet/party paths are explicitly deferred;
-- no conventional party frame is introduced;
-- no secret-value/Lua errors occur.
+B.6 succeeds when:
+- Phase B HUD components coexist without functional regressions;
+- player health/resource/target/cast/ally presentations update together;
+- target/cast lifecycle cleanup leaves no stale cues;
+- immersion off/on cleanly hides/restores integrated HUD state;
+- no Lua/secret-value errors occur;
+- layout is usable enough to proceed;
+- polish debt is recorded separately;
+- existing environmental deferrals remain accurately classified.
 
 ## Do Not Reopen Without New Evidence
 
 - **B.1:** complete.
 - **B.2:** complete.
 - **B.3:** complete.
-- **B.4:** complete with target-caster deferral.
-- **Ally/pet default:** sparse name + health percentage.
-- **Initial units:** pet + party1–party4 only.
-- **Raid/healer/click-cast UI:** outside initial B.5.
-- **Deployment:** full deploy block required.
+- **B.4:** complete with target-caster true-path environmental deferral.
+- **B.5:** complete; pet and party true paths both proven.
+- **Target caster:** retry naturally; do not force travel solely for proof.
+- **Visual debt:** does not equal architecture failure unless unusable.
+- **Deployment:** full deploy block required for runtime validation handoffs.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/decisions/D-015_ALLY_AND_PET_PRESENTATION_CONTRACT.md`
-- `docs/memory/investigations/B5_ALLIES_AND_PETS.md`
+- `docs/memory/evidence/B5_ALLIES_PETS_RUNTIME_PROOF_2026-10-01.md`
+- `docs/memory/investigations/B6_HUD_INTEGRATION_VALIDATION.md`
 - `docs/memory/architecture/HUD.md`
+- `docs/memory/roadmap/PHASE_B_CORE_HUD.md`
 - `Logres/HUD/HUD.lua`
-- `tools/check_hud_contract.py`

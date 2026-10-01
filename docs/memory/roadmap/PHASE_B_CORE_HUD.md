@@ -169,7 +169,7 @@ Canonical decision:
 
 ## B.5 — Allies and pets
 
-**Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
+**Status: COMPLETE.**
 
 Implement restrained ally/pet presentation:
 - name;
@@ -189,6 +189,8 @@ Each existing unit receives a compact name + health % row.
 No portrait, health bar, role/class/level metadata, raid grid, or secure click-casting is introduced.
 
 ## B.6 — HUD integration validation
+
+**Status: ACTIVE.**
 
 Validate:
 - world;
