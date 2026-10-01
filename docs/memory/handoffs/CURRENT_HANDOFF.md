@@ -2,18 +2,24 @@
 
 Authoritative state: `../CURRENT.md`. Start there.
 
-Project Logres is in **Phase 0 — Foundation**, work item **0.2 WoW Forever API capability audit**.
+Project Logres is in **Phase 0 / 0.2 — WoW Forever API capability audit**.
 
-The source/documentation pass is complete. Current task: run the temporary diagnostic addon under `tools/probes/LogresAPIAudit` and preserve its sanitized SavedVariables evidence.
+Runtime pass 01 is complete.
 
-Important source-pass findings:
-- Forever currently appears as MAINLINE through Blizzard `WOW_PROJECT_ID`; do not use that constant alone to identify Retail.
-- Modern secret values apply; health/power UI must be secret-safe.
-- Health vignette may be feasible through native curves + secret-capable bar/alpha/color aspects.
-- map position/facing are unavailable in instances, matching the compass suspension design.
-- secure action cluster reconfiguration is constrained in combat.
+Key verified findings:
+- Forever 1.60.1 build 70124 / interface 16001 reports `WOW_PROJECT_ID == WOW_PROJECT_MAINLINE == 1`;
+- player health/power percentages are secret even outside combat;
+- secret health can drive status-bar value and texture alpha directly;
+- secret percentage text formatting/display works;
+- ordinary target level/classification are readable in the tested world context;
+- open-world position/facing works;
+- SavedVariables persisted through `/reload`;
+- combat event and restriction/lockdown timing are not synchronous.
 
-Operating boundaries:
-- Windows 11 + WSL;
-- user performs all commits/pushes;
-- failures and rejected approaches are durable evidence.
+Negative result:
+- initial probe failed because `table.pack` is unavailable; fixed with a compatibility helper.
+
+Next:
+targeted runtime pass 02 for custom health curve, valid target in combat, real cast/channel, elite target, instance navigation restriction, quest waypoint, and optional PvP transition.
+
+User performs all commits/pushes.

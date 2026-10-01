@@ -1,6 +1,6 @@
 # I-001 — WoW Forever API Capability Audit
 
-Status: ACTIVE — SOURCE PASS COMPLETE; RUNTIME PROBE NEXT  
+Status: ACTIVE — RUNTIME PASS 01 COMPLETE; TARGETED PASS 02 NEXT  
 Phase: 0.2  
 Opened: 2026-09-30
 
@@ -19,7 +19,7 @@ Logres intentionally depends on unusual presentation choices. Building against r
 - **RUNTIME VERIFIED** — observed on the user's current Forever client.
 - **UNKNOWN / NEEDS PROBE** — architecture should not depend on the result yet.
 
-No item in this record is promoted to RUNTIME VERIFIED until the user's probe supplies evidence.
+Runtime pass 01 supplied evidence. Promote only the specific contexts actually exercised; untested scenarios remain open.
 
 ## Source-pass findings
 
@@ -203,6 +203,57 @@ Current DynamicCam source supports Forever and uses camera CVars such as:
 - dynamic pitch/focus CVars.
 
 This is strong evidence that the later camera module is feasible, but exact mutation behavior and user settings must be runtime validated before Logres owns these values.
+
+
+## Runtime pass 01 findings
+
+Canonical sanitized evidence:
+`../evidence/I001_RUNTIME_PASS_01_2026-09-30.md`
+
+### RUNTIME VERIFIED
+
+- Forever 1.60.1 build 70124 uses interface 16001.
+- `WOW_PROJECT_ID == WOW_PROJECT_MAINLINE == 1`.
+- player `UnitHealthPercent` is secret even out of combat.
+- player `UnitPowerPercent` is secret even out of combat.
+- secret percentage formatting and `FontString:SetText` work.
+- secret normalized health can be passed to `StatusBar:SetValue`.
+- secret normalized health can be passed to `Texture:SetAlpha`.
+- those health display operations also succeeded during active combat-lockdown snapshots.
+- ordinary target level and `"normal"` classification were non-secret in tested out-of-combat contexts.
+- ordinary valid target health/power percentages were secret.
+- open-world map position/facing are available and non-secret.
+- `UnitIsPVP("player")` is callable and non-secret in the unflagged state.
+- chat messaging-lockdown state is readable.
+- camera zoom/CVar reads work.
+- probe SavedVariables persisted across `/reload`.
+
+### NEGATIVE RESULT CLOSED
+
+The first snapshot attempt failed because Forever Lua lacked `table.pack`.
+
+The probe now uses a local compatibility `pack(...)` helper.
+
+### TIMING FINDING
+
+`PLAYER_REGEN_DISABLED` occurred before `InCombatLockdown()` settled to true in the captured sequence. A later restriction-state event and later combat snapshots reflected stronger restriction/lockdown state.
+
+The state engine must tolerate this transition ordering.
+
+### STILL OPEN
+
+- custom inverse/threshold health curve;
+- elite/rare target metadata;
+- valid target retained during active combat lockdown;
+- player cast-time/channel capture;
+- target cast capture;
+- PvP-flagged transition;
+- instance map/facing loss;
+- quest waypoint data;
+- secure action-button behavior;
+- camera mutation/restore behavior;
+- outbound chat behavior.
+
 
 ## Negative findings / constraints from the source pass
 

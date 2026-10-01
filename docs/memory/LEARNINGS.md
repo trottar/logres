@@ -30,3 +30,27 @@ When they conflict:
 A conventional implementation may reveal level, elite status, exact HP, cast timing, or other metadata simply because the API provides it.
 
 In Logres, availability is not sufficient justification for display. The disclosure policy must be deliberate.
+
+## L-004 — Assume Lua 5.1-era compatibility unless runtime proves otherwise
+
+The first runtime probe failed because `table.pack` was unavailable.
+
+For Logres and its tooling, prefer compatibility helpers for standard-library features that are not guaranteed in WoW's Lua environment. A tool that fails before measuring the game API is a probe failure, not an API result.
+
+## L-005 — Secret does not mean undisplayable
+
+On Forever 1.60.1, player health/power percentages were secret even in ordinary open-world, out-of-combat snapshots.
+
+Nevertheless:
+- secret percentage -> `string.format` -> secret string -> `FontString:SetText` worked;
+- secret normalized health -> `StatusBar:SetValue` worked;
+- secret normalized health -> `Texture:SetAlpha` worked;
+- the same display path continued to work during combat lockdown.
+
+Therefore the correct architecture is to move secret values through permitted native transformations/display aspects, not to attempt to recover ordinary numbers.
+
+## L-006 — Combat events and settled combat state are not identical moments
+
+In the first runtime pass, `PLAYER_REGEN_DISABLED` fired before `InCombatLockdown()` had become true. Restriction state then changed through intermediate observations before later snapshots showed active lockdown.
+
+State-engine code must read current state and tolerate event ordering rather than assuming a single event means all related restrictions have already settled.

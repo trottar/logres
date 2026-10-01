@@ -8,7 +8,7 @@ As of 2026-09-30.
 
 Active work item: **0.2 WoW Forever API capability audit**
 
-State: **SOURCE PASS COMPLETE; RUNTIME PROBE NEXT**
+State: **RUNTIME PASS 01 COMPLETE; TARGETED PASS 02 NEXT**
 
 ## Phase status
 
@@ -28,32 +28,31 @@ State: **SOURCE PASS COMPLETE; RUNTIME PROBE NEXT**
 
 | Item | State |
 | --- | --- |
-| 0.1 Repository + durable memory | COMPLETE; pushed at `353c5b0` |
-| 0.2 Forever API capability audit | ACTIVE; source pass complete, runtime probe next |
+| 0.1 Repository + durable memory | COMPLETE (`353c5b0`) |
+| 0.2 Forever API capability audit | ACTIVE; runtime pass 01 complete |
 | 0.3 Minimal addon skeleton/load proof | BLOCKED on 0.2 |
 
-## I-001 source-pass headline findings
+## Runtime pass 01 established
 
-- Forever cannot currently be identified reliably by `WOW_PROJECT_ID`; maintained addon source observes MAINLINE.
-- Interface 1.60.1 / TOC 16001 is the current Forever line used by maintained addons.
-- Modern secret-value restrictions are present.
-- Health/power percentage APIs and secret-safe visual/text pathways exist.
-- Level/classification APIs remain available as plausible hidden metadata.
-- Casting is secret-restricted for non-player units.
-- Combat lockdown constrains action-button reconfiguration.
-- Map position/facing are unavailable in instances.
-- Quest waypoint, PvP flag, instance state, chat restriction, and camera APIs are present.
+- client: Forever 1.60.1 build 70124 / interface 16001;
+- project ID collision with MAINLINE confirmed;
+- secret health/power behavior confirmed;
+- secret-safe health bar/alpha/text transport confirmed;
+- ordinary target level/classification readable in tested context;
+- open-world map/facing path confirmed;
+- combat transition timing nuance discovered;
+- SavedVariables persistence across `/reload` confirmed;
+- camera/chat read APIs confirmed;
+- probe compatibility failure (`table.pack`) recorded and fixed.
 
-All remain source/documentation evidence until runtime probe promotion.
+## Runtime pass 02 priorities
 
-## Established design decisions
+- custom health curve;
+- target retained in active combat lockdown;
+- real player cast/channel;
+- elite target;
+- instance map/facing;
+- quest waypoint;
+- PvP transition if convenient.
 
-- D-001 Project identity/world-first philosophy
-- D-002 Player health presentation
-- D-003 Enemy information disclosure
-- D-004 Action cluster geometry
-- D-005 Immersion/instance behavior
-- D-006 PvP as a state modifier
-- D-007 User owns Git checkpoints
-
-See `../../ROADMAP.md` for the full phase roadmap.
+Phase 0.3 remains blocked until these architecture-critical questions are closed or explicitly deferred.

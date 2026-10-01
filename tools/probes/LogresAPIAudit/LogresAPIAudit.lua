@@ -3,6 +3,53 @@ local addonName = ...
 local frame = CreateFrame("Frame")
 local MAX_SNAPSHOTS = 300
 
+local function pack(...)
+    return { n = select("#", ...), ... }
+end
+
+local vignetteCurve
+local vignetteCurveStatus = {
+    available = false,
+    ok = false,
+}
+
+local function initializeVignetteCurve()
+    if not C_CurveUtil or type(C_CurveUtil.CreateCurve) ~= "function" then
+        vignetteCurveStatus.error = "C_CurveUtil.CreateCurve unavailable"
+        return
+    end
+
+    vignetteCurveStatus.available = true
+    local ok, curveOrError = pcall(C_CurveUtil.CreateCurve)
+    if not ok or not curveOrError then
+        vignetteCurveStatus.error = tostring(curveOrError):sub(1, 300)
+        return
+    end
+
+    local curve = curveOrError
+    local points = {
+        {0.00, 1.00},
+        {0.15, 0.95},
+        {0.30, 0.70},
+        {0.50, 0.30},
+        {0.70, 0.00},
+        {1.00, 0.00},
+    }
+
+    for _, point in ipairs(points) do
+        local pointOK, pointError = pcall(curve.AddPoint, curve, point[1], point[2])
+        if not pointOK then
+            vignetteCurveStatus.error = tostring(pointError):sub(1, 300)
+            return
+        end
+    end
+
+    vignetteCurve = curve
+    vignetteCurveStatus.ok = true
+end
+
+initializeVignetteCurve()
+
 local function isSecret(value)
     if type(issecretvalue) ~= "function" then
         return false
@@ -35,7 +82,7 @@ local function callRecord(label, func, ...)
         }
     end
 
-    local packed = table.pack(pcall(func, ...))
+    local packed = pack(pcall(func, ...))
     local ok = packed[1]
     local record = {
         label = label,
@@ -126,7 +173,7 @@ local function displayPathProbe(unit)
     }
 
     if type(UnitHealthPercent) == "function" then
-        local hp = table.pack(pcall(UnitHealthPercent, unit))
+        local hp = pack(pcall(UnitHealthPercent, unit))
         result.health.raw_ok = hp[1] and true or false
         if hp[1] then
             result.health.raw_secret = hp[2] ~= nil and isSecret(hp[2]) or false
@@ -142,7 +189,7 @@ local function displayPathProbe(unit)
         end
 
         if CurveConstants and CurveConstants.ZeroToOne then
-            local h01 = table.pack(
+            local h01 = pack(
                 pcall(UnitHealthPercent, unit, true, CurveConstants.ZeroToOne)
             )
             result.health.zero_to_one_ok = h01[1] and true or false
@@ -161,13 +208,36 @@ local function displayPathProbe(unit)
             result.health.zero_to_one_ok = false
             result.health.zero_to_one_error = "CurveConstants.ZeroToOne unavailable"
         end
+
+
+if vignetteCurve then
+    local vignette = pack(
+        pcall(UnitHealthPercent, unit, true, vignetteCurve)
+    )
+    result.health.vignette_curve_ok = vignette[1] and true or false
+    if vignette[1] then
+        result.health.vignette_curve_secret =
+            vignette[2] ~= nil and isSecret(vignette[2]) or false
+        result.health.vignette_set_bar_ok =
+            pcall(barProbe.SetValue, barProbe, vignette[2])
+        result.health.vignette_set_alpha_ok =
+            pcall(alphaProbe.SetAlpha, alphaProbe, vignette[2])
+    else
+        result.health.vignette_curve_error =
+            tostring(vignette[2]):sub(1, 300)
+    end
+else
+    result.health.vignette_curve_ok = false
+    result.health.vignette_curve_error =
+        vignetteCurveStatus.error or "vignette curve unavailable"
+end
     else
         result.health.raw_ok = false
         result.health.raw_error = "UnitHealthPercent unavailable"
     end
 
     if type(UnitPowerPercent) == "function" then
-        local pp = table.pack(pcall(UnitPowerPercent, unit))
+        local pp = pack(pcall(UnitPowerPercent, unit))
         result.power.raw_ok = pp[1] and true or false
         if pp[1] then
             result.power.raw_secret = pp[2] ~= nil and isSecret(pp[2]) or false
@@ -210,7 +280,7 @@ local function mapState()
         result.position_present = ok and pos ~= nil or false
         result.position_secret = ok and pos ~= nil and isSecret(pos) or false
         if ok and pos and type(pos.GetXY) == "function" then
-            local xy = table.pack(pcall(pos.GetXY, pos))
+            local xy = pack(pcall(pos.GetXY, pos))
             result.position_xy_ok = xy[1] and true or false
             if xy[1] then
                 result.position_x_secret = xy[2] ~= nil and isSecret(xy[2]) or false
@@ -312,6 +382,11 @@ local function snapshot(reason)
             instanceType = cleanScalar(instanceType),
         },
         restrictions = restrictionStates(),
+        vignette_curve_status = {
+            available = vignetteCurveStatus.available,
+            ok = vignetteCurveStatus.ok,
+            error = vignetteCurveStatus.error,
+        },
         player_display = displayPathProbe("player"),
         target = targetState(),
         casts = {

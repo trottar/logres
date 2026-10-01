@@ -1,101 +1,140 @@
 # WoW Forever API Boundaries
 
-Status: **PROVISIONAL — SOURCE PASS COMPLETE, RUNTIME VERIFICATION ACTIVE**
+Status: **PARTIALLY RUNTIME VERIFIED — I-001 ACTIVE**
 
 Canonical investigation:
 `../investigations/FOREVER_API_CAPABILITY_AUDIT.md`
 
-## Client identity
+Runtime evidence:
+`../evidence/I001_RUNTIME_PASS_01_2026-09-30.md`
+
+## Client identity — runtime verified
 
 Do not use `WOW_PROJECT_ID == WOW_PROJECT_MAINLINE` as proof that the client is Retail.
 
-Maintained Forever-compatible addon source reports that Forever currently answers MAINLINE. Interface/build identification (currently 1.60.x / TOC 16001) plus capability tests are the provisional identification strategy.
+Runtime on Forever 1.60.1 build 70124 / interface 16001:
+- `WOW_PROJECT_ID = 1`;
+- `WOW_PROJECT_MAINLINE = 1`.
+
+Use capability checks where possible. Where client identity is genuinely required, use validated interface/build identification until Blizzard provides a distinct project ID.
+
+## Lua compatibility — runtime verified negative boundary
+
+Forever's addon Lua environment did not provide `table.pack` during the first probe.
+
+Project code and diagnostics should use a compatibility helper when preserving vararg counts is required.
 
 ## Secret values are a first-class architecture constraint
 
-Forever exposes the modern secret-value model.
-
-Logres code must assume that health, power, cast details, identity, aura, and related combat information can become secret depending on restriction state.
+Runtime showed player health and power percentages as secret even in ordinary open-world, out-of-combat snapshots.
 
 Rules:
-- never perform ordinary arithmetic/comparison on a value merely because it was numeric out of combat;
-- use `issecretvalue` in diagnostics, not product branching intended to recover the hidden value;
-- prefer native curves/durations/secret-capable widget methods;
+- do not perform ordinary Lua arithmetic/comparison on health/power percentage;
+- never design product logic around recovering a secret value;
+- use native curves/durations/secret-capable widget methods;
 - never persist secret values to SavedVariables.
 
-## Health vignette
+## Health vignette — transport path runtime verified
 
-Provisional feasible path:
-- `UnitHealthPercent`;
-- native curve maps health to an intensity/fill value;
-- direct pass into secret-capable visual APIs (`StatusBar:SetValue`, alpha/vertex-color aspects).
+Runtime-proven operations:
+- `UnitHealthPercent(unit)`;
+- secret-safe formatting;
+- `UnitHealthPercent(unit, true, CurveConstants.ZeroToOne)`;
+- secret `StatusBar:SetValue`;
+- secret `Texture:SetAlpha`.
 
-This is not yet runtime validated.
+The same operations succeeded while `InCombatLockdown()` was true.
 
-The architecture should favor visual primitives that can consume the secret directly rather than code that needs to know "health < 30%".
+Therefore the health vignette can be designed around secret-native visual transport rather than Lua thresholds.
 
-## Resource percentage text
+Still required:
+- prove a Logres-specific inverse/threshold curve suitable for vignette intensity/closure.
 
-Provisional feasible path:
-- `UnitPowerPercent`;
-- secret-safe formatting to a secret string;
-- `FontString:SetText`.
+Do not implement:
+```lua
+if UnitHealthPercent("player") < 30 then
+    ...
+end
+```
 
-Runtime verification required.
+The percentage can be secret.
 
-## Hidden enemy metadata
+## Resource percentage text — runtime verified
 
-`UnitLevel` and `UnitClassification` are documented available on Forever.
+Runtime-proven:
+- `UnitPowerPercent("player")` returns secret;
+- `string.format("%.0f%%", secretPercent)` succeeds and returns secret text;
+- `FontString:SetText(secretText)` succeeds.
+
+A percentage-only resource display is feasible without exposing the numeric value to Lua.
+
+## Hidden enemy metadata — partially runtime verified
+
+Ordinary valid targets returned:
+- non-secret numeric level;
+- non-secret `"normal"` classification.
 
 Product policy remains:
 - numeric level is not displayed;
-- elite classification is not explicitly warned by default;
-- these values may be used internally only when the API permits and the design decision allows.
+- elite classification is not explicitly warned by default.
 
-## Casting
+Still required:
+- elite/rare target;
+- valid target retained while active combat lockdown.
 
-Self cast/channel confirmation is expected to be feasible.
+## Casting — open
 
-Enemy cast data may be secret in restricted contexts. No Logres architecture may require unrestricted target cast times or spell IDs.
+`UnitCastingInfo` / `UnitChannelInfo` were callable, but the first pass did not capture an active player or target cast/channel.
 
-## Secure actions
+Self-cast confirmation and enemy-cast behavior remain to be runtime verified.
 
-Action buttons must be treated as protected/secure UI.
+## Secure actions / combat state
 
-Create and configure action mappings/layout outside combat. Any combat-time presentation changes must be proven safe for protected frames before adoption.
+Protected action constraints remain a documented boundary.
 
-## Compass/navigation
+Runtime adds an event-ordering warning:
+- `PLAYER_REGEN_DISABLED` was observed before `InCombatLockdown()` settled to true;
+- restriction state changed afterward.
 
-`C_Map.GetPlayerMapPosition` and `GetPlayerFacing` are unavailable in instanced content.
+State detection must read actual current state and tolerate transitions. Do not treat the first combat event as proof that every protected-state transition has already completed.
 
-World compass behavior must:
-- check availability;
-- suspend in instances;
-- restore outside;
-- never invent coordinates/bearings.
+## Compass/navigation — open-world runtime verified
 
-## State engine inputs
+Open-world runtime proved:
+- best-map lookup;
+- player map position;
+- non-secret X/Y;
+- non-secret facing.
 
-Source-backed candidates:
-- combat: `InCombatLockdown` plus regen events;
-- instance: `IsInInstance`;
-- PvP flag: `UnitIsPVP("player")`;
-- restriction state: `C_RestrictedActions.GetAddOnRestrictionState`.
+World compass inputs therefore exist.
 
-Runtime probe will establish exact transition behavior.
+Still required:
+- instance entry proving the documented loss/unavailability there;
+- quest waypoint behavior.
 
-## Quest waypoint
+## PvP state — API runtime verified, flagged transition open
 
-`C_QuestLog.GetNextWaypoint` is available, but waypoint coverage/semantics are not yet validated for Logres' quest helper.
+`UnitIsPVP("player")` is callable and returned non-secret false in the initial pass.
+
+Still required:
+- flagged transition.
+
+## Quest waypoint — documented, not runtime verified
+
+`C_QuestLog.GetNextWaypoint` is present, but waypoint coverage/semantics have not yet been exercised.
 
 ## Quiet Mode
 
-Visual chat suppression is conceptually separate from outbound communication.
+`C_ChatInfo.InChatMessagingLockdown()` was callable and false during the first pass.
 
-Automatic replies remain unapproved until chat-lockdown/restriction behavior is runtime tested and a separate design decision is made.
+Visual chat suppression remains conceptually separate from outbound communication.
 
-## Camera
+Automatic replies remain unapproved until a dedicated test establishes allowed behavior and a design decision is made.
 
-Basic zoom and camera CVars exist, and a maintained DynamicCam build supports Forever.
+## Camera — reads runtime verified
 
-Logres must preserve user settings and validate each CVar before later camera ownership.
+`GetCameraZoom()` and the camera CVars used by DynamicCam were readable in the initial pass.
+
+Observed values changed during the session, so do not treat them as defaults.
+
+No mutation behavior is yet promoted to runtime verified. Logres must preserve user settings before taking ownership of any CVar.
