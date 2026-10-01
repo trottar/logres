@@ -179,3 +179,13 @@ combat > PvP > instance > world
 
 This prevents combat/PvP state changes from causing unnecessary protected
 replacement churn.
+
+## P0060 context-policy diagnostic
+
+Context orchestration now has one integrated, secret-safe diagnostic.
+
+The check treats suppression ownership and action presentation as separate
+policy dimensions.
+
+This helps catch accidental global-mode coupling without reading protected
+Blizzard frame state.

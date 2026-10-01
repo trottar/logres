@@ -305,7 +305,7 @@ D.4 closes.
 
 ## D.5 — Context / PvP / instance orchestration
 
-**Status: SOURCE / DESIGN RESOLVED; INTEGRATED DIAGNOSTIC NEXT.**
+**Status: P0060 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
 
 Integrate orthogonal state:
 - context;
@@ -346,6 +346,21 @@ Current controller behavior already matches this matrix.
 
 Next:
 add integrated Context Policy Check runtime diagnostics.
+
+### D.5 P0060 integrated diagnostic
+
+Runtime target `0.0.26-dev`.
+
+Adds Context Policy Check to the developer panel, slash command path, and
+Run All.
+
+It validates D-028 using State + addon-owned controller/action-context state.
+
+It does not inspect Blizzard protected presentation values.
+
+No orchestration behavior changes.
+
+Runtime proof is next.
 
 ## D.6 — Restoration / integration validation
 

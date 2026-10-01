@@ -1,49 +1,49 @@
 # D.5 — Context / PvP / Instance Orchestration
 
-Status: SOURCE / DESIGN RESOLVED
+Status: P0060 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT
 Opened: 2026-10-01
-Resolved: 2026-10-01
+Source/design resolved: 2026-10-01
 
-## Result
+## Canonical policy
 
 D-028 is canonical.
 
-The current runtime controller already matches the selected first-pass
-suppression matrix:
-
-- Bar 2–3 replacement follows immersion preference only;
-- Player replacement follows immersion preference only;
-- Target replacement follows immersion preference only;
-- Quiet Mode follows immersion preference + world/instance context;
+The runtime ownership matrix remains:
+- Bar 2–3 replacement follows immersion preference;
+- Player replacement follows immersion preference;
+- Target replacement follows immersion preference;
+- Quiet Mode = immersion + world context;
 - Party remains unsupported/stock.
 
-ActionContext independently provides presentation precedence:
+ActionContext presentation precedence:
 
 ```text
 combat > PvP > instance > world
 ```
 
-## Important transition property
+## P0060
 
-Combat and PvP transitions should not churn protected replacement ownership.
+Adds integrated Context Policy Check.
 
-World/instance transition should change only Quiet Mode among current Phase D
-replacement domains.
+The diagnostic validates:
+- State/context shape;
+- ImmersionController desired/requested/applied ownership;
+- legal combat-deferred protected transitions;
+- ActionContext policy + alpha;
+- Party/Primary capability gates.
 
-## Implementation gap
+The check does not read Blizzard protected presentation state.
 
-The first D.5 runtime patch does not need new suppression behavior.
+## Runtime proof next
 
-It needs integrated diagnostic proof.
+Required:
+- world idle;
+- Immersion ON/OFF;
+- Run All.
 
-Add a Context Policy Check that compares:
-- State;
-- ImmersionController desired state;
-- ActionContext presentation policy;
-- supported capability gates.
+Natural/safe:
+- combat;
+- PvP.
 
-No secret/protected diagnostic readback.
-
-## Next
-
-Prepare the D.5 Context Policy Check runtime patch.
+Environmental:
+- instance transition if not naturally available.

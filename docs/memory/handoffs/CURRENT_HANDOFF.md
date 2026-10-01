@@ -2,28 +2,27 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0058 is verified pushed at `eba9998`.
-
-D.5 source/design review is complete.
+P0059 is verified pushed at `b245170`.
 
 D-028 is canonical.
 
-Selected current matrix:
-- action replacement follows immersion preference;
-- Player replacement follows immersion preference;
-- Target replacement follows immersion preference;
-- Quiet Mode = immersion ON + world context;
-- Party suppression = false;
-- ActionContext presentation precedence =
-  combat > PvP > instance > world.
+Current work:
+**P0060 — Context Policy Check runtime validation**
 
-No instanceType-specific branch in the first pass.
+Runtime target:
+`0.0.26-dev`
 
-Current runtime behavior already matches this matrix.
+P0060 adds no new suppression policy.
 
-Next patch should add integrated Context Policy Check diagnostics rather than
-inventing new suppression behavior.
+It adds an integrated developer-panel diagnostic validating:
+- State;
+- ImmersionController ownership;
+- ActionContext precedence/alpha;
+- combat-deferred protected transitions;
+- unsupported Party / Primary gates.
 
-P0059 is documentation/source-design only; no WoW redeploy required.
+No Blizzard protected presentation state is read by the new check.
+
+P0060 changes runtime code; full deployment block is mandatory.
 
 User performs all commits/pushes.

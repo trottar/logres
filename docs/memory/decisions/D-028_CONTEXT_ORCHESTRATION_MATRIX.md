@@ -140,3 +140,16 @@ Compass, quest presentation, and camera should use the same orthogonal state
 model in later phases.
 
 Their future policies do not expand Phase D runtime ownership.
+
+## P0060 implementation binding
+
+P0060 does not change D-028 policy.
+
+It adds an integrated Context Policy Check that derives the expected matrix from
+State and preference, then compares it with addon-owned ImmersionController and
+ActionContext state.
+
+Protected combat deferral is accepted where a protected domain has pending
+state and the applied state has not yet converged.
+
+No Blizzard protected presentation readback is part of this diagnostic.

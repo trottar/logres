@@ -1333,6 +1333,246 @@ local function runTargetFrameCheck()
     ))
 end
 
+local CONTEXT_POLICY_ALPHA = {
+    world = {
+        primary = 1.00,
+        secondary = 0.45,
+        utility = 0.20,
+    },
+    pvp = {
+        primary = 1.00,
+        secondary = 0.75,
+        utility = 0.40,
+    },
+    instance = {
+        primary = 1.00,
+        secondary = 0.70,
+        utility = 0.45,
+    },
+    combat = {
+        primary = 1.00,
+        secondary = 1.00,
+        utility = 0.75,
+    },
+}
+
+local function resolveExpectedContextPolicy(state)
+    if state.combat then
+        return "combat"
+    end
+
+    if state.pvpFlagged then
+        return "pvp"
+    end
+
+    if state.context == "instance" then
+        return "instance"
+    end
+
+    return "world"
+end
+
+local function contextDomainSettledOrDeferred(
+    applied,
+    expected,
+    pending
+)
+    if applied == expected then
+        return true
+    end
+
+    return pending == true
+        and InCombatLockdown()
+end
+
+local function runContextPolicyCheck()
+    local state = Logres:GetState()
+    local preferences = Logres:GetPreferences()
+
+    local controllerStatus =
+        Logres:GetModuleStatus("ImmersionController")
+    local controller =
+        Logres:GetModule("ImmersionController")
+    local controllerDebug =
+        controller:GetDebugStatus()
+
+    local actionContextStatus =
+        Logres:GetModuleStatus("ActionContext")
+    local actionContext =
+        Logres:GetModule("ActionContext")
+    local actionDebug =
+        actionContext:GetDebugStatus()
+
+    local immersion =
+        preferences.immersionEnabled == true
+
+    local expectedContext =
+        state.inInstance
+        and "instance"
+        or "world"
+
+    local expectedQuiet =
+        immersion
+        and state.context == "world"
+
+    local expectedActionPolicy =
+        resolveExpectedContextPolicy(state)
+
+    local expectedAlpha =
+        CONTEXT_POLICY_ALPHA[expectedActionPolicy]
+
+    local stateShapeOK =
+        (
+            state.context == "world"
+            or state.context == "instance"
+        )
+        and state.context == expectedContext
+        and type(state.combat) == "boolean"
+        and type(state.pvpFlagged) == "boolean"
+        and type(state.inInstance) == "boolean"
+
+    local controllerStateOK =
+        controllerDebug.immersionEnabled == immersion
+        and controllerDebug.context == state.context
+        and controllerDebug.combat == state.combat
+        and controllerDebug.pvpFlagged == state.pvpFlagged
+
+    local desiredOwnershipOK =
+        controllerDebug.actionReplacementDesired == immersion
+        and controllerDebug.quietModeDesired == expectedQuiet
+        and controllerDebug.playerFrameSuppressionDesired == immersion
+        and controllerDebug.targetFrameSuppressionDesired == immersion
+        and controllerDebug.partyFrameSuppressionDesired == false
+        and controllerDebug.primaryActionRoutingOwned == false
+
+    local requestedOwnershipOK =
+        controllerDebug.actionReplacementRequested == immersion
+        and controllerDebug.quietModeRequested == expectedQuiet
+        and controllerDebug.playerFrameSuppressionRequested == immersion
+        and controllerDebug.targetFrameSuppressionRequested == immersion
+
+    local appliedOwnershipOK =
+        contextDomainSettledOrDeferred(
+            controllerDebug.actionReplacementApplied,
+            immersion,
+            controllerDebug.actionReplacementPending
+        )
+        and controllerDebug.quietModeApplied == expectedQuiet
+        and contextDomainSettledOrDeferred(
+            controllerDebug.playerFrameSuppressionApplied,
+            immersion,
+            controllerDebug.playerFrameSuppressionPending
+        )
+        and contextDomainSettledOrDeferred(
+            controllerDebug.targetFrameSuppressionApplied,
+            immersion,
+            controllerDebug.targetFrameSuppressionPending
+        )
+
+    local actionPolicyOK =
+        actionDebug.policyName == expectedActionPolicy
+        and actionDebug.primaryAlpha == expectedAlpha.primary
+        and actionDebug.secondaryAlpha == expectedAlpha.secondary
+        and actionDebug.utilityAlpha == expectedAlpha.utility
+        and actionDebug.alphaZeroUsed == false
+
+    local errorsClear =
+        controllerDebug.actionReplacementError == nil
+        and controllerDebug.quietModeError == nil
+        and controllerDebug.playerFrameSuppressionError == nil
+        and controllerDebug.targetFrameSuppressionError == nil
+        and controllerDebug.lastActionError == nil
+        and controllerDebug.lastQuietError == nil
+        and controllerDebug.lastPlayerError == nil
+        and controllerDebug.lastTargetError == nil
+
+    local modulesReady =
+        controllerStatus.initialized == true
+        and controllerStatus.enabled == true
+        and controllerDebug.moduleEnabled == true
+        and actionContextStatus.initialized == true
+        and actionContextStatus.enabled == true
+        and actionDebug.moduleEnabled == true
+
+    local passed =
+        modulesReady
+        and stateShapeOK
+        and controllerStateOK
+        and desiredOwnershipOK
+        and requestedOwnershipOK
+        and appliedOwnershipOK
+        and actionPolicyOK
+        and errorsClear
+
+    if passed then
+        emit(string.format(
+            "Logres contextpolicycheck: PASS (immersion=%s context=%s instance=%s/%s combat=%s pvp=%s actionPolicy=%s alpha=%.2f/%.2f/%.2f replace=%s quiet=%s player=%s target=%s party=false pending=%s/%s/%s)",
+            boolText(immersion),
+            tostring(state.context),
+            boolText(state.inInstance),
+            tostring(state.instanceType),
+            boolText(state.combat),
+            boolText(state.pvpFlagged),
+            tostring(actionDebug.policyName),
+            actionDebug.primaryAlpha,
+            actionDebug.secondaryAlpha,
+            actionDebug.utilityAlpha,
+            boolText(controllerDebug.actionReplacementDesired),
+            boolText(controllerDebug.quietModeDesired),
+            boolText(controllerDebug.playerFrameSuppressionDesired),
+            boolText(controllerDebug.targetFrameSuppressionDesired),
+            boolText(controllerDebug.actionReplacementPending),
+            boolText(controllerDebug.playerFrameSuppressionPending),
+            boolText(controllerDebug.targetFrameSuppressionPending)
+        ))
+        return
+    end
+
+    emit(string.format(
+        "Logres contextpolicycheck: FAIL (modulesReady=%s stateShape=%s controllerState=%s desiredOwnership=%s requestedOwnership=%s appliedOwnership=%s actionPolicy=%s errorsClear=%s immersion=%s context=%s expectedContext=%s instance=%s/%s combat=%s pvp=%s policy=%s expectedPolicy=%s alpha=%s/%s/%s expectedAlpha=%s/%s/%s actionDesired=%s requested=%s applied=%s pending=%s quietDesired=%s requested=%s applied=%s playerDesired=%s requested=%s applied=%s pending=%s targetDesired=%s requested=%s applied=%s pending=%s party=%s primaryRoutingOwned=%s)",
+        tostring(modulesReady),
+        tostring(stateShapeOK),
+        tostring(controllerStateOK),
+        tostring(desiredOwnershipOK),
+        tostring(requestedOwnershipOK),
+        tostring(appliedOwnershipOK),
+        tostring(actionPolicyOK),
+        tostring(errorsClear),
+        tostring(immersion),
+        tostring(state.context),
+        tostring(expectedContext),
+        tostring(state.inInstance),
+        tostring(state.instanceType),
+        tostring(state.combat),
+        tostring(state.pvpFlagged),
+        tostring(actionDebug.policyName),
+        tostring(expectedActionPolicy),
+        tostring(actionDebug.primaryAlpha),
+        tostring(actionDebug.secondaryAlpha),
+        tostring(actionDebug.utilityAlpha),
+        tostring(expectedAlpha.primary),
+        tostring(expectedAlpha.secondary),
+        tostring(expectedAlpha.utility),
+        tostring(controllerDebug.actionReplacementDesired),
+        tostring(controllerDebug.actionReplacementRequested),
+        tostring(controllerDebug.actionReplacementApplied),
+        tostring(controllerDebug.actionReplacementPending),
+        tostring(controllerDebug.quietModeDesired),
+        tostring(controllerDebug.quietModeRequested),
+        tostring(controllerDebug.quietModeApplied),
+        tostring(controllerDebug.playerFrameSuppressionDesired),
+        tostring(controllerDebug.playerFrameSuppressionRequested),
+        tostring(controllerDebug.playerFrameSuppressionApplied),
+        tostring(controllerDebug.playerFrameSuppressionPending),
+        tostring(controllerDebug.targetFrameSuppressionDesired),
+        tostring(controllerDebug.targetFrameSuppressionRequested),
+        tostring(controllerDebug.targetFrameSuppressionApplied),
+        tostring(controllerDebug.targetFrameSuppressionPending),
+        tostring(controllerDebug.partyFrameSuppressionDesired),
+        tostring(controllerDebug.primaryActionRoutingOwned)
+    ))
+end
+
 local function runAllChecks()
     emit("Logres checkall: beginning")
     printStatus()
@@ -1347,6 +1587,7 @@ local function runAllChecks()
     runQuietModeCheck()
     runPlayerFrameCheck()
     runTargetFrameCheck()
+    runContextPolicyCheck()
     emit("Logres checkall: complete")
 end
 
@@ -1422,6 +1663,7 @@ local function printHelp()
     emit("  /logres quietcheck")
     emit("  /logres playerframecheck")
     emit("  /logres targetframecheck")
+    emit("  /logres contextpolicycheck")
     emit("  /logres hudpreview [on|off]")
     emit("  /logres immersion [on|off|toggle]")
     emit("  /logres debug on")
@@ -1537,6 +1779,11 @@ local function handleCommand(message)
 
     if command == "targetframecheck" then
         runTargetFrameCheck()
+        return
+    end
+
+    if command == "contextpolicycheck" then
+        runContextPolicyCheck()
         return
     end
 
@@ -1663,6 +1910,11 @@ Logres:RegisterDevPanelAction(
     "targetFrameCheck",
     "Target Frame Check",
     "targetframecheck"
+)
+Logres:RegisterDevPanelAction(
+    "contextPolicyCheck",
+    "Context Policy Check",
+    "contextpolicycheck"
 )
 Logres:RegisterDevPanelAction(
     "immersionOn",

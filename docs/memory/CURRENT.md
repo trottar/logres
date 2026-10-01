@@ -14,7 +14,7 @@ project: logres
 
 **D.5 — Context / PvP / instance orchestration runtime validation.**
 
-D.5 source/design review is complete.
+P0060 integrated diagnostic implementation is prepared.
 
 ## Verified State
 
@@ -27,23 +27,20 @@ D.5 source/design review is complete.
 - D.3 complete.
 - D.4 complete for supported Player + Target selective replacement.
 - Party/CompactPartyFrame suppression remains capability-deferred.
-- P0058 pushed at `eba9998`.
-- runtime remains `0.0.25-dev`.
-- D-028 context orchestration matrix accepted.
-- current ImmersionController already matches the first-pass D-028 ownership
-  matrix.
-- Bar 2–3 replacement remains ON across world/instance/combat/PvP whenever
-  immersion is ON.
-- Player selective replacement remains ON across those states whenever
-  immersion is ON.
-- Target selective replacement remains ON across those states whenever
-  immersion is ON.
-- Quiet Mode is ON only in world context while immersion is ON.
-- Party suppression remains OFF in all states.
-- ActionContext precedence remains:
+- P0059 pushed at `b245170`.
+- runtime before P0060: `0.0.25-dev`.
+- P0060 target: `0.0.26-dev`.
+- D-028 is canonical.
+- P0060 changes diagnostics, not orchestration behavior.
+- Context Policy Check validates State + ImmersionController + ActionContext.
+- Context Policy Check does not inspect Blizzard protected/secret presentation
+  state.
+- expected ActionContext precedence remains:
   `combat > PvP > instance > world`.
-- `instanceType` remains observed but does not alter D.5 first-pass policy.
-- mounted/resting/taxi/interacting do not alter current Phase D suppression.
+- Quiet Mode remains world-only while immersion is ON.
+- Bar 2–3, Player, and Target replacement remain immersion-preference-owned.
+- Party suppression remains false.
+- instanceType remains observed but not first-pass policy-bearing.
 - TargetFrame intermittent reappearance remains OPEN / UNREPRODUCED.
 - future Aura / Status Presentation domain remains deferred.
 - Primary replacement/routing ownership remains deferred.
@@ -52,40 +49,51 @@ D.5 source/design review is complete.
 
 ## Next Action
 
-Implement D.5 integrated runtime diagnostics.
+Install/review/commit/push P0060.
 
-Add a `Context Policy Check` to the developer panel / command path.
+Because runtime code changes, deploy explicitly:
 
-It should validate:
-1. State context/combat/PvP snapshot exists;
-2. ImmersionController desired action ownership matches immersion preference;
-3. Quiet Mode desired state is `immersion && context == world`;
-4. Player desired ownership matches immersion preference;
-5. Target desired ownership matches immersion preference;
-6. Party desired ownership is false;
-7. ActionContext policy matches:
-   - combat first;
-   - then PvP;
-   - then instance;
-   - otherwise world;
-8. no secret/protected UI state is inspected.
+```bash
+cd ~/Projects/logres
 
-No behavioral policy change is required unless runtime proof exposes one.
+WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
+ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
+
+./tools/deploy_logres.sh "$ADDONS"
+```
+
+Then `/reload`.
+
+Use the developer panel:
+1. Status — confirm `0.0.26-dev`;
+2. Context Policy Check;
+3. Run All;
+4. Immersion OFF;
+5. Context Policy Check;
+6. Immersion ON;
+7. Context Policy Check.
+
+Then where safe:
+8. enter combat and run Context Policy Check;
+9. leave combat and run it again;
+10. if a PvP flag transition is convenient, validate idle PvP policy.
+
+Instance transition may remain environmental if no instance is naturally
+available.
 
 ## Success Criteria
 
 D.5 runtime validation succeeds when:
 - world idle policy passes;
-- combat transition resolves combat presentation without replacement churn;
-- PvP transition resolves PvP presentation when not in combat;
-- world/instance transition changes Quiet Mode only among current supported
-  replacement domains;
-- unsupported Party remains stock;
-- Immersion OFF restores supported replacement ownership;
+- Immersion OFF policy passes;
+- Immersion ON policy passes;
+- combat policy resolves to ActionContext combat without replacement ownership
+  churn;
+- PvP policy resolves to PvP presentation when not in combat;
+- world/instance changes only Quiet Mode among supported Phase D suppression
+  domains;
+- Party remains stock;
 - no Lua/taint/secret regression occurs.
-
-Instance proof may remain environmental if no natural instance transition is
-available.
 
 ## Do Not Reopen Without New Evidence
 
@@ -99,10 +107,8 @@ available.
 
 ## Relevant References
 
+- `docs/memory/evidence/D5_P0060_CONTEXT_POLICY_CHECK_IMPLEMENTATION_2026-10-01.md`
 - `docs/memory/evidence/D5_CONTEXT_ORCHESTRATION_SOURCE_REVIEW_2026-10-01.md`
 - `docs/memory/decisions/D-028_CONTEXT_ORCHESTRATION_MATRIX.md`
 - `docs/memory/investigations/D5_CONTEXT_PVP_INSTANCE_ORCHESTRATION.md`
-- `Logres/Core/State.lua`
-- `Logres/Immersion/Controller.lua`
-- `Logres/Actions/Context.lua`
-- `docs/memory/DESIGN_PRINCIPLES.md`
+- `tools/check_context_policy_contract.py`

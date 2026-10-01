@@ -60,6 +60,7 @@
 | P0056 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME DIAGNOSTIC FAIL | Target selective replacement (`4d7b6b1`); Target Frame Check hit secret boolean branch |
 | P0057 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME PASS | Make TargetFrame restoration/diagnostics secret-safe (`fc848b9`) |
 | P0058 | 2026-10-01 | INSTALLED / PUSHED | Record P0057 pass; close D.4; track Target reappearance and aura domain; open D.5 (`eba9998`) |
-| P0059 | 2026-10-01 | PREPARED | Resolve D.5 orthogonal context/PvP/instance orchestration matrix |
+| P0059 | 2026-10-01 | INSTALLED / PUSHED | Resolve D.5 orthogonal context/PvP/instance orchestration matrix (`b245170`) |
+| P0060 | 2026-10-01 | PREPARED | Add integrated D.5 Context Policy Check runtime diagnostic |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

@@ -10,7 +10,7 @@ Active work item:
 **D.5 Context / PvP / instance orchestration runtime validation**
 
 State:
-**SOURCE / DESIGN RESOLVED; INTEGRATED DIAGNOSTIC NEXT**
+**P0060 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
 
 ## Phase status
 
@@ -34,5 +34,5 @@ State:
 | D.2 Immersion Controller foundation | COMPLETE |
 | D.3 Quiet Mode runtime suppression | COMPLETE — instance proof deferred |
 | D.4 Unit-frame selective suppression | COMPLETE — Player/Target proven; Party deferred |
-| D.5 Context/PvP/instance orchestration | SOURCE-RESOLVED — diagnostic proof next |
+| D.5 Context/PvP/instance orchestration | P0060 PREPARED — runtime proof next |
 | D.6 Restoration/integration validation | QUEUED |
