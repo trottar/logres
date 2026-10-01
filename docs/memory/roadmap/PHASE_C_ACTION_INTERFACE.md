@@ -146,7 +146,7 @@ roles/sizes/shapes, including compact groups such as a six-slot utility bar.
 
 ## C.4 — Contextual visibility
 
-**Status: SOURCE-RESOLVED; IMPLEMENTATION NEXT.**
+**Status: P0039 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
 
 Integrate with observed state:
 - world;
@@ -166,7 +166,20 @@ D-021:
 - unsupported special pages retain stock fallback.
 
 First implementation should prove context alpha and normal secure paging before
-expanding into every vehicle/override/form state.
+expanding into every vehicle/override/form state.### P0039 implementation
+
+Context:
+- state-driven non-zero role alpha;
+- world/PvP/instance/combat weighting;
+- no protected contextual Show/Hide.
+
+Primary paging:
+- IDs 1–12;
+- secure actionpage driver for normal pages 1–6;
+- presentation synchronized separately;
+- special page coverage explicitly remains `normal-pages-only`.
+
+Stock Blizzard bars remain visible.
 
 
 ## C.5 — Stock action-bar replacement

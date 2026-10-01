@@ -2,20 +2,24 @@
 
 Authoritative state: `../CURRENT.md`.
 
-Current phase:
-**Phase C — Action Interface**
-
 Current work:
 **C.4 — Contextual Visibility / Secure Paging**
 
-P0038 source-resolves C.4.
+P0039 is prepared.
 
-D-021:
-- use non-zero alpha for first-pass context emphasis;
-- do not ordinary Show/Hide protected action clusters in combat;
-- migrate Primary execution toward secure ID/actionpage paging;
-- keep stock fallback for unproven special action states.
+Version:
+`0.0.17-dev`
 
-P0038 is documentation/source-evidence only; no WoW redeploy required.
+Adds:
+- state-driven action-role alpha;
+- secure normal Primary actionpage driver;
+- presentation-only page registration;
+- expanded Action Check.
+
+Special form/vehicle/override/possess paging is not claimed.
+
+Stock bars remain visible.
+
+P0039 changes runtime code; full deploy block is mandatory.
 
 User performs all commits/pushes.

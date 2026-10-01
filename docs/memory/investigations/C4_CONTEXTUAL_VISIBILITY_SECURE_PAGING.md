@@ -1,6 +1,6 @@
 # C.4 — Contextual Visibility / Secure Paging
 
-Status: SOURCE-RESOLVED; IMPLEMENTATION NEXT
+Status: P0039 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT
 Opened: 2026-10-01
 
 ## Goal
@@ -8,108 +8,163 @@ Opened: 2026-10-01
 Make the proven Logres action constellation respond to gameplay context without
 violating combat-lockdown rules.
 
-Resolve the known Primary combat-time page-remapping limitation before stock
+Resolve the normal Primary combat-time page-remapping limitation before stock
 action-bar suppression is considered.
 
-## Canonical source evidence
+## Canonical contract
 
-`../evidence/C4_CONTEXT_VISIBILITY_SECURE_PAGING_SOURCE_REVIEW_2026-10-01.md`
+- source evidence:
+  `../evidence/C4_CONTEXT_VISIBILITY_SECURE_PAGING_SOURCE_REVIEW_2026-10-01.md`
+- decision:
+  `../decisions/D-021_ACTION_CONTEXT_AND_SECURE_PAGING_CONTRACT.md`
 
-## Canonical decision
+## P0039 Part A — contextual emphasis
 
-`../decisions/D-021_ACTION_CONTEXT_AND_SECURE_PAGING_CONTRACT.md`
+Adds `Actions/Context.lua`.
 
-## Resolved context approach
+It subscribes to the existing orthogonal state contract:
+- combat;
+- pvpFlagged;
+- context.
 
-Initial C.4 uses presentation alpha, not protected Show/Hide.
+Precedence:
 
-Role policy:
+```text
+combat > pvpFlagged > instance > world/default
+```
+
+First-pass policy:
 
 | State | Primary | Secondary | Utility |
 | --- | ---: | ---: | ---: |
-| world/default idle | 1.00 | 0.45 | 0.20 |
-| PvP flagged idle | 1.00 | 0.75 | 0.40 |
-| instance idle | 1.00 | 0.70 | 0.45 |
+| world/default | 1.00 | 0.45 | 0.20 |
+| PvP flagged | 1.00 | 0.75 | 0.40 |
+| instance | 1.00 | 0.70 | 0.45 |
 | combat | 1.00 | 1.00 | 0.75 |
 
-No alpha-zero state.
+No alpha-zero state exists.
 
-All buttons stay interactable.
+All secure action buttons remain interactable.
 
-## Resolved paging direction
+## P0039 Part B — normal secure Primary paging
 
-Primary secure execution should use:
-- button IDs 1–12;
-- `actionpage`;
-- AttributeDriver / SecureStateDriver macro conditions.
+Primary buttons now receive IDs 1–12.
 
-This removes the need for insecure combat-time protected attribute remapping
-for supported states.
+Execution page is driven by:
 
-## Implementation split
+```text
+[bar:2]2;
+[bar:3]3;
+[bar:4]4;
+[bar:5]5;
+[bar:6]6;
+1
+```
 
-P0039 should be narrow.
+through `RegisterAttributeDriver(..., "actionpage", ...)`.
 
-### Part A — contextual alpha
+The protected action no longer needs ordinary Lua to rewrite concrete `action`
+attributes on normal page changes.
 
-Add role-policy application from existing State subscription.
+## Presentation synchronization
 
-Prove:
-- world idle;
-- PvP flag modifier;
-- combat;
-- instance if naturally available.
+P0039 separates:
+- secure execution selection;
+- ordinary icon/cooldown/count/range registration.
 
-### Part B — secure primary paging foundation
+`ActionButton.RegisterPresentation` updates presentation registration without
+changing the protected `action` attribute.
 
-Move Primary execution to ID/actionpage driver.
+Primary presentation resolves the same normal-page driver through:
 
-Prove at minimum:
-- ordinary page 1;
-- out-of-combat page switching;
-- combat page switching if practical;
-- presentation follows execution.
+```text
+SecureCmdOptionParse(PRIMARY_PAGE_DRIVER)
+```
 
-Special vehicle/override/form states remain explicit capability gates until
-tested.
+and updates:
+- action slot fields;
+- native button registration;
+- range registration;
+- icon/cooldown/count/usability/range state.
+
+## Special-state boundary
+
+P0039 intentionally supports only normal primary pages 1–6.
+
+Not yet claimed:
+- bonus/form bars;
+- temporary shapeshift;
+- vehicle;
+- override;
+- possess.
+
+Debug status reports:
+
+```text
+specialPagingCoverage = normal-pages-only
+```
+
+Stock Blizzard bars remain visible.
 
 ## Diagnostics
 
-Extend Action Check with:
-- current context-policy alpha values;
-- secure paging driver ready;
-- active presentation page/slots;
-- stock fallback still enabled.
-
-Consider a focused `Action Context Check` only if Action Check becomes too
-dense.
+Action Check now includes:
+- secure paging driver readiness;
+- secure page attribute;
+- current presentation page/slots;
+- context policy;
+- Primary/Secondary/Utility alpha;
+- special paging coverage;
+- stock fallback status.
 
 ## Runtime proof
 
-Context:
-1. world idle weighting;
-2. PvP flagged weighting if convenient;
-3. combat weighting;
-4. no protected-action error;
-5. faded buttons remain clickable/key-usable.
+After deployment:
 
-Paging:
-1. Primary page 1 correct;
-2. change normal primary page and verify execution + icon/cooldown presentation;
-3. if a safe combat-time page change is naturally available, verify it;
-4. otherwise record combat page-change true path as pending rather than
-   manufacturing a class/form scenario.
+### Baseline
 
-Special states:
-- do not force vehicle/override/form travel solely for C.4;
-- retain stock fallback and explicit retry conditions.
+1. confirm `0.0.17-dev`;
+2. Run All / Action Check PASS;
+3. confirm world-idle alpha:
+   - Primary full;
+   - Secondary noticeably subdued;
+   - Utility strongly subdued;
+4. faded clusters must remain clickable/key-usable.
+
+### Combat
+
+5. enter ordinary combat;
+6. Secondary should rise to full;
+7. Utility should rise but remain less dominant than Primary/Secondary;
+8. actions remain clickable/key-usable;
+9. no protected-action/taint error.
+
+### PvP modifier
+
+10. outside combat, use `/pvp` if convenient;
+11. Secondary/Utility should rise above ordinary world idle;
+12. combat should still override the PvP weighting.
+
+### Instance
+
+13. if naturally convenient, instance idle should use the intermediate
+    conservative weighting;
+14. otherwise instance alpha true path may remain environment-deferred.
+
+### Primary paging
+
+15. switch normal primary pages 1–6 if the current UI permits;
+16. Logres icon/presentation must follow the page;
+17. clicking/keying Logres must execute the action shown;
+18. page switching must not require waiting for combat to end.
+
+A combat-time normal page switch is valuable if naturally practical.
+
+Do not manufacture a special class/form/vehicle state solely for P0039.
 
 ## Exit
 
-C.4 completes when:
-- contextual role emphasis is runtime-proven;
-- no alpha-zero invisible click zones exist;
-- normal Primary secure paging is proven;
-- supported combat-time page changes no longer depend on post-combat attribute
-  mutation;
-- unsupported special paging states retain safe stock fallback.
+C.4 remains open until:
+- context weighting is runtime-proven;
+- normal secure paging execution/presentation is runtime-proven;
+- unsupported special pages retain explicit safe fallback.

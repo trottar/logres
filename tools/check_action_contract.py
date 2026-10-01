@@ -35,6 +35,7 @@ if BUTTON_PATH.is_file():
         'button:SetAttribute("typerelease", "actionrelease")',
         '"LeftButtonDown"',
         '"RightButtonDown"',
+        "function ActionButton.RegisterPresentation(button, actionSlot)",
         "function ActionButton.Register(button, actionSlot)",
         'button:SetAttribute("action", actionSlot)',
         "C_ActionBar.RegisterActionUIButton(",
@@ -91,19 +92,23 @@ if PRIMARY_PATH.is_file():
         "local ActionButton = Logres.ActionButton",
         "ActionButton.CreateCluster(",
         "ActionButton.Create(",
-        "ActionButton.Register(",
+        "ActionButton.RegisterPresentation(",
         "ActionButton.Unregister(",
-        "C_ActionBar.GetActionBarPage()",
+        'button:SetID(index)',
+        "RegisterAttributeDriver(",
+        '"actionpage"',
+        "UnregisterAttributeDriver(",
+        "SecureCmdOptionParse(PRIMARY_PAGE_DRIVER)",
         "SetOverrideBindingClick(",
         "ClearOverrideBindings(",
         "function Primary:SetBindingRoutingEnabled(enabled)",
         "bindingRoutingEnabled = false",
         'GetBindingKey(command)',
         'event == "ACTIONBAR_PAGE_CHANGED"',
+        "RefreshPresentationPage()",
         'event == "UPDATE_BINDINGS"',
         'event == "PLAYER_REGEN_ENABLED"',
         "InCombatLockdown()",
-        "pendingPageRefresh",
         "pendingBindingRefresh",
         "stockBarsSuppressed = false",
     ]
@@ -112,7 +117,13 @@ if PRIMARY_PATH.is_file():
         if fragment not in source:
             errors.append(f"Primary.lua missing: {fragment}")
 
-    for fragment in ("UseAction(", "SaveBindings(", "SetBinding("):
+    for fragment in (
+        "UseAction(",
+        "SaveBindings(",
+        "SetBinding(",
+        "C_ActionBar.GetActionBarPage(",
+        "ActionButton.Register(\n",
+    ):
         if fragment in source:
             errors.append(f"Primary.lua forbidden path present: {fragment}")
 

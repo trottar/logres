@@ -337,3 +337,27 @@ Stock bars remain visible until relevant paths are runtime-proven.
 Context alpha is a role policy, not a permanent hardcoded frame policy.
 
 D-020 profile-defined clusters should be able to consume the same policy.
+## C.4 P0039 implementation
+
+Context policy now lives in `Actions/Context.lua`.
+
+It consumes orthogonal state and applies non-zero alpha by role.
+
+No protected Show/Hide is used for first-pass contextual behavior.
+
+Primary normal paging now uses:
+- button IDs 1–12;
+- secure `actionpage` attribute drivers;
+- the normal `[bar:n]` condition family.
+
+Primary presentation registration is separated from protected action
+assignment through `ActionButton.RegisterPresentation`.
+
+This lets icons/cooldowns/count/range follow the driven page without ordinary
+Lua rewriting the protected secure action during combat.
+
+Current capability gate:
+`normal-pages-only`.
+
+Special bonus/form/vehicle/override/possess action states remain stock-fallback
+territory until proven.

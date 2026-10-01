@@ -39,6 +39,7 @@
 | P0035 | 2026-10-01 | INSTALLED / PUSHED | Resolve C.3 secondary/utility slot, binding, reuse, and layout contract (`fccaabd`) |
 | P0036 | 2026-10-01 | INSTALLED / PUSHED | C.3 shared action primitive + Secondary/Utility secure clusters (`f192557`) |
 | P0037 | 2026-10-01 | INSTALLED / PUSHED | Record C.3 proof; add action-layout customization direction; open C.4 (`d1a6527`) |
-| P0038 | 2026-10-01 | PREPARED | Resolve C.4 contextual alpha and secure Primary paging contract |
+| P0038 | 2026-10-01 | INSTALLED / PUSHED | Resolve C.4 contextual alpha and secure Primary paging contract (`1dbc3cf`) |
+| P0039 | 2026-10-01 | PREPARED | C.4 context alpha + secure normal Primary paging |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

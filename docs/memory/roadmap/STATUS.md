@@ -10,7 +10,7 @@ Active work item:
 **C.4 Contextual Visibility / Secure Paging**
 
 State:
-**SOURCE-RESOLVED; IMPLEMENTATION NEXT**
+**P0039 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
 
 ## Phase status
 
@@ -33,19 +33,20 @@ State:
 | C.1 Secure action capability/source review | COMPLETE |
 | C.2 Primary action cluster | COMPLETE |
 | C.3 Secondary / utility clusters | COMPLETE |
-| C.4 Contextual visibility / secure paging | ACTIVE — source-resolved |
+| C.4 Contextual visibility / secure paging | ACTIVE — P0039 prepared |
 | C.5 Stock action-bar replacement | QUEUED |
 | C.6 Action interface integration validation | QUEUED |
 
-## C.4 contract
+## P0039
 
 Context:
-- alpha emphasis only initially;
-- no alpha-zero invisible click zones;
-- Primary full;
-- Secondary/Utility context weighted.
+- Primary always full;
+- Secondary/Utility non-zero state-driven alpha;
+- world/PvP/instance/combat policy.
 
 Paging:
-- Primary moves to secure ID/actionpage driver;
-- ordinary presentation follows secure page;
-- unsupported special states keep stock fallback.
+- secure normal pages 1–6;
+- presentation follows driven page;
+- special paging remains capability-gated.
+
+Stock action bars remain visible.

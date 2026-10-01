@@ -130,8 +130,18 @@ function ActionButton.Create(
     return button
 end
 
-function ActionButton.Register(button, actionSlot)
-    button:SetAttribute("action", actionSlot)
+function ActionButton.RegisterPresentation(button, actionSlot)
+    if (
+        button.registeredActionSlot
+        and button.registeredActionSlot ~= actionSlot
+    ) then
+        C_ActionBar.EnableActionRangeCheck(
+            button.registeredActionSlot,
+            false
+        )
+        C_ActionBar.UnregisterActionUIButton(button)
+    end
+
     button.actionSlot = actionSlot
 
     C_ActionBar.RegisterActionUIButton(
@@ -142,6 +152,11 @@ function ActionButton.Register(button, actionSlot)
     C_ActionBar.EnableActionRangeCheck(actionSlot, true)
 
     button.registeredActionSlot = actionSlot
+end
+
+function ActionButton.Register(button, actionSlot)
+    button:SetAttribute("action", actionSlot)
+    ActionButton.RegisterPresentation(button, actionSlot)
 end
 
 function ActionButton.Unregister(button)

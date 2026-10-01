@@ -14,9 +14,7 @@ project: logres
 
 **C.4 — Contextual Visibility / Secure Paging.**
 
-C.4 source/design resolution is complete.
-
-Implementation is next.
+P0039 runtime implementation is prepared.
 
 ## Verified State
 
@@ -26,73 +24,79 @@ Implementation is next.
 - C.1 complete.
 - C.2 complete.
 - C.3 complete.
-- P0037 pushed at `d1a6527`.
-- current runtime version remains `0.0.16-dev`.
-- Primary/Secondary/Utility secure execution proven.
-- D-020 future layout customization direction accepted.
-- D-021 context/secure-paging contract accepted.
-- protected ordinary Show/Hide/SetAttribute remains forbidden in combat.
-- alpha-based emphasis is the selected initial context approach.
-- no alpha-zero action state is allowed.
-- SecureActionButtonTemplate ID/actionpage is the selected Primary paging path.
-- stock Blizzard action bars remain visible.
+- P0038 pushed at `1dbc3cf`.
+- runtime baseline before P0039: `0.0.16-dev`.
+- P0039 version: `0.0.17-dev`.
+- D-021 is canonical.
+- P0039 static action/context contracts pass.
+- contextual policy uses non-zero alpha only.
+- Primary normal execution uses secure ID/actionpage driver.
+- Primary presentation follows the same normal-page driver.
+- special paging coverage remains `normal-pages-only`.
+- stock Blizzard bars remain visible.
 - cast/channel cue color regression remains open visual debt.
 
 ## Next Action
 
-Implement C.4 in a narrow runtime patch.
+Install/review/commit/push P0039.
 
-Part A:
-- subscribe action policy to existing state;
-- apply role alpha from combat/pvpFlagged/context;
-- keep all action buttons interactable.
+Because runtime code changes, deploy explicitly:
 
-Part B:
-- migrate Primary secure execution toward button ID + actionpage driver;
-- synchronize presentation slot/page with secure execution state;
-- preserve post-combat fallback until new path is runtime-proven.
+```bash
+cd ~/Projects/logres
 
-Diagnostics:
-- extend Action Check with role alpha/policy;
-- report secure paging readiness/current presentation page;
-- keep stock fallback status explicit.
+WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
+ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
 
-Runtime proof should cover:
-- world idle alpha;
-- combat alpha;
-- PvP alpha if convenient;
-- instance alpha if naturally available;
-- Primary normal page switching;
-- mouse/key execution after page changes;
-- icon/cooldown presentation matches executed action;
-- no protected/taint/Lua/secret errors.
+./tools/deploy_logres.sh "$ADDONS"
+```
 
-Do not force vehicle/override/form scenarios solely for proof.
+Then `/reload`.
 
-Record unavailable special states with retry conditions.
+Use the diagnostics panel:
+- Run All;
+- Action Check.
+
+Confirm version:
+`0.0.17-dev`.
+
+Test:
+1. world idle alpha weighting;
+2. faded Secondary/Utility remain usable;
+3. combat raises Secondary/Utility;
+4. PvP modifier outside combat if convenient;
+5. instance idle if naturally available;
+6. normal Primary page switching;
+7. icon/presentation follows page;
+8. mouse/key execution matches displayed action;
+9. normal page switching does not require combat end;
+10. no protected/taint/Lua/secret errors.
+
+Do not force bonus/form/vehicle/override/possess scenarios.
+
+Those remain explicit capability gates with stock fallback.
 
 ## Success Criteria
 
-C.4 succeeds when:
-- contextual alpha policy is correct and combat-safe;
-- Primary always remains fully legible;
-- faded actions remain accessible;
-- normal Primary paging executes securely;
-- presentation follows the securely selected page;
-- no combat-time protected mutation error occurs;
-- unsupported special states retain stock fallback;
-- no required action becomes inaccessible.
+C.4 P0039 succeeds when:
+- world/combat context alpha works;
+- PvP alpha works if available or is explicitly deferred;
+- instance alpha works if available or is explicitly deferred;
+- faded controls remain usable;
+- normal Primary paging is secure and presentation-synchronized;
+- no protected/taint/Lua/secret error occurs;
+- unsupported special states retain safe stock fallback.
 
 ## Do Not Reopen Without New Evidence
 
 - **C.1:** complete.
 - **C.2:** complete.
 - **C.3:** complete.
-- **D-020:** current geometry is provisional.
-- **D-021:** context/paging contract is canonical.
-- **Alpha 0:** rejected for action-context fading.
-- **Special action states:** capability-gated until runtime proof.
-- **Stock action bars:** remain visible.
+- **D-020:** current geometry provisional.
+- **D-021:** canonical C.4 contract.
+- **Alpha zero:** rejected.
+- **Special paging:** not claimed in P0039.
+- **Stock bars:** remain visible.
 - **Cast cue colors:** open visual debt.
 - **Git authority:** user performs commits/pushes.
 
@@ -101,6 +105,8 @@ C.4 succeeds when:
 - `docs/memory/evidence/C4_CONTEXT_VISIBILITY_SECURE_PAGING_SOURCE_REVIEW_2026-10-01.md`
 - `docs/memory/decisions/D-021_ACTION_CONTEXT_AND_SECURE_PAGING_CONTRACT.md`
 - `docs/memory/investigations/C4_CONTEXTUAL_VISIBILITY_SECURE_PAGING.md`
-- `docs/memory/decisions/D-020_ACTION_LAYOUT_CUSTOMIZATION_DIRECTION.md`
 - `docs/memory/architecture/ACTION_CLUSTERS.md`
-- `docs/memory/decisions/D-017_BLIZZARD_UI_SUPPRESSION_AND_RESTORATION.md`
+- `Logres/Actions/Context.lua`
+- `Logres/Actions/Primary.lua`
+- `Logres/Actions/Button.lua`
+- `tools/check_action_context_contract.py`

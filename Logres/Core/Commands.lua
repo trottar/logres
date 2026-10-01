@@ -464,21 +464,16 @@ local function runActionCheck()
         Logres:GetModule("SecondaryUtilityActions")
     local sideDebug = sideActions:GetDebugStatus()
 
+    local contextStatus = Logres:GetModuleStatus("ActionContext")
+    local actionContext = Logres:GetModule("ActionContext")
+    local contextDebug = actionContext:GetDebugStatus()
+
     local secondary = sideDebug.secondary
     local utility = sideDebug.utility
 
     local primaryDeferredOK =
-        (
-            primaryDebug.pendingPageRefresh == false
-            and primaryDebug.pendingBindingRefresh == false
-        )
-        or (
-            InCombatLockdown()
-            and (
-                primaryDebug.pendingPageRefresh
-                or primaryDebug.pendingBindingRefresh
-            )
-        )
+        primaryDebug.pendingBindingRefresh == false
+        or InCombatLockdown()
 
     local secondaryDeferredOK =
         secondary.pendingBindingRefresh == false
@@ -498,6 +493,8 @@ local function runActionCheck()
         and primaryDebug.currentPage ~= nil
         and primaryDebug.firstActionSlot ~= nil
         and primaryDebug.lastActionSlot ~= nil
+        and primaryDebug.securePagingReady == true
+        and primaryDebug.secureDriverRegisteredCount == 12
         and primaryDeferredOK
         and sideStatus.initialized == true
         and sideStatus.enabled == true
@@ -514,47 +511,64 @@ local function runActionCheck()
         and utility.firstActionSlot == 49
         and utility.lastActionSlot == 60
         and utilityDeferredOK
+        and contextStatus.initialized == true
+        and contextStatus.enabled == true
+        and contextDebug.moduleEnabled == true
+        and contextDebug.primaryAlpha > 0
+        and contextDebug.secondaryAlpha > 0
+        and contextDebug.utilityAlpha > 0
+        and contextDebug.alphaZeroUsed == false
         and primaryDebug.stockBarsSuppressed == false
         and sideDebug.stockBarsSuppressed == false
 
     if passed then
         emit(string.format(
-            "Logres actioncheck: PASS (primary=12 page=%s slots=%s-%s keys=%s/%s secondary=12 slots=61-72 keys=%s/%s utility=12 slots=49-60 keys=%s/%s stockBarsSuppressed=false)",
+            "Logres actioncheck: PASS (primary=12 page=%s securePage=%s driver=12 slots=%s-%s keys=%s/%s secondary=12 slots=61-72 alpha=%.2f keys=%s/%s utility=12 slots=49-60 alpha=%.2f keys=%s/%s policy=%s primaryAlpha=%.2f specialPaging=%s stockBarsSuppressed=false)",
             tostring(primaryDebug.currentPage),
+            tostring(primaryDebug.securePage),
             tostring(primaryDebug.firstActionSlot),
             tostring(primaryDebug.lastActionSlot),
             boolText(primaryDebug.bindingRoutingEnabled),
             tostring(primaryDebug.boundButtonCount),
+            contextDebug.secondaryAlpha,
             boolText(secondary.bindingRoutingEnabled),
             tostring(secondary.boundButtonCount),
+            contextDebug.utilityAlpha,
             boolText(utility.bindingRoutingEnabled),
-            tostring(utility.boundButtonCount)
+            tostring(utility.boundButtonCount),
+            tostring(contextDebug.policyName),
+            contextDebug.primaryAlpha,
+            tostring(primaryDebug.specialPagingCoverage)
         ))
         return
     end
 
     emit(string.format(
-        "Logres actioncheck: FAIL (primary init=%s enabled=%s shown=%s buttons=%s registered=%s page=%s slots=%s-%s secondary init=%s enabled=%s shown=%s buttons=%s registered=%s slots=%s-%s utility shown=%s buttons=%s registered=%s slots=%s-%s stockSuppressed=%s/%s)",
+        "Logres actioncheck: FAIL (primary init=%s enabled=%s shown=%s buttons=%s registered=%s page=%s securePage=%s driverReady=%s drivers=%s slots=%s-%s secondary init=%s enabled=%s shown=%s registered=%s utility shown=%s registered=%s context init=%s enabled=%s policy=%s alphas=%.2f/%.2f/%.2f alphaZero=%s stockSuppressed=%s/%s)",
         tostring(primaryStatus.initialized),
         tostring(primaryStatus.enabled),
         tostring(primaryDebug.clusterShown),
         tostring(primaryDebug.buttonCount),
         tostring(primaryDebug.registeredCount),
         tostring(primaryDebug.currentPage),
+        tostring(primaryDebug.securePage),
+        tostring(primaryDebug.securePagingReady),
+        tostring(primaryDebug.secureDriverRegisteredCount),
         tostring(primaryDebug.firstActionSlot),
         tostring(primaryDebug.lastActionSlot),
         tostring(sideStatus.initialized),
         tostring(sideStatus.enabled),
         tostring(secondary.shown),
-        tostring(secondary.buttonCount),
         tostring(secondary.registeredCount),
-        tostring(secondary.firstActionSlot),
-        tostring(secondary.lastActionSlot),
         tostring(utility.shown),
-        tostring(utility.buttonCount),
         tostring(utility.registeredCount),
-        tostring(utility.firstActionSlot),
-        tostring(utility.lastActionSlot),
+        tostring(contextStatus.initialized),
+        tostring(contextStatus.enabled),
+        tostring(contextDebug.policyName),
+        contextDebug.primaryAlpha or -1,
+        contextDebug.secondaryAlpha or -1,
+        contextDebug.utilityAlpha or -1,
+        tostring(contextDebug.alphaZeroUsed),
         tostring(primaryDebug.stockBarsSuppressed),
         tostring(sideDebug.stockBarsSuppressed)
     ))

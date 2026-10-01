@@ -6,6 +6,14 @@ local BUTTON_COUNT = 12
 local COLUMNS = 4
 local ROWS = 3
 
+local PRIMARY_PAGE_DRIVER =
+    "[bar:2]2;"
+    .. "[bar:3]3;"
+    .. "[bar:4]4;"
+    .. "[bar:5]5;"
+    .. "[bar:6]6;"
+    .. "1"
+
 local ACTION_EVENTS = {
     "ACTIONBAR_SLOT_CHANGED",
     "ACTIONBAR_UPDATE_COOLDOWN",
@@ -43,19 +51,25 @@ local Primary = Logres:RegisterModule("PrimaryActions", {
         self.firstActionSlot = nil
         self.lastActionSlot = nil
         self.registeredCount = 0
+        self.secureDriverRegisteredCount = 0
+        self.securePagingReady = false
         self.bindingRoutingEnabled = false
         self.bindingsApplied = false
         self.bindingKeyCounts = {}
-        self.pendingPageRefresh = false
         self.pendingBindingRefresh = false
 
         for index = 1, BUTTON_COUNT do
-            self.buttons[index] = ActionButton.Create(
+            local button = ActionButton.Create(
                 "LogresPrimaryActionButton" .. index,
                 cluster,
                 index,
                 COLUMNS
             )
+
+            -- A positive ID makes SecureActionButtonTemplate calculate the
+            -- action from ID + actionpage rather than a concrete action attr.
+            button:SetID(index)
+            self.buttons[index] = button
         end
 
         local eventFrame = CreateFrame("Frame")
@@ -75,7 +89,8 @@ local Primary = Logres:RegisterModule("PrimaryActions", {
             self.eventFrame:UnregisterAllEvents()
         end)
 
-        self:ApplyActionPage()
+        self:RegisterSecurePaging()
+        self:RefreshPresentationPage()
         self:RefreshBindingLabels()
         self.cluster:Show()
         self:UpdateAll()
@@ -86,6 +101,7 @@ local Primary = Logres:RegisterModule("PrimaryActions", {
         -- Normal disable/cleanup is an out-of-combat development operation.
         if not InCombatLockdown() then
             self:ClearBindings()
+            self:UnregisterSecurePaging()
             self:UnregisterButtons()
             self.cluster:Hide()
         else
@@ -97,12 +113,58 @@ local Primary = Logres:RegisterModule("PrimaryActions", {
     end,
 })
 
-function Primary:GetActionSlotForIndex(index)
-    if not self.currentPage then
-        return index
+function Primary:RegisterSecurePaging()
+    if InCombatLockdown() then
+        return false
     end
 
-    return ((self.currentPage - 1) * BUTTON_COUNT) + index
+    self.secureDriverRegisteredCount = 0
+
+    for index = 1, #self.buttons do
+        RegisterAttributeDriver(
+            self.buttons[index],
+            "actionpage",
+            PRIMARY_PAGE_DRIVER
+        )
+        self.secureDriverRegisteredCount =
+            self.secureDriverRegisteredCount + 1
+    end
+
+    self.securePagingReady =
+        self.secureDriverRegisteredCount == BUTTON_COUNT
+    return self.securePagingReady
+end
+
+function Primary:UnregisterSecurePaging()
+    if InCombatLockdown() then
+        return false
+    end
+
+    for index = 1, #self.buttons do
+        UnregisterAttributeDriver(
+            self.buttons[index],
+            "actionpage"
+        )
+    end
+
+    self.secureDriverRegisteredCount = 0
+    self.securePagingReady = false
+    return true
+end
+
+function Primary:GetDrivenPage()
+    local page = tonumber(SecureCmdOptionParse(PRIMARY_PAGE_DRIVER))
+
+    if page == nil or page < 1 then
+        return 1
+    end
+
+    return page
+end
+
+function Primary:GetActionSlotForIndex(index)
+    local page = self.currentPage or self:GetDrivenPage()
+    return ((page - 1) * BUTTON_COUNT) + index
 end
 
 function Primary:UnregisterButtons()
@@ -113,35 +175,26 @@ function Primary:UnregisterButtons()
     self.registeredCount = 0
 end
 
-function Primary:ApplyActionPage()
-    if InCombatLockdown() then
-        self.pendingPageRefresh = true
-        return false
-    end
-
-    local page = C_ActionBar.GetActionBarPage()
-
-    if page < 1 then
-        page = 1
-    end
-
-    self:UnregisterButtons()
+function Primary:RefreshPresentationPage()
+    local page = self:GetDrivenPage()
 
     self.currentPage = page
     self.firstActionSlot = ((page - 1) * BUTTON_COUNT) + 1
     self.lastActionSlot = self.firstActionSlot + BUTTON_COUNT - 1
+    self.registeredCount = 0
 
     for index = 1, #self.buttons do
         local actionSlot = self:GetActionSlotForIndex(index)
 
-        ActionButton.Register(
+        -- This updates ordinary presentation/check/range registration only.
+        -- Secure execution comes from button ID + driven actionpage.
+        ActionButton.RegisterPresentation(
             self.buttons[index],
             actionSlot
         )
         self.registeredCount = self.registeredCount + 1
     end
 
-    self.pendingPageRefresh = false
     self:UpdateAll()
     return true
 end
@@ -217,10 +270,6 @@ end
 
 function Primary:HandleEvent(event, ...)
     if event == "PLAYER_REGEN_ENABLED" then
-        if self.pendingPageRefresh then
-            self:ApplyActionPage()
-        end
-
         if self.pendingBindingRefresh then
             self:RefreshOverrideBindings()
         end
@@ -229,7 +278,7 @@ function Primary:HandleEvent(event, ...)
     end
 
     if event == "ACTIONBAR_PAGE_CHANGED" then
-        self:ApplyActionPage()
+        self:RefreshPresentationPage()
         return
     end
 
@@ -273,19 +322,29 @@ function Primary:GetDebugStatus()
         end
     end
 
+    local securePage
+    if self.buttons and self.buttons[1] then
+        securePage = self.buttons[1]:GetAttribute("actionpage")
+    end
+
     return {
         moduleEnabled = self:IsEnabled(),
         clusterShown = self.cluster and self.cluster:IsShown() or false,
+        clusterAlpha = self.cluster and self.cluster:GetAlpha() or nil,
         buttonCount = self.buttons and #self.buttons or 0,
         registeredCount = self.registeredCount or 0,
         currentPage = self.currentPage,
+        securePage = securePage,
         firstActionSlot = self.firstActionSlot,
         lastActionSlot = self.lastActionSlot,
+        securePagingReady = self.securePagingReady == true,
+        secureDriverRegisteredCount =
+            self.secureDriverRegisteredCount or 0,
         bindingRoutingEnabled = self.bindingRoutingEnabled == true,
         bindingsApplied = self.bindingsApplied == true,
         boundButtonCount = boundButtonCount,
-        pendingPageRefresh = self.pendingPageRefresh == true,
         pendingBindingRefresh = self.pendingBindingRefresh == true,
         stockBarsSuppressed = false,
+        specialPagingCoverage = "normal-pages-only",
     }
 end
