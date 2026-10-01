@@ -12,9 +12,9 @@ project: logres
 
 ## Current Work Item
 
-**D.4 — Player secure interaction + selective PlayerFrame shell suppression.**
+**D.4 — Target selective suppression source/design review.**
 
-P0053 implementation is prepared.
+Player selective replacement is runtime-proven.
 
 ## Verified State
 
@@ -25,15 +25,17 @@ P0053 implementation is prepared.
 - D.1 complete.
 - D.2 complete.
 - D.3 complete.
-- D.4 source review complete.
-- P0052 pushed at `f5bda1e`.
-- runtime before P0053: `0.0.22-dev`.
-- P0053 target: `0.0.23-dev`.
-- D-026 remains canonical.
-- Player first-pass selective suppression now has a runtime implementation.
+- D.4 source contract D-026 accepted.
+- P0053 pushed at `361cea7`.
+- P0053 Player selective replacement runtime PASS.
+- runtime remains `0.0.23-dev`.
+- conventional PlayerFrame shell suppression works in the tested workflow.
+- secure Logres player interaction works in the tested workflow.
+- stock PlayerFrame restoration works in the tested workflow.
 - whole PlayerFrame suppression remains forbidden.
-- alternate/class/rune/totem/pet direct children remain Blizzard-owned.
-- TargetFrame suppression remains gated.
+- class/spec/context-specific direct PlayerFrame child proof may be deferred by
+  environment when those surfaces do not appear naturally.
+- TargetFrame suppression is the next D.4 capability step.
 - Party/CompactPartyFrame suppression remains deferred.
 - D.3 instance Quiet Mode transition remains environmental deferral.
 - Primary replacement/routing ownership remains deferred.
@@ -42,56 +44,41 @@ P0053 implementation is prepared.
 
 ## Next Action
 
-Install/review/commit/push P0053.
+Source/design-resolve Target selective suppression before runtime code.
 
-Because runtime code changes, deploy explicitly:
+Resolve exact TargetFrame child ownership for:
+1. conventional portrait/frame shell;
+2. health/power main content;
+3. target aura container;
+4. raid-target marker;
+5. high-level/classification/difficulty-style indicators;
+6. threat/context indicators;
+7. stock secure mouse interaction;
+8. Logres secure target interaction;
+9. secure unit-watch visibility;
+10. combat deferral and exact restoration.
 
-```bash
-cd ~/Projects/logres
-
-WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
-ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
-
-./tools/deploy_logres.sh "$ADDONS"
-```
-
-Then `/reload`.
-
-Runtime proof:
-1. confirm `0.0.23-dev`;
-2. Immersion ON removes the conventional stock PlayerFrame shell;
-3. Logres health/resource presentation remains;
-4. click the Logres resource percentage near screen center -> target self;
-5. right-click the same percentage -> player unit menu opens;
-6. old PlayerFrame area does not intercept mouse;
-7. Player Frame Check PASS;
-8. Immersion Check PASS;
-9. Run All PASS;
-10. Immersion OFF restores the stock PlayerFrame shell + mouse;
-11. Player Frame Check PASS;
-12. toggle immersion during combat and confirm PlayerFrame transition defers
-    until combat ends;
-13. no protected/taint/Lua/secret error.
-
-If class resource/rune/totem/pet/alternate-power states occur naturally, confirm
-they remain available. Do not manufacture them solely for proof.
+Goal:
+preserve useful target auras/raid coordination while removing stock target
+metadata that conflicts with Logres information-hiding policy.
 
 ## Success Criteria
 
-P0053 succeeds when:
-- selective stock shell suppression works;
-- secure Logres player left/right-click interaction works;
-- stock mouse region is removed while replaced;
-- OFF restoration is exact;
-- protected transitions defer safely;
-- required direct PlayerFrame children are not intentionally suppressed.
+Target source/design review succeeds when there is an exact contract for:
+- suppress child paths;
+- preserve child paths;
+- secure Logres target interaction;
+- dynamic visibility;
+- combat safety;
+- restoration;
+- runtime proof.
 
 ## Do Not Reopen Without New Evidence
 
 - **D.1–D.3:** complete.
-- **D.4 source review:** complete.
+- **D.4 Player selective replacement:** runtime PASS.
 - **Whole PlayerFrame suppression:** rejected.
-- **Target suppression:** later D.4 capability step.
+- **Target blanket suppression:** rejected; selective review active.
 - **Party suppression:** deferred.
 - **D.3 instance transition:** environmental deferral.
 - **Primary replacement/routing:** deferred.
@@ -99,9 +86,7 @@ P0053 succeeds when:
 
 ## Relevant References
 
-- `docs/memory/evidence/D4_P0053_PLAYER_SHELL_IMPLEMENTATION_2026-10-01.md`
-- `docs/memory/evidence/D4_UNIT_FRAME_SELECTIVE_SUPPRESSION_SOURCE_REVIEW_2026-10-01.md`
+- `docs/memory/evidence/D4_P0053_PLAYER_SHELL_RUNTIME_PROOF_2026-10-01.md`
 - `docs/memory/decisions/D-026_SELECTIVE_UNIT_FRAME_SUPPRESSION.md`
-- `docs/memory/investigations/D4_PLAYER_SHELL_RUNTIME_PROOF.md`
-- `Logres/Immersion/PlayerFrameReplacement.lua`
-- `tools/check_player_frame_replacement_contract.py`
+- `docs/memory/investigations/D4_TARGET_SELECTIVE_SUPPRESSION_REVIEW.md`
+- `docs/memory/roadmap/PHASE_D_IMMERSION_CONTROLLER.md`

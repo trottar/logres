@@ -2,23 +2,19 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0052 is verified pushed at `f5bda1e`.
+P0053 is verified pushed at `361cea7` and runtime-proven.
+
+Player selective replacement works well in the tested workflow.
 
 Current work:
-**D.4 Player secure interaction + selective PlayerFrame shell suppression**
+**D.4 Target selective suppression source/design review**
 
-P0053 target:
-`0.0.23-dev`
+Next:
+source-resolve exact TargetFrame children to suppress vs preserve, plus secure
+Logres target interaction and restoration.
 
-Adds:
-- `PlayerFrameReplacement`;
-- secure player target/menu interaction;
-- selective PlayerFrame shell suppression;
-- combat deferral/restoration;
-- Player Frame Check.
+Party remains deferred.
 
-Does not suppress Target or Party.
-
-P0053 changes runtime code; full deploy block is mandatory.
+P0054 is documentation-only; no WoW redeploy required.
 
 User performs all commits/pushes.

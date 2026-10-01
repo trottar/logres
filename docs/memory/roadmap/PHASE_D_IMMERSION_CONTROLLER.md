@@ -138,7 +138,7 @@ D.3 closes.
 
 ## D.4 — Unit-frame interaction + selective suppression
 
-**Status: P0053 PLAYER SHELL IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
+**Status: PLAYER SHELL PASS; TARGET SELECTIVE REVIEW ACTIVE.**
 
 Before suppression, complete the missing capability.
 
@@ -211,6 +211,26 @@ Does not suppress:
 - alternate/class/rune/totem/pet direct children.
 
 Runtime proof is next.
+
+### D.4 P0053 runtime result
+
+Player selective replacement passed on `0.0.23-dev`.
+
+Accepted:
+- conventional PlayerFrame shell suppression;
+- secure Logres player interaction;
+- stock interaction restoration;
+- Immersion ON/OFF integration.
+
+Environment-specific direct-child resource paths remain natural-play
+follow-ups rather than blockers.
+
+### D.4 next capability step
+
+**Target selective suppression source/design review — ACTIVE.**
+
+Resolve exact TargetFrame suppress/preserve child paths before runtime code.
+Party remains deferred.
 
 ## D.5 — Context / PvP / instance orchestration
 

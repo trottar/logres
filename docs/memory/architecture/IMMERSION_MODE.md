@@ -117,3 +117,13 @@ the Blizzard parent and direct resource/pet children.
 
 A secure Logres player button over the visible resource affordance replaces the
 stock PlayerFrame target/menu click path while suppression is active.
+
+## P0053 Player runtime result
+
+The first selective unit-frame replacement passed runtime validation.
+
+Player conventional shell suppression + secure Logres player interaction is now
+proven for the tested workflow.
+
+D.4 continues with Target selective suppression rather than expanding to
+whole-frame ownership.

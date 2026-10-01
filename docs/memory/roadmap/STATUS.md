@@ -7,10 +7,10 @@ As of 2026-10-01.
 **Phase D — Immersion Controller**
 
 Active work item:
-**D.4 Player secure interaction + selective PlayerFrame shell suppression**
+**D.4 Target selective suppression source/design review**
 
 State:
-**P0053 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**PLAYER SHELL PASS; TARGET SOURCE REVIEW ACTIVE**
 
 ## Phase status
 
@@ -30,8 +30,8 @@ State:
 
 | Domain | State |
 | --- | --- |
-| Player selective shell | P0053 prepared |
-| Target selective suppression | capability-gated |
-| Party / compact party | deferred |
+| Player selective shell | RUNTIME PASS |
+| Target selective suppression | ACTIVE — source/design review |
+| Party / compact party | DEFERRED |
 
-Whole PlayerFrame suppression remains rejected.
+Whole-frame unit suppression remains rejected.

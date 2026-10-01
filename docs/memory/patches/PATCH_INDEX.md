@@ -54,6 +54,7 @@
 | P0050 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME PASS | Implement D.3 runtime Quiet Mode without saved chat mutation (`57c682c`) |
 | P0051 | 2026-10-01 | INSTALLED / PUSHED | Close D.3 with instance deferral; open D.4 unit-frame source review (`d25430f`) |
 | P0052 | 2026-10-01 | INSTALLED / PUSHED | Resolve D.4 selective unit-frame contract; open Player shell implementation (`f5bda1e`) |
-| P0053 | 2026-10-01 | PREPARED | Implement secure Player interaction and selective PlayerFrame shell suppression |
+| P0053 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME PASS | Implement secure Player interaction and selective PlayerFrame shell suppression (`361cea7`) |
+| P0054 | 2026-10-01 | PREPARED | Record Player shell runtime PASS; open Target selective suppression review |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

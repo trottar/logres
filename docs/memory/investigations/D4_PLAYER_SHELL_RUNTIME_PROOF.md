@@ -1,6 +1,6 @@
 # D.4 — Player Shell Runtime Proof
 
-Status: P0053 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT
+Status: COMPLETE
 Opened: 2026-10-01
 
 ## Goal
@@ -87,3 +87,15 @@ Adds:
 Target and Party remain untouched.
 
 Runtime proof is next.
+
+## Runtime result
+
+P0053 runtime passed on `0.0.23-dev`.
+
+The user reported the selective Player replacement works very nicely.
+
+Player shell suppression, secure interaction, restoration, and immersion
+integration are accepted for the tested workflow.
+
+Environment-specific class/resource child paths remain natural-play
+follow-ups rather than blockers.

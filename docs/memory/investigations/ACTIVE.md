@@ -1,16 +1,16 @@
 # Active Investigations
 
-## D.4 — Player shell runtime proof
+## D.4 — Target selective suppression
 
 Status:
-**P0053 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**SOURCE / DESIGN RESOLUTION NEXT**
 
 Canonical:
-`D4_PLAYER_SHELL_RUNTIME_PROOF.md`
+`D4_TARGET_SELECTIVE_SUPPRESSION_REVIEW.md`
 
 Decision:
 `../decisions/D-026_SELECTIVE_UNIT_FRAME_SUPPRESSION.md`
 
 Next:
-runtime-prove selective PlayerFrame suppression, secure resource-affordance
-target/menu interaction, restoration, and combat deferral.
+resolve TargetFrame suppress/preserve child paths, secure target interaction,
+unit-watch behavior, combat constraints, and exact restoration.
