@@ -1,0 +1,343 @@
+local _, Logres = ...
+
+local ActionButton = Logres.ActionButton
+
+local BUTTON_COUNT = 12
+local COLUMNS = 3
+local ROWS = 4
+
+local ACTION_EVENTS = {
+    "ACTIONBAR_SLOT_CHANGED",
+    "ACTIONBAR_UPDATE_COOLDOWN",
+    "ACTIONBAR_UPDATE_STATE",
+    "ACTIONBAR_UPDATE_USABLE",
+    "ACTION_USABLE_CHANGED",
+    "ACTION_RANGE_CHECK_UPDATE",
+    "UPDATE_BINDINGS",
+    "PLAYER_REGEN_ENABLED",
+    "PLAYER_ENTERING_WORLD",
+}
+
+local CLUSTER_CONFIG = {
+    secondary = {
+        frameName = "LogresSecondaryActionCluster",
+        buttonPrefix = "LogresSecondaryActionButton",
+        bindingOwnerName = "LogresSecondaryActionBindingOwner",
+        bindingPrefix = "MULTIACTIONBAR1BUTTON",
+        firstActionSlot = 61,
+        lastActionSlot = 72,
+        x = -190,
+        y = -260,
+        alpha = 0.88,
+    },
+    utility = {
+        frameName = "LogresUtilityActionCluster",
+        buttonPrefix = "LogresUtilityActionButton",
+        bindingOwnerName = "LogresUtilityActionBindingOwner",
+        bindingPrefix = "MULTIACTIONBAR2BUTTON",
+        firstActionSlot = 49,
+        lastActionSlot = 60,
+        x = 190,
+        y = -260,
+        alpha = 0.76,
+    },
+}
+
+local SecondaryUtility =
+    Logres:RegisterModule("SecondaryUtilityActions", {
+        OnInitialize = function(self)
+            self.clusters = {
+                secondary = self:CreateFixedCluster(
+                    "secondary",
+                    CLUSTER_CONFIG.secondary
+                ),
+                utility = self:CreateFixedCluster(
+                    "utility",
+                    CLUSTER_CONFIG.utility
+                ),
+            }
+
+            local eventFrame = CreateFrame("Frame")
+            eventFrame:SetScript("OnEvent", function(_, event, ...)
+                self:HandleEvent(event, ...)
+            end)
+
+            self.eventFrame = eventFrame
+        end,
+
+        OnEnable = function(self)
+            for index = 1, #ACTION_EVENTS do
+                self.eventFrame:RegisterEvent(ACTION_EVENTS[index])
+            end
+
+            self:OwnCleanup(function()
+                self.eventFrame:UnregisterAllEvents()
+            end)
+
+            self:RegisterCluster(self.clusters.secondary)
+            self:RegisterCluster(self.clusters.utility)
+
+            self:RefreshBindingLabels(self.clusters.secondary)
+            self:RefreshBindingLabels(self.clusters.utility)
+
+            self.clusters.secondary.frame:Show()
+            self.clusters.utility.frame:Show()
+
+            self:UpdateAll()
+        end,
+
+        OnDisable = function(self)
+            if not InCombatLockdown() then
+                self:SetBindingRoutingEnabled("secondary", false)
+                self:SetBindingRoutingEnabled("utility", false)
+
+                self:UnregisterCluster(self.clusters.secondary)
+                self:UnregisterCluster(self.clusters.utility)
+
+                self.clusters.secondary.frame:Hide()
+                self.clusters.utility.frame:Hide()
+            else
+                Logres:DevPrint(
+                    "SecondaryUtilityActions disable requested during "
+                    .. "combat; protected cleanup was not attempted."
+                )
+            end
+        end,
+    })
+
+function SecondaryUtility:CreateFixedCluster(key, config)
+    local frame = ActionButton.CreateCluster(
+        config.frameName,
+        COLUMNS,
+        ROWS,
+        config.x,
+        config.y,
+        config.alpha
+    )
+
+    local bindingOwner = CreateFrame(
+        "Frame",
+        config.bindingOwnerName,
+        UIParent
+    )
+
+    local cluster = {
+        key = key,
+        frame = frame,
+        bindingOwner = bindingOwner,
+        bindingPrefix = config.bindingPrefix,
+        firstActionSlot = config.firstActionSlot,
+        lastActionSlot = config.lastActionSlot,
+        buttons = {},
+        bindingKeyCounts = {},
+        registeredCount = 0,
+        bindingRoutingEnabled = false,
+        bindingsApplied = false,
+        pendingBindingRefresh = false,
+    }
+
+    for index = 1, BUTTON_COUNT do
+        cluster.buttons[index] = ActionButton.Create(
+            config.buttonPrefix .. index,
+            frame,
+            index,
+            COLUMNS
+        )
+    end
+
+    return cluster
+end
+
+function SecondaryUtility:RegisterCluster(cluster)
+    if InCombatLockdown() then
+        error(
+            "SecondaryUtilityActions cannot register protected "
+            .. "action slots during combat"
+        )
+    end
+
+    self:UnregisterCluster(cluster)
+
+    for index = 1, #cluster.buttons do
+        local actionSlot = cluster.firstActionSlot + index - 1
+
+        ActionButton.Register(
+            cluster.buttons[index],
+            actionSlot
+        )
+        cluster.registeredCount = cluster.registeredCount + 1
+    end
+
+    ActionButton.UpdateAll(cluster.buttons)
+end
+
+function SecondaryUtility:UnregisterCluster(cluster)
+    for index = 1, #cluster.buttons do
+        ActionButton.Unregister(cluster.buttons[index])
+    end
+
+    cluster.registeredCount = 0
+end
+
+function SecondaryUtility:RefreshBindingLabels(cluster)
+    for index = 1, #cluster.buttons do
+        local button = cluster.buttons[index]
+        local command = cluster.bindingPrefix .. index
+        local keys = { GetBindingKey(command) }
+
+        cluster.bindingKeyCounts[index] = #keys
+        button.hotkeyText:SetText(keys[1] or "")
+    end
+end
+
+function SecondaryUtility:RefreshOverrideBindings(cluster)
+    if InCombatLockdown() then
+        cluster.pendingBindingRefresh = true
+        return false
+    end
+
+    ClearOverrideBindings(cluster.bindingOwner)
+    cluster.bindingsApplied = false
+
+    if cluster.bindingRoutingEnabled then
+        for index = 1, #cluster.buttons do
+            local button = cluster.buttons[index]
+            local command = cluster.bindingPrefix .. index
+            local keys = { GetBindingKey(command) }
+
+            for keyIndex = 1, #keys do
+                SetOverrideBindingClick(
+                    cluster.bindingOwner,
+                    false,
+                    keys[keyIndex],
+                    button:GetName(),
+                    "LeftButton"
+                )
+            end
+        end
+
+        cluster.bindingsApplied = true
+    end
+
+    cluster.pendingBindingRefresh = false
+    return true
+end
+
+function SecondaryUtility:SetBindingRoutingEnabled(key, enabled)
+    local cluster = self.clusters[key]
+
+    if not cluster then
+        error("Unknown action cluster: " .. tostring(key))
+    end
+
+    cluster.bindingRoutingEnabled = enabled == true
+    self:RefreshBindingLabels(cluster)
+
+    if InCombatLockdown() then
+        cluster.pendingBindingRefresh = true
+        return false
+    end
+
+    return self:RefreshOverrideBindings(cluster)
+end
+
+function SecondaryUtility:UpdateAll()
+    ActionButton.UpdateAll(self.clusters.secondary.buttons)
+    ActionButton.UpdateAll(self.clusters.utility.buttons)
+end
+
+function SecondaryUtility:UpdateSlot(actionSlot)
+    if ActionButton.UpdateSlot(
+        self.clusters.secondary.buttons,
+        actionSlot
+    ) then
+        return
+    end
+
+    ActionButton.UpdateSlot(
+        self.clusters.utility.buttons,
+        actionSlot
+    )
+end
+
+function SecondaryUtility:HandleEvent(event, ...)
+    if event == "PLAYER_REGEN_ENABLED" then
+        for _, key in ipairs({ "secondary", "utility" }) do
+            local cluster = self.clusters[key]
+
+            if cluster.pendingBindingRefresh then
+                self:RefreshOverrideBindings(cluster)
+            end
+        end
+
+        return
+    end
+
+    if event == "UPDATE_BINDINGS" then
+        for _, key in ipairs({ "secondary", "utility" }) do
+            local cluster = self.clusters[key]
+
+            self:RefreshBindingLabels(cluster)
+
+            if cluster.bindingRoutingEnabled or cluster.bindingsApplied then
+                self:RefreshOverrideBindings(cluster)
+            end
+        end
+
+        return
+    end
+
+    if event == "ACTIONBAR_SLOT_CHANGED" then
+        local actionSlot = ...
+
+        if actionSlot == 0 then
+            self:UpdateAll()
+        else
+            self:UpdateSlot(actionSlot)
+        end
+
+        return
+    end
+
+    if event == "ACTION_RANGE_CHECK_UPDATE" then
+        local actionSlot = ...
+        self:UpdateSlot(actionSlot)
+        return
+    end
+
+    self:UpdateAll()
+end
+
+function SecondaryUtility:GetClusterDebugStatus(key)
+    local cluster = self.clusters[key]
+    local boundButtonCount = 0
+
+    for index = 1, #cluster.buttons do
+        if (cluster.bindingKeyCounts[index] or 0) > 0 then
+            boundButtonCount = boundButtonCount + 1
+        end
+    end
+
+    return {
+        shown = cluster.frame and cluster.frame:IsShown() or false,
+        buttonCount = cluster.buttons and #cluster.buttons or 0,
+        registeredCount = cluster.registeredCount or 0,
+        firstActionSlot = cluster.firstActionSlot,
+        lastActionSlot = cluster.lastActionSlot,
+        bindingRoutingEnabled =
+            cluster.bindingRoutingEnabled == true,
+        bindingsApplied = cluster.bindingsApplied == true,
+        boundButtonCount = boundButtonCount,
+        pendingBindingRefresh =
+            cluster.pendingBindingRefresh == true,
+    }
+end
+
+function SecondaryUtility:GetDebugStatus()
+    return {
+        moduleEnabled = self:IsEnabled(),
+        secondary = self:GetClusterDebugStatus("secondary"),
+        utility = self:GetClusterDebugStatus("utility"),
+        stockBarsSuppressed = false,
+    }
+end

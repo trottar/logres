@@ -97,7 +97,7 @@ Known non-blocking debt:
 
 ## C.3 — Secondary / utility clusters
 
-**Status: SOURCE-RESOLVED; IMPLEMENTATION NEXT.**
+**Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
 
 Add:
 - secondary/tertiary actions;
@@ -116,7 +116,18 @@ First implementation:
 - independent fail-open key routing;
 - no stock-bar suppression.
 
-Bars 4–8 remain outside the first C.3 proof.
+Bars 4–8 remain outside the first C.3 proof.### P0036 implementation
+
+- shared secure action-button/presentation primitive;
+- Primary keeps proven paging/binding orchestration;
+- Secondary slots 61–72, 3 x 4 left cluster;
+- Utility slots 49–60, 3 x 4 right cluster;
+- independent fail-open multi-bar key routing;
+- expanded Action Check;
+- stock action bars remain visible.
+
+Dynamic context visibility remains C.4.
+
 
 ## C.4 — Contextual visibility
 

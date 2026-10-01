@@ -230,3 +230,36 @@ C.4 remains the owner of state-driven cluster visibility.
 
 Bars 4–8 remain stock-only after the first C.3 implementation and therefore
 cannot be suppressed.
+## C.3 P0036 implementation
+
+Reusable secure presentation now lives in:
+
+```text
+Actions/Button.lua
+```
+
+It provides common button construction and action presentation.
+
+Primary retains its proven page/binding orchestration.
+
+New fixed clusters:
+
+Secondary:
+- slots 61–72;
+- 3 x 4;
+- left of Primary;
+- MULTIACTIONBAR1BUTTON binding labels/routing.
+
+Utility:
+- slots 49–60;
+- 3 x 4;
+- right of Primary;
+- MULTIACTIONBAR2BUTTON binding labels/routing.
+
+All new key routing is fail-open and opt-in during proof.
+
+Static alpha weighting is presentation-only.
+
+C.4 remains responsible for context-driven visibility.
+
+No stock bar suppression occurs in P0036.

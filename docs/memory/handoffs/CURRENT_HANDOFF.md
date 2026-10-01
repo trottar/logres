@@ -2,23 +2,26 @@
 
 Authoritative state: `../CURRENT.md`.
 
-Current phase:
-**Phase C — Action Interface**
-
 Current work:
 **C.3 — Secondary / Utility Clusters**
 
-P0035 source-resolves C.3.
+P0036 is prepared.
 
-Implementation target:
-- Secondary slots 61–72;
-- Utility slots 49–60;
-- fixed 3 x 4 side clusters;
-- shared secure presentation primitive;
-- separate fail-open key-routing controls;
-- Primary orchestration preserved;
-- stock Blizzard bars visible.
+Version:
+`0.0.16-dev`
 
-P0035 is documentation/source-evidence only; no WoW redeploy required.
+Adds:
+- shared secure action-button presentation primitive;
+- Secondary fixed cluster, slots 61–72;
+- Utility fixed cluster, slots 49–60;
+- separate Secondary/Utility key-routing controls;
+- expanded Action Check;
+- larger diagnostics panel.
+
+Primary's proven page/binding orchestration is retained.
+
+Stock bars remain visible.
+
+P0036 changes runtime code; full deploy block is mandatory.
 
 User performs all commits/pushes.

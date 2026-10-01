@@ -1,33 +1,42 @@
 #!/usr/bin/env python3
-"""Static contract checks for the Logres Phase C primary action cluster."""
+"""Static contract checks for the Logres Phase C action interface."""
 
 from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE_PATH = ROOT / "Logres" / "Actions" / "Primary.lua"
+BUTTON_PATH = ROOT / "Logres" / "Actions" / "Button.lua"
+PRIMARY_PATH = ROOT / "Logres" / "Actions" / "Primary.lua"
+SIDE_PATH = ROOT / "Logres" / "Actions" / "SecondaryUtility.lua"
 COMMANDS_PATH = ROOT / "Logres" / "Core" / "Commands.lua"
 TOC_PATH = ROOT / "Logres" / "Logres.toc"
 
 errors = []
 
-for path in (SOURCE_PATH, COMMANDS_PATH, TOC_PATH):
+for path in (
+    BUTTON_PATH,
+    PRIMARY_PATH,
+    SIDE_PATH,
+    COMMANDS_PATH,
+    TOC_PATH,
+):
     if not path.is_file():
         errors.append(f"missing required file: {path.relative_to(ROOT)}")
 
-if SOURCE_PATH.is_file():
-    source = SOURCE_PATH.read_text(encoding="utf-8")
+if BUTTON_PATH.is_file():
+    source = BUTTON_PATH.read_text(encoding="utf-8")
 
     required = [
-        'Logres:RegisterModule("PrimaryActions"',
-        'local BUTTON_COUNT = 12',
+        "Logres.ActionButton = ActionButton",
+        "function ActionButton.CreateCluster(",
+        "function ActionButton.Create(",
         '"SecureActionButtonTemplate"',
         'button:SetAttribute("type", "action")',
         'button:SetAttribute("typerelease", "actionrelease")',
         '"LeftButtonDown"',
         '"RightButtonDown"',
+        "function ActionButton.Register(button, actionSlot)",
         'button:SetAttribute("action", actionSlot)',
-        "C_ActionBar.GetActionBarPage()",
         "C_ActionBar.RegisterActionUIButton(",
         "C_ActionBar.UnregisterActionUIButton(",
         "C_ActionBar.EnableActionRangeCheck(",
@@ -37,24 +46,11 @@ if SOURCE_PATH.is_file():
         "C_ActionBar.GetActionDisplayCount(",
         "C_ActionBar.IsUsableAction(",
         "C_ActionBar.IsActionInRange(",
-        "SetOverrideBindingClick(",
-        "ClearOverrideBindings(",
-        "function Primary:SetBindingRoutingEnabled(enabled)",
-        "function Primary:RefreshBindingLabels()",
-        "bindingRoutingEnabled = false",
-        'GetBindingKey(command)',
-        'event == "ACTIONBAR_PAGE_CHANGED"',
-        'event == "UPDATE_BINDINGS"',
-        'event == "PLAYER_REGEN_ENABLED"',
-        "InCombatLockdown()",
-        "pendingPageRefresh",
-        "pendingBindingRefresh",
-        "stockBarsSuppressed = false",
     ]
 
     for fragment in required:
         if fragment not in source:
-            errors.append(f"Primary.lua missing: {fragment}")
+            errors.append(f"Button.lua missing: {fragment}")
 
     forbidden = [
         "UseAction(",
@@ -71,14 +67,11 @@ if SOURCE_PATH.is_file():
 
     for fragment in forbidden:
         if fragment in source:
-            errors.append(f"Primary.lua forbidden path present: {fragment}")
+            errors.append(f"Button.lua forbidden path present: {fragment}")
 
-    if re.search(
-        r"if\s+.*GetActionDisplayCount",
-        source,
-    ):
+    if re.search(r"if\s+.*GetActionDisplayCount", source):
         errors.append(
-            "Primary.lua must not branch on GetActionDisplayCount results"
+            "Button.lua must not branch on GetActionDisplayCount results"
         )
 
     if re.search(
@@ -86,9 +79,84 @@ if SOURCE_PATH.is_file():
         source,
     ):
         errors.append(
-            "Primary.lua must not perform Lua arithmetic/comparison on "
+            "Button.lua must not perform Lua arithmetic/comparison on "
             "cooldown duration objects"
         )
+
+if PRIMARY_PATH.is_file():
+    source = PRIMARY_PATH.read_text(encoding="utf-8")
+
+    required = [
+        'Logres:RegisterModule("PrimaryActions"',
+        "local ActionButton = Logres.ActionButton",
+        "ActionButton.CreateCluster(",
+        "ActionButton.Create(",
+        "ActionButton.Register(",
+        "ActionButton.Unregister(",
+        "C_ActionBar.GetActionBarPage()",
+        "SetOverrideBindingClick(",
+        "ClearOverrideBindings(",
+        "function Primary:SetBindingRoutingEnabled(enabled)",
+        "bindingRoutingEnabled = false",
+        'GetBindingKey(command)',
+        'event == "ACTIONBAR_PAGE_CHANGED"',
+        'event == "UPDATE_BINDINGS"',
+        'event == "PLAYER_REGEN_ENABLED"',
+        "InCombatLockdown()",
+        "pendingPageRefresh",
+        "pendingBindingRefresh",
+        "stockBarsSuppressed = false",
+    ]
+
+    for fragment in required:
+        if fragment not in source:
+            errors.append(f"Primary.lua missing: {fragment}")
+
+    for fragment in ("UseAction(", "SaveBindings(", "SetBinding("):
+        if fragment in source:
+            errors.append(f"Primary.lua forbidden path present: {fragment}")
+
+if SIDE_PATH.is_file():
+    source = SIDE_PATH.read_text(encoding="utf-8")
+
+    required = [
+        'Logres:RegisterModule("SecondaryUtilityActions"',
+        "local ActionButton = Logres.ActionButton",
+        'bindingPrefix = "MULTIACTIONBAR1BUTTON"',
+        "firstActionSlot = 61",
+        "lastActionSlot = 72",
+        'bindingPrefix = "MULTIACTIONBAR2BUTTON"',
+        "firstActionSlot = 49",
+        "lastActionSlot = 60",
+        "ActionButton.CreateCluster(",
+        "ActionButton.Create(",
+        "ActionButton.Register(",
+        "ActionButton.Unregister(",
+        "SetOverrideBindingClick(",
+        "ClearOverrideBindings(",
+        "function SecondaryUtility:SetBindingRoutingEnabled(key, enabled)",
+        "bindingRoutingEnabled = false",
+        'event == "UPDATE_BINDINGS"',
+        'event == "PLAYER_REGEN_ENABLED"',
+        "InCombatLockdown()",
+        "stockBarsSuppressed = false",
+    ]
+
+    for fragment in required:
+        if fragment not in source:
+            errors.append(f"SecondaryUtility.lua missing: {fragment}")
+
+    for fragment in (
+        "C_ActionBar.GetActionBarPage(",
+        "ACTIONBAR_PAGE_CHANGED",
+        "UseAction(",
+        "SaveBindings(",
+        "SetBinding(",
+    ):
+        if fragment in source:
+            errors.append(
+                f"SecondaryUtility.lua forbidden path present: {fragment}"
+            )
 
 if COMMANDS_PATH.is_file():
     source = COMMANDS_PATH.read_text(encoding="utf-8")
@@ -96,28 +164,40 @@ if COMMANDS_PATH.is_file():
     required = [
         "local function runActionCheck()",
         '"Logres actioncheck: PASS',
-        'if command == "actioncheck" then',
-        'Logres:RegisterDevPanelAction("action", "Action Check", "actioncheck")',
-        '"Action Keys ON"',
-        '"Action Keys OFF"',
-        'if command == "actionbindings" then',
+        '"Secondary Keys ON"',
+        '"Secondary Keys OFF"',
+        '"Utility Keys ON"',
+        '"Utility Keys OFF"',
+        'if command == "secondarybindings" then',
+        'if command == "utilitybindings" then',
         "runActionCheck()",
     ]
 
     for fragment in required:
         if fragment not in source:
-            errors.append(f"Commands.lua missing action diagnostic: {fragment}")
+            errors.append(
+                f"Commands.lua missing action diagnostic/control: {fragment}"
+            )
 
 if TOC_PATH.is_file():
     source = TOC_PATH.read_text(encoding="utf-8")
-    action_index = source.find("Actions\\Primary.lua")
+
+    button_index = source.find("Actions\\Button.lua")
+    primary_index = source.find("Actions\\Primary.lua")
+    side_index = source.find("Actions\\SecondaryUtility.lua")
     commands_index = source.find("Core\\Commands.lua")
 
-    if action_index == -1:
-        errors.append("Logres.toc missing Actions\\Primary.lua")
-    elif commands_index == -1 or action_index > commands_index:
+    if min(button_index, primary_index, side_index, commands_index) == -1:
+        errors.append("Logres.toc missing required action runtime files")
+    elif not (
+        button_index
+        < primary_index
+        < side_index
+        < commands_index
+    ):
         errors.append(
-            "Actions\\Primary.lua must load before Core\\Commands.lua"
+            "Action runtime load order must be "
+            "Button -> Primary -> SecondaryUtility -> Commands"
         )
 
 print("Logres action interface contract")

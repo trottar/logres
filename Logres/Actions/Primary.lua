@@ -1,8 +1,8 @@
 local _, Logres = ...
 
+local ActionButton = Logres.ActionButton
+
 local BUTTON_COUNT = 12
-local BUTTON_SIZE = 38
-local BUTTON_GAP = 5
 local COLUMNS = 4
 local ROWS = 3
 
@@ -21,24 +21,14 @@ local ACTION_EVENTS = {
 
 local Primary = Logres:RegisterModule("PrimaryActions", {
     OnInitialize = function(self)
-        local width =
-            (COLUMNS * BUTTON_SIZE) + ((COLUMNS - 1) * BUTTON_GAP)
-        local height =
-            (ROWS * BUTTON_SIZE) + ((ROWS - 1) * BUTTON_GAP)
-
-        local cluster = CreateFrame(
-            "Frame",
+        local cluster = ActionButton.CreateCluster(
             "LogresPrimaryActionCluster",
-            UIParent
+            COLUMNS,
+            ROWS,
+            0,
+            -260,
+            1
         )
-        cluster:SetSize(width, height)
-        cluster:SetPoint("CENTER", UIParent, "CENTER", 0, -260)
-        cluster:SetFrameStrata("MEDIUM")
-
-        local backdrop = cluster:CreateTexture(nil, "BACKGROUND")
-        backdrop:SetPoint("TOPLEFT", cluster, "TOPLEFT", -7, 7)
-        backdrop:SetPoint("BOTTOMRIGHT", cluster, "BOTTOMRIGHT", 7, -7)
-        backdrop:SetColorTexture(0.025, 0.022, 0.018, 0.78)
 
         local bindingOwner = CreateFrame(
             "Frame",
@@ -60,94 +50,12 @@ local Primary = Logres:RegisterModule("PrimaryActions", {
         self.pendingBindingRefresh = false
 
         for index = 1, BUTTON_COUNT do
-            local name = "LogresPrimaryActionButton" .. index
-            local button = CreateFrame(
-                "CheckButton",
-                name,
+            self.buttons[index] = ActionButton.Create(
+                "LogresPrimaryActionButton" .. index,
                 cluster,
-                "SecureActionButtonTemplate"
+                index,
+                COLUMNS
             )
-
-            button:SetSize(BUTTON_SIZE, BUTTON_SIZE)
-            button:RegisterForClicks(
-                "AnyUp",
-                "LeftButtonDown",
-                "RightButtonDown"
-            )
-            button:SetAttribute("type", "action")
-            button:SetAttribute("typerelease", "actionrelease")
-            button:SetAttribute("checkselfcast", true)
-            button:SetAttribute("checkfocuscast", true)
-            button:SetAttribute("checkmouseovercast", true)
-
-            local zeroIndex = index - 1
-            local column = zeroIndex % COLUMNS
-            local row = math.floor(zeroIndex / COLUMNS)
-
-            button:SetPoint(
-                "TOPLEFT",
-                cluster,
-                "TOPLEFT",
-                column * (BUTTON_SIZE + BUTTON_GAP),
-                -(row * (BUTTON_SIZE + BUTTON_GAP))
-            )
-
-            local border = button:CreateTexture(nil, "BACKGROUND")
-            border:SetAllPoints(button)
-            border:SetColorTexture(0.13, 0.11, 0.085, 0.98)
-
-            local inner = button:CreateTexture(nil, "BORDER")
-            inner:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2)
-            inner:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 2)
-            inner:SetColorTexture(0.025, 0.022, 0.018, 0.98)
-
-            local icon = button:CreateTexture(nil, "ARTWORK")
-            icon:SetPoint("TOPLEFT", button, "TOPLEFT", 4, -4)
-            icon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -4, 4)
-            icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-
-            local cooldown = CreateFrame(
-                "Cooldown",
-                nil,
-                button,
-                "CooldownFrameTemplate"
-            )
-            cooldown:SetAllPoints(icon)
-            cooldown:SetDrawBling(false)
-            cooldown:SetDrawEdge(false)
-
-            local checked = button:CreateTexture(nil, "OVERLAY")
-            checked:SetAllPoints(icon)
-            checked:SetColorTexture(0.84, 0.68, 0.30, 0.22)
-            button:SetCheckedTexture(checked)
-
-            local hotkeyText = button:CreateFontString(
-                nil,
-                "OVERLAY",
-                "GameFontHighlightSmall"
-            )
-            hotkeyText:SetPoint("TOPRIGHT", button, "TOPRIGHT", -3, -3)
-            hotkeyText:SetJustifyH("RIGHT")
-            hotkeyText:SetTextColor(0.84, 0.78, 0.66, 0.90)
-
-            local countText = button:CreateFontString(
-                nil,
-                "OVERLAY",
-                "GameFontHighlightSmall"
-            )
-            countText:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -3, 3)
-            countText:SetJustifyH("RIGHT")
-            countText:SetTextColor(0.96, 0.92, 0.82, 1.00)
-
-            button.logresIndex = index
-            button.actionSlot = nil
-            button.registeredActionSlot = nil
-            button.icon = icon
-            button.cooldown = cooldown
-            button.hotkeyText = hotkeyText
-            button.countText = countText
-
-            self.buttons[index] = button
         end
 
         local eventFrame = CreateFrame("Frame")
@@ -199,16 +107,7 @@ end
 
 function Primary:UnregisterButtons()
     for index = 1, #self.buttons do
-        local button = self.buttons[index]
-
-        if button.registeredActionSlot then
-            C_ActionBar.EnableActionRangeCheck(
-                button.registeredActionSlot,
-                false
-            )
-            C_ActionBar.UnregisterActionUIButton(button)
-            button.registeredActionSlot = nil
-        end
+        ActionButton.Unregister(self.buttons[index])
     end
 
     self.registeredCount = 0
@@ -233,20 +132,12 @@ function Primary:ApplyActionPage()
     self.lastActionSlot = self.firstActionSlot + BUTTON_COUNT - 1
 
     for index = 1, #self.buttons do
-        local button = self.buttons[index]
         local actionSlot = self:GetActionSlotForIndex(index)
 
-        button:SetAttribute("action", actionSlot)
-        button.actionSlot = actionSlot
-
-        C_ActionBar.RegisterActionUIButton(
-            button,
-            actionSlot,
-            button.cooldown
+        ActionButton.Register(
+            self.buttons[index],
+            actionSlot
         )
-        C_ActionBar.EnableActionRangeCheck(actionSlot, true)
-
-        button.registeredActionSlot = actionSlot
         self.registeredCount = self.registeredCount + 1
     end
 
@@ -316,92 +207,12 @@ function Primary:ClearBindings()
     return self:RefreshOverrideBindings()
 end
 
-
-function Primary:UpdateIcon(button)
-    local actionSlot = button.actionSlot
-    if not actionSlot then
-        return
-    end
-
-    if C_ActionBar.HasAction(actionSlot) then
-        local texture = C_ActionBar.GetActionTexture(actionSlot)
-
-        if texture then
-            button.icon:SetTexture(texture)
-            button.icon:Show()
-        else
-            button.icon:Hide()
-        end
-    else
-        button.icon:Hide()
-    end
-end
-
-function Primary:UpdateCooldown(button)
-    local actionSlot = button.actionSlot
-    if not actionSlot then
-        return
-    end
-
-    local duration = C_ActionBar.GetActionCooldownDuration(actionSlot)
-    button.cooldown:SetCooldownFromDurationObject(duration, true)
-end
-
-function Primary:UpdateCount(button)
-    local actionSlot = button.actionSlot
-    if not actionSlot then
-        return
-    end
-
-    -- The display count can be secret on Forever. Do not inspect it.
-    button.countText:SetText(
-        C_ActionBar.GetActionDisplayCount(actionSlot)
-    )
-end
-
-function Primary:UpdateUsabilityAndRange(button)
-    local actionSlot = button.actionSlot
-    if not actionSlot then
-        return
-    end
-
-    local usable, lackingResources =
-        C_ActionBar.IsUsableAction(actionSlot)
-    local inRange = C_ActionBar.IsActionInRange(actionSlot)
-
-    if inRange == false then
-        button.icon:SetVertexColor(0.95, 0.28, 0.24, 1.00)
-    elseif usable then
-        button.icon:SetVertexColor(1.00, 1.00, 1.00, 1.00)
-    elseif lackingResources then
-        button.icon:SetVertexColor(0.38, 0.54, 0.90, 0.92)
-    else
-        button.icon:SetVertexColor(0.48, 0.46, 0.43, 0.88)
-    end
-end
-
-function Primary:UpdateButton(button)
-    self:UpdateIcon(button)
-    self:UpdateCooldown(button)
-    self:UpdateCount(button)
-    self:UpdateUsabilityAndRange(button)
-end
-
 function Primary:UpdateAll()
-    for index = 1, #self.buttons do
-        self:UpdateButton(self.buttons[index])
-    end
+    ActionButton.UpdateAll(self.buttons)
 end
 
 function Primary:UpdateSlot(actionSlot)
-    for index = 1, #self.buttons do
-        local button = self.buttons[index]
-
-        if button.actionSlot == actionSlot then
-            self:UpdateButton(button)
-            return
-        end
-    end
+    ActionButton.UpdateSlot(self.buttons, actionSlot)
 end
 
 function Primary:HandleEvent(event, ...)

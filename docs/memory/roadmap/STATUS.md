@@ -10,7 +10,7 @@ Active work item:
 **C.3 Secondary / Utility Clusters**
 
 State:
-**SOURCE-RESOLVED; IMPLEMENTATION NEXT**
+**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
 
 ## Phase status
 
@@ -32,19 +32,16 @@ State:
 | --- | --- |
 | C.1 Secure action capability/source review | COMPLETE |
 | C.2 Primary action cluster | COMPLETE |
-| C.3 Secondary / utility clusters | ACTIVE — source-resolved |
+| C.3 Secondary / utility clusters | ACTIVE — implementation prepared |
 | C.4 Contextual visibility / secure paging | QUEUED |
 | C.5 Stock action-bar replacement | QUEUED |
 | C.6 Action interface integration validation | QUEUED |
 
-## C.3 contract
+## P0036
 
-Secondary:
-- slots 61–72;
-- MULTIACTIONBAR1BUTTON1–12.
+Constellation:
+- Secondary 3 x 4: slots 61–72;
+- Primary 4 x 3: current primary page;
+- Utility 3 x 4: slots 49–60.
 
-Utility:
-- slots 49–60;
-- MULTIACTIONBAR2BUTTON1–12.
-
-Initial implementation keeps all stock action bars visible.
+All stock action bars remain visible.

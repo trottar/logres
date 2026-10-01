@@ -1,6 +1,6 @@
 # C.3 — Secondary / Utility Clusters
 
-Status: SOURCE-RESOLVED; IMPLEMENTATION NEXT
+Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT
 Opened: 2026-10-01
 
 ## Goal
@@ -16,71 +16,125 @@ Canonical evidence:
 Canonical decision:
 `../decisions/D-019_SECONDARY_UTILITY_CLUSTER_CONTRACT.md`
 
-## First implementation scope
+## P0036 implementation
 
-Secondary:
-- slots `61–72`;
+### Shared primitive
+
+Adds:
+
+```text
+Actions/Button.lua
+```
+
+It owns reusable:
+- secure action button creation;
+- click/release attributes;
+- icon/cooldown/count widgets;
+- native action-button registration;
+- icon/count/cooldown/usability/range updates.
+
+Primary keeps its proven:
+- action-page orchestration;
+- pending page refresh;
+- primary binding-routing control.
+
+### Secondary
+
+Fixed:
+- slots 61–72;
 - `MULTIACTIONBAR1BUTTON1–12`;
-- 3 x 4 left-side cluster.
+- left 3 x 4 cluster;
+- default key routing OFF.
 
-Utility:
-- slots `49–60`;
+### Utility
+
+Fixed:
+- slots 49–60;
 - `MULTIACTIONBAR2BUTTON1–12`;
-- 3 x 4 right-side cluster.
+- right 3 x 4 cluster;
+- default key routing OFF.
 
-Primary remains:
-- current primary page;
-- 4 x 3 center cluster.
+### Geometry
 
-## Reuse boundary
+```text
+Secondary      Primary       Utility
+   3 x 4         4 x 3         3 x 4
+```
 
-Extract a shared secure button/presentation primitive.
+Anchors:
+- Secondary x=-190 y=-260;
+- Primary x=0 y=-260;
+- Utility x=190 y=-260.
 
-Do not rewrite Primary's proven paging/binding orchestration wholesale in the
-same patch.
+Static weighting:
+- Primary alpha 1.00;
+- Secondary alpha 0.88;
+- Utility alpha 0.76.
 
-## Key-routing safety
+Dynamic visibility remains C.4.
 
-Default:
-- new cluster routing OFF.
+## Key-routing controls
 
-Developer panel:
-- Secondary Keys ON/OFF;
-- Utility Keys ON/OFF.
+Developer panel now includes:
+- Secondary Keys ON;
+- Secondary Keys OFF;
+- Utility Keys ON;
+- Utility Keys OFF.
 
-Both domains must be mouse-tested and keyboard-tested.
+Each routing domain is independent.
 
-## Visibility
+Default is fail-open:
+stock bindings are active until the user explicitly enables Logres routing.
 
-Only static visual weighting in C.3.
+Combat-time requests defer until `PLAYER_REGEN_ENABLED`.
 
-C.4 owns contextual visibility/security policy.
+## Diagnostics
+
+`Action Check` now validates:
+- Primary;
+- Secondary;
+- Utility;
+- expected slot ranges;
+- button registration;
+- stock-bar non-suppression.
+
+The control panel height is increased to keep the larger control set usable.
+
+## Runtime proof
+
+After deployment:
+1. confirm version `0.0.16-dev`;
+2. Run All / Action Check PASS;
+3. confirm three-cluster constellation is visible;
+4. verify Primary still works by mouse and key;
+5. verify Secondary visually corresponds to stock Action Bar 2 slots/actions;
+6. verify Utility visually corresponds to stock Action Bar 3 slots/actions;
+7. mouse-click at least one safe action in Secondary;
+8. mouse-click at least one safe action in Utility;
+9. turn Secondary Keys ON and test any existing bound key;
+10. turn Secondary Keys OFF and confirm routing releases;
+11. turn Utility Keys ON/OFF and test equivalently;
+12. verify cooldown/range/count/usability updates;
+13. fight normally and verify secure mouse/key actions continue working;
+14. report protected/taint/Lua/secret errors;
+15. judge overlap/readability with Phase B HUD.
+
+If no keys are currently bound to one of the selected stock multi-bars:
+- do not fabricate a PASS;
+- record keyboard true-path unavailable;
+- a temporary normal WoW keybind may be assigned if convenient;
+- stock UI remains available.
+
+If slots 61–72 / 49–60 do not correspond to the expected Forever bars:
+record the exact mismatch and correct D-019.
 
 ## Stock UI
 
-All Blizzard action bars remain visible in C.3.
+No Blizzard action bar is suppressed.
 
-## Runtime proof requirements
-
-1. Secondary shows the expected stock Action Bar 2 actions.
-2. Utility shows the expected stock Action Bar 3 actions.
-3. mouse execution works on each cluster.
-4. existing binding labels appear when present.
-5. explicit Secondary Keys ON makes those existing keys execute via Logres.
-6. Secondary Keys OFF releases routing.
-7. explicit Utility Keys ON/OFF behaves equivalently.
-8. cooldown/count/range/usability presentation works.
-9. Primary remains regression-free.
-10. ordinary combat execution works.
-11. no protected/taint/Lua/secret errors occur.
-12. layout coexists with Phase B HUD.
-13. stock Blizzard bars remain present.
-
-If the user's current Forever binding domain differs from the source mapping,
-record the mismatch as runtime evidence and correct the contract rather than
-forcing the current-source assumption.
+Bars 4–8 remain outside the first C.3 proof.
 
 ## Exit
 
-C.3 completes when both new fixed-slot domains are runtime-proven and Primary
-remains intact.
+C.3 completes when both fixed-slot clusters are runtime-proven and Primary
+remains regression-free.

@@ -454,68 +454,109 @@ end
 
 
 local function runActionCheck()
-    local status = Logres:GetModuleStatus("PrimaryActions")
-    local actions = Logres:GetModule("PrimaryActions")
-    local debugStatus = actions:GetDebugStatus()
+    local primaryStatus = Logres:GetModuleStatus("PrimaryActions")
+    local primary = Logres:GetModule("PrimaryActions")
+    local primaryDebug = primary:GetDebugStatus()
 
-    local deferredOnlyBecauseCombat =
-        InCombatLockdown()
-        and (
-            debugStatus.pendingPageRefresh
-            or debugStatus.pendingBindingRefresh
+    local sideStatus =
+        Logres:GetModuleStatus("SecondaryUtilityActions")
+    local sideActions =
+        Logres:GetModule("SecondaryUtilityActions")
+    local sideDebug = sideActions:GetDebugStatus()
+
+    local secondary = sideDebug.secondary
+    local utility = sideDebug.utility
+
+    local primaryDeferredOK =
+        (
+            primaryDebug.pendingPageRefresh == false
+            and primaryDebug.pendingBindingRefresh == false
         )
+        or (
+            InCombatLockdown()
+            and (
+                primaryDebug.pendingPageRefresh
+                or primaryDebug.pendingBindingRefresh
+            )
+        )
+
+    local secondaryDeferredOK =
+        secondary.pendingBindingRefresh == false
+        or InCombatLockdown()
+
+    local utilityDeferredOK =
+        utility.pendingBindingRefresh == false
+        or InCombatLockdown()
 
     local passed =
-        status.initialized == true
-        and status.enabled == true
-        and debugStatus.moduleEnabled == true
-        and debugStatus.clusterShown == true
-        and debugStatus.buttonCount == 12
-        and debugStatus.registeredCount == 12
-        and debugStatus.currentPage ~= nil
-        and debugStatus.firstActionSlot ~= nil
-        and debugStatus.lastActionSlot ~= nil
-        and debugStatus.stockBarsSuppressed == false
-        and (
-            (
-                debugStatus.pendingPageRefresh == false
-                and debugStatus.pendingBindingRefresh == false
-            )
-            or deferredOnlyBecauseCombat
-        )
+        primaryStatus.initialized == true
+        and primaryStatus.enabled == true
+        and primaryDebug.moduleEnabled == true
+        and primaryDebug.clusterShown == true
+        and primaryDebug.buttonCount == 12
+        and primaryDebug.registeredCount == 12
+        and primaryDebug.currentPage ~= nil
+        and primaryDebug.firstActionSlot ~= nil
+        and primaryDebug.lastActionSlot ~= nil
+        and primaryDeferredOK
+        and sideStatus.initialized == true
+        and sideStatus.enabled == true
+        and sideDebug.moduleEnabled == true
+        and secondary.shown == true
+        and secondary.buttonCount == 12
+        and secondary.registeredCount == 12
+        and secondary.firstActionSlot == 61
+        and secondary.lastActionSlot == 72
+        and secondaryDeferredOK
+        and utility.shown == true
+        and utility.buttonCount == 12
+        and utility.registeredCount == 12
+        and utility.firstActionSlot == 49
+        and utility.lastActionSlot == 60
+        and utilityDeferredOK
+        and primaryDebug.stockBarsSuppressed == false
+        and sideDebug.stockBarsSuppressed == false
 
     if passed then
         emit(string.format(
-            "Logres actioncheck: PASS (buttons=12 registered=12 page=%s slots=%s-%s boundButtons=%s keyRouting=%s overrides=%s deferredPage=%s deferredBindings=%s stockBarsSuppressed=false)",
-            tostring(debugStatus.currentPage),
-            tostring(debugStatus.firstActionSlot),
-            tostring(debugStatus.lastActionSlot),
-            tostring(debugStatus.boundButtonCount),
-            boolText(debugStatus.bindingRoutingEnabled),
-            boolText(debugStatus.bindingsApplied),
-            boolText(debugStatus.pendingPageRefresh),
-            boolText(debugStatus.pendingBindingRefresh)
+            "Logres actioncheck: PASS (primary=12 page=%s slots=%s-%s keys=%s/%s secondary=12 slots=61-72 keys=%s/%s utility=12 slots=49-60 keys=%s/%s stockBarsSuppressed=false)",
+            tostring(primaryDebug.currentPage),
+            tostring(primaryDebug.firstActionSlot),
+            tostring(primaryDebug.lastActionSlot),
+            boolText(primaryDebug.bindingRoutingEnabled),
+            tostring(primaryDebug.boundButtonCount),
+            boolText(secondary.bindingRoutingEnabled),
+            tostring(secondary.boundButtonCount),
+            boolText(utility.bindingRoutingEnabled),
+            tostring(utility.boundButtonCount)
         ))
         return
     end
 
     emit(string.format(
-        "Logres actioncheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s shown=%s buttons=%s registered=%s page=%s slots=%s-%s boundButtons=%s keyRouting=%s overrides=%s deferredPage=%s deferredBindings=%s stockBarsSuppressed=%s)",
-        tostring(status.initialized),
-        tostring(status.enabled),
-        tostring(debugStatus.moduleEnabled),
-        tostring(debugStatus.clusterShown),
-        tostring(debugStatus.buttonCount),
-        tostring(debugStatus.registeredCount),
-        tostring(debugStatus.currentPage),
-        tostring(debugStatus.firstActionSlot),
-        tostring(debugStatus.lastActionSlot),
-        tostring(debugStatus.boundButtonCount),
-        tostring(debugStatus.bindingRoutingEnabled),
-        tostring(debugStatus.bindingsApplied),
-        tostring(debugStatus.pendingPageRefresh),
-        tostring(debugStatus.pendingBindingRefresh),
-        tostring(debugStatus.stockBarsSuppressed)
+        "Logres actioncheck: FAIL (primary init=%s enabled=%s shown=%s buttons=%s registered=%s page=%s slots=%s-%s secondary init=%s enabled=%s shown=%s buttons=%s registered=%s slots=%s-%s utility shown=%s buttons=%s registered=%s slots=%s-%s stockSuppressed=%s/%s)",
+        tostring(primaryStatus.initialized),
+        tostring(primaryStatus.enabled),
+        tostring(primaryDebug.clusterShown),
+        tostring(primaryDebug.buttonCount),
+        tostring(primaryDebug.registeredCount),
+        tostring(primaryDebug.currentPage),
+        tostring(primaryDebug.firstActionSlot),
+        tostring(primaryDebug.lastActionSlot),
+        tostring(sideStatus.initialized),
+        tostring(sideStatus.enabled),
+        tostring(secondary.shown),
+        tostring(secondary.buttonCount),
+        tostring(secondary.registeredCount),
+        tostring(secondary.firstActionSlot),
+        tostring(secondary.lastActionSlot),
+        tostring(utility.shown),
+        tostring(utility.buttonCount),
+        tostring(utility.registeredCount),
+        tostring(utility.firstActionSlot),
+        tostring(utility.lastActionSlot),
+        tostring(primaryDebug.stockBarsSuppressed),
+        tostring(sideDebug.stockBarsSuppressed)
     ))
 end
 
@@ -565,6 +606,59 @@ local function handleActionBindings(argument)
         boolText(debugStatus.pendingBindingRefresh)
     ))
 end
+
+local function handleSideActionBindings(key, label, argument)
+    local actions = Logres:GetModule("SecondaryUtilityActions")
+
+    if argument == "on" then
+        local applied = actions:SetBindingRoutingEnabled(key, true)
+
+        if applied then
+            emit(
+                "Logres: " .. label .. " Keys ON. Existing stock "
+                .. "multi-bar keys temporarily route through Logres."
+            )
+        else
+            emit(
+                "Logres: " .. label
+                .. " Keys ON deferred until combat ends."
+            )
+        end
+
+        return
+    end
+
+    if argument == "off" then
+        local applied = actions:SetBindingRoutingEnabled(key, false)
+
+        if applied then
+            emit(
+                "Logres: " .. label
+                .. " Keys OFF. Normal stock multi-bar bindings "
+                .. "are active."
+            )
+        else
+            emit(
+                "Logres: " .. label
+                .. " Keys OFF deferred until combat ends."
+            )
+        end
+
+        return
+    end
+
+    local status = actions:GetClusterDebugStatus(key)
+
+    emit(string.format(
+        "Logres %s bindings: keyRouting=%s overrides=%s boundButtons=%s pending=%s",
+        key,
+        boolText(status.bindingRoutingEnabled),
+        boolText(status.bindingsApplied),
+        tostring(status.boundButtonCount),
+        boolText(status.pendingBindingRefresh)
+    ))
+end
+
 
 local function runAllChecks()
     emit("Logres checkall: beginning")
@@ -641,6 +735,8 @@ local function printHelp()
     emit("  /logres hudcheck")
     emit("  /logres actioncheck")
     emit("  /logres actionbindings [on|off]")
+    emit("  /logres secondarybindings [on|off]")
+    emit("  /logres utilitybindings [on|off]")
     emit("  /logres hudpreview [on|off]")
     emit("  /logres immersion [on|off|toggle]")
     emit("  /logres debug on")
@@ -714,6 +810,16 @@ local function handleCommand(message)
         return
     end
 
+    if command == "secondarybindings" then
+        handleSideActionBindings("secondary", "Secondary", argument)
+        return
+    end
+
+    if command == "utilitybindings" then
+        handleSideActionBindings("utility", "Utility", argument)
+        return
+    end
+
     if command == "hudpreview" then
         handleHUDPreview(argument)
         return
@@ -782,6 +888,26 @@ Logres:RegisterDevPanelAction("hud", "HUD Check", "hudcheck")
 Logres:RegisterDevPanelAction("action", "Action Check", "actioncheck")
 Logres:RegisterDevPanelAction("actionKeysOn", "Action Keys ON", "actionbindings on")
 Logres:RegisterDevPanelAction("actionKeysOff", "Action Keys OFF", "actionbindings off")
+Logres:RegisterDevPanelAction(
+    "secondaryKeysOn",
+    "Secondary Keys ON",
+    "secondarybindings on"
+)
+Logres:RegisterDevPanelAction(
+    "secondaryKeysOff",
+    "Secondary Keys OFF",
+    "secondarybindings off"
+)
+Logres:RegisterDevPanelAction(
+    "utilityKeysOn",
+    "Utility Keys ON",
+    "utilitybindings on"
+)
+Logres:RegisterDevPanelAction(
+    "utilityKeysOff",
+    "Utility Keys OFF",
+    "utilitybindings off"
+)
 Logres:RegisterDevPanelAction(
     "immersionOn",
     "Immersion ON",
