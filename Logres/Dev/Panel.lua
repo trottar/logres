@@ -1,7 +1,7 @@
 local _, Logres = ...
 
 local PANEL_WIDTH = 540
-local PANEL_HEIGHT = 500
+local PANEL_HEIGHT = 590
 local BUTTON_WIDTH = 154
 local BUTTON_HEIGHT = 24
 local BUTTON_GAP_X = 8
@@ -90,10 +90,10 @@ local Panel = Logres:RegisterModule("DevPanel", {
         local buttonHost = CreateFrame("Frame", nil, frame)
         buttonHost:SetPoint("TOPLEFT", frame, "TOPLEFT", 18, -64)
         buttonHost:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -18, -64)
-        buttonHost:SetHeight(180)
+        buttonHost:SetHeight(270)
 
         local resultsBackground = frame:CreateTexture(nil, "ARTWORK")
-        resultsBackground:SetPoint("TOPLEFT", frame, "TOPLEFT", 18, -258)
+        resultsBackground:SetPoint("TOPLEFT", frame, "TOPLEFT", 18, -348)
         resultsBackground:SetPoint(
             "BOTTOMRIGHT",
             frame,

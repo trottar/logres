@@ -10,7 +10,7 @@ Active work item:
 **C.5 Stock Action-Bar Replacement**
 
 State:
-**FIRST-PASS SOURCE-RESOLVED; IMPLEMENTATION NEXT**
+**P0044 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
 
 ## Phase status
 
@@ -34,19 +34,7 @@ State:
 | C.2 Primary action cluster | COMPLETE |
 | C.3 Secondary / utility clusters | COMPLETE |
 | C.4 Contextual visibility / secure paging | COMPLETE |
-| C.5 Stock action-bar replacement | ACTIVE — first-pass contract resolved |
+| C.5 Stock action-bar replacement | ACTIVE — P0044 prepared |
 | C.6 Action interface integration validation | QUEUED |
 
-## C.5 first runtime scope
-
-Replace only:
-- stock Bar 2 / `MultiBarBottomLeft`;
-- stock Bar 3 / `MultiBarBottomRight`.
-
-Keep visible:
-- MainActionBar;
-- special action bars;
-- Bars 4–5;
-- unsupported extra bars.
-
-Replacement is session-only and fail-open during first proof.
+P0044 replaces only stock Bars 2–3.

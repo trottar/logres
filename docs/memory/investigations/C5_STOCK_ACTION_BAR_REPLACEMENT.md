@@ -1,6 +1,6 @@
 # C.5 — Stock Action-Bar Replacement
 
-Status: FIRST-PASS SOURCE-RESOLVED; IMPLEMENTATION NEXT
+Status: P0044 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT
 Opened: 2026-10-01
 
 ## Goal
@@ -145,3 +145,19 @@ First suppression mechanism:
 - session-only, fail-open default OFF after reload.
 
 Implementation next.
+
+## P0044 implementation
+
+Adds `Actions/StockReplacement.lua`.
+
+First runtime replacement:
+- Bar 2 + Bar 3 only;
+- session-only;
+- defaults OFF after reload;
+- automatic Secondary/Utility routing;
+- alpha/mouse suppression;
+- exact snapshot restoration;
+- combat deferral;
+- routing OFF guard while replacement owns the domain.
+
+Runtime proof is next.

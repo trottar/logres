@@ -14,9 +14,7 @@ project: logres
 
 **C.5 — Stock Action-Bar Replacement.**
 
-First-pass source/design resolution is complete.
-
-Implementation is next.
+P0044 runtime implementation is prepared.
 
 ## Verified State
 
@@ -27,78 +25,79 @@ Implementation is next.
 - C.2 complete.
 - C.3 complete.
 - C.4 complete.
-- P0042 pushed at `8f5326a`.
-- P0041 routed-key activation proof remains valid.
-- stock Bar 2 source frame: `MultiBarBottomLeft`.
-- stock Bar 3 source frame: `MultiBarBottomRight`.
-- Bar 2 maps to slots 61–72 / Logres Secondary.
-- Bar 3 maps to slots 49–60 / Logres Utility.
-- Blizzard retains Show/Hide ownership of multi-bars.
-- MainActionBar is reused for special action states and is excluded from first
-  suppression.
-- Bars 4–5 remain outside current Logres coverage and stay visible.
-- D-023 selective replacement contract accepted.
-- stock Blizzard action bars are still visible in current runtime.
+- P0043 pushed at `66ea513`.
+- runtime before P0044: `0.0.19-dev`.
+- P0044 target: `0.0.20-dev`.
+- first replacement scope is Bars 2–3 only.
+- MainActionBar remains unsuppressed.
+- Bars 4–5 remain unsuppressed.
+- stock settings remain untouched.
+- replacement defaults OFF after reload.
 
 ## Next Action
 
-Implement first selective C.5 runtime proof.
+Install/review/commit/push P0044.
 
-Add session-only developer controls:
-- Stock Bars Replace ON;
-- Stock Bars Replace OFF.
+Because runtime code changes, deploy explicitly:
 
-ON, out of combat:
-1. snapshot Bar 2 / Bar 3 alpha and mouse states;
-2. enable Secondary and Utility Logres key routing;
-3. if routing succeeded, set Bar 2 / Bar 3 alpha to 0;
-4. disable mouse input on those stock bars and action buttons.
+```bash
+cd ~/Projects/logres
 
-OFF, out of combat:
-1. restore exact stock alpha/mouse snapshots;
-2. restore prior Secondary/Utility routing state.
+WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
+ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
 
-Combat-time requests defer until `PLAYER_REGEN_ENABLED`.
+./tools/deploy_logres.sh "$ADDONS"
+```
 
-Do not suppress:
-- MainActionBar;
-- OverrideActionBar;
-- Bars 4–5;
-- special action surfaces.
+Then `/reload`.
 
-First proof defaults replacement OFF after `/reload`.
+Confirm `0.0.20-dev`.
+
+Use:
+- Run All;
+- Stock Replace Check;
+- Stock Replace ON;
+- Stock Replace OFF.
+
+Proof:
+1. OFF baseline PASS;
+2. ON hides only stock Bars 2–3;
+3. Primary and Bars 4–5 remain visible;
+4. no invisible stock mouse zones;
+5. Secondary/Utility keys route through Logres with activation feedback;
+6. OFF restores stock Bars 2–3 and prior routing;
+7. combat ON/OFF request defers until combat ends;
+8. no protected/taint/Lua/secret errors.
+
+Do not change Blizzard Edit Mode/action-bar configuration during this first
+proof.
 
 ## Success Criteria
 
-First selective C.5 runtime pass succeeds when:
-- Bar 2 and Bar 3 are visually absent when replacement ON;
-- no invisible stock mouse zones remain;
-- Secondary/Utility keyboard actions route through Logres;
-- activation feedback works;
-- Primary remains stock-visible;
-- Bars 4–5 remain stock-visible;
-- replacement OFF restores stock bars exactly;
-- prior routing state is restored;
-- combat-time transition requests defer safely;
+P0044 succeeds when:
+- selective ON/OFF is reversible;
+- routing and suppression remain coupled;
+- stock mouse interaction is removed while suppressed;
+- restoration is exact;
+- combat deferral works;
+- unsupported bars remain accessible;
 - no protected/taint/Lua/secret regression occurs.
 
 ## Do Not Reopen Without New Evidence
 
 - **C.1–C.4:** complete.
-- **P0040:** retained real visual failure.
-- **P0041:** feedback proof complete.
-- **MainActionBar suppression:** explicitly deferred by D-023.
-- **Bars 4–5:** remain visible.
-- **Stock Settings:** must not be rewritten for suppression.
-- **Replacement persistence:** deferred until restoration proof.
+- **D-023:** first replacement scope is canonical.
+- **MainActionBar suppression:** deferred.
+- **Bars 4–5 suppression:** deferred.
+- **Persistence:** deferred until restoration proof.
+- **Stock settings:** untouched.
 - **Cast cue colors:** open visual debt.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/C5_STOCK_ACTION_BAR_REPLACEMENT_SOURCE_REVIEW_2026-10-01.md`
+- `docs/memory/evidence/C5_P0044_SELECTIVE_REPLACEMENT_IMPLEMENTATION_2026-10-01.md`
 - `docs/memory/decisions/D-023_SELECTIVE_STOCK_ACTION_REPLACEMENT.md`
 - `docs/memory/investigations/C5_STOCK_ACTION_BAR_REPLACEMENT.md`
-- `docs/memory/decisions/D-017_BLIZZARD_UI_SUPPRESSION_AND_RESTORATION.md`
-- `docs/memory/decisions/D-020_ACTION_LAYOUT_CUSTOMIZATION_DIRECTION.md`
-- `docs/memory/architecture/ACTION_CLUSTERS.md`
+- `Logres/Actions/StockReplacement.lua`
+- `tools/check_stock_replacement_contract.py`

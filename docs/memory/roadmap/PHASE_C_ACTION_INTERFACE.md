@@ -306,3 +306,17 @@ Suppression requires:
 
 Current user layout uses more stock action domains than Logres currently
 represents, so Bars 4–5 remain visible until later coverage/profile work.
+
+### P0044 selective replacement implementation
+
+Runtime version `0.0.20-dev`.
+
+Adds session-only replacement for stock Bars 2–3:
+- snapshot;
+- automatic matching Logres routing;
+- alpha/mouse suppression;
+- exact restoration;
+- combat deferral;
+- replacement diagnostics.
+
+Primary and unsupported Bars 4–5 remain Blizzard-visible.

@@ -432,3 +432,20 @@ Instead, while replacement is enabled:
 Restoration restores exact captured values.
 
 MainActionBar remains Blizzard-owned until special-state fallback is proven.
+
+## P0044 replacement runtime ownership
+
+`StockActionReplacement` owns the first selective replacement transaction.
+
+It coordinates:
+- stock presentation/interactivity;
+- Secondary/Utility key routing;
+- restoration snapshots;
+- combat deferral.
+
+The transaction is session-only for first proof.
+
+A replaced stock domain cannot have its Logres routing manually disabled while
+suppression is applied.
+
+MainActionBar and unsupported stock domains remain outside this module's scope.

@@ -5,24 +5,24 @@ Authoritative state: `../CURRENT.md`.
 Current work:
 **C.5 — Stock Action-Bar Replacement**
 
-P0043 resolves the first replacement contract.
+P0044 is prepared.
 
-First runtime implementation:
-- stock Bar 2 only;
-- stock Bar 3 only;
-- alpha/mouse suppression;
-- automatic matching Logres key routing;
-- exact restoration;
-- OOC-only transitions;
-- combat deferral;
-- replacement defaults OFF after reload.
+Version:
+`0.0.20-dev`
 
-Do not suppress:
-- MainActionBar;
-- OverrideActionBar;
-- Bars 4–5;
-- special action surfaces.
+Runtime controls:
+- Stock Replace Check;
+- Stock Replace ON;
+- Stock Replace OFF.
 
-P0043 is documentation/source-evidence only; no WoW redeploy required.
+Scope:
+- stock Bar 2;
+- stock Bar 3.
+
+Replacement automatically owns Secondary/Utility Logres routing while active.
+
+Primary and Bars 4–5 remain visible.
+
+P0044 changes runtime code; full deploy block is mandatory.
 
 User performs all commits/pushes.

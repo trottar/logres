@@ -643,6 +643,19 @@ end
 
 local function handleSideActionBindings(key, label, argument)
     local actions = Logres:GetModule("SecondaryUtilityActions")
+    local replacement = Logres:GetModule("StockActionReplacement")
+
+    if (
+        argument == "off"
+        and replacement:IsRoutingManaged(key)
+    ) then
+        emit(
+            "Logres: " .. label .. " Keys OFF blocked while stock "
+            .. "replacement owns this routing domain. Turn Stock Bars "
+            .. "Replace OFF first."
+        )
+        return
+    end
 
     if argument == "on" then
         local applied = actions:SetBindingRoutingEnabled(key, true)
@@ -694,6 +707,129 @@ local function handleSideActionBindings(key, label, argument)
 end
 
 
+local function runStockReplacementCheck()
+    local status =
+        Logres:GetModuleStatus("StockActionReplacement")
+    local replacement =
+        Logres:GetModule("StockActionReplacement")
+    local debugStatus = replacement:GetDebugStatus()
+
+    local appliedConsistent = true
+
+    if debugStatus.appliedEnabled then
+        appliedConsistent =
+            debugStatus.snapshotReady == true
+            and debugStatus.secondaryAlpha == 0
+            and debugStatus.utilityAlpha == 0
+            and debugStatus.secondaryFrameMouseEnabled == false
+            and debugStatus.utilityFrameMouseEnabled == false
+            and debugStatus.secondaryButtonMouseEnabledCount == 0
+            and debugStatus.utilityButtonMouseEnabledCount == 0
+            and debugStatus.secondaryRoutingEnabled == true
+            and debugStatus.secondaryBindingsApplied == true
+            and debugStatus.utilityRoutingEnabled == true
+            and debugStatus.utilityBindingsApplied == true
+    end
+
+    local passed =
+        status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and debugStatus.secondaryFrameFound == true
+        and debugStatus.utilityFrameFound == true
+        and debugStatus.mainActionBarSuppressed == false
+        and debugStatus.unsupportedBarsSuppressed == false
+        and appliedConsistent
+
+    if passed then
+        emit(string.format(
+            "Logres stockreplacecheck: PASS (requested=%s applied=%s pending=%s bar2Alpha=%s bar2Mouse=%s/%s bar3Alpha=%s bar3Mouse=%s/%s secondaryRouting=%s/%s utilityRouting=%s/%s error=%s)",
+            boolText(debugStatus.requestedEnabled),
+            boolText(debugStatus.appliedEnabled),
+            boolText(debugStatus.pending),
+            tostring(debugStatus.secondaryAlpha),
+            boolText(debugStatus.secondaryFrameMouseEnabled),
+            tostring(debugStatus.secondaryButtonMouseEnabledCount),
+            tostring(debugStatus.utilityAlpha),
+            boolText(debugStatus.utilityFrameMouseEnabled),
+            tostring(debugStatus.utilityButtonMouseEnabledCount),
+            boolText(debugStatus.secondaryRoutingEnabled),
+            boolText(debugStatus.secondaryBindingsApplied),
+            boolText(debugStatus.utilityRoutingEnabled),
+            boolText(debugStatus.utilityBindingsApplied),
+            tostring(debugStatus.lastError)
+        ))
+        return
+    end
+
+    emit(string.format(
+        "Logres stockreplacecheck: FAIL (initialized=%s enabled=%s requested=%s applied=%s pending=%s frames=%s/%s alphas=%s/%s frameMouse=%s/%s buttonMouse=%s/%s routing=%s/%s/%s/%s error=%s)",
+        tostring(status.initialized),
+        tostring(status.enabled),
+        tostring(debugStatus.requestedEnabled),
+        tostring(debugStatus.appliedEnabled),
+        tostring(debugStatus.pending),
+        tostring(debugStatus.secondaryFrameFound),
+        tostring(debugStatus.utilityFrameFound),
+        tostring(debugStatus.secondaryAlpha),
+        tostring(debugStatus.utilityAlpha),
+        tostring(debugStatus.secondaryFrameMouseEnabled),
+        tostring(debugStatus.utilityFrameMouseEnabled),
+        tostring(debugStatus.secondaryButtonMouseEnabledCount),
+        tostring(debugStatus.utilityButtonMouseEnabledCount),
+        tostring(debugStatus.secondaryRoutingEnabled),
+        tostring(debugStatus.secondaryBindingsApplied),
+        tostring(debugStatus.utilityRoutingEnabled),
+        tostring(debugStatus.utilityBindingsApplied),
+        tostring(debugStatus.lastError)
+    ))
+end
+
+local function handleStockReplacement(argument)
+    local replacement =
+        Logres:GetModule("StockActionReplacement")
+
+    if argument == "on" or argument == "off" then
+        local applied, result =
+            replacement:RequestEnabled(argument == "on")
+
+        if applied then
+            emit(
+                "Logres: Stock Bars Replace "
+                .. string.upper(argument)
+                .. " applied for Bars 2-3."
+            )
+        elseif result == "deferred" then
+            emit(
+                "Logres: Stock Bars Replace "
+                .. string.upper(argument)
+                .. " deferred until combat ends."
+            )
+        else
+            local debugStatus = replacement:GetDebugStatus()
+            emit(
+                "Logres: Stock Bars Replace "
+                .. string.upper(argument)
+                .. " failed: "
+                .. tostring(debugStatus.lastError)
+            )
+        end
+
+        return
+    end
+
+    local debugStatus = replacement:GetDebugStatus()
+    emit(string.format(
+        "Logres stockreplace: requested=%s applied=%s pending=%s secondaryRouting=%s utilityRouting=%s error=%s",
+        boolText(debugStatus.requestedEnabled),
+        boolText(debugStatus.appliedEnabled),
+        boolText(debugStatus.pending),
+        boolText(debugStatus.secondaryRoutingEnabled),
+        boolText(debugStatus.utilityRoutingEnabled),
+        tostring(debugStatus.lastError)
+    ))
+end
+
 local function runAllChecks()
     emit("Logres checkall: beginning")
     printStatus()
@@ -703,6 +839,7 @@ local function runAllChecks()
     runLifecycleCheck()
     runHUDCheck()
     runActionCheck()
+    runStockReplacementCheck()
     emit("Logres checkall: complete")
 end
 
@@ -772,6 +909,8 @@ local function printHelp()
     emit("  /logres actionbindings [on|off]")
     emit("  /logres secondarybindings [on|off]")
     emit("  /logres utilitybindings [on|off]")
+    emit("  /logres stockreplace [on|off]")
+    emit("  /logres stockreplacecheck")
     emit("  /logres hudpreview [on|off]")
     emit("  /logres immersion [on|off|toggle]")
     emit("  /logres debug on")
@@ -857,6 +996,16 @@ local function handleCommand(message)
 
     if command == "utilitybindings" then
         handleSideActionBindings("utility", "Utility", argument)
+        return
+    end
+
+    if command == "stockreplace" then
+        handleStockReplacement(argument)
+        return
+    end
+
+    if command == "stockreplacecheck" then
+        runStockReplacementCheck()
         return
     end
 
@@ -948,6 +1097,21 @@ Logres:RegisterDevPanelAction(
     "utilityKeysOff",
     "Utility Keys OFF",
     "utilitybindings off"
+)
+Logres:RegisterDevPanelAction(
+    "stockReplaceCheck",
+    "Stock Replace Check",
+    "stockreplacecheck"
+)
+Logres:RegisterDevPanelAction(
+    "stockReplaceOn",
+    "Stock Replace ON",
+    "stockreplace on"
+)
+Logres:RegisterDevPanelAction(
+    "stockReplaceOff",
+    "Stock Replace OFF",
+    "stockreplace off"
 )
 Logres:RegisterDevPanelAction(
     "immersionOn",
