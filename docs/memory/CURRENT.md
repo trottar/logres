@@ -14,7 +14,7 @@ project: logres
 
 **D.2 — Immersion Controller runtime foundation.**
 
-D.1 source/design review is complete.
+P0048 implementation is prepared.
 
 ## Verified State
 
@@ -22,73 +22,78 @@ D.1 source/design review is complete.
 - Phase A complete.
 - Phase B complete.
 - Phase C complete.
-- P0046 pushed at `8ad0f01`.
-- runtime remains `0.0.20-dev`.
-- D-024 immersion orchestration contract accepted.
-- Phase C Bar 2–3 replacement is safe for automatic Phase D orchestration.
-- Quiet Mode first pass can use runtime-only chat/tab suppression without
-  changing saved chat settings.
-- full PlayerFrame suppression is BLOCKED by un-replaced child resources.
-- full TargetFrame suppression is BLOCKED by secure interaction + aura policy.
-- full PartyFrame/CompactPartyFrame suppression is BLOCKED by secure
-  interaction and additional group context.
-- Primary action routing remains manual while Primary stock replacement is
-  unsupported.
-- live action editing remains deferred under D-020.
-- cast cue color regression remains open visual debt.
+- D.1 complete.
+- P0047 pushed at `d24fcba`.
+- runtime before P0048: `0.0.20-dev`.
+- P0048 target: `0.0.21-dev`.
+- D-024 remains canonical.
+- Phase C Bar 2–3 replacement remains the only action suppression capability
+  automatically owned by Phase D.
+- full Player/Target/Party suppression remains blocked.
+- Primary stock replacement remains unsupported.
+- Primary routing remains manual.
+- Quiet Mode desired policy is computed in D.2 but not visually applied until
+  D.3.
 
 ## Next Action
 
-Implement D.2.
+Install/review/commit/push P0048.
 
-Runtime target:
-1. add `ImmersionController` module;
-2. consume preference snapshot/subscription;
-3. consume State snapshot/subscription;
-4. compute desired orchestration policy;
-5. when immersion ON, automatically request Phase C Bar 2–3 replacement;
-6. when immersion OFF, restore that replacement;
-7. expose desired Quiet Mode state diagnostically;
-8. add `Immersion Check`;
-9. do not suppress Player/Target/Party yet.
+Because runtime code changes, deploy explicitly:
 
-Expected policy:
-- action replacement follows `immersionEnabled`;
-- Quiet Mode desired in world while immersion ON;
-- Quiet Mode desired OFF in instances for first conservative pass;
-- PvP does not turn immersion off.
+```bash
+cd ~/Projects/logres
+
+WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
+ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
+
+./tools/deploy_logres.sh "$ADDONS"
+```
+
+Then `/reload`.
+
+Runtime proof:
+1. ensure Immersion ON before reload;
+2. confirm `0.0.21-dev`;
+3. confirm stock Bars 2–3 are automatically replaced after reload;
+4. confirm Primary stock bar stays visible;
+5. confirm Primary Action Keys remain manual;
+6. Immersion Check PASS;
+7. Run All PASS;
+8. Immersion OFF restores Bars 2–3;
+9. Immersion ON automatically replaces them again;
+10. in combat, changing immersion safely defers replacement transition;
+11. after combat, desired replacement state applies;
+12. Player/Target/Party stock frames remain untouched;
+13. no protected/taint/Lua/secret error.
 
 ## Success Criteria
 
 D.2 succeeds when:
-- reload with persisted immersion ON automatically applies supported Bar 2–3
+- persisted immersion preference automatically owns supported Bar 2–3
   replacement;
-- immersion OFF restores Bars 2–3;
-- immersion ON reapplies them;
-- combat-time preference changes safely defer through the existing replacement
-  module;
-- Primary keys are not seized automatically;
-- unit frames remain untouched;
-- controller diagnostics explain desired/applied state;
-- no protected/taint/Lua/secret regression occurs.
+- OFF restoration is reliable;
+- combat deferral remains correct;
+- controller diagnostics match preference/state/replacement truth;
+- Primary routing is not automatically seized;
+- unit-frame capability gates remain intact.
 
 ## Do Not Reopen Without New Evidence
 
 - **Phase C:** complete.
 - **D.1:** complete.
-- **Full PlayerFrame suppression:** blocked pending child-resource-safe design.
-- **Full TargetFrame suppression:** blocked pending secure interaction/aura
-  design.
-- **Party suppression:** blocked pending secure interaction + normal/compact
-  coverage.
-- **Primary replacement/routing:** deferred.
+- **PlayerFrame blanket suppression:** blocked.
+- **TargetFrame blanket suppression:** blocked.
+- **Party-frame blanket suppression:** blocked.
+- **Primary replacement/routing ownership:** deferred.
+- **Quiet Mode visuals:** D.3.
 - **D-020 live action editing:** deferred.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/D1_IMMERSION_ORCHESTRATION_SOURCE_REVIEW_2026-10-01.md`
+- `docs/memory/evidence/D2_P0048_IMMERSION_CONTROLLER_IMPLEMENTATION_2026-10-01.md`
 - `docs/memory/decisions/D-024_IMMERSION_ORCHESTRATION_CONTRACT.md`
 - `docs/memory/roadmap/PHASE_D_IMMERSION_CONTROLLER.md`
-- `docs/memory/investigations/D1_IMMERSION_ORCHESTRATION_SOURCE_REVIEW.md`
-- `docs/memory/decisions/D-017_BLIZZARD_UI_SUPPRESSION_AND_RESTORATION.md`
+- `Logres/Immersion/Controller.lua`
+- `tools/check_immersion_controller_contract.py`

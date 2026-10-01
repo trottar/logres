@@ -10,7 +10,7 @@ Active work item:
 **D.2 Immersion Controller runtime foundation**
 
 State:
-**D.1 SOURCE-RESOLVED; D.2 IMPLEMENTATION NEXT**
+**P0048 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
 
 ## Phase status
 
@@ -26,17 +26,14 @@ State:
 | G — Cinematic Camera | QUEUED |
 | H — Integration and Polish | QUEUED |
 
-## D.1 result
+## D.2 scope
 
-Safe immediate orchestration:
-- persisted immersion preference;
-- Phase C selective Bar 2–3 replacement;
-- Quiet Mode runtime chat/tab suppression in D.3.
+Implemented:
+- preference/state orchestration;
+- automatic proven Bar 2–3 replacement;
+- Quiet Mode desired policy diagnostics.
 
-Capability-gated:
-- full PlayerFrame;
-- full TargetFrame;
-- PartyFrame / CompactPartyFrame;
-- focus;
-- MainActionBar;
-- Bars 4–5.
+Not implemented:
+- chat suppression;
+- Player/Target/Party suppression;
+- Primary replacement/routing ownership.

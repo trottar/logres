@@ -27,7 +27,7 @@ Resolved:
 
 ## D.2 — Immersion Controller runtime foundation
 
-**Status: ACTIVE — IMPLEMENTATION NEXT.**
+**Status: P0048 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
 
 Implement:
 - `ImmersionController` module;
@@ -44,6 +44,21 @@ Do not suppress Player/Target/Party in D.2.
 
 Primary action routing remains manual because Primary replacement remains
 unsupported.
+
+### D.2 P0048 implementation
+
+Version `0.0.21-dev`.
+
+Adds `ImmersionController`.
+
+Runtime behavior:
+- persisted immersion ON automatically requests proven Bar 2–3
+  replacement;
+- immersion OFF restores it;
+- state/preferences both trigger policy reconciliation;
+- Quiet Mode desired state is computed but not applied until D.3;
+- Player/Target/Party remain unsuppressed;
+- Primary routing remains manual.
 
 ## D.3 — Quiet Mode runtime suppression
 

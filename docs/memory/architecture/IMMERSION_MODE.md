@@ -55,3 +55,21 @@ resource children.
 
 The controller coordinates replacement modules rather than duplicating their
 internal snapshot/combat logic.
+
+## D.2 runtime controller
+
+`ImmersionController` is the runtime policy coordinator.
+
+It subscribes to:
+- preferences;
+- observed State.
+
+It currently controls only a proven stock capability:
+- selective Bar 2–3 replacement through StockActionReplacement.
+
+It computes Quiet Mode desired state for D.3 but does not yet mutate chat.
+
+It explicitly reports Player/Target/Party suppression as false capability
+gates.
+
+Primary routing remains manual until Primary stock replacement exists.

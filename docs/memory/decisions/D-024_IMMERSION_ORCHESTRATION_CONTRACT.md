@@ -207,3 +207,18 @@ and required group context have a replacement/fallback.
 - duplicating StockActionReplacement logic in the controller;
 - automatically seizing Primary action keys without Primary replacement;
 - treating PvP flagging as immersion OFF.
+
+## D.2 implementation binding
+
+P0048 binds D-024 to `ImmersionController`.
+
+The controller automatically requests the already-proven Phase C Bar 2–3
+replacement from persisted `immersionEnabled`.
+
+Persisted immersion ON requests supported replacement on login.
+Immersion OFF restores it.
+
+StockActionReplacement retains combat deferral, routing, snapshots, and
+restoration ownership.
+
+Primary routing remains outside controller ownership.

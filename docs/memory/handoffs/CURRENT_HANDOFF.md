@@ -2,24 +2,23 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0046 is verified pushed at `8ad0f01`.
-
-D.1 source review is complete.
-
-D-024 is canonical.
+P0047 is verified pushed at `d24fcba`.
 
 Current work:
 **D.2 — Immersion Controller runtime foundation**
 
-Implement automatic orchestration of the already-proven Phase C Bar 2–3
-replacement from persisted `immersionEnabled`.
+P0048 target:
+`0.0.21-dev`
 
-Do not suppress Player/Target/Party in D.2.
+Adds:
+- ImmersionController;
+- automatic Bar 2–3 replacement from persisted immersion;
+- Immersion Check.
 
-Important source finding:
-full PlayerFrame suppression would also hide un-replaced class-resource/rune/
-totem/pet children.
+Does not suppress Player/Target/Party.
 
-P0047 is documentation/source-evidence only; no WoW redeploy required.
+Primary Action Keys remain manual.
+
+P0048 changes runtime code; full deploy block is mandatory.
 
 User performs all commits/pushes.

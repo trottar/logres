@@ -830,6 +830,105 @@ local function handleStockReplacement(argument)
     ))
 end
 
+local function runImmersionCheck()
+    local status =
+        Logres:GetModuleStatus("ImmersionController")
+    local controller =
+        Logres:GetModule("ImmersionController")
+    local debugStatus =
+        controller:GetDebugStatus()
+
+    local preferences = Logres:GetPreferences()
+    local state = Logres:GetState()
+
+    local expectedActionReplacement =
+        preferences.immersionEnabled == true
+
+    local expectedQuietMode =
+        preferences.immersionEnabled == true
+        and state.context == "world"
+
+    local desiredMatches =
+        debugStatus.immersionEnabled
+            == preferences.immersionEnabled
+        and debugStatus.context == state.context
+        and debugStatus.actionReplacementDesired
+            == expectedActionReplacement
+        and debugStatus.quietModeDesired
+            == expectedQuietMode
+
+    local replacementMatches =
+        debugStatus.actionReplacementRequested
+            == expectedActionReplacement
+        and (
+            debugStatus.actionReplacementApplied
+                == expectedActionReplacement
+            or (
+                debugStatus.actionReplacementPending
+                and InCombatLockdown()
+            )
+        )
+
+    local capabilityGatesSafe =
+        debugStatus.quietModeImplemented == false
+        and debugStatus.playerFrameSuppressionDesired == false
+        and debugStatus.targetFrameSuppressionDesired == false
+        and debugStatus.partyFrameSuppressionDesired == false
+        and debugStatus.primaryActionRoutingOwned == false
+
+    local passed =
+        status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and desiredMatches
+        and replacementMatches
+        and capabilityGatesSafe
+        and debugStatus.lastActionError == nil
+
+    if passed then
+        emit(string.format(
+            "Logres immersioncheck: PASS (immersion=%s context=%s pvp=%s actionDesired=%s requested=%s applied=%s pending=%s quietDesired=%s quietImplemented=false unitSuppression=false primaryRoutingOwned=false reason=%s result=%s)",
+            boolText(debugStatus.immersionEnabled),
+            tostring(debugStatus.context),
+            boolText(debugStatus.pvpFlagged),
+            boolText(debugStatus.actionReplacementDesired),
+            boolText(debugStatus.actionReplacementRequested),
+            boolText(debugStatus.actionReplacementApplied),
+            boolText(debugStatus.actionReplacementPending),
+            boolText(debugStatus.quietModeDesired),
+            tostring(debugStatus.lastReconcileReason),
+            tostring(debugStatus.lastActionResult)
+        ))
+        return
+    end
+
+    emit(string.format(
+        "Logres immersioncheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s desiredMatches=%s replacementMatches=%s gatesSafe=%s immersion=%s context=%s action=%s/%s/%s/%s quiet=%s/%s unitSuppression=%s/%s/%s primaryRoutingOwned=%s reason=%s result=%s error=%s replacementError=%s)",
+        tostring(status.initialized),
+        tostring(status.enabled),
+        tostring(debugStatus.moduleEnabled),
+        tostring(desiredMatches),
+        tostring(replacementMatches),
+        tostring(capabilityGatesSafe),
+        tostring(debugStatus.immersionEnabled),
+        tostring(debugStatus.context),
+        tostring(debugStatus.actionReplacementDesired),
+        tostring(debugStatus.actionReplacementRequested),
+        tostring(debugStatus.actionReplacementApplied),
+        tostring(debugStatus.actionReplacementPending),
+        tostring(debugStatus.quietModeDesired),
+        tostring(debugStatus.quietModeImplemented),
+        tostring(debugStatus.playerFrameSuppressionDesired),
+        tostring(debugStatus.targetFrameSuppressionDesired),
+        tostring(debugStatus.partyFrameSuppressionDesired),
+        tostring(debugStatus.primaryActionRoutingOwned),
+        tostring(debugStatus.lastReconcileReason),
+        tostring(debugStatus.lastActionResult),
+        tostring(debugStatus.lastActionError),
+        tostring(debugStatus.actionReplacementError)
+    ))
+end
+
 local function runAllChecks()
     emit("Logres checkall: beginning")
     printStatus()
@@ -840,6 +939,7 @@ local function runAllChecks()
     runHUDCheck()
     runActionCheck()
     runStockReplacementCheck()
+    runImmersionCheck()
     emit("Logres checkall: complete")
 end
 
@@ -911,6 +1011,7 @@ local function printHelp()
     emit("  /logres utilitybindings [on|off]")
     emit("  /logres stockreplace [on|off]")
     emit("  /logres stockreplacecheck")
+    emit("  /logres immersioncheck")
     emit("  /logres hudpreview [on|off]")
     emit("  /logres immersion [on|off|toggle]")
     emit("  /logres debug on")
@@ -1006,6 +1107,11 @@ local function handleCommand(message)
 
     if command == "stockreplacecheck" then
         runStockReplacementCheck()
+        return
+    end
+
+    if command == "immersioncheck" then
+        runImmersionCheck()
         return
     end
 
@@ -1112,6 +1218,11 @@ Logres:RegisterDevPanelAction(
     "stockReplaceOff",
     "Stock Replace OFF",
     "stockreplace off"
+)
+Logres:RegisterDevPanelAction(
+    "immersionCheck",
+    "Immersion Check",
+    "immersioncheck"
 )
 Logres:RegisterDevPanelAction(
     "immersionOn",
