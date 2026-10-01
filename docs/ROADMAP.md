@@ -6,6 +6,8 @@ The roadmap is intentionally capability-gated. A phase does not advance because 
 
 ## Phase 0 — Foundation
 
+**Status: COMPLETE.**
+
 Purpose: establish the repository, memory discipline, development environment, design invariants, and verified WoW Forever API boundaries before addon implementation depends on assumptions.
 
 ### 0.1 Repository and durable memory
@@ -51,6 +53,8 @@ The API audit established the baseline required to begin:
 - prove load/reload behavior in WoW Forever.
 
 ## Phase A — Core State Engine
+
+**Status: ACTIVE — A.1 State contract hardening.**
 
 Implement the central context model rather than independent modules making conflicting visibility decisions.
 

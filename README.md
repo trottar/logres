@@ -2,7 +2,7 @@
 
 **Project Logres** is an immersive, world-first interface addon for World of Warcraft Forever.
 
-The project is currently in **Phase 0 — Foundation**. The first real addon skeleton now exists, but product HUD features are intentionally not implemented yet.
+The project has completed **Phase 0 — Foundation** and is now in **Phase A — Core State Engine**. The real addon runtime exists, but product HUD features are intentionally not implemented yet.
 
 Design decisions, technical findings, failures, rejected approaches, evidence, and active development state are maintained as repository-native durable memory under `docs/memory/`.
 

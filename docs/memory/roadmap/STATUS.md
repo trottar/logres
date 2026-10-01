@@ -4,18 +4,16 @@ As of 2026-09-30.
 
 ## Active
 
-**Phase 0 — Foundation**
+**Phase A — Core State Engine**
 
-Active work item: **0.3 Minimal addon skeleton/load proof**
-
-State: **SKELETON PREPARED; RUNTIME PROOF PENDING**
+Active work item: **A.1 State contract hardening**
 
 ## Phase status
 
 | Phase | State |
 | --- | --- |
-| 0 — Foundation | ACTIVE — 0.3 |
-| A — Core State Engine | BLOCKED on 0.3 runtime proof |
+| 0 — Foundation | COMPLETE |
+| A — Core State Engine | ACTIVE — A.1 |
 | B — Core HUD | BLOCKED on Phase A |
 | C — Action Interface | BLOCKED on Phase A/B |
 | D — Immersion Controller | BLOCKED on Phase A |
@@ -24,32 +22,32 @@ State: **SKELETON PREPARED; RUNTIME PROOF PENDING**
 | G — Cinematic Camera | BLOCKED on Phase A; requires current DynamicCam profile |
 | H — Integration and Polish | BLOCKED on prior phases |
 
-## Foundation sequence
+## Foundation result
 
 | Item | State |
 | --- | --- |
 | 0.1 Repository + durable memory | COMPLETE (`353c5b0`) |
 | 0.2 Forever API capability audit | COMPLETE WITH DEFERRALS (`477df5b`) |
-| 0.3 Minimal addon skeleton/load proof | ACTIVE — source prepared |
+| 0.3 Minimal addon skeleton/load proof | COMPLETE (`ce4f1b0` + runtime proof) |
 
-## 0.3 source prepared
+Phase 0.3 runtime proof established:
+- clean addon load in tested scope;
+- development status command;
+- SavedVariables/loadCount persistence;
+- correct transition into combined instance + combat state;
+- correct restoration after leaving instance.
 
-P0005 adds:
-- real `Logres/Logres.toc`;
-- core namespace/event bus;
-- SavedVariables initialization;
-- central state observation;
-- development status/debug commands;
-- WSL deployment helper;
-- static addon-structure checker.
+Separate world-combat retest was intentionally omitted as redundant for this checkpoint.
 
-## Gate to Phase A
+## Phase A sequence
 
-Do not begin Phase A until runtime proves:
-- clean addon load;
-- clean `/reload`;
-- SavedVariables persistence;
-- basic state transitions;
-- repeatable WSL deployment.
+| Item | State |
+| --- | --- |
+| A.1 State contract hardening | ACTIVE |
+| A.2 Additional context sensors | QUEUED |
+| A.3 User-controlled state | QUEUED |
+| A.4 Module lifecycle contract | QUEUED |
+| A.5 Transition validation | QUEUED |
 
-No HUD presentation is part of this gate.
+Canonical Phase A plan:
+`PHASE_A_CORE_STATE_ENGINE.md`

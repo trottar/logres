@@ -2,25 +2,25 @@
 
 Authoritative state: `../CURRENT.md`. Start there.
 
-Project Logres is in **Phase 0 / 0.3 — Minimal addon skeleton/load proof**.
+**Phase 0 — Foundation is complete.**
 
-P0005 prepares the first actual addon runtime:
-- `Logres.toc`;
-- namespace/event bus;
-- database initialization;
-- central state;
+The real P0005 addon passed its minimal runtime proof:
+- clean load in tested scope;
 - `/logres status`;
-- WSL deployment/check tooling.
+- SavedVariables/loadCount persistence across `/reload`;
+- correct combined instance + combat state;
+- correct return to ordinary world/non-combat state.
 
-It intentionally contains no product HUD.
+A separate out-of-instance combat retest was intentionally omitted because the underlying combat APIs were already verified in I-001 and duplicate travel was not justified.
 
-Next:
-1. commit/push P0005;
-2. deploy to Forever;
-3. `/reload`;
-4. verify load message and `/logres status`;
-5. verify `loadCount` increments across another reload;
-6. exercise basic combat/instance state;
-7. record runtime evidence or failures.
+Current phase:
+
+**Phase A — Core State Engine**
+
+Current work item:
+
+**A.1 — State contract hardening**
+
+Next patch should harden consumer-facing state access/callback semantics before adding more sensors or any HUD.
 
 User performs all commits/pushes.
