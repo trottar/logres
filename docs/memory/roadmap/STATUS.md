@@ -8,6 +8,8 @@ As of 2026-09-30.
 
 Active work item: **A.2 Additional Context Sensors**
 
+State: **SOURCE REVIEW COMPLETE; IMPLEMENTATION NEXT**
+
 ## Phase status
 
 | Phase | State |
@@ -26,30 +28,23 @@ Active work item: **A.2 Additional Context Sensors**
 
 | Item | State |
 | --- | --- |
-| A.1 State contract hardening | COMPLETE (`e2f3d17` + runtime proof) |
-| A.2 Additional context sensors | ACTIVE |
+| A.1 State contract hardening | COMPLETE |
+| A.2 Additional context sensors | ACTIVE — source review complete |
 | A.3 User-controlled state | QUEUED |
 | A.4 Module lifecycle contract | QUEUED |
 | A.5 Transition validation | QUEUED |
 
-## A.1 result
+## A.2 selected facts
 
-Runtime `/logres statecheck` passed with no reported issues.
+Accepted:
+- mounted;
+- resting;
+- onTaxi;
+- interacting;
+- interactionType.
 
-Established:
-- private authoritative state;
-- snapshot consumer reads;
-- transition subscriptions;
-- actual-change-only revision semantics;
-- no-op notification suppression;
-- travel-free contract validation.
+Rejected/deferred:
+- generic traveling rejected;
+- flying/vehicle/travel-form/loss-of-control deferred.
 
-## A.2 gate
-
-Do not add sensors merely because an API exists.
-
-Each field must have:
-- a future feature owner;
-- a precise meaning;
-- current API/event evidence;
-- a validation plan.
+Implementation must preserve orthogonal state and avoid expensive required travel for proof.

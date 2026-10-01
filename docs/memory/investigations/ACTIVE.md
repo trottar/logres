@@ -1,21 +1,22 @@
 # Active Investigations
 
-No standalone technical investigation is currently active.
+## A2 — Additional Context Sensors
 
-## Recently completed
-
-### I-001 — WoW Forever API capability audit
-
-Status: COMPLETE WITH EXPLICIT DEFERRALS
+Status: ACTIVE — SOURCE REVIEW COMPLETE; IMPLEMENTATION NEXT
 
 Canonical record:
-`FOREVER_API_CAPABILITY_AUDIT.md`
+`A2_CONTEXT_SENSORS.md`
 
-Runtime evidence:
-- `../evidence/I001_RUNTIME_PASS_01_2026-09-30.md`
-- `../evidence/I001_RUNTIME_PASS_02_2026-09-30.md`
+Source evidence:
+`../evidence/A2_CONTEXT_SENSOR_SOURCE_AUDIT_2026-09-30.md`
 
-Next project work item:
-**Phase 0.3 — Minimal addon skeleton/load proof.**
+Accepted implementation candidates:
+- mounted;
+- resting;
+- onTaxi;
+- interacting;
+- interactionType.
 
-Deferred questions reopen inside the phase that owns them rather than extending I-001 indefinitely.
+The next patch may modify `Core/State.lua`.
+
+No dedicated taxi trip is required for this investigation.
