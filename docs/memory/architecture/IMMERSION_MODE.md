@@ -189,3 +189,31 @@ policy dimensions.
 
 This helps catch accidental global-mode coupling without reading protected
 Blizzard frame state.
+
+## D.6 restoration validation contract
+
+D.6 validates the existing Phase D ownership model rather than adding new
+suppression policy.
+
+The recovery invariant is:
+
+**restore stock ownership first, then remove the Logres substitute path.**
+
+Current implementations follow that order for:
+- Bars 2–3 + Logres routing;
+- Player shell + secure player interaction;
+- Target shell + secure target interaction.
+
+Controller disable is fail-open. Protected restoration may defer during combat,
+but the replacement modules retain their own PLAYER_REGEN_ENABLED convergence
+handlers even while ImmersionController is disabled.
+
+The integrated Restoration Check must use addon-owned recovery state. Protected
+Blizzard presentation getters are not a proof mechanism.
+
+Out-of-combat recovery testing may deliberately cycle preference and controller
+enable state as long as the original persisted preference is restored before the
+check exits.
+
+In-combat recovery testing is non-mutating and accepts only legal pending
+protected transitions.

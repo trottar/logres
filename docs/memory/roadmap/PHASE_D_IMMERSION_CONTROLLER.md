@@ -409,6 +409,40 @@ Validate Phase D as one reversible system:
 
 Prefer addon-owned diagnostics over protected Blizzard presentation readback.
 
+### D.6 P0062 source/design result
+
+Source review confirms no new suppression policy is required.
+
+The current modules already provide the required recovery mechanics:
+- exact stock/runtime restoration;
+- protected combat deferral;
+- independent PLAYER_REGEN_ENABLED convergence;
+- controller fail-open disable;
+- controller re-enable reconciliation from persisted preference + State.
+
+P0063 should add one integrated Restoration Check.
+
+Out of combat:
+- verify current settled state;
+- flip immersion preference and verify the opposite settled state;
+- restore the original preference and verify convergence;
+- disable ImmersionController and verify fail-open restoration;
+- re-enable it and verify reconvergence;
+- leave the original preference unchanged at exit.
+
+In combat:
+- do not run the active cycle;
+- validate requested ownership and legal pending protected state only.
+
+The integrated check must use addon-owned recovery state. It must not inspect
+protected Blizzard presentation values merely to prove a mutation.
+
+Reload persistence and world/PvP/instance transitions remain real runtime proof
+steps. Context Policy Check remains canonical for D-028 context policy.
+
+Runtime target:
+`0.0.27-dev`.
+
 ## Phase D exit
 
 Phase D completes when:

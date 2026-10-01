@@ -9,7 +9,7 @@ Canonical:
 `D6_RESTORATION_INTEGRATION_VALIDATION.md`
 
 Next:
-design the integrated Phase D recovery/restoration validation path.
+implement P0063 integrated Restoration Check from the P0062 source resolution.
 
 ## Tracked non-blocking defects / deferred domains
 
