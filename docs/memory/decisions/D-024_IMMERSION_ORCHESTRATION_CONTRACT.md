@@ -222,3 +222,13 @@ StockActionReplacement retains combat deferral, routing, snapshots, and
 restoration ownership.
 
 Primary routing remains outside controller ownership.
+
+## D.3 source refinement
+
+D.1's broad phrase "hide chat frames and tabs at runtime" is refined by D-025.
+
+Direct ChatFrame Hide/Show is not acceptable because Blizzard's OnHide/OnShow
+updates saved ChatWindowShown state.
+
+Quiet Mode therefore uses presentation suppression rather than visibility
+mutation for ChatFrame objects.

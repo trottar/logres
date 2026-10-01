@@ -49,6 +49,7 @@
 | P0045 | 2026-10-01 | INSTALLED / PUSHED | Close C.5; record live editing gap; open C.6 integration validation (`e3c8602`) |
 | P0046 | 2026-10-01 | INSTALLED / PUSHED | Close Phase C; open Phase D / D.1 (`8ad0f01`) |
 | P0047 | 2026-10-01 | INSTALLED / PUSHED | Resolve D.1 immersion orchestration and unit-frame capability gates (`d24fcba`) |
-| P0048 | 2026-10-01 | PREPARED | Add Immersion Controller and automatic proven action replacement |
+| P0048 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME PASS | Add Immersion Controller and automatic proven action replacement (`ed5af75`) |
+| P0049 | 2026-10-01 | PREPARED | Close D.2; resolve D.3 Quiet Mode runtime suppression contract |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

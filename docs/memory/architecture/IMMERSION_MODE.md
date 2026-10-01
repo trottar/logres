@@ -73,3 +73,20 @@ It explicitly reports Player/Target/Party suppression as false capability
 gates.
 
 Primary routing remains manual until Primary stock replacement exists.
+
+## D.3 Quiet Mode suppression boundary
+
+Quiet Mode is presentation-only.
+
+Do not directly Hide/Show ChatFrame objects because Blizzard frame scripts
+persist ChatWindowShown state.
+
+D-025 selects:
+- runtime alpha suppression;
+- mouse removal;
+- exact restoration;
+- edit-box IgnoreParentAlpha;
+- chat-update reconciliation.
+
+The controller still owns desired policy; the Quiet Mode module owns chat
+presentation mechanics.

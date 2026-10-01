@@ -12,9 +12,11 @@ project: logres
 
 ## Current Work Item
 
-**D.2 — Immersion Controller runtime foundation.**
+**D.3 — Quiet Mode runtime suppression.**
 
-P0048 implementation is prepared.
+D.2 is complete.
+
+D.3 first-pass source/design contract is complete; implementation is next.
 
 ## Verified State
 
@@ -23,77 +25,68 @@ P0048 implementation is prepared.
 - Phase B complete.
 - Phase C complete.
 - D.1 complete.
-- P0047 pushed at `d24fcba`.
-- runtime before P0048: `0.0.20-dev`.
-- P0048 target: `0.0.21-dev`.
-- D-024 remains canonical.
-- Phase C Bar 2–3 replacement remains the only action suppression capability
-  automatically owned by Phase D.
-- full Player/Target/Party suppression remains blocked.
-- Primary stock replacement remains unsupported.
-- Primary routing remains manual.
-- Quiet Mode desired policy is computed in D.2 but not visually applied until
-  D.3.
+- D.2 complete.
+- P0048 pushed at `ed5af75`.
+- P0048 Immersion Controller runtime PASS.
+- runtime remains `0.0.21-dev`.
+- D-025 Quiet Mode runtime suppression contract accepted.
+- direct ChatFrame Hide/Show is rejected because Blizzard scripts persist
+  ChatWindowShown state.
+- first-pass Quiet Mode will use runtime alpha/mouse suppression.
+- chat edit boxes must remain visually usable through ignore-parent-alpha.
+- world + immersion ON -> Quiet Mode desired ON.
+- instance -> conservative Quiet Mode OFF.
+- PvP flag alone does not disable Quiet Mode.
+- Player/Target/Party suppression remains capability-gated.
+- Primary replacement/routing ownership remains deferred.
 
 ## Next Action
 
-Install/review/commit/push P0048.
+Implement D.3 / P0050.
 
-Because runtime code changes, deploy explicitly:
-
-```bash
-cd ~/Projects/logres
-
-WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
-ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
-
-./tools/deploy_logres.sh "$ADDONS"
-```
-
-Then `/reload`.
-
-Runtime proof:
-1. ensure Immersion ON before reload;
-2. confirm `0.0.21-dev`;
-3. confirm stock Bars 2–3 are automatically replaced after reload;
-4. confirm Primary stock bar stays visible;
-5. confirm Primary Action Keys remain manual;
-6. Immersion Check PASS;
-7. Run All PASS;
-8. Immersion OFF restores Bars 2–3;
-9. Immersion ON automatically replaces them again;
-10. in combat, changing immersion safely defers replacement transition;
-11. after combat, desired replacement state applies;
-12. Player/Target/Party stock frames remain untouched;
-13. no protected/taint/Lua/secret error.
+Runtime target:
+1. add Quiet Mode module;
+2. consume desired Quiet Mode from ImmersionController;
+3. snapshot ChatFrame/tab runtime alpha + mouse state;
+4. alpha-zero and mouse-disable passive chat/tabs;
+5. preserve intentional edit-box visibility with IgnoreParentAlpha;
+6. suppress dock overflow/known safe auxiliary chat controls;
+7. reconcile after `UPDATE_CHAT_WINDOWS` and
+   `UPDATE_FLOATING_CHAT_WINDOWS`;
+8. restore exact captured state when Quiet Mode turns OFF;
+9. never call `SetChatWindowShown()` or direct ChatFrame Hide/Show;
+10. add Quiet Mode diagnostics.
 
 ## Success Criteria
 
-D.2 succeeds when:
-- persisted immersion preference automatically owns supported Bar 2–3
-  replacement;
-- OFF restoration is reliable;
-- combat deferral remains correct;
-- controller diagnostics match preference/state/replacement truth;
-- Primary routing is not automatically seized;
-- unit-frame capability gates remain intact.
+D.3 first pass succeeds when:
+- passive chat/tabs disappear in world Immersion ON;
+- no invisible chat/tab mouse zones remain;
+- pressing Enter still gives a visible usable edit box;
+- intentional outbound chat works;
+- Immersion OFF restores chat;
+- instance policy restores chat;
+- returning to world reapplies Quiet Mode;
+- PvP flag alone keeps Quiet Mode active;
+- saved Blizzard chat-window configuration remains unchanged;
+- no Lua/taint/secret regression occurs.
 
 ## Do Not Reopen Without New Evidence
 
 - **Phase C:** complete.
 - **D.1:** complete.
-- **PlayerFrame blanket suppression:** blocked.
-- **TargetFrame blanket suppression:** blocked.
-- **Party-frame blanket suppression:** blocked.
+- **D.2:** complete.
+- **Direct ChatFrame Hide/Show for Quiet Mode:** rejected.
+- **Player/Target/Party blanket suppression:** blocked.
 - **Primary replacement/routing ownership:** deferred.
-- **Quiet Mode visuals:** D.3.
+- **Auto replies:** not promised.
 - **D-020 live action editing:** deferred.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/D2_P0048_IMMERSION_CONTROLLER_IMPLEMENTATION_2026-10-01.md`
-- `docs/memory/decisions/D-024_IMMERSION_ORCHESTRATION_CONTRACT.md`
+- `docs/memory/evidence/D2_P0048_IMMERSION_CONTROLLER_RUNTIME_PROOF_2026-10-01.md`
+- `docs/memory/evidence/D3_QUIET_MODE_SOURCE_REVIEW_2026-10-01.md`
+- `docs/memory/decisions/D-025_QUIET_MODE_RUNTIME_SUPPRESSION.md`
+- `docs/memory/investigations/D3_QUIET_MODE_RUNTIME_SUPPRESSION.md`
 - `docs/memory/roadmap/PHASE_D_IMMERSION_CONTROLLER.md`
-- `Logres/Immersion/Controller.lua`
-- `tools/check_immersion_controller_contract.py`

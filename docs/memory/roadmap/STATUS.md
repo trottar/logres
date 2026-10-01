@@ -7,10 +7,10 @@ As of 2026-10-01.
 **Phase D — Immersion Controller**
 
 Active work item:
-**D.2 Immersion Controller runtime foundation**
+**D.3 Quiet Mode runtime suppression**
 
 State:
-**P0048 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**SOURCE-RESOLVED; IMPLEMENTATION NEXT**
 
 ## Phase status
 
@@ -20,20 +20,21 @@ State:
 | A — Core State Engine | COMPLETE |
 | B — Core HUD | COMPLETE |
 | C — Action Interface | COMPLETE |
-| D — Immersion Controller | ACTIVE — D.2 |
+| D — Immersion Controller | ACTIVE — D.3 |
 | E — Compass and Navigation | QUEUED |
 | F — Quest Experience | QUEUED |
 | G — Cinematic Camera | QUEUED |
 | H — Integration and Polish | QUEUED |
 
-## D.2 scope
+## Phase D
 
-Implemented:
-- preference/state orchestration;
-- automatic proven Bar 2–3 replacement;
-- Quiet Mode desired policy diagnostics.
+| Item | State |
+| --- | --- |
+| D.1 Orchestration contract/source review | COMPLETE |
+| D.2 Immersion Controller foundation | COMPLETE |
+| D.3 Quiet Mode runtime suppression | SOURCE-RESOLVED; IMPLEMENTATION NEXT |
+| D.4 Unit-frame interaction/selective suppression | QUEUED |
+| D.5 Context/PvP/instance orchestration | QUEUED |
+| D.6 Restoration/integration validation | QUEUED |
 
-Not implemented:
-- chat suppression;
-- Player/Target/Party suppression;
-- Primary replacement/routing ownership.
+D.3 must not mutate saved Blizzard chat-window visibility.

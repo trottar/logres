@@ -27,7 +27,7 @@ Resolved:
 
 ## D.2 — Immersion Controller runtime foundation
 
-**Status: P0048 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
+**Status: COMPLETE.**
 
 Implement:
 - `ImmersionController` module;
@@ -60,6 +60,18 @@ Runtime behavior:
 - Player/Target/Party remain unsuppressed;
 - Primary routing remains manual.
 
+### D.2 final runtime result
+
+P0048 runtime passed on `0.0.21-dev`.
+
+Verified accepted behavior:
+- persisted immersion owns Bar 2–3 replacement;
+- reload orchestration works;
+- immersion OFF/ON restores/reapplies supported replacement;
+- unsupported Primary and unit-frame domains remain outside ownership.
+
+D.2 closes.
+
 ## D.3 — Quiet Mode runtime suppression
 
 Implement runtime visual silence:
@@ -74,6 +86,22 @@ Rules:
 - world default ON while immersion is enabled;
 - conservative instance default OFF;
 - restore/reconcile after chat-window updates.
+
+### D.3 source refinement
+
+D-025 is canonical.
+
+Direct ChatFrame Hide/Show is rejected because Blizzard's frame scripts
+persist `SetChatWindowShown`.
+
+First-pass Quiet Mode uses:
+- runtime alpha zero;
+- mouse disabled;
+- exact state snapshots/restoration;
+- edit-box ignore-parent-alpha for intentional outbound chat;
+- reconciliation after Blizzard chat-window updates.
+
+Implementation next.
 
 ## D.4 — Unit-frame interaction + selective suppression
 

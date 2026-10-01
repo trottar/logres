@@ -1,16 +1,16 @@
 # Active Investigations
 
-## D.2 — Immersion Controller runtime foundation
+## D.3 — Quiet Mode runtime suppression
 
 Status:
-**P0048 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**SOURCE-RESOLVED; IMPLEMENTATION NEXT**
 
-Contract:
-`../decisions/D-024_IMMERSION_ORCHESTRATION_CONTRACT.md`
+Canonical:
+`D3_QUIET_MODE_RUNTIME_SUPPRESSION.md`
 
-Implementation evidence:
-`../evidence/D2_P0048_IMMERSION_CONTROLLER_IMPLEMENTATION_2026-10-01.md`
+Decision:
+`../decisions/D-025_QUIET_MODE_RUNTIME_SUPPRESSION.md`
 
 Next:
-runtime-prove automatic Bar 2–3 orchestration on reload, preference OFF/ON,
-combat deferral, and unchanged unit-frame capability gates.
+implement reversible runtime chat/tab suppression without changing saved
+Blizzard chat configuration.

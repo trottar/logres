@@ -2,23 +2,22 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0047 is verified pushed at `d24fcba`.
+P0048 is verified pushed at `ed5af75` and runtime-proven.
+
+D.2 is complete.
 
 Current work:
-**D.2 — Immersion Controller runtime foundation**
+**D.3 — Quiet Mode runtime suppression**
 
-P0048 target:
-`0.0.21-dev`
+D-025 is canonical.
 
-Adds:
-- ImmersionController;
-- automatic Bar 2–3 replacement from persisted immersion;
-- Immersion Check.
+Critical source correction:
+do not `Hide()` ChatFrame objects for Quiet Mode. Blizzard OnHide writes saved
+ChatWindowShown state.
 
-Does not suppress Player/Target/Party.
+Use reversible alpha/mouse suppression and preserve visible outbound chat edit
+boxes via IgnoreParentAlpha.
 
-Primary Action Keys remain manual.
-
-P0048 changes runtime code; full deploy block is mandatory.
+P0049 is documentation/source-evidence only; no WoW redeploy required.
 
 User performs all commits/pushes.
