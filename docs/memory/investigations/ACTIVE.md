@@ -3,12 +3,11 @@
 ## B.5 — Allies and Pets
 
 Status:
-**ACTIVE**
+**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
 
 Canonical record:
 `B5_ALLIES_AND_PETS.md`
 
-Goal:
-compact pet + party condition awareness using sparse name + health percentage presentation.
+P0027 implements compact pet + party1–party4 name/health rows.
 
-Source/design confirmation is next before runtime implementation.
+Unavailable true paths may defer by environment.

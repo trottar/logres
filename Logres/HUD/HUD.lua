@@ -78,6 +78,14 @@ local CAST_EVENTS = {
     "UNIT_SPELLCAST_CHANNEL_STOP",
 }
 
+local ALLY_UNITS = {
+    "pet",
+    "party1",
+    "party2",
+    "party3",
+    "party4",
+}
+
 local function createCastCue(parent, name)
     local cue = CreateFrame("Frame", name, parent)
     cue:SetSize(18, 18)
@@ -314,6 +322,44 @@ function HUD:UpdateResource()
 end
 
 
+
+function HUD:UpdateAllyUnit(unit)
+    if not self.root or not self.root:IsShown() then
+        return
+    end
+
+    local row = self.allyRowsByUnit[unit]
+    if not row then
+        return
+    end
+
+    if not UnitExists(unit) then
+        row.frame:Hide()
+        return
+    end
+
+    -- Ally/pet identity may be secret-restricted. Forward the value directly
+    -- to the native FontString consumer and never inspect/read it back.
+    row.nameText:SetText(UnitName(unit))
+
+    -- Ally/pet health is secret-capable. The native curve performs the
+    -- 0-100 scale and the secret result goes directly to SetFormattedText.
+    local percent = UnitHealthPercent(
+        unit,
+        true,
+        self.percentScaleCurve
+    )
+
+    row.healthText:SetFormattedText("%.0f%%", percent)
+    row.frame:Show()
+end
+
+function HUD:UpdateAllies()
+    for index = 1, #ALLY_UNITS do
+        self:UpdateAllyUnit(ALLY_UNITS[index])
+    end
+end
+
 function HUD:UpdateTarget()
     if not self.root or not self.root:IsShown() then
         return
@@ -353,6 +399,7 @@ function HUD:ApplyImmersionPreference(preferences)
 
         self:UpdateResource()
         self:UpdateTarget()
+        self:UpdateAllies()
     else
         self.root:Hide()
     end
@@ -379,6 +426,10 @@ function HUD:GetDebugStatus()
         targetCastCueReady = self.targetCastCue ~= nil,
         playerCastEventFrameReady = self.playerCastEventFrame ~= nil,
         targetCastEventFrameReady = self.targetCastEventFrame ~= nil,
+        allyRowCount = self.allyRows and #self.allyRows or 0,
+        allyEventFrameCount =
+            self.allyEventFrames and #self.allyEventFrames or 0,
+        allyRosterEventFrameReady = self.allyRosterEventFrame ~= nil,
     }
 end
 
@@ -471,6 +522,61 @@ function HUD:OnInitialize()
     self.playerCastCue = playerCastCue
     self.targetCastCue = targetCastCue
 
+    local allyAnchor = CreateFrame("Frame", "LogresHUDAllies", root)
+    allyAnchor:SetSize(190, 118)
+    allyAnchor:SetPoint("CENTER", root, "CENTER", -330, -44)
+
+    self.allyAnchor = allyAnchor
+    self.allyRows = {}
+    self.allyRowsByUnit = {}
+
+    for index = 1, #ALLY_UNITS do
+        local unit = ALLY_UNITS[index]
+        local rowFrame = CreateFrame("Frame", nil, allyAnchor)
+        rowFrame:SetSize(184, 20)
+        rowFrame:SetPoint(
+            "TOPLEFT",
+            allyAnchor,
+            "TOPLEFT",
+            0,
+            -((index - 1) * 23)
+        )
+        rowFrame:Hide()
+
+        local nameText = rowFrame:CreateFontString(
+            nil,
+            "OVERLAY",
+            "GameFontNormalSmall"
+        )
+        nameText:SetPoint("LEFT", rowFrame, "LEFT", 0, 0)
+        nameText:SetWidth(138)
+        nameText:SetJustifyH("LEFT")
+        nameText:SetTextColor(0.78, 0.75, 0.69, 0.92)
+        nameText:SetShadowColor(0, 0, 0, 0.80)
+        nameText:SetShadowOffset(1, -1)
+
+        local healthText = rowFrame:CreateFontString(
+            nil,
+            "OVERLAY",
+            "GameFontNormalSmall"
+        )
+        healthText:SetPoint("RIGHT", rowFrame, "RIGHT", 0, 0)
+        healthText:SetJustifyH("RIGHT")
+        healthText:SetTextColor(0.84, 0.80, 0.73, 0.95)
+        healthText:SetShadowColor(0, 0, 0, 0.80)
+        healthText:SetShadowOffset(1, -1)
+
+        local row = {
+            unit = unit,
+            frame = rowFrame,
+            nameText = nameText,
+            healthText = healthText,
+        }
+
+        self.allyRows[#self.allyRows + 1] = row
+        self.allyRowsByUnit[unit] = row
+    end
+
     local healthEventFrame = CreateFrame("Frame")
     healthEventFrame:SetScript("OnEvent", function(_, _, unit)
         if unit and unit ~= "player" then
@@ -526,6 +632,33 @@ function HUD:OnInitialize()
 
     self.playerCastEventFrame = playerCastEventFrame
     self.targetCastEventFrame = targetCastEventFrame
+
+    self.allyEventFrames = {}
+
+    for index = 1, #ALLY_UNITS do
+        local unit = ALLY_UNITS[index]
+        local allyEventFrame = CreateFrame("Frame")
+
+        allyEventFrame:SetScript("OnEvent", function(_, _, eventUnit)
+            if eventUnit and eventUnit ~= unit then
+                return
+            end
+
+            self:UpdateAllyUnit(unit)
+        end)
+
+        allyEventFrame.unit = unit
+
+        self.allyEventFrames[#self.allyEventFrames + 1] =
+            allyEventFrame
+    end
+
+    local allyRosterEventFrame = CreateFrame("Frame")
+    allyRosterEventFrame:SetScript("OnEvent", function()
+        self:UpdateAllies()
+    end)
+
+    self.allyRosterEventFrame = allyRosterEventFrame
 end
 
 function HUD:OnEnable()
@@ -554,12 +687,30 @@ function HUD:OnEnable()
 
     self.targetCastEventFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
 
+    for index = 1, #self.allyEventFrames do
+        local allyEventFrame = self.allyEventFrames[index]
+        local unit = allyEventFrame.unit
+
+        allyEventFrame:RegisterUnitEvent("UNIT_HEALTH", unit)
+        allyEventFrame:RegisterUnitEvent("UNIT_MAXHEALTH", unit)
+        allyEventFrame:RegisterUnitEvent("UNIT_NAME_UPDATE", unit)
+    end
+
+    self.allyRosterEventFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
+    self.allyRosterEventFrame:RegisterUnitEvent("UNIT_PET", "player")
+
     self:OwnCleanup(function()
         self.healthEventFrame:UnregisterAllEvents()
         self.resourceEventFrame:UnregisterAllEvents()
         self.targetEventFrame:UnregisterAllEvents()
         self.playerCastEventFrame:UnregisterAllEvents()
         self.targetCastEventFrame:UnregisterAllEvents()
+
+        for index = 1, #self.allyEventFrames do
+            self.allyEventFrames[index]:UnregisterAllEvents()
+        end
+
+        self.allyRosterEventFrame:UnregisterAllEvents()
     end)
 
     self:SubscribePreferences(function(current)
@@ -574,5 +725,10 @@ function HUD:OnDisable()
     hideCastCue(self.playerCastCue, true)
     hideCastCue(self.targetCastCue, true)
     self.targetFrame:Hide()
+
+    for index = 1, #self.allyRows do
+        self.allyRows[index].frame:Hide()
+    end
+
     self.root:Hide()
 end

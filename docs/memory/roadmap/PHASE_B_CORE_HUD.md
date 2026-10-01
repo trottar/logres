@@ -169,7 +169,7 @@ Canonical decision:
 
 ## B.5 — Allies and pets
 
-**Status: ACTIVE.**
+**Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
 
 Implement restrained ally/pet presentation:
 - name;
@@ -177,6 +177,16 @@ Implement restrained ally/pet presentation:
 - compact party condition awareness.
 
 Accessibility/healer alternatives may be added later without changing the default philosophy.
+
+### P0027 implementation
+
+Initial candidate units:
+- pet;
+- party1–party4.
+
+Each existing unit receives a compact name + health % row.
+
+No portrait, health bar, role/class/level metadata, raid grid, or secure click-casting is introduced.
 
 ## B.6 — HUD integration validation
 

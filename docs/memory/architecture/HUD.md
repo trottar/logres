@@ -378,3 +378,34 @@ Initial candidate units:
 - party1–party4.
 
 No portraits, dense raid grid, or conventional large party bars by default.
+## B.5 implementation boundary
+
+P0027 adds compact ally/pet rows for:
+- pet;
+- party1–party4.
+
+Each existing unit renders only:
+
+```text
+Name                            Health %
+```
+
+Identity/health use the same secret-safe text forwarding proven by B.2/B.3.
+
+Structural visibility uses `UnitExists`.
+
+Roster/pet existence refresh uses:
+- `GROUP_ROSTER_UPDATE`;
+- `UNIT_PET`.
+
+Per-unit content refresh uses:
+- `UNIT_HEALTH`;
+- `UNIT_MAXHEALTH`;
+- `UNIT_NAME_UPDATE`.
+
+No:
+- portrait;
+- StatusBar;
+- role/class/level metadata;
+- secure click-casting;
+- raid grid.

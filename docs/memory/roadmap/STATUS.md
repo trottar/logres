@@ -9,6 +9,9 @@ As of 2026-10-01.
 Active work item:
 **B.5 Allies and Pets**
 
+State:
+**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+
 ## Phase status
 
 | Phase | State |
@@ -31,16 +34,5 @@ Active work item:
 | B.2 Resource presentation | COMPLETE |
 | B.3 Target presentation | COMPLETE |
 | B.4 Cast confirmation | COMPLETE — target true-path environmentally deferred |
-| B.5 Allies and pets | ACTIVE |
+| B.5 Allies and pets | ACTIVE — implementation prepared |
 | B.6 HUD integration validation | QUEUED |
-
-## B.4 final result
-
-Player runtime proof:
-- cast PASS;
-- channel PASS;
-- interruption PASS.
-
-Current-target cue:
-- implemented;
-- true-path runtime proof deferred because no convenient caster was available.

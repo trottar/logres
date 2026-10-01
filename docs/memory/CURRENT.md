@@ -14,14 +14,13 @@ project: logres
 
 **B.5 — Allies and Pets.**
 
-B.4 is complete with an explicit environmental deferral for the current-target caster true path.
+P0027 prepares compact ally/pet condition rows for:
+- `pet`;
+- `party1`–`party4`.
 
-Player cast presentation is runtime proven:
-- normal cast cue;
-- channel cue;
-- interruption/failure snap.
-
-The current-target cast cue remains implemented and should be retried when a natural caster is available.
+Each existing unit shows only:
+- name;
+- health percentage.
 
 ## Verified State
 
@@ -30,50 +29,58 @@ The current-target cast cue remains implemented and should be retried when a nat
 - B.2 primary resource percentage complete.
 - B.3 target presentation complete.
 - B.4 cast confirmation complete with target-caster true-path environmental deferral.
-- P0025 pushed at `4c27c6c`.
-- current runtime version: `0.0.11-dev`.
-- player cast/channel/interruption behavior passed runtime testing.
-- no conventional cast bar exists.
-- no reported secret-value/Lua error in tested B.4 paths.
+- P0026 B.4 closure pushed at `8a89a35`.
+- current runtime baseline before P0027: `0.0.11-dev`.
+- group/pet source review supports `GROUP_ROSTER_UPDATE`, `UNIT_PET`, unit name, and per-unit health update signals.
+- P0027 static checks pass; runtime proof pending.
 
 ## Next Action
 
-Design/source-check B.5 before implementing it.
+Install/review/commit/push P0027.
 
-Initial candidate unit scope:
-- pet;
-- party1;
-- party2;
-- party3;
-- party4.
+Because runtime code changes, deploy explicitly:
 
-Resolve:
-1. party/pet roster/existence event coverage;
-2. per-unit health/name update events;
-3. secret-safe name/health forwarding;
-4. compact row ownership;
-5. layout that preserves future action-cluster space;
-6. environmental coverage for party/pet true paths.
+```bash
+WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
+ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
 
-Default presentation remains:
-- name;
-- health percentage;
-- compact condition awareness.
+./tools/deploy_logres.sh "$ADDONS"
+```
 
-Do not build conventional party frames or portrait/bar-heavy unit frames.
+Then:
 
-When B.5 runtime code is prepared, include the full deploy block before in-game validation.
+```text
+/reload
+/logres status
+/logres statecheck
+/logres preferencecheck
+/logres lifecyclecheck
+/logres hudcheck
+```
+
+Confirm version:
+`0.0.12-dev`
+
+B.5 runtime:
+1. absent pet/party units must not leave empty rows;
+2. if a pet exists, verify its name + health percentage and health updates;
+3. if party members are available, verify visible rows and health updates;
+4. join/leave changes should add/remove rows if practical;
+5. immersion off/on should hide/restore available rows;
+6. report any Lua/secret-value error.
+
+If pet or party true paths are unavailable, report that directly; environmental deferral is allowed.
 
 ## Success Criteria
 
 B.5 succeeds when:
-- compact ally/pet presentation is implemented;
-- available party/pet units show name + health percentage;
-- health/name updates behave;
-- unit creation/loss/roster changes behave;
-- immersion hide/restore works through the shared HUD root;
+- five candidate slots exist structurally;
+- only existing units are shown;
+- available pet/party name + health paths work;
+- available health/roster updates work;
+- immersion root behavior remains correct;
+- unavailable pet/party paths are explicitly deferred;
 - no conventional party frame is introduced;
-- unavailable true paths are explicitly deferred by environment/class constraints;
 - no secret-value/Lua errors occur.
 
 ## Do Not Reopen Without New Evidence
@@ -81,17 +88,17 @@ B.5 succeeds when:
 - **B.1:** complete.
 - **B.2:** complete.
 - **B.3:** complete.
-- **B.4:** complete with target true-path environmental deferral.
-- **Target caster:** retry naturally; no travel required solely for proof.
-- **Allies/pets:** sparse name + health percentage default.
-- **Accessibility/healer mode:** separate future concern.
-- **Deployment:** full deploy block required for runtime-code tests.
+- **B.4:** complete with target-caster deferral.
+- **Ally/pet default:** sparse name + health percentage.
+- **Initial units:** pet + party1–party4 only.
+- **Raid/healer/click-cast UI:** outside initial B.5.
+- **Deployment:** full deploy block required.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/B4_CAST_CONFIRMATION_RUNTIME_PROOF_2026-10-01.md`
-- `docs/memory/decisions/D-014_CAST_PRESENTATION_CONTRACT.md`
+- `docs/memory/decisions/D-015_ALLY_AND_PET_PRESENTATION_CONTRACT.md`
 - `docs/memory/investigations/B5_ALLIES_AND_PETS.md`
 - `docs/memory/architecture/HUD.md`
-- `docs/memory/roadmap/PHASE_B_CORE_HUD.md`
+- `Logres/HUD/HUD.lua`
+- `tools/check_hud_contract.py`

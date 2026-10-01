@@ -352,11 +352,14 @@ local function runHUDCheck()
         and debugStatus.targetCastCueReady == true
         and debugStatus.playerCastEventFrameReady == true
         and debugStatus.targetCastEventFrameReady == true
+        and debugStatus.allyRowCount == 5
+        and debugStatus.allyEventFrameCount == 5
+        and debugStatus.allyRosterEventFrameReady == true
         and visibilityMatchesPreference
 
     if passed then
         print(string.format(
-            "Logres hudcheck: PASS (bands=4 textures=16 curves=true resourceText=true resourceCurve=true target=true casts=true immersion=%s visible=%s)",
+            "Logres hudcheck: PASS (bands=4 textures=16 curves=true resourceText=true resourceCurve=true target=true casts=true allies=5 immersion=%s visible=%s)",
             boolText(debugStatus.immersionEnabled),
             boolText(debugStatus.rootShown)
         ))
@@ -364,7 +367,7 @@ local function runHUDCheck()
     end
 
     print(string.format(
-        "Logres hudcheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s bands=%s textures=%s curves=%s resourceText=%s resourceCurve=%s targetFrame=%s targetName=%s targetHealth=%s targetEvents=%s playerCast=%s targetCast=%s playerCastEvents=%s targetCastEvents=%s immersion=%s visible=%s visibilityMatches=%s)",
+        "Logres hudcheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s bands=%s textures=%s curves=%s resourceText=%s resourceCurve=%s targetFrame=%s targetName=%s targetHealth=%s targetEvents=%s playerCast=%s targetCast=%s playerCastEvents=%s targetCastEvents=%s allyRows=%s allyEvents=%s allyRoster=%s immersion=%s visible=%s visibilityMatches=%s)",
         tostring(status.initialized),
         tostring(status.enabled),
         tostring(debugStatus.moduleEnabled),
@@ -381,6 +384,9 @@ local function runHUDCheck()
         tostring(debugStatus.targetCastCueReady),
         tostring(debugStatus.playerCastEventFrameReady),
         tostring(debugStatus.targetCastEventFrameReady),
+        tostring(debugStatus.allyRowCount),
+        tostring(debugStatus.allyEventFrameCount),
+        tostring(debugStatus.allyRosterEventFrameReady),
         tostring(debugStatus.immersionEnabled),
         tostring(debugStatus.rootShown),
         tostring(visibilityMatchesPreference)
