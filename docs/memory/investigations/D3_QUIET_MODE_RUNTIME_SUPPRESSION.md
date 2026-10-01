@@ -1,6 +1,6 @@
 # D.3 — Quiet Mode Runtime Suppression
 
-Status: SOURCE-RESOLVED; IMPLEMENTATION NEXT
+Status: P0050 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT
 Opened: 2026-10-01
 
 ## Canonical decision
@@ -34,3 +34,18 @@ Create a Quiet Mode module that:
 ## Next
 
 Implement P0050 runtime Quiet Mode and diagnostics.
+
+## P0050 implementation
+
+Runtime version:
+`0.0.22-dev`
+
+Adds runtime Quiet Mode with:
+- alpha/mouse suppression;
+- exact snapshots/restoration;
+- edit-box parent-alpha override;
+- chat-update reconciliation;
+- controller integration;
+- Quiet Check diagnostics.
+
+Runtime proof is next.

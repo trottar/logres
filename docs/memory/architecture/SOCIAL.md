@@ -32,3 +32,14 @@ Selected path:
 - exact restore.
 
 Auto replies remain outside this contract.
+
+## P0050 Quiet Mode runtime module
+
+`QuietMode` is the presentation owner for D-025.
+
+It suppresses passive chat at runtime without direct ChatFrame Hide/Show.
+
+The edit box remains Blizzard-owned; Logres only makes it ignore parent alpha
+while Quiet Mode is active so intentional chat can remain visible.
+
+Controller policy and chat presentation mechanics remain separate.

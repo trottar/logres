@@ -14,9 +14,7 @@ project: logres
 
 **D.3 — Quiet Mode runtime suppression.**
 
-D.2 is complete.
-
-D.3 first-pass source/design contract is complete; implementation is next.
+P0050 implementation is prepared.
 
 ## Verified State
 
@@ -26,50 +24,66 @@ D.3 first-pass source/design contract is complete; implementation is next.
 - Phase C complete.
 - D.1 complete.
 - D.2 complete.
-- P0048 pushed at `ed5af75`.
-- P0048 Immersion Controller runtime PASS.
-- runtime remains `0.0.21-dev`.
-- D-025 Quiet Mode runtime suppression contract accepted.
-- direct ChatFrame Hide/Show is rejected because Blizzard scripts persist
-  ChatWindowShown state.
-- first-pass Quiet Mode will use runtime alpha/mouse suppression.
-- chat edit boxes must remain visually usable through ignore-parent-alpha.
-- world + immersion ON -> Quiet Mode desired ON.
-- instance -> conservative Quiet Mode OFF.
-- PvP flag alone does not disable Quiet Mode.
+- P0049 pushed at `c06d9cd`.
+- runtime before P0050: `0.0.21-dev`.
+- P0050 target: `0.0.22-dev`.
+- D-025 remains canonical.
+- Quiet Mode follows Immersion ON + world policy.
+- direct ChatFrame Hide/Show remains forbidden.
+- P0050 uses runtime alpha/mouse suppression.
+- chat edit boxes use IgnoreParentAlpha while Quiet Mode is active.
+- saved ChatWindowShown is not intentionally mutated.
 - Player/Target/Party suppression remains capability-gated.
 - Primary replacement/routing ownership remains deferred.
 
 ## Next Action
 
-Implement D.3 / P0050.
+Install/review/commit/push P0050.
 
-Runtime target:
-1. add Quiet Mode module;
-2. consume desired Quiet Mode from ImmersionController;
-3. snapshot ChatFrame/tab runtime alpha + mouse state;
-4. alpha-zero and mouse-disable passive chat/tabs;
-5. preserve intentional edit-box visibility with IgnoreParentAlpha;
-6. suppress dock overflow/known safe auxiliary chat controls;
-7. reconcile after `UPDATE_CHAT_WINDOWS` and
-   `UPDATE_FLOATING_CHAT_WINDOWS`;
-8. restore exact captured state when Quiet Mode turns OFF;
-9. never call `SetChatWindowShown()` or direct ChatFrame Hide/Show;
-10. add Quiet Mode diagnostics.
+Because runtime code changes, deploy explicitly:
+
+```bash
+cd ~/Projects/logres
+
+WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
+ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
+
+./tools/deploy_logres.sh "$ADDONS"
+```
+
+Then `/reload`.
+
+Runtime proof:
+1. confirm `0.0.22-dev`;
+2. with Immersion ON in world, passive chat/tabs disappear;
+3. old chat/tab areas do not intercept mouse;
+4. Quiet Check PASS;
+5. Immersion Check PASS;
+6. Run All PASS;
+7. press Enter and confirm chat edit box is visible;
+8. send an intentional chat message successfully;
+9. passive chat remains quiet afterward;
+10. Immersion OFF restores normal chat/tabs/interactions;
+11. Quiet Check PASS;
+12. Immersion ON reapplies Quiet Mode;
+13. PvP flag alone does not restore chat;
+14. if naturally entering an instance, chat restores there and Quiet Mode
+    reapplies after returning to world;
+15. Blizzard chat-window shown/layout configuration remains intact;
+16. no Lua/taint/secret error.
+
+Do not enter an instance solely to manufacture proof.
 
 ## Success Criteria
 
-D.3 first pass succeeds when:
-- passive chat/tabs disappear in world Immersion ON;
-- no invisible chat/tab mouse zones remain;
-- pressing Enter still gives a visible usable edit box;
-- intentional outbound chat works;
-- Immersion OFF restores chat;
-- instance policy restores chat;
-- returning to world reapplies Quiet Mode;
-- PvP flag alone keeps Quiet Mode active;
-- saved Blizzard chat-window configuration remains unchanged;
-- no Lua/taint/secret regression occurs.
+P0050 succeeds when:
+- passive world chat is visually quiet under immersion;
+- no invisible chat interaction remains;
+- intentional outbound chat stays usable;
+- OFF restoration is exact;
+- chat-update reconciliation does not leak passive chat;
+- saved Blizzard chat configuration is preserved;
+- context/PvP policy matches D-025.
 
 ## Do Not Reopen Without New Evidence
 
@@ -85,8 +99,9 @@ D.3 first pass succeeds when:
 
 ## Relevant References
 
-- `docs/memory/evidence/D2_P0048_IMMERSION_CONTROLLER_RUNTIME_PROOF_2026-10-01.md`
+- `docs/memory/evidence/D3_P0050_QUIET_MODE_IMPLEMENTATION_2026-10-01.md`
 - `docs/memory/evidence/D3_QUIET_MODE_SOURCE_REVIEW_2026-10-01.md`
 - `docs/memory/decisions/D-025_QUIET_MODE_RUNTIME_SUPPRESSION.md`
 - `docs/memory/investigations/D3_QUIET_MODE_RUNTIME_SUPPRESSION.md`
-- `docs/memory/roadmap/PHASE_D_IMMERSION_CONTROLLER.md`
+- `Logres/Immersion/QuietMode.lua`
+- `tools/check_quiet_mode_contract.py`

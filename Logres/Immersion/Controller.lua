@@ -4,9 +4,17 @@ local ImmersionController =
     Logres:RegisterModule("ImmersionController", {
         OnInitialize = function(self)
             self.policy = nil
-            self.lastReconcileReason = "not-yet-reconciled"
-            self.lastActionResult = "not-yet-requested"
+
+            self.lastReconcileReason =
+                "not-yet-reconciled"
+
+            self.lastActionResult =
+                "not-yet-requested"
             self.lastActionError = nil
+
+            self.lastQuietResult =
+                "not-yet-requested"
+            self.lastQuietError = nil
         end,
 
         OnEnable = function(self)
@@ -17,7 +25,8 @@ local ImmersionController =
                 reason
             )
                 self:Reconcile(
-                    "preference:" .. tostring(reason or "change")
+                    "preference:"
+                    .. tostring(reason or "change")
                 )
             end)
 
@@ -28,7 +37,8 @@ local ImmersionController =
                 reason
             )
                 self:Reconcile(
-                    "state:" .. tostring(reason or "change")
+                    "state:"
+                    .. tostring(reason or "change")
                 )
             end)
 
@@ -36,14 +46,45 @@ local ImmersionController =
         end,
 
         OnDisable = function(self)
+            local quietMode =
+                Logres:GetModule("QuietMode")
+            local quietRestored, quietResult =
+                quietMode:RequestEnabled(
+                    false,
+                    "controller-disable"
+                )
+
+            self.lastQuietResult =
+                quietResult or "unknown"
+            self.lastQuietError = nil
+
+            if not quietRestored then
+                local quietDebug =
+                    quietMode:GetDebugStatus()
+
+                self.lastQuietError =
+                    quietDebug.lastError
+                    or "unknown Quiet Mode restore failure"
+
+                Logres:DevPrint(
+                    "ImmersionController Quiet Mode fail-open "
+                    .. "restore failed: "
+                    .. tostring(self.lastQuietError)
+                )
+            end
+
             local replacement =
-                Logres:GetModule("StockActionReplacement")
+                Logres:GetModule(
+                    "StockActionReplacement"
+                )
 
             local applied, result =
                 replacement:RequestEnabled(false)
 
-            self.lastReconcileReason = "module-disable"
-            self.lastActionResult = result or "unknown"
+            self.lastReconcileReason =
+                "module-disable"
+            self.lastActionResult =
+                result or "unknown"
             self.lastActionError = nil
 
             if not applied and result ~= "deferred" then
@@ -52,7 +93,7 @@ local ImmersionController =
 
                 self.lastActionError =
                     replacementDebug.lastError
-                        or "unknown replacement restore failure"
+                    or "unknown replacement restore failure"
 
                 Logres:DevPrint(
                     "ImmersionController fail-open restore failed: "
@@ -63,21 +104,30 @@ local ImmersionController =
     })
 
 function ImmersionController:BuildPolicy()
-    local preferences = Logres:GetPreferences()
-    local state = Logres:GetState()
+    local preferences =
+        Logres:GetPreferences()
+    local state =
+        Logres:GetState()
     local immersionEnabled =
         preferences.immersionEnabled == true
 
     return {
-        preferenceRevision = preferences.revision,
-        stateRevision = state.revision,
+        preferenceRevision =
+            preferences.revision,
+        stateRevision =
+            state.revision,
 
-        immersionEnabled = immersionEnabled,
-        context = state.context,
-        combat = state.combat == true,
-        pvpFlagged = state.pvpFlagged == true,
+        immersionEnabled =
+            immersionEnabled,
+        context =
+            state.context,
+        combat =
+            state.combat == true,
+        pvpFlagged =
+            state.pvpFlagged == true,
 
-        actionReplacementDesired = immersionEnabled,
+        actionReplacementDesired =
+            immersionEnabled,
 
         quietModeDesired =
             immersionEnabled
@@ -91,17 +141,15 @@ function ImmersionController:BuildPolicy()
     }
 end
 
-function ImmersionController:Reconcile(reason)
-    local policy = self:BuildPolicy()
+function ImmersionController:ReconcileActionReplacement(
+    policy
+)
     local replacement =
-        Logres:GetModule("StockActionReplacement")
+        Logres:GetModule(
+            "StockActionReplacement"
+        )
     local replacementDebug =
         replacement:GetDebugStatus()
-
-    self.policy = policy
-    self.lastReconcileReason =
-        reason or "unspecified-reconcile"
-    self.lastActionError = nil
 
     local desired =
         policy.actionReplacementDesired
@@ -115,18 +163,23 @@ function ImmersionController:Reconcile(reason)
 
     if alreadyRequested and appliedOrPending then
         if replacementDebug.pending then
-            self.lastActionResult = "pending-existing"
+            self.lastActionResult =
+                "pending-existing"
         else
-            self.lastActionResult = "already-applied"
+            self.lastActionResult =
+                "already-applied"
         end
 
+        self.lastActionError = nil
         return
     end
 
     local applied, result =
         replacement:RequestEnabled(desired)
 
-    self.lastActionResult = result or "unknown"
+    self.lastActionResult =
+        result or "unknown"
+    self.lastActionError = nil
 
     if not applied and result ~= "deferred" then
         replacementDebug =
@@ -134,21 +187,93 @@ function ImmersionController:Reconcile(reason)
 
         self.lastActionError =
             replacementDebug.lastError
-                or "unknown action replacement failure"
+            or "unknown action replacement failure"
 
         Logres:DevPrint(
-            "ImmersionController action replacement reconcile failed: "
+            "ImmersionController action replacement "
+            .. "reconcile failed: "
             .. tostring(self.lastActionError)
         )
     end
 end
 
+function ImmersionController:ReconcileQuietMode(
+    policy,
+    reason
+)
+    local quietMode =
+        Logres:GetModule("QuietMode")
+    local quietDebug =
+        quietMode:GetDebugStatus()
+    local desired =
+        policy.quietModeDesired
+
+    if (
+        quietDebug.requestedEnabled == desired
+        and quietDebug.appliedEnabled == desired
+    ) then
+        self.lastQuietResult =
+            "already-applied"
+        self.lastQuietError = nil
+        return
+    end
+
+    local applied, result =
+        quietMode:RequestEnabled(
+            desired,
+            reason
+        )
+
+    self.lastQuietResult =
+        result or "unknown"
+    self.lastQuietError = nil
+
+    if not applied then
+        quietDebug =
+            quietMode:GetDebugStatus()
+
+        self.lastQuietError =
+            quietDebug.lastError
+            or "unknown Quiet Mode failure"
+
+        Logres:DevPrint(
+            "ImmersionController Quiet Mode "
+            .. "reconcile failed: "
+            .. tostring(self.lastQuietError)
+        )
+    end
+end
+
+function ImmersionController:Reconcile(reason)
+    local policy =
+        self:BuildPolicy()
+
+    self.policy = policy
+    self.lastReconcileReason =
+        reason or "unspecified-reconcile"
+
+    self:ReconcileActionReplacement(policy)
+    self:ReconcileQuietMode(
+        policy,
+        self.lastReconcileReason
+    )
+end
+
 function ImmersionController:GetDebugStatus()
-    local policy = self.policy or self:BuildPolicy()
+    local policy =
+        self.policy or self:BuildPolicy()
+
     local replacement =
-        Logres:GetModule("StockActionReplacement")
+        Logres:GetModule(
+            "StockActionReplacement"
+        )
     local replacementDebug =
         replacement:GetDebugStatus()
+
+    local quietMode =
+        Logres:GetModule("QuietMode")
+    local quietDebug =
+        quietMode:GetDebugStatus()
 
     return {
         moduleEnabled = self:IsEnabled(),
@@ -180,7 +305,13 @@ function ImmersionController:GetDebugStatus()
 
         quietModeDesired =
             policy.quietModeDesired,
-        quietModeImplemented = false,
+        quietModeImplemented = true,
+        quietModeRequested =
+            quietDebug.requestedEnabled == true,
+        quietModeApplied =
+            quietDebug.appliedEnabled == true,
+        quietModeError =
+            quietDebug.lastError,
 
         playerFrameSuppressionDesired =
             policy.playerFrameSuppressionDesired,
@@ -194,9 +325,15 @@ function ImmersionController:GetDebugStatus()
 
         lastReconcileReason =
             self.lastReconcileReason,
+
         lastActionResult =
             self.lastActionResult,
         lastActionError =
             self.lastActionError,
+
+        lastQuietResult =
+            self.lastQuietResult,
+        lastQuietError =
+            self.lastQuietError,
     }
 end

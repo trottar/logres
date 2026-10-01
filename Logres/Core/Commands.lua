@@ -869,9 +869,15 @@ local function runImmersionCheck()
             )
         )
 
+    local quietMatches =
+        debugStatus.quietModeImplemented == true
+        and debugStatus.quietModeRequested
+            == expectedQuietMode
+        and debugStatus.quietModeApplied
+            == expectedQuietMode
+
     local capabilityGatesSafe =
-        debugStatus.quietModeImplemented == false
-        and debugStatus.playerFrameSuppressionDesired == false
+        debugStatus.playerFrameSuppressionDesired == false
         and debugStatus.targetFrameSuppressionDesired == false
         and debugStatus.partyFrameSuppressionDesired == false
         and debugStatus.primaryActionRoutingOwned == false
@@ -882,12 +888,14 @@ local function runImmersionCheck()
         and debugStatus.moduleEnabled == true
         and desiredMatches
         and replacementMatches
+        and quietMatches
         and capabilityGatesSafe
         and debugStatus.lastActionError == nil
+        and debugStatus.lastQuietError == nil
 
     if passed then
         emit(string.format(
-            "Logres immersioncheck: PASS (immersion=%s context=%s pvp=%s actionDesired=%s requested=%s applied=%s pending=%s quietDesired=%s quietImplemented=false unitSuppression=false primaryRoutingOwned=false reason=%s result=%s)",
+            "Logres immersioncheck: PASS (immersion=%s context=%s pvp=%s actionDesired=%s requested=%s applied=%s pending=%s quietDesired=%s quietRequested=%s quietApplied=%s unitSuppression=false primaryRoutingOwned=false reason=%s actionResult=%s quietResult=%s)",
             boolText(debugStatus.immersionEnabled),
             tostring(debugStatus.context),
             boolText(debugStatus.pvpFlagged),
@@ -896,19 +904,23 @@ local function runImmersionCheck()
             boolText(debugStatus.actionReplacementApplied),
             boolText(debugStatus.actionReplacementPending),
             boolText(debugStatus.quietModeDesired),
+            boolText(debugStatus.quietModeRequested),
+            boolText(debugStatus.quietModeApplied),
             tostring(debugStatus.lastReconcileReason),
-            tostring(debugStatus.lastActionResult)
+            tostring(debugStatus.lastActionResult),
+            tostring(debugStatus.lastQuietResult)
         ))
         return
     end
 
     emit(string.format(
-        "Logres immersioncheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s desiredMatches=%s replacementMatches=%s gatesSafe=%s immersion=%s context=%s action=%s/%s/%s/%s quiet=%s/%s unitSuppression=%s/%s/%s primaryRoutingOwned=%s reason=%s result=%s error=%s replacementError=%s)",
+        "Logres immersioncheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s desiredMatches=%s replacementMatches=%s quietMatches=%s gatesSafe=%s immersion=%s context=%s action=%s/%s/%s/%s quiet=%s/%s/%s unitSuppression=%s/%s/%s primaryRoutingOwned=%s reason=%s actionResult=%s quietResult=%s actionError=%s quietError=%s)",
         tostring(status.initialized),
         tostring(status.enabled),
         tostring(debugStatus.moduleEnabled),
         tostring(desiredMatches),
         tostring(replacementMatches),
+        tostring(quietMatches),
         tostring(capabilityGatesSafe),
         tostring(debugStatus.immersionEnabled),
         tostring(debugStatus.context),
@@ -917,15 +929,110 @@ local function runImmersionCheck()
         tostring(debugStatus.actionReplacementApplied),
         tostring(debugStatus.actionReplacementPending),
         tostring(debugStatus.quietModeDesired),
-        tostring(debugStatus.quietModeImplemented),
+        tostring(debugStatus.quietModeRequested),
+        tostring(debugStatus.quietModeApplied),
         tostring(debugStatus.playerFrameSuppressionDesired),
         tostring(debugStatus.targetFrameSuppressionDesired),
         tostring(debugStatus.partyFrameSuppressionDesired),
         tostring(debugStatus.primaryActionRoutingOwned),
         tostring(debugStatus.lastReconcileReason),
         tostring(debugStatus.lastActionResult),
+        tostring(debugStatus.lastQuietResult),
         tostring(debugStatus.lastActionError),
-        tostring(debugStatus.actionReplacementError)
+        tostring(debugStatus.lastQuietError)
+    ))
+end
+
+local function runQuietModeCheck()
+    local status =
+        Logres:GetModuleStatus("QuietMode")
+    local quietMode =
+        Logres:GetModule("QuietMode")
+    local debugStatus =
+        quietMode:GetDebugStatus()
+
+    local preferences = Logres:GetPreferences()
+    local state = Logres:GetState()
+
+    local expected =
+        preferences.immersionEnabled == true
+        and state.context == "world"
+
+    local stateMatches =
+        debugStatus.requestedEnabled == expected
+        and debugStatus.appliedEnabled == expected
+
+    local presentationMatches = true
+
+    if expected then
+        presentationMatches =
+            debugStatus.chatFrameCount >= 1
+            and debugStatus.suppressedChatFrameCount
+                == debugStatus.chatFrameCount
+            and debugStatus.suppressedTabCount
+                == debugStatus.tabCount
+            and debugStatus.editBoxIgnoreCount
+                == debugStatus.editBoxCount
+            and debugStatus.regionSnapshotCount >= 1
+            and debugStatus.persistentShownMatches == true
+    else
+        presentationMatches =
+            debugStatus.regionSnapshotCount == 0
+            and debugStatus.editBoxSnapshotCount == 0
+    end
+
+    local passed =
+        status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and stateMatches
+        and presentationMatches
+        and debugStatus.savedConfigurationMutation == false
+        and debugStatus.lastError == nil
+
+    if passed then
+        emit(string.format(
+            "Logres quietcheck: PASS (expected=%s applied=%s frames=%s/%s tabs=%s/%s editBoxes=%s/%s snapshots=%s/%s aux=%s persistentShownMatches=%s savedMutation=false reason=%s)",
+            boolText(expected),
+            boolText(debugStatus.appliedEnabled),
+            tostring(debugStatus.suppressedChatFrameCount),
+            tostring(debugStatus.chatFrameCount),
+            tostring(debugStatus.suppressedTabCount),
+            tostring(debugStatus.tabCount),
+            tostring(debugStatus.editBoxIgnoreCount),
+            tostring(debugStatus.editBoxCount),
+            tostring(debugStatus.regionSnapshotCount),
+            tostring(debugStatus.editBoxSnapshotCount),
+            tostring(debugStatus.auxiliarySnapshotCount),
+            boolText(debugStatus.persistentShownMatches),
+            tostring(debugStatus.lastReason)
+        ))
+        return
+    end
+
+    emit(string.format(
+        "Logres quietcheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s expected=%s requested=%s applied=%s stateMatches=%s presentationMatches=%s frames=%s/%s tabs=%s/%s editBoxes=%s/%s snapshots=%s/%s aux=%s persistentShownMatches=%s savedMutation=%s reason=%s error=%s)",
+        tostring(status.initialized),
+        tostring(status.enabled),
+        tostring(debugStatus.moduleEnabled),
+        tostring(expected),
+        tostring(debugStatus.requestedEnabled),
+        tostring(debugStatus.appliedEnabled),
+        tostring(stateMatches),
+        tostring(presentationMatches),
+        tostring(debugStatus.suppressedChatFrameCount),
+        tostring(debugStatus.chatFrameCount),
+        tostring(debugStatus.suppressedTabCount),
+        tostring(debugStatus.tabCount),
+        tostring(debugStatus.editBoxIgnoreCount),
+        tostring(debugStatus.editBoxCount),
+        tostring(debugStatus.regionSnapshotCount),
+        tostring(debugStatus.editBoxSnapshotCount),
+        tostring(debugStatus.auxiliarySnapshotCount),
+        tostring(debugStatus.persistentShownMatches),
+        tostring(debugStatus.savedConfigurationMutation),
+        tostring(debugStatus.lastReason),
+        tostring(debugStatus.lastError)
     ))
 end
 
@@ -940,6 +1047,7 @@ local function runAllChecks()
     runActionCheck()
     runStockReplacementCheck()
     runImmersionCheck()
+    runQuietModeCheck()
     emit("Logres checkall: complete")
 end
 
@@ -1012,6 +1120,7 @@ local function printHelp()
     emit("  /logres stockreplace [on|off]")
     emit("  /logres stockreplacecheck")
     emit("  /logres immersioncheck")
+    emit("  /logres quietcheck")
     emit("  /logres hudpreview [on|off]")
     emit("  /logres immersion [on|off|toggle]")
     emit("  /logres debug on")
@@ -1112,6 +1221,11 @@ local function handleCommand(message)
 
     if command == "immersioncheck" then
         runImmersionCheck()
+        return
+    end
+
+    if command == "quietcheck" then
+        runQuietModeCheck()
         return
     end
 
@@ -1223,6 +1337,11 @@ Logres:RegisterDevPanelAction(
     "immersionCheck",
     "Immersion Check",
     "immersioncheck"
+)
+Logres:RegisterDevPanelAction(
+    "quietCheck",
+    "Quiet Check",
+    "quietcheck"
 )
 Logres:RegisterDevPanelAction(
     "immersionOn",

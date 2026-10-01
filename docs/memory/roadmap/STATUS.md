@@ -10,7 +10,7 @@ Active work item:
 **D.3 Quiet Mode runtime suppression**
 
 State:
-**SOURCE-RESOLVED; IMPLEMENTATION NEXT**
+**P0050 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
 
 ## Phase status
 
@@ -32,9 +32,7 @@ State:
 | --- | --- |
 | D.1 Orchestration contract/source review | COMPLETE |
 | D.2 Immersion Controller foundation | COMPLETE |
-| D.3 Quiet Mode runtime suppression | SOURCE-RESOLVED; IMPLEMENTATION NEXT |
+| D.3 Quiet Mode runtime suppression | P0050 PREPARED |
 | D.4 Unit-frame interaction/selective suppression | QUEUED |
 | D.5 Context/PvP/instance orchestration | QUEUED |
 | D.6 Restoration/integration validation | QUEUED |
-
-D.3 must not mutate saved Blizzard chat-window visibility.

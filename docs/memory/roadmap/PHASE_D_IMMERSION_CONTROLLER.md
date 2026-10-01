@@ -103,6 +103,20 @@ First-pass Quiet Mode uses:
 
 Implementation next.
 
+### D.3 P0050 implementation
+
+Version `0.0.22-dev`.
+
+Quiet Mode now:
+- follows ImmersionController world policy;
+- suppresses passive chat/tabs through runtime alpha/mouse state;
+- keeps intentional chat edit boxes independent from parent alpha;
+- restores exact captured runtime presentation;
+- reconciles after Blizzard chat-window updates;
+- never writes ChatWindowShown for suppression.
+
+Runtime proof is next.
+
 ## D.4 — Unit-frame interaction + selective suppression
 
 Before suppression, complete the missing capability.

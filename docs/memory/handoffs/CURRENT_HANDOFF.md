@@ -2,22 +2,24 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0048 is verified pushed at `ed5af75` and runtime-proven.
-
-D.2 is complete.
+P0049 is verified pushed at `c06d9cd`.
 
 Current work:
 **D.3 — Quiet Mode runtime suppression**
 
-D-025 is canonical.
+P0050 target:
+`0.0.22-dev`
 
-Critical source correction:
-do not `Hide()` ChatFrame objects for Quiet Mode. Blizzard OnHide writes saved
-ChatWindowShown state.
+Adds:
+- QuietMode runtime module;
+- controller integration;
+- Quiet Check;
+- chat-update reconciliation;
+- exact runtime restoration.
 
-Use reversible alpha/mouse suppression and preserve visible outbound chat edit
-boxes via IgnoreParentAlpha.
+Critical safety:
+no direct ChatFrame Hide/Show and no SetChatWindowShown mutation.
 
-P0049 is documentation/source-evidence only; no WoW redeploy required.
+P0050 changes runtime code; full deploy block is mandatory.
 
 User performs all commits/pushes.

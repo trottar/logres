@@ -90,3 +90,18 @@ D-025 first pass does not claim total social-notification coverage.
 
 Additional notification surfaces can be added independently after source/runtime
 proof.
+
+## P0050 implementation binding
+
+P0050 binds D-025 to `Immersion/QuietMode.lua`.
+
+ImmersionController owns desired Quiet Mode state.
+
+QuietMode owns:
+- runtime surface snapshots;
+- alpha/mouse suppression;
+- edit-box parent-alpha override;
+- chat-update reconciliation;
+- restoration.
+
+Quiet Mode does not own communication status or saved chat settings.
