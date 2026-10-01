@@ -2,23 +2,23 @@
 
 Authoritative state: `../CURRENT.md`. Start there.
 
-Phase B is complete.
-
-Integrated B.6 runtime validation passed on P0029.
-
 Current phase:
 **Phase C — Action Interface**
 
+C.1 source review is complete.
+
 Current work:
-**C.1 — Secure Action Capability / Source Review**
+**C.2 — Primary Action Cluster**
 
-Do not write secure action runtime code until current Forever source constraints are resolved.
+D-018 is the implementation contract.
 
-Important roadmap clarification:
-stock Blizzard UI suppression is now explicit and capability-gated by D-017.
+C.2 must:
+- create 12 secure primary action buttons;
+- preserve existing ACTIONBUTTON1–12 keys through temporary override clicks;
+- use secret-safe cooldown/count presentation;
+- keep stock Blizzard action bars visible;
+- add diagnostics to the developer/control panel.
 
-The developer/control panel remains the preferred recurring runtime validation surface.
-
-P0030 is documentation/evidence only; no WoW redeploy required.
+P0031 is documentation/source-evidence only; no WoW redeploy required.
 
 User performs all commits/pushes.

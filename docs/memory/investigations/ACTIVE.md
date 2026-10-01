@@ -1,12 +1,15 @@
 # Active Investigations
 
-## C.1 — Secure Action Interface
+## C.2 — Primary Action Cluster
 
 Status:
 **ACTIVE**
 
-Canonical record:
+C.1 source resolution:
 `C1_SECURE_ACTION_INTERFACE.md`
 
-Goal:
-resolve Forever secure action-button, combat-lockdown, visibility, binding, and stock-bar suppression constraints before implementing the first Logres action cluster.
+Canonical secure contract:
+`../decisions/D-018_SECURE_ACTION_INTERFACE_CONTRACT.md`
+
+Next:
+implement and runtime-prove the first 12-button secure primary action cluster without suppressing Blizzard's stock action bars.

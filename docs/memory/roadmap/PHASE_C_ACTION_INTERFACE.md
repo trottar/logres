@@ -20,7 +20,7 @@ Presentation:
 
 ## C.1 — Secure action capability/source review
 
-**Status: ACTIVE.**
+**Status: COMPLETE.**
 
 Before building buttons, resolve:
 - secure action-button templates available on Forever;
@@ -36,7 +36,17 @@ Use source evidence before choosing architecture.
 
 ## C.2 — Primary action cluster
 
+**Status: ACTIVE.**
+
 Implement the first secure rectangular/square cluster.
+
+Initial proof target:
+- 12 named secure primary action buttons;
+- existing ACTIONBUTTON1–12 bindings routed through temporary override click bindings;
+- icon, cooldown, count, usability, and range presentation;
+- mouse + keyboard execution;
+- combat-lockdown-safe mutation/defer behavior;
+- stock Blizzard action bars remain visible during proof.
 
 Success:
 - actions activate correctly;

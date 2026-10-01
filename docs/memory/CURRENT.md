@@ -12,74 +12,84 @@ project: logres
 
 ## Current Work Item
 
-**C.1 — Secure Action Capability / Source Review.**
+**C.2 — Primary Action Cluster.**
 
-Phase B is complete.
+C.1 secure-action source review is complete.
 
-P0029's developer/control panel and the complete Phase B HUD passed integrated runtime validation.
+D-018 defines the secure action contract for implementation.
 
 ## Verified State
 
 - Phase 0 Foundation complete.
 - Phase A Core State Engine complete.
 - Phase B Core HUD complete.
-- P0029 pushed at `90491fe`.
-- current runtime version: `0.0.13-dev`.
-- B.6 integrated HUD validation: PASS.
-- developer/control panel: PASS and preferred recurring validation surface.
-- no reported Lua/secret errors in B.6.
-- no stale-state regression reported.
-- no layout issue severe enough to block continuation.
-- current-target cast true-path remains environmentally deferred.
-- stock Blizzard UI remains visible intentionally at Phase B close.
-- D-017 now explicitly defines later suppression/restoration ownership.
+- P0030 Phase B closure pushed at `74ccfc3`.
+- current runtime version remains `0.0.13-dev`.
+- secure protected execution path is `SecureActionButtonTemplate` + action attributes.
+- ordinary protected-frame mutation is forbidden during combat lockdown.
+- secure state/attribute drivers are available for genuinely required combat-time protected transitions.
+- current Forever `C_ActionBar` presentation APIs are available.
+- cooldown/count data are secret-capable.
+- DurationObject -> Cooldown is the selected secret-safe cooldown path.
+- current action display count -> FontString is the selected secret-safe count path.
+- existing ACTIONBUTTON1–12 keys can be preserved with session override click bindings.
+- override binding changes and action pickup are no-combat.
+- stock Blizzard action bars remain visible through C.2.
 
 ## Next Action
 
-Perform C.1 current-source review before writing secure action-button runtime code.
+Implement C.2.
 
-Resolve:
-1. secure action-button template/API available on Forever;
-2. action-slot attribute model;
-3. combat-lockdown restrictions;
-4. secure visibility/state-driver options;
-5. cooldown/icon/count/range update sources;
-6. keybind handling;
-7. drag/drop/edit constraints;
-8. protected layout mutation rules;
-9. safe stock action-bar suppression/restoration;
-10. operations that must defer until combat ends.
+First runtime patch should provide:
+- 12 named secure primary action buttons;
+- compact square/rectangular layout;
+- action slot icon;
+- cooldown sweep through DurationObject;
+- direct count text;
+- usability/range visual states;
+- native action-button registration;
+- existing primary keybind routing;
+- deferred binding refresh if combat blocks mutation;
+- developer-panel `Action Check` diagnostic.
 
-Use narrow source evidence before implementation.
-
-Phase C diagnostics should register in the existing developer/control panel.
+Runtime proof:
+1. cluster renders existing primary actions;
+2. mouse click executes an action;
+3. normal existing action key executes via Logres button;
+4. cooldown/count/icon update;
+5. usability/range presentation behaves if naturally observable;
+6. actions work in combat;
+7. entering combat does not cause protected-action errors;
+8. binding/layout refresh requested in combat defers safely;
+9. stock Blizzard bars remain available.
 
 ## Success Criteria
 
-C.1 succeeds when:
-- secure action APIs/templates are source-verified;
-- protected operations are clearly separated from ordinary presentation updates;
-- first primary-cluster architecture is documented;
-- combat-time mutation rules are explicit;
-- stock action-bar suppression is gated behind proven Logres secure controls;
-- no action-interface implementation depends on unverified assumptions.
+C.2 succeeds when:
+- secure primary buttons execute correctly;
+- mouse and keyboard paths both work;
+- ordinary action presentation updates correctly;
+- secret cooldown/count transport produces no Lua errors;
+- combat lockdown causes no forbidden mutation;
+- bindings are not permanently rewritten;
+- module disable/restoration can clear temporary bindings;
+- stock bars remain available until later replacement proof.
 
 ## Do Not Reopen Without New Evidence
 
-- **Phase A:** complete.
 - **Phase B:** complete.
-- **Target caster true-path:** deferred until natural opportunity.
-- **Developer panel:** keep shared command execution; extend rather than duplicate.
-- **Stock UI suppression:** D-017 capability-gated ownership is canonical.
-- **Action bars:** do not hide until Phase C secure replacement is proven.
+- **C.1:** complete; D-018 is canonical.
+- **Saved bindings:** do not rewrite automatically.
+- **Cooldown/count:** secret-capable native-consumer paths only.
+- **Drag/drop editing:** deferred beyond C.2.
+- **Stock action bars:** do not suppress in C.2.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/B6_HUD_INTEGRATION_RUNTIME_PROOF_2026-10-01.md`
-- `docs/memory/decisions/D-017_BLIZZARD_UI_SUPPRESSION_AND_RESTORATION.md`
-- `docs/memory/architecture/BLIZZARD_UI_SUPPRESSION.md`
+- `docs/memory/evidence/C1_SECURE_ACTION_SOURCE_REVIEW_2026-10-01.md`
+- `docs/memory/decisions/D-018_SECURE_ACTION_INTERFACE_CONTRACT.md`
 - `docs/memory/architecture/ACTION_CLUSTERS.md`
+- `docs/memory/decisions/D-017_BLIZZARD_UI_SUPPRESSION_AND_RESTORATION.md`
 - `docs/memory/investigations/C1_SECURE_ACTION_INTERFACE.md`
 - `docs/memory/roadmap/PHASE_C_ACTION_INTERFACE.md`
-- `docs/ROADMAP.md`

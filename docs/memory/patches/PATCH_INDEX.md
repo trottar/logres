@@ -32,5 +32,6 @@
 | P0028 | 2026-10-01 | INSTALLED / PUSHED | Record B.5 proof; close B.5 and open B.6 (`22e1ff1`) |
 | P0029 | 2026-10-01 | PREPARED | B.6 reusable in-game developer/control panel |
 | P0030 | 2026-10-01 | PREPARED | Record B.6 integrated proof; close Phase B; open Phase C; clarify stock-UI suppression ownership |
+| P0031 | 2026-10-01 | PREPARED | Resolve C.1 secure action architecture; open C.2 primary action cluster |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

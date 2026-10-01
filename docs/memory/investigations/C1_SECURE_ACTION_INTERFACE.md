@@ -1,40 +1,55 @@
 # C.1 — Secure Action Interface
 
-Status: ACTIVE
+Status: COMPLETE
 Opened: 2026-10-01
+Closed: 2026-10-01
 
 ## Goal
 
 Resolve the secure-action architecture for Logres action clusters before writing the first Phase C runtime implementation.
 
-## Required source questions
+## Resolution
 
-1. Which secure action-button template/API is present on Forever?
-2. How should standard action slots be represented?
-3. Which attributes can be assigned out of combat?
-4. Which button/layout/visibility operations are protected during combat?
-5. Can secure state drivers control cluster visibility safely?
-6. How should action icons/cooldowns/count/range/usability updates be sourced?
-7. How should keybinds be represented and updated?
-8. What drag/drop/edit behavior is feasible?
-9. What Blizzard action-bar frames can be safely hidden, and under what restoration constraints?
-10. Which operations must be deferred until `PLAYER_REGEN_ENABLED`?
+C.1 is source-resolved.
 
-## Architecture constraints
+Canonical evidence:
+`../evidence/C1_SECURE_ACTION_SOURCE_REVIEW_2026-10-01.md`
 
-- no insecure replacement for protected actions;
-- no combat-time protected mutation;
-- no monolithic state mode;
-- primary cluster must remain usable;
-- suppression of Blizzard bars comes only after Logres secure controls are proven;
-- user must never lose access to required actions because suppression happened too early.
+Canonical decision:
+`../decisions/D-018_SECURE_ACTION_INTERFACE_CONTRACT.md`
 
-## Runtime strategy
+## Confirmed
 
-Use the developer/control panel for diagnostics as Phase C checks are added.
+- secure action execution through `SecureActionButtonTemplate`;
+- `"action"` attribute path for action slots;
+- combat-lockdown protected mutation boundary;
+- secure state/attribute driver option for required in-combat state changes;
+- current Forever `C_ActionBar` presentation APIs;
+- native action-button registration;
+- secret-safe DurationObject cooldown route;
+- direct secret-safe display-count forwarding;
+- session-only override binding strategy;
+- no-combat action pickup/edit boundary;
+- stock action bars remain until replacement proof.
 
-Future Phase C diagnostics should register into the existing panel action registry rather than requiring manual slash-command workflows.
+## C.2 handoff
 
-## Exit
+Next:
+**C.2 — Primary Action Cluster**
 
-C.1 completes when secure-action constraints and the first implementable cluster contract are documented strongly enough to write C.2 without guessing.
+First runtime target:
+- 12 named secure buttons;
+- compact rectangular/square cluster;
+- existing primary action bindings routed to matching Logres buttons;
+- icon/cooldown/count/usability/range presentation;
+- stock Blizzard action bars still visible;
+- developer-panel diagnostic for action cluster readiness.
+
+C.2 must prove both:
+- mouse click action execution;
+- keyboard binding execution.
+
+Combat validation must confirm:
+- actions continue working;
+- no forbidden protected mutation occurs;
+- binding/layout updates requested in combat are deferred rather than executed insecurely.

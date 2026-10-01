@@ -7,7 +7,7 @@ As of 2026-10-01.
 **Phase C — Action Interface**
 
 Active work item:
-**C.1 Secure Action Capability / Source Review**
+**C.2 Primary Action Cluster**
 
 ## Phase status
 
@@ -16,34 +16,31 @@ Active work item:
 | 0 — Foundation | COMPLETE |
 | A — Core State Engine | COMPLETE |
 | B — Core HUD | COMPLETE |
-| C — Action Interface | ACTIVE — C.1 |
+| C — Action Interface | ACTIVE — C.2 |
 | D — Immersion Controller | QUEUED after Phase C foundation |
 | E — Compass and Navigation | QUEUED |
 | F — Quest Experience | QUEUED |
 | G — Cinematic Camera | QUEUED; requires current DynamicCam profile |
 | H — Integration and Polish | BLOCKED on prior phases |
 
-## Phase B final result
+## Phase C sequence
 
-Runtime-proven:
-- health vignette;
-- resource percentage;
-- target presentation;
-- player cast/channel/interruption cues;
-- pet/party presentation;
-- integrated immersion behavior;
-- in-game developer/control panel.
+| Item | State |
+| --- | --- |
+| C.1 Secure action capability/source review | COMPLETE |
+| C.2 Primary action cluster | ACTIVE |
+| C.3 Secondary / utility clusters | QUEUED |
+| C.4 Contextual visibility | QUEUED |
+| C.5 Stock action-bar replacement | QUEUED |
+| C.6 Action interface integration validation | QUEUED |
 
-Environmental deferral:
-- current-target cast true-path.
+## C.1 result
 
-## Stock Blizzard UI
-
-Stock UI remains visible at Phase B close by design.
-
-D-017 assigns suppression/restoration:
-- action bars: Phase C replacement + Phase D orchestration;
-- player/target/party frames: Phase D;
-- chat/tabs: Phase D;
-- minimap/navigation: Phase E;
-- quest/XP surfaces: Phase F.
+Resolved:
+- secure protected action path;
+- combat-lockdown boundary;
+- secure driver option;
+- current action presentation APIs;
+- secret-safe cooldown/count paths;
+- session override binding strategy;
+- edit-mode no-combat boundary.
