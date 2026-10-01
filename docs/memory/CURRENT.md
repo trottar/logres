@@ -8,71 +8,72 @@ project: logres
 
 ## Active Objective
 
-**Phase A — Core State Engine.** Establish the stable state/lifecycle contract that later Logres modules consume.
+**Phase A — Core State Engine.** Establish the stable state/lifecycle contract and the minimal orthogonal context sensors required by later Logres modules.
 
 ## Current Work Item
 
-**A.1 — State contract hardening.**
+**A.2 — Additional Context Sensors.**
 
-P0007 prepares the A.1 implementation:
-- authoritative mutable state becomes private to `Core/State.lua`;
-- consumers read fresh snapshots through `Logres:GetState()`;
-- consumers subscribe through `Logres:SubscribeState(handler)`;
-- state revisions advance only for actual canonical transitions;
-- callback payload semantics are explicit;
-- `/logres statecheck` provides travel-free contract validation;
-- a static state-contract checker prevents direct `Logres.State` access.
+A.1 is complete.
 
-No new game-state sensor and no HUD behavior is added.
+The next work must add only context facts that have a concrete downstream owner and a justified API/event source.
+
+Primary candidates:
+- mounted;
+- resting;
+- NPC interaction;
+- taxi/travel state if technically justified.
+
+Do not add all imaginable player states. Each sensor needs:
+1. an owning future subsystem;
+2. a clear semantic definition;
+3. an API/event source;
+4. a narrow validation plan.
+
+No HUD behavior belongs in A.2.
 
 ## Verified State
 
 - Phase 0 — Foundation is complete.
-- P0006 Foundation closure is pushed at `25bc9da`.
-- Existing P0005 state wiring passed load/reload and combined instance+combat transition testing.
-- I-001 established combat/restriction timing can settle across multiple events.
-- A.1 contract is captured by D-009.
-- P0007 source/static validation is prepared but not yet runtime proven.
+- P0006 Foundation closure pushed at `25bc9da`.
+- P0007 A.1 state contract pushed at `e2f3d17`.
+- D-009 defines the state consumer contract.
+- `/logres statecheck` passed in-client with no issues reported.
+- snapshot isolation is runtime verified by the A.1 development check.
+- no-op refresh revision stability is runtime verified by the A.1 development check.
+- no-op refresh callback suppression is runtime verified by the A.1 development check.
+- prior world/instance/combat state transitions remain established by Phase 0.3/I-001.
+- A.1 is complete.
 
 ## Next Action
 
-Install/review/commit/push P0007.
+Start A.2 with a narrow capability/source review for the candidate sensors before modifying `State.lua`.
 
-Then deploy the updated Logres addon and run, from any stable in-game location:
+For each candidate sensor:
+- identify why Logres needs it;
+- verify the current Forever API/event surface;
+- prefer a boolean/orthogonal fact over a derived mega-state;
+- determine whether it can be validated without expensive travel;
+- explicitly defer any sensor whose semantics or API are not yet justified.
 
-```text
-/reload
-/logres status
-/logres statecheck
-```
-
-Expected statecheck result:
-
-```text
-Logres statecheck: PASS (...)
-```
-
-No travel or combat is required for this A.1 contract proof.
-
-If a natural state transition is convenient, `/logres status` before/after may be observed, but it is not required to repeat Phase 0/I-001 travel-heavy testing.
+The first A.2 implementation patch should stay small enough that each new field's behavior can be understood independently.
 
 ## Success Criteria
 
-A.1 succeeds when:
-- D-009 is durable;
-- authoritative mutable state is not publicly exposed;
-- `GetState()` snapshot mutation cannot affect authority;
-- subscribers receive transition copies and can unsubscribe;
-- revision changes only for real canonical transitions;
-- no-op refresh emits no callback;
-- `/logres status` still works;
-- `/logres statecheck` passes;
-- memory/addon/state-contract static checks pass;
-- no Lua errors are reported in the test scope.
+A.2 succeeds when:
+- the minimal required additional sensors are selected explicitly;
+- each selected sensor has a documented semantic definition;
+- API/event sources are current and justified;
+- sensors publish through the existing D-009 state contract;
+- no combinatorial mega-states are introduced;
+- static checks pass;
+- narrow runtime validation passes;
+- deferred/rejected sensors are recorded rather than silently omitted.
 
 ## Do Not Reopen Without New Evidence
 
 - **Foundation:** Phase 0 complete.
+- **A.1:** state consumer contract complete and runtime proven.
 - **State authority:** mutable state belongs to `Core/State.lua`.
 - **State access:** consumers use `GetState()` and `SubscribeState()`.
 - **Revision:** actual canonical transitions only.
@@ -85,10 +86,9 @@ A.1 succeeds when:
 
 ## Relevant References
 
+- `docs/memory/evidence/A1_STATE_CONTRACT_RUNTIME_PROOF_2026-09-30.md`
 - `docs/memory/decisions/D-009_STATE_CONSUMER_CONTRACT.md`
 - `docs/memory/architecture/STATE_ENGINE.md`
 - `docs/memory/roadmap/PHASE_A_CORE_STATE_ENGINE.md`
 - `docs/memory/evidence/PHASE_0_3_RUNTIME_PROOF_2026-09-30.md`
 - `Logres/Core/State.lua`
-- `Logres/Core/Commands.lua`
-- `tools/check_state_contract.py`

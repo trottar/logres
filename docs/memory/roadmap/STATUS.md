@@ -6,16 +6,14 @@ As of 2026-09-30.
 
 **Phase A — Core State Engine**
 
-Active work item: **A.1 State contract hardening**
-
-State: **IMPLEMENTATION PREPARED; RUNTIME PROOF PENDING**
+Active work item: **A.2 Additional Context Sensors**
 
 ## Phase status
 
 | Phase | State |
 | --- | --- |
 | 0 — Foundation | COMPLETE |
-| A — Core State Engine | ACTIVE — A.1 |
+| A — Core State Engine | ACTIVE — A.2 |
 | B — Core HUD | BLOCKED on Phase A |
 | C — Action Interface | BLOCKED on Phase A/B |
 | D — Immersion Controller | BLOCKED on Phase A |
@@ -28,21 +26,30 @@ State: **IMPLEMENTATION PREPARED; RUNTIME PROOF PENDING**
 
 | Item | State |
 | --- | --- |
-| A.1 State contract hardening | ACTIVE — implementation prepared |
-| A.2 Additional context sensors | QUEUED |
+| A.1 State contract hardening | COMPLETE (`e2f3d17` + runtime proof) |
+| A.2 Additional context sensors | ACTIVE |
 | A.3 User-controlled state | QUEUED |
 | A.4 Module lifecycle contract | QUEUED |
 | A.5 Transition validation | QUEUED |
 
-## A.1 contract
+## A.1 result
 
-- mutable authoritative state is private;
-- `GetState()` returns snapshots;
-- `SubscribeState()` provides transition notifications/unsubscribe;
-- revisions advance only for actual canonical changes;
-- no-op observations do not publish;
-- `/logres statecheck` provides travel-free runtime validation;
-- static checker rejects direct `Logres.State` consumer access.
+Runtime `/logres statecheck` passed with no reported issues.
 
-Canonical decision:
-`../decisions/D-009_STATE_CONSUMER_CONTRACT.md`
+Established:
+- private authoritative state;
+- snapshot consumer reads;
+- transition subscriptions;
+- actual-change-only revision semantics;
+- no-op notification suppression;
+- travel-free contract validation.
+
+## A.2 gate
+
+Do not add sensors merely because an API exists.
+
+Each field must have:
+- a future feature owner;
+- a precise meaning;
+- current API/event evidence;
+- a validation plan.

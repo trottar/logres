@@ -8,6 +8,7 @@
 | P0004 | 2026-09-30 | INSTALLED / PUSHED | Runtime pass 02, close I-001, advance to Phase 0.3 (`477df5b`) |
 | P0005 | 2026-09-30 | INSTALLED / PUSHED | First real addon skeleton + deployment/static-check tooling (`ce4f1b0`) |
 | P0006 | 2026-09-30 | INSTALLED / PUSHED | Record Phase 0.3 proof, close Foundation, open Phase A (`25bc9da`) |
-| P0007 | 2026-09-30 | PREPARED | A.1 private state + snapshot/subscription consumer contract |
+| P0007 | 2026-09-30 | INSTALLED / PUSHED | A.1 private state + snapshot/subscription consumer contract (`e2f3d17`) |
+| P0008 | 2026-09-30 | PREPARED | Record A.1 runtime proof; advance to A.2 context sensors |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

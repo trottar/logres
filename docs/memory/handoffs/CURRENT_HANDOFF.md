@@ -5,25 +5,21 @@ Authoritative state: `../CURRENT.md`. Start there.
 Current phase:
 **Phase A — Core State Engine**
 
-Current work:
-**A.1 — State contract hardening**
+A.1 is complete.
 
-P0007 prepares:
-- private authoritative state;
-- `Logres:GetState()` snapshot API;
-- `Logres:SubscribeState()` transition subscription;
-- deterministic revision/change semantics;
-- `/logres statecheck`;
-- static contract enforcement.
+Runtime `/logres statecheck` passed with no issues reported, closing the D-009 state consumer contract.
 
-No new sensors and no HUD are part of A.1.
+Current work item:
+**A.2 — Additional Context Sensors**
 
-After commit/deploy, runtime proof is intentionally travel-free:
+Next work begins with a narrow capability review before code changes.
 
-```text
-/reload
-/logres status
-/logres statecheck
-```
+Candidate facts:
+- mounted;
+- resting;
+- NPC interaction;
+- taxi/travel only if justified.
+
+Do not add mega-states or HUD behavior.
 
 User performs all commits/pushes.

@@ -43,7 +43,7 @@ Runtime proved:
 
 ## A.1 — State contract hardening
 
-**Status: IMPLEMENTATION PREPARED; RUNTIME PROOF PENDING.**
+**Status: COMPLETE.**
 
 Goal: define a stable consumer-facing state API before additional modules depend on internal tables.
 
@@ -65,15 +65,18 @@ Implementation:
 - revision advances only for actual canonical changes;
 - `/logres statecheck` verifies snapshot isolation and no-op semantics without travel.
 
-Success:
-- one documented authoritative state contract;
-- deterministic transition semantics;
-- existing world/instance/combat/PvP behavior preserved;
-- no consumer needs direct event knowledge;
+Result:
+- D-009 accepted;
+- authoritative mutable state is private;
+- `GetState()` snapshots are isolated;
+- `SubscribeState()` transition contract is defined;
+- revisions advance only on real canonical transitions;
 - static state-contract check passes;
-- travel-free runtime statecheck passes.
+- travel-free `/logres statecheck` runtime proof passed.
 
 ## A.2 — Additional context sensors
+
+**Status: ACTIVE.**
 
 Add only the orthogonal facts required for planned immersion behavior.
 
