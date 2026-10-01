@@ -1,13 +1,20 @@
 # Active Investigations
 
-## C.5 — Stock Action-Bar Replacement
+## C.6 — Action Interface Integration Validation
 
 Status:
-**P0044 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**ACTIVE**
 
 Canonical:
-`C5_STOCK_ACTION_BAR_REPLACEMENT.md`
+`C6_ACTION_INTERFACE_INTEGRATION_VALIDATION.md`
 
 Next:
-runtime-prove selective Bars 2–3 suppression, routing coupling, restoration,
-and combat deferral.
+run the integrated Phase C validation matrix on `0.0.20-dev`.
+
+## Deferred — Live action layout editing
+
+Tracked by:
+- D-020;
+- `../evidence/ACTION_LAYOUT_EDITING_RUNTIME_GAP_2026-10-01.md`.
+
+Not a C.6 implementation task.

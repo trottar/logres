@@ -7,10 +7,7 @@ As of 2026-10-01.
 **Phase C — Action Interface**
 
 Active work item:
-**C.5 Stock Action-Bar Replacement**
-
-State:
-**P0044 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**C.6 Action Interface Integration Validation**
 
 ## Phase status
 
@@ -19,7 +16,7 @@ State:
 | 0 — Foundation | COMPLETE |
 | A — Core State Engine | COMPLETE |
 | B — Core HUD | COMPLETE |
-| C — Action Interface | ACTIVE — C.5 |
+| C — Action Interface | ACTIVE — C.6 |
 | D — Immersion Controller | QUEUED |
 | E — Compass and Navigation | QUEUED |
 | F — Quest Experience | QUEUED |
@@ -34,7 +31,17 @@ State:
 | C.2 Primary action cluster | COMPLETE |
 | C.3 Secondary / utility clusters | COMPLETE |
 | C.4 Contextual visibility / secure paging | COMPLETE |
-| C.5 Stock action-bar replacement | ACTIVE — P0044 prepared |
-| C.6 Action interface integration validation | QUEUED |
+| C.5 Stock action-bar replacement | COMPLETE |
+| C.6 Action interface integration validation | ACTIVE |
 
-P0044 replaces only stock Bars 2–3.
+## Deferred action-layout capability
+
+D-020 now explicitly includes:
+- move;
+- swap;
+- clear/remove;
+- reorder;
+
+for future Logres live action editing.
+
+This does not reopen C.5.

@@ -12,9 +12,9 @@ project: logres
 
 ## Current Work Item
 
-**C.5 — Stock Action-Bar Replacement.**
+**C.6 — Action Interface Integration Validation.**
 
-P0044 runtime implementation is prepared.
+C.5 is complete.
 
 ## Verified State
 
@@ -25,79 +25,72 @@ P0044 runtime implementation is prepared.
 - C.2 complete.
 - C.3 complete.
 - C.4 complete.
-- P0043 pushed at `66ea513`.
-- runtime before P0044: `0.0.19-dev`.
-- P0044 target: `0.0.20-dev`.
-- first replacement scope is Bars 2–3 only.
-- MainActionBar remains unsuppressed.
-- Bars 4–5 remain unsuppressed.
-- stock settings remain untouched.
-- replacement defaults OFF after reload.
+- C.5 complete.
+- P0044 pushed at `1d4f811`.
+- selective stock Bar 2–3 replacement runtime PASS.
+- replacement/routing/restoration work in the tested workflow.
+- no protected/taint/Lua/secret error reported from P0044 validation.
+- MainActionBar remains unsuppressed by design.
+- Bars 4–5 remain unsuppressed by design.
+- persistent replacement remains deferred.
+- live action move/swap/remove editing is now an explicit D-020 requirement.
+- cast/channel cue color regression remains open visual debt.
 
 ## Next Action
 
-Install/review/commit/push P0044.
+Run C.6 as an integrated Phase C validation pass.
 
-Because runtime code changes, deploy explicitly:
+Use the current runtime build `0.0.20-dev`.
 
-```bash
-cd ~/Projects/logres
+Validate:
+1. reload / fail-open baseline;
+2. Run All;
+3. normal world action use;
+4. routed keyboard use + activation feedback;
+5. combat context + action execution;
+6. PvP modifier;
+7. Stock Replace ON/OFF;
+8. selective replacement restoration;
+9. Phase B HUD coexistence;
+10. no protected/taint/Lua/secret errors.
 
-WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
-ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
+Do not expand suppression scope during C.6.
 
-./tools/deploy_logres.sh "$ADDONS"
-```
+Do not require:
+- MainActionBar replacement;
+- Bars 4–5 replacement;
+- persistent replacement;
+- live action-layout editing;
+- vehicle/override/form scenarios.
 
-Then `/reload`.
-
-Confirm `0.0.20-dev`.
-
-Use:
-- Run All;
-- Stock Replace Check;
-- Stock Replace ON;
-- Stock Replace OFF.
-
-Proof:
-1. OFF baseline PASS;
-2. ON hides only stock Bars 2–3;
-3. Primary and Bars 4–5 remain visible;
-4. no invisible stock mouse zones;
-5. Secondary/Utility keys route through Logres with activation feedback;
-6. OFF restores stock Bars 2–3 and prior routing;
-7. combat ON/OFF request defers until combat ends;
-8. no protected/taint/Lua/secret errors.
-
-Do not change Blizzard Edit Mode/action-bar configuration during this first
-proof.
+Those remain separate explicit capability gates.
 
 ## Success Criteria
 
-P0044 succeeds when:
-- selective ON/OFF is reversible;
-- routing and suppression remain coupled;
-- stock mouse interaction is removed while suppressed;
-- restoration is exact;
-- combat deferral works;
-- unsupported bars remain accessible;
-- no protected/taint/Lua/secret regression occurs.
+C.6 succeeds when:
+- Phase C features work together in normal play;
+- secure execution remains stable;
+- context policy remains coherent;
+- routed keys remain correct;
+- selective replacement remains reversible;
+- unsupported action domains remain accessible;
+- Phase B HUD coexists with the action interface;
+- no required player control is lost.
 
 ## Do Not Reopen Without New Evidence
 
-- **C.1–C.4:** complete.
-- **D-023:** first replacement scope is canonical.
+- **C.1–C.5:** complete.
 - **MainActionBar suppression:** deferred.
 - **Bars 4–5 suppression:** deferred.
-- **Persistence:** deferred until restoration proof.
-- **Stock settings:** untouched.
+- **Persistent replacement:** deferred.
+- **D-020 live action editing:** deferred product capability.
 - **Cast cue colors:** open visual debt.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/C5_P0044_SELECTIVE_REPLACEMENT_IMPLEMENTATION_2026-10-01.md`
+- `docs/memory/evidence/C5_P0044_SELECTIVE_REPLACEMENT_RUNTIME_PROOF_2026-10-01.md`
+- `docs/memory/evidence/ACTION_LAYOUT_EDITING_RUNTIME_GAP_2026-10-01.md`
+- `docs/memory/investigations/C6_ACTION_INTERFACE_INTEGRATION_VALIDATION.md`
+- `docs/memory/decisions/D-020_ACTION_LAYOUT_CUSTOMIZATION_DIRECTION.md`
 - `docs/memory/decisions/D-023_SELECTIVE_STOCK_ACTION_REPLACEMENT.md`
-- `docs/memory/investigations/C5_STOCK_ACTION_BAR_REPLACEMENT.md`
-- `Logres/Actions/StockReplacement.lua`
-- `tools/check_stock_replacement_contract.py`

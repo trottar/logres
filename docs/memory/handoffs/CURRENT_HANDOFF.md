@@ -2,27 +2,25 @@
 
 Authoritative state: `../CURRENT.md`.
 
+C.5 is complete.
+
+P0044 runtime:
+- selective stock Bar 2–3 replacement PASS;
+- routing coupling PASS;
+- restoration PASS.
+
+New deferred product requirement:
+Logres needs a complete live action move/swap/remove/reorder workflow under
+D-020.
+
 Current work:
-**C.5 — Stock Action-Bar Replacement**
+**C.6 — Action Interface Integration Validation**
 
-P0044 is prepared.
+No new runtime code in P0045.
 
-Version:
-`0.0.20-dev`
+Use current version:
+`0.0.20-dev`.
 
-Runtime controls:
-- Stock Replace Check;
-- Stock Replace ON;
-- Stock Replace OFF.
-
-Scope:
-- stock Bar 2;
-- stock Bar 3.
-
-Replacement automatically owns Secondary/Utility Logres routing while active.
-
-Primary and Bars 4–5 remain visible.
-
-P0044 changes runtime code; full deploy block is mandatory.
+P0045 is documentation-only; no WoW redeploy required.
 
 User performs all commits/pushes.

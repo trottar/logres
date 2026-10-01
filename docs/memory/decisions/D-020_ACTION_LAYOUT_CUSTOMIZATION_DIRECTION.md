@@ -120,3 +120,35 @@ The existing diagnostics panel is not the final action-layout editor.
 
 However, its in-game control architecture is a useful precursor to the future
 settings/menu surface.
+
+## Live action editing requirement
+
+Runtime testing after the first selective stock replacement exposed an
+additional requirement.
+
+A future Logres layout/editor must support action-content editing as well as
+cluster geometry.
+
+Required action-content interactions:
+- pick up / drag;
+- move;
+- swap;
+- clear/remove;
+- reorder.
+
+Rules:
+- protected action mutation occurs only when permitted by combat-lockdown
+  rules;
+- saved keybindings are not silently rewritten;
+- action placement is distinct from cluster geometry/profile assignment;
+- while Logres editing is incomplete, the player retains an explicit stock
+  editing fallback.
+
+The current observation that an action can be added but cannot be fully
+removed/moved through Logres is tracked in:
+`../evidence/ACTION_LAYOUT_EDITING_RUNTIME_GAP_2026-10-01.md`.
+
+This does not reopen the secure execution or selective replacement proofs.
+
+It does block treating persistent stock suppression as the final player-facing
+action-editing experience until an editor or stock-edit mode exists.

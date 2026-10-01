@@ -235,6 +235,8 @@ C.4 closes.
 
 ## C.5 — Stock action-bar replacement
 
+**Status: COMPLETE.**
+
 After Logres secure clusters are runtime proven:
 - suppress relevant Blizzard action bars;
 - preserve restoration path;
@@ -260,7 +262,26 @@ special action states.
 
 Bars 4–5 remain visible because current Logres does not replace them.
 
+### C.5 final runtime result
+
+P0044 runtime passed.
+
+Verified in the user's workflow:
+- selective stock Bar 2–3 replacement;
+- Logres routing coupling;
+- activation feedback through routed actions;
+- stock restoration;
+- unsupported Primary/Bars 4–5 remain available.
+
+C.5 closes.
+
+Runtime also exposed a separate live editing gap: Logres does not yet
+provide a complete move/swap/remove/reorder workflow. That requirement is
+attached to D-020 and does not reopen C.5.
+
 ## C.6 — Action interface integration validation
+
+**Status: ACTIVE.**
 
 Validate:
 - combat transitions;
@@ -320,3 +341,27 @@ Adds session-only replacement for stock Bars 2–3:
 - replacement diagnostics.
 
 Primary and unsupported Bars 4–5 remain Blizzard-visible.
+
+
+### C.6 validation scope
+
+C.6 validates the integrated Phase C feature set on the current
+`0.0.20-dev` build.
+
+It does not expand action-domain support or stock suppression scope.
+
+Required integration checks:
+- reload/fail-open baseline;
+- world/combat/PvP context;
+- secure mouse + routed-key execution;
+- activation feedback;
+- selective stock replacement/restoration;
+- Phase B HUD coexistence;
+- no protected/taint/Lua/secret errors.
+
+Deferred:
+- MainActionBar replacement;
+- Bars 4–5 replacement;
+- persistent replacement;
+- live action move/swap/remove editor;
+- special vehicle/override/form states unless naturally encountered.
