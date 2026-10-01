@@ -1,22 +1,25 @@
 # Active Investigations
 
-## A2 — Additional Context Sensors
+No standalone technical investigation is currently active.
 
-Status: ACTIVE — SOURCE REVIEW COMPLETE; IMPLEMENTATION NEXT
+## Recently completed
+
+### A.2 — Additional Context Sensors
+
+Status:
+**COMPLETE WITH ENVIRONMENTAL DEFERRAL**
+
+Verified:
+- resting transition;
+- taxi transition;
+- interaction transition;
+- taxi/mount separation in taxi context.
+
+Deferred:
+- ordinary mounted=true path because the current beta test environment cannot provide a usable mount test.
 
 Canonical record:
 `A2_CONTEXT_SENSORS.md`
 
-Source evidence:
-`../evidence/A2_CONTEXT_SENSOR_SOURCE_AUDIT_2026-09-30.md`
-
-Accepted implementation candidates:
-- mounted;
-- resting;
-- onTaxi;
-- interacting;
-- interactionType.
-
-The next patch may modify `Core/State.lua`.
-
-No dedicated taxi trip is required for this investigation.
+Next project work item:
+**A.3 — User-Controlled State**

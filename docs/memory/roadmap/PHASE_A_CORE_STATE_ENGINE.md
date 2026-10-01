@@ -76,7 +76,7 @@ Result:
 
 ## A.2 — Additional context sensors
 
-**Status: ACTIVE.**
+**Status: COMPLETE WITH ENVIRONMENTAL DEFERRAL.**
 
 Add only the orthogonal facts required for planned immersion behavior.
 
@@ -95,7 +95,21 @@ Before each field:
 
 Do not create combinatorial states such as `WorldMountedPvPCombat`.
 
+### A.2 result
+
+Runtime verified:
+- resting true/false transition;
+- real taxi transition;
+- interaction open/close;
+- taxi remains semantically separate from ordinary mounting.
+
+Environmental deferral:
+- ordinary `mounted=true` path cannot currently be produced in the beta test environment.
+- reopen only when a later test environment naturally permits mounting.
+
 ## A.3 — User-controlled state
+
+**Status: ACTIVE.**
 
 Introduce durable configuration state separately from observed game state.
 

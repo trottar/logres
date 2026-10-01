@@ -1,12 +1,11 @@
 # A.2 — Additional Context Sensors
 
-Status: ACTIVE — IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT  
+Status: COMPLETE WITH ENVIRONMENTAL DEFERRAL  
 Phase: A.2  
-Opened: 2026-09-30
+Opened: 2026-09-30  
+Closed: 2026-09-30
 
-## Accepted sensors
-
-Implemented by P0010:
+## Implemented sensors
 
 ```text
 mounted
@@ -19,71 +18,70 @@ interactionType
 Source evidence:
 `../evidence/A2_CONTEXT_SENSOR_SOURCE_AUDIT_2026-09-30.md`
 
-## Semantics
+Runtime evidence:
+`../evidence/A2_CONTEXT_SENSOR_RUNTIME_PROOF_2026-09-30.md`
+
+## Runtime result
+
+### resting
+
+Runtime verified:
+- true in Ironforge;
+- false after leaving the resting area during taxi travel.
+
+### onTaxi
+
+Runtime verified during a real flight-path trip.
+
+### interaction
+
+Runtime verified through open/close interaction behavior.
+
+### mounted
+
+The ordinary mounted=true path remains unverified because the current beta/character test environment does not permit a practical mount test.
+
+Status:
+**DEFERRED BY ENVIRONMENT**
+
+This is not an implementation failure.
+
+The taxi test did verify the important design rule that taxi travel is tracked independently from ordinary mounting.
+
+## Durable semantics
 
 - mounted = player-controlled mount, excluding taxi;
 - resting = literal `IsResting()`;
 - onTaxi = literal `UnitOnTaxi("player")`;
-- interaction type = PlayerInteractionManager SHOW/HIDE payload.
+- interaction type = PlayerInteractionManager SHOW/HIDE payload;
+- no generic `traveling` mega-state.
 
-## Implementation details
+## Deferred/rejected sensor set
 
-Refresh signals:
-- mount display;
-- player aura;
-- resting update;
-- control lost/gained;
-- interaction manager show/hide.
+Rejected:
+- generic traveling.
 
-Interaction state is event-latched because no universal documented current-type getter is assumed.
-
-A mismatched HIDE does not clear a newer active type.
-
-## Development diagnostic
-
-P0010 adds:
-
-```text
-/logres sensorcheck
-```
-
-It compares current snapshot values with direct mounted/resting/taxi APIs and checks interaction field consistency.
-
-## Runtime plan — optimized for current player location
-
-The user reported being in Ironforge, next to a flight path, with a Thunderbrew hearth.
-
-Use the existing location rather than creating a travel-heavy matrix.
-
-1. `/reload`
-2. `/logres statecheck`
-3. `/logres sensorcheck`
-4. `/logres status`
-5. mount/dismount where permitted, checking status
-6. open/close any nearby ordinary interaction frame and check status
-7. take any convenient short flight path:
-   - during flight: `onTaxi=true`;
-   - `mounted=false` by Logres semantics
-8. after landing: verify taxi returns false
-9. resting true/false observations are accepted wherever naturally encountered; no dedicated detour required.
-
-## Completion rule
-
-A.2 does not require every sensor true-path to be forced artificially.
-
-Minimum desired runtime evidence:
-- diagnostic passes;
-- mounted transition;
-- taxi transition if convenient (currently convenient);
-- one interaction transition if nearby;
-- resting current state agrees with direct API.
-
-Any missing true-path is explicitly deferred.
-
-## Deferred sensors
-
-- generic traveling: rejected;
+Deferred:
 - flying/airborne;
 - vehicle;
 - druid travel form;
 - generic loss of control.
+
+## Completion judgment
+
+A.2 is complete because:
+- every implemented sensor except mounted=true has runtime evidence;
+- the remaining mount true-path is blocked by the current test environment rather than by an unresolved API/architecture question;
+- the state contract and semantics are sufficient for downstream work.
+
+Do not keep A.2 open indefinitely for an environment the user cannot currently produce.
+
+## Retry condition for mounted=true
+
+Reopen only when:
+- the test environment permits ordinary mounting;
+- or a later owning phase naturally exercises a mount-capable character/build.
+
+## Next
+
+Proceed to **A.3 — User-Controlled State**.

@@ -11,6 +11,7 @@
 | P0007 | 2026-09-30 | INSTALLED / PUSHED | A.1 private state + snapshot/subscription consumer contract (`e2f3d17`) |
 | P0008 | 2026-09-30 | INSTALLED / PUSHED | Record A.1 proof; advance to A.2 context sensors (`c7dd8e8`) |
 | P0009 | 2026-09-30 | INSTALLED / PUSHED | A.2 current source review and sensor selection (`dd6c4d7`) |
-| P0010 | 2026-09-30 | PREPARED | Implement A.2 mounted/resting/taxi/interaction sensors |
+| P0010 | 2026-09-30 | INSTALLED / PUSHED | Implement A.2 mounted/resting/taxi/interaction sensors (`a1f119a`) |
+| P0011 | 2026-09-30 | PREPARED | Record A.2 runtime proof; close A.2 and open A.3 |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

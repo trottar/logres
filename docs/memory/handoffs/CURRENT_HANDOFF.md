@@ -2,27 +2,26 @@
 
 Authoritative state: `../CURRENT.md`. Start there.
 
+Current phase:
+**Phase A — Core State Engine**
+
+A.2 is complete.
+
+Runtime verified:
+- resting true/false;
+- taxi transition;
+- interaction transition.
+
+Mounted=true remains deferred because the current beta/character environment cannot produce a mount test. This is not a failure.
+
 Current work:
-**A.2 — Additional Context Sensors**
+**A.3 — User-Controlled State**
 
-P0010 implementation is prepared.
+First target:
+`immersionEnabled`
 
-New fields:
-- mounted;
-- resting;
-- onTaxi;
-- interacting;
-- interactionType.
+The next patch should define a clean persisted-preference contract without conflating user choice with observed game state.
 
-New diagnostic:
-`/logres sensorcheck`
-
-The user is currently near the Ironforge flight path, so runtime proof should use that location:
-- mount/dismount locally;
-- nearby interaction;
-- one short taxi leg;
-- check taxi true + mounted false during flight.
-
-No extra instance/combat travel is required.
+No settings UI is required yet.
 
 User performs all commits/pushes.

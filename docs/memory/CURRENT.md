@@ -8,86 +8,94 @@ project: logres
 
 ## Active Objective
 
-**Phase A — Core State Engine.** Establish the stable state/lifecycle contract and minimal orthogonal context sensors required by later Logres modules.
+**Phase A — Core State Engine.** Establish the stable state/lifecycle contract, orthogonal observed context, and user-controlled state required by later Logres modules.
 
 ## Current Work Item
 
-**A.2 — Additional Context Sensors.**
+**A.3 — User-Controlled State.**
 
-P0010 prepares the implementation for:
-- mounted;
-- resting;
-- onTaxi;
-- interacting;
-- interactionType.
+A.2 is complete with one explicit environmental deferral.
 
-The implementation preserves D-009 and adds `/logres sensorcheck`.
+The next work separates durable user preference from observed game facts.
 
-No HUD behavior is included.
+Initial A.3 target:
+
+```text
+immersionEnabled: boolean
+```
+
+This preference should be persisted in `LogresDB` and exposed to consumers without pretending it is an observed Blizzard state.
+
+The design must answer:
+- where user-controlled state lives;
+- how consumers read it;
+- how changes publish;
+- whether it belongs in the same snapshot as observed state or in a clearly separated configuration/effective-state layer;
+- how defaults/migrations work.
+
+No HUD/settings panel is required for A.3. A slash-command development control is sufficient for proof.
 
 ## Verified State
 
-- Phase 0 complete.
-- A.1 complete and runtime proven.
-- P0009 source review pushed at `dd6c4d7`.
-- A.2 sensor semantics are source/documentation backed.
-- P0010 implementation/static checks are prepared but not yet runtime proven.
-- user is currently near the Ironforge flight path, allowing an efficient taxi true-path test without a dedicated trip.
+- Phase 0 — Foundation complete.
+- A.1 state consumer contract complete and runtime proven.
+- P0010 A.2 implementation pushed at `a1f119a`.
+- A.2 runtime proof passed for tested sensors.
+- resting true in Ironforge and false after leaving the resting area is runtime verified.
+- real taxi true/false behavior is runtime verified.
+- interaction open/close behavior is runtime verified.
+- taxi remains separate from ordinary mounting under the intended state semantics.
+- ordinary `mounted=true` is **not runtime verified** because the current beta/character environment cannot provide a practical mount test.
+- that mount true-path is deferred by environment, not failed.
+- A.2 is complete.
 
 ## Next Action
 
-Install/review/commit/push P0010 and redeploy Logres.
+Design A.3 before changing runtime code.
 
-In game:
+Required questions:
+1. Should persisted user preference be exposed through a separate configuration API or included as a clearly named user-controlled field in an effective state snapshot?
+2. What is the default for `immersionEnabled`? Current design intent is enabled by default unless a later decision overrides it.
+3. What callback semantics apply when the user changes a preference?
+4. How should schema/default migration remain safe for existing `LogresDB`?
+5. What development command should prove persistence across `/reload` without needing a settings UI?
 
-```text
-/reload
-/logres statecheck
-/logres sensorcheck
-/logres status
-```
-
-Then use the current Ironforge location for efficient validation:
-1. mount/dismount locally where mounting is permitted;
-2. open/close a nearby normal interaction frame;
-3. take any convenient short taxi flight;
-4. during flight verify `taxi=true` and `mounted=false`;
-5. after landing verify `taxi=false`;
-6. note the resting value in the current/resting areas encountered.
-
-No separate world/instance travel is required.
+Prefer the smallest contract that later Immersion/HUD modules can consume without conflating preference with observed game state.
 
 ## Success Criteria
 
-A.2 succeeds when:
-- `/logres statecheck` still passes;
-- `/logres sensorcheck` passes;
-- mounted transition is observed;
-- taxi transition is observed if the currently convenient flight path is used;
-- mounted remains false on taxi;
-- one interaction transition is observed if a suitable nearby interaction uses Interaction Manager events;
-- resting state agrees with the direct API diagnostic;
-- no Lua errors occur in tested scope;
-- any unobserved true-path is explicitly deferred;
-- failures/quirks are preserved.
+A.3 succeeds when:
+- user-controlled state is explicitly separated from observed facts;
+- `immersionEnabled` has a durable default and persistence path;
+- consumers have a supported read API;
+- preference changes publish deterministically;
+- `/reload` preserves the chosen value;
+- existing state contract is not weakened;
+- no settings UI is required;
+- static checks pass;
+- travel-free runtime validation passes;
+- failures/limitations are recorded.
 
 ## Do Not Reopen Without New Evidence
 
 - **A.1:** complete.
-- **State authority:** private.
+- **A.2:** complete with mounted=true environmental deferral.
+- **State authority:** observed mutable state private to `Core/State.lua`.
 - **State access:** `GetState()` / `SubscribeState()`.
-- **mounted:** excludes taxi.
+- **Observed vs user-controlled:** do not conflate them.
+- **mounted:** excludes taxi; mounted=true runtime proof deferred.
 - **resting:** literal Blizzard state.
-- **taxi:** authority is `UnitOnTaxi`, not control-loss event alone.
+- **taxi:** independent orthogonal state.
 - **interaction:** event-latched Blizzard interaction type.
 - **generic traveling:** rejected.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
+- `docs/memory/evidence/A2_CONTEXT_SENSOR_RUNTIME_PROOF_2026-09-30.md`
 - `docs/memory/investigations/A2_CONTEXT_SENSORS.md`
-- `docs/memory/evidence/A2_CONTEXT_SENSOR_SOURCE_AUDIT_2026-09-30.md`
-- `docs/memory/architecture/STATE_ENGINE.md`
+- `docs/memory/roadmap/PHASE_A_CORE_STATE_ENGINE.md`
 - `docs/memory/decisions/D-009_STATE_CONSUMER_CONTRACT.md`
+- `docs/memory/architecture/STATE_ENGINE.md`
+- `Logres/Core/Database.lua`
 - `Logres/Core/State.lua`
-- `Logres/Core/Commands.lua`
