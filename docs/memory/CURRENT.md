@@ -8,116 +8,96 @@ project: logres
 
 ## Active Objective
 
-**Phase A — Core State Engine.** Establish the stable observed-state, user-preference, and lifecycle contracts required by later Logres modules.
+**Phase A — Core State Engine.** Establish the stable observed-state, user-preference, and module-lifecycle contracts required by later Logres systems.
 
 ## Current Work Item
 
-**A.3 — User-Controlled State.**
+**A.4 — Module Lifecycle Contract.**
 
-P0012 prepares the A.3 preference contract.
+A.3 is complete.
 
-Observed game state remains separate.
+The next work defines the smallest lifecycle boundary future modules need before HUD/Immersion implementation begins.
 
-User preference API:
+Required capabilities:
+- module registration;
+- deterministic initialization;
+- enable/disable;
+- state/preference subscription ownership;
+- cleanup/unsubscribe on disable;
+- no duplicate initialization;
+- clear ordering relative to database/state startup.
 
-```text
-GetPreferences
-GetPreference
-SetPreference
-SubscribePreferences
-```
+Do not build a general-purpose addon framework.
 
-Initial persisted preference:
-
-```text
-immersionEnabled = true
-```
-
-Database schema advances from 1 to 2 with an additive migration.
+No HUD behavior belongs in A.4.
 
 ## Verified State
 
 - Phase 0 complete.
-- A.1 complete and runtime proven.
-- A.2 complete with ordinary mounted=true deferred by environment.
-- P0011 A.2 closure pushed at `7ff61b0`.
-- P0012 preference implementation/static validation is prepared but not yet runtime proven.
-- observed state does not include `immersionEnabled`.
-- A.3 design is captured by D-010.
+- A.1 state consumer contract complete and runtime proven.
+- A.2 context sensors complete with ordinary mounted=true deferred by environment.
+- P0012 preference contract pushed at `6a01f85`.
+- A.3 runtime validation passed after correct redeploy.
+- preference contract check passed with no issue reported.
+- `immersionEnabled` persisted through off/reload and on/reload testing.
+- database schema 2 loaded/migrated without reported issue in the tested path.
+- observed state remained separate from user preference.
+- the initial command-list result was caused by failing to redeploy P0012, not by a product defect.
+- L-007 now requires explicit deployment commands for every runtime-code validation handoff.
+- A.3 is complete.
 
 ## Next Action
 
-Install/review/commit/push P0012 and redeploy.
+Design A.4 before adding a module implementation.
 
-Then run:
+Specify:
+1. what constitutes a Logres module;
+2. registration semantics;
+3. initialization order;
+4. enable/disable semantics;
+5. how a module owns and releases state/preference subscriptions;
+6. whether modules may be disabled while in combat;
+7. how lifecycle errors surface during development;
+8. what minimum development diagnostic proves lifecycle correctness.
 
-```text
-/reload
-/logres statecheck
-/logres preferencecheck
-/logres immersion
-```
+Prefer a small explicit contract over an AceAddon-like framework.
 
-The first `/logres immersion` should show:
-- schema 2;
-- `immersionEnabled=true` unless the existing database already contains an explicit value.
-
-Persistence proof:
-
-```text
-/logres immersion off
-/reload
-/logres immersion
-```
-
-Confirm false.
-
-Then restore the intended default/current choice:
-
-```text
-/logres immersion on
-/reload
-/logres immersion
-```
-
-Confirm true.
-
-No travel is required.
+For any later runtime-code patch, always include the complete deployment block before in-game test commands.
 
 ## Success Criteria
 
-A.3 succeeds when:
-- schema 1 database migrates safely to schema 2;
-- default `immersionEnabled=true` is established when absent;
-- observed State remains separate;
-- preference snapshots are isolated;
-- no-op writes do not publish or advance revision;
-- actual preference changes publish deterministically;
-- off persists across reload;
-- on persists across reload;
-- static checks pass;
-- no Lua errors occur in tested scope;
-- runtime evidence is recorded.
+A.4 succeeds when:
+- module lifecycle semantics are documented;
+- initialization order is deterministic;
+- duplicate registration/initialization is rejected;
+- enable/disable are idempotent or explicitly defined;
+- subscriptions/resources can be released reliably;
+- lifecycle does not silently swallow development errors;
+- static validation exists for the agreed contract;
+- travel-free runtime proof passes;
+- no unnecessary framework features are added;
+- deployment instructions explicitly precede runtime validation.
 
 ## Do Not Reopen Without New Evidence
 
 - **A.1:** complete.
-- **A.2:** complete with mount true-path environmental deferral.
+- **A.2:** complete with mounted=true environmental deferral.
+- **A.3:** complete.
 - **Observed state:** `GetState()` / `SubscribeState()`.
-- **User preferences:** separate contract; see D-010.
-- **immersionEnabled:** boolean, default true.
-- **Preference revision:** session-local; value persists.
-- **Database schema:** A.3 target schema 2.
-- **Generic traveling:** rejected.
+- **User preferences:** separate D-010 contract.
+- **immersionEnabled:** boolean, default true, persistence runtime proven.
+- **Database schema:** 2.
+- **Deployment:** every runtime-code test handoff repeats deploy commands; see L-007.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
+- `docs/memory/evidence/A3_USER_PREFERENCE_RUNTIME_PROOF_2026-09-30.md`
 - `docs/memory/decisions/D-010_USER_PREFERENCE_CONTRACT.md`
 - `docs/memory/architecture/PREFERENCES.md`
-- `docs/memory/decisions/D-009_STATE_CONSUMER_CONTRACT.md`
 - `docs/memory/roadmap/PHASE_A_CORE_STATE_ENGINE.md`
-- `Logres/Core/Database.lua`
+- `docs/memory/LEARNINGS.md`
+- `docs/memory/MAINTENANCE.md`
+- `Logres/Core/Bootstrap.lua`
+- `Logres/Core/State.lua`
 - `Logres/Core/Preferences.lua`
-- `Logres/Core/Commands.lua`
-- `tools/check_preference_contract.py`

@@ -6,16 +6,14 @@ As of 2026-09-30.
 
 **Phase A — Core State Engine**
 
-Active work item: **A.3 User-Controlled State**
-
-State: **IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+Active work item: **A.4 Module Lifecycle Contract**
 
 ## Phase status
 
 | Phase | State |
 | --- | --- |
 | 0 — Foundation | COMPLETE |
-| A — Core State Engine | ACTIVE — A.3 |
+| A — Core State Engine | ACTIVE — A.4 |
 | B — Core HUD | BLOCKED on Phase A |
 | C — Action Interface | BLOCKED on Phase A/B |
 | D — Immersion Controller | BLOCKED on Phase A |
@@ -30,19 +28,18 @@ State: **IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
 | --- | --- |
 | A.1 State contract hardening | COMPLETE |
 | A.2 Additional context sensors | COMPLETE WITH ENVIRONMENTAL DEFERRAL |
-| A.3 User-controlled state | ACTIVE — implementation prepared |
-| A.4 Module lifecycle contract | QUEUED |
+| A.3 User-controlled state | COMPLETE (`6a01f85` + runtime proof) |
+| A.4 Module lifecycle contract | ACTIVE |
 | A.5 Transition validation | QUEUED |
 
-## A.3 implementation
+## A.3 result
 
-P0012 adds:
-- separate preference API;
-- `immersionEnabled=true` default;
-- database schema 2;
-- additive schema 1 -> 2 migration;
-- preference transition subscriptions;
-- `/logres preferencecheck`;
-- `/logres immersion ...`.
+Runtime verified after correct deployment:
+- preference contract check;
+- schema 2 load/migration path;
+- immersion off persistence across reload;
+- immersion on persistence across reload;
+- observed-state separation retained.
 
-Runtime validation is entirely travel-free.
+Workflow lesson:
+runtime code must be explicitly redeployed before every in-game validation sequence.

@@ -13,6 +13,7 @@
 | P0009 | 2026-09-30 | INSTALLED / PUSHED | A.2 current source review and sensor selection (`dd6c4d7`) |
 | P0010 | 2026-09-30 | INSTALLED / PUSHED | Implement A.2 mounted/resting/taxi/interaction sensors (`a1f119a`) |
 | P0011 | 2026-09-30 | INSTALLED / PUSHED | Record A.2 proof; close A.2 and open A.3 (`7ff61b0`) |
-| P0012 | 2026-09-30 | PREPARED | A.3 separate persisted user-preference contract |
+| P0012 | 2026-09-30 | INSTALLED / PUSHED | A.3 separate persisted user-preference contract (`6a01f85`) |
+| P0013 | 2026-09-30 | PREPARED | Record A.3 proof; deployment workflow lesson; open A.4 |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

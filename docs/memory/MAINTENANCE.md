@@ -127,3 +127,20 @@ Do not:
 - collapse uncertainty into a confident summary;
 - overwrite an accepted decision without a superseding record;
 - use maintenance as an excuse for unrelated code changes.
+
+## Runtime validation instruction rule
+
+When a patch changes files under `Logres/` and requires in-game validation, the handoff/instructions must repeat the concrete deployment block immediately before the in-game commands.
+
+At minimum include:
+
+```bash
+WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
+ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
+
+./tools/deploy_logres.sh "$ADDONS"
+```
+
+Then include `/reload` before the validation commands.
+
+Reason: repository state and installed WoW addon state are separate authorities. P0012 produced a false-negative command test when the new repository build had not yet been copied into the game AddOns directory.

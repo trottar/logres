@@ -109,7 +109,7 @@ Environmental deferral:
 
 ## A.3 — User-controlled state
 
-**Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
+**Status: COMPLETE.**
 
 Introduce durable configuration state separately from observed game state.
 
@@ -123,6 +123,8 @@ Requirements:
 - later settings UI can change it without rewriting subsystem logic.
 
 ## A.4 — Module lifecycle contract
+
+**Status: ACTIVE.**
 
 Define how future Logres modules:
 - register;

@@ -3,26 +3,20 @@
 Authoritative state: `../CURRENT.md`. Start there.
 
 Current work:
-**A.3 — User-Controlled State**
+**A.4 — Module Lifecycle Contract**
 
-P0012 is prepared.
+A.3 is complete.
 
-New persisted preference:
-`immersionEnabled = true`
+Verified:
+- separate preference contract;
+- `immersionEnabled` persistence;
+- schema 2 runtime path.
 
-Preferences are deliberately separate from observed game state.
+Important workflow rule:
+**Every patch that changes runtime addon code must include the full deploy block before in-game validation commands.**
 
-New development commands:
-- `/logres preferencecheck`
-- `/logres immersion [on|off|toggle]`
+Do not say only "redeploy as usual."
 
-Runtime proof:
-1. preferencecheck;
-2. set off;
-3. reload and confirm off;
-4. set on;
-5. reload and confirm on.
-
-No travel required.
+Next work should design a lightweight module lifecycle before implementing it.
 
 User performs all commits/pushes.

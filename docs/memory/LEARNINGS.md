@@ -54,3 +54,20 @@ Therefore the correct architecture is to move secret values through permitted na
 In the first runtime pass, `PLAYER_REGEN_DISABLED` fired before `InCombatLockdown()` had become true. Restriction state then changed through intermediate observations before later snapshots showed active lockdown.
 
 State-engine code must read current state and tolerate event ordering rather than assuming a single event means all related restrictions have already settled.
+
+## L-007 — Runtime validation must explicitly redeploy the current code patch
+
+P0012 initially appeared to reject its new slash commands because the repository patch had been committed but the installed WoW addon had not been redeployed.
+
+The game was correctly running an older deployed build.
+
+This is a workflow failure mode, not an addon API/runtime failure.
+
+For every patch that changes addon runtime code, validation instructions must explicitly include:
+1. repository checks;
+2. commit/push checkpoint;
+3. `tools/deploy_logres.sh` invocation;
+4. `/reload`;
+5. in-game validation commands.
+
+Do not rely on "deploy as usual" or assume deployment is implied by a prior patch.
