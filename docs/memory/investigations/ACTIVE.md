@@ -1,19 +1,15 @@
 # Active Investigations
 
-## D.5 — Context / PvP / instance orchestration runtime validation
+## D.6 — Restoration / integration validation
 
 Status:
-**INTEGRATED DIAGNOSTIC NEXT**
+**ACTIVE**
 
 Canonical:
-`D5_CONTEXT_PVP_INSTANCE_ORCHESTRATION.md`
-
-Decision:
-`../decisions/D-028_CONTEXT_ORCHESTRATION_MATRIX.md`
+`D6_RESTORATION_INTEGRATION_VALIDATION.md`
 
 Next:
-add a Context Policy Check that validates State + ImmersionController +
-ActionContext without secret/protected readback.
+design the integrated Phase D recovery/restoration validation path.
 
 ## Tracked non-blocking defects / deferred domains
 

@@ -305,7 +305,7 @@ D.4 closes.
 
 ## D.5 — Context / PvP / instance orchestration
 
-**Status: P0060 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
+**Status: COMPLETE.**
 
 Integrate orthogonal state:
 - context;
@@ -362,7 +362,28 @@ No orchestration behavior changes.
 
 Runtime proof is next.
 
+### D.5 final runtime result
+
+P0060 runtime passed on `0.0.26-dev`.
+
+Verified:
+- Context Policy Check PASS;
+- Run All PASS;
+- Immersion OFF context policy PASS;
+- Immersion ON context policy PASS;
+- requested integrated context checks passed;
+- no reported Lua/taint/secret regression.
+
+D-028 remains canonical.
+
+Natural instance transition proof may remain environmental when no instance
+is readily available.
+
+D.5 closes.
+
 ## D.6 — Restoration / integration validation
+
+**Status: ACTIVE.**
 
 Validate:
 - immersion ON;
@@ -374,6 +395,19 @@ Validate:
 - module disable/restore;
 - developer recovery;
 - no required control/information lost.
+
+### D.6 active validation scope
+
+Validate Phase D as one reversible system:
+- immersion ON/OFF;
+- reload persistence;
+- combat-deferred protected convergence;
+- context integration;
+- module recovery;
+- fail-open stock fallback preservation;
+- no required control/information loss.
+
+Prefer addon-owned diagnostics over protected Blizzard presentation readback.
 
 ## Phase D exit
 

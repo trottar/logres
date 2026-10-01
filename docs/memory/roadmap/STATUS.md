@@ -7,10 +7,10 @@ As of 2026-10-01.
 **Phase D — Immersion Controller**
 
 Active work item:
-**D.5 Context / PvP / instance orchestration runtime validation**
+**D.6 Restoration / integration validation**
 
 State:
-**P0060 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**D.5 COMPLETE; D.6 ACTIVE**
 
 ## Phase status
 
@@ -20,7 +20,7 @@ State:
 | A — Core State Engine | COMPLETE |
 | B — Core HUD | COMPLETE |
 | C — Action Interface | COMPLETE |
-| D — Immersion Controller | ACTIVE — D.5 |
+| D — Immersion Controller | ACTIVE — D.6 |
 | E — Compass and Navigation | QUEUED |
 | F — Quest Experience | QUEUED |
 | G — Cinematic Camera | QUEUED |
@@ -32,7 +32,7 @@ State:
 | --- | --- |
 | D.1 Orchestration contract/source review | COMPLETE |
 | D.2 Immersion Controller foundation | COMPLETE |
-| D.3 Quiet Mode runtime suppression | COMPLETE — instance proof deferred |
+| D.3 Quiet Mode runtime suppression | COMPLETE — instance proof environmental |
 | D.4 Unit-frame selective suppression | COMPLETE — Player/Target proven; Party deferred |
-| D.5 Context/PvP/instance orchestration | P0060 PREPARED — runtime proof next |
-| D.6 Restoration/integration validation | QUEUED |
+| D.5 Context/PvP/instance orchestration | COMPLETE |
+| D.6 Restoration/integration validation | ACTIVE |

@@ -77,7 +77,7 @@ Canonical phase record:
 
 ## Phase D — Immersion Controller
 
-**Status: ACTIVE — D.5 Context Policy Check runtime proof.**
+**Status: ACTIVE — D.6 restoration/integration validation.**
 
 Implement full immersion orchestration:
 - Quiet/social immersion mode;

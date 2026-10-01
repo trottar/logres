@@ -12,9 +12,9 @@ project: logres
 
 ## Current Work Item
 
-**D.5 — Context / PvP / instance orchestration runtime validation.**
+**D.6 — Restoration / integration validation.**
 
-P0060 integrated diagnostic implementation is prepared.
+D.5 is runtime-proven and complete.
 
 ## Verified State
 
@@ -26,80 +26,59 @@ P0060 integrated diagnostic implementation is prepared.
 - D.2 complete.
 - D.3 complete.
 - D.4 complete for supported Player + Target selective replacement.
+- D.5 complete.
+- P0060 pushed at `9608634`.
+- P0060 runtime `0.0.26-dev`.
+- Context Policy Check PASS.
+- Run All PASS.
+- Immersion OFF context policy PASS.
+- Immersion ON context policy PASS.
+- D-028 orchestration matrix remains canonical and runtime-proven for tested
+  scope.
 - Party/CompactPartyFrame suppression remains capability-deferred.
-- P0059 pushed at `b245170`.
-- runtime before P0060: `0.0.25-dev`.
-- P0060 target: `0.0.26-dev`.
-- D-028 is canonical.
-- P0060 changes diagnostics, not orchestration behavior.
-- Context Policy Check validates State + ImmersionController + ActionContext.
-- Context Policy Check does not inspect Blizzard protected/secret presentation
-  state.
-- expected ActionContext precedence remains:
-  `combat > PvP > instance > world`.
-- Quiet Mode remains world-only while immersion is ON.
-- Bar 2–3, Player, and Target replacement remain immersion-preference-owned.
-- Party suppression remains false.
-- instanceType remains observed but not first-pass policy-bearing.
+- Primary replacement/routing ownership remains deferred.
 - TargetFrame intermittent reappearance remains OPEN / UNREPRODUCED.
 - future Aura / Status Presentation domain remains deferred.
-- Primary replacement/routing ownership remains deferred.
 - D-020 live action editing remains deferred.
 - cast cue color regression remains open visual debt.
 
 ## Next Action
 
-Install/review/commit/push P0060.
+Design and implement D.6 integrated restoration / recovery validation.
 
-Because runtime code changes, deploy explicitly:
+The validation should cover:
+1. Immersion ON;
+2. Immersion OFF;
+3. OFF -> ON and ON -> OFF restoration;
+4. persisted preference through `/reload`;
+5. combat-deferred protected transitions and convergence after combat;
+6. world/PvP/context integration;
+7. natural instance transition when available;
+8. module disable/restore recovery where supported;
+9. stock fallback surfaces remain available;
+10. no invisible protected interaction regions;
+11. no Lua/taint/secret regression.
 
-```bash
-cd ~/Projects/logres
+Prefer addon-owned diagnostic state.
 
-WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
-ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
-
-./tools/deploy_logres.sh "$ADDONS"
-```
-
-Then `/reload`.
-
-Use the developer panel:
-1. Status — confirm `0.0.26-dev`;
-2. Context Policy Check;
-3. Run All;
-4. Immersion OFF;
-5. Context Policy Check;
-6. Immersion ON;
-7. Context Policy Check.
-
-Then where safe:
-8. enter combat and run Context Policy Check;
-9. leave combat and run it again;
-10. if a PvP flag transition is convenient, validate idle PvP policy.
-
-Instance transition may remain environmental if no instance is naturally
-available.
+Do not inspect protected Blizzard presentation values solely to prove a
+mutation.
 
 ## Success Criteria
 
-D.5 runtime validation succeeds when:
-- world idle policy passes;
-- Immersion OFF policy passes;
-- Immersion ON policy passes;
-- combat policy resolves to ActionContext combat without replacement ownership
-  churn;
-- PvP policy resolves to PvP presentation when not in combat;
-- world/instance changes only Quiet Mode among supported Phase D suppression
-  domains;
-- Party remains stock;
-- no Lua/taint/secret regression occurs.
+D.6 succeeds when Phase D behaves as one reversible system:
+- preference-driven suppression/restoration is reliable;
+- protected deferrals converge;
+- context policy remains coherent;
+- fallback stock surfaces remain available where Logres lacks replacement;
+- developer recovery remains fail-open;
+- no required control/information is lost.
 
 ## Do Not Reopen Without New Evidence
 
-- **D.1–D.4 supported scope:** complete.
-- **D.5 source/design:** complete; D-028 canonical.
+- **D.1–D.5:** complete.
 - **Party suppression:** capability-deferred.
+- **Primary replacement/routing:** deferred.
 - **TargetFrame intermittent reappearance:** open/unreproduced.
 - **Aura/status suppression:** deferred design domain.
 - **Whole PlayerFrame / TargetFrame suppression:** rejected.
@@ -107,8 +86,7 @@ D.5 runtime validation succeeds when:
 
 ## Relevant References
 
-- `docs/memory/evidence/D5_P0060_CONTEXT_POLICY_CHECK_IMPLEMENTATION_2026-10-01.md`
-- `docs/memory/evidence/D5_CONTEXT_ORCHESTRATION_SOURCE_REVIEW_2026-10-01.md`
+- `docs/memory/evidence/D5_P0060_CONTEXT_POLICY_RUNTIME_PROOF_2026-10-01.md`
+- `docs/memory/investigations/D6_RESTORATION_INTEGRATION_VALIDATION.md`
 - `docs/memory/decisions/D-028_CONTEXT_ORCHESTRATION_MATRIX.md`
-- `docs/memory/investigations/D5_CONTEXT_PVP_INSTANCE_ORCHESTRATION.md`
-- `tools/check_context_policy_contract.py`
+- `docs/memory/roadmap/PHASE_D_IMMERSION_CONTROLLER.md`

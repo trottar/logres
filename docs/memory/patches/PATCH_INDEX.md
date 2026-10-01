@@ -61,6 +61,7 @@
 | P0057 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME PASS | Make TargetFrame restoration/diagnostics secret-safe (`fc848b9`) |
 | P0058 | 2026-10-01 | INSTALLED / PUSHED | Record P0057 pass; close D.4; track Target reappearance and aura domain; open D.5 (`eba9998`) |
 | P0059 | 2026-10-01 | INSTALLED / PUSHED | Resolve D.5 orthogonal context/PvP/instance orchestration matrix (`b245170`) |
-| P0060 | 2026-10-01 | PREPARED | Add integrated D.5 Context Policy Check runtime diagnostic |
+| P0060 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME PASS | Add integrated D.5 Context Policy Check (`9608634`) |
+| P0061 | 2026-10-01 | PREPARED | Record P0060 runtime PASS; close D.5; open D.6 restoration validation |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

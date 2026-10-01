@@ -2,27 +2,28 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0059 is verified pushed at `b245170`.
+P0060 is verified pushed at `9608634` and runtime-proven.
 
-D-028 is canonical.
+Reported PASS:
+- Context Policy Check;
+- Run All;
+- Immersion OFF policy;
+- Immersion ON policy;
+- requested integrated context checks.
+
+D.5 closes.
 
 Current work:
-**P0060 — Context Policy Check runtime validation**
+**D.6 — Restoration / integration validation**
 
-Runtime target:
-`0.0.26-dev`
+D.6 should validate Phase D as one reversible system:
+- preference lifecycle;
+- reload;
+- combat deferral/convergence;
+- context transitions;
+- fail-open recovery;
+- stock fallback preservation.
 
-P0060 adds no new suppression policy.
-
-It adds an integrated developer-panel diagnostic validating:
-- State;
-- ImmersionController ownership;
-- ActionContext precedence/alpha;
-- combat-deferred protected transitions;
-- unsupported Party / Primary gates.
-
-No Blizzard protected presentation state is read by the new check.
-
-P0060 changes runtime code; full deployment block is mandatory.
+P0061 is documentation-only; no WoW redeploy required.
 
 User performs all commits/pushes.
