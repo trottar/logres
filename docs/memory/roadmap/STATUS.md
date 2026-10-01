@@ -9,6 +9,9 @@ As of 2026-10-01.
 Active work item:
 **C.4 Contextual Visibility / Secure Paging**
 
+State:
+**SOURCE-RESOLVED; IMPLEMENTATION NEXT**
+
 ## Phase status
 
 | Phase | State |
@@ -30,26 +33,19 @@ Active work item:
 | C.1 Secure action capability/source review | COMPLETE |
 | C.2 Primary action cluster | COMPLETE |
 | C.3 Secondary / utility clusters | COMPLETE |
-| C.4 Contextual visibility / secure paging | ACTIVE |
+| C.4 Contextual visibility / secure paging | ACTIVE — source-resolved |
 | C.5 Stock action-bar replacement | QUEUED |
 | C.6 Action interface integration validation | QUEUED |
 
-## C.3 final result
+## C.4 contract
 
-P0036:
-- Primary PASS;
-- Secondary PASS;
-- Utility PASS;
-- combined layout PASS.
+Context:
+- alpha emphasis only initially;
+- no alpha-zero invisible click zones;
+- Primary full;
+- Secondary/Utility context weighted.
 
-## Future action-layout profiles
-
-D-020 records that the current three-cluster arrangement is a proof layout.
-
-Future customization must permit:
-- variable cluster role;
-- action-domain assignment;
-- rows/columns/visible slot count;
-- compact six-slot groups;
-- anchor/spacing/scale;
-- contextual visibility policy.
+Paging:
+- Primary moves to secure ID/actionpage driver;
+- ordinary presentation follows secure page;
+- unsupported special states keep stock fallback.

@@ -14,7 +14,9 @@ project: logres
 
 **C.4 — Contextual Visibility / Secure Paging.**
 
-C.3 is complete.
+C.4 source/design resolution is complete.
+
+Implementation is next.
 
 ## Verified State
 
@@ -24,62 +26,81 @@ C.3 is complete.
 - C.1 complete.
 - C.2 complete.
 - C.3 complete.
-- P0036 pushed at `f192557`.
-- Primary secure cluster works.
-- Secondary fixed-slot cluster works.
-- Utility fixed-slot cluster works.
-- three-cluster constellation works together.
-- no reported protected/taint/Lua/secret error in C.3.
+- P0037 pushed at `d1a6527`.
+- current runtime version remains `0.0.16-dev`.
+- Primary/Secondary/Utility secure execution proven.
+- D-020 future layout customization direction accepted.
+- D-021 context/secure-paging contract accepted.
+- protected ordinary Show/Hide/SetAttribute remains forbidden in combat.
+- alpha-based emphasis is the selected initial context approach.
+- no alpha-zero action state is allowed.
+- SecureActionButtonTemplate ID/actionpage is the selected Primary paging path.
 - stock Blizzard action bars remain visible.
-- cast/channel cue color loss remains open visual debt.
-- D-020 records future configurable action-layout profiles.
-- current hardcoded 3-cluster geometry is explicitly provisional.
+- cast/channel cue color regression remains open visual debt.
 
 ## Next Action
 
-Source/design-resolve C.4 before changing protected visibility or paging.
+Implement C.4 in a narrow runtime patch.
 
-Resolve:
-1. presentation-only alpha vs protected Show/Hide boundaries;
-2. secure visibility/state-driver APIs and Forever constraints;
-3. safe interaction behavior for faded protected buttons;
-4. combat/world/PvP/instance visibility policy;
-5. PvP as an orthogonal modifier;
-6. Primary combat-time page changes;
-7. class/form/override/vehicle action-page states;
-8. capability gates before stock action-bar suppression;
-9. data model that future D-020 layout profiles can consume.
+Part A:
+- subscribe action policy to existing state;
+- apply role alpha from combat/pvpFlagged/context;
+- keep all action buttons interactable.
 
-Do not build the full action-layout editor during C.4.
+Part B:
+- migrate Primary secure execution toward button ID + actionpage driver;
+- synchronize presentation slot/page with secure execution state;
+- preserve post-combat fallback until new path is runtime-proven.
+
+Diagnostics:
+- extend Action Check with role alpha/policy;
+- report secure paging readiness/current presentation page;
+- keep stock fallback status explicit.
+
+Runtime proof should cover:
+- world idle alpha;
+- combat alpha;
+- PvP alpha if convenient;
+- instance alpha if naturally available;
+- Primary normal page switching;
+- mouse/key execution after page changes;
+- icon/cooldown presentation matches executed action;
+- no protected/taint/Lua/secret errors.
+
+Do not force vehicle/override/form scenarios solely for proof.
+
+Record unavailable special states with retry conditions.
 
 ## Success Criteria
 
 C.4 succeeds when:
-- Primary remains reliably accessible;
-- Secondary/Utility context emphasis is proven;
-- combat transitions cause no protected mutation errors;
-- PvP modifier behavior is distinct from combat state;
-- Primary combat-time paging is secure or precisely capability-gated;
-- unsupported special action states keep a safe stock fallback;
-- future configurable cluster definitions can reuse the policy model.
+- contextual alpha policy is correct and combat-safe;
+- Primary always remains fully legible;
+- faded actions remain accessible;
+- normal Primary paging executes securely;
+- presentation follows the securely selected page;
+- no combat-time protected mutation error occurs;
+- unsupported special states retain stock fallback;
+- no required action becomes inaccessible.
 
 ## Do Not Reopen Without New Evidence
 
 - **C.1:** complete.
 - **C.2:** complete.
 - **C.3:** complete.
-- **P0032 failure:** historical evidence retained.
+- **D-020:** current geometry is provisional.
+- **D-021:** context/paging contract is canonical.
+- **Alpha 0:** rejected for action-context fading.
+- **Special action states:** capability-gated until runtime proof.
+- **Stock action bars:** remain visible.
 - **Cast cue colors:** open visual debt.
-- **Current 3-cluster geometry:** proof layout, not final product lock.
-- **D-020:** future layout customization requirement is canonical.
-- **Stock action bars:** remain visible until capability gates are satisfied.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/C3_SECONDARY_UTILITY_RUNTIME_PROOF_2026-10-01.md`
-- `docs/memory/decisions/D-020_ACTION_LAYOUT_CUSTOMIZATION_DIRECTION.md`
+- `docs/memory/evidence/C4_CONTEXT_VISIBILITY_SECURE_PAGING_SOURCE_REVIEW_2026-10-01.md`
+- `docs/memory/decisions/D-021_ACTION_CONTEXT_AND_SECURE_PAGING_CONTRACT.md`
 - `docs/memory/investigations/C4_CONTEXTUAL_VISIBILITY_SECURE_PAGING.md`
+- `docs/memory/decisions/D-020_ACTION_LAYOUT_CUSTOMIZATION_DIRECTION.md`
 - `docs/memory/architecture/ACTION_CLUSTERS.md`
 - `docs/memory/decisions/D-017_BLIZZARD_UI_SUPPRESSION_AND_RESTORATION.md`
-- `docs/memory/decisions/D-018_SECURE_ACTION_INTERFACE_CONTRACT.md`

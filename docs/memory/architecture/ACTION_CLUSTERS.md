@@ -298,3 +298,42 @@ C.2/C.3 runtime modules remain valid secure-action proofs.
 
 Future refactoring may turn their hardcoded definitions into profile-driven
 cluster data after C.4 establishes safe contextual visibility behavior.
+## C.4 source resolution
+
+D-021 separates action context policy from protected paging.
+
+### Context
+
+Initial contextual behavior is alpha-only:
+- Primary always 1.00;
+- Secondary subdued in world, raised in PvP, full in combat;
+- Utility strongly subdued in world, raised in PvP/instance/combat.
+
+Alpha is never zero.
+
+The protected buttons remain clickable.
+
+This is deliberate fail-open behavior.
+
+### Secure paging
+
+Primary moves toward SecureActionButtonTemplate's built-in ID/actionpage model.
+
+The secure page selection is driven from macro-condition state rather than
+ordinary Lua rewriting protected action attributes during combat.
+
+Presentation synchronization remains an ordinary responsibility:
+the visible icon/cooldown/count/range state must track the same concrete slot
+the secure button will execute.
+
+### Special states
+
+Vehicle/override/temp-shapeshift/bonus/possess coverage is capability-gated.
+
+Stock bars remain visible until relevant paths are runtime-proven.
+
+### Future profile compatibility
+
+Context alpha is a role policy, not a permanent hardcoded frame policy.
+
+D-020 profile-defined clusters should be able to consume the same policy.

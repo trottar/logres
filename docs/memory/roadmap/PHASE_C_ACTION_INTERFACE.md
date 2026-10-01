@@ -146,7 +146,7 @@ roles/sizes/shapes, including compact groups such as a six-slot utility bar.
 
 ## C.4 — Contextual visibility
 
-**Status: ACTIVE.**
+**Status: SOURCE-RESOLVED; IMPLEMENTATION NEXT.**
 
 Integrate with observed state:
 - world;
@@ -154,7 +154,20 @@ Integrate with observed state:
 - PvP;
 - instance.
 
-Visibility policy must respect secure-state restrictions.
+Visibility policy must respect secure-state restrictions.### C.4 source resolution
+
+D-021:
+- contextual emphasis initially uses non-zero alpha only;
+- Primary stays full;
+- Secondary rises world -> PvP -> combat;
+- Utility remains peripheral but rises with context;
+- true protected hiding is deferred unless required;
+- Primary moves to secure button-ID + actionpage driver paging;
+- unsupported special pages retain stock fallback.
+
+First implementation should prove context alpha and normal secure paging before
+expanding into every vehicle/override/form state.
+
 
 ## C.5 — Stock action-bar replacement
 

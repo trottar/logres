@@ -1,6 +1,6 @@
 # C.4 — Contextual Visibility / Secure Paging
 
-Status: ACTIVE
+Status: SOURCE-RESOLVED; IMPLEMENTATION NEXT
 Opened: 2026-10-01
 
 ## Goal
@@ -8,96 +8,108 @@ Opened: 2026-10-01
 Make the proven Logres action constellation respond to gameplay context without
 violating combat-lockdown rules.
 
-C.4 also resolves the known Primary combat-time page-remapping limitation
-before any stock action-bar suppression is considered.
+Resolve the known Primary combat-time page-remapping limitation before stock
+action-bar suppression is considered.
 
-## Proven base
+## Canonical source evidence
 
-C.2/C.3 provide:
-- secure Primary execution;
-- fixed Secondary execution;
-- fixed Utility execution;
-- shared secure action-button presentation;
-- fail-open key routing;
-- stock bars as fallback.
+`../evidence/C4_CONTEXT_VISIBILITY_SECURE_PAGING_SOURCE_REVIEW_2026-10-01.md`
 
-## Product policy
+## Canonical decision
 
-Desired direction:
+`../decisions/D-021_ACTION_CONTEXT_AND_SECURE_PAGING_CONTRACT.md`
 
-### Primary
+## Resolved context approach
 
-Always perceptible.
+Initial C.4 uses presentation alpha, not protected Show/Hide.
 
-It may change emphasis, but should not disappear during ordinary gameplay.
+Role policy:
 
-### Secondary
+| State | Primary | Secondary | Utility |
+| --- | ---: | ---: | ---: |
+| world/default idle | 1.00 | 0.45 | 0.20 |
+| PvP flagged idle | 1.00 | 0.75 | 0.40 |
+| instance idle | 1.00 | 0.70 | 0.45 |
+| combat | 1.00 | 1.00 | 0.75 |
 
-Outside combat:
-- dim/subdued.
+No alpha-zero state.
 
-PvP flagged:
-- stronger visibility.
+All buttons stay interactable.
 
-Combat:
-- fully available.
+## Resolved paging direction
 
-### Utility
+Primary secure execution should use:
+- button IDs 1–12;
+- `actionpage`;
+- AttributeDriver / SecureStateDriver macro conditions.
 
-World/idle:
-- peripheral, faded, or intentionally revealed.
+This removes the need for insecure combat-time protected attribute remapping
+for supported states.
 
-Combat:
-- available where needed.
+## Implementation split
 
-Instance:
-- policy may be more conservative.
+P0039 should be narrow.
 
-## Architecture questions
+### Part A — contextual alpha
 
-Before runtime implementation, resolve:
+Add role-policy application from existing State subscription.
 
-1. Which visibility changes can be ordinary alpha changes?
-2. Which protected-frame Show/Hide changes require secure drivers?
-3. Can Logres keep protected buttons technically shown while using
-   presentation-only alpha/interaction policy safely?
-4. How should mouse interaction behave for visually faded buttons?
-5. Which state inputs can be expressed through secure macro-condition drivers?
-6. How should `combat`, `pvpFlagged`, and context interact without creating a
-   monolithic combined mode?
-7. How should Primary's combat-time action-page changes be securely driven?
-8. Which paging states are class/form/override/vehicle-specific on Forever?
-9. What must remain stock-controlled until those special states are proven?
-10. How should future D-020 layout profiles attach visibility policies without
-    making protected mutation unsafe?
+Prove:
+- world idle;
+- PvP flag modifier;
+- combat;
+- instance if naturally available.
 
-## Primary paging debt
+### Part B — secure primary paging foundation
 
-Current C.2 behavior:
-if the primary action page changes during combat, Logres defers remapping until
-`PLAYER_REGEN_ENABLED`.
+Move Primary execution to ID/actionpage driver.
 
-That is acceptable while stock bars remain visible.
+Prove at minimum:
+- ordinary page 1;
+- out-of-combat page switching;
+- combat page switching if practical;
+- presentation follows execution.
 
-It is not acceptable before stock primary-bar suppression.
+Special vehicle/override/form states remain explicit capability gates until
+tested.
 
-C.4 must either:
-- implement a source-proven secure page/state driver;
-- or explicitly retain stock bar visibility for unsupported paging states.
+## Diagnostics
 
-## Scope boundary
+Extend Action Check with:
+- current context-policy alpha values;
+- secure paging driver ready;
+- active presentation page/slots;
+- stock fallback still enabled.
 
-C.4 does not build the full D-020 layout editor.
+Consider a focused `Action Context Check` only if Action Check becomes too
+dense.
 
-It should make visibility/page policy data-driven enough that future layout
-profiles can consume the same policy model.
+## Runtime proof
+
+Context:
+1. world idle weighting;
+2. PvP flagged weighting if convenient;
+3. combat weighting;
+4. no protected-action error;
+5. faded buttons remain clickable/key-usable.
+
+Paging:
+1. Primary page 1 correct;
+2. change normal primary page and verify execution + icon/cooldown presentation;
+3. if a safe combat-time page change is naturally available, verify it;
+4. otherwise record combat page-change true path as pending rather than
+   manufacturing a class/form scenario.
+
+Special states:
+- do not force vehicle/override/form travel solely for C.4;
+- retain stock fallback and explicit retry conditions.
 
 ## Exit
 
 C.4 completes when:
-- contextual action emphasis/visibility is runtime-proven;
-- protected visibility transitions are combat-safe;
-- Primary combat-time paging behavior is resolved or precisely capability-
-  gated;
-- PvP remains a modifier rather than a separate monolithic mode;
-- no required action becomes inaccessible.
+- contextual role emphasis is runtime-proven;
+- no alpha-zero invisible click zones exist;
+- normal Primary secure paging is proven;
+- supported combat-time page changes no longer depend on post-combat attribute
+  mutation;
+- unsupported special paging states retain safe stock fallback.
