@@ -12,95 +12,77 @@ project: logres
 
 ## Current Work Item
 
-**B.2 — Resource Presentation.**
+**B.3 — Target Presentation.**
 
-P0021 prepares the production primary-resource percentage.
+B.2 is complete.
 
-Secret-safe path:
+The production primary-resource percentage is runtime proven on P0021:
+- visible lower-center percentage;
+- updates while resource changes;
+- immersion off hides it;
+- immersion on restores it;
+- no secret-value/Lua error reported.
 
-```text
-UnitPowerPercent("player", nil, false, nativeScaleTo100Curve)
-    -> FontString:SetFormattedText("%.0f%%", secretPercent)
-```
-
-No Lua arithmetic/comparison/stringification is performed on the resource percentage.
+B.3 now owns sparse current-target presentation.
 
 ## Verified State
 
 - Phase A complete.
-- B.1 complete.
-- P0020 B.1 closure pushed at `893ab6c`.
-- current runtime baseline before P0021: `0.0.8-dev`.
-- current Forever docs confirm `UnitPowerPercent` on Forever 1.60.1.
-- native percentage curves use normalized 0–1 input.
-- `FontString:SetFormattedText` accepts secret arguments.
-- `UNIT_POWER_FREQUENT` and `UNIT_MAXPOWER` provide the required update signals.
-- P0021 source/static checks are prepared; runtime proof pending.
+- B.1 player health vignette complete.
+- B.2 primary resource percentage complete.
+- P0021 pushed at `66b27a3`.
+- current runtime version: `0.0.9-dev`.
+- target level/classification are technically available from prior audit evidence.
+- product policy intentionally withholds numeric level and elite/rare classification by default.
+- target health/power percentages are secret-capable.
 
 ## Next Action
 
-Install/review/commit/push P0021.
+Design/source-check B.3 before implementing it.
 
-Because runtime code changes, deploy explicitly:
+Resolve:
+1. target-name API/event path on Forever;
+2. secret-safe target health percentage formatting;
+3. minimal target update events;
+4. whether target resource percentage belongs in the initial patch or should remain optional;
+5. no-target/target-change visibility behavior;
+6. initial anchor relative to player resource/cast-confirmation space.
 
-```bash
-WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
-ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
+Hard rule:
+do not expose numeric level or elite/rare classification in default target UI.
 
-./tools/deploy_logres.sh "$ADDONS"
-```
+Do not build a conventional target frame.
 
-Then:
-
-```text
-/reload
-/logres status
-/logres statecheck
-/logres preferencecheck
-/logres lifecyclecheck
-/logres hudcheck
-```
-
-Confirm version:
-`0.0.9-dev`
-
-Runtime B.2:
-1. confirm a lower-center percentage is visible;
-2. spend/gain the current primary resource and confirm it updates;
-3. `/logres immersion off` hides HUD/resource;
-4. `/logres immersion on` restores HUD/resource with current percentage;
-5. report any Lua/secret error;
-6. report whether the text placement/size is usable as a first pass.
-
-No travel is required.
+When B.3 runtime code is prepared, include the full deploy block before in-game validation.
 
 ## Success Criteria
 
-B.2 succeeds when:
-- primary resource percentage renders;
-- it updates while resource changes;
-- no secret-value/Lua errors occur;
-- immersion off/on hides/restores it;
-- no conventional resource bar exists;
-- HUD structural check remains green;
-- current-character primary-resource path is runtime proven;
-- untested form/class switching is recorded rather than assumed.
+B.3 succeeds when:
+- no target -> presentation absent;
+- target acquisition shows sparse name + health percentage;
+- target health updates correctly;
+- target changes/clears cleanly;
+- immersion off/on hides/restores presentation;
+- default UI exposes no numeric level/classification;
+- no portrait-heavy frame or health bar is added;
+- no secret-value/Lua errors occur.
 
 ## Do Not Reopen Without New Evidence
 
 - **B.1:** complete.
-- **Resource secret path:** D-012 + D-008.
-- **No Lua scaling:** native curve handles 0–100 conversion.
-- **No resource bar:** percentage-only default.
-- **Secondary resources:** outside initial B.2.
-- **Deployment:** full deploy block required.
+- **B.2:** complete.
+- **Player resource:** current-character primary-resource path proven.
+- **Target disclosure:** D-003 is authoritative.
+- **Target health/power:** secret-capable.
+- **Actions:** Phase C.
+- **Deployment:** full deploy block required for runtime-code tests.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/decisions/D-012_RESOURCE_PRESENTATION_CONTRACT.md`
-- `docs/memory/investigations/B2_RESOURCE_PRESENTATION.md`
+- `docs/memory/evidence/B2_RESOURCE_PRESENTATION_RUNTIME_PROOF_2026-10-01.md`
+- `docs/memory/investigations/B3_TARGET_PRESENTATION.md`
+- `docs/memory/decisions/D-003_ENEMY_INFORMATION_DISCLOSURE.md`
 - `docs/memory/decisions/D-008_SECRET_SAFE_HEALTH_AND_RESOURCE_PATH.md`
 - `docs/memory/architecture/HUD.md`
-- `Logres/HUD/HUD.lua`
-- `tools/check_hud_contract.py`
+- `docs/memory/evidence/I001_RUNTIME_PASS_02_2026-09-30.md`

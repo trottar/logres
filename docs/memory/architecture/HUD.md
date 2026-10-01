@@ -233,3 +233,29 @@ Resource events:
 The initial readout is lower-center text only.
 
 No resource bar and no percentage-based Lua threshold styling are introduced.
+## B.2 final result
+
+B.2 primary-resource percentage is production-proven on P0021.
+
+Verified:
+- secret-safe percentage rendering;
+- responsive resource updates;
+- immersion hide/restore;
+- no conventional resource bar.
+
+Current-character primary-resource behavior is proven. Broader class/form coverage remains conditional on future natural test opportunities.
+
+## B.3 entry
+
+Next HUD subdomain:
+**target presentation**
+
+D-003 remains authoritative:
+- target name;
+- health percentage;
+- optional resource percentage;
+- no default numeric level;
+- no explicit elite/rare disclosure;
+- no portrait-heavy conventional target frame.
+
+Target health/power remain secret-capable and must use native safe display paths.

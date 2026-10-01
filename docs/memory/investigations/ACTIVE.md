@@ -1,11 +1,14 @@
 # Active Investigations
 
-## B.2 — Resource Presentation
+## B.3 — Target Presentation
 
 Status:
-**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+**ACTIVE**
 
 Canonical record:
-`B2_RESOURCE_PRESENTATION.md`
+`B3_TARGET_PRESENTATION.md`
 
-P0021 implements the source-resolved secret-safe primary-resource percentage.
+Goal:
+sparse target name + health percentage while preserving deliberate information withholding.
+
+Source/design confirmation is next before runtime implementation.

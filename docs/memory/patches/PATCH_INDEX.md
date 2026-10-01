@@ -22,6 +22,7 @@
 | P0018 | 2026-09-30 | INSTALLED / PUSHED | B.1 production HUD root + secret-safe health vignette (`fa342ad`) |
 | P0019 | 2026-09-30 | INSTALLED / PUSHED | Record P0018 visual failure; strengthen vignette + add preview (`5ae500d`) |
 | P0020 | 2026-10-01 | INSTALLED / PUSHED | Record B.1 production proof; close B.1 and open B.2 (`893ab6c`) |
-| P0021 | 2026-10-01 | PREPARED | B.2 secret-safe primary resource percentage |
+| P0021 | 2026-10-01 | INSTALLED / PUSHED | B.2 secret-safe primary resource percentage (`66b27a3`) |
+| P0022 | 2026-10-01 | PREPARED | Record B.2 runtime proof; close B.2 and open B.3 target presentation |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

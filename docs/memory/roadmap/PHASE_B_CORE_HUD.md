@@ -84,7 +84,7 @@ Success:
 
 ## B.2 — Resource presentation
 
-**Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
+**Status: COMPLETE.**
 
 Goal:
 add compact player resource percentage near the character/center HUD language.
@@ -107,6 +107,8 @@ Do not add a conventional resource bar unless later accessibility work explicitl
 - no secondary-resource modeling yet.
 
 ## B.3 — Target presentation
+
+**Status: ACTIVE.**
 
 Default target information:
 - name;
