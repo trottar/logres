@@ -109,3 +109,19 @@ Failure restores/preserves Blizzard unit-frame presentation and interaction.
 
 No unit domain is considered replaced merely because its health/name data is
 available to Logres.
+
+## P0053 implementation binding
+
+P0053 binds the Player portion of D-026 to
+`Immersion/PlayerFrameReplacement.lua`.
+
+ImmersionController owns desired state.
+
+PlayerFrameReplacement owns:
+- secure Logres player interaction;
+- selective Player shell snapshots;
+- stock mouse suppression;
+- combat deferral;
+- exact restoration.
+
+Target and Party remain capability-gated.

@@ -107,3 +107,13 @@ Required atomic pieces:
 
 Target and Party remain gated behind their own interaction/context
 requirements.
+
+## P0053 Player selective replacement
+
+The Player unit-frame replacement is not whole-frame ownership.
+
+Logres suppresses only the conventional container/main content while preserving
+the Blizzard parent and direct resource/pet children.
+
+A secure Logres player button over the visible resource affordance replaces the
+stock PlayerFrame target/menu click path while suppression is active.

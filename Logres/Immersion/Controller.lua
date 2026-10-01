@@ -15,6 +15,10 @@ local ImmersionController =
             self.lastQuietResult =
                 "not-yet-requested"
             self.lastQuietError = nil
+
+            self.lastPlayerResult =
+                "not-yet-requested"
+            self.lastPlayerError = nil
         end,
 
         OnEnable = function(self)
@@ -46,6 +50,38 @@ local ImmersionController =
         end,
 
         OnDisable = function(self)
+            local playerReplacement =
+                Logres:GetModule(
+                    "PlayerFrameReplacement"
+                )
+            local playerRestored, playerResult =
+                playerReplacement:RequestEnabled(
+                    false,
+                    "controller-disable"
+                )
+
+            self.lastPlayerResult =
+                playerResult or "unknown"
+            self.lastPlayerError = nil
+
+            if (
+                not playerRestored
+                and playerResult ~= "deferred"
+            ) then
+                local playerDebug =
+                    playerReplacement:GetDebugStatus()
+
+                self.lastPlayerError =
+                    playerDebug.lastError
+                    or "unknown PlayerFrame restore failure"
+
+                Logres:DevPrint(
+                    "ImmersionController PlayerFrame "
+                    .. "fail-open restore failed: "
+                    .. tostring(self.lastPlayerError)
+                )
+            end
+
             local quietMode =
                 Logres:GetModule("QuietMode")
             local quietRestored, quietResult =
@@ -133,7 +169,8 @@ function ImmersionController:BuildPolicy()
             immersionEnabled
             and state.context == "world",
 
-        playerFrameSuppressionDesired = false,
+        playerFrameSuppressionDesired =
+            immersionEnabled,
         targetFrameSuppressionDesired = false,
         partyFrameSuppressionDesired = false,
 
@@ -244,6 +281,65 @@ function ImmersionController:ReconcileQuietMode(
     end
 end
 
+function ImmersionController:ReconcilePlayerFrame(
+    policy,
+    reason
+)
+    local playerReplacement =
+        Logres:GetModule(
+            "PlayerFrameReplacement"
+        )
+    local playerDebug =
+        playerReplacement:GetDebugStatus()
+    local desired =
+        policy.playerFrameSuppressionDesired
+
+    local alreadyRequested =
+        playerDebug.requestedEnabled == desired
+
+    local appliedOrPending =
+        playerDebug.appliedEnabled == desired
+        or playerDebug.pending == true
+
+    if alreadyRequested and appliedOrPending then
+        if playerDebug.pending then
+            self.lastPlayerResult =
+                "pending-existing"
+        else
+            self.lastPlayerResult =
+                "already-applied"
+        end
+
+        self.lastPlayerError = nil
+        return
+    end
+
+    local applied, result =
+        playerReplacement:RequestEnabled(
+            desired,
+            reason
+        )
+
+    self.lastPlayerResult =
+        result or "unknown"
+    self.lastPlayerError = nil
+
+    if not applied and result ~= "deferred" then
+        playerDebug =
+            playerReplacement:GetDebugStatus()
+
+        self.lastPlayerError =
+            playerDebug.lastError
+            or "unknown PlayerFrame replacement failure"
+
+        Logres:DevPrint(
+            "ImmersionController PlayerFrame "
+            .. "reconcile failed: "
+            .. tostring(self.lastPlayerError)
+        )
+    end
+end
+
 function ImmersionController:Reconcile(reason)
     local policy =
         self:BuildPolicy()
@@ -254,6 +350,10 @@ function ImmersionController:Reconcile(reason)
 
     self:ReconcileActionReplacement(policy)
     self:ReconcileQuietMode(
+        policy,
+        self.lastReconcileReason
+    )
+    self:ReconcilePlayerFrame(
         policy,
         self.lastReconcileReason
     )
@@ -274,6 +374,13 @@ function ImmersionController:GetDebugStatus()
         Logres:GetModule("QuietMode")
     local quietDebug =
         quietMode:GetDebugStatus()
+
+    local playerReplacement =
+        Logres:GetModule(
+            "PlayerFrameReplacement"
+        )
+    local playerDebug =
+        playerReplacement:GetDebugStatus()
 
     return {
         moduleEnabled = self:IsEnabled(),
@@ -315,6 +422,16 @@ function ImmersionController:GetDebugStatus()
 
         playerFrameSuppressionDesired =
             policy.playerFrameSuppressionDesired,
+        playerFrameSuppressionImplemented = true,
+        playerFrameSuppressionRequested =
+            playerDebug.requestedEnabled == true,
+        playerFrameSuppressionApplied =
+            playerDebug.appliedEnabled == true,
+        playerFrameSuppressionPending =
+            playerDebug.pending == true,
+        playerFrameSuppressionError =
+            playerDebug.lastError,
+
         targetFrameSuppressionDesired =
             policy.targetFrameSuppressionDesired,
         partyFrameSuppressionDesired =
@@ -335,5 +452,10 @@ function ImmersionController:GetDebugStatus()
             self.lastQuietResult,
         lastQuietError =
             self.lastQuietError,
+
+        lastPlayerResult =
+            self.lastPlayerResult,
+        lastPlayerError =
+            self.lastPlayerError,
     }
 end

@@ -2,23 +2,23 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0051 is verified pushed at `d25430f`.
+P0052 is verified pushed at `f5bda1e`.
 
-D.4 source/design review is complete.
+Current work:
+**D.4 Player secure interaction + selective PlayerFrame shell suppression**
 
-D-026 is canonical.
+P0053 target:
+`0.0.23-dev`
 
-Current runtime implementation target:
-**secure Logres player interaction + selective PlayerFrame shell suppression**
+Adds:
+- `PlayerFrameReplacement`;
+- secure player target/menu interaction;
+- selective PlayerFrame shell suppression;
+- combat deferral/restoration;
+- Player Frame Check.
 
-Only suppress:
-- PlayerFrameContainer;
-- PlayerFrameContentMain.
+Does not suppress Target or Party.
 
-Preserve alternate/class/rune/totem/pet children.
-
-Do not suppress Target or Party yet.
-
-P0052 is documentation/source-evidence only; no WoW redeploy required.
+P0053 changes runtime code; full deploy block is mandatory.
 
 User performs all commits/pushes.

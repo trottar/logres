@@ -1,6 +1,6 @@
 # D.4 — Player Shell Runtime Proof
 
-Status: IMPLEMENTATION NEXT
+Status: P0053 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT
 Opened: 2026-10-01
 
 ## Goal
@@ -69,3 +69,21 @@ Immersion OFF:
 - disables/hides the Logres secure player interaction as appropriate.
 
 Environmental child-resource paths may be deferred if unavailable naturally.
+
+## P0053 implementation
+
+Runtime version:
+`0.0.23-dev`
+
+Adds:
+- secure player target/menu interaction over the Logres resource affordance;
+- PlayerFrameContainer selective alpha suppression;
+- PlayerFrameContentMain selective alpha suppression;
+- stock PlayerFrame mouse removal;
+- exact restoration;
+- combat deferral;
+- Player Frame Check diagnostics.
+
+Target and Party remain untouched.
+
+Runtime proof is next.

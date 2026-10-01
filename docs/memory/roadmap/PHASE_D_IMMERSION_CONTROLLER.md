@@ -138,7 +138,7 @@ D.3 closes.
 
 ## D.4 — Unit-frame interaction + selective suppression
 
-**Status: SOURCE-RESOLVED; PLAYER SHELL IMPLEMENTATION NEXT.**
+**Status: P0053 PLAYER SHELL IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
 
 Before suppression, complete the missing capability.
 
@@ -192,6 +192,25 @@ Party:
 
 First runtime implementation:
 **Player secure interaction + selective shell suppression.**
+
+### D.4 P0053 Player shell implementation
+
+Version `0.0.23-dev`.
+
+Implements the first D-026 unit-frame replacement:
+- secure Logres player target/menu interaction;
+- selective PlayerFrameContainer suppression;
+- selective PlayerFrameContentMain suppression;
+- stock PlayerFrame mouse suppression;
+- exact restoration and combat deferral.
+
+Does not suppress:
+- whole PlayerFrame;
+- TargetFrame;
+- Party/CompactPartyFrame;
+- alternate/class/rune/totem/pet direct children.
+
+Runtime proof is next.
 
 ## D.5 — Context / PvP / instance orchestration
 

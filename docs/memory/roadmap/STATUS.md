@@ -10,7 +10,7 @@ Active work item:
 **D.4 Player secure interaction + selective PlayerFrame shell suppression**
 
 State:
-**SOURCE-RESOLVED; IMPLEMENTATION NEXT**
+**P0053 IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
 
 ## Phase status
 
@@ -26,12 +26,12 @@ State:
 | G — Cinematic Camera | QUEUED |
 | H — Integration and Polish | QUEUED |
 
-## D.4 source result
+## D.4
 
-| Domain | Decision |
+| Domain | State |
 | --- | --- |
-| Player | First supported selective runtime target |
-| Target | Deferred until secure interaction + aura/marker policy proof |
-| Party | Deferred until normal + compact interaction/context coverage |
+| Player selective shell | P0053 prepared |
+| Target selective suppression | capability-gated |
+| Party / compact party | deferred |
 
-Player first-pass suppression is shell-only, not whole-frame hiding.
+Whole PlayerFrame suppression remains rejected.
