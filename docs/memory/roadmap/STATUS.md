@@ -9,6 +9,9 @@ As of 2026-09-30.
 Active work item:
 **B.1 HUD root + player health vignette**
 
+State:
+**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
+
 ## Phase status
 
 | Phase | State |
@@ -18,31 +21,22 @@ Active work item:
 | B — Core HUD | ACTIVE — B.1 |
 | C — Action Interface | BLOCKED on Phase B |
 | D — Immersion Controller | BLOCKED on core HUD/state consumers |
-| E — Compass and Navigation | QUEUED after core integration dependencies |
+| E — Compass and Navigation | QUEUED |
 | F — Quest Experience | QUEUED |
 | G — Cinematic Camera | QUEUED; requires current DynamicCam profile |
 | H — Integration and Polish | BLOCKED on prior phases |
 
-## Phase A final result
+## B.1 implementation
 
-Covered:
-- load/reload/persistence;
-- world/instance/combat;
-- real PvP flag transition;
-- resting/taxi/interaction;
-- state contract;
-- preference contract/persistence;
-- module lifecycle.
-
-Environmental deferral retained:
-- ordinary mounted=true.
-
-## Phase B entry
-
-B.1 begins with:
-- real HUD module;
+P0018 adds:
+- production HUD module;
 - HUD root;
-- production secret-safe player health vignette;
-- immersion preference integration.
+- four native secret-safe health-vignette curves;
+- 16 procedural edge textures;
+- player health event refresh;
+- immersion preference integration;
+- HUD structural diagnostic/static check.
 
-No action-cluster implementation belongs in B.1.
+Runtime proof is next.
+
+No action-cluster work is included.

@@ -1,6 +1,6 @@
 # Phase B — Core HUD
 
-Status: ACTIVE  
+Status: ACTIVE
 Opened: 2026-09-30
 
 ## Purpose
@@ -31,7 +31,7 @@ Canonical decisions:
 
 ## B.1 — HUD root + player health vignette
 
-**Status: ACTIVE.**
+**Status: IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT.**
 
 Goal:
 establish the first real presentation module and prove the production secret-safe health transport in Logres itself.
@@ -46,6 +46,17 @@ Work:
 - define frame strata/level/anchors without blocking later HUD elements;
 - subscribe through state/preferences only where needed;
 - hide/suspend cleanly when `immersionEnabled=false`.
+
+### P0018 implementation
+
+- real `HUD` lifecycle module;
+- full-screen HUD root;
+- four curve-driven edge bands;
+- 16 native procedural textures;
+- `UNIT_HEALTH` / `UNIT_MAXHEALTH` player refresh;
+- `immersionEnabled` presentation gating;
+- `/logres hudcheck`;
+- static checker preventing obvious secret-health boundary regressions.
 
 Initial visual target:
 - healthy: effectively absent;

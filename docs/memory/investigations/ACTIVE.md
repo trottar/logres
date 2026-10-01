@@ -1,25 +1,15 @@
 # Active Investigations
 
-No standalone technical investigation is currently active.
-
-## Recently completed
-
-### A.2 — Additional Context Sensors
+## B.1 — HUD Root + Player Health Vignette
 
 Status:
-**COMPLETE WITH ENVIRONMENTAL DEFERRAL**
-
-Verified:
-- resting transition;
-- taxi transition;
-- interaction transition;
-- taxi/mount separation in taxi context.
-
-Deferred:
-- ordinary mounted=true path because the current beta test environment cannot provide a usable mount test.
+**IMPLEMENTATION PREPARED; RUNTIME PROOF NEXT**
 
 Canonical record:
-`A2_CONTEXT_SENSORS.md`
+`B1_HEALTH_VIGNETTE.md`
 
-Next project work item:
-**A.3 — User-Controlled State**
+P0018 moves the I-001 secret-safe health transport into the real HUD module.
+
+Runtime proof is intentionally limited to ordinary safe damage/healing plus immersion off/on.
+
+No near-death test is required.

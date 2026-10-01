@@ -18,6 +18,7 @@ python3 tools/check_addon_structure.py
 python3 tools/check_state_contract.py
 python3 tools/check_preference_contract.py
 python3 tools/check_module_contract.py
+python3 tools/check_hud_contract.py
 ```
 
 Deploy the development addon to a Forever AddOns directory:
@@ -35,6 +36,7 @@ Then in game:
 /logres sensorcheck
 /logres preferencecheck
 /logres lifecyclecheck
+/logres hudcheck
 /logres immersion
 ```
 

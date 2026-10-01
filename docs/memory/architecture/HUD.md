@@ -1,6 +1,6 @@
 # HUD Architecture
 
-Status: PHASE B ACTIVE
+Status: PHASE B / B.1 IMPLEMENTATION PREPARED
 
 ## Intent
 
@@ -31,47 +31,115 @@ Player and target health/power percentages are secret-capable.
 The HUD must not:
 - perform ordinary Lua arithmetic on them;
 - compare them in `if` threshold logic;
-- convert them to ordinary numbers;
+- stringify/log them;
+- convert them to ordinary values;
 - persist them.
 
 Player health vignette uses the D-008 native path:
 - `UnitHealthPercent`;
-- native curve transformation;
-- secret-capable status/texture properties.
+- native `CurveObject`;
+- secret-capable `Texture:SetAlpha`.
 
-Resource uses:
-- `UnitPowerPercent`;
-- secret-safe formatting;
-- `FontString:SetText`.
+## B.1 module boundary
 
-## Module boundary
+P0018 introduces the real:
 
-Phase B will introduce a real `HUD` module through the D-011 lifecycle.
+```text
+HUD
+```
+
+module through D-011.
 
 The HUD module owns:
-- its frames/textures/font strings;
-- state/preference subscriptions;
+- `LogresHUDRoot`;
+- vignette curve objects;
+- 16 edge textures;
+- player health event registration;
+- preference subscription;
 - cleanup on disable.
 
 It does not own:
-- global context detection;
+- global state detection;
 - secure action buttons;
 - compass;
 - quest presentation;
 - camera behavior.
 
-## B.1 first implementation
+## Initial native layer model
 
-Start with:
-**HUD root + player health vignette**
+B.1 deliberately uses native/procedural solid textures before art-asset polish.
 
-Architecture before polish:
-1. real HUD module;
-2. screen-edge layer ownership;
-3. secret-safe health transport;
-4. immersion preference integration;
-5. runtime proof;
-6. visual tuning after the transport is proven in production code.
+Four edge bands encode the product danger progression:
+
+| Layer | Health range encoded by native curve | Role |
+| --- | --- | --- |
+| outerDark | begins below ~70% | faint/dark edge pressure |
+| injuryRed | begins below ~50% | red injury pressure |
+| criticalPressure | begins below ~30% | wider inward pressure |
+| nearDeathTunnel | begins below ~15% | deepest/widest tunnel pressure |
+
+The Lua code does not ask which range applies.
+
+Each curve maps the secret health percentage directly to an alpha value inside the native UI system.
+
+The resulting secret alpha is forwarded directly to each texture's `SetAlpha`.
+
+The widths/insets/colors are provisional visual tuning values. The secret-safe transport and ownership boundary are the durable architecture.
+
+## Immersion preference
+
+The HUD module remains lifecycle-enabled while `immersionEnabled=false`, but hides its presentation root.
+
+This keeps:
+- module lifecycle;
+- user choice;
+- observed game state
+
+as separate concepts.
+
+When immersion becomes enabled again, the HUD root is shown and the vignette refreshes from current health.
+
+## Player health events
+
+B.1 listens only to player:
+- `UNIT_HEALTH`;
+- `UNIT_MAXHEALTH`.
+
+No health value is persisted.
+
+## Development validation
+
+`/logres hudcheck` verifies only ordinary structural facts:
+- module initialized/enabled;
+- four bands;
+- sixteen textures;
+- curves created;
+- root visibility matches `immersionEnabled`.
+
+It deliberately does not inspect the secret health-derived alpha.
+
+## Runtime visual proof
+
+The production proof should cover:
+- healthy state: vignette effectively absent;
+- ordinary injury: edges become visible;
+- additional safe injury: stronger/wider pressure is observable;
+- immersion off: presentation hides;
+- immersion on: current injury presentation returns;
+- healing: vignette reduces/disappears;
+- no secret-value/Lua errors.
+
+Do not deliberately push the character to near death solely to validate B.1.
+
+## Deferred visual work
+
+Not required to prove B.1 architecture:
+- custom vignette artwork/masks;
+- near-death pulse;
+- accessibility alternate health mode;
+- final color/width tuning.
+
+These may iterate after production transport is proven.
 
 ## Enemy disclosure
 

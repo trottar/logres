@@ -326,6 +326,47 @@ local function runLifecycleCheck()
     ))
 end
 
+
+local function runHUDCheck()
+    local status = Logres:GetModuleStatus("HUD")
+    local hud = Logres:GetModule("HUD")
+    local debugStatus = hud:GetDebugStatus()
+
+    local visibilityMatchesPreference =
+        debugStatus.rootShown == debugStatus.immersionEnabled
+
+    local passed =
+        status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and debugStatus.bandCount == 4
+        and debugStatus.textureCount == 16
+        and debugStatus.curvesReady == true
+        and visibilityMatchesPreference
+
+    if passed then
+        print(string.format(
+            "Logres hudcheck: PASS (bands=4 textures=16 curves=true immersion=%s visible=%s)",
+            boolText(debugStatus.immersionEnabled),
+            boolText(debugStatus.rootShown)
+        ))
+        return
+    end
+
+    print(string.format(
+        "Logres hudcheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s bands=%s textures=%s curves=%s immersion=%s visible=%s visibilityMatches=%s)",
+        tostring(status.initialized),
+        tostring(status.enabled),
+        tostring(debugStatus.moduleEnabled),
+        tostring(debugStatus.bandCount),
+        tostring(debugStatus.textureCount),
+        tostring(debugStatus.curvesReady),
+        tostring(debugStatus.immersionEnabled),
+        tostring(debugStatus.rootShown),
+        tostring(visibilityMatchesPreference)
+    ))
+end
+
 local function handleImmersion(argument)
     if argument == "" or argument == "status" then
         printPreferences()
@@ -366,6 +407,7 @@ local function printHelp()
     print("  /logres sensorcheck")
     print("  /logres preferencecheck")
     print("  /logres lifecyclecheck")
+    print("  /logres hudcheck")
     print("  /logres immersion [on|off|toggle]")
     print("  /logres debug on")
     print("  /logres debug off")
@@ -397,6 +439,11 @@ SlashCmdList.LOGRES = function(message)
 
     if command == "lifecyclecheck" then
         runLifecycleCheck()
+        return
+    end
+
+    if command == "hudcheck" then
+        runHUDCheck()
         return
     end
 

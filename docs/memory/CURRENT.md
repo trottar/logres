@@ -14,86 +14,96 @@ project: logres
 
 **B.1 — HUD root + player health vignette.**
 
-The first Phase B patch should create the real HUD module and move the already-proven secret-safe player-health transport into production Logres code.
+P0018 prepares the first real HUD module.
 
-Required architecture:
-- register a `HUD` module through D-011;
-- own HUD frames/textures through that module;
-- use D-008 secret-safe health flow;
-- avoid Lua arithmetic/comparison on health;
-- integrate `immersionEnabled` without adding user preference to observed State;
-- no conventional player health bar/numbers;
-- no action clusters yet.
+Implementation:
+- `HUD` module via D-011;
+- `LogresHUDRoot`;
+- four native curve-driven edge bands;
+- 16 procedural textures;
+- secret health transported directly from `UnitHealthPercent(..., curve)` to `Texture:SetAlpha`;
+- player health event refresh;
+- `immersionEnabled` visibility integration;
+- `/logres hudcheck`;
+- static secret-boundary checker.
+
+No conventional health bar or numeric player health is added.
 
 ## Verified State
 
-- Phase 0 — Foundation complete.
-- Phase A — Core State Engine complete.
-- A.1 observed-state contract runtime proven.
-- A.2 context sensors runtime proven, with ordinary mounted=true deferred by environment.
-- A.3 preference contract/persistence runtime proven.
-- A.4 module lifecycle runtime proven after P0015 diagnostic fix.
-- A.5 real PvP flag transition runtime proven.
-- integrated Phase A evidence matrix is complete.
-- P0016 Phase A.5 activation pushed at `7296d1f`.
-- current runtime version remains `0.0.6-dev`.
-- D-008 proves the required secret-safe health-vignette transport in Forever.
-- Phase B is now active.
+- Phase 0 complete.
+- Phase A complete.
+- P0017 Phase A closure pushed at `840b40f`.
+- D-008 runtime evidence proves custom curves + secret texture alpha work on Forever.
+- current public API documentation still shows `UnitHealthPercent(unit, usePredicted, curve)` and `C_CurveUtil.CreateCurve()` on Forever 1.60.1.
+- P0018 source/static validation is prepared but production HUD runtime proof is pending.
 
 ## Next Action
 
-Prepare B.1 implementation.
+Install/review/commit/push P0018.
 
-Before coding:
-1. use D-002 and D-008 as hard constraints;
-2. define the HUD module/frame ownership boundary;
-3. choose the smallest production version of the edge vignette that proves the secret-safe transport;
-4. keep initial art assets procedural/native where practical so architecture can be validated before asset polish;
-5. make immersion off/on testable without travel;
-6. include full deploy commands because B.1 will change runtime addon code.
+Because runtime addon code changes, explicitly deploy:
 
-A practical first runtime test should not require deliberately reaching near-death health. It should prove:
-- module loads;
-- healthy state is unobtrusive;
-- taking ordinary damage changes the vignette;
-- healing reduces/removes it;
-- immersion off hides it;
-- immersion on restores behavior;
-- no Lua/secret-value errors occur.
+```bash
+WOW_ROOT="/mnt/c/Program Files (x86)/World of Warcraft"
+ADDONS="$WOW_ROOT/_classic_beta_/Interface/AddOns"
+
+./tools/deploy_logres.sh "$ADDONS"
+```
+
+Then:
+
+```text
+/reload
+/logres status
+/logres statecheck
+/logres preferencecheck
+/logres lifecyclecheck
+/logres hudcheck
+```
+
+Confirm version `0.0.7-dev`.
+
+Visual proof:
+1. at healthy health, vignette should be effectively absent;
+2. take ordinary safe damage until the edge effect becomes visible;
+3. while injured, turn immersion off and confirm it hides;
+4. turn immersion on and confirm current injury effect returns;
+5. heal/eat and confirm the effect recedes/disappears.
+
+Do not intentionally approach near death for this test.
 
 ## Success Criteria
 
 B.1 succeeds when:
-- a real HUD module exists;
-- screen-edge health vignette is production code, not only audit code;
-- health transport uses native secret-safe path;
-- no conventional player health bar/numbers are introduced;
-- immersion preference cleanly disables/enables presentation;
-- lifecycle cleanup is correct;
-- static checks enforce key secret-safe constraints where practical;
-- runtime proof covers ordinary damage/heal behavior without unnecessary risk;
-- failures/visual limitations are durable.
+- `HUD` module loads and `/logres hudcheck` passes;
+- existing state/preference/lifecycle checks remain green;
+- healthy state is unobtrusive;
+- ordinary damage visibly increases edge pressure;
+- healing reduces/removes the effect;
+- immersion off/on cleanly hides/restores presentation;
+- no secret-value/Lua errors occur;
+- no player health numbers/bar are introduced;
+- any visual tuning limitation is recorded separately from transport correctness.
 
 ## Do Not Reopen Without New Evidence
 
 - **Phase A:** complete.
-- **mounted=true:** environmental deferral remains valid.
-- **Observed state:** consume Phase A contract; do not duplicate.
-- **Preferences:** consume D-010 contract.
-- **Lifecycle:** consume D-011 contract.
-- **Health:** D-002 + D-008 are authoritative.
-- **Enemy disclosure:** D-003 remains authoritative.
+- **Health path:** D-008 native secret-safe transport only.
+- **No Lua health thresholds:** thresholds live in native curves.
+- **Player health UI:** vignette, not conventional bar/numbers.
+- **Preferences:** D-010.
+- **Lifecycle:** D-011.
 - **Actions:** Phase C, not B.1.
-- **Deployment:** runtime-code patch instructions must include full deploy block.
+- **Deployment:** full deploy block required for runtime-code tests.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/roadmap/PHASE_B_CORE_HUD.md`
-- `docs/memory/evidence/A5_PHASE_A_TRANSITION_VALIDATION_2026-09-30.md`
+- `docs/memory/investigations/B1_HEALTH_VIGNETTE.md`
 - `docs/memory/decisions/D-002_PLAYER_HEALTH_PRESENTATION.md`
 - `docs/memory/decisions/D-008_SECRET_SAFE_HEALTH_AND_RESOURCE_PATH.md`
-- `docs/memory/decisions/D-003_ENEMY_INFORMATION_DISCLOSURE.md`
 - `docs/memory/architecture/HUD.md`
-- `docs/memory/architecture/SYSTEM.md`
-- `docs/memory/architecture/API_BOUNDARIES.md`
+- `docs/memory/evidence/I001_RUNTIME_PASS_02_2026-09-30.md`
+- `Logres/HUD/HUD.lua`
+- `tools/check_hud_contract.py`

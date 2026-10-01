@@ -2,25 +2,24 @@
 
 Authoritative state: `../CURRENT.md`. Start there.
 
-Phase A is complete.
-
-Final A.5 gap:
-real `pvpFlagged` transition — PASS.
-
 Current phase:
 **Phase B — Core HUD**
 
 Current work:
 **B.1 — HUD root + player health vignette**
 
-Use:
-- D-002 player health presentation;
-- D-008 secret-safe health/resource path;
-- D-011 module lifecycle;
-- D-010 preference contract.
+P0018 is prepared.
 
-The first B.1 runtime patch must include the full deploy block before in-game tests.
+New runtime:
+- `Logres/HUD/HUD.lua`
+- HUD lifecycle module
+- four native health curves
+- 16 edge textures
+- `/logres hudcheck`
 
-No redeploy is required for P0017 because it is documentation/evidence only.
+Important:
+P0018 changes runtime addon code, so deploy explicitly before testing.
+
+Runtime proof should use ordinary safe damage and healing only. Do not require a near-death test.
 
 User performs all commits/pushes.
