@@ -1,6 +1,6 @@
 # C.3 — Secondary / Utility Clusters
 
-Status: ACTIVE
+Status: SOURCE-RESOLVED; IMPLEMENTATION NEXT
 Opened: 2026-10-01
 
 ## Goal
@@ -8,81 +8,79 @@ Opened: 2026-10-01
 Extend the proven secure action architecture into Logres' broader action
 constellation without prematurely suppressing Blizzard's stock bars.
 
-## Product model
+## Source resolution
 
-The action constellation has:
-- Primary Cluster;
-- Secondary/Tertiary Cluster;
-- Utility Cluster(s).
+Canonical evidence:
+`../evidence/C3_SECONDARY_UTILITY_SOURCE_REVIEW_2026-10-01.md`
 
-Primary remains the most legible.
+Canonical decision:
+`../decisions/D-019_SECONDARY_UTILITY_CLUSTER_CONTRACT.md`
 
-Secondary/tertiary:
-- nearby;
-- visually related;
-- subdued outside combat;
-- stronger in PvP;
-- more available in combat.
+## First implementation scope
+
+Secondary:
+- slots `61–72`;
+- `MULTIACTIONBAR1BUTTON1–12`;
+- 3 x 4 left-side cluster.
 
 Utility:
-- peripheral;
-- normally faded or absent;
-- intentionally revealed.
+- slots `49–60`;
+- `MULTIACTIONBAR2BUTTON1–12`;
+- 3 x 4 right-side cluster.
 
-C.3 establishes the secure cluster structure.
+Primary remains:
+- current primary page;
+- 4 x 3 center cluster.
 
-C.4 will own broader contextual visibility policy.
+## Reuse boundary
 
-## Proven base from C.2
+Extract a shared secure button/presentation primitive.
 
-Reuse:
-- SecureActionButtonTemplate;
-- secure action attributes;
-- action presentation APIs;
-- secret-safe cooldown/count paths;
-- native action-button registration;
-- combat-lockdown defer rules;
-- developer-panel diagnostics.
+Do not rewrite Primary's proven paging/binding orchestration wholesale in the
+same patch.
 
-Do not fork a second action-button implementation unless evidence requires it.
+## Key-routing safety
 
-## Initial C.3 design questions
+Default:
+- new cluster routing OFF.
 
-1. Which action-slot domains should map to Secondary and Utility?
-2. How should stock multi-bar/action-page semantics map into stable Logres groups?
-3. Which clusters can be built as static secure buttons with presentation-only
-   fading?
-4. Which visibility changes require secure drivers because they must happen in
-   combat?
-5. What geometry leaves adequate space for the Phase B HUD?
-6. How should the existing primary cluster be refactored so all clusters share
-   reusable button/presentation code?
-7. How should Action Keys routing expand without stealing unrelated bindings?
-8. Which stock bars must remain visible until all corresponding Logres actions
-   are proven?
+Developer panel:
+- Secondary Keys ON/OFF;
+- Utility Keys ON/OFF.
 
-## Architecture direction
+Both domains must be mouse-tested and keyboard-tested.
 
-Prefer shared action-button primitives:
-- one secure button construction path;
-- cluster-specific slot mapping;
-- common presentation update functions;
-- common diagnostics.
+## Visibility
 
-Avoid copying `Primary.lua` wholesale for every cluster.
+Only static visual weighting in C.3.
 
-## Suppression
+C.4 owns contextual visibility/security policy.
 
-No new stock-bar suppression in the initial C.3 implementation.
+## Stock UI
 
-D-017 remains authoritative.
+All Blizzard action bars remain visible in C.3.
 
-## C.3 exit
+## Runtime proof requirements
 
-C.3 completes when:
-- secondary/utility secure clusters exist;
-- their slot/binding semantics are proven;
-- mouse/key execution is reliable;
-- they coexist with Phase B HUD and Primary Cluster;
-- no critical input path is taken over before proof;
-- stock bars remain available.
+1. Secondary shows the expected stock Action Bar 2 actions.
+2. Utility shows the expected stock Action Bar 3 actions.
+3. mouse execution works on each cluster.
+4. existing binding labels appear when present.
+5. explicit Secondary Keys ON makes those existing keys execute via Logres.
+6. Secondary Keys OFF releases routing.
+7. explicit Utility Keys ON/OFF behaves equivalently.
+8. cooldown/count/range/usability presentation works.
+9. Primary remains regression-free.
+10. ordinary combat execution works.
+11. no protected/taint/Lua/secret errors occur.
+12. layout coexists with Phase B HUD.
+13. stock Blizzard bars remain present.
+
+If the user's current Forever binding domain differs from the source mapping,
+record the mismatch as runtime evidence and correct the contract rather than
+forcing the current-source assumption.
+
+## Exit
+
+C.3 completes when both new fixed-slot domains are runtime-proven and Primary
+remains intact.

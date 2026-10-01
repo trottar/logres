@@ -3,11 +3,13 @@
 ## C.3 — Secondary / Utility Clusters
 
 Status:
-**ACTIVE**
+**SOURCE-RESOLVED; IMPLEMENTATION NEXT**
 
 Canonical:
 `C3_SECONDARY_UTILITY_CLUSTERS.md`
 
+Contract:
+`../decisions/D-019_SECONDARY_UTILITY_CLUSTER_CONTRACT.md`
+
 Next:
-design/source-resolve reusable secure cluster architecture and secondary/utility
-slot/binding mapping before writing C.3 runtime code.
+implement the two fixed-slot clusters while preserving Primary and stock bars.

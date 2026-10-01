@@ -2,23 +2,23 @@
 
 Authoritative state: `../CURRENT.md`.
 
-C.2 is complete.
-
-P0033 runtime proved both mouse and keyboard secure action execution.
-
 Current phase:
 **Phase C — Action Interface**
 
 Current work:
 **C.3 — Secondary / Utility Clusters**
 
-Before implementation:
-resolve slot domains, shared cluster abstraction, binding domains, and layout.
+P0035 source-resolves C.3.
 
-Known visual debt:
-cast/channel cues still appear but their distinct colors became imperceptible
-during P0033. Do not silently mark this fixed.
+Implementation target:
+- Secondary slots 61–72;
+- Utility slots 49–60;
+- fixed 3 x 4 side clusters;
+- shared secure presentation primitive;
+- separate fail-open key-routing controls;
+- Primary orchestration preserved;
+- stock Blizzard bars visible.
 
-P0034 is documentation/evidence only; no WoW redeploy required.
+P0035 is documentation/source-evidence only; no WoW redeploy required.
 
 User performs all commits/pushes.

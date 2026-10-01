@@ -97,7 +97,7 @@ Known non-blocking debt:
 
 ## C.3 — Secondary / utility clusters
 
-**Status: ACTIVE.**
+**Status: SOURCE-RESOLVED; IMPLEMENTATION NEXT.**
 
 Add:
 - secondary/tertiary actions;
@@ -105,6 +105,18 @@ Add:
 - initial context visibility policy.
 
 PvP is a modifier, not a separate monolithic mode.
+
+### C.3 source resolution
+
+First implementation:
+- Secondary = slots 61–72 / MULTIACTIONBAR1BUTTON1–12;
+- Utility = slots 49–60 / MULTIACTIONBAR2BUTTON1–12;
+- 3 x 4 side clusters around the 4 x 3 Primary cluster;
+- shared secure presentation primitive;
+- independent fail-open key routing;
+- no stock-bar suppression.
+
+Bars 4–8 remain outside the first C.3 proof.
 
 ## C.4 — Contextual visibility
 

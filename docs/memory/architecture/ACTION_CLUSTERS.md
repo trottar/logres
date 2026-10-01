@@ -201,3 +201,32 @@ reusable cluster primitives rather than cloning the primary module.
 Contextual visibility policy remains primarily C.4 work.
 
 Stock Blizzard bars remain visible during C.3 proof.
+## C.3 source resolution
+
+D-019 selects the first persistent extra-action domains:
+
+Secondary:
+- slots 61–72;
+- MULTIACTIONBAR1BUTTON1–12.
+
+Utility:
+- slots 49–60;
+- MULTIACTIONBAR2BUTTON1–12.
+
+These are fixed-slot clusters, so unlike Primary they do not need page
+remapping.
+
+Initial geometry:
+
+```text
+Secondary      Primary       Utility
+   3 x 4         4 x 3         3 x 4
+```
+
+C.3 extracts common secure button/presentation construction but deliberately
+does not replace all proven Primary orchestration in one step.
+
+C.4 remains the owner of state-driven cluster visibility.
+
+Bars 4–8 remain stock-only after the first C.3 implementation and therefore
+cannot be suppressed.

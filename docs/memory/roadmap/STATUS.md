@@ -9,6 +9,9 @@ As of 2026-10-01.
 Active work item:
 **C.3 Secondary / Utility Clusters**
 
+State:
+**SOURCE-RESOLVED; IMPLEMENTATION NEXT**
+
 ## Phase status
 
 | Phase | State |
@@ -29,18 +32,19 @@ Active work item:
 | --- | --- |
 | C.1 Secure action capability/source review | COMPLETE |
 | C.2 Primary action cluster | COMPLETE |
-| C.3 Secondary / utility clusters | ACTIVE |
+| C.3 Secondary / utility clusters | ACTIVE — source-resolved |
 | C.4 Contextual visibility / secure paging | QUEUED |
 | C.5 Stock action-bar replacement | QUEUED |
 | C.6 Action interface integration validation | QUEUED |
 
-## C.2 final result
+## C.3 contract
 
-P0033:
-- mouse execution PASS;
-- keyboard execution PASS;
-- range presentation PASS.
+Secondary:
+- slots 61–72;
+- MULTIACTIONBAR1BUTTON1–12.
 
-Known debt:
-- combat-time page remap defers;
-- cast/channel cue colors currently imperceptible though cues still appear.
+Utility:
+- slots 49–60;
+- MULTIACTIONBAR2BUTTON1–12.
+
+Initial implementation keeps all stock action bars visible.
