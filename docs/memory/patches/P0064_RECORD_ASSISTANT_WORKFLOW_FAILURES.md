@@ -1,7 +1,7 @@
 # P0064 — Record Assistant Delivery Workflow Failures
 
 Date: 2026-10-01
-Result: PREPARED — DOCS-ONLY MEMORY CHECKPOINT
+Result: INSTALLED / PUSHED (`770f9f30`)
 
 ## Baseline
 
@@ -55,7 +55,7 @@ No WoW redeploy is required.
 
 ## Next
 
-After P0064 is pushed, verify the pushed commit on `main`.
+P0064 is verified pushed at `770f9f30`.
 
-Only then resume D.6 closure from the already-reported successful P0063 runtime
+Resume D.6 closure from the already-reported successful P0063 runtime
 validation. Do not ask the user to repeat that validation without new evidence.

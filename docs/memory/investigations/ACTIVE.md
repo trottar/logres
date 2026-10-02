@@ -1,15 +1,16 @@
 # Active Investigations
 
-## D.6 — Restoration / integration validation
+## E.1 — Compass/navigation source review
 
 Status:
 **ACTIVE**
 
 Canonical:
-`D6_RESTORATION_INTEGRATION_VALIDATION.md`
+`E1_COMPASS_NAVIGATION_SOURCE_REVIEW.md`
 
 Next:
-runtime-validate P0063 integrated Restoration Check and D.6 recovery cycle.
+resolve the production compass/navigation capability contract before runtime
+implementation.
 
 ## Tracked non-blocking defects / deferred domains
 

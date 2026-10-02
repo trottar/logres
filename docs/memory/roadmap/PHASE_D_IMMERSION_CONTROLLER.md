@@ -1,6 +1,6 @@
 # Phase D — Immersion Controller
 
-Status: ACTIVE
+Status: COMPLETE
 
 ## Objective
 
@@ -383,7 +383,7 @@ D.5 closes.
 
 ## D.6 — Restoration / integration validation
 
-**Status: ACTIVE.**
+**Status: COMPLETE.**
 
 Validate:
 - immersion ON;
@@ -462,6 +462,20 @@ It also folds in the stale PlayerFrame checker repair surfaced during P0062
 delivery; no standalone repair phase is introduced.
 
 Runtime proof is next.
+
+### D.6 final runtime result
+
+P0063 is verified pushed at `20b1bf55` on `0.0.27-dev`.
+
+The user confirmed the requested P0063 runtime validation was completed
+successfully and the panel/runtime behavior was correct.
+
+No verbatim diagnostic output was supplied; the durable evidence does not
+invent exact check lines.
+
+D.6 closes.
+
+Phase D closes.
 
 ## Phase D exit
 

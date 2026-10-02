@@ -77,7 +77,7 @@ Canonical phase record:
 
 ## Phase D — Immersion Controller
 
-**Status: ACTIVE — D.6 restoration/integration validation.**
+**Status: COMPLETE.**
 
 Implement full immersion orchestration:
 - Quiet/social immersion mode;
@@ -93,12 +93,21 @@ Canonical phase record:
 
 ## Phase E — Compass and Navigation
 
+**Status: ACTIVE — E.1 source review and capability audit.**
+
 Implement a Warcraft-aesthetic horizontal compass:
 - world/exploration use;
 - selected quest/user waypoint markers where APIs permit;
 - automatic suspension in instances;
 - graceful degradation whenever position/bearing data is unavailable;
 - minimap suppression only after Logres navigation is sufficient for the active context.
+
+Canonical phase record:
+`memory/roadmap/PHASE_E_COMPASS_NAVIGATION.md`
+
+Current work:
+E.1 resolves the production compass/navigation capability contract before
+runtime code.
 
 ## Phase F — Quest Experience
 

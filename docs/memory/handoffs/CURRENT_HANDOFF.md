@@ -2,26 +2,35 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0062 is verified pushed at `13c5339`.
+P0063 is verified pushed at `20b1bf55`.
 
-D.5 is complete.
+The user confirmed the requested P0063 runtime validation was completed
+successfully.
+
+P0064 is verified pushed at `770f9f30` and records the assistant delivery
+workflow failures durably.
+
+Phase D / D.6 are complete.
 
 Current work:
-**D.6 — Restoration / integration validation**
+**Phase E — Compass and Navigation**
+**E.1 — Compass/navigation source review and capability audit**
 
-P0063 is the active runtime candidate targeting `0.0.27-dev`.
+Known E.1 evidence:
+- open-world map position/facing are available;
+- tested party-instance map position/facing are unavailable;
+- both recover after returning to the world;
+- navigation must suspend rather than fabricate bearings;
+- `C_QuestLog.GetNextWaypoint` exists but detailed behavior is unproven;
+- minimap suppression is not allowed until Logres deliberately replaces the
+  required navigation information/control surface.
 
-It adds:
-- integrated Restoration Check;
-- addon-owned recovery-state APIs;
-- Player secure interaction/suppression ownership facts;
-- static stock-first restoration-order checks;
-- coherent repair of the stale PlayerFrame Target-disabled assertion exposed
-  during P0062 delivery.
+P0065 is documentation-only.
 
-Runtime proof is next.
+No WoW redeploy is required.
 
-Context Policy Check remains canonical for D-028 context policy.
-Reload/combat transitions remain real in-client proof.
+Next after P0065 push:
+perform E.1 source review and produce the first capability-gated Phase E
+implementation plan.
 
 User performs all commits/pushes.

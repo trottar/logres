@@ -1,6 +1,6 @@
 # D.6 — Restoration / Integration Validation
 
-Status: ACTIVE — SOURCE-RESOLVED; RUNTIME DIAGNOSTIC NEXT
+Status: COMPLETE — RUNTIME ACCEPTED
 Opened: 2026-10-01
 
 ## Goal
@@ -198,6 +198,29 @@ The check should compose addon-owned recovery state from:
 Context Policy Check remains the canonical ActionContext/context-policy proof.
 
 Do not inspect protected Blizzard presentation state solely for diagnostics.
+
+## Final runtime result — P0063
+
+P0063 is verified pushed at `20b1bf55` on runtime `0.0.27-dev`.
+
+The user explicitly confirmed that the requested P0063 runtime validation was
+checked successfully and that the panel/runtime behavior was correct.
+
+No verbatim Restoration Check / Run All output was supplied, so this record
+preserves the evidence at the level actually supplied rather than inventing
+exact diagnostic lines.
+
+Accepted conclusions:
+- the integrated restoration/recovery validation passed in the requested scope;
+- no P0063 runtime failure was reported with the accepted result;
+- canonical D-028 context-policy evidence remains valid;
+- existing environmental instance/navigation evidence remains available from
+  I-001;
+- Phase D's reversible-system exit criteria are satisfied for the tested scope.
+
+D.6 closes.
+
+Phase D closes.
 
 ## Exit
 

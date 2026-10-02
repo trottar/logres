@@ -1,7 +1,7 @@
 # P0063 — D.6 Restoration Check
 
 Date: 2026-10-01
-Result: PREPARED — runtime proof pending
+Result: INSTALLED / PUSHED — RUNTIME PASS (`20b1bf55`)
 
 ## Baseline
 
@@ -56,4 +56,12 @@ realignment.
 
 ## Runtime proof
 
-Runtime validation is required before D.6 can close.
+P0063 is verified pushed at `20b1bf55`.
+
+The user confirmed the requested runtime validation was completed successfully
+and the panel/runtime behavior was correct.
+
+No verbatim diagnostic output was supplied, so this record does not invent
+exact lines.
+
+D.6 and Phase D close from this accepted runtime result.

@@ -8,13 +8,13 @@ project: logres
 
 ## Active Objective
 
-**Phase D — Immersion Controller.**
+**Phase E — Compass and Navigation.**
 
 ## Current Work Item
 
-**D.6 — Restoration / integration validation.**
+**E.1 — Compass/navigation source review and capability audit.**
 
-D.5 is runtime-proven and complete.
+Phase D is runtime-proven and complete.
 
 ## Verified State
 
@@ -22,76 +22,76 @@ D.5 is runtime-proven and complete.
 - Phase A complete.
 - Phase B complete.
 - Phase C complete.
-- D.1 complete.
-- D.2 complete.
-- D.3 complete.
-- D.4 complete for supported Player + Target selective replacement.
-- D.5 complete.
+- Phase D complete.
+- D.1–D.6 complete.
 - P0060 pushed at `9608634`.
 - P0061 pushed at `01665d1`.
 - P0062 pushed at `13c5339`.
 - P0063 pushed at `20b1bf55`.
-- The user reports the requested P0063 runtime validation was completed
+- The user confirmed the requested P0063 runtime validation was completed
   successfully and the panel/runtime behavior was correct.
-- D.6 closure is intentionally paused until P0064 makes the assistant delivery
-  failures durable; do not ask the user to repeat the successful P0063
-  validation without new evidence.
-- P0060 runtime `0.0.26-dev`.
-- Context Policy Check PASS.
-- Run All PASS.
-- Immersion OFF context policy PASS.
-- Immersion ON context policy PASS.
-- D-028 orchestration matrix remains canonical and runtime-proven for tested
-  scope.
+- P0064 pushed at `770f9f30`; assistant delivery failures are durable project
+  knowledge and the standard patch procedure is restored.
+- P0063 runtime is `0.0.27-dev`.
+- D-028 context policy remains canonical.
+- Existing I-001 runtime evidence proves navigation data is available in the
+  open world, unavailable in a tested party instance, and restored after
+  returning to the world.
+- `C_QuestLog.GetNextWaypoint` is known present, but detailed waypoint
+  semantics remain unproven.
 - Party/CompactPartyFrame suppression remains capability-deferred.
 - Primary replacement/routing ownership remains deferred.
 - TargetFrame intermittent reappearance remains OPEN / UNREPRODUCED.
-- future Aura / Status Presentation domain remains deferred.
+- future Aura / Status Presentation remains deferred.
 - D-020 live action editing remains deferred.
 - cast cue color regression remains open visual debt.
 
 ## Next Action
 
-Push P0064 as a docs-only process-memory checkpoint.
+Perform E.1 source review before writing compass runtime code.
 
-P0064 records the assistant delivery failures that followed the successful
-P0063 validation report and restores the established patch-delivery procedure.
+Resolve:
+1. exact production heading/facing source;
+2. exact production map-position source;
+3. availability/suspension behavior when navigation data is absent;
+4. integration with existing world/instance State;
+5. selected quest/user waypoint capability boundaries;
+6. the Phase E / Phase F ownership boundary for quest presentation;
+7. the minimum capability required before any minimap suppression is allowed;
+8. a narrow Compass diagnostic/runtime proof plan.
 
-After P0064 is verified pushed:
-- resume D.6 closure from the already-reported successful P0063 runtime
-  validation;
-- record only the evidence actually supplied;
-- do not ask the user to repeat P0063 validation without new evidence.
+Do not suppress the minimap during E.1.
 
-No WoW redeploy is required for P0064.
+Do not fabricate bearings when position/facing data is unavailable.
 
 ## Success Criteria
 
-D.6 succeeds when Phase D behaves as one reversible system:
-- preference-driven suppression/restoration is reliable;
-- protected deferrals converge;
-- context policy remains coherent;
-- fallback stock surfaces remain available where Logres lacks replacement;
-- developer recovery remains fail-open;
-- no required control/information is lost.
+E.1 succeeds when current Forever source/runtime evidence defines:
+- the production navigation input APIs;
+- a capability-gated world compass contract;
+- deterministic instance suspension/restoration;
+- waypoint limitations;
+- fail-open Blizzard navigation fallback;
+- the first safe runtime implementation slice.
 
 ## Do Not Reopen Without New Evidence
 
-- **D.1–D.5:** complete.
+- **Phase D / D.1–D.6:** complete.
 - **Party suppression:** capability-deferred.
 - **Primary replacement/routing:** deferred.
 - **TargetFrame intermittent reappearance:** open/unreproduced.
 - **Aura/status suppression:** deferred design domain.
 - **Whole PlayerFrame / TargetFrame suppression:** rejected.
+- **P0064 delivery failures:** durable; follow the restored standard patch procedure.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/D5_P0060_CONTEXT_POLICY_RUNTIME_PROOF_2026-10-01.md`
-- `docs/memory/evidence/D6_RESTORATION_INTEGRATION_SOURCE_REVIEW_2026-10-01.md`
-- `docs/memory/evidence/D6_P0063_RESTORATION_CHECK_IMPLEMENTATION_2026-10-01.md`
-- `docs/memory/evidence/P0062_DELIVERY_WORKFLOW_FAILURE_2026-10-01.md`
+- `docs/memory/evidence/D6_P0063_RESTORATION_RUNTIME_PROOF_2026-10-01.md`
 - `docs/memory/evidence/P0064_ASSISTANT_WORKFLOW_FAILURES_2026-10-01.md`
-- `docs/memory/investigations/D6_RESTORATION_INTEGRATION_VALIDATION.md`
-- `docs/memory/decisions/D-028_CONTEXT_ORCHESTRATION_MATRIX.md`
 - `docs/memory/roadmap/PHASE_D_IMMERSION_CONTROLLER.md`
+- `docs/memory/roadmap/PHASE_E_COMPASS_NAVIGATION.md`
+- `docs/memory/investigations/E1_COMPASS_NAVIGATION_SOURCE_REVIEW.md`
+- `docs/memory/architecture/API_BOUNDARIES.md`
+- `docs/memory/evidence/I001_RUNTIME_PASS_02_2026-09-30.md`
+- `docs/ROADMAP.md`

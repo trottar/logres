@@ -4,13 +4,13 @@ As of 2026-10-01.
 
 ## Active
 
-**Phase D — Immersion Controller**
+**Phase E — Compass and Navigation**
 
 Active work item:
-**D.6 Restoration / integration validation**
+**E.1 Compass/navigation source review and capability audit**
 
 State:
-**D.5 COMPLETE; D.6 ACTIVE**
+**Phase D COMPLETE; Phase E ACTIVE — E.1**
 
 ## Phase status
 
@@ -20,8 +20,8 @@ State:
 | A — Core State Engine | COMPLETE |
 | B — Core HUD | COMPLETE |
 | C — Action Interface | COMPLETE |
-| D — Immersion Controller | ACTIVE — D.6 |
-| E — Compass and Navigation | QUEUED |
+| D — Immersion Controller | COMPLETE |
+| E — Compass and Navigation | ACTIVE — E.1 |
 | F — Quest Experience | QUEUED |
 | G — Cinematic Camera | QUEUED |
 | H — Integration and Polish | QUEUED |
@@ -35,4 +35,11 @@ State:
 | D.3 Quiet Mode runtime suppression | COMPLETE — instance proof environmental |
 | D.4 Unit-frame selective suppression | COMPLETE — Player/Target proven; Party deferred |
 | D.5 Context/PvP/instance orchestration | COMPLETE |
-| D.6 Restoration/integration validation | ACTIVE |
+| D.6 Restoration/integration validation | COMPLETE |
+
+## Phase E
+
+| Item | State |
+| --- | --- |
+| E.1 Compass/navigation source review + capability audit | ACTIVE |
+| E.2+ Runtime slices | QUEUED — define after E.1 |
