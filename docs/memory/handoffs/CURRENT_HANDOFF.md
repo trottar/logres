@@ -2,33 +2,32 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0083 is verified pushed at `484323bb`.
+P0084 is verified pushed at `a74329a`.
 
-Phase F / F.4 remains active.
-
-P0083 QuestDialogue runtime:
-- Preview PASS;
-- real `QUEST_DETAIL` PASS;
-- quest `436`;
-- body/objective present;
-- accept cleanup PASS;
-- Immersion OFF suppression PASS;
-- Immersion ON recovery PASS;
-- Quest Dialogue Check PASS.
-
-Visual acceptance remains pending.
-
-Integrated Run All exposed the exact TargetFrame restore defect:
-`SetIgnoreParentAlpha` rejected a secret-capable captured restoration token.
-
-P0084:
-- removes IgnoreParentAlpha mutation;
-- leaves preserved contextual children untouched;
-- alpha-suppresses only nine unwanted contextual children;
-- restores opaque alpha tokens;
-- adds no retry/polling/hook.
-
-Runtime target:
+Production runtime:
 `0.0.33-dev`.
+
+Phase F / F.4 is complete:
+**RUNTIME + INTEGRATION + VISUAL PASS.**
+
+P0084 restoration correction:
+- Target Frame Check PASS;
+- two standalone Restoration Checks PASS;
+- three consecutive Run All PASS;
+- old `SetIgnoreParentAlpha` failure did not recur.
+
+User reported:
+**visual passed**.
+
+Active work:
+**F.5 — Objective / progress runtime capability proof.**
+
+Use the existing Quest Probe.
+Do not add production objective presentation until populated objective rows and
+relevant progress/completion behavior are runtime-proven.
+
+Stock Objective Tracker and all quest interaction controls remain Blizzard-owned.
+
+No new runtime code is required for the F.5 evidence step.
 
 User performs all commits/pushes.

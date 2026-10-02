@@ -1,6 +1,6 @@
 # Phase F — Quest Experience
 
-Status: ACTIVE — F.4
+Status: ACTIVE — F.5
 
 ## Product Objective
 
@@ -8,50 +8,84 @@ Create an immersive quest experience that presents only the quest information
 the player actually needs while preserving Blizzard control surfaces until
 safe replacements exist.
 
+## Standing Boundaries
+
+Phase F owns:
+- passive quest/XP presentation policy;
+- restrained objective updates when runtime-proven;
+- contextual XP;
+- quest destination state only when runtime-proven.
+
+Blizzard retains:
+- quest accept/decline/continue/complete/reward controls;
+- gossip navigation;
+- quest watch/super-track mutation;
+- stock quest-log interaction;
+- stock Objective Tracker interaction until a safe replacement exists.
+
 ## F.1
 
-COMPLETE — D-031.
+**COMPLETE — D-031.**
 
 ## F.2
 
-COMPLETE.
+**COMPLETE.**
 
-Runtime-proven XP and passive quest-detail inputs.
+Runtime-proven:
+- XP source/events;
+- passive quest-detail reads;
+- `QUEST_DETAIL`;
+- `QUEST_ACCEPTED`;
+- super-tracked quest identity.
 
-Deferred:
-- populated active objective rows;
-- quest destination output;
-- quest compass marker.
+Deferred/unproven:
+- populated active-objective rows;
+- several progress/completion events;
+- quest destination output.
 
 ## F.3 — Contextual XP pulse
 
-COMPLETE — RUNTIME + INTEGRATION + VISUAL PASS.
+**COMPLETE — RUNTIME + INTEGRATION + VISUAL PASS.**
 
 ## F.4 — Additive NPC quest detail presentation
 
-ACTIVE — RUNTIME PATH PASS; VISUAL + INTEGRATED RETEST PENDING.
+**COMPLETE — RUNTIME + INTEGRATION + VISUAL PASS.**
 
-P0083 runtime-proven:
-- Preview;
-- real quest detail;
-- quest `436`;
-- body/objective;
-- production presentation;
-- accept cleanup;
-- Immersion policy;
-- Quest Dialogue Check.
+P0083:
+- real quest-detail production path proven.
 
-P0083 Run All exposed an exact pre-existing TargetFrame restoration error.
+P0084:
+- integrated restoration correction runtime-proven;
+- three consecutive Run All PASS;
+- user visual PASS.
 
-P0084 corrects that TargetFrame mechanism without changing QuestDialogue
-behavior.
+## F.5 — Objective / progress runtime capability proof
 
-Remaining F.4:
-- P0084 integrated PASS;
-- explicit visual acceptance.
+**ACTIVE — EXISTING QUEST PROBE; EVIDENCE PENDING.**
 
-## F.5+
+Before adding objective/progress presentation, prove populated objective rows and
+their update behavior during normal gameplay.
 
-Choose only from runtime-proven capability.
+Use the existing Quest Probe.
 
-Populated objectives and quest compass destinations remain deferred.
+Do not:
+- invent missing objective state;
+- treat empty as complete;
+- suppress the stock Objective Tracker;
+- mutate quest watch/super-track state;
+- require contrived gameplay solely for evidence.
+
+Unobserved transitions remain environmental deferrals.
+
+## Quest navigation
+
+Quest IDs `436` and `237` remain negative destination samples.
+
+Quest compass marker remains unsupported until a real usable destination is
+runtime-proven.
+
+## Phase F Exit
+
+Phase F completes only when accepted quest/XP presentation is runtime-proven and
+every suppressed Blizzard surface has a deliberate replacement and
+restoration/fallback contract.

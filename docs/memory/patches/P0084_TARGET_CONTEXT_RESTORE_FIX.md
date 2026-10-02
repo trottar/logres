@@ -1,11 +1,11 @@
 # P0084 — Target Context Restoration Fix
 
 Date: 2026-10-02
-Result: PREPARED — RUNTIME RETEST PENDING
+Result: INSTALLED / PUSHED — RUNTIME PASS (`a74329a`)
 
 ## Baseline
 
-P0083 verified pushed:
+P0083:
 `484323bb19e589d4987bbc25d703c856d6cfbf6b`
 
 ## Trigger
@@ -15,7 +15,7 @@ P0083 captured:
 
 ## Correction
 
-Remove IgnoreParentAlpha mutation from TargetFrame replacement.
+Removed IgnoreParentAlpha mutation from TargetFrame replacement.
 
 Preserved and untouched:
 - Auras;
@@ -34,55 +34,44 @@ Alpha-suppressed individually:
 - PetBattleIcon;
 - NumericalThreat.
 
-Each suppressed child's alpha is captured/restored as an opaque token.
-
 The contextual parent is no longer alpha-zeroed.
 
-## Diagnostics
+Runtime:
+`0.0.33-dev`.
 
-Track:
-`contextualSuppressedCount`.
+## Runtime result
 
-Expected:
-- active `9`;
-- restored `0`.
+PASS:
+- Target Frame Check:
+  `contextualSuppressed=9`, `preserved=4`;
+- standalone Restoration Check twice;
+- three consecutive Run All executions;
+- no recurrence of the old secret-value setter failure.
+
+The associated restoration investigation is CLOSED.
+
+## Delivery history
+
+Three static delivery/preflight failures occurred while preparing P0084:
+1. incorrect Target debug anchor;
+2. repair used an invalid prose-state marker;
+3. an over-broad checker produced a false positive on unrelated
+   `overrides=%s` diagnostics.
+
+All were static delivery failures.
+They produced no additional WoW runtime evidence.
+
+The final recovery used exact state classification and temporary-tree validation
+before working-tree mutation.
 
 ## Non-scope
 
-No retry, polling, periodic reassertion, broad hook, target-of-target
-suppression, Focus/boss/party suppression, or QuestDialogue behavior change.
+No:
+- retry;
+- polling;
+- periodic reassertion;
+- broad hook;
+- target-of-target suppression;
+- Focus/boss/party suppression.
 
-## Runtime
-
-`0.0.32-dev -> 0.0.33-dev`.
-
-Runtime retest required.
-
-## Delivery recovery
-
-Three static delivery/preflight failures occurred before a valid P0084 checkpoint:
-
-1. `Target debug count anchor mismatch`;
-2. repair preflight used a prose marker that did not exist in the exact partial
-   P0084 CURRENT payload;
-3. temporary-tree validation exposed an over-broad checker that treated
-   unrelated action-binding `overrides=%s` diagnostics as obsolete TargetFrame
-   state.
-
-Neither failure produced new WoW runtime evidence.
-
-The final recovery applier is deliberately different:
-- exact byte-state classification;
-- no prose-marker assumptions;
-- runtime files reconstructed from verified P0083 HEAD;
-- complete intended tree validated in a temporary `git archive` before working
-  tree mutation;
-- unknown patch-owned state refused before writes.
-
-Recovery v2 scopes the obsolete-label check to
-`restorationMismatchSummary` and requires the intended label replacement
-to occur exactly once before validation.
-
-Evidence:
-`../evidence/P0084_DELIVERY_FAILURE_2026-10-02.md`.
-
+The separate TargetFrame reappearance issue remains independently tracked.

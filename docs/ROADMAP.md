@@ -76,7 +76,7 @@ Canonical phase record:
 
 ## Phase F — Quest Experience
 
-**Status: ACTIVE — F.4 additive NPC quest detail presentation.**
+**Status: ACTIVE — F.5 objective / progress runtime capability proof.**
 
 F.1:
 complete under D-031.
@@ -87,12 +87,17 @@ complete with runtime-proven XP/event and quest-detail inputs.
 F.3:
 contextual XP complete with runtime, integration, and visual proof.
 
+F.4:
+additive NPC quest detail presentation complete with runtime, integration, and
+visual proof.
+
 Current work:
-F.4 uses the proven `QUEST_DETAIL` read path for temporary additive NPC quest
-presentation while Blizzard retains all quest interaction controls.
+F.5 uses the existing Quest Probe to prove populated objective rows and
+progress/completion behavior before any objective production presentation.
 
 Deferred:
-- populated active objective rows;
+- any objective presentation not yet runtime-proven;
+- stock Objective Tracker replacement/suppression;
 - quest destination / quest compass marker.
 
 Canonical phase record:

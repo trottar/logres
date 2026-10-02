@@ -85,6 +85,8 @@
 | P0081 | 2026-10-02 | INSTALLED / PUSHED — TARGETED PASS / FAILURE NOT REPRODUCED | Expose TargetFrame restoration reason/error (`ef8fa310`) |
 | P0082 | 2026-10-02 | INSTALLED / PUSHED | Record P0081 repeated targeted PASS; F.3 visual acceptance pending (`c6395f10`) |
 | P0083 | 2026-10-02 | INSTALLED / PUSHED — F.4 RUNTIME PASS / RESTORATION FAIL | Close F.3 visual PASS; implement F.4 additive NPC quest detail presentation (`484323bb`) |
-| P0084 | 2026-10-02 | PREPARED — RECOVERY AFTER THREE STATIC DELIVERY/PREFLIGHT FAILURES; RUNTIME RETEST PENDING | Replace secret IgnoreParentAlpha restoration with selective contextual alpha restoration |
+| P0084 | 2026-10-02 | INSTALLED / PUSHED — RUNTIME PASS | Replace secret IgnoreParentAlpha restoration with selective contextual alpha restoration (`a74329a`) |
+
+| P0085 | 2026-10-02 | PREPARED — DOCS-ONLY | Close F.4 after P0084 runtime + user visual PASS; open F.5 objective/progress proof |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

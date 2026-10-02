@@ -1,7 +1,8 @@
 # P0080 — TargetFrame Restoration Failure
 
-Status: ROOT CAUSE IDENTIFIED — P0084 CORRECTION PREPARED
+Status: CLOSED — ROOT CAUSE FIXED; P0084 RUNTIME PASS
 Opened: 2026-10-02
+Closed: 2026-10-02
 
 ## History
 
@@ -9,44 +10,61 @@ P0078 and P0080 showed the same TargetFrame restoration state shape.
 
 P0081 added TargetFrame/controller reason/error fields.
 
-## P0083 exact recurrence
+P0083 reproduced the failure and captured the exact native error:
 
-Run All captured:
-
-`TargetFrameReplacement.lua:306: bad argument #1 to 'SetIgnoreParentAlpha'`
-
-Forever reported that secret values are only allowed during untainted execution
-for that setter argument.
-
-The replacement remained applied until cleanup reconverged.
+`SetIgnoreParentAlpha` rejected a secret-capable captured restoration token
+outside untainted execution.
 
 ## Root cause
 
-P0057 stopped inspecting `IsIgnoringParentAlpha()` and kept its result as an
-opaque restoration token.
+P0057 correctly stopped inspecting the secret-capable
+`IsIgnoringParentAlpha()` value in Lua, but the native setter itself rejected
+that secret token when the addon later passed it to `SetIgnoreParentAlpha`.
 
-P0083 proves that is still insufficient: the native setter rejects the secret
-token itself from addon execution.
+Thus opaque transport alone was insufficient for this Forever API path.
 
 ## P0084 correction
 
-Do not guess the secret boolean and do not retry the setter.
+P0084 removed IgnoreParentAlpha mutation entirely.
 
-Instead:
-- leave Auras/RaidTargetIcon/QuestIcon/PingIconFrame untouched;
-- stop alpha-zeroing the contextual parent;
-- alpha-suppress only the nine unwanted contextual children;
-- capture/restore their alpha values opaquely;
-- restore stock before removing Logres secure interaction.
+Preserved without mutation:
+- Auras;
+- RaidTargetIcon;
+- QuestIcon;
+- PingIconFrame.
 
-## Historical attribution
+Individually alpha-suppressed/restored:
+- HighLevelTexture;
+- LeaderIcon;
+- GuideIcon;
+- BossIcon;
+- PvpIcon;
+- PrestigePortrait;
+- PrestigeBadge;
+- PetBattleIcon;
+- NumericalThreat.
 
-P0083 establishes the concrete root cause for this failure path.
+The contextual parent is no longer alpha-zeroed.
 
-P0078/P0080 had compatible state shape but did not capture the native error at
-the time.
+## P0084 runtime proof
 
-## Exit
+Runtime:
+`0.0.33-dev`.
 
-P0084 must pass repeated Restoration Check and Run All with no secret-value
-error.
+Observed:
+- Target Frame Check PASS with
+  `contextualSuppressed=9`, `preserved=4`;
+- two standalone Restoration Checks PASS;
+- three consecutive Run All executions PASS;
+- no recurrence of the previous secret setter error.
+
+No retry, polling, periodic reassertion, or broad Blizzard hook was added.
+
+## Result
+
+**CLOSED — FIX RUNTIME-PROVEN.**
+
+Historical P0078/P0080 failures remain valid historical evidence.
+
+The separate TargetFrame reappearance issue remains independently tracked and
+is not closed by this result.

@@ -1,27 +1,38 @@
 # Active Investigations
 
-## F.4 — Additive NPC quest detail presentation
+## F.5 — Objective / progress runtime capability proof
 
 Status:
-**ACTIVE — RUNTIME PATH PASS; VISUAL + INTEGRATED RETEST PENDING**
+**ACTIVE — EXISTING QUEST PROBE; RUNTIME EVIDENCE PENDING**
 
-P0083 proves the real quest-detail path, accept cleanup, Immersion policy, and
-Quest Dialogue Check.
+Canonical:
+`F5_OBJECTIVE_PROGRESS_CAPABILITY_PROOF.md`
 
-Visual acceptance remains pending.
+Known gap:
+- populated active-objective rows remain unproven;
+- progress/complete/turn-in/watch-update events remain naturally unobserved.
 
-## TargetFrame restoration failure
+Use the existing panel Quest Probe during normal gameplay.
+Do not add production objective presentation before evidence.
 
-Status:
-**ROOT CAUSE IDENTIFIED — P0084 CORRECTION PREPARED**
+## Closed Phase F slices
 
-P0083 captured the exact failure:
-`SetIgnoreParentAlpha(secret-token)` is rejected outside untainted execution.
+F.3 contextual XP:
+**CLOSED — RUNTIME + INTEGRATION + VISUAL PASS.**
 
-P0084 removes IgnoreParentAlpha mutation and uses selective contextual alpha
-suppression/restoration instead.
+F.4 additive NPC quest detail presentation:
+**CLOSED — RUNTIME + INTEGRATION + VISUAL PASS.**
 
-No polling, retry, periodic reassertion, or broad hook.
+Evidence:
+`../evidence/F4_P0084_RUNTIME_AND_VISUAL_PASS_2026-10-02.md`
+
+## Closed TargetFrame restoration investigation
+
+`P0080_TARGETFRAME_RESTORE_FAILURE.md`:
+**CLOSED — P0084 RUNTIME PASS.**
+
+The separate TargetFrame visual reappearance investigation remains open and is
+not merged with the restoration defect.
 
 ## Other tracked non-blocking defects / deferred domains
 
@@ -30,6 +41,5 @@ No polling, retry, periodic reassertion, or broad hook.
 
 ## Deferred quest/navigation evidence
 
-- populated active-objective rows remain unproven;
-- quest IDs `436` and `237` have no usable next waypoint in tested states;
+- quest IDs `436` and `237` have produced no usable next waypoint;
 - quest compass marker remains unsupported.

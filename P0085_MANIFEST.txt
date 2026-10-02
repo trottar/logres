@@ -1,0 +1,27 @@
+Project Logres P0085 patch
+Date: 2026-10-02
+Baseline: a74329a18e1090581d618999c54f1e12360188c9
+Runtime: 0.0.33-dev (unchanged)
+Purpose: record P0084/F.4 PASS; close restoration investigation; open F.5 objective/progress proof
+
+Files:
+14c39f5bbca5804315f6f1fc90d8c1f7895394e407ba62336bc89de52157eb98  docs/ROADMAP.md
+02f6d11ae05dca04a0d0ee923672885eda00763a9ab13ce66e8670bd45852426  docs/memory/CURRENT.md
+e91740906c66948fa57d70e03f7f3302d6e4887ed904c2c33a6a673d07d0c2dc  docs/memory/evidence/F4_P0084_RUNTIME_AND_VISUAL_PASS_2026-10-02.md
+747d962f134bb7bed207e8c495ee024b45f6787477f664210f7dd6e3230c9d57  docs/memory/handoffs/CURRENT_HANDOFF.md
+eae0fd7140af3d203f53cfe70d952f2c09b91d401de77a91b9be06a2e8e6ea6a  docs/memory/investigations/ACTIVE.md
+e1ab667f764a2153f3dbb4cb069e6a08bba7304eee316597dcc66fdc9862cb8e  docs/memory/investigations/F4_NPC_QUEST_DETAIL_PRESENTATION.md
+e238eda543080e07e52773ab046e9a4e5dd84293b0b536172391f9b18cc60fcd  docs/memory/investigations/F5_OBJECTIVE_PROGRESS_CAPABILITY_PROOF.md
+bf442eae7d5e01c1778b57732cfce0114ba76be51b633d9f7504489b10c6553d  docs/memory/investigations/P0080_TARGETFRAME_RESTORE_FAILURE.md
+4cfdc38ec3a08d1d6cdbd6f30a3bc8bcb0d2dc2ec1e03d034d01580a124e4332  docs/memory/patches/P0084_TARGET_CONTEXT_RESTORE_FIX.md
+872228d661db8f93a88a832b24bee63afbdc08583a85bdd6ed2327fa580619eb  docs/memory/patches/P0085_CLOSE_F4_OPEN_F5.md
+888e39e334b1dfaec83705027c8f2d2dca97bdca29e67c4b84c7dab48053d394  docs/memory/patches/PATCH_INDEX.md
+7eb503607c9fd368045997df2e24f4c4651bcc31574255c3ed8ad09f458dc68b  docs/memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md
+61f44f2f6391b841c01e7f7f8df479092d1dcaaa3d519a3d6bdddfa45b3d35eb  docs/memory/roadmap/STATUS.md
+
+Checks:
+python3 tools/check_memory_health.py
+temporary git-archive consistency validation
+git diff --check -- <P0085-owned files>
+
+Docs-only checkpoint; no WoW redeploy required.

@@ -1,16 +1,23 @@
 # F.4 — Additive NPC Quest Detail Presentation
 
-Status: ACTIVE — RUNTIME PATH PASS; VISUAL + INTEGRATED RETEST PENDING
+Status: CLOSED — RUNTIME + INTEGRATION + VISUAL PASS
 Opened: 2026-10-02
+Closed: 2026-10-02
 
-## Product contract
+Canonical capability contract:
+`../decisions/D-031_QUEST_EXPERIENCE_CAPABILITY_CONTRACT.md`
+
+Runtime/closure evidence:
+`../evidence/F4_P0084_RUNTIME_AND_VISUAL_PASS_2026-10-02.md`
+
+## Product result
 
 Temporary additive NPC quest presentation:
-- title;
+- quest title;
 - restrained body excerpt;
-- optional objective;
+- optional objective line;
 - upper-world placement;
-- approximately ten seconds;
+- approximately ten-second lifetime;
 - no mouse interaction.
 
 Blizzard retains all quest interaction controls.
@@ -28,25 +35,34 @@ PASS:
 - Immersion OFF suppression;
 - Immersion ON recovery.
 
-## Integrated blocker
+## Integrated restoration correction
 
-Run All failed in pre-existing TargetFrame restoration.
+P0083 Run All exposed a pre-existing TargetFrame restoration failure.
 
-P0083 captured the exact error:
-Forever rejected the secret-capable IgnoreParentAlpha restoration token passed
-to `SetIgnoreParentAlpha`.
+P0084 replaced the failing IgnoreParentAlpha mechanism with selective contextual
+alpha suppression/restoration.
 
-P0084 corrects that narrow target path.
+P0084 runtime:
+- Target Frame Check PASS;
+- two standalone Restoration Checks PASS;
+- three consecutive Run All executions PASS;
+- no recurrence of the secret-value setter failure.
 
-## Visual status
+## Visual result
 
-Explicit user visual acceptance of F.4 has not yet been recorded.
+User reported:
+**visual passed**.
+
+The acceptance request included:
+- readable placement;
+- appropriate temporary duration;
+- non-interactive presentation;
+- unchanged Blizzard quest controls;
+- no observed Lua/taint/secret-value errors.
 
 ## Exit
 
-Close F.4 only after:
-- P0084 integrated restoration retest passes;
-- QuestDialogue remains correct;
-- no Lua/taint/secret errors;
-- Blizzard quest controls remain unchanged;
-- user visually accepts the presentation.
+All F.4 exit criteria are satisfied.
+
+Next:
+F.5 objective/progress capability proof using the existing Quest Probe.

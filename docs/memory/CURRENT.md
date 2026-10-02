@@ -12,89 +12,99 @@ project: logres
 
 ## Current Work Item
 
-**F.4 — Additive NPC quest detail presentation, with narrow TargetFrame restoration correction.**
+**F.5 — Objective / progress runtime capability proof.**
 
-P0083 is verified pushed at `484323bb`.
+P0084 is verified pushed at `a74329a`.
 
-P0083 F.4 runtime path is proven, but integrated Run All exposed the exact
-TargetFrame restoration defect. P0084 corrects that defect.
-
-Runtime target:
+Production runtime remains:
 `0.0.33-dev`.
 
 ## Verified State
 
 - Phase E is complete.
-- F.1, F.2, and F.3 are complete.
-- F.3 contextual XP is runtime/integration/visual PASS.
-- P0083 F.4 runtime evidence proves:
-  - Quest Dialogue Preview shown;
-  - real `QUEST_DETAIL`;
+- F.1 and F.2 are complete.
+- F.3 contextual XP is complete:
+  runtime + integration + visual PASS.
+- F.4 additive NPC quest detail presentation is complete:
+  runtime + integration + visual PASS.
+- P0083 proved the real quest-detail path:
+  - `QUEST_DETAIL`;
   - quest ID `436`;
-  - body/objective present;
+  - title/body/objective text;
   - production presentation;
   - `QUEST_ACCEPTED` cleanup;
   - Immersion OFF suppression;
-  - Immersion ON recovery;
-  - Quest Dialogue Check PASS.
-- F.4 visual acceptance is not yet recorded.
-- P0083 Run All captured the exact TargetFrame restore error:
-  `SetIgnoreParentAlpha` rejected a secret-capable restoration token outside
-  untainted execution.
-- P0084 removes IgnoreParentAlpha mutation from TargetFrame replacement.
-- Preserved contextual surfaces are left untouched:
-  Auras, RaidTargetIcon, QuestIcon, PingIconFrame.
-- Nine unwanted contextual children are alpha-suppressed individually and
-  restored from opaque alpha tokens.
-- No polling, retry, periodic reassertion, or broad Blizzard hook is added.
-- P0084 preparation encountered three static delivery/preflight failures; all are recorded and produced no new runtime evidence.
+  - Immersion ON recovery.
+- P0084 corrected the TargetFrame restoration defect identified in P0083.
+- P0084 runtime proof:
+  - `0.0.33-dev`;
+  - Target Frame Check PASS with
+    `contextualSuppressed=9`, `preserved=4`;
+  - two standalone Restoration Checks PASS;
+  - three consecutive Run All executions PASS;
+  - no recurrence of the `SetIgnoreParentAlpha` secret-value failure.
+- User reported F.4:
+  **visual passed**.
+- The P0080 TargetFrame restoration investigation is CLOSED by P0084 runtime
+  proof.
+- The separate historical TargetFrame reappearance issue remains tracked
+  independently.
+- Populated active-objective rows remain unproven.
+- `QUEST_PROGRESS`, `QUEST_COMPLETE`, `QUEST_TURNED_IN`, and
+  `QUEST_WATCH_UPDATE` remain registered but naturally unobserved in the
+  existing capability evidence.
+- Quest IDs `436` and `237` remain negative destination samples; quest compass
+  marker remains unsupported.
 
 ## Next Action
 
-Apply/push P0084.
+F.5 uses the existing **Quest Probe** before any new production code.
 
-Then deploy `0.0.33-dev` and validate:
-1. Target Frame Check;
-2. Restoration Check twice;
-3. Run All twice;
-4. Quest Dialogue Check;
-5. Quest Dialogue Preview;
-6. no Lua/taint/secret errors;
-7. stock TargetFrame restoration works;
-8. preserved target context remains available when naturally present.
+When normal gameplay naturally provides suitable states, capture:
+1. an active quest with one or more populated objective rows;
+2. a later objective/progress state for that quest;
+3. completion and/or turn-in state if naturally encountered.
 
-F.4 then still requires explicit visual acceptance before closure.
+Do not travel or manufacture gameplay solely to satisfy the probe.
+
+After meaningful evidence:
+- `/reload` to flush SavedVariables;
+- export `LOGRES_DIAGNOSTICS_LATEST.lua`;
+- evaluate which objective/progress paths are actually runtime-proven.
+
+No new objective presentation and no stock Objective Tracker suppression is
+authorized until this evidence exists.
 
 ## Success Criteria
 
-P0084 succeeds when:
-- no IgnoreParentAlpha runtime path remains in TargetFrame replacement;
-- preserved contextual children are not mutated;
-- nine unwanted contextual children are selectively alpha-suppressed;
-- exact captured alpha tokens restore before Logres interaction is removed;
-- repeated Restoration Check and Run All pass;
-- no Lua/taint/secret error occurs.
+F.5 succeeds when runtime evidence is sufficient to distinguish, without
+fabrication:
+- unavailable/not-loaded objective data;
+- empty objective lists;
+- populated active objectives;
+- completed objectives where naturally observable;
+- relevant progress/completion/turn-in event behavior.
 
-F.4 succeeds when its proven runtime path also receives visual acceptance.
+Any unobserved transition remains an environmental deferral rather than PASS.
 
 ## Do Not Reopen Without New Evidence
 
 - **Phase E:** complete.
 - **F.1/F.2:** complete.
-- **F.3 contextual XP:** complete / visual PASS.
-- **P0083 F.4 runtime path:** proven.
-- **F.4 visual acceptance:** pending.
-- **TargetFrame restore failure class:** root cause identified in P0083.
-- **Separate TargetFrame reappearance issue:** unrelated absent new evidence.
-- **Populated objective rows:** unproven.
-- **Quest destination / compass marker:** unsupported until runtime-proven.
+- **F.3 contextual XP:** complete.
+- **F.4 additive NPC quest detail presentation:** complete.
+- **P0084 TargetFrame restoration correction:** runtime PASS.
+- **TargetFrame reappearance issue:** separate tracked defect.
+- **Quest destination / compass marker:** unsupported until a real destination
+  is runtime-proven.
 - **Quest interaction controls:** Blizzard-owned.
+- **Stock Objective Tracker:** remains Blizzard-owned.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/evidence/F4_P0083_QUEST_DIALOGUE_RUNTIME_AND_TARGET_RESTORE_ROOT_CAUSE_2026-10-02.md`
-- `docs/memory/evidence/P0084_DELIVERY_FAILURE_2026-10-02.md`
+- `docs/memory/evidence/F4_P0084_RUNTIME_AND_VISUAL_PASS_2026-10-02.md`
+- `docs/memory/investigations/F5_OBJECTIVE_PROGRESS_CAPABILITY_PROOF.md`
 - `docs/memory/investigations/F4_NPC_QUEST_DETAIL_PRESENTATION.md`
 - `docs/memory/investigations/P0080_TARGETFRAME_RESTORE_FAILURE.md`
-- `docs/memory/decisions/D-027_TARGET_SELECTIVE_SUPPRESSION.md`
+- `docs/memory/decisions/D-031_QUEST_EXPERIENCE_CAPABILITY_CONTRACT.md`
