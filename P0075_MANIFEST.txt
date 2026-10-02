@@ -1,0 +1,29 @@
+Project Logres P0075 patch
+Date: 2026-10-02
+Baseline: 04d7931764e2b35d68709c4513722637d85f3064
+Runtime: 0.0.30-dev
+Purpose: manual user-waypoint compass marker
+
+Files:
+1af8f8e7c1b2a56edd2e7af55d8f45a70e844d8783685058e2806ee92db96b9c  Logres/Core/Bootstrap.lua
+4b7cc557e856c7d5169da87ea7c0062f637cbfabd5455704a34015aca3ee9b72  Logres/Logres.toc
+6cec33835a0b67d306ccfb2acbea1659421104b2c850228056981dbfee6d0c0b  Logres/Core/Commands.lua
+2047ff0063416ce711f8a45211245013de86104dfff1393da2a06796cdd3b617  Logres/Navigation/Compass.lua
+e79e4791c66dcfa6380e998aeeed7955620d82720924cc3d787f468d59540850  tools/check_compass_contract.py
+c609dd277036f5d88fb3a8e09ffdf3b2aa0153c60f62d9cad95dc85eeb3ccbda  docs/memory/CURRENT.md
+575ac3d41abc39d3a0bb9f188a570162c4449c4ae4b1e148bdf80eae4baa7d30  docs/memory/handoffs/CURRENT_HANDOFF.md
+523fe4fa7f28377426fb0c97f0621e6a2bedb5e9716defec5cec51da208358ce  docs/memory/roadmap/PHASE_E_COMPASS_NAVIGATION.md
+2660b2300b154b2a0e5021a20da6c7a60295849ce23c554421011b69fe3bb133  docs/memory/evidence/E4_P0075_USER_WAYPOINT_MARKER_DESIGN_2026-10-02.md
+52f4b6a7e060928e9b10cae44e001661aad5a8296a787bc161ca5dcbb1e748c7  docs/memory/patches/P0074_CLOSE_E3_OPEN_E4.md
+74cf2387b1ddfb417de58ec345e113da3ca6206ae085edce21fe1e1fe90e316d  docs/memory/patches/P0075_USER_WAYPOINT_COMPASS_MARKER.md
+9fa761d3849a0254b99e3c32f76896d3a81ef8aefc8cf9db16afeb8d0f0491a3  docs/memory/patches/PATCH_INDEX.md
+
+Checks:
+python3 tools/check_compass_contract.py
+python3 tools/check_addon_structure.py
+python3 tools/check_dev_panel_contract.py
+python3 tools/check_memory_health.py
+git diff --check -- <P0075-owned files>
+
+Runtime code change: WoW redeploy required after push verification.
+Validation surface: existing developer panel -> Compass Check / Run All.

@@ -1,6 +1,7 @@
 local _, Logres = ...
 
 local UPDATE_INTERVAL = 0.05
+local WAYPOINT_UPDATE_INTERVAL = 0.15
 local COMPASS_WIDTH = 400
 local COMPASS_HEIGHT = 42
 local TAPE_WIDTH = 360
@@ -35,6 +36,41 @@ local function headingFromFacing(facing)
     return (360 - math.deg(facing)) % 360
 end
 
+local function readVectorXY(value)
+    if value == nil then
+        return nil, nil, "position-unavailable"
+    end
+
+    if isSecret(value) then
+        return nil, nil, "position-secret"
+    end
+
+    local x
+    local y
+
+    if type(value.GetXY) == "function" then
+        local ok
+        ok, x, y = pcall(value.GetXY, value)
+
+        if not ok then
+            return nil, nil, "position-getxy-failed"
+        end
+    else
+        x = value.x
+        y = value.y
+    end
+
+    if isSecret(x) or isSecret(y) then
+        return nil, nil, "position-component-secret"
+    end
+
+    if type(x) ~= "number" or type(y) ~= "number" then
+        return nil, nil, "position-component-invalid"
+    end
+
+    return x, y, nil
+end
+
 local Compass = Logres:RegisterModule("Compass", {
     OnInitialize = function(self)
         self.moduleEnabled = false
@@ -46,6 +82,18 @@ local Compass = Logres:RegisterModule("Compass", {
         self.facingAvailable = false
         self.presentationActive = false
         self.headingDegrees = nil
+
+        self.waypointAPIAvailable = false
+        self.waypointEventRegistered = false
+        self.waypointSourcePresent = false
+        self.waypointBearingAvailable = false
+        self.waypointBearingDegrees = nil
+        self.waypointRelativeDegrees = nil
+        self.waypointMarkerShown = false
+        self.waypointMapID = nil
+        self.waypointElapsed = 0
+        self.lastWaypointReason = "initialize"
+        self.lastWaypointError = nil
 
         self.updateActive = false
         self.elapsed = 0
@@ -74,7 +122,19 @@ local Compass = Logres:RegisterModule("Compass", {
         centerCap:SetPoint("TOP", center, "TOP", 0, 0)
         centerCap:SetColorTexture(0.93, 0.76, 0.39, 0.92)
 
+        local waypointMarker = frame:CreateTexture(nil, "OVERLAY")
+        waypointMarker:SetSize(2, 18)
+        waypointMarker:SetColorTexture(0.36, 0.78, 0.95, 0.95)
+        waypointMarker:Hide()
+
+        local waypointCap = frame:CreateTexture(nil, "OVERLAY")
+        waypointCap:SetSize(8, 2)
+        waypointCap:SetColorTexture(0.36, 0.78, 0.95, 0.95)
+        waypointCap:Hide()
+
         self.frame = frame
+        self.waypointMarker = waypointMarker
+        self.waypointCap = waypointCap
         self.directionWidgets = {}
 
         for index = 1, #DIRECTIONS do
@@ -111,6 +171,25 @@ local Compass = Logres:RegisterModule("Compass", {
             }
         end
 
+        local waypointEventFrame = CreateFrame("Frame")
+        local registered = pcall(
+            waypointEventFrame.RegisterEvent,
+            waypointEventFrame,
+            "USER_WAYPOINT_UPDATED"
+        )
+
+        self.waypointEventRegistered = registered and true or false
+
+        waypointEventFrame:SetScript("OnEvent", function(_, event)
+            if not self.moduleEnabled or not self.policyEligible then
+                return
+            end
+
+            self:RefreshWaypointBearing(event)
+        end)
+
+        self.waypointEventFrame = waypointEventFrame
+
         self.onUpdateHandler = function(_, elapsed)
             self:OnUpdate(elapsed)
         end
@@ -134,6 +213,7 @@ local Compass = Logres:RegisterModule("Compass", {
         self.moduleEnabled = false
         self.policyEligible = false
         self:SetUpdateActive(false)
+        self:ClearWaypointPresentation("module-disabled")
         self:ClearPresentation("module-disabled")
     end,
 })
@@ -147,6 +227,7 @@ function Compass:SetUpdateActive(enabled)
 
     self.updateActive = enabled
     self.elapsed = 0
+    self.waypointElapsed = 0
 
     if enabled then
         self.frame:SetScript("OnUpdate", self.onUpdateHandler)
@@ -155,12 +236,39 @@ function Compass:SetUpdateActive(enabled)
     end
 end
 
+function Compass:SetWaypointMarkerShown(shown)
+    shown = shown and true or false
+
+    self.waypointMarkerShown = shown
+
+    if shown then
+        self.waypointMarker:Show()
+        self.waypointCap:Show()
+    else
+        self.waypointMarker:Hide()
+        self.waypointCap:Hide()
+    end
+end
+
+function Compass:ClearWaypointPresentation(reason, errorText)
+    self.waypointSourcePresent = false
+    self.waypointBearingAvailable = false
+    self.waypointBearingDegrees = nil
+    self.waypointRelativeDegrees = nil
+    self.waypointMapID = nil
+    self.lastWaypointReason = reason or "waypoint-unavailable"
+    self.lastWaypointError = errorText
+    self:SetWaypointMarkerShown(false)
+end
+
 function Compass:ClearPresentation(reason, errorText)
     self.facingAvailable = false
     self.presentationActive = false
     self.headingDegrees = nil
+    self.waypointRelativeDegrees = nil
     self.lastReason = reason or "unavailable"
     self.lastError = errorText
+    self:SetWaypointMarkerShown(false)
     self.frame:Hide()
 end
 
@@ -198,6 +306,180 @@ function Compass:UpdateTape(headingDegrees)
             widget.label:Hide()
         end
     end
+end
+
+function Compass:UpdateWaypointMarker()
+    self:SetWaypointMarkerShown(false)
+    self.waypointRelativeDegrees = nil
+
+    if not self.presentationActive
+        or type(self.headingDegrees) ~= "number"
+        or not self.waypointBearingAvailable
+        or type(self.waypointBearingDegrees) ~= "number"
+    then
+        return
+    end
+
+    local relative = normalizeRelativeDegrees(
+        self.waypointBearingDegrees - self.headingDegrees
+    )
+
+    self.waypointRelativeDegrees = relative
+
+    if math.abs(relative) > VISIBLE_HALF_ANGLE then
+        return
+    end
+
+    local x = relative * PIXELS_PER_DEGREE
+
+    self.waypointMarker:ClearAllPoints()
+    self.waypointMarker:SetPoint(
+        "CENTER",
+        self.frame,
+        "CENTER",
+        x,
+        -1
+    )
+
+    self.waypointCap:ClearAllPoints()
+    self.waypointCap:SetPoint(
+        "TOP",
+        self.waypointMarker,
+        "TOP",
+        0,
+        0
+    )
+
+    self:SetWaypointMarkerShown(true)
+end
+
+function Compass:RefreshWaypointBearing(reason)
+    self.waypointAPIAvailable =
+        C_Map ~= nil
+        and type(C_Map.GetBestMapForUnit) == "function"
+        and type(C_Map.GetPlayerMapPosition) == "function"
+        and type(C_Map.GetUserWaypoint) == "function"
+        and type(C_Map.GetUserWaypointPositionForMap) == "function"
+        and type(math.atan2) == "function"
+
+    if not self.policyEligible then
+        self:ClearWaypointPresentation(reason or "policy-ineligible")
+        return false
+    end
+
+    if not self.waypointAPIAvailable then
+        self:ClearWaypointPresentation(
+            "waypoint-api-unavailable",
+            "required waypoint API unavailable"
+        )
+        return false
+    end
+
+    local waypointOK, waypoint = pcall(C_Map.GetUserWaypoint)
+
+    if not waypointOK then
+        self:ClearWaypointPresentation(
+            "waypoint-call-failed",
+            "GetUserWaypoint call failed"
+        )
+        return false
+    end
+
+    if isSecret(waypoint) then
+        self:ClearWaypointPresentation("waypoint-secret")
+        return false
+    end
+
+    if waypoint == nil then
+        self:ClearWaypointPresentation("waypoint-absent")
+        return true
+    end
+
+    self.waypointSourcePresent = true
+
+    local mapOK, mapID = pcall(C_Map.GetBestMapForUnit, "player")
+
+    if not mapOK then
+        self:ClearWaypointPresentation(
+            "player-map-call-failed",
+            "GetBestMapForUnit call failed"
+        )
+        return false
+    end
+
+    if isSecret(mapID) then
+        self:ClearWaypointPresentation("player-map-secret")
+        return false
+    end
+
+    if type(mapID) ~= "number" then
+        self:ClearWaypointPresentation("player-map-unavailable")
+        return false
+    end
+
+    local playerOK, playerPosition = pcall(
+        C_Map.GetPlayerMapPosition,
+        mapID,
+        "player"
+    )
+
+    if not playerOK then
+        self:ClearWaypointPresentation(
+            "player-position-call-failed",
+            "GetPlayerMapPosition call failed"
+        )
+        return false
+    end
+
+    local playerX, playerY, playerError =
+        readVectorXY(playerPosition)
+
+    if playerError then
+        self:ClearWaypointPresentation(playerError)
+        return false
+    end
+
+    local destinationOK, destinationPosition = pcall(
+        C_Map.GetUserWaypointPositionForMap,
+        mapID
+    )
+
+    if not destinationOK then
+        self:ClearWaypointPresentation(
+            "waypoint-position-call-failed",
+            "GetUserWaypointPositionForMap call failed"
+        )
+        return false
+    end
+
+    local destinationX, destinationY, destinationError =
+        readVectorXY(destinationPosition)
+
+    if destinationError then
+        self:ClearWaypointPresentation(destinationError)
+        return false
+    end
+
+    local dx = destinationX - playerX
+    local dy = destinationY - playerY
+
+    if dx == 0 and dy == 0 then
+        self:ClearWaypointPresentation("waypoint-coincident")
+        return true
+    end
+
+    local bearingDegrees =
+        (math.deg(math.atan2(dx, -dy)) + 360) % 360
+
+    self.waypointSourcePresent = true
+    self.waypointBearingAvailable = true
+    self.waypointBearingDegrees = bearingDegrees
+    self.waypointMapID = mapID
+    self.lastWaypointReason = reason or "waypoint-refresh"
+    self.lastWaypointError = nil
+
+    self:UpdateWaypointMarker()
+    return true
 end
 
 function Compass:RefreshHeading(reason)
@@ -251,6 +533,7 @@ function Compass:RefreshHeading(reason)
     self.lastReason = reason or "heading-refresh"
     self.lastError = nil
 
+    self:UpdateWaypointMarker()
     self.frame:Show()
     return true
 end
@@ -271,21 +554,26 @@ function Compass:ReconcilePolicy(reason)
         self:SetUpdateActive(false)
 
         if not self.moduleEnabled then
+            self:ClearWaypointPresentation("module-disabled")
             self:ClearPresentation("module-disabled")
         elseif not self.immersionEnabled then
+            self:ClearWaypointPresentation("immersion-off")
             self:ClearPresentation("immersion-off")
         else
-            self:ClearPresentation("context-" .. tostring(self.context))
+            local contextReason = "context-" .. tostring(self.context)
+            self:ClearWaypointPresentation(contextReason)
+            self:ClearPresentation(contextReason)
         end
 
         return
     end
 
-    -- World context is the only context in which E.2 samples facing.
-    -- If a world sample is temporarily unavailable, keep the throttled
-    -- sampler alive so capability can recover without inventing a heading.
+    -- World context is the only context in which navigation samples are used.
+    -- If a sample is temporarily unavailable, keep the throttled sampler alive
+    -- so capability can recover without inventing heading or waypoint state.
     self:SetUpdateActive(true)
     self:RefreshHeading(reason or "policy")
+    self:RefreshWaypointBearing(reason or "policy")
 end
 
 function Compass:OnUpdate(elapsed)
@@ -294,13 +582,18 @@ function Compass:OnUpdate(elapsed)
     end
 
     self.elapsed = self.elapsed + elapsed
+    self.waypointElapsed = self.waypointElapsed + elapsed
 
-    if self.elapsed < UPDATE_INTERVAL then
-        return
+    if self.elapsed >= UPDATE_INTERVAL then
+        self.elapsed = self.elapsed % UPDATE_INTERVAL
+        self:RefreshHeading("onupdate")
     end
 
-    self.elapsed = self.elapsed % UPDATE_INTERVAL
-    self:RefreshHeading("onupdate")
+    if self.waypointElapsed >= WAYPOINT_UPDATE_INTERVAL then
+        self.waypointElapsed =
+            self.waypointElapsed % WAYPOINT_UPDATE_INTERVAL
+        self:RefreshWaypointBearing("onupdate")
+    end
 end
 
 function Compass:GetDebugStatus()
@@ -320,6 +613,20 @@ function Compass:GetDebugStatus()
 
         presentationActive = self.presentationActive == true,
         headingDegrees = self.headingDegrees,
+
+        waypointAPIAvailable = self.waypointAPIAvailable == true,
+        waypointEventRegistered = self.waypointEventRegistered == true,
+        waypointSourcePresent = self.waypointSourcePresent == true,
+        waypointBearingAvailable = self.waypointBearingAvailable == true,
+        waypointBearingDegrees = self.waypointBearingDegrees,
+        waypointRelativeDegrees = self.waypointRelativeDegrees,
+        waypointMarkerReady =
+            self.waypointMarker ~= nil
+            and self.waypointCap ~= nil,
+        waypointMarkerShown = self.waypointMarkerShown == true,
+        waypointMapID = self.waypointMapID,
+        lastWaypointReason = self.lastWaypointReason,
+        lastWaypointError = self.lastWaypointError,
 
         lastReason = self.lastReason,
         lastError = self.lastError,

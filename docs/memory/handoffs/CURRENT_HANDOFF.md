@@ -2,30 +2,26 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0073 is verified pushed at `4d4ea878`.
+P0074 is verified pushed at `04d79317`.
 
-Phase E / E.3 is complete.
+Phase E / E.4 is active.
 
-Final north-reference runtime proof:
-- current-map waypoint position was usable;
-- map delta was approximately `-0.00506, -0.37168`;
-- map-space bearing was `359.2` degrees;
-- previous raw-world candidates remained near east.
-
-Therefore the supported bearing orientation is current UI map space, not raw
-world X/Y.
-
-Active work:
-**E.4 — User-waypoint compass marker integration.**
-
-E.4 scope:
+P0075 prepares the first production waypoint presentation:
 - manual user waypoint only;
-- current-player-map bearing;
-- existing world/Immersion compass eligibility;
-- fail open;
-- no quest marker without new runtime evidence;
+- current UI map bearing only;
+- existing Compass module;
+- existing Compass Check developer-panel action;
+- throttled player-position resampling;
+- `USER_WAYPOINT_UPDATED` immediate refresh;
+- no stale fallback;
+- no quest marker;
 - minimap remains stock.
 
-Production runtime remains `0.0.29-dev`.
+Runtime target:
+`0.0.30-dev`.
+
+After P0075 push:
+deploy and validate through the existing developer panel, then export the
+persisted diagnostic file.
 
 User performs all commits/pushes.

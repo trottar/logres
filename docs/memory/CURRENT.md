@@ -14,65 +14,80 @@ project: logres
 
 **E.4 — User-waypoint compass marker integration.**
 
-P0073 is verified pushed at `4d4ea878`.
+P0074 is verified pushed at `04d79317`.
 
-E.3 is complete.
+P0075 prepares the production manual user-waypoint compass marker.
 
-Production runtime remains `0.0.29-dev`.
+Production runtime target:
+`0.0.30-dev`.
 
 ## Verified State
 
 - E.1 complete.
 - E.2 complete.
 - E.3 complete.
-- Forever runtime: client `1.60.1`, build `70170`, interface `16001`.
-- User-waypoint present/absent retrieval is runtime-proven.
+- Manual user-waypoint retrieval is runtime-proven.
 - User-waypoint clear behavior is runtime-proven with no stale bearing.
 - `USER_WAYPOINT_UPDATED` is runtime-proven to register and fire.
-- `SUPER_TRACKING_CHANGED` is runtime-proven to register and fire.
-- `SUPER_TRACKING_PATH_UPDATED` registered but did not fire in the tested runs.
-- Tested super-tracked quest IDs `436` and `237` returned no usable next
-  waypoint.
-- Raw world X/Y axes are rejected as the compass-north basis on map `1432`.
-- The supported user-waypoint bearing path is current UI map space:
-  - player position: `C_Map.GetPlayerMapPosition(playerMapID, "player")`;
-  - destination: `C_Map.GetUserWaypointPositionForMap(playerMapID)`;
-  - clockwise bearing:
-    `(degrees(atan2(dx, -dy)) + 360) % 360`.
-- Final north-reference proof produced:
-  - map delta approximately `-0.00506, -0.37168`;
-  - map bearing `359.2` degrees;
-  - the same sample's raw-world candidates remained approximately
-    `88.8` / `91.2`.
-- Therefore map-space orientation is runtime-proven and E.3 closes.
-- Quest waypoint presentation remains unsupported unless later runtime evidence
-  proves a usable quest destination.
+- The supported bearing domain is the player's current UI map:
+  - player position from `C_Map.GetPlayerMapPosition`;
+  - destination from `C_Map.GetUserWaypointPositionForMap`;
+  - clockwise bearing from `(degrees(atan2(dx, -dy)) + 360) % 360`.
+- Deliberate north-reference proof resolved to `359.2` degrees.
+- Raw world X/Y remains rejected for compass orientation.
+- Tested super-tracked quest IDs `436` and `237` returned no usable next waypoint.
+- Quest marker presentation remains unsupported without new runtime evidence.
 - Minimap remains stock.
+
+## P0075 Design
+
+P0075 integrates only the proven manual user-waypoint path into the existing
+Compass module.
+
+The marker:
+- uses current UI map coordinates only;
+- updates from `USER_WAYPOINT_UPDATED`;
+- resamples player/destination position on a throttled interval while the
+  compass is eligible so player movement changes the relative bearing;
+- shares existing world/Immersion eligibility;
+- is shown only while its relative bearing lies inside the visible compass tape;
+- disappears immediately when the waypoint/input becomes absent or unusable;
+- never caches a stale destination as fallback.
+
+`Compass Check` remains the canonical developer-panel diagnostic and is extended
+to validate the waypoint-marker state. No new user workflow is introduced.
 
 ## Next Action
 
-E.4 implements only the runtime-proven **manual user waypoint** bearing marker
-on the existing compass.
+Apply/push P0075, deploy, then validate through the existing developer panel.
 
-Requirements:
-1. use current-player-map coordinates, not raw world X/Y, for bearing;
-2. show no marker when the user waypoint is absent or unusable;
-3. update on `USER_WAYPOINT_UPDATED` and while player position changes;
-4. preserve existing compass world/Immersion eligibility;
-5. fail open to Blizzard navigation;
-6. do not add quest waypoint presentation from source presence alone;
-7. do not suppress the minimap.
+Required runtime matrix:
+1. no manual waypoint -> Compass Check;
+2. set a manual waypoint -> Compass Check;
+3. rotate so marker crosses the tape and visually follows the correct direction;
+4. move enough for bearing to update -> Compass Check;
+5. move/clear the waypoint -> Compass Check;
+6. Immersion OFF -> marker/compass hidden -> Compass Check;
+7. Immersion ON -> recovery -> Compass Check;
+8. Run All;
+9. no Lua/taint/secret errors;
+10. minimap unchanged.
+
+After the final check:
+- `/reload`;
+- `python3 tools/export_panel_diagnostics.py`;
+- attach `LOGRES_DIAGNOSTICS_LATEST.lua`.
 
 ## Success Criteria
 
 E.4 succeeds when:
-- a manual user waypoint produces a restrained compass marker at the correct
-  relative heading;
-- moving/clearing the waypoint updates/removes the marker without stale state;
-- player movement updates the relative bearing;
-- ineligible/restricted contexts omit the marker cleanly;
+- manual waypoint marker direction is visually correct;
+- moving/clearing the waypoint updates/removes without stale state;
+- player movement updates relative bearing;
+- policy-ineligible contexts omit marker cleanly;
+- Compass Check and Run All pass;
 - no Lua/taint/secret errors occur;
-- Blizzard minimap/navigation remains available.
+- minimap/navigation fallback remains available.
 
 ## Do Not Reopen Without New Evidence
 
@@ -80,8 +95,7 @@ E.4 succeeds when:
 - **E.2:** complete.
 - **E.3:** complete.
 - **User-waypoint map-space bearing:** proven.
-- **Raw world X/Y bearing:** rejected for compass orientation on tested map.
-- **Quest IDs 436/237 next waypoint:** unavailable in tested state.
+- **Raw world X/Y bearing:** rejected.
 - **Quest marker:** unsupported until separately runtime-proven.
 - **Minimap suppression:** deferred/capability-gated.
 - **Git authority:** user performs commits/pushes.
@@ -89,6 +103,5 @@ E.4 succeeds when:
 ## Relevant References
 
 - `docs/memory/evidence/E3_P0073_RUNTIME_PASS_2026-10-02.md`
-- `docs/memory/evidence/E3_P0073_MAP_SPACE_BEARING_CORRECTION_2026-10-01.md`
-- `docs/memory/investigations/E3_WAYPOINT_BEARING_CAPABILITY_PROOF.md`
+- `docs/memory/evidence/E4_P0075_USER_WAYPOINT_MARKER_DESIGN_2026-10-02.md`
 - `docs/memory/decisions/D-029_COMPASS_NAVIGATION_CAPABILITY_CONTRACT.md`

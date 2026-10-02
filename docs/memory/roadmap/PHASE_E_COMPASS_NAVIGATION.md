@@ -42,33 +42,32 @@ Final north-reference runtime proof:
 
 Raw world X/Y axes are rejected for compass orientation on the tested map.
 
-Runtime-proven events:
-- `USER_WAYPOINT_UPDATED`;
-- `SUPER_TRACKING_CHANGED`.
-
-Not observed firing:
-- `SUPER_TRACKING_PATH_UPDATED`.
-
 Tested quest limitation:
 - super-tracked quest IDs `436` and `237` produced no usable next waypoint.
 
-Therefore quest marker support remains unavailable until separately proven.
+Quest marker support remains unavailable until separately proven.
 
 ## E.4 — User-waypoint compass marker integration
 
-**ACTIVE.**
+**ACTIVE — P0075 PREPARED.**
 
-Implement only the proven manual user-waypoint path on the existing compass.
+P0075 integrates only the proven manual user-waypoint path into the existing
+Compass module.
 
-Required behavior:
-- restrained marker integrated into the horizontal compass;
-- bearing calculated in the current player UI map domain;
-- marker omitted when waypoint/map/position data is absent or unusable;
-- marker updates when the waypoint changes and as the player moves;
-- existing world/Immersion eligibility remains authoritative;
-- restricted/unavailable contexts fail open;
-- no quest marker from API/source presence alone;
+Contract:
+- current-player-map coordinates only;
+- no raw-world bearing;
+- no quest marker;
+- marker shares existing world/Immersion eligibility;
+- `USER_WAYPOINT_UPDATED` triggers immediate destination refresh;
+- player/destination positions are resampled on a throttled interval while
+  eligible;
+- no stale destination is retained when an input becomes unavailable;
+- marker is shown only inside the existing visible compass tape;
+- Compass Check remains the canonical developer-panel diagnostic;
 - minimap remains stock.
+
+Runtime proof is required before E.4 closes.
 
 ## E.5+ — Navigation sufficiency / minimap capability
 
@@ -77,9 +76,8 @@ Required behavior:
 Do not suppress the minimap merely because heading and user-waypoint bearing
 exist.
 
-Any later suppression requires a separate deliberate capability review proving
-that Logres replaces the required navigation/control surface safely and
-reversibly.
+Any later suppression requires a separate capability review proving that Logres
+replaces the required navigation/control surface safely and reversibly.
 
 ## Navigation ownership
 

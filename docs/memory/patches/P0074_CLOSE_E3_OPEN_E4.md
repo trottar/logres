@@ -1,7 +1,7 @@
 # P0074 — Close E.3 / Open E.4
 
 Date: 2026-10-02
-Result: PREPARED
+Result: INSTALLED / PUSHED (`04d79317`)
 
 ## Baseline
 
@@ -21,26 +21,11 @@ The deliberate north-reference waypoint resolved to:
 - current-map delta approximately `-0.00506, -0.37168`;
 - corrected map-space bearing `359.2` degrees.
 
-This closes the orientation proof.
+E.3 is closed.
 
-## E.4 opened
+## E.4
 
-**E.4 — User-waypoint compass marker integration**
+Opened:
+**E.4 — User-waypoint compass marker integration**.
 
-Scope:
-- manual user waypoint only;
-- current-player-map coordinates;
-- existing compass world/Immersion eligibility;
-- clean omission on unavailable inputs;
-- waypoint/player-position updates;
-- no quest marker without separate runtime proof;
-- minimap remains stock.
-
-## Runtime
-
-No production runtime code changes in P0074.
-
-Production runtime remains:
-`0.0.29-dev`.
-
-No WoW redeploy is required for this docs-only checkpoint.
+P0075 is the first production implementation checkpoint.

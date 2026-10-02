@@ -1785,6 +1785,46 @@ local function runCompassCheck()
             and debugStatus.headingDegrees == nil
     end
 
+    local waypointBearingOK =
+        debugStatus.waypointBearingAvailable == false
+
+    if debugStatus.waypointBearingAvailable then
+        waypointBearingOK =
+            type(debugStatus.waypointBearingDegrees) == "number"
+            and debugStatus.waypointBearingDegrees >= 0
+            and debugStatus.waypointBearingDegrees < 360
+            and type(debugStatus.waypointRelativeDegrees) == "number"
+    end
+
+    local expectedMarkerShown = false
+
+    if expectedPolicy
+        and debugStatus.waypointBearingAvailable
+        and type(debugStatus.waypointRelativeDegrees) == "number"
+    then
+        expectedMarkerShown =
+            math.abs(debugStatus.waypointRelativeDegrees) <= 100
+    end
+
+    local waypointCoherent =
+        debugStatus.waypointMarkerReady == true
+        and debugStatus.waypointEventRegistered == true
+        and waypointBearingOK
+        and debugStatus.waypointMarkerShown == expectedMarkerShown
+        and (
+            debugStatus.waypointSourcePresent == true
+            or (
+                debugStatus.waypointBearingAvailable == false
+                and debugStatus.waypointMarkerShown == false
+            )
+        )
+
+    if not expectedPolicy then
+        waypointCoherent =
+            waypointCoherent
+            and debugStatus.waypointMarkerShown == false
+    end
+
     local passed =
         status.initialized == true
         and status.enabled == true
@@ -1793,17 +1833,31 @@ local function runCompassCheck()
         and debugStatus.directionCount == 8
         and policyMatches
         and presentationMatches
+        and waypointCoherent
         and debugStatus.lastError == nil
+        and debugStatus.lastWaypointError == nil
 
     local headingText = "nil"
+    local waypointBearingText = "nil"
+    local waypointRelativeText = "nil"
 
     if type(debugStatus.headingDegrees) == "number" then
         headingText = string.format("%.1f", debugStatus.headingDegrees)
     end
 
+    if type(debugStatus.waypointBearingDegrees) == "number" then
+        waypointBearingText =
+            string.format("%.1f", debugStatus.waypointBearingDegrees)
+    end
+
+    if type(debugStatus.waypointRelativeDegrees) == "number" then
+        waypointRelativeText =
+            string.format("%.1f", debugStatus.waypointRelativeDegrees)
+    end
+
     if passed then
         emit(string.format(
-            "Logres compasscheck: PASS (immersion=%s context=%s policy=%s facing=%s update=%s active=%s heading=%s reason=%s)",
+            "Logres compasscheck: PASS (immersion=%s context=%s policy=%s facing=%s update=%s active=%s heading=%s waypointAPI=%s event=%s waypoint=%s bearing=%s relative=%s marker=%s waypointReason=%s reason=%s)",
             boolText(preferences.immersionEnabled == true),
             tostring(state.context),
             boolText(debugStatus.policyEligible),
@@ -1811,13 +1865,20 @@ local function runCompassCheck()
             boolText(debugStatus.updateActive),
             boolText(debugStatus.presentationActive),
             headingText,
+            boolText(debugStatus.waypointAPIAvailable),
+            boolText(debugStatus.waypointEventRegistered),
+            boolText(debugStatus.waypointSourcePresent),
+            waypointBearingText,
+            waypointRelativeText,
+            boolText(debugStatus.waypointMarkerShown),
+            tostring(debugStatus.lastWaypointReason),
             tostring(debugStatus.lastReason)
         ))
         return
     end
 
     emit(string.format(
-        "Logres compasscheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s rootReady=%s directions=%s policyMatches=%s presentationMatches=%s expectedPolicy=%s immersion=%s/%s context=%s/%s facingAPI=%s facing=%s update=%s active=%s shown=%s heading=%s headingOK=%s reason=%s error=%s)",
+        "Logres compasscheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s rootReady=%s directions=%s policyMatches=%s presentationMatches=%s waypointCoherent=%s expectedPolicy=%s immersion=%s/%s context=%s/%s facingAPI=%s facing=%s update=%s active=%s shown=%s heading=%s headingOK=%s waypointAPI=%s event=%s waypoint=%s bearingAvailable=%s bearing=%s relative=%s markerReady=%s markerShown=%s expectedMarker=%s waypointReason=%s waypointError=%s reason=%s error=%s)",
         tostring(status.initialized),
         tostring(status.enabled),
         tostring(debugStatus.moduleEnabled),
@@ -1825,6 +1886,7 @@ local function runCompassCheck()
         tostring(debugStatus.directionCount),
         tostring(policyMatches),
         tostring(presentationMatches),
+        tostring(waypointCoherent),
         tostring(expectedPolicy),
         tostring(debugStatus.immersionEnabled),
         tostring(preferences.immersionEnabled == true),
@@ -1837,6 +1899,17 @@ local function runCompassCheck()
         tostring(debugStatus.rootShown),
         headingText,
         tostring(headingOK),
+        tostring(debugStatus.waypointAPIAvailable),
+        tostring(debugStatus.waypointEventRegistered),
+        tostring(debugStatus.waypointSourcePresent),
+        tostring(debugStatus.waypointBearingAvailable),
+        waypointBearingText,
+        waypointRelativeText,
+        tostring(debugStatus.waypointMarkerReady),
+        tostring(debugStatus.waypointMarkerShown),
+        tostring(expectedMarkerShown),
+        tostring(debugStatus.lastWaypointReason),
+        tostring(debugStatus.lastWaypointError),
         tostring(debugStatus.lastReason),
         tostring(debugStatus.lastError)
     ))
