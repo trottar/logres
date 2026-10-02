@@ -93,7 +93,7 @@ Canonical phase record:
 
 ## Phase E — Compass and Navigation
 
-**Status: ACTIVE — E.1 source review and capability audit.**
+**Status: ACTIVE — E.2 heading-only world compass.**
 
 Implement a Warcraft-aesthetic horizontal compass:
 - world/exploration use;
@@ -106,8 +106,7 @@ Canonical phase record:
 `memory/roadmap/PHASE_E_COMPASS_NAVIGATION.md`
 
 Current work:
-E.1 resolves the production compass/navigation capability contract before
-runtime code.
+E.2 implements and runtime-validates the D-029 heading-only world compass.
 
 ## Phase F — Quest Experience
 

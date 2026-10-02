@@ -69,7 +69,8 @@ if COMMANDS.is_file():
         '"Stock Replace ON"',
         '"Stock Replace OFF"',
         "replacement:IsRoutingManaged(key)",
-        "Turn Stock Bars Replace OFF first.",
+        'replacement owns this routing domain. Turn Stock Bars "',
+        '"Replace OFF first."',
         "runStockReplacementCheck()",
     ]
 

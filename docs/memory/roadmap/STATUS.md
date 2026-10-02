@@ -7,7 +7,7 @@ As of 2026-10-01.
 **Phase E — Compass and Navigation**
 
 Active work item:
-**E.2 Heading-only world compass runtime implementation**
+**E.2 Heading-only world compass runtime validation**
 
 State:
 **Phase D COMPLETE; Phase E ACTIVE — E.2**
@@ -31,6 +31,6 @@ State:
 | Item | State |
 | --- | --- |
 | E.1 Compass/navigation source review + capability audit | COMPLETE |
-| E.2 Heading-only world compass | ACTIVE |
+| E.2 Heading-only world compass | ACTIVE — implementation prepared; runtime proof next |
 | E.3 Waypoint-bearing capability/proof | QUEUED |
 | E.4+ Navigation integration/minimap capability | QUEUED |

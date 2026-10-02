@@ -11,6 +11,23 @@ for path in (TARGET, COMMANDS):
     if not path.is_file():
         errors.append(f"missing required file: {path.relative_to(ROOT)}")
 
+
+def local_function_source(source, signature):
+    start = source.find(signature)
+    if start == -1:
+        return None
+
+    next_function = source.find(
+        "\nlocal function ",
+        start + len(signature),
+    )
+
+    if next_function == -1:
+        return source[start:]
+
+    return source[start:next_function]
+
+
 if TARGET.is_file():
     source = TARGET.read_text(encoding="utf-8")
 
@@ -77,21 +94,32 @@ if COMMANDS.is_file():
                 f"Commands.lua missing secret-safe target diagnostic: {fragment}"
             )
 
-    forbidden = [
-        "debugStatus.containerAlpha",
-        "debugStatus.contentMainAlpha",
-        "debugStatus.contextualAlpha",
-        "debugStatus.targetFrameMouseEnabled",
-        "debugStatus.preservedIgnoreParentCount",
-        "debugStatus.interactionShown",
-        "debugStatus.interactionMouseEnabled",
-    ]
+    target_check = local_function_source(
+        source,
+        "local function runTargetFrameCheck()",
+    )
 
-    for fragment in forbidden:
-        if fragment in source:
-            errors.append(
-                f"Commands.lua still inspects secret-capable target state: {fragment}"
-            )
+    if target_check is None:
+        errors.append("runTargetFrameCheck could not be isolated")
+    else:
+        # These fields are forbidden only inside the Target diagnostic.
+        # PlayerFrame Check legitimately uses container/content alpha fields.
+        forbidden = [
+            "debugStatus.containerAlpha",
+            "debugStatus.contentMainAlpha",
+            "debugStatus.contextualAlpha",
+            "debugStatus.targetFrameMouseEnabled",
+            "debugStatus.preservedIgnoreParentCount",
+            "debugStatus.interactionShown",
+            "debugStatus.interactionMouseEnabled",
+        ]
+
+        for fragment in forbidden:
+            if fragment in target_check:
+                errors.append(
+                    "Commands.lua target diagnostic still inspects "
+                    f"secret-capable target state: {fragment}"
+                )
 
 print("Logres TargetFrame replacement contract")
 print("=======================================")

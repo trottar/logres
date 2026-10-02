@@ -1744,6 +1744,104 @@ local function runRestorationCheck()
     )
 end
 
+local function runCompassCheck()
+    local status = Logres:GetModuleStatus("Compass")
+    local compass = Logres:GetModule("Compass")
+    local debugStatus = compass:GetDebugStatus()
+    local preferences = Logres:GetPreferences()
+    local state = Logres:GetState()
+
+    local expectedPolicy =
+        preferences.immersionEnabled == true
+        and state.context == "world"
+
+    local policyMatches =
+        debugStatus.immersionEnabled
+            == (preferences.immersionEnabled == true)
+        and debugStatus.context == state.context
+        and debugStatus.policyEligible == expectedPolicy
+
+    local presentationMatches
+    local headingOK = false
+
+    if expectedPolicy then
+        headingOK =
+            type(debugStatus.headingDegrees) == "number"
+            and debugStatus.headingDegrees >= 0
+            and debugStatus.headingDegrees < 360
+
+        presentationMatches =
+            debugStatus.facingAPIAvailable == true
+            and debugStatus.facingAvailable == true
+            and debugStatus.updateActive == true
+            and debugStatus.presentationActive == true
+            and debugStatus.rootShown == true
+            and headingOK
+    else
+        presentationMatches =
+            debugStatus.updateActive == false
+            and debugStatus.presentationActive == false
+            and debugStatus.rootShown == false
+            and debugStatus.headingDegrees == nil
+    end
+
+    local passed =
+        status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and debugStatus.rootReady == true
+        and debugStatus.directionCount == 8
+        and policyMatches
+        and presentationMatches
+        and debugStatus.lastError == nil
+
+    local headingText = "nil"
+
+    if type(debugStatus.headingDegrees) == "number" then
+        headingText = string.format("%.1f", debugStatus.headingDegrees)
+    end
+
+    if passed then
+        emit(string.format(
+            "Logres compasscheck: PASS (immersion=%s context=%s policy=%s facing=%s update=%s active=%s heading=%s reason=%s)",
+            boolText(preferences.immersionEnabled == true),
+            tostring(state.context),
+            boolText(debugStatus.policyEligible),
+            boolText(debugStatus.facingAvailable),
+            boolText(debugStatus.updateActive),
+            boolText(debugStatus.presentationActive),
+            headingText,
+            tostring(debugStatus.lastReason)
+        ))
+        return
+    end
+
+    emit(string.format(
+        "Logres compasscheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s rootReady=%s directions=%s policyMatches=%s presentationMatches=%s expectedPolicy=%s immersion=%s/%s context=%s/%s facingAPI=%s facing=%s update=%s active=%s shown=%s heading=%s headingOK=%s reason=%s error=%s)",
+        tostring(status.initialized),
+        tostring(status.enabled),
+        tostring(debugStatus.moduleEnabled),
+        tostring(debugStatus.rootReady),
+        tostring(debugStatus.directionCount),
+        tostring(policyMatches),
+        tostring(presentationMatches),
+        tostring(expectedPolicy),
+        tostring(debugStatus.immersionEnabled),
+        tostring(preferences.immersionEnabled == true),
+        tostring(debugStatus.context),
+        tostring(state.context),
+        tostring(debugStatus.facingAPIAvailable),
+        tostring(debugStatus.facingAvailable),
+        tostring(debugStatus.updateActive),
+        tostring(debugStatus.presentationActive),
+        tostring(debugStatus.rootShown),
+        headingText,
+        tostring(headingOK),
+        tostring(debugStatus.lastReason),
+        tostring(debugStatus.lastError)
+    ))
+end
+
 local CONTEXT_POLICY_ALPHA = {
     world = {
         primary = 1.00,
@@ -2000,6 +2098,7 @@ local function runAllChecks()
     runTargetFrameCheck()
     runRestorationCheck()
     runContextPolicyCheck()
+    runCompassCheck()
     emit("Logres checkall: complete")
 end
 
@@ -2077,6 +2176,7 @@ local function printHelp()
     emit("  /logres targetframecheck")
     emit("  /logres restorationcheck")
     emit("  /logres contextpolicycheck")
+    emit("  /logres compasscheck")
     emit("  /logres hudpreview [on|off]")
     emit("  /logres immersion [on|off|toggle]")
     emit("  /logres debug on")
@@ -2202,6 +2302,11 @@ local function handleCommand(message)
 
     if command == "contextpolicycheck" then
         runContextPolicyCheck()
+        return
+    end
+
+    if command == "compasscheck" then
+        runCompassCheck()
         return
     end
 
@@ -2338,6 +2443,11 @@ Logres:RegisterDevPanelAction(
     "contextPolicyCheck",
     "Context Policy Check",
     "contextpolicycheck"
+)
+Logres:RegisterDevPanelAction(
+    "compassCheck",
+    "Compass Check",
+    "compasscheck"
 )
 Logres:RegisterDevPanelAction(
     "immersionOn",

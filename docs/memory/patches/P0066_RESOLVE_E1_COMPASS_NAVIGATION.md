@@ -1,7 +1,7 @@
 # P0066 — Resolve E.1 Compass / Navigation Contract
 
 Date: 2026-10-01
-Result: PREPARED — DOCS-ONLY SOURCE/DESIGN CHECKPOINT
+Result: INSTALLED / PUSHED (`586d188d`)
 
 ## Baseline
 
@@ -52,5 +52,6 @@ No WoW redeploy is required.
 
 ## Next
 
-After P0066 is pushed:
-implement E.2 on runtime target `0.0.28-dev`.
+P0066 is verified pushed at `586d188d`.
+
+Implement E.2 on runtime target `0.0.28-dev`.

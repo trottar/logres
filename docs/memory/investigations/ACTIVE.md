@@ -1,12 +1,15 @@
 # Active Investigations
 
-No open source investigation blocks E.2.
+## E.2 — Heading compass runtime validation
 
-## Next runtime work
+Status:
+**ACTIVE — IMPLEMENTATION PREPARED**
 
-**E.2 — Heading-only world compass implementation**
+Canonical:
+`E2_HEADING_COMPASS_RUNTIME_VALIDATION.md`
 
-D-029 is canonical.
+Next:
+deploy P0067 and validate `0.0.28-dev`.
 
 ## Tracked non-blocking defects / deferred domains
 

@@ -12,9 +12,11 @@ project: logres
 
 ## Current Work Item
 
-**E.2 — Heading-only world compass runtime implementation.**
+**E.2 — Heading-only world compass runtime validation.**
 
-E.1 source review is complete.
+E.1 is complete.
+
+P0067 implementation is prepared for runtime proof.
 
 ## Verified State
 
@@ -27,43 +29,49 @@ E.1 source review is complete.
 - P0063 pushed at `20b1bf55`; user-reported runtime validation PASS.
 - P0064 pushed at `770f9f30`; assistant workflow failures are durable project
   knowledge and the standard patch procedure is restored.
-- P0065 pushed at `46271f97`; Phase D closed and Phase E / E.1 opened.
-- Runtime remains `0.0.27-dev`.
-- D-029 is the canonical Phase E navigation capability contract.
-- Forever source + I-001 runtime evidence agree that `GetPlayerFacing()` is
-  usable outdoors and unavailable in restricted instance contexts.
-- `C_Map.GetBestMapForUnit("player")` +
-  `C_Map.GetPlayerMapPosition(mapID, "player")` is the later player-position
-  path; I-001 already proved it in open world and proved its absence in the
-  tested party instance.
-- User-waypoint APIs are source-present on Forever, but project runtime semantics
-  are not yet proven.
-- `C_QuestLog.GetNextWaypoint` is source-present and project presence-proven,
-  but detailed waypoint semantics are not yet runtime-proven.
-- `SUPER_TRACKING_CHANGED` is source-listed for Forever.
-- `USER_WAYPOINT_UPDATED` is not relied on because current source reference does
-  not list Forever support.
-- Minimap suppression remains forbidden until Logres navigation deliberately
-  replaces the required information/control surface.
+- P0065 pushed at `46271f97`; Phase D closed and Phase E opened.
+- P0066 pushed at `586d188d`; D-029 accepted, E.1 closed, E.2 opened.
+- P0067 targets runtime `0.0.28-dev`.
+- D-029 remains the canonical Phase E navigation capability contract.
+- E.2 uses `GetPlayerFacing()` only.
+- E.2 has no player-position, waypoint, distance, route, or minimap dependency.
+- Compass presentation is gated by Immersion preference + existing State world
+  context.
+- The compass samples facing only in eligible world context.
+- Facing values are secret-checked before inspection/arithmetic.
+- Unavailable facing clears/hides presentation; no stale heading fallback is
+  retained.
+- In eligible world context, the throttled sampler remains active through a
+  temporarily unavailable sample so capability can recover.
+- In instance/non-world context the facing sampler is disabled.
+- User/quest waypoint work remains queued for E.3.
+- Minimap suppression remains forbidden/capability-gated.
+- Party/CompactPartyFrame suppression remains capability-deferred.
+- Primary replacement/routing ownership remains deferred.
+- TargetFrame intermittent reappearance remains OPEN / UNREPRODUCED.
+- future Aura / Status Presentation remains deferred.
+- D-020 live action editing remains deferred.
+- cast cue color regression remains open visual debt.
 
 ## Next Action
 
-Implement E.2 as the smallest proven compass slice:
+Deploy and runtime-validate P0067 on `0.0.28-dev`.
 
-1. add a `Compass` module;
-2. top-center horizontal Warcraft-style heading tape;
-3. consume `immersionEnabled` + existing State context;
-4. use `GetPlayerFacing()` only for the first slice;
-5. convert API facing to conventional compass heading for presentation:
-   `headingDegrees = (360 - degrees(facing)) % 360`;
-6. update on a throttled `OnUpdate` only while eligible;
-7. suspend when Immersion is OFF, context is not world, or facing is unavailable;
-8. add addon-owned diagnostic state + `Compass Check`;
-9. do not add waypoint markers, distance, map-position logic, or minimap
-   suppression in E.2.
+Validate:
+1. Immersion ON in open world: Compass Check PASS;
+2. heading tape visible and follows player rotation;
+3. N/E/S/W orientation correct;
+4. Immersion OFF: compass hidden and Compass Check PASS suspended;
+5. Immersion ON: compass restores and Compass Check PASS;
+6. `/reload`: preference-driven compass state restores;
+7. natural instance transition when available: compass suspends, sampler stops,
+   Compass Check PASS; returning to world restores;
+8. Run All PASS for checks actually performed;
+9. no Lua/taint/secret regression;
+10. minimap remains untouched.
 
-Runtime target:
-`0.0.28-dev`.
+Do not require contrived travel solely to manufacture instance proof. If no
+natural instance is available, record environmental deferral rather than PASS.
 
 ## Success Criteria
 
@@ -72,8 +80,8 @@ E.2 succeeds when:
 - N/E/S/W orientation is visually correct;
 - Immersion OFF hides it;
 - Immersion ON restores it;
-- instance/restricted unavailability suspends it without fabricated heading;
-- returning to world restores it;
+- restricted-context suspension/restoration is proven or explicitly
+  environmentally deferred with prior I-001 capability evidence preserved;
 - no Lua/taint/secret regression occurs;
 - minimap remains untouched.
 
@@ -82,8 +90,7 @@ E.2 succeeds when:
 - **Phase D / D.1–D.6:** complete.
 - **D-029 heading source:** `GetPlayerFacing()` for E.2.
 - **E.2 position dependency:** none.
-- **Waypoint markers:** deferred until their runtime data/event contract is
-  proven.
+- **Waypoint markers:** deferred to E.3.
 - **Minimap suppression:** deferred/capability-gated.
 - **Party suppression:** capability-deferred.
 - **Primary replacement/routing:** deferred.
@@ -95,9 +102,10 @@ E.2 succeeds when:
 
 - `docs/memory/decisions/D-029_COMPASS_NAVIGATION_CAPABILITY_CONTRACT.md`
 - `docs/memory/evidence/E1_COMPASS_NAVIGATION_SOURCE_REVIEW_2026-10-01.md`
+- `docs/memory/evidence/E2_P0067_HEADING_COMPASS_IMPLEMENTATION_2026-10-01.md`
+- `docs/memory/evidence/E2_P0067_STATIC_CHECKER_FAILURE_2026-10-01.md`
+- `docs/memory/investigations/E2_HEADING_COMPASS_RUNTIME_VALIDATION.md`
 - `docs/memory/roadmap/PHASE_E_COMPASS_NAVIGATION.md`
-- `docs/memory/investigations/E1_COMPASS_NAVIGATION_SOURCE_REVIEW.md`
 - `docs/memory/architecture/COMPASS.md`
-- `docs/memory/architecture/API_BOUNDARIES.md`
 - `docs/memory/evidence/I001_RUNTIME_PASS_01_2026-09-30.md`
 - `docs/memory/evidence/I001_RUNTIME_PASS_02_2026-09-30.md`
