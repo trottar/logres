@@ -1,0 +1,31 @@
+Project Logres P0079 patch
+Date: 2026-10-02
+Baseline: 8b38fe64d381bb4ab87b245073cc288ae4f092b7
+Production runtime: 0.0.30-dev (unchanged)
+Purpose: detail P0078 Restoration Check settle failure
+
+Files:
+2a65cbe552401dcfb5383c5d0fbf729e59ef5b3f10055b63d2032c4b37cd609b  Logres/Core/Commands.lua
+3e9d72f962c11b6e944ad29dc61bc428ffbd15da2a69d605227a37ee0c08a591  tools/check_restoration_diagnostic_contract.py
+305c16357c15d05856c29b22251b413ea84a800cd4623fcfb1e1faf108192b4c  docs/memory/CURRENT.md
+d3163edda707fbdb7b7019f1395baddba3fec3bbb087f5f880d335b5f4b201f4  docs/memory/handoffs/CURRENT_HANDOFF.md
+338676529185079d63af72d89dc5ef56730f093c74c339d4cc34b73bdddc806b  docs/memory/investigations/ACTIVE.md
+b6ad04f7f2561d5ac54e61a604d074ba80d6537e433fee53503e733ef5a86f3c  docs/memory/investigations/F2_QUEST_XP_RUNTIME_CAPABILITY_PROBE.md
+1e5f4240c8fbe85fa1c6831fa0a370b0d8f1b31ff5abbb87274dea913d19174d  docs/memory/evidence/F2_P0078_QUEST_XP_RUNTIME_EVIDENCE_2026-10-02.md
+540390683762a3aca76fc6095073d3b28e60eab8e27787ca9eaf73bc53dc1e9b  docs/memory/evidence/P0078_RESTORATION_SETTLE_FAILURE_2026-10-02.md
+c345be389aff9a5c6d65b4416929f89b953d7629a7f6e4e66d050adbd231c117  docs/memory/roadmap/STATUS.md
+3c925e1ee24978579680efe736e7512a979bb1d1c33d9a45088b4c919fc683c8  docs/memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md
+66762f9ffd6974b3b3ac812d5a7348048554b319e7eda31b87879d28bd82c31f  docs/memory/patches/P0078_F1_CONTRACT_F2_QUEST_PROBE.md
+c7fb9ef28271f14353374945f8a137fd088e496864b2b4c7d0f2ab8a4906752e  docs/memory/patches/P0079_RESTORATION_FAILURE_DIAGNOSTIC.md
+9ea39023a32952936ce7923ad00047db8e6bac74fe420a6d4d92cd411f6cd5ef  docs/memory/patches/PATCH_INDEX.md
+
+Checks:
+python3 tools/check_restoration_diagnostic_contract.py
+python3 tools/check_quest_probe_contract.py
+python3 tools/check_dev_panel_contract.py
+python3 tools/check_addon_structure.py
+python3 tools/check_memory_health.py
+git diff --check -- <P0079-owned files>
+
+Runtime diagnostic code change: WoW redeploy required after push verification.
+Validation surface: developer panel -> Restoration Check, then Run All.

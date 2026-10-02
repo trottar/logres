@@ -2,30 +2,30 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0077 is verified pushed at `bf73fcf4`.
+P0078 is verified pushed at `8b38fe64`.
 
-Phase F is active.
+Phase F / F.2 remains active.
 
-F.1 is complete:
-D-031 is the canonical quest-experience capability contract.
+F.2 capability results:
+- contextual XP inputs/events proven;
+- quest-detail passive reads proven;
+- populated objective rows unproven;
+- quest destination for quest 436 unavailable again.
 
-First production candidate:
-**contextual XP pulse**, pending F.2 runtime proof.
+Blocker:
+P0078 Run All hit a real Restoration Check failure at the opposite-preference
+settle stage.
 
-Quest compass marker extension remains conditional on a runtime-proven quest
-destination.
+Cleanup succeeded and final state reconverged.
 
-Active work:
-**F.2 — Quest / XP runtime capability probe.**
+P0079 adds failure-detail diagnostics only.
+No suppression/recovery behavior is changed.
 
-P0078 adds `LogresQuestAudit` and a **Quest Probe** developer-panel action.
-
-The probe is passive and its panel output auto-persists through the normal
-Logres diagnostics exporter.
+After P0079:
+developer panel -> Restoration Check once -> Run All once -> `/reload` -> export
+`LOGRES_DIAGNOSTICS_LATEST.lua`.
 
 Production runtime remains:
 `0.0.30-dev`.
-
-No quest/objective/XP stock suppression is authorized.
 
 User performs all commits/pushes.

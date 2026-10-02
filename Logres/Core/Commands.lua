@@ -1425,7 +1425,7 @@ local function restorationOwnershipCoherent(snapshot)
             == targetOverrideExpected
 end
 
-local function restorationStateMatches(
+local function restorationMatchDetails(
     snapshot,
     expectedImmersion,
     allowPending
@@ -1477,6 +1477,9 @@ local function restorationStateMatches(
             allowPending
         )
 
+    local ownershipCoherent =
+        restorationOwnershipCoherent(snapshot)
+
     local errorsClear =
         snapshot.action.lastError == nil
         and snapshot.quiet.lastError == nil
@@ -1487,11 +1490,92 @@ local function restorationStateMatches(
         and controller.lastPlayerError == nil
         and controller.lastTargetError == nil
 
-    return modulesReady
-        and desiredMatches
-        and recoveryMatches
-        and restorationOwnershipCoherent(snapshot)
-        and errorsClear
+    return {
+        passed =
+            modulesReady
+            and desiredMatches
+            and recoveryMatches
+            and ownershipCoherent
+            and errorsClear,
+        modulesReady = modulesReady,
+        desiredMatches = desiredMatches,
+        recoveryMatches = recoveryMatches,
+        ownershipCoherent = ownershipCoherent,
+        errorsClear = errorsClear,
+        expectedQuiet = expectedQuiet,
+    }
+end
+
+local function restorationStateMatches(
+    snapshot,
+    expectedImmersion,
+    allowPending
+)
+    return restorationMatchDetails(
+        snapshot,
+        expectedImmersion,
+        allowPending
+    ).passed
+end
+
+local function restorationMismatchSummary(
+    snapshot,
+    expectedImmersion,
+    allowPending
+)
+    local details =
+        restorationMatchDetails(
+            snapshot,
+            expectedImmersion,
+            allowPending
+        )
+
+    local controller = snapshot.controller
+    local action = snapshot.action
+    local quiet = snapshot.quiet
+    local player = snapshot.player
+    local target = snapshot.target
+
+    return string.format(
+        "expected=%s quietExpected=%s modules=%s desired=%s recovery=%s ownership=%s errors=%s controller=%s/%s/%s/%s action=%s/%s/%s snap=%s route=%s quiet=%s/%s snap=%s player=%s/%s/%s snap=%s interact=%s mouse=%s present=%s stockMouse=%s target=%s/%s/%s snap=%s watch=%s interact=%s mouse=%s present=%s stockMouse=%s overrides=%s",
+        boolText(expectedImmersion),
+        boolText(details.expectedQuiet),
+        boolText(details.modulesReady),
+        boolText(details.desiredMatches),
+        boolText(details.recoveryMatches),
+        boolText(details.ownershipCoherent),
+        boolText(details.errorsClear),
+        boolText(controller.immersionEnabled),
+        boolText(controller.actionReplacementDesired),
+        boolText(controller.playerFrameSuppressionDesired),
+        boolText(controller.targetFrameSuppressionDesired),
+        boolText(action.requestedEnabled),
+        boolText(action.appliedEnabled),
+        boolText(action.pending),
+        boolText(action.snapshotReady),
+        boolText(action.routingManaged),
+        boolText(quiet.requestedEnabled),
+        boolText(quiet.appliedEnabled),
+        boolText(quiet.snapshotReady),
+        boolText(player.requestedEnabled),
+        boolText(player.appliedEnabled),
+        boolText(player.pending),
+        boolText(player.snapshotReady),
+        boolText(player.interactionConfigured),
+        boolText(player.interactionMouseOwnedByLogres),
+        boolText(player.stockPresentationSuppressed),
+        boolText(player.stockMouseSuppressed),
+        boolText(target.requestedEnabled),
+        boolText(target.appliedEnabled),
+        boolText(target.pending),
+        boolText(target.snapshotReady),
+        boolText(target.unitWatchRegistered),
+        boolText(target.interactionConfigured),
+        boolText(target.interactionMouseOwnedByLogres),
+        boolText(target.stockPresentationSuppressed),
+        boolText(target.stockMouseSuppressed),
+        tostring(target.preservedOverrideCount)
+    )
 end
 
 local function failOpenStateMatches(snapshot, originalImmersion)
@@ -1587,7 +1671,15 @@ local function runRestorationCheck()
             originalImmersion,
             false
         ) then
-            error("initial state is not settled", 0)
+            error(
+                "initial state is not settled "
+                .. restorationMismatchSummary(
+                    initial,
+                    originalImmersion,
+                    false
+                ),
+                0
+            )
         end
 
         local flipped =
@@ -1608,7 +1700,15 @@ local function runRestorationCheck()
             not originalImmersion,
             false
         ) then
-            error("opposite preference state did not settle", 0)
+            error(
+                "opposite preference state did not settle "
+                .. restorationMismatchSummary(
+                    opposite,
+                    not originalImmersion,
+                    false
+                ),
+                0
+            )
         end
 
         local restored =
@@ -1629,7 +1729,15 @@ local function runRestorationCheck()
             originalImmersion,
             false
         ) then
-            error("original preference did not reconverge", 0)
+            error(
+                "original preference did not reconverge "
+                .. restorationMismatchSummary(
+                    restoredState,
+                    originalImmersion,
+                    false
+                ),
+                0
+            )
         end
 
         if Logres:DisableModule("ImmersionController") ~= true then
@@ -1656,7 +1764,15 @@ local function runRestorationCheck()
             originalImmersion,
             false
         ) then
-            error("controller re-enable did not reconverge", 0)
+            error(
+                "controller re-enable did not reconverge "
+                .. restorationMismatchSummary(
+                    reenabledState,
+                    originalImmersion,
+                    false
+                ),
+                0
+            )
         end
     end)
 

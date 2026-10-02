@@ -1,73 +1,45 @@
 # P0078 — F.1 Contract / F.2 Quest-XP Probe
 
 Date: 2026-10-02
-Result: PREPARED — RUNTIME PROBE PENDING
+Result: INSTALLED / PUSHED — CAPABILITY EVIDENCE; RESTORATION CHECK FAILED (`8b38fe64`)
 
 ## Baseline
 
 P0077 verified pushed:
 `bf73fcf49e31177e9305652e509fd46a4aad12dc`
 
-## Purpose
-
-Resolve the Phase F source/capability contract and immediately open the targeted
-runtime proof without an extra docs-only checkpoint.
-
 ## F.1
 
 D-031 accepted.
 
-Key result:
-- passive observation and Blizzard interaction/control are separate;
-- first production candidate is contextual XP;
-- quest compass integration requires runtime-proven quest destination output;
-- no quest/objective/XP stock suppression is authorized.
+## F.2 runtime result
 
-## F.2 probe
+Proven:
+- current/max/rested XP normal scalar inputs;
+- XP/update exhaustion events;
+- quest-detail passive reads;
+- quest-detail/accept events;
+- super-tracked quest identity.
 
-Adds:
-`tools/probes/LogresQuestAudit`
+Unproven:
+- populated objective rows.
 
-Adds developer-panel action:
-**Quest Probe**
+Negative:
+- quest 436 destination remained unavailable.
 
-Captures:
-- quest-giver read state;
-- selected/super-tracked quest identity;
-- objectives;
-- next-waypoint data and current-map bearing;
-- XP/max/rested XP;
-- Forever XP preset;
-- quest/tracking/XP event registration/counts.
+## Integrated validation
 
-## Safety
+Run All hit:
+**Restoration Check FAIL — opposite preference state did not settle.**
 
-Probe is passive.
+Cleanup succeeded and final state reconverged.
 
-It does not:
-- accept/decline/complete quests;
-- choose rewards;
-- mutate watches/super-tracking/waypoints;
-- suppress stock UI;
-- send chat.
+P0079 adds targeted diagnostic detail before any behavioral fix.
 
-## Runtime
+## Delivery note
 
-Production runtime remains:
+The first apply attempt had a memory-heading delivery failure, repaired before
+the final P0078 commit.
+
+Production runtime remained:
 `0.0.30-dev`.
-
-Diagnostic integration changes `Commands.lua`.
-
-WoW deployment is required after push verification.
-
-## Delivery repair
-
-The first apply attempt failed repository memory health because the generated
-`CURRENT.md` omitted the canonical `Verified State` and `Success Criteria`
-headings.
-
-The repair restores the required memory schema and reruns the complete P0078
-checker set before creating the manifest.
-
-This failure is recorded in:
-`../evidence/P0078_DELIVERY_FAILURE_2026-10-02.md`.

@@ -1,6 +1,6 @@
 # Phase F — Quest Experience
 
-Status: ACTIVE — F.2
+Status: ACTIVE — F.2 BLOCKED BY RESTORATION DIAGNOSTIC
 
 ## Product Objective
 
@@ -23,52 +23,56 @@ The existing Compass remains the navigation renderer.
 
 The Blizzard minimap remains stock by D-030.
 
-## F.1 — Source / capability review
+## F.1
 
-**COMPLETE.**
+**COMPLETE — D-031.**
 
-Canonical:
-`../decisions/D-031_QUEST_EXPERIENCE_CAPABILITY_CONTRACT.md`
-
-Resolved:
-- passive quest/XP observation is separate from interaction/control;
-- Blizzard keeps accept/decline/continue/complete/reward/gossip/watch controls;
-- no stock quest/objective/XP suppression is authorized;
-- source availability does not equal runtime proof;
-- first production candidate is a contextual XP pulse;
-- quest compass integration requires a runtime-proven destination.
+Passive observation is separated from Blizzard-owned quest interaction/control.
 
 ## F.2 — Quest / XP runtime capability probe
 
-**ACTIVE — P0078 PREPARED.**
+**ACTIVE — CAPABILITY EVIDENCE CAPTURED; INTEGRATED VALIDATION BLOCKED.**
 
-Temporary passive probe:
-`tools/probes/LogresQuestAudit`
+P0078 runtime-proven:
+- current/max/rested XP normal scalar access;
+- `PLAYER_XP_UPDATE`;
+- `UPDATE_EXHAUSTION`;
+- quest-detail passive reads for quest `436`;
+- `QUEST_DETAIL`;
+- `QUEST_ACCEPTED`;
+- super-tracked quest identity.
 
-Developer-panel action:
-**Quest Probe**
+Therefore the data/event prerequisite for a future contextual XP pulse is
+proven.
 
-It tests:
-- quest-giver read state;
-- selected/super-tracked quest state;
-- objectives;
-- next waypoint / player-map waypoint;
-- map-space quest bearing;
-- current/max/rested XP;
-- Forever experience preset;
-- relevant quest/tracking/XP events.
+Not proven:
+- populated active objective rows.
 
-No stock UI is suppressed.
+Negative:
+- quest `436` again produced no usable quest destination;
+- quest compass marker remains unsupported.
+
+## Integrated validation blocker
+
+The P0078 Run All produced:
+`Restoration Check FAIL — opposite preference state did not settle`.
+
+Cleanup succeeded and the final state reconverged.
+
+P0079 adds diagnostic detail only.
+
+Do not advance to F.3 until the targeted restoration evidence is reviewed.
 
 ## F.3+
 
-Implementation opens only from F.2 evidence.
-
-First production candidate:
+First production candidate remains:
 **contextual XP pulse**.
 
-A quest compass marker extension may move ahead when F.2 proves a usable
-destination path; it is not authorized from API presence alone.
+It is ready from a quest/XP capability perspective but remains blocked by the
+unresolved integrated Restoration Check failure.
+
+Quest compass integration remains conditional on a usable runtime-proven
+destination.
 
 NPC quest presentation and objective/helper replacement remain separately
 capability-gated.

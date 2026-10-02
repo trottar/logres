@@ -1,48 +1,68 @@
 # F.2 — Quest / XP Runtime Capability Probe
 
-Status: ACTIVE — P0078 PROBE PREPARED
+Status: ACTIVE — CAPABILITY EVIDENCE CAPTURED; BLOCKED BY RESTORATION FAILURE
 Opened: 2026-10-02
 
 Canonical contract:
 `../decisions/D-031_QUEST_EXPERIENCE_CAPABILITY_CONTRACT.md`
 
+Runtime evidence:
+`../evidence/F2_P0078_QUEST_XP_RUNTIME_EVIDENCE_2026-10-02.md`
+
 Probe:
 `../../../tools/probes/LogresQuestAudit`
 
-## Questions
+## Proven
 
-On the tested Forever client:
+- XP/current/max/rested values were normal non-secret scalars in tested world
+  state.
+- `PLAYER_XP_UPDATE` registered and fired.
+- `UPDATE_EXHAUSTION` registered and fired.
+- Quest detail passive reads worked for quest `436`.
+- `QUEST_DETAIL` and `QUEST_ACCEPTED` fired.
+- super-tracked quest identity worked.
 
-1. Are quest-giver read APIs usable/non-secret in their expected event windows?
-2. Are selected/super-tracked quest IDs usable?
-3. Does `C_QuestLog.GetQuestObjectives` return usable objective state?
-4. Can any real active/super-tracked quest produce a usable
-   `GetNextWaypoint` / `GetNextWaypointForMap` destination?
-5. Are XP/max/rested XP values usable without secret-value violations?
-6. Which quest/tracking/XP events register and fire during ordinary play?
+## Negative / deferred
 
-## Probe policy
+- quest `436` again produced no usable next waypoint or player-map waypoint;
+- quest compass marker remains unsupported;
+- completed quest `436` returned an empty objectives table, so populated
+  objective rows remain unproven;
+- progress/complete/turn-in/watch-update events were not naturally observed.
 
-Passive only.
+## Capability conclusions
 
-No:
-- quest acceptance/completion/reward action;
-- watch/super-track mutation;
-- waypoint mutation;
-- stock suppression;
-- chat.
+Contextual XP source/event path:
+**PROVEN.**
 
-The Logres developer panel is the canonical workflow.
+Quest-giver passive detail reads:
+**PROVEN for tested detail flow.**
 
-Panel output is persisted through the existing diagnostics SavedVariables and
-export helper.
+Populated objective rows:
+**UNPROVEN.**
+
+Quest destination / quest compass marker:
+**UNAVAILABLE in tested quest 436; DEFERRED.**
+
+## Blocking runtime failure
+
+The final P0078 Run All produced a real Restoration Check failure at:
+**opposite preference state did not settle**.
+
+Cleanup succeeded and final state reconverged.
+
+The existing diagnostic did not persist enough intermediate detail to identify
+the failing replacement domain.
+
+P0079 adds diagnostic detail only.
 
 ## Exit
 
-F.2 closes with runtime evidence sufficient to:
-- authorize or reject the contextual XP production slice;
-- authorize or reject objective-state presentation inputs;
-- authorize or defer quest compass destination integration;
-- identify any remaining environmental deferrals.
+Do not advance to the contextual XP production slice until the P0079 targeted
+restoration diagnostic is run.
 
-Negative results remain project knowledge.
+If restoration passes without recurrence, preserve the P0078 failure as
+intermittent/unreproduced and decide whether it remains blocking based on the
+new evidence.
+
+If it fails, investigate the identified subdomain before advancing.
