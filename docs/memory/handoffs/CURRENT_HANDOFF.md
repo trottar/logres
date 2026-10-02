@@ -2,32 +2,40 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0084 is verified pushed at `a74329a`.
+P0085 is verified pushed at `f6a30d8`.
 
 Production runtime:
 `0.0.33-dev`.
 
-Phase F / F.4 is complete:
-**RUNTIME + INTEGRATION + VISUAL PASS.**
-
-P0084 restoration correction:
-- Target Frame Check PASS;
-- two standalone Restoration Checks PASS;
-- three consecutive Run All PASS;
-- old `SetIgnoreParentAlpha` failure did not recur.
-
-User reported:
-**visual passed**.
-
 Active work:
 **F.5 — Objective / progress runtime capability proof.**
 
-Use the existing Quest Probe.
-Do not add production objective presentation until populated objective rows and
-relevant progress/completion behavior are runtime-proven.
+F.5 objective data shapes are now runtime-proven:
+- no active quest -> nil;
+- quest `436` -> empty table;
+- quest `237` -> two incomplete `0/10` rows;
+- quest `1338` -> completed `1/1` row.
+
+Quest `237`:
+`complete=false`, `ready=false`.
+
+Quest `1338`:
+`complete=true`, `ready=true`.
+
+Still pending:
+**same-quest objective transition**.
+
+The new samples did not naturally emit:
+- `QUEST_PROGRESS`;
+- `QUEST_COMPLETE`;
+- `QUEST_TURNED_IN`;
+- `QUEST_WATCH_UPDATE`.
+
+Use the existing Quest Probe after a natural objective count/state change.
+No new runtime code is justified yet.
 
 Stock Objective Tracker and all quest interaction controls remain Blizzard-owned.
 
-No new runtime code is required for the F.5 evidence step.
+Quest IDs `436`, `237`, and `1338` remain negative waypoint samples.
 
 User performs all commits/pushes.

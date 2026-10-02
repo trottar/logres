@@ -34,14 +34,25 @@ State:
 | F.2 Quest/XP runtime capability probe | COMPLETE |
 | F.3 Contextual XP pulse | COMPLETE — runtime + integration + visual PASS |
 | F.4 Additive NPC quest detail presentation | COMPLETE — runtime + integration + visual PASS |
-| F.5 Objective / progress runtime capability proof | ACTIVE — existing Quest Probe |
+| F.5 Objective / progress runtime capability proof | ACTIVE — data shapes PASS; same-quest transition pending |
 | F.6+ Remaining quest production slices | QUEUED — capability-gated |
 
-## Resolved correction
+## F.5 proven
 
-P0084 TargetFrame restoration correction:
-**RUNTIME PASS**.
+- nil/no-active objective state;
+- empty objective list;
+- populated incomplete objectives;
+- populated completed objective;
+- complete/ready state readable through passive query path.
 
-The historical restoration investigation is closed.
+## F.5 pending
 
-The separate TargetFrame reappearance issue remains independently tracked.
+- same-quest objective count/finished transition;
+- naturally observed progress/completion/turn-in/watch-specific events remain
+  environmental deferrals.
+
+## Navigation
+
+Quest IDs `436`, `237`, and `1338` are negative waypoint samples.
+
+Quest compass marker remains unsupported.

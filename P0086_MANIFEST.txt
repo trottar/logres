@@ -1,0 +1,24 @@
+Project Logres P0086 patch
+Date: 2026-10-02
+Baseline: f6a30d84a597d931943f206afb9971fdddbc7181
+Runtime: 0.0.33-dev (unchanged)
+Purpose: record F.5 objective data-shape PASS; same-quest transition pending
+
+Files:
+4250def7c55d6b38c6177b36ce692903867c59ee44fd5d1d53f692f5bebefffe  docs/memory/CURRENT.md
+f43bc5b44199578a992441766f0c69906d4c54b19dd3635ce0806af600c80d58  docs/memory/evidence/F5_OBJECTIVE_DATA_SHAPES_2026-10-02.md
+2da8a8fe710f168a8b3fd81fd7b01deb528539a63e1b38beb25375ff9ea8ba77  docs/memory/handoffs/CURRENT_HANDOFF.md
+5a887cee2b7717e4fe3d1106ebc5f01a242f1f7c27a761ef0d48a35ac9a815e7  docs/memory/investigations/ACTIVE.md
+13a1dbdf3cead217aaee0d474daa5d34dae0495387dfaee00c33298d8c179e3b  docs/memory/investigations/F5_OBJECTIVE_PROGRESS_CAPABILITY_PROOF.md
+7959d392fb82f33189bf38e4b069bdb5ff58997a711d026c0e08f2589f608518  docs/memory/patches/P0085_CLOSE_F4_OPEN_F5.md
+cc1b934d329f352ac1b12bf7b41f730505472af9f38499c4ada3c6ad32c0114a  docs/memory/patches/P0086_RECORD_F5_OBJECTIVE_ROWS.md
+1c596aae39fad3f69327382071e2b0fee415ae9b7e56e014a1b90e73e6c7faf3  docs/memory/patches/PATCH_INDEX.md
+4227b1ef3713e3f25b639befdf7effc9ff6ac2f9671fa8daea4dce1197db6788  docs/memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md
+ce7633f9e39e784cdafe3e2e4fa0bd1b725b6cdb9ed84dbdb357b7b229f3087a  docs/memory/roadmap/STATUS.md
+
+Checks:
+python3 tools/check_memory_health.py
+temporary git-archive consistency validation
+git diff --check -- <P0086-owned files>
+
+Docs-only checkpoint; no WoW redeploy required.

@@ -3,17 +3,28 @@
 ## F.5 — Objective / progress runtime capability proof
 
 Status:
-**ACTIVE — EXISTING QUEST PROBE; RUNTIME EVIDENCE PENDING**
+**ACTIVE — DATA SHAPE PASS; SAME-QUEST TRANSITION PENDING**
 
 Canonical:
 `F5_OBJECTIVE_PROGRESS_CAPABILITY_PROOF.md`
 
-Known gap:
-- populated active-objective rows remain unproven;
-- progress/complete/turn-in/watch-update events remain naturally unobserved.
+Runtime-proven objective states:
+- nil / unavailable with no active quest;
+- empty table on quest `436`;
+- populated incomplete rows on quest `237`;
+- populated completed row on quest `1338`.
+
+Remaining narrow gap:
+- a same-quest objective value transition and fresh recapture.
+
+Naturally unobserved events remain:
+- `QUEST_PROGRESS`;
+- `QUEST_COMPLETE`;
+- `QUEST_TURNED_IN`;
+- `QUEST_WATCH_UPDATE`.
 
 Use the existing panel Quest Probe during normal gameplay.
-Do not add production objective presentation before evidence.
+Do not add production objective presentation before transition evidence.
 
 ## Closed Phase F slices
 
@@ -22,9 +33,6 @@ F.3 contextual XP:
 
 F.4 additive NPC quest detail presentation:
 **CLOSED — RUNTIME + INTEGRATION + VISUAL PASS.**
-
-Evidence:
-`../evidence/F4_P0084_RUNTIME_AND_VISUAL_PASS_2026-10-02.md`
 
 ## Closed TargetFrame restoration investigation
 
@@ -41,5 +49,5 @@ not merged with the restoration defect.
 
 ## Deferred quest/navigation evidence
 
-- quest IDs `436` and `237` have produced no usable next waypoint;
+- quest IDs `436`, `237`, and `1338` have produced no usable next waypoint;
 - quest compass marker remains unsupported.

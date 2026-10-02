@@ -14,10 +14,13 @@ project: logres
 
 **F.5 — Objective / progress runtime capability proof.**
 
-P0084 is verified pushed at `a74329a`.
+P0085 is verified pushed at `f6a30d8`.
 
 Production runtime remains:
 `0.0.33-dev`.
+
+F.5 status:
+**PARTIAL PASS — OBJECTIVE DATA SHAPES PROVEN; SAME-QUEST TRANSITION PENDING.**
 
 ## Verified State
 
@@ -27,65 +30,69 @@ Production runtime remains:
   runtime + integration + visual PASS.
 - F.4 additive NPC quest detail presentation is complete:
   runtime + integration + visual PASS.
-- P0083 proved the real quest-detail path:
-  - `QUEST_DETAIL`;
-  - quest ID `436`;
-  - title/body/objective text;
-  - production presentation;
-  - `QUEST_ACCEPTED` cleanup;
-  - Immersion OFF suppression;
-  - Immersion ON recovery.
-- P0084 corrected the TargetFrame restoration defect identified in P0083.
-- P0084 runtime proof:
-  - `0.0.33-dev`;
-  - Target Frame Check PASS with
-    `contextualSuppressed=9`, `preserved=4`;
-  - two standalone Restoration Checks PASS;
-  - three consecutive Run All executions PASS;
-  - no recurrence of the `SetIgnoreParentAlpha` secret-value failure.
-- User reported F.4:
-  **visual passed**.
-- The P0080 TargetFrame restoration investigation is CLOSED by P0084 runtime
-  proof.
-- The separate historical TargetFrame reappearance issue remains tracked
-  independently.
-- Populated active-objective rows remain unproven.
-- `QUEST_PROGRESS`, `QUEST_COMPLETE`, `QUEST_TURNED_IN`, and
-  `QUEST_WATCH_UPDATE` remain registered but naturally unobserved in the
-  existing capability evidence.
-- Quest IDs `436` and `237` remain negative destination samples; quest compass
-  marker remains unsupported.
+- P0084 TargetFrame restoration correction is runtime-proven.
+- F.5 now runtime-proves the objective data shapes required by D-031:
+  - no active quest -> objective state unavailable / `nil`;
+  - quest `436` -> objective table present but empty;
+  - quest `237` -> populated incomplete rows:
+    - Stonesplinter Skullthumper slain `0/10`, done=false;
+    - Stonesplinter Seer slain `0/10`, done=false;
+  - quest `1338` -> populated completed row:
+    - Bring Stormpike's Request to Furen Longbeard in Stormwind
+      `1/1`, done=true.
+- Quest `237` reported:
+  `complete=false`, `failed=false`, `ready=false`.
+- Quest `1338` reported:
+  `complete=true`, `failed=false`, `ready=true`.
+- Across the new samples:
+  - `QUEST_LOG_UPDATE` advanced;
+  - `SUPER_TRACKING_CHANGED` advanced;
+  - `QUEST_PROGRESS` remained 0;
+  - `QUEST_COMPLETE` remained 0;
+  - `QUEST_TURNED_IN` remained 0;
+  - `QUEST_WATCH_UPDATE` remained 0.
+- Therefore the data model is proven, but a same-quest objective update transition is
+  not yet proven.
+- Quest IDs `436`, `237`, and `1338` are now negative waypoint samples.
+- Quest compass marker remains unsupported.
 
 ## Next Action
 
-F.5 uses the existing **Quest Probe** before any new production code.
+Use the existing **Quest Probe** for one same-quest objective transition during
+normal gameplay.
 
-When normal gameplay naturally provides suitable states, capture:
-1. an active quest with one or more populated objective rows;
-2. a later objective/progress state for that quest;
-3. completion and/or turn-in state if naturally encountered.
+Preferred currently-proven candidate:
+quest `237`, which already has a captured `0/10` baseline.
 
-Do not travel or manufacture gameplay solely to satisfy the probe.
+When naturally continuing that quest:
+1. leave quest `237` active/super-tracked if convenient;
+2. after one Stonesplinter Skullthumper or Seer kill changes the objective count,
+   run **Quest Probe**;
+3. if the quest later completes naturally, run **Quest Probe** again;
+4. if it is turned in naturally, run **Quest Probe** again;
+5. `/reload`;
+6. export `LOGRES_DIAGNOSTICS_LATEST.lua`.
 
-After meaningful evidence:
-- `/reload` to flush SavedVariables;
-- export `LOGRES_DIAGNOSTICS_LATEST.lua`;
-- evaluate which objective/progress paths are actually runtime-proven.
+Any equivalent active quest with a before/after objective-row change is valid.
 
-No new objective presentation and no stock Objective Tracker suppression is
-authorized until this evidence exists.
+Do not travel, repeat content, or manufacture gameplay solely for proof.
 
 ## Success Criteria
 
-F.5 succeeds when runtime evidence is sufficient to distinguish, without
-fabrication:
+F.5 may close when runtime evidence proves:
 - unavailable/not-loaded objective data;
-- empty objective lists;
-- populated active objectives;
-- completed objectives where naturally observable;
-- relevant progress/completion/turn-in event behavior.
+- empty objective list;
+- populated incomplete objectives;
+- populated completed objectives;
+- a same-quest objective update that replaces the prior value rather than
+  retaining stale data.
 
-Any unobserved transition remains an environmental deferral rather than PASS.
+Completion/turn-in/watch-specific events remain environmental deferrals if they
+are not naturally emitted; they are not promoted to PASS merely because the
+corresponding final data state is observable.
+
+No production objective presentation and no stock Objective Tracker suppression
+is authorized until the same-quest update behavior is proven.
 
 ## Do Not Reopen Without New Evidence
 
@@ -94,6 +101,8 @@ Any unobserved transition remains an environmental deferral rather than PASS.
 - **F.3 contextual XP:** complete.
 - **F.4 additive NPC quest detail presentation:** complete.
 - **P0084 TargetFrame restoration correction:** runtime PASS.
+- **F.5 objective data shapes:** runtime PASS.
+- **F.5 same-quest update behavior:** pending.
 - **TargetFrame reappearance issue:** separate tracked defect.
 - **Quest destination / compass marker:** unsupported until a real destination
   is runtime-proven.
@@ -103,8 +112,7 @@ Any unobserved transition remains an environmental deferral rather than PASS.
 
 ## Relevant References
 
-- `docs/memory/evidence/F4_P0084_RUNTIME_AND_VISUAL_PASS_2026-10-02.md`
+- `docs/memory/evidence/F5_OBJECTIVE_DATA_SHAPES_2026-10-02.md`
 - `docs/memory/investigations/F5_OBJECTIVE_PROGRESS_CAPABILITY_PROOF.md`
-- `docs/memory/investigations/F4_NPC_QUEST_DETAIL_PRESENTATION.md`
-- `docs/memory/investigations/P0080_TARGETFRAME_RESTORE_FAILURE.md`
 - `docs/memory/decisions/D-031_QUEST_EXPERIENCE_CAPABILITY_CONTRACT.md`
+- `docs/memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md`

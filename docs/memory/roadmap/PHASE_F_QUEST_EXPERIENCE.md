@@ -38,11 +38,6 @@ Runtime-proven:
 - `QUEST_ACCEPTED`;
 - super-tracked quest identity.
 
-Deferred/unproven:
-- populated active-objective rows;
-- several progress/completion events;
-- quest destination output.
-
 ## F.3 — Contextual XP pulse
 
 **COMPLETE — RUNTIME + INTEGRATION + VISUAL PASS.**
@@ -51,22 +46,25 @@ Deferred/unproven:
 
 **COMPLETE — RUNTIME + INTEGRATION + VISUAL PASS.**
 
-P0083:
-- real quest-detail production path proven.
-
-P0084:
-- integrated restoration correction runtime-proven;
-- three consecutive Run All PASS;
-- user visual PASS.
-
 ## F.5 — Objective / progress runtime capability proof
 
-**ACTIVE — EXISTING QUEST PROBE; EVIDENCE PENDING.**
+**ACTIVE — DATA SHAPES PASS; SAME-QUEST TRANSITION PENDING.**
 
-Before adding objective/progress presentation, prove populated objective rows and
-their update behavior during normal gameplay.
+Runtime-proven objective states:
+- no active quest -> nil;
+- completed quest `436` -> empty objective list;
+- quest `237` -> two populated incomplete `0/10` rows;
+- quest `1338` -> populated completed `1/1` row.
 
-Use the existing Quest Probe.
+Quest state is also readable:
+- `237`: complete=false, ready=false;
+- `1338`: complete=true, ready=true.
+
+The active quest identity switch none -> `237` -> `1338` returned fresh data for
+each identity, but a same-quest objective transition remains unproven.
+
+Use the existing Quest Probe after a natural objective count or finished-state
+change.
 
 Do not:
 - invent missing objective state;
@@ -75,11 +73,12 @@ Do not:
 - mutate quest watch/super-track state;
 - require contrived gameplay solely for evidence.
 
-Unobserved transitions remain environmental deferrals.
+Unobserved progress/completion/turn-in/watch events remain environmental
+deferrals.
 
 ## Quest navigation
 
-Quest IDs `436` and `237` remain negative destination samples.
+Quest IDs `436`, `237`, and `1338` remain negative destination samples.
 
 Quest compass marker remains unsupported until a real usable destination is
 runtime-proven.
