@@ -200,3 +200,24 @@ Prefer:
 2. inspect whether Logres still believes suppression is applied;
 3. identify the Blizzard ownership path;
 4. add the narrowest reconciliation hook only after evidence.
+
+## L-015 — Repository workflow outranks assistant-invented process
+
+When a patch/check result reveals an inconsistency, first reconcile it against
+the repository's operating rules, active state, and established patch-history
+pattern.
+
+Do not infer that a pushed checkpoint is invalid merely because its own patch
+record still says `PREPARED`; the checkpoint cannot know its eventual commit
+SHA, and the following checkpoint normally records that pushed identity.
+
+Do not invent extra repair checkpoints, local paths, staging ceremonies, or
+workflow gates without repository evidence.
+
+When a pre-existing defect naturally belongs to the next already-authoritative
+coherent patch, record the negative result and repair it there unless safety or
+correctness requires an immediate standalone fix.
+
+P0062/P0063 established this lesson after a stale PlayerFrame static assertion
+was surfaced during P0062 delivery and the assistant initially proposed an
+unnecessary standalone repair checkpoint.

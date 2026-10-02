@@ -35,21 +35,25 @@ State:
 | F.3 Contextual XP pulse | COMPLETE — runtime + integration + visual PASS |
 | F.4 Additive NPC quest detail presentation | COMPLETE — runtime + integration + visual PASS |
 | F.5 Objective / progress runtime capability proof | COMPLETE — runtime PASS |
-| F.6 Contextual objective progress pulse | ACTIVE — implemented; runtime + visual proof pending |
+| F.6 Contextual objective progress pulse | ACTIVE — runtime/integration PASS; visual FAIL; P0089 Repair 2 retest pending |
 | F.7+ Remaining quest slices | QUEUED — capability-gated |
 
-## F.6 implementation
+## F.6 current state
 
 P0088:
-- baseline-first passive objective recapture;
-- objective count/finished change pulse;
-- proven refresh events only;
-- temporary/non-interactive presentation;
-- Immersion OFF suppression;
-- no stock Objective Tracker suppression.
+- runtime/integration PASS within tested scope;
+- visual FAIL due action-cluster overlap;
+- real production pulse not yet proven in captured run.
 
-Runtime target:
-`0.0.34-dev`.
+P0089 Repair 2:
+- presentation-only correction;
+- anchor above addon-owned target frame;
+- explicit synthetic Preview;
+- runtime target `0.0.35-dev`;
+- runtime + visual retest pending.
+
+Possible live count freshness issue:
+OPEN / UNPROVEN pending Quest Probe before/after evidence.
 
 ## Navigation
 

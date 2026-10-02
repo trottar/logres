@@ -43,45 +43,34 @@ Blizzard retains:
 
 **COMPLETE — RUNTIME PASS.**
 
-Proven:
-- nil/no-active objective state;
-- empty objective list;
-- populated incomplete rows;
-- populated completed row;
-- same-quest objective count transition (`0/10 -> 1/10`);
-- fresh repeated same-quest recapture;
-- `QUEST_WATCH_UPDATE` observed.
-
-Environmental deferrals:
-- `QUEST_PROGRESS`;
-- `QUEST_COMPLETE`;
-- `QUEST_TURNED_IN`.
-
 ## F.6 — Contextual objective progress pulse
 
-**ACTIVE — IMPLEMENTED; RUNTIME + VISUAL PROOF PENDING.**
+**ACTIVE — RUNTIME/INTEGRATION PASS; VISUAL FAIL; P0089 REPAIR 2 RETEST PENDING.**
 
-P0088 implementation:
-- module `QuestObjectiveProgress`;
-- safe super-tracked identity with selected-quest fallback;
-- passive objective recapture;
-- baseline-first/no-false-pulse policy;
-- same-quest count/finished comparison;
-- `QUEST_LOG_UPDATE` and `QUEST_WATCH_UPDATE` refresh;
-- super-track/world rebaseline-only behavior;
-- 3-second, maximum-two-row text pulse;
-- Immersion OFF suppression while baseline remains current;
-- Objective Progress Check/Preview;
-- Run All integration.
+P0088:
+- implemented passive objective progress;
+- Objective Progress Check PASS;
+- Preview Immersion policy PASS;
+- two consecutive Run All PASS;
+- visual FAIL because pulse overlapped action cluster;
+- real production pulse not captured in that run.
 
-P0088 does not:
-- suppress the stock Objective Tracker;
-- mutate watch/super-track state;
-- persist real objective content;
-- require unobserved progress/complete/turn-in events.
+P0089 Repair 2:
+- presentation-only correction;
+- frame `520x32`;
+- anchor above addon-owned target frame with 6px gap;
+- center fallback `y=-5`;
+- explicit synthetic Preview;
+- passive source/event/baseline contract unchanged.
+
+Possible Seer-count freshness problem:
+**OPEN / UNPROVEN**.
+
+Use Quest Probe for live before/after count evidence.
+Do not add polling/retry/reassertion without that evidence.
 
 Runtime target:
-`0.0.34-dev`.
+`0.0.35-dev`.
 
 ## Quest navigation
 

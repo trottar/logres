@@ -93,6 +93,8 @@
 
 | P0087 | 2026-10-02 | INSTALLED / PUSHED | Close F.5 same-quest refresh proof; open F.6 contextual objective progress pulse (`4aecb22`) |
 
-| P0088 | 2026-10-02 | PREPARED — RUNTIME + VISUAL PROOF PENDING | Implement F.6 contextual objective progress pulse |
+| P0088 | 2026-10-02 | INSTALLED / PUSHED — RUNTIME/INTEGRATION PASS; VISUAL FAIL | Implement F.6 contextual objective progress pulse (`228b467`) |
+
+| P0089 | 2026-10-02 | PREPARED — REPAIR 2; RUNTIME + VISUAL RETEST PENDING | Move F.6 pulse off action cluster; clarify Preview; record two static delivery failures |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

@@ -3,31 +3,36 @@
 ## F.6 — Contextual objective progress pulse
 
 Status:
-**ACTIVE — IMPLEMENTED; RUNTIME + VISUAL PROOF PENDING**
+**ACTIVE — RUNTIME/INTEGRATION PASS; VISUAL FAIL; P0089 REPAIR 2 RETEST PENDING**
 
 Canonical:
 `F6_CONTEXTUAL_OBJECTIVE_PROGRESS.md`
 
-P0088 implements:
-- passive super-tracked/selected quest identity;
-- passive objective recapture;
-- baseline-first/no-false-pulse policy;
-- meaningful same-quest count/finished change detection;
-- temporary bounded text presentation;
-- Immersion OFF suppression;
-- developer-panel Check/Preview;
-- Run All integration.
+P0088 runtime/integration:
+**PASS within tested scope.**
 
-Refresh events:
-- `QUEST_LOG_UPDATE`;
-- `QUEST_WATCH_UPDATE`;
-- `SUPER_TRACKING_CHANGED` rebaseline only;
-- `PLAYER_ENTERING_WORLD` rebaseline only.
+P0088 visual:
+**FAIL — objective progress overlapped the lower-center action cluster.**
 
-Do not require:
-- `QUEST_PROGRESS`;
-- `QUEST_COMPLETE`;
-- `QUEST_TURNED_IN`.
+Real F.6 production pulse:
+**UNPROVEN (`changes=0`, `pulses=0`).**
+
+Possible post-kill Seer count freshness problem:
+**OPEN / UNPROVEN**.
+
+Use Quest Probe for actual live before/after objective state.
+
+P0089:
+- first two delivery artifacts failed static temporary-tree validation;
+- neither wrote tracked target files;
+- Repair 2 moves the transient presentation above addon-owned target frame;
+- `520x32`;
+- 6px separation;
+- fallback center `y=-5`;
+- visibly synthetic Preview;
+- no source/event/baseline changes.
+
+Do not add polling/retry/reassertion without live source evidence.
 
 Stock Objective Tracker remains Blizzard-owned.
 

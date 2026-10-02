@@ -1,6 +1,6 @@
 # F.6 — Contextual Objective Progress Pulse
 
-Status: ACTIVE — IMPLEMENTED; RUNTIME + VISUAL PROOF PENDING
+Status: ACTIVE — RUNTIME/INTEGRATION PASS; VISUAL FAIL; P0089 REPAIR 2 RETEST PENDING
 Opened: 2026-10-02
 
 Canonical capability contract:
@@ -9,154 +9,108 @@ Canonical capability contract:
 F.5 evidence:
 `../evidence/F5_SAME_QUEST_TRANSITION_PASS_2026-10-02.md`
 
+P0088 runtime/visual evidence:
+`../evidence/F6_P0088_RUNTIME_VISUAL_FAIL_2026-10-02.md`
+
 ## Product intent
 
 Present objective progress only when it meaningfully changes.
 
 This is a contextual pulse, not a permanent quest/objective tracker.
 
-## P0088 implementation
+## Passive / baseline contract
 
-Module:
-`QuestObjectiveProgress`.
+Unchanged from P0088:
+- safe super-tracked/selected quest identity;
+- passive `C_QuestLog.GetQuestObjectives`;
+- secret checks before inspection;
+- first usable sample baselines without a pulse;
+- identity changes rebaseline;
+- same-quest count/finished changes may pulse;
+- missing/empty/unusable data does not fabricate progress.
 
-Source:
-`Logres/Quest/Progress.lua`.
+## Refresh contract
 
-Runtime:
-`0.0.34-dev`.
-
-### Passive identity
-
-Prefer:
-`C_SuperTrack.GetSuperTrackedQuestID`.
-
-Safe fallback:
-`C_QuestLog.GetSelectedQuest`.
-
-A secret/invalid/failing identity read fails open.
-
-### Objective source
-
-Use:
-`C_QuestLog.GetQuestObjectives(questID)`.
-
-Before inspection:
-- secret-check objective container;
-- secret-check each row;
-- secret-check each scalar field.
-
-Session baseline may contain safe objective text/counts for comparison.
-
-Real quest/objective content is not persisted to Logres SavedVariables or
-developer-panel diagnostics.
-
-### Baseline policy
-
-First usable sample:
-baseline only.
-
-Quest identity change:
-rebaseline and hide any old pulse.
-
-World/super-track rebaseline:
-no progress pulse merely because identity/context changed.
-
-Same quest:
-compare safe current rows to the immediately prior safe baseline.
-
-### Change policy
-
-A row is eligible only when the objective text remains the same at the same
-source position.
-
-Meaningful change:
-- fulfilled/required count changed; and/or
-- finished boolean changed.
-
-A presentable completion shows:
-`<objective>  ·  Complete`.
-
-A presentable count change shows:
-`<objective>  ·  current/required`.
-
-Added/removed/reidentified rows rebaseline without fabricating a progress
-claim.
-
-### Refresh events
-
-Production listens to:
+Unchanged:
 - `QUEST_LOG_UPDATE`;
 - `QUEST_WATCH_UPDATE`;
-- `SUPER_TRACKING_CHANGED`;
-- `PLAYER_ENTERING_WORLD`.
+- `SUPER_TRACKING_CHANGED` rebaseline;
+- `PLAYER_ENTERING_WORLD` rebaseline.
 
-The last two force rebaseline and do not themselves imply progress.
-
-Production does not require:
+Do not require:
 - `QUEST_PROGRESS`;
 - `QUEST_COMPLETE`;
 - `QUEST_TURNED_IN`.
 
-### Presentation
+## P0088 result
 
-- temporary;
-- 3 seconds;
-- text-only;
-- non-interactive;
-- maximum two changed rows;
-- no permanent background/list.
+Runtime/integration:
+**PASS within tested scope.**
 
-Immersion OFF:
-- hide/suppress Logres presentation;
-- continue safe objective baseline updates so re-enable does not replay stale
-  progress.
+Real production pulse:
+**UNPROVEN** in that session:
+`changes=0`, `pulses=0`.
 
-### Blizzard ownership
+Visual:
+**FAIL** because the `0,-205` / 58px presentation overlapped the lower-center
+action cluster.
 
-P0088 does not:
-- suppress Objective Tracker;
-- mutate watch state;
-- mutate super-track state;
-- mutate quest-log selection;
-- alter quest interaction controls.
+## Possible live freshness issue
 
-## Diagnostics
+A reported Seer count remaining at `1/10` is:
+**OPEN / UNPROVEN**.
 
-Developer panel:
-- **Objective Progress Check**
-- **Objective Progress Preview**
+P0088 Preview itself hardcoded that exact `1/10` sample.
 
-Run All includes Objective Progress Check.
+Live source validation must use Quest Probe before and after a natural objective
+change.
 
-Addon-owned status includes:
-- event registration/counts;
-- baseline capture count;
-- meaningful change count;
-- pulse/suppressed/preview counts;
-- safe quest ID;
-- baseline row count;
-- last secret flag;
-- last sample/presentation reason;
-- last fixed error.
+No polling, delayed reread, broad hook, or periodic reassertion is authorized
+without that evidence.
 
-Real objective text is not emitted by the diagnostic.
+## P0089 Repair 2
+
+Runtime target:
+`0.0.35-dev`.
+
+Presentation only:
+- width `520`;
+- height `32`;
+- bottom anchored to top of addon-owned `LogresHUDTarget`;
+- 6px gap;
+- fallback UI-center `y=-5`;
+- Preview begins with `PREVIEW`.
+
+Delivery hardening:
+- complete checker supplied as payload;
+- multiline anchors checked with whitespace-tolerant regex;
+- exact multiline checker self-test before packaging;
+- all repository static checkers precompiled in temporary final tree before
+  execution.
+
+Two earlier P0089 artifacts failed temporary-tree validation and produced no
+tracked mutation or runtime evidence.
+
+## Blizzard ownership
+
+Unchanged:
+- stock Objective Tracker remains available;
+- no quest-watch mutation;
+- no super-track mutation;
+- no quest-log selection mutation;
+- no quest interaction control mutation.
 
 ## Runtime acceptance
 
 Required:
-1. Check PASS;
-2. Preview visible while Immersion ON;
+1. Objective Progress Check PASS;
+2. corrected Preview placement visual PASS;
 3. Preview suppressed while Immersion OFF;
-4. initial baseline does not false-pulse;
-5. real same-quest objective update produces one short pulse;
-6. unchanged subsequent refresh does not duplicate;
-7. identity change does not replay old progress;
-8. Objective Tracker remains usable;
-9. no Lua/taint/protected/secret-value errors.
-
-Visual:
-- concise/readable;
-- temporary;
-- no permanent-tracker feel;
-- no conflict with NPC quest dialogue.
+4. Preview visible after Immersion ON recovery;
+5. Run All twice, all emitted checks PASS;
+6. Quest Probe records actual live objective baseline;
+7. one natural same-quest objective update produces one real pulse;
+8. Quest Probe records matching updated live count;
+9. unchanged later refresh produces no duplicate pulse;
+10. stock Objective Tracker remains usable;
+11. no Lua/taint/protected/secret-value errors.
