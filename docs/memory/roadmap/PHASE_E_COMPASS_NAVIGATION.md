@@ -1,20 +1,17 @@
 # Phase E — Compass and Navigation
 
-Status: ACTIVE — E.5
+Status: COMPLETE
 
 ## Objective
 
 Build a Warcraft-aesthetic navigation layer that shows direction through the
 world whenever the tested Forever client provides reliable navigation data.
 
-Blizzard navigation remains fail-open fallback until Logres deliberately
-replaces the required information/control surface.
-
 ## E.1
 
 **COMPLETE.**
 
-D-029 is canonical.
+D-029 established the initial compass/navigation capability contract.
 
 ## E.2
 
@@ -22,86 +19,76 @@ D-029 is canonical.
 
 Heading-only world compass runtime proof passed.
 
-## E.3 — Waypoint-bearing capability/proof
+## E.3
 
 **COMPLETE.**
 
-Runtime-proven manual user-waypoint path:
-- player map:
-  `C_Map.GetBestMapForUnit("player")`;
-- player position:
-  `C_Map.GetPlayerMapPosition(mapID, "player")`;
-- user waypoint projection:
-  `C_Map.GetUserWaypointPositionForMap(mapID)`;
-- clockwise bearing:
-  `(degrees(atan2(dx, -dy)) + 360) % 360`.
+Manual user-waypoint retrieval, update behavior, map-space bearing, and north
+orientation were runtime-proven.
 
-Final north-reference runtime proof:
-- map delta approximately `-0.00506, -0.37168`;
-- bearing `359.2` degrees.
+Accepted bearing:
+`(degrees(atan2(dx, -dy)) + 360) % 360`
+using the player's current UI map domain.
 
-Raw world X/Y axes are rejected for compass orientation on the tested map.
+Raw world X/Y orientation was rejected by runtime evidence.
 
-## E.4 — User-waypoint compass marker integration
+Quest waypoint output remained unavailable in tested super-tracked quests
+`436` and `237`.
 
-**COMPLETE — P0075 RUNTIME + VISUAL PASS.**
+## E.4
+
+**COMPLETE.**
+
+Production manual user-waypoint compass marker:
+- runtime PASS;
+- visual directional/movement PASS;
+- no stale clear behavior;
+- Immersion OFF/ON suppression/recovery;
+- Run All PASS;
+- no reported Lua/taint/secret errors;
+- minimap unchanged.
 
 Production runtime:
 `0.0.30-dev`.
 
-Runtime-proven:
-- no waypoint -> no marker;
-- waypoint outside visible tape -> marker omitted;
-- waypoint inside tape -> marker shown;
-- moving/clearing waypoint updates/removes marker without stale state;
-- player movement updates relative bearing;
-- Immersion OFF suppresses the compass/marker;
-- Immersion ON restores the compass;
-- Compass Check PASS;
-- Run All PASS.
+## E.5
 
-User visual confirmation:
-- marker tracked the correct destination direction while rotating/moving;
-- no Lua/taint/secret errors observed;
-- minimap unchanged.
+**COMPLETE.**
 
-Quest waypoint support remains unavailable until separately proven.
+Canonical decision:
+`../decisions/D-030_MINIMAP_REMAINS_BLIZZARD_OWNED.md`
 
-## E.5 — Navigation sufficiency / minimap capability review
+The minimap remains stock.
 
-**ACTIVE.**
+Reason:
+Logres does not replace the complete minimap/navigation information and control
+surface.
 
-E.4 does not authorize minimap suppression.
+Missing/unreplaced domains include quest navigation, POI/tracking information,
+ping/click interaction, zoom controls, zone/territory context, and other stock
+minimap utility.
 
-E.5 must inventory the stock minimap/navigation information and control surfaces
-and decide whether Logres replaces enough of them to suppress anything safely.
+No suppression probe was performed because the prerequisite replacement gate
+already failed.
 
-Review at minimum:
-- local spatial/orientation information;
-- manual waypoint navigation;
-- quest/objective navigation;
-- POI/tracking information;
-- minimap click interactions;
-- zoom and related controls;
-- context-specific fallback;
-- deterministic restoration.
+## Final Phase E Contract
 
-Do not mutate or suppress the minimap during the review.
+Logres owns:
+- world-context heading compass;
+- manual user-waypoint direction where runtime-capable.
 
-E.5 closes only with an explicit capability contract.
+Blizzard retains:
+- minimap;
+- unsupported quest navigation;
+- POI/tracking/map controls and other minimap utility.
 
-## Navigation ownership
+Failure behavior remains fail-open.
 
-Phase E may own restrained navigational direction.
+## Phase E Result
 
-Phase F owns quest text/objective presentation.
+**COMPLETE.**
 
-Quest navigation remains unsupported until separately runtime-proven.
+The phase closes without minimap suppression.
 
-## Exit
-
-Phase E completes only when:
-- supported navigation presentation is runtime-proven;
-- unsupported destination cases fail open;
-- Blizzard fallback remains available where Logres lacks capability;
-- minimap ownership/suppression has an explicit accepted capability decision.
+Next:
+**Phase F — Quest Experience.**

@@ -1,0 +1,26 @@
+Project Logres P0077 patch
+Date: 2026-10-02
+Baseline: ebb4bbc7084987e78b2fb9789d712a7e9d81e239
+Production runtime: 0.0.30-dev (unchanged)
+Purpose: close E.5/Phase E; open Phase F/F.1
+
+Files:
+fd0834c67952b26a67cd8426b0a72c823d54ee5561a6a77fdbd112f4eb7f52e4  docs/memory/CURRENT.md
+fd16bfd5147ce82e5a62e6f923eec0e02be46bcb299594197666219df9e631c3  docs/memory/handoffs/CURRENT_HANDOFF.md
+48fde319f7c4edd2d2b2b065bcecee789712b9bc37b0193194e6d76e87d9c1e0  docs/memory/investigations/ACTIVE.md
+bfdfb93e08a95107d5f283aeaba958435b38e3b94896d1d4d0bcaa31f07af670  docs/memory/investigations/E5_NAVIGATION_SUFFICIENCY_MINIMAP_CAPABILITY.md
+27b2b75840a3da7c5fd9475e0d37b574b6ec8ed1c862396c77eedc6f5f40bb8b  docs/memory/decisions/D-030_MINIMAP_REMAINS_BLIZZARD_OWNED.md
+e5a71f20fa0d46430ef09e267d1597d2d05f631eb35c66a93c029384ab146ebf  docs/memory/evidence/E5_MINIMAP_CAPABILITY_REVIEW_2026-10-02.md
+fd19e005a4051ee2ae78266d834868fd5d2030a7b7ef5142c1f7d6fdd15343b3  docs/memory/roadmap/STATUS.md
+15b24a36273cd34bac4bd4b6f61005ff3b72a4d6e7a0e9d957a8de2f4b226c75  docs/memory/roadmap/PHASE_E_COMPASS_NAVIGATION.md
+69ebe25a8f49bc507a31e966261d179a030f4b8c18424d64f2ab1f8a0d4ac5b1  docs/memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md
+6d1a27234e813245fb2101cd0c85315933f35d6db9ae306753b0bd6044968104  docs/memory/patches/P0076_CLOSE_E4_OPEN_E5.md
+b2e7dc796a89c772db136f373e7a029229fc2beb7c5f4dcdcbf48b85db2d0259  docs/memory/patches/P0077_CLOSE_PHASE_E_OPEN_PHASE_F.md
+963c7d91f6aeec425ecdb8e0ad0a93c74ecdcd2b841105d3d16d8afd04b405de  docs/memory/patches/PATCH_INDEX.md
+fc7167a61023e9dcf5cdec7f4c126e3d60509ef6a5fa6b0dbc6cd14715cf609c  docs/ROADMAP.md
+
+Checks:
+python3 tools/check_memory_health.py
+git diff --check -- <P0077-owned files>
+
+Docs-only checkpoint; no WoW redeploy required.

@@ -57,20 +57,11 @@ Phase B runtime-proven:
 - pet/party rows;
 - in-game diagnostic/control panel.
 
-Stock Blizzard UI remains visible at this checkpoint by design. Suppression/restoration is capability-gated and assigned explicitly by D-017.
-
 ## Phase C — Action Interface
 
 **Status: COMPLETE.**
 
-Implement rectangular/square action clusters:
-- primary cluster always legible;
-- secondary/tertiary clusters contextually revealed;
-- utility clusters normally absent/faded;
-- combat and PvP modifiers;
-- secure-action/combat-lockdown compliance.
-
-Action-bar replacement is capability-gated: prove Logres secure controls first, then suppress/restore Blizzard action bars.
+Secure action clusters and proven selective stock replacement.
 
 Canonical phase record:
 `memory/roadmap/PHASE_C_ACTION_INTERFACE.md`
@@ -79,45 +70,34 @@ Canonical phase record:
 
 **Status: COMPLETE.**
 
-Implement full immersion orchestration:
-- Quiet/social immersion mode;
-- contextual HUD fades;
-- PvP-aware immersion;
-- automatic instance behavior;
-- module-level restoration when immersion is suspended;
-- suppression/restoration orchestration for Blizzard player/target/party frames;
-- stock action-bar suppression/restoration once Phase C replacement is proven.
+Immersion orchestration, Quiet Mode, context policy, selective unit-frame
+suppression/restoration, and proven action replacement orchestration.
 
 Canonical phase record:
 `memory/roadmap/PHASE_D_IMMERSION_CONTROLLER.md`
 
 ## Phase E — Compass and Navigation
 
-**Status: ACTIVE — E.5 navigation sufficiency / minimap capability review.**
+**Status: COMPLETE.**
 
-Implement a Warcraft-aesthetic horizontal compass:
-- world/exploration use;
-- selected quest/user waypoint markers where APIs permit;
-- automatic suspension in instances;
-- graceful degradation whenever position/bearing data is unavailable;
-- minimap suppression only after Logres navigation is sufficient for the active context.
+Established:
+- heading compass;
+- runtime-proven map-space manual user-waypoint bearing;
+- production manual user-waypoint compass marker;
+- fail-open navigation behavior;
+- explicit minimap ownership decision.
 
 Canonical phase record:
 `memory/roadmap/PHASE_E_COMPASS_NAVIGATION.md`
 
-Completed:
-- E.1 compass/navigation source review and capability contract;
-- E.2 heading-only world compass runtime proof;
-- E.3 manual user-waypoint retrieval/update/map-space bearing runtime proof;
-- E.4 manual user-waypoint compass marker runtime + visual proof.
+Canonical minimap decision:
+`memory/decisions/D-030_MINIMAP_REMAINS_BLIZZARD_OWNED.md`
 
-Current work:
-E.5 reviews whether Logres replaces enough minimap/navigation information and
-controls to justify any reversible stock minimap suppression.
-
-The minimap remains stock during this review.
+The Blizzard minimap remains stock.
 
 ## Phase F — Quest Experience
+
+**Status: ACTIVE — F.1 source / capability review.**
 
 Implement:
 - immersive NPC quest presentation;
@@ -125,6 +105,13 @@ Implement:
 - aesthetic quest helper;
 - contextual XP presentation;
 - stock quest/XP surface suppression only after equivalent Logres presentation is proven.
+
+Canonical phase record:
+`memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md`
+
+Current work:
+F.1 inventories tested Forever quest, interaction, objective, helper, XP, and
+stock-ownership capabilities before selecting the first implementation slice.
 
 ## Phase G — Cinematic Camera
 

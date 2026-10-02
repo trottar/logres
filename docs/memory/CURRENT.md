@@ -8,90 +8,87 @@ project: logres
 
 ## Active Objective
 
-**Phase E — Compass and Navigation.**
+**Phase F — Quest Experience.**
 
 ## Current Work Item
 
-**E.5 — Navigation sufficiency / minimap capability review.**
+**F.1 — Quest-experience source / capability review.**
 
-P0075 is verified pushed at `51763025`.
+P0076 is verified pushed at `ebb4bbc7`.
 
-E.4 is complete.
+Phase E is complete.
 
 Production runtime remains:
 `0.0.30-dev`.
 
 ## Verified State
 
-- E.1 complete.
-- E.2 complete.
-- E.3 complete.
-- E.4 complete.
-- Manual user-waypoint retrieval, update, clearing, map-space bearing, and
-  production compass presentation are runtime-proven.
-- P0075 persisted diagnostics prove:
-  - no waypoint -> no marker;
-  - out-of-tape waypoint -> marker omitted;
-  - in-tape waypoint -> marker shown;
-  - clearing waypoint -> no stale marker;
-  - Immersion OFF -> compass/marker suppressed;
-  - Immersion ON -> compass recovery;
-  - Compass Check PASS;
-  - Run All PASS.
-- User visual confirmation proves:
-  - marker direction tracked correctly while rotating/moving;
-  - no Lua/taint/secret-value errors were observed;
-  - Blizzard minimap remained unchanged.
-- The supported bearing domain remains current UI map space:
-  - player position from `C_Map.GetPlayerMapPosition`;
-  - destination from `C_Map.GetUserWaypointPositionForMap`;
-  - clockwise bearing:
-    `(degrees(atan2(dx, -dy)) + 360) % 360`.
-- Raw world X/Y remains rejected for compass orientation.
-- Tested super-tracked quest IDs `436` and `237` returned no usable next waypoint.
-- Quest marker presentation remains unsupported without new runtime evidence.
-- Minimap remains stock.
+- Phases 0, A, B, C, D, and E are complete.
+- E.1 compass/navigation source review complete.
+- E.2 heading-only compass runtime-proven.
+- E.3 manual user-waypoint map-space bearing runtime-proven.
+- E.4 production user-waypoint compass marker runtime + visual PASS.
+- E.5 navigation-sufficiency/minimap review complete.
+- D-030 is accepted:
+  **the Blizzard minimap remains Blizzard-owned; Phase E does not suppress it.**
+- The minimap suppression capability gate fails because Logres does not
+  deliberately replace all required minimap/navigation information and control
+  surfaces.
+- Known missing/unreplaced domains include:
+  - quest/objective navigation;
+  - route/path guidance;
+  - local POI/tracking information;
+  - minimap ping/click interaction;
+  - zoom controls;
+  - zone/territory context;
+  - other Blizzard-owned minimap utility not separately proven/replaced.
+- Tested super-tracked quest IDs `436` and `237` returned no usable next
+  waypoint.
+- Quest marker presentation remains unsupported.
+- Existing heading + manual user-waypoint compass remains accepted production
+  navigation.
+- Minimap remains stock in all contexts.
 
 ## Next Action
 
-E.5 reviews whether Logres navigation is sufficient to replace any Blizzard
-minimap/navigation surface safely.
+F.1 reviews the tested Forever client's quest-experience sources and stock UI
+ownership before any quest presentation or suppression work.
 
-The review must identify:
-1. information/control surfaces currently supplied by the Blizzard minimap;
-2. which of those Logres already replaces deliberately;
-3. which remain missing or intentionally Blizzard-owned;
-4. interaction/control requirements, including tracking and click behavior;
-5. context-specific fallback requirements;
-6. whether any minimap suppression is justified at all.
+Review at minimum:
+1. NPC quest offer/progress/reward presentation;
+2. gossip/quest interaction boundaries;
+3. objective/task update sources;
+4. selected/super-tracked quest state relevant to presentation;
+5. quest helper / world-map ownership boundaries;
+6. XP presentation sources;
+7. secure/protected/secret-value constraints;
+8. stock quest/objective/XP surfaces that must remain until deliberately
+   replaced.
 
-Do not suppress or mutate the minimap during the review.
+No stock quest/XP suppression is authorized during F.1.
 
 ## Success Criteria
 
-E.5 succeeds when the project has an explicit capability contract stating:
-- which minimap/navigation surfaces remain required;
-- whether reversible minimap suppression is allowed in any context;
-- exact capability gates for any allowed suppression;
-- required restoration/fail-open behavior;
-- explicit non-scope for surfaces Logres does not replace.
+F.1 succeeds with an explicit capability contract that separates:
+- safe informational sources;
+- interaction/control surfaces;
+- protected/restricted behavior;
+- Phase F presentation ownership;
+- fail-open stock fallback;
+- runtime proof requirements for the first implementation slice.
 
 ## Do Not Reopen Without New Evidence
 
-- **E.1:** complete.
-- **E.2:** complete.
-- **E.3:** complete.
-- **E.4:** complete.
-- **Manual user-waypoint compass marker:** runtime + visual PASS.
-- **User-waypoint map-space bearing:** proven.
-- **Raw world X/Y bearing:** rejected.
-- **Quest marker:** unsupported until separately runtime-proven.
-- **Minimap:** stock until E.5 capability contract explicitly says otherwise.
+- **Phase E:** complete.
+- **Heading compass:** accepted.
+- **Manual user-waypoint marker:** accepted.
+- **Quest waypoint marker:** unsupported until separately runtime-proven.
+- **Minimap:** Blizzard-owned / stock by D-030.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
+- `docs/memory/decisions/D-030_MINIMAP_REMAINS_BLIZZARD_OWNED.md`
+- `docs/memory/evidence/E5_MINIMAP_CAPABILITY_REVIEW_2026-10-02.md`
 - `docs/memory/evidence/E4_P0075_RUNTIME_PASS_2026-10-02.md`
-- `docs/memory/evidence/E3_P0073_RUNTIME_PASS_2026-10-02.md`
-- `docs/memory/investigations/E5_NAVIGATION_SUFFICIENCY_MINIMAP_CAPABILITY.md`
-- `docs/memory/decisions/D-029_COMPASS_NAVIGATION_CAPABILITY_CONTRACT.md`
+- `docs/memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md`

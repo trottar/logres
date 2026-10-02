@@ -1,7 +1,7 @@
 # P0076 — Close E.4 / Open E.5
 
 Date: 2026-10-02
-Result: PREPARED
+Result: INSTALLED / PUSHED (`ebb4bbc7`)
 
 ## Baseline
 
@@ -13,34 +13,13 @@ P0075 verified pushed:
 Record P0075 runtime + visual PASS, close E.4, and open the explicit
 navigation-sufficiency/minimap capability review.
 
-## E.4 result
+## Result
 
-PASS.
+E.4 closed.
 
-Accepted production capability:
-- heading compass;
-- manual user-waypoint compass marker;
-- current-map bearing;
-- movement/update/clear behavior;
-- world/Immersion policy gating;
-- fail-open omission.
+E.5 opened.
 
-## E.5 opened
+No runtime code changed.
 
-**E.5 — Navigation sufficiency / minimap capability review**
-
-Initial rule:
-**no minimap mutation or suppression during the review.**
-
-The review must inventory required Blizzard minimap/navigation information and
-controls and decide whether any reversible suppression is justified.
-
-## Runtime
-
-No runtime code changes.
-
-Production runtime remains:
+Production runtime remained:
 `0.0.30-dev`.
-
-Docs-only patch.
-No WoW redeploy required.
