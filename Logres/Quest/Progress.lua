@@ -4,6 +4,11 @@ local PULSE_SECONDS = 3.0
 local MAX_OBJECTIVES = 8
 local MAX_PRESENTATION_ROWS = 2
 local TEXT_LIMIT = 86
+local PRESENTATION_WIDTH = 520
+local PRESENTATION_HEIGHT = 32
+local PRESENTATION_GAP = 6
+local FALLBACK_Y = -5
+local PREVIEW_TEXT = "PREVIEW · Objective progress · 3/10"
 
 local Progress = Logres:RegisterModule("QuestObjectiveProgress", {
     autoEnable = true,
@@ -553,9 +558,7 @@ function Progress:ShowPreview()
     end
 
     return self:PresentLines(
-        {
-            "Stonesplinter Seer slain  ·  1/10",
-        },
+        { PREVIEW_TEXT },
         "preview"
     )
 end
@@ -654,14 +657,30 @@ function Progress:OnInitialize()
         "LogresQuestObjectiveProgress",
         UIParent
     )
-    root:SetSize(600, 58)
-    root:SetPoint(
-        "CENTER",
-        UIParent,
-        "CENTER",
-        0,
-        -205
+    root:SetSize(
+        PRESENTATION_WIDTH,
+        PRESENTATION_HEIGHT
     )
+
+    local targetAnchor = _G.LogresHUDTarget
+
+    if targetAnchor then
+        root:SetPoint(
+            "BOTTOM",
+            targetAnchor,
+            "TOP",
+            0,
+            PRESENTATION_GAP
+        )
+    else
+        root:SetPoint(
+            "CENTER",
+            UIParent,
+            "CENTER",
+            0,
+            FALLBACK_Y
+        )
+    end
     root:SetFrameStrata("HIGH")
     root:EnableMouse(false)
     root:Hide()
