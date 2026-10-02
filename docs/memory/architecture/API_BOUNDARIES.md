@@ -139,3 +139,35 @@ Automated outbound replies remain unapproved and deferred to a dedicated future 
 Zoom and relevant camera CVar reads are runtime verified.
 
 Mutation/restore behavior is deferred to Phase G and must preserve user settings.
+
+## E.1 compass/navigation resolution
+
+Phase E heading uses `GetPlayerFacing()` as the first production navigation
+input.
+
+Contract:
+- outdoors/world capability only;
+- radians;
+- 0 north;
+- counterclockwise-positive;
+- unavailable in restricted instance contexts;
+- never retain/fabricate a prior heading when unavailable.
+
+Presentation converts to conventional clockwise compass degrees:
+
+`headingDegrees = (360 - degrees(facing)) % 360`
+
+Player map position remains the later waypoint path:
+
+`C_Map.GetBestMapForUnit("player")` ->
+`C_Map.GetPlayerMapPosition(mapID, "player")`.
+
+I-001 already runtime-proved that path outdoors and its absence in the tested
+party instance.
+
+User waypoint and quest waypoint APIs are source-present on Forever, but their
+project runtime behavior/event contract remains unproven. They are not part of
+the first heading compass slice.
+
+Minimap suppression remains deferred until Logres has a deliberate safe
+replacement/fallback for required navigation information and controls.

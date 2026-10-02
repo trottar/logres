@@ -2,35 +2,36 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0063 is verified pushed at `20b1bf55`.
+P0065 is verified pushed at `46271f97`.
 
-The user confirmed the requested P0063 runtime validation was completed
-successfully.
+Phase D is complete.
 
-P0064 is verified pushed at `770f9f30` and records the assistant delivery
-workflow failures durably.
+Phase E is active.
 
-Phase D / D.6 are complete.
+E.1 source review is complete and D-029 is canonical.
 
 Current work:
-**Phase E — Compass and Navigation**
-**E.1 — Compass/navigation source review and capability audit**
+**E.2 — Heading-only world compass runtime implementation**
 
-Known E.1 evidence:
-- open-world map position/facing are available;
-- tested party-instance map position/facing are unavailable;
-- both recover after returning to the world;
-- navigation must suspend rather than fabricate bearings;
-- `C_QuestLog.GetNextWaypoint` exists but detailed behavior is unproven;
-- minimap suppression is not allowed until Logres deliberately replaces the
-  required navigation information/control surface.
+First slice:
+- `Compass` module;
+- top-center horizontal directional strip;
+- Immersion ON + world context only;
+- heading from `GetPlayerFacing()` only;
+- throttled update while eligible;
+- suspend when facing is unavailable;
+- addon-owned `Compass Check`;
+- no position dependency;
+- no quest/user waypoint markers;
+- no minimap suppression.
 
-P0065 is documentation-only.
+Runtime target:
+`0.0.28-dev`.
 
-No WoW redeploy is required.
-
-Next after P0065 push:
-perform E.1 source review and produce the first capability-gated Phase E
-implementation plan.
+Waypoint work remains separately capability-gated:
+- player position path is known and I-001-proven outdoors;
+- user waypoint APIs are source-present but not project-runtime-proven;
+- quest waypoint presence is known but semantics are not project-runtime-proven;
+- waypoint bearing math must receive dedicated runtime proof.
 
 User performs all commits/pushes.

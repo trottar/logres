@@ -66,6 +66,7 @@
 | P0062 | 2026-10-01 | INSTALLED / PUSHED | Resolve D.6 integrated restoration/recovery validation design (`13c5339`) |
 | P0063 | 2026-10-01 | INSTALLED / PUSHED — USER-REPORTED RUNTIME PASS | Add integrated D.6 Restoration Check and addon-owned recovery diagnostics (`20b1bf55`) |
 | P0064 | 2026-10-01 | INSTALLED / PUSHED | Record assistant delivery workflow failures; restore standard patch procedure (`770f9f30`) |
-| P0065 | 2026-10-01 | PREPARED | Record P0063 runtime PASS; close Phase D; open Phase E / E.1 |
+| P0065 | 2026-10-01 | INSTALLED / PUSHED | Record P0063 runtime PASS; close Phase D; open Phase E / E.1 (`46271f97`) |
+| P0066 | 2026-10-01 | PREPARED | Resolve E.1 compass/navigation capability contract; open E.2 heading compass |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

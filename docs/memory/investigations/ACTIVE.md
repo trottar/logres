@@ -1,16 +1,12 @@
 # Active Investigations
 
-## E.1 — Compass/navigation source review
+No open source investigation blocks E.2.
 
-Status:
-**ACTIVE**
+## Next runtime work
 
-Canonical:
-`E1_COMPASS_NAVIGATION_SOURCE_REVIEW.md`
+**E.2 — Heading-only world compass implementation**
 
-Next:
-resolve the production compass/navigation capability contract before runtime
-implementation.
+D-029 is canonical.
 
 ## Tracked non-blocking defects / deferred domains
 

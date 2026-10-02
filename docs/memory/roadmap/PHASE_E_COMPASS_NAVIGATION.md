@@ -14,7 +14,7 @@ deliberately replaces the required information/control surface.
 
 ## Existing runtime evidence
 
-I-001 already proved on the tested Forever client:
+I-001 proved on the tested Forever client:
 
 Open world:
 - usable player map position is available;
@@ -28,57 +28,96 @@ Tested party instance:
 After returning to the world:
 - position/facing recover.
 
-Therefore Phase E starts with these non-negotiable rules:
+Therefore:
 - world navigation is capability-gated;
-- instance/restricted contexts suspend the compass when required inputs are
+- instance/restricted contexts suspend navigation when required inputs are
   unavailable;
 - Logres never fabricates a bearing;
 - absence of compass capability does not imply Immersion OFF;
 - minimap suppression requires a later explicit capability gate.
 
-`C_QuestLog.GetNextWaypoint` is present, but its detailed runtime semantics were
-not proven by I-001.
-
 ## E.1 — Compass/navigation source review and capability audit
+
+**Status: COMPLETE.**
+
+D-029 is canonical.
+
+Resolved:
+- heading source: `GetPlayerFacing()`;
+- API convention: radians, 0 north, increasing counterclockwise;
+- presentation conversion:
+  `headingDegrees = (360 - degrees(facing)) % 360`;
+- first compass slice does not need map position;
+- later player position path:
+  `C_Map.GetBestMapForUnit("player")` +
+  `C_Map.GetPlayerMapPosition(mapID, "player")`;
+- map/player-facing queries are unavailable in restricted instance contexts;
+- user waypoint APIs are source-present on Forever but project runtime semantics
+  remain unproven;
+- `C_QuestLog.GetNextWaypoint` is source-present/presence-proven but detailed
+  semantics remain unproven;
+- `SUPER_TRACKING_CHANGED` is source-listed for Forever;
+- `USER_WAYPOINT_UPDATED` is not a current Forever dependency;
+- waypoint bearing math must be separately proven;
+- minimap remains stock.
+
+## E.2 — Heading-only world compass
 
 **Status: ACTIVE.**
 
-Resolve before runtime implementation:
+Runtime target:
+`0.0.28-dev`.
 
-1. exact heading/facing API and value semantics;
-2. exact player map-position API and map-transition semantics;
-3. safe availability checks;
-4. update cadence/event strategy;
-5. integration with existing State world/instance context;
-6. selected quest waypoint capability;
-7. user waypoint capability;
-8. coordinate/bearing conversion requirements;
-9. Phase E navigation marker ownership vs Phase F quest presentation;
-10. minimap suppression prerequisites;
-11. addon-owned diagnostic state and runtime proof matrix.
+Implement:
+- `Compass` module;
+- top-center horizontal directional strip;
+- cardinal/intercardinal heading presentation;
+- consume persisted Immersion preference and existing observed State;
+- eligible only when:
+  - module enabled;
+  - Immersion ON;
+  - State context is `world`;
+  - `GetPlayerFacing()` returns a usable non-secret number;
+- throttled `OnUpdate` while presentation is eligible;
+- immediate suspend/hide on preference/context ineligibility;
+- fail closed for presentation when facing is absent;
+- addon-owned diagnostic state and `Compass Check`.
 
-### Standing rules
+Do not implement in E.2:
+- player coordinates;
+- quest waypoint marker;
+- user waypoint marker;
+- distance;
+- route/path guidance;
+- minimap suppression.
 
-- Do not fabricate position or heading.
-- Do not suppress the minimap during E.1.
-- Do not create a competing global context mode; consume existing State.
-- Do not require contrived travel solely to prove an unavailable environmental
-  path when existing evidence already establishes the restriction.
-- Preserve Blizzard navigation fail-open when Logres lacks equivalent required
-  information/control.
-- PvP remains a modifier, not Immersion OFF.
+## E.3 — Waypoint-bearing capability/proof
 
-## First implementation gate
+**Status: QUEUED.**
 
-E.1 should end with a narrow first runtime slice.
+Before waypoint markers:
+- runtime-prove user waypoint retrieval on Forever;
+- runtime-prove active/super-tracked quest selection path;
+- runtime-prove quest waypoint result semantics;
+- determine reliable Forever update events;
+- convert player + target points through map/world coordinates;
+- verify axis/bearing orientation in game;
+- require matching world/continent domain before calculating a bearing;
+- fail open/omit marker when conversion is unavailable.
 
-Expected shape, subject to source review:
-- world-only compass heading presentation;
-- immediate suspension when required navigation inputs are unavailable;
-- no quest/user marker until its data contract is proven;
-- no minimap suppression.
+Phase F owns quest text/objective presentation.
+Phase E may later own only the restrained navigational bearing marker for the
+currently selected/super-tracked destination.
 
-Do not commit to that slice if current source evidence contradicts it.
+## Minimap gate
+
+The minimap remains Blizzard-owned.
+
+Do not suppress it merely because the heading tape exists.
+
+A later phase-E checkpoint must explicitly prove that Logres supplies every
+required navigation/control surface for the active context before any reversible
+minimap suppression is considered.
 
 ## Exit
 

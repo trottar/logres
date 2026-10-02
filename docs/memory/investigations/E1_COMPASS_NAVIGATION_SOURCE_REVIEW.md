@@ -1,86 +1,139 @@
 # E.1 — Compass / Navigation Source Review
 
-Status: ACTIVE
+Status: COMPLETE
 Opened: 2026-10-01
+Closed: 2026-10-01
+
+Canonical decision:
+`../decisions/D-029_COMPASS_NAVIGATION_CAPABILITY_CONTRACT.md`
+
+Canonical evidence:
+`../evidence/E1_COMPASS_NAVIGATION_SOURCE_REVIEW_2026-10-01.md`
 
 ## Question
 
 What is the smallest capability-safe production compass/navigation contract for
 the tested Forever client?
 
-## Known evidence
+## Resolution
 
-From I-001:
-- open-world map position is available;
-- open-world facing is available;
-- tested party-instance map position is unavailable;
-- tested party-instance facing is unavailable;
-- both recover after returning to the world;
-- `C_QuestLog.GetNextWaypoint` exists, but detailed waypoint output was not
-  exercised.
+The smallest safe first slice is a heading-only world compass.
 
-From Phase D:
-- world/instance context already exists in observed State;
-- instance is not a global Logres-off state;
-- PvP is orthogonal;
-- fail-open fallback is required whenever Logres lacks a safe replacement.
-
-## Source review targets
+It does not need player position.
 
 ### Heading
-Resolve:
-- exact native facing source;
-- units/range and orientation convention;
-- unavailable-value behavior;
-- update cadence.
+
+Use:
+`GetPlayerFacing()`
+
+Source/reference semantics:
+- Forever 1.60.1 support;
+- radians;
+- 0 = north;
+- values increase counterclockwise;
+- restricted/no-instance API;
+- returns no usable value in restricted instances.
+
+I-001 independently runtime-proved:
+- non-secret facing outdoors;
+- no facing in tested party instance;
+- facing restored after returning to the world.
+
+Presentation conversion:
+`headingDegrees = (360 - degrees(facing)) % 360`
+
+This yields conventional clockwise compass degrees for UI labeling:
+- N = 0;
+- E = 90;
+- S = 180;
+- W = 270.
+
+Runtime E.2 must visually verify this orientation rather than treating source
+documentation as visual proof.
 
 ### Position
-Resolve:
-- exact map ID source;
-- exact player-position source;
-- zone/map transition behavior;
-- unavailable/restricted behavior;
-- whether heading-only presentation remains meaningful when position is absent.
+
+Later waypoint work may use:
+1. `C_Map.GetBestMapForUnit("player")`;
+2. `C_Map.GetPlayerMapPosition(mapID, "player")`.
+
+I-001 already proved this outdoors and proved the position path unavailable in
+the tested party instance.
+
+Position is not required for E.2.
 
 ### Waypoints
-Resolve:
-- selected quest waypoint semantics;
-- user waypoint API availability;
-- map/coordinate conversion requirements;
-- stale/absent waypoint handling;
-- ownership boundary with Phase F quest presentation.
 
-### Context
-Resolve:
-- consumption of existing State;
-- world presentation;
-- instance/restriction suspension;
-- restoration when navigation capability returns;
-- no polling/reassertion intended merely to fight restricted state.
+User waypoint APIs are source-present on Forever:
+- `C_Map.GetUserWaypoint`;
+- `C_Map.GetUserWaypointPositionForMap`;
+- related user-waypoint helpers.
+
+Quest waypoint source is present:
+- `C_QuestLog.GetNextWaypoint(questID)`.
+
+Active quest selection can potentially use:
+- `C_SuperTrack.GetSuperTrackedQuestID()`.
+
+But project runtime evidence does not yet establish:
+- actual user-waypoint return behavior;
+- exact active quest/super-track behavior;
+- quest waypoint result behavior;
+- reliable Forever event behavior for user-waypoint changes;
+- waypoint bearing axis/orientation.
+
+Therefore waypoint markers are not part of E.2.
+
+### Events / update cadence
+
+Facing changes continuously during player rotation.
+
+Do not force global State to own heading.
+
+E.2 should use a module-local throttled `OnUpdate` only while the compass is
+eligible.
+
+Preference/context changes remain event/subscription driven through existing:
+- `SubscribePreferences`;
+- `SubscribeState`.
+
+For later waypoint work:
+- `SUPER_TRACKING_CHANGED` is source-listed for Forever;
+- current `USER_WAYPOINT_UPDATED` reference does not list Forever, so E.1 does
+  not adopt it as a required Forever event.
+
+### Context / immersion
+
+The compass belongs to Immersion Mode.
+
+E.2 presentation eligibility:
+- Immersion ON;
+- State context `world`;
+- facing available.
+
+Instance entry does not disable Logres globally.
+
+The compass simply suspends.
 
 ### Blizzard fallback
-Resolve:
-- what the minimap currently provides that Logres does not;
-- what must be replaced before any later minimap suppression;
-- restoration/fail-open requirements.
 
-## Diagnostic requirement
+The minimap remains stock.
 
-A future Compass Check should prefer addon-owned state and report:
-- module enabled;
-- observed context;
-- heading capability available/unavailable;
-- position capability available/unavailable;
-- waypoint capability/status where proven;
-- presentation active/suspended reason.
+The heading strip is not equivalent to:
+- map interaction;
+- zoom;
+- map pins;
+- tracking controls;
+- arbitrary point selection;
+- instance navigation.
 
-It must not invent navigation data.
+Therefore E.2 does not authorize minimap suppression.
 
-## Exit
+## E.1 exit result
 
-E.1 closes with:
-- a source-backed capability matrix;
-- explicit production API choices;
-- a first runtime implementation slice;
-- static contract requirements;
-- a runtime validation plan.
+E.1 is complete.
+
+First runtime slice:
+**E.2 heading-only world compass.**
+
+Waypoint bearing is separately capability-gated as E.3.

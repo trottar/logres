@@ -1,7 +1,7 @@
 # P0065 — Close Phase D / Open Phase E
 
 Date: 2026-10-01
-Result: PREPARED — DOCS-ONLY PHASE TRANSITION
+Result: INSTALLED / PUSHED (`46271f97`)
 
 ## Baseline
 
@@ -47,5 +47,6 @@ No WoW redeploy is required.
 
 ## Next
 
-After P0065 is pushed:
-perform E.1 source review before writing compass runtime code.
+P0065 is verified pushed at `46271f97`.
+
+Perform E.1 source review before writing compass runtime code.

@@ -1,0 +1,27 @@
+Project Logres P0066 patch
+Date: 2026-10-01
+Baseline: 46271f97a47fdf30559285d90e8b296f5e0feb8b
+Type: docs-only source/design checkpoint
+
+Files:
+94d407e8d37ef55626351a20183224919de239b80739a9dc698b66332f85005d  docs/memory/CURRENT.md
+bef90e1d1be2233273f0cd4dc79b32c21f6f5a624dff0bafb8d5ddd8a13266e0  docs/memory/handoffs/CURRENT_HANDOFF.md
+96108d5a8e203c8bf15b564d4748f282d1a6ce2edf9fd1692b5414c2cd36b01c  docs/memory/investigations/ACTIVE.md
+3f24d14b5a0879d6b7e6431c7cc46c899810aaeaff8979caf62ff704136fa0da  docs/memory/roadmap/STATUS.md
+edc4db11b131250a499f0c9aac82f0120131e2904845b0a0c06d00630d510e4c  docs/memory/roadmap/PHASE_E_COMPASS_NAVIGATION.md
+d4b230ee0807423b8976159f4a28c0f90b1b3ad3ad863d83b525a14e386fed5c  docs/memory/investigations/E1_COMPASS_NAVIGATION_SOURCE_REVIEW.md
+3176972be2adfdea6aae9fec570735163e9ded74d5cfcbf6d715b9a614d419fa  docs/memory/architecture/COMPASS.md
+6ea4b842dde49d60e888adb664a9ee4adc53c44b2e974e69e499250fd437289a  docs/memory/architecture/API_BOUNDARIES.md
+a5233f28e749b862e1704c0a07b12abc2057be3a7dea9e78db6ad56da3083fab  docs/memory/patches/P0065_CLOSE_PHASE_D_OPEN_PHASE_E.md
+5d3bbac8d672a3c68b214f537075eed50c772bd0a220546a67d7deb8c7da510b  docs/memory/patches/PATCH_INDEX.md
+97b6ece3dab20ad9b266f488e54f63f8691700148e82646981ee15a8aaf68214  docs/memory/2026-10-01.md
+741f421e9c850e576bbdba06355e200010b6292568dcab56a6694f4d8c868a56  docs/memory/decisions/D-029_COMPASS_NAVIGATION_CAPABILITY_CONTRACT.md
+7b924695896fc9c937a4300b11e077ff84af6b1c9d8eb5b33c7e2c07865583d9  docs/memory/evidence/E1_COMPASS_NAVIGATION_SOURCE_REVIEW_2026-10-01.md
+5b4cf4cff3e20d8be5022474b1f66df3ebc6d69e9f9fc34f81aaf88fb1dc9f90  docs/memory/patches/P0066_RESOLVE_E1_COMPASS_NAVIGATION.md
+
+Checks:
+python3 tools/check_memory_health.py
+git diff --check -- <P0066-owned files>
+
+No WoW redeploy required.
+Unrelated local modifications remain outside P0066 ownership.
