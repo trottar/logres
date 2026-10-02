@@ -1,7 +1,7 @@
 # P0080 — Contextual XP Pulse
 
 Date: 2026-10-02
-Result: PREPARED — RUNTIME + VISUAL PROOF PENDING
+Result: INSTALLED / PUSHED — XP RUNTIME PASS / RESTORATION FAIL (`cde9b726`)
 
 ## Baseline
 
@@ -10,55 +10,32 @@ P0079 verified pushed:
 
 ## Runtime
 
-`0.0.30-dev -> 0.0.31-dev`
+`0.0.31-dev`
 
-## Purpose
+## XP result
 
-Close F.2 from its resolved capability matrix and implement F.3's first
-production quest-experience presentation slice.
-
-## Production behavior
-
-Adds `Logres/Quest/XP.lua`.
-
-On a safe positive XP gain:
-- compute delta from a safe baseline;
-- show `+N XP · progress%`;
-- auto-hide after approximately two seconds.
-
-Safety:
-- secret-check before inspection/arithmetic;
-- level/range changes rebaseline;
-- non-positive deltas do not fabricate gain;
-- invalid/secret/unavailable input fails open;
-- Immersion OFF suppresses presentation.
-
-## Diagnostics
-
-Adds:
+PASS:
 - XP Check;
-- XP Preview.
+- real XP update;
+- delta `124`;
+- progress `89.1%`;
+- pulse count `1`;
+- auto-hide;
+- Immersion OFF preview suppression;
+- Immersion ON preview recovery.
 
-Run All now includes XP Check.
+Visual acceptance remains separate user evidence.
 
-## Non-scope
+## Integrated result
 
-No:
-- permanent XP bar;
-- stock XP suppression;
-- quest/objective tracker suppression;
-- quest compass marker;
-- quest interaction automation.
+Run All failed Restoration Check.
 
-## Runtime next
+P0079 diagnostics narrowed the failure to TargetFrame stock restoration.
 
-Deploy `0.0.31-dev`.
+Final cleanup reconverged.
 
-Validate:
-- XP Check;
-- XP Preview;
-- one real XP gain;
-- Immersion OFF/ON preview behavior;
-- Run All;
-- no Lua/taint/secret errors;
-- stock quest/XP UI unchanged.
+## Next
+
+P0081 adds only the missing TargetFrame/controller error text.
+
+No restoration behavior workaround is introduced without the error evidence.

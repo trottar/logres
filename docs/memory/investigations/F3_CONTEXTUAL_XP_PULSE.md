@@ -1,105 +1,65 @@
 # F.3 — Contextual XP Pulse
 
-Status: ACTIVE — P0080 IMPLEMENTATION PREPARED
+Status: ACTIVE — XP RUNTIME PROVEN; INTEGRATED RESTORATION BLOCKER
 Opened: 2026-10-02
 
 Canonical capability contract:
 `../decisions/D-031_QUEST_EXPERIENCE_CAPABILITY_CONTRACT.md`
 
-F.2 evidence:
-`../evidence/F2_P0078_QUEST_XP_RUNTIME_EVIDENCE_2026-10-02.md`
+## Production implementation
 
-## Product contract
-
-Show XP as a brief contextual confirmation, not a permanent conventional bar.
+P0080 runtime:
+`0.0.31-dev`.
 
 Presentation:
-- centered below the existing core HUD;
 - `+N XP · progress%`;
-- visible for approximately two seconds;
-- no persistent XP frame after the pulse.
+- approximately two seconds;
+- no permanent bar;
+- no stock XP suppression.
 
-## Input contract
+## Runtime evidence
 
-Use:
-- `UnitXP("player")`;
-- `UnitXPMax("player")`;
-- `PLAYER_XP_UPDATE`.
+Proven:
+- safe XP baseline;
+- real `PLAYER_XP_UPDATE`;
+- positive delta `124`;
+- progress `89.1%`;
+- pulse count `1`;
+- automatic hide;
+- Immersion OFF preview suppression;
+- Immersion ON preview restoration;
+- XP Check PASS.
 
-Support events:
-- `PLAYER_LEVEL_UP`;
-- `PLAYER_ENTERING_WORLD`.
+Visual appearance still requires user acceptance.
 
-Every XP sample is secret-checked before:
-- type inspection;
-- comparison;
-- arithmetic;
-- formatting.
+## Integrated blocker
 
-## Delta contract
+P0080 Run All reproduced the restoration failure.
 
-On module enable / world entry:
-- establish baseline only.
+P0079 diagnostic detail now identifies TargetFrame restoration as the failing
+domain.
 
-On positive XP update with unchanged max-XP range:
-- compute delta;
-- present pulse;
-- update baseline.
+See:
+`P0080_TARGETFRAME_RESTORE_FAILURE.md`.
 
-On level/range change or non-positive delta:
-- rebaseline;
-- do not fabricate an XP gain.
+F.3 cannot close until integrated restoration passes after the narrow defect is
+understood/resolved.
 
-On absent, secret, invalid, failed, or level-cap/no-XP input:
-- clear baseline/pulse;
-- fail open.
+## P0081
 
-## Immersion contract
+Diagnostic-only checkpoint.
 
-Immersion ON:
-- positive XP gains may present.
+Adds the TargetFrame/controller reason/error strings to the restoration mismatch
+record.
 
-Immersion OFF:
-- no pulse presentation;
-- XP events may still advance the safe baseline so later re-enable does not
-  display stale accumulated XP.
-
-## Stock ownership
-
-P0080 does not suppress or mutate:
-- Blizzard XP bars;
-- quest log;
-- objective tracker;
-- minimap;
-- quest interaction UI.
-
-This slice is additive only.
-
-## Diagnostics
-
-Developer panel:
-- **XP Check** — addon-owned structural/runtime state;
-- **XP Preview** — synthetic visual-only preview.
-
-Run All includes XP Check.
-
-## Runtime proof
-
-Required:
-1. XP Check PASS after reload;
-2. XP Preview visual acceptance;
-3. one ordinary real XP gain produces a pulse;
-4. pulse auto-hides;
-5. post-gain XP Check shows XP event and pulse count;
-6. Immersion OFF suppresses XP Preview;
-7. Immersion ON restores XP Preview;
-8. Run All PASS;
-9. no Lua/taint/secret-value errors;
-10. stock XP/quest UI unchanged.
+No XP or restoration behavior changes.
 
 ## Exit
 
-Close F.3 only after runtime + visual proof.
-
-Then choose the next Phase F slice from remaining proven capabilities rather
-than assuming objective or quest-destination support.
+Close F.3 only after:
+- XP visual acceptance;
+- real XP pulse remains correct;
+- Immersion policy remains correct;
+- Run All passes;
+- no Lua/taint/secret errors;
+- stock XP/quest UI remains unchanged.

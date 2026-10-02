@@ -81,6 +81,7 @@
 | P0077 | 2026-10-02 | INSTALLED / PUSHED | D-030 minimap stays stock; close Phase E; open Phase F / F.1 (`bf73fcf4`) |
 | P0078 | 2026-10-02 | INSTALLED / PUSHED — CAPABILITY EVIDENCE; RESTORATION FAIL | Accept D-031; F.2 quest/XP probe (`8b38fe64`) |
 | P0079 | 2026-10-02 | INSTALLED / PUSHED — TARGETED PASS / PRIOR FAILURE UNREPRODUCED | Detail P0078 Restoration Check settle failure (`1aad7bad`) |
-| P0080 | 2026-10-02 | PREPARED — RUNTIME + VISUAL PROOF PENDING | Close F.2; implement F.3 contextual XP pulse |
+| P0080 | 2026-10-02 | INSTALLED / PUSHED — XP RUNTIME PASS / RESTORATION FAIL | Close F.2; implement F.3 contextual XP pulse (`cde9b726`) |
+| P0081 | 2026-10-02 | PREPARED — TARGETED ERROR CAPTURE PENDING | Expose TargetFrame restoration reason/error after P0080 recurrence |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

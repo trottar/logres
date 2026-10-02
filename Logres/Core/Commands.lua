@@ -1537,7 +1537,7 @@ local function restorationMismatchSummary(
     local target = snapshot.target
 
     return string.format(
-        "expected=%s quietExpected=%s modules=%s desired=%s recovery=%s ownership=%s errors=%s controller=%s/%s/%s/%s action=%s/%s/%s snap=%s route=%s quiet=%s/%s snap=%s player=%s/%s/%s snap=%s interact=%s mouse=%s present=%s stockMouse=%s target=%s/%s/%s snap=%s watch=%s interact=%s mouse=%s present=%s stockMouse=%s overrides=%s",
+        "expected=%s quietExpected=%s modules=%s desired=%s recovery=%s ownership=%s errors=%s controller=%s/%s/%s/%s action=%s/%s/%s snap=%s route=%s quiet=%s/%s snap=%s player=%s/%s/%s snap=%s interact=%s mouse=%s present=%s stockMouse=%s target=%s/%s/%s snap=%s watch=%s interact=%s mouse=%s present=%s stockMouse=%s overrides=%s targetReason=%s targetError=%s controllerTargetResult=%s controllerTargetError=%s",
         boolText(expectedImmersion),
         boolText(details.expectedQuiet),
         boolText(details.modulesReady),
@@ -1574,7 +1574,11 @@ local function restorationMismatchSummary(
         boolText(target.interactionMouseOwnedByLogres),
         boolText(target.stockPresentationSuppressed),
         boolText(target.stockMouseSuppressed),
-        tostring(target.preservedOverrideCount)
+        tostring(target.preservedOverrideCount),
+        tostring(target.lastReason),
+        tostring(target.lastError),
+        tostring(controller.lastTargetResult),
+        tostring(controller.lastTargetError)
     )
 end
 

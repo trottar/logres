@@ -1,0 +1,31 @@
+Project Logres P0081 patch
+Date: 2026-10-02
+Baseline: cde9b726622642960df27e3862111b9886962cbd
+Runtime: 0.0.31-dev (unchanged)
+Purpose: expose TargetFrame restore error after P0080 recurrence
+
+Files:
+c924ae1ca011f2a8bb6436dd5f1fd5a6fe4b64451935098fa4f0c882cb118ebf  Logres/Core/Commands.lua
+dc9a4aacb6b573ed8be101809170703056b3d712675dcb2651f08d0471c4a3c2  tools/check_target_restore_error_diagnostic.py
+11bb5838511bed4cc2b6a9bbd1b25c34b8ae46783f6de6b3bd9af28fe92fd978  docs/memory/CURRENT.md
+0cd839a004b514065eec27d0322419c3310c4b6a935694fd2eaf3f6c19bb10ae  docs/memory/handoffs/CURRENT_HANDOFF.md
+c121e19570ef0c5be0b98265165a8bc18745a7176d48cb462afbec6dfb596d2f  docs/memory/investigations/ACTIVE.md
+9d0a25f2019d44bcc797119c3da534813c580107c395cd5368cc5f746be637e5  docs/memory/investigations/F3_CONTEXTUAL_XP_PULSE.md
+dfa10752a3ac75c5c8b54c35cf1d9898b688621ccd93869139d9e092782793a8  docs/memory/investigations/P0080_TARGETFRAME_RESTORE_FAILURE.md
+33e3dd06e6928183ad439499719d09e0db564e56a38230161cf431a81a6ba2f6  docs/memory/evidence/F3_P0080_XP_RUNTIME_AND_TARGET_RESTORE_FAILURE_2026-10-02.md
+bc21d48ad5e9ee8f6c17f13c24a687702906fdffa2f354634cd0198baba73150  docs/memory/roadmap/STATUS.md
+ba443d98a10569d340a02c36e5aa8e462225b786028bf3edfd24ffccbc87ed0b  docs/memory/patches/P0080_CONTEXTUAL_XP_PULSE.md
+2db8b6e7a0065a54f032c04a211acc538980585e3230b334c15529f0472dd456  docs/memory/patches/P0081_TARGET_RESTORE_ERROR_DIAGNOSTIC.md
+9ec5346e7d16fc41856fe2192e2724d5de4d91d644aee212c6b8d6a66e135d9f  docs/memory/patches/PATCH_INDEX.md
+
+Checks:
+python3 tools/check_target_restore_error_diagnostic.py
+python3 tools/check_restoration_diagnostic_contract.py
+python3 tools/check_xp_pulse_contract.py
+python3 tools/check_dev_panel_contract.py
+python3 tools/check_addon_structure.py
+python3 tools/check_memory_health.py
+git diff --check -- <P0081-owned files>
+
+Runtime diagnostic code change: WoW redeploy required after push verification.
+Validation surface: developer panel -> Run All / Restoration Check.

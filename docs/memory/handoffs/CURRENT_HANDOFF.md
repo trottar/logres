@@ -2,36 +2,32 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0079 is verified pushed at `1aad7bad`.
+P0080 is verified pushed at `cde9b726`.
 
-Phase F / F.2 is complete.
+Phase F / F.3 remains active.
 
-F.2 result:
-- contextual XP data/event path proven;
-- quest-detail passive reads proven;
-- populated objective rows unproven;
-- quest destination for tested quest 436 unavailable;
-- quest compass marker remains deferred.
+P0080 XP result:
+- XP Check PASS;
+- real XP event `delta=124`;
+- progress `89.1%`;
+- production pulse count `1`;
+- Immersion OFF preview suppression PASS;
+- Immersion ON preview recovery PASS.
 
-P0078 Restoration Check failure:
-**OPEN — INTERMITTENT / UNREPRODUCED.**
+Integrated blocker:
+Run All reproduced the restoration failure.
 
-P0079 targeted validation:
-- standalone Restoration Check PASS;
-- Run All PASS including Restoration Check.
+P0079 detail now identifies the failing domain as TargetFrame restoration:
+requested=false while applied/snapshot/watch/mouse/presentation suppression
+remained active.
 
-No restoration behavior change is justified.
+The exact TargetFrame error string was not included in the P0079 summary.
 
-Active work:
-**F.3 — Contextual XP pulse implementation.**
+P0081 adds that error/reason/result detail only.
 
-P0080 adds an additive event-driven XP pulse plus:
-- XP Check;
-- XP Preview.
+No behavior workaround.
 
-No stock XP UI suppression.
-
-Runtime target:
+Production runtime remains:
 `0.0.31-dev`.
 
 User performs all commits/pushes.

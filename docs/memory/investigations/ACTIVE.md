@@ -3,49 +3,44 @@
 ## F.3 — Contextual XP pulse
 
 Status:
-**ACTIVE — P0080 IMPLEMENTATION PREPARED**
+**ACTIVE — XP RUNTIME PROVEN; BLOCKED BY TARGETFRAME RESTORATION FAILURE**
 
 Canonical:
 `F3_CONTEXTUAL_XP_PULSE.md`
 
-Runtime target:
-`0.0.31-dev`.
+P0080 XP runtime:
+- XP Check PASS;
+- real positive XP delta PASS;
+- production pulse PASS;
+- Immersion policy PASS.
 
-Developer-panel actions:
-- **XP Check**
-- **XP Preview**
+Visual acceptance remains pending.
 
-No stock XP/quest UI suppression is authorized.
+## P0080 TargetFrame restoration failure
 
-## Closed Phase F investigation
-
-F.2 quest / XP runtime capability probe is CLOSED.
+Status:
+**OPEN — REPRODUCED / TARGETFRAME RESTORE PATH IDENTIFIED**
 
 Canonical:
-`F2_QUEST_XP_RUNTIME_CAPABILITY_PROBE.md`
+`P0080_TARGETFRAME_RESTORE_FAILURE.md`
 
-## Tracked intermittent runtime failure
+The failure reproduced during P0080 Run All.
 
-P0078 Restoration Check settle failure:
-**OPEN — INTERMITTENT / UNREPRODUCED under P0079 targeted validation.**
+P0079 detail proves TargetFrame remained applied/suppressed after an OFF request
+while Action/Quiet/Player had restored.
 
-Evidence:
-`../evidence/P0078_RESTORATION_SETTLE_FAILURE_2026-10-02.md`
-
-Targeted P0079 evidence:
-`../evidence/P0079_RESTORATION_TARGETED_PASS_2026-10-02.md`
-
-Do not add retries, polling, periodic reassertion, or broad hooks without a
-reproducible failing subdomain.
+P0081 exposes the existing TargetFrame/controller error text before any
+behavioral fix.
 
 ## Other tracked non-blocking defects / deferred domains
 
 - `D4_TARGETFRAME_REASSERTION_INTERMITTENT.md`
 - `FUTURE_AURA_STATUS_PRESENTATION.md`
 
+Do not merge the restore failure with TargetFrame reappearance without evidence.
+
 ## Deferred quest/navigation evidence
 
 - populated active-objective rows remain unproven;
-- quest IDs `436` and `237` have produced no usable next waypoint in tested
-  states;
+- quest IDs `436` and `237` have produced no usable next waypoint;
 - quest compass marker remains unsupported.
