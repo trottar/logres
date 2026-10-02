@@ -1,7 +1,7 @@
 # P0075 — User-Waypoint Compass Marker
 
 Date: 2026-10-02
-Result: PREPARED — RUNTIME PROOF PENDING
+Result: INSTALLED / PUSHED — RUNTIME + VISUAL PASS (`51763025`)
 
 ## Baseline
 
@@ -10,43 +10,40 @@ P0074 verified pushed:
 
 ## Runtime
 
-`0.0.29-dev -> 0.0.30-dev`
+`0.0.30-dev`
 
 ## Purpose
 
 Integrate the E.3 runtime-proven manual user-waypoint bearing into the existing
 production Compass.
 
-## Changes
+## Runtime result
 
-- manual user-waypoint marker on the existing compass tape;
-- current-player-map bearing only;
-- `USER_WAYPOINT_UPDATED` immediate refresh;
-- throttled player/destination resampling;
-- no stale destination fallback;
-- secret-safe map/vector guards;
-- extended existing Compass Check;
-- updated E.4 static contract;
-- synchronized durable memory.
+PASS.
 
-## Non-scope
+Persisted developer-panel diagnostics proved:
+- no-waypoint omission;
+- out-of-tape marker omission;
+- in-tape marker display;
+- clear/no-stale behavior;
+- Immersion OFF/ON suppression and recovery;
+- Compass Check PASS;
+- Run All PASS.
 
-No:
-- quest marker;
-- objective text;
-- route/path guidance;
-- minimap suppression;
-- Blizzard navigation mutation.
+User visual confirmation proved:
+- correct directional tracking while rotating/moving;
+- no Lua/taint/secret errors observed;
+- minimap unchanged.
 
-## Runtime next
+## Scope result
 
-Deploy `0.0.30-dev`.
+Manual user-waypoint compass marker:
+**ACCEPTED.**
 
-Use the existing developer panel:
-- Compass Check;
-- Run All.
+Quest marker:
+**UNSUPPORTED pending separate runtime proof.**
 
-Perform the E.4 set/move/clear, rotation, movement, and Immersion OFF/ON matrix.
+Minimap:
+**UNCHANGED / STOCK.**
 
-Persist through `/reload`, export with:
-`python3 tools/export_panel_diagnostics.py`.
+E.4 closes in P0076.

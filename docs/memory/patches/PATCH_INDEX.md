@@ -76,6 +76,7 @@
 | P0072 | 2026-10-01 | INSTALLED / PUSHED | Correct P0071 version mismatch and record E.3 runtime evidence (`1fc48777`) |
 | P0073 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME PASS | Correct E.3 bearing proof to current-map coordinates (`4d4ea878`) |
 | P0074 | 2026-10-02 | INSTALLED / PUSHED | Record P0073 PASS; close E.3; open E.4 (`04d79317`) |
-| P0075 | 2026-10-02 | PREPARED — RUNTIME PROOF PENDING | Implement manual user-waypoint compass marker |
+| P0075 | 2026-10-02 | INSTALLED / PUSHED — RUNTIME + VISUAL PASS | Implement manual user-waypoint compass marker (`51763025`) |
+| P0076 | 2026-10-02 | PREPARED | Record P0075 PASS; close E.4; open E.5 minimap capability review |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

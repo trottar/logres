@@ -1,6 +1,6 @@
 # Phase E — Compass and Navigation
 
-Status: ACTIVE — E.4
+Status: ACTIVE — E.5
 
 ## Objective
 
@@ -42,42 +42,53 @@ Final north-reference runtime proof:
 
 Raw world X/Y axes are rejected for compass orientation on the tested map.
 
-Tested quest limitation:
-- super-tracked quest IDs `436` and `237` produced no usable next waypoint.
-
-Quest marker support remains unavailable until separately proven.
-
 ## E.4 — User-waypoint compass marker integration
 
-**ACTIVE — P0075 PREPARED.**
+**COMPLETE — P0075 RUNTIME + VISUAL PASS.**
 
-P0075 integrates only the proven manual user-waypoint path into the existing
-Compass module.
+Production runtime:
+`0.0.30-dev`.
 
-Contract:
-- current-player-map coordinates only;
-- no raw-world bearing;
-- no quest marker;
-- marker shares existing world/Immersion eligibility;
-- `USER_WAYPOINT_UPDATED` triggers immediate destination refresh;
-- player/destination positions are resampled on a throttled interval while
-  eligible;
-- no stale destination is retained when an input becomes unavailable;
-- marker is shown only inside the existing visible compass tape;
-- Compass Check remains the canonical developer-panel diagnostic;
-- minimap remains stock.
+Runtime-proven:
+- no waypoint -> no marker;
+- waypoint outside visible tape -> marker omitted;
+- waypoint inside tape -> marker shown;
+- moving/clearing waypoint updates/removes marker without stale state;
+- player movement updates relative bearing;
+- Immersion OFF suppresses the compass/marker;
+- Immersion ON restores the compass;
+- Compass Check PASS;
+- Run All PASS.
 
-Runtime proof is required before E.4 closes.
+User visual confirmation:
+- marker tracked the correct destination direction while rotating/moving;
+- no Lua/taint/secret errors observed;
+- minimap unchanged.
 
-## E.5+ — Navigation sufficiency / minimap capability
+Quest waypoint support remains unavailable until separately proven.
 
-**QUEUED.**
+## E.5 — Navigation sufficiency / minimap capability review
 
-Do not suppress the minimap merely because heading and user-waypoint bearing
-exist.
+**ACTIVE.**
 
-Any later suppression requires a separate capability review proving that Logres
-replaces the required navigation/control surface safely and reversibly.
+E.4 does not authorize minimap suppression.
+
+E.5 must inventory the stock minimap/navigation information and control surfaces
+and decide whether Logres replaces enough of them to suppress anything safely.
+
+Review at minimum:
+- local spatial/orientation information;
+- manual waypoint navigation;
+- quest/objective navigation;
+- POI/tracking information;
+- minimap click interactions;
+- zoom and related controls;
+- context-specific fallback;
+- deterministic restoration.
+
+Do not mutate or suppress the minimap during the review.
+
+E.5 closes only with an explicit capability contract.
 
 ## Navigation ownership
 
@@ -85,10 +96,12 @@ Phase E may own restrained navigational direction.
 
 Phase F owns quest text/objective presentation.
 
+Quest navigation remains unsupported until separately runtime-proven.
+
 ## Exit
 
 Phase E completes only when:
 - supported navigation presentation is runtime-proven;
 - unsupported destination cases fail open;
 - Blizzard fallback remains available where Logres lacks capability;
-- any minimap suppression is separately capability-gated and reversible.
+- minimap ownership/suppression has an explicit accepted capability decision.

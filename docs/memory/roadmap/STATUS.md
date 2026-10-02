@@ -7,10 +7,10 @@ As of 2026-10-02.
 **Phase E — Compass and Navigation**
 
 Active work item:
-**E.4 User-waypoint compass marker integration**
+**E.5 Navigation sufficiency / minimap capability review**
 
 State:
-**Phase D COMPLETE; Phase E ACTIVE — E.4**
+**Phase D COMPLETE; Phase E ACTIVE — E.5**
 
 ## Phase status
 
@@ -21,7 +21,7 @@ State:
 | B — Core HUD | COMPLETE |
 | C — Action Interface | COMPLETE |
 | D — Immersion Controller | COMPLETE |
-| E — Compass and Navigation | ACTIVE — E.4 |
+| E — Compass and Navigation | ACTIVE — E.5 |
 | F — Quest Experience | QUEUED |
 | G — Cinematic Camera | QUEUED |
 | H — Integration and Polish | QUEUED |
@@ -33,5 +33,5 @@ State:
 | E.1 Compass/navigation source review + capability audit | COMPLETE |
 | E.2 Heading-only world compass | COMPLETE — P0067 user-reported requested runtime PASS |
 | E.3 Waypoint-bearing capability/proof | COMPLETE — P0073 north-reference map-space PASS |
-| E.4 User-waypoint compass marker integration | ACTIVE |
-| E.5+ Navigation sufficiency / minimap capability | QUEUED |
+| E.4 User-waypoint compass marker integration | COMPLETE — P0075 runtime + visual PASS |
+| E.5 Navigation sufficiency / minimap capability review | ACTIVE |

@@ -93,7 +93,7 @@ Canonical phase record:
 
 ## Phase E — Compass and Navigation
 
-**Status: ACTIVE — E.4 user-waypoint compass marker integration.**
+**Status: ACTIVE — E.5 navigation sufficiency / minimap capability review.**
 
 Implement a Warcraft-aesthetic horizontal compass:
 - world/exploration use;
@@ -108,11 +108,14 @@ Canonical phase record:
 Completed:
 - E.1 compass/navigation source review and capability contract;
 - E.2 heading-only world compass runtime proof;
-- E.3 manual user-waypoint retrieval/update/map-space bearing runtime proof.
+- E.3 manual user-waypoint retrieval/update/map-space bearing runtime proof;
+- E.4 manual user-waypoint compass marker runtime + visual proof.
 
 Current work:
-E.4 integrates only the proven manual user-waypoint bearing marker into the
-existing compass while preserving Blizzard navigation and the stock minimap.
+E.5 reviews whether Logres replaces enough minimap/navigation information and
+controls to justify any reversible stock minimap suppression.
+
+The minimap remains stock during this review.
 
 ## Phase F — Quest Experience
 

@@ -1,0 +1,24 @@
+Project Logres P0076 patch
+Date: 2026-10-02
+Baseline: 51763025758a1ee36897917792ee4088228e319b
+Production runtime: 0.0.30-dev (unchanged)
+Purpose: record P0075 PASS; close E.4; open E.5
+
+Files:
+250483af393423d28c6a7ef3c734a95c75c712eba0dfaf6f90e90b467cae638b  docs/memory/CURRENT.md
+0446b4fd5c40b502492b656e8d02e0b187564a3358ead7ccb02e31c9eeb31a90  docs/memory/handoffs/CURRENT_HANDOFF.md
+ac8286f630079933e354c0f1a8655f5f6f55239bc0d8c049651ef9c06d867a97  docs/memory/investigations/ACTIVE.md
+281cfdd5d10c57850fe563b306ed543843c9a0f495d26bb656269304abb6390b  docs/memory/investigations/E5_NAVIGATION_SUFFICIENCY_MINIMAP_CAPABILITY.md
+7f75f2f31879ee6ccc9110d853de43e327b20d2ec232aaa4f4b66d204577b02b  docs/memory/evidence/E4_P0075_RUNTIME_PASS_2026-10-02.md
+48efce461f91a506be39a0e6941773ac2e0f87be323eb79eb71b47719c11be80  docs/memory/roadmap/STATUS.md
+df472af3a75b6a68e5e7b412f1404461ec8ed254d3be8ecb3ee29160f2cc2f77  docs/memory/roadmap/PHASE_E_COMPASS_NAVIGATION.md
+a461f1911463684ac4d39567ffa85bfe0e36a96d15a1154a57ddf9c41cf301c2  docs/memory/patches/P0075_USER_WAYPOINT_COMPASS_MARKER.md
+3d41220e8ffbc2e4c1daa57860a41dd1e764e3e1e5831f547d5ad66e2e9268da  docs/memory/patches/P0076_CLOSE_E4_OPEN_E5.md
+f52efa7c31179f4a7a04e3c3b25ada9f5e7c94a7269f91e78257595136b65887  docs/memory/patches/PATCH_INDEX.md
+c276d687910d438cded78c13919efd0fa17d2c30eff9aeb40785a0d4118a83f0  docs/ROADMAP.md
+
+Checks:
+python3 tools/check_memory_health.py
+git diff --check -- <P0076-owned files>
+
+Docs-only checkpoint; no WoW redeploy required.

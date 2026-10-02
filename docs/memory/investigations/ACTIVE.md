@@ -1,8 +1,18 @@
 # Active Investigations
 
-No blocking Phase E capability investigation is active.
+## E.5 — Navigation sufficiency / minimap capability
 
-E.3 waypoint-bearing capability/proof is CLOSED.
+Status:
+**ACTIVE — SOURCE/CAPABILITY REVIEW**
+
+Canonical:
+`E5_NAVIGATION_SUFFICIENCY_MINIMAP_CAPABILITY.md`
+
+Question:
+Does Logres replace enough of the Blizzard minimap/navigation information and
+control surface to justify any reversible minimap suppression?
+
+No minimap mutation is authorized during this investigation.
 
 ## Tracked non-blocking defects / deferred domains
 
