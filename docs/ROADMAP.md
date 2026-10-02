@@ -38,24 +38,10 @@ Canonical phase record:
 
 **Status: COMPLETE.**
 
-Implement the identity-defining awareness layer:
-- no conventional player health bar;
-- screen-edge health vignette;
-- compact resource percentage;
-- minimal target information;
-- minimal ally/pet information;
-- cast confirmation without a cast bar.
+Identity-defining awareness layer is runtime-proven.
 
 Canonical phase record:
 `memory/roadmap/PHASE_B_CORE_HUD.md`
-
-Phase B runtime-proven:
-- health vignette;
-- resource percentage;
-- sparse target;
-- cast/channel cues;
-- pet/party rows;
-- in-game diagnostic/control panel.
 
 ## Phase C — Action Interface
 
@@ -70,8 +56,7 @@ Canonical phase record:
 
 **Status: COMPLETE.**
 
-Immersion orchestration, Quiet Mode, context policy, selective unit-frame
-suppression/restoration, and proven action replacement orchestration.
+Immersion orchestration and proven selective restoration/suppression.
 
 Canonical phase record:
 `memory/roadmap/PHASE_D_IMMERSION_CONTROLLER.md`
@@ -82,36 +67,33 @@ Canonical phase record:
 
 Established:
 - heading compass;
-- runtime-proven map-space manual user-waypoint bearing;
-- production manual user-waypoint compass marker;
-- fail-open navigation behavior;
-- explicit minimap ownership decision.
+- manual user-waypoint compass marker;
+- fail-open navigation;
+- Blizzard-owned stock minimap.
 
 Canonical phase record:
 `memory/roadmap/PHASE_E_COMPASS_NAVIGATION.md`
 
-Canonical minimap decision:
-`memory/decisions/D-030_MINIMAP_REMAINS_BLIZZARD_OWNED.md`
-
-The Blizzard minimap remains stock.
-
 ## Phase F — Quest Experience
 
-**Status: ACTIVE — F.1 source / capability review.**
+**Status: ACTIVE — F.2 runtime capability probe.**
 
-Implement:
-- immersive NPC quest presentation;
-- restrained objective updates;
-- aesthetic quest helper;
-- contextual XP presentation;
-- stock quest/XP surface suppression only after equivalent Logres presentation is proven.
+F.1 is complete under:
+`memory/decisions/D-031_QUEST_EXPERIENCE_CAPABILITY_CONTRACT.md`
+
+Current work:
+F.2 passively runtime-proves quest interaction reads, objective state, quest
+destination output, XP/rested XP, and relevant events through the developer
+panel.
+
+First production candidate after proof:
+**contextual XP pulse**.
+
+Quest compass integration remains conditional on a usable runtime-proven quest
+destination.
 
 Canonical phase record:
 `memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md`
-
-Current work:
-F.1 inventories tested Forever quest, interaction, objective, helper, XP, and
-stock-ownership capabilities before selecting the first implementation slice.
 
 ## Phase G — Cinematic Camera
 

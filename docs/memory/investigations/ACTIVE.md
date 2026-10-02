@@ -1,25 +1,27 @@
 # Active Investigations
 
-## F.1 — Quest-experience source / capability review
+## F.2 — Quest / XP runtime capability probe
 
 Status:
-**ACTIVE — SOURCE/CAPABILITY REVIEW**
+**ACTIVE — P0078 PROBE PREPARED**
 
-Canonical roadmap:
-`../roadmap/PHASE_F_QUEST_EXPERIENCE.md`
+Canonical:
+`F2_QUEST_XP_RUNTIME_CAPABILITY_PROBE.md`
 
-Question:
-Which tested Forever quest, objective, interaction, and XP sources are safe and
-sufficient for the first Logres quest-experience presentation slice?
+Contract:
+`../decisions/D-031_QUEST_EXPERIENCE_CAPABILITY_CONTRACT.md`
 
-No stock quest/objective/XP suppression is authorized during this review.
+Panel action:
+**Quest Probe**
 
-## Closed Phase E investigation
+No stock quest/objective/XP suppression is authorized.
 
-E.5 navigation sufficiency / minimap capability is CLOSED.
+## Closed
+
+F.1 quest-experience source / capability review is CLOSED.
 
 Canonical decision:
-`../decisions/D-030_MINIMAP_REMAINS_BLIZZARD_OWNED.md`
+`../decisions/D-031_QUEST_EXPERIENCE_CAPABILITY_CONTRACT.md`
 
 ## Tracked non-blocking defects / deferred domains
 
@@ -30,5 +32,5 @@ Canonical decision:
 
 - `SUPER_TRACKING_PATH_UPDATED` registered but did not fire in tested E.3 runs.
 - super-tracked quest IDs `436` and `237` returned no usable next waypoint.
-- quest waypoint presentation remains unsupported until new runtime evidence
-  proves a usable destination path.
+- quest waypoint presentation remains unsupported until F.2 or later runtime
+  evidence proves a usable destination path.

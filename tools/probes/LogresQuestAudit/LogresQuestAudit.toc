@@ -1,0 +1,9 @@
+## Interface: 16001
+## Title: Logres Quest Audit
+## Notes: Temporary passive quest/XP capability probe for Project Logres.
+## Author: trottar
+## Version: 1
+## Dependencies: Logres
+## SavedVariables: LogresQuestAuditDB
+
+LogresQuestAudit.lua

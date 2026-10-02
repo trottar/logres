@@ -32,6 +32,9 @@ if COMMANDS.is_file():
         '"waypointProbe"',
         '"Waypoint Probe"',
         '"waypointprobe"',
+        '"questProbe"',
+        '"Quest Probe"',
+        '"questprobe"',
     ]
 
     for fragment in required:

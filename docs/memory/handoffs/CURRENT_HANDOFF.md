@@ -2,26 +2,30 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0076 is verified pushed at `ebb4bbc7`.
+P0077 is verified pushed at `bf73fcf4`.
 
-Phase E is complete.
+Phase F is active.
 
-E.5 decision:
-**the Blizzard minimap remains Blizzard-owned and stock.**
+F.1 is complete:
+D-031 is the canonical quest-experience capability contract.
 
-Reason:
-Logres replaces heading and manual user-waypoint direction, but does not replace
-the complete minimap/navigation information and control surface.
+First production candidate:
+**contextual XP pulse**, pending F.2 runtime proof.
 
-D-030 is canonical.
+Quest compass marker extension remains conditional on a runtime-proven quest
+destination.
+
+Active work:
+**F.2 — Quest / XP runtime capability probe.**
+
+P0078 adds `LogresQuestAudit` and a **Quest Probe** developer-panel action.
+
+The probe is passive and its panel output auto-persists through the normal
+Logres diagnostics exporter.
 
 Production runtime remains:
 `0.0.30-dev`.
 
-Active work:
-**Phase F / F.1 — Quest-experience source / capability review.**
-
-No quest/objective/XP stock suppression is authorized before F.1 resolves the
-replacement/fallback contract.
+No quest/objective/XP stock suppression is authorized.
 
 User performs all commits/pushes.

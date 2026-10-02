@@ -1,0 +1,40 @@
+Project Logres P0078 patch
+Date: 2026-10-02
+Baseline: bf73fcf49e31177e9305652e509fd46a4aad12dc
+Production runtime: 0.0.30-dev (unchanged)
+Purpose: accept D-031; close F.1; add F.2 quest/XP probe
+Delivery repair: restore required CURRENT.md memory headings
+
+Files:
+54253a94bcd4aa7398f7b050c216d03bf03c3e2a91748f6c5973fa3f67c65a9d  Logres/Core/Commands.lua
+a0b43387571343c353fa93e8e86db25ad224cd4d5743a108a7427a3985150ddc  tools/probes/LogresQuestAudit/LogresQuestAudit.lua
+470d1bfde1b58a95f2f1270a43f1b5533dbfa38b0f1772678ec980bd3f12162b  tools/probes/LogresQuestAudit/LogresQuestAudit.toc
+6f05356093a631dbfdfcfc6263d43f08b174ddc906ac87aa920884328a52508d  tools/probes/LogresQuestAudit/README.md
+5c41497d55d5e92c5753319069b347772dd45fc9c5d6cdce87d39b6683725ab2  tools/check_quest_probe_contract.py
+efccdd08fd0ceae7019eeacb98426e6118a5f49309d54e6f1c904ae160434daf  tools/check_dev_panel_contract.py
+4cb7b93e0e16ab1d7d621eee38cd2726a8bf1aed0b200f6e9c515983d570f02d  docs/memory/CURRENT.md
+1828bbd143f6f8086ee233d19c21e05eb1a224cb49b9bad0dcb685e30f39d0d0  docs/memory/handoffs/CURRENT_HANDOFF.md
+e425752a6ae2db96e3a52e8c1f67257f13ae37a11a51eedabffaa23deeb046a3  docs/memory/investigations/ACTIVE.md
+85fb65b257efa44b59b05d9bf1f09d101ece81134387fc82a7ec5b4dea7fed74  docs/memory/investigations/F1_QUEST_EXPERIENCE_CAPABILITY_REVIEW.md
+561d9c15373f18e58b246f762e58d99a262e1610ec7222782dc25bec3c2ddaf4  docs/memory/investigations/F2_QUEST_XP_RUNTIME_CAPABILITY_PROBE.md
+4e0326506fcba69a4b1016d60a674bfd14434353f18805cee5bc081cf466e20d  docs/memory/decisions/D-031_QUEST_EXPERIENCE_CAPABILITY_CONTRACT.md
+0e758c3b400fb63cd96bb335728db1c299b5ecf22faf204bcb59b6cbd3ae5fae  docs/memory/evidence/F1_QUEST_EXPERIENCE_SOURCE_REVIEW_2026-10-02.md
+851f42e0094e1cc353ae023607eb90b26cbf8cfe8ff17d7bdce2a2bf6f35cefe  docs/memory/evidence/P0078_DELIVERY_FAILURE_2026-10-02.md
+bc5a59e8f84e680586d090be855ef23db4ff025746095d300a3ed1e0acdd02ef  docs/memory/architecture/QUESTING.md
+fa6f808495b897cdb12339865bb294b59745553b4f3b9f880cd597d5c5bdc64d  docs/memory/roadmap/STATUS.md
+9d5cdb1fd47bf5ecee55e32b8df66b43ac0532ef56bdd6e57af91ad13b35d561  docs/memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md
+b508aac98c2dde1ee3e4f644228568363ce0b64ce7b402b8597df4ea2abd6bd1  docs/memory/patches/P0077_CLOSE_PHASE_E_OPEN_PHASE_F.md
+88cce2d76c0c7628b3e09969a9d38f03cfdf0b70ec8782e9a9cac3aae3888c24  docs/memory/patches/P0078_F1_CONTRACT_F2_QUEST_PROBE.md
+9a87204bc0c00309d33f5b68da69c67fc525e6b21ef331f8ae395420fc948c13  docs/memory/patches/PATCH_INDEX.md
+5290e3f7be1944407c529894abfb1aafddad0596366d1273c45eed289dd10e29  docs/ROADMAP.md
+
+Checks:
+python3 tools/check_quest_probe_contract.py
+python3 tools/check_waypoint_probe_contract.py
+python3 tools/check_dev_panel_contract.py
+python3 tools/check_addon_structure.py
+python3 tools/check_memory_health.py
+git diff --check -- <P0078-owned files>
+
+Runtime diagnostic integration: WoW deployment required after push verification.
+Canonical runtime surface: developer panel -> Quest Probe.

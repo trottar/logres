@@ -1,6 +1,6 @@
 # Phase F — Quest Experience
 
-Status: ACTIVE — F.1
+Status: ACTIVE — F.2
 
 ## Product Objective
 
@@ -13,80 +13,65 @@ Phase F must not turn the HUD back into a conventional quest tracker by default.
 ## Standing Boundaries
 
 Phase F owns:
-- NPC quest presentation;
+- NPC quest presentation policy;
 - restrained objective updates;
-- aesthetic quest-helper presentation;
+- aesthetic quest-helper data/presentation;
 - contextual XP presentation;
-- stock quest/objective/XP suppression only after replacement proof.
+- quest destination state supplied to navigation when runtime-proven.
 
-Phase E retains ownership of:
-- heading compass;
-- proven manual user-waypoint direction.
+The existing Compass remains the navigation renderer.
 
 The Blizzard minimap remains stock by D-030.
 
-## F.1 — Quest-experience source / capability review
+## F.1 — Source / capability review
 
-**ACTIVE.**
+**COMPLETE.**
 
-Before implementation, review the tested Forever client for:
+Canonical:
+`../decisions/D-031_QUEST_EXPERIENCE_CAPABILITY_CONTRACT.md`
 
-### NPC interaction
-- quest offer;
-- quest progress;
-- quest reward;
-- gossip/quest interaction boundaries;
-- secure/protected behavior.
+Resolved:
+- passive quest/XP observation is separate from interaction/control;
+- Blizzard keeps accept/decline/continue/complete/reward/gossip/watch controls;
+- no stock quest/objective/XP suppression is authorized;
+- source availability does not equal runtime proof;
+- first production candidate is a contextual XP pulse;
+- quest compass integration requires a runtime-proven destination.
 
-### Quest state
-- quest log sources;
+## F.2 — Quest / XP runtime capability probe
+
+**ACTIVE — P0078 PREPARED.**
+
+Temporary passive probe:
+`tools/probes/LogresQuestAudit`
+
+Developer-panel action:
+**Quest Probe**
+
+It tests:
+- quest-giver read state;
 - selected/super-tracked quest state;
-- objective/task updates;
-- completion/failure state;
-- secret-capable values.
+- objectives;
+- next waypoint / player-map waypoint;
+- map-space quest bearing;
+- current/max/rested XP;
+- Forever experience preset;
+- relevant quest/tracking/XP events.
 
-### World/helper presentation
-- objective direction sources where independently proven;
-- world-map ownership;
-- POI/helper boundaries;
-- relationship to the stock objective tracker.
+No stock UI is suppressed.
 
-### XP
-- current/max XP;
-- rested XP where available;
-- level-cap behavior;
-- event/update sources.
+## F.3+
 
-### Stock ownership
-Inventory which stock quest/objective/XP surfaces provide:
-- information only;
-- required interaction/control;
-- fallback presentation.
+Implementation opens only from F.2 evidence.
 
-No suppression is authorized during F.1.
+First production candidate:
+**contextual XP pulse**.
 
-## F.1 Exit
+A quest compass marker extension may move ahead when F.2 proves a usable
+destination path; it is not authorized from API presence alone.
 
-Produce an explicit capability contract that:
-- chooses the first safe production presentation slice;
-- separates observed data from presentation policy;
-- identifies protected/secret risks;
-- defines fail-open behavior;
-- lists stock surfaces that remain Blizzard-owned;
-- states the runtime proof needed before suppression.
-
-## F.2+
-
-Implementation slices are opened only after F.1 resolves their capability and
-ownership boundaries.
-
-Likely domains:
-- NPC quest presentation;
-- restrained objective updates/helper;
-- contextual XP;
-- selective stock suppression where replacement is proven.
-
-Do not pre-authorize those implementations from roadmap intent alone.
+NPC quest presentation and objective/helper replacement remain separately
+capability-gated.
 
 ## Phase F Exit
 

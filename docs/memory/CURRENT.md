@@ -12,83 +12,93 @@ project: logres
 
 ## Current Work Item
 
-**F.1 — Quest-experience source / capability review.**
+**F.2 — Quest / XP runtime capability probe.**
 
-P0076 is verified pushed at `ebb4bbc7`.
+P0077 is verified pushed at `bf73fcf4`.
 
-Phase E is complete.
+F.1 is complete under D-031.
 
 Production runtime remains:
 `0.0.30-dev`.
 
 ## Verified State
 
-- Phases 0, A, B, C, D, and E are complete.
-- E.1 compass/navigation source review complete.
-- E.2 heading-only compass runtime-proven.
-- E.3 manual user-waypoint map-space bearing runtime-proven.
-- E.4 production user-waypoint compass marker runtime + visual PASS.
-- E.5 navigation-sufficiency/minimap review complete.
-- D-030 is accepted:
-  **the Blizzard minimap remains Blizzard-owned; Phase E does not suppress it.**
-- The minimap suppression capability gate fails because Logres does not
-  deliberately replace all required minimap/navigation information and control
-  surfaces.
-- Known missing/unreplaced domains include:
-  - quest/objective navigation;
-  - route/path guidance;
-  - local POI/tracking information;
-  - minimap ping/click interaction;
-  - zoom controls;
-  - zone/territory context;
-  - other Blizzard-owned minimap utility not separately proven/replaced.
-- Tested super-tracked quest IDs `436` and `237` returned no usable next
-  waypoint.
-- Quest marker presentation remains unsupported.
-- Existing heading + manual user-waypoint compass remains accepted production
-  navigation.
-- Minimap remains stock in all contexts.
+- Phase E is complete.
+- F.1 source/capability review is complete under D-031.
+- Forever-facing passive candidates exist for:
+  - quest identity/title/objectives;
+  - quest-giver detail/progress/reward text;
+  - selected/super-tracked quest identity;
+  - quest destination APIs that may return nothing;
+  - current/max/rested XP;
+  - quest/tracking/XP events.
+- Blizzard remains owner of:
+  - quest accept/decline;
+  - continue/complete;
+  - reward selection;
+  - gossip navigation;
+  - quest-log/watch controls;
+  - stock objective-tracker interaction.
+- No stock quest/objective/XP suppression is authorized.
+- First production presentation candidate:
+  **contextual XP pulse**, gated by F.2 runtime evidence.
+- Quest compass extension remains conditional on runtime proof of a usable real
+  quest destination.
+- Prior negative evidence remains:
+  super-tracked quest IDs `436` and `237` returned no usable next waypoint.
+- P0078 adds the temporary passive `LogresQuestAudit` probe and exposes it
+  through the existing developer panel as **Quest Probe**.
+- Panel output auto-persists through the existing `LogresDiagnosticsDB`
+  workflow.
+- Initial P0078 apply failed only because this file omitted two required
+  repository-memory headings; the runtime/probe design itself was not rejected.
 
 ## Next Action
 
-F.1 reviews the tested Forever client's quest-experience sources and stock UI
-ownership before any quest presentation or suppression work.
+Finish the repaired P0078 apply, commit/push it, then deploy Logres plus
+`LogresQuestAudit`.
 
-Review at minimum:
-1. NPC quest offer/progress/reward presentation;
-2. gossip/quest interaction boundaries;
-3. objective/task update sources;
-4. selected/super-tracked quest state relevant to presentation;
-5. quest helper / world-map ownership boundaries;
-6. XP presentation sources;
-7. secure/protected/secret-value constraints;
-8. stock quest/objective/XP surfaces that must remain until deliberately
-   replaced.
+Run the F.2 scenarios only through the existing developer panel **Quest Probe**
+action.
 
-No stock quest/XP suppression is authorized during F.1.
+Do not use slash commands when the panel action is available.
 
 ## Success Criteria
 
-F.1 succeeds with an explicit capability contract that separates:
-- safe informational sources;
-- interaction/control surfaces;
-- protected/restricted behavior;
-- Phase F presentation ownership;
-- fail-open stock fallback;
-- runtime proof requirements for the first implementation slice.
+F.2 evidence must distinguish:
+- source absent vs present;
+- call failure vs may-return-nothing;
+- secret vs normal scalar data;
+- no-objective vs unavailable objective data;
+- quest destination absent vs usable;
+- event registered vs observed firing.
+
+The probe must remain passive:
+- no quest interaction mutation;
+- no watch/super-track mutation;
+- no waypoint mutation;
+- no stock UI suppression;
+- no chat.
+
+F.2 does not require contrived travel/gameplay for every event.
+
+Unavailable environmental cases are recorded as deferrals, not PASS.
 
 ## Do Not Reopen Without New Evidence
 
 - **Phase E:** complete.
-- **Heading compass:** accepted.
-- **Manual user-waypoint marker:** accepted.
-- **Quest waypoint marker:** unsupported until separately runtime-proven.
 - **Minimap:** Blizzard-owned / stock by D-030.
+- **F.1:** complete / D-031 accepted.
+- **Quest interaction controls:** Blizzard-owned.
+- **Quest IDs 436/237 waypoint output:** negative tested evidence.
+- **P0078 first apply memory-heading failure:** delivery failure, not runtime
+  evidence against the F.2 probe.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/decisions/D-030_MINIMAP_REMAINS_BLIZZARD_OWNED.md`
-- `docs/memory/evidence/E5_MINIMAP_CAPABILITY_REVIEW_2026-10-02.md`
-- `docs/memory/evidence/E4_P0075_RUNTIME_PASS_2026-10-02.md`
+- `docs/memory/decisions/D-031_QUEST_EXPERIENCE_CAPABILITY_CONTRACT.md`
+- `docs/memory/evidence/F1_QUEST_EXPERIENCE_SOURCE_REVIEW_2026-10-02.md`
+- `docs/memory/evidence/P0078_DELIVERY_FAILURE_2026-10-02.md`
+- `docs/memory/investigations/F2_QUEST_XP_RUNTIME_CAPABILITY_PROBE.md`
 - `docs/memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md`

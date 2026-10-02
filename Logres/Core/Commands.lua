@@ -2178,6 +2178,29 @@ local function runWaypointProbe()
     end
 end
 
+local function runQuestProbe()
+    if type(LogresQuestAudit_Run) ~= "function" then
+        emit(
+            "Logres questprobe: FAIL "
+            .. "(LogresQuestAudit addon unavailable)"
+        )
+        return
+    end
+
+    local ok, probeError = pcall(
+        LogresQuestAudit_Run,
+        emit
+    )
+
+    if not ok then
+        emit(
+            "Logres questprobe: FAIL (error="
+            .. tostring(probeError)
+            .. ")"
+        )
+    end
+end
+
 local function runAllChecks()
     emit("Logres checkall: beginning")
     printStatus()
@@ -2274,6 +2297,7 @@ local function printHelp()
     emit("  /logres contextpolicycheck")
     emit("  /logres compasscheck")
     emit("  /logres waypointprobe")
+    emit("  /logres questprobe")
     emit("  /logres hudpreview [on|off]")
     emit("  /logres immersion [on|off|toggle]")
     emit("  /logres debug on")
@@ -2409,6 +2433,11 @@ local function handleCommand(message)
 
     if command == "waypointprobe" then
         runWaypointProbe()
+        return
+    end
+
+    if command == "questprobe" then
+        runQuestProbe()
         return
     end
 
@@ -2555,6 +2584,11 @@ Logres:RegisterDevPanelAction(
     "waypointProbe",
     "Waypoint Probe",
     "waypointprobe"
+)
+Logres:RegisterDevPanelAction(
+    "questProbe",
+    "Quest Probe",
+    "questprobe"
 )
 Logres:RegisterDevPanelAction(
     "immersionOn",
