@@ -2,41 +2,33 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0082 is verified pushed at `c6395f10`.
+P0083 is verified pushed at `484323bb`.
 
-Phase F / F.3 is complete.
+Phase F / F.4 remains active.
 
-F.3 contextual XP:
-**RUNTIME + INTEGRATION + VISUAL PASS.**
+P0083 QuestDialogue runtime:
+- Preview PASS;
+- real `QUEST_DETAIL` PASS;
+- quest `436`;
+- body/objective present;
+- accept cleanup PASS;
+- Immersion OFF suppression PASS;
+- Immersion ON recovery PASS;
+- Quest Dialogue Check PASS.
 
-Production runtime at F.3 close:
-`0.0.31-dev`.
+Visual acceptance remains pending.
 
-Active work:
-**F.4 — Additive NPC quest detail presentation.**
+Integrated Run All exposed the exact TargetFrame restore defect:
+`SetIgnoreParentAlpha` rejected a secret-capable captured restoration token.
 
-P0083 adds:
-- `Quest/Dialogue.lua`;
-- Quest Dialogue Check;
-- Quest Dialogue Preview;
-- Run All integration.
-
-Production trigger:
-`QUEST_DETAIL`.
-
-Cleanup:
-- `QUEST_ACCEPTED`;
-- `QUEST_FINISHED`;
-- world entry;
-- timeout;
-- Immersion OFF.
-
-Blizzard quest interaction/control remains fully stock.
+P0084:
+- removes IgnoreParentAlpha mutation;
+- leaves preserved contextual children untouched;
+- alpha-suppresses only nine unwanted contextual children;
+- restores opaque alpha tokens;
+- adds no retry/polling/hook.
 
 Runtime target:
-`0.0.32-dev`.
-
-Historical TargetFrame restoration issue remains:
-**OPEN — INTERMITTENT / UNREPRODUCED.**
+`0.0.33-dev`.
 
 User performs all commits/pushes.

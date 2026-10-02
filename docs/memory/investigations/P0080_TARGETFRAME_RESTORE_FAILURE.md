@@ -1,78 +1,52 @@
 # P0080 — TargetFrame Restoration Failure
 
-Status: OPEN — INTERMITTENT / UNREPRODUCED UNDER P0081 TARGETED RUNS
+Status: ROOT CAUSE IDENTIFIED — P0084 CORRECTION PREPARED
 Opened: 2026-10-02
 
-## Reproduced evidence
+## History
 
-The restoration failure was observed in:
-- P0078 Run All;
-- P0080 Run All.
+P0078 and P0080 showed the same TargetFrame restoration state shape.
 
-P0080 / P0079-expanded state narrowed the mismatch to TargetFrame restoration:
+P0081 added TargetFrame/controller reason/error fields.
 
-- expected Immersion OFF;
-- Target requested false;
-- Target applied true;
-- Target pending false;
-- snapshot retained;
-- unit watch retained;
-- Logres interaction mouse ownership retained;
-- stock presentation/mouse suppression retained;
-- Action, Quiet, and Player had restored.
+## P0083 exact recurrence
 
-Final cleanup reconverged.
+Run All captured:
 
-## Narrow code-path conclusion
+`TargetFrameReplacement.lua:306: bad argument #1 to 'SetIgnoreParentAlpha'`
 
-The observed state is consistent with
-`TargetFrameReplacement:DisableReplacement()` entering the stock restoration
-path but not completing it on the failing runs.
+Forever reported that secret values are only allowed during untainted execution
+for that setter argument.
 
-P0081 was created to expose:
-- `target.lastReason`;
-- `target.lastError`;
-- controller `lastTargetResult`;
-- controller `lastTargetError`.
+The replacement remained applied until cleanup reconverged.
 
-No behavior changed.
+## Root cause
 
-## P0081 targeted result
+P0057 stopped inspecting `IsIgnoringParentAlpha()` and kept its result as an
+opaque restoration token.
 
-The failure did not reproduce.
+P0083 proves that is still insufficient: the native setter rejects the secret
+token itself from addon execution.
 
-Observed after P0081 deployment:
-- Run All PASS;
-- standalone Restoration Check PASS;
-- Run All PASS;
-- after reload, three additional Run All PASS executions.
+## P0084 correction
 
-Total:
-- five Run All PASS;
-- one standalone Restoration Check PASS.
+Do not guess the secret boolean and do not retry the setter.
 
-Because no mismatch occurred, the new TargetFrame error fields were not
-emitted.
+Instead:
+- leave Auras/RaidTargetIcon/QuestIcon/PingIconFrame untouched;
+- stop alpha-zeroing the contextual parent;
+- alpha-suppress only the nine unwanted contextual children;
+- capture/restore their alpha values opaquely;
+- restore stock before removing Logres secure interaction.
 
-## Classification
+## Historical attribution
 
-**REAL HISTORICAL FAILURE — CURRENTLY INTERMITTENT / UNREPRODUCED.**
+P0083 establishes the concrete root cause for this failure path.
 
-Do not erase the P0078/P0080 failures.
+P0078/P0080 had compatible state shape but did not capture the native error at
+the time.
 
-Do not infer the exact native failing restore operation without an emitted error.
+## Exit
 
-Do not add:
-- retry loops;
-- polling;
-- periodic reassertion;
-- broad Blizzard hooks;
-- speculative TargetFrame mutation changes.
-
-## Reopening / escalation
-
-If the failure recurs, use the P0081 error fields to identify the exact failing
-native call and investigate that operation narrowly.
-
-Until recurrence, this issue remains tracked but does not block unrelated
-runtime-proven Phase F work.
+P0084 must pass repeated Restoration Check and Run All with no secret-value
+error.

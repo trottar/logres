@@ -36,14 +36,17 @@ if TARGET.is_file():
         '"SecureUnitButtonTemplate"',
         "RegisterUnitWatch(self.interaction)",
         "UnregisterUnitWatch(self.interaction)",
-        "ignoreParentAlpha =",
-        "entry.region:IsIgnoringParentAlpha(),",
-        "entry.region:SetIgnoreParentAlpha(entry.ignoreParentAlpha)",
-        "self.preservedOverrideCount",
+        "local PRESERVED_CONTEXT_KEYS = {",
+        "local SUPPRESSED_CONTEXT_KEYS = {",
+        "alpha = entry.region:GetAlpha(),",
+        "entry.region:SetAlpha(0)",
+        "entry.region:SetAlpha(entry.alpha)",
+        "self.contextualSuppressedCount",
         "self.stockPresentationSuppressed",
         "self.stockMouseSuppressed",
         "self.interactionMouseOwnedByLogres",
-        "preservedOverrideCount =",
+        "suppressedContextCount =",
+        "contextualSuppressedCount =",
         "stockPresentationSuppressed =",
         "stockMouseSuppressed =",
         "interactionMouseOwnedByLogres =",
@@ -57,11 +60,32 @@ if TARGET.is_file():
                 f"TargetFrameReplacement.lua missing: {fragment}"
             )
 
+    for key in (
+        "Auras",
+        "RaidTargetIcon",
+        "QuestIcon",
+        "PingIconFrame",
+        "HighLevelTexture",
+        "LeaderIcon",
+        "GuideIcon",
+        "BossIcon",
+        "PvpIcon",
+        "PrestigePortrait",
+        "PrestigeBadge",
+        "PetBattleIcon",
+        "NumericalThreat",
+    ):
+        if f'"{key}"' not in source:
+            errors.append(
+                f"TargetFrame contextual key missing: {key}"
+            )
+
     forbidden = [
-        "if region:IsIgnoringParentAlpha()",
-        "IsIgnoringParentAlpha() == true",
-        "interaction:IsShown()",
-        "interaction:IsMouseEnabled()",
+        "IsIgnoringParentAlpha(",
+        "SetIgnoreParentAlpha(",
+        "ignoreParentAlpha",
+        "preservedOverrideCount",
+        "snapshot.contextual:SetAlpha(0)",
         "TargetFrame:Hide(",
         "TargetFrame:SetAlpha(",
     ]
@@ -69,13 +93,41 @@ if TARGET.is_file():
     for fragment in forbidden:
         if fragment in source:
             errors.append(
-                f"TargetFrameReplacement.lua secret-unsafe/forbidden path: {fragment}"
+                "TargetFrameReplacement.lua secret-unsafe/"
+                f"obsolete path: {fragment}"
             )
 
-    if source.count("IsIgnoringParentAlpha()") != 1:
+    suppress_start = source.find(
+        "function TargetFrameReplacement:SuppressStock(snapshot)"
+    )
+    restore_start = source.find(
+        "function TargetFrameReplacement:RestoreStock(snapshot)"
+    )
+    enable_start = source.find(
+        "function TargetFrameReplacement:EnableReplacement(reason)"
+    )
+
+    if (
+        suppress_start == -1
+        or restore_start == -1
+        or enable_start == -1
+    ):
         errors.append(
-            "IsIgnoringParentAlpha must appear exactly once as opaque capture"
+            "TargetFrame suppression functions could not be isolated"
         )
+    else:
+        suppress = source[suppress_start:restore_start]
+        restore = source[restore_start:enable_start]
+
+        if "snapshot.preserved" in suppress:
+            errors.append(
+                "preserved contextual children must not be mutated"
+            )
+
+        if "snapshot.preserved" in restore:
+            errors.append(
+                "preserved contextual children must not be restored/mutated"
+            )
 
 if COMMANDS.is_file():
     source = COMMANDS.read_text(encoding="utf-8")
@@ -84,14 +136,18 @@ if COMMANDS.is_file():
         "local function runTargetFrameCheck()",
         "debugStatus.stockPresentationSuppressed == true",
         "debugStatus.stockMouseSuppressed == true",
-        "debugStatus.preservedOverrideCount == 4",
+        "debugStatus.preservedCount == 4",
+        "debugStatus.suppressedContextCount == 9",
+        "debugStatus.contextualSuppressedCount == 9",
         "debugStatus.interactionMouseOwnedByLogres == true",
+        "target.contextualSuppressedCount",
+        "targetSuppressedExpected",
     ]
 
     for fragment in required:
         if fragment not in source:
             errors.append(
-                f"Commands.lua missing secret-safe target diagnostic: {fragment}"
+                f"Commands.lua missing target diagnostic: {fragment}"
             )
 
     target_check = local_function_source(
@@ -102,8 +158,6 @@ if COMMANDS.is_file():
     if target_check is None:
         errors.append("runTargetFrameCheck could not be isolated")
     else:
-        # These fields are forbidden only inside the Target diagnostic.
-        # PlayerFrame Check legitimately uses container/content alpha fields.
         forbidden = [
             "debugStatus.containerAlpha",
             "debugStatus.contentMainAlpha",
@@ -112,13 +166,14 @@ if COMMANDS.is_file():
             "debugStatus.preservedIgnoreParentCount",
             "debugStatus.interactionShown",
             "debugStatus.interactionMouseEnabled",
+            "debugStatus.preservedOverrideCount",
         ]
 
         for fragment in forbidden:
             if fragment in target_check:
                 errors.append(
                     "Commands.lua target diagnostic still inspects "
-                    f"secret-capable target state: {fragment}"
+                    f"obsolete/protected state: {fragment}"
                 )
 
 print("Logres TargetFrame replacement contract")

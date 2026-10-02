@@ -31,7 +31,7 @@ else:
         "target.interactionMouseOwnedByLogres",
         "target.stockPresentationSuppressed",
         "target.stockMouseSuppressed",
-        "target.preservedOverrideCount",
+        "target.contextualSuppressedCount",
         '"initial state is not settled "',
         '"opposite preference state did not settle "',
         '"original preference did not reconverge "',
@@ -42,18 +42,51 @@ else:
     for fragment in required:
         if fragment not in source:
             errors.append(
-                f"Commands.lua missing restoration diagnostic: {fragment}"
+                "Commands.lua missing restoration diagnostic: "
+                f"{fragment}"
             )
 
-    # This patch is diagnostic-only. It must not add timers/retries/polling.
+    start = source.find(
+        "local function restorationMismatchSummary("
+    )
+    end = source.find(
+        "\nlocal function failOpenStateMatches(",
+        start,
+    )
+    summary_region = (
+        source[start:end]
+        if start != -1 and end != -1
+        else ""
+    )
+
+    if not summary_region:
+        errors.append(
+            "restorationMismatchSummary could not be isolated"
+        )
+    else:
+        for obsolete in (
+            "target.preservedOverrideCount",
+            "overrides=%s",
+        ):
+            if obsolete in summary_region:
+                errors.append(
+                    "restoration summary still uses obsolete "
+                    f"target diagnostic: {obsolete}"
+                )
+
     forbidden = [
         "C_Timer.After",
         "C_Timer.NewTicker",
         "hooksecurefunc",
     ]
 
-    start = source.find("local function restorationMatchDetails(")
-    end = source.find("local function runCompassCheck()", start)
+    start = source.find(
+        "local function restorationMatchDetails("
+    )
+    end = source.find(
+        "local function runCompassCheck()",
+        start,
+    )
     diagnostic_region = (
         source[start:end]
         if start != -1 and end != -1
@@ -63,7 +96,8 @@ else:
     for fragment in forbidden:
         if fragment in diagnostic_region:
             errors.append(
-                f"restoration diagnostic adds forbidden broad retry/hook: {fragment}"
+                "restoration diagnostic adds forbidden broad "
+                f"retry/hook: {fragment}"
             )
 
 print("Logres restoration failure diagnostic contract")

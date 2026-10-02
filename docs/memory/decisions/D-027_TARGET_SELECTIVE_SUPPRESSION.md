@@ -147,3 +147,39 @@ This does not change D-027 suppression semantics.
 
 Do not add periodic TargetFrame forcing without evidence of the reassertion
 path.
+
+## P0084 secret-setter refinement — accepted 2026-10-02
+
+P0083 runtime evidence invalidated the original IgnoreParentAlpha restoration
+mechanism.
+
+Observed:
+- `IsIgnoringParentAlpha()` yielded a secret-capable restoration token;
+- Logres did not inspect that token;
+- Forever still rejected it when passed to `SetIgnoreParentAlpha` outside
+  untainted execution.
+
+The IgnoreParentAlpha snapshot/restore technique is therefore superseded.
+
+Preserve without mutation:
+- `Auras`;
+- `RaidTargetIcon`;
+- `QuestIcon`;
+- `PingIconFrame`.
+
+Suppress by exact alpha snapshot/restoration:
+- `HighLevelTexture`;
+- `LeaderIcon`;
+- `GuideIcon`;
+- `BossIcon`;
+- `PvpIcon`;
+- `PrestigePortrait`;
+- `PrestigeBadge`;
+- `PetBattleIcon`;
+- `NumericalThreat`.
+
+Do not alpha-zero the contextual parent.
+
+Captured alpha values remain opaque restoration tokens and are never inspected.
+
+Stock restoration still occurs before Logres secure interaction is removed.

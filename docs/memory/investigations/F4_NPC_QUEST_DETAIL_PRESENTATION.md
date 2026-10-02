@@ -1,96 +1,52 @@
 # F.4 — Additive NPC Quest Detail Presentation
 
-Status: ACTIVE — P0083 IMPLEMENTATION PREPARED
+Status: ACTIVE — RUNTIME PATH PASS; VISUAL + INTEGRATED RETEST PENDING
 Opened: 2026-10-02
-
-Canonical capability contract:
-`../decisions/D-031_QUEST_EXPERIENCE_CAPABILITY_CONTRACT.md`
-
-F.2 source/runtime evidence already proved:
-- `QUEST_DETAIL`;
-- `GetQuestID`;
-- `GetTitleText`;
-- `GetQuestText`;
-- `GetObjectiveText`;
-- quest ID/title/body/objective values for tested quest `436`;
-- `QUEST_ACCEPTED`.
 
 ## Product contract
 
-Present quest-giver narrative as a restrained, temporary world-oriented text
-surface while leaving Blizzard's quest frame fully available for control.
+Temporary additive NPC quest presentation:
+- title;
+- restrained body excerpt;
+- optional objective;
+- upper-world placement;
+- approximately ten seconds;
+- no mouse interaction.
 
-P0083 presentation:
-- centered near the upper world view;
-- quest title;
-- restrained quest body excerpt;
-- optional objective line;
-- approximately ten-second lifetime;
-- no mouse interaction;
-- no replacement of accept/decline/reward controls.
+Blizzard retains all quest interaction controls.
 
-## Input contract
+## P0083 runtime result
 
-Production presentation starts only from:
-`QUEST_DETAIL`.
+PASS:
+- Quest Dialogue Preview;
+- Quest Dialogue Check;
+- real `QUEST_DETAIL`;
+- quest ID `436`;
+- body/objective present;
+- production presentation;
+- `QUEST_ACCEPTED` cleanup;
+- Immersion OFF suppression;
+- Immersion ON recovery.
 
-Read:
-- `GetQuestID`;
-- `GetTitleText`;
-- `GetQuestText`;
-- `GetObjectiveText`.
+## Integrated blocker
 
-Every returned value is secret-checked before type inspection/string handling.
+Run All failed in pre-existing TargetFrame restoration.
 
-## Cleanup contract
+P0083 captured the exact error:
+Forever rejected the secret-capable IgnoreParentAlpha restoration token passed
+to `SetIgnoreParentAlpha`.
 
-Hide on:
-- `QUEST_ACCEPTED`;
-- `QUEST_FINISHED`;
-- `PLAYER_ENTERING_WORLD`;
-- timeout;
-- Immersion OFF;
-- module disable.
+P0084 corrects that narrow target path.
 
-Timeout is the stale-state fallback if a cleanup event is unavailable or does
-not fire.
+## Visual status
 
-## Stock ownership
-
-P0083 does not:
-- hide/mutate QuestFrame or GossipFrame;
-- accept/decline/complete quests;
-- choose rewards;
-- change quest selection/watch/super-tracking;
-- suppress objective tracker/minimap/XP UI.
-
-This slice is additive only.
-
-## Diagnostics
-
-Developer panel:
-- **Quest Dialogue Check**;
-- **Quest Dialogue Preview**.
-
-Run All includes Quest Dialogue Check.
-
-## Runtime proof
-
-Required:
-1. Quest Dialogue Check PASS after reload;
-2. Quest Dialogue Preview visual acceptance;
-3. open a normal quest detail page;
-4. real presentation shows the same quest context;
-5. accept/close path removes the Logres presentation;
-6. Immersion OFF suppresses Preview;
-7. Immersion ON restores Preview;
-8. Run All PASS;
-9. no Lua/taint/secret errors;
-10. Blizzard quest controls remain usable and visually unchanged.
+Explicit user visual acceptance of F.4 has not yet been recorded.
 
 ## Exit
 
-Close F.4 only after runtime + visual proof.
-
-Do not expand into quest progress/reward replacement or objective tracking from
-this slice.
+Close F.4 only after:
+- P0084 integrated restoration retest passes;
+- QuestDialogue remains correct;
+- no Lua/taint/secret errors;
+- Blizzard quest controls remain unchanged;
+- user visually accepts the presentation.

@@ -1234,7 +1234,8 @@ local function runTargetFrameCheck()
             and debugStatus.stockPresentationSuppressed == true
             and debugStatus.stockMouseSuppressed == true
             and debugStatus.preservedCount == 4
-            and debugStatus.preservedOverrideCount == 4
+            and debugStatus.suppressedContextCount == 9
+            and debugStatus.contextualSuppressedCount == 9
             and debugStatus.interactionReady == true
             and debugStatus.interactionConfigured == true
             and debugStatus.unitWatchRegistered == true
@@ -1251,7 +1252,7 @@ local function runTargetFrameCheck()
             and debugStatus.interactionMouseOwnedByLogres == false
             and debugStatus.stockPresentationSuppressed == false
             and debugStatus.stockMouseSuppressed == false
-            and debugStatus.preservedOverrideCount == 0
+            and debugStatus.contextualSuppressedCount == 0
     end
 
     local preservationSafe =
@@ -1272,7 +1273,7 @@ local function runTargetFrameCheck()
 
     if passed then
         emit(string.format(
-            "Logres targetframecheck: PASS (expected=%s applied=%s pending=%s frame=%s container=%s main=%s contextual=%s stockPresentation=%s stockMouseSuppressed=%s preservedOverrides=%s/%s interactionReady=%s configured=%s watch=%s mouseOwned=%s unit=%s types=%s/%s wholeFrame=false tot=false focus=false boss=false party=false reason=%s)",
+            "Logres targetframecheck: PASS (expected=%s applied=%s pending=%s frame=%s container=%s main=%s contextual=%s stockPresentation=%s stockMouseSuppressed=%s contextualSuppressed=%s preserved=%s interactionReady=%s configured=%s watch=%s mouseOwned=%s unit=%s types=%s/%s wholeFrame=false tot=false focus=false boss=false party=false reason=%s)",
             boolText(expected),
             boolText(debugStatus.appliedEnabled),
             boolText(debugStatus.pending),
@@ -1282,7 +1283,7 @@ local function runTargetFrameCheck()
             boolText(debugStatus.contextualFound),
             boolText(debugStatus.stockPresentationSuppressed),
             boolText(debugStatus.stockMouseSuppressed),
-            tostring(debugStatus.preservedOverrideCount),
+            tostring(debugStatus.contextualSuppressedCount),
             tostring(debugStatus.preservedCount),
             boolText(debugStatus.interactionReady),
             boolText(debugStatus.interactionConfigured),
@@ -1297,7 +1298,7 @@ local function runTargetFrameCheck()
     end
 
     emit(string.format(
-        "Logres targetframecheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s expected=%s requested=%s applied=%s pending=%s stateMatches=%s presentationMatches=%s preservationSafe=%s frame=%s container=%s main=%s contextual=%s stockPresentation=%s stockMouseSuppressed=%s preservedOverrides=%s/%s interactionReady=%s configured=%s watch=%s mouseOwned=%s unit=%s types=%s/%s snapshot=%s wholeFrame=%s tot=%s focus=%s boss=%s party=%s reason=%s error=%s)",
+        "Logres targetframecheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s expected=%s requested=%s applied=%s pending=%s stateMatches=%s presentationMatches=%s preservationSafe=%s frame=%s container=%s main=%s contextual=%s stockPresentation=%s stockMouseSuppressed=%s contextualSuppressed=%s preserved=%s interactionReady=%s configured=%s watch=%s mouseOwned=%s unit=%s types=%s/%s snapshot=%s wholeFrame=%s tot=%s focus=%s boss=%s party=%s reason=%s error=%s)",
         tostring(status.initialized),
         tostring(status.enabled),
         tostring(debugStatus.moduleEnabled),
@@ -1314,7 +1315,7 @@ local function runTargetFrameCheck()
         tostring(debugStatus.contextualFound),
         tostring(debugStatus.stockPresentationSuppressed),
         tostring(debugStatus.stockMouseSuppressed),
-        tostring(debugStatus.preservedOverrideCount),
+        tostring(debugStatus.contextualSuppressedCount),
         tostring(debugStatus.preservedCount),
         tostring(debugStatus.interactionReady),
         tostring(debugStatus.interactionConfigured),
@@ -1398,8 +1399,8 @@ local function restorationOwnershipCoherent(snapshot)
     local player = snapshot.player
     local target = snapshot.target
 
-    local targetOverrideExpected =
-        target.appliedEnabled and 4 or 0
+    local targetSuppressedExpected =
+        target.appliedEnabled and 9 or 0
 
     return action.snapshotReady == action.appliedEnabled
         and action.routingManaged == action.appliedEnabled
@@ -1421,8 +1422,8 @@ local function restorationOwnershipCoherent(snapshot)
             == target.appliedEnabled
         and target.stockMouseSuppressed
             == target.appliedEnabled
-        and target.preservedOverrideCount
-            == targetOverrideExpected
+        and target.contextualSuppressedCount
+            == targetSuppressedExpected
 end
 
 local function restorationMatchDetails(
@@ -1537,7 +1538,7 @@ local function restorationMismatchSummary(
     local target = snapshot.target
 
     return string.format(
-        "expected=%s quietExpected=%s modules=%s desired=%s recovery=%s ownership=%s errors=%s controller=%s/%s/%s/%s action=%s/%s/%s snap=%s route=%s quiet=%s/%s snap=%s player=%s/%s/%s snap=%s interact=%s mouse=%s present=%s stockMouse=%s target=%s/%s/%s snap=%s watch=%s interact=%s mouse=%s present=%s stockMouse=%s overrides=%s targetReason=%s targetError=%s controllerTargetResult=%s controllerTargetError=%s",
+        "expected=%s quietExpected=%s modules=%s desired=%s recovery=%s ownership=%s errors=%s controller=%s/%s/%s/%s action=%s/%s/%s snap=%s route=%s quiet=%s/%s snap=%s player=%s/%s/%s snap=%s interact=%s mouse=%s present=%s stockMouse=%s target=%s/%s/%s snap=%s watch=%s interact=%s mouse=%s present=%s stockMouse=%s contextualSuppressed=%s targetReason=%s targetError=%s controllerTargetResult=%s controllerTargetError=%s",
         boolText(expectedImmersion),
         boolText(details.expectedQuiet),
         boolText(details.modulesReady),
@@ -1574,7 +1575,7 @@ local function restorationMismatchSummary(
         boolText(target.interactionMouseOwnedByLogres),
         boolText(target.stockPresentationSuppressed),
         boolText(target.stockMouseSuppressed),
-        tostring(target.preservedOverrideCount),
+        tostring(target.contextualSuppressedCount),
         tostring(target.lastReason),
         tostring(target.lastError),
         tostring(controller.lastTargetResult),

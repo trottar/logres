@@ -1,82 +1,46 @@
 # P0083 — Close F.3 / Add NPC Quest Detail Presentation
 
 Date: 2026-10-02
-Result: PREPARED — RUNTIME + VISUAL PROOF PENDING
+Result: INSTALLED / PUSHED — F.4 RUNTIME PASS / RESTORATION FAIL (`484323bb`)
 
-## Baseline
+## F.3
 
-P0082 verified pushed:
-`c6395f102a735f7589e67dfffbc17816e503b91d`
+Closed:
+RUNTIME + INTEGRATION + VISUAL PASS.
 
-## F.3 close
+## F.4
 
-User reported:
-**visual passed**.
+Added additive QuestDialogue production presentation and developer-panel
+diagnostics.
 
-Combined with prior runtime/integration evidence, F.3 contextual XP is closed:
-**RUNTIME + INTEGRATION + VISUAL PASS.**
+Runtime PASS:
+- Preview;
+- real quest `436` detail;
+- body/objective;
+- accepted cleanup;
+- Immersion policy;
+- Quest Dialogue Check.
 
-## F.4 implementation
+Visual acceptance remains pending.
 
-Adds:
-`Logres/Quest/Dialogue.lua`.
+## Integrated result
 
-Production trigger:
-`QUEST_DETAIL`.
+Run All failed Restoration Check.
 
-Presentation:
-- quest title;
-- restrained body excerpt;
-- optional objective;
-- centered upper-world text;
-- approximately ten seconds;
-- no mouse input.
+P0081 diagnostics captured the exact TargetFrame error:
+secret-capable IgnoreParentAlpha restoration token rejected by
+`SetIgnoreParentAlpha`.
 
-Cleanup:
-- `QUEST_ACCEPTED`;
-- `QUEST_FINISHED`;
-- `PLAYER_ENTERING_WORLD`;
-- timeout;
-- Immersion OFF.
-
-## Diagnostics
-
-Adds:
-- Quest Dialogue Check;
-- Quest Dialogue Preview.
-
-Run All includes Quest Dialogue Check.
-
-## Safety / ownership
-
-No Blizzard quest frame/control mutation.
-
-No:
-- accept/decline;
-- completion;
-- reward choice;
-- watch/super-track mutation;
-- objective tracker suppression;
-- minimap mutation.
-
-## Runtime
-
-`0.0.31-dev -> 0.0.32-dev`.
-
-WoW redeploy required after push verification.
+QuestDialogue itself remained PASS.
 
 ## Delivery repair
 
-The first apply attempt failed after the intentional `0.0.32-dev` bump because
-the older F.3 XP checker permanently required `0.0.31-dev`.
+The first apply attempt failed because the older F.3 checker froze the runtime
+at `0.0.31-dev`.
 
-Repair:
-- make the XP checker validate Bootstrap/TOC version synchronization instead of
-  historical version identity;
-- apply the same rule to the F.4 dialogue checker to prevent the next runtime
-  bump from repeating the defect;
-- rerun the complete P0083 checker set;
-- create the final manifest only after all checks pass.
+The repair changed feature checkers to validate Bootstrap/TOC version
+synchronization instead.
 
-Evidence:
-`../evidence/P0083_DELIVERY_FAILURE_2026-10-02.md`.
+## Next
+
+P0084 corrects the root-caused TargetFrame restoration path.

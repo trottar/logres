@@ -12,7 +12,7 @@ local TargetFrameReplacement =
             self.interactionMouseOwnedByLogres = false
             self.stockPresentationSuppressed = false
             self.stockMouseSuppressed = false
-            self.preservedOverrideCount = 0
+            self.contextualSuppressedCount = 0
             self.lastError = nil
             self.lastReason = "not-yet-requested"
 
@@ -76,6 +76,18 @@ local PRESERVED_CONTEXT_KEYS = {
     "RaidTargetIcon",
     "QuestIcon",
     "PingIconFrame",
+}
+
+local SUPPRESSED_CONTEXT_KEYS = {
+    "HighLevelTexture",
+    "LeaderIcon",
+    "GuideIcon",
+    "BossIcon",
+    "PvpIcon",
+    "PrestigePortrait",
+    "PrestigeBadge",
+    "PetBattleIcon",
+    "NumericalThreat",
 }
 
 -- Values returned by these protected/secret-capable frame queries are treated
@@ -173,19 +185,37 @@ function TargetFrameReplacement:GetStockFrames()
 
         if not region then
             return nil,
-                "missing TargetFrame contextual child: "
-                .. tostring(key)
-        end
-
-        if type(region.IsIgnoringParentAlpha) ~= "function"
-            or type(region.SetIgnoreParentAlpha) ~= "function"
-        then
-            return nil,
-                "TargetFrame contextual child lacks parent-alpha API: "
+                "missing preserved TargetFrame contextual child: "
                 .. tostring(key)
         end
 
         preserved[#preserved + 1] = {
+            key = key,
+            region = region,
+        }
+    end
+
+    local suppressed = {}
+
+    for index = 1, #SUPPRESSED_CONTEXT_KEYS do
+        local key = SUPPRESSED_CONTEXT_KEYS[index]
+        local region = contextual[key]
+
+        if not region then
+            return nil,
+                "missing suppressed TargetFrame contextual child: "
+                .. tostring(key)
+        end
+
+        if type(region.GetAlpha) ~= "function"
+            or type(region.SetAlpha) ~= "function"
+        then
+            return nil,
+                "TargetFrame contextual child lacks alpha API: "
+                .. tostring(key)
+        end
+
+        suppressed[#suppressed + 1] = {
             key = key,
             region = region,
         }
@@ -197,7 +227,9 @@ function TargetFrameReplacement:GetStockFrames()
         contentMain = main,
         contextual = contextual,
         preserved = preserved,
-        targetOfTarget = targetFrame.totFrame or _G.TargetFrameToT,
+        suppressed = suppressed,
+        targetOfTarget =
+            targetFrame.totFrame or _G.TargetFrameToT,
     }
 end
 
@@ -220,18 +252,18 @@ function TargetFrameReplacement:CaptureStock()
             "Logres secure target interaction is not configured"
     end
 
-    local preserved = {}
+    local suppressed = {}
 
-    for index = 1, #frames.preserved do
-        local entry = frames.preserved[index]
+    for index = 1, #frames.suppressed do
+        local entry = frames.suppressed[index]
 
-        preserved[index] = {
+        suppressed[index] = {
             key = entry.key,
             region = entry.region,
 
-            -- Opaque secret-capable boolean. Transport only.
-            ignoreParentAlpha =
-                entry.region:IsIgnoringParentAlpha(),
+            -- Opaque secret-capable alpha restoration token.
+            -- Transport only; never inspect.
+            alpha = entry.region:GetAlpha(),
         }
     end
 
@@ -239,13 +271,12 @@ function TargetFrameReplacement:CaptureStock()
         targetFrame = frames.targetFrame,
         container = frames.container,
         contentMain = frames.contentMain,
-        contextual = frames.contextual,
-        preserved = preserved,
+        preserved = frames.preserved,
+        suppressed = suppressed,
 
         -- Alpha values are restoration tokens here; do not inspect them.
         containerAlpha = frames.container:GetAlpha(),
         contentMainAlpha = frames.contentMain:GetAlpha(),
-        contextualAlpha = frames.contextual:GetAlpha(),
 
         mouse = captureMouseState(frames.targetFrame),
     }
@@ -277,17 +308,18 @@ function TargetFrameReplacement:DisableInteraction()
 end
 
 function TargetFrameReplacement:SuppressStock(snapshot)
-    self.preservedOverrideCount = 0
+    self.contextualSuppressedCount = 0
 
-    for index = 1, #snapshot.preserved do
-        snapshot.preserved[index].region:SetIgnoreParentAlpha(true)
-        self.preservedOverrideCount =
-            self.preservedOverrideCount + 1
+    for index = 1, #snapshot.suppressed do
+        local entry = snapshot.suppressed[index]
+
+        entry.region:SetAlpha(0)
+        self.contextualSuppressedCount =
+            self.contextualSuppressedCount + 1
     end
 
     snapshot.container:SetAlpha(0)
     snapshot.contentMain:SetAlpha(0)
-    snapshot.contextual:SetAlpha(0)
     self.stockPresentationSuppressed = true
 
     suppressMouse(snapshot.targetFrame)
@@ -297,18 +329,17 @@ end
 function TargetFrameReplacement:RestoreStock(snapshot)
     snapshot.container:SetAlpha(snapshot.containerAlpha)
     snapshot.contentMain:SetAlpha(snapshot.contentMainAlpha)
-    snapshot.contextual:SetAlpha(snapshot.contextualAlpha)
 
-    for index = 1, #snapshot.preserved do
-        local entry = snapshot.preserved[index]
+    for index = 1, #snapshot.suppressed do
+        local entry = snapshot.suppressed[index]
 
-        -- Feed the opaque captured value directly back to the native API.
-        entry.region:SetIgnoreParentAlpha(entry.ignoreParentAlpha)
+        -- Feed the opaque captured alpha token directly back.
+        entry.region:SetAlpha(entry.alpha)
     end
 
     restoreMouse(snapshot.targetFrame, snapshot.mouse)
 
-    self.preservedOverrideCount = 0
+    self.contextualSuppressedCount = 0
     self.stockPresentationSuppressed = false
     self.stockMouseSuppressed = false
 end
@@ -414,7 +445,7 @@ function TargetFrameReplacement:DisableReplacement(reason)
             self:DisableInteraction()
         end)
 
-        self.preservedOverrideCount = 0
+        self.contextualSuppressedCount = 0
         self.stockPresentationSuppressed = false
         self.stockMouseSuppressed = false
 
@@ -530,8 +561,8 @@ function TargetFrameReplacement:GetRecoveryStatus()
             self.stockPresentationSuppressed == true,
         stockMouseSuppressed =
             self.stockMouseSuppressed == true,
-        preservedOverrideCount =
-            self.preservedOverrideCount,
+        contextualSuppressedCount =
+            self.contextualSuppressedCount,
 
         lastReason = self.lastReason,
         lastError = self.lastError,
@@ -563,8 +594,10 @@ function TargetFrameReplacement:GetDebugStatus()
 
         preservedCount =
             frames and #frames.preserved or 0,
-        preservedOverrideCount =
-            self.preservedOverrideCount,
+        suppressedContextCount =
+            frames and #frames.suppressed or 0,
+        contextualSuppressedCount =
+            self.contextualSuppressedCount,
 
         stockPresentationSuppressed =
             self.stockPresentationSuppressed == true,
