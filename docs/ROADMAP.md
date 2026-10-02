@@ -76,7 +76,7 @@ Canonical phase record:
 
 ## Phase F — Quest Experience
 
-**Status: ACTIVE — F.3 contextual XP pulse.**
+**Status: ACTIVE — F.4 additive NPC quest detail presentation.**
 
 F.1:
 complete under D-031.
@@ -84,14 +84,16 @@ complete under D-031.
 F.2:
 complete with runtime-proven XP/event and quest-detail inputs.
 
+F.3:
+contextual XP complete with runtime, integration, and visual proof.
+
+Current work:
+F.4 uses the proven `QUEST_DETAIL` read path for temporary additive NPC quest
+presentation while Blizzard retains all quest interaction controls.
+
 Deferred:
 - populated active objective rows;
 - quest destination / quest compass marker.
-
-Current work:
-F.3 implements the first production Phase F presentation:
-a brief event-driven contextual XP pulse, with no permanent bar and no stock XP
-suppression.
 
 Canonical phase record:
 `memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md`

@@ -1,27 +1,31 @@
 # Active Investigations
 
-## F.3 — Contextual XP pulse
+## F.4 — Additive NPC quest detail presentation
 
 Status:
-**ACTIVE — RUNTIME + INTEGRATION PASS; VISUAL ACCEPTANCE PENDING**
+**ACTIVE — P0083 IMPLEMENTATION PREPARED**
 
 Canonical:
-`F3_CONTEXTUAL_XP_PULSE.md`
+`F4_NPC_QUEST_DETAIL_PRESENTATION.md`
 
-P0080 runtime-proven:
-- XP Check PASS;
-- real positive XP delta PASS;
-- production pulse PASS;
-- Immersion policy PASS;
-- auto-hide PASS.
+Production trigger:
+`QUEST_DETAIL`.
 
-P0081 integrated validation:
-- five Run All PASS;
-- one standalone Restoration Check PASS.
+Developer-panel actions:
+- **Quest Dialogue Check**
+- **Quest Dialogue Preview**
 
-Visual acceptance remains the only F.3 exit item.
+Blizzard quest controls remain stock.
 
-## P0080 TargetFrame restoration failure
+## Closed Phase F slices
+
+F.3 contextual XP:
+**CLOSED — RUNTIME + INTEGRATION + VISUAL PASS.**
+
+Evidence:
+`../evidence/F3_CONTEXTUAL_XP_VISUAL_PASS_2026-10-02.md`
+
+## TargetFrame restoration failure
 
 Status:
 **OPEN — INTERMITTENT / UNREPRODUCED UNDER P0081 TARGETED RUNS**
@@ -33,23 +37,12 @@ Historical reproduced failures:
 - P0078;
 - P0080.
 
-P0081:
-- diagnostic-only change;
-- five Run All PASS;
-- one standalone Restoration Check PASS;
-- no recurrence;
-- no error string captured.
-
-Do not add retries, polling, periodic reassertion, broad hooks, or other
-behavior workarounds without a reproducible failing operation.
+No speculative behavior workaround.
 
 ## Other tracked non-blocking defects / deferred domains
 
 - `D4_TARGETFRAME_REASSERTION_INTERMITTENT.md`
 - `FUTURE_AURA_STATUS_PRESENTATION.md`
-
-Do not merge the restoration failure with TargetFrame reappearance without
-evidence.
 
 ## Deferred quest/navigation evidence
 

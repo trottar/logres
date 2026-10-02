@@ -2382,6 +2382,80 @@ local function runXPPreview()
     ))
 end
 
+local function runQuestDialogueCheck()
+    local status =
+        Logres:GetModuleStatus("QuestDialogue")
+    local dialogue =
+        Logres:GetModule("QuestDialogue")
+    local debugStatus =
+        dialogue:GetDebugStatus()
+
+    local policyCoherent =
+        debugStatus.immersionEnabled
+        or debugStatus.presentationShown == false
+
+    local passed =
+        status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and debugStatus.rootReady == true
+        and debugStatus.titleReady == true
+        and debugStatus.bodyReady == true
+        and debugStatus.objectiveReady == true
+        and debugStatus.eventFrameReady == true
+        and debugStatus.timerAvailable == true
+        and debugStatus.apiAvailable == true
+        and debugStatus.questDetailRegistered == true
+        and debugStatus.questAcceptedRegistered == true
+        and debugStatus.questFinishedRegistered == true
+        and debugStatus.worldRegistered == true
+        and policyCoherent
+        and debugStatus.lastError == nil
+
+    emit(string.format(
+        "Logres questdialoguecheck: %s (initialized=%s enabled=%s module=%s immersion=%s api=%s timer=%s events=%s/%s/%s/%s detailEvents=%s accepted=%s finished=%s world=%s presentations=%s suppressed=%s previews=%s shown=%s questID=%s body=%s objective=%s secret=%s reason=%s presentationReason=%s error=%s)",
+        passed and "PASS" or "FAIL",
+        tostring(status.initialized),
+        tostring(status.enabled),
+        tostring(debugStatus.moduleEnabled),
+        tostring(debugStatus.immersionEnabled),
+        tostring(debugStatus.apiAvailable),
+        tostring(debugStatus.timerAvailable),
+        tostring(debugStatus.questDetailRegistered),
+        tostring(debugStatus.questAcceptedRegistered),
+        tostring(debugStatus.questFinishedRegistered),
+        tostring(debugStatus.worldRegistered),
+        tostring(debugStatus.detailEventCount),
+        tostring(debugStatus.acceptedEventCount),
+        tostring(debugStatus.finishedEventCount),
+        tostring(debugStatus.worldEventCount),
+        tostring(debugStatus.presentationCount),
+        tostring(debugStatus.suppressedCount),
+        tostring(debugStatus.previewCount),
+        tostring(debugStatus.presentationShown),
+        tostring(debugStatus.lastQuestID),
+        tostring(debugStatus.lastHadBody),
+        tostring(debugStatus.lastHadObjective),
+        tostring(debugStatus.lastSecret),
+        tostring(debugStatus.lastReason),
+        tostring(debugStatus.lastPresentationReason),
+        tostring(debugStatus.lastError)
+    ))
+end
+
+local function runQuestDialoguePreview()
+    local dialogue =
+        Logres:GetModule("QuestDialogue")
+    local ok, state =
+        dialogue:ShowPreview()
+
+    emit(string.format(
+        "Logres questdialoguepreview: %s (state=%s)",
+        ok and "PASS" or "FAIL",
+        tostring(state)
+    ))
+end
+
 local function runWaypointProbe()
     if type(LogresWaypointAudit_Run) ~= "function" then
         emit(
@@ -2437,6 +2511,7 @@ local function runAllChecks()
     runLifecycleCheck()
     runHUDCheck()
     runXPCheck()
+    runQuestDialogueCheck()
     runActionCheck()
     runStockReplacementCheck()
     runImmersionCheck()
@@ -2528,6 +2603,8 @@ local function printHelp()
     emit("  /logres questprobe")
     emit("  /logres xpcheck")
     emit("  /logres xppreview")
+    emit("  /logres questdialoguecheck")
+    emit("  /logres questdialoguepreview")
     emit("  /logres hudpreview [on|off]")
     emit("  /logres immersion [on|off|toggle]")
     emit("  /logres debug on")
@@ -2678,6 +2755,16 @@ local function handleCommand(message)
 
     if command == "xppreview" then
         runXPPreview()
+        return
+    end
+
+    if command == "questdialoguecheck" then
+        runQuestDialogueCheck()
+        return
+    end
+
+    if command == "questdialoguepreview" then
+        runQuestDialoguePreview()
         return
     end
 
@@ -2839,6 +2926,16 @@ Logres:RegisterDevPanelAction(
     "xpPreview",
     "XP Preview",
     "xppreview"
+)
+Logres:RegisterDevPanelAction(
+    "questDialogueCheck",
+    "Quest Dialogue Check",
+    "questdialoguecheck"
+)
+Logres:RegisterDevPanelAction(
+    "questDialoguePreview",
+    "Quest Dialogue Preview",
+    "questdialoguepreview"
 )
 Logres:RegisterDevPanelAction(
     "immersionOn",

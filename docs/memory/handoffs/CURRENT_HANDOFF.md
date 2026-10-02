@@ -2,38 +2,41 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0081 is verified pushed at `ef8fa310`.
+P0082 is verified pushed at `c6395f10`.
 
-Phase F / F.3 remains active.
+Phase F / F.3 is complete.
 
-P0080 XP runtime result:
-- XP Check PASS;
-- real XP delta `124`;
-- progress `89.1%`;
-- production pulse count `1`;
-- auto-hide;
-- Immersion OFF suppression;
-- Immersion ON recovery.
+F.3 contextual XP:
+**RUNTIME + INTEGRATION + VISUAL PASS.**
 
-P0081 restoration follow-up:
-- five Run All PASS;
-- one standalone Restoration Check PASS;
-- no mismatch recurred;
-- no TargetFrame error fields emitted because there was no failure.
-
-Historical P0078/P0080 restoration failures remain recorded.
-
-Current classification:
-**OPEN — INTERMITTENT / UNREPRODUCED under repeated P0081 targeting.**
-
-No behavior workaround.
-
-F.3 is no longer restoration-blocked.
-
-Only remaining F.3 closure item:
-**user visual acceptance of the contextual XP pulse.**
-
-Production runtime remains:
+Production runtime at F.3 close:
 `0.0.31-dev`.
+
+Active work:
+**F.4 — Additive NPC quest detail presentation.**
+
+P0083 adds:
+- `Quest/Dialogue.lua`;
+- Quest Dialogue Check;
+- Quest Dialogue Preview;
+- Run All integration.
+
+Production trigger:
+`QUEST_DETAIL`.
+
+Cleanup:
+- `QUEST_ACCEPTED`;
+- `QUEST_FINISHED`;
+- world entry;
+- timeout;
+- Immersion OFF.
+
+Blizzard quest interaction/control remains fully stock.
+
+Runtime target:
+`0.0.32-dev`.
+
+Historical TargetFrame restoration issue remains:
+**OPEN — INTERMITTENT / UNREPRODUCED.**
 
 User performs all commits/pushes.

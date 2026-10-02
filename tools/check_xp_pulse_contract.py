@@ -174,14 +174,23 @@ if TOC.is_file():
     if match:
         toc_version = match.group(1).strip()
 
-if bootstrap_version != "0.0.31-dev":
+if bootstrap_version is None:
     errors.append(
-        "F.3 runtime must identify as 0.0.31-dev"
+        "Bootstrap runtime version could not be read"
     )
 
-if toc_version != "0.0.31-dev":
+if toc_version is None:
     errors.append(
-        "F.3 TOC must identify as 0.0.31-dev"
+        "TOC runtime version could not be read"
+    )
+
+if (
+    bootstrap_version is not None
+    and toc_version is not None
+    and bootstrap_version != toc_version
+):
+    errors.append(
+        "Bootstrap and TOC runtime versions must match"
     )
 
 print("Logres F.3 contextual XP pulse contract")

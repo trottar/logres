@@ -83,6 +83,7 @@
 | P0079 | 2026-10-02 | INSTALLED / PUSHED — TARGETED PASS / PRIOR FAILURE UNREPRODUCED | Detail P0078 Restoration Check settle failure (`1aad7bad`) |
 | P0080 | 2026-10-02 | INSTALLED / PUSHED — XP RUNTIME PASS / RESTORATION FAIL | Close F.2; implement F.3 contextual XP pulse (`cde9b726`) |
 | P0081 | 2026-10-02 | INSTALLED / PUSHED — TARGETED PASS / FAILURE NOT REPRODUCED | Expose TargetFrame restoration reason/error (`ef8fa310`) |
-| P0082 | 2026-10-02 | PREPARED | Record P0081 repeated targeted PASS; F.3 visual acceptance pending |
+| P0082 | 2026-10-02 | INSTALLED / PUSHED | Record P0081 repeated targeted PASS; F.3 visual acceptance pending (`c6395f10`) |
+| P0083 | 2026-10-02 | PREPARED — RUNTIME + VISUAL PROOF PENDING | Close F.3 visual PASS; implement F.4 additive NPC quest detail presentation |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

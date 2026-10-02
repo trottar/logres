@@ -36,28 +36,45 @@ Quest destination APIs may return nothing.
 
 Tested quest IDs `436` and `237` have not produced a usable destination.
 
-A quest compass marker requires a runtime-proven real destination and must clear
-rather than retaining stale state when that destination is unavailable.
+A quest compass marker requires a runtime-proven real destination.
 
 ## XP boundary
 
-F.2 runtime-proved normal current/max/rested XP inputs and
-`PLAYER_XP_UPDATE`.
+F.3 is complete.
 
-F.3 implements a brief contextual XP pulse:
+Production contextual XP:
 - positive same-range XP delta only;
 - `+N XP · progress%`;
 - approximately two seconds;
 - no permanent XP bar;
 - no stock XP suppression.
 
-Level/range changes rebaseline rather than fabricating a gain.
+Runtime, integration, and visual proof are accepted.
 
-Immersion OFF suppresses presentation while the safe baseline continues to
-track XP events.
+## NPC quest detail boundary
+
+F.2 runtime-proved the `QUEST_DETAIL` passive read path.
+
+F.4 uses that path additively.
+
+Production presentation:
+- title;
+- restrained body excerpt;
+- optional objective line;
+- temporary world-oriented text;
+- no mouse interaction.
+
+Blizzard retains the complete quest interaction frame and every control.
+
+Cleanup is fail-open:
+- accepted/finished/world events;
+- timeout;
+- Immersion OFF.
+
+The Logres presentation does not carry authoritative interaction state.
 
 ## Current work
 
-F.3 runtime proof of the contextual XP pulse.
+F.4 runtime + visual proof of additive NPC quest detail presentation.
 
 Populated objective rows and quest destination presentation remain deferred.

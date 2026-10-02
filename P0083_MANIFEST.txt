@@ -1,0 +1,43 @@
+Project Logres P0083 patch
+Date: 2026-10-02
+Baseline: c6395f102a735f7589e67dfffbc17816e503b91d
+Runtime: 0.0.32-dev
+Purpose: close F.3 visual PASS; implement F.4 additive NPC quest detail presentation
+Delivery repair: remove historical-version freeze from feature contract checkers
+
+Files:
+fc9e5ae52e15465fedbf6d3a63f8aa5b07c3ade26a9e5a05821da888f70d79cb  Logres/Core/Bootstrap.lua
+afc033ecc1f6d8c2e6b99d68b65020351a17738152238a6ea6e57851828856df  Logres/Logres.toc
+9b07ac572291a697275992b7dad09441508422318aab87a01b795fe4ed7b05aa  Logres/Core/Commands.lua
+8e98f574bee24f0d811baf91a2965613f4cdde2f8ba8299ad37d16357df8c42c  Logres/Quest/Dialogue.lua
+81db768f4c0cb393eabb922be03c10827ce586f64c659e4bbc8f5d8df48ea3d8  tools/check_quest_dialogue_contract.py
+99c6f902bf92868ffa760019d393fbceb2752243c38a906fdd325a9713e603f3  tools/check_xp_pulse_contract.py
+dbbb76f933b64ad54c3ffbd112917118b496cd9d7657f0ec152c62a99c4fcf8b  docs/memory/CURRENT.md
+9ff53a975dc510d844ede3fdd4fd8d5d4bd4ef4ef54e77af8fce3709d1e77be2  docs/memory/handoffs/CURRENT_HANDOFF.md
+8508cef5d6a8331900c3d50e37427027afb0d5609e03b0947275b639fb665330  docs/memory/investigations/ACTIVE.md
+371936c1efd7cce7c1a8889403488c627a1ce796274e5ea99cad327f4873e1f6  docs/memory/investigations/F3_CONTEXTUAL_XP_PULSE.md
+fc0b071798e4c394f1fa18e325161ebaa049150b2bc02a35c20ecc3983dd7d39  docs/memory/investigations/F4_NPC_QUEST_DETAIL_PRESENTATION.md
+5e1c08d8cc583220b1699bf19b742a48a85f05d4b62842e2bfe7958b9f2dd315  docs/memory/evidence/F3_CONTEXTUAL_XP_VISUAL_PASS_2026-10-02.md
+d84e7daca8f879fddd775f14bc3c1faba75e6c9c99bfa4f7b3013e3363b1bb40  docs/memory/evidence/P0083_DELIVERY_FAILURE_2026-10-02.md
+0c9590320e10c865779fc45f666120cee2950290a6c4d58cce910eb517d8bf2a  docs/memory/roadmap/STATUS.md
+2de002a1ed941a401f88d60efc6b497fda3a0890ad35db262776946ff1bc8f75  docs/memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md
+9f8559973fec1210fc959467ac3632264a422a8ad74fbc9fda78504f163bb2bc  docs/memory/architecture/QUESTING.md
+9edc02d937a3be15d53400f04193d9c4556c5ac495f52a9fcd74cc41c104d1b4  docs/memory/patches/P0082_RECORD_P0081_TARGETED_PASS.md
+a6f9a4d28f71a693d58cc243d066d66d92058d3faeb2b2389b502f06e2749012  docs/memory/patches/P0083_CLOSE_F3_ADD_QUEST_DIALOGUE.md
+ee44f2683c59306e296662d06f6ceedf19df359703410cfb397384287e845378  docs/memory/patches/PATCH_INDEX.md
+715718a143121cab742860f727ff3ca11a692248929a7450a2fd511107acc35b  docs/ROADMAP.md
+
+Checks:
+python3 tools/check_quest_dialogue_contract.py
+python3 tools/check_xp_pulse_contract.py
+python3 tools/check_target_restore_error_diagnostic.py
+python3 tools/check_restoration_diagnostic_contract.py
+python3 tools/check_quest_probe_contract.py
+python3 tools/check_hud_contract.py
+python3 tools/check_dev_panel_contract.py
+python3 tools/check_addon_structure.py
+python3 tools/check_memory_health.py
+git diff --check -- <P0083-owned files>
+
+Runtime code change: WoW redeploy required after push verification.
+Validation surface: developer panel -> Quest Dialogue Check / Preview / Run All.

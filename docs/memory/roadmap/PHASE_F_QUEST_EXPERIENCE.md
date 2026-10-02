@@ -1,6 +1,6 @@
 # Phase F — Quest Experience
 
-Status: ACTIVE — F.3
+Status: ACTIVE — F.4
 
 ## Product Objective
 
@@ -27,68 +27,75 @@ The Blizzard minimap remains stock by D-030.
 
 **COMPLETE — D-031.**
 
-Passive observation is separated from Blizzard-owned quest interaction/control.
-
-## F.2 — Quest / XP runtime capability probe
+## F.2
 
 **COMPLETE.**
 
 Runtime-proven:
-- current/max/rested XP normal scalar access;
-- `PLAYER_XP_UPDATE`;
-- `UPDATE_EXHAUSTION`;
-- quest-detail passive reads for quest `436`;
+- current/max/rested XP;
+- XP events;
+- quest-detail passive reads;
 - `QUEST_DETAIL`;
 - `QUEST_ACCEPTED`;
 - super-tracked quest identity.
 
-Deferred/unproven:
+Deferred:
 - populated active objective rows;
 - quest destination output;
 - quest compass marker.
 
 ## F.3 — Contextual XP pulse
 
-**ACTIVE — RUNTIME + INTEGRATION PASS; VISUAL ACCEPTANCE PENDING.**
+**COMPLETE — RUNTIME + INTEGRATION + VISUAL PASS.**
 
-P0080 production behavior:
-- event-driven safe XP baseline;
-- positive same-range XP delta;
-- brief `+N XP · progress%` pulse;
-- automatic hide;
+Production:
+- event-driven safe XP delta;
+- brief `+N XP · progress%`;
+- auto-hide;
 - Immersion OFF suppression;
-- no conventional permanent XP bar;
-- no stock XP/quest UI suppression.
+- no permanent XP bar;
+- no stock XP/quest suppression.
 
-P0080 runtime:
-- real delta `124`;
-- progress `89.1%`;
-- pulse count `1`;
-- XP Check PASS.
+User visual validation:
+**PASS.**
 
-P0080 Run All reproduced the historical TargetFrame restoration failure.
+## F.4 — Additive NPC quest detail presentation
 
-P0081 diagnostic-only follow-up did not reproduce it:
-- five Run All PASS;
-- one standalone Restoration Check PASS.
+**ACTIVE — P0083 PREPARED.**
 
-The TargetFrame issue remains tracked as intermittent/unreproduced and does not
-currently block F.3.
+P0083 uses the already-proven `QUEST_DETAIL` read path to show:
+- quest title;
+- restrained body excerpt;
+- optional objective line.
 
-Remaining F.3 item:
-**user visual acceptance**.
+Presentation is:
+- temporary;
+- non-interactive;
+- Immersion-gated;
+- additive to Blizzard's stock quest frame.
 
-## F.4+
+Cleanup:
+- accepted;
+- finished;
+- world entry;
+- timeout;
+- Immersion OFF.
 
-Choose only from proven capability.
+Diagnostics:
+- Quest Dialogue Check;
+- Quest Dialogue Preview;
+- Run All integration.
 
-Quest compass marker remains unavailable until a real quest destination is
-runtime-proven.
+No accept/decline/complete/reward/watch/super-track behavior is owned by Logres.
 
-Populated objective-row presentation remains unavailable until tested.
+## F.5+
 
-NPC quest presentation remains additive until interaction/control replacement
-is deliberately solved.
+Choose only from runtime-proven capability.
+
+Populated objective rows remain unavailable for production presentation until
+proven.
+
+Quest compass markers remain unavailable until a real destination is proven.
 
 ## Phase F Exit
 
