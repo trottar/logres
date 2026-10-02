@@ -511,6 +511,33 @@ function TargetFrameReplacement:HandleEvent(event)
     end
 end
 
+function TargetFrameReplacement:GetRecoveryStatus()
+    return {
+        moduleEnabled = self:IsEnabled(),
+        requestedEnabled = self.requestedEnabled == true,
+        appliedEnabled = self.appliedEnabled == true,
+        pending = self.pending == true,
+        snapshotReady = self.snapshot ~= nil,
+
+        interactionConfigured =
+            self.interactionConfigured == true,
+        unitWatchRegistered =
+            self.unitWatchRegistered == true,
+        interactionMouseOwnedByLogres =
+            self.interactionMouseOwnedByLogres == true,
+
+        stockPresentationSuppressed =
+            self.stockPresentationSuppressed == true,
+        stockMouseSuppressed =
+            self.stockMouseSuppressed == true,
+        preservedOverrideCount =
+            self.preservedOverrideCount,
+
+        lastReason = self.lastReason,
+        lastError = self.lastError,
+    }
+end
+
 function TargetFrameReplacement:GetDebugStatus()
     local frames, frameError = self:GetStockFrames()
 

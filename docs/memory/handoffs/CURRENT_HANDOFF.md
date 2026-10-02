@@ -2,28 +2,26 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0061 is verified pushed at `01665d1`.
+P0062 is verified pushed at `13c5339`.
 
 D.5 is complete.
 
 Current work:
 **D.6 — Restoration / integration validation**
 
-P0062 source/design review is prepared.
+P0063 is the active runtime candidate targeting `0.0.27-dev`.
 
-Resolved runtime direction:
-- no new suppression policy;
-- one integrated Restoration Check;
-- out-of-combat reversible preference cycle;
-- out-of-combat ImmersionController disable/re-enable recovery cycle;
-- in-combat check is non-mutating and accepts legal protected pending state;
-- addon-owned recovery state only;
-- add explicit Player secure-interaction ownership state;
-- Context Policy Check remains the context/PvP/instance proof surface;
-- reload persistence remains a real `/reload` proof step.
+It adds:
+- integrated Restoration Check;
+- addon-owned recovery-state APIs;
+- Player secure interaction/suppression ownership facts;
+- static stock-first restoration-order checks;
+- coherent repair of the stale PlayerFrame Target-disabled assertion exposed
+  during P0062 delivery.
 
-After P0062 is pushed and verified, implement P0063 targeting `0.0.27-dev`.
+Runtime proof is next.
 
-P0062 is documentation-only; no WoW redeploy required.
+Context Policy Check remains canonical for D-028 context policy.
+Reload/combat transitions remain real in-client proof.
 
 User performs all commits/pushes.

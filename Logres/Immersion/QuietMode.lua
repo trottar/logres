@@ -488,6 +488,22 @@ local function currentChatFrames()
     return frames
 end
 
+function QuietMode:GetRecoveryStatus()
+    local snapshotReady =
+        next(self.regionSnapshots) ~= nil
+        or next(self.editBoxSnapshots) ~= nil
+
+    return {
+        moduleEnabled = self:IsEnabled(),
+        requestedEnabled = self.requestedEnabled == true,
+        appliedEnabled = self.appliedEnabled == true,
+        snapshotReady = snapshotReady,
+        savedConfigurationMutation = false,
+        lastReason = self.lastReason,
+        lastError = self.lastError,
+    }
+end
+
 function QuietMode:GetDebugStatus()
     local frames = currentChatFrames()
 

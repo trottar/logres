@@ -443,6 +443,26 @@ steps. Context Policy Check remains canonical for D-028 context policy.
 Runtime target:
 `0.0.27-dev`.
 
+### D.6 P0063 integrated restoration diagnostic
+
+Runtime target:
+
+`0.0.27-dev`.
+
+P0063 implements:
+- integrated Restoration Check;
+- out-of-combat reversible preference cycle;
+- controller disable/fail-open/re-enable cycle;
+- non-mutating in-combat legality validation;
+- addon-owned recovery-state APIs;
+- explicit Player interaction/suppression ownership facts;
+- static recovery-order contract.
+
+It also folds in the stale PlayerFrame checker repair surfaced during P0062
+delivery; no standalone repair phase is introduced.
+
+Runtime proof is next.
+
 ## Phase D exit
 
 Phase D completes when:

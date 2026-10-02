@@ -7,6 +7,10 @@ local PlayerFrameReplacement =
             self.appliedEnabled = false
             self.pending = false
             self.snapshot = nil
+            self.interactionConfigured = false
+            self.interactionMouseOwnedByLogres = false
+            self.stockPresentationSuppressed = false
+            self.stockMouseSuppressed = false
             self.lastError = nil
             self.lastReason = "not-yet-requested"
 
@@ -35,6 +39,7 @@ local PlayerFrameReplacement =
             interaction:Hide()
 
             self.interaction = interaction
+            self.interactionConfigured = true
 
             local eventFrame = CreateFrame("Frame")
             eventFrame:SetScript("OnEvent", function(_, event)
@@ -179,6 +184,7 @@ function PlayerFrameReplacement:IsInteractionReady()
     local interaction = self.interaction
 
     return interaction ~= nil
+        and self.interactionConfigured == true
         and interaction:GetAttribute("unit") == "player"
         and interaction:GetAttribute("*type1") == "target"
         and interaction:GetAttribute("*type2") == "togglemenu"
@@ -215,10 +221,12 @@ end
 function PlayerFrameReplacement:EnableInteraction()
     self.interaction:Show()
     self.interaction:EnableMouse(true)
+    self.interactionMouseOwnedByLogres = true
 end
 
 function PlayerFrameReplacement:DisableInteraction()
     self.interaction:EnableMouse(false)
+    self.interactionMouseOwnedByLogres = false
     self.interaction:Hide()
 end
 
@@ -226,6 +234,9 @@ function PlayerFrameReplacement:SuppressStock(snapshot)
     snapshot.container:SetAlpha(0)
     snapshot.contentMain:SetAlpha(0)
     suppressMouse(snapshot.playerFrame)
+
+    self.stockPresentationSuppressed = true
+    self.stockMouseSuppressed = true
 end
 
 function PlayerFrameReplacement:RestoreStock(snapshot)
@@ -239,6 +250,9 @@ function PlayerFrameReplacement:RestoreStock(snapshot)
         snapshot.playerFrame,
         snapshot.mouse
     )
+
+    self.stockPresentationSuppressed = false
+    self.stockMouseSuppressed = false
 end
 
 function PlayerFrameReplacement:EnableReplacement(reason)
@@ -457,6 +471,29 @@ function PlayerFrameReplacement:IsApplied()
     return self.appliedEnabled == true
 end
 
+function PlayerFrameReplacement:GetRecoveryStatus()
+    return {
+        moduleEnabled = self:IsEnabled(),
+        requestedEnabled = self.requestedEnabled == true,
+        appliedEnabled = self.appliedEnabled == true,
+        pending = self.pending == true,
+        snapshotReady = self.snapshot ~= nil,
+
+        interactionConfigured =
+            self.interactionConfigured == true,
+        interactionMouseOwnedByLogres =
+            self.interactionMouseOwnedByLogres == true,
+
+        stockPresentationSuppressed =
+            self.stockPresentationSuppressed == true,
+        stockMouseSuppressed =
+            self.stockMouseSuppressed == true,
+
+        lastReason = self.lastReason,
+        lastError = self.lastError,
+    }
+end
+
 function PlayerFrameReplacement:GetDebugStatus()
     local frames =
         self:GetStockFrames()
@@ -490,6 +527,15 @@ function PlayerFrameReplacement:GetDebugStatus()
             self.pending == true,
         snapshotReady =
             self.snapshot ~= nil,
+
+        interactionConfigured =
+            self.interactionConfigured == true,
+        interactionMouseOwnedByLogres =
+            self.interactionMouseOwnedByLogres == true,
+        stockPresentationSuppressed =
+            self.stockPresentationSuppressed == true,
+        stockMouseSuppressed =
+            self.stockMouseSuppressed == true,
 
         lastReason =
             self.lastReason,

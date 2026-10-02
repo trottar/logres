@@ -1114,8 +1114,8 @@ local function runPlayerFrameCheck()
             and debugStatus.contentMainAlpha == 0
             and debugStatus.playerFrameMouseEnabled == false
             and debugStatus.interactionReady == true
-            and debugStatus.interactionShown == true
-            and debugStatus.interactionMouseEnabled == true
+            and debugStatus.interactionConfigured == true
+            and debugStatus.interactionMouseOwnedByLogres == true
             and debugStatus.interactionUnit == "player"
             and debugStatus.interactionLeftType == "target"
             and debugStatus.interactionRightType == "togglemenu"
@@ -1124,8 +1124,9 @@ local function runPlayerFrameCheck()
         presentationMatches =
             debugStatus.appliedEnabled == false
             and debugStatus.snapshotReady == false
-            and debugStatus.interactionShown == false
-            and debugStatus.interactionMouseEnabled == false
+            and debugStatus.interactionMouseOwnedByLogres == false
+            and debugStatus.stockPresentationSuppressed == false
+            and debugStatus.stockMouseSuppressed == false
     end
 
     local preservationSafe =
@@ -1145,7 +1146,7 @@ local function runPlayerFrameCheck()
 
     if passed then
         emit(string.format(
-            "Logres playerframecheck: PASS (expected=%s applied=%s pending=%s frame=%s container=%s main=%s alpha=%s/%s stockMouse=%s interaction=%s/%s unit=%s types=%s/%s wholeFrame=false directChildren=false target=false party=false reason=%s)",
+            "Logres playerframecheck: PASS (expected=%s applied=%s pending=%s frame=%s container=%s main=%s alpha=%s/%s stockMouse=%s interactionConfigured=%s mouseOwned=%s unit=%s types=%s/%s wholeFrame=false directChildren=false target=false party=false reason=%s)",
             boolText(expected),
             boolText(debugStatus.appliedEnabled),
             boolText(debugStatus.pending),
@@ -1155,8 +1156,8 @@ local function runPlayerFrameCheck()
             tostring(debugStatus.containerAlpha),
             tostring(debugStatus.contentMainAlpha),
             tostring(debugStatus.playerFrameMouseEnabled),
-            boolText(debugStatus.interactionShown),
-            boolText(debugStatus.interactionMouseEnabled),
+            boolText(debugStatus.interactionConfigured),
+            boolText(debugStatus.interactionMouseOwnedByLogres),
             tostring(debugStatus.interactionUnit),
             tostring(debugStatus.interactionLeftType),
             tostring(debugStatus.interactionRightType),
@@ -1166,7 +1167,7 @@ local function runPlayerFrameCheck()
     end
 
     emit(string.format(
-        "Logres playerframecheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s expected=%s requested=%s applied=%s pending=%s stateMatches=%s presentationMatches=%s preservationSafe=%s frame=%s container=%s main=%s alpha=%s/%s stockMouse=%s click=%s motion=%s interactionReady=%s shown=%s mouse=%s unit=%s types=%s/%s snapshot=%s wholeFrame=%s directChildren=%s target=%s party=%s reason=%s error=%s)",
+        "Logres playerframecheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s expected=%s requested=%s applied=%s pending=%s stateMatches=%s presentationMatches=%s preservationSafe=%s frame=%s container=%s main=%s alpha=%s/%s stockMouse=%s click=%s motion=%s interactionReady=%s configured=%s mouseOwned=%s unit=%s types=%s/%s snapshot=%s wholeFrame=%s directChildren=%s target=%s party=%s reason=%s error=%s)",
         tostring(status.initialized),
         tostring(status.enabled),
         tostring(debugStatus.moduleEnabled),
@@ -1186,8 +1187,8 @@ local function runPlayerFrameCheck()
         tostring(debugStatus.playerFrameMouseClickEnabled),
         tostring(debugStatus.playerFrameMouseMotionEnabled),
         tostring(debugStatus.interactionReady),
-        tostring(debugStatus.interactionShown),
-        tostring(debugStatus.interactionMouseEnabled),
+        tostring(debugStatus.interactionConfigured),
+        tostring(debugStatus.interactionMouseOwnedByLogres),
         tostring(debugStatus.interactionUnit),
         tostring(debugStatus.interactionLeftType),
         tostring(debugStatus.interactionRightType),
@@ -1331,6 +1332,416 @@ local function runTargetFrameCheck()
         tostring(debugStatus.lastReason),
         tostring(debugStatus.lastError)
     ))
+end
+
+local function collectRestorationState()
+    local state = Logres:GetState()
+
+    return {
+        immersion =
+            Logres:GetPreference("immersionEnabled") == true,
+        context = state.context,
+
+        controllerStatus =
+            Logres:GetModuleStatus("ImmersionController"),
+        controller =
+            Logres:GetModule("ImmersionController")
+                :GetRecoveryStatus(),
+
+        actionStatus =
+            Logres:GetModuleStatus("StockActionReplacement"),
+        action =
+            Logres:GetModule("StockActionReplacement")
+                :GetRecoveryStatus(),
+
+        quietStatus =
+            Logres:GetModuleStatus("QuietMode"),
+        quiet =
+            Logres:GetModule("QuietMode")
+                :GetRecoveryStatus(),
+
+        playerStatus =
+            Logres:GetModuleStatus("PlayerFrameReplacement"),
+        player =
+            Logres:GetModule("PlayerFrameReplacement")
+                :GetRecoveryStatus(),
+
+        targetStatus =
+            Logres:GetModuleStatus("TargetFrameReplacement"),
+        target =
+            Logres:GetModule("TargetFrameReplacement")
+                :GetRecoveryStatus(),
+    }
+end
+
+local function protectedRecoveryMatches(
+    recovery,
+    expected,
+    allowPending
+)
+    if recovery.requestedEnabled ~= expected then
+        return false
+    end
+
+    if recovery.appliedEnabled == expected then
+        return true
+    end
+
+    return allowPending
+        and recovery.pending == true
+        and InCombatLockdown()
+end
+
+local function restorationOwnershipCoherent(snapshot)
+    local action = snapshot.action
+    local quiet = snapshot.quiet
+    local player = snapshot.player
+    local target = snapshot.target
+
+    local targetOverrideExpected =
+        target.appliedEnabled and 4 or 0
+
+    return action.snapshotReady == action.appliedEnabled
+        and action.routingManaged == action.appliedEnabled
+        and quiet.snapshotReady == quiet.appliedEnabled
+        and player.snapshotReady == player.appliedEnabled
+        and player.interactionConfigured == true
+        and player.interactionMouseOwnedByLogres
+            == player.appliedEnabled
+        and player.stockPresentationSuppressed
+            == player.appliedEnabled
+        and player.stockMouseSuppressed
+            == player.appliedEnabled
+        and target.snapshotReady == target.appliedEnabled
+        and target.interactionConfigured == true
+        and target.unitWatchRegistered == target.appliedEnabled
+        and target.interactionMouseOwnedByLogres
+            == target.appliedEnabled
+        and target.stockPresentationSuppressed
+            == target.appliedEnabled
+        and target.stockMouseSuppressed
+            == target.appliedEnabled
+        and target.preservedOverrideCount
+            == targetOverrideExpected
+end
+
+local function restorationStateMatches(
+    snapshot,
+    expectedImmersion,
+    allowPending
+)
+    local expectedQuiet =
+        expectedImmersion
+        and snapshot.context == "world"
+
+    local controller = snapshot.controller
+
+    local modulesReady =
+        snapshot.controllerStatus.initialized == true
+        and snapshot.controllerStatus.enabled == true
+        and controller.moduleEnabled == true
+        and snapshot.actionStatus.enabled == true
+        and snapshot.quietStatus.enabled == true
+        and snapshot.playerStatus.enabled == true
+        and snapshot.targetStatus.enabled == true
+
+    local desiredMatches =
+        controller.immersionEnabled == expectedImmersion
+        and controller.context == snapshot.context
+        and controller.actionReplacementDesired
+            == expectedImmersion
+        and controller.quietModeDesired == expectedQuiet
+        and controller.playerFrameSuppressionDesired
+            == expectedImmersion
+        and controller.targetFrameSuppressionDesired
+            == expectedImmersion
+        and controller.partyFrameSuppressionDesired == false
+        and controller.primaryActionRoutingOwned == false
+
+    local recoveryMatches =
+        protectedRecoveryMatches(
+            snapshot.action,
+            expectedImmersion,
+            allowPending
+        )
+        and snapshot.quiet.requestedEnabled == expectedQuiet
+        and snapshot.quiet.appliedEnabled == expectedQuiet
+        and protectedRecoveryMatches(
+            snapshot.player,
+            expectedImmersion,
+            allowPending
+        )
+        and protectedRecoveryMatches(
+            snapshot.target,
+            expectedImmersion,
+            allowPending
+        )
+
+    local errorsClear =
+        snapshot.action.lastError == nil
+        and snapshot.quiet.lastError == nil
+        and snapshot.player.lastError == nil
+        and snapshot.target.lastError == nil
+        and controller.lastActionError == nil
+        and controller.lastQuietError == nil
+        and controller.lastPlayerError == nil
+        and controller.lastTargetError == nil
+
+    return modulesReady
+        and desiredMatches
+        and recoveryMatches
+        and restorationOwnershipCoherent(snapshot)
+        and errorsClear
+end
+
+local function failOpenStateMatches(snapshot, originalImmersion)
+    local controller = snapshot.controller
+
+    return snapshot.immersion == originalImmersion
+        and snapshot.controllerStatus.enabled == false
+        and controller.moduleEnabled == false
+        and snapshot.action.requestedEnabled == false
+        and snapshot.action.appliedEnabled == false
+        and snapshot.action.pending == false
+        and snapshot.quiet.requestedEnabled == false
+        and snapshot.quiet.appliedEnabled == false
+        and snapshot.player.requestedEnabled == false
+        and snapshot.player.appliedEnabled == false
+        and snapshot.player.pending == false
+        and snapshot.target.requestedEnabled == false
+        and snapshot.target.appliedEnabled == false
+        and snapshot.target.pending == false
+        and restorationOwnershipCoherent(snapshot)
+        and snapshot.action.lastError == nil
+        and snapshot.quiet.lastError == nil
+        and snapshot.player.lastError == nil
+        and snapshot.target.lastError == nil
+        and controller.lastActionError == nil
+        and controller.lastQuietError == nil
+        and controller.lastPlayerError == nil
+        and controller.lastTargetError == nil
+end
+
+local function restorationSummary(snapshot)
+    return string.format(
+        "immersion=%s context=%s action=%s/%s/%s quiet=%s/%s player=%s/%s/%s target=%s/%s/%s",
+        boolText(snapshot.immersion),
+        tostring(snapshot.context),
+        boolText(snapshot.action.requestedEnabled),
+        boolText(snapshot.action.appliedEnabled),
+        boolText(snapshot.action.pending),
+        boolText(snapshot.quiet.requestedEnabled),
+        boolText(snapshot.quiet.appliedEnabled),
+        boolText(snapshot.player.requestedEnabled),
+        boolText(snapshot.player.appliedEnabled),
+        boolText(snapshot.player.pending),
+        boolText(snapshot.target.requestedEnabled),
+        boolText(snapshot.target.appliedEnabled),
+        boolText(snapshot.target.pending)
+    )
+end
+
+local function runRestorationCheck()
+    local originalImmersion =
+        Logres:GetPreference("immersionEnabled") == true
+    local initial = collectRestorationState()
+
+    if initial.controllerStatus.enabled ~= true then
+        emit(
+            "Logres restorationcheck: FAIL "
+            .. "(ImmersionController is disabled; no mutation attempted)"
+        )
+        return
+    end
+
+    if InCombatLockdown() then
+        local passed =
+            restorationStateMatches(
+                initial,
+                originalImmersion,
+                true
+            )
+
+        if passed then
+            emit(
+                "Logres restorationcheck: PASS "
+                .. "(mode=combat-nonmutating "
+                .. restorationSummary(initial)
+                .. ")"
+            )
+            return
+        end
+
+        emit(
+            "Logres restorationcheck: FAIL "
+            .. "(mode=combat-nonmutating "
+            .. restorationSummary(initial)
+            .. ")"
+        )
+        return
+    end
+
+    local cycleOK, cycleError = pcall(function()
+        if not restorationStateMatches(
+            initial,
+            originalImmersion,
+            false
+        ) then
+            error("initial state is not settled", 0)
+        end
+
+        local flipped =
+            Logres:SetPreference(
+                "immersionEnabled",
+                not originalImmersion,
+                "DEV_RESTORATIONCHECK_FLIP"
+            )
+
+        if flipped ~= true then
+            error("preference flip did not change state", 0)
+        end
+
+        local opposite = collectRestorationState()
+
+        if not restorationStateMatches(
+            opposite,
+            not originalImmersion,
+            false
+        ) then
+            error("opposite preference state did not settle", 0)
+        end
+
+        local restored =
+            Logres:SetPreference(
+                "immersionEnabled",
+                originalImmersion,
+                "DEV_RESTORATIONCHECK_RESTORE"
+            )
+
+        if restored ~= true then
+            error("preference restore did not change state", 0)
+        end
+
+        local restoredState = collectRestorationState()
+
+        if not restorationStateMatches(
+            restoredState,
+            originalImmersion,
+            false
+        ) then
+            error("original preference did not reconverge", 0)
+        end
+
+        if Logres:DisableModule("ImmersionController") ~= true then
+            error("ImmersionController did not disable", 0)
+        end
+
+        local disabledState = collectRestorationState()
+
+        if not failOpenStateMatches(
+            disabledState,
+            originalImmersion
+        ) then
+            error("controller fail-open restoration did not settle", 0)
+        end
+
+        if Logres:EnableModule("ImmersionController") ~= true then
+            error("ImmersionController did not re-enable", 0)
+        end
+
+        local reenabledState = collectRestorationState()
+
+        if not restorationStateMatches(
+            reenabledState,
+            originalImmersion,
+            false
+        ) then
+            error("controller re-enable did not reconverge", 0)
+        end
+    end)
+
+    local cleanupErrors = {}
+
+    if Logres:GetPreference("immersionEnabled") ~= originalImmersion then
+        local ok, cleanupError = pcall(function()
+            Logres:SetPreference(
+                "immersionEnabled",
+                originalImmersion,
+                "DEV_RESTORATIONCHECK_FINALIZE_PREFERENCE"
+            )
+        end)
+
+        if not ok then
+            cleanupErrors[#cleanupErrors + 1] =
+                "preference=" .. tostring(cleanupError)
+        end
+    end
+
+    if not Logres:GetModuleStatus("ImmersionController").enabled then
+        local ok, cleanupError = pcall(function()
+            Logres:EnableModule("ImmersionController")
+        end)
+
+        if not ok then
+            cleanupErrors[#cleanupErrors + 1] =
+                "controller=" .. tostring(cleanupError)
+        end
+    end
+
+    if Logres:GetModuleStatus("ImmersionController").enabled then
+        local controller =
+            Logres:GetModule("ImmersionController")
+
+        local ok, cleanupError = pcall(function()
+            controller:Reconcile(
+                "DEV_RESTORATIONCHECK_FINALIZE_RECONCILE"
+            )
+        end)
+
+        if not ok then
+            cleanupErrors[#cleanupErrors + 1] =
+                "reconcile=" .. tostring(cleanupError)
+        end
+    end
+
+    local final = collectRestorationState()
+    local finalOK =
+        final.immersion == originalImmersion
+        and restorationStateMatches(
+            final,
+            originalImmersion,
+            false
+        )
+
+    if cycleOK
+        and #cleanupErrors == 0
+        and finalOK
+    then
+        emit(string.format(
+            "Logres restorationcheck: PASS (mode=active original=%s final=%s controllerCycle=true context=%s)",
+            boolText(originalImmersion),
+            boolText(final.immersion),
+            tostring(final.context)
+        ))
+        return
+    end
+
+    emit(
+        "Logres restorationcheck: FAIL "
+        .. "(cycleError="
+        .. tostring(cycleOK and "none" or cycleError)
+        .. " cleanup="
+        .. tostring(
+            #cleanupErrors == 0
+            and "none"
+            or table.concat(cleanupErrors, " | ")
+        )
+        .. " finalOK="
+        .. tostring(finalOK)
+        .. " "
+        .. restorationSummary(final)
+        .. ")"
+    )
 end
 
 local CONTEXT_POLICY_ALPHA = {
@@ -1587,6 +1998,7 @@ local function runAllChecks()
     runQuietModeCheck()
     runPlayerFrameCheck()
     runTargetFrameCheck()
+    runRestorationCheck()
     runContextPolicyCheck()
     emit("Logres checkall: complete")
 end
@@ -1663,6 +2075,7 @@ local function printHelp()
     emit("  /logres quietcheck")
     emit("  /logres playerframecheck")
     emit("  /logres targetframecheck")
+    emit("  /logres restorationcheck")
     emit("  /logres contextpolicycheck")
     emit("  /logres hudpreview [on|off]")
     emit("  /logres immersion [on|off|toggle]")
@@ -1779,6 +2192,11 @@ local function handleCommand(message)
 
     if command == "targetframecheck" then
         runTargetFrameCheck()
+        return
+    end
+
+    if command == "restorationcheck" then
+        runRestorationCheck()
         return
     end
 
@@ -1910,6 +2328,11 @@ Logres:RegisterDevPanelAction(
     "targetFrameCheck",
     "Target Frame Check",
     "targetframecheck"
+)
+Logres:RegisterDevPanelAction(
+    "restorationCheck",
+    "Restoration Check",
+    "restorationcheck"
 )
 Logres:RegisterDevPanelAction(
     "contextPolicyCheck",

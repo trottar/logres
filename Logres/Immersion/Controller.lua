@@ -352,6 +352,41 @@ function ImmersionController:Reconcile(reason)
     self:ReconcileTargetFrame(policy, self.lastReconcileReason)
 end
 
+function ImmersionController:GetRecoveryStatus()
+    local policy = self.policy or self:BuildPolicy()
+
+    return {
+        moduleEnabled = self:IsEnabled(),
+
+        immersionEnabled = policy.immersionEnabled,
+        context = policy.context,
+        combat = policy.combat,
+        pvpFlagged = policy.pvpFlagged,
+
+        actionReplacementDesired =
+            policy.actionReplacementDesired,
+        quietModeDesired =
+            policy.quietModeDesired,
+        playerFrameSuppressionDesired =
+            policy.playerFrameSuppressionDesired,
+        targetFrameSuppressionDesired =
+            policy.targetFrameSuppressionDesired,
+        partyFrameSuppressionDesired =
+            policy.partyFrameSuppressionDesired,
+        primaryActionRoutingOwned =
+            policy.primaryActionRoutingOwned,
+
+        lastActionResult = self.lastActionResult,
+        lastActionError = self.lastActionError,
+        lastQuietResult = self.lastQuietResult,
+        lastQuietError = self.lastQuietError,
+        lastPlayerResult = self.lastPlayerResult,
+        lastPlayerError = self.lastPlayerError,
+        lastTargetResult = self.lastTargetResult,
+        lastTargetError = self.lastTargetError,
+    }
+end
+
 function ImmersionController:GetDebugStatus()
     local policy = self.policy or self:BuildPolicy()
 

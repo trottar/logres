@@ -160,6 +160,30 @@ Use:
 
 Natural instance proof may remain environmental.
 
+## P0063 implementation
+
+P0063 implements the source-resolved D.6 diagnostic at runtime `0.0.27-dev`.
+
+It adds addon-owned `GetRecoveryStatus()` APIs across the controller and
+supported replacement modules.
+
+Out of combat, Restoration Check executes the reversible preference and
+controller recovery cycle and defensively restores the original preference +
+controller state before exit even when an intermediate assertion fails.
+
+In combat, Restoration Check performs no mutations and validates legal
+requested/applied/pending state plus addon-owned ownership coherence.
+
+Player replacement now explicitly tracks secure interaction ownership and
+selective stock suppression ownership. The integrated check therefore does not
+need Player protected interaction readback.
+
+P0063 also repairs the stale PlayerFrame static assertion exposed during P0062
+delivery. That checker still described the older state where Target replacement
+was deferred; D-028 remains the current authority.
+
+Runtime proof is now the active gate.
+
 ## Validation strategy
 
 Prefer one integrated developer check over duplicating every module check.

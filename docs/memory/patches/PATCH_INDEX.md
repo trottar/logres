@@ -63,6 +63,7 @@
 | P0059 | 2026-10-01 | INSTALLED / PUSHED | Resolve D.5 orthogonal context/PvP/instance orchestration matrix (`b245170`) |
 | P0060 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME PASS | Add integrated D.5 Context Policy Check (`9608634`) |
 | P0061 | 2026-10-01 | INSTALLED / PUSHED | Record P0060 runtime PASS; close D.5; open D.6 restoration validation (`01665d1`) |
-| P0062 | 2026-10-01 | PREPARED | Resolve D.6 integrated restoration/recovery validation design |
+| P0062 | 2026-10-01 | INSTALLED / PUSHED | Resolve D.6 integrated restoration/recovery validation design (`13c5339`) |
+| P0063 | 2026-10-01 | PREPARED — RUNTIME PROOF PENDING | Add integrated D.6 Restoration Check and addon-owned recovery diagnostics |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

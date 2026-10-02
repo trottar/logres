@@ -35,7 +35,12 @@ if PLAYER.is_file():
         "self:DisableInteraction()",
         '"PLAYER_REGEN_ENABLED"',
         "function PlayerFrameReplacement:RequestEnabled(",
+        "function PlayerFrameReplacement:GetRecoveryStatus()",
         "function PlayerFrameReplacement:GetDebugStatus()",
+        "self.interactionConfigured",
+        "self.interactionMouseOwnedByLogres",
+        "self.stockPresentationSuppressed",
+        "self.stockMouseSuppressed",
         "wholePlayerFrameSuppressedByLogres = false",
         "directPlayerChildrenSuppressedByLogres = false",
         "targetFrameSuppressedByLogres = false",
@@ -79,7 +84,6 @@ if CONTROLLER.is_file():
         "playerFrameSuppressionRequested =",
         "playerFrameSuppressionApplied =",
         "playerFrameSuppressionPending =",
-        "targetFrameSuppressionDesired = false",
         "partyFrameSuppressionDesired = false",
     ]
 

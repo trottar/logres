@@ -9,7 +9,7 @@ Canonical:
 `D6_RESTORATION_INTEGRATION_VALIDATION.md`
 
 Next:
-implement P0063 integrated Restoration Check from the P0062 source resolution.
+runtime-validate P0063 integrated Restoration Check and D.6 recovery cycle.
 
 ## Tracked non-blocking defects / deferred domains
 

@@ -217,3 +217,24 @@ check exits.
 
 In-combat recovery testing is non-mutating and accepts only legal pending
 protected transitions.
+
+## P0063 addon-owned recovery state
+
+D.6 recovery proof has a dedicated addon-owned state surface.
+
+`GetRecoveryStatus()` is intentionally narrower than presentation/debug
+inspection. It reports Logres ownership facts needed to prove reversibility
+without reading protected Blizzard presentation merely for confirmation.
+
+The integrated Restoration Check composes:
+- controller desired ownership;
+- action requested/applied/pending + snapshot/routing ownership;
+- Quiet Mode requested/applied + runtime snapshot ownership;
+- Player requested/applied/pending + secure interaction/suppression ownership;
+- Target requested/applied/pending + unit-watch/mouse/suppression ownership.
+
+In combat, this state is diagnostic only and the check performs no mutation.
+
+Out of combat, any active-cycle failure triggers a defensive attempt to restore
+the original preference and controller/reconcile state before failure is
+reported.

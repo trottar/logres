@@ -29,6 +29,8 @@ D.5 is runtime-proven and complete.
 - D.5 complete.
 - P0060 pushed at `9608634`.
 - P0061 pushed at `01665d1`.
+- P0062 pushed at `13c5339`.
+- P0063 implementation prepared for runtime `0.0.27-dev`; runtime proof pending.
 - P0060 runtime `0.0.26-dev`.
 - Context Policy Check PASS.
 - Run All PASS.
@@ -45,15 +47,16 @@ D.5 is runtime-proven and complete.
 
 ## Next Action
 
-Implement P0063 integrated Restoration Check and addon-owned recovery-state
-diagnostics.
+Deploy and runtime-validate P0063 integrated Restoration Check on
+`0.0.27-dev`.
 
-P0062 source review resolved the runtime shape:
+P0063 implements the P0062-resolved runtime shape:
 - out of combat: reversible preference cycle + controller disable/re-enable
-  recovery cycle;
+  recovery cycle with defensive final restoration;
 - in combat: non-mutating legality check for requested/applied/pending state;
-- no protected Blizzard presentation readback solely for proof;
-- explicit addon-owned Player secure-interaction ownership state.
+- addon-owned recovery-state APIs only;
+- explicit Player secure-interaction/suppression ownership state;
+- static enforcement of stock-first restoration ordering.
 
 The validation should cover:
 1. Immersion ON;
@@ -97,6 +100,8 @@ D.6 succeeds when Phase D behaves as one reversible system:
 
 - `docs/memory/evidence/D5_P0060_CONTEXT_POLICY_RUNTIME_PROOF_2026-10-01.md`
 - `docs/memory/evidence/D6_RESTORATION_INTEGRATION_SOURCE_REVIEW_2026-10-01.md`
+- `docs/memory/evidence/D6_P0063_RESTORATION_CHECK_IMPLEMENTATION_2026-10-01.md`
+- `docs/memory/evidence/P0062_DELIVERY_WORKFLOW_FAILURE_2026-10-01.md`
 - `docs/memory/investigations/D6_RESTORATION_INTEGRATION_VALIDATION.md`
 - `docs/memory/decisions/D-028_CONTEXT_ORCHESTRATION_MATRIX.md`
 - `docs/memory/roadmap/PHASE_D_IMMERSION_CONTROLLER.md`

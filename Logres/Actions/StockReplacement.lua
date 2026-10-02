@@ -309,6 +309,18 @@ function StockReplacement:HandleEvent(event)
     end
 end
 
+function StockReplacement:GetRecoveryStatus()
+    return {
+        moduleEnabled = self:IsEnabled(),
+        requestedEnabled = self.requestedEnabled == true,
+        appliedEnabled = self.appliedEnabled == true,
+        pending = self.pending == true,
+        snapshotReady = self.snapshot ~= nil,
+        routingManaged = self.appliedEnabled == true,
+        lastError = self.lastError,
+    }
+end
+
 function StockReplacement:IsRoutingManaged(key)
     return self.appliedEnabled
         and (key == "secondary" or key == "utility")
