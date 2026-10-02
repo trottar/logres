@@ -74,6 +74,7 @@
 | P0070 | 2026-10-01 | PREPARED — RUNTIME PROOF PENDING | Integrate E.3 waypoint probe with developer panel |
 | P0071 | 2026-10-01 | INSTALLED / PUSHED — VERSION METADATA DEFECT | Auto-persist developer-panel diagnostics (`7976d34e`) |
 | P0072 | 2026-10-01 | INSTALLED / PUSHED | Correct P0071 version mismatch and record E.3 runtime evidence (`1fc48777`) |
-| P0073 | 2026-10-01 | PREPARED — RUNTIME PROOF PENDING | Correct E.3 bearing proof to current-map coordinates |
+| P0073 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME PASS | Correct E.3 bearing proof to current-map coordinates (`4d4ea878`) |
+| P0074 | 2026-10-02 | PREPARED | Record P0073 PASS; close E.3; open E.4 user-waypoint integration |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

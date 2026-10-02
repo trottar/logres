@@ -1,7 +1,7 @@
 # P0073 — Map-Space Waypoint Bearing Probe
 
 Date: 2026-10-01
-Result: PREPARED — RUNTIME PROOF PENDING
+Result: INSTALLED / PUSHED — RUNTIME PASS (`4d4ea878`)
 
 ## Baseline
 
@@ -15,22 +15,24 @@ world X/Y as the compass-north basis.
 
 ## Changes
 
-- `vectorRecord` now safely supports both Vector2 mixins and plain x/y tables;
+- `vectorRecord` supports both Vector2 mixins and plain x/y tables;
 - calls `C_Map.GetUserWaypointPositionForMap(playerMapID)`;
 - records waypoint position in the player's current UI map domain;
 - computes map-space clockwise bearing with `atan2(dx, -dy)`;
-- preserves previous world-coordinate data only as diagnostic/domain evidence;
-- updates the probe static contract;
-- synchronizes E.3 durable memory.
+- preserves world-coordinate data as diagnostic/domain evidence;
+- updates the probe static contract.
 
-## Runtime next
+## Runtime result
 
-Use one waypoint deliberately placed directly north of the player on the map.
+The user deliberately placed a waypoint directly north of the player.
 
-Developer panel:
-`Waypoint Probe`
+P0073 captured:
+- map delta approximately `-0.00506, -0.37168`;
+- map-space bearing `359.2` degrees.
 
-Expected map-space bearing:
-approximately `0` / `360` degrees.
+PASS.
 
-No repeat of earlier retrieval/event/quest scenarios.
+The same sample's raw-world candidates remained near east, confirming that the
+map-space correction is required.
+
+E.3 closes in P0074.

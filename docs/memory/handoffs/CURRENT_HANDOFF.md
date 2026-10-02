@@ -2,23 +2,30 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0072 is verified pushed at `1fc48777`.
+P0073 is verified pushed at `4d4ea878`.
 
-Phase E / E.3 is active.
+Phase E / E.3 is complete.
 
-The north-reference runtime sample rejected the prior raw-world-axis bearing
-assumption.
+Final north-reference runtime proof:
+- current-map waypoint position was usable;
+- map delta was approximately `-0.00506, -0.37168`;
+- map-space bearing was `359.2` degrees;
+- previous raw-world candidates remained near east.
 
-P0073 is prepared to use current UI map coordinates and
-`C_Map.GetUserWaypointPositionForMap(mapID)` for bearing orientation.
+Therefore the supported bearing orientation is current UI map space, not raw
+world X/Y.
 
-Next runtime action after push:
-- deploy;
-- keep/set one waypoint directly north of player on map;
-- developer panel -> `Waypoint Probe`;
-- `/reload`;
-- export `LOGRES_DIAGNOSTICS_LATEST.lua`.
+Active work:
+**E.4 — User-waypoint compass marker integration.**
 
-No repeat of the earlier waypoint/event/quest matrix.
+E.4 scope:
+- manual user waypoint only;
+- current-player-map bearing;
+- existing world/Immersion compass eligibility;
+- fail open;
+- no quest marker without new runtime evidence;
+- minimap remains stock.
+
+Production runtime remains `0.0.29-dev`.
 
 User performs all commits/pushes.

@@ -1,6 +1,6 @@
 # Phase E — Compass and Navigation
 
-Status: ACTIVE
+Status: ACTIVE — E.4
 
 ## Objective
 
@@ -24,45 +24,73 @@ Heading-only world compass runtime proof passed.
 
 ## E.3 — Waypoint-bearing capability/proof
 
-**ACTIVE.**
+**COMPLETE.**
 
-Runtime-proven:
-- user waypoint present/absent retrieval;
-- user waypoint world conversion;
-- clean clear/no-stale-bearing behavior;
+Runtime-proven manual user-waypoint path:
+- player map:
+  `C_Map.GetBestMapForUnit("player")`;
+- player position:
+  `C_Map.GetPlayerMapPosition(mapID, "player")`;
+- user waypoint projection:
+  `C_Map.GetUserWaypointPositionForMap(mapID)`;
+- clockwise bearing:
+  `(degrees(atan2(dx, -dy)) + 360) % 360`.
+
+Final north-reference runtime proof:
+- map delta approximately `-0.00506, -0.37168`;
+- bearing `359.2` degrees.
+
+Raw world X/Y axes are rejected for compass orientation on the tested map.
+
+Runtime-proven events:
 - `USER_WAYPOINT_UPDATED`;
 - `SUPER_TRACKING_CHANGED`.
 
-Observed but not proven useful:
-- `SUPER_TRACKING_PATH_UPDATED` registered but did not fire.
+Not observed firing:
+- `SUPER_TRACKING_PATH_UPDATED`.
 
 Tested quest limitation:
-- super-tracked quest IDs 436 and 237 produced no usable next waypoint.
+- super-tracked quest IDs `436` and `237` produced no usable next waypoint.
 
-### Orientation correction
+Therefore quest marker support remains unavailable until separately proven.
 
-The first probe tested raw world-coordinate bearing candidates.
+## E.4 — User-waypoint compass marker integration
 
-A deliberate north-reference waypoint disproved that assumption on map 1432:
-the raw-world candidates resolved near east.
+**ACTIVE.**
 
-P0073 therefore proves bearing in the current UI map domain instead:
-- player position from `C_Map.GetPlayerMapPosition`;
-- user waypoint from `C_Map.GetUserWaypointPositionForMap`;
-- clockwise bearing from map north via `atan2(dx, -dy)`.
+Implement only the proven manual user-waypoint path on the existing compass.
 
-One north-reference runtime sample remains.
+Required behavior:
+- restrained marker integrated into the horizontal compass;
+- bearing calculated in the current player UI map domain;
+- marker omitted when waypoint/map/position data is absent or unusable;
+- marker updates when the waypoint changes and as the player moves;
+- existing world/Immersion eligibility remains authoritative;
+- restricted/unavailable contexts fail open;
+- no quest marker from API/source presence alone;
+- minimap remains stock.
+
+## E.5+ — Navigation sufficiency / minimap capability
+
+**QUEUED.**
+
+Do not suppress the minimap merely because heading and user-waypoint bearing
+exist.
+
+Any later suppression requires a separate deliberate capability review proving
+that Logres replaces the required navigation/control surface safely and
+reversibly.
 
 ## Navigation ownership
 
-Do not add quest text/objective presentation here.
+Phase E may own restrained navigational direction.
 
-Do not suppress the minimap.
-
-Production waypoint presentation remains blocked until E.3 orientation proof
-closes.
+Phase F owns quest text/objective presentation.
 
 ## Exit
 
-E.3 exits when the current-map waypoint position is runtime-usable and a known
-north reference resolves near `0`/`360` degrees without stale/fabricated output.
+Phase E completes only when:
+- supported navigation presentation is runtime-proven;
+- unsupported destination cases fail open;
+- Blizzard fallback remains available where Logres lacks capability;
+- any minimap suppression is separately capability-gated and reversible.

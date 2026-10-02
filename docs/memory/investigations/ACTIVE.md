@@ -1,18 +1,17 @@
 # Active Investigations
 
-## E.3 — Waypoint-bearing capability/proof
+No blocking Phase E capability investigation is active.
 
-Status:
-**ACTIVE — P0073 MAP-SPACE ORIENTATION PROBE PREPARED**
-
-Canonical:
-`E3_WAYPOINT_BEARING_CAPABILITY_PROOF.md`
-
-Next:
-run one deliberate north-reference `Waypoint Probe` using P0073 and verify the
-map-space bearing resolves near `0`/`360`.
+E.3 waypoint-bearing capability/proof is CLOSED.
 
 ## Tracked non-blocking defects / deferred domains
 
 - `D4_TARGETFRAME_REASSERTION_INTERMITTENT.md`
 - `FUTURE_AURA_STATUS_PRESENTATION.md`
+
+## Deferred navigation evidence
+
+- `SUPER_TRACKING_PATH_UPDATED` registered but did not fire in tested E.3 runs.
+- super-tracked quest IDs `436` and `237` returned no usable next waypoint.
+- quest waypoint presentation remains capability-gated until new runtime
+  evidence proves a usable destination path.

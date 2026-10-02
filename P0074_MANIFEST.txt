@@ -1,0 +1,24 @@
+Project Logres P0074 patch
+Date: 2026-10-02
+Baseline: 4d4ea878d224cb2a64949f689535b7291f3d8efd
+Production runtime: 0.0.29-dev (unchanged)
+Purpose: record P0073 PASS; close E.3; open E.4
+
+Files:
+3581d35e46a3d23a1bf938d679ac5f6fb1dfe04fc080a0472332e2543a7aa0d6  docs/memory/CURRENT.md
+09dbcde170231a2a3514a4b1313dee34a0d56c2d4b31ad22b62f15f4ee8d7a6c  docs/memory/handoffs/CURRENT_HANDOFF.md
+370f776759b9bcde06ba005a1114771cdfc5722936d7b1074c074d98a47013ab  docs/memory/investigations/ACTIVE.md
+f6abbfee2647168b20e4d04bf2295cbdf607206fdb1ed7c07d25bdfb6e79e463  docs/memory/investigations/E3_WAYPOINT_BEARING_CAPABILITY_PROOF.md
+c496f18084c0a14ef189ba4632b33e07212fdec6cac3bf55412b1aecf895425d  docs/memory/evidence/E3_P0073_RUNTIME_PASS_2026-10-02.md
+793130975b68eab28851b07ad94732f1b0e02349491d3f5843ba3f8a88c5dfd4  docs/memory/roadmap/STATUS.md
+7bae1899c037673063e8a02c997946760c823a5d1e0517dbeeb650813cd4a00a  docs/memory/roadmap/PHASE_E_COMPASS_NAVIGATION.md
+4beeb4d8393c604482874f530db144ad3b52a11b296471d49a5f9dec76681f3a  docs/memory/patches/P0073_MAP_SPACE_WAYPOINT_BEARING_PROBE.md
+88c4274790b89daed70f44dab8a50c006bb09b57dbbe2dbba888b0468f0eb774  docs/memory/patches/P0074_CLOSE_E3_OPEN_E4.md
+e126caf9a9796100c73705e9f586b0c8ace77ebba8f010b5f3375b9e7358356b  docs/memory/patches/PATCH_INDEX.md
+67e77f00b243ca79fddac6d033a91591d926f98620d8211dc7ea377ae1c4110e  docs/ROADMAP.md
+
+Checks:
+python3 tools/check_memory_health.py
+git diff --check -- <P0074-owned files>
+
+Docs-only checkpoint; no WoW redeploy required.

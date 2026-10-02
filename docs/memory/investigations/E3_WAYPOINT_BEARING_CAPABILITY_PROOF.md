@@ -1,60 +1,81 @@
 # E.3 — Waypoint-Bearing Capability / Proof
 
-Status: ACTIVE — MAP-SPACE ORIENTATION PROOF REMAINS
+Status: CLOSED — RUNTIME PASS
 Opened: 2026-10-01
+Closed: 2026-10-02
 
 Canonical decision:
 `../decisions/D-029_COMPASS_NAVIGATION_CAPABILITY_CONTRACT.md`
 
-Latest evidence:
-- `../evidence/E3_P0071_RUNTIME_EVIDENCE_2026-10-01.md`
-- `../evidence/E3_P0073_MAP_SPACE_BEARING_CORRECTION_2026-10-01.md`
+Final runtime evidence:
+`../evidence/E3_P0073_RUNTIME_PASS_2026-10-02.md`
 
 ## Proven
 
 - open-world player map/world position;
 - user waypoint present/absent semantics;
-- user waypoint world conversion;
 - clean clear/no-stale-bearing behavior;
 - `USER_WAYPOINT_UPDATED` firing;
-- `SUPER_TRACKING_CHANGED` firing.
+- `SUPER_TRACKING_CHANGED` firing;
+- current-map user waypoint projection through
+  `C_Map.GetUserWaypointPositionForMap(playerMapID)`;
+- clockwise map-space bearing orientation.
 
-## Negative / incomplete evidence
+## Final orientation proof
 
-- `SUPER_TRACKING_PATH_UPDATED` registered but did not fire;
-- tested super-tracked quest IDs 436 and 237 returned no usable next waypoint;
-- this does not generalize to all quests.
+The user deliberately placed a manual waypoint directly north of the player on
+the UI map.
 
-## Rejected orientation assumption
+P0073 captured:
+- player map position:
+  `0.3511172533, 0.4888285398`;
+- waypoint position in the same map:
+  `0.3460545540, 0.1171445549`;
+- map delta:
+  `-0.00506, -0.37168`;
+- corrected map-space bearing:
+  `359.2` degrees.
 
-A waypoint deliberately placed directly north on the UI map produced raw world
-delta `+694.09, +34.69` and previous candidate bearings `87.1` / `92.9`.
+This is consistent with the known north reference.
 
-Therefore raw world X/Y axes are rejected as the compass-north basis for this
-map.
+The same sample's raw-world candidates were approximately `88.8` / `91.2`,
+confirming that raw world X/Y is not the compass-north orientation source for
+this map.
 
-## Corrected orientation path
+## Accepted bearing path
 
-P0073 uses:
-- player position in current UI map coordinates;
-- `C_Map.GetUserWaypointPositionForMap(playerMapID)`;
-- map-space `dx`, `dy`;
-- clockwise bearing:
-  `(degrees(atan2(dx, -dy)) + 360) % 360`.
+For a manual user waypoint:
 
-## Remaining proof
+```text
+mapID = C_Map.GetBestMapForUnit("player")
+player = C_Map.GetPlayerMapPosition(mapID, "player")
+destination = C_Map.GetUserWaypointPositionForMap(mapID)
 
-One north-reference panel run.
+dx = destination.x - player.x
+dy = destination.y - player.y
 
-Expected result:
-map-space bearing approximately `0`/`360`.
+bearingDegrees = (degrees(atan2(dx, -dy)) + 360) % 360
+```
 
-Do not repeat already-proven retrieval/event/quest scenarios.
+All values remain capability-gated and secret-safe.
 
-## Exit
+If any required input is absent/unusable, no waypoint marker is shown.
 
-E.3 closes if the corrected map-space path returns a usable waypoint position
-and the deliberate north reference resolves correctly.
+## Negative / deferred evidence
 
-Production may then implement the proven user-waypoint bearing path. Quest
-waypoint support remains capability-gated/fail-open until separately proven.
+- `SUPER_TRACKING_PATH_UPDATED` registered but did not fire in tested runs.
+- tested super-tracked quest IDs `436` and `237` returned no usable next
+  waypoint.
+- this does not generalize to all quests, but it does prohibit assuming quest
+  marker support.
+
+## Result
+
+E.3 exit criteria are satisfied for the manual user-waypoint path.
+
+Next:
+E.4 may implement only the proven manual user-waypoint compass marker.
+
+Quest waypoint support remains separately capability-gated.
+
+The minimap remains stock.
