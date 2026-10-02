@@ -1,6 +1,6 @@
 # Phase F — Quest Experience
 
-Status: ACTIVE — F.5
+Status: ACTIVE — F.6
 
 ## Product Objective
 
@@ -31,13 +31,6 @@ Blizzard retains:
 
 **COMPLETE.**
 
-Runtime-proven:
-- XP source/events;
-- passive quest-detail reads;
-- `QUEST_DETAIL`;
-- `QUEST_ACCEPTED`;
-- super-tracked quest identity.
-
 ## F.3 — Contextual XP pulse
 
 **COMPLETE — RUNTIME + INTEGRATION + VISUAL PASS.**
@@ -48,33 +41,49 @@ Runtime-proven:
 
 ## F.5 — Objective / progress runtime capability proof
 
-**ACTIVE — DATA SHAPES PASS; SAME-QUEST TRANSITION PENDING.**
+**COMPLETE — RUNTIME PASS.**
 
-Runtime-proven objective states:
-- no active quest -> nil;
-- completed quest `436` -> empty objective list;
-- quest `237` -> two populated incomplete `0/10` rows;
-- quest `1338` -> populated completed `1/1` row.
+Proven:
+- nil/no-active objective state;
+- empty objective list;
+- populated incomplete rows;
+- populated completed row;
+- same-quest objective count transition (`0/10 -> 1/10`);
+- fresh repeated same-quest recapture;
+- `QUEST_WATCH_UPDATE` observed.
 
-Quest state is also readable:
-- `237`: complete=false, ready=false;
-- `1338`: complete=true, ready=true.
+Environmental deferrals:
+- `QUEST_PROGRESS`;
+- `QUEST_COMPLETE`;
+- `QUEST_TURNED_IN`.
 
-The active quest identity switch none -> `237` -> `1338` returned fresh data for
-each identity, but a same-quest objective transition remains unproven.
+## F.6 — Contextual objective progress pulse
 
-Use the existing Quest Probe after a natural objective count or finished-state
-change.
+**ACTIVE — CONTRACT ACCEPTED; IMPLEMENTATION NEXT.**
 
-Do not:
-- invent missing objective state;
-- treat empty as complete;
-- suppress the stock Objective Tracker;
-- mutate quest watch/super-track state;
-- require contrived gameplay solely for evidence.
+Production direction:
+- passive/event-driven;
+- baseline-first;
+- pulse only on meaningful same-quest objective change;
+- temporary/non-interactive;
+- no permanent objective list;
+- no stock Objective Tracker suppression;
+- no watch/super-track mutation;
+- fail open on unusable/secret/uncached data.
 
-Unobserved progress/completion/turn-in/watch events remain environmental
-deferrals.
+Primary proven refresh:
+`QUEST_LOG_UPDATE`.
+
+Additional proven refresh:
+`QUEST_WATCH_UPDATE`.
+
+Identity/baseline refresh:
+`SUPER_TRACKING_CHANGED`.
+
+Do not require the still-unobserved progress/complete/turn-in events.
+
+Canonical investigation:
+`../investigations/F6_CONTEXTUAL_OBJECTIVE_PROGRESS.md`
 
 ## Quest navigation
 

@@ -1,32 +1,26 @@
 # F.5 — Objective / Progress Runtime Capability Proof
 
-Status: ACTIVE — DATA SHAPE PASS; SAME-QUEST TRANSITION PENDING
+Status: CLOSED — RUNTIME PASS
 Opened: 2026-10-02
+Closed: 2026-10-02
 
 Canonical capability contract:
 `../decisions/D-031_QUEST_EXPERIENCE_CAPABILITY_CONTRACT.md`
 
 Evidence:
-`../evidence/F5_OBJECTIVE_DATA_SHAPES_2026-10-02.md`
-
-## Question
-
-Can Forever provide stable, secret-safe objective/progress information sufficient
-for a restrained Logres objective presentation without fabricating missing data
-or replacing Blizzard controls prematurely?
+- `../evidence/F5_OBJECTIVE_DATA_SHAPES_2026-10-02.md`
+- `../evidence/F5_SAME_QUEST_TRANSITION_PASS_2026-10-02.md`
 
 ## Proven data states
 
 ### Unavailable / no active quest
 
-Quest Probe with no active quest reports:
+Quest Probe:
 `LQA objectives nil`.
-
-This is not converted into an empty or completed state.
 
 ### Empty objective list
 
-Prior F.2 evidence on completed quest `436` reported:
+Quest `436`:
 `LQA objectives <empty>`.
 
 ### Populated incomplete objectives
@@ -34,12 +28,7 @@ Prior F.2 evidence on completed quest `436` reported:
 Quest `237`:
 **In Defense of the King's Lands**
 
-Quest state:
-- complete=false;
-- failed=false;
-- ready=false.
-
-Objective rows:
+Baseline:
 1. Stonesplinter Skullthumper slain — `0/10`, done=false;
 2. Stonesplinter Seer slain — `0/10`, done=false.
 
@@ -48,72 +37,65 @@ Objective rows:
 Quest `1338`:
 **Stormpike's Order**
 
-Quest state:
+State:
 - complete=true;
-- failed=false;
 - ready=true.
 
 Objective:
 1. Bring Stormpike's Request to Furen Longbeard in Stormwind —
    `1/1`, done=true.
 
+## Same-quest transition proof
+
+Quest `237` later reported:
+1. Stonesplinter Skullthumper slain — `0/10`, done=false;
+2. Stonesplinter Seer slain — `1/10`, done=false.
+
+A subsequent probe on the same quest again reported the Seer objective at
+`1/10`.
+
+This proves:
+- objective rows refresh for the same quest identity;
+- the prior `0/10` row is not retained as stale state;
+- fresh objective data can be passively recaptured after gameplay progress.
+
 ## Event evidence
 
-During the new samples:
-- `QUEST_LOG_UPDATE` advanced from 32 to 34;
-- `SUPER_TRACKING_CHANGED` advanced from 9 to 11;
+During the same-quest transition:
+- `QUEST_LOG_UPDATE` reached 50;
+- `QUEST_WATCH_UPDATE` advanced from 0 to 1;
 - `QUEST_PROGRESS` remained 0;
 - `QUEST_COMPLETE` remained 0;
-- `QUEST_TURNED_IN` remained 0;
-- `QUEST_WATCH_UPDATE` remained 0.
+- `QUEST_TURNED_IN` remained 0.
 
-The completed final state for quest `1338` is therefore observable through the
-passive query path, but no same-quest progress/completion event transition was
-captured.
-
-## Stale-state status
-
-Switching active/super-tracked identity from none -> `237` -> `1338` produced
-fresh objective rows for each selected active quest.
-
-This supports identity-based recapture.
-
-It does not yet prove that an objective row updates from one count to another
-for the same quest.
+Therefore:
+- `QUEST_LOG_UPDATE` is a proven production refresh source;
+- `QUEST_WATCH_UPDATE` is also runtime-observed;
+- the three still-zero events remain environmental deferrals and must not be
+  required by production behavior.
 
 ## Waypoint side evidence
 
-Quest `1338` also returned no usable destination.
-
-Negative destination samples are now:
+Negative destination samples remain:
 - `436`;
 - `237`;
 - `1338`.
 
 Quest compass marker remains unsupported.
 
-## Remaining proof
-
-Capture one same-quest before/after objective state during normal gameplay.
-
-Preferred available baseline:
-quest `237` at `0/10`, `0/10`.
-
-A later Quest Probe showing the same quest ID with a changed objective count or
-finished flag is sufficient to prove the required refresh behavior.
-
-If completion/turn-in/watch-specific events remain unobserved, preserve them as
-environmental deferrals rather than PASS.
-
 ## Stock ownership
 
-Throughout F.5:
-- Blizzard Objective Tracker remains stock;
-- quest log/watch interaction remains Blizzard-owned;
-- accept/decline/continue/complete/reward controls remain Blizzard-owned;
-- no quest compass marker is added.
+F.5 did not suppress or mutate:
+- Blizzard Objective Tracker;
+- quest log/watch interaction;
+- quest accept/decline/continue/complete/reward controls;
+- super-track/watch state.
 
-## Exit
+## Result
 
-F.5 may authorize a production objective/progress slice only after a same-quest
-objective update is runtime-proven and shown not to retain stale prior values.
+**F.5 CLOSED — RUNTIME PASS.**
+
+The passive objective source is sufficient for a narrow, fail-open contextual
+objective-progress presentation.
+
+It is not evidence for removing the stock Objective Tracker.

@@ -2,40 +2,37 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0085 is verified pushed at `f6a30d8`.
+P0086 is verified pushed at `d4e8c39`.
 
 Production runtime:
 `0.0.33-dev`.
 
-Active work:
-**F.5 — Objective / progress runtime capability proof.**
+F.5 is COMPLETE.
 
-F.5 objective data shapes are now runtime-proven:
-- no active quest -> nil;
-- quest `436` -> empty table;
-- quest `237` -> two incomplete `0/10` rows;
-- quest `1338` -> completed `1/1` row.
+Runtime proof:
+- nil/no-active objective state;
+- empty objective table on quest `436`;
+- incomplete populated rows on quest `237`;
+- completed populated row on quest `1338`;
+- quest `237` same-quest Seer objective changed `0/10 -> 1/10`;
+- repeated same-quest probe retained the fresh `1/10`;
+- `QUEST_WATCH_UPDATE` advanced to 1;
+- `QUEST_LOG_UPDATE` is proven active.
 
-Quest `237`:
-`complete=false`, `ready=false`.
-
-Quest `1338`:
-`complete=true`, `ready=true`.
-
-Still pending:
-**same-quest objective transition**.
-
-The new samples did not naturally emit:
+Still environmental deferrals:
 - `QUEST_PROGRESS`;
 - `QUEST_COMPLETE`;
-- `QUEST_TURNED_IN`;
-- `QUEST_WATCH_UPDATE`.
+- `QUEST_TURNED_IN`.
 
-Use the existing Quest Probe after a natural objective count/state change.
-No new runtime code is justified yet.
+Active work:
+**F.6 — Contextual objective progress pulse.**
 
-Stock Objective Tracker and all quest interaction controls remain Blizzard-owned.
-
-Quest IDs `436`, `237`, and `1338` remain negative waypoint samples.
+F.6 is temporary/event-driven:
+- baseline first;
+- pulse only on meaningful changed objective count/finished state;
+- no permanent tracker;
+- no stock Objective Tracker suppression;
+- no watch/super-track mutation;
+- fail open on unusable/secret/uncached data.
 
 User performs all commits/pushes.

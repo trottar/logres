@@ -76,7 +76,7 @@ Canonical phase record:
 
 ## Phase F — Quest Experience
 
-**Status: ACTIVE — F.5 objective / progress runtime capability proof.**
+**Status: ACTIVE — F.6 contextual objective progress pulse.**
 
 F.1:
 complete under D-031.
@@ -91,12 +91,22 @@ F.4:
 additive NPC quest detail presentation complete with runtime, integration, and
 visual proof.
 
+F.5:
+objective/progress capability proof complete, including populated incomplete and
+completed rows plus a same-quest `0/10 -> 1/10` refresh.
+
 Current work:
-F.5 uses the existing Quest Probe to prove populated objective rows and
-progress/completion behavior before any objective production presentation.
+F.6 implements a temporary contextual objective-progress pulse using the proven
+passive objective source and proven refresh events.
+
+F.6 constraints:
+- baseline first;
+- no permanent objective tracker;
+- no stock Objective Tracker suppression;
+- no watch/super-track mutation;
+- fail open on secret/invalid/uncached data.
 
 Deferred:
-- any objective presentation not yet runtime-proven;
 - stock Objective Tracker replacement/suppression;
 - quest destination / quest compass marker.
 

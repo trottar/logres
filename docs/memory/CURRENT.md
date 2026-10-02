@@ -12,15 +12,12 @@ project: logres
 
 ## Current Work Item
 
-**F.5 — Objective / progress runtime capability proof.**
+**F.6 — Contextual objective progress pulse.**
 
-P0085 is verified pushed at `f6a30d8`.
+P0086 is verified pushed at `d4e8c39`.
 
 Production runtime remains:
 `0.0.33-dev`.
-
-F.5 status:
-**PARTIAL PASS — OBJECTIVE DATA SHAPES PROVEN; SAME-QUEST TRANSITION PENDING.**
 
 ## Verified State
 
@@ -31,68 +28,105 @@ F.5 status:
 - F.4 additive NPC quest detail presentation is complete:
   runtime + integration + visual PASS.
 - P0084 TargetFrame restoration correction is runtime-proven.
-- F.5 now runtime-proves the objective data shapes required by D-031:
-  - no active quest -> objective state unavailable / `nil`;
+- F.5 objective/progress capability proof is COMPLETE.
+- F.5 runtime-proven data states:
+  - no active quest -> objective state unavailable / nil;
   - quest `436` -> objective table present but empty;
-  - quest `237` -> populated incomplete rows:
-    - Stonesplinter Skullthumper slain `0/10`, done=false;
-    - Stonesplinter Seer slain `0/10`, done=false;
-  - quest `1338` -> populated completed row:
-    - Bring Stormpike's Request to Furen Longbeard in Stormwind
-      `1/1`, done=true.
-- Quest `237` reported:
-  `complete=false`, `failed=false`, `ready=false`.
-- Quest `1338` reported:
-  `complete=true`, `failed=false`, `ready=true`.
-- Across the new samples:
-  - `QUEST_LOG_UPDATE` advanced;
-  - `SUPER_TRACKING_CHANGED` advanced;
+  - quest `237` -> populated incomplete rows;
+  - quest `1338` -> populated completed row.
+- Same-quest update behavior is now runtime-proven on quest `237`:
+  - baseline Seer objective: `0/10`, done=false;
+  - later same-quest sample: `1/10`, done=false;
+  - repeated later sample retained `1/10`, proving fresh recapture rather than
+    stale baseline reuse.
+- During that transition:
+  - `QUEST_LOG_UPDATE` reached 50;
+  - `QUEST_WATCH_UPDATE` advanced from 0 to 1;
   - `QUEST_PROGRESS` remained 0;
   - `QUEST_COMPLETE` remained 0;
-  - `QUEST_TURNED_IN` remained 0;
-  - `QUEST_WATCH_UPDATE` remained 0.
-- Therefore the data model is proven, but a same-quest objective update transition is
-  not yet proven.
-- Quest IDs `436`, `237`, and `1338` are now negative waypoint samples.
+  - `QUEST_TURNED_IN` remained 0.
+- `QUEST_PROGRESS`, `QUEST_COMPLETE`, and `QUEST_TURNED_IN` remain environmental
+  deferrals and are not required production triggers.
+- Negative quest-destination samples remain:
+  `436`, `237`, `1338`.
 - Quest compass marker remains unsupported.
+- The first P0087 docs-only apply was rejected by the repository memory
+  checker because the proposed CURRENT.md omitted the required Success
+  Criteria heading; validation stopped in the temporary tree before any
+  tracked-file mutation.
+
+## F.6 Contract
+
+F.6 is a **temporary contextual objective-progress pulse**, not a permanent
+objective tracker.
+
+Observation:
+- use passive quest-log objective reads already runtime-proven in F.5;
+- prefer current super-tracked quest ID, with selected quest as safe fallback;
+- use only secret-safe scalar objective fields;
+- do not persist quest text/objective content.
+
+Update triggers:
+- `QUEST_LOG_UPDATE` is the primary proven refresh event;
+- `QUEST_WATCH_UPDATE` is an additional proven refresh event;
+- `SUPER_TRACKING_CHANGED` changes identity/baseline but does not itself imply
+  objective progress;
+- do not require unobserved `QUEST_PROGRESS`, `QUEST_COMPLETE`, or
+  `QUEST_TURNED_IN`.
+
+Presentation:
+- first usable sample for a quest establishes a baseline and shows nothing;
+- quest identity changes rebaseline and show nothing;
+- a changed objective count or finished flag may produce a short pulse;
+- show only the changed objective information needed by the player;
+- no permanent list;
+- no mouse interaction;
+- Immersion OFF suppresses presentation while observation/baseline remains safe;
+- absent, secret, invalid, uncached, nil, or empty data fails open without
+  fabricating progress.
+
+Stock ownership:
+- Blizzard Objective Tracker remains fully available;
+- Logres does not mutate quest watch/super-track state;
+- quest log and interaction controls remain Blizzard-owned.
 
 ## Next Action
 
-Use the existing **Quest Probe** for one same-quest objective transition during
-normal gameplay.
+Implement F.6 according to the accepted contextual-pulse contract.
 
-Preferred currently-proven candidate:
-quest `237`, which already has a captured `0/10` baseline.
+Required developer-panel surfaces:
+- Objective Progress Check;
+- Objective Progress Preview;
+- Run All integration for the check.
 
-When naturally continuing that quest:
-1. leave quest `237` active/super-tracked if convenient;
-2. after one Stonesplinter Skullthumper or Seer kill changes the objective count,
-   run **Quest Probe**;
-3. if the quest later completes naturally, run **Quest Probe** again;
-4. if it is turned in naturally, run **Quest Probe** again;
-5. `/reload`;
-6. export `LOGRES_DIAGNOSTICS_LATEST.lua`.
-
-Any equivalent active quest with a before/after objective-row change is valid.
-
-Do not travel, repeat content, or manufacture gameplay solely for proof.
+Runtime acceptance must prove:
+1. clean initialization/baseline with no false pulse;
+2. a real same-quest objective change produces one short pulse;
+3. no stale pulse on quest identity change;
+4. Immersion OFF suppresses presentation;
+5. stock Objective Tracker remains unchanged/usable;
+6. no Lua/taint/protected/secret-value errors.
 
 ## Success Criteria
 
-F.5 may close when runtime evidence proves:
-- unavailable/not-loaded objective data;
-- empty objective list;
-- populated incomplete objectives;
-- populated completed objectives;
-- a same-quest objective update that replaces the prior value rather than
-  retaining stale data.
+F.6 implementation is ready for runtime validation when:
+- the first usable sample establishes a baseline without a false pulse;
+- a same-quest objective count or finished-state change produces one bounded,
+  temporary pulse;
+- a repeated refresh with no additional objective change produces no duplicate
+  pulse;
+- a quest identity change rebaselines without replaying prior progress;
+- Immersion OFF suppresses presentation while safe observation/baselining
+  continues;
+- missing, nil, empty, secret, invalid, or uncached objective data fails open;
+- Blizzard Objective Tracker remains unchanged and usable;
+- Logres does not mutate quest watch or super-track state;
+- developer-panel Objective Progress Check/Preview and Run All integration are
+  present;
+- runtime validation observes no Lua, taint, protected-action, or secret-value
+  errors.
 
-Completion/turn-in/watch-specific events remain environmental deferrals if they
-are not naturally emitted; they are not promoted to PASS merely because the
-corresponding final data state is observable.
-
-No production objective presentation and no stock Objective Tracker suppression
-is authorized until the same-quest update behavior is proven.
+F.6 does not authorize stock Objective Tracker suppression.
 
 ## Do Not Reopen Without New Evidence
 
@@ -100,9 +134,8 @@ is authorized until the same-quest update behavior is proven.
 - **F.1/F.2:** complete.
 - **F.3 contextual XP:** complete.
 - **F.4 additive NPC quest detail presentation:** complete.
+- **F.5 objective/progress capability proof:** complete.
 - **P0084 TargetFrame restoration correction:** runtime PASS.
-- **F.5 objective data shapes:** runtime PASS.
-- **F.5 same-quest update behavior:** pending.
 - **TargetFrame reappearance issue:** separate tracked defect.
 - **Quest destination / compass marker:** unsupported until a real destination
   is runtime-proven.
@@ -112,7 +145,9 @@ is authorized until the same-quest update behavior is proven.
 
 ## Relevant References
 
-- `docs/memory/evidence/F5_OBJECTIVE_DATA_SHAPES_2026-10-02.md`
+- `docs/memory/evidence/F5_SAME_QUEST_TRANSITION_PASS_2026-10-02.md`
+- `docs/memory/evidence/P0087_DELIVERY_FAILURE_2026-10-02.md`
 - `docs/memory/investigations/F5_OBJECTIVE_PROGRESS_CAPABILITY_PROOF.md`
+- `docs/memory/investigations/F6_CONTEXTUAL_OBJECTIVE_PROGRESS.md`
 - `docs/memory/decisions/D-031_QUEST_EXPERIENCE_CAPABILITY_CONTRACT.md`
 - `docs/memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md`

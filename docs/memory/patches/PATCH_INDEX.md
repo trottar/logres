@@ -89,6 +89,8 @@
 
 | P0085 | 2026-10-02 | INSTALLED / PUSHED | Close F.4 after P0084 runtime + user visual PASS; open F.5 objective/progress proof (`f6a30d8`) |
 
-| P0086 | 2026-10-02 | PREPARED — DOCS-ONLY PARTIAL F.5 PASS | Record populated incomplete/completed objective rows; same-quest transition pending |
+| P0086 | 2026-10-02 | INSTALLED / PUSHED — PARTIAL F.5 PASS | Record populated incomplete/completed objective rows; same-quest transition pending (`d4e8c39`) |
+
+| P0087 | 2026-10-02 | PREPARED — DOCS-ONLY | Close F.5 same-quest refresh proof; open F.6 contextual objective progress pulse |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

@@ -1,0 +1,29 @@
+Project Logres P0087 patch
+Date: 2026-10-02
+Baseline: d4e8c39837210d38e73447f4800cc5448d1e956d
+Runtime: 0.0.33-dev (unchanged)
+Purpose: close F.5 runtime proof and open F.6 contextual objective progress pulse
+Delivery repair: restore required CURRENT Success Criteria heading
+
+Files:
+b688fbf8fadc545c28bd3ba89797ab89f3a88952da78d30d9a72e0ef68c43e52  docs/ROADMAP.md
+76ed73291603d501764bf2bb0b475431aea10a4aa3fa9fa351384415aae35f4d  docs/memory/CURRENT.md
+76f47545f5b7777f4fbc05fe348bb2621fbe10a9449f276f07050d361a573edc  docs/memory/evidence/F5_SAME_QUEST_TRANSITION_PASS_2026-10-02.md
+221b728cc02d83ff8831c0c52f7a3e83e6fb1e6a911230751f21e5c1a0d37a9c  docs/memory/evidence/P0087_DELIVERY_FAILURE_2026-10-02.md
+5f3696a76e6d8a3bf0638c2481141c0a0f74fb0ba2b521af866d9647db4ced04  docs/memory/handoffs/CURRENT_HANDOFF.md
+ecb1bbadf7bd1e618e740ae2e7944f3d1d8b36b7ddd11a492863696eaebefb14  docs/memory/investigations/ACTIVE.md
+59ce7f7917d2e175825f767ca9f1483c80599e1b53127b639fb31d20902360f2  docs/memory/investigations/F5_OBJECTIVE_PROGRESS_CAPABILITY_PROOF.md
+59965b55587ceec6194097be66cb374c8a2ec9410ad5c42d371658e2b2c0fafa  docs/memory/investigations/F6_CONTEXTUAL_OBJECTIVE_PROGRESS.md
+c89705a6e154cedebe28e543cc0068e58c7a9fa5acd49e2a319badbb24190b3a  docs/memory/patches/P0086_RECORD_F5_OBJECTIVE_ROWS.md
+1c7b8e83f79e20b4994bf6b44bd8ab982f161fa2c88b3cd7574f40413b380580  docs/memory/patches/P0087_CLOSE_F5_OPEN_F6.md
+8265725c4f9e49fe0c588eeedcce56ce93cdc0e4ab9621429b3d4e7583fffb9d  docs/memory/patches/PATCH_INDEX.md
+0c80514855c38df555668674b1e2e98a7464fba06625a5339f4197415da0329e  docs/memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md
+fbdae976daf286c29382b61b3d9cf1894f68656f1387a327bc557e9cbd40683a  docs/memory/roadmap/STATUS.md
+
+Checks:
+artifact-level canonical CURRENT heading validation
+python3 tools/check_memory_health.py
+temporary git-archive consistency validation
+git diff --check -- <P0087-owned files>
+
+Docs-only checkpoint; no WoW redeploy required.

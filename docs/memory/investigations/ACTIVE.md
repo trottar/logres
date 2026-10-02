@@ -1,30 +1,27 @@
 # Active Investigations
 
-## F.5 — Objective / progress runtime capability proof
+## F.6 — Contextual objective progress pulse
 
 Status:
-**ACTIVE — DATA SHAPE PASS; SAME-QUEST TRANSITION PENDING**
+**ACTIVE — CONTRACT ACCEPTED; IMPLEMENTATION NEXT**
 
 Canonical:
-`F5_OBJECTIVE_PROGRESS_CAPABILITY_PROOF.md`
+`F6_CONTEXTUAL_OBJECTIVE_PROGRESS.md`
 
-Runtime-proven objective states:
-- nil / unavailable with no active quest;
-- empty table on quest `436`;
-- populated incomplete rows on quest `237`;
-- populated completed row on quest `1338`.
+F.5 runtime evidence now proves enough passive objective behavior for a narrow
+production pulse.
 
-Remaining narrow gap:
-- a same-quest objective value transition and fresh recapture.
+Use:
+- `QUEST_LOG_UPDATE` as primary proven refresh;
+- `QUEST_WATCH_UPDATE` as additional proven refresh;
+- `SUPER_TRACKING_CHANGED` for identity/baseline changes.
 
-Naturally unobserved events remain:
+Do not require:
 - `QUEST_PROGRESS`;
 - `QUEST_COMPLETE`;
-- `QUEST_TURNED_IN`;
-- `QUEST_WATCH_UPDATE`.
+- `QUEST_TURNED_IN`.
 
-Use the existing panel Quest Probe during normal gameplay.
-Do not add production objective presentation before transition evidence.
+Stock Objective Tracker remains Blizzard-owned.
 
 ## Closed Phase F slices
 
@@ -33,6 +30,12 @@ F.3 contextual XP:
 
 F.4 additive NPC quest detail presentation:
 **CLOSED — RUNTIME + INTEGRATION + VISUAL PASS.**
+
+F.5 objective/progress capability proof:
+**CLOSED — RUNTIME PASS.**
+
+Evidence:
+`../evidence/F5_SAME_QUEST_TRANSITION_PASS_2026-10-02.md`
 
 ## Closed TargetFrame restoration investigation
 

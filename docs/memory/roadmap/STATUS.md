@@ -7,10 +7,10 @@ As of 2026-10-02.
 **Phase F — Quest Experience**
 
 Active work item:
-**F.5 Objective / progress runtime capability proof**
+**F.6 Contextual objective progress pulse**
 
 State:
-**Phase E COMPLETE; Phase F ACTIVE — F.5**
+**Phase E COMPLETE; Phase F ACTIVE — F.6**
 
 ## Phase status
 
@@ -22,7 +22,7 @@ State:
 | C — Action Interface | COMPLETE |
 | D — Immersion Controller | COMPLETE |
 | E — Compass and Navigation | COMPLETE |
-| F — Quest Experience | ACTIVE — F.5 |
+| F — Quest Experience | ACTIVE — F.6 |
 | G — Cinematic Camera | QUEUED |
 | H — Integration and Polish | QUEUED |
 
@@ -34,25 +34,28 @@ State:
 | F.2 Quest/XP runtime capability probe | COMPLETE |
 | F.3 Contextual XP pulse | COMPLETE — runtime + integration + visual PASS |
 | F.4 Additive NPC quest detail presentation | COMPLETE — runtime + integration + visual PASS |
-| F.5 Objective / progress runtime capability proof | ACTIVE — data shapes PASS; same-quest transition pending |
-| F.6+ Remaining quest production slices | QUEUED — capability-gated |
+| F.5 Objective / progress runtime capability proof | COMPLETE — runtime PASS |
+| F.6 Contextual objective progress pulse | ACTIVE — contract accepted; implementation next |
+| F.7+ Remaining quest slices | QUEUED — capability-gated |
 
-## F.5 proven
+## F.5 closure
 
-- nil/no-active objective state;
+Runtime-proven:
+- nil/no-active;
 - empty objective list;
-- populated incomplete objectives;
-- populated completed objective;
-- complete/ready state readable through passive query path.
+- populated incomplete rows;
+- populated completed row;
+- same-quest `0/10 -> 1/10` update;
+- fresh repeated same-quest recapture;
+- `QUEST_WATCH_UPDATE` observed.
 
-## F.5 pending
-
-- same-quest objective count/finished transition;
-- naturally observed progress/completion/turn-in/watch-specific events remain
-  environmental deferrals.
+Environmental deferrals:
+- `QUEST_PROGRESS`;
+- `QUEST_COMPLETE`;
+- `QUEST_TURNED_IN`.
 
 ## Navigation
 
-Quest IDs `436`, `237`, and `1338` are negative waypoint samples.
+Quest IDs `436`, `237`, and `1338` remain negative waypoint samples.
 
 Quest compass marker remains unsupported.
