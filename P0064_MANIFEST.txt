@@ -1,0 +1,17 @@
+Project Logres P0064 patch
+Date: 2026-10-01
+Baseline: 20b1bf5562be3232df46e087ea0c66420085e2c9
+Type: docs-only process-memory checkpoint
+
+Files:
+fbbab7fac54708208068fa8f75d8a781dcfeb1c73a7faa8f72c9390ba467a617  docs/memory/CURRENT.md
+83e0b4fc6b53bd8624cca17dd83b97e355404a3bdf2d1da559d0b113ca790bf6  docs/memory/patches/PATCH_INDEX.md
+8dfee2223cbd956cf76b55326d271c1a43b803b36f723637453c9941f8a7a285  docs/memory/evidence/P0064_ASSISTANT_WORKFLOW_FAILURES_2026-10-01.md
+6f33b1cdc8a581ccc38bb673006c451fe483846603d48cb7cd8ed07e81ee33a3  docs/memory/patches/P0064_RECORD_ASSISTANT_WORKFLOW_FAILURES.md
+
+Checks:
+python3 tools/check_memory_health.py
+git diff --check -- <P0064-owned files>
+
+No WoW redeploy required.
+Unrelated local modifications are outside P0064 ownership.

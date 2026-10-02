@@ -30,7 +30,12 @@ D.5 is runtime-proven and complete.
 - P0060 pushed at `9608634`.
 - P0061 pushed at `01665d1`.
 - P0062 pushed at `13c5339`.
-- P0063 implementation prepared for runtime `0.0.27-dev`; runtime proof pending.
+- P0063 pushed at `20b1bf55`.
+- The user reports the requested P0063 runtime validation was completed
+  successfully and the panel/runtime behavior was correct.
+- D.6 closure is intentionally paused until P0064 makes the assistant delivery
+  failures durable; do not ask the user to repeat the successful P0063
+  validation without new evidence.
 - P0060 runtime `0.0.26-dev`.
 - Context Policy Check PASS.
 - Run All PASS.
@@ -47,34 +52,18 @@ D.5 is runtime-proven and complete.
 
 ## Next Action
 
-Deploy and runtime-validate P0063 integrated Restoration Check on
-`0.0.27-dev`.
+Push P0064 as a docs-only process-memory checkpoint.
 
-P0063 implements the P0062-resolved runtime shape:
-- out of combat: reversible preference cycle + controller disable/re-enable
-  recovery cycle with defensive final restoration;
-- in combat: non-mutating legality check for requested/applied/pending state;
-- addon-owned recovery-state APIs only;
-- explicit Player secure-interaction/suppression ownership state;
-- static enforcement of stock-first restoration ordering.
+P0064 records the assistant delivery failures that followed the successful
+P0063 validation report and restores the established patch-delivery procedure.
 
-The validation should cover:
-1. Immersion ON;
-2. Immersion OFF;
-3. OFF -> ON and ON -> OFF restoration;
-4. persisted preference through `/reload`;
-5. combat-deferred protected transitions and convergence after combat;
-6. world/PvP/context integration;
-7. natural instance transition when available;
-8. module disable/restore recovery where supported;
-9. stock fallback surfaces remain available;
-10. no invisible protected interaction regions;
-11. no Lua/taint/secret regression.
+After P0064 is verified pushed:
+- resume D.6 closure from the already-reported successful P0063 runtime
+  validation;
+- record only the evidence actually supplied;
+- do not ask the user to repeat P0063 validation without new evidence.
 
-Prefer addon-owned diagnostic state.
-
-Do not inspect protected Blizzard presentation values solely to prove a
-mutation.
+No WoW redeploy is required for P0064.
 
 ## Success Criteria
 
@@ -102,6 +91,7 @@ D.6 succeeds when Phase D behaves as one reversible system:
 - `docs/memory/evidence/D6_RESTORATION_INTEGRATION_SOURCE_REVIEW_2026-10-01.md`
 - `docs/memory/evidence/D6_P0063_RESTORATION_CHECK_IMPLEMENTATION_2026-10-01.md`
 - `docs/memory/evidence/P0062_DELIVERY_WORKFLOW_FAILURE_2026-10-01.md`
+- `docs/memory/evidence/P0064_ASSISTANT_WORKFLOW_FAILURES_2026-10-01.md`
 - `docs/memory/investigations/D6_RESTORATION_INTEGRATION_VALIDATION.md`
 - `docs/memory/decisions/D-028_CONTEXT_ORCHESTRATION_MATRIX.md`
 - `docs/memory/roadmap/PHASE_D_IMMERSION_CONTROLLER.md`
