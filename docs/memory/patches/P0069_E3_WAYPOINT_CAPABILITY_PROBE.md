@@ -1,7 +1,7 @@
 # P0069 — E.3 Waypoint Capability Probe
 
 Date: 2026-10-01
-Result: PREPARED — RUNTIME PROOF PENDING
+Result: INSTALLED / PUSHED — RUNTIME PROOF PENDING (`9e637d5a`)
 
 ## Baseline
 
@@ -56,3 +56,10 @@ Run the E.3 matrix in:
 `docs/memory/investigations/E3_WAYPOINT_BEARING_CAPABILITY_PROOF.md`
 
 No production waypoint marker is authorized by this patch alone.
+
+## Workflow correction
+
+The initial runtime handoff incorrectly used `/lwpa` as the primary validation
+surface instead of the established Logres developer panel.
+
+P0070 corrects that workflow.

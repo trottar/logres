@@ -541,11 +541,20 @@ local function bearingText(bearings)
     )
 end
 
-local function printReport()
+local function reportLine(output, message)
+    if type(output) == "function" then
+        output(message)
+        return
+    end
+
+    print(message)
+end
+
+local function printReport(output)
     if not LogresWaypointAuditDB
         or #LogresWaypointAuditDB.snapshots == 0
     then
-        print("LogresWaypointAudit: no snapshots")
+        reportLine(output, "LogresWaypointAudit: no snapshots")
         return
     end
 
@@ -553,7 +562,8 @@ local function printReport()
         #LogresWaypointAuditDB.snapshots
     ]
 
-    print(
+    reportLine(
+        output,
         string.format(
             "LWPA reason=%s instance=%s/%s",
             tostring(row.reason),
@@ -562,7 +572,8 @@ local function printReport()
         )
     )
 
-    print(
+    reportLine(
+        output,
         string.format(
             "LWPA player map=%s pos=%s world=%s",
             valueText(row.player.mapID),
@@ -573,7 +584,8 @@ local function printReport()
 
     local user = row.userWaypoint
 
-    print(
+    reportLine(
+        output,
         string.format(
             "LWPA user present=%s secret=%s map=%s pos=%s world=%s bearing=%s",
             boolText(user.present),
@@ -588,7 +600,8 @@ local function printReport()
     local quest = row.quest
     local waypoint = quest.waypoint
 
-    print(
+    reportLine(
+        output,
         string.format(
             "LWPA quest id=%s tracked=%s waypoint=%s map=%s xy=%s,%s world=%s bearing=%s",
             quest.questID and valueText(quest.questID) or "nil",
@@ -607,7 +620,8 @@ local function printReport()
     local registration = LogresWaypointAuditDB.eventRegistration or {}
     local counts = LogresWaypointAuditDB.eventCounts or {}
 
-    print(
+    reportLine(
+        output,
         string.format(
             "LWPA events SUPER_TRACKING_CHANGED=%s/%d SUPER_TRACKING_PATH_UPDATED=%s/%d USER_WAYPOINT_UPDATED=%s/%d",
             boolText(registration.SUPER_TRACKING_CHANGED),
@@ -618,6 +632,12 @@ local function printReport()
             counts.USER_WAYPOINT_UPDATED or 0
         )
     )
+end
+
+function LogresWaypointAudit_Run(output)
+    snapshot("developer-panel")
+    printReport(output)
+    return true
 end
 
 local function printStatus()

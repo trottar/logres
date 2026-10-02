@@ -1,0 +1,28 @@
+Project Logres P0070 patch
+Date: 2026-10-01
+Baseline: 9e637d5aa68fe8c11da95b91f3668fbb3c84dcb0
+Production runtime: 0.0.28-dev
+Purpose: route E.3 waypoint probe through existing developer panel
+
+Files:
+8a4162deae72b2ba1c13c0d122af0a50a4dcd25c4442d67295fd1d2be843ba88  Logres/Core/Commands.lua
+d8950460cb555b3c50bb9e46e4f69715b6003d411e58276346933e057db7a38f  tools/probes/LogresWaypointAudit/LogresWaypointAudit.lua
+6ca4c8cecd5d68272a042163086013ee351368c61e53dc2570b381363d0cfd88  tools/check_waypoint_probe_contract.py
+0f1a8bf3747d7bcf5107857d3ad7a530ac0c1318c56f7dc8abb8349c5fc7f073  docs/memory/CURRENT.md
+d6173804361bfa75aa4dae613eff9493ea143642b48fbf85eb98e0bf91068054  docs/memory/handoffs/CURRENT_HANDOFF.md
+ff9078a2127069e79fe059757cf9275aa0c1cfb606ae319e7555578edac1b61b  docs/memory/investigations/ACTIVE.md
+2757ec06c06ab78b99a737791d095ddabfe0eeaa0e10940eaa01a1b8407cafb6  docs/memory/investigations/E3_WAYPOINT_BEARING_CAPABILITY_PROOF.md
+438087cc1c05a30395e730a7bd110889973ac5ec087eacb5854b0b923463b580  docs/memory/evidence/P0069_DEV_PANEL_WORKFLOW_CORRECTION_2026-10-01.md
+21a6a5553fc84528060603ce1269291ca979c52596ce3f9ae81736ef4eaba11b  docs/memory/patches/P0069_E3_WAYPOINT_CAPABILITY_PROBE.md
+2e8f935a29b678a5d5a647e77d5c540f33be164bf1337369a5a29e66941ea631  docs/memory/patches/P0070_WAYPOINT_PROBE_PANEL_INTEGRATION.md
+941fabd9264ceecf3e066fcd807a4e026c639b6ba4bae1f459385c4afc0fd4f4  docs/memory/patches/PATCH_INDEX.md
+
+Checks:
+python3 tools/check_waypoint_probe_contract.py
+python3 tools/check_dev_panel_contract.py
+python3 tools/check_addon_structure.py
+python3 tools/check_memory_health.py
+git diff --check -- <P0070-owned files>
+
+Runtime diagnostic integration; WoW deployment required after push verification.
+Use developer-panel Waypoint Probe action for E.3 validation.

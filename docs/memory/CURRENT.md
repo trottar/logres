@@ -18,8 +18,10 @@ E.1 and E.2 are complete.
 
 P0068 is verified pushed at `740ebe15`.
 
-P0069 prepares a dedicated waypoint capability probe; production Logres remains
-at `0.0.28-dev`.
+P0069 is verified pushed at `9e637d5a`.
+
+P0070 corrects the E.3 validation workflow by exposing the waypoint probe through
+the established developer panel. Production runtime remains `0.0.28-dev`.
 
 ## Verified State
 
@@ -55,8 +57,8 @@ at `0.0.28-dev`.
 
 ## Next Action
 
-Deploy the temporary P0069 `LogresWaypointAudit` addon and execute the E.3
-runtime matrix:
+Deploy P0070, then execute the E.3 runtime matrix through the developer-panel
+`Waypoint Probe` action:
 
 1. open-world snapshot with no user waypoint;
 2. snapshot with an active user waypoint at a visibly known direction;
@@ -66,6 +68,9 @@ runtime matrix:
 6. compare recorded bearing candidates with visible direction.
 
 Preserve unavailable/unsupported cases as negative evidence.
+
+Use the developer panel as the normal validation surface; `/lwpa` is fallback
+only.
 
 Do not add production waypoint presentation yet.
 

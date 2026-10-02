@@ -2082,6 +2082,29 @@ local function runContextPolicyCheck()
     ))
 end
 
+local function runWaypointProbe()
+    if type(LogresWaypointAudit_Run) ~= "function" then
+        emit(
+            "Logres waypointprobe: FAIL "
+            .. "(LogresWaypointAudit addon unavailable)"
+        )
+        return
+    end
+
+    local ok, probeError = pcall(
+        LogresWaypointAudit_Run,
+        emit
+    )
+
+    if not ok then
+        emit(
+            "Logres waypointprobe: FAIL (error="
+            .. tostring(probeError)
+            .. ")"
+        )
+    end
+end
+
 local function runAllChecks()
     emit("Logres checkall: beginning")
     printStatus()
@@ -2177,6 +2200,7 @@ local function printHelp()
     emit("  /logres restorationcheck")
     emit("  /logres contextpolicycheck")
     emit("  /logres compasscheck")
+    emit("  /logres waypointprobe")
     emit("  /logres hudpreview [on|off]")
     emit("  /logres immersion [on|off|toggle]")
     emit("  /logres debug on")
@@ -2307,6 +2331,11 @@ local function handleCommand(message)
 
     if command == "compasscheck" then
         runCompassCheck()
+        return
+    end
+
+    if command == "waypointprobe" then
+        runWaypointProbe()
         return
     end
 
@@ -2448,6 +2477,11 @@ Logres:RegisterDevPanelAction(
     "compassCheck",
     "Compass Check",
     "compasscheck"
+)
+Logres:RegisterDevPanelAction(
+    "waypointProbe",
+    "Waypoint Probe",
+    "waypointprobe"
 )
 Logres:RegisterDevPanelAction(
     "immersionOn",

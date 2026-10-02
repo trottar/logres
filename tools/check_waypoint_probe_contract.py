@@ -35,6 +35,9 @@ if PROBE.is_file():
         'minusYNorth',
         'pcall(frame.RegisterEvent, frame, candidate)',
         'LogresWaypointAuditDB.eventCounts',
+        'function LogresWaypointAudit_Run(output)',
+        'snapshot("developer-panel")',
+        'printReport(output)',
     ]
 
     for fragment in required:
@@ -53,6 +56,24 @@ if PROBE.is_file():
     for fragment in forbidden:
         if fragment in source:
             errors.append(f"waypoint probe mutates forbidden surface: {fragment}")
+
+COMMANDS = ROOT / "Logres" / "Core" / "Commands.lua"
+
+if COMMANDS.is_file():
+    commands = COMMANDS.read_text(encoding="utf-8")
+    for fragment in (
+        "local function runWaypointProbe()",
+        'if command == "waypointprobe" then',
+        'Logres:RegisterDevPanelAction(',
+        '"waypointProbe"',
+        '"Waypoint Probe"',
+        '"waypointprobe"',
+        "LogresWaypointAudit_Run",
+    ):
+        if fragment not in commands:
+            errors.append(
+                f"Commands.lua missing waypoint panel integration: {fragment}"
+            )
 
 if TOC.is_file():
     source = TOC.read_text(encoding="utf-8")

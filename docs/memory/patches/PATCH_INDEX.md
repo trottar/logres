@@ -70,6 +70,7 @@
 | P0066 | 2026-10-01 | INSTALLED / PUSHED | Resolve E.1 compass/navigation capability contract; open E.2 heading compass (`586d188d`) |
 | P0067 | 2026-10-01 | INSTALLED / PUSHED — USER-REPORTED RUNTIME PASS | Implement E.2 heading-only world compass + Compass Check (`931f068e`) |
 | P0068 | 2026-10-01 | INSTALLED / PUSHED | Record P0067 runtime PASS; close E.2; open E.3 waypoint-bearing proof (`740ebe15`) |
-| P0069 | 2026-10-01 | PREPARED — RUNTIME PROOF PENDING | Add E.3 temporary waypoint capability probe |
+| P0069 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME PROOF PENDING | Add E.3 temporary waypoint capability probe (`9e637d5a`) |
+| P0070 | 2026-10-01 | PREPARED — RUNTIME PROOF PENDING | Integrate E.3 waypoint probe with developer panel |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

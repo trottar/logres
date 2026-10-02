@@ -3,14 +3,14 @@
 ## E.3 — Waypoint-bearing capability/proof
 
 Status:
-**ACTIVE — P0069 PROBE PREPARED**
+**ACTIVE — P0070 PANEL INTEGRATION PREPARED**
 
 Canonical:
 `E3_WAYPOINT_BEARING_CAPABILITY_PROOF.md`
 
 Next:
-deploy `LogresWaypointAudit` and collect user-waypoint, quest-waypoint,
-conversion, event, and bearing-orientation runtime evidence.
+deploy P0070 and collect user-waypoint, quest-waypoint, conversion, event, and
+bearing-orientation evidence through the developer-panel `Waypoint Probe` action.
 
 ## Tracked non-blocking defects / deferred domains
 

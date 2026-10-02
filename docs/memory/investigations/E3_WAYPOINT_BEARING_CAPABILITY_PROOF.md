@@ -1,6 +1,6 @@
 # E.3 — Waypoint-Bearing Capability / Proof
 
-Status: ACTIVE — P0069 PROBE PREPARED
+Status: ACTIVE — P0070 PANEL INTEGRATION PREPARED
 Opened: 2026-10-01
 
 Canonical decision:
@@ -119,3 +119,15 @@ is runtime proven.
 
 If a source is unsupported or unreliable, record that negative result and keep
 Blizzard navigation as fallback.
+
+## Validation surface correction
+
+P0069's initial handoff incorrectly made `/lwpa` the primary workflow.
+
+P0070 corrects this:
+- use the existing Logres developer panel;
+- click `Waypoint Probe`;
+- read/copy the result output from the panel;
+- `/lwpa` remains fallback only.
+
+This is the canonical E.3 validation workflow.
