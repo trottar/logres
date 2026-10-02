@@ -1,133 +1,56 @@
 # E.3 — Waypoint-Bearing Capability / Proof
 
-Status: ACTIVE — P0070 PANEL INTEGRATION PREPARED
+Status: ACTIVE — ORIENTATION PROOF REMAINS
 Opened: 2026-10-01
 
 Canonical decision:
 `../decisions/D-029_COMPASS_NAVIGATION_CAPABILITY_CONTRACT.md`
 
-Source/probe evidence:
-`../evidence/E3_P0069_WAYPOINT_SOURCE_PROBE_DESIGN_2026-10-01.md`
+Latest runtime evidence:
+`../evidence/E3_P0071_RUNTIME_EVIDENCE_2026-10-01.md`
 
-## Question
+## Proven
 
-Which waypoint/destination sources, coordinate conversions, update events, and
-bearing math are actually reliable on the tested WoW Forever client?
+- open-world player map/world position;
+- user waypoint present/absent semantics;
+- user waypoint world conversion;
+- same-continent compatibility for captured samples;
+- clean clear/no-stale-bearing behavior;
+- `USER_WAYPOINT_UPDATED` firing;
+- `SUPER_TRACKING_CHANGED` firing.
 
-## Known starting point
+## Negative / incomplete evidence
 
-Already proven:
-- open-world player map position can be available;
-- open-world player facing can be available;
-- tested party-instance position/facing can be unavailable;
-- P0067 heading-only compass runtime behavior passed the requested validation.
+- `SUPER_TRACKING_PATH_UPDATED` registered but did not fire;
+- tested super-tracked quest IDs 436 and 237 returned no usable next waypoint;
+- this does not generalize to all quests.
 
-Source-present but behavior-unproven:
-- `C_Map.GetUserWaypoint`;
-- `C_QuestLog.GetNextWaypoint`;
-- `C_SuperTrack.GetSuperTrackedQuestID`;
-- `SUPER_TRACKING_CHANGED`;
-- `SUPER_TRACKING_PATH_UPDATED`.
+## Bearing samples
 
-`USER_WAYPOINT_UPDATED` remains an explicit probe candidate rather than an
-assumed Forever dependency.
+Sample 1:
+- delta `+295.03, -38.13`;
+- +Y-north `97.4`;
+- -Y-north `82.6`.
 
-## P0069 probe
+Sample 2:
+- delta `+184.18, -785.29`;
+- +Y-north `166.8`;
+- -Y-north `13.2`.
 
-Temporary addon:
-`tools/probes/LogresWaypointAudit`
+## Remaining proof
 
-It records:
-- player map position and map->world conversion;
-- user waypoint point/map/world data;
-- super-tracked quest ID/state;
-- quest next-waypoint map/x/y and map->world conversion;
-- candidate event registration + firing counts;
-- raw same-continent world delta;
-- two candidate north-axis bearing conventions.
+Persisted diagnostics do not encode which cardinal direction the user intended
+for each manually placed waypoint.
 
-It does not mutate navigation state.
+Therefore the axis convention remains open.
 
-## Runtime matrix
-
-### A — no user waypoint
-
-Open world:
-- `/lwpa clear`
-- `/lwpa snapshot`
-
-Expected evidence:
-- player world position if capability is available;
-- user waypoint absent without error;
-- event registration matrix.
-
-### B — active user waypoint
-
-Set a user waypoint at a visibly known direction on the map:
-- `/lwpa snapshot`
-
-Record:
-- point present/secret;
-- map ID + XY;
-- world continent + XY;
-- candidate bearings;
-- event counts after set/change/clear.
-
-### C — super-tracked quest
-
-Super-track a quest with a visible destination:
-- `/lwpa snapshot`
-
-Record:
-- quest ID;
-- supertracking state;
-- `GetNextWaypoint` map/x/y;
-- world conversion;
-- candidate bearings;
-- SuperTrack event counts.
-
-### D — orientation
-
-Compare the visible waypoint direction with the two recorded world-axis
-candidates.
-
-Do not promote a candidate until in-game orientation is unambiguous.
-
-## Failure behavior
-
-- absent destination -> no bearing;
-- secret input -> branch stops;
-- map/world conversion failure -> no bearing;
-- different continent/domain -> no bearing;
-- unsupported event -> record registration/firing negative result;
-- Blizzard navigation remains available.
-
-## Non-scope
-
-Do not implement:
-- quest text/objective presentation;
-- waypoint UI marker in production;
-- route/path guidance;
-- minimap suppression;
-- generic polling/reassertion without evidence.
+Do not repeat already-proven retrieval/event tests.
 
 ## Exit
 
-E.3 closes only when at least one useful destination source has an
-evidence-backed Forever retrieval/update/conversion path and bearing orientation
-is runtime proven.
+E.3 closes after the bearing-axis convention is tied to an unambiguous in-game
+cardinal reference.
 
-If a source is unsupported or unreliable, record that negative result and keep
-Blizzard navigation as fallback.
-
-## Validation surface correction
-
-P0069's initial handoff incorrectly made `/lwpa` the primary workflow.
-
-P0070 corrects this:
-- use the existing Logres developer panel;
-- click `Waypoint Probe`;
-- read/copy the result output from the panel;
-- `/lwpa` remains fallback only.
-
-This is the canonical E.3 validation workflow.
+Then production may implement only the proven user-waypoint bearing path, while
+quest waypoint support remains capability-gated/fail-open until separately
+proven.

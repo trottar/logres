@@ -1,44 +1,26 @@
 # P0071 — Developer-Panel Diagnostic Autodump
 
 Date: 2026-10-01
-Result: PREPARED
+Result: INSTALLED / PUSHED — VERSION METADATA DEFECT (`7976d34e`)
 
 ## Baseline
 
 P0070 verified pushed:
-
-`f99afa9b74029a59ec78021715acdf1f32ded078`
-
-## Runtime
-
-`0.0.28-dev -> 0.0.29-dev`
+`f99afa9b`
 
 ## Purpose
 
-Make the established developer panel the complete diagnostic workflow.
+Persist developer-panel diagnostic output through WoW SavedVariables.
 
-## Changes
+## Runtime result
 
-- adds `LogresDiagnosticsDB` SavedVariables persistence;
-- records every developer-panel command run;
-- records every emitted human-readable result line;
-- bounded to 100 runs / 120 lines per run;
-- adds stable WSL export helper:
-  `tools/export_panel_diagnostics.py`;
-- updates developer-panel static contract;
-- records the workflow correction durably.
+The persistence workflow works and produced reviewable E.3 evidence.
 
-## Runtime workflow
+## Defect
 
-1. use developer panel;
-2. `/reload` to flush SavedVariables;
-3. `python3 tools/export_panel_diagnostics.py`;
-4. provide `LOGRES_DIAGNOSTICS_LATEST.lua`.
+P0071 changed `Logres.toc` to `0.0.29-dev` but did not update
+`Logres.VERSION` in `Core/Bootstrap.lua`, which remained `0.0.28-dev`.
 
-No in-game text copying.
+This is a real delivery defect, not a runtime navigation defect.
 
-## Scope
-
-No waypoint UI implementation.
-No minimap change.
-No navigation-state mutation.
+P0072 corrects it and adds a version-equality static contract.

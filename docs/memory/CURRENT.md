@@ -14,79 +14,66 @@ project: logres
 
 **E.3 — Waypoint-bearing capability/proof.**
 
-E.1 and E.2 are complete.
+P0071 is verified pushed at `7976d34e`.
 
-P0070 is verified pushed at `f99afa9b`.
-
-P0071 prepares developer-panel diagnostic auto-capture.
-
-Production runtime target:
-`0.0.29-dev`.
+P0071 runtime diagnostics are captured and reviewed.
 
 ## Verified State
 
-- Phase 0 complete.
-- Phase A complete.
-- Phase B complete.
-- Phase C complete.
-- Phase D complete.
-- D.1–D.6 complete.
-- P0065 pushed at `46271f97`; Phase D closed and Phase E opened.
-- P0066 pushed at `586d188d`; D-029 accepted.
-- P0067 pushed at `931f068e`; E.2 runtime passed.
-- P0068 pushed at `740ebe15`; E.2 closed / E.3 opened.
-- P0069 pushed at `9e637d5a`; waypoint capability probe added.
-- P0070 pushed at `f99afa9b`; Waypoint Probe integrated into developer panel.
-- User runtime evidence proves developer-panel waypoint snapshots are being
-  captured.
-- Observed registered/firing navigation events include:
-  - `USER_WAYPOINT_UPDATED`;
-  - `SUPER_TRACKING_CHANGED`.
-- Existing P0069 structured SavedVariables capture remains authoritative.
-- P0071 adds generic developer-panel run persistence so every panel action also
-  auto-saves human-readable result lines to `LogresDiagnosticsDB`.
-- WoW writes SavedVariables on `/reload`/logout; arbitrary addon filesystem
-  writes are not available.
-- `tools/export_panel_diagnostics.py` copies the newest Forever `Logres.lua` to
-  stable repo-local `LOGRES_DIAGNOSTICS_LATEST.lua`.
+- E.1 complete.
+- E.2 complete.
+- P0069 waypoint probe installed/pushed.
+- P0070 developer-panel integration installed/pushed.
+- P0071 developer-panel diagnostic persistence installed/pushed.
+- Forever runtime: client `1.60.1`, build `70170`, interface `16001`.
+- Open-world player map position and map->world conversion are usable/non-secret.
+- User-waypoint retrieval is runtime-proven.
+- User-waypoint world conversion is runtime-proven on same continent/domain.
+- Clearing the waypoint returns cleanly to no destination/no bearing.
+- `USER_WAYPOINT_UPDATED` is runtime-proven to register and fire on Forever.
+- `SUPER_TRACKING_CHANGED` is runtime-proven to register and fire.
+- `SUPER_TRACKING_PATH_UPDATED` registered but did not fire in this run.
+- Tested super-tracked quest IDs `436` and `237` returned no usable next waypoint.
+- Two user-waypoint bearing candidates were captured.
+- Bearing-axis convention remains OPEN because the intended cardinal direction
+  of those manual waypoint placements was not persisted.
+- P0071 introduced a real version metadata mismatch:
+  TOC `0.0.29-dev`, Bootstrap `0.0.28-dev`.
+- P0072 corrects the mismatch and adds a static equality check.
 - Production waypoint presentation remains unimplemented.
 - Minimap remains stock.
 
 ## Next Action
 
-Apply/push P0071, deploy, then run the E.3 matrix exclusively through the
-developer-panel `Waypoint Probe` action.
+Apply/push P0072.
 
-After the final probe click:
-1. `/reload`;
-2. run `python3 tools/export_panel_diagnostics.py`;
-3. provide `LOGRES_DIAGNOSTICS_LATEST.lua`.
+Then resolve only the remaining E.3 bearing-orientation proof.
 
-No manual copying from WoW text.
+Do not repeat retrieval/event/quest tests already captured.
+
+Do not add production waypoint presentation until orientation is resolved.
 
 ## Success Criteria
 
-E.3 succeeds when:
-- at least one destination source has runtime-proven retrieval;
-- player/destination coordinates share a proven compatible domain;
-- bearing orientation is runtime-proven;
-- update behavior is backed by observed Forever events;
-- unsupported cases omit presentation;
-- Blizzard navigation remains fail-open fallback.
+E.3 closes when:
+- user-waypoint retrieval/conversion/update behavior remains accepted;
+- the world-axis bearing convention is runtime-proven;
+- unavailable quest waypoint cases remain fail-open;
+- no fabricated/stale direction is used.
 
 ## Do Not Reopen Without New Evidence
 
-- **Phase D / D.1–D.6:** complete.
 - **E.1:** complete.
 - **E.2:** complete.
-- **Developer panel:** canonical runtime validation surface.
-- **Production waypoint marker:** not authorized before E.3 proof.
+- **User waypoint retrieval/conversion:** proven.
+- **USER_WAYPOINT_UPDATED:** proven.
+- **SUPER_TRACKING_CHANGED:** proven.
+- **Quest IDs 436/237 next waypoint:** unavailable in tested state.
 - **Minimap suppression:** deferred/capability-gated.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
-- `docs/memory/decisions/D-029_COMPASS_NAVIGATION_CAPABILITY_CONTRACT.md`
+- `docs/memory/evidence/E3_P0071_RUNTIME_EVIDENCE_2026-10-01.md`
 - `docs/memory/investigations/E3_WAYPOINT_BEARING_CAPABILITY_PROOF.md`
-- `docs/memory/evidence/E3_P0069_WAYPOINT_SOURCE_PROBE_DESIGN_2026-10-01.md`
-- `docs/memory/evidence/P0071_PANEL_DIAGNOSTIC_AUTODUMP_2026-10-01.md`
+- `docs/memory/decisions/D-029_COMPASS_NAVIGATION_CAPABILITY_CONTRACT.md`

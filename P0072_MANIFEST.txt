@@ -1,0 +1,21 @@
+Project Logres P0072 patch
+Date: 2026-10-01
+Baseline: 7976d34ede66336cf6e564117800b1ec7277c793
+Runtime: 0.0.29-dev
+
+Files:
+f0de904316e7f784925b42e93208cfad2766a9d892406c9e085ce174d0a8a6a4  Logres/Core/Bootstrap.lua
+ba1138859960ffc1a95cde48b4202ea5c4061d3f718eb40992f8fee02ca09846  tools/check_addon_structure.py
+870ea9042eb32187a145a36a4353ba49d55cd8f52d06a41ddf0b7483463e21e0  docs/memory/CURRENT.md
+ca1e19ed607f1151d169804a27521e5c80b4ac2697eb6187a023d6750bd04d52  docs/memory/investigations/E3_WAYPOINT_BEARING_CAPABILITY_PROOF.md
+d170f6b5e0a9ed031f2ffbedb635a836fbbb900d17b97de66de024e5bfbc124a  docs/memory/evidence/E3_P0071_RUNTIME_EVIDENCE_2026-10-01.md
+097825b1139b0fd0967d3af64eaf30cfdbcdccd52064986e880ad6aee819c9d6  docs/memory/patches/P0071_PANEL_DIAGNOSTIC_AUTODUMP.md
+6c1d346675ba5d1569d7d2272b2d062657e79b098126bfab1d5a65c761945dc8  docs/memory/patches/P0072_VERSION_SYNC_AND_E3_EVIDENCE.md
+7c897b85876d666dd73c072f5395b821c79d55dc28c32efa974c39cb2c45c15c  docs/memory/patches/PATCH_INDEX.md
+
+Checks:
+python3 tools/check_addon_structure.py
+python3 tools/check_memory_health.py
+git diff --check -- <P0072-owned files>
+
+Runtime metadata change: WoW redeploy required after push verification.

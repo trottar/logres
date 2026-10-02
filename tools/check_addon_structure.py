@@ -2,11 +2,12 @@
 """Static structure checks for the Project Logres addon."""
 
 from pathlib import Path
-import sys
+import re
 
 ROOT = Path(__file__).resolve().parents[1]
 ADDON = ROOT / "Logres"
 TOC = ADDON / "Logres.toc"
+BOOTSTRAP = ADDON / "Core" / "Bootstrap.lua"
 
 errors = []
 
@@ -36,6 +37,23 @@ else:
         path = ADDON / relative
         if not path.is_file():
             errors.append(f"TOC entry does not exist: {entry}")
+
+    toc_match = re.search(r"^## Version:\s*(\S+)\s*$", text, re.MULTILINE)
+    if not toc_match:
+        errors.append("Logres.toc missing Version metadata")
+    elif BOOTSTRAP.is_file():
+        bootstrap = BOOTSTRAP.read_text(encoding="utf-8")
+        lua_match = re.search(
+            r'Logres\.VERSION\s*=\s*"([^"]+)"',
+            bootstrap,
+        )
+        if not lua_match:
+            errors.append("Bootstrap.lua missing Logres.VERSION")
+        elif toc_match.group(1) != lua_match.group(1):
+            errors.append(
+                "TOC/Bootstrap version mismatch: "
+                f"{toc_match.group(1)} != {lua_match.group(1)}"
+            )
 
 for lua_path in sorted(ADDON.rglob("*.lua")):
     source = lua_path.read_text(encoding="utf-8")

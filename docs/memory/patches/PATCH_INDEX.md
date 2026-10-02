@@ -72,6 +72,7 @@
 | P0068 | 2026-10-01 | INSTALLED / PUSHED | Record P0067 runtime PASS; close E.2; open E.3 waypoint-bearing proof (`740ebe15`) |
 | P0069 | 2026-10-01 | INSTALLED / PUSHED — RUNTIME PROOF PENDING | Add E.3 temporary waypoint capability probe (`9e637d5a`) |
 | P0070 | 2026-10-01 | PREPARED — RUNTIME PROOF PENDING | Integrate E.3 waypoint probe with developer panel |
-| P0071 | 2026-10-01 | PREPARED | Auto-persist developer-panel diagnostics to SavedVariables |
+| P0071 | 2026-10-01 | INSTALLED / PUSHED — VERSION METADATA DEFECT | Auto-persist developer-panel diagnostics (`7976d34e`) |
+| P0072 | 2026-10-01 | PREPARED | Correct P0071 version mismatch and record E.3 runtime evidence |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.
