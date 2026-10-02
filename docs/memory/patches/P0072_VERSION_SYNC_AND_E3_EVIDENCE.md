@@ -1,34 +1,23 @@
 # P0072 — Version Sync / Record E.3 Evidence
 
 Date: 2026-10-01
-Result: PREPARED
+Result: INSTALLED / PUSHED (`1fc48777`)
 
 ## Baseline
 
 P0071 verified pushed:
-`7976d34ede66336cf6e564117800b1ec7277c793`
+`7976d34e`
 
 ## Purpose
 
-Correct the P0071 TOC/Bootstrap version mismatch and preserve the captured E.3
+Correct the P0071 TOC/Bootstrap version mismatch and preserve captured E.3
 runtime evidence.
 
-## Changes
+## Result
 
-- `Logres.VERSION`: `0.0.28-dev -> 0.0.29-dev`;
-- strengthen `check_addon_structure.py` to require TOC/Bootstrap equality;
-- record user-waypoint retrieval/conversion/event proof;
-- record quest IDs 436/237 next-waypoint negative evidence;
-- narrow E.3 remaining work to bearing-axis orientation proof.
+Version metadata is synchronized at `0.0.29-dev`.
 
-## Runtime
+User waypoint retrieval/conversion/event evidence is preserved.
 
-No navigation behavior changes.
-
-A redeploy is required because `Bootstrap.lua` changes.
-
-## Next
-
-Resolve only bearing-axis orientation.
-
-Do not repeat the already-proven waypoint/event matrix.
+The subsequent deliberate north-reference sample rejected the probe's raw-world
+axis assumption; P0073 provides the corrected map-space proof path.

@@ -3,14 +3,14 @@
 ## E.3 — Waypoint-bearing capability/proof
 
 Status:
-**ACTIVE — P0070 PANEL INTEGRATION PREPARED**
+**ACTIVE — P0073 MAP-SPACE ORIENTATION PROBE PREPARED**
 
 Canonical:
 `E3_WAYPOINT_BEARING_CAPABILITY_PROOF.md`
 
 Next:
-deploy P0070 and collect user-waypoint, quest-waypoint, conversion, event, and
-bearing-orientation evidence through the developer-panel `Waypoint Probe` action.
+run one deliberate north-reference `Waypoint Probe` using P0073 and verify the
+map-space bearing resolves near `0`/`360`.
 
 ## Tracked non-blocking defects / deferred domains
 

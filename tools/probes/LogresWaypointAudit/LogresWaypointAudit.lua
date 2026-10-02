@@ -97,21 +97,35 @@ local function vectorRecord(value)
         return result
     end
 
-    if type(value.GetXY) ~= "function" then
-        result.error = "GetXY unavailable"
+    if type(value.GetXY) == "function" then
+        local values = pack(pcall(value.GetXY, value))
+        result.xy_ok = values[1] and true or false
+
+        if not result.xy_ok then
+            result.error = "GetXY failed"
+            return result
+        end
+
+        result.x = scalarRecord(values[2])
+        result.y = scalarRecord(values[3])
         return result
     end
 
-    local values = pack(pcall(value.GetXY, value))
-    result.xy_ok = values[1] and true or false
+    result.x = scalarRecord(value.x)
+    result.y = scalarRecord(value.y)
+
+    result.xy_ok =
+        result.x.present == true
+        and result.x.secret == false
+        and result.x.type == "number"
+        and result.y.present == true
+        and result.y.secret == false
+        and result.y.type == "number"
 
     if not result.xy_ok then
-        result.error = "GetXY failed"
-        return result
+        result.error = "XY unavailable"
     end
 
-    result.x = scalarRecord(values[2])
-    result.y = scalarRecord(values[3])
     return result
 end
 
@@ -121,6 +135,38 @@ local function usableNumber(record)
         and record.secret == false
         and record.type == "number"
         and type(record.value) == "number"
+end
+
+local function mapBearing(playerPosition, destinationPosition)
+    local result = {
+        available = type(math.atan2) == "function",
+        ok = false,
+    }
+
+    if not result.available
+        or not playerPosition
+        or not destinationPosition
+        or not usableNumber(playerPosition.x)
+        or not usableNumber(playerPosition.y)
+        or not usableNumber(destinationPosition.x)
+        or not usableNumber(destinationPosition.y)
+    then
+        return result
+    end
+
+    local dx = destinationPosition.x.value - playerPosition.x.value
+    local dy = destinationPosition.y.value - playerPosition.y.value
+
+    result.ok = true
+    result.dx = dx
+    result.dy = dy
+
+    -- UI map coordinates are left-to-right for X and top-to-bottom for Y.
+    -- Clockwise compass degrees from map north therefore use atan2(dx, -dy).
+    result.degrees =
+        (math.deg(math.atan2(dx, -dy)) + 360) % 360
+
+    return result
 end
 
 local function worldPositionRecord(mapID, mapPosition)
@@ -292,6 +338,40 @@ local function userWaypointState(player)
     result.mapID = scalarRecord(point.uiMapID)
     result.z = scalarRecord(point.z)
     result.mapPosition = vectorRecord(point.position)
+
+    result.positionForPlayerMap = {
+        available = C_Map
+            and type(C_Map.GetUserWaypointPositionForMap) == "function"
+            or false,
+        call_ok = false,
+        position = vectorRecord(nil),
+    }
+
+    if result.positionForPlayerMap.available
+        and usableNumber(player.mapID)
+    then
+        local mapPositionCall = pack(
+            pcall(
+                C_Map.GetUserWaypointPositionForMap,
+                player.mapID.value
+            )
+        )
+
+        result.positionForPlayerMap.call_ok =
+            mapPositionCall[1] and true or false
+
+        if result.positionForPlayerMap.call_ok then
+            result.positionForPlayerMap.position =
+                vectorRecord(mapPositionCall[2])
+            result.mapBearing = mapBearing(
+                player.mapPosition,
+                result.positionForPlayerMap.position
+            )
+        else
+            result.positionForPlayerMap.error =
+                "GetUserWaypointPositionForMap failed"
+        end
+    end
 
     if usableNumber(result.mapID)
         and point.position ~= nil
@@ -527,6 +607,19 @@ local function worldText(world)
     )
 end
 
+local function mapBearingText(bearing)
+    if not bearing or not bearing.ok then
+        return "nil"
+    end
+
+    return string.format(
+        "dxy=%.5f,%.5f bearing=%.1f",
+        bearing.dx,
+        bearing.dy,
+        bearing.degrees
+    )
+end
+
 local function bearingText(bearings)
     if not bearings or not bearings.ok then
         return "nil"
@@ -587,11 +680,16 @@ local function printReport(output)
     reportLine(
         output,
         string.format(
-            "LWPA user present=%s secret=%s map=%s pos=%s world=%s bearing=%s",
+            "LWPA user present=%s secret=%s map=%s pointPos=%s playerMapPos=%s mapBearing=%s world=%s worldCandidates=%s",
             boolText(user.present),
             boolText(user.secret),
             valueText(user.mapID),
             vectorText(user.mapPosition),
+            vectorText(
+                user.positionForPlayerMap
+                and user.positionForPlayerMap.position
+            ),
+            mapBearingText(user.mapBearing),
             worldText(user.world),
             bearingText(user.bearings)
         )

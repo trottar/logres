@@ -1,0 +1,26 @@
+Project Logres P0073 patch
+Date: 2026-10-01
+Baseline: 1fc4877767ad035a50c83b3aa0e72f536358f47a
+Production runtime: 0.0.29-dev (unchanged)
+Probe correction: map-space waypoint bearing
+
+Files:
+38b6af64c5c30e4cb6179a78fd746acbaa42ca1a883c92030ba29fd592fea0cb  tools/probes/LogresWaypointAudit/LogresWaypointAudit.lua
+cf1f3157bd4906ee2f42e236af88ada464902c65aa3f90fff7d6a19056e24d1b  tools/check_waypoint_probe_contract.py
+a08acd4218eca69d20efbe1f9474f1e99cc6f87a09a3ce512fc0f3326c6d38f8  docs/memory/CURRENT.md
+542ef5d2242d8b26feeb6e2ad533d5000f7be5f7dc2096c1d8d0dbd428bd9d58  docs/memory/handoffs/CURRENT_HANDOFF.md
+c2113691b2d41b4a6c7e4bd71e2effbb46dcb8ed20af564191e56f706d4a3afb  docs/memory/investigations/ACTIVE.md
+8d014177b998da40a7b9616ec8a5b8ee3997d9ea8dbeff99a5149634dd008446  docs/memory/investigations/E3_WAYPOINT_BEARING_CAPABILITY_PROOF.md
+915a0fec879bb3664c40ae526f1c3584da4decefd1fffd581546b3ab8b1ac29f  docs/memory/evidence/E3_P0073_MAP_SPACE_BEARING_CORRECTION_2026-10-01.md
+92657e0c127f4d75e8fb330a0c7edc1d4a02d103dab1ab2257a293894c4e034f  docs/memory/roadmap/PHASE_E_COMPASS_NAVIGATION.md
+f4569764a6c3d0ea5174442b74fd794831940124d77b6e027ccdcef4fb4371fe  docs/memory/patches/P0072_VERSION_SYNC_AND_E3_EVIDENCE.md
+607a85f485fbaa57ba4329e4edca84d297fa31d68858adb0f401e830fc2d612c  docs/memory/patches/P0073_MAP_SPACE_WAYPOINT_BEARING_PROBE.md
+8f4174e3ab44727d563cf9f25aaa3ff40131e28d1f95aaaaf7152a8091a1d4b6  docs/memory/patches/PATCH_INDEX.md
+
+Checks:
+python3 tools/check_waypoint_probe_contract.py
+python3 tools/check_addon_structure.py
+python3 tools/check_memory_health.py
+git diff --check -- <P0073-owned files>
+
+Runtime probe change: WoW deployment required after push verification.

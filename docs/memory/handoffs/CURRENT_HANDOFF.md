@@ -2,23 +2,23 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0070 is verified pushed at `f99afa9b`.
+P0072 is verified pushed at `1fc48777`.
 
 Phase E / E.3 is active.
 
-P0071 is prepared to make the developer panel auto-persist every diagnostic run
-to `LogresDiagnosticsDB`.
+The north-reference runtime sample rejected the prior raw-world-axis bearing
+assumption.
 
-Runtime target:
-`0.0.29-dev`
+P0073 is prepared to use current UI map coordinates and
+`C_Map.GetUserWaypointPositionForMap(mapID)` for bearing orientation.
 
-Canonical runtime workflow after P0071:
-- use developer-panel actions;
-- panel output auto-persists to SavedVariables;
-- `/reload` flushes;
-- `python3 tools/export_panel_diagnostics.py`;
-- review `LOGRES_DIAGNOSTICS_LATEST.lua`.
+Next runtime action after push:
+- deploy;
+- keep/set one waypoint directly north of player on map;
+- developer panel -> `Waypoint Probe`;
+- `/reload`;
+- export `LOGRES_DIAGNOSTICS_LATEST.lua`.
 
-No manual copying from WoW text.
+No repeat of the earlier waypoint/event/quest matrix.
 
 User performs all commits/pushes.
