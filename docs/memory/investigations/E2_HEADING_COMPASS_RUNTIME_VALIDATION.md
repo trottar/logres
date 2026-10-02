@@ -1,7 +1,8 @@
 # E.2 — Heading Compass Runtime Validation
 
-Status: ACTIVE — IMPLEMENTATION PREPARED
+Status: COMPLETE
 Opened: 2026-10-01
+Closed: 2026-10-01
 
 Canonical decision:
 `../decisions/D-029_COMPASS_NAVIGATION_CAPABILITY_CONTRACT.md`
@@ -9,54 +10,58 @@ Canonical decision:
 Implementation evidence:
 `../evidence/E2_P0067_HEADING_COMPASS_IMPLEMENTATION_2026-10-01.md`
 
+Runtime evidence:
+`../evidence/E2_P0067_RUNTIME_PASS_2026-10-01.md`
+
 ## Runtime target
 
 P0067:
 `0.0.28-dev`
 
-## Required proof
+Commit:
+`931f068e`
 
-### Open world
+## Result
 
-With Immersion ON:
-- compass is visible;
-- Compass Check PASS;
-- heading moves with player rotation;
-- N/E/S/W orientation is correct.
+The user reported that all requested final runtime validation checks passed.
 
-### Preference
+Directly covered by the requested validation:
+- open-world Compass Check PASS;
+- compass visible in open world with Immersion ON;
+- tape follows player rotation;
+- N/E/S/W orientation correct;
+- Immersion OFF hides/suspends the compass;
+- Compass Check PASS while suspended;
+- Immersion ON restores the compass;
+- Compass Check PASS after restoration;
+- Run All PASS;
+- no Lua/taint/secret regression reported;
+- minimap unchanged.
 
-- Immersion OFF hides the compass immediately;
-- Compass Check PASS in suspended state;
-- Immersion ON restores it;
-- Compass Check PASS.
+The deployment validation began with `/reload`.
 
-### Reload
+## Instance / restricted context
 
-- persisted Immersion preference still drives compass presentation after
-  `/reload`.
+A natural instance transition was not separately exercised in the final
+requested P0067 validation sequence.
 
-### Instance / restricted context
+This is an explicit environmental deferral, not a PASS.
 
-When a natural instance transition is available:
-- State context becomes `instance`;
-- compass hides;
-- heading sampler is inactive;
-- Compass Check PASS in suspended state;
-- returning to world restores presentation.
+Existing I-001 runtime evidence remains authoritative for the underlying
+capability boundary:
+- facing/position unavailable in the tested party instance;
+- map restriction active;
+- facing/position restored after returning to the world.
 
-Do not require contrived travel solely to manufacture this proof. If no natural
-instance is available, record the environmental deferral rather than PASS.
-
-### Regression
-
-- Run All passes for checks actually performed;
-- no Lua/taint/secret regression;
-- minimap remains stock.
+No fabricated instance proof is recorded.
 
 ## Exit
 
-E.2 closes when the world heading presentation and orientation are runtime
-proven, Immersion restoration is proven, and restricted-context suspension has
-either direct runtime proof or an explicitly preserved environmental deferral
-consistent with existing I-001 capability evidence.
+E.2 is COMPLETE.
+
+The accepted exit rule allowed restricted-context module proof to remain an
+explicit environmental deferral when the existing I-001 capability evidence is
+preserved.
+
+Next:
+E.3 waypoint-bearing capability/proof.

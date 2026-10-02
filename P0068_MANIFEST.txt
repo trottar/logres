@@ -1,0 +1,25 @@
+Project Logres P0068 patch
+Date: 2026-10-01
+Baseline: 931f068e6540625021de23108b70de72278e5399
+Scope: docs/memory only
+
+Files:
+7f057b95f8d8857224355d57321b3e664ef2b1a9de0c71f11b74471d0309f5d5  docs/memory/CURRENT.md
+a954f9c6965551640efe6bbd668cea15d1f0612fd1a1051391564e6923a0a49c  docs/memory/handoffs/CURRENT_HANDOFF.md
+104877c84d505846a449f523ec221544a5370a5783cc1e883ad0697ea3af7195  docs/memory/investigations/ACTIVE.md
+320d5711134996430751b0f5592ef44da8780b4a1ce74f7ee020a0e0d94073ae  docs/memory/roadmap/STATUS.md
+27bfa0d2a0407e0c006513c6e85ba0d119084a630967038ab2220a80c0b07856  docs/memory/roadmap/PHASE_E_COMPASS_NAVIGATION.md
+4f5cabf16638726820a7c5360da6fc06e5282b13fbefa9a0623712883b67cae7  docs/ROADMAP.md
+21e6b6e2c9bd884890da822aa75914e5de22a6ba96d8c141df46aaea11456c49  docs/memory/investigations/E2_HEADING_COMPASS_RUNTIME_VALIDATION.md
+38248b97476001e1ea553137dbcbc85c9620744e6d6c95ef8e576ac8da6ad929  docs/memory/investigations/E3_WAYPOINT_BEARING_CAPABILITY_PROOF.md
+070853265679b59a72b17ffe804ebceb964d39e2c93b3f7f6ce9f5efc914b3c8  docs/memory/evidence/E2_P0067_RUNTIME_PASS_2026-10-01.md
+0d25f24c511e43ef239030bf494b5d50e3f1eda761138f6f619d69df643f27a4  docs/memory/patches/P0067_E2_HEADING_COMPASS.md
+ae7a62f772fc5e9334ab6abbf03350010aa386f76ed01ac51541433a3176d9ac  docs/memory/patches/PATCH_INDEX.md
+8fbed6a1bb4394cb31c373290445003debdb96d607d054bdca33a1e0bed78881  docs/memory/patches/P0068_RECORD_E2_PASS_OPEN_E3.md
+
+Checks:
+python3 tools/check_memory_health.py
+git diff --check -- <P0068-owned files>
+
+Docs-only checkpoint; no WoW redeploy required.
+Unrelated local modifications/untracked files are preserved.

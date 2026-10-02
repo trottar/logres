@@ -1,15 +1,16 @@
 # Active Investigations
 
-## E.2 — Heading compass runtime validation
+## E.3 — Waypoint-bearing capability/proof
 
 Status:
-**ACTIVE — IMPLEMENTATION PREPARED**
+**ACTIVE**
 
 Canonical:
-`E2_HEADING_COMPASS_RUNTIME_VALIDATION.md`
+`E3_WAYPOINT_BEARING_CAPABILITY_PROOF.md`
 
 Next:
-deploy P0067 and validate `0.0.28-dev`.
+prove Forever destination retrieval, conversion, update events, and bearing
+orientation before waypoint-marker implementation.
 
 ## Tracked non-blocking defects / deferred domains
 

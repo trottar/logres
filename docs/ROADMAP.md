@@ -93,7 +93,7 @@ Canonical phase record:
 
 ## Phase E — Compass and Navigation
 
-**Status: ACTIVE — E.2 heading-only world compass.**
+**Status: ACTIVE — E.3 waypoint-bearing capability/proof.**
 
 Implement a Warcraft-aesthetic horizontal compass:
 - world/exploration use;
@@ -105,8 +105,13 @@ Implement a Warcraft-aesthetic horizontal compass:
 Canonical phase record:
 `memory/roadmap/PHASE_E_COMPASS_NAVIGATION.md`
 
+Completed:
+- E.1 compass/navigation source review and capability contract;
+- E.2 heading-only world compass runtime proof.
+
 Current work:
-E.2 implements and runtime-validates the D-029 heading-only world compass.
+E.3 proves waypoint destination retrieval, coordinate conversion, update events,
+and bearing orientation before any waypoint marker is added.
 
 ## Phase F — Quest Experience
 

@@ -63,37 +63,46 @@ Resolved:
 
 ## E.2 — Heading-only world compass
 
-**Status: ACTIVE.**
+**Status: COMPLETE.**
 
-Runtime target:
+Runtime:
 `0.0.28-dev`.
 
-Implement:
+P0067:
+`931f068e`.
+
+Implemented:
 - `Compass` module;
 - top-center horizontal directional strip;
 - cardinal/intercardinal heading presentation;
-- consume persisted Immersion preference and existing observed State;
-- eligible only when:
-  - module enabled;
-  - Immersion ON;
-  - State context is `world`;
-  - `GetPlayerFacing()` returns a usable non-secret number;
-- throttled `OnUpdate` while presentation is eligible;
-- immediate suspend/hide on preference/context ineligibility;
-- fail closed for presentation when facing is absent;
-- addon-owned diagnostic state and `Compass Check`.
+- persisted Immersion + existing State eligibility;
+- world-only secret-safe `GetPlayerFacing()` sampling;
+- throttled module-local `OnUpdate`;
+- fail-closed heading presentation when facing is unavailable;
+- addon-owned diagnostic state and `Compass Check`;
+- no position, waypoint, distance, route, or minimap dependency.
 
-Do not implement in E.2:
-- player coordinates;
-- quest waypoint marker;
-- user waypoint marker;
-- distance;
-- route/path guidance;
-- minimap suppression.
+User-reported requested runtime validation passed:
+- open-world Compass Check;
+- visible heading movement while rotating;
+- N/E/S/W orientation;
+- Immersion OFF suspension;
+- Immersion ON restoration;
+- Run All;
+- no Lua/taint/secret regression reported;
+- minimap unchanged.
+
+Direct natural-instance transition behavior for the P0067 module was not
+separately exercised in the final requested validation sequence.
+
+E.2 closes under its accepted exit rule using:
+- direct world/orientation/preference proof;
+- existing I-001 restricted-instance capability evidence;
+- explicit environmental deferral for direct P0067 instance-transition proof.
 
 ## E.3 — Waypoint-bearing capability/proof
 
-**Status: QUEUED.**
+**Status: ACTIVE.**
 
 Before waypoint markers:
 - runtime-prove user waypoint retrieval on Forever;
@@ -104,6 +113,10 @@ Before waypoint markers:
 - verify axis/bearing orientation in game;
 - require matching world/continent domain before calculating a bearing;
 - fail open/omit marker when conversion is unavailable.
+
+Do not treat source presence as runtime proof.
+
+Do not add quest text/objective presentation here.
 
 Phase F owns quest text/objective presentation.
 Phase E may later own only the restrained navigational bearing marker for the
@@ -123,7 +136,8 @@ minimap suppression is considered.
 
 Phase E completes only when:
 - compass presentation is capability-safe and useful;
-- world/instance suspension/restoration is proven;
+- world/instance suspension/restoration is proven or explicitly resolved under
+  an accepted environmental deferral;
 - supported waypoint behavior is proven rather than assumed;
 - required navigation fallback remains available;
 - any minimap suppression is separately capability-gated and reversible.

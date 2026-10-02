@@ -2,7 +2,7 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0066 is verified pushed at `586d188d`.
+P0067 is verified pushed at `931f068e`.
 
 Phase D is complete.
 
@@ -10,30 +10,34 @@ Phase E is active.
 
 D-029 is canonical.
 
-Current work:
-**E.2 — Heading-only world compass runtime validation**
+E.1 is complete.
 
-P0067 runtime target:
+E.2 is complete.
+
+P0067 runtime:
 `0.0.28-dev`
 
-P0067 adds:
-- `Compass` module;
-- top-center heading tape;
-- cardinal/intercardinal labels;
-- Immersion + existing State context gating;
-- world-only secret-safe `GetPlayerFacing()` sampling;
-- no stale/fabricated heading fallback;
-- `Compass Check`;
-- static D-029/E.2 contract.
+User-reported requested runtime validation PASS:
+- open-world Compass Check;
+- heading movement;
+- N/E/S/W orientation;
+- Immersion OFF suspension;
+- Immersion ON restoration;
+- Run All;
+- no Lua/taint/secret regression reported;
+- minimap unchanged.
 
-Explicitly absent:
-- player position;
-- waypoint markers;
-- quest presentation;
-- distance/path guidance;
-- minimap suppression.
+Direct natural-instance transition behavior for the P0067 module was not
+separately exercised in the final requested validation sequence. Preserve the
+existing I-001 restricted-context evidence and the explicit environmental
+deferral; do not invent a PASS.
 
-Next:
-deploy P0067 and validate the runtime matrix in CURRENT.
+Current work:
+**E.3 — Waypoint-bearing capability/proof**
+
+Before marker implementation, prove destination retrieval, map/world conversion,
+Forever update events, same-domain constraints, and bearing orientation.
+
+Minimap remains stock.
 
 User performs all commits/pushes.
