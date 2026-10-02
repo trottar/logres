@@ -335,8 +335,43 @@ function Progress:SetBaseline(questID, rows, reason)
     self.lastSecret = false
 end
 
+function Progress:NormalizeObjectiveLabel(row)
+    local label = row.text
+
+    if type(row.fulfilled) == "number"
+        and type(row.required) == "number"
+        and row.required > 0
+    then
+        local prefix = string.format(
+            "%.0f/%.0f",
+            row.fulfilled,
+            row.required
+        )
+        local prefixLength = #prefix
+
+        if label:sub(1, prefixLength) == prefix then
+            local nextCharacter =
+                label:sub(
+                    prefixLength + 1,
+                    prefixLength + 1
+                )
+
+            if nextCharacter == " " then
+                local remainder =
+                    label:sub(prefixLength + 1)
+
+                label =
+                    remainder:gsub("^%s+", "")
+            end
+        end
+    end
+
+    return trimText(label, TEXT_LIMIT)
+end
+
 function Progress:FormatRow(row)
-    local label = trimText(row.text, TEXT_LIMIT)
+    local label =
+        self:NormalizeObjectiveLabel(row)
 
     if row.finished == true then
         return label .. "  ·  Complete"

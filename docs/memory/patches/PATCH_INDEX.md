@@ -97,6 +97,8 @@
 
 | P0089 | 2026-10-02 | INSTALLED / PUSHED — LIVE SOURCE PASS; PREVIEW REGRESSION; PRODUCTION PULSE UNPROVEN | Move F.6 pulse off action cluster; live source verified (`1781c038`) |
 
-| P0090 | 2026-10-02 | PREPARED — RUNTIME RETEST PENDING | Make Objective Progress Preview use current live objective rows without mutating production baseline |
+| P0090 | 2026-10-02 | INSTALLED / PUSHED — LIVE PREVIEW PASS; DUPLICATE-COUNT VISUAL FAIL | Show current live objective rows without baseline mutation (`afcc37c`) |
+
+| P0091 | 2026-10-02 | PREPARED — RUNTIME + VISUAL RETEST PENDING | Normalize objective labels so progress count renders once |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

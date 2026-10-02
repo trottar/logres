@@ -6,11 +6,9 @@ As of 2026-10-02.
 
 **Phase F — Quest Experience**
 
-Active work item:
-**F.6 Contextual objective progress pulse**
+Active work item: **F.6 Contextual objective progress pulse**
 
-State:
-**Phase E COMPLETE; Phase F ACTIVE — F.6**
+State: **Phase E COMPLETE; Phase F ACTIVE — F.6**
 
 ## Phase status
 
@@ -35,29 +33,15 @@ State:
 | F.3 Contextual XP pulse | COMPLETE — runtime + integration + visual PASS |
 | F.4 Additive NPC quest detail presentation | COMPLETE — runtime + integration + visual PASS |
 | F.5 Objective / progress runtime capability proof | COMPLETE — runtime PASS |
-| F.6 Contextual objective progress pulse | ACTIVE — live source PASS; Preview regression; production pulse unproven |
+| F.6 Contextual objective progress pulse | ACTIVE — live Preview PASS; duplicate-count visual FAIL; production pulse unproven |
 | F.7+ Remaining quest slices | QUEUED — capability-gated |
 
 ## F.6 current state
 
-P0089:
-- durable at `1781c038`;
-- runtime `0.0.35-dev`;
-- live source freshness PASS;
-- quest 237 Skullthumper `3/10 -> 4/10`;
-- QUEST_LOG_UPDATE and QUEST_WATCH_UPDATE both advanced;
-- production pulse for that update unproven;
-- generic Preview is a confirmed usability regression.
+P0090 is durable at `afcc37c`, runtime `0.0.36-dev`: current-objective Preview PASS, Immersion Preview policy PASS, two Run All executions PASS, duplicate-count presentation FAIL, production pulse still unproven.
 
-P0090:
-- current live objectives in Preview when available;
-- explicit synthetic fallback only when unavailable;
-- no production source/event/baseline change;
-- runtime target `0.0.36-dev`;
-- runtime retest pending.
+P0091 normalizes the leading Blizzard count prefix before Logres formatting. Runtime target `0.0.37-dev`; runtime + visual retest pending.
 
 ## Navigation
 
-Quest IDs `436`, `237`, and `1338` remain negative waypoint samples.
-
-Quest compass marker remains unsupported.
+Quest IDs `436`, `237`, and `1338` remain negative waypoint samples. Quest compass marker remains unsupported.

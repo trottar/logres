@@ -4,24 +4,11 @@ Status: ACTIVE — F.6
 
 ## Product Objective
 
-Create an immersive quest experience that presents only the quest information
-the player actually needs while preserving Blizzard control surfaces until
-safe replacements exist.
+Create an immersive quest experience that presents only the quest information the player actually needs while preserving Blizzard control surfaces until safe replacements exist.
 
 ## Standing Boundaries
 
-Phase F owns:
-- passive quest/XP presentation policy;
-- restrained objective updates when runtime-proven;
-- contextual XP;
-- quest destination state only when runtime-proven.
-
-Blizzard retains:
-- quest accept/decline/continue/complete/reward controls;
-- gossip navigation;
-- quest watch/super-track mutation;
-- stock quest-log interaction;
-- stock Objective Tracker interaction until a safe replacement exists.
+Phase F owns passive quest/XP presentation policy and restrained runtime-proven objective updates. Blizzard retains quest interaction controls, watch/super-track mutation, stock quest-log interaction, and the stock Objective Tracker until a safe replacement exists.
 
 ## F.1
 
@@ -45,40 +32,18 @@ Blizzard retains:
 
 ## F.6 — Contextual objective progress pulse
 
-**ACTIVE — LIVE SOURCE PASS; PREVIEW REGRESSION; PRODUCTION PULSE UNPROVEN.**
+**ACTIVE — LIVE PREVIEW PASS; DUPLICATE-COUNT VISUAL FAIL; PRODUCTION PULSE UNPROVEN.**
 
-P0089 runtime:
-- durable at `1781c038`;
-- `0.0.35-dev`;
-- corrected lower-center placement;
-- live quest 237 objective source refreshed Skullthumper `3/10 -> 4/10`;
-- QUEST_LOG_UPDATE `85 -> 86`;
-- QUEST_WATCH_UPDATE `6 -> 7`;
-- stale-source concern closed PASS;
-- no post-change Objective Progress Check was captured, so production pulse
-  remains unproven;
-- generic synthetic Preview is a confirmed usability regression.
+P0090 is durable at `afcc37c`, runtime `0.0.36-dev`. Live current-objective Preview, Immersion suppression/restoration, and two Run All executions passed. Visual output duplicated counts because the source label already contains the count and Logres appended it again.
 
-P0090:
-- runtime target `0.0.36-dev`;
-- Preview shows current live objective rows when safely available;
-- maximum two rows;
-- explicit synthetic fallback only when live rows are unavailable;
-- Preview does not mutate the production baseline;
-- production source/event/baseline behavior unchanged.
+P0091 target `0.0.37-dev` normalizes only an exact matching leading count prefix. The shared formatter corrects Preview and production pulse text. No source/event/baseline/change-detection change.
 
-Do not add polling/retry/reassertion without evidence of an actual production
-pulse failure.
+Production pulse remains runtime-unproven. Do not add polling/retry/reassertion without evidence of an actual production pulse failure.
 
 ## Quest navigation
 
-Quest IDs `436`, `237`, and `1338` remain negative destination samples.
-
-Quest compass marker remains unsupported until a real usable destination is
-runtime-proven.
+Quest IDs `436`, `237`, and `1338` remain negative destination samples. Quest compass marker remains unsupported until a real usable destination is runtime-proven.
 
 ## Phase F Exit
 
-Phase F completes only when accepted quest/XP presentation is runtime-proven and
-every suppressed Blizzard surface has a deliberate replacement and
-restoration/fallback contract.
+Phase F completes only when accepted quest/XP presentation is runtime-proven and every suppressed Blizzard surface has a deliberate replacement and restoration/fallback contract.

@@ -2,44 +2,31 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0089 runtime implementation is verified pushed at `1781c038`.
+P0090 is verified pushed at `afcc37c`.
 
-Current pushed runtime:
-`0.0.35-dev`.
+Current pushed runtime: `0.0.36-dev`.
+P0091 runtime target: `0.0.37-dev`.
 
-P0090 runtime target:
-`0.0.36-dev`.
+Active work: **F.6 — Contextual objective progress pulse.**
 
-Active work:
-**F.6 — Contextual objective progress pulse.**
+P0090 runtime:
+- current-objective Preview path PASS (`shown-current`);
+- Immersion suppression/restoration PASS;
+- two Run All executions PASS;
+- no fixed secret/error result in Objective Progress Check.
 
-P0089 runtime evidence:
-- live quest 237 objective source refreshed correctly;
-- Skullthumper `3/10 -> 4/10`;
-- Seer remained `3/10`;
-- QUEST_LOG_UPDATE `85 -> 86`;
-- QUEST_WATCH_UPDATE `6 -> 7`;
-- stale-source concern is closed PASS.
+Visual defect: **CONFIRMED — DUPLICATE COUNT PRESENTATION.**
 
-Production pulse:
-**UNPROVEN for that natural change.**
-No post-change Objective Progress Check was captured before reload.
+Observed:
+- `4/10 Stonesplinter Skullthumper slain  ·  4/10`;
+- `3/10 Stonesplinter Seer slain  ·  3/10`.
 
-Preview:
-**REGRESSION CONFIRMED.**
-P0089 intentionally changed Preview to an explicit synthetic generic sample.
-The prior quest-looking sample was also synthetic and must not be restored as
-fake live data.
+Cause: Forever objective text already carries the leading count and shared `FormatRow()` appends it again.
 
-P0090:
-- Preview reads current active objective rows safely;
-- maximum two rows, matching production presentation;
-- synthetic sample is fallback only when current rows are unavailable;
-- Preview does not mutate baseline;
-- production change detection/events remain unchanged.
+P0091 normalizes the presentation label only. Production source/events/baseline/change detection remain unchanged.
 
-Next proof after push:
-live Preview -> natural objective change -> automatic pulse ->
-Objective Progress Check -> Quest Probe.
+Production pulse: **STILL UNPROVEN** on P0090.
+
+Next proof: single-count Preview -> natural objective change -> automatic pulse -> Objective Progress Check -> Quest Probe.
 
 User performs all commits/pushes.

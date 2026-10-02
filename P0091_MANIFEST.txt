@@ -1,0 +1,33 @@
+Project Logres P0091
+Date: 2026-10-02
+Baseline: afcc37c1aedff4120332ddd2a76b8151f6461ce8
+Runtime: 0.0.37-dev
+Purpose: normalize objective labels so progress count renders exactly once
+
+Files:
+ad4d293380f2aebcb94d5088dee3ba66c9ddaa90187ce3b0ac772fb28f1256c9  Logres/Core/Bootstrap.lua
+22ff30bdea9a046793ccf85d2cbd0ddc29a867f79fe7d9b1e955f852514f3c0a  Logres/Logres.toc
+21957a67b5144b8fe0afad6b5ccab120c12a23590832171d9eccf66787f25477  Logres/Quest/Progress.lua
+750526bbaaeefaf9897335dafe2721b585178e9e456bf6744d4d973d2a9a4ca5  docs/ROADMAP.md
+928916cd2ffef06fbed056387ef7fb5542b8085ad2943691f48c48c6754ef55c  docs/memory/CURRENT.md
+506406e45a29e86a618353211e2ffdb8e499e4e112c8bd61e1d92554050b18bd  docs/memory/evidence/F6_P0090_LIVE_PREVIEW_DUPLICATE_COUNT_FAIL_2026-10-02.md
+01e48198f8442df468d484e6450aca1a99b8c4bca69e1cb828fa621237390b9b  docs/memory/handoffs/CURRENT_HANDOFF.md
+4c44a5be05be3f64a6e18563d60378f65f4aef2b61b9d7c9a68cac14ccdc52a2  docs/memory/investigations/ACTIVE.md
+95497c5444e0861f9a54cd5e8a8e72657acdccb152323e9715d2cb66f780cba7  docs/memory/investigations/F6_CONTEXTUAL_OBJECTIVE_PROGRESS.md
+a952d6014bc619a54cfb77c787575263796731387868d67db08d820324fd6673  docs/memory/patches/P0090_LIVE_OBJECTIVE_PREVIEW.md
+8e0ce01c123af482d9597470483dd6a1f9218c0ce6e7a76922b41290b8d154ad  docs/memory/patches/P0091_FIX_OBJECTIVE_PROGRESS_LABELS.md
+1f230f1c7533b4cd2a04c942ae5172530a8c0b565d2ad22a7b68ad776d11de65  docs/memory/patches/PATCH_INDEX.md
+c809d238c5d8626e24df5b99922a57350c0a1df9a09037bb4f2d7e59d207fcc3  docs/memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md
+6c06868618794f0e1a36aa8d6614376963cbcba278862307c063d26c51030519  docs/memory/roadmap/STATUS.md
+a12fe3570c6f0f4d3938426bb89e1f9a8f4812c6a97edf20649372cb62a434f7  tools/check_objective_progress_contract.py
+
+Validation:
+exact verified P0090 HEAD
+exact-byte verification of P0091-owned tracked inputs against HEAD
+full temporary git-archive final-tree construction
+compile and execute every tools/check_*.py in temporary and real trees
+objective-label normalization structural checks
+old duplicate-count formatter rejection
+git diff --check
+
+Runtime code changed: WoW redeploy required after verified push.

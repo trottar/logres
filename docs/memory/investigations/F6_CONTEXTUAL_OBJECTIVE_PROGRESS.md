@@ -1,25 +1,15 @@
 # F.6 — Contextual Objective Progress Pulse
 
-Status: ACTIVE — LIVE SOURCE PASS; PREVIEW REGRESSION; PRODUCTION PULSE UNPROVEN
+Status: ACTIVE — LIVE SOURCE PASS; LIVE PREVIEW PASS; LABEL DUPLICATION FAIL; PRODUCTION PULSE UNPROVEN
 Opened: 2026-10-02
 
-Canonical capability contract:
-`../decisions/D-031_QUEST_EXPERIENCE_CAPABILITY_CONTRACT.md`
+Canonical capability contract: `../decisions/D-031_QUEST_EXPERIENCE_CAPABILITY_CONTRACT.md`
 
-F.5 evidence:
-`../evidence/F5_SAME_QUEST_TRANSITION_PASS_2026-10-02.md`
-
-P0088 runtime/visual evidence:
-`../evidence/F6_P0088_RUNTIME_VISUAL_FAIL_2026-10-02.md`
-
-P0089 runtime evidence:
-`../evidence/F6_P0089_LIVE_SOURCE_PASS_PREVIEW_REGRESSION_2026-10-02.md`
+P0090 runtime evidence: `../evidence/F6_P0090_LIVE_PREVIEW_DUPLICATE_COUNT_FAIL_2026-10-02.md`
 
 ## Product intent
 
-Present objective progress only when it meaningfully changes.
-
-This is a contextual pulse, not a permanent quest/objective tracker.
+Present objective progress only when it meaningfully changes. This is a contextual pulse, not a permanent quest/objective tracker.
 
 ## Passive / baseline contract
 
@@ -40,95 +30,59 @@ Unchanged:
 - `SUPER_TRACKING_CHANGED` rebaseline;
 - `PLAYER_ENTERING_WORLD` rebaseline.
 
-Do not require:
-- `QUEST_PROGRESS`;
-- `QUEST_COMPLETE`;
-- `QUEST_TURNED_IN`.
+No polling/retry/broad-hook workaround is authorized.
 
-## P0089 durable runtime
+## P0090 live Preview result
 
-P0089 implementation is pushed at:
-`1781c038`.
+P0090 is durable at `afcc37c`, runtime `0.0.36-dev`.
 
-Runtime:
-`0.0.35-dev`.
+Diagnostics prove:
+- Preview returned `shown-current`;
+- Immersion OFF returned `suppressed-immersion-off`;
+- Immersion ON returned `shown-current`;
+- two consecutive Run All executions passed;
+- Objective Progress Check reported `secret=false` and no error.
 
-Placement:
-- width `520`;
-- height `32`;
-- 6px above addon-owned `LogresHUDTarget`;
-- fallback UI-center `y=-5`.
+Therefore: **CURRENT-OBJECTIVE PREVIEW PATH PASS.**
 
-## Live source result
+## P0090 presentation defect
 
-**PASS.**
+**FAIL — DUPLICATE COUNT.**
 
-Quest 237 was captured with:
-- Skullthumper `3/10`;
-- Seer `3/10`.
+User screenshot showed:
+- `4/10 Stonesplinter Skullthumper slain  ·  4/10`;
+- `3/10 Stonesplinter Seer slain  ·  3/10`.
 
-A later natural update captured:
-- Skullthumper `4/10`;
-- Seer `3/10`.
+Source diagnosis:
+- Forever `objective.text` already contains the leading count token;
+- `Progress:FormatRow()` appended `fulfilled/required` again;
+- Preview and production changed-row presentation both use `FormatRow()`.
 
-Relevant event counters advanced:
-- QUEST_LOG_UPDATE `85 -> 86`;
-- QUEST_WATCH_UPDATE `6 -> 7`.
+## P0091
 
-This closes the stale-source concern.
+Runtime target: `0.0.37-dev`.
+
+P0091 changes formatting only:
+- if the label starts with the exact current `fulfilled/required` token followed by whitespace, remove that prefix;
+- append the canonical Logres count suffix once;
+- completed rows use the normalized label before `· Complete`.
+
+No source/event/baseline/change-detection change.
 
 ## Production pulse result
 
-**UNPROVEN for the captured `3/10 -> 4/10` update.**
-
-The diagnostic sequence did not include Objective Progress Check after that
-natural change and before reload, so the existing `meaningfulChangeCount` /
-`pulseCount` evidence was not preserved in the exported panel run.
-
-Do not change production event logic from this result alone.
-
-## Preview regression
-
-**CONFIRMED.**
-
-P0089 changed Objective Progress Preview from a quest-looking synthetic example
-to the explicit generic:
-
-`PREVIEW · Objective progress · 3/10`.
-
-That successfully stopped Preview from masquerading as live quest evidence, but
-it made the developer-panel action less useful for a real multi-objective quest.
-
-The correct behavior is:
-- when a safe active quest/objective set exists, Preview shows the current live
-  objective rows;
-- maximum two rows;
-- Preview does not establish or mutate the production baseline;
-- when current data is unavailable, Preview uses the explicit synthetic sample.
-
-The previous hardcoded Seer sample is not restored.
-
-## P0090
-
-Runtime target:
-`0.0.36-dev`.
-
-P0090 changes Preview semantics only.
-
-Production source, event, baseline, comparison, timer, Immersion policy, and
-Blizzard ownership remain unchanged.
+**UNPROVEN on P0090.** No natural same-quest objective transition was captured after the new runtime loaded.
 
 ## Runtime acceptance
 
-Required:
-1. Objective Progress Check PASS;
-2. with active quest 237, Preview shows current live objective rows;
-3. with no usable active quest, Preview may show explicit synthetic fallback;
-4. Preview does not alter production baseline/change counters;
-5. one natural same-quest objective update produces one automatic pulse;
-6. immediately after that update, Objective Progress Check records the change
-   and pulse before reload;
-7. Quest Probe records the matching updated live count;
-8. unchanged later refresh produces no duplicate pulse;
-9. stock Objective Tracker remains usable;
-10. no Lua/taint/protected/secret-value errors.
+1. Objective Progress Check PASS.
+2. Live Preview shows current objective rows.
+3. Each objective count appears exactly once.
+4. Immersion OFF suppresses Preview; ON restores it.
+5. One natural same-quest objective update produces one automatic pulse.
+6. The automatic pulse renders the changed count exactly once.
+7. Immediately run Objective Progress Check before reload.
+8. Quest Probe records the matching updated live count.
+9. Unchanged later refresh produces no duplicate pulse.
+10. Stock Objective Tracker remains usable.
+11. No Lua/taint/protected/secret-value errors.

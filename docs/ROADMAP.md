@@ -8,139 +8,52 @@ The roadmap is capability-gated. A phase advances only when its success criteria
 
 **Status: COMPLETE.**
 
-Established:
-- repository and durable memory;
-- WSL/Windows development workflow;
-- user-owned Git checkpoint boundary;
-- Forever API capability audit;
-- minimal real addon skeleton;
-- load/reload and SavedVariables proof.
-
 ## Phase A — Core State Engine
 
 **Status: COMPLETE.**
-
-Established:
-- private observed-state authority;
-- snapshot/subscription consumer contract;
-- world/instance/combat/PvP/resting/taxi/interaction facts;
-- separate persisted user preference contract;
-- lightweight module lifecycle;
-- integrated transition evidence matrix.
-
-Known environmental deferral:
-- ordinary `mounted=true` runtime path.
-
-Canonical phase record:
-`memory/roadmap/PHASE_A_CORE_STATE_ENGINE.md`
 
 ## Phase B — Core HUD
 
 **Status: COMPLETE.**
 
-Identity-defining awareness layer is runtime-proven.
-
-Canonical phase record:
-`memory/roadmap/PHASE_B_CORE_HUD.md`
-
 ## Phase C — Action Interface
 
 **Status: COMPLETE.**
-
-Secure action clusters and proven selective stock replacement.
-
-Canonical phase record:
-`memory/roadmap/PHASE_C_ACTION_INTERFACE.md`
 
 ## Phase D — Immersion Controller
 
 **Status: COMPLETE.**
 
-Immersion orchestration and proven selective restoration/suppression.
-
-Canonical phase record:
-`memory/roadmap/PHASE_D_IMMERSION_CONTROLLER.md`
-
 ## Phase E — Compass and Navigation
 
 **Status: COMPLETE.**
 
-Established:
-- heading compass;
-- manual user-waypoint compass marker;
-- fail-open navigation;
-- Blizzard-owned stock minimap.
-
-Canonical phase record:
-`memory/roadmap/PHASE_E_COMPASS_NAVIGATION.md`
+Established heading compass, manual user-waypoint compass marker, fail-open navigation, and Blizzard-owned stock minimap.
 
 ## Phase F — Quest Experience
 
 **Status: ACTIVE — F.6 contextual objective progress pulse.**
 
-F.1:
-complete under D-031.
-
-F.2:
-complete with runtime-proven XP/event and quest-detail inputs.
-
-F.3:
-contextual XP complete with runtime, integration, and visual proof.
-
-F.4:
-additive NPC quest detail presentation complete with runtime, integration, and
-visual proof.
-
-F.5:
-objective/progress capability proof complete, including populated incomplete and
-completed rows plus a same-quest `0/10 -> 1/10` refresh.
+F.1/F.2 complete. F.3 contextual XP and F.4 additive NPC quest detail presentation are complete with runtime/integration/visual proof. F.5 objective/progress capability proof is complete.
 
 F.6 current evidence:
-- P0089 runtime is durable at `1781c038`;
-- current objective source refreshed quest 237 from Skullthumper `3/10` to
-  `4/10` while Seer remained `3/10`;
-- QUEST_LOG_UPDATE and QUEST_WATCH_UPDATE both advanced;
-- live source freshness is PASS;
-- automatic production pulse remains unproven for that exact update;
-- P0089 generic synthetic Preview is a confirmed usability regression;
-- P0090 changes Preview to show current live objectives when safely available.
+- P0090 durable at `afcc37c`;
+- current-objective Preview PASS;
+- Immersion Preview policy PASS;
+- duplicate-count presentation FAIL;
+- P0091 fixes shared objective label formatting only;
+- production automatic pulse remains unproven.
 
-F.6 constraints:
-- baseline first;
-- no permanent objective tracker;
-- no stock Objective Tracker suppression;
-- no watch/super-track mutation;
-- fail open on secret/invalid/uncached data;
-- no polling/retry/hook workaround without evidence.
+F.6 constraints remain baseline-first, no permanent tracker, no stock Objective Tracker suppression, no watch/super-track mutation, fail-open secret/invalid handling, and no polling/retry workaround without evidence.
 
-Deferred:
-- stock Objective Tracker replacement/suppression;
-- quest destination / quest compass marker.
+Deferred: stock Objective Tracker replacement/suppression and quest destination / quest compass marker.
 
-Canonical phase record:
-`memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md`
+Canonical phase record: `memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md`
 
 ## Phase G — Cinematic Camera
 
-Translate the user's established DynamicCam behavior into Logres:
-- world;
-- combat;
-- NPC interaction;
-- gathering;
-- fishing;
-- taxi;
-- hearth/teleport;
-- instance behavior.
-
-Exact behavior must be reconstructed from a current exported profile, not from memory alone.
+Translate the user's established DynamicCam behavior into Logres when Phase G begins; request a fresh export then.
 
 ## Phase H — Integration and Polish
 
-- unified settings;
-- profiles;
-- visual language consistency;
-- performance;
-- accessibility/configurability;
-- packaging;
-- release documentation;
-- compatibility testing.
+Unified settings, profiles, visual consistency, performance, accessibility/configurability, packaging, release documentation, and compatibility testing.

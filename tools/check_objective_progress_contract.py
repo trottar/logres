@@ -42,6 +42,11 @@ if PROGRESS.is_file():
         '"PLAYER_ENTERING_WORLD"',
         "function Progress:ReadActiveQuestID()",
         "function Progress:ReadObjectives(questID)",
+        "function Progress:NormalizeObjectiveLabel(row)",
+        "local prefixLength = #prefix",
+        "local remainder =",
+        'remainder:gsub("^%s+", "")',
+        "self:NormalizeObjectiveLabel(row)",
         "function Progress:FindChangedRows(previousRows, currentRows)",
         "function Progress:Refresh(reason, forceBaseline)",
         "function Progress:ShowPreview()",
@@ -129,6 +134,7 @@ if PROGRESS.is_file():
         "LogresDiagnosticsDB",
         "root:SetSize(600, 58)",
         "Stonesplinter Seer slain  ·  1/10",
+        "local label = trimText(row.text, TEXT_LIMIT)",
     ]
 
     for fragment in forbidden:
