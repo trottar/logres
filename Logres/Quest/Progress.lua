@@ -335,7 +335,7 @@ function Progress:SetBaseline(questID, rows, reason)
     self.lastSecret = false
 end
 
-function Progress:NormalizeObjectiveLabel(row)
+function Progress:StableObjectiveText(row)
     local label = row.text
 
     if type(row.fulfilled) == "number"
@@ -366,7 +366,14 @@ function Progress:NormalizeObjectiveLabel(row)
         end
     end
 
-    return trimText(label, TEXT_LIMIT)
+    return label
+end
+
+function Progress:NormalizeObjectiveLabel(row)
+    return trimText(
+        self:StableObjectiveText(row),
+        TEXT_LIMIT
+    )
 end
 
 function Progress:FormatRow(row)
@@ -401,30 +408,34 @@ function Progress:FindChangedRows(previousRows, currentRows)
         local previous = previousRows[index]
         local current = currentRows[index]
 
-        if previous
-            and current
-            and previous.text == current.text
-        then
-            local countChanged =
-                type(previous.fulfilled) == "number"
-                and type(current.fulfilled) == "number"
-                and type(previous.required) == "number"
-                and type(current.required) == "number"
-                and (
-                    previous.fulfilled ~= current.fulfilled
-                    or previous.required ~= current.required
-                )
+        if previous and current then
+            local previousIdentity =
+                self:StableObjectiveText(previous)
+            local currentIdentity =
+                self:StableObjectiveText(current)
 
-            local finishedChanged =
-                type(previous.finished) == "boolean"
-                and type(current.finished) == "boolean"
-                and previous.finished ~= current.finished
+            if previousIdentity == currentIdentity then
+                local countChanged =
+                    type(previous.fulfilled) == "number"
+                    and type(current.fulfilled) == "number"
+                    and type(previous.required) == "number"
+                    and type(current.required) == "number"
+                    and (
+                        previous.fulfilled ~= current.fulfilled
+                        or previous.required ~= current.required
+                    )
 
-            if countChanged or finishedChanged then
-                local line = self:FormatRow(current)
+                local finishedChanged =
+                    type(previous.finished) == "boolean"
+                    and type(current.finished) == "boolean"
+                    and previous.finished ~= current.finished
 
-                if line then
-                    changed[#changed + 1] = line
+                if countChanged or finishedChanged then
+                    local line = self:FormatRow(current)
+
+                    if line then
+                        changed[#changed + 1] = line
+                    end
                 end
             end
         end

@@ -42,6 +42,7 @@ if PROGRESS.is_file():
         '"PLAYER_ENTERING_WORLD"',
         "function Progress:ReadActiveQuestID()",
         "function Progress:ReadObjectives(questID)",
+        "function Progress:StableObjectiveText(row)",
         "function Progress:NormalizeObjectiveLabel(row)",
         "local prefixLength = #prefix",
         "local remainder =",
@@ -56,7 +57,9 @@ if PROGRESS.is_file():
         'root:EnableMouse(false)',
         '"suppressed-immersion-off"',
         "self.baselineRows = rows",
-        "previous.text == current.text",
+        "self:StableObjectiveText(previous)",
+        "self:StableObjectiveText(current)",
+        "previousIdentity == currentIdentity",
         "previous.fulfilled ~= current.fulfilled",
         "previous.finished ~= current.finished",
         "local targetAnchor = _G.LogresHUDTarget",
@@ -135,6 +138,7 @@ if PROGRESS.is_file():
         "root:SetSize(600, 58)",
         "Stonesplinter Seer slain  ·  1/10",
         "local label = trimText(row.text, TEXT_LIMIT)",
+        "previous.text == current.text",
     ]
 
     for fragment in forbidden:

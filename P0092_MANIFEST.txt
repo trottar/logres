@@ -1,0 +1,33 @@
+Project Logres P0092
+Date: 2026-10-02
+Baseline: a2c5e863e37f1b34a014d960e3c7910c8be44ee7
+Runtime: 0.0.38-dev
+Purpose: use stable count-prefix-free objective identity for F.6 production change detection
+
+Files:
+971b4c880af96468085c57cfe6b80d48f39bef7d07ed5ac85d17e5f5dd30b75f  Logres/Core/Bootstrap.lua
+ffea04c3b24109cad5110e9c90d05dbb1b0490b6de43cbaf7981b4c0364a4b0b  Logres/Logres.toc
+c959d93cfe3ff163b90349389e0984fe159579a48848bc6006d9478b6cb85177  Logres/Quest/Progress.lua
+088bd9bf980ba062ca44d15dc86c15bd4cb98455e6a36f6a91ef947da1b0edf7  docs/ROADMAP.md
+3aa8787eca492647ec2630a23f98023cff9eb445b8a89f4368c3a49870b9fe4e  docs/memory/CURRENT.md
+cae3b522d3e11a9fc90164b9652c6d988994f262cf4877dd2cfef4bd3ed8b44a  docs/memory/evidence/F6_P0091_STABLE_IDENTITY_DEFECT_2026-10-02.md
+7a752e00869b39710d95a154ee3e738891b2f4c0d58b4dee788743e75de27175  docs/memory/handoffs/CURRENT_HANDOFF.md
+190d1f2e7ed4f1f2dcf4eb86dd3443b9c1a7f043b0bef47ff3ee80e4796f562e  docs/memory/investigations/ACTIVE.md
+b969cece650dfe27a69d4b7353d578449b084a2489f516b639dfa5f913db2bf6  docs/memory/investigations/F6_CONTEXTUAL_OBJECTIVE_PROGRESS.md
+7c6407b84e4beef0aa0d4bc250219f237bbd4b9109cf8d9d9840351c76dd7005  docs/memory/patches/P0091_FIX_OBJECTIVE_PROGRESS_LABELS.md
+96e73d7ecf84e14fcdb9ca1bcdb3bf56468a7f03a787632d2e5a7fd69972a4ca  docs/memory/patches/P0092_FIX_OBJECTIVE_PROGRESS_IDENTITY.md
+ad2c8ed30cdd8d87b707a3228abf9ffbd79a64ef969bcb73d5fdef3448025f32  docs/memory/patches/PATCH_INDEX.md
+2ff27c56c5ecc218b57a170323d7a3ca1b8b2ca9c4cb169f25ee7ef2ae6ddf99  docs/memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md
+2cd09b2668140b257e18f52b441d224b04e5cadbc003f533e1e1065492bdc8dc  docs/memory/roadmap/STATUS.md
+744d1490d3899858866756fee4c5a9f67b46d328b7691a6b12f7a71142a5c07b  tools/check_objective_progress_contract.py
+
+Validation:
+exact verified P0091 HEAD
+exact-byte verification of P0092-owned tracked inputs against HEAD
+full temporary git-archive final-tree construction
+compile and execute every tools/check_*.py in temporary and real trees
+stable-objective-identity structural checks
+raw previous.text == current.text identity rejected
+git diff --check
+
+Runtime code changed: WoW redeploy required after verified push.

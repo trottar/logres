@@ -37,12 +37,13 @@ Established heading compass, manual user-waypoint compass marker, fail-open navi
 F.1/F.2 complete. F.3 contextual XP and F.4 additive NPC quest detail presentation are complete with runtime/integration/visual proof. F.5 objective/progress capability proof is complete.
 
 F.6 current evidence:
-- P0090 durable at `afcc37c`;
-- current-objective Preview PASS;
+- P0091 durable at `a2c5e863`;
+- current-objective Preview execution PASS;
 - Immersion Preview policy PASS;
-- duplicate-count presentation FAIL;
-- P0091 fixes shared objective label formatting only;
-- production automatic pulse remains unproven.
+- latest quest 237 source remains live;
+- production raw-text objective identity defect is proven;
+- P0092 introduces stable count-prefix-free objective identity;
+- production automatic pulse retest pending.
 
 F.6 constraints remain baseline-first, no permanent tracker, no stock Objective Tracker suppression, no watch/super-track mutation, fail-open secret/invalid handling, and no polling/retry workaround without evidence.
 
