@@ -12,9 +12,9 @@ project: logres
 
 ## Current Work Item
 
-**F.3 — Contextual XP pulse, blocked by reproduced TargetFrame restoration failure.**
+**F.3 — Contextual XP pulse; runtime/integration proven, visual acceptance pending.**
 
-P0080 is verified pushed at `cde9b726`.
+P0081 is verified pushed at `ef8fa310`.
 
 Production runtime remains:
 `0.0.31-dev`.
@@ -26,67 +26,60 @@ Production runtime remains:
 - P0080 F.3 runtime evidence proves:
   - XP Check PASS after reload;
   - normal non-secret current/max XP baseline;
-  - XP Preview reports shown under Immersion ON;
-  - one real XP event occurred;
-  - delta `124`;
+  - one real XP event;
+  - positive delta `124`;
   - progress `89.1%`;
   - production pulse count `1`;
-  - pulse auto-hidden by the later XP Check;
-  - Immersion OFF suppresses XP Preview;
-  - Immersion ON restores XP Preview;
-  - XP Check remained PASS throughout.
-- Contextual XP runtime behavior is therefore proven except for final visual
-  acceptance and integrated validation closure.
-- P0080 Run All reproduced the prior restoration failure.
-- P0079 diagnostics narrow the failure to TargetFrame restoration:
-  - expected Immersion OFF;
-  - TargetFrame `requested=false`;
-  - TargetFrame `applied=true`;
-  - snapshot retained;
-  - unit watch retained;
-  - Logres interaction mouse ownership retained;
-  - stock presentation/mouse suppression retained;
-  - Action, Quiet, and Player restoration were already false/off as expected.
-- The state shape proves `TargetFrameReplacement:DisableReplacement()` entered
-  the restore path but did not complete stock restoration/interaction teardown.
-- P0079's mismatch summary did not include the TargetFrame/controller error text,
-  so the exact failing native restore operation is still unknown.
-- No restoration behavior fix is authorized until that error is captured.
+  - pulse auto-hide;
+  - Immersion OFF preview suppression;
+  - Immersion ON preview recovery.
+- P0080 Run All reproduced the historical TargetFrame restoration failure.
+- P0079 narrowed the reproduced mismatch to TargetFrame restoration.
+- P0081 added the missing TargetFrame/controller reason/error fields without
+  changing restoration behavior.
+- P0081 targeted validation did **not** reproduce the failure:
+  - five Run All executions PASS;
+  - one standalone Restoration Check PASS;
+  - every observed Restoration Check in those runs PASS;
+  - no TargetFrame error fields emitted because no mismatch occurred.
+- The P0078/P0080 restoration failures remain real historical evidence.
+- Current classification:
+  **OPEN — INTERMITTENT / UNREPRODUCED under repeated P0081 targeted runs.**
+- No retry, polling, broad hook, periodic reassertion, or restoration behavior
+  workaround is justified from current evidence.
+- F.3 integrated validation is no longer blocked by restoration failure.
+- F.3 still requires explicit user visual acceptance of the XP pulse before it
+  can close.
 
 ## Next Action
 
-Apply/push P0081 and redeploy Logres.
+Obtain final visual acceptance for the contextual XP pulse.
 
-Use the developer panel:
-1. **Run All** once;
-2. if Restoration Check passes, run **Run All** a second time;
-3. if it still passes, run standalone **Restoration Check** once;
-4. `/reload`;
-5. export `LOGRES_DIAGNOSTICS_LATEST.lua`.
+If the user confirms that:
+- the preview/real pulse appeared in the intended centered location;
+- `+N XP · progress%` was readable and appropriately brief;
+- the pulse disappeared instead of becoming a persistent bar;
+- Blizzard XP/quest UI remained unchanged;
+- no Lua/taint/secret-value errors were observed;
 
-P0081 adds only error/reason/result text to an existing failure diagnostic.
+then close F.3 in the next durable checkpoint.
 
-If the failure recurs, use the emitted TargetFrame error to identify the exact
-restore operation before changing behavior.
+If visual presentation needs changes, keep F.3 open and patch only that
+presentation issue.
 
 ## Success Criteria
 
-P0081 succeeds when:
-- no restoration/suppression behavior changes;
-- no retry/polling/reassertion/hook is introduced;
-- a reproduced mismatch includes:
-  - TargetFrame last reason;
-  - TargetFrame last error;
-  - controller last TargetFrame result;
-  - controller last TargetFrame error;
-- the diagnostic remains panel-persisted;
-- no Lua/taint/secret-value errors occur.
-
-F.3 remains open until:
-- the restoration defect is resolved or correctly reclassified from new
-  evidence;
+F.3 succeeds when:
+- event-driven XP behavior remains proven;
+- positive same-range XP gain produces the brief pulse;
+- Immersion OFF suppresses presentation;
+- no permanent XP bar is introduced;
+- no stock XP/quest UI is suppressed;
 - Run All passes;
-- the XP pulse receives visual acceptance.
+- no Lua/taint/secret-value errors occur;
+- user visually accepts the pulse.
+
+All non-visual runtime/integration criteria are currently satisfied.
 
 ## Do Not Reopen Without New Evidence
 
@@ -94,15 +87,18 @@ F.3 remains open until:
 - **F.1/F.2:** complete.
 - **XP data/event path:** proven.
 - **P0080 XP production event:** proven (`delta=124`, one pulse).
+- **P0081 targeted restoration runs:** five Run All PASS + one standalone
+  Restoration Check PASS.
+- **TargetFrame restoration defect:** retained as intermittent/unreproduced;
+  historical P0078/P0080 failures remain preserved.
 - **Quest IDs 436/237 destination output:** negative tested evidence.
 - **Quest compass marker:** unsupported until a usable destination is proven.
-- **TargetFrame restoration failure:** reproduced in P0078 and P0080; P0079
-  standalone/integrated targeted run temporarily did not reproduce it.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
 - `docs/memory/evidence/F3_P0080_XP_RUNTIME_AND_TARGET_RESTORE_FAILURE_2026-10-02.md`
+- `docs/memory/evidence/P0081_TARGET_RESTORE_TARGETED_PASS_2026-10-02.md`
 - `docs/memory/evidence/P0078_RESTORATION_SETTLE_FAILURE_2026-10-02.md`
 - `docs/memory/evidence/P0079_RESTORATION_TARGETED_PASS_2026-10-02.md`
 - `docs/memory/investigations/F3_CONTEXTUAL_XP_PULSE.md`

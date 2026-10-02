@@ -1,6 +1,6 @@
 # F.3 — Contextual XP Pulse
 
-Status: ACTIVE — XP RUNTIME PROVEN; INTEGRATED RESTORATION BLOCKER
+Status: ACTIVE — RUNTIME + INTEGRATION PASS; VISUAL ACCEPTANCE PENDING
 Opened: 2026-10-02
 
 Canonical capability contract:
@@ -19,7 +19,7 @@ Presentation:
 
 ## Runtime evidence
 
-Proven:
+P0080 proven:
 - safe XP baseline;
 - real `PLAYER_XP_UPDATE`;
 - positive delta `124`;
@@ -30,36 +30,35 @@ Proven:
 - Immersion ON preview restoration;
 - XP Check PASS.
 
-Visual appearance still requires user acceptance.
+## Integrated validation
 
-## Integrated blocker
+P0080 Run All reproduced the historical TargetFrame restoration failure.
 
-P0080 Run All reproduced the restoration failure.
+P0081 added TargetFrame/controller failure text only.
 
-P0079 diagnostic detail now identifies TargetFrame restoration as the failing
-domain.
+P0081 targeted result:
+- five Run All PASS;
+- one standalone Restoration Check PASS;
+- no mismatch recurred.
 
-See:
-`P0080_TARGETFRAME_RESTORE_FAILURE.md`.
+Therefore:
+- the historical restoration failures remain preserved;
+- the defect is classified intermittent/unreproduced under repeated P0081
+  targeting;
+- no behavioral fix is justified;
+- integrated validation no longer blocks F.3.
 
-F.3 cannot close until integrated restoration passes after the narrow defect is
-understood/resolved.
+## Remaining item
 
-## P0081
-
-Diagnostic-only checkpoint.
-
-Adds the TargetFrame/controller reason/error strings to the restoration mismatch
-record.
-
-No XP or restoration behavior changes.
+Visual appearance still requires explicit user acceptance.
 
 ## Exit
 
-Close F.3 only after:
-- XP visual acceptance;
-- real XP pulse remains correct;
-- Immersion policy remains correct;
-- Run All passes;
-- no Lua/taint/secret errors;
-- stock XP/quest UI remains unchanged.
+Close F.3 when the user confirms:
+- preview/real pulse appears in the intended centered location;
+- text is readable and appropriately brief;
+- pulse disappears instead of remaining as a permanent bar;
+- stock XP/quest UI remains unchanged;
+- no Lua/taint/secret errors were observed.
+
+All persisted runtime/integration criteria are currently satisfied.

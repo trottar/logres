@@ -1,7 +1,7 @@
 # P0081 — TargetFrame Restore Error Diagnostic
 
 Date: 2026-10-02
-Result: PREPARED — TARGETED ERROR CAPTURE PENDING
+Result: INSTALLED / PUSHED — TARGETED PASS / FAILURE NOT REPRODUCED (`ef8fa310`)
 
 ## Baseline
 
@@ -17,36 +17,31 @@ actual TargetFrame/controller error strings.
 
 ## Change
 
-Extend `restorationMismatchSummary` with:
+Extended `restorationMismatchSummary` with:
 - TargetFrame last reason;
 - TargetFrame last error;
 - controller last TargetFrame result;
 - controller last TargetFrame error.
 
-## Non-change
+No restoration behavior changed.
 
-No:
-- TargetFrame mutation change;
-- retry;
-- polling;
-- periodic reassertion;
-- Blizzard hook;
-- XP behavior change.
+## Runtime result
 
-## Runtime
+P0081 targeted validation:
+- five Run All PASS;
+- one standalone Restoration Check PASS;
+- no recurrence.
+
+Because no mismatch occurred, the new error fields were not emitted.
+
+## Classification
+
+The historical P0078/P0080 restoration failures remain recorded.
+
+Current state:
+**OPEN — INTERMITTENT / UNREPRODUCED under repeated P0081 targeting.**
+
+No speculative behavior fix is justified.
 
 Production runtime remains:
 `0.0.31-dev`.
-
-This changes runtime diagnostics, so WoW redeploy is required.
-
-## Validation
-
-Developer panel:
-- Run All once;
-- if PASS, Run All a second time;
-- then Restoration Check once if needed;
-- reload/export diagnostics.
-
-A reproduced failure should now provide the error required for a narrow
-corrective patch.

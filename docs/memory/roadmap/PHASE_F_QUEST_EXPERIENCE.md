@@ -47,34 +47,36 @@ Deferred/unproven:
 - quest destination output;
 - quest compass marker.
 
-The P0078 Restoration Check failure is retained as intermittent/unreproduced
-after P0079 targeted Restoration Check + Run All both passed.
-
-No behavioral workaround was added.
-
 ## F.3 — Contextual XP pulse
 
-**ACTIVE — P0080 PREPARED.**
+**ACTIVE — RUNTIME + INTEGRATION PASS; VISUAL ACCEPTANCE PENDING.**
 
-P0080 implements the first production Phase F presentation slice.
-
-Contract:
-- event-driven only;
-- `UnitXP` / `UnitXPMax` safe sample;
-- positive same-range delta;
+P0080 production behavior:
+- event-driven safe XP baseline;
+- positive same-range XP delta;
 - brief `+N XP · progress%` pulse;
-- approximately two-second lifetime;
-- rebaseline on level/range changes;
-- Immersion OFF presentation suppression with baseline maintenance;
-- no conventional XP bar;
+- automatic hide;
+- Immersion OFF suppression;
+- no conventional permanent XP bar;
 - no stock XP/quest UI suppression.
 
-Diagnostics:
-- XP Check;
-- XP Preview;
-- XP Check included in Run All.
+P0080 runtime:
+- real delta `124`;
+- progress `89.1%`;
+- pulse count `1`;
+- XP Check PASS.
 
-Runtime proof is required before F.3 closes.
+P0080 Run All reproduced the historical TargetFrame restoration failure.
+
+P0081 diagnostic-only follow-up did not reproduce it:
+- five Run All PASS;
+- one standalone Restoration Check PASS.
+
+The TargetFrame issue remains tracked as intermittent/unreproduced and does not
+currently block F.3.
+
+Remaining F.3 item:
+**user visual acceptance**.
 
 ## F.4+
 

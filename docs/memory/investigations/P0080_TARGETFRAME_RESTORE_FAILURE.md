@@ -1,79 +1,78 @@
 # P0080 — TargetFrame Restoration Failure
 
-Status: OPEN — REPRODUCED / RESTORE PATH IDENTIFIED
+Status: OPEN — INTERMITTENT / UNREPRODUCED UNDER P0081 TARGETED RUNS
 Opened: 2026-10-02
 
-## Trigger
+## Reproduced evidence
 
-P0080 Run All failed Restoration Check during the opposite-preference
-(Immersion OFF) state.
+The restoration failure was observed in:
+- P0078 Run All;
+- P0080 Run All.
 
-The P0079-expanded diagnostic reported:
+P0080 / P0079-expanded state narrowed the mismatch to TargetFrame restoration:
 
-- expected immersion: false;
-- controller desired action/player/target: false;
-- Action requested/applied: false/false;
-- Quiet requested/applied: false/false;
-- Player requested/applied: false/false;
-- Target requested/applied: false/true;
-- Target pending: false;
-- Target snapshot: true;
-- Target unit watch: true;
-- Target interaction mouse ownership: true;
-- Target stock presentation suppressed: true;
-- Target stock mouse suppressed: true;
-- preserved overrides: 4;
-- errorsClear: false.
+- expected Immersion OFF;
+- Target requested false;
+- Target applied true;
+- Target pending false;
+- snapshot retained;
+- unit watch retained;
+- Logres interaction mouse ownership retained;
+- stock presentation/mouse suppression retained;
+- Action, Quiet, and Player had restored.
 
-Cleanup later reconverged successfully.
+Final cleanup reconverged.
 
 ## Narrow code-path conclusion
 
-`TargetFrameReplacement:RequestEnabled(false)` sets `requestedEnabled=false`.
+The observed state is consistent with
+`TargetFrameReplacement:DisableReplacement()` entering the stock restoration
+path but not completing it on the failing runs.
 
-In `DisableReplacement`, if stock restoration succeeds, the implementation
-continues to disable interaction and clears:
-- `appliedEnabled`;
-- snapshot;
-- unit watch;
-- Logres mouse ownership;
-- stock presentation/mouse suppression.
-
-The observed state retains all of those applied fields.
-
-Therefore the failing request did not complete
-`TargetFrameReplacement:RestoreStock(snapshot)`.
-
-This is narrower than a general controller settle race.
-
-## Missing evidence
-
-The P0079 mismatch summary printed `errors=false` (errors not clear) but omitted:
+P0081 was created to expose:
 - `target.lastReason`;
 - `target.lastError`;
 - controller `lastTargetResult`;
 - controller `lastTargetError`.
 
-Without the actual error string, choosing which native restore call to change
-would be speculative.
+No behavior changed.
 
-## P0081
+## P0081 targeted result
 
-P0081 adds those four fields to the existing restoration mismatch summary.
+The failure did not reproduce.
 
-It does not:
-- retry;
-- poll;
-- reassert;
-- hook Blizzard code;
-- alter TargetFrame restore/suppress behavior.
+Observed after P0081 deployment:
+- Run All PASS;
+- standalone Restoration Check PASS;
+- Run All PASS;
+- after reload, three additional Run All PASS executions.
 
-## Exit
+Total:
+- five Run All PASS;
+- one standalone Restoration Check PASS.
 
-Reproduce through Run All.
+Because no mismatch occurred, the new TargetFrame error fields were not
+emitted.
 
-If an error is captured, investigate that exact failing native operation and
-prepare the smallest corrective patch.
+## Classification
 
-If repeated runs do not reproduce, preserve the failure as intermittent but do
-not erase the two reproduced failures.
+**REAL HISTORICAL FAILURE — CURRENTLY INTERMITTENT / UNREPRODUCED.**
+
+Do not erase the P0078/P0080 failures.
+
+Do not infer the exact native failing restore operation without an emitted error.
+
+Do not add:
+- retry loops;
+- polling;
+- periodic reassertion;
+- broad Blizzard hooks;
+- speculative TargetFrame mutation changes.
+
+## Reopening / escalation
+
+If the failure recurs, use the P0081 error fields to identify the exact failing
+native call and investigate that operation narrowly.
+
+Until recurrence, this issue remains tracked but does not block unrelated
+runtime-proven Phase F work.

@@ -1,0 +1,24 @@
+Project Logres P0082 patch
+Date: 2026-10-02
+Baseline: ef8fa310103767f7a17c1c5f7f850f9187cb00a7
+Production runtime: 0.0.31-dev (unchanged)
+Purpose: record P0081 repeated targeted PASS; F.3 visual pending
+
+Files:
+914aca3b454118ab6db2a6c6d83ee9822caf5f94f4d47d6a7a71d835d7e7494c  docs/memory/CURRENT.md
+6a3401da154087cfe9eec0d60241c92f93b19c74859b442d361cc75c4e47afdd  docs/memory/handoffs/CURRENT_HANDOFF.md
+e4f8512c2357d949b05135b81ed81b3742a4e93ffbeac7864f302c98f2a45977  docs/memory/investigations/ACTIVE.md
+0497fd38bebea8085414de7a97cb307a489a37d303095f6ff0c203bc7680fb71  docs/memory/investigations/F3_CONTEXTUAL_XP_PULSE.md
+e8d118e5b6b64223ccc51a7c44becd975fc63e66eb7b2cb465d2498f5ed7c1c4  docs/memory/investigations/P0080_TARGETFRAME_RESTORE_FAILURE.md
+921364fe109059cd929e9b21c5e482b4f1e93873ee04b2d923358bdd25f823c8  docs/memory/evidence/P0081_TARGET_RESTORE_TARGETED_PASS_2026-10-02.md
+315114656e735c0b116c8eef473102a1fffc4fe38668bd37813a95edbc03bec1  docs/memory/roadmap/STATUS.md
+5947eee7d0645994c032f496b6dacf107906b3f1474f0742646eba579f62bc79  docs/memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md
+e245f56fcbbfa1506a4dae40270311ada486995db3a9c41fe98db447f61468b3  docs/memory/patches/P0081_TARGET_RESTORE_ERROR_DIAGNOSTIC.md
+ed09ad5b0447083b57224f7d31bd14c90e4da3cf2e0876d7b17b0e059cd6c1f4  docs/memory/patches/P0082_RECORD_P0081_TARGETED_PASS.md
+8eab280009efcd6e25c1d342d5b1b8aaa93ed28ea0abbba0c794cb1b0547766c  docs/memory/patches/PATCH_INDEX.md
+
+Checks:
+python3 tools/check_memory_health.py
+git diff --check -- <P0082-owned files>
+
+Docs-only checkpoint; no WoW redeploy required.

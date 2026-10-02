@@ -2,30 +2,36 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0080 is verified pushed at `cde9b726`.
+P0081 is verified pushed at `ef8fa310`.
 
 Phase F / F.3 remains active.
 
-P0080 XP result:
+P0080 XP runtime result:
 - XP Check PASS;
-- real XP event `delta=124`;
+- real XP delta `124`;
 - progress `89.1%`;
 - production pulse count `1`;
-- Immersion OFF preview suppression PASS;
-- Immersion ON preview recovery PASS.
+- auto-hide;
+- Immersion OFF suppression;
+- Immersion ON recovery.
 
-Integrated blocker:
-Run All reproduced the restoration failure.
+P0081 restoration follow-up:
+- five Run All PASS;
+- one standalone Restoration Check PASS;
+- no mismatch recurred;
+- no TargetFrame error fields emitted because there was no failure.
 
-P0079 detail now identifies the failing domain as TargetFrame restoration:
-requested=false while applied/snapshot/watch/mouse/presentation suppression
-remained active.
+Historical P0078/P0080 restoration failures remain recorded.
 
-The exact TargetFrame error string was not included in the P0079 summary.
-
-P0081 adds that error/reason/result detail only.
+Current classification:
+**OPEN — INTERMITTENT / UNREPRODUCED under repeated P0081 targeting.**
 
 No behavior workaround.
+
+F.3 is no longer restoration-blocked.
+
+Only remaining F.3 closure item:
+**user visual acceptance of the contextual XP pulse.**
 
 Production runtime remains:
 `0.0.31-dev`.
