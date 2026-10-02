@@ -545,6 +545,44 @@ function Progress:ApplyPreferences(preferences)
     end
 end
 
+function Progress:BuildCurrentPreviewLines()
+    local questID =
+        self:ReadActiveQuestID()
+
+    if questID == nil then
+        return nil
+    end
+
+    local rows =
+        self:ReadObjectives(questID)
+
+    if rows == nil then
+        return nil
+    end
+
+    local lines = {}
+    local count =
+        math.min(
+            #rows,
+            MAX_PRESENTATION_ROWS
+        )
+
+    for index = 1, count do
+        local line =
+            self:FormatRow(rows[index])
+
+        if line then
+            lines[#lines + 1] = line
+        end
+    end
+
+    if #lines == 0 then
+        return nil
+    end
+
+    return lines
+end
+
 function Progress:ShowPreview()
     if not self.moduleEnabled then
         return false, "module-disabled"
@@ -557,10 +595,34 @@ function Progress:ShowPreview()
         return true, "suppressed-immersion-off"
     end
 
-    return self:PresentLines(
-        { PREVIEW_TEXT },
-        "preview"
-    )
+    local lines =
+        self:BuildCurrentPreviewLines()
+
+    if lines then
+        local ok, state =
+            self:PresentLines(
+                lines,
+                "preview-current"
+            )
+
+        if ok and state == "shown" then
+            return true, "shown-current"
+        end
+
+        return ok, state
+    end
+
+    local ok, state =
+        self:PresentLines(
+            { PREVIEW_TEXT },
+            "preview-fallback"
+        )
+
+    if ok and state == "shown" then
+        return true, "shown-fallback"
+    end
+
+    return ok, state
 end
 
 function Progress:GetDebugStatus()

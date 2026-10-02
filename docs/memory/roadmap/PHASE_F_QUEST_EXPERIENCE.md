@@ -45,32 +45,30 @@ Blizzard retains:
 
 ## F.6 — Contextual objective progress pulse
 
-**ACTIVE — RUNTIME/INTEGRATION PASS; VISUAL FAIL; P0089 REPAIR 2 RETEST PENDING.**
+**ACTIVE — LIVE SOURCE PASS; PREVIEW REGRESSION; PRODUCTION PULSE UNPROVEN.**
 
-P0088:
-- implemented passive objective progress;
-- Objective Progress Check PASS;
-- Preview Immersion policy PASS;
-- two consecutive Run All PASS;
-- visual FAIL because pulse overlapped action cluster;
-- real production pulse not captured in that run.
+P0089 runtime:
+- durable at `1781c038`;
+- `0.0.35-dev`;
+- corrected lower-center placement;
+- live quest 237 objective source refreshed Skullthumper `3/10 -> 4/10`;
+- QUEST_LOG_UPDATE `85 -> 86`;
+- QUEST_WATCH_UPDATE `6 -> 7`;
+- stale-source concern closed PASS;
+- no post-change Objective Progress Check was captured, so production pulse
+  remains unproven;
+- generic synthetic Preview is a confirmed usability regression.
 
-P0089 Repair 2:
-- presentation-only correction;
-- frame `520x32`;
-- anchor above addon-owned target frame with 6px gap;
-- center fallback `y=-5`;
-- explicit synthetic Preview;
-- passive source/event/baseline contract unchanged.
+P0090:
+- runtime target `0.0.36-dev`;
+- Preview shows current live objective rows when safely available;
+- maximum two rows;
+- explicit synthetic fallback only when live rows are unavailable;
+- Preview does not mutate the production baseline;
+- production source/event/baseline behavior unchanged.
 
-Possible Seer-count freshness problem:
-**OPEN / UNPROVEN**.
-
-Use Quest Probe for live before/after count evidence.
-Do not add polling/retry/reassertion without that evidence.
-
-Runtime target:
-`0.0.35-dev`.
+Do not add polling/retry/reassertion without evidence of an actual production
+pulse failure.
 
 ## Quest navigation
 

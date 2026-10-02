@@ -95,16 +95,23 @@ F.5:
 objective/progress capability proof complete, including populated incomplete and
 completed rows plus a same-quest `0/10 -> 1/10` refresh.
 
-Current work:
-F.6 implements a temporary contextual objective-progress pulse using the proven
-passive objective source and proven refresh events.
+F.6 current evidence:
+- P0089 runtime is durable at `1781c038`;
+- current objective source refreshed quest 237 from Skullthumper `3/10` to
+  `4/10` while Seer remained `3/10`;
+- QUEST_LOG_UPDATE and QUEST_WATCH_UPDATE both advanced;
+- live source freshness is PASS;
+- automatic production pulse remains unproven for that exact update;
+- P0089 generic synthetic Preview is a confirmed usability regression;
+- P0090 changes Preview to show current live objectives when safely available.
 
 F.6 constraints:
 - baseline first;
 - no permanent objective tracker;
 - no stock Objective Tracker suppression;
 - no watch/super-track mutation;
-- fail open on secret/invalid/uncached data.
+- fail open on secret/invalid/uncached data;
+- no polling/retry/hook workaround without evidence.
 
 Deferred:
 - stock Objective Tracker replacement/suppression;

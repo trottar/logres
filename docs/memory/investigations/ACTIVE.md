@@ -3,36 +3,51 @@
 ## F.6 — Contextual objective progress pulse
 
 Status:
-**ACTIVE — RUNTIME/INTEGRATION PASS; VISUAL FAIL; P0089 REPAIR 2 RETEST PENDING**
+**ACTIVE — LIVE SOURCE PASS; PREVIEW REGRESSION; PRODUCTION PULSE UNPROVEN**
 
 Canonical:
 `F6_CONTEXTUAL_OBJECTIVE_PROGRESS.md`
 
-P0088 runtime/integration:
-**PASS within tested scope.**
-
-P0088 visual:
-**FAIL — objective progress overlapped the lower-center action cluster.**
-
-Real F.6 production pulse:
-**UNPROVEN (`changes=0`, `pulses=0`).**
-
-Possible post-kill Seer count freshness problem:
-**OPEN / UNPROVEN**.
-
-Use Quest Probe for actual live before/after objective state.
+P0088:
+- runtime/integration PASS within tested scope;
+- visual FAIL due action-cluster overlap.
 
 P0089:
-- first two delivery artifacts failed static temporary-tree validation;
-- neither wrote tracked target files;
-- Repair 2 moves the transient presentation above addon-owned target frame;
-- `520x32`;
-- 6px separation;
-- fallback center `y=-5`;
-- visibly synthetic Preview;
-- no source/event/baseline changes.
+- durable runtime at `1781c038`;
+- presentation moved off the lower action lane;
+- Preview changed to explicit synthetic sample.
 
-Do not add polling/retry/reassertion without live source evidence.
+Latest runtime source evidence:
+**PASS.**
+
+Quest 237:
+- Skullthumper `3/10 -> 4/10`;
+- Seer remained `3/10`.
+
+Relevant event evidence:
+- QUEST_LOG_UPDATE `85 -> 86`;
+- QUEST_WATCH_UPDATE `6 -> 7`.
+
+Therefore:
+**LIVE OBJECTIVE SOURCE IS FRESH.**
+
+Production F.6 pulse for that change:
+**UNPROVEN** because no post-change Objective Progress Check was captured before
+reload.
+
+Preview usability:
+**FAIL / REGRESSION.**
+The generic synthetic sample is visually clear but not useful for validating a
+real active multi-objective quest.
+
+P0090 correction:
+- current live objective rows when safely available;
+- synthetic fallback only when live rows are unavailable;
+- no baseline mutation from Preview;
+- no source/event/baseline/polling changes.
+
+Do not modify production event logic without evidence of a production pulse
+failure.
 
 Stock Objective Tracker remains Blizzard-owned.
 

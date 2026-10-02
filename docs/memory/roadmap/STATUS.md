@@ -35,25 +35,26 @@ State:
 | F.3 Contextual XP pulse | COMPLETE — runtime + integration + visual PASS |
 | F.4 Additive NPC quest detail presentation | COMPLETE — runtime + integration + visual PASS |
 | F.5 Objective / progress runtime capability proof | COMPLETE — runtime PASS |
-| F.6 Contextual objective progress pulse | ACTIVE — runtime/integration PASS; visual FAIL; P0089 Repair 2 retest pending |
+| F.6 Contextual objective progress pulse | ACTIVE — live source PASS; Preview regression; production pulse unproven |
 | F.7+ Remaining quest slices | QUEUED — capability-gated |
 
 ## F.6 current state
 
-P0088:
-- runtime/integration PASS within tested scope;
-- visual FAIL due action-cluster overlap;
-- real production pulse not yet proven in captured run.
+P0089:
+- durable at `1781c038`;
+- runtime `0.0.35-dev`;
+- live source freshness PASS;
+- quest 237 Skullthumper `3/10 -> 4/10`;
+- QUEST_LOG_UPDATE and QUEST_WATCH_UPDATE both advanced;
+- production pulse for that update unproven;
+- generic Preview is a confirmed usability regression.
 
-P0089 Repair 2:
-- presentation-only correction;
-- anchor above addon-owned target frame;
-- explicit synthetic Preview;
-- runtime target `0.0.35-dev`;
-- runtime + visual retest pending.
-
-Possible live count freshness issue:
-OPEN / UNPROVEN pending Quest Probe before/after evidence.
+P0090:
+- current live objectives in Preview when available;
+- explicit synthetic fallback only when unavailable;
+- no production source/event/baseline change;
+- runtime target `0.0.36-dev`;
+- runtime retest pending.
 
 ## Navigation
 

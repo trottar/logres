@@ -9,10 +9,11 @@ PROGRESS = ROOT / "Logres" / "Quest" / "Progress.lua"
 COMMANDS = ROOT / "Logres" / "Core" / "Commands.lua"
 TOC = ROOT / "Logres" / "Logres.toc"
 BOOTSTRAP = ROOT / "Logres" / "Core" / "Bootstrap.lua"
+HUD = ROOT / "Logres" / "HUD" / "HUD.lua"
 
 errors = []
 
-for path in (PROGRESS, COMMANDS, TOC, BOOTSTRAP):
+for path in (PROGRESS, COMMANDS, TOC, BOOTSTRAP, HUD):
     if not path.is_file():
         errors.append(f"missing required file: {path.relative_to(ROOT)}")
 
@@ -23,6 +24,15 @@ if PROGRESS.is_file():
         'Logres:RegisterModule("QuestObjectiveProgress"',
         "local PULSE_SECONDS = 3.0",
         "local MAX_OBJECTIVES = 8",
+        "local MAX_PRESENTATION_ROWS = 2",
+        "local TEXT_LIMIT = 86",
+        "local PRESENTATION_WIDTH = 520",
+        "local PRESENTATION_HEIGHT = 32",
+        "local PRESENTATION_GAP = 6",
+        "local FALLBACK_Y = -5",
+        "local PREVIEW_TEXT =",
+        "PREVIEW",
+        "Objective progress",
         "C_QuestLog.GetQuestObjectives",
         "C_QuestLog.GetSelectedQuest",
         "C_SuperTrack.GetSuperTrackedQuestID",
@@ -44,11 +54,55 @@ if PROGRESS.is_file():
         "previous.text == current.text",
         "previous.fulfilled ~= current.fulfilled",
         "previous.finished ~= current.finished",
+        "local targetAnchor = _G.LogresHUDTarget",
+        "{ PREVIEW_TEXT }",
     ]
 
     for fragment in required:
         if fragment not in source:
             errors.append(f"Progress.lua missing: {fragment}")
+
+    anchor_pattern = re.compile(
+        r'root:SetPoint\(\s*'
+        r'"BOTTOM",\s*'
+        r'targetAnchor,\s*'
+        r'"TOP",\s*'
+        r'0,\s*'
+        r'PRESENTATION_GAP\s*'
+        r'\)',
+        re.MULTILINE,
+    )
+    if anchor_pattern.search(source) is None:
+        errors.append(
+            "Progress.lua missing target-relative presentation anchor"
+        )
+
+    fallback_pattern = re.compile(
+        r'root:SetPoint\(\s*'
+        r'"CENTER",\s*'
+        r'UIParent,\s*'
+        r'"CENTER",\s*'
+        r'0,\s*'
+        r'FALLBACK_Y\s*'
+        r'\)',
+        re.MULTILINE,
+    )
+    if fallback_pattern.search(source) is None:
+        errors.append(
+            "Progress.lua missing center fallback presentation anchor"
+        )
+
+    size_pattern = re.compile(
+        r'root:SetSize\(\s*'
+        r'PRESENTATION_WIDTH,\s*'
+        r'PRESENTATION_HEIGHT\s*'
+        r'\)',
+        re.MULTILINE,
+    )
+    if size_pattern.search(source) is None:
+        errors.append(
+            "Progress.lua missing bounded presentation size contract"
+        )
 
     forbidden = [
         "OnUpdate",
@@ -73,14 +127,31 @@ if PROGRESS.is_file():
         "SetAttribute(",
         "LogresDB",
         "LogresDiagnosticsDB",
+        "root:SetSize(600, 58)",
+        "Stonesplinter Seer slain  ·  1/10",
     ]
 
     for fragment in forbidden:
         if fragment in source:
             errors.append(
-                "objective progress exceeds passive/additive scope: "
+                "objective progress exceeds current contract: "
                 f"{fragment}"
             )
+
+    old_anchor_pattern = re.compile(
+        r'root:SetPoint\(\s*'
+        r'"CENTER",\s*'
+        r'UIParent,\s*'
+        r'"CENTER",\s*'
+        r'0,\s*'
+        r'-205\s*'
+        r'\)',
+        re.MULTILINE,
+    )
+    if old_anchor_pattern.search(source) is not None:
+        errors.append(
+            "objective progress still uses rejected lower action-lane anchor"
+        )
 
     container_secret = source.find("if isSecret(objectives) then")
     container_type = source.find('if type(objectives) ~= "table" then')
@@ -113,6 +184,16 @@ if PROGRESS.is_file():
     ):
         errors.append(
             "objective scalar fields must be secret-checked before type inspection"
+        )
+
+if HUD.is_file():
+    source = HUD.read_text(encoding="utf-8")
+    if (
+        'CreateFrame("Frame", "LogresHUDTarget", root)'
+        not in source
+    ):
+        errors.append(
+            "HUD must still provide addon-owned target presentation anchor"
         )
 
 if COMMANDS.is_file():

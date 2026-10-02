@@ -1,7 +1,7 @@
 # P0089 — Fix Objective Progress Placement
 
 Date: 2026-10-02
-Result: PREPARED — REPAIR 2; RUNTIME + VISUAL RETEST PENDING
+Result: INSTALLED / PUSHED — LIVE SOURCE PASS; PREVIEW REGRESSION (`1781c038`)
 
 ## Baseline
 
@@ -17,21 +17,19 @@ P0088 verified pushed:
 P0088 runtime/integration checks passed, but visual inspection showed the F.6
 objective-progress text overlapping the lower-center Logres action cluster.
 
-A possible post-kill `1/10` freshness concern remains OPEN / UNPROVEN because
-the visible `1/10` was also the hardcoded Objective Progress Preview sample.
-
 ## Presentation correction
 
-Presentation only:
+Presentation:
 - width `520`;
 - height `32`;
 - bottom of pulse anchored to top of addon-owned `LogresHUDTarget`;
 - 6px gap;
-- UI-center `y=-5` fallback;
-- visibly synthetic Preview:
-  `PREVIEW · Objective progress · 3/10`.
+- UI-center `y=-5` fallback.
 
-Unchanged:
+Preview was changed to the explicitly synthetic:
+`PREVIEW · Objective progress · 3/10`.
+
+Production contract remained unchanged:
 - active quest identity selection;
 - objective source;
 - secret handling;
@@ -48,25 +46,42 @@ No polling, ticker, delayed reread, broad hook, or watch/super-track mutation.
 
 Two P0089 artifacts were rejected by temporary-tree validation before tracked
 mutation:
-1. invalid generated Python in the checker;
+1. invalid generated Python in a checker;
 2. checker false negative caused by demanding single-line SetPoint formatting.
 
-Repair 2 replaces the checker from a validated payload and uses
-whitespace-tolerant structural regex for the intended multiline anchors.
-
-Evidence:
+Those failures are preserved in:
 `../evidence/P0089_DELIVERY_FAILURE_2026-10-02.md`.
 
-## Runtime retest
+The durable pushed runtime correction at `1781c038` did **not** replace
+`tools/check_objective_progress_contract.py`; earlier memory text claiming that
+the pushed checker used multiline-anchor structural regex was inaccurate and is
+superseded by this record.
 
-After verified push/deploy:
-1. Objective Progress Preview placement/readability;
-2. Immersion OFF/ON Preview behavior;
-3. Run All twice;
-4. Quest Probe for actual live objective count;
-5. one natural objective change;
-6. one real production F.6 pulse;
-7. Quest Probe again for updated live count;
-8. no duplicate production pulse without another change.
+## Runtime result
 
-WoW redeploy required after verified push.
+Live objective source:
+**PASS.**
+
+Quest 237 advanced naturally:
+- Skullthumper `3/10 -> 4/10`;
+- Seer remained `3/10`.
+
+Relevant event counters:
+- QUEST_LOG_UPDATE `85 -> 86`;
+- QUEST_WATCH_UPDATE `6 -> 7`.
+
+Production automatic pulse:
+**UNPROVEN** for that exact update because no post-change Objective Progress
+Check was captured before reload.
+
+Preview:
+**USABILITY REGRESSION CONFIRMED.**
+
+The explicit generic sample avoids pretending to be live, but is not useful
+when validating a real active multi-objective quest.
+
+P0090 corrects Preview to show current live objective rows when safely
+available, while leaving production logic unchanged.
+
+Evidence:
+`../evidence/F6_P0089_LIVE_SOURCE_PASS_PREVIEW_REGRESSION_2026-10-02.md`.

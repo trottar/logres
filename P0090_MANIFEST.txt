@@ -1,0 +1,35 @@
+Project Logres P0090
+Date: 2026-10-02
+Baseline: 1781c038637cef750061e20635e4c1310dcecc96
+Runtime: 0.0.36-dev
+Purpose: restore useful live Objective Progress Preview without changing production baseline/event logic
+
+Files:
+effbd61024cf16c4c612a1223fe682b65e8e2e2dba65e6eca498b4b03712032e  Logres/Core/Bootstrap.lua
+44654dc24811ed20dd43d96070a4a1099ddfe9cbac189c6d46ba9f8031b519c6  Logres/Logres.toc
+d3d9f349ef320d49809dc1eff2bb3cfc256abde1e84ff126fa96dd56552ba2c8  Logres/Quest/Progress.lua
+1cca85de0dd4551c709647540b2e52da18bc6262c969a1372c6c553763c507c1  docs/ROADMAP.md
+74993cc9155951e74e0635af8817d07ac322e4baa8286bc99ed0a28f618f1dab  docs/memory/CURRENT.md
+a4f92349e79cdf95ee3f60a217c1afec74cab588bd8fef4a94003fb033d857b4  docs/memory/evidence/F6_P0089_LIVE_SOURCE_PASS_PREVIEW_REGRESSION_2026-10-02.md
+652bd24d16717bae4edb63d16f32e0d8dee2092b2d3c3efd836e11a7ef903f16  docs/memory/evidence/P0090_WORKFLOW_REALIGNMENT_2026-10-02.md
+9f56e224ee406ce2a2668d8a6315514113cafae8d41bb24acff76c704961e9cb  docs/memory/handoffs/CURRENT_HANDOFF.md
+bed29bc601838c29cc3316ebd8e3076ac29c113fb753048e9022bc284bbd9670  docs/memory/investigations/ACTIVE.md
+bfb63490dc3fa06cf6e873b34c303e5ab2b62573a88613149aa7ab35c0614329  docs/memory/investigations/F6_CONTEXTUAL_OBJECTIVE_PROGRESS.md
+ad39cfd8d5fbd7851018c58ccbd1c49ad263e00aa9b3eda9c16eee51d53de0ae  docs/memory/patches/P0089_FIX_OBJECTIVE_PROGRESS_PLACEMENT.md
+64c097d82ee9bc9e38f9cf78d259488d9a735888967137173943436d1830ceb4  docs/memory/patches/P0090_LIVE_OBJECTIVE_PREVIEW.md
+a8304d15930881453683bdd4005109ac319babfd157bf6aedef180b899f2f377  docs/memory/patches/PATCH_INDEX.md
+60445bb6aa4227ead7b298cf3327db937e43d87a79ca081a90b23ec8ec8ffc1e  docs/memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md
+78aa79b704349b70ab3a8e8bceb701686a4dbcc8c49bd9131fb58f3628df17ba  docs/memory/roadmap/STATUS.md
+
+Validation:
+exact verified P0089 HEAD
+exact-byte verification of P0090-owned tracked inputs against HEAD
+full temporary git-archive final-tree construction
+python3 -m py_compile on every tools/check_*.py
+execution of every tools/check_*.py in temporary tree
+execution of every tools/check_*.py in real tree
+Preview current-objective semantic checks
+Preview baseline non-mutation checks
+git diff --check
+
+Runtime code changed: WoW redeploy required after verified push.

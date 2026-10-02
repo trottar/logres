@@ -95,6 +95,8 @@
 
 | P0088 | 2026-10-02 | INSTALLED / PUSHED — RUNTIME/INTEGRATION PASS; VISUAL FAIL | Implement F.6 contextual objective progress pulse (`228b467`) |
 
-| P0089 | 2026-10-02 | PREPARED — REPAIR 2; RUNTIME + VISUAL RETEST PENDING | Move F.6 pulse off action cluster; clarify Preview; record two static delivery failures |
+| P0089 | 2026-10-02 | INSTALLED / PUSHED — LIVE SOURCE PASS; PREVIEW REGRESSION; PRODUCTION PULSE UNPROVEN | Move F.6 pulse off action cluster; live source verified (`1781c038`) |
+
+| P0090 | 2026-10-02 | PREPARED — RUNTIME RETEST PENDING | Make Objective Progress Preview use current live objective rows without mutating production baseline |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.
