@@ -1,0 +1,39 @@
+Project Logres P0080 patch
+Date: 2026-10-02
+Baseline: 1aad7bad305865ff0fddab61b94b919371499c9c
+Runtime: 0.0.31-dev
+Purpose: close F.2; implement F.3 contextual XP pulse
+
+Files:
+90337c75aeb95f34873f8cfe98f57301ba77af083e7ae24c59e71292f01397e0  Logres/Core/Bootstrap.lua
+a21dc1add491cdec85c10f946938b60c2113cbd928c54715d4dcf72f85a3ab55  Logres/Logres.toc
+f40a1be3141d5feaf8a7c05202400fb3ec77b880d061fec6ae4f618d574ca30d  Logres/Core/Commands.lua
+7da4eefb90e786e76946a1d065754019f75a49ff45b0cb15b25bdef691409421  Logres/Quest/XP.lua
+813e857f20e36027a5ecbe71d5f489f460639aa3826019408fc0d79e9abfa006  tools/check_xp_pulse_contract.py
+164f89b0b92f5835fbb409ccdec582951d317d64b9ccbbd7f3a172b18895267d  docs/memory/CURRENT.md
+2db706c0e2788c72b69af314aa019a702dfbd903b9df38c49fa2bb5452fb97c3  docs/memory/handoffs/CURRENT_HANDOFF.md
+12a0533beafd0a5312bba1da4addc1db35f055e22b6619fdd9e6640e3e4d25f4  docs/memory/investigations/ACTIVE.md
+7ad781ef588b55e90616ea5659fdaf455d4e4a41d809311791d0aec7406aed89  docs/memory/investigations/F2_QUEST_XP_RUNTIME_CAPABILITY_PROBE.md
+4bb20f0f306a9475dd4b7387d9900404eb75598e75017c2bf95f25ed797cda7f  docs/memory/investigations/F3_CONTEXTUAL_XP_PULSE.md
+a65cfc74c1cb0547f0237e39d305fb3abc9bfd0d2b876d66b2c3a1c2f831eb15  docs/memory/evidence/P0078_RESTORATION_SETTLE_FAILURE_2026-10-02.md
+766ea393719d1f8afa3b0d5211eb1fa2b6e0633468880409797e3d28d5cca8bc  docs/memory/evidence/P0079_RESTORATION_TARGETED_PASS_2026-10-02.md
+8c1d0fab2ce5e6c6a169e374a7b2f01307eb338a1e10bbf21701f9461e61f265  docs/memory/roadmap/STATUS.md
+7f3eb1c2ba853c05115c9186776c8ca8f6c5f0867bec4de8b9fce8ff7b5c3236  docs/memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md
+accbd4f3f3f70c0cd84f4f9ddfc336f1017ead80a56018294227019f1f62147a  docs/memory/architecture/QUESTING.md
+c4c83db3fd582190a0e1826953ea983571ffb30df5cb2c6583949d630e3bfc5f  docs/memory/patches/P0079_RESTORATION_FAILURE_DIAGNOSTIC.md
+23e5c5220908072c1b8f906b20aba91dae634182543958a32f4d3a553c1540e4  docs/memory/patches/P0080_CONTEXTUAL_XP_PULSE.md
+c6c9da64dba08a3afa3033156a9fb852bde2f134a3251777bec337392d07d060  docs/memory/patches/PATCH_INDEX.md
+dcfc7ed8a3dcd492ba3c4bfaa4ee155c394e882836de9e099dc53233cf7a2354  docs/ROADMAP.md
+
+Checks:
+python3 tools/check_xp_pulse_contract.py
+python3 tools/check_restoration_diagnostic_contract.py
+python3 tools/check_quest_probe_contract.py
+python3 tools/check_hud_contract.py
+python3 tools/check_dev_panel_contract.py
+python3 tools/check_addon_structure.py
+python3 tools/check_memory_health.py
+git diff --check -- <P0080-owned files>
+
+Runtime code change: WoW redeploy required after push verification.
+Validation surface: developer panel -> XP Check / XP Preview / Run All.

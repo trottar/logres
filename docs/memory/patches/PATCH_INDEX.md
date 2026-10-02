@@ -80,6 +80,7 @@
 | P0076 | 2026-10-02 | INSTALLED / PUSHED | Record P0075 PASS; close E.4; open E.5 (`ebb4bbc7`) |
 | P0077 | 2026-10-02 | INSTALLED / PUSHED | D-030 minimap stays stock; close Phase E; open Phase F / F.1 (`bf73fcf4`) |
 | P0078 | 2026-10-02 | INSTALLED / PUSHED — CAPABILITY EVIDENCE; RESTORATION FAIL | Accept D-031; F.2 quest/XP probe (`8b38fe64`) |
-| P0079 | 2026-10-02 | PREPARED — TARGETED RUNTIME DIAGNOSTIC PENDING | Detail P0078 Restoration Check settle failure |
+| P0079 | 2026-10-02 | INSTALLED / PUSHED — TARGETED PASS / PRIOR FAILURE UNREPRODUCED | Detail P0078 Restoration Check settle failure (`1aad7bad`) |
+| P0080 | 2026-10-02 | PREPARED — RUNTIME + VISUAL PROOF PENDING | Close F.2; implement F.3 contextual XP pulse |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

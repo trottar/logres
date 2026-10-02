@@ -2271,6 +2271,113 @@ local function runContextPolicyCheck()
     ))
 end
 
+local function runXPCheck()
+    local status = Logres:GetModuleStatus("QuestXP")
+    local xp = Logres:GetModule("QuestXP")
+    local debugStatus = xp:GetDebugStatus()
+
+    local baselineCoherent = true
+
+    if debugStatus.baselineAvailable then
+        baselineCoherent =
+            type(debugStatus.lastCurrentXP) == "number"
+            and type(debugStatus.lastMaxXP) == "number"
+            and debugStatus.lastCurrentXP >= 0
+            and debugStatus.lastMaxXP > 0
+    end
+
+    local policyCoherent =
+        debugStatus.immersionEnabled
+        or debugStatus.pulseShown == false
+
+    local passed =
+        status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and debugStatus.rootReady == true
+        and debugStatus.textReady == true
+        and debugStatus.eventFrameReady == true
+        and debugStatus.timerAvailable == true
+        and debugStatus.xpAPIAvailable == true
+        and debugStatus.playerXPEventRegistered == true
+        and debugStatus.levelEventRegistered == true
+        and debugStatus.worldEventRegistered == true
+        and baselineCoherent
+        and policyCoherent
+        and debugStatus.lastError == nil
+
+    local currentText = "nil"
+    local maxText = "nil"
+    local deltaText = "nil"
+    local progressText = "nil"
+
+    if type(debugStatus.lastCurrentXP) == "number" then
+        currentText = tostring(debugStatus.lastCurrentXP)
+    end
+
+    if type(debugStatus.lastMaxXP) == "number" then
+        maxText = tostring(debugStatus.lastMaxXP)
+    end
+
+    if type(debugStatus.lastDelta) == "number" then
+        deltaText = tostring(debugStatus.lastDelta)
+    end
+
+    if type(debugStatus.lastProgressPercent) == "number" then
+        progressText =
+            string.format(
+                "%.1f",
+                debugStatus.lastProgressPercent
+            )
+    end
+
+    local line = string.format(
+        "initialized=%s enabled=%s module=%s immersion=%s api=%s timer=%s events=%s/%s/%s baseline=%s current=%s max=%s xpEvents=%s pulses=%s suppressed=%s previews=%s shown=%s delta=%s progress=%s sampleSecret=%s sampleReason=%s presentationReason=%s error=%s",
+        tostring(status.initialized),
+        tostring(status.enabled),
+        tostring(debugStatus.moduleEnabled),
+        tostring(debugStatus.immersionEnabled),
+        tostring(debugStatus.xpAPIAvailable),
+        tostring(debugStatus.timerAvailable),
+        tostring(debugStatus.playerXPEventRegistered),
+        tostring(debugStatus.levelEventRegistered),
+        tostring(debugStatus.worldEventRegistered),
+        tostring(debugStatus.baselineAvailable),
+        currentText,
+        maxText,
+        tostring(debugStatus.xpEventCount),
+        tostring(debugStatus.pulseCount),
+        tostring(debugStatus.suppressedCount),
+        tostring(debugStatus.previewCount),
+        tostring(debugStatus.pulseShown),
+        deltaText,
+        progressText,
+        tostring(debugStatus.lastSampleSecret),
+        tostring(debugStatus.lastSampleReason),
+        tostring(debugStatus.lastPresentationReason),
+        tostring(debugStatus.lastError)
+    )
+
+    emit(
+        "Logres xpcheck: "
+        .. (passed and "PASS" or "FAIL")
+        .. " ("
+        .. line
+        .. ")"
+    )
+end
+
+local function runXPPreview()
+    local xp = Logres:GetModule("QuestXP")
+    local ok, state = xp:ShowPreview()
+
+    emit(string.format(
+        "Logres xppreview: %s (state=%s)",
+        ok and "PASS" or "FAIL",
+        tostring(state)
+    ))
+end
+
 local function runWaypointProbe()
     if type(LogresWaypointAudit_Run) ~= "function" then
         emit(
@@ -2325,6 +2432,7 @@ local function runAllChecks()
     runPreferenceCheck()
     runLifecycleCheck()
     runHUDCheck()
+    runXPCheck()
     runActionCheck()
     runStockReplacementCheck()
     runImmersionCheck()
@@ -2414,6 +2522,8 @@ local function printHelp()
     emit("  /logres compasscheck")
     emit("  /logres waypointprobe")
     emit("  /logres questprobe")
+    emit("  /logres xpcheck")
+    emit("  /logres xppreview")
     emit("  /logres hudpreview [on|off]")
     emit("  /logres immersion [on|off|toggle]")
     emit("  /logres debug on")
@@ -2554,6 +2664,16 @@ local function handleCommand(message)
 
     if command == "questprobe" then
         runQuestProbe()
+        return
+    end
+
+    if command == "xpcheck" then
+        runXPCheck()
+        return
+    end
+
+    if command == "xppreview" then
+        runXPPreview()
         return
     end
 
@@ -2705,6 +2825,16 @@ Logres:RegisterDevPanelAction(
     "questProbe",
     "Quest Probe",
     "questprobe"
+)
+Logres:RegisterDevPanelAction(
+    "xpCheck",
+    "XP Check",
+    "xpcheck"
+)
+Logres:RegisterDevPanelAction(
+    "xpPreview",
+    "XP Preview",
+    "xppreview"
 )
 Logres:RegisterDevPanelAction(
     "immersionOn",

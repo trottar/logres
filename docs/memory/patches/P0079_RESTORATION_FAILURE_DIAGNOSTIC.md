@@ -1,7 +1,7 @@
 # P0079 — Restoration Failure Diagnostic
 
 Date: 2026-10-02
-Result: PREPARED — TARGETED RUNTIME DIAGNOSTIC PENDING
+Result: INSTALLED / PUSHED — TARGETED RUNTIME PASS / PRIOR FAILURE UNREPRODUCED (`1aad7bad`)
 
 ## Baseline
 
@@ -15,45 +15,28 @@ P0078 Run All:
 - cleanup had no error;
 - final state reconverged (`finalOK=true`).
 
-The persisted line did not identify the failing replacement subdomain.
-
 ## Change
 
-Extend the existing Restoration Check's failure output to record:
-- module readiness;
-- desired-policy match;
-- recovery requested/applied match;
-- ownership coherence;
-- error state;
-- action snapshot/routing;
-- Quiet snapshot;
-- Player interaction/presentation ownership;
-- Target watch/interaction/presentation ownership and override count.
+Expanded failure-only Restoration Check diagnostics.
 
-## Non-change
+No suppression/recovery behavior changed.
 
-No:
-- retry;
-- timer;
-- polling;
-- periodic reassertion;
-- Blizzard hook;
-- suppression-policy change.
+## Runtime result
 
-## Runtime
+P0079 targeted validation:
+- standalone Restoration Check PASS;
+- subsequent Run All PASS, including Restoration Check.
 
-Production runtime remains:
+The prior failure did not recur, so no mismatch detail was emitted.
+
+Classification:
+**P0078 failure remains OPEN — INTERMITTENT / UNREPRODUCED.**
+
+No behavior fix is justified.
+
+## Phase F result
+
+The restoration diagnostic no longer blocks F.2 closure.
+
+Production runtime remained:
 `0.0.30-dev`.
-
-This is runtime diagnostic code; WoW redeploy is required.
-
-## Validation
-
-Developer panel:
-1. Restoration Check once;
-2. Run All once;
-3. `/reload`;
-4. export diagnostics.
-
-If no recurrence occurs, preserve the P0078 failure as intermittent rather than
-inventing a fix.

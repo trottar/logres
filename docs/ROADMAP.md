@@ -76,21 +76,22 @@ Canonical phase record:
 
 ## Phase F — Quest Experience
 
-**Status: ACTIVE — F.2 runtime capability probe.**
+**Status: ACTIVE — F.3 contextual XP pulse.**
 
-F.1 is complete under:
-`memory/decisions/D-031_QUEST_EXPERIENCE_CAPABILITY_CONTRACT.md`
+F.1:
+complete under D-031.
+
+F.2:
+complete with runtime-proven XP/event and quest-detail inputs.
+
+Deferred:
+- populated active objective rows;
+- quest destination / quest compass marker.
 
 Current work:
-F.2 passively runtime-proves quest interaction reads, objective state, quest
-destination output, XP/rested XP, and relevant events through the developer
-panel.
-
-First production candidate after proof:
-**contextual XP pulse**.
-
-Quest compass integration remains conditional on a usable runtime-proven quest
-destination.
+F.3 implements the first production Phase F presentation:
+a brief event-driven contextual XP pulse, with no permanent bar and no stock XP
+suppression.
 
 Canonical phase record:
 `memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md`

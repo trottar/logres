@@ -1,7 +1,8 @@
 # F.2 — Quest / XP Runtime Capability Probe
 
-Status: ACTIVE — CAPABILITY EVIDENCE CAPTURED; BLOCKED BY RESTORATION FAILURE
+Status: CLOSED — CAPABILITY MATRIX RESOLVED
 Opened: 2026-10-02
+Closed: 2026-10-02
 
 Canonical contract:
 `../decisions/D-031_QUEST_EXPERIENCE_CAPABILITY_CONTRACT.md`
@@ -9,28 +10,18 @@ Canonical contract:
 Runtime evidence:
 `../evidence/F2_P0078_QUEST_XP_RUNTIME_EVIDENCE_2026-10-02.md`
 
-Probe:
-`../../../tools/probes/LogresQuestAudit`
+Targeted restoration follow-up:
+`../evidence/P0079_RESTORATION_TARGETED_PASS_2026-10-02.md`
 
 ## Proven
 
-- XP/current/max/rested values were normal non-secret scalars in tested world
-  state.
-- `PLAYER_XP_UPDATE` registered and fired.
-- `UPDATE_EXHAUSTION` registered and fired.
-- Quest detail passive reads worked for quest `436`.
-- `QUEST_DETAIL` and `QUEST_ACCEPTED` fired.
-- super-tracked quest identity worked.
-
-## Negative / deferred
-
-- quest `436` again produced no usable next waypoint or player-map waypoint;
-- quest compass marker remains unsupported;
-- completed quest `436` returned an empty objectives table, so populated
-  objective rows remain unproven;
-- progress/complete/turn-in/watch-update events were not naturally observed.
-
-## Capability conclusions
+- current/max/rested XP normal scalar access;
+- `PLAYER_XP_UPDATE`;
+- `UPDATE_EXHAUSTION`;
+- quest-detail passive reads for quest `436`;
+- `QUEST_DETAIL`;
+- `QUEST_ACCEPTED`;
+- super-tracked quest identity.
 
 Contextual XP source/event path:
 **PROVEN.**
@@ -38,31 +29,43 @@ Contextual XP source/event path:
 Quest-giver passive detail reads:
 **PROVEN for tested detail flow.**
 
-Populated objective rows:
-**UNPROVEN.**
+## Negative / deferred
 
-Quest destination / quest compass marker:
-**UNAVAILABLE in tested quest 436; DEFERRED.**
+- quest `436` again produced no usable next waypoint or player-map waypoint;
+- quest compass marker remains unsupported;
+- completed quest `436` returned an empty objective table, so populated active
+  objective rows remain unproven;
+- progress/complete/turn-in/watch-update events were not naturally observed.
 
-## Blocking runtime failure
+These are retained as explicit negative evidence or environmental deferrals.
 
-The final P0078 Run All produced a real Restoration Check failure at:
-**opposite preference state did not settle**.
+## Integrated validation follow-up
+
+P0078 Run All produced a real one-off Restoration Check failure:
+`opposite preference state did not settle`.
 
 Cleanup succeeded and final state reconverged.
 
-The existing diagnostic did not persist enough intermediate detail to identify
-the failing replacement domain.
+P0079 then ran:
+- standalone Restoration Check -> PASS;
+- Run All -> PASS, including Restoration Check.
 
-P0079 adds diagnostic detail only.
+The failure did not reproduce, so no subdomain-specific diagnostic line was
+generated.
+
+Classification:
+**OPEN — INTERMITTENT / UNREPRODUCED under targeted P0079 validation.**
+
+No behavioral fix is justified.
 
 ## Exit
 
-Do not advance to the contextual XP production slice until the P0079 targeted
-restoration diagnostic is run.
+F.2 exit criteria are satisfied:
+- contextual XP production input is authorized;
+- populated objective rows are deferred;
+- quest compass destination integration is deferred;
+- unobserved lifecycle events are recorded as environmental deferrals;
+- the unrelated restoration failure is preserved rather than erased.
 
-If restoration passes without recurrence, preserve the P0078 failure as
-intermittent/unreproduced and decide whether it remains blocking based on the
-new evidence.
-
-If it fails, investigate the identified subdomain before advancing.
+Next:
+**F.3 — Contextual XP pulse.**

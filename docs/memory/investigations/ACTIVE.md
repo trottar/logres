@@ -1,45 +1,51 @@
 # Active Investigations
 
-## F.2 — Quest / XP runtime capability probe
+## F.3 — Contextual XP pulse
 
 Status:
-**ACTIVE — CAPABILITY EVIDENCE CAPTURED; BLOCKED BY RESTORATION FAILURE**
+**ACTIVE — P0080 IMPLEMENTATION PREPARED**
+
+Canonical:
+`F3_CONTEXTUAL_XP_PULSE.md`
+
+Runtime target:
+`0.0.31-dev`.
+
+Developer-panel actions:
+- **XP Check**
+- **XP Preview**
+
+No stock XP/quest UI suppression is authorized.
+
+## Closed Phase F investigation
+
+F.2 quest / XP runtime capability probe is CLOSED.
 
 Canonical:
 `F2_QUEST_XP_RUNTIME_CAPABILITY_PROBE.md`
 
-Runtime evidence:
-`../evidence/F2_P0078_QUEST_XP_RUNTIME_EVIDENCE_2026-10-02.md`
+## Tracked intermittent runtime failure
 
-Capability results:
-- contextual XP source/event path proven;
-- quest-detail passive reads proven;
-- populated objective rows unproven;
-- quest destination for tested quest 436 unavailable.
-
-No stock quest/objective/XP suppression is authorized.
-
-## P0078 restoration settle failure
-
-Status:
-**OPEN — REPRODUCED ONCE / SUBDOMAIN UNKNOWN**
+P0078 Restoration Check settle failure:
+**OPEN — INTERMITTENT / UNREPRODUCED under P0079 targeted validation.**
 
 Evidence:
 `../evidence/P0078_RESTORATION_SETTLE_FAILURE_2026-10-02.md`
 
-P0079 adds diagnostic detail only; no behavior workaround.
+Targeted P0079 evidence:
+`../evidence/P0079_RESTORATION_TARGETED_PASS_2026-10-02.md`
+
+Do not add retries, polling, periodic reassertion, or broad hooks without a
+reproducible failing subdomain.
 
 ## Other tracked non-blocking defects / deferred domains
 
 - `D4_TARGETFRAME_REASSERTION_INTERMITTENT.md`
 - `FUTURE_AURA_STATUS_PRESENTATION.md`
 
-Do not conflate the P0078 Restoration Check failure with the TargetFrame
-reappearance without evidence.
+## Deferred quest/navigation evidence
 
-## Deferred navigation evidence
-
-- `SUPER_TRACKING_PATH_UPDATED` registered but did not fire in tested E.3 runs.
+- populated active-objective rows remain unproven;
 - quest IDs `436` and `237` have produced no usable next waypoint in tested
-  states.
-- quest waypoint presentation remains unsupported.
+  states;
+- quest compass marker remains unsupported.

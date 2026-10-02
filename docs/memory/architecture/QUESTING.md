@@ -34,20 +34,30 @@ The existing Compass remains the navigation renderer.
 
 Quest destination APIs may return nothing.
 
+Tested quest IDs `436` and `237` have not produced a usable destination.
+
 A quest compass marker requires a runtime-proven real destination and must clear
 rather than retaining stale state when that destination is unavailable.
 
 ## XP boundary
 
-The first production candidate is a brief contextual XP pulse.
+F.2 runtime-proved normal current/max/rested XP inputs and
+`PLAYER_XP_UPDATE`.
 
-It remains gated by runtime proof that current/max/rested XP inputs are usable
-on the tested Forever client.
+F.3 implements a brief contextual XP pulse:
+- positive same-range XP delta only;
+- `+N XP · progress%`;
+- approximately two seconds;
+- no permanent XP bar;
+- no stock XP suppression.
 
-The stock XP surface is not suppressed by the first slice.
+Level/range changes rebaseline rather than fabricating a gain.
+
+Immersion OFF suppresses presentation while the safe baseline continues to
+track XP events.
 
 ## Current work
 
-F.2 runs a passive developer-panel quest/XP capability probe.
+F.3 runtime proof of the contextual XP pulse.
 
-Source presence is not runtime proof.
+Populated objective rows and quest destination presentation remain deferred.

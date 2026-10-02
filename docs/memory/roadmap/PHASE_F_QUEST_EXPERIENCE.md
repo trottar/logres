@@ -1,6 +1,6 @@
 # Phase F — Quest Experience
 
-Status: ACTIVE — F.2 BLOCKED BY RESTORATION DIAGNOSTIC
+Status: ACTIVE — F.3
 
 ## Product Objective
 
@@ -31,9 +31,9 @@ Passive observation is separated from Blizzard-owned quest interaction/control.
 
 ## F.2 — Quest / XP runtime capability probe
 
-**ACTIVE — CAPABILITY EVIDENCE CAPTURED; INTEGRATED VALIDATION BLOCKED.**
+**COMPLETE.**
 
-P0078 runtime-proven:
+Runtime-proven:
 - current/max/rested XP normal scalar access;
 - `PLAYER_XP_UPDATE`;
 - `UPDATE_EXHAUSTION`;
@@ -42,40 +42,51 @@ P0078 runtime-proven:
 - `QUEST_ACCEPTED`;
 - super-tracked quest identity.
 
-Therefore the data/event prerequisite for a future contextual XP pulse is
-proven.
+Deferred/unproven:
+- populated active objective rows;
+- quest destination output;
+- quest compass marker.
 
-Not proven:
-- populated active objective rows.
+The P0078 Restoration Check failure is retained as intermittent/unreproduced
+after P0079 targeted Restoration Check + Run All both passed.
 
-Negative:
-- quest `436` again produced no usable quest destination;
-- quest compass marker remains unsupported.
+No behavioral workaround was added.
 
-## Integrated validation blocker
+## F.3 — Contextual XP pulse
 
-The P0078 Run All produced:
-`Restoration Check FAIL — opposite preference state did not settle`.
+**ACTIVE — P0080 PREPARED.**
 
-Cleanup succeeded and the final state reconverged.
+P0080 implements the first production Phase F presentation slice.
 
-P0079 adds diagnostic detail only.
+Contract:
+- event-driven only;
+- `UnitXP` / `UnitXPMax` safe sample;
+- positive same-range delta;
+- brief `+N XP · progress%` pulse;
+- approximately two-second lifetime;
+- rebaseline on level/range changes;
+- Immersion OFF presentation suppression with baseline maintenance;
+- no conventional XP bar;
+- no stock XP/quest UI suppression.
 
-Do not advance to F.3 until the targeted restoration evidence is reviewed.
+Diagnostics:
+- XP Check;
+- XP Preview;
+- XP Check included in Run All.
 
-## F.3+
+Runtime proof is required before F.3 closes.
 
-First production candidate remains:
-**contextual XP pulse**.
+## F.4+
 
-It is ready from a quest/XP capability perspective but remains blocked by the
-unresolved integrated Restoration Check failure.
+Choose only from proven capability.
 
-Quest compass integration remains conditional on a usable runtime-proven
-destination.
+Quest compass marker remains unavailable until a real quest destination is
+runtime-proven.
 
-NPC quest presentation and objective/helper replacement remain separately
-capability-gated.
+Populated objective-row presentation remains unavailable until tested.
+
+NPC quest presentation remains additive until interaction/control replacement
+is deliberately solved.
 
 ## Phase F Exit
 
