@@ -3,18 +3,26 @@
 ## F.6 — Contextual objective progress pulse
 
 Status:
-**ACTIVE — CONTRACT ACCEPTED; IMPLEMENTATION NEXT**
+**ACTIVE — IMPLEMENTED; RUNTIME + VISUAL PROOF PENDING**
 
 Canonical:
 `F6_CONTEXTUAL_OBJECTIVE_PROGRESS.md`
 
-F.5 runtime evidence now proves enough passive objective behavior for a narrow
-production pulse.
+P0088 implements:
+- passive super-tracked/selected quest identity;
+- passive objective recapture;
+- baseline-first/no-false-pulse policy;
+- meaningful same-quest count/finished change detection;
+- temporary bounded text presentation;
+- Immersion OFF suppression;
+- developer-panel Check/Preview;
+- Run All integration.
 
-Use:
-- `QUEST_LOG_UPDATE` as primary proven refresh;
-- `QUEST_WATCH_UPDATE` as additional proven refresh;
-- `SUPER_TRACKING_CHANGED` for identity/baseline changes.
+Refresh events:
+- `QUEST_LOG_UPDATE`;
+- `QUEST_WATCH_UPDATE`;
+- `SUPER_TRACKING_CHANGED` rebaseline only;
+- `PLAYER_ENTERING_WORLD` rebaseline only.
 
 Do not require:
 - `QUEST_PROGRESS`;
@@ -33,17 +41,6 @@ F.4 additive NPC quest detail presentation:
 
 F.5 objective/progress capability proof:
 **CLOSED — RUNTIME PASS.**
-
-Evidence:
-`../evidence/F5_SAME_QUEST_TRANSITION_PASS_2026-10-02.md`
-
-## Closed TargetFrame restoration investigation
-
-`P0080_TARGETFRAME_RESTORE_FAILURE.md`:
-**CLOSED — P0084 RUNTIME PASS.**
-
-The separate TargetFrame visual reappearance investigation remains open and is
-not merged with the restoration defect.
 
 ## Other tracked non-blocking defects / deferred domains
 

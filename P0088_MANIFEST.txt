@@ -1,0 +1,44 @@
+Project Logres P0088 patch
+Date: 2026-10-02
+Baseline: 4aecb22418d8980f2a121acce4d9eeafdf4a604b
+Runtime: 0.0.34-dev
+Purpose: implement F.6 contextual objective progress pulse; repair stale Compass version checker
+
+Files:
+3342c7c147663197c37ab1b8d7db8f7013980fcf67535881302f661325c24b1f  Logres/Core/Bootstrap.lua
+2a59eb1bb7be80d203623e4f8d8197811dec43e997c6db19ff677acdcd421151  Logres/Core/Commands.lua
+643d4d91514065344aecda563ac26277616390d1a6f92039394c3b2c5e9cb2bd  Logres/Logres.toc
+872ceee478b89577e03097827389aaa9f538e860128de2fdd498709571a4eb33  Logres/Quest/Progress.lua
+33d970ea87842d11bc7a5df2c112b43a42116ae811168c7e738e0b87bf3ead00  docs/memory/CURRENT.md
+90472dbe2b358d7a1c68c8af47d916a5bcf1db885e2cfe45b617430cb73db078  docs/memory/evidence/P0088_DELIVERY_FAILURE_2026-10-02.md
+a298f389ccf250957e59b96c485f7684752b167eab69e3283bbb211d7f78f68b  docs/memory/handoffs/CURRENT_HANDOFF.md
+dcfda542cfc3d63ec658d5529168c8ac1efa5442d61cb36f1f4476d6bf47d245  docs/memory/investigations/ACTIVE.md
+caec72aeacac785bb2481bdbc684dc707683c4b396c11306787b2305f549ffa8  docs/memory/investigations/F6_CONTEXTUAL_OBJECTIVE_PROGRESS.md
+d86f0067cabc4971b53bdd9d369f6f125b06e6c55be3e733702da25c19b277f8  docs/memory/patches/P0087_CLOSE_F5_OPEN_F6.md
+f378b5f71220f198bd5c1878b35b822cb53c066306b58a05e5df8d47330b1a1b  docs/memory/patches/P0088_IMPLEMENT_OBJECTIVE_PROGRESS.md
+bf3d8fc31e074ecbafd2d3132bffae454242bdf6167f8b840e7b42b5980dabbc  docs/memory/patches/PATCH_INDEX.md
+e5732365f204a95ddc41432c78cea75509eda6528a11b22b21a4d65217d59cab  docs/memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md
+a1111dd4f0a0322a79351bfda51ddac7e09699203b66803267d828880225f193  docs/memory/roadmap/STATUS.md
+b8c57d848a69c9e14963f5088ce51742b11ee1464ccedff0f4d1f20570698464  tools/check_compass_contract.py
+d6c098df6b3bceb63b1cccec9f5500e4286f819c9d2d8502ace014880ecdf2d0  tools/check_objective_progress_contract.py
+
+Checks:
+python3 tools/check_objective_progress_contract.py
+python3 tools/check_xp_pulse_contract.py
+python3 tools/check_quest_dialogue_contract.py
+python3 tools/check_quest_probe_contract.py
+python3 tools/check_dev_panel_contract.py
+python3 tools/check_target_frame_replacement_contract.py
+python3 tools/check_restoration_contract.py
+python3 tools/check_restoration_diagnostic_contract.py
+python3 tools/check_target_restore_error_diagnostic.py
+python3 tools/check_compass_contract.py
+python3 tools/check_context_policy_contract.py
+python3 tools/check_hud_contract.py
+python3 tools/check_addon_structure.py
+python3 tools/check_memory_health.py
+repository-wide static-checker historical-version-freeze audit
+temporary git-archive full-tree validation
+git diff --check -- <P0088-owned files>
+
+Runtime code change: WoW redeploy required after push verification.

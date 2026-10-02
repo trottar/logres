@@ -91,6 +91,8 @@
 
 | P0086 | 2026-10-02 | INSTALLED / PUSHED — PARTIAL F.5 PASS | Record populated incomplete/completed objective rows; same-quest transition pending (`d4e8c39`) |
 
-| P0087 | 2026-10-02 | PREPARED — DOCS-ONLY | Close F.5 same-quest refresh proof; open F.6 contextual objective progress pulse |
+| P0087 | 2026-10-02 | INSTALLED / PUSHED | Close F.5 same-quest refresh proof; open F.6 contextual objective progress pulse (`4aecb22`) |
+
+| P0088 | 2026-10-02 | PREPARED — RUNTIME + VISUAL PROOF PENDING | Implement F.6 contextual objective progress pulse |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

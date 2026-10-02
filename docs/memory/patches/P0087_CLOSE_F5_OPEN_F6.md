@@ -1,71 +1,39 @@
 # P0087 — Close F.5 / Open F.6
 
 Date: 2026-10-02
-Result: PREPARED — DOCS-ONLY CHECKPOINT
+Result: INSTALLED / PUSHED (`4aecb22`)
 
 ## Baseline
 
-P0086 verified pushed:
+P0086:
 `d4e8c39837210d38e73447f4800cc5448d1e956d`
 
-## F.5 closing evidence
+## Result
 
-Quest `237` supplied the required same-quest update:
+F.5 closed:
+**RUNTIME PASS.**
 
-- previous Seer objective: `0/10`, done=false;
-- later Seer objective: `1/10`, done=false;
-- second later probe retained `1/10`.
-
-This proves fresh same-quest recapture without stale prior-value retention.
-
-Event evidence:
-- `QUEST_LOG_UPDATE` proven;
-- `QUEST_WATCH_UPDATE` observed once;
-- `QUEST_PROGRESS`, `QUEST_COMPLETE`, and `QUEST_TURNED_IN` remain
-  environmental deferrals.
-
-F.5:
-**CLOSED — RUNTIME PASS.**
-
-## F.6 open
-
-F.6:
+F.6 opened:
 **Contextual objective progress pulse.**
 
-Contract:
+Accepted contract:
 - passive/event-driven;
 - baseline-first;
-- pulse only on meaningful same-quest objective count/finished changes;
-- temporary text-only presentation;
+- temporary/non-interactive;
 - no permanent tracker;
-- Immersion OFF suppression with safe baseline tracking;
 - no stock Objective Tracker suppression;
 - no watch/super-track mutation;
-- fail open on missing/secret/invalid/uncached data.
+- fail open.
 
-Developer-panel implementation should include:
-- Objective Progress Check;
-- Objective Progress Preview;
-- Run All integration.
+## Delivery history
 
-## Runtime
+The first P0087 docs-only apply was rejected by memory health because its
+proposed CURRENT omitted the required Success Criteria heading.
 
-Unchanged:
-`0.0.33-dev`.
-
-Docs-only patch.
-No WoW redeploy required.
-
-## Delivery repair
-
-The first P0087 apply failed during temporary-tree memory validation because the
-proposed `CURRENT.md` omitted the required Success Criteria heading.
-
-No tracked P0087 target file was written.
-
-The repair restores the required heading and adds exact artifact-level
-validation for all seven canonical CURRENT headings before packaging.
+The repair restored the heading and passed temporary-tree validation.
 
 Evidence:
 `../evidence/P0087_DELIVERY_FAILURE_2026-10-02.md`.
 
+Runtime remained:
+`0.0.33-dev`.

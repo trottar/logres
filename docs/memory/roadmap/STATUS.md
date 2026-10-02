@@ -35,24 +35,21 @@ State:
 | F.3 Contextual XP pulse | COMPLETE — runtime + integration + visual PASS |
 | F.4 Additive NPC quest detail presentation | COMPLETE — runtime + integration + visual PASS |
 | F.5 Objective / progress runtime capability proof | COMPLETE — runtime PASS |
-| F.6 Contextual objective progress pulse | ACTIVE — contract accepted; implementation next |
+| F.6 Contextual objective progress pulse | ACTIVE — implemented; runtime + visual proof pending |
 | F.7+ Remaining quest slices | QUEUED — capability-gated |
 
-## F.5 closure
+## F.6 implementation
 
-Runtime-proven:
-- nil/no-active;
-- empty objective list;
-- populated incomplete rows;
-- populated completed row;
-- same-quest `0/10 -> 1/10` update;
-- fresh repeated same-quest recapture;
-- `QUEST_WATCH_UPDATE` observed.
+P0088:
+- baseline-first passive objective recapture;
+- objective count/finished change pulse;
+- proven refresh events only;
+- temporary/non-interactive presentation;
+- Immersion OFF suppression;
+- no stock Objective Tracker suppression.
 
-Environmental deferrals:
-- `QUEST_PROGRESS`;
-- `QUEST_COMPLETE`;
-- `QUEST_TURNED_IN`.
+Runtime target:
+`0.0.34-dev`.
 
 ## Navigation
 

@@ -1,6 +1,6 @@
 # F.6 — Contextual Objective Progress Pulse
 
-Status: ACTIVE — CONTRACT ACCEPTED; IMPLEMENTATION NEXT
+Status: ACTIVE — IMPLEMENTED; RUNTIME + VISUAL PROOF PENDING
 Opened: 2026-10-02
 
 Canonical capability contract:
@@ -15,148 +15,148 @@ Present objective progress only when it meaningfully changes.
 
 This is a contextual pulse, not a permanent quest/objective tracker.
 
-The world-first rule remains:
-show an abstraction only when the player actually needs the update.
+## P0088 implementation
 
-## Passive source
+Module:
+`QuestObjectiveProgress`.
 
-Use the runtime-proven quest-log path:
-- current super-tracked quest ID when usable;
-- selected quest ID as fallback when usable;
-- `C_QuestLog.GetQuestObjectives(questID)`.
+Source:
+`Logres/Quest/Progress.lua`.
 
-Objective fields may be used only after secret-safe validation:
-- text;
-- finished;
-- numFulfilled;
-- numRequired.
+Runtime:
+`0.0.34-dev`.
 
-Do not persist objective text/content.
+### Passive identity
 
-## Refresh events
+Prefer:
+`C_SuperTrack.GetSuperTrackedQuestID`.
 
-Production may listen to:
-- `QUEST_LOG_UPDATE` — primary runtime-proven refresh;
-- `QUEST_WATCH_UPDATE` — runtime-observed refresh;
-- `SUPER_TRACKING_CHANGED` — identity/baseline update only.
+Safe fallback:
+`C_QuestLog.GetSelectedQuest`.
 
-Do not require:
+A secret/invalid/failing identity read fails open.
+
+### Objective source
+
+Use:
+`C_QuestLog.GetQuestObjectives(questID)`.
+
+Before inspection:
+- secret-check objective container;
+- secret-check each row;
+- secret-check each scalar field.
+
+Session baseline may contain safe objective text/counts for comparison.
+
+Real quest/objective content is not persisted to Logres SavedVariables or
+developer-panel diagnostics.
+
+### Baseline policy
+
+First usable sample:
+baseline only.
+
+Quest identity change:
+rebaseline and hide any old pulse.
+
+World/super-track rebaseline:
+no progress pulse merely because identity/context changed.
+
+Same quest:
+compare safe current rows to the immediately prior safe baseline.
+
+### Change policy
+
+A row is eligible only when the objective text remains the same at the same
+source position.
+
+Meaningful change:
+- fulfilled/required count changed; and/or
+- finished boolean changed.
+
+A presentable completion shows:
+`<objective>  ·  Complete`.
+
+A presentable count change shows:
+`<objective>  ·  current/required`.
+
+Added/removed/reidentified rows rebaseline without fabricating a progress
+claim.
+
+### Refresh events
+
+Production listens to:
+- `QUEST_LOG_UPDATE`;
+- `QUEST_WATCH_UPDATE`;
+- `SUPER_TRACKING_CHANGED`;
+- `PLAYER_ENTERING_WORLD`.
+
+The last two force rebaseline and do not themselves imply progress.
+
+Production does not require:
 - `QUEST_PROGRESS`;
 - `QUEST_COMPLETE`;
 - `QUEST_TURNED_IN`.
 
-Those remain environmental deferrals.
+### Presentation
 
-## Baseline and stale-state policy
-
-First usable sample for a quest:
-- establish baseline;
-- show nothing.
-
-Quest identity changes:
-- discard the previous quest baseline;
-- capture the new quest baseline;
-- show nothing merely because identity changed.
-
-Same quest:
-- recapture current objective rows after a proven refresh event;
-- compare only secret-safe normal scalar values;
-- pulse only when a row's count or finished state meaningfully changes.
-
-Unusable read:
-- clear/withhold presentation;
-- do not fabricate an empty/completed state;
-- do not reuse stale data as current data.
-
-## Presentation
-
-Initial production presentation:
 - temporary;
+- 3 seconds;
 - text-only;
 - non-interactive;
-- no permanent objective list;
-- no background tracker panel;
-- no exact replacement of Blizzard Objective Tracker.
-
-For a count change, a compact example shape is:
-`Stonesplinter Seer slain  ·  1/10`
-
-For completion:
-`Stonesplinter Seer slain  ·  Complete`
-
-The implementation may truncate long objective text conservatively.
-
-Multiple changed rows in one refresh should remain bounded and restrained.
-
-## Context policy
-
-Immersion ON:
-- normal contextual pulse behavior.
+- maximum two changed rows;
+- no permanent background/list.
 
 Immersion OFF:
-- suppress Logres objective presentation;
-- continue safe observation/baselining so re-enabling does not replay stale
-  progress as a new pulse.
+- hide/suppress Logres presentation;
+- continue safe objective baseline updates so re-enable does not replay stale
+  progress.
 
-## Fail-open
+### Blizzard ownership
 
-On:
-- missing active quest;
-- nil objectives;
-- secret objective container/row/field;
-- invalid scalar type;
-- API call failure;
-- uncached/empty data where completion cannot be inferred;
-
-show nothing and leave Blizzard UI untouched.
-
-## Blizzard ownership
-
-F.6 does not:
-- suppress the stock Objective Tracker;
-- mutate quest watch state;
+P0088 does not:
+- suppress Objective Tracker;
+- mutate watch state;
 - mutate super-track state;
-- alter quest log interaction;
-- alter accept/decline/continue/complete/reward controls;
-- add a quest compass marker.
+- mutate quest-log selection;
+- alter quest interaction controls.
 
 ## Diagnostics
 
-Implementation should add developer-panel:
+Developer panel:
 - **Objective Progress Check**
 - **Objective Progress Preview**
 
-Run All should include Objective Progress Check.
+Run All includes Objective Progress Check.
 
-Useful addon-owned counters/state:
-- refresh event counts;
-- baseline captures;
-- meaningful changes;
-- pulses shown;
-- suppressed pulses;
-- previews;
-- current quest ID if safely usable;
-- current baseline row count;
-- last presentation reason;
-- last safe error/reason.
+Addon-owned status includes:
+- event registration/counts;
+- baseline capture count;
+- meaningful change count;
+- pulse/suppressed/preview counts;
+- safe quest ID;
+- baseline row count;
+- last secret flag;
+- last sample/presentation reason;
+- last fixed error.
 
-No protected/secret Blizzard presentation state is inspected for proof.
+Real objective text is not emitted by the diagnostic.
 
 ## Runtime acceptance
 
 Required:
-1. Check PASS after initialization;
-2. Preview PASS / visible while Immersion ON;
+1. Check PASS;
+2. Preview visible while Immersion ON;
 3. Preview suppressed while Immersion OFF;
-4. first real baseline produces no false pulse;
-5. one real same-quest objective change produces a short pulse;
-6. repeat refresh without a new change produces no duplicate pulse;
-7. quest identity change does not replay prior objective progress;
-8. stock Objective Tracker remains unchanged/usable;
+4. initial baseline does not false-pulse;
+5. real same-quest objective update produces one short pulse;
+6. unchanged subsequent refresh does not duplicate;
+7. identity change does not replay old progress;
+8. Objective Tracker remains usable;
 9. no Lua/taint/protected/secret-value errors.
 
-Visual acceptance:
+Visual:
 - concise/readable;
 - temporary;
-- does not resemble a permanent tracker;
-- does not compete with the NPC quest-dialogue presentation.
+- no permanent-tracker feel;
+- no conflict with NPC quest dialogue.

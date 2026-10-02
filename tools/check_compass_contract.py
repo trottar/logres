@@ -210,11 +210,6 @@ if (
         f"{bootstrap_version} != {toc_version}"
     )
 
-if bootstrap_version != "0.0.30-dev":
-    errors.append(
-        "E.4 runtime must identify as 0.0.30-dev"
-    )
-
 print("Logres D-029 / E.4 compass contract")
 print("===================================")
 

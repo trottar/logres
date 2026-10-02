@@ -59,31 +59,29 @@ Environmental deferrals:
 
 ## F.6 — Contextual objective progress pulse
 
-**ACTIVE — CONTRACT ACCEPTED; IMPLEMENTATION NEXT.**
+**ACTIVE — IMPLEMENTED; RUNTIME + VISUAL PROOF PENDING.**
 
-Production direction:
-- passive/event-driven;
-- baseline-first;
-- pulse only on meaningful same-quest objective change;
-- temporary/non-interactive;
-- no permanent objective list;
-- no stock Objective Tracker suppression;
-- no watch/super-track mutation;
-- fail open on unusable/secret/uncached data.
+P0088 implementation:
+- module `QuestObjectiveProgress`;
+- safe super-tracked identity with selected-quest fallback;
+- passive objective recapture;
+- baseline-first/no-false-pulse policy;
+- same-quest count/finished comparison;
+- `QUEST_LOG_UPDATE` and `QUEST_WATCH_UPDATE` refresh;
+- super-track/world rebaseline-only behavior;
+- 3-second, maximum-two-row text pulse;
+- Immersion OFF suppression while baseline remains current;
+- Objective Progress Check/Preview;
+- Run All integration.
 
-Primary proven refresh:
-`QUEST_LOG_UPDATE`.
+P0088 does not:
+- suppress the stock Objective Tracker;
+- mutate watch/super-track state;
+- persist real objective content;
+- require unobserved progress/complete/turn-in events.
 
-Additional proven refresh:
-`QUEST_WATCH_UPDATE`.
-
-Identity/baseline refresh:
-`SUPER_TRACKING_CHANGED`.
-
-Do not require the still-unobserved progress/complete/turn-in events.
-
-Canonical investigation:
-`../investigations/F6_CONTEXTUAL_OBJECTIVE_PROGRESS.md`
+Runtime target:
+`0.0.34-dev`.
 
 ## Quest navigation
 

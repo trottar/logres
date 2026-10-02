@@ -2383,6 +2383,97 @@ local function runXPPreview()
     ))
 end
 
+local function runObjectiveProgressCheck()
+    local status =
+        Logres:GetModuleStatus("QuestObjectiveProgress")
+    local progress =
+        Logres:GetModule("QuestObjectiveProgress")
+    local debugStatus = progress:GetDebugStatus()
+
+    local identityAPIAvailable =
+        debugStatus.superTrackedAPIAvailable == true
+        or debugStatus.selectedQuestAPIAvailable == true
+
+    local baselineCoherent =
+        (
+            debugStatus.currentQuestID == nil
+            and debugStatus.baselineRowCount == 0
+        )
+        or (
+            type(debugStatus.currentQuestID) == "number"
+            and debugStatus.currentQuestID > 0
+            and type(debugStatus.baselineRowCount) == "number"
+            and debugStatus.baselineRowCount >= 0
+        )
+
+    local policyCoherent =
+        debugStatus.immersionEnabled == true
+        or debugStatus.pulseShown == false
+
+    local passed =
+        status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and debugStatus.rootReady == true
+        and debugStatus.textReady == true
+        and debugStatus.eventFrameReady == true
+        and debugStatus.timerAvailable == true
+        and debugStatus.objectiveAPIAvailable == true
+        and identityAPIAvailable
+        and debugStatus.questLogEventRegistered == true
+        and debugStatus.questWatchEventRegistered == true
+        and debugStatus.superTrackingEventRegistered == true
+        and debugStatus.worldEventRegistered == true
+        and baselineCoherent
+        and policyCoherent
+        and debugStatus.lastError == nil
+
+    emit(string.format(
+        "Logres objectiveprogresscheck: %s (initialized=%s enabled=%s module=%s immersion=%s api=%s identityAPI=%s timer=%s events=%s/%s/%s/%s eventCounts=%s/%s/%s/%s baselines=%s changes=%s pulses=%s suppressed=%s previews=%s shown=%s questID=%s rows=%s secret=%s sampleReason=%s presentationReason=%s error=%s)",
+        passed and "PASS" or "FAIL",
+        tostring(status.initialized),
+        tostring(status.enabled),
+        tostring(debugStatus.moduleEnabled),
+        tostring(debugStatus.immersionEnabled),
+        tostring(debugStatus.objectiveAPIAvailable),
+        tostring(identityAPIAvailable),
+        tostring(debugStatus.timerAvailable),
+        tostring(debugStatus.questLogEventRegistered),
+        tostring(debugStatus.questWatchEventRegistered),
+        tostring(debugStatus.superTrackingEventRegistered),
+        tostring(debugStatus.worldEventRegistered),
+        tostring(debugStatus.questLogEventCount),
+        tostring(debugStatus.questWatchEventCount),
+        tostring(debugStatus.superTrackingEventCount),
+        tostring(debugStatus.worldEventCount),
+        tostring(debugStatus.baselineCaptureCount),
+        tostring(debugStatus.meaningfulChangeCount),
+        tostring(debugStatus.pulseCount),
+        tostring(debugStatus.suppressedCount),
+        tostring(debugStatus.previewCount),
+        tostring(debugStatus.pulseShown),
+        tostring(debugStatus.currentQuestID),
+        tostring(debugStatus.baselineRowCount),
+        tostring(debugStatus.lastSecret),
+        tostring(debugStatus.lastSampleReason),
+        tostring(debugStatus.lastPresentationReason),
+        tostring(debugStatus.lastError)
+    ))
+end
+
+local function runObjectiveProgressPreview()
+    local progress =
+        Logres:GetModule("QuestObjectiveProgress")
+    local ok, state =
+        progress:ShowPreview()
+
+    emit(string.format(
+        "Logres objectiveprogresspreview: %s (state=%s)",
+        ok and "PASS" or "FAIL",
+        tostring(state)
+    ))
+end
+
 local function runQuestDialogueCheck()
     local status =
         Logres:GetModuleStatus("QuestDialogue")
@@ -2512,6 +2603,7 @@ local function runAllChecks()
     runLifecycleCheck()
     runHUDCheck()
     runXPCheck()
+    runObjectiveProgressCheck()
     runQuestDialogueCheck()
     runActionCheck()
     runStockReplacementCheck()
@@ -2604,6 +2696,8 @@ local function printHelp()
     emit("  /logres questprobe")
     emit("  /logres xpcheck")
     emit("  /logres xppreview")
+    emit("  /logres objectiveprogresscheck")
+    emit("  /logres objectiveprogresspreview")
     emit("  /logres questdialoguecheck")
     emit("  /logres questdialoguepreview")
     emit("  /logres hudpreview [on|off]")
@@ -2756,6 +2850,16 @@ local function handleCommand(message)
 
     if command == "xppreview" then
         runXPPreview()
+        return
+    end
+
+    if command == "objectiveprogresscheck" then
+        runObjectiveProgressCheck()
+        return
+    end
+
+    if command == "objectiveprogresspreview" then
+        runObjectiveProgressPreview()
         return
     end
 
@@ -2927,6 +3031,16 @@ Logres:RegisterDevPanelAction(
     "xpPreview",
     "XP Preview",
     "xppreview"
+)
+Logres:RegisterDevPanelAction(
+    "objectiveProgressCheck",
+    "Objective Progress Check",
+    "objectiveprogresscheck"
+)
+Logres:RegisterDevPanelAction(
+    "objectiveProgressPreview",
+    "Objective Progress Preview",
+    "objectiveprogresspreview"
 )
 Logres:RegisterDevPanelAction(
     "questDialogueCheck",

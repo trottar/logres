@@ -2,37 +2,31 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0086 is verified pushed at `d4e8c39`.
+P0087 is verified pushed at `4aecb22`.
 
-Production runtime:
-`0.0.33-dev`.
-
-F.5 is COMPLETE.
-
-Runtime proof:
-- nil/no-active objective state;
-- empty objective table on quest `436`;
-- incomplete populated rows on quest `237`;
-- completed populated row on quest `1338`;
-- quest `237` same-quest Seer objective changed `0/10 -> 1/10`;
-- repeated same-quest probe retained the fresh `1/10`;
-- `QUEST_WATCH_UPDATE` advanced to 1;
-- `QUEST_LOG_UPDATE` is proven active.
-
-Still environmental deferrals:
-- `QUEST_PROGRESS`;
-- `QUEST_COMPLETE`;
-- `QUEST_TURNED_IN`.
+Production runtime target:
+`0.0.34-dev`.
 
 Active work:
 **F.6 — Contextual objective progress pulse.**
 
-F.6 is temporary/event-driven:
-- baseline first;
-- pulse only on meaningful changed objective count/finished state;
-- no permanent tracker;
-- no stock Objective Tracker suppression;
-- no watch/super-track mutation;
-- fail open on unusable/secret/uncached data.
+P0088 implements:
+- `QuestObjectiveProgress`;
+- baseline-first passive objective reads;
+- `QUEST_LOG_UPDATE` refresh;
+- `QUEST_WATCH_UPDATE` refresh;
+- `SUPER_TRACKING_CHANGED` rebaseline;
+- temporary 3-second objective change pulse;
+- Immersion OFF suppression while baseline remains current;
+- Objective Progress Check/Preview;
+- Run All integration.
+
+P0088 does not:
+- suppress the stock Objective Tracker;
+- mutate quest watch or super-track state;
+- depend on unobserved QUEST_PROGRESS/QUEST_COMPLETE/QUEST_TURNED_IN;
+- persist real objective text/content.
+
+Runtime proof is pending after push/deploy.
 
 User performs all commits/pushes.
