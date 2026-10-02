@@ -8,8 +8,20 @@ local BUTTON_GAP_X = 8
 local BUTTON_GAP_Y = 6
 local BUTTON_COLUMNS = 3
 
+local MAX_DIAGNOSTIC_RUNS = 100
+local MAX_DIAGNOSTIC_LINES = 120
+
+local function ensureDiagnosticsDB()
+    LogresDiagnosticsDB = LogresDiagnosticsDB or {}
+    LogresDiagnosticsDB.schema = 1
+    LogresDiagnosticsDB.runs = LogresDiagnosticsDB.runs or {}
+    return LogresDiagnosticsDB
+end
+
 local Panel = Logres:RegisterModule("DevPanel", {
     OnInitialize = function(self)
+        ensureDiagnosticsDB()
+
         local frame = CreateFrame("Frame", "LogresDevPanel", UIParent)
         frame:SetSize(PANEL_WIDTH, PANEL_HEIGHT)
         frame:SetPoint("CENTER", UIParent, "CENTER", 0, 40)
@@ -141,7 +153,9 @@ local Panel = Logres:RegisterModule("DevPanel", {
             "GameFontDisableSmall"
         )
         hint:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 18, 17)
-        hint:SetText("Drag title area to move. /logres panel toggles this window.")
+        hint:SetText(
+            "Panel runs auto-save to LogresDiagnosticsDB on /reload/logout."
+        )
 
         self.frame = frame
         self.buttonHost = buttonHost
@@ -167,15 +181,51 @@ local Panel = Logres:RegisterModule("DevPanel", {
     end,
 })
 
-function Panel:AddResult(message)
-    self.results:AddMessage(tostring(message))
+function Panel:BeginDiagnosticRun(command)
+    local db = ensureDiagnosticsDB()
+    local run = {
+        command = tostring(command),
+        time = type(time) == "function" and time() or nil,
+        lines = {},
+    }
+
+    db.runs[#db.runs + 1] = run
+
+    while #db.runs > MAX_DIAGNOSTIC_RUNS do
+        table.remove(db.runs, 1)
+    end
+
+    db.lastCommand = run.command
+    db.lastTime = run.time
+
+    return run
+end
+
+function Panel:AddResult(message, run)
+    local text = tostring(message)
+    self.results:AddMessage(text)
+
+    if not run then
+        return
+    end
+
+    run.lines[#run.lines + 1] = text
+
+    while #run.lines > MAX_DIAGNOSTIC_LINES do
+        table.remove(run.lines, 1)
+    end
 end
 
 function Panel:RunCommand(command)
-    self:AddResult("> /logres " .. tostring(command))
+    local run = self:BeginDiagnosticRun(command)
+
+    self:AddResult(
+        "> /logres " .. tostring(command),
+        run
+    )
 
     Logres:RunDevCommand(command, function(line)
-        self:AddResult(line)
+        self:AddResult(line, run)
     end)
 end
 

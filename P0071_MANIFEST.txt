@@ -1,0 +1,24 @@
+Project Logres P0071 patch
+Date: 2026-10-01
+Baseline: f99afa9b74029a59ec78021715acdf1f32ded078
+Runtime: 0.0.29-dev
+
+Files:
+5d24eb8574b255ded5cc93cd2e4e4e0ee888644590d3cda90163cb8c57a3d93f  Logres/Dev/Panel.lua
+7ceeb8659db2810c4b51ab4abb32f622337cf75f7a51a835077898854443b3ed  Logres/Logres.toc
+51462d2fbdb1adfb892c4d45853f640448c1719ba7f99bf83d0874aa6f822a8d  tools/check_dev_panel_contract.py
+674b6eeb6998fe30b91496adebd1bcd3eece14bffec80cd1505e87efcafa39b8  tools/export_panel_diagnostics.py
+baabb3155cd4ff412ff03729652f641ae3190907b1f4965f4e2b82438bf8a04b  docs/memory/CURRENT.md
+ead729c7df241f21ab40a42ef04dc2478b7fb0eb1af4442e51e7731020e41726  docs/memory/handoffs/CURRENT_HANDOFF.md
+c08a73c76646a7e58bc98ce78cd7c9870b8428d37c18e894df0b842c08c34069  docs/memory/evidence/P0071_PANEL_DIAGNOSTIC_AUTODUMP_2026-10-01.md
+23d9cfe2119d851d23114a4b87aaf5ce03ee309bc9ff3a0e99d30ae8ca30206b  docs/memory/patches/P0071_PANEL_DIAGNOSTIC_AUTODUMP.md
+f744b3ae70400f4958308e50202ebac53dbdddccb9025500074ee896992e74c5  docs/memory/patches/PATCH_INDEX.md
+
+Checks:
+python3 tools/check_dev_panel_contract.py
+python3 tools/check_addon_structure.py
+python3 tools/check_memory_health.py
+python3 -m py_compile tools/export_panel_diagnostics.py
+git diff --check -- <P0071-owned files>
+
+Runtime change: WoW redeploy required after push verification.

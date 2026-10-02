@@ -29,6 +29,9 @@ if COMMANDS.is_file():
         '"hudcheck"',
         '"immersion on"',
         '"immersion off"',
+        '"waypointProbe"',
+        '"Waypoint Probe"',
+        '"waypointprobe"',
     ]
 
     for fragment in required:
@@ -71,6 +74,13 @@ if PANEL.is_file():
         "function Logres:ToggleDevPanel()",
         "OnEnable = function(self)",
         "self.frame:Show()",
+        "LogresDiagnosticsDB = LogresDiagnosticsDB or {}",
+        "function Panel:BeginDiagnosticRun(command)",
+        "function Panel:AddResult(message, run)",
+        "db.runs[#db.runs + 1] = run",
+        "MAX_DIAGNOSTIC_RUNS = 100",
+        "MAX_DIAGNOSTIC_LINES = 120",
+        "Panel runs auto-save to LogresDiagnosticsDB on /reload/logout.",
     ]
 
     for fragment in required:
@@ -87,6 +97,11 @@ if TOC.is_file():
     commands_index = source.find("Core\\Commands.lua")
     panel_index = source.find("Dev\\Panel.lua")
     lifecycle_index = source.find("Core\\Lifecycle.lua")
+
+    if "## SavedVariables: LogresDB, LogresDiagnosticsDB" not in source:
+        errors.append(
+            "Logres.toc must persist LogresDiagnosticsDB"
+        )
 
     if panel_index == -1:
         errors.append("Logres.toc missing Dev\\Panel.lua")

@@ -2,37 +2,23 @@
 
 Authoritative state: `../CURRENT.md`.
 
-P0069 is verified pushed at `9e637d5a`.
+P0070 is verified pushed at `f99afa9b`.
 
-Phase D is complete.
+Phase E / E.3 is active.
 
-Phase E is active.
+P0071 is prepared to make the developer panel auto-persist every diagnostic run
+to `LogresDiagnosticsDB`.
 
-E.1 and E.2 are complete.
+Runtime target:
+`0.0.29-dev`
 
-Current work:
-**E.3 — Waypoint-bearing capability/proof**
+Canonical runtime workflow after P0071:
+- use developer-panel actions;
+- panel output auto-persists to SavedVariables;
+- `/reload` flushes;
+- `python3 tools/export_panel_diagnostics.py`;
+- review `LOGRES_DIAGNOSTICS_LATEST.lua`.
 
-Production Logres runtime remains:
-`0.0.28-dev`
-
-P0069 added the temporary diagnostic addon:
-`tools/probes/LogresWaypointAudit`
-
-It probes:
-- player map/world position;
-- user waypoint retrieval;
-- super-tracked quest selection;
-- quest next-waypoint output;
-- map->world conversion;
-- candidate navigation events;
-- candidate bearing-axis conventions.
-
-It does not mutate navigation state, production Compass behavior, or minimap
-ownership.
-
-Next:
-apply P0070, deploy, and run E.3 through the developer-panel `Waypoint Probe`
-action before implementing any production waypoint marker.
+No manual copying from WoW text.
 
 User performs all commits/pushes.
