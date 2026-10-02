@@ -1,7 +1,7 @@
 # P0068 — Record E.2 Runtime Pass / Open E.3
 
 Date: 2026-10-01
-Result: PREPARED — DOCS ONLY
+Result: INSTALLED / PUSHED (`740ebe15`)
 
 ## Baseline
 
@@ -57,6 +57,8 @@ No runtime code changes.
 No WoW redeploy required.
 
 ## Next
+
+P0068 is verified pushed at `740ebe15`.
 
 Execute E.3 waypoint-bearing capability/proof before implementing waypoint
 presentation or changing minimap ownership.

@@ -1,0 +1,29 @@
+Project Logres P0069 patch
+Date: 2026-10-01
+Baseline: 740ebe15ae933dc50cbcd9482528a9ae6eb7f846
+Production runtime: 0.0.28-dev (unchanged)
+Probe: LogresWaypointAudit 0.1.0
+
+Files:
+04b388328f0418bd300cbac4528ee96bc8fc30dfc7d85d286170da9c5f82ecf9  tools/probes/LogresWaypointAudit/LogresWaypointAudit.lua
+360a70c08de2231eb42ba6671e688ebbda7e489a7f58938e53cc9b5edcd5b5e2  tools/probes/LogresWaypointAudit/LogresWaypointAudit.toc
+14e012a6767c41ef2baefc960c32960ea11d303d0fde1da1fc3c4737f76909ff  tools/probes/LogresWaypointAudit/README.md
+e7007ce9dce626fc49ed457c4f5a9781552db860549254b63cee9ccc423e0e50  tools/check_waypoint_probe_contract.py
+71542e224def578dca8388e35d7645e93b427590b9466a59ed173a1b8311a87f  docs/memory/evidence/E3_P0069_WAYPOINT_SOURCE_PROBE_DESIGN_2026-10-01.md
+260919cb40ddbd0059f3cb2eeca59c1a14b22e76bfb4962dc0b799ecae58d050  docs/memory/investigations/E3_WAYPOINT_BEARING_CAPABILITY_PROOF.md
+f5bf0454197b4418172a545c04e8172f7b6a3a8b3d5a83e2ae43a9e2797f12cd  docs/memory/CURRENT.md
+c405531597cc8f160e00cf745ad333cf138cb20a92709494820bfac6119d6303  docs/memory/handoffs/CURRENT_HANDOFF.md
+33ace35fc33a3bc1aa16bf642be091e9af9c186d8f88369fe033e3d67d0ad5c0  docs/memory/investigations/ACTIVE.md
+d0c58cf98d61920ffa0e3e585738eb0885bd0f5d72194f54a5ab49fdbfd693c7  docs/memory/roadmap/PHASE_E_COMPASS_NAVIGATION.md
+3015b1560f33b5e282277c39a2bbc1e0cc77dbf5f0cdb2fc3ed2225155383635  docs/memory/patches/P0068_RECORD_E2_PASS_OPEN_E3.md
+d28090ac864ecf2f4a83e43e6f658d70799a0abce81b789d606c42c7297c6f43  docs/memory/patches/P0069_E3_WAYPOINT_CAPABILITY_PROBE.md
+7a580ddbcdcf19e7119e3c33e6b8e903a563c980df431e2db4a30273c62da2fc  docs/memory/patches/PATCH_INDEX.md
+
+Checks:
+python3 tools/check_waypoint_probe_contract.py
+python3 tools/check_memory_health.py
+git diff --check -- <P0069-owned files>
+
+Runtime diagnostic change: in-game probe deployment required after push verification.
+Production Compass/minimap behavior is unchanged.
+Unrelated local modifications/untracked files are preserved.

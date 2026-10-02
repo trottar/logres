@@ -16,9 +16,10 @@ project: logres
 
 E.1 and E.2 are complete.
 
-P0067 is verified pushed at `931f068e`.
+P0068 is verified pushed at `740ebe15`.
 
-The user reported that all requested P0067 runtime validation checks passed.
+P0069 prepares a dedicated waypoint capability probe; production Logres remains
+at `0.0.28-dev`.
 
 ## Verified State
 
@@ -28,31 +29,22 @@ The user reported that all requested P0067 runtime validation checks passed.
 - Phase C complete.
 - Phase D complete.
 - D.1–D.6 complete.
-- P0063 pushed at `20b1bf55`; user-reported runtime validation PASS.
-- P0064 pushed at `770f9f30`; assistant workflow failures are durable project
-  knowledge and the standard patch procedure is restored.
 - P0065 pushed at `46271f97`; Phase D closed and Phase E opened.
 - P0066 pushed at `586d188d`; D-029 accepted, E.1 closed, E.2 opened.
-- P0067 pushed at `931f068e`; runtime `0.0.28-dev`.
-- P0067 requested runtime validation passed:
-  - open-world Compass Check PASS;
-  - heading tape followed player rotation;
-  - N/E/S/W orientation was correct;
-  - Immersion OFF hid/suspended the compass and Compass Check passed;
-  - Immersion ON restored the compass and Compass Check passed;
-  - Run All passed;
-  - no Lua/taint/secret regression was reported;
-  - minimap remained unchanged.
-- Direct P0067 module suspension/restoration across a natural instance transition
-  was not separately exercised in the final requested validation sequence.
-- Existing I-001 runtime evidence remains authoritative for the underlying
-  restricted-context capability boundary: facing/position were unavailable in
-  the tested party instance and restored after returning to the world.
-- E.2 therefore closes with direct world/preference/orientation proof plus the
-  explicitly permitted instance environmental deferral.
+- P0067 pushed at `931f068e`; heading-only compass runtime proof passed.
+- P0068 pushed at `740ebe15`; E.2 closed and E.3 opened.
 - D-029 remains the canonical Phase E navigation capability contract.
-- E.2 uses `GetPlayerFacing()` only and has no position/waypoint dependency.
-- User/quest waypoint behavior remains unproven and is now the active E.3 scope.
+- E.3 requires runtime proof before production waypoint presentation.
+- Current source supports a narrow dedicated diagnostic:
+  - user waypoint retrieval source exists;
+  - map position -> world position conversion source exists;
+  - quest next-waypoint and super-track sources exist;
+  - SuperTrack events are candidates for runtime proof.
+- `USER_WAYPOINT_UPDATED` remains unproven as a Forever dependency.
+- P0069 does not change the production Compass module.
+- P0069 does not change the production runtime version.
+- P0069 does not set/clear waypoints or mutate supertracking.
+- P0069 does not suppress/mutate the minimap.
 - Minimap suppression remains forbidden/capability-gated.
 - Party/CompactPartyFrame suppression remains capability-deferred.
 - Primary replacement/routing ownership remains deferred.
@@ -63,19 +55,19 @@ The user reported that all requested P0067 runtime validation checks passed.
 
 ## Next Action
 
-Execute E.3 waypoint-bearing capability/proof before adding any waypoint marker.
+Deploy the temporary P0069 `LogresWaypointAudit` addon and execute the E.3
+runtime matrix:
 
-Prove:
-1. user waypoint retrieval on Forever;
-2. active/super-tracked quest selection behavior;
-3. quest waypoint result semantics;
-4. reliable Forever update events;
-5. player + destination map/world conversion;
-6. axis/bearing orientation in game;
-7. same-domain requirements for valid bearing math;
-8. fail-open behavior when any required input is unavailable.
+1. open-world snapshot with no user waypoint;
+2. snapshot with an active user waypoint at a visibly known direction;
+3. change/clear the waypoint and inspect candidate event counts;
+4. super-track a quest with a visible destination and snapshot;
+5. change super-tracking if convenient and inspect event counts;
+6. compare recorded bearing candidates with visible direction.
 
-Do not add waypoint presentation from source presence alone.
+Preserve unavailable/unsupported cases as negative evidence.
+
+Do not add production waypoint presentation yet.
 
 Do not suppress the minimap.
 
@@ -94,10 +86,9 @@ E.3 succeeds when:
 
 - **Phase D / D.1–D.6:** complete.
 - **E.1:** complete.
-- **E.2:** complete with user-reported requested runtime PASS and explicit
-  natural-instance environmental deferral.
+- **E.2:** complete.
 - **D-029 heading source:** `GetPlayerFacing()`.
-- **Waypoint markers:** E.3 capability/proof first; presentation remains unproven.
+- **Production waypoint marker:** not authorized before E.3 runtime proof.
 - **Minimap suppression:** deferred/capability-gated.
 - **Party suppression:** capability-deferred.
 - **Primary replacement/routing:** deferred.
@@ -109,12 +100,8 @@ E.3 succeeds when:
 
 - `docs/memory/decisions/D-029_COMPASS_NAVIGATION_CAPABILITY_CONTRACT.md`
 - `docs/memory/evidence/E1_COMPASS_NAVIGATION_SOURCE_REVIEW_2026-10-01.md`
-- `docs/memory/evidence/E2_P0067_HEADING_COMPASS_IMPLEMENTATION_2026-10-01.md`
 - `docs/memory/evidence/E2_P0067_RUNTIME_PASS_2026-10-01.md`
-- `docs/memory/evidence/E2_P0067_STATIC_CHECKER_FAILURE_2026-10-01.md`
-- `docs/memory/investigations/E2_HEADING_COMPASS_RUNTIME_VALIDATION.md`
+- `docs/memory/evidence/E3_P0069_WAYPOINT_SOURCE_PROBE_DESIGN_2026-10-01.md`
 - `docs/memory/investigations/E3_WAYPOINT_BEARING_CAPABILITY_PROOF.md`
 - `docs/memory/roadmap/PHASE_E_COMPASS_NAVIGATION.md`
 - `docs/memory/architecture/COMPASS.md`
-- `docs/memory/evidence/I001_RUNTIME_PASS_01_2026-09-30.md`
-- `docs/memory/evidence/I001_RUNTIME_PASS_02_2026-09-30.md`

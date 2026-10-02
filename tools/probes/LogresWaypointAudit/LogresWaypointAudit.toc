@@ -1,0 +1,8 @@
+## Interface: 16001
+## Title: Logres Waypoint Audit
+## Notes: Temporary Phase E.3 waypoint capability probe for Project Logres.
+## Author: Project Logres
+## Version: 0.1.0
+## SavedVariables: LogresWaypointAuditDB
+
+LogresWaypointAudit.lua

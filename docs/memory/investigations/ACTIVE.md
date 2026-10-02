@@ -3,14 +3,14 @@
 ## E.3 — Waypoint-bearing capability/proof
 
 Status:
-**ACTIVE**
+**ACTIVE — P0069 PROBE PREPARED**
 
 Canonical:
 `E3_WAYPOINT_BEARING_CAPABILITY_PROOF.md`
 
 Next:
-prove Forever destination retrieval, conversion, update events, and bearing
-orientation before waypoint-marker implementation.
+deploy `LogresWaypointAudit` and collect user-waypoint, quest-waypoint,
+conversion, event, and bearing-orientation runtime evidence.
 
 ## Tracked non-blocking defects / deferred domains
 
