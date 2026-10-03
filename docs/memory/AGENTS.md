@@ -182,6 +182,12 @@ When parsing `git status --porcelain`, preserve its leading whitespace exactly;
 never call `.strip()` on the machine-readable output before reading status
 columns.
 
+Generated patch appliers must validate text anchors against the authoritative
+baseline before handoff. If a fragment occurs more than once, do not use a
+global unique-anchor replacement for it: scope the replacement to the owning
+function/block or use an explicitly validated occurrence. Keep transform
+construction pre-write so an anchor failure cannot leave tracked partial state.
+
 ## Commands
 
 Commands given to the user must be:

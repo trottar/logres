@@ -6,11 +6,14 @@ Authoritative state:
 Phase G:
 **ACTIVE — G.5.**
 
-Latest verified predecessor checkpoint:
-P0115 `4ba6393193c830e5deb08a63bb82fdaf2543aa8d`.
+Latest verified durable checkpoint:
+P0116 `c64fcc97698e0dbe98a8d52469444f2ef15a76ec`.
 
-Current runtime tree:
+Current pushed runtime:
 `0.0.46-dev` — P0116 action visual translation; in-client visual proof pending.
+
+P0117 prepared runtime:
+`0.0.47-dev`.
 
 Target 50 without max-distance mutation:
 **CLOSED — CLEAN NEGATIVE.**
@@ -40,11 +43,18 @@ P0112 runtime `0.0.45-dev` read-only PASS recorded:
 - locked=false, secure=false, readOnly=false;
 - DynamicCam not loaded; secret=false; error=nil.
 
-Next:
-resolve product/ownership policy for any temporary above-default account-scoped
-camera-distance mutation. No SetCVar probe is authorized yet.
+DynamicCam parity correction:
+requested Taxi target `50` is not a physical-reachability guarantee. Pinned
+LibCamera accepts the engine max-distance clamp.
 
-Production Taxi remains fail-open.
+P0117 prepares runtime `0.0.47-dev` production Taxi zoom:
+requested=50, effective=min(50, live ceiling), entry=5s, no SetCVar.
+
+Next after verified push:
+deploy, use Phase G GUI, obtain one normal Taxi-flight automatic ownership proof,
+then verify destination context after landing.
+
+Production Taxi: P0117 prepared; runtime proof pending.
 
 Parallel accepted Phase H+ direction remains unchanged:
 - D-036 health-tunnel visible-field contract;

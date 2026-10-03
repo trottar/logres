@@ -79,16 +79,36 @@ Classification:
 
 The prior decision gate therefore resolves on `default < 50 / 15`.
 
-### Next G.5 checkpoint
+### DynamicCam parity correction
 
-Resolve the product/ownership contract for any temporary above-default,
-account-scoped camera-distance mutation.
+Canonical:
+`../evidence/G5_DYNAMICCAM_TAXI_PARITY_CORRECTION_2026-10-03.md`.
 
-Before any SetCVar probe, define current-value restoration, coexistence,
-reload/logout/disable/error/crash persistence, combat/protected behavior, and
-fail-open semantics.
+Pinned DynamicCam/LibCamera treats `50` as the requested Taxi target and accepts
+the engine max-distance clamp. Physical zoom 50 is not a prerequisite for
+reproducing the user's situation action.
 
-Production Taxi remains fail-open until explicitly authorized.
+P0109/P0112 measurements remain valid but no longer block Taxi zoom.
+
+### P0117 production Taxi zoom
+
+Runtime:
+`0.0.47-dev`.
+
+Contract:
+- existing `state.onTaxi`;
+- requested target `50`;
+- diagnostic effective target = `min(50, live factor * 15)`;
+- transition `5` seconds;
+- instance and DynamicCam fail-open preserved;
+- no SetCVar;
+- no Taxi rotation;
+- no Taxi UI fade.
+
+Next:
+runtime-prove automatic Taxi ownership and destination convergence.
+
+Production Taxi is not considered closed until that runtime proof passes.
 
 ## Parallel future integration direction
 

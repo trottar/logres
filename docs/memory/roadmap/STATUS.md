@@ -7,7 +7,7 @@ As of 2026-10-03.
 **Phase G — Cinematic Camera**
 
 Active work item:
-**G.5 camera-distance product/ownership policy after default negative**
+**G.5 DynamicCam-parity production Taxi zoom runtime proof**
 
 State:
 **Phase F COMPLETE; Phase G ACTIVE — G.5**
@@ -62,13 +62,17 @@ P0112 runtime `0.0.45-dev` read-only PASS:
 
 Therefore the inherited client/DynamicCam default cannot satisfy target 50.
 
+DynamicCam parity correction:
+requested target `50` may be physically engine-clamped; reachability of literal
+50 is not a production prerequisite.
+
+P0117 prepares runtime `0.0.47-dev` production Taxi zoom with requested target
+50, live effective-ceiling diagnostics, and 5-second entry transition.
+
 Next:
-resolve product/ownership policy for any temporary above-default account-scoped
-max-distance mutation.
+runtime-prove automatic Taxi ownership and destination convergence.
 
-Production Taxi remains fail-open.
-
-No CVar mutation or clamped target is authorized.
+No max-distance mutation, Taxi rotation, or Taxi UI fade is authorized.
 
 ## Phase H queued direction
 

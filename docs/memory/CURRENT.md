@@ -12,19 +12,22 @@ project: logres
 
 ## Current Work Item
 
-**G.5 — Resolve product/ownership policy for any above-default Taxi camera-distance CVar.**
+**G.5 — Runtime-prove DynamicCam-parity production Taxi zoom with engine-clamped target semantics.**
 
-Latest verified predecessor checkpoint:
-P0115 `4ba6393193c830e5deb08a63bb82fdaf2543aa8d`.
+Latest verified durable checkpoint:
+P0116 `c64fcc97698e0dbe98a8d52469444f2ef15a76ec`.
 
-Current runtime tree:
+Current pushed runtime:
 `0.0.46-dev` — P0116 action visual translation; in-client visual proof pending.
+
+P0117 prepared runtime:
+`0.0.47-dev`.
 
 G.4 status:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
 G.5 status:
-**P0112 READ-ONLY DEFAULT/METADATA PASS; DEFAULT FACTOR 1 / CEILING 15 CANNOT SUPPORT TARGET 50; PRODUCT/OWNERSHIP POLICY NEXT.**
+**DYNAMICCAM PARITY CONTRACT CORRECTED; TARGET 50 IS REQUESTED, NOT GUARANTEED PHYSICAL; P0117 TAXI ZOOM RUNTIME PROOF NEXT.**
 
 ## Verified State
 
@@ -50,10 +53,11 @@ G.5 status:
   is no longer the main missing work for the covered families.
 - P0115 is verified durable at `4ba63931` and preserves the twelve approved
   visual sheets plus D-039.
-- P0116 begins production translation without changing the active G.5 product
-  question: `Logres/Media/Theme.lua` owns runtime visual paths/tokens and the
-  proven secure action buttons consume approved frame/hover/pressed/checked/
-  activation-flash assets. Runtime visual validation is still pending.
+- P0116 at `c64fcc97` durably begins production visual translation without
+  changing the active G.5 product question: `Logres/Media/Theme.lua` owns runtime
+  visual paths/tokens and the proven secure action buttons consume approved
+  frame/hover/pressed/checked/activation-flash assets. Runtime visual validation
+  remains pending.
 - P0112 at `dea48e04` is durable on runtime `0.0.45-dev`; its read-only
   Camera Distance Info runtime PASS measured current factor `1.2`, default
   factor `1`, ceilings `18`/`15`, and required target-50 factor
@@ -86,6 +90,10 @@ G.5 status:
   locked=false, secure=false, readOnly=false, secret=false, error=nil.
 - Both `currentSupports50` and `defaultSupports50` are false. Therefore the
   inherited DynamicCam/client default cannot satisfy target 50.
+- P0117 source correction: pinned DynamicCam/LibCamera does not require physical
+  reachability of requested Taxi target `50`; it requests the target and accepts
+  the engine max-distance clamp. The previous above-default-CVar gate was an
+  over-interpretation, not a DynamicCam parity requirement.
 - Taxi rotation and Taxi UI hide/fade remain separately gated.
 - D-035 quest interaction ownership remains a valid future endpoint with Blizzard
   fail-open controls until each replacement capability is proven.
@@ -99,43 +107,43 @@ G.5 status:
 
 ## Next Action
 
-Resolve the **product/ownership contract** for any temporary
-`cameraDistanceMaxZoomFactor` increase above both the current factor `1.2` and
-client default `1`.
+After P0117 is verified pushed, deploy runtime `0.0.47-dev`.
 
-No runtime mutation is authorized yet.
+Use the existing Phase G developer-panel GUI and obtain one normal Taxi-flight
+runtime proof:
+- automatic context becomes `taxi`;
+- requested target remains `50`;
+- effective target reflects the current live physical max-distance ceiling;
+- duration is `5`;
+- engine/geometry limitation is not counted as a Taxi controller failure;
+- failures=0, secret=false, error=nil;
+- after landing, destination context reconciles normally.
 
-Before any SetCVar probe, define:
-- whether Logres is allowed to alter this account-stored setting at all;
-- exact target factor `50 / 15`;
-- capture/restore semantics using the observed pre-ownership value, not default;
-- coexistence with user/other-addon changes;
-- reload/logout/disable/error/crash persistence behavior;
-- combat/protected-state behavior;
-- fail-open behavior if ownership or restoration is uncertain.
+No SetCVar, Taxi rotation, or Taxi UI fade is part of this checkpoint.
 
 ## Decision Gate
 
-P0112 resolves the prior gate:
+Pinned DynamicCam + LibCamera resolve the prior interpretation:
 
-- default factor `1` < required `50 / 15`;
-- default ceiling `15` cannot reach target 50;
-- current factor `1.2` / ceiling `18` also cannot reach target 50;
-- the CVar is account-stored and metadata does not mark it locked, secure, or
-  read-only.
+- Taxi `50` is the requested conditional-out target;
+- DynamicCam does not first make physical zoom 50 reachable;
+- the engine may clamp below 50;
+- a clamped endpoint is not treated as situation failure.
 
-Therefore the next question is not capability-by-default. It is whether Logres
-should deliberately own a persistent account-scoped setting temporarily.
+Therefore above-default max-distance mutation is **not a prerequisite** for the
+Taxi zoom action.
 
-Do not clamp Taxi to 18 and do not call SetCVar until that policy is explicit.
+P0112 current/default measurements remain valid evidence for later full CVar
+parity work, but that work no longer blocks this Taxi slice.
 
 ## Success Criteria
 
-The next G.5 contract checkpoint completes when:
-- the product decision on temporary above-default max-distance ownership is explicit;
-- exact restoration ownership is defined around current value `1.2`;
-- interruption/persistence/coexistence boundaries are explicit;
-- a smallest safe mutation capability probe is defined, or mutation is rejected.
+This P0117 runtime checkpoint completes when a normal Taxi flight proves:
+- Taxi wins the non-instance camera priority slice;
+- requested target `50` is retained;
+- live effective ceiling is reported when readable;
+- the 5-second transition completes without addon-owned error/secret failure;
+- Taxi exit returns to the correct destination context.
 
 ## Do Not Reopen Without New Evidence
 
@@ -150,8 +158,9 @@ The next G.5 contract checkpoint completes when:
 - **Client default factor:** 1; ceiling 15.
 - **Target-50 default support:** false.
 - **CVar metadata:** account-stored=true; character-stored=false; locked=false; secure=false; readOnly=false.
-- **Camera-distance mutation:** still not authorized.
-- **Production Taxi ownership:** still fail-open.
+- **Camera-distance mutation:** not required for Taxi zoom parity; still not authorized.
+- **Taxi target 50 semantics:** requested target; engine-clamped physical endpoint is valid.
+- **Production Taxi ownership:** P0117 prepared; runtime proof pending.
 - **Taxi rotation/UI fade:** separately gated.
 - **D-036 health tunnel:** accepted/frozen future visual contract.
 - **D-037 navigation/minimap direction:** accepted future endpoint; capability-gated.
@@ -163,6 +172,7 @@ The next G.5 contract checkpoint completes when:
 - `docs/memory/evidence/G5_P0109_TARGET50_NEGATIVE_2026-10-03.md`
 - `docs/memory/evidence/G5_CAMERA_DISTANCE_SOURCE_AUDIT_2026-10-03.md`
 - `docs/memory/evidence/G5_P0112_CAMERA_DISTANCE_INFO_2026-10-03.md`
+- `docs/memory/evidence/G5_DYNAMICCAM_TAXI_PARITY_CORRECTION_2026-10-03.md`
 - `docs/memory/investigations/G5_CAMERA_DISTANCE_CVAR_OWNERSHIP.md`
 - `docs/memory/investigations/G5_TAXI_CAMERA_OWNERSHIP.md`
 - `docs/memory/architecture/CAMERA.md`

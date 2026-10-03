@@ -21,7 +21,7 @@ if CONTROLLER.is_file():
         'self.lastResting = state.resting == true',
         'return "city", "resting-city", false',
         'elseif context == "city" then',
-        'targetZoom = CITY_TARGET',
+        'requestedTargetZoom = CITY_TARGET',
         'context == "city" and currentZoom > CITY_TARGET',
         'lastResting = self.lastResting',
         'self:SubscribeState(function(',
@@ -40,7 +40,6 @@ if CONTROLLER.is_file():
     forbidden = [
         'Logres:RegisterEvent("PLAYER_UPDATE_RESTING"',
         'SetCVar(',
-        'cameraDistanceMaxZoomFactor',
         'FadeOutUI',
         'UIParent',
         'ReactiveZoom',

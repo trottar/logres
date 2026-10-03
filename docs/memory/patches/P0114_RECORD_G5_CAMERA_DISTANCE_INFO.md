@@ -67,3 +67,11 @@ pushed/runtime-read-only-PASS state.
 Docs/evidence only.
 
 No WoW redeploy required.
+
+## Superseded next-step interpretation
+
+P0117 source review does not invalidate P0114's runtime measurements.
+
+It supersedes only the conclusion that an above-default CVar ownership policy
+must be resolved before production Taxi zoom. DynamicCam itself requests target
+50 and accepts the engine clamp.

@@ -34,7 +34,7 @@ The roadmap is capability-gated. A phase advances only when its success criteria
 
 ## Phase G — Cinematic Camera
 
-**Status: ACTIVE — G.5 camera-distance product/ownership policy after default negative.**
+**Status: ACTIVE — G.5 DynamicCam-parity production Taxi zoom runtime proof.**
 
 G.1 captured the DynamicCam profile.
 
@@ -56,10 +56,14 @@ P0112 runtime `0.0.45-dev` then measured current factor `1.2` / ceiling `18`
 and client default factor `1` / ceiling `15`; both report target-50 support false.
 The CVar is account-stored and is not reported locked, secure, or read-only.
 
-The next checkpoint is a product/ownership contract for any temporary
-above-default max-distance mutation before any SetCVar probe.
+Pinned DynamicCam/LibCamera then resolves the earlier interpretation error:
+Taxi target 50 is requested, while the engine may clamp to the live max-distance
+ceiling without making the situation fail.
 
-Production Taxi remains fail-open.
+P0117 prepares production Taxi zoom on `0.0.47-dev` with no SetCVar and leaves
+rotation/UI fade separate.
+
+Production Taxi remains runtime-proof pending.
 
 Canonical phase record:
 `memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`

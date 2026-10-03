@@ -247,3 +247,24 @@ Reusable rule:
   parsing its fixed status columns.
 
 A missing manifest is a failed/incomplete patch checkpoint, not a filename typo.
+
+## L-017 — Generated patch appliers must scope repeated anchors
+
+The provisional camera-P0115 R1 failed before writing tracked files because its applier used a global
+`replace_once()` for a source fragment that legitimately appeared in both
+`FinishTransition()` and `OnUpdate()`.
+
+The applier even contained a comment acknowledging the duplicate, but the first
+replacement still required global uniqueness.
+
+Reusable rule:
+- validate generated replacement-anchor counts against the authoritative
+  baseline before handoff;
+- if a fragment repeats, scope the replacement to its owning function/block or
+  use an explicitly validated occurrence;
+- keep all transform construction before filesystem writes whenever practical;
+- classify a pre-write anchor mismatch as a delivery/applier failure, not a
+  runtime failure.
+
+This is the text-transformation analogue of manifest gating: assumptions made by
+the delivery mechanism must themselves be checked before user execution.

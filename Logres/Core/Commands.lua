@@ -2633,6 +2633,7 @@ local function cameraWorldCombatStatusPasses(status)
                 status.selectedContext == "world"
                 or status.selectedContext == "city"
                 or status.selectedContext == "combat"
+                or status.selectedContext == "taxi"
             )
             and status.ownsContext == true
         )
@@ -2643,6 +2644,7 @@ local function cameraWorldCombatStatusPasses(status)
             status.transitionContext == "world"
             or status.transitionContext == "city"
             or status.transitionContext == "combat"
+            or status.transitionContext == "taxi"
         )
 
     return
@@ -2657,7 +2659,7 @@ end
 
 local function emitCameraWorldCombatStatus(prefix, status, passed)
     emit(string.format(
-        "Logres cameraworldcombat: %s (enabled=%s context=%s owns=%s transition=%s/%s action=%s reason=%s stop=%s blocked=%s liveCombat=%s lockdown=%s cachedCombat=%s mismatch=%s resting=%s dynamicCam=%s/%s api=%s current=%s start=%s target=%s final=%s elapsed=%s targetReached=%s reconcile=%s starts=%s complete=%s stops=%s noop=%s blockedCount=%s relinquish=%s failures=%s secret=%s error=%s)",
+        "Logres cameraworldcombat: %s (enabled=%s context=%s owns=%s transition=%s/%s action=%s reason=%s stop=%s blocked=%s liveCombat=%s lockdown=%s cachedCombat=%s mismatch=%s resting=%s dynamicCam=%s/%s api=%s current=%s start=%s requested=%s effective=%s duration=%s maxFactor=%s maxCeiling=%s final=%s elapsed=%s targetReached=%s reconcile=%s starts=%s complete=%s stops=%s noop=%s blockedCount=%s relinquish=%s failures=%s secret=%s error=%s)",
         prefix or (passed and "PASS" or "FAIL"),
         tostring(status.moduleEnabled),
         tostring(status.selectedContext),
@@ -2678,7 +2680,11 @@ local function emitCameraWorldCombatStatus(prefix, status, passed)
         tostring(status.apiAvailable),
         tostring(status.lastCurrentZoom),
         tostring(status.transitionStartZoom),
-        tostring(status.transitionTargetZoom),
+        tostring(status.transitionRequestedZoom),
+        tostring(status.transitionEffectiveTargetZoom),
+        tostring(status.transitionDuration),
+        tostring(status.lastCameraDistanceFactor),
+        tostring(status.lastCameraDistanceCeiling),
         tostring(status.lastFinalZoom),
         tostring(status.lastTransitionElapsed),
         tostring(status.lastTargetReached),

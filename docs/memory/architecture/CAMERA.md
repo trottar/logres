@@ -54,8 +54,11 @@ Runtime `0.0.44-dev` repeatedly observed:
 - CVar unchanged;
 - secret=false.
 
-This closes target 50 under the current no-CVar-mutation boundary as a clean
-negative.
+This remains valid capability evidence: physical zoom 50 is not reachable under
+the measured no-CVar-mutation ceiling.
+
+It does **not** mean the captured DynamicCam Taxi action cannot be reproduced.
+Pinned DynamicCam/LibCamera requests 50 and accepts the engine clamp.
 
 ## Camera-distance source model
 
@@ -105,9 +108,27 @@ The client default cannot satisfy target 50. The current value is also
 insufficient and differs from default, so future restoration must preserve the
 captured pre-ownership current value rather than resetting to default.
 
+## DynamicCam parity correction
+
+Canonical:
+`../evidence/G5_DYNAMICCAM_TAXI_PARITY_CORRECTION_2026-10-03.md`.
+
+DynamicCam treats Taxi target `50` as a requested conditional-out target.
+LibCamera drives toward that requested value while the engine may clamp visible
+distance to the current max-distance ceiling. DynamicCam does not require
+literal target reachability for situation success.
+
+Therefore the earlier conclusion that Logres must first make physical zoom 50
+reachable is superseded.
+
+For the narrow production Taxi zoom slice, Logres keeps requested target `50`,
+records the live factor/ceiling only for diagnostics, and does not mutate the
+max-distance CVar.
+
 ## Ownership boundary
 
-Camera-distance mutation remains **not authorized**.
+Camera-distance mutation remains **not authorized** and is no longer required
+for the Taxi zoom slice.
 
 The CVar is account-stored according to runtime metadata. A future temporary
 write would therefore be deliberate ownership of a persistent user setting,
@@ -158,5 +179,8 @@ G.5 target 50 without max-distance mutation:
 G.5 camera-distance default/metadata proof:
 **COMPLETE — READ-ONLY PASS on `0.0.45-dev`; DEFAULT FACTOR 1 / CEILING 15 CANNOT SUPPORT TARGET 50.**
 
+G.5 DynamicCam parity correction:
+**RESOLVED — REQUESTED TARGET 50 MAY BE ENGINE-CLAMPED.**
+
 G.5 next:
-**PRODUCT/OWNERSHIP CONTRACT FOR ANY ABOVE-DEFAULT ACCOUNT-SCOPED MUTATION.**
+**P0117 PRODUCTION TAXI ZOOM RUNTIME PROOF on `0.0.47-dev`.**

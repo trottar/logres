@@ -1,6 +1,6 @@
 # G.5 — Taxi Camera Ownership
 
-Status: **TARGET-50 NO-CVAR NEGATIVE — READ-ONLY CAMERA-DISTANCE DEFAULT/METADATA PROBE NEXT**
+Status: **DYNAMICCAM PARITY CORRECTED — P0117 PRODUCTION TAXI ZOOM PROOF NEXT**
 Opened: 2026-10-03
 Contract review resolved: 2026-10-03
 Target-50 no-CVar runtime result: 2026-10-03
@@ -31,32 +31,40 @@ Target 50 with current factor 1.2:
 Canonical evidence:
 `../evidence/G5_P0109_TARGET50_NEGATIVE_2026-10-03.md`.
 
-## Camera-distance source result
+## DynamicCam parity correction
 
-Canonical audit:
-`../evidence/G5_CAMERA_DISTANCE_SOURCE_AUDIT_2026-10-03.md`.
+Canonical:
+`../evidence/G5_DYNAMICCAM_TAXI_PARITY_CORRECTION_2026-10-03.md`.
 
-Important correction to the next-step hypothesis:
+The previous blocking interpretation was too strict.
 
-The captured Taxi target 50 does not itself prove DynamicCam raises the
-camera-distance maximum.
+Pinned DynamicCam passes Taxi target `50` to LibCamera without proving that
+`cameraDistanceMaxZoomFactor` can physically reach 50. LibCamera drives toward
+the requested value and the engine may clamp visible distance.
 
-DynamicCam's standard setting inherits `GetCVarDefault`, and neither the captured
-standard profile nor Taxi situation stores an explicit max-distance override.
+Therefore P0109/P0112 remain valid measurements, but physical reachability of 50
+is not a prerequisite for reproducing the user's DynamicCam Taxi action.
 
-Therefore the actual inherited Forever default must be measured before Logres
-considers CVar mutation.
+P0117 production contract:
+- requested target `50`;
+- live diagnostic effective endpoint =
+  `min(50, cameraDistanceMaxZoomFactor * 15)`;
+- entry `5` seconds;
+- no SetCVar;
+- rotation/UI fade still separate.
 
 ## Current production behavior
 
-Taxi remains fail-open/out-of-slice.
+P0117 moves Taxi zoom into the existing production camera controller while
+preserving instance/DynamicCam fail-open boundaries.
 
 Do not:
-- substitute target 18;
-- mutate max-distance yet;
+- rewrite requested target `50` to a hard-coded `18` or `15`;
+- mutate max-distance;
 - add Taxi rotation;
 - add Taxi UI fade.
 
 ## Next
 
-Use P0112 Phase G `Camera Distance Info` and classify the read-only result.
+Runtime-prove automatic Taxi ownership on `0.0.47-dev` with the existing Phase G
+camera check, then verify destination-context convergence after landing.

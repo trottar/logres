@@ -1,56 +1,39 @@
 # Active Investigations
 
-## G.5 — Camera-distance CVar ownership for Taxi target 50
+## G.5 — Taxi zoom parity
 
 Status:
-**READ-ONLY DEFAULT/METADATA RUNTIME PASS — PRODUCT/OWNERSHIP POLICY NEXT**
+**DYNAMICCAM PARITY CORRECTED — P0117 PRODUCTION RUNTIME PROOF NEXT**
 
-Canonical:
-`G5_CAMERA_DISTANCE_CVAR_OWNERSHIP.md`
+Canonical Taxi investigation:
+`G5_TAXI_CAMERA_OWNERSHIP.md`
 
-Source audit:
-`../evidence/G5_CAMERA_DISTANCE_SOURCE_AUDIT_2026-10-03.md`
-
-P0109 negative evidence:
-`../evidence/G5_P0109_TARGET50_NEGATIVE_2026-10-03.md`
+Parity correction:
+`../evidence/G5_DYNAMICCAM_TAXI_PARITY_CORRECTION_2026-10-03.md`
 
 Established:
-- current factor `1.2` physically capped zoom at `18`;
-- target 50 requires factor at least `50 / 15`;
-- DynamicCam's captured Taxi situation does not itself override max distance;
-- DynamicCam's standard max-distance setting inherits the client default;
-- the G.1 profile does not persist an explicit standard max-distance value;
-- LibCamera does not own this CVar.
+- requested Taxi target remains `50`;
+- current factor `1.2` physically caps at `18`;
+- client default factor `1` caps at `15`;
+- pinned DynamicCam/LibCamera does not require requested target 50 to be
+  physically reachable;
+- engine-clamped endpoint is normal source behavior rather than a situation
+  failure;
+- no max-distance mutation is needed for the narrow Taxi zoom slice.
 
-P0112 runtime evidence:
-- runtime `0.0.45-dev`;
-- source `C_CVar.GetCVarInfo`;
-- current factor `1.2`, ceiling `18`;
-- default factor `1`, ceiling `15`;
-- required factor `3.3333333333333`;
-- current/default support false/false;
-- account-stored=true; character-stored=false;
-- locked=false; secure=false; readOnly=false;
-- DynamicCam not loaded;
-- secret=false; error=nil.
+P0117 runtime `0.0.47-dev` extends the existing production controller with Taxi
+requested/effective diagnostic target semantics.
 
-Therefore DynamicCam's inherited/client default cannot satisfy target 50.
-
-Next:
-resolve whether Logres should ever temporarily own an above-default,
-account-stored max-distance value and, if so, define exact restoration and
-interruption semantics before any SetCVar probe.
-
-No `SetCVar`, camera movement, polling, or production Taxi ownership is
-authorized.
+No Taxi rotation or UI fade is included.
 
 ## G.5 Taxi contract status
 
 `G5_TAXI_CAMERA_OWNERSHIP.md`
 
-Production Taxi remains fail-open.
+P0117 production Taxi zoom is prepared; runtime proof is pending.
 
-Taxi target remains 50 by captured intent; no clamped substitute is accepted.
+Taxi requested target remains 50. The engine's live physical clamp is valid
+DynamicCam-parity behavior and is not rewritten as a hard-coded substitute.
 
 Taxi rotation and UI hide/fade remain separately gated.
 

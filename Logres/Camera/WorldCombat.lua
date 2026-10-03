@@ -3,9 +3,12 @@ local _, Logres = ...
 local WORLD_TARGET = 5
 local CITY_TARGET = 5
 local COMBAT_TARGET = 15
+local TAXI_TARGET = 50
 local TRANSITION_DURATION = 2.5
+local TAXI_TRANSITION_DURATION = 5
 local TRANSITION_TIMEOUT_EXTRA = 0.75
 local TARGET_TOLERANCE = 0.25
+local CAMERA_DISTANCE_SCALE = 15
 
 local function isSecret(value)
     if type(issecretvalue) ~= "function" then
@@ -57,6 +60,36 @@ local function readZoomSpeed()
     end
 
     return numberValue, nil, false
+end
+
+local function readCameraDistanceFactor()
+    if type(GetCVar) ~= "function" then
+        return nil, nil, "GetCVar unavailable", false
+    end
+
+    local ok, value = pcall(GetCVar, "cameraDistanceMaxZoomFactor")
+    if not ok then
+        return nil, nil, tostring(value), false
+    end
+
+    if isSecret(value) then
+        return nil, nil, "cameraDistanceMaxZoomFactor returned secret value", true
+    end
+
+    local factor = tonumber(value)
+    if not factor or factor <= 0 then
+        return nil, nil, "cameraDistanceMaxZoomFactor unavailable or invalid", false
+    end
+
+    return factor, factor * CAMERA_DISTANCE_SCALE, nil, false
+end
+
+local function transitionDurationForContext(context)
+    if context == "taxi" then
+        return TAXI_TRANSITION_DURATION
+    end
+
+    return TRANSITION_DURATION
 end
 
 local function readBoolean(func, ...)
@@ -147,12 +180,16 @@ local Controller = Logres:RegisterModule("CameraWorldCombat", {
         self.transitionActive = false
         self.transitionContext = nil
         self.transitionStartZoom = nil
-        self.transitionTargetZoom = nil
+        self.transitionRequestedZoom = nil
+        self.transitionEffectiveTargetZoom = nil
+        self.transitionDuration = nil
         self.transitionStartTime = nil
         self.transitionDirection = nil
         self.lastCurrentZoom = nil
         self.lastFinalZoom = nil
         self.lastZoomSpeed = nil
+        self.lastCameraDistanceFactor = nil
+        self.lastCameraDistanceCeiling = nil
         self.lastTransitionElapsed = nil
         self.lastTargetReached = false
         self.lastAction = "initialize"
@@ -313,7 +350,7 @@ function Controller:ReadContext()
     end
 
     if state.onTaxi then
-        return "none", "outside-slice:taxi", false
+        return "taxi", "taxi", false
     end
 
     if state.interacting then
@@ -354,7 +391,13 @@ function Controller:CheckCoexistence()
     return true, nil
 end
 
-function Controller:BeginTransition(context, currentZoom, targetZoom)
+function Controller:BeginTransition(
+    context,
+    currentZoom,
+    requestedTargetZoom,
+    effectiveTargetZoom,
+    transitionDuration
+)
     local zoomSpeed, speedError, speedSecret = readZoomSpeed()
     if zoomSpeed == nil then
         self.lastSecret = speedSecret and true or false
@@ -365,9 +408,9 @@ function Controller:BeginTransition(context, currentZoom, targetZoom)
         return false, speedError
     end
 
-    local delta = targetZoom - currentZoom
+    local delta = requestedTargetZoom - currentZoom
     local desiredUnitsPerSecond =
-        math.abs(delta) / TRANSITION_DURATION
+        math.abs(delta) / transitionDuration
     local factor = desiredUnitsPerSecond / zoomSpeed
 
     local stopOK, stopError = stopMotion()
@@ -406,7 +449,9 @@ function Controller:BeginTransition(context, currentZoom, targetZoom)
     self.transitionActive = true
     self.transitionContext = context
     self.transitionStartZoom = currentZoom
-    self.transitionTargetZoom = targetZoom
+    self.transitionRequestedZoom = requestedTargetZoom
+    self.transitionEffectiveTargetZoom = effectiveTargetZoom
+    self.transitionDuration = transitionDuration
     self.transitionStartTime = GetTime()
     self.transitionDirection = direction
     self.transitionStartCount = self.transitionStartCount + 1
@@ -418,7 +463,8 @@ function Controller:BeginTransition(context, currentZoom, targetZoom)
 end
 
 function Controller:FinishTransition(currentZoom, elapsed, timedOut)
-    local targetZoom = self.transitionTargetZoom
+    local transitionContext = self.transitionContext
+    local targetZoom = self.transitionEffectiveTargetZoom
     local stopOK, stopError = self:StopTransition(
         timedOut and "transition-timeout" or "transition-complete",
         false
@@ -435,7 +481,10 @@ function Controller:FinishTransition(currentZoom, elapsed, timedOut)
         return
     end
 
-    if timedOut and not self.lastTargetReached then
+    if timedOut
+        and not self.lastTargetReached
+        and transitionContext ~= "taxi"
+    then
         self.lastError = "camera transition timed out before target"
         self.failureCount = self.failureCount + 1
         self.lastAction = "transition-timeout"
@@ -444,7 +493,14 @@ function Controller:FinishTransition(currentZoom, elapsed, timedOut)
 
     self.lastError = nil
     self.transitionCompleteCount = self.transitionCompleteCount + 1
-    self.lastAction = "transition-complete"
+    if timedOut
+        and transitionContext == "taxi"
+        and not self.lastTargetReached
+    then
+        self.lastAction = "transition-complete-limited"
+    else
+        self.lastAction = "transition-complete"
+    end
 end
 
 function Controller:OnUpdate()
@@ -463,16 +519,22 @@ function Controller:OnUpdate()
     end
 
     local elapsed = GetTime() - self.transitionStartTime
-    local targetZoom = self.transitionTargetZoom
-    local delta = targetZoom - self.transitionStartZoom
-    local reached =
-        math.abs(currentZoom - targetZoom) <= TARGET_TOLERANCE
-        or (delta > 0 and currentZoom >= targetZoom)
-        or (delta < 0 and currentZoom <= targetZoom)
-    local timedOut =
-        elapsed >= (TRANSITION_DURATION + TRANSITION_TIMEOUT_EXTRA)
+    local requestedTargetZoom = self.transitionRequestedZoom
+    local delta = requestedTargetZoom - self.transitionStartZoom
+    local reachedRequested =
+        math.abs(currentZoom - requestedTargetZoom) <= TARGET_TOLERANCE
+        or (delta > 0 and currentZoom >= requestedTargetZoom)
+        or (delta < 0 and currentZoom <= requestedTargetZoom)
 
-    if reached or timedOut then
+    local timeoutExtra = TRANSITION_TIMEOUT_EXTRA
+    if self.transitionContext == "taxi" then
+        timeoutExtra = 0
+    end
+
+    local timedOut =
+        elapsed >= (self.transitionDuration + timeoutExtra)
+
+    if reachedRequested or timedOut then
         self:FinishTransition(currentZoom, elapsed, timedOut)
     end
 end
@@ -516,16 +578,49 @@ function Controller:Reconcile(reason)
         return true, contextReason
     end
 
-    local targetZoom = WORLD_TARGET
+    local requestedTargetZoom = WORLD_TARGET
     if context == "combat" then
-        targetZoom = COMBAT_TARGET
+        requestedTargetZoom = COMBAT_TARGET
     elseif context == "city" then
-        targetZoom = CITY_TARGET
+        requestedTargetZoom = CITY_TARGET
+    elseif context == "taxi" then
+        requestedTargetZoom = TAXI_TARGET
+    end
+
+    local effectiveTargetZoom = requestedTargetZoom
+    local transitionDuration = transitionDurationForContext(context)
+
+    if context == "taxi" then
+        local cameraDistanceFactor
+        local cameraDistanceCeiling
+        local distanceError
+        local distanceSecret
+
+        cameraDistanceFactor,
+        cameraDistanceCeiling,
+        distanceError,
+        distanceSecret = readCameraDistanceFactor()
+
+        if cameraDistanceFactor == nil then
+            self.lastSecret = distanceSecret and true or false
+            self.lastError = distanceError
+            self.failureCount = self.failureCount + 1
+            self:Relinquish("taxi-camera-distance-read-failed", false)
+            return false, distanceError
+        end
+
+        self.lastCameraDistanceFactor = cameraDistanceFactor
+        self.lastCameraDistanceCeiling = cameraDistanceCeiling
+        effectiveTargetZoom = math.min(
+            requestedTargetZoom,
+            cameraDistanceCeiling
+        )
     end
 
     if self.transitionActive
         and self.transitionContext == context
-        and self.transitionTargetZoom == targetZoom
+        and self.transitionRequestedZoom == requestedTargetZoom
+        and self.transitionEffectiveTargetZoom == effectiveTargetZoom
     then
         self.selectedContext = context
         self.ownsContext = true
@@ -557,12 +652,15 @@ function Controller:Reconcile(reason)
     end
 
     self.lastCurrentZoom = currentZoom
-    self.transitionTargetZoom = targetZoom
+    self.transitionRequestedZoom = requestedTargetZoom
+    self.transitionEffectiveTargetZoom = effectiveTargetZoom
+    self.transitionDuration = transitionDuration
 
     local needsTransition =
         (context == "world" and currentZoom > WORLD_TARGET)
         or (context == "city" and currentZoom > CITY_TARGET)
         or (context == "combat" and currentZoom < COMBAT_TARGET)
+        or (context == "taxi" and currentZoom < requestedTargetZoom)
 
     if not needsTransition then
         self.noOpCount = self.noOpCount + 1
@@ -571,7 +669,13 @@ function Controller:Reconcile(reason)
         return true, "noop"
     end
 
-    return self:BeginTransition(context, currentZoom, targetZoom)
+    return self:BeginTransition(
+        context,
+        currentZoom,
+        requestedTargetZoom,
+        effectiveTargetZoom,
+        transitionDuration
+    )
 end
 
 function Controller:GetDebugStatus()
@@ -583,11 +687,15 @@ function Controller:GetDebugStatus()
         transitionActive = self.transitionActive,
         transitionContext = self.transitionContext,
         transitionStartZoom = self.transitionStartZoom,
-        transitionTargetZoom = self.transitionTargetZoom,
+        transitionRequestedZoom = self.transitionRequestedZoom,
+        transitionEffectiveTargetZoom = self.transitionEffectiveTargetZoom,
+        transitionDuration = self.transitionDuration,
         transitionDirection = self.transitionDirection,
         lastCurrentZoom = self.lastCurrentZoom,
         lastFinalZoom = self.lastFinalZoom,
         lastZoomSpeed = self.lastZoomSpeed,
+        lastCameraDistanceFactor = self.lastCameraDistanceFactor,
+        lastCameraDistanceCeiling = self.lastCameraDistanceCeiling,
         lastTransitionElapsed = self.lastTransitionElapsed,
         lastTargetReached = self.lastTargetReached,
         lastAction = self.lastAction,

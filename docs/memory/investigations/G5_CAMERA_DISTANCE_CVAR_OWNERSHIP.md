@@ -1,6 +1,6 @@
 # G.5 — Camera-Distance CVar Ownership
 
-Status: **READ-ONLY RUNTIME EVIDENCE RESOLVED — PRODUCT/OWNERSHIP POLICY NEXT**
+Status: **DEFERRED — VALID EVIDENCE, NO LONGER BLOCKS TAXI ZOOM PARITY**
 Opened: 2026-10-03
 Parent: `G5_TAXI_CAMERA_OWNERSHIP.md`
 
@@ -62,22 +62,19 @@ Properties:
 - no timer/event/subscription/polling;
 - secret-safe before numeric conversion or formatting.
 
-## Next product/ownership question
+## Superseding parity result
 
-The previous default gate resolved on the negative branch.
+Canonical:
+`../evidence/G5_DYNAMICCAM_TAXI_PARITY_CORRECTION_2026-10-03.md`.
 
-Before any mutation experiment, decide whether Logres may temporarily raise this
-account-stored setting above both current `1.2` and default `1`.
+Pinned DynamicCam/LibCamera proves that physical reachability of requested target
+50 is not required for the Taxi situation action. The engine may clamp to the
+current max-distance ceiling.
 
-If accepted, the contract must define:
-- exact target factor `50 / 15`;
-- restoration to the captured current value, not the client default;
-- concurrent user/other-addon changes;
-- reload/logout/disable/error/crash interruption;
-- combat/protected behavior;
-- fail-open restoration.
+Therefore above-default CVar ownership is **not a G.5 Taxi zoom prerequisite**.
 
-If not accepted, target 50 remains intentionally unavailable and a separate
-product decision must resolve the Taxi experience.
+This investigation remains useful later if Logres migrates DynamicCam's broader
+standard CVar policy. P0112's account-storage/default/current evidence remains
+authoritative for that future work.
 
-No target clamp follows automatically from either result.
+No SetCVar is authorized by this deferral.

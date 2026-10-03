@@ -102,7 +102,7 @@ if CONTROLLER.is_file():
     source = CONTROLLER.read_text(encoding="utf-8")
     required = [
         'if state.onTaxi then',
-        'return "none", "outside-slice:taxi", false',
+        'return "taxi", "taxi", false',
         'Logres:GetModule("CameraCapabilityProbe")',
         'if probeStatus.running then',
         'return false, "camera-probe-running"',
@@ -110,13 +110,9 @@ if CONTROLLER.is_file():
     for fragment in required:
         if fragment not in source:
             errors.append(
-                "production controller must remain Taxi fail-open/probe-gated: "
+                "Taxi probe/production coexistence contract missing: "
                 + fragment
             )
-    if 'return "taxi"' in source:
-        errors.append(
-            "P0109 must not implement production Taxi context ownership"
-        )
 
 if TOC.is_file():
     source = TOC.read_text(encoding="utf-8")
