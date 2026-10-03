@@ -1,7 +1,8 @@
 # G.2 — World/Combat Camera Zoom Capability
 
-Status: ACTIVE — PRIMARY PATH OOC PASS; COMBAT CLASSIFICATION FIX PENDING RETEST
+Status: CLOSED — RUNTIME + INTEGRATION PASS
 Opened: 2026-10-02
+Closed: 2026-10-02
 
 Profile evidence:
 `../evidence/G1_DYNAMICCAM_PROFILE_CAPTURE_2026-10-02.md`
@@ -9,8 +10,11 @@ Profile evidence:
 Source audit:
 `../evidence/G2_DYNAMICCAM_ZOOM_SOURCE_AUDIT_2026-10-02.md`
 
-P0095 runtime evidence:
+P0095 failure evidence:
 `../evidence/G2_P0095_COMBAT_CLASSIFICATION_FAIL_2026-10-02.md`
+
+P0096 runtime PASS evidence:
+`../evidence/G2_P0096_RUNTIME_PASS_2026-10-02.md`
 
 ## Correct target behavior
 
@@ -24,78 +28,79 @@ World (Combat):
 - otherwise leave the farther zoom alone;
 - ordinary transition 2.5 seconds.
 
+Zoom restore:
+`never`.
+
 ## Combat predicate correction
 
 DynamicCam situation 006 explicitly uses:
 
 `return not IsInInstance() and UnitAffectingCombat("player")`
 
-P0095 did not measure that predicate.
+P0095 did not measure that predicate. It recorded cached
+`Logres:GetState().combat`, whose value is tied to event-refreshed lockdown
+observation.
 
-It recorded:
-`Logres:GetState().combat`.
+I-001 already established that lockdown timing can lag early combat events.
+P0095 therefore proved camera movement out of combat but did not prove the live
+DynamicCam combat context.
 
-Core State currently derives that cached field from `InCombatLockdown()` during
-registered state refreshes.
+P0096 corrected only the diagnostic classifier and retained the other signals
+independently:
+- `combat`: live UnitAffectingCombat;
+- `lockdown`: live InCombatLockdown;
+- `cachedCombat`: existing Logres state;
+- `mismatch`: live combat versus cached combat.
 
-I-001 already established a timing nuance:
-- `PLAYER_REGEN_DISABLED` may still see lockdown false;
-- `ADDON_RESTRICTION_STATE_CHANGED` may still see lockdown false;
-- a later event while fighting may finally see lockdown true.
+Core state behavior was not changed.
 
-Therefore the cached field may be false when the DynamicCam combat predicate is
-already true.
+## P0096 runtime result
 
-This invalidates P0095 combat classification, not the camera movement result.
+Current runtime:
+`0.0.40-dev`.
 
-## P0095 runtime result
+Two captured live-combat probes both reported:
+- `combat=true`;
+- `lockdown=true`;
+- `cachedCombat=false`;
+- `mismatch=true`;
+- `targetReached=true`;
+- `moved=true`;
+- `restored=true`;
+- `secret=false`;
+- `error=nil`.
 
-Two captured runs:
-- DynamicCam loaded: false;
-- API available: true;
-- cameraZoomSpeed: 15.5;
-- target reached: true;
-- movement observed: true;
-- starting zoom restored: true;
-- secret: false;
-- error: nil;
-- reported combat: false on both runs.
+The out-of-combat path remained clean.
+A post-combat probe returned to `combat=false` with restoration PASS.
 
-Classification:
-**PRIMARY CAMERA PATH OUT-OF-COMBAT PASS; IN-COMBAT CAPABILITY UNPROVEN.**
+Run All was then performed on the current `0.0.40-dev` runtime and every
+emitted check passed through `checkall: complete`.
 
-## P0096 diagnostic contract
+## Classification
 
-At probe start capture independently:
+Primary camera path out of combat:
+**PASS.**
 
-- `combat` from live `UnitAffectingCombat("player")`;
-- `lockdown` from live `InCombatLockdown()`;
-- `cachedCombat` from `Logres:GetState().combat`;
-- `mismatch` from live combat versus cached combat.
+Primary camera path in live DynamicCam-equivalent combat:
+**PASS.**
 
-The first value matches DynamicCam's situation predicate.
-The other values remain useful diagnostics but do not define G.2 context.
+Integration on current runtime:
+**PASS.**
 
-P0096 does not modify the core state engine and does not add polling/events.
+G.2:
+**CLOSED — RUNTIME + INTEGRATION PASS.**
 
-## Runtime acceptance
+The `cachedCombat=false` / `mismatch=true` observation is retained as positive
+evidence for the signal distinction. Production camera selection must use the
+profile's live combat predicate rather than cached Logres combat state.
 
-With DynamicCam disabled:
+## Production consequence
 
-1. out-of-combat reversible probe remains PASS;
-2. naturally engage a mob;
-3. start a probe while `UnitAffectingCombat("player")` is true;
-4. second-click result reports `combat=true`;
-5. targetReached/moved/restored all true;
-6. record lockdown/cachedCombat/mismatch exactly as observed;
-7. no Lua/taint/protected/secret error;
-8. Run All PASS.
+G.3 may now implement automatic World/Combat camera ownership using the proven
+signals and primary movement path.
 
-A `cachedCombat=false` result during live combat is evidence about cached state,
-not a reason to relabel the live DynamicCam predicate as false.
-
-## Out of scope
-
-No automatic World/Combat camera behavior yet.
-No core combat-state redesign in G.2.
-No DynamicCam CVar fallback.
+G.3 must not:
+- redefine core State.combat because of this mismatch;
+- adopt the unproven temporary-CVar camera fallback;
+- invent zoom restoration contrary to the captured `never` policy;
+- permit simultaneous DynamicCam and Logres camera movement ownership.

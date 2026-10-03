@@ -4,45 +4,57 @@ Authoritative state:
 `../CURRENT.md`.
 
 Phase G:
-**ACTIVE — G.2.**
+**ACTIVE — G.3.**
 
 P0096 is verified pushed at:
 `a556a19a`.
 
+P0097 future layout direction is durable at:
+`86d062d3`.
+
+P0098 parallel World Ghost direction is durable at:
+`903e65c8`.
+
 Current pushed runtime:
 `0.0.40-dev`.
 
-G.2 source review:
-**PASS.**
+G.2:
+**CLOSED — RUNTIME + INTEGRATION PASS.**
 
-P0095 runtime:
-- two primary-path camera movements PASS;
-- DynamicCam disabled;
+Captured P0096 evidence includes two genuine live-combat probes with:
+- `combat=true`;
+- `lockdown=true`;
+- `cachedCombat=false`;
+- `mismatch=true`;
 - target/movement/restoration PASS;
-- no secret/error result;
-- both runs reported `combat=false`.
+- no secret/error result.
 
-Classification defect:
-P0095 used cached `Logres:GetState().combat`, which is an event-refreshed
-`InCombatLockdown()` observation and is not DynamicCam's World (Combat)
-predicate.
+Out-of-combat and post-combat paths remained clean, and Run All passed every
+emitted check through `checkall: complete` on `0.0.40-dev`.
 
-DynamicCam situation 006 uses:
-`UnitAffectingCombat("player")`.
+The mismatch is retained as evidence: camera combat context uses live
+`UnitAffectingCombat("player")`; cached Logres combat is not equivalent.
 
-P0096 makes the probe report four distinct facts:
-- `combat`: live UnitAffectingCombat;
-- `lockdown`: live InCombatLockdown;
-- `cachedCombat`: Logres state;
-- `mismatch`: live combat versus cached combat disagreement.
+G.3 production contract:
+- World -> conditional target 5;
+- World (Combat) -> conditional target 15;
+- ordinary transition 2.5 seconds;
+- zoom restore never;
+- primary `GetCameraZoom` + `MoveView*Start/Stop` path only;
+- live UnitAffectingCombat selects combat;
+- InCombatLockdown remains a separate restriction signal;
+- stop cleanly on interruption/disable/failure;
+- never let DynamicCam and Logres move the camera simultaneously.
 
-Core state semantics are not changed by P0096.
+Future Phase H+ layout direction remains recorded in D-032 and
+`architecture/WORLD_FIRST_LAYOUT.md`.
 
-Next proof:
-one reversible probe with `combat=true` while naturally fighting.
+Parallel art-direction preparation remains accepted in D-033 and
+`architecture/VISUAL_SYSTEM_DIRECTION.md`; current preferred hypothesis is
+World Ghost.
 
-Future Phase H+ layout direction is recorded in D-032 and `architecture/WORLD_FIRST_LAYOUT.md`; it does not alter the active G.2 proof.
+P0099 is docs/evidence only. No WoW redeploy is required for P0099.
 
-Parallel art-direction preparation is also accepted in D-033 and `architecture/VISUAL_SYSTEM_DIRECTION.md`; current preferred hypothesis: World Ghost.
+After P0099 is verified pushed, implement G.3 production ownership.
 
 User performs all commits/pushes.

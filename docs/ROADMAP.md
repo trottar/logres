@@ -34,23 +34,26 @@ The roadmap is capability-gated. A phase advances only when its success criteria
 
 ## Phase G — Cinematic Camera
 
-**Status: ACTIVE — G.2 World/Combat camera zoom capability.**
+**Status: ACTIVE — G.3 Production World/Combat camera ownership.**
 
 G.1 captured the current DynamicCam `RPG` profile durably.
 
-G.2 source review corrected the profile interpretation:
+G.2 established and runtime-proved the first camera capability contract:
 - World conditionally targets zoom 5 when farther away;
 - World (Combat) conditionally targets zoom 15 when closer;
 - ordinary transitions use 2.5 seconds;
-- zoom restore is `never`.
+- zoom restore is `never`;
+- the primary `GetCameraZoom` + `MoveView*Start/Stop` path works out of combat
+  and in live DynamicCam-equivalent combat on `0.0.40-dev`.
 
-The first runtime capability proof uses the primary camera mechanism:
-`GetCameraZoom` + `MoveView*Start/Stop`, with read-only `cameraZoomSpeed`.
+P0096's two live-combat probes also recorded `cachedCombat=false` while live
+`UnitAffectingCombat("player")` and lockdown were true. That mismatch is retained
+as evidence that production camera context must use the actual live DynamicCam
+predicate rather than cached Logres combat state.
 
-P0095 proved the reversible primary camera path out of combat, but its combat
-classifier used cached Logres state rather than DynamicCam's live
-`UnitAffectingCombat("player")` predicate. P0096 corrects only that diagnostic
-classification; one live-combat proof remains before automatic ownership.
+G.3 now implements production World/Combat ownership from the proven contract,
+without adopting the unproven temporary-CVar fallback and without allowing
+DynamicCam and Logres to drive camera movement simultaneously.
 
 Canonical phase record:
 `memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
@@ -69,7 +72,9 @@ Logres owns its aesthetic rather than becoming a general UI/action-bar profile
 editor. Limited safe layout presets may be considered; unrestricted layout can
 use stock/specialist addons with the Logres action presentation disabled.
 
-Parallel art-direction / mockup work may proceed before Lua integration. Current preferred working hypothesis: World Ghost — simple, immersive, Warcraft-native, with a subtle Logres / Camelot inflection.
+Parallel art-direction / mockup work may proceed before Lua integration. Current
+preferred working hypothesis: World Ghost — simple, immersive, Warcraft-native,
+with a subtle Logres / Camelot inflection.
 
 Canonical phase record:
 `memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`

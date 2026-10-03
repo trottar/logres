@@ -1,12 +1,17 @@
 # P0098 — Record Parallel World Ghost Art Direction
 
 Date: 2026-10-02
-Result: PREPARED — DOCS-ONLY
+Result: INSTALLED / PUSHED — DOCS-ONLY (`903e65c8`)
 
 ## Baseline
 
 P0097 verified pushed:
 `86d062d3a6be264a29f3b9d36cccdc7ac1ff5987`.
+
+## Durable identity
+
+P0098 verified pushed:
+`903e65c88dde36cc31d6f64af8cc6ff3da4623fd`.
 
 Runtime remains:
 `0.0.40-dev`.
@@ -28,13 +33,14 @@ Records:
   inflected by the Logres / Camelot theme;
 - mockups, style boards, token systems, and asset exploration are valid parallel
   deliverables;
-- this work does not change active G.2 runtime scope.
+- this work did not change the active G.2 runtime scope.
 
 ## Active work preservation
 
-G.2 remains the active work item.
+At P0098, G.2 remained the active runtime work item. P0099 later records the
+completed G.2 runtime proof and opens G.3.
 
-P0098 is docs only and does not change runtime camera behavior or acceptance
+P0098 is docs only and did not change runtime camera behavior or acceptance
 criteria.
 
 ## Deployment

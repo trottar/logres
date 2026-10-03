@@ -1,0 +1,32 @@
+Project Logres P0099
+Date: 2026-10-02
+Baseline: 903e65c88dde36cc31d6f64af8cc6ff3da4623fd
+Runtime: 0.0.40-dev (unchanged)
+Purpose: record P0096 G.2 runtime/integration PASS; close G.2; open G.3
+
+Files:
+a2910f146289067540e6818d37a67a735ac37a948a37205a9b1a2c96f457e51b  docs/ROADMAP.md
+883460cb177fc399085862c919b45a62d64d45b58946431cd75b614d910929c7  docs/memory/CURRENT.md
+7bd6c94ba5cfe6756e2725e90273013217f3ba56d0e6478323b0c5823a05b027  docs/memory/architecture/CAMERA.md
+438e13a69497b9a8c43b936bc4766bfcc7bc18d79fd6c142f1525687b6eefc5a  docs/memory/evidence/G2_P0096_RUNTIME_PASS_2026-10-02.md
+cba15607aea0cadd14a57cbcb426e973a825a13656462f1c4b218f9b509bbcf3  docs/memory/handoffs/CURRENT_HANDOFF.md
+ea5e6844919d1e5463a4e5869abc8081df82c2ee990b6f22cfd64ba87e50ef59  docs/memory/investigations/ACTIVE.md
+5f7a423128fdb8b4729a86c992b49c2663ce8da56da4448b0ca83c0e9867f312  docs/memory/investigations/G2_WORLD_COMBAT_CAMERA_CAPABILITY.md
+c948e25675775acea14b2b655b4d2db195dcd0bd01c1c438ece90dcc755fed46  docs/memory/investigations/G3_WORLD_COMBAT_CAMERA_OWNERSHIP.md
+1d1e110a501b8f159f374effcf09858ac5030f945aea7d7d18c92d139478171e  docs/memory/patches/P0096_FIX_CAMERA_COMBAT_CLASSIFICATION.md
+39385709da5740043a65afa842e9f4bcf8350e03eae205f78f7a1103b04baf5a  docs/memory/patches/P0098_PARALLEL_WORLD_GHOST_ART_DIRECTION.md
+a94715bb34892d6c5e83e22b0dd24b414a47f569ba2f2a52a7eb6875d9dc465d  docs/memory/patches/P0099_CLOSE_G2_OPEN_G3.md
+4113ddd7ecb28529a77f1f46ec13129957f35aade523b7e977048b8c755cf936  docs/memory/patches/PATCH_INDEX.md
+4a67fbc0f5778bd6d451fea7bac6d6b295e2cf224e4c7ee31002b9c6e9ff8268  docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md
+6c62f0283ed573262c3f0bb5e8baae8d858459bb47da7b3a1a6c119aeecfcb88  docs/memory/roadmap/STATUS.md
+
+Validation:
+exact verified P0098 HEAD
+verified expected baseline blob for every modified tracked file
+known local LOGRES_DIAGNOSTICS_LATEST.lua allowed but not modified/tracked
+docs-only path guard
+all tools/check_*.py syntax-compiled and executed
+git diff --check
+
+Runtime code changed: no.
+WoW redeploy required: no.

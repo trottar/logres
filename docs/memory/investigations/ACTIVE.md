@@ -1,46 +1,38 @@
 # Active Investigations
 
-## G.2 — World/Combat camera zoom capability
+## G.3 — Production World/Combat camera ownership
 
 Status:
-**ACTIVE — PRIMARY PATH OOC PASS; COMBAT CLASSIFICATION FIX PENDING RETEST**
+**ACTIVE — IMPLEMENTATION NEXT**
 
 Canonical:
-`G2_WORLD_COMBAT_CAMERA_CAPABILITY.md`
+`G3_WORLD_COMBAT_CAMERA_OWNERSHIP.md`
 
-Source evidence:
-`../evidence/G2_DYNAMICCAM_ZOOM_SOURCE_AUDIT_2026-10-02.md`
+G.2 runtime evidence:
+`../evidence/G2_P0096_RUNTIME_PASS_2026-10-02.md`
 
-P0095 runtime evidence:
-`../evidence/G2_P0095_COMBAT_CLASSIFICATION_FAIL_2026-10-02.md`
-
-Source semantics:
+Accepted production contract:
 - World -> conditional target 5;
 - World (Combat) -> conditional target 15;
 - ordinary transition 2.5 seconds;
-- zoom restore never.
-
-P0095:
-- primary camera movement PASS twice;
-- restoration PASS twice;
-- both diagnostic runs classified `combat=false`.
-
-Cause:
-P0095 classified combat from cached `State.combat`; DynamicCam situation 006
-uses live `UnitAffectingCombat("player")`.
-
-P0096 corrects the diagnostic classifier only and records live lockdown plus
-cached combat separately.
-
-Required next evidence:
-- one probe with live `combat=true`;
-- movement/target/restoration PASS;
-- no camera/security error.
+- zoom restore never;
+- combat selection uses live `UnitAffectingCombat("player")`;
+- lockdown remains a separate restriction signal;
+- use the proven primary MoveView path;
+- no temporary-CVar fallback;
+- stop movement on interruption/disable/failure;
+- DynamicCam and Logres must not move the camera simultaneously.
 
 ## Closed Phase G investigations
 
 G.1 DynamicCam profile capture:
 **CLOSED — PASS.**
+
+G.2 World/Combat camera zoom capability:
+**CLOSED — RUNTIME + INTEGRATION PASS.**
+
+Canonical G.2 record:
+`G2_WORLD_COMBAT_CAMERA_CAPABILITY.md`
 
 ## Other tracked non-blocking defects / deferred domains
 

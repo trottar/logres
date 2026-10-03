@@ -7,10 +7,10 @@ As of 2026-10-02.
 **Phase G — Cinematic Camera**
 
 Active work item:
-**G.2 World/Combat camera zoom capability**
+**G.3 Production World/Combat camera ownership**
 
 State:
-**Phase F COMPLETE; Phase G ACTIVE — G.2**
+**Phase F COMPLETE; Phase G ACTIVE — G.3**
 
 ## Phase status
 
@@ -23,7 +23,7 @@ State:
 | D — Immersion Controller | COMPLETE |
 | E — Compass and Navigation | COMPLETE |
 | F — Quest Experience | COMPLETE |
-| G — Cinematic Camera | ACTIVE — G.2 |
+| G — Cinematic Camera | ACTIVE — G.3 |
 | H — Integration and Polish | QUEUED |
 
 ## G.2
@@ -34,16 +34,23 @@ Source semantics:
 Primary camera path out of combat:
 **PASS.**
 
-Combat classification:
-**P0095 DEFECT — cached state used instead of DynamicCam predicate.**
+Primary camera path in live DynamicCam-equivalent combat:
+**PASS.**
 
-P0096:
-- live UnitAffectingCombat classification;
-- live InCombatLockdown diagnostic;
-- cached State.combat diagnostic;
-- no core state-engine change;
-- in-combat retest pending.
+Integration on `0.0.40-dev`:
+**PASS.**
 
+Classification:
+**CLOSED — RUNTIME + INTEGRATION PASS.**
+
+## G.3
+
+Production World/Combat ownership:
+**ACTIVE — IMPLEMENTATION NEXT.**
+
+The implementation uses the proven primary camera path and live combat
+predicate, preserves zoom restore `never`, keeps lockdown separate, and must not
+compete with DynamicCam for movement ownership.
 
 ## Phase H queued direction
 
@@ -59,7 +66,8 @@ Queued direction:
 - urgent player debuffs central, passive buffs peripheral, target status in
   world space where safe.
 
-- parallel art-direction / mockup work may proceed outside Lua implementation;
-- current preferred working hypothesis: World Ghost.
+Parallel art-direction / mockup work may proceed outside Lua implementation.
+Current preferred working hypothesis: World Ghost.
 
-This does not change active G.2 scope.
+These Phase H+ directions remain parallel planning and do not change active G.3
+runtime scope.

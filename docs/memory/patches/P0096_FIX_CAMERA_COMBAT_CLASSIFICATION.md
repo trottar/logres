@@ -1,7 +1,7 @@
 # P0096 — Fix Camera Combat Classification
 
 Date: 2026-10-02
-Result: INSTALLED / PUSHED — G.2 LIVE-COMBAT RETEST PENDING (`a556a19a`)
+Result: INSTALLED / PUSHED — G.2 RUNTIME + INTEGRATION PASS (`a556a19a`)
 
 ## Baseline
 
@@ -11,6 +11,11 @@ P0095 verified pushed:
 ## Runtime
 
 `0.0.39-dev -> 0.0.40-dev`.
+
+## Durable identity
+
+P0096 verified pushed:
+`a556a19a569fe2c539b6b61ab5946f6fa7e91c68`.
 
 ## Trigger
 
@@ -30,7 +35,7 @@ At probe start P0096 records:
 - `cachedCombat`: existing Logres state;
 - `mismatch`: live combat versus cached combat.
 
-`combat` now matches the DynamicCam situation predicate.
+`combat` therefore matches the DynamicCam situation predicate.
 
 ## Unchanged
 
@@ -43,11 +48,33 @@ At probe start P0096 records:
 - no automatic camera ownership;
 - core State.combat semantics.
 
-## Runtime acceptance
+## Runtime result
 
-With DynamicCam disabled:
-- OOC probe PASS;
-- one naturally engaged probe reports `combat=true`;
-- targetReached/moved/restored true;
-- no secret/error result;
-- Run All PASS.
+Two genuine live-combat probes on `0.0.40-dev` both reported:
+- `combat=true`;
+- `lockdown=true`;
+- `cachedCombat=false`;
+- `mismatch=true`;
+- `targetReached=true`;
+- `moved=true`;
+- `restored=true`;
+- `secret=false`;
+- `error=nil`.
+
+The out-of-combat path remained clean, and a post-combat probe returned to
+`combat=false` with restoration PASS.
+
+Run All was performed on the current `0.0.40-dev` runtime and every emitted
+check passed through `checkall: complete`.
+
+Canonical evidence:
+`../evidence/G2_P0096_RUNTIME_PASS_2026-10-02.md`.
+
+## Classification
+
+**PASS — G.2 RUNTIME + INTEGRATION.**
+
+The observed cached/live mismatch confirms why production camera context must
+use the live DynamicCam predicate while treating lockdown as a separate signal.
+
+P0099 records the G.2 closure and opens G.3 production ownership.

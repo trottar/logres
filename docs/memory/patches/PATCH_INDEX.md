@@ -109,10 +109,12 @@
 
 | P0095 | 2026-10-02 | INSTALLED / PUSHED — OOC CAMERA PASS; COMBAT CLASSIFIER FAIL | Correct DynamicCam zoom semantics; add isolated Camera Zoom Probe (`b65ea1af`) |
 
-| P0096 | 2026-10-02 | INSTALLED / PUSHED — G.2 LIVE-COMBAT RETEST PENDING | Use DynamicCam-equivalent live combat classification in camera probe (`a556a19a`) |
+| P0096 | 2026-10-02 | INSTALLED / PUSHED — G.2 RUNTIME + INTEGRATION PASS | Use DynamicCam-equivalent live combat classification in camera probe (`a556a19a`) |
 
 | P0097 | 2026-10-02 | INSTALLED / PUSHED — DOCS-ONLY | Record world-first layout, target, status, Active Quest, and action-role direction (`86d062d3`) |
 
-| P0098 | 2026-10-02 | PREPARED — DOCS-ONLY | Record parallel World Ghost art direction and visual-system workflow |
+| P0098 | 2026-10-02 | INSTALLED / PUSHED — DOCS-ONLY | Record parallel World Ghost art direction and visual-system workflow (`903e65c8`) |
+
+| P0099 | 2026-10-02 | PREPARED — DOCS/EVIDENCE ONLY | Record P0096 PASS; close G.2; open G.3 production World/Combat camera ownership |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.
