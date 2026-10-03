@@ -221,3 +221,29 @@ correctness requires an immediate standalone fix.
 P0062/P0063 established this lesson after a stale PlayerFrame static assertion
 was surfaced during P0062 delivery and the assistant initially proposed an
 unnecessary standalone repair checkpoint.
+
+## L-016 — Patch handoffs must be shell-safe and manifest-gated
+
+The project has now repeated the same delivery failure across P0064 and P0112:
+a patch command referenced a manifest that had not been created because the
+applier had already failed.
+
+In zsh, filename correction then offered an unrelated historical manifest with a
+similar name.
+
+Reusable rule:
+
+- start Logres patch handoff command blocks with
+  `unsetopt CORRECT CORRECT_ALL 2>/dev/null`;
+- never reference a patch manifest until the applier has explicitly passed and
+  `test -f` confirms the manifest exists;
+- never accept autocorrection from a new patch number to an older patch artifact;
+- after any applier failure, diagnose the worktree before staging or reapplying;
+- prefer transactional patch appliers that restore patch-owned pre-state when a
+  post-write validation fails;
+- when `git status` and ordinary `git diff` disagree, use porcelain status plus
+  direct blob hashing for the relevant files;
+- never strip leading whitespace from `git status --porcelain` output before
+  parsing its fixed status columns.
+
+A missing manifest is a failed/incomplete patch checkpoint, not a filename typo.

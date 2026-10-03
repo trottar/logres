@@ -2808,6 +2808,41 @@ local function runCameraZoomProbe()
 end
 
 
+
+local function runCameraDistanceInfo()
+    local probe = Logres:GetModule("CameraCapabilityProbe")
+    local info, reason, secret = probe:ReadCameraDistanceInfo()
+
+    if not info then
+        emit(string.format(
+            "Logres cameradistanceinfo: FAIL (secret=%s error=%s)",
+            tostring(secret and true or false),
+            tostring(reason)
+        ))
+        return
+    end
+
+    emit(string.format(
+        "Logres cameradistanceinfo: PASS (source=%s current=%s default=%s currentCeiling=%s defaultCeiling=%s requiredFactor=%s currentSupports50=%s defaultSupports50=%s storedAccount=%s storedCharacter=%s locked=%s secure=%s readOnly=%s dynamicCam=%s/%s/%s secret=false error=nil)",
+        tostring(info.source),
+        tostring(info.current),
+        tostring(info.default),
+        tostring(info.currentCeiling),
+        tostring(info.defaultCeiling),
+        tostring(info.requiredFactor),
+        tostring(info.currentSupports50),
+        tostring(info.defaultSupports50),
+        tostring(info.isStoredServerAccount),
+        tostring(info.isStoredServerCharacter),
+        tostring(info.isLockedFromUser),
+        tostring(info.isSecure),
+        tostring(info.isReadOnly),
+        tostring(info.dynamicCamLoaded),
+        tostring(info.dynamicCamStatusKnown),
+        tostring(info.dynamicCamStatusSource)
+    ))
+end
+
 local function runCameraTaxiTargetProbe()
     local probe = Logres:GetModule("CameraCapabilityProbe")
     local mode, reason = probe:HandleTaxiTargetPanelAction()
@@ -3168,6 +3203,11 @@ local function handleCommand(message)
         return
     end
 
+    if command == "cameradistanceinfo" then
+        runCameraDistanceInfo()
+        return
+    end
+
     if command == "xpcheck" then
         runXPCheck()
         return
@@ -3444,6 +3484,12 @@ Logres:RegisterDevPanelAction(
     "cameraTaxiTargetProbe",
     "Taxi Target 50 Probe",
     "camerataxitargetprobe",
+    "G"
+)
+Logres:RegisterDevPanelAction(
+    "cameraDistanceInfo",
+    "Camera Distance Info",
+    "cameradistanceinfo",
     "G"
 )
 Logres:RegisterDevPanelAction(

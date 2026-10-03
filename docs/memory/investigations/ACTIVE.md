@@ -3,47 +3,43 @@
 ## G.5 — Camera-distance CVar ownership for Taxi target 50
 
 Status:
-**SOURCE/CONTRACT REVIEW ACTIVE — NO CVAR MUTATION AUTHORIZED**
+**SOURCE CONTRACT RESOLVED — READ-ONLY DEFAULT/METADATA RUNTIME EVIDENCE NEXT**
 
 Canonical:
 `G5_CAMERA_DISTANCE_CVAR_OWNERSHIP.md`
 
-Negative runtime evidence:
+Source audit:
+`../evidence/G5_CAMERA_DISTANCE_SOURCE_AUDIT_2026-10-03.md`
+
+P0109 negative evidence:
 `../evidence/G5_P0109_TARGET50_NEGATIVE_2026-10-03.md`
 
-Established by P0109 runtime:
-- `cameraDistanceMaxZoomFactor = 1.2`;
-- source-derived effective ceiling `18`;
-- two independent target-50 attempts both stopped at `18`;
-- target not reached;
-- movement occurred;
-- starting zoom restored;
-- CVar remained unchanged;
-- no secret-value result;
-- DynamicCam was not loaded.
+Established:
+- current factor `1.2` physically capped zoom at `18`;
+- target 50 requires factor at least `50 / 15`;
+- DynamicCam's captured Taxi situation does not itself override max distance;
+- DynamicCam's standard max-distance setting inherits the client default;
+- the G.1 profile does not persist an explicit standard max-distance value;
+- LibCamera does not own this CVar.
 
-Therefore:
-- target 50 is unavailable under the current no-CVar-mutation boundary;
-- production Taxi remains fail-open;
-- no lower target is accepted by inference.
+Missing fact:
+the actual current Forever **default** and CVar metadata.
 
-Next action:
-audit camera-distance CVar range, persistence, restoration, protection/combat
-boundaries, and DynamicCam/LibCamera source behavior before deciding whether any
-targeted mutation capability test is safe.
+P0112 prepares read-only runtime `0.0.45-dev` with Phase G action:
+`Camera Distance Info`.
+
+No `SetCVar`, camera movement, polling, or production Taxi ownership is
+authorized.
 
 ## G.5 Taxi contract status
 
 `G5_TAXI_CAMERA_OWNERSHIP.md`
 
-Resolved:
-- existing `state.onTaxi` is sufficient and already runtime-proven;
-- Taxi priority `1000` wins over interaction/combat/City/World;
-- conditional-out intended target is absolute zoom `50`;
-- Taxi entry uses `5` seconds;
-- ordinary Taxi exit fresh-evaluates the destination under restore `never`;
-- Taxi rotation remains separately gated;
-- Taxi UI hide/fade remains presentation policy.
+Production Taxi remains fail-open.
+
+Taxi target remains 50 by captured intent; no clamped substitute is accepted.
+
+Taxi rotation and UI hide/fade remain separately gated.
 
 ## Closed Phase G investigations
 

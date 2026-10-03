@@ -118,15 +118,8 @@ if CONTROLLER.is_file():
             "P0109 must not implement production Taxi context ownership"
         )
 
-if BOOTSTRAP.is_file():
-    source = BOOTSTRAP.read_text(encoding="utf-8")
-    if 'Logres.VERSION = "0.0.44-dev"' not in source:
-        errors.append("Bootstrap runtime must be 0.0.44-dev")
-
 if TOC.is_file():
     source = TOC.read_text(encoding="utf-8")
-    if "## Version: 0.0.44-dev" not in source:
-        errors.append("TOC runtime must be 0.0.44-dev")
     probe_index = source.find("Camera\\Probe.lua")
     commands_index = source.find("Core\\Commands.lua")
     if probe_index == -1:

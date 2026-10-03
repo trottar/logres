@@ -150,6 +150,38 @@ Do not duplicate full evidence into active memory. Point to canonical detail.
 
 `handoffs/CURRENT_HANDOFF.md` is a compact transfer note only and must never become a second append-only CURRENT file.
 
+## Patch handoff shell safety
+
+The user's interactive development shell is zsh and has historically enabled
+filename autocorrection.
+
+Every patch apply/stage handoff must begin with:
+
+`unsetopt CORRECT CORRECT_ALL 2>/dev/null`
+
+This prevents a missing new patch artifact such as `P0112_MANIFEST.txt` from
+being silently redirected toward an older artifact such as
+`P0111_MANIFEST.txt`.
+
+Never reference a patch manifest in staging/commit commands until:
+1. the applier has printed its explicit PASS result; and
+2. `test -f P00XX_MANIFEST.txt` succeeds.
+
+After any applier failure:
+- stop;
+- inspect porcelain status and patch-owned file hashes;
+- do not stage, reset, restore, or reapply until the partial state is classified.
+
+Patch appliers that verify a clean/known baseline should be transactional over
+their patch-owned files whenever practical: preserve pre-write contents and
+restore/remove patch-owned files if a post-write checker fails.
+
+Do not rely on `git diff --name-only` alone when it conflicts with `git status`;
+use porcelain status plus direct `git hash-object` checks for the relevant paths.
+When parsing `git status --porcelain`, preserve its leading whitespace exactly;
+never call `.strip()` on the machine-readable output before reading status
+columns.
+
 ## Commands
 
 Commands given to the user must be:

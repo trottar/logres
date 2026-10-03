@@ -84,6 +84,129 @@ local function readCameraDistanceFactor()
     return numberValue, nil, false
 end
 
+
+local function readCameraDistanceInfo()
+    local cvarName = "cameraDistanceMaxZoomFactor"
+
+    local currentValue
+    local defaultValue
+    local storedAccount
+    local storedCharacter
+    local lockedFromUser
+    local secure
+    local readOnly
+    local source
+
+    if C_CVar and type(C_CVar.GetCVarInfo) == "function" then
+        local ok
+        ok,
+        currentValue,
+        defaultValue,
+        storedAccount,
+        storedCharacter,
+        lockedFromUser,
+        secure,
+        readOnly = pcall(C_CVar.GetCVarInfo, cvarName)
+
+        if ok then
+            if isSecret(currentValue)
+                or isSecret(defaultValue)
+                or isSecret(storedAccount)
+                or isSecret(storedCharacter)
+                or isSecret(lockedFromUser)
+                or isSecret(secure)
+                or isSecret(readOnly)
+            then
+                return nil, "camera-distance CVar info returned secret value", true
+            end
+
+            source = "C_CVar.GetCVarInfo"
+        else
+            currentValue = nil
+            defaultValue = nil
+        end
+    end
+
+    if source == nil then
+        local getCurrent =
+            C_CVar
+            and type(C_CVar.GetCVar) == "function"
+            and C_CVar.GetCVar
+            or GetCVar
+        local getDefault =
+            C_CVar
+            and type(C_CVar.GetCVarDefault) == "function"
+            and C_CVar.GetCVarDefault
+            or GetCVarDefault
+
+        if type(getCurrent) ~= "function"
+            or type(getDefault) ~= "function"
+        then
+            return nil, "camera-distance current/default APIs unavailable", false
+        end
+
+        local currentOK
+        currentOK, currentValue = pcall(getCurrent, cvarName)
+
+        if not currentOK then
+            if isSecret(currentValue) then
+                return nil, "camera-distance current read failed with secret value", true
+            end
+            return nil, tostring(currentValue), false
+        end
+
+        local defaultOK
+        defaultOK, defaultValue = pcall(getDefault, cvarName)
+
+        if not defaultOK then
+            if isSecret(defaultValue) then
+                return nil, "camera-distance default read failed with secret value", true
+            end
+            return nil, tostring(defaultValue), false
+        end
+
+        if isSecret(currentValue) or isSecret(defaultValue) then
+            return nil, "camera-distance current/default returned secret value", true
+        end
+
+        source = "GetCVar/GetCVarDefault"
+        storedAccount = nil
+        storedCharacter = nil
+        lockedFromUser = nil
+        secure = nil
+        readOnly = nil
+    end
+
+    local currentNumber = tonumber(currentValue)
+    local defaultNumber = tonumber(defaultValue)
+
+    if not currentNumber or currentNumber <= 0 then
+        return nil, "cameraDistanceMaxZoomFactor current value invalid", false
+    end
+
+    if not defaultNumber or defaultNumber <= 0 then
+        return nil, "cameraDistanceMaxZoomFactor default value invalid", false
+    end
+
+    local requiredFactor = TAXI_TARGET / CAMERA_DISTANCE_SCALE
+
+    return {
+        source = source,
+        current = currentNumber,
+        default = defaultNumber,
+        currentCeiling = currentNumber * CAMERA_DISTANCE_SCALE,
+        defaultCeiling = defaultNumber * CAMERA_DISTANCE_SCALE,
+        requiredFactor = requiredFactor,
+        currentSupports50 = currentNumber >= requiredFactor,
+        defaultSupports50 = defaultNumber >= requiredFactor,
+        isStoredServerAccount = storedAccount,
+        isStoredServerCharacter = storedCharacter,
+        isLockedFromUser = lockedFromUser,
+        isSecure = secure,
+        isReadOnly = readOnly,
+    }, nil, false
+end
+
 local function queryDynamicCamLoaded()
     if C_AddOns and type(C_AddOns.IsAddOnLoaded) == "function" then
         local ok, loaded = pcall(C_AddOns.IsAddOnLoaded, "DynamicCam")
@@ -586,6 +709,24 @@ function Probe:StartProbe()
     return true, "started"
 end
 
+
+
+function Probe:ReadCameraDistanceInfo()
+    local info, reason, secret = readCameraDistanceInfo()
+
+    if not info then
+        return nil, reason, secret
+    end
+
+    local dynamicCamLoaded, statusKnown, statusSource =
+        queryDynamicCamLoaded()
+
+    info.dynamicCamLoaded = dynamicCamLoaded
+    info.dynamicCamStatusKnown = statusKnown
+    info.dynamicCamStatusSource = statusSource
+
+    return info, nil, false
+end
 
 function Probe:StartTaxiTargetProbe()
     if self.running then

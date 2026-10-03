@@ -7,7 +7,7 @@ As of 2026-10-03.
 **Phase G — Cinematic Camera**
 
 Active work item:
-**G.5 camera-distance ownership review for Taxi target 50**
+**G.5 read-only camera-distance default/metadata proof**
 
 State:
 **Phase F COMPLETE; Phase G ACTIVE — G.5**
@@ -40,25 +40,23 @@ State:
 
 ## G.5
 
-Target-50 under no-CVar-mutation boundary:
+Target 50 under current no-CVar-mutation boundary:
 **CLOSED — CLEAN NEGATIVE on `0.0.44-dev`.**
 
-P0109 runtime evidence repeated the same result twice:
-- factor `1.2`;
-- effective ceiling `18`;
-- target `50`;
-- turn zoom `18`;
-- `targetReached=false`;
-- movement/restoration PASS;
-- CVar unchanged;
-- secret=false.
+Camera-distance source contract:
+**RESOLVED.**
 
-Production Taxi therefore remains fail-open.
+Key finding:
+DynamicCam's captured Taxi target 50 does not itself raise max-distance; the
+standard max-distance setting inherits the client default, which G.1 did not
+persist and P0109 did not measure.
 
-Active next step:
-**source/contract review of camera-distance CVar ownership.**
+P0112 prepares runtime `0.0.45-dev` with a read-only Phase G
+`Camera Distance Info` action.
 
-No CVar mutation or clamped Taxi target is authorized yet.
+Production Taxi remains fail-open.
+
+No CVar mutation or clamped target is authorized.
 
 ## Phase H queued direction
 

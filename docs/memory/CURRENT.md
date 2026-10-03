@@ -12,58 +12,62 @@ project: logres
 
 ## Current Work Item
 
-**G.5 — Resolve camera-distance ownership after target-50 capability NEGATIVE.**
+**G.5 — Read the Forever camera-distance default/metadata before deciding CVar ownership.**
 
-P0109 is verified pushed at:
-`affb1ace6b7561ce9c2046b74273948dfbb5c4b5`.
+Latest verified durable checkpoint:
+P0113 `19c0d1ffcdc0cf2df59a2e648cfa9caab1c4d347`.
 
 Current pushed runtime:
 `0.0.44-dev`.
+
+P0112 prepared runtime:
+`0.0.45-dev`.
 
 G.4 status:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
 G.5 status:
-**TARGET-50 CAPABILITY CLOSED — CLEAN NEGATIVE UNDER NO-CVAR-MUTATION BOUNDARY; CAMERA-DISTANCE OWNERSHIP REVIEW ACTIVE.**
+**TARGET-50 NO-CVAR CAPABILITY CLOSED NEGATIVE; CAMERA-DISTANCE SOURCE CONTRACT RESOLVED; READ-ONLY DEFAULT/METADATA PROBE PENDING.**
 
 ## Verified State
 
 - Phase F is complete.
 - G.1 captured the current DynamicCam `RPG` profile durably.
-- G.2 proved the primary MoveView camera capability out of combat and in genuine
-  live combat.
+- G.2 primary MoveView camera capability is runtime + integration PASS.
 - G.3 World/Combat production ownership is runtime + integration PASS.
 - G.4 City/resting ownership is runtime + integration PASS on `0.0.43-dev`.
-- P0108 resolved the G.5 Taxi source/profile contract.
-- P0109 at `affb1ace` is durable on runtime `0.0.44-dev`.
-- A.2 already runtime-proved `state.onTaxi` true during a real flight path and
-  false again after Taxi ended.
-- Taxi source precedence remains priority `1000`, above captured interaction
-  `110`, combat `50`, City `1`, and World `0`, with the existing instance
-  fail-open outside the Taxi slice.
-- Taxi zoom intent remains conditional-out absolute target `50`, with ordinary
-  Taxi entry `5` seconds and restore `never`.
+- P0109 runtime `0.0.44-dev` proved twice that current factor `1.2` yields
+  effective ceiling `18`; target 50 was not reached while movement, restoration,
+  unchanged-CVar, and secret-safety checks succeeded.
+- P0110 at `51c6fbc` durably records that clean negative and keeps Taxi
+  fail-open.
+- P0111 at `bd0a9da3` durably records the parallel D-036/D-037 future visual and
+  navigation direction without changing runtime.
+- G.5 source audit now resolves the next architectural question:
+  - DynamicCam's non-mainline UI permits displayed camera distance 50;
+  - displayed distance is factor times 15;
+  - target 50 therefore requires factor at least `50 / 15`;
+  - DynamicCam standard `cameraDistanceMaxZoomFactor` defaults from
+    `GetCVarDefault("cameraDistanceMaxZoomFactor")`;
+  - the captured G.1 profile does not store an explicit standard max-distance
+    factor;
+  - Taxi does not store a situation-specific max-distance override;
+  - DynamicCam does not auto-raise max-distance merely because Taxi zoom target
+    is 50;
+  - pinned LibCamera does not own `cameraDistanceMaxZoomFactor`.
+- Therefore P0109's measured current value `1.2` is insufficient to decide
+  whether Logres should ever mutate the CVar. The missing runtime fact is the
+  inherited **client default and CVar metadata**.
+- P0112 adds a read-only Phase G developer-panel action:
+  `Camera Distance Info`.
+- The action prefers `C_CVar.GetCVarInfo` and safely reports current/default
+  factor, effective ceilings, required factor, storage/lock/secure/read-only
+  flags, DynamicCam load state, and secret/error state.
+- A fallback uses only read-only current/default APIs if GetCVarInfo is
+  unavailable.
+- P0112 does not call `SetCVar`, does not move the camera, and does not change
+  production Taxi ownership.
 - Taxi rotation and Taxi UI hide/fade remain separately gated.
-- P0109 runtime capability evidence is a repeated clean NEGATIVE:
-  - runtime `0.0.44-dev`;
-  - `cameraDistanceMaxZoomFactor = 1.2`;
-  - source-derived effective ceiling `18`;
-  - both independent target-50 attempts stopped at zoom `18`;
-  - both recorded `targetReached=false`;
-  - both recorded `moved=true`;
-  - both restored the captured starting zoom successfully;
-  - both recorded `cvarUnchanged=true`;
-  - both recorded `secret=false`;
-  - DynamicCam was not loaded during the probe.
-- Therefore target `50` is **not reachable** under the current accepted
-  no-camera-distance-CVar-mutation boundary.
-- This is a capability result, not a production-controller defect.
-- The generic probe error text `movement/target/restoration tolerance failed`
-  is broader than the actual failing criterion; the explicit diagnostic fields
-  show movement and restoration succeeded and only target reach failed.
-- Production Taxi ownership remains fail-open/out-of-slice.
-- No lower Taxi target may be substituted merely because the current ceiling is
-  `18`.
 - D-035 quest interaction ownership remains a valid future endpoint with Blizzard
   fail-open controls until each replacement capability is proven.
 - D-036 freezes the future player-health tunnel visual contract: remaining health
@@ -76,58 +80,56 @@ G.5 status:
 
 ## Next Action
 
-Perform a **source/contract audit of camera-distance CVar ownership** before any
-new runtime mutation.
+After P0112 is verified pushed, deploy runtime `0.0.45-dev`.
 
-The audit must resolve:
-- current Forever semantics and allowed range for
-  `cameraDistanceMaxZoomFactor`;
-- whether target `50` implies a required factor of at least `50 / 15`;
-- whether changing that CVar is session-only, persistent, restricted, or otherwise
-  coupled to Blizzard settings;
-- DynamicCam/LibCamera behavior around temporary or restored camera-distance
-  changes;
-- exact ownership/restore semantics if Logres ever changes the CVar;
-- combat/protected-state implications;
-- startup/logout/reload behavior;
-- fail-open behavior if the requested distance cannot be established or restored.
+Use the Phase G developer-panel GUI:
+`Camera Distance Info`
 
-No runtime CVar mutation is authorized by this checkpoint.
+No camera controller disable, camera positioning, Taxi ride, or DynamicCam
+disable is required because this diagnostic is read-only.
 
-Do not implement production Taxi zoom, rotation, UI fade, or a clamped fallback
-until that review is explicit.
+Then flush/export the developer-panel diagnostic.
+
+## Decision Gate
+
+Use the runtime `default` value, not assumption:
+
+- if default factor is at least `50 / 15`, investigate the smallest safe
+  temporary max-distance ownership capability;
+- if default factor is below `50 / 15`, preserve that as evidence that
+  DynamicCam's inherited standard setting itself cannot make target 50 physically
+  reachable without an additional max-distance policy.
+
+In either case:
+- do not silently clamp Taxi to 18;
+- do not call `SetCVar` yet;
+- do not enable production Taxi ownership yet.
 
 ## Success Criteria
 
-The next G.5 contract checkpoint completes only when:
-- camera-distance CVar semantics are source-resolved for the current client;
-- the minimum required factor for target 50 is explicit;
-- persistence/restoration and combat boundaries are explicit;
-- a smallest safe capability test, or a reason not to test, is defined;
-- production Taxi remains fail-open until that capability is proven.
+This checkpoint completes when runtime evidence safely records:
+- current factor;
+- default factor;
+- current/default effective ceilings;
+- required target-50 factor;
+- current/default support result;
+- storage/lock/secure/read-only metadata where available;
+- DynamicCam state;
+- secret/error state.
 
 ## Do Not Reopen Without New Evidence
 
-- **Phase F:** complete.
-- **G.1 DynamicCam profile capture:** complete.
-- **G.2 primary zoom capability:** runtime + integration PASS.
-- **G.3 World/Combat ownership:** runtime + integration PASS.
-- **G.4 City ownership:** runtime + integration PASS on `0.0.43-dev`.
-- **World/City zoom:** conditional-in target 5.
-- **Combat zoom:** conditional-out target 15.
-- **Zoom restoration:** `never`.
-- **Taxi source precedence:** Taxi `1000` > Interaction `110` > Combat `50` >
-  City `1` > World `0` inside the captured profile.
-- **Taxi entry:** 5 seconds.
-- **Taxi ordinary destination exit:** entering destination time, no remembered
-  restore.
-- **Taxi rotation/UI fade:** separately gated.
-- **Target 50 without camera-distance mutation:** runtime NEGATIVE on
-  `0.0.44-dev`; current factor `1.2`, observed ceiling `18`.
-- **Camera-distance CVar mutation:** not yet accepted.
+- **G.1:** profile capture complete.
+- **G.2:** primary zoom capability PASS.
+- **G.3:** World/Combat ownership PASS.
+- **G.4:** City ownership PASS.
+- **G.5 target 50 without CVar mutation:** clean NEGATIVE on `0.0.44-dev`.
+- **Taxi intended target:** 50.
+- **Target-50 required factor:** `50 / 15`.
+- **Current observed factor:** 1.2; ceiling 18.
+- **Camera-distance mutation:** still not authorized.
 - **Production Taxi ownership:** still fail-open.
-- **D-032/D-033/D-034 visual direction:** accepted future Phase H+ direction.
-- **D-035 quest interaction ownership:** accepted future endpoint.
+- **Taxi rotation/UI fade:** separately gated.
 - **D-036 health tunnel:** accepted/frozen future visual contract.
 - **D-037 navigation/minimap direction:** accepted future endpoint; capability-gated.
 - **D-030 minimap boundary:** still current runtime authority until replacement proof.
@@ -135,10 +137,10 @@ The next G.5 contract checkpoint completes only when:
 
 ## Relevant References
 
-- `docs/memory/evidence/G5_TAXI_CAMERA_SOURCE_AUDIT_2026-10-03.md`
 - `docs/memory/evidence/G5_P0109_TARGET50_NEGATIVE_2026-10-03.md`
-- `docs/memory/investigations/G5_TAXI_CAMERA_OWNERSHIP.md`
+- `docs/memory/evidence/G5_CAMERA_DISTANCE_SOURCE_AUDIT_2026-10-03.md`
 - `docs/memory/investigations/G5_CAMERA_DISTANCE_CVAR_OWNERSHIP.md`
+- `docs/memory/investigations/G5_TAXI_CAMERA_OWNERSHIP.md`
 - `docs/memory/architecture/CAMERA.md`
-- `docs/memory/patches/P0109_G5_TAXI_TARGET50_CAPABILITY_PROBE.md`
+- `docs/memory/patches/P0112_G5_CAMERA_DISTANCE_INFO.md`
 - `docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`

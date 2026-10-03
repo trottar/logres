@@ -6,48 +6,51 @@ Authoritative state:
 Phase G:
 **ACTIVE — G.5.**
 
-P0109 is verified durable at:
-`affb1ace6b7561ce9c2046b74273948dfbb5c4b5`.
+Latest verified durable checkpoint:
+P0113 `19c0d1ffcdc0cf2df59a2e648cfa9caab1c4d347`.
 
 Current pushed runtime:
 `0.0.44-dev`.
 
-G.4:
-**CLOSED — RUNTIME + INTEGRATION PASS.**
+P0112 prepared runtime:
+`0.0.45-dev`.
 
-G.5:
-**TARGET-50 CAPABILITY CLEAN NEGATIVE; CAMERA-DISTANCE OWNERSHIP REVIEW NEXT.**
+Target 50 without max-distance mutation:
+**CLOSED — CLEAN NEGATIVE.**
 
-Canonical negative runtime evidence:
-`../evidence/G5_P0109_TARGET50_NEGATIVE_2026-10-03.md`.
+Camera-distance source contract:
+**RESOLVED — READ-ONLY FOREVER DEFAULT/METADATA PROBE NEXT.**
 
-Observed twice:
-- factor `1.2`;
-- effective ceiling `18`;
-- target `50`;
-- turn zoom `18`;
-- `targetReached=false`;
-- `moved=true`;
-- `restored=true`;
-- `cvarUnchanged=true`;
-- `secret=false`;
-- DynamicCam not loaded.
+Canonical source audit:
+`../evidence/G5_CAMERA_DISTANCE_SOURCE_AUDIT_2026-10-03.md`.
 
-This proves target 50 is unavailable under the current no-CVar-mutation boundary.
-Production Taxi ownership therefore remains fail-open.
+Key source result:
+- DynamicCam's displayed max-distance mapping is factor × 15;
+- target 50 needs factor >= 50/15;
+- DynamicCam standard max-distance inherits `GetCVarDefault`;
+- G.1 captured no explicit standard max-distance value;
+- Taxi has no max-distance override;
+- LibCamera does not raise the max-distance CVar.
 
-Next:
-source/contract audit of `cameraDistanceMaxZoomFactor` ownership, range,
-persistence, restoration, combat/protected behavior, and DynamicCam/LibCamera
-semantics.
+Therefore do not jump from current factor 1.2 to a mutation policy.
 
-Do not mutate the CVar, clamp Taxi to 18, add rotation, or add Taxi UI fade yet.
+P0112 adds read-only Phase G GUI action:
+`Camera Distance Info`.
 
-Parallel accepted Phase H+ direction:
-- D-036 freezes the continuous health->clear-field tunnel visual contract;
-- D-037 defines four navigation roles (manual waypoint, quest destination, local
-  radius POI, tracking) and the future minimap-replacement endpoint;
-- D-030 still keeps the minimap stock today; POI/tracking source capability is
-  unproven and deferred.
+It reports current/default factors, ceilings, support threshold, storage/security
+metadata, DynamicCam state, and secret/error state without moving the camera or
+calling SetCVar.
+
+Next after verified push:
+deploy `0.0.45-dev`, click `Camera Distance Info` in Phase G, flush/export
+diagnostics.
+
+Production Taxi remains fail-open.
+
+Parallel accepted Phase H+ direction remains unchanged:
+- D-036 health-tunnel visible-field contract;
+- D-037 four navigation roles and future minimap-replacement endpoint;
+- D-030 stock minimap remains current runtime authority until replacement proof;
+- POI/tracking source capability remains deferred/unproven.
 
 User performs all commits/pushes.

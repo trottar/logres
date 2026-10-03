@@ -34,25 +34,28 @@ The roadmap is capability-gated. A phase advances only when its success criteria
 
 ## Phase G — Cinematic Camera
 
-**Status: ACTIVE — G.5 camera-distance ownership review.**
+**Status: ACTIVE — G.5 read-only camera-distance default/metadata proof.**
 
-G.1 captured the current DynamicCam `RPG` profile durably.
+G.1 captured the DynamicCam profile.
 
-G.2 runtime-proved the primary camera capability and conditional zoom semantics.
+G.2 primary camera capability is runtime-proven.
 
-G.3 World/Combat production ownership is runtime + integration PASS.
+G.3 World/Combat production ownership is PASS.
 
-G.4 City/resting ownership is runtime + integration PASS on `0.0.43-dev`.
+G.4 City/resting ownership is PASS.
 
-G.5 source/profile review is resolved. P0109 runtime `0.0.44-dev` then proved a
-clean negative for target 50 under the accepted no-CVar-mutation boundary:
-current factor `1.2`, effective ceiling `18`, outbound turn zoom `18`, target not
-reached, restoration successful, CVar unchanged, no secret-value result.
+G.5 P0109 proved target 50 is unavailable with current factor 1.2 / ceiling 18
+under the no-CVar-mutation boundary.
 
-Production Taxi ownership therefore remains fail-open.
+The follow-up source audit shows the captured DynamicCam Taxi target does not
+itself raise max-distance: DynamicCam inherits the client default for its
+standard max-distance setting, and that default was not captured by G.1 or
+measured by P0109.
 
-The next checkpoint is a source/contract review of camera-distance CVar ownership,
-not a production Taxi implementation and not a clamped target.
+P0112 therefore adds a read-only developer-panel diagnostic for the current
+Forever default and metadata before any SetCVar experiment is considered.
+
+Production Taxi remains fail-open.
 
 Canonical phase record:
 `memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
@@ -61,15 +64,11 @@ Canonical phase record:
 
 **Status: QUEUED.**
 
-D-032 records the accepted world-first integration direction. D-033 permits
-parallel art-direction/mockup work. D-034 refines the visual anchor to Selective
-Hybrid E and the shared percentage-bar direction.
+D-032/D-033/D-034 define the accepted world-first / Selective Hybrid E visual
+direction.
 
 D-035 establishes NPC quest interaction as a future Logres-owned experience with
-Blizzard fail-open fallback until each replacement capability is proven. D-036
+Blizzard fail-open fallback until each replacement surface is proven. D-036
 freezes the continuous health-tunnel visible-field contract. D-037 defines the
 future four-role navigation/minimap endpoint while preserving the current D-030
 stock-minimap boundary until all required capabilities are proven.
-
-Canonical phase record:
-`memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`
