@@ -38,30 +38,27 @@ State:
 
 **CLOSED — RUNTIME + INTEGRATION PASS on `0.0.43-dev`.**
 
-Canonical evidence:
-`../evidence/G4_P0105_RUNTIME_PASS_2026-10-03.md`.
-
 ## G.5
 
-**SOURCE/PROFILE CONTRACT RESOLVED — TARGET-50 CAPABILITY PROBE NEXT.**
+**TARGET-50 CAPABILITY PROBE IMPLEMENTED — RUNTIME PROOF PENDING.**
 
-Canonical source/profile evidence:
-`../evidence/G5_TAXI_CAMERA_SOURCE_AUDIT_2026-10-03.md`.
+P0108 at `19efaad6` resolves the Taxi source/profile contract.
 
-Resolved:
-- Taxi uses existing `state.onTaxi`;
-- priority `1000` outranks interaction/combat/City/World;
-- conditional-out target is `50`;
-- entry is `5` seconds;
-- ordinary exit uses destination timing under restore `never`;
-- rotation and UI fade remain separately gated.
+P0109 prepares runtime `0.0.44-dev` and adds only the diagnostic capability gate:
+- Phase G `Taxi Target 50 Probe`;
+- read-only `cameraDistanceMaxZoomFactor`;
+- recorded `factor * 15` effective ceiling;
+- 5-second MoveView target-50 attempt;
+- MoveView restoration to start;
+- unchanged-CVar / target / secret / error diagnostics;
+- dedicated static contract enforcement.
 
-Production ownership is blocked on one narrow capability question:
-whether current Forever can reach zoom `50` through the proven MoveView path
-without changing `cameraDistanceMaxZoomFactor`.
+Production Taxi remains fail-open/out-of-slice.
 
-Next checkpoint:
-developer-panel target-50 capability probe.
+A PASS permits a later zoom-only Taxi production patch.
+
+A clean target-reach FAIL opens a separate camera-distance ownership decision;
+the target must not be silently lowered.
 
 ## Phase H queued direction
 

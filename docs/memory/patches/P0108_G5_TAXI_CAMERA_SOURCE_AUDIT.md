@@ -1,7 +1,8 @@
 # P0108 — G.5 Taxi Camera Source/Profile Audit
 
 Date: 2026-10-03
-Result: **PREPARED — DOCS/SOURCE EVIDENCE ONLY**
+Result: **INSTALLED / PUSHED — DOCS/SOURCE EVIDENCE ONLY**
+Commit: `19efaad6523369020c6789d9e18e006538e3bf68`
 Baseline: `ab83882f28f98b3d90cc6bee65e5d7c45928c536`
 Runtime: `0.0.43-dev` unchanged
 
@@ -36,7 +37,7 @@ Production Taxi ownership is therefore not authorized yet.
 
 ## Authorized next step
 
-A diagnostic-only developer-panel capability probe may be implemented to:
+A diagnostic-only developer-panel capability probe may:
 - read the CVar;
 - attempt target `50` with the proven MoveView path;
 - restore start zoom;

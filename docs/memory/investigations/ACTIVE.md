@@ -3,7 +3,7 @@
 ## G.5 — Taxi camera ownership
 
 Status:
-**SOURCE/PROFILE CONTRACT RESOLVED — TARGET-50 CAPABILITY PROBE NEXT**
+**TARGET-50 CAPABILITY PROBE IMPLEMENTED — RUNTIME PROOF PENDING**
 
 Canonical:
 `G5_TAXI_CAMERA_OWNERSHIP.md`
@@ -21,16 +21,23 @@ Resolved:
 - Taxi UI hide/fade remains presentation policy;
 - current instance and DynamicCam fail-open boundaries remain intact.
 
-Blocking question:
-can the current Forever camera physically reach target `50` without mutating
-`cameraDistanceMaxZoomFactor`?
+P0109 implements the narrow capability gate on runtime `0.0.44-dev`:
+- Phase G `Taxi Target 50 Probe`;
+- reads but never mutates `cameraDistanceMaxZoomFactor`;
+- records `factor * 15` effective ceiling;
+- attempts target 50 with the proven MoveView path;
+- restores captured starting zoom;
+- checks CVar unchanged;
+- records target/movement/restoration/secret/error state;
+- production Taxi remains fail-open.
 
 Next action:
-add a targeted Phase G developer-panel capability probe using the proven
-MoveView path and read-only CVar observation.
+collect the developer-panel runtime result.
 
-Production Taxi ownership remains unauthorized until that capability result is
-known.
+PASS -> prepare zoom-only production Taxi ownership.
+
+FAIL because target 50 cannot be reached -> preserve the negative finding and
+open a separate camera-distance ownership decision. Do not clamp the target.
 
 ## Closed Phase G investigations
 

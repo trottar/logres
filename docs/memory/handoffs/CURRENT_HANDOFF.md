@@ -6,42 +6,38 @@ Authoritative state:
 Phase G:
 **ACTIVE — G.5.**
 
-Remote P0107 is verified durable at:
-`ab83882f28f98b3d90cc6bee65e5d7c45928c536`.
+P0108 is verified durable at:
+`19efaad6523369020c6789d9e18e006538e3bf68`.
 
-Current pushed runtime:
-`0.0.43-dev`.
+P0109 runtime checkpoint:
+`0.0.44-dev`.
 
 G.4:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
 G.5:
-**SOURCE/PROFILE CONTRACT RESOLVED — TARGET-50 CAPABILITY PROBE NEXT.**
+**TARGET-50 CAPABILITY PROBE IMPLEMENTED — RUNTIME PROOF PENDING.**
 
-Canonical G.5 audit:
+Canonical source/profile audit:
 `../evidence/G5_TAXI_CAMERA_SOURCE_AUDIT_2026-10-03.md`.
 
-Resolved Taxi contract:
-- use existing runtime-proven `state.onTaxi`;
-- Taxi priority `1000` outranks interaction `110`, combat `50`, City `1`, World `0`;
-- instance remains the outer fail-open boundary;
-- Taxi is conditional-out absolute target `50`;
-- Taxi entry is `5` seconds;
-- ordinary Taxi exit uses the destination situation's entering transition under
-  restore `never`;
-- rotation is separable and remains capability-gated;
-- UI hide/fade remains presentation policy;
-- DynamicCam/probe coexistence and fail-open behavior remain unchanged.
+P0109 adds only the diagnostic capability gate:
+- Phase G `Taxi Target 50 Probe`;
+- existing `CameraCapabilityProbe` module/mutual-exclusion path;
+- read-only `cameraDistanceMaxZoomFactor`;
+- recorded effective ceiling `factor * 15`;
+- 5-second MoveView attempt to target 50;
+- MoveView restoration to captured start;
+- unchanged-CVar / target / secret / error diagnostics;
+- no production Taxi ownership change;
+- no rotation, UI fade, or CVar mutation.
 
-Blocking capability question:
-current Forever reachability of target `50` without mutating
-`cameraDistanceMaxZoomFactor`.
+Next after verified push:
+deploy `0.0.44-dev`, use the Phase G GUI to turn production camera OFF, run the
+Taxi target-50 probe, click the same probe again after movement to record the
+result, then turn production camera ON and export diagnostics.
 
-Next:
-prepare one **developer-panel GUI** capability probe that reads the CVar, attempts
-target `50` through the proven MoveView path, restores starting zoom, and records
-target/secret/error state.
-
-Do not implement production Taxi ownership until that probe passes.
+A negative target-50 result is valid evidence and must be recorded rather than
+worked around with a guessed lower target.
 
 User performs all commits/pushes.

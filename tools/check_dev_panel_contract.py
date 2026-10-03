@@ -55,6 +55,7 @@ EXPECTED_PHASES = {
     "cameraWorldCombatOn": "G",
     "cameraWorldCombatOff": "G",
     "cameraZoomProbe": "G",
+    "cameraTaxiTargetProbe": "G",
 }
 
 for path in (COMMANDS, PANEL, TOC):

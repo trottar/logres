@@ -3,6 +3,10 @@ local _, Logres = ...
 local PROBE_DELTA = 0.75
 local PROBE_LEG_DURATION = 0.40
 local PROBE_TIMEOUT_EXTRA = 0.35
+local TAXI_TARGET = 50
+local TAXI_PROBE_LEG_DURATION = 5.0
+local TAXI_PROBE_TIMEOUT_EXTRA = 0.75
+local CAMERA_DISTANCE_SCALE = 15
 local TARGET_TOLERANCE = 0.25
 local MIN_MOVEMENT = 0.20
 
@@ -53,6 +57,28 @@ local function readZoomSpeed()
     local numberValue = tonumber(value)
     if not numberValue or numberValue <= 0 then
         return nil, "cameraZoomSpeed unavailable or invalid", false
+    end
+
+    return numberValue, nil, false
+end
+
+local function readCameraDistanceFactor()
+    if type(GetCVar) ~= "function" then
+        return nil, "GetCVar unavailable", false
+    end
+
+    local ok, value = pcall(GetCVar, "cameraDistanceMaxZoomFactor")
+    if not ok then
+        return nil, tostring(value), false
+    end
+
+    if isSecret(value) then
+        return nil, "cameraDistanceMaxZoomFactor returned secret value", true
+    end
+
+    local numberValue = tonumber(value)
+    if not numberValue or numberValue <= 0 then
+        return nil, "cameraDistanceMaxZoomFactor unavailable or invalid", false
     end
 
     return numberValue, nil, false
@@ -170,6 +196,13 @@ local Probe = Logres:RegisterModule("CameraCapabilityProbe", {
         self.lastDynamicCamStatusSource = nil
         self.lastAPIAvailable = false
         self.lastZoomSpeed = nil
+        self.probeKind = "none"
+        self.legDuration = PROBE_LEG_DURATION
+        self.legTimeoutExtra = PROBE_TIMEOUT_EXTRA
+        self.lastCameraDistanceFactor = nil
+        self.lastCameraDistanceFactorFinal = nil
+        self.lastCameraDistanceCeiling = nil
+        self.lastCameraDistanceUnchanged = nil
         self.startZoom = nil
         self.targetZoom = nil
         self.turnZoom = nil
@@ -194,6 +227,13 @@ function Probe:ResetTransient()
     self.lastCombatMismatch = false
     self.lastAPIAvailable = false
     self.lastZoomSpeed = nil
+    self.probeKind = "none"
+    self.legDuration = PROBE_LEG_DURATION
+    self.legTimeoutExtra = PROBE_TIMEOUT_EXTRA
+    self.lastCameraDistanceFactor = nil
+    self.lastCameraDistanceFactorFinal = nil
+    self.lastCameraDistanceCeiling = nil
+    self.lastCameraDistanceUnchanged = nil
     self.startZoom = nil
     self.targetZoom = nil
     self.turnZoom = nil
@@ -272,12 +312,47 @@ function Probe:Finish()
             math.abs(self.finalZoom - self.startZoom) <= TARGET_TOLERANCE
     end
 
+    if self.probeKind == "taxi-target" then
+        local finalFactor, factorError, factorSecret =
+            readCameraDistanceFactor()
+
+        if finalFactor == nil then
+            if factorSecret then
+                self.lastSecret = true
+            end
+
+            if not self.lastError then
+                self.lastError = factorError
+            end
+        else
+            self.lastCameraDistanceFactorFinal = finalFactor
+
+            if type(self.lastCameraDistanceFactor) == "number" then
+                self.lastCameraDistanceUnchanged =
+                    math.abs(
+                        finalFactor - self.lastCameraDistanceFactor
+                    ) <= 0.000001
+
+                if not self.lastCameraDistanceUnchanged
+                    and not self.lastError
+                then
+                    self.lastError =
+                        "cameraDistanceMaxZoomFactor changed during probe"
+                end
+            end
+        end
+    end
+
     local passed =
         self.lastError == nil
         and self.lastSecret == false
         and self.moved == true
         and self.targetReached == true
         and self.restored == true
+        and (
+            self.probeKind ~= "taxi-target"
+            or self.lastCameraDistanceUnchanged == true
+        )
 
     if passed then
         self.lastState = "pass"
@@ -320,7 +395,7 @@ function Probe:BeginLeg(targetZoom, phase)
     end
 
     local desiredUnitsPerSecond =
-        math.abs(delta) / PROBE_LEG_DURATION
+        math.abs(delta) / self.legDuration
     local factor =
         desiredUnitsPerSecond / self.lastZoomSpeed
 
@@ -374,7 +449,7 @@ function Probe:OnUpdate()
         (delta > 0 and currentZoom >= self.legTargetZoom)
         or (delta < 0 and currentZoom <= self.legTargetZoom)
     local timedOut =
-        elapsed >= (PROBE_LEG_DURATION + PROBE_TIMEOUT_EXTRA)
+        elapsed >= (self.legDuration + self.legTimeoutExtra)
 
     if not reached and not timedOut then
         return
@@ -406,6 +481,9 @@ function Probe:StartProbe()
     end
 
     self:ResetTransient()
+    self.probeKind = "small"
+    self.legDuration = PROBE_LEG_DURATION
+    self.legTimeoutExtra = PROBE_TIMEOUT_EXTRA
 
     local productionController = Logres:GetModule("CameraWorldCombat")
     if productionController:IsEnabled() then
@@ -508,15 +586,164 @@ function Probe:StartProbe()
     return true, "started"
 end
 
+
+function Probe:StartTaxiTargetProbe()
+    if self.running then
+        return false, "probe already running"
+    end
+
+    self:ResetTransient()
+    self.probeKind = "taxi-target"
+    self.legDuration = TAXI_PROBE_LEG_DURATION
+    self.legTimeoutExtra = TAXI_PROBE_TIMEOUT_EXTRA
+
+    local productionController = Logres:GetModule("CameraWorldCombat")
+    if productionController:IsEnabled() then
+        return self:FailImmediate(
+            "production camera controller enabled; turn it OFF in Phase G before Taxi target probe",
+            false
+        )
+    end
+
+    local dynamicCamLoaded, statusKnown, statusSource =
+        queryDynamicCamLoaded()
+
+    self.lastDynamicCamLoaded = dynamicCamLoaded
+    self.lastDynamicCamStatusKnown = statusKnown
+    self.lastDynamicCamStatusSource = statusSource
+
+    if not statusKnown then
+        return self:FailImmediate(
+            "cannot verify whether DynamicCam is loaded",
+            false
+        )
+    end
+
+    if dynamicCamLoaded then
+        return self:FailImmediate(
+            "DynamicCam is loaded; disable it for isolated Taxi target proof",
+            false
+        )
+    end
+
+    local required = {
+        GetCameraZoom,
+        GetCVar,
+        UnitAffectingCombat,
+        InCombatLockdown,
+        MoveViewInStart,
+        MoveViewInStop,
+        MoveViewOutStart,
+        MoveViewOutStop,
+    }
+
+    for index = 1, #required do
+        if type(required[index]) ~= "function" then
+            return self:FailImmediate(
+                "required camera API unavailable",
+                false
+            )
+        end
+    end
+
+    self.lastAPIAvailable = true
+
+    local zoomSpeed, speedError, speedSecret = readZoomSpeed()
+    if zoomSpeed == nil then
+        return self:FailImmediate(speedError, speedSecret)
+    end
+
+    local distanceFactor, factorError, factorSecret =
+        readCameraDistanceFactor()
+    if distanceFactor == nil then
+        return self:FailImmediate(factorError, factorSecret)
+    end
+
+    local startZoom, zoomError, zoomSecret = readZoom()
+    if startZoom == nil then
+        return self:FailImmediate(zoomError, zoomSecret)
+    end
+
+    self.lastZoomSpeed = zoomSpeed
+    self.lastCameraDistanceFactor = distanceFactor
+    self.lastCameraDistanceCeiling =
+        distanceFactor * CAMERA_DISTANCE_SCALE
+    self.startZoom = startZoom
+    self.targetZoom = TAXI_TARGET
+
+    if startZoom >= TAXI_TARGET - TARGET_TOLERANCE then
+        return self:FailImmediate(
+            "start zoom is already at Taxi target; manually zoom closer before retrying",
+            false
+        )
+    end
+
+    local state = Logres:GetState()
+    local combatEngaged, combatLockdown, combatError, combatSecret =
+        readCombatSignals()
+
+    if combatEngaged == nil then
+        return self:FailImmediate(combatError, combatSecret)
+    end
+
+    self.lastCombat = combatEngaged
+    self.lastCombatLockdown = combatLockdown
+    self.lastCachedCombat = state.combat == true
+    self.lastCombatMismatch =
+        self.lastCombat ~= self.lastCachedCombat
+
+    self.runCount = self.runCount + 1
+    self.lastState = "running"
+    self.lastReported = true
+    self.running = true
+
+    self.frame:SetScript("OnUpdate", function()
+        self:OnUpdate()
+    end)
+    self.frame:Show()
+
+    if not self:BeginLeg(self.targetZoom, "outbound") then
+        return false, self.lastError
+    end
+
+    return true, "started"
+end
+
+function Probe:HandleTaxiTargetPanelAction()
+    if self.running then
+        return "running", nil
+    end
+
+    if self.probeKind == "taxi-target"
+        and (
+            self.lastState == "pass"
+            or self.lastState == "fail"
+        )
+        and not self.lastReported
+    then
+        return "result", nil
+    end
+
+    local ok, reason = self:StartTaxiTargetProbe()
+    if ok then
+        return "started", reason
+    end
+
+    return "blocked", reason
+end
+
 function Probe:HandlePanelAction()
     if self.running then
         return "running", nil
     end
 
-    if (
-        self.lastState == "pass"
-        or self.lastState == "fail"
-    ) and not self.lastReported then
+    if self.probeKind == "small"
+        and (
+            self.lastState == "pass"
+            or self.lastState == "fail"
+        )
+        and not self.lastReported
+    then
         return "result", nil
     end
 
@@ -549,6 +776,16 @@ function Probe:GetDebugStatus()
         lastDynamicCamStatusSource = self.lastDynamicCamStatusSource,
         lastAPIAvailable = self.lastAPIAvailable,
         lastZoomSpeed = self.lastZoomSpeed,
+        probeKind = self.probeKind,
+        legDuration = self.legDuration,
+        legTimeoutExtra = self.legTimeoutExtra,
+        lastCameraDistanceFactor = self.lastCameraDistanceFactor,
+        lastCameraDistanceFactorFinal =
+            self.lastCameraDistanceFactorFinal,
+        lastCameraDistanceCeiling =
+            self.lastCameraDistanceCeiling,
+        lastCameraDistanceUnchanged =
+            self.lastCameraDistanceUnchanged,
         startZoom = self.startZoom,
         targetZoom = self.targetZoom,
         turnZoom = self.turnZoom,

@@ -2807,6 +2807,88 @@ local function runCameraZoomProbe()
     end
 end
 
+
+local function runCameraTaxiTargetProbe()
+    local probe = Logres:GetModule("CameraCapabilityProbe")
+    local mode, reason = probe:HandleTaxiTargetPanelAction()
+    local debugStatus = probe:GetDebugStatus()
+
+    if mode == "started" then
+        emit(string.format(
+            "Logres camerataxitargetprobe: STARTED (start=%s target=%s speed=%s factor=%s ceiling=%s combat=%s lockdown=%s; wait for movement to finish, then click Taxi Target 50 Probe again)",
+            tostring(debugStatus.startZoom),
+            tostring(debugStatus.targetZoom),
+            tostring(debugStatus.lastZoomSpeed),
+            tostring(debugStatus.lastCameraDistanceFactor),
+            tostring(debugStatus.lastCameraDistanceCeiling),
+            tostring(debugStatus.lastCombat),
+            tostring(debugStatus.lastCombatLockdown)
+        ))
+        return
+    end
+
+    if mode == "running" then
+        emit(string.format(
+            "Logres camerataxitargetprobe: RUNNING (phase=%s start=%s target=%s factor=%s ceiling=%s)",
+            tostring(debugStatus.phase),
+            tostring(debugStatus.startZoom),
+            tostring(debugStatus.targetZoom),
+            tostring(debugStatus.lastCameraDistanceFactor),
+            tostring(debugStatus.lastCameraDistanceCeiling)
+        ))
+        return
+    end
+
+    if mode == "blocked" then
+        emit(string.format(
+            "Logres camerataxitargetprobe: BLOCKED (reason=%s factor=%s ceiling=%s secret=%s error=%s)",
+            tostring(reason),
+            tostring(debugStatus.lastCameraDistanceFactor),
+            tostring(debugStatus.lastCameraDistanceCeiling),
+            tostring(debugStatus.lastSecret),
+            tostring(debugStatus.lastError)
+        ))
+        return
+    end
+
+    local passed =
+        debugStatus.lastState == "pass"
+        and debugStatus.probeKind == "taxi-target"
+
+    emit(string.format(
+        "Logres camerataxitargetprobe: %s (mode=%s factor=%s factorFinal=%s ceiling=%s cvarUnchanged=%s speed=%s start=%s target=%s turn=%s final=%s targetReached=%s moved=%s restored=%s combat=%s lockdown=%s dynamicCam=%s/%s secret=%s elapsed=%s/%s runs=%s pass=%s fail=%s error=%s)",
+        passed and "PASS" or "FAIL",
+        tostring(mode),
+        tostring(debugStatus.lastCameraDistanceFactor),
+        tostring(debugStatus.lastCameraDistanceFactorFinal),
+        tostring(debugStatus.lastCameraDistanceCeiling),
+        tostring(debugStatus.lastCameraDistanceUnchanged),
+        tostring(debugStatus.lastZoomSpeed),
+        tostring(debugStatus.startZoom),
+        tostring(debugStatus.targetZoom),
+        tostring(debugStatus.turnZoom),
+        tostring(debugStatus.finalZoom),
+        tostring(debugStatus.targetReached),
+        tostring(debugStatus.moved),
+        tostring(debugStatus.restored),
+        tostring(debugStatus.lastCombat),
+        tostring(debugStatus.lastCombatLockdown),
+        tostring(debugStatus.lastDynamicCamLoaded),
+        tostring(debugStatus.lastDynamicCamStatusSource),
+        tostring(debugStatus.lastSecret),
+        tostring(debugStatus.outboundElapsed),
+        tostring(debugStatus.returnElapsed),
+        tostring(debugStatus.runCount),
+        tostring(debugStatus.passCount),
+        tostring(debugStatus.failCount),
+        tostring(debugStatus.lastError or reason)
+    ))
+
+    if mode == "result" then
+        probe:MarkReported()
+    end
+end
+
 local function runAllChecks()
     emit("Logres checkall: beginning")
     printStatus()
@@ -3081,6 +3163,11 @@ local function handleCommand(message)
         return
     end
 
+    if command == "camerataxitargetprobe" then
+        runCameraTaxiTargetProbe()
+        return
+    end
+
     if command == "xpcheck" then
         runXPCheck()
         return
@@ -3351,6 +3438,12 @@ Logres:RegisterDevPanelAction(
     "cameraZoomProbe",
     "Camera Zoom Probe",
     "camerazoomprobe",
+    "G"
+)
+Logres:RegisterDevPanelAction(
+    "cameraTaxiTargetProbe",
+    "Taxi Target 50 Probe",
+    "camerataxitargetprobe",
     "G"
 )
 Logres:RegisterDevPanelAction(

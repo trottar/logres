@@ -44,14 +44,13 @@ G.3 World/Combat production ownership is runtime + integration PASS.
 
 G.4 City/resting ownership is runtime + integration PASS on `0.0.43-dev`.
 
-G.5 source/profile review now resolves Taxi precedence, conditional target,
-entry/exit timing, rotation separation, and UI-presentation boundaries.
-Production Taxi ownership remains gated on proving that current Forever can reach
-the intended target `50` through the existing MoveView path without mutating
-`cameraDistanceMaxZoomFactor`.
+G.5 source/profile review is resolved. P0109 prepares runtime `0.0.44-dev` with
+a developer-panel target-50 capability probe that reads but never mutates
+`cameraDistanceMaxZoomFactor`, attempts the intended Taxi target through the
+proven MoveView path, restores starting zoom, and records the result.
 
-The next checkpoint is a developer-panel target-50 capability probe, not
-production Taxi code.
+Production Taxi ownership remains fail-open until that runtime capability
+evidence is classified.
 
 Canonical phase record:
 `memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
