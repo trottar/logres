@@ -15,13 +15,17 @@ project: logres
 **G.5 — Runtime-prove DynamicCam-parity production Taxi zoom with engine-clamped target semantics.**
 
 Latest verified durable checkpoint:
-P0116 `c64fcc97698e0dbe98a8d52469444f2ef15a76ec`.
+P0117 `82bdb4f33b8199c6794f486eff0067f99e22b4d0`.
 
 Current pushed runtime:
-`0.0.46-dev` — P0116 action visual translation; in-client visual proof pending.
+`0.0.47-dev` — DynamicCam-parity Taxi production zoom; runtime proof pending.
 
-P0117 prepared runtime:
-`0.0.47-dev`.
+Parallel visual evidence:
+P0116 `c64fcc97` core action primitive runtime + visual PASS; detailed state
+coverage remains deferred.
+
+P0118 prepared runtime:
+`0.0.48-dev` — action-keybind polish: stronger dark tag fill, compact modifier labels, and 42 px buttons; visual proof pending.
 
 G.4 status:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
@@ -56,8 +60,9 @@ G.5 status:
 - P0116 at `c64fcc97` durably begins production visual translation without
   changing the active G.5 product question: `Logres/Media/Theme.lua` owns runtime
   visual paths/tokens and the proven secure action buttons consume approved
-  frame/hover/pressed/checked/activation-flash assets. Runtime visual validation
-  remains pending.
+  frame/hover/pressed/checked/activation-flash assets. Core in-client runtime +
+  visual validation is PASS; checked/cooldown/range/resource/unusable state coverage
+  remains deferred. P0118 refines only action-button presentation: stronger keybind tag contrast, compact modifier labels, and modest size increase.
 - P0112 at `dea48e04` is durable on runtime `0.0.45-dev`; its read-only
   Camera Distance Info runtime PASS measured current factor `1.2`, default
   factor `1`, ceilings `18`/`15`, and required target-50 factor
@@ -107,7 +112,8 @@ G.5 status:
 
 ## Next Action
 
-After P0117 is verified pushed, deploy runtime `0.0.47-dev`.
+Deploy/runtime-prove the pushed P0117 Taxi implementation. P0118 is an independent
+parallel visual refinement and does not change the G.5 acceptance gate.
 
 Use the existing Phase G developer-panel GUI and obtain one normal Taxi-flight
 runtime proof:

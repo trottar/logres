@@ -491,3 +491,49 @@ P0116 is not complete visual proof until in-client validation confirms actual
 scale, hover/pressed hierarchy, checked persistence, feedback visibility, and
 existing cooldown/range/resource/unusable states without Lua/taint/protected or
 secret-value errors.
+
+
+## P0116 runtime visual result and P0118 action-keybind polish
+
+P0116 core production action presentation is runtime + visual PASS at actual UI
+scale. The user accepted the frame/icon/feedback result and `Action Check` passed.
+Specific checked/cooldown/range/resource/unusable visual-state coverage remains
+deferred rather than inferred.
+
+Primary key routing remains intentionally manual/session-only while the stock
+Primary action surface remains Blizzard-owned. A `keys=false/12` observation is
+therefore policy state, not action-visual failure.
+
+P0118 changes only action-button presentation:
+- default button size increases modestly from 38 px to 42 px;
+- top-right metadata plate with stronger near-black inset fill;
+- compact modifier notation uses lowercase modifier + hyphen + uppercase main
+  key (`s-Q`, `c-C`, `a-E`);
+- dark charcoal inset;
+- thin weathered-bronze border;
+- ivory key text;
+- width follows the non-secret binding label;
+- empty labels hide the plate completely;
+- bottom-right action count placement is unchanged.
+
+The plate uses texture/font regions on the existing secure button rather than a
+new child Frame, so the refinement does not introduce protected frame
+show/hide/resize mutations during combat.
+
+
+### Keybind metadata alpha isolation
+
+P0118 R4 confirms that keybind metadata must not inherit Secondary/Utility
+contextual alpha: the black plate became visually ineffective at role alphas
+`0.45` and `0.20` even though Primary was correct. Key-tag border, fill, and text
+therefore use the existing UIParent feedback frame as an alpha-isolated
+presentation surface. The underlying secure button and icon continue to inherit
+normal role alpha.
+
+
+### Keybind metadata plate layering
+
+P0118 R5 establishes explicit draw sublevels for the keybind metadata plate on
+the shared feedback frame: border at sublevel 0, black inset fill at sublevel
+1, and key text at sublevel 2. This prevents the solid bronze border quad from
+obscuring the intended black inset.

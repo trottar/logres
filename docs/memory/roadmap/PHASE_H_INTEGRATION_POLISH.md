@@ -152,3 +152,15 @@ The implementation deliberately does not change:
 Static contract checks precede an in-client visual gate. A later evidence
 checkpoint must record the real-scale result before the action primitive is
 considered production visually proven.
+
+
+## Action visual refinement — P0118
+
+P0116's core production action primitive is accepted in client. P0118 applies
+the approved aura-metadata readability idea to action keybinds with a stronger
+near-black bronze-edged plate, compact modifier labels (`s-Q`, `c-C`, `a-E`),
+and a modest 42 px default button size. Bottom-right counts and all secure action
+behavior remain unchanged.
+
+This remains parallel Phase H preparation while Phase G / G.5 runtime proof is
+active.

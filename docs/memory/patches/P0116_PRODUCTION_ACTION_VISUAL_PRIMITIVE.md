@@ -1,7 +1,7 @@
 # P0116 — Production Action Visual Primitive
 
 Date: 2026-10-03
-Result: **INSTALLED / PUSHED — RUNTIME VISUAL PROOF PENDING** (`c64fcc97`)
+Result: **INSTALLED / PUSHED — CORE RUNTIME + VISUAL PASS; STATE-COVERAGE DEFERRED** (`c64fcc97`)
 Baseline: `4ba6393193c830e5deb08a63bb82fdaf2543aa8d`
 Commit: `c64fcc97698e0dbe98a8d52469444f2ef15a76ec`
 Runtime: `0.0.45-dev` -> `0.0.46-dev`
@@ -61,7 +61,12 @@ In-client validation must confirm:
 - cooldown/range/insufficient-resource/unusable states remain legible;
 - no Lua, taint, protected-action, or secret-value errors occur.
 
-Do not record runtime visual PASS until those states are actually observed.
+The core primitive was subsequently accepted in client: base presentation and
+activation feedback are PASS. Specific checked/cooldown/range/resource/unusable
+states were not individually demonstrated and remain coverage-deferred.
+
+Canonical evidence:
+`../evidence/P0116_ACTION_VISUAL_RUNTIME_PASS_2026-10-03.md`.
 
 ## Active work boundary
 

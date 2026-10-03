@@ -206,7 +206,7 @@ function Primary:RefreshBindingLabels()
         local keys = { GetBindingKey(command) }
 
         self.bindingKeyCounts[index] = #keys
-        button.hotkeyText:SetText(keys[1] or "")
+        ActionButton.SetHotkeyLabel(button, keys[1] or "")
     end
 end
 

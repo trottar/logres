@@ -135,6 +135,7 @@
 | P0113 | 2026-10-03 | INSTALLED / PUSHED — DOCS-ONLY | Record D-038 compass visual focus/depth contract (`19c0d1ff`) |
 | P0114 | 2026-10-03 | INSTALLED / PUSHED — DOCS/EVIDENCE ONLY | Record P0112 default negative; open above-default account-scoped ownership policy (`f89efd53`) |
 | P0115 | 2026-10-03 | INSTALLED / PUSHED — DOCS / DESIGN ASSETS / STATIC CHECKER ONLY | Preserve twelve approved visual sheets; accept D-039; add visual implementation audit (`4ba63931`) |
-| P0116 | 2026-10-03 | INSTALLED / PUSHED — RUNTIME VISUAL PROOF PENDING | Establish production media/tokens and wire approved action-button state assets (`c64fcc97`, `0.0.46-dev`) |
-| P0117 | 2026-10-03 | PREPARED — RUNTIME PROOF PENDING | Correct DynamicCam target-50 parity semantics; add production Taxi zoom (`0.0.47-dev`) |
+| P0116 | 2026-10-03 | INSTALLED / PUSHED — CORE RUNTIME + VISUAL PASS; STATE COVERAGE DEFERRED | Establish production media/tokens and wire approved action-button state assets (`c64fcc97`, `0.0.46-dev`) |
+| P0117 | 2026-10-03 | INSTALLED / PUSHED — RUNTIME PROOF PENDING | Correct DynamicCam target-50 parity semantics; add production Taxi zoom (`82bdb4f3`, `0.0.47-dev`) |
+| P0118 | 2026-10-03 | PREPARED — VISUAL PROOF PENDING | Polish action keybind tag contrast/modifier labels and increase buttons to 42 px (`0.0.48-dev`) |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

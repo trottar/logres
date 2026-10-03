@@ -6,10 +6,21 @@ local theme = Logres.Theme or {}
 theme.mediaRoot = MEDIA_ROOT
 
 theme.action = {
-    buttonSize = 38,
+    buttonSize = 42,
     buttonGap = 5,
     iconInset = 4,
     artOverscan = 2,
+
+    hotkeyPlate = {
+        minWidth = 16,
+        height = 15,
+        horizontalPadding = 4,
+        rightInset = 1,
+        topInset = 1,
+        borderColor = { 0.46, 0.34, 0.18, 0.98 },
+        fillColor = { 0.00, 0.00, 0.00, 0.98 },
+        textColor = { 0.96, 0.92, 0.82, 1.00 },
+    },
 
     assets = {
         frame = MEDIA_ROOT .. "Action\\action_frame.tga",

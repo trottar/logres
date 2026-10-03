@@ -8,11 +8,20 @@ local actionStyle =
     and Logres.Theme.action
     or {}
 local actionAssets = actionStyle.assets or {}
+local hotkeyStyle = actionStyle.hotkeyPlate or {}
 
-local DEFAULT_BUTTON_SIZE = actionStyle.buttonSize or 38
+local DEFAULT_BUTTON_SIZE = actionStyle.buttonSize or 42
 local DEFAULT_BUTTON_GAP = actionStyle.buttonGap or 5
 local DEFAULT_ICON_INSET = actionStyle.iconInset or 4
 local DEFAULT_ART_OVERSCAN = actionStyle.artOverscan or 2
+local HOTKEY_MIN_WIDTH = hotkeyStyle.minWidth or 16
+local HOTKEY_HEIGHT = hotkeyStyle.height or 15
+local HOTKEY_PADDING = hotkeyStyle.horizontalPadding or 4
+local HOTKEY_RIGHT_INSET = hotkeyStyle.rightInset or 1
+local HOTKEY_TOP_INSET = hotkeyStyle.topInset or 1
+local HOTKEY_BORDER = hotkeyStyle.borderColor or { 0.46, 0.34, 0.18, 0.98 }
+local HOTKEY_FILL = hotkeyStyle.fillColor or { 0.00, 0.00, 0.00, 0.98 }
+local HOTKEY_TEXT = hotkeyStyle.textColor or { 0.96, 0.92, 0.82, 1.00 }
 
 local function setActionArtBounds(texture, button)
     texture:SetPoint(
@@ -206,14 +215,63 @@ button:HookScript("PostClick", function(current)
     ActionButton.Pulse(current)
 end)
 
-    local hotkeyText = button:CreateFontString(
+    local hotkeyPlateBorder = feedbackFrame:CreateTexture(nil, "OVERLAY")
+    hotkeyPlateBorder:SetPoint(
+        "TOPRIGHT",
+        button,
+        "TOPRIGHT",
+        -HOTKEY_RIGHT_INSET,
+        -HOTKEY_TOP_INSET
+    )
+    hotkeyPlateBorder:SetSize(HOTKEY_MIN_WIDTH, HOTKEY_HEIGHT)
+    hotkeyPlateBorder:SetColorTexture(
+        HOTKEY_BORDER[1],
+        HOTKEY_BORDER[2],
+        HOTKEY_BORDER[3],
+        HOTKEY_BORDER[4]
+    )
+    hotkeyPlateBorder:SetDrawLayer("OVERLAY", 0)
+    hotkeyPlateBorder:Hide()
+
+    local hotkeyPlateFill = feedbackFrame:CreateTexture(nil, "OVERLAY")
+    hotkeyPlateFill:SetPoint(
+        "TOPLEFT",
+        hotkeyPlateBorder,
+        "TOPLEFT",
+        1,
+        -1
+    )
+    hotkeyPlateFill:SetPoint(
+        "BOTTOMRIGHT",
+        hotkeyPlateBorder,
+        "BOTTOMRIGHT",
+        -1,
+        1
+    )
+    hotkeyPlateFill:SetColorTexture(
+        HOTKEY_FILL[1],
+        HOTKEY_FILL[2],
+        HOTKEY_FILL[3],
+        HOTKEY_FILL[4]
+    )
+    hotkeyPlateFill:SetDrawLayer("OVERLAY", 1)
+    hotkeyPlateFill:Hide()
+
+    local hotkeyText = feedbackFrame:CreateFontString(
         nil,
         "OVERLAY",
         "GameFontHighlightSmall"
     )
-    hotkeyText:SetPoint("TOPRIGHT", button, "TOPRIGHT", -3, -3)
-    hotkeyText:SetJustifyH("RIGHT")
-    hotkeyText:SetTextColor(0.84, 0.78, 0.66, 0.90)
+    hotkeyText:SetPoint("CENTER", hotkeyPlateBorder, "CENTER", 0, 0)
+    hotkeyText:SetJustifyH("CENTER")
+    hotkeyText:SetTextColor(
+        HOTKEY_TEXT[1],
+        HOTKEY_TEXT[2],
+        HOTKEY_TEXT[3],
+        HOTKEY_TEXT[4]
+    )
+    hotkeyText:SetDrawLayer("OVERLAY", 2)
+    hotkeyText:Hide()
 
     local countText = button:CreateFontString(
         nil,
@@ -230,6 +288,9 @@ end)
     button.icon = icon
     button.cooldown = cooldown
     button.hotkeyText = hotkeyText
+    button.hotkeyPlateBorder = hotkeyPlateBorder
+    button.hotkeyPlateFill = hotkeyPlateFill
+    button.hotkeyPlateReady = true
     button.countText = countText
     button.actionFrameArt = frameArt
     button.actionHoverTexture = hoverTexture
@@ -273,6 +334,43 @@ function ActionButton.CountFeedbackReady(buttons)
     end
 
     return count
+end
+
+local function normalizeHotkeyLabel(label)
+    local text = tostring(label or "")
+    if text == "" then
+        return ""
+    end
+
+    text = text:upper()
+    text = text:gsub("SHIFT%-", "s-")
+    text = text:gsub("CTRL%-", "c-")
+    text = text:gsub("ALT%-", "a-")
+    return text
+end
+
+function ActionButton.SetHotkeyLabel(button, label)
+    local text = normalizeHotkeyLabel(label)
+
+    if text == "" then
+        button.hotkeyText:SetText("")
+        button.hotkeyText:Hide()
+        button.hotkeyPlateFill:Hide()
+        button.hotkeyPlateBorder:Hide()
+        return
+    end
+
+    button.hotkeyText:SetText(text)
+    local textWidth = math.ceil(button.hotkeyText:GetStringWidth())
+    local plateWidth = math.max(
+        HOTKEY_MIN_WIDTH,
+        textWidth + (HOTKEY_PADDING * 2)
+    )
+
+    button.hotkeyPlateBorder:SetWidth(plateWidth)
+    button.hotkeyPlateBorder:Show()
+    button.hotkeyPlateFill:Show()
+    button.hotkeyText:Show()
 end
 
 function ActionButton.RegisterPresentation(button, actionSlot)

@@ -7,13 +7,17 @@ Phase G:
 **ACTIVE — G.5.**
 
 Latest verified durable checkpoint:
-P0116 `c64fcc97698e0dbe98a8d52469444f2ef15a76ec`.
+P0117 `82bdb4f33b8199c6794f486eff0067f99e22b4d0`.
 
 Current pushed runtime:
-`0.0.46-dev` — P0116 action visual translation; in-client visual proof pending.
+`0.0.47-dev` — P0117 Taxi production zoom; runtime proof pending.
 
-P0117 prepared runtime:
-`0.0.47-dev`.
+Parallel visual evidence:
+P0116 `c64fcc97` core action primitive runtime + visual PASS; detailed state
+coverage deferred.
+
+P0118 prepared runtime:
+`0.0.48-dev` — action-keybind polish: stronger dark tag fill, compact modifier labels, and 42 px buttons; visual proof pending.
 
 Target 50 without max-distance mutation:
 **CLOSED — CLEAN NEGATIVE.**
@@ -47,11 +51,11 @@ DynamicCam parity correction:
 requested Taxi target `50` is not a physical-reachability guarantee. Pinned
 LibCamera accepts the engine max-distance clamp.
 
-P0117 prepares runtime `0.0.47-dev` production Taxi zoom:
+P0117 is pushed at `82bdb4f3` on runtime `0.0.47-dev`:
 requested=50, effective=min(50, live ceiling), entry=5s, no SetCVar.
 
-Next after verified push:
-deploy, use Phase G GUI, obtain one normal Taxi-flight automatic ownership proof,
+Next:
+deploy/use Phase G GUI, obtain one normal Taxi-flight automatic ownership proof,
 then verify destination context after landing.
 
 Production Taxi: P0117 prepared; runtime proof pending.
@@ -67,7 +71,9 @@ Parallel accepted Phase H+ direction remains unchanged:
 - `../architecture/VISUAL_IMPLEMENTATION_STATUS.md` is the implementation audit
   for translating those designs into addon assets/runtime.
 - D-040 establishes `Logres/Media/Theme.lua` as the production visual token/path
-  boundary; P0116 wires the approved action-button frame/state family and awaits
-  in-client visual proof.
+  boundary; P0116 core action presentation/feedback is runtime + visual PASS.
+  P0118 refines action-button readability only: stronger dark tag fill, compact
+  modifier labels, and modest size increase; detailed P0116 state coverage remains
+  deferred.
 
 User performs all commits/pushes.

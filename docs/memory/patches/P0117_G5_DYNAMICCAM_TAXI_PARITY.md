@@ -1,8 +1,9 @@
 # P0117 — G.5 DynamicCam Taxi Parity + Production Zoom
 
 Date: 2026-10-03
-Result: **PREPARED — RUNTIME PROOF PENDING**
+Result: **INSTALLED / PUSHED — RUNTIME PROOF PENDING** (`82bdb4f3`)
 Baseline: `c64fcc97698e0dbe98a8d52469444f2ef15a76ec`
+Commit: `82bdb4f33b8199c6794f486eff0067f99e22b4d0`
 Runtime: `0.0.46-dev -> 0.0.47-dev`
 
 ## Purpose

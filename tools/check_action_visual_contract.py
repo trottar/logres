@@ -33,7 +33,7 @@ if THEME.is_file():
     required = [
         'local MEDIA_ROOT = "Interface\\\\AddOns\\\\Logres\\\\Media\\\\"',
         "theme.action = {",
-        "buttonSize = 38",
+        "buttonSize = 42",
         "buttonGap = 5",
         "iconInset = 4",
         "artOverscan = 2",

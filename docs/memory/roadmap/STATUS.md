@@ -66,8 +66,8 @@ DynamicCam parity correction:
 requested target `50` may be physically engine-clamped; reachability of literal
 50 is not a production prerequisite.
 
-P0117 prepares runtime `0.0.47-dev` production Taxi zoom with requested target
-50, live effective-ceiling diagnostics, and 5-second entry transition.
+P0117 is verified pushed at `82bdb4f3` on runtime `0.0.47-dev` with requested
+target 50, live effective-ceiling diagnostics, and 5-second entry transition.
 
 Next:
 runtime-prove automatic Taxi ownership and destination convergence.
@@ -87,5 +87,7 @@ source-dependent quest/POI/tracking inputs remain capability-gated. D-039 now
 preserves the twelve approved visual sheets as the canonical art baseline and
 moves the covered component families from broad concept exploration to asset /
 runtime translation. D-040 now defines the production `Logres/Media/` token/
-asset boundary; P0116 is the first action-button translation and remains
-in-client visual-proof pending. See `../architecture/VISUAL_IMPLEMENTATION_STATUS.md`.
+asset boundary; P0116 core action presentation/activation feedback is runtime +
+visual PASS with detailed state coverage deferred. P0118 prepares the accepted action-keybind polish (stronger dark tag fill,
+compact modifier labels, 42 px buttons) without changing action ownership or
+routing. See `../architecture/VISUAL_IMPLEMENTATION_STATUS.md`.

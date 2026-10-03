@@ -186,7 +186,7 @@ function SecondaryUtility:RefreshBindingLabels(cluster)
         local keys = { GetBindingKey(command) }
 
         cluster.bindingKeyCounts[index] = #keys
-        button.hotkeyText:SetText(keys[1] or "")
+        ActionButton.SetHotkeyLabel(button, keys[1] or "")
     end
 end
 
