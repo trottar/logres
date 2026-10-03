@@ -1,6 +1,6 @@
 # G.5 — Camera-Distance CVar Ownership
 
-Status: **SOURCE CONTRACT RESOLVED — READ-ONLY DEFAULT/METADATA PROBE NEXT**
+Status: **READ-ONLY RUNTIME EVIDENCE RESOLVED — PRODUCT/OWNERSHIP POLICY NEXT**
 Opened: 2026-10-03
 Parent: `G5_TAXI_CAMERA_OWNERSHIP.md`
 
@@ -26,19 +26,26 @@ Resolved:
 - Taxi zoom does not automatically raise the max-distance CVar;
 - pinned LibCamera does not mutate `cameraDistanceMaxZoomFactor`.
 
-## Narrow unresolved fact
+## P0112 runtime result
 
-P0109 measured current factor `1.2`, but not the inherited client default.
+Canonical evidence:
+`../evidence/G5_P0112_CAMERA_DISTANCE_INFO_2026-10-03.md`.
 
-Before any mutation experiment, record:
-- current factor;
-- default factor;
-- current/default ceilings;
-- storage scope;
-- locked/secure/read-only flags.
+Runtime `0.0.45-dev` measured:
+- current factor `1.2`;
+- default factor `1`;
+- current/default ceilings `18` / `15`;
+- required target-50 factor `3.3333333333333`;
+- current/default support false / false;
+- account-stored=true;
+- character-stored=false;
+- locked=false;
+- secure=false;
+- readOnly=false;
+- secret=false;
+- error=nil.
 
-Prefer `C_CVar.GetCVarInfo`, which current Forever API documentation exposes for
-1.60.1.
+The inherited client default cannot satisfy target 50.
 
 ## P0112 diagnostic
 
@@ -55,13 +62,22 @@ Properties:
 - no timer/event/subscription/polling;
 - secret-safe before numeric conversion or formatting.
 
-## Decision after evidence
+## Next product/ownership question
 
-If default >= `50 / 15`:
-open the smallest temporary ownership/restoration capability design.
+The previous default gate resolved on the negative branch.
 
-If default < `50 / 15`:
-record that DynamicCam's inherited standard cannot itself satisfy target 50 and
-resolve product policy before inventing a higher camera-distance setting.
+Before any mutation experiment, decide whether Logres may temporarily raise this
+account-stored setting above both current `1.2` and default `1`.
+
+If accepted, the contract must define:
+- exact target factor `50 / 15`;
+- restoration to the captured current value, not the client default;
+- concurrent user/other-addon changes;
+- reload/logout/disable/error/crash interruption;
+- combat/protected behavior;
+- fail-open restoration.
+
+If not accepted, target 50 remains intentionally unavailable and a separate
+product decision must resolve the Taxi experience.
 
 No target clamp follows automatically from either result.

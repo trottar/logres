@@ -1,9 +1,10 @@
 # P0112 — G.5 Camera-Distance Source Audit + Read-Only Info Diagnostic
 
 Date: 2026-10-03
-Result: **PREPARED R5 — RUNTIME READ-ONLY DIAGNOSTIC; PROOF PENDING**
+Result: **INSTALLED / PUSHED — READ-ONLY RUNTIME PASS**
 Initial baseline: `bd0a9da3c7abc49ff527e8901bfd5c77846414a5`
 Current parent after parallel P0113: `19c0d1ffcdc0cf2df59a2e648cfa9caab1c4d347`
+Commit: `dea48e04dfdb46f0f443222806e0d6bc81afd2e8`
 Runtime: `0.0.44-dev -> 0.0.45-dev`
 
 ## Purpose
@@ -116,3 +117,20 @@ R5 therefore repairs P0112 in place on top of that parent and updates only
 CURRENT / CURRENT_HANDOFF identity plus PATCH_INDEX. Remaining shared Phase-H
 summary convergence is deferred to a later docs-only checkpoint after P0112 is
 durable.
+## Runtime evidence
+
+Verified runtime `0.0.45-dev` `Camera Distance Info` PASS:
+- current `1.2`, default `1`;
+- ceilings `18` / `15`;
+- required factor `3.3333333333333`;
+- current/default support false/false;
+- account-stored=true; character-stored=false;
+- locked=false; secure=false; readOnly=false;
+- DynamicCam not loaded;
+- secret=false; error=nil.
+
+Canonical:
+`../evidence/G5_P0112_CAMERA_DISTANCE_INFO_2026-10-03.md`.
+
+The inherited default cannot satisfy target 50. Production Taxi remains
+fail-open and SetCVar remains unauthorized pending product/ownership policy.

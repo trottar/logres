@@ -34,7 +34,7 @@ The roadmap is capability-gated. A phase advances only when its success criteria
 
 ## Phase G — Cinematic Camera
 
-**Status: ACTIVE — G.5 read-only camera-distance default/metadata proof.**
+**Status: ACTIVE — G.5 camera-distance product/ownership policy after default negative.**
 
 G.1 captured the DynamicCam profile.
 
@@ -52,8 +52,12 @@ itself raise max-distance: DynamicCam inherits the client default for its
 standard max-distance setting, and that default was not captured by G.1 or
 measured by P0109.
 
-P0112 therefore adds a read-only developer-panel diagnostic for the current
-Forever default and metadata before any SetCVar experiment is considered.
+P0112 runtime `0.0.45-dev` then measured current factor `1.2` / ceiling `18`
+and client default factor `1` / ceiling `15`; both report target-50 support false.
+The CVar is account-stored and is not reported locked, secure, or read-only.
+
+The next checkpoint is a product/ownership contract for any temporary
+above-default max-distance mutation before any SetCVar probe.
 
 Production Taxi remains fail-open.
 
@@ -71,4 +75,5 @@ D-035 establishes NPC quest interaction as a future Logres-owned experience with
 Blizzard fail-open fallback until each replacement surface is proven. D-036
 freezes the continuous health-tunnel visible-field contract. D-037 defines the
 future four-role navigation/minimap endpoint while preserving the current D-030
-stock-minimap boundary until all required capabilities are proven.
+stock-minimap boundary until all required capabilities are proven. D-038 defines
+the accepted compass focus/depth visual contract under the same capability gates.

@@ -12,22 +12,19 @@ project: logres
 
 ## Current Work Item
 
-**G.5 — Read the Forever camera-distance default/metadata before deciding CVar ownership.**
+**G.5 — Resolve product/ownership policy for any above-default Taxi camera-distance CVar.**
 
 Latest verified durable checkpoint:
-P0113 `19c0d1ffcdc0cf2df59a2e648cfa9caab1c4d347`.
+P0112 `dea48e04dfdb46f0f443222806e0d6bc81afd2e8`.
 
 Current pushed runtime:
-`0.0.44-dev`.
-
-P0112 prepared runtime:
 `0.0.45-dev`.
 
 G.4 status:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
 G.5 status:
-**TARGET-50 NO-CVAR CAPABILITY CLOSED NEGATIVE; CAMERA-DISTANCE SOURCE CONTRACT RESOLVED; READ-ONLY DEFAULT/METADATA PROBE PENDING.**
+**P0112 READ-ONLY DEFAULT/METADATA PASS; DEFAULT FACTOR 1 / CEILING 15 CANNOT SUPPORT TARGET 50; PRODUCT/OWNERSHIP POLICY NEXT.**
 
 ## Verified State
 
@@ -43,6 +40,11 @@ G.5 status:
   fail-open.
 - P0111 at `bd0a9da3` durably records the parallel D-036/D-037 future visual and
   navigation direction without changing runtime.
+- P0113 at `19c0d1ff` durably records D-038 compass focus/depth visual direction.
+- P0112 at `dea48e04` is durable on runtime `0.0.45-dev`; its read-only
+  Camera Distance Info runtime PASS measured current factor `1.2`, default
+  factor `1`, ceilings `18`/`15`, and required target-50 factor
+  `3.3333333333333`.
 - G.5 source audit now resolves the next architectural question:
   - DynamicCam's non-mainline UI permits displayed camera distance 50;
   - displayed distance is factor times 15;
@@ -67,6 +69,10 @@ G.5 status:
   unavailable.
 - P0112 does not call `SetCVar`, does not move the camera, and does not change
   production Taxi ownership.
+- P0112 runtime metadata reports account-stored=true, character-stored=false,
+  locked=false, secure=false, readOnly=false, secret=false, error=nil.
+- Both `currentSupports50` and `defaultSupports50` are false. Therefore the
+  inherited DynamicCam/client default cannot satisfy target 50.
 - Taxi rotation and Taxi UI hide/fade remain separately gated.
 - D-035 quest interaction ownership remains a valid future endpoint with Blizzard
   fail-open controls until each replacement capability is proven.
@@ -80,42 +86,43 @@ G.5 status:
 
 ## Next Action
 
-After P0112 is verified pushed, deploy runtime `0.0.45-dev`.
+Resolve the **product/ownership contract** for any temporary
+`cameraDistanceMaxZoomFactor` increase above both the current factor `1.2` and
+client default `1`.
 
-Use the Phase G developer-panel GUI:
-`Camera Distance Info`
+No runtime mutation is authorized yet.
 
-No camera controller disable, camera positioning, Taxi ride, or DynamicCam
-disable is required because this diagnostic is read-only.
-
-Then flush/export the developer-panel diagnostic.
+Before any SetCVar probe, define:
+- whether Logres is allowed to alter this account-stored setting at all;
+- exact target factor `50 / 15`;
+- capture/restore semantics using the observed pre-ownership value, not default;
+- coexistence with user/other-addon changes;
+- reload/logout/disable/error/crash persistence behavior;
+- combat/protected-state behavior;
+- fail-open behavior if ownership or restoration is uncertain.
 
 ## Decision Gate
 
-Use the runtime `default` value, not assumption:
+P0112 resolves the prior gate:
 
-- if default factor is at least `50 / 15`, investigate the smallest safe
-  temporary max-distance ownership capability;
-- if default factor is below `50 / 15`, preserve that as evidence that
-  DynamicCam's inherited standard setting itself cannot make target 50 physically
-  reachable without an additional max-distance policy.
+- default factor `1` < required `50 / 15`;
+- default ceiling `15` cannot reach target 50;
+- current factor `1.2` / ceiling `18` also cannot reach target 50;
+- the CVar is account-stored and metadata does not mark it locked, secure, or
+  read-only.
 
-In either case:
-- do not silently clamp Taxi to 18;
-- do not call `SetCVar` yet;
-- do not enable production Taxi ownership yet.
+Therefore the next question is not capability-by-default. It is whether Logres
+should deliberately own a persistent account-scoped setting temporarily.
+
+Do not clamp Taxi to 18 and do not call SetCVar until that policy is explicit.
 
 ## Success Criteria
 
-This checkpoint completes when runtime evidence safely records:
-- current factor;
-- default factor;
-- current/default effective ceilings;
-- required target-50 factor;
-- current/default support result;
-- storage/lock/secure/read-only metadata where available;
-- DynamicCam state;
-- secret/error state.
+The next G.5 contract checkpoint completes when:
+- the product decision on temporary above-default max-distance ownership is explicit;
+- exact restoration ownership is defined around current value `1.2`;
+- interruption/persistence/coexistence boundaries are explicit;
+- a smallest safe mutation capability probe is defined, or mutation is rejected.
 
 ## Do Not Reopen Without New Evidence
 
@@ -127,6 +134,9 @@ This checkpoint completes when runtime evidence safely records:
 - **Taxi intended target:** 50.
 - **Target-50 required factor:** `50 / 15`.
 - **Current observed factor:** 1.2; ceiling 18.
+- **Client default factor:** 1; ceiling 15.
+- **Target-50 default support:** false.
+- **CVar metadata:** account-stored=true; character-stored=false; locked=false; secure=false; readOnly=false.
 - **Camera-distance mutation:** still not authorized.
 - **Production Taxi ownership:** still fail-open.
 - **Taxi rotation/UI fade:** separately gated.
@@ -139,6 +149,7 @@ This checkpoint completes when runtime evidence safely records:
 
 - `docs/memory/evidence/G5_P0109_TARGET50_NEGATIVE_2026-10-03.md`
 - `docs/memory/evidence/G5_CAMERA_DISTANCE_SOURCE_AUDIT_2026-10-03.md`
+- `docs/memory/evidence/G5_P0112_CAMERA_DISTANCE_INFO_2026-10-03.md`
 - `docs/memory/investigations/G5_CAMERA_DISTANCE_CVAR_OWNERSHIP.md`
 - `docs/memory/investigations/G5_TAXI_CAMERA_OWNERSHIP.md`
 - `docs/memory/architecture/CAMERA.md`

@@ -3,7 +3,7 @@
 ## G.5 — Camera-distance CVar ownership for Taxi target 50
 
 Status:
-**SOURCE CONTRACT RESOLVED — READ-ONLY DEFAULT/METADATA RUNTIME EVIDENCE NEXT**
+**READ-ONLY DEFAULT/METADATA RUNTIME PASS — PRODUCT/OWNERSHIP POLICY NEXT**
 
 Canonical:
 `G5_CAMERA_DISTANCE_CVAR_OWNERSHIP.md`
@@ -22,11 +22,24 @@ Established:
 - the G.1 profile does not persist an explicit standard max-distance value;
 - LibCamera does not own this CVar.
 
-Missing fact:
-the actual current Forever **default** and CVar metadata.
+P0112 runtime evidence:
+- runtime `0.0.45-dev`;
+- source `C_CVar.GetCVarInfo`;
+- current factor `1.2`, ceiling `18`;
+- default factor `1`, ceiling `15`;
+- required factor `3.3333333333333`;
+- current/default support false/false;
+- account-stored=true; character-stored=false;
+- locked=false; secure=false; readOnly=false;
+- DynamicCam not loaded;
+- secret=false; error=nil.
 
-P0112 prepares read-only runtime `0.0.45-dev` with Phase G action:
-`Camera Distance Info`.
+Therefore DynamicCam's inherited/client default cannot satisfy target 50.
+
+Next:
+resolve whether Logres should ever temporarily own an above-default,
+account-stored max-distance value and, if so, define exact restoration and
+interruption semantics before any SetCVar probe.
 
 No `SetCVar`, camera movement, polling, or production Taxi ownership is
 authorized.

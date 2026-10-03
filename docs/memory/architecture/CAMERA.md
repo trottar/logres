@@ -81,28 +81,37 @@ does not automatically raise max-distance merely because its target is 50.
 
 Pinned LibCamera does not mutate `cameraDistanceMaxZoomFactor`.
 
-## P0112 read-only metadata gate
+## P0112 read-only metadata result
 
-Before any SetCVar experiment, runtime `0.0.45-dev` adds Phase G action:
-`Camera Distance Info`.
+Canonical:
+`../evidence/G5_P0112_CAMERA_DISTANCE_INFO_2026-10-03.md`.
 
-It records:
-- current/default factor;
-- current/default ceiling;
-- required target-50 factor;
-- current/default support booleans;
-- storage scope;
-- locked/secure/read-only metadata;
-- DynamicCam load status;
-- secret/error state.
+Runtime `0.0.45-dev` `Camera Distance Info` PASS recorded:
+- source `C_CVar.GetCVarInfo`;
+- current factor `1.2`, ceiling `18`;
+- default factor `1`, ceiling `15`;
+- required target-50 factor `3.3333333333333`;
+- current/default support false/false;
+- account-stored=true;
+- character-stored=false;
+- locked=false;
+- secure=false;
+- readOnly=false;
+- DynamicCam not loaded;
+- secret=false;
+- error=nil.
 
-It prefers `C_CVar.GetCVarInfo` and falls back to read-only current/default APIs.
-
-It does not move the camera or mutate a CVar.
+The client default cannot satisfy target 50. The current value is also
+insufficient and differs from default, so future restoration must preserve the
+captured pre-ownership current value rather than resetting to default.
 
 ## Ownership boundary
 
 Camera-distance mutation remains **not authorized**.
+
+The CVar is account-stored according to runtime metadata. A future temporary
+write would therefore be deliberate ownership of a persistent user setting,
+not merely use of the inherited DynamicCam default.
 
 If a later mutation capability is justified, it must separately define:
 - old-value capture;
@@ -146,5 +155,8 @@ G.4: **COMPLETE — City ownership PASS on `0.0.43-dev`.**
 G.5 target 50 without max-distance mutation:
 **COMPLETE — CLEAN NEGATIVE on `0.0.44-dev`.**
 
-G.5 camera-distance source contract:
-**RESOLVED — READ-ONLY DEFAULT/METADATA PROBE NEXT on `0.0.45-dev`.**
+G.5 camera-distance default/metadata proof:
+**COMPLETE — READ-ONLY PASS on `0.0.45-dev`; DEFAULT FACTOR 1 / CEILING 15 CANNOT SUPPORT TARGET 50.**
+
+G.5 next:
+**PRODUCT/OWNERSHIP CONTRACT FOR ANY ABOVE-DEFAULT ACCOUNT-SCOPED MUTATION.**

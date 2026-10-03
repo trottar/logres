@@ -32,7 +32,7 @@ Target 50 without max-distance mutation:
 **CLOSED — CLEAN NEGATIVE on `0.0.44-dev`.**
 
 Camera-distance source contract:
-**RESOLVED — READ-ONLY DEFAULT/METADATA PROBE NEXT.**
+**RESOLVED — P0112 READ-ONLY PASS; DEFAULT CANNOT SUPPORT TARGET 50.**
 
 ### Source finding
 
@@ -51,34 +51,42 @@ the inherited client default rather than permission to mutate the CVar.
 Canonical:
 `../evidence/G5_CAMERA_DISTANCE_SOURCE_AUDIT_2026-10-03.md`.
 
-### P0112 read-only checkpoint
+### P0112 read-only runtime evidence
 
 Runtime:
 `0.0.45-dev`.
 
-Phase G action:
-`Camera Distance Info`.
+Canonical:
+`../evidence/G5_P0112_CAMERA_DISTANCE_INFO_2026-10-03.md`.
 
-It reads:
-- current/default factor;
-- current/default effective ceiling;
-- required target-50 factor;
-- support booleans;
-- storage scope;
-- locked/secure/read-only flags;
-- DynamicCam state;
-- secret/error state.
+Observed:
+- source `C_CVar.GetCVarInfo`;
+- current factor `1.2`, ceiling `18`;
+- default factor `1`, ceiling `15`;
+- required factor `3.3333333333333`;
+- current/default support false/false;
+- account-stored=true;
+- character-stored=false;
+- locked=false;
+- secure=false;
+- readOnly=false;
+- DynamicCam not loaded;
+- secret=false;
+- error=nil.
 
-No movement. No SetCVar. No polling.
+Classification:
+**CLEAN READ-ONLY RUNTIME PASS; DEFAULT TARGET-50 SUPPORT NEGATIVE.**
 
-### Decision after P0112 runtime evidence
+The prior decision gate therefore resolves on `default < 50 / 15`.
 
-If default >= `50 / 15`, investigate the smallest safe temporary ownership
-capability.
+### Next G.5 checkpoint
 
-If default < `50 / 15`, record that inherited DynamicCam standard settings also
-cannot satisfy target 50 and resolve product policy before adding a higher
-max-distance setting.
+Resolve the product/ownership contract for any temporary above-default,
+account-scoped camera-distance mutation.
+
+Before any SetCVar probe, define current-value restoration, coexistence,
+reload/logout/disable/error/crash persistence, combat/protected behavior, and
+fail-open semantics.
 
 Production Taxi remains fail-open until explicitly authorized.
 

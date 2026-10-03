@@ -7,7 +7,7 @@ As of 2026-10-03.
 **Phase G — Cinematic Camera**
 
 Active work item:
-**G.5 read-only camera-distance default/metadata proof**
+**G.5 camera-distance product/ownership policy after default negative**
 
 State:
 **Phase F COMPLETE; Phase G ACTIVE — G.5**
@@ -51,8 +51,20 @@ DynamicCam's captured Taxi target 50 does not itself raise max-distance; the
 standard max-distance setting inherits the client default, which G.1 did not
 persist and P0109 did not measure.
 
-P0112 prepares runtime `0.0.45-dev` with a read-only Phase G
-`Camera Distance Info` action.
+P0112 runtime `0.0.45-dev` read-only PASS:
+- current factor `1.2` / ceiling `18`;
+- default factor `1` / ceiling `15`;
+- required factor `3.3333333333333`;
+- current/default support false/false;
+- account-stored=true;
+- locked=false; secure=false; readOnly=false;
+- secret=false; error=nil.
+
+Therefore the inherited client/DynamicCam default cannot satisfy target 50.
+
+Next:
+resolve product/ownership policy for any temporary above-default account-scoped
+max-distance mutation.
 
 Production Taxi remains fail-open.
 
@@ -66,3 +78,5 @@ experience with Blizzard fallback until each replacement surface is proven.
 D-036 freezes the approved health-tunnel visible-field progression. D-037 defines
 the future four-role navigation/minimap endpoint while preserving D-030 until
 local POI/tracking/quest and remaining minimap capabilities are runtime-proven.
+D-038 defines the accepted compass focus/depth visual contract while all
+source-dependent quest/POI/tracking inputs remain capability-gated.

@@ -7,19 +7,16 @@ Phase G:
 **ACTIVE — G.5.**
 
 Latest verified durable checkpoint:
-P0113 `19c0d1ffcdc0cf2df59a2e648cfa9caab1c4d347`.
+P0112 `dea48e04dfdb46f0f443222806e0d6bc81afd2e8`.
 
 Current pushed runtime:
-`0.0.44-dev`.
-
-P0112 prepared runtime:
 `0.0.45-dev`.
 
 Target 50 without max-distance mutation:
 **CLOSED — CLEAN NEGATIVE.**
 
-Camera-distance source contract:
-**RESOLVED — READ-ONLY FOREVER DEFAULT/METADATA PROBE NEXT.**
+Camera-distance default/metadata proof:
+**COMPLETE — READ-ONLY PASS; DEFAULT FACTOR 1 / CEILING 15 DOES NOT SUPPORT TARGET 50.**
 
 Canonical source audit:
 `../evidence/G5_CAMERA_DISTANCE_SOURCE_AUDIT_2026-10-03.md`.
@@ -34,22 +31,25 @@ Key source result:
 
 Therefore do not jump from current factor 1.2 to a mutation policy.
 
-P0112 adds read-only Phase G GUI action:
-`Camera Distance Info`.
+P0112 runtime `0.0.45-dev` read-only PASS recorded:
+- current factor `1.2`, ceiling `18`;
+- default factor `1`, ceiling `15`;
+- required factor `3.3333333333333`;
+- current/default support false/false;
+- account-stored=true, character-stored=false;
+- locked=false, secure=false, readOnly=false;
+- DynamicCam not loaded; secret=false; error=nil.
 
-It reports current/default factors, ceilings, support threshold, storage/security
-metadata, DynamicCam state, and secret/error state without moving the camera or
-calling SetCVar.
-
-Next after verified push:
-deploy `0.0.45-dev`, click `Camera Distance Info` in Phase G, flush/export
-diagnostics.
+Next:
+resolve product/ownership policy for any temporary above-default account-scoped
+camera-distance mutation. No SetCVar probe is authorized yet.
 
 Production Taxi remains fail-open.
 
 Parallel accepted Phase H+ direction remains unchanged:
 - D-036 health-tunnel visible-field contract;
 - D-037 four navigation roles and future minimap-replacement endpoint;
+- D-038 compass focus/depth visual contract;
 - D-030 stock minimap remains current runtime authority until replacement proof;
 - POI/tracking source capability remains deferred/unproven.
 
