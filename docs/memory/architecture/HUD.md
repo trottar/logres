@@ -436,3 +436,24 @@ Validation focuses on:
 - usable spacing.
 
 Known visual polish debt remains separate from functional correctness.
+
+
+## Phase H+ visual direction — D-034
+
+The Phase B text-only percentage displays were capability/proof presentations,
+not the final visual endpoint.
+
+Future Logres-owned percentage presentation should normally use the shared
+compact percentage-bar primitive with visible `%` text, including:
+- primary player resource percentage;
+- pet health percentage;
+- party-member health percentage;
+- fallback/world target health percentage when owned.
+
+Player health remains the health-tunnel/peripheral-pressure system and is not
+converted into a conventional player health bar.
+
+This presentation refinement does not change the secret-safe transport
+contract. Secret-capable percentages must still flow directly through
+native-safe consumers without Lua arithmetic, comparison, stringification,
+persistence, or threshold branching.

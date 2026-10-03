@@ -41,9 +41,9 @@ Classification: **CLOSED — RUNTIME + INTEGRATION PASS.**
 ## G.3
 
 Production World/Combat ownership:
-**P0100 IMPLEMENTATION PREPARED — RUNTIME PROOF PENDING.**
+**P0100 PUSHED — RUNTIME PROOF PENDING.**
 
-Runtime target: `0.0.41-dev`.
+Current runtime: `0.0.41-dev` (`31a2a7f`).
 
 P0100 uses the proven primary camera path, live combat predicate, targeted
 combat-event reevaluation, zoom restore `never`, explicit fail-open stopping,
@@ -53,5 +53,7 @@ fallback or redesign core combat state.
 ## Phase H queued direction
 
 D-032 accepted the world-first integration composition. D-033 accepted parallel
-World Ghost art-direction work. These remain parallel planning and do not change
+World Ghost art-direction work. D-034 refines the working visual anchor to
+Selective Hybrid E and establishes the canonical component inventory and
+percentage-bar direction. These remain parallel planning and do not change
 active G.3 runtime scope.

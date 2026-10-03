@@ -6,13 +6,10 @@ Authoritative state:
 Phase G:
 **ACTIVE — G.3.**
 
-P0099 is verified pushed at:
-`10c7255f`.
+P0100 is verified pushed at:
+`31a2a7f`.
 
 Current pushed runtime:
-`0.0.40-dev`.
-
-P0100 runtime target:
 `0.0.41-dev`.
 
 G.2:
@@ -32,10 +29,8 @@ P0100 adds production World/Combat camera ownership:
 - manual G.2 probe mutually gated from production controller;
 - developer Check/Reconcile/ON/OFF diagnostics.
 
-P0100 is a runtime-code patch. After verified push it must be deployed before
-WoW validation.
+P0100 is verified pushed. Deploy `0.0.41-dev` before WoW validation.
 
-Future Phase H+ D-032 layout and D-033 World Ghost art-direction work remains
-parallel and does not alter G.3 acceptance.
+Future Phase H+ D-032 layout, D-033 World Ghost, and D-034 Selective Hybrid E / visual-component work remain parallel and do not alter G.3 acceptance.
 
 User performs all commits/pushes.

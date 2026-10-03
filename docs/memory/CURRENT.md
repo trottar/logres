@@ -14,13 +14,10 @@ project: logres
 
 **G.3 — Production World/Combat camera ownership.**
 
-P0099 is verified pushed at:
-`10c7255f7e04c73108c22d457bed6178002c0ae6`.
+P0100 is verified pushed at:
+`31a2a7f63298252325938897ba653d33d8e384ec`.
 
 Current pushed runtime:
-`0.0.40-dev`.
-
-P0100 runtime target:
 `0.0.41-dev`.
 
 G.2 status:
@@ -41,7 +38,9 @@ WoW Forever.
   action-role direction without changing Phase G camera scope.
 - P0098 is durable at `903e65c8`; D-033 records parallel World Ghost visual
   direction without changing Phase G runtime scope.
+- D-034 refines the visual anchor to Selective Hybrid E and establishes the canonical visual-component inventory / percentage-bar direction for parallel art work.
 - P0099 is durable at `10c7255f`; G.2 is closed and G.3 is active.
+- P0100 is durable at `31a2a7f`, runtime `0.0.41-dev`; G.3 production runtime proof remains pending.
 - The P0096 `cachedCombat=false` / `mismatch=true` evidence remains authoritative:
   camera combat selection uses live `UnitAffectingCombat("player")`, not cached
   `State.combat`.
@@ -99,9 +98,7 @@ Reconcile is deliberately excluded from Run All because it may move the camera.
 
 ## Next Action
 
-Apply and push P0100.
-
-After verified push, deploy `0.0.41-dev` and validate with DynamicCam disabled:
+Deploy pushed P0100 runtime `0.0.41-dev` and validate with DynamicCam disabled:
 - World target transition from farther than 5;
 - World no-op at 5 or closer;
 - automatic live-combat transition from closer than 15;
@@ -146,6 +143,7 @@ G.3 completes only after production ownership proves:
 - **Quest destination / compass marker:** unsupported until runtime-proven.
 - **D-032 world-first layout direction:** accepted future Phase H+ direction.
 - **D-033 World Ghost art direction:** accepted parallel visual hypothesis.
+- **D-034 Selective Hybrid E + component taxonomy:** accepted parallel art-direction refinement; no Lua implementation implied.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
@@ -159,7 +157,9 @@ G.3 completes only after production ownership proves:
 - `docs/memory/patches/P0100_G3_WORLD_COMBAT_CAMERA_OWNERSHIP.md`
 - `docs/memory/decisions/D-032_WORLD_FIRST_LAYOUT_AND_ACTION_ROLES.md`
 - `docs/memory/decisions/D-033_PARALLEL_ART_DIRECTION_AND_WORLD_GHOST.md`
+- `docs/memory/decisions/D-034_SELECTIVE_HYBRID_E_AND_VISUAL_COMPONENTS.md`
 - `docs/memory/architecture/WORLD_FIRST_LAYOUT.md`
 - `docs/memory/architecture/VISUAL_SYSTEM_DIRECTION.md`
+- `docs/memory/architecture/VISUAL_COMPONENT_INVENTORY.md`
 - `docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
 - `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`

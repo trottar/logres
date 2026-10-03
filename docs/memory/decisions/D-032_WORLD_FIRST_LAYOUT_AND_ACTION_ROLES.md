@@ -144,3 +144,15 @@ Phase H should integrate these regions and settings after current capability
 work is complete. Exact ordering and pixel geometry remain Phase H design work;
 this decision establishes product direction rather than a frozen implementation
 schema.
+
+
+## Visual-system refinement — D-034
+
+D-034 defines the current visual working anchor and canonical component
+inventory without changing D-032's spatial/ownership rules.
+
+In particular:
+- meaning-heavy surfaces may carry more authored Logres ornament;
+- high-density interaction surfaces remain comparatively simple;
+- percentage-based Logres-owned values use a shared compact bar + `%` text
+  direction, with player health explicitly remaining the perceptual tunnel.

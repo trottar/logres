@@ -84,3 +84,14 @@ Urgent player state belongs near the player's reaction space. Passive state can
 recede to the periphery. Target information should live on the world target
 when safe. Detached frames are fallbacks when the world cannot carry required
 information or interaction reliably.
+
+
+## 14. Ornament follows semantic weight
+
+Use stronger authored ornament where an element carries narrative,
+navigational, or perceptual meaning. Keep repeated, high-density interaction
+surfaces comparatively simple.
+
+A Logres screen should feel authored without every button becoming decorative.
+Group-level composition, typography, motion, and selective ornament should
+carry more identity than repeated control chrome.

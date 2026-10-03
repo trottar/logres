@@ -82,3 +82,38 @@ This workstream is intentionally parallelizable.
 Mockups and art-direction decisions can advance while runtime capability work is
 still focused elsewhere, provided the repo memory clearly separates accepted
 visual direction from proven implementation state.
+
+
+## Current anchor refinement — Selective Hybrid E
+
+D-034 refines World Ghost into a selective hybrid rather than a uniform skin.
+
+Rule:
+**thematic for meaning; restrained for interaction.**
+
+Use authored Warcraft/Logres ornament most strongly on:
+- Compass/navigation;
+- Active Quest;
+- player-health perceptual effects;
+- selected narrative/context accents.
+
+Keep repeated high-density controls comparatively simple:
+- Primary/Secondary/Utility action buttons;
+- class/pet/special controls;
+- compact status/information surfaces.
+
+The stronger treatment should mostly live at the composition/group level, not
+on every repeated button.
+
+## Percentage-bar primitive
+
+Percentage-only Logres-owned readouts should converge on a shared compact bar +
+percentage text visual primitive when their presentation is revisited.
+
+The player-health tunnel remains the explicit exception.
+
+Secret-capable percentages still require native-safe transport; visual
+standardization must not introduce Lua inspection/arithmetic on those values.
+
+Canonical inventory:
+`VISUAL_COMPONENT_INVENTORY.md`.

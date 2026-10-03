@@ -65,3 +65,14 @@ options and refining them iteratively, for example:
 
 The assistant's role is to help externalize those options into concrete design
 artifacts and then preserve the resulting direction durably.
+
+
+## 2026-10-02 refinement — D-034
+
+D-034 keeps World Ghost as the underlying philosophy but narrows the current
+working visual anchor to Selective Hybrid E:
+- authored/thematic treatment on meaning-heavy surfaces;
+- simple treatment on repeated/high-density interaction surfaces;
+- canonical component taxonomy for art studies;
+- compact bar + percentage text as the future default primitive for
+  percentage-based Logres-owned values, except player health.

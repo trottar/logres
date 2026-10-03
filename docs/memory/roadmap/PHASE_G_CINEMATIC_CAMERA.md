@@ -30,9 +30,9 @@ Canonical evidence:
 
 ## G.3 — Production World/Combat camera ownership
 
-**ACTIVE — P0100 IMPLEMENTATION PREPARED; RUNTIME PROOF PENDING.**
+**ACTIVE — P0100 PUSHED; RUNTIME PROOF PENDING.**
 
-P0100 adds the smallest production controller:
+P0100 is durable at `31a2a7f` and adds the smallest production controller:
 - event/state-driven World/Combat selection;
 - targeted live-combat reevaluation independent of cached state publication;
 - World conditional target 5;

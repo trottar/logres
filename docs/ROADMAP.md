@@ -46,7 +46,7 @@ combat.
 P0096 also proved why production combat selection must use live
 `UnitAffectingCombat("player")` rather than cached Logres combat state.
 
-P0100 implements the first production controller at runtime `0.0.41-dev`:
+P0100 is pushed at `31a2a7f` and implements the first production controller at runtime `0.0.41-dev`:
 - event/state-driven World/Combat ownership;
 - targeted live-combat reevaluation;
 - primary MoveView transitions only;
@@ -64,9 +64,10 @@ Canonical phase record:
 **Status: QUEUED.**
 
 D-032 records the accepted world-first integration direction. D-033 permits
-parallel art-direction/mockup work; the current preferred visual hypothesis is
-World Ghost — simple, immersive, Warcraft-native, with a subtle Logres/Camelot
-inflection.
+parallel art-direction/mockup work. D-034 refines the current visual anchor to
+Selective Hybrid E: World Ghost restraint, authored ornament on meaning-heavy
+surfaces, simple high-density interaction controls, and a shared percentage-bar
+primitive for percentage-based Logres-owned values except player health.
 
 Canonical phase record:
 `memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`

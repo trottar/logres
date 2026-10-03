@@ -11,7 +11,11 @@ Logres into a general-purpose UI construction toolkit.
 
 Canonical direction:
 - `../decisions/D-032_WORLD_FIRST_LAYOUT_AND_ACTION_ROLES.md`
+- `../decisions/D-033_PARALLEL_ART_DIRECTION_AND_WORLD_GHOST.md`
+- `../decisions/D-034_SELECTIVE_HYBRID_E_AND_VISUAL_COMPONENTS.md`
 - `../architecture/WORLD_FIRST_LAYOUT.md`
+- `../architecture/VISUAL_SYSTEM_DIRECTION.md`
+- `../architecture/VISUAL_COMPONENT_INVENTORY.md`
 
 ## Accepted inputs
 
@@ -55,11 +59,11 @@ Parallel deliverables may include:
 - full-screen representative mockups;
 - typography/color/opacity/spacing/motion tokens;
 - reusable asset-family exploration;
-- perceptual-effect studies such as health-tunnel styling.
+- perceptual-effect studies such as health-tunnel styling;
+- canonical component boards from `VISUAL_COMPONENT_INVENTORY.md`, including full 36-button combat-density stress tests and state sheets.
 
 Current preferred working direction:
-**World Ghost** — simple, immersive, Warcraft-native, with a subtle Logres /
-Camelot inflection and ghosted low-visual-weight presentation.
+**Selective Hybrid E on the World Ghost foundation** — authored/thematic treatment for meaning-heavy surfaces, simple high-density interaction controls, restrained Warcraft-native Logres/Camelot cues, and a shared percentage-bar primitive for percentage-based Logres-owned values except player health.
 
 These outputs inform implementation later; they do not replace capability
 proofs.

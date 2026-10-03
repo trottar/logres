@@ -3,7 +3,7 @@
 ## G.3 — Production World/Combat camera ownership
 
 Status:
-**ACTIVE — P0100 IMPLEMENTATION PREPARED; RUNTIME PROOF PENDING**
+**ACTIVE — P0100 PUSHED; RUNTIME PROOF PENDING**
 
 Canonical:
 `G3_WORLD_COMBAT_CAMERA_OWNERSHIP.md`
@@ -26,6 +26,8 @@ P0100 production implementation:
 - DynamicCam coexistence gate;
 - historical G.2 probe mutually gated from production ownership;
 - addon-owned developer diagnostics and non-mutating Run All check.
+
+P0100 is durable at `31a2a7f`.
 
 Required next evidence is production runtime validation on `0.0.41-dev`.
 
