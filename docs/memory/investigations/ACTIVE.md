@@ -66,3 +66,6 @@ G.5 target-50 without CVar mutation:
 
 - `D4_TARGETFRAME_REASSERTION_INTERMITTENT.md`
 - `FUTURE_AURA_STATUS_PRESENTATION.md`
+- `FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md` — future Phase H+ source/runtime
+  audit for local radius POIs, tracking results, quest destination, and minimap
+  replacement completeness.

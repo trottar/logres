@@ -50,7 +50,10 @@ Required art objects:
 - accommodation for class-resource presentation;
 - accommodation for Blizzard-owned alternate/special power surfaces.
 
-Player health remains perceptual pressure, not a conventional health bar.
+Player health remains perceptual pressure, not a conventional health bar. D-036
+freezes the intended continuous mapping: remaining health roughly corresponds to
+remaining clear/usable visual field, with mild high-health easing and increasingly
+severe critical collapse.
 
 ## 3. Action interface
 
@@ -88,20 +91,29 @@ the current proof constellation.
 
 ## 4. Navigation
 
-Compass objects:
+Compass core objects:
 - baseline/tape;
 - cardinal ticks;
 - intercardinal ticks;
 - cardinal labels;
 - intercardinal labels;
-- center heading marker;
-- manual user-waypoint marker;
-- waypoint cap/glyph;
+- fixed center heading marker;
 - restrained compass end-cap/heraldic ornament;
 - hidden/suspended transition treatment.
 
-Quest waypoint graphics are not assumed available merely because a marker
-asset exists.
+D-037 future marker roles:
+- manual waypoint: explicit player destination, authored muted-blue Logres glyph;
+- quest destination: distinct quest/heraldic destination glyph, only when a real
+  destination bearing is capability-proven;
+- local radius POI: restrained nearby service/place marker within realistic local
+  awareness; exact categories/radius/positions remain capability work;
+- tracking: tiny repeated generic Logres tracker glyph, same visual meaning across
+  tracked categories and not a literal stock yellow dot.
+
+Manual waypoint is currently runtime-proven. Quest destination, local POI, and
+tracking-result source/position capability remain separate future proof domains.
+Exact glyph construction and marker collision/density behavior remain focused art
+work.
 
 ## 5. Active Quest
 
@@ -270,7 +282,8 @@ Future Phase H visual language should also account for:
 ## 14. Blizzard-owned coexistence surfaces
 
 Full-screen art studies must leave room for stock surfaces that Logres does not
-currently replace:
+currently replace. D-037 defines a future minimap-replacement endpoint, but D-030
+remains current runtime authority until the complete replacement gate is proven:
 - minimap;
 - Objective Tracker;
 - quest log;
@@ -309,7 +322,8 @@ Before component implementation/polish, art studies should cover at least:
    - Context;
    - NPC quest interaction: short/paged narrative, wrapped objective text, and
      future action/reward control states;
-   - waypoint treatment.
+   - four navigation marker roles: manual waypoint, quest destination, local POI,
+     generic tracking glyph;
 
 2. **Combat-density board**
    - full 36 ordinary action buttons;

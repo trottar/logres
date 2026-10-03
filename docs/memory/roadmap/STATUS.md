@@ -65,3 +65,6 @@ No CVar mutation or clamped Taxi target is authorized yet.
 D-032/D-033/D-034 define the accepted world-first / Selective Hybrid E visual
 direction. D-035 defines NPC quest interaction as a future Logres-owned
 experience with Blizzard fallback until each replacement surface is proven.
+D-036 freezes the approved health-tunnel visible-field progression. D-037 defines
+the future four-role navigation/minimap endpoint while preserving D-030 until
+local POI/tracking/quest and remaining minimap capabilities are runtime-proven.

@@ -14,6 +14,8 @@ Canonical direction:
 - `../decisions/D-033_PARALLEL_ART_DIRECTION_AND_WORLD_GHOST.md`
 - `../decisions/D-034_SELECTIVE_HYBRID_E_AND_VISUAL_COMPONENTS.md`
 - `../decisions/D-035_QUEST_INTERACTION_OWNERSHIP.md`
+- `../decisions/D-036_HEALTH_TUNNEL_VISIBLE_FIELD_CONTRACT.md`
+- `../decisions/D-037_NAVIGATION_MARKER_ROLES_AND_MINIMAP_DIRECTION.md`
 - `../architecture/WORLD_FIRST_LAYOUT.md`
 - `../architecture/VISUAL_SYSTEM_DIRECTION.md`
 - `../architecture/VISUAL_COMPONENT_INVENTORY.md`
@@ -22,6 +24,12 @@ Canonical direction:
 
 Phase H begins from these settled directions:
 - world before abstraction;
+- approved continuous player-health tunnel in which clear/usable visual field
+  roughly follows remaining health, with increasingly severe critical collapse;
+- four semantic navigation roles: manual waypoint, quest destination, local radius
+  POI, and tracking; local POI/tracking capability remains unproven;
+- stock minimap remains available until the complete D-037 replacement gate is
+  satisfied;
 - authored semantic screen regions;
 - optional Active Quest current-focus presentation;
 - NPC quest interaction is a future Logres-owned experience, with Blizzard
@@ -50,6 +58,9 @@ Likely slices include:
 - broaden supported action sources and role assignment safely;
 - optional limited action-grid/whole-cluster adjustments if justified;
 - world-attached target capability and fallback policy;
+- source/runtime audit for local POI, tracking-result, quest-destination, and
+  remaining minimap information/control capabilities before any minimap suppression;
+- integrate the accepted four-role compass marker system only for proven sources;
 - aura/status ownership, filtering, and placement;
 - coherent settings/toggles for optional Logres feature domains;
 - accessibility, compatibility, restoration, performance, packaging, and final
@@ -65,7 +76,10 @@ Parallel deliverables may include:
 - full-screen representative mockups;
 - typography/color/opacity/spacing/motion tokens;
 - reusable asset-family exploration;
-- perceptual-effect studies such as health-tunnel styling;
+- health-tunnel asset/mask implementation studies constrained by the frozen D-036
+  visible-field mapping;
+- compass state/detail sheets covering heading, manual waypoint, quest destination,
+  local POI, and generic tracking glyph roles without implying source capability;
 - canonical component boards from `VISUAL_COMPONENT_INVENTORY.md`, including full 36-button combat-density stress tests and state sheets.
 
 Current preferred working direction:

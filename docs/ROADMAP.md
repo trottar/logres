@@ -66,7 +66,10 @@ parallel art-direction/mockup work. D-034 refines the visual anchor to Selective
 Hybrid E and the shared percentage-bar direction.
 
 D-035 establishes NPC quest interaction as a future Logres-owned experience with
-Blizzard fail-open fallback until each replacement capability is proven.
+Blizzard fail-open fallback until each replacement capability is proven. D-036
+freezes the continuous health-tunnel visible-field contract. D-037 defines the
+future four-role navigation/minimap endpoint while preserving the current D-030
+stock-minimap boundary until all required capabilities are proven.
 
 Canonical phase record:
 `memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`

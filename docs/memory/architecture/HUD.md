@@ -457,3 +457,23 @@ This presentation refinement does not change the secret-safe transport
 contract. Secret-capable percentages must still flow directly through
 native-safe consumers without Lua arithmetic, comparison, stringification,
 persistence, or threshold branching.
+
+
+## Phase H+ player-health visual contract — D-036
+
+The B.1 four-layer native implementation remains valid runtime evidence, but the
+procedural rectangular bands are not the final art endpoint.
+
+D-036 freezes the intended health-tunnel presentation: a continuous progression in
+which remaining health roughly maps to remaining clear/usable visual field. The
+healthy range eases gently; critical ranges collapse much more directly, reaching
+an extremely narrow central field near death and effective collapse at 0%.
+
+The visual effect is primarily charcoal/black peripheral pressure, desaturation,
+loss of peripheral clarity, and restrained cold burgundy injury color. It is not a
+hard circular mask, red fog, blood/vein treatment, numeric warning, or conventional
+player-health bar.
+
+This visual refinement must continue to use native secret-safe transport. D-036 is
+not permission to branch on, inspect, stringify, or perform Lua arithmetic on the
+secret-capable health value.

@@ -117,3 +117,27 @@ standardization must not introduce Lua inspection/arithmetic on those values.
 
 Canonical inventory:
 `VISUAL_COMPONENT_INVENTORY.md`.
+
+
+## Frozen player-health visual contract — D-036
+
+The player-health tunnel is no longer only a generic vignette hypothesis. Its
+approved perceptual rule is continuous: remaining health roughly corresponds to
+remaining clear/usable visual field, from near-full visibility at 100% to effective
+collapse at 0%. Healthy ranges may ease gently; critical ranges collapse much more
+directly.
+
+Art uses peripheral darkness, desaturation/loss of clarity, and restrained cold
+burgundy injury pressure. Reject blood splatter, veins, red fog, hard circular
+apertures, and conventional health-meter treatment.
+
+## Navigation semantic family — D-037
+
+Future compass art must reserve distinct roles for manual waypoint, quest
+destination, local radius POI, and tracking. Tracking uses one small generic
+Logres-styled repeated glyph regardless of tracked category; it must not literally
+copy stock yellow dots.
+
+These semantic roles are accepted. Exact glyph construction remains the next
+focused compass design work, and unproven marker sources must not be represented as
+implemented capability.

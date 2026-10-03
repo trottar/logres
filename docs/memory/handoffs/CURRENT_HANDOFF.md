@@ -43,4 +43,11 @@ semantics.
 
 Do not mutate the CVar, clamp Taxi to 18, add rotation, or add Taxi UI fade yet.
 
+Parallel accepted Phase H+ direction:
+- D-036 freezes the continuous health->clear-field tunnel visual contract;
+- D-037 defines four navigation roles (manual waypoint, quest destination, local
+  radius POI, tracking) and the future minimap-replacement endpoint;
+- D-030 still keeps the minimap stock today; POI/tracking source capability is
+  unproven and deferred.
+
 User performs all commits/pushes.

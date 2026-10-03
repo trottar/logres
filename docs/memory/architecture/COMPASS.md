@@ -70,11 +70,39 @@ Waypoint math must be separately runtime-proven.
 
 Do not infer a destination bearing from source availability alone.
 
+## Future marker taxonomy — D-037
+
+Future Phase H+ navigation uses four semantic marker roles when their sources are
+capability-proven:
+1. manual waypoint — explicit player destination; authored muted-blue Logres glyph;
+2. quest destination — separate quest/heraldic marker; no presentation without a
+   proven quest bearing;
+3. local radius POI — nearby service/place awareness within a realistic local
+   radius; exact Forever categories and positions must be enumerated/proven;
+4. tracking — one generic Logres-styled repeated tracker glyph independent of
+   tracked category; not literal stock yellow dots.
+
+The player's selected tracking mode supplies the category meaning; the assumed
+Forever selection semantics and individual result positions remain unproven until
+the dedicated capability audit.
+
+Exact glyph geometry, color values, collision behavior, density limits, and
+inspection treatment remain visual-design work.
+
 ## Minimap boundary
 
-The minimap remains Blizzard-owned through E.2 and E.3 capability work.
+D-030 remains the current runtime authority: the Blizzard minimap stays stock and
+Blizzard-owned.
 
-A horizontal heading tape is not a safe minimap replacement by itself.
+D-037 now defines the intended future endpoint: ordinary minimap awareness may move
+into the Logres compass/navigation system only after the missing information and
+control surfaces are deliberately replaced or explicitly dispositioned,
+runtime-proven, reversible, and fail-open.
 
-Any minimap suppression requires a later explicit capability/fallback decision
-and reversible implementation.
+A heading tape plus attractive markers is not sufficient evidence by itself. Local
+POI positions, tracking results, quest destination, ping/click behavior, zone
+context, zoom/map expectations, and other current Forever minimap utility must be
+audited before suppression.
+
+Until that complete gate passes, unsupported Logres marker roles are simply omitted
+and Blizzard navigation remains available.

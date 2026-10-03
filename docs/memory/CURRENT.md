@@ -66,6 +66,13 @@ G.5 status:
   `18`.
 - D-035 quest interaction ownership remains a valid future endpoint with Blizzard
   fail-open controls until each replacement capability is proven.
+- D-036 freezes the future player-health tunnel visual contract: remaining health
+  roughly maps to remaining clear/usable visual field, with severe critical collapse.
+- D-037 accepts four future navigation marker roles — manual waypoint, quest
+  destination, local radius POI, and tracking — while preserving D-030: the stock
+  minimap remains until the complete replacement surface is capability-proven.
+- Local POI/tracking position sources and exact Forever tracking semantics remain
+  hypothetical/unproven and are deferred to a dedicated Phase H+ capability audit.
 
 ## Next Action
 
@@ -121,6 +128,9 @@ The next G.5 contract checkpoint completes only when:
 - **Production Taxi ownership:** still fail-open.
 - **D-032/D-033/D-034 visual direction:** accepted future Phase H+ direction.
 - **D-035 quest interaction ownership:** accepted future endpoint.
+- **D-036 health tunnel:** accepted/frozen future visual contract.
+- **D-037 navigation/minimap direction:** accepted future endpoint; capability-gated.
+- **D-030 minimap boundary:** still current runtime authority until replacement proof.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
