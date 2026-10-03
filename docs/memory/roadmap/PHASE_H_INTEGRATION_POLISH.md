@@ -18,6 +18,7 @@ Canonical direction:
 - `../decisions/D-037_NAVIGATION_MARKER_ROLES_AND_MINIMAP_DIRECTION.md`
 - `../decisions/D-038_COMPASS_VISUAL_FOCUS_AND_DEPTH_CONTRACT.md`
 - `../decisions/D-039_APPROVED_VISUAL_BASELINE.md`
+- `../decisions/D-040_PRODUCTION_VISUAL_ASSET_TRANSLATION_CONTRACT.md`
 - `../architecture/WORLD_FIRST_LAYOUT.md`
 - `../architecture/VISUAL_SYSTEM_DIRECTION.md`
 - `../architecture/VISUAL_COMPONENT_INVENTORY.md`
@@ -132,3 +133,22 @@ settings/accessibility, exact hotkey/count/36-button density calibration, and an
 future capability-proven surface absent from the approved sheets.
 
 This parallel visual checkpoint does not change the active Phase G / G.5 objective.
+
+## First production translation — P0116
+
+P0116 establishes `Logres/Media/` plus `Theme.lua` as the production asset/token
+boundary and wires the approved action-button frame/state family into the
+already-proven secure action runtime.
+
+This is parallel Phase H preparation while G.5 remains active.
+
+The implementation deliberately does not change:
+- secure execution or paging;
+- key routing;
+- Primary/Secondary/Utility geometry;
+- contextual alpha policy;
+- stock Bar 2–3 replacement/restoration.
+
+Static contract checks precede an in-client visual gate. A later evidence
+checkpoint must record the real-scale result before the action primitive is
+considered production visually proven.

@@ -6,11 +6,11 @@ Authoritative state:
 Phase G:
 **ACTIVE — G.5.**
 
-Latest verified durable checkpoint:
-P0114 `f89efd53ae47b41a6c843f203186a225f0b347c4`.
+Latest verified predecessor checkpoint:
+P0115 `4ba6393193c830e5deb08a63bb82fdaf2543aa8d`.
 
-Current pushed runtime:
-`0.0.45-dev`.
+Current runtime tree:
+`0.0.46-dev` — P0116 action visual translation; in-client visual proof pending.
 
 Target 50 without max-distance mutation:
 **CLOSED — CLEAN NEGATIVE.**
@@ -56,5 +56,8 @@ Parallel accepted Phase H+ direction remains unchanged:
   visual baseline;
 - `../architecture/VISUAL_IMPLEMENTATION_STATUS.md` is the implementation audit
   for translating those designs into addon assets/runtime.
+- D-040 establishes `Logres/Media/Theme.lua` as the production visual token/path
+  boundary; P0116 wires the approved action-button frame/state family and awaits
+  in-client visual proof.
 
 User performs all commits/pushes.

@@ -463,3 +463,31 @@ Current rule:
   replacement and restoration.
 
 This preserves L-011 fail-open behavior.
+
+## P0116 production visual primitive
+
+D-039/D-040 move the proven secure action-button runtime onto the approved
+World Ghost / Selective Hybrid E button chrome without changing action
+semantics.
+
+Production media:
+- `Logres/Media/Theme.lua` owns paths and geometry tokens;
+- `Logres/Media/Action/action_frame.tga` is the persistent frame;
+- hover, pressed, checked, and activation-flash layers use separate approved
+  derivatives.
+
+The native WoW action icon remains dominant. Cooldown/count/range/usability
+transport is unchanged.
+
+The secure button hit box remains 38 x 38 with the proven 5-pixel cluster gap.
+Decorative frame art may overscan by two pixels without changing secure
+interaction geometry.
+
+The existing independent UIParent activation-feedback frame is retained so
+pressed/flash confirmation remains legible when Secondary/Utility cluster alpha
+is subdued.
+
+P0116 is not complete visual proof until in-client validation confirms actual
+scale, hover/pressed hierarchy, checked persistence, feedback visibility, and
+existing cooldown/range/resource/unusable states without Lua/taint/protected or
+secret-value errors.

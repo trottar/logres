@@ -14,11 +14,11 @@ project: logres
 
 **G.5 — Resolve product/ownership policy for any above-default Taxi camera-distance CVar.**
 
-Latest verified durable checkpoint:
-P0114 `f89efd53ae47b41a6c843f203186a225f0b347c4`.
+Latest verified predecessor checkpoint:
+P0115 `4ba6393193c830e5deb08a63bb82fdaf2543aa8d`.
 
-Current pushed runtime:
-`0.0.45-dev`.
+Current runtime tree:
+`0.0.46-dev` — P0116 action visual translation; in-client visual proof pending.
 
 G.4 status:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
@@ -48,6 +48,12 @@ G.5 status:
 - `VISUAL_IMPLEMENTATION_STATUS.md` separates approved art from remaining asset
   wiring, runtime ownership, and capability gates; broad component art exploration
   is no longer the main missing work for the covered families.
+- P0115 is verified durable at `4ba63931` and preserves the twelve approved
+  visual sheets plus D-039.
+- P0116 begins production translation without changing the active G.5 product
+  question: `Logres/Media/Theme.lua` owns runtime visual paths/tokens and the
+  proven secure action buttons consume approved frame/hover/pressed/checked/
+  activation-flash assets. Runtime visual validation is still pending.
 - P0112 at `dea48e04` is durable on runtime `0.0.45-dev`; its read-only
   Camera Distance Info runtime PASS measured current factor `1.2`, default
   factor `1`, ceilings `18`/`15`, and required target-50 factor
@@ -163,5 +169,7 @@ The next G.5 contract checkpoint completes when:
 - `docs/memory/patches/P0112_G5_CAMERA_DISTANCE_INFO.md`
 - `docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
 - `docs/memory/decisions/D-039_APPROVED_VISUAL_BASELINE.md`
+- `docs/memory/decisions/D-040_PRODUCTION_VISUAL_ASSET_TRANSLATION_CONTRACT.md`
+- `docs/memory/patches/P0116_PRODUCTION_ACTION_VISUAL_PRIMITIVE.md`
 - `docs/memory/architecture/VISUAL_IMPLEMENTATION_STATUS.md`
 - `docs/design/approved/README.md`

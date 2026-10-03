@@ -48,7 +48,7 @@ if BUTTON_PATH.is_file():
         "C_ActionBar.IsUsableAction(",
         "C_ActionBar.IsActionInRange(",
         'button:SetPushedTexture(',
-        '"Interface\\\\Buttons\\\\UI-Quickslot-Depress"',
+        "Logres.Theme.action",
         'button:HookScript("PostClick", function(current)',
         'activationFlash:CreateAnimationGroup()',
         'activationFade:SetDuration(0.24)',
@@ -71,6 +71,7 @@ if BUTTON_PATH.is_file():
         "C_ActionBar.GetActionUseCount(",
         "C_ActionBar.GetActionCharges(",
         "slotText",
+        "UI-Quickslot-Depress",
     ]
 
     for fragment in forbidden:

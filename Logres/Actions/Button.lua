@@ -3,8 +3,33 @@ local _, Logres = ...
 local ActionButton = {}
 Logres.ActionButton = ActionButton
 
-local DEFAULT_BUTTON_SIZE = 38
-local DEFAULT_BUTTON_GAP = 5
+local actionStyle =
+    Logres.Theme
+    and Logres.Theme.action
+    or {}
+local actionAssets = actionStyle.assets or {}
+
+local DEFAULT_BUTTON_SIZE = actionStyle.buttonSize or 38
+local DEFAULT_BUTTON_GAP = actionStyle.buttonGap or 5
+local DEFAULT_ICON_INSET = actionStyle.iconInset or 4
+local DEFAULT_ART_OVERSCAN = actionStyle.artOverscan or 2
+
+local function setActionArtBounds(texture, button)
+    texture:SetPoint(
+        "TOPLEFT",
+        button,
+        "TOPLEFT",
+        -DEFAULT_ART_OVERSCAN,
+        DEFAULT_ART_OVERSCAN
+    )
+    texture:SetPoint(
+        "BOTTOMRIGHT",
+        button,
+        "BOTTOMRIGHT",
+        DEFAULT_ART_OVERSCAN,
+        -DEFAULT_ART_OVERSCAN
+    )
+end
 
 function ActionButton.CreateCluster(
     name,
@@ -82,8 +107,20 @@ function ActionButton.Create(
     inner:SetColorTexture(0.025, 0.022, 0.018, 0.98)
 
     local icon = button:CreateTexture(nil, "ARTWORK")
-    icon:SetPoint("TOPLEFT", button, "TOPLEFT", 4, -4)
-    icon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -4, 4)
+    icon:SetPoint(
+        "TOPLEFT",
+        button,
+        "TOPLEFT",
+        DEFAULT_ICON_INSET,
+        -DEFAULT_ICON_INSET
+    )
+    icon:SetPoint(
+        "BOTTOMRIGHT",
+        button,
+        "BOTTOMRIGHT",
+        -DEFAULT_ICON_INSET,
+        DEFAULT_ICON_INSET
+    )
     icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 
     local cooldown = CreateFrame(
@@ -96,17 +133,25 @@ function ActionButton.Create(
     cooldown:SetDrawBling(false)
     cooldown:SetDrawEdge(false)
 
-    local checked = button:CreateTexture(nil, "OVERLAY")
-    checked:SetAllPoints(icon)
-    checked:SetColorTexture(0.84, 0.68, 0.30, 0.22)
-    button:SetCheckedTexture(checked)
+    local frameArt = button:CreateTexture(nil, "OVERLAY")
+    setActionArtBounds(frameArt, button)
+    frameArt:SetTexture(actionAssets.frame)
 
--- Keep a conventional pushed texture as an extra mouse affordance.
-button:SetPushedTexture(
-    "Interface\\Buttons\\UI-Quickslot-Depress"
-)
-local pushedTexture = button:GetPushedTexture()
-pushedTexture:SetAllPoints(button)
+    local hoverTexture = button:CreateTexture(nil, "HIGHLIGHT")
+    setActionArtBounds(hoverTexture, button)
+    hoverTexture:SetTexture(actionAssets.hover)
+    hoverTexture:SetBlendMode("ADD")
+    button:SetHighlightTexture(hoverTexture)
+
+    local pushedTexture = button:CreateTexture(nil, "OVERLAY")
+    setActionArtBounds(pushedTexture, button)
+    pushedTexture:SetTexture(actionAssets.pressed)
+    button:SetPushedTexture(pushedTexture)
+
+    local checked = button:CreateTexture(nil, "OVERLAY")
+    setActionArtBounds(checked, button)
+    checked:SetTexture(actionAssets.checked)
+    button:SetCheckedTexture(checked)
 
 -- Activation feedback is outside the faded action-cluster hierarchy.
 -- It stays visually strong even when Secondary/Utility are subdued.
@@ -117,13 +162,13 @@ feedbackFrame:EnableMouse(false)
 
 local pressedOverlay = feedbackFrame:CreateTexture(nil, "OVERLAY")
 pressedOverlay:SetAllPoints(feedbackFrame)
-pressedOverlay:SetColorTexture(0.08, 0.055, 0.025, 0.68)
+pressedOverlay:SetTexture(actionAssets.pressed)
 pressedOverlay:Hide()
 
 local activationFlash = feedbackFrame:CreateTexture(nil, "OVERLAY")
 activationFlash:SetPoint("TOPLEFT", feedbackFrame, "TOPLEFT", -2, 2)
 activationFlash:SetPoint("BOTTOMRIGHT", feedbackFrame, "BOTTOMRIGHT", 2, -2)
-activationFlash:SetColorTexture(1.00, 0.84, 0.38, 0.92)
+activationFlash:SetTexture(actionAssets.flash)
 activationFlash:SetBlendMode("ADD")
 activationFlash:SetAlpha(1)
 activationFlash:Hide()
@@ -186,7 +231,12 @@ end)
     button.cooldown = cooldown
     button.hotkeyText = hotkeyText
     button.countText = countText
-button.activationFeedbackFrame = feedbackFrame
+    button.actionFrameArt = frameArt
+    button.actionHoverTexture = hoverTexture
+    button.actionPushedTexture = pushedTexture
+    button.actionCheckedTexture = checked
+    button.actionVisualReady = true
+    button.activationFeedbackFrame = feedbackFrame
     button.activationPressedOverlay = pressedOverlay
     button.activationFlash = activationFlash
     button.activationAnimation = activationAnimation

@@ -134,5 +134,6 @@
 | P0112 | 2026-10-03 | INSTALLED / PUSHED — READ-ONLY RUNTIME PASS | Camera Distance Info: current/default 1.2/1, ceilings 18/15, target-50 support false/false (`dea48e04`) |
 | P0113 | 2026-10-03 | INSTALLED / PUSHED — DOCS-ONLY | Record D-038 compass visual focus/depth contract (`19c0d1ff`) |
 | P0114 | 2026-10-03 | INSTALLED / PUSHED — DOCS/EVIDENCE ONLY | Record P0112 default negative; open above-default account-scoped ownership policy (`f89efd53`) |
-| P0115 | 2026-10-03 | PREPARED — DOCS / DESIGN ASSETS / STATIC CHECKER ONLY | Preserve twelve approved visual sheets; accept D-039; add visual implementation audit |
+| P0115 | 2026-10-03 | INSTALLED / PUSHED — DOCS / DESIGN ASSETS / STATIC CHECKER ONLY | Preserve twelve approved visual sheets; accept D-039; add visual implementation audit (`4ba63931`) |
+| P0116 | 2026-10-03 | PREPARED — RUNTIME VISUAL PROOF PENDING | Establish production media/tokens and wire approved action-button state assets (`0.0.46-dev`) |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.
