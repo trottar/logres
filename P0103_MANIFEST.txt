@@ -1,0 +1,26 @@
+P0103 — G.3 Runtime Pass and G.4 Open
+Baseline: 20ad55ba9be6d04fbd8d1eeeaa4e5e8bdb53addc
+Runtime: unchanged 0.0.42-dev
+Type: docs/evidence only
+
+Files:
+74c4f41362876a3e4fa23dc8733425618dc9d203e38dada78ecc466b07ab2438  docs/ROADMAP.md
+7d63fea644d949073cd088b9970a49d2f63eb9c9dcdbde97428a9c3eb9826176  docs/memory/CURRENT.md
+d1bdf2957e865ef434ecac3f3cc3aa3177ce72c9f9630ce1f44c2a09be5be7fc  docs/memory/architecture/CAMERA.md
+5ec5fe856fbf96009b7bfac268843c230ed7a48dc137c92eecdf4d73428ea0e8  docs/memory/evidence/G3_P0102_RUNTIME_PASS_2026-10-03.md
+5cdc26a2dcda6003b509594f1a6a16d97e870807be49407bb207c075c870a7bc  docs/memory/handoffs/CURRENT_HANDOFF.md
+28e828304d94e1bfada57dbdf6e2b628ddccdcd12a4245dc65a16200cc00495b  docs/memory/investigations/ACTIVE.md
+79c227ee71891f00a04939f235766e0d3ad722623aaf3cdb761ef9b27a23d6ef  docs/memory/investigations/G3_WORLD_COMBAT_CAMERA_OWNERSHIP.md
+d2b360f1aab71a414a46ef591032bfd7fa6ece227f3ca4cbc72c3c1cc7ceed59  docs/memory/investigations/G4_CITY_CAMERA_OWNERSHIP.md
+1d4e5524db8051c94ba58a5b5ddae49d0d8af6a8fd94ccc62e60207a93f1eb22  docs/memory/patches/P0100_G3_WORLD_COMBAT_CAMERA_OWNERSHIP.md
+d0a893406ebdea0378d3101a14f1abe3c96a53f7f3cb5a781b4c11b5d8707b04  docs/memory/patches/P0102_PHASE_TABBED_DEV_PANEL.md
+ddcbfaf09304a6bd25d1fd1ff425d3b7d984956f6d0e22976debeff20bdb73fc  docs/memory/patches/P0103_G3_RUNTIME_PASS_AND_G4_OPEN.md
+8bf1d126fd980d8856a61d3efd96db3a84699a219a0d55a6601f31325244e035  docs/memory/patches/PATCH_INDEX.md
+c73d098c2acac8953f4a87d8693a37edd151d442e29eba73b4fe37da53840b21  docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md
+d4d10b68568db72aacc1292beac14fe1df7d12503da2614f578d791762bc9f3a  docs/memory/roadmap/STATUS.md
+
+Validation:
+python3 tools/check_memory_health.py
+git diff --check
+
+No runtime code changed. No WoW redeploy required.

@@ -4,44 +4,34 @@ Authoritative state:
 `../CURRENT.md`.
 
 Phase G:
-**ACTIVE — G.3.**
+**ACTIVE — G.4.**
 
-P0101 is verified pushed at:
-`86660959`.
+Current pushed checkpoint:
+P0102 at `20ad55ba`, runtime `0.0.42-dev`.
 
-Current pushed runtime:
-`0.0.41-dev`.
-
-P0102 runtime target:
-`0.0.42-dev`.
-
-G.2:
+G.3:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
-P0100 production camera ownership is durable at `31a2a7f6`, but its first
-observed movement attempt occurred while addon-owned state reported
-`outside-slice:resting`. The controller correctly relinquished ownership and no
-World transition was exercised. Classification: **ENVIRONMENTAL DEFERRAL**, not
-PASS/FAIL.
+Final `0.0.42-dev` evidence proves World >5 transition, World <=5 no-op,
+automatic live-combat transition, combat >=15 no-op, fresh World behavior on
+combat exit, disable interruption with `stop=module-disabled`, Run All PASS, and
+DynamicCam coexistence blocking. Addon-owned diagnostics ended with
+`failures=0`, `secret=false`, and `error=nil`.
 
-The same screenshot exposed a separate developer-panel defect: the flat action
-grid overflowed its fixed button region and obscured diagnostics.
+Canonical evidence:
+`../evidence/G3_P0102_RUNTIME_PASS_2026-10-03.md`.
 
-P0102 correction:
-- roadmap tabs `0/A/B/C/D/E/F/G/H`;
-- every developer-panel action declares one phase;
-- only the selected phase renders;
-- Phase G is the default tab for current work;
-- Run All / Status live under Phase 0;
-- diagnostics persistence remains unchanged;
-- the G.3 camera checker no longer pins the whole addon to an exact runtime;
-  `check_addon_structure.py` remains the canonical TOC/Bootstrap version-sync
-  contract.
+The earlier P0100 resting/City observation remains an environmental deferral and
+is retained as historical evidence.
 
-P0101 D-034 Selective Hybrid E / visual-component work remains durable and is
-preserved unchanged by P0102.
+Next work item:
+**G.4 City camera ownership contract review.**
 
-After P0102 is verified pushed, deploy `0.0.42-dev`, verify the tabbed panel,
-then leave resting/City and resume G.3 World movement validation.
+Use the captured DynamicCam profile and existing resting sensor to define the
+smallest City camera slice. Preserve live-combat precedence. Do not silently
+import DynamicCam City UI hide/fade into camera ownership; resolve that as an
+explicit presentation-policy question first.
+
+P0103 is docs/evidence only. No WoW redeploy is required for P0103.
 
 User performs all commits/pushes.

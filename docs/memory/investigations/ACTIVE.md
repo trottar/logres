@@ -1,38 +1,25 @@
 # Active Investigations
 
-## G.3 — Production World/Combat camera ownership
+## G.4 — City camera ownership
 
 Status:
-**ACTIVE — P0100 PUSHED; FIRST MOVEMENT OBSERVATION ENVIRONMENTALLY DEFERRED**
+**ACTIVE — CONTRACT REVIEW; NO RUNTIME CODE YET**
 
 Canonical:
-`G3_WORLD_COMBAT_CAMERA_OWNERSHIP.md`
+`G4_CITY_CAMERA_OWNERSHIP.md`
 
-P0100 is durable at `31a2a7f6`, runtime `0.0.41-dev`.
+Starting evidence:
+- G.1 captured City as an enabled DynamicCam situation activated by resting;
+- City stores an enter transition of `2.5` seconds;
+- City uses conditional zoom-in target `5`;
+- City also stores DynamicCam UI-hide/fade behavior, which is not automatically a
+  Logres camera responsibility;
+- G.3 already proves live World (Combat) must take priority over ordinary World
+  and resting/City context selection.
 
-First runtime observation:
-- controller reason `outside-slice:resting`;
-- selected context `none`;
-- ownership false;
-- live combat false;
-- DynamicCam false;
-- camera API available;
-- no secret/error result;
-- no accepted World movement proof because resting intentionally relinquishes.
-
-Classification:
-**ENVIRONMENTAL DEFERRAL — EXPECTED RESTING RELINQUISH.**
-
-Separate reproduced runtime UI defect:
-- developer-panel flat action grid overflowed into diagnostics;
-- P0102 introduces roadmap-phase tabs and preserves diagnostics persistence.
-
-P0102 also removes the G.3 feature checker's stale exact-runtime pin; global
-TOC/Bootstrap version synchronization remains enforced by
-`tools/check_addon_structure.py`.
-
-Required next camera evidence remains production validation outside resting/City
-on the corrected panel runtime.
+Next question:
+define exact City camera ownership/precedence/exit semantics and explicitly
+separate camera behavior from UI-hide presentation policy before implementation.
 
 ## Closed Phase G investigations
 
@@ -42,8 +29,11 @@ G.1 DynamicCam profile capture:
 G.2 World/Combat camera zoom capability:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
-Canonical G.2 record:
-`G2_WORLD_COMBAT_CAMERA_CAPABILITY.md`
+G.3 production World/Combat camera ownership:
+**CLOSED — RUNTIME + INTEGRATION PASS on `0.0.42-dev`.**
+
+Canonical G.3 evidence:
+`../evidence/G3_P0102_RUNTIME_PASS_2026-10-03.md`
 
 ## Other tracked non-blocking defects / deferred domains
 

@@ -1,7 +1,7 @@
 # P0100 — G.3 Production World/Combat Camera Ownership
 
 Date: 2026-10-02
-Result: INSTALLED / PUSHED — FIRST RUNTIME OBSERVATION DEFERRED (`31a2a7f`)
+Result: INSTALLED / PUSHED — G.3 RUNTIME + INTEGRATION PASS (`31a2a7f`; final proof on `0.0.42-dev`)
 
 ## Baseline
 
@@ -124,4 +124,10 @@ Required after verified push/deploy:
 - Run All PASS including Camera World/Combat Check;
 - no Lua/taint/protected/secret errors.
 
-G.3 remains open until that evidence is recorded.
+G.3 acceptance was later completed on P0102 runtime `0.0.42-dev`.
+
+Canonical final evidence:
+`../evidence/G3_P0102_RUNTIME_PASS_2026-10-03.md`.
+
+Classification:
+**CLOSED — RUNTIME + INTEGRATION PASS.**
