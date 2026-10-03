@@ -34,7 +34,7 @@ The roadmap is capability-gated. A phase advances only when its success criteria
 
 ## Phase G — Cinematic Camera
 
-**Status: ACTIVE — G.5 Taxi target-50 capability proof.**
+**Status: ACTIVE — G.5 camera-distance ownership review.**
 
 G.1 captured the current DynamicCam `RPG` profile durably.
 
@@ -44,13 +44,15 @@ G.3 World/Combat production ownership is runtime + integration PASS.
 
 G.4 City/resting ownership is runtime + integration PASS on `0.0.43-dev`.
 
-G.5 source/profile review is resolved. P0109 prepares runtime `0.0.44-dev` with
-a developer-panel target-50 capability probe that reads but never mutates
-`cameraDistanceMaxZoomFactor`, attempts the intended Taxi target through the
-proven MoveView path, restores starting zoom, and records the result.
+G.5 source/profile review is resolved. P0109 runtime `0.0.44-dev` then proved a
+clean negative for target 50 under the accepted no-CVar-mutation boundary:
+current factor `1.2`, effective ceiling `18`, outbound turn zoom `18`, target not
+reached, restoration successful, CVar unchanged, no secret-value result.
 
-Production Taxi ownership remains fail-open until that runtime capability
-evidence is classified.
+Production Taxi ownership therefore remains fail-open.
+
+The next checkpoint is a source/contract review of camera-distance CVar ownership,
+not a production Taxi implementation and not a clamped target.
 
 Canonical phase record:
 `memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`

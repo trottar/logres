@@ -128,5 +128,6 @@
 | P0106 | 2026-10-03 | INSTALLED / PUSHED — DOCS-ONLY | Make full player-facing quest interaction an intended Logres-owned domain; retain Blizzard fail-open fallback until capability-proven (`b2fce832`) |
 | P0107 | 2026-10-03 | INSTALLED / PUSHED — DOCS/EVIDENCE ONLY | Record G.4 runtime + integration PASS; open G.5 Taxi camera ownership contract review (`ab83882f`) |
 | P0108 | 2026-10-03 | INSTALLED / PUSHED — DOCS/SOURCE EVIDENCE ONLY | Resolve G.5 Taxi source/profile contract; gate production ownership on target-50 capability proof (`19efaad6`) |
-| P0109 | 2026-10-03 | PREPARED R2 — RUNTIME DIAGNOSTIC; PROOF PENDING | Add Phase G Taxi target-50 read-only-CVar capability probe; R2 fixes delivery-checker false negatives (`0.0.44-dev`) |
+| P0109 | 2026-10-03 | INSTALLED / PUSHED — CLEAN NEGATIVE CAPABILITY RESULT | Add Phase G Taxi target-50 read-only-CVar capability probe; target 50 unavailable at factor 1.2 / ceiling 18 (`affb1ace`) |
+| P0110 | 2026-10-03 | PREPARED — DOCS/EVIDENCE ONLY | Record P0109 clean negative; open G.5 camera-distance CVar ownership review |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

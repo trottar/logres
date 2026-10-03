@@ -7,7 +7,7 @@ As of 2026-10-03.
 **Phase G — Cinematic Camera**
 
 Active work item:
-**G.5 Taxi target-50 capability proof**
+**G.5 camera-distance ownership review for Taxi target 50**
 
 State:
 **Phase F COMPLETE; Phase G ACTIVE — G.5**
@@ -40,25 +40,25 @@ State:
 
 ## G.5
 
-**TARGET-50 CAPABILITY PROBE IMPLEMENTED — RUNTIME PROOF PENDING.**
+Target-50 under no-CVar-mutation boundary:
+**CLOSED — CLEAN NEGATIVE on `0.0.44-dev`.**
 
-P0108 at `19efaad6` resolves the Taxi source/profile contract.
+P0109 runtime evidence repeated the same result twice:
+- factor `1.2`;
+- effective ceiling `18`;
+- target `50`;
+- turn zoom `18`;
+- `targetReached=false`;
+- movement/restoration PASS;
+- CVar unchanged;
+- secret=false.
 
-P0109 prepares runtime `0.0.44-dev` and adds only the diagnostic capability gate:
-- Phase G `Taxi Target 50 Probe`;
-- read-only `cameraDistanceMaxZoomFactor`;
-- recorded `factor * 15` effective ceiling;
-- 5-second MoveView target-50 attempt;
-- MoveView restoration to start;
-- unchanged-CVar / target / secret / error diagnostics;
-- dedicated static contract enforcement.
+Production Taxi therefore remains fail-open.
 
-Production Taxi remains fail-open/out-of-slice.
+Active next step:
+**source/contract review of camera-distance CVar ownership.**
 
-A PASS permits a later zoom-only Taxi production patch.
-
-A clean target-reach FAIL opens a separate camera-distance ownership decision;
-the target must not be silently lowered.
+No CVar mutation or clamped Taxi target is authorized yet.
 
 ## Phase H queued direction
 

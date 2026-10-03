@@ -12,19 +12,19 @@ project: logres
 
 ## Current Work Item
 
-**G.5 — Prove target-50 camera capability before production Taxi ownership.**
+**G.5 — Resolve camera-distance ownership after target-50 capability NEGATIVE.**
 
-P0108 is verified pushed at:
-`19efaad6523369020c6789d9e18e006538e3bf68`.
+P0109 is verified pushed at:
+`affb1ace6b7561ce9c2046b74273948dfbb5c4b5`.
 
-Runtime in the P0109 implementation checkpoint:
+Current pushed runtime:
 `0.0.44-dev`.
 
 G.4 status:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
 G.5 status:
-**TARGET-50 CAPABILITY PROBE IMPLEMENTED — RUNTIME PROOF PENDING; PRODUCTION TAXI OWNERSHIP REMAINS GATED.**
+**TARGET-50 CAPABILITY CLOSED — CLEAN NEGATIVE UNDER NO-CVAR-MUTATION BOUNDARY; CAMERA-DISTANCE OWNERSHIP REVIEW ACTIVE.**
 
 ## Verified State
 
@@ -34,71 +34,70 @@ G.5 status:
   live combat.
 - G.3 World/Combat production ownership is runtime + integration PASS.
 - G.4 City/resting ownership is runtime + integration PASS on `0.0.43-dev`.
-- P0108 at `19efaad6` is durable and resolves the G.5 Taxi source/profile contract.
+- P0108 resolved the G.5 Taxi source/profile contract.
+- P0109 at `affb1ace` is durable on runtime `0.0.44-dev`.
 - A.2 already runtime-proved `state.onTaxi` true during a real flight path and
   false again after Taxi ended.
-- Taxi source precedence is resolved as priority `1000`, above captured
-  interaction `110`, combat `50`, City `1`, and World `0`; the existing instance
-  fail-open remains outside the Taxi slice.
-- Taxi zoom intent is conditional-out absolute target `50`, with ordinary Taxi
-  entry `5` seconds and restore `never`.
-- Ordinary Taxi exit to World/City/Combat uses the destination situation's
-  entering transition rather than restoring remembered pre-Taxi zoom.
+- Taxi source precedence remains priority `1000`, above captured interaction
+  `110`, combat `50`, City `1`, and World `0`, with the existing instance
+  fail-open outside the Taxi slice.
+- Taxi zoom intent remains conditional-out absolute target `50`, with ordinary
+  Taxi entry `5` seconds and restore `never`.
 - Taxi rotation and Taxi UI hide/fade remain separately gated.
-- Production Taxi ownership still remains fail-open/out-of-slice until target
-  `50` is proven reachable without camera-distance CVar mutation.
-- P0109 extends the existing manual `CameraCapabilityProbe`; it does **not**
-  change the production camera controller's Taxi branch.
-- P0109 adds the Phase G developer-panel action `Taxi Target 50 Probe`.
-- The target-50 probe:
-  - refuses while the production camera controller is enabled;
-  - refuses while DynamicCam is loaded or load status is unknown;
-  - reads but never mutates `cameraDistanceMaxZoomFactor`;
-  - records the source-derived effective ceiling (`factor * 15`);
-  - attempts absolute target `50` over a 5-second MoveView leg;
-  - returns to the captured starting zoom through the same MoveView path;
-  - re-reads the CVar and requires it to remain unchanged;
-  - records targetReached / moved / restored / secret / error state;
-  - uses no `SetCVar`, `CameraZoomIn`, or `CameraZoomOut`.
-- The production controller already blocks while `CameraCapabilityProbe.running`
-  is true, so the new mode inherits the proven mutual-exclusion boundary.
-- P0109 adds a dedicated static Taxi target-probe contract checker and updates the
-  developer-panel phase contract.
+- P0109 runtime capability evidence is a repeated clean NEGATIVE:
+  - runtime `0.0.44-dev`;
+  - `cameraDistanceMaxZoomFactor = 1.2`;
+  - source-derived effective ceiling `18`;
+  - both independent target-50 attempts stopped at zoom `18`;
+  - both recorded `targetReached=false`;
+  - both recorded `moved=true`;
+  - both restored the captured starting zoom successfully;
+  - both recorded `cvarUnchanged=true`;
+  - both recorded `secret=false`;
+  - DynamicCam was not loaded during the probe.
+- Therefore target `50` is **not reachable** under the current accepted
+  no-camera-distance-CVar-mutation boundary.
+- This is a capability result, not a production-controller defect.
+- The generic probe error text `movement/target/restoration tolerance failed`
+  is broader than the actual failing criterion; the explicit diagnostic fields
+  show movement and restoration succeeded and only target reach failed.
+- Production Taxi ownership remains fail-open/out-of-slice.
+- No lower Taxi target may be substituted merely because the current ceiling is
+  `18`.
 - D-035 quest interaction ownership remains a valid future endpoint with Blizzard
   fail-open controls until each replacement capability is proven.
 
 ## Next Action
 
-After P0109 is verified pushed, deploy runtime `0.0.44-dev` and collect one
-developer-panel GUI target-50 capability result.
+Perform a **source/contract audit of camera-distance CVar ownership** before any
+new runtime mutation.
 
-Validation sequence:
-1. DynamicCam disabled for the isolated proof session.
-2. Phase G -> `Camera World/Combat OFF`.
-3. Manually place the camera clearly below target 50.
-4. Phase G -> `Taxi Target 50 Probe`.
-5. Wait for outbound + restore movement to finish.
-6. Phase G -> `Taxi Target 50 Probe` again to record the result.
-7. Phase G -> `Camera World/Combat ON`.
-8. flush/export the saved developer-panel diagnostic.
+The audit must resolve:
+- current Forever semantics and allowed range for
+  `cameraDistanceMaxZoomFactor`;
+- whether target `50` implies a required factor of at least `50 / 15`;
+- whether changing that CVar is session-only, persistent, restricted, or otherwise
+  coupled to Blizzard settings;
+- DynamicCam/LibCamera behavior around temporary or restored camera-distance
+  changes;
+- exact ownership/restore semantics if Logres ever changes the CVar;
+- combat/protected-state implications;
+- startup/logout/reload behavior;
+- fail-open behavior if the requested distance cannot be established or restored.
 
-A PASS authorizes the next zoom-only Taxi production implementation.
+No runtime CVar mutation is authorized by this checkpoint.
 
-A FAIL because target 50 is not reachable is a valid capability result, not
-something to hide or reinterpret. Preserve it durably and investigate
-camera-distance ownership separately. Do not silently lower the Taxi target.
+Do not implement production Taxi zoom, rotation, UI fade, or a clamped fallback
+until that review is explicit.
 
 ## Success Criteria
 
-The target-50 capability checkpoint completes only after runtime evidence records:
-- current `cameraDistanceMaxZoomFactor` without mutation;
-- source-derived effective ceiling;
-- actual target-50 reached/not-reached result;
-- successful return to starting zoom;
-- unchanged CVar state;
-- no secret-value, Lua, taint, protected-action, or probe ownership failure.
-
-Production Taxi ownership remains gated until that evidence is classified.
+The next G.5 contract checkpoint completes only when:
+- camera-distance CVar semantics are source-resolved for the current client;
+- the minimum required factor for target 50 is explicit;
+- persistence/restoration and combat boundaries are explicit;
+- a smallest safe capability test, or a reason not to test, is defined;
+- production Taxi remains fail-open until that capability is proven.
 
 ## Do Not Reopen Without New Evidence
 
@@ -116,8 +115,10 @@ Production Taxi ownership remains gated until that evidence is classified.
 - **Taxi ordinary destination exit:** entering destination time, no remembered
   restore.
 - **Taxi rotation/UI fade:** separately gated.
-- **Camera-distance CVar mutation:** not accepted.
-- **Production Taxi ownership:** not authorized before target-50 runtime proof.
+- **Target 50 without camera-distance mutation:** runtime NEGATIVE on
+  `0.0.44-dev`; current factor `1.2`, observed ceiling `18`.
+- **Camera-distance CVar mutation:** not yet accepted.
+- **Production Taxi ownership:** still fail-open.
 - **D-032/D-033/D-034 visual direction:** accepted future Phase H+ direction.
 - **D-035 quest interaction ownership:** accepted future endpoint.
 - **Git authority:** user performs commits/pushes.
@@ -125,8 +126,9 @@ Production Taxi ownership remains gated until that evidence is classified.
 ## Relevant References
 
 - `docs/memory/evidence/G5_TAXI_CAMERA_SOURCE_AUDIT_2026-10-03.md`
+- `docs/memory/evidence/G5_P0109_TARGET50_NEGATIVE_2026-10-03.md`
 - `docs/memory/investigations/G5_TAXI_CAMERA_OWNERSHIP.md`
+- `docs/memory/investigations/G5_CAMERA_DISTANCE_CVAR_OWNERSHIP.md`
 - `docs/memory/architecture/CAMERA.md`
-- `docs/memory/patches/P0108_G5_TAXI_CAMERA_SOURCE_AUDIT.md`
 - `docs/memory/patches/P0109_G5_TAXI_TARGET50_CAPABILITY_PROBE.md`
 - `docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`

@@ -6,38 +6,41 @@ Authoritative state:
 Phase G:
 **ACTIVE — G.5.**
 
-P0108 is verified durable at:
-`19efaad6523369020c6789d9e18e006538e3bf68`.
+P0109 is verified durable at:
+`affb1ace6b7561ce9c2046b74273948dfbb5c4b5`.
 
-P0109 runtime checkpoint:
+Current pushed runtime:
 `0.0.44-dev`.
 
 G.4:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
 G.5:
-**TARGET-50 CAPABILITY PROBE IMPLEMENTED — RUNTIME PROOF PENDING.**
+**TARGET-50 CAPABILITY CLEAN NEGATIVE; CAMERA-DISTANCE OWNERSHIP REVIEW NEXT.**
 
-Canonical source/profile audit:
-`../evidence/G5_TAXI_CAMERA_SOURCE_AUDIT_2026-10-03.md`.
+Canonical negative runtime evidence:
+`../evidence/G5_P0109_TARGET50_NEGATIVE_2026-10-03.md`.
 
-P0109 adds only the diagnostic capability gate:
-- Phase G `Taxi Target 50 Probe`;
-- existing `CameraCapabilityProbe` module/mutual-exclusion path;
-- read-only `cameraDistanceMaxZoomFactor`;
-- recorded effective ceiling `factor * 15`;
-- 5-second MoveView attempt to target 50;
-- MoveView restoration to captured start;
-- unchanged-CVar / target / secret / error diagnostics;
-- no production Taxi ownership change;
-- no rotation, UI fade, or CVar mutation.
+Observed twice:
+- factor `1.2`;
+- effective ceiling `18`;
+- target `50`;
+- turn zoom `18`;
+- `targetReached=false`;
+- `moved=true`;
+- `restored=true`;
+- `cvarUnchanged=true`;
+- `secret=false`;
+- DynamicCam not loaded.
 
-Next after verified push:
-deploy `0.0.44-dev`, use the Phase G GUI to turn production camera OFF, run the
-Taxi target-50 probe, click the same probe again after movement to record the
-result, then turn production camera ON and export diagnostics.
+This proves target 50 is unavailable under the current no-CVar-mutation boundary.
+Production Taxi ownership therefore remains fail-open.
 
-A negative target-50 result is valid evidence and must be recorded rather than
-worked around with a guessed lower target.
+Next:
+source/contract audit of `cameraDistanceMaxZoomFactor` ownership, range,
+persistence, restoration, combat/protected behavior, and DynamicCam/LibCamera
+semantics.
+
+Do not mutate the CVar, clamp Taxi to 18, add rotation, or add Taxi UI fade yet.
 
 User performs all commits/pushes.

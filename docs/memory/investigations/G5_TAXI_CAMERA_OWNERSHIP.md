@@ -1,14 +1,15 @@
 # G.5 — Taxi Camera Ownership
 
-Status: **TARGET-50 CAPABILITY PROBE IMPLEMENTED — RUNTIME PROOF PENDING**
+Status: **TARGET-50 NO-CVAR CAPABILITY CLOSED NEGATIVE — CAMERA-DISTANCE OWNERSHIP REVIEW ACTIVE**
 Opened: 2026-10-03
 Contract review resolved: 2026-10-03
+Target-50 no-CVar runtime result: 2026-10-03
 
 ## Objective
 
-Replace the current Taxi fail-open exclusion only after Logres proves the
-captured Taxi target can be reached safely without silently taking camera-distance
-CVar, rotation, or UI-presentation ownership.
+Replace the current Taxi fail-open exclusion only after Logres can reproduce the
+captured Taxi target safely without silently taking unproven camera-distance CVar,
+rotation, or UI-presentation ownership.
 
 ## Canonical source/profile audit
 
@@ -18,72 +19,60 @@ Resolved facts:
 - activation is existing `state.onTaxi`, sourced from `UnitOnTaxi("player")`;
 - DynamicCam Taxi priority `1000` outranks interaction `110`, live combat `50`,
   City `1`, and World `0`;
-- Taxi conditional-out target is absolute zoom `50`;
+- Taxi conditional-out intended target is absolute zoom `50`;
 - ordinary Taxi entry uses `5` seconds;
 - ordinary Taxi exit to World/City/Combat uses the destination situation's
   entering transition under restore `never`;
 - no remembered pre-Taxi zoom restore is allowed;
-- Taxi rotation is a separate continuous-yaw capability and is not part of the
-  first zoom slice;
+- Taxi rotation is a separate continuous-yaw capability;
 - Taxi UI hide/fade remains presentation policy;
-- current instance fail-open remains outside the Taxi slice;
-- existing DynamicCam/probe coexistence and fail-open rules remain unchanged.
+- current instance fail-open remains outside the Taxi slice.
 
-## P0109 target-50 capability probe
+## P0109 target-50 capability result
 
-P0109 prepares runtime `0.0.44-dev`.
+Canonical runtime evidence:
+`../evidence/G5_P0109_TARGET50_NEGATIVE_2026-10-03.md`
 
-It extends the existing manual `CameraCapabilityProbe` rather than creating a
-second camera mover, preserving the production controller's existing
-`CameraCapabilityProbe.running` mutual-exclusion gate.
+Runtime:
+`0.0.44-dev`.
 
-Developer-panel action:
-`Taxi Target 50 Probe` in Phase G.
+Two independent developer-panel probe runs recorded:
+- `cameraDistanceMaxZoomFactor = 1.2`;
+- effective ceiling `18`;
+- intended target `50`;
+- outbound movement reached exactly `18`;
+- `targetReached=false`;
+- `moved=true`;
+- restoration to starting zoom succeeded;
+- `cvarUnchanged=true`;
+- `secret=false`;
+- DynamicCam not loaded.
 
-The probe:
-- requires the production camera controller to be OFF;
-- refuses while DynamicCam is loaded or load status is unknown;
-- reads `cameraDistanceMaxZoomFactor` through `GetCVar`;
-- checks secret status before numeric conversion;
-- records the source-derived effective ceiling as `factor * 15`;
-- attempts absolute target 50 over a 5-second MoveView leg;
-- stops on target/crossing or timeout;
-- returns to the captured starting zoom over the same MoveView path;
-- re-reads the distance factor and requires it to remain unchanged;
-- records targetReached, moved, restored, CVar state, secret state, and error;
-- never calls `SetCVar`, `CameraZoomIn`, or `CameraZoomOut`;
-- adds no event hook, state subscription, timer, or polling loop.
+This is a **clean negative capability result** for target 50 under the accepted
+no-CVar-mutation boundary.
 
-If the camera begins already within target tolerance, the probe blocks and asks
-for a closer starting camera position rather than manufacturing movement.
+The aggregate error text says `movement/target/restoration tolerance failed`, but
+the explicit telemetry shows movement and restoration passed; only target reach
+failed.
+
+No additional target-50 no-CVar retries are required without new evidence.
 
 ## Current production behavior
 
 Taxi remains fail-open/out-of-slice in the production controller.
 
-P0109 does not alter:
-- Taxi production ownership;
-- context precedence in production;
-- rotation;
-- UI fade;
-- camera-distance CVar ownership.
+Do not:
+- replace target 50 with 18;
+- infer another acceptable target;
+- mutate `cameraDistanceMaxZoomFactor`;
+- add Taxi rotation;
+- add Taxi UI fade.
 
-## Runtime acceptance
+## Active sub-investigation
 
-After verified push/deployment:
-1. disable DynamicCam for the isolated proof;
-2. Phase G -> `Camera World/Combat OFF`;
-3. manually place camera clearly below target 50;
-4. Phase G -> `Taxi Target 50 Probe`;
-5. wait for outbound and restore legs to finish;
-6. Phase G -> `Taxi Target 50 Probe` again to persist the result;
-7. Phase G -> `Camera World/Combat ON`;
-8. flush/export diagnostics.
+`G5_CAMERA_DISTANCE_CVAR_OWNERSHIP.md`
 
-A PASS authorizes a later zoom-only Taxi production implementation.
+The next question is whether Logres can ever own a temporary camera-distance CVar
+change safely enough to reproduce target 50.
 
-A target-reach FAIL is a valid capability finding. If restoration/CVar/secret/error
-state is otherwise clean, record target 50 as unavailable under the accepted
-no-CVar-mutation boundary and investigate camera-distance ownership separately.
-
-Do not silently substitute another Taxi target.
+That question must be source-resolved before another runtime patch.
