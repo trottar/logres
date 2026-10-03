@@ -1,0 +1,28 @@
+P0105 — G.4 City Camera Runtime Implementation
+Baseline: 0b6760838441a896b97a656099e38e6c6f399bfd
+Runtime: 0.0.43-dev
+Purpose: extend proven camera ownership with City/resting conditional target 5
+
+Files:
+56f4104da96b77a2a2a346f7b1e504f721352f6f99247e3ec4492dcaed0bee03  Logres/Camera/WorldCombat.lua
+d4c2e01c849d42c8a5e0d4d5808c3042209df884d6ea9b4cee138d7ecb41186c  Logres/Core/Bootstrap.lua
+5e65fa94c8a502f2bc00693786232ebbec8be3cc0c7ed142c329ad2ded26b433  Logres/Core/Commands.lua
+991a275fe90b4f5c0386eaa37ef394eb8fe650e4943bf5a3b2a511e6c75b2699  Logres/Logres.toc
+1ade9d1cd64ae9b1759b7b97b55c76c1398becb75a84797633dbfbf9dfe432e1  docs/ROADMAP.md
+0c623a06ba42b213a77c28155b6d7eab013abb557a2dffc131041dee2b7e10a4  docs/memory/CURRENT.md
+1f7477ad53c05db8e55784bc8312fa2bc49f373402f2591672fc7f667e912ed8  docs/memory/architecture/CAMERA.md
+62c2ade43291c6cdc39cbaf12e039c4abd0d5df4fb5ad513c42d99036ebd3168  docs/memory/handoffs/CURRENT_HANDOFF.md
+ded4d7bfaa71cf9fc2dda3e8b8cb964b98ff2230fc8928d114452ba36baedde2  docs/memory/investigations/ACTIVE.md
+cfd1c7c99383eaf8bfc163b0aebb2904129c931336bb301795826d65c870eaf7  docs/memory/investigations/G4_CITY_CAMERA_OWNERSHIP.md
+7e80f112587bf4c9cc2473d4b84b13cdb31ae2ab2d40620913dba6bb6b1e8041  docs/memory/patches/P0104_G4_CITY_CAMERA_CONTRACT.md
+20dacafb82cec86aa13285a6d6eb0d5e88e39cd03bc1352e6f58c439011139ac  docs/memory/patches/P0105_G4_CITY_CAMERA_IMPLEMENTATION.md
+de9ba043f2c39aa3a2941e8d39b1ec5b17b368ea2f2ecb28557f7e61f87a8048  docs/memory/patches/PATCH_INDEX.md
+d700a8f8542a29f8aa253e8ae0d506ba7cb7f053d526474c1864fcf7473b1c7f  docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md
+8a01bee2a942d3a35e19044eaeb191f383975b77336417e2ce14d2d8265ecaac  docs/memory/roadmap/STATUS.md
+7256755aa8c23f6d965746dee927bfe474a69338373a0e9ab62e00956669204e  tools/check_camera_city_contract.py
+
+Validation:
+all tools/check_*.py
+git diff --check
+
+Deployment: runtime code changed; deploy after verified push.

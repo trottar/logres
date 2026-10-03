@@ -22,7 +22,8 @@ Hearth/Teleport, NPC Interaction, Fishing, AFK, and Gathering. No explicit
 enabled instance camera situation is present.
 
 G.3 runtime-proves World / World (Combat). G.4 source/profile review resolves the
-next City/resting zoom slice; later contexts remain separately capability-gated.
+City/resting slice, and P0105 prepares that extension on runtime `0.0.43-dev`;
+later contexts remain separately capability-gated.
 
 ## Context precedence
 
@@ -115,8 +116,9 @@ Proven production direction reused by G.4:
 The production controller exposes addon-owned context, transition, coexistence,
 live/cached combat distinction, zoom, counters, and last reason/error state.
 
-G.4 implementation must make `city` observable through this same diagnostic
-surface and extend static contracts to enforce live-combat-before-City ordering.
+P0105 makes `city` and resting state observable through this same diagnostic
+surface and adds a dedicated static contract enforcing live-combat-before-City
+ordering. Runtime proof remains pending.
 
 ## Implementation sequence
 
@@ -126,7 +128,7 @@ G.2: **COMPLETE — World/Combat primary camera capability runtime + integration
 
 G.3: **COMPLETE — production World/Combat ownership runtime + integration PASS.**
 
-G.4: **CONTRACT RESOLVED — CITY ZOOM IMPLEMENTATION NEXT.**
+G.4: **IMPLEMENTATION PREPARED — RUNTIME PROOF PENDING.**
 
 Rotation, UI-hide integration, shoulder offsets, startup snap parity, later
 profile contexts, and broader camera-CVar ownership remain outside the accepted

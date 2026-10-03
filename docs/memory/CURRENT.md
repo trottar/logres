@@ -14,19 +14,20 @@ project: logres
 
 **G.4 — Implement the resolved City/resting zoom slice.**
 
-P0103 is verified pushed at:
-`4adf400a4b2ee66a29a398f14364610288a6b4b9`.
+P0104 is verified pushed at:
+`0b6760838441a896b97a656099e38e6c6f399bfd`.
 
 Current pushed runtime:
 `0.0.42-dev`.
 
-P0104 is docs/source-evidence only and does not change runtime code or version.
+P0105 runtime target:
+`0.0.43-dev`.
 
 G.3 status:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
 G.4 status:
-**CONTRACT RESOLVED — CITY ZOOM IMPLEMENTATION NEXT.**
+**IMPLEMENTATION PREPARED — RUNTIME PROOF PENDING.**
 
 ## Verified State
 
@@ -38,6 +39,8 @@ G.4 status:
   live-combat transition/no-op, fresh combat-exit World evaluation, interruption,
   Run All, DynamicCam coexistence, and clean addon-owned diagnostics proven.
 - P0103 is durable at `4adf400a`; it records the G.3 runtime pass and opens G.4.
+- P0104 is durable at `0b676083`; it resolves the City/resting camera contract
+  from captured profile + source evidence and authorizes the narrow runtime slice.
 - G.4 source/profile audit resolves City as DynamicCam situation `001`:
   - activation is `IsResting()` / existing Logres `state.resting`;
   - priority `1`, while World (Combat) priority `50` uses live
@@ -65,21 +68,21 @@ G.4 status:
 
 ## Next Action
 
-Prepare the G.4 runtime implementation from the resolved contract:
-- extend the existing production camera controller with `city` after live combat
-  and before ordinary World;
-- City conditionally targets zoom `5` using the existing 2.5-second MoveView
-  path;
-- preserve instance/taxi/interaction exclusions and DynamicCam/probe gates;
-- add City-aware diagnostics/static contract coverage;
-- do not implement City UI fade, reactive zoom, startup snapping, or camera CVar
-  ownership in this checkpoint.
+Apply and push P0105 from verified P0104 baseline `0b676083`, then deploy
+`0.0.43-dev` and collect G.4 runtime evidence.
 
-Runtime proof after deployment should cover automatic City entry, City >5
-transition, City <=5 no-op, City exit fresh destination evaluation, Run All, and
-DynamicCam coexistence. A live combat + resting overlap is not to be manufactured
-through contrived gameplay; if unavailable naturally, record environmental
-deferral and rely on enforced ordering plus the already-proven live combat path.
+P0105 extends the existing production controller only:
+- `city` is selected from `state.resting` after live combat and before World;
+- City target is conditional zoom `5` on the existing 2.5-second MoveView path;
+- diagnostics expose `context=city` and resting state;
+- a dedicated G.4 static checker enforces live-combat-before-City ordering;
+- instance/taxi/interaction exclusions and DynamicCam/probe gates are unchanged;
+- City UI fade, reactive zoom, startup snapping, and camera CVar ownership remain
+  excluded.
+
+Runtime proof should cover automatic City entry, City >5 transition, City <=5
+no-op, City exit fresh destination evaluation, Run All, and DynamicCam
+coexistence. Do not manufacture live-combat + resting overlap solely for proof.
 
 ## Success Criteria
 
@@ -124,4 +127,5 @@ G.4 implementation completes only after:
 - `docs/memory/architecture/CAMERA.md`
 - `docs/memory/patches/P0103_G3_RUNTIME_PASS_AND_G4_OPEN.md`
 - `docs/memory/patches/P0104_G4_CITY_CAMERA_CONTRACT.md`
+- `docs/memory/patches/P0105_G4_CITY_CAMERA_IMPLEMENTATION.md`
 - `docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`

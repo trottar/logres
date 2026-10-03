@@ -44,10 +44,10 @@ semantics in real combat.
 G.3 production World/Combat ownership is closed with runtime + integration PASS
 on `0.0.42-dev`.
 
-G.4 source/profile review now resolves the City camera contract: existing
-resting state selects City after live-combat precedence, City conditionally
-targets zoom 5 over the ordinary 2.5-second path, and exit never restores a
-remembered pre-City zoom. Runtime implementation is the next narrow checkpoint.
+G.4 source/profile review resolves the City camera contract. P0105 prepares
+runtime `0.0.43-dev` by selecting City from resting after live-combat precedence
+and reusing the proven conditional target-5 / 2.5-second MoveView path. Runtime
+acceptance is the next narrow checkpoint.
 
 City UI hide/fade, City/global CVar ownership, reactive zoom, startup instant
 transition parity, and later DynamicCam situations remain separately gated.

@@ -44,7 +44,7 @@ Canonical evidence:
 
 ## G.4
 
-**CONTRACT RESOLVED — CITY ZOOM IMPLEMENTATION NEXT.**
+**IMPLEMENTATION PREPARED — RUNTIME PROOF PENDING.**
 
 P0104 source/profile review resolves:
 - resting -> City;
@@ -58,7 +58,11 @@ City UI fade, City `cameraDistanceMaxZoomFactor`, reactive zoom, startup instant
 transition parity, and later DynamicCam contexts remain outside the first City
 runtime slice.
 
-Canonical evidence:
+P0105 prepares runtime `0.0.43-dev` with City selected from resting after
+live-combat precedence, conditional target 5, City-aware diagnostics, and a
+dedicated static contract. Runtime acceptance remains pending.
+
+Canonical source evidence:
 `../evidence/G4_CITY_CAMERA_SOURCE_AUDIT_2026-10-03.md`.
 
 ## Phase H queued direction

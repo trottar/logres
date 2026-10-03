@@ -1,6 +1,6 @@
 # G.4 — City Camera Ownership
 
-Status: CONTRACT RESOLVED — CITY ZOOM IMPLEMENTATION NEXT
+Status: IMPLEMENTATION PREPARED — RUNTIME PROOF PENDING
 Opened: 2026-10-03
 Contract resolved: 2026-10-03
 
@@ -74,6 +74,22 @@ G.4 does not authorize:
 - Gathering;
 - rotation;
 - shoulder offsets.
+
+## P0105 implementation checkpoint
+
+P0105 prepares runtime `0.0.43-dev` by extending the existing
+`CameraWorldCombat` controller without renaming stable module/command identifiers:
+- adds explicit `CITY_TARGET = 5`;
+- records `state.resting` in addon-owned diagnostics;
+- selects `city` only after live combat and before World;
+- maps City to conditional-in target 5;
+- reuses the same 2.5-second MoveView transition and fail-open logic;
+- extends integrated diagnostics to accept/print City;
+- adds `tools/check_camera_city_contract.py` for City target, ordering, and scope
+  exclusions.
+
+Runtime behavior is not considered proven until the deployed acceptance sequence
+is completed.
 
 ## Runtime acceptance
 

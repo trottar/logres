@@ -2631,6 +2631,7 @@ local function cameraWorldCombatStatusPasses(status)
         or (
             (
                 status.selectedContext == "world"
+                or status.selectedContext == "city"
                 or status.selectedContext == "combat"
             )
             and status.ownsContext == true
@@ -2640,6 +2641,7 @@ local function cameraWorldCombatStatusPasses(status)
         status.transitionActive ~= true
         or (
             status.transitionContext == "world"
+            or status.transitionContext == "city"
             or status.transitionContext == "combat"
         )
 
@@ -2655,7 +2657,7 @@ end
 
 local function emitCameraWorldCombatStatus(prefix, status, passed)
     emit(string.format(
-        "Logres cameraworldcombat: %s (enabled=%s context=%s owns=%s transition=%s/%s action=%s reason=%s stop=%s blocked=%s liveCombat=%s lockdown=%s cachedCombat=%s mismatch=%s dynamicCam=%s/%s api=%s current=%s start=%s target=%s final=%s elapsed=%s targetReached=%s reconcile=%s starts=%s complete=%s stops=%s noop=%s blockedCount=%s relinquish=%s failures=%s secret=%s error=%s)",
+        "Logres cameraworldcombat: %s (enabled=%s context=%s owns=%s transition=%s/%s action=%s reason=%s stop=%s blocked=%s liveCombat=%s lockdown=%s cachedCombat=%s mismatch=%s resting=%s dynamicCam=%s/%s api=%s current=%s start=%s target=%s final=%s elapsed=%s targetReached=%s reconcile=%s starts=%s complete=%s stops=%s noop=%s blockedCount=%s relinquish=%s failures=%s secret=%s error=%s)",
         prefix or (passed and "PASS" or "FAIL"),
         tostring(status.moduleEnabled),
         tostring(status.selectedContext),
@@ -2670,6 +2672,7 @@ local function emitCameraWorldCombatStatus(prefix, status, passed)
         tostring(status.lastLockdown),
         tostring(status.lastCachedCombat),
         tostring(status.lastCombatMismatch),
+        tostring(status.lastResting),
         tostring(status.lastDynamicCamLoaded),
         tostring(status.lastDynamicCamStatusSource),
         tostring(status.apiAvailable),

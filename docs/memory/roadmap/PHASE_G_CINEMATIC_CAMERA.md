@@ -42,7 +42,7 @@ Canonical evidence:
 
 ## G.4 — City camera ownership
 
-**CONTRACT RESOLVED — IMPLEMENTATION NEXT.**
+**IMPLEMENTATION PREPARED — RUNTIME PROOF PENDING.**
 
 P0104 source/profile audit resolves the camera-only City slice:
 - City activation uses existing resting state from `IsResting()`;
@@ -62,6 +62,11 @@ Explicitly outside the first City implementation:
 
 Canonical audit:
 `../evidence/G4_CITY_CAMERA_SOURCE_AUDIT_2026-10-03.md`.
+
+P0105 prepares runtime `0.0.43-dev`: the existing production controller now
+selects `city` after live combat, uses conditional target 5, exposes resting/City
+diagnostics, and is guarded by a dedicated G.4 static contract checker. Stable
+internal World/Combat command/module identifiers remain for compatibility.
 
 Implementation runtime proof should cover automatic City entry, City >5
 transition, City <=5 no-op, fresh destination evaluation on City exit, Run All,

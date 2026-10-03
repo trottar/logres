@@ -3,7 +3,7 @@
 ## G.4 — City camera ownership
 
 Status:
-**CONTRACT RESOLVED — CITY ZOOM IMPLEMENTATION NEXT**
+**IMPLEMENTATION PREPARED — RUNTIME PROOF PENDING**
 
 Canonical:
 `G4_CITY_CAMERA_OWNERSHIP.md`
@@ -26,8 +26,10 @@ Deferred deliberately:
 - startup first-situation instant transition parity;
 - later DynamicCam situations.
 
+P0105 prepares the smallest City context extension at runtime target `0.0.43-dev`.
+
 Next action:
-implement the smallest City context extension and collect targeted runtime proof.
+apply/push P0105, deploy, and collect targeted City runtime proof.
 
 ## Closed Phase G investigations
 

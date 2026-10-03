@@ -1,6 +1,7 @@
 local _, Logres = ...
 
 local WORLD_TARGET = 5
+local CITY_TARGET = 5
 local COMBAT_TARGET = 15
 local TRANSITION_DURATION = 2.5
 local TRANSITION_TIMEOUT_EXTRA = 0.75
@@ -164,6 +165,7 @@ local Controller = Logres:RegisterModule("CameraWorldCombat", {
         self.lastLockdown = false
         self.lastCachedCombat = false
         self.lastCombatMismatch = false
+        self.lastResting = false
         self.lastStateRevision = 0
         self.lastDynamicCamLoaded = false
         self.lastDynamicCamStatusKnown = false
@@ -300,6 +302,7 @@ function Controller:ReadContext()
     self.lastLockdown = lockdown
     self.lastCombatMismatch =
         self.lastLiveCombat ~= self.lastCachedCombat
+    self.lastResting = state.resting == true
 
     if not state.initialized then
         return "none", "state-uninitialized", false
@@ -322,7 +325,7 @@ function Controller:ReadContext()
     end
 
     if state.resting then
-        return "none", "outside-slice:resting", false
+        return "city", "resting-city", false
     end
 
     return "world", "world", false
@@ -513,7 +516,12 @@ function Controller:Reconcile(reason)
         return true, contextReason
     end
 
-    local targetZoom = context == "combat" and COMBAT_TARGET or WORLD_TARGET
+    local targetZoom = WORLD_TARGET
+    if context == "combat" then
+        targetZoom = COMBAT_TARGET
+    elseif context == "city" then
+        targetZoom = CITY_TARGET
+    end
 
     if self.transitionActive
         and self.transitionContext == context
@@ -553,6 +561,7 @@ function Controller:Reconcile(reason)
 
     local needsTransition =
         (context == "world" and currentZoom > WORLD_TARGET)
+        or (context == "city" and currentZoom > CITY_TARGET)
         or (context == "combat" and currentZoom < COMBAT_TARGET)
 
     if not needsTransition then
@@ -591,6 +600,7 @@ function Controller:GetDebugStatus()
         lastLockdown = self.lastLockdown,
         lastCachedCombat = self.lastCachedCombat,
         lastCombatMismatch = self.lastCombatMismatch,
+        lastResting = self.lastResting,
         lastStateRevision = self.lastStateRevision,
         lastDynamicCamLoaded = self.lastDynamicCamLoaded,
         lastDynamicCamStatusKnown = self.lastDynamicCamStatusKnown,

@@ -1,7 +1,7 @@
 # P0104 — Resolve G.4 City Camera Contract
 
 Date: 2026-10-03
-Result: PREPARED — DOCS/SOURCE EVIDENCE ONLY
+Result: INSTALLED / PUSHED — DOCS/SOURCE EVIDENCE ONLY (`0b676083`)
 
 ## Baseline
 
@@ -61,3 +61,7 @@ Combat+resting overlap is not to be manufactured solely for proof.
 Docs/source-evidence only.
 
 **No WoW redeploy is required.**
+
+## Verified push
+
+P0104 is durable on `main` at `0b6760838441a896b97a656099e38e6c6f399bfd`.

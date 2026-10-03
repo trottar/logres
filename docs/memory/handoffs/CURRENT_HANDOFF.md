@@ -7,13 +7,16 @@ Phase G:
 **ACTIVE — G.4.**
 
 Current pushed checkpoint:
-P0103 at `4adf400a`, runtime remains `0.0.42-dev`.
+P0104 at `0b676083`, runtime remains `0.0.42-dev`.
+
+P0105 runtime target:
+`0.0.43-dev`.
 
 G.3:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
-G.4 contract:
-**RESOLVED — CITY ZOOM IMPLEMENTATION NEXT.**
+G.4:
+**IMPLEMENTATION PREPARED — RUNTIME PROOF PENDING.**
 
 Canonical source/profile audit:
 `../evidence/G4_CITY_CAMERA_SOURCE_AUDIT_2026-10-03.md`.
@@ -33,9 +36,14 @@ Explicitly excluded from the first City runtime slice:
 - startup instant-transition parity;
 - later DynamicCam situations/rotation/shoulder offsets.
 
-P0104 is docs/source-evidence only. No WoW redeploy is required.
+P0104 is verified durable at `0b676083`.
 
-Next patch: implement the narrow City context in the existing production camera
-controller and extend diagnostics/static coverage.
+P0105 prepares the narrow City context in the existing production controller,
+extends diagnostics with resting/City visibility, and adds a dedicated G.4 static
+contract checker. Runtime code changes require deployment after verified push.
+
+Next: apply/push P0105, deploy `0.0.43-dev`, then validate automatic City entry,
+City transition/no-op, City exit destination evaluation, Run All, and DynamicCam
+coexistence.
 
 User performs all commits/pushes.
