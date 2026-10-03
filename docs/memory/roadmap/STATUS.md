@@ -31,40 +31,29 @@ State:
 | Item | State |
 | --- | --- |
 | G.1 Current DynamicCam profile capture | COMPLETE — exact RPG evidence preserved |
-| G.2 World/Combat camera zoom capability | ACTIVE — source review / runtime proof pending |
-| G.3+ Camera implementation/context slices | QUEUED — evidence-driven |
+| G.2 World/Combat camera zoom capability | ACTIVE — source PASS; runtime probe pending |
+| G.3+ Production/context slices | QUEUED — evidence-driven |
 
-## G.1 captured profile
+## G.2 source result
 
-Enabled RPG contexts:
-- City;
-- World;
-- World (Combat);
-- Taxi;
-- Hearth/Teleport;
-- NPC Interaction;
-- Fishing;
-- AFK;
-- Gathering.
+Correct semantics:
+- World -> conditional target 5;
+- World (Combat) -> conditional target 15;
+- ordinary transition 2.5 seconds;
+- restore policy never.
 
-No explicit enabled instance situation is present.
+Primary camera path:
+`GetCameraZoom` + read-only `cameraZoomSpeed` + `MoveView*Start/Stop`.
 
-Canonical evidence:
-`../evidence/G1_DYNAMICCAM_PROFILE_CAPTURE_2026-10-02.md`.
+P0095 adds the isolated manual runtime probe.
 
-## G.2 target
+## Runtime proof next
 
-World:
-- zoom in by 5;
-- enter 2.5;
-- exit 0.
-
-World (Combat):
-- zoom out by 15;
-- enter 2.5;
-- exit 0.
-
-No WoW redeploy is required for P0094.
+With DynamicCam disabled:
+- Camera Zoom Probe PASS out of combat;
+- Camera Zoom Probe PASS in combat;
+- starting zoom restored both times;
+- no camera/security errors.
 
 ## Deferred navigation
 

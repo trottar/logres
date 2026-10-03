@@ -2594,6 +2594,63 @@ local function runQuestProbe()
     end
 end
 
+local function runCameraZoomProbe()
+    local probe = Logres:GetModule("CameraCapabilityProbe")
+    local mode, reason = probe:HandlePanelAction()
+    local debugStatus = probe:GetDebugStatus()
+
+    if mode == "started" then
+        emit(string.format(
+            "Logres camerazoomprobe: STARTED (combat=%s start=%s target=%s speed=%s; click Camera Zoom Probe again after the movement finishes)",
+            tostring(debugStatus.lastCombat),
+            tostring(debugStatus.startZoom),
+            tostring(debugStatus.targetZoom),
+            tostring(debugStatus.lastZoomSpeed)
+        ))
+        return
+    end
+
+    if mode == "running" then
+        emit(string.format(
+            "Logres camerazoomprobe: RUNNING (phase=%s combat=%s)",
+            tostring(debugStatus.phase),
+            tostring(debugStatus.lastCombat)
+        ))
+        return
+    end
+
+    local passed = debugStatus.lastState == "pass"
+
+    emit(string.format(
+        "Logres camerazoomprobe: %s (mode=%s combat=%s dynamicCam=%s/%s api=%s speed=%s start=%s target=%s turn=%s final=%s targetReached=%s moved=%s restored=%s secret=%s elapsed=%s/%s runs=%s pass=%s fail=%s error=%s)",
+        passed and "PASS" or "FAIL",
+        tostring(mode),
+        tostring(debugStatus.lastCombat),
+        tostring(debugStatus.lastDynamicCamLoaded),
+        tostring(debugStatus.lastDynamicCamStatusSource),
+        tostring(debugStatus.lastAPIAvailable),
+        tostring(debugStatus.lastZoomSpeed),
+        tostring(debugStatus.startZoom),
+        tostring(debugStatus.targetZoom),
+        tostring(debugStatus.turnZoom),
+        tostring(debugStatus.finalZoom),
+        tostring(debugStatus.targetReached),
+        tostring(debugStatus.moved),
+        tostring(debugStatus.restored),
+        tostring(debugStatus.lastSecret),
+        tostring(debugStatus.outboundElapsed),
+        tostring(debugStatus.returnElapsed),
+        tostring(debugStatus.runCount),
+        tostring(debugStatus.passCount),
+        tostring(debugStatus.failCount),
+        tostring(debugStatus.lastError or reason)
+    ))
+
+    if mode == "result" then
+        probe:MarkReported()
+    end
+end
+
 local function runAllChecks()
     emit("Logres checkall: beginning")
     printStatus()
@@ -2694,6 +2751,7 @@ local function printHelp()
     emit("  /logres compasscheck")
     emit("  /logres waypointprobe")
     emit("  /logres questprobe")
+    emit("  /logres camerazoomprobe")
     emit("  /logres xpcheck")
     emit("  /logres xppreview")
     emit("  /logres objectiveprogresscheck")
@@ -2840,6 +2898,11 @@ local function handleCommand(message)
 
     if command == "questprobe" then
         runQuestProbe()
+        return
+    end
+
+    if command == "camerazoomprobe" then
+        runCameraZoomProbe()
         return
     end
 
@@ -3021,6 +3084,11 @@ Logres:RegisterDevPanelAction(
     "questProbe",
     "Quest Probe",
     "questprobe"
+)
+Logres:RegisterDevPanelAction(
+    "cameraZoomProbe",
+    "Camera Zoom Probe",
+    "camerazoomprobe"
 )
 Logres:RegisterDevPanelAction(
     "xpCheck",

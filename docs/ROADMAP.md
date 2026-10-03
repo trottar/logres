@@ -28,54 +28,27 @@ The roadmap is capability-gated. A phase advances only when its success criteria
 
 **Status: COMPLETE.**
 
-Established heading compass, manual user-waypoint compass marker, fail-open navigation, and Blizzard-owned stock minimap.
-
 ## Phase F — Quest Experience
 
 **Status: COMPLETE.**
-
-Contextual XP, additive NPC quest detail, objective capability proof, and
-contextual objective progress are runtime-proven.
-
-Deferred boundaries remain deliberate:
-- stock Objective Tracker remains Blizzard-owned;
-- quest interaction controls remain Blizzard-owned;
-- quest compass marker remains unsupported without a runtime-proven
-  destination.
-
-Canonical phase record:
-`memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md`
 
 ## Phase G — Cinematic Camera
 
 **Status: ACTIVE — G.2 World/Combat camera zoom capability.**
 
-G.1:
-complete. The user's current DynamicCam `RPG` profile is preserved as durable
-evidence.
+G.1 captured the current DynamicCam `RPG` profile durably.
 
-Captured enabled contexts:
-- City;
-- World;
-- World (Combat);
-- Taxi;
-- Hearth/Teleport;
-- NPC Interaction;
-- Fishing;
-- AFK;
-- Gathering.
+G.2 source review corrected the profile interpretation:
+- World conditionally targets zoom 5 when farther away;
+- World (Combat) conditionally targets zoom 15 when closer;
+- ordinary transitions use 2.5 seconds;
+- zoom restore is `never`.
 
-There is no explicit enabled instance camera situation in the captured profile.
+The first runtime capability proof uses the primary camera mechanism:
+`GetCameraZoom` + `MoveView*Start/Stop`, with read-only `cameraZoomSpeed`.
 
-G.2:
-source-audit and runtime-prove the narrow World/Combat zoom path before
-production implementation.
-
-Target behavior:
-- World: zoom in by 5;
-- World (Combat): zoom out by 15;
-- 2.5-second enter transitions;
-- no UI-hide or rotation behavior in this first slice.
+P0095 adds a manual reversible probe; automatic Logres camera ownership remains
+absent until that probe passes outside and inside combat.
 
 Canonical phase record:
 `memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
@@ -83,5 +56,3 @@ Canonical phase record:
 ## Phase H — Integration and Polish
 
 **Status: QUEUED.**
-
-Unified settings, profiles, visual consistency, performance, accessibility/configurability, packaging, release documentation, and compatibility testing.

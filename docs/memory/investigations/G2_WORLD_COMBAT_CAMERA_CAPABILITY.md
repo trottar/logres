@@ -1,73 +1,100 @@
 # G.2 — World/Combat Camera Zoom Capability
 
-Status: ACTIVE — SOURCE REVIEW / RUNTIME PROOF PENDING
+Status: ACTIVE — SOURCE REVIEW PASS; FOREVER RUNTIME PROBE PENDING
 Opened: 2026-10-02
 
 Profile evidence:
 `../evidence/G1_DYNAMICCAM_PROFILE_CAPTURE_2026-10-02.md`
 
+Source audit:
+`../evidence/G2_DYNAMICCAM_ZOOM_SOURCE_AUDIT_2026-10-02.md`
+
 Phase roadmap:
 `../roadmap/PHASE_G_CINEMATIC_CAMERA.md`
 
-## Question
+## Correct target behavior
 
-Can Logres safely reproduce the current `RPG` World / World (Combat) camera zoom
-behavior on WoW Forever without introducing polling, stealing unrelated camera
-ownership, or touching DynamicCam's more complex UI-hide/rotation behaviors?
+World:
+- if current zoom > `5`, target zoom `5`;
+- otherwise leave the closer current zoom alone;
+- ordinary enter transition `2.5` seconds.
 
-## Target profile behavior
+World (Combat):
+- if current zoom < `15`, target zoom `15`;
+- otherwise leave the farther current zoom alone;
+- ordinary enter transition `2.5` seconds.
 
-Situation 004 — World:
-- not resting;
-- not in an instance;
-- zoom `in` by `5`;
-- enter transition `2.5`;
-- exit transition `0`.
+These are conditional absolute targets, not deltas.
 
-Situation 006 — World (Combat):
-- not in an instance;
-- player in combat;
-- priority above World;
-- zoom `out` by `15`;
-- enter transition `2.5`;
-- exit transition `0`.
+P0094's `by 5` / `by 15` wording is superseded.
 
-The word `by` is intentional: the export uses DynamicCam `zoomType = in/out`,
-not a fixed target-distance `set` mode.
+## Source-resolved camera path
+
+DynamicCam:
+- computes the conditional target;
+- calls `LibCamera:SetZoom(target, transitionTime, easing)`;
+- stops an existing transition before replacing it.
+
+LibCamera primary zoom:
+- reads `GetCameraZoom()`;
+- reads `cameraZoomSpeed`;
+- drives `MoveViewOutStart()` / `MoveViewInStart()` from a frame animation;
+- stops both directions on completion/interruption.
+
+The primary path does not set a CVar.
+
+LibCamera's temporary-CVar corrective fallback remains unaccepted and is not
+part of P0095.
 
 ## Existing Logres state inputs
 
-Use existing observed state where sufficient:
+Use existing observed state:
 - combat;
 - instance/world;
 - resting.
 
-Do not create duplicate world/combat sensors merely for the camera module.
+Do not create duplicate sensors.
 
-## Source-review questions
+## P0095 runtime probe
 
-Before runtime mutation, determine:
+P0095 adds a manual `Camera Zoom Probe` panel action.
 
-1. how current DynamicCam implements timed `zoomType = in/out`;
-2. which WoW APIs/CVars it uses on Forever;
-3. whether `GetCameraZoom`, `CameraZoomIn`, `CameraZoomOut`,
-   `MoveViewInStop`, `MoveViewOutStop`, and/or `cameraZoomSpeed` are involved;
-4. whether those values/calls are safe in and out of combat on Forever;
-5. how a transition can be stopped/replaced when context changes;
-6. how Logres can fail open without leaving a stale zoom transition;
-7. how staged testing coexists with DynamicCam so both addons do not fight for
-   camera ownership.
+The probe:
+- is excluded from Run All;
+- has no state subscription or automatic event trigger;
+- refuses while DynamicCam is loaded;
+- reads camera zoom and camera zoom speed secret-safely;
+- makes a small reversible movement with the `MoveView*` path;
+- does not call `SetCVar`;
+- records whether it began in combat.
 
-## Runtime proof boundary
+Panel sequence:
+1. click once to start;
+2. wait about two seconds;
+3. click again to persist the final result.
 
-A probe, if required, must:
-- be developer-panel driven;
-- preserve current camera usability;
-- capture addon-owned diagnostic state;
-- avoid polling/tickers as a substitute for event evidence;
-- avoid permanent CVar mutation;
-- restore temporary CVar changes after the probe;
-- not implement automatic production behavior yet.
+Required proof:
+- PASS out of combat;
+- PASS in combat;
+- starting zoom restored both times;
+- no Lua/taint/protected/secret errors.
+
+## Coexistence contract
+
+DynamicCam must be disabled for the isolated G.2 proof.
+
+Until production Logres camera ownership exists:
+- DynamicCam may be re-enabled after proof;
+- Logres performs no automatic camera mutation.
+
+## Fail-open / interruption contract
+
+For eventual production:
+- stop the previous Logres transition before starting another;
+- stop movement immediately when ownership is relinquished;
+- leave no temporary CVar mutation;
+- do not restore pre-combat zoom merely because combat ended;
+- instead, entering World applies its conditional target rule.
 
 ## Out of scope
 
@@ -84,14 +111,15 @@ G.2 does not implement:
 
 ## Success criteria
 
-G.2 completes only after:
-- current DynamicCam zoom semantics are source-understood;
-- the required Forever API path is identified;
-- a safe fail-open/restoration contract is explicit;
-- any required runtime probe passes or a limitation is recorded;
-- the first production World/Combat camera implementation can be specified
-  without guessing.
+G.2 closes only after:
+- source review remains accepted;
+- P0095 passes out of combat;
+- P0095 passes in combat;
+- both runs restore the starting zoom;
+- no camera/security error occurs;
+- production World/Combat can be specified without adopting the unproven CVar
+  fallback.
 
 ## Next action
 
-Audit current DynamicCam zoom implementation and relevant Forever camera APIs.
+Apply/push P0095 and run the isolated panel probe outside and inside combat.

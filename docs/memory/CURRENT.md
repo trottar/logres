@@ -14,100 +14,89 @@ project: logres
 
 **G.2 — World/Combat camera zoom capability contract and runtime proof.**
 
-P0093 is verified pushed at `de30c6f3`.
+P0094 is verified pushed at `9db11d2b`.
 
 Current pushed runtime:
 `0.0.38-dev`.
 
-G.1:
-**COMPLETE — CURRENT DYNAMICCAM PROFILE CAPTURED.**
+P0095 runtime target:
+`0.0.39-dev`.
 
 G.2:
-**ACTIVE — SOURCE REVIEW / RUNTIME PROOF PENDING.**
+**SOURCE REVIEW PASS; FOREVER RUNTIME PROBE PENDING.**
 
 ## Verified State
 
 - Phase F is complete.
-- P0093 is durable at `de30c6f3`.
-- The user supplied current `DynamicCam.lua` and `DynamicCam.lua.bak`.
-- The two files have different byte hashes but parse to identical semantic data.
-- The exact stored `RPG` profile is preserved in:
-  `docs/memory/evidence/G1_DYNAMICCAM_RPG_PROFILE_2026-10-02.json`.
-- `RPG` is referenced by 12 of 15 profile keys and is the richly customized
-  migration target.
-- `RPG` schema version is 5.
-- `zoomRestoreSetting = never`.
-- Enabled current contexts are:
-  - City;
-  - World;
-  - World (Combat);
-  - Taxi;
-  - Hearth/Teleport;
-  - NPC Interaction;
-  - Fishing;
-  - AFK;
-  - Gathering.
-- No explicit enabled instance camera situation exists in the captured `RPG`
-  profile.
-- Global stored camera behavior includes:
-  - camera zoom speed `15.5`;
-  - dynamic pitch enabled;
-  - standard shoulder offset `1` with a zoom-based 0 -> 1 curve;
-  - enemy/interact target focus enabled with yaw `0.75`, pitch `0.5`;
-  - reactive zoom max time `2.5`;
-  - zoom restore `never`.
-- World (`004`) stores:
-  - zoom in **by 5**;
-  - enter `2.5`;
-  - exit `0`.
-- World (Combat) (`006`) stores:
-  - zoom out **by 15**;
-  - enter `2.5`;
-  - exit `0`.
-- World/Combat is the first selected capability slice because it is camera-only:
-  no stored UI-hide or rotation override in those situations.
-- DynamicCam UI-hide, rotation, shoulder, taxi, teleport, fishing, gathering,
-  City, and AFK behavior remain later slices.
-- Situation names/conditions/priorities are mapped using current upstream
-  DynamicCam `DefaultSettings.lua` at `ae586a9c`.
-- Omitted SavedVariables fields remain inherited behavior to resolve from source;
-  they are not guessed from the export.
+- G.1 is complete.
+- P0094 is durable at `9db11d2b`.
+- Exact current DynamicCam `RPG` settings remain preserved as canonical JSON.
+- G.2 source review corrected P0094's derived `by 5` / `by 15` wording:
+  DynamicCam `in/out` use conditional absolute targets, not deltas.
+- World (`004`):
+  - if current zoom > 5, target zoom 5;
+  - otherwise leave the closer current zoom unchanged.
+- World (Combat) (`006`):
+  - if current zoom < 15, target zoom 15;
+  - otherwise leave the farther current zoom unchanged.
+- Ordinary World <-> World (Combat) transitions use the entering situation's
+  `timeToEnter = 2.5` seconds.
+- `zoomRestoreSetting = never`; combat exit does not restore pre-combat zoom.
+- DynamicCam source uses `LibCamera:SetZoom()` for ordinary situation zoom.
+- LibCamera primary zoom uses:
+  - `GetCameraZoom()`;
+  - read-only `cameraZoomSpeed`;
+  - frame-based `MoveViewOutStart` / `MoveViewInStart`;
+  - matching stop functions.
+- LibCamera also contains a temporary-CVar `CameraZoomIn/Out` corrective
+  fallback; Logres has not accepted that fallback.
+- P0095 adds only a manual reversible camera capability probe.
+- P0095 refuses to run while DynamicCam is loaded.
+- P0095 does not subscribe to state or implement automatic camera behavior.
+- P0095 does not call `SetCVar`.
+- Runtime proof is required once out of combat and once in combat.
 
 ## Next Action
 
-Perform G.2 source review:
+Apply and push P0095.
 
-- inspect current DynamicCam zoom-transition implementation;
-- identify the exact WoW/Forever camera API and CVar path for `zoomType=in/out`;
-- determine how `zoomValue` and `transitionTime` are applied;
-- establish safe interruption/restoration behavior;
-- establish how Logres and DynamicCam can coexist during staged testing;
-- only then add a developer-panel capability probe if runtime evidence is
-  needed.
+After verified push:
+- disable DynamicCam for one isolated validation session;
+- deploy Logres `0.0.39-dev`;
+- `/reload`;
+- out of combat, click `Camera Zoom Probe` once;
+- wait about two seconds and click it again to record the result;
+- expect PASS with `combat=false`, movement/target/restoration true;
+- enter combat naturally;
+- repeat the same two-click probe;
+- expect PASS with `combat=true`, movement/target/restoration true;
+- run Run All once;
+- `/reload`;
+- export `LOGRES_DIAGNOSTICS_LATEST.lua`;
+- re-enable DynamicCam after the isolated proof if desired.
 
-Do not write automatic production camera behavior until the capability contract
-is proven.
-
-P0094 is docs/evidence-only; no WoW redeploy is required.
+Do not implement automatic World/Combat camera behavior until both probe runs
+are captured.
 
 ## Success Criteria
 
 G.2 completes only after:
-- DynamicCam World/Combat zoom semantics are source-understood;
-- the relevant Forever camera APIs/CVars are identified;
-- combat/world mutation safety is established;
-- temporary/probe CVar changes restore cleanly;
-- transition interruption/fail-open behavior is explicit;
-- coexistence with DynamicCam during validation is safe;
-- the first production World/Combat camera implementation can be specified
-  without guessing.
+- source semantics correction remains accepted;
+- manual primary camera path PASS out of combat;
+- manual primary camera path PASS in combat;
+- each probe restores its starting zoom;
+- no Lua, taint, protected-action, or secret-value errors;
+- DynamicCam was not simultaneously driving the proof;
+- production World/Combat ownership can be specified without guessing or
+  importing the unproven LibCamera CVar fallback.
 
 ## Do Not Reopen Without New Evidence
 
 - **Phase F:** complete.
 - **F.6 contextual objective progress pulse:** complete.
 - **G.1 DynamicCam profile capture:** complete.
-- **Current DynamicCam RPG exact settings:** use canonical G.1 evidence.
+- **Current DynamicCam RPG exact stored settings:** canonical JSON.
+- **P0094 `by 5/by 15` interpretation:** incorrect; superseded by G.2 source audit.
 - **Instance camera custom profile:** absent from captured RPG profile.
 - **Quest destination / compass marker:** unsupported until runtime-proven.
 - **Quest interaction controls:** Blizzard-owned.
@@ -118,8 +107,9 @@ G.2 completes only after:
 
 - `docs/memory/evidence/G1_DYNAMICCAM_PROFILE_CAPTURE_2026-10-02.md`
 - `docs/memory/evidence/G1_DYNAMICCAM_RPG_PROFILE_2026-10-02.json`
-- `docs/memory/investigations/G1_DYNAMICCAM_PROFILE_CAPTURE.md`
+- `docs/memory/evidence/G2_DYNAMICCAM_ZOOM_SOURCE_AUDIT_2026-10-02.md`
 - `docs/memory/investigations/G2_WORLD_COMBAT_CAMERA_CAPABILITY.md`
 - `docs/memory/architecture/CAMERA.md`
-- `docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
 - `docs/memory/patches/P0094_CAPTURE_DYNAMICCAM_PROFILE.md`
+- `docs/memory/patches/P0095_CAMERA_ZOOM_CAPABILITY_PROBE.md`
+- `docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`

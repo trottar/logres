@@ -105,6 +105,8 @@
 
 | P0093 | 2026-10-02 | INSTALLED / PUSHED — DOCS-ONLY | Record P0092 PASS; close Phase F; open Phase G / G.1 (`de30c6f3`) |
 
-| P0094 | 2026-10-02 | PREPARED — DOCS/EVIDENCE ONLY | Capture current DynamicCam RPG profile; close G.1; open G.2 |
+| P0094 | 2026-10-02 | INSTALLED / PUSHED — G.1 PASS | Capture current DynamicCam RPG profile; close G.1; open G.2 (`9db11d2b`) |
+
+| P0095 | 2026-10-02 | PREPARED — G.2 RUNTIME PROOF PENDING | Correct DynamicCam zoom semantics; add isolated Camera Zoom Probe |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

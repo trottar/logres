@@ -18,18 +18,12 @@ Current profile evidence:
 - `../evidence/G1_DYNAMICCAM_PROFILE_CAPTURE_2026-10-02.md`
 - `../evidence/G1_DYNAMICCAM_RPG_PROFILE_2026-10-02.json`
 
-Exact camera values must come from durable evidence, not conversational memory.
+Current source audit:
+`../evidence/G2_DYNAMICCAM_ZOOM_SOURCE_AUDIT_2026-10-02.md`.
 
 ## G.1 — Current DynamicCam profile capture
 
 **COMPLETE — PASS.**
-
-The user supplied current `DynamicCam.lua` and `.bak` files.
-
-They parse to identical semantic data.
-
-The canonical `RPG` profile is preserved as machine-readable JSON and mapped
-against current upstream DynamicCam situation IDs.
 
 Enabled `RPG` contexts:
 - City;
@@ -46,41 +40,45 @@ No explicit enabled instance situation is present.
 
 ## G.2 — World/Combat camera zoom capability
 
-**ACTIVE — SOURCE REVIEW / RUNTIME PROOF PENDING.**
+**ACTIVE — SOURCE REVIEW PASS; RUNTIME PROBE PENDING.**
 
-Evidence-backed target:
+Correct target behavior:
 
 World:
-- zoom in by 5;
-- enter 2.5;
-- exit 0.
+- if current zoom > 5, target 5;
+- otherwise no zoom;
+- ordinary transition 2.5 seconds.
 
 World (Combat):
-- zoom out by 15;
-- enter 2.5;
-- exit 0.
+- if current zoom < 15, target 15;
+- otherwise no zoom;
+- ordinary transition 2.5 seconds.
 
-G.2 intentionally excludes:
-- UI hiding;
-- rotation;
-- shoulder offsets;
-- spell-detection contexts;
-- global camera CVar ownership.
+Zoom restoration:
+`never`.
 
-Use existing Logres world/combat/resting/instance state where sufficient.
+The earlier `by 5/by 15` interpretation is closed as incorrect.
 
-## G.2 Success Criteria
+Primary source path:
+- `GetCameraZoom`;
+- read `cameraZoomSpeed`;
+- `MoveViewInStart/Stop`;
+- `MoveViewOutStart/Stop`;
+- frame-based transition animation.
 
-- current DynamicCam zoom implementation understood from source;
-- Forever camera API/CVar path identified;
-- combat/world safety established;
-- transition interruption/restoration contract explicit;
-- coexistence with DynamicCam during staged validation is safe;
-- first production World/Combat camera patch can be specified without guessing.
+P0095 probe:
+- manual panel action only;
+- DynamicCam must be disabled;
+- reversible small movement;
+- no `SetCVar`;
+- must pass both out of combat and in combat.
 
 ## Later Phase G Work
 
-After World/Combat zoom is proven, select later slices from captured evidence:
+After G.2 capability proof, specify and implement World/Combat ownership before
+advancing to more complex contexts.
+
+Later evidence-backed contexts include:
 - City;
 - NPC interaction;
 - Gathering;
@@ -88,8 +86,6 @@ After World/Combat zoom is proven, select later slices from captured evidence:
 - Taxi;
 - Hearth/Teleport;
 - AFK;
-- standard/global camera settings.
+- global camera settings.
 
 Do not invent an instance camera slice while the captured profile has none.
-
-Exact later ordering remains evidence-driven.

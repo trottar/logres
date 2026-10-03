@@ -3,29 +3,35 @@
 ## G.2 — World/Combat camera zoom capability
 
 Status:
-**ACTIVE — SOURCE REVIEW / RUNTIME PROOF PENDING**
+**ACTIVE — SOURCE REVIEW PASS; FOREVER RUNTIME PROBE PENDING**
 
 Canonical:
 `G2_WORLD_COMBAT_CAMERA_CAPABILITY.md`
 
-Profile evidence:
-`../evidence/G1_DYNAMICCAM_PROFILE_CAPTURE_2026-10-02.md`
+Source evidence:
+`../evidence/G2_DYNAMICCAM_ZOOM_SOURCE_AUDIT_2026-10-02.md`
 
-Target:
-- World: zoom in by 5, enter 2.5, exit 0;
-- World (Combat): zoom out by 15, enter 2.5, exit 0.
+Correct profile semantics:
+- World -> conditional target 5 when farther than 5;
+- World (Combat) -> conditional target 15 when closer than 15;
+- ordinary transition 2.5 seconds;
+- zoom restore never.
 
-G.2 must prove the exact current DynamicCam zoom API/CVar path and establish
-safe transition interruption/restoration on Forever.
+P0094's previous `by 5/by 15` wording is closed as incorrect.
 
-Do not add production camera behavior before that proof.
+P0095 adds a manual reversible primary-path probe.
+No automatic camera ownership yet.
+
+Required runtime evidence:
+- one out-of-combat PASS;
+- one in-combat PASS;
+- restoration PASS;
+- DynamicCam disabled during both runs.
 
 ## Closed Phase G investigations
 
 G.1 DynamicCam profile capture:
 **CLOSED — PASS.**
-
-Current `RPG` profile is preserved durably.
 
 ## Closed Phase F
 

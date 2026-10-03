@@ -1,0 +1,38 @@
+Project Logres P0095
+Date: 2026-10-02
+Baseline: 9db11d2b61f49be48a4b488af1285b2e4439aca0
+Runtime: 0.0.39-dev
+Purpose: correct G.2 zoom semantics and add isolated primary-path camera capability probe
+
+Files:
+527b81bd0b4e62328e38bef85336d6dd5455da2a511cd731087a854eff92c1fc  Logres/Camera/Probe.lua
+6f88813c43be932ef49e0265ef74e9ca20113bd8c29ae38dbf4d71ef5251e5b9  Logres/Core/Bootstrap.lua
+67af38d259fe50ed458105e918476519d7a7a5634ae6fe1b18eb64ad435399ff  Logres/Core/Commands.lua
+46813c053038ea648e7b1e30033827d6d8e297ca82e82e0650be0ec78988ea1e  Logres/Logres.toc
+437ce7f380a3d88e7c8746bae2d0505fb92861f65d318cba574e2f9ce6bf7333  docs/ROADMAP.md
+f0169064f958886b373db5f3b814019b8a23053372de14848371d11f07327a81  docs/memory/CURRENT.md
+17f715273a3382904ba85ffd4124c92ac93ceb212cc6db8186d4b52358058949  docs/memory/architecture/CAMERA.md
+3a2c0e058cdfb0b81c42606b9aebf9518118850eff0bd2f42dcfe5a8e54660eb  docs/memory/evidence/G1_DYNAMICCAM_PROFILE_CAPTURE_2026-10-02.md
+816a0656db9a2ec637f8bc58e80c3788fd0857c05a5f38e37df9f9aec21d8ad5  docs/memory/evidence/G2_DYNAMICCAM_ZOOM_SOURCE_AUDIT_2026-10-02.md
+c141ec66b27fa0713d5c331df6751a5d0655dafabf7373f6bf31673b90918487  docs/memory/evidence/P0095_DELIVERY_CHECKER_FALSE_NEGATIVE_2026-10-02.md
+edaf49563052f91d7eb0b4dfcafa16a73016a2d543ad9fad8f52a4f0909a3c7b  docs/memory/handoffs/CURRENT_HANDOFF.md
+74c71de5c1d9147fff907a2fb9a0eedf40dcd17fc13ab225209ab59b7a9df441  docs/memory/investigations/ACTIVE.md
+28187ddf73d32e041d42b36ae37ee8fbf561f1db8bc09e3ad18f714776518186  docs/memory/investigations/G2_WORLD_COMBAT_CAMERA_CAPABILITY.md
+0be539bff74081c199821844b3ade4b1cd4cbbb0e0574d30c9cd842fd11f5a6b  docs/memory/patches/P0094_CAPTURE_DYNAMICCAM_PROFILE.md
+2e61f8b6518df27f868f3ac8346f552b46dd479ccc84ac2d7e40c65a8c2b8f06  docs/memory/patches/P0095_CAMERA_ZOOM_CAPABILITY_PROBE.md
+75ec19c13db864152ba26e9c1750e2d9b5aa2b52016ef6de86bdf4be5375de55  docs/memory/patches/PATCH_INDEX.md
+0001e7b9373ab35d42434c81f9d4f56e35fdbf63a5a91acec2a0492221935335  docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md
+0fc9b91edd8b24921e02d496d2d9c3fb352ca41b258a16cf52a9d77fa606600b  docs/memory/roadmap/STATUS.md
+ef6cef454f04eb72382dd947d6f855358c5bbeaa3dee3fc0fab4d80636a0bcfe  tools/check_camera_probe_contract.py
+
+Validation:
+exact verified P0094 HEAD
+exact-byte verification of P0095-owned tracked inputs against HEAD
+full temporary git-archive final-tree construction
+compile and execute every tools/check_*.py in temporary and real trees
+camera probe manual-only/no-SetCVar contract
+camera probe excluded from Run All
+CURRENT canonical heading validation
+git diff --check
+
+Runtime probe code changed: WoW redeploy required after verified push.

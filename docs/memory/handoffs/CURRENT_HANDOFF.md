@@ -3,42 +3,43 @@
 Authoritative state:
 `../CURRENT.md`.
 
-Phase F:
-**COMPLETE.**
-
 Phase G:
 **ACTIVE — G.2.**
 
-P0093 is verified pushed at:
-`de30c6f3`.
+P0094 is verified pushed at:
+`9db11d2b`.
 
-Current runtime remains:
+Current pushed runtime:
 `0.0.38-dev`.
+
+P0095 runtime target:
+`0.0.39-dev`.
 
 G.1:
 **CLOSED — PASS.**
 
-Fresh current DynamicCam files were supplied and parsed.
+G.2 source review:
+**PASS.**
 
-Key facts:
-- `DynamicCam.lua` and `.bak` are semantically identical;
-- exact `RPG` profile preserved as canonical JSON;
-- RPG has nine enabled contexts;
-- no explicit enabled instance situation;
-- World = zoom in by 5, enter 2.5, exit 0;
-- World (Combat) = zoom out by 15, enter 2.5, exit 0.
+Important correction:
+DynamicCam `zoomType=in/out` is a conditional absolute target, not a delta.
 
-Active work:
-**G.2 — World/Combat camera zoom capability.**
+Current profile semantics:
+- World: if farther than 5, target 5 over 2.5 seconds;
+- World (Combat): if closer than 15, target 15 over 2.5 seconds;
+- zoom restoration: never.
 
-Next:
-source-audit DynamicCam's current timed zoom implementation and the relevant
-Forever camera APIs/CVars before any production mutation.
+Primary source path:
+`GetCameraZoom` + read-only `cameraZoomSpeed` + `MoveView*Start/Stop`.
 
-G.2 scope excludes rotation, UI hiding, shoulder offset, taxi, teleport,
-fishing, gathering, City, AFK, and global camera-CVar ownership.
+P0095 adds only a manual reversible panel probe.
+It refuses while DynamicCam is loaded and makes no automatic camera changes.
 
-P0094 is docs/evidence-only.
-No WoW redeploy required.
+Runtime proof required:
+- PASS out of combat;
+- PASS in combat;
+- start zoom restored each run.
+
+P0095 changes runtime probe code; WoW redeploy is required after verified push.
 
 User performs all commits/pushes.
