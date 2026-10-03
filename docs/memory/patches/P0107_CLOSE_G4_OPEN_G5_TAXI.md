@@ -1,7 +1,8 @@
 # P0107 — Close G.4 Runtime Proof; Open G.5 Taxi Contract Review
 
 Date: 2026-10-03
-Result: **PREPARED — DOCS/EVIDENCE ONLY**
+Result: **INSTALLED / PUSHED — DOCS/EVIDENCE ONLY**
+Commit: `ab83882f28f98b3d90cc6bee65e5d7c45928c536`
 Baseline: `b2fce832ef689ebf70732bc8a9f1c07fa11faa35`
 Runtime: `0.0.43-dev` unchanged
 
@@ -20,16 +21,15 @@ Accepted proof covers:
 - automatic resting -> City selection;
 - clean City >5 conditional target-5 transition;
 - City <=5 no-op;
-- City exit fresh World evaluation with no remembered restore;
+- City exit fresh destination evaluation with no remembered restore;
 - Run All integration;
 - DynamicCam coexistence;
 - clean addon-owned failure/secret/error diagnostics.
 
-The first City attempt from zoom 18 ending at reported zoom 0 is retained as
-ambiguous environmental evidence and is not rewritten as a PASS.
+The first City attempt from zoom 18 ending at reported zoom 0 remains preserved
+as ambiguous environmental evidence and is not rewritten as a PASS.
 
-Natural live-combat + resting overlap remains an environmental deferral; static
-ordering plus the already-proven live-combat path remain authoritative.
+Natural live-combat + resting overlap remains an environmental deferral.
 
 ## G.5 opened
 
@@ -45,15 +45,13 @@ Known captured-profile facts:
 - UI hide/fade stored;
 - restore policy `never`.
 
-G.5 starts with source/profile review only. Runtime code waits until precedence,
-transition semantics, target-50 capability/CVar boundaries, rotation scope, and
-presentation separation are explicit.
+G.5 begins with source/profile review. Production runtime code waits until
+precedence, transition semantics, target-50 capability/CVar boundaries, rotation
+scope, and presentation separation are explicit.
 
 ## P0106 synchronization
 
-Remote `main` was verified at `b2fce832ef689ebf70732bc8a9f1c07fa11faa35` before this patch. Patch-index status
-is synchronized so P0106 is recorded as installed/pushed at `b2fce832` rather
-than left as PREPARED.
+P0106 is durable at `b2fce832`.
 
 ## Deployment
 

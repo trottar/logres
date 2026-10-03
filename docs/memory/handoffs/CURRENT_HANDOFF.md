@@ -6,51 +6,42 @@ Authoritative state:
 Phase G:
 **ACTIVE — G.5.**
 
-Current pushed runtime:
-`0.0.43-dev` from P0105 at `69560080`.
+Remote P0107 is verified durable at:
+`ab83882f28f98b3d90cc6bee65e5d7c45928c536`.
 
-Current remote baseline before P0107:
-`b2fce832ef689ebf70732bc8a9f1c07fa11faa35` (P0106 docs-only).
+Current pushed runtime:
+`0.0.43-dev`.
 
 G.4:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
-Canonical runtime evidence:
-`../evidence/G4_P0105_RUNTIME_PASS_2026-10-03.md`.
-
-Accepted G.4 proof:
-- automatic resting -> City selection;
-- clean City >5 -> target 5 transition;
-- City <=5 no-op;
-- City exit fresh destination evaluation / no remembered restore;
-- Run All;
-- DynamicCam coexistence;
-- clean addon-owned failure/secret/error diagnostics.
-
-The first City `18 -> 0` observation remains preserved as ambiguous environmental
-evidence; a later targeted retest from about `13.090` completed near `5.178` with
-`targetReached=true`.
-
-Natural combat + resting overlap remains an environmental deferral; static
-live-combat-before-City ordering remains enforced.
-
 G.5:
-**ACTIVE — TAXI CONTRACT REVIEW; NO RUNTIME CODE YET.**
+**SOURCE/PROFILE CONTRACT RESOLVED — TARGET-50 CAPABILITY PROBE NEXT.**
 
-Known profile starting point:
-- Taxi `160`, priority `1000`;
-- on-taxi activation;
-- enter/exit `5`;
-- conditional-out target `50`;
-- rotation speed `-20`;
-- UI hide/fade stored;
-- restore `never`.
+Canonical G.5 audit:
+`../evidence/G5_TAXI_CAMERA_SOURCE_AUDIT_2026-10-03.md`.
 
-Next: audit DynamicCam source + captured profile for Taxi precedence,
-transition/exit semantics, target-50 capability/CVar boundaries, rotation scope,
-presentation separation, and smallest runtime proof.
+Resolved Taxi contract:
+- use existing runtime-proven `state.onTaxi`;
+- Taxi priority `1000` outranks interaction `110`, combat `50`, City `1`, World `0`;
+- instance remains the outer fail-open boundary;
+- Taxi is conditional-out absolute target `50`;
+- Taxi entry is `5` seconds;
+- ordinary Taxi exit uses the destination situation's entering transition under
+  restore `never`;
+- rotation is separable and remains capability-gated;
+- UI hide/fade remains presentation policy;
+- DynamicCam/probe coexistence and fail-open behavior remain unchanged.
 
-The existing Taxi fail-open exclusion remains authoritative until that contract is
-resolved.
+Blocking capability question:
+current Forever reachability of target `50` without mutating
+`cameraDistanceMaxZoomFactor`.
+
+Next:
+prepare one **developer-panel GUI** capability probe that reads the CVar, attempts
+target `50` through the proven MoveView path, restores starting zoom, and records
+target/secret/error state.
+
+Do not implement production Taxi ownership until that probe passes.
 
 User performs all commits/pushes.

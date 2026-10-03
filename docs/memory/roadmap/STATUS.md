@@ -7,7 +7,7 @@ As of 2026-10-03.
 **Phase G — Cinematic Camera**
 
 Active work item:
-**G.5 Taxi camera ownership contract review**
+**G.5 Taxi target-50 capability proof**
 
 State:
 **Phase F COMPLETE; Phase G ACTIVE — G.5**
@@ -28,57 +28,43 @@ State:
 
 ## G.2
 
-Classification:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
 ## G.3
 
-Production World/Combat ownership:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
-
-Final validation runtime:
-`0.0.42-dev`.
 
 ## G.4
 
-City/resting camera ownership:
-**CLOSED — RUNTIME + INTEGRATION PASS.**
-
-Implementation:
-P0105 at `69560080`, runtime `0.0.43-dev`.
-
-Accepted runtime evidence proves automatic City selection, City >5 target-5
-movement, City <=5 no-op, fresh destination evaluation on exit, Run All, and
-DynamicCam coexistence with clean addon-owned failure/secret/error state.
+**CLOSED — RUNTIME + INTEGRATION PASS on `0.0.43-dev`.**
 
 Canonical evidence:
 `../evidence/G4_P0105_RUNTIME_PASS_2026-10-03.md`.
 
-Natural combat + resting overlap remains an environmental deferral.
-
 ## G.5
 
-**ACTIVE — TAXI CONTRACT REVIEW; NO RUNTIME CODE YET.**
+**SOURCE/PROFILE CONTRACT RESOLVED — TARGET-50 CAPABILITY PROBE NEXT.**
 
-Captured profile starting point:
-- Taxi `160`;
-- priority `1000`;
-- enter/exit `5`;
-- conditional-out target `50`;
-- rotation speed `-20`;
-- UI hide/fade stored;
-- restore `never`.
+Canonical source/profile evidence:
+`../evidence/G5_TAXI_CAMERA_SOURCE_AUDIT_2026-10-03.md`.
 
-The current Taxi fail-open exclusion remains until source/profile review resolves
-precedence, transition semantics, target capability/CVar boundaries, rotation
-scope, presentation scope, coexistence, and the smallest runtime slice.
+Resolved:
+- Taxi uses existing `state.onTaxi`;
+- priority `1000` outranks interaction/combat/City/World;
+- conditional-out target is `50`;
+- entry is `5` seconds;
+- ordinary exit uses destination timing under restore `never`;
+- rotation and UI fade remain separately gated.
+
+Production ownership is blocked on one narrow capability question:
+whether current Forever can reach zoom `50` through the proven MoveView path
+without changing `cameraDistanceMaxZoomFactor`.
+
+Next checkpoint:
+developer-panel target-50 capability probe.
 
 ## Phase H queued direction
 
-D-032 accepted the world-first integration composition. D-033 accepted parallel
-World Ghost art-direction work. D-034 refines the working visual anchor to
-Selective Hybrid E and establishes the canonical component inventory and
-percentage-bar direction. D-035 defines NPC quest interaction as a future
-Logres-owned experience with Blizzard fallback until each interaction surface is
-proven. These remain parallel planning and do not change active Phase G camera
-scope.
+D-032/D-033/D-034 define the accepted world-first / Selective Hybrid E visual
+direction. D-035 defines NPC quest interaction as a future Logres-owned
+experience with Blizzard fallback until each replacement surface is proven.

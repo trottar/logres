@@ -1,72 +1,68 @@
 # G.5 — Taxi Camera Ownership
 
-Status: **ACTIVE — CONTRACT REVIEW; NO RUNTIME CODE YET**
+Status: **SOURCE/PROFILE CONTRACT RESOLVED — TARGET-50 CAPABILITY PROBE NEXT; NO PRODUCTION TAXI OWNERSHIP YET**
 Opened: 2026-10-03
+Contract review resolved: 2026-10-03
 
 ## Objective
 
-Resolve the smallest deliberate Taxi camera contract before replacing the
-current fail-open Taxi exclusion in the production camera controller.
+Replace the current Taxi fail-open exclusion only after Logres proves the
+captured Taxi target can be reached safely without silently taking camera-distance
+CVar, rotation, or UI-presentation ownership.
 
-## Existing durable evidence
+## Canonical source/profile audit
 
-The captured DynamicCam `RPG` profile maps Taxi to situation `160`:
-- activation meaning: on taxi;
-- priority `1000`;
-- enabled;
-- enter transition `5` seconds;
-- exit transition `5` seconds;
-- `zoomType = out`;
-- absolute target `50` only when currently closer than 50;
-- rotation speed `-20`;
-- UI hide/fade stored.
+`../evidence/G5_TAXI_CAMERA_SOURCE_AUDIT_2026-10-03.md`
 
-Profile-wide zoom restoration remains `never`.
+Resolved facts:
+- activation is existing `state.onTaxi`, sourced from `UnitOnTaxi("player")`;
+- DynamicCam Taxi priority `1000` outranks interaction `110`, live combat `50`,
+  City `1`, and World `0`;
+- Taxi conditional-out target is absolute zoom `50`;
+- ordinary Taxi entry uses `5` seconds;
+- ordinary Taxi exit to World/City/Combat uses the **destination** situation's
+  entering transition under restore `never`;
+- no remembered pre-Taxi zoom restore is allowed;
+- Taxi rotation is a separate continuous-yaw capability and is not part of the
+  first zoom slice;
+- Taxi UI hide/fade remains presentation policy;
+- current instance fail-open remains outside the Taxi slice;
+- existing DynamicCam/probe coexistence and fail-open rules remain unchanged.
 
-Logres already exposes the proven `state.onTaxi` sensor, so a Taxi slice should
-not require a polling loop or duplicate sensor.
+## Target-50 gate
+
+DynamicCam permits target `50` on non-mainline clients, but current source also
+ties effective camera distance to `cameraDistanceMaxZoomFactor`.
+
+The captured profile does not preserve an explicit effective runtime value for
+that standard CVar, and Logres has not accepted CVar mutation.
+
+Production Taxi ownership therefore remains blocked until a targeted developer-
+panel probe proves target `50` through the existing `MoveView*` path while only
+**reading** the camera-distance CVar.
+
+The probe must:
+- refuse while DynamicCam is loaded;
+- report `cameraDistanceMaxZoomFactor` and its source-derived `*15` ceiling;
+- attempt target `50`;
+- restore starting zoom;
+- record target reached / secret / error state;
+- never mutate a CVar.
+
+If target `50` cannot be reached, record the negative result and open a separate
+camera-distance ownership decision. Do not clamp or substitute another target.
 
 ## Current production behavior
 
-Through G.4, `state.onTaxi` is an explicit fail-open exclusion:
-Taxi relinquishes Logres camera ownership rather than applying a Logres camera
-situation.
-
-That exclusion remains authoritative until G.5 contract review is complete.
-
-## Questions to resolve before runtime code
-
-1. Verify DynamicCam source activation and priority semantics for Taxi, including
-   precedence relative to live combat, City, World, and interaction contexts.
-2. Verify ordinary Taxi entry and destination-transition semantics for the stored
-   5-second values under profile-wide restore `never`.
-3. Confirm conditional-out target-50 behavior against current client camera
-   capability and any relevant maximum-distance constraints without silently
-   taking global camera-CVar ownership.
-4. Decide whether the first Taxi runtime slice is zoom-only or whether rotation
-   is inseparable from the intended Taxi experience. Rotation requires its own
-   capability proof and must not be imported implicitly.
-5. Keep Taxi UI hide/fade as presentation policy unless separately accepted.
-6. Preserve DynamicCam/probe coexistence, interruption, and fail-open behavior.
-
-## Explicit non-authorization
-
-No G.5 runtime implementation is authorized yet.
-
-Do not:
-- remove the Taxi fail-open exclusion;
-- add rotation;
-- add UI fade;
-- add camera-distance CVar mutation;
-- add polling/tickers;
-- broaden into Hearth/Teleport, NPC Interaction, Fishing, AFK, Gathering, or
-  shoulder-offset work
-
-until source/profile evidence resolves the Taxi contract.
+Taxi remains fail-open/out-of-slice in the production controller until the
+capability gate passes and a later production patch deliberately changes that
+branch.
 
 ## Next action
 
-Audit the captured Taxi profile against the pinned DynamicCam source and current
-Logres controller/sensor behavior. Record the exact Taxi precedence,
-zoom/transition semantics, capability boundary, and smallest runtime proof before
-preparing implementation.
+Prepare the narrow target-50 developer-panel capability probe.
+
+No real Taxi ride is needed for that capability check.
+
+No production Taxi zoom, rotation, UI fade, or CVar mutation is authorized by
+this source-review checkpoint.

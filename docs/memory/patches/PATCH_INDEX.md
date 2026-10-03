@@ -126,5 +126,6 @@
 | P0104 | 2026-10-03 | INSTALLED / PUSHED — DOCS/SOURCE EVIDENCE ONLY | Resolve G.4 City camera contract; authorize narrow City zoom implementation (`0b676083`) |
 | P0105 | 2026-10-03 | INSTALLED / PUSHED — G.4 RUNTIME + INTEGRATION PASS | Extend production camera ownership with City/resting conditional target 5 (`69560080`) |
 | P0106 | 2026-10-03 | INSTALLED / PUSHED — DOCS-ONLY | Make full player-facing quest interaction an intended Logres-owned domain; retain Blizzard fail-open fallback until capability-proven (`b2fce832`) |
-| P0107 | 2026-10-03 | PREPARED — DOCS/EVIDENCE ONLY | Record G.4 runtime + integration PASS; open G.5 Taxi camera ownership contract review |
+| P0107 | 2026-10-03 | INSTALLED / PUSHED — DOCS/EVIDENCE ONLY | Record G.4 runtime + integration PASS; open G.5 Taxi camera ownership contract review (`ab83882f`) |
+| P0108 | 2026-10-03 | PREPARED — DOCS/SOURCE EVIDENCE ONLY | Resolve G.5 Taxi source/profile contract; gate production ownership on target-50 capability proof |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

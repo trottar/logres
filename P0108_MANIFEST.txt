@@ -1,0 +1,17 @@
+P0108 — G.5 Taxi Camera Source/Profile Audit
+Baseline: ab83882f28f98b3d90cc6bee65e5d7c45928c536
+Type: docs/source-evidence only
+Runtime: 0.0.43-dev unchanged
+
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/architecture/CAMERA.md
+docs/memory/evidence/G5_TAXI_CAMERA_SOURCE_AUDIT_2026-10-03.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/G5_TAXI_CAMERA_OWNERSHIP.md
+docs/memory/patches/P0107_CLOSE_G4_OPEN_G5_TAXI.md
+docs/memory/patches/P0108_G5_TAXI_CAMERA_SOURCE_AUDIT.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md
+docs/memory/roadmap/STATUS.md

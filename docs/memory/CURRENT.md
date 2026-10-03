@@ -12,131 +12,119 @@ project: logres
 
 ## Current Work Item
 
-**G.5 — Taxi camera ownership contract review.**
+**G.5 — Prove target-50 camera capability before production Taxi ownership.**
 
-P0105 is verified pushed at:
-`6956008033b3f86c5b70d68c50486a4bed0ecdf1`.
+P0107 is verified pushed at:
+`ab83882f28f98b3d90cc6bee65e5d7c45928c536`.
 
 Current pushed runtime:
 `0.0.43-dev`.
-
-P0106 is verified pushed at:
-`b2fce832ef689ebf70732bc8a9f1c07fa11faa35`.
 
 G.4 status:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
 G.5 status:
-**ACTIVE — CONTRACT REVIEW; NO RUNTIME CODE YET.**
+**SOURCE/PROFILE CONTRACT RESOLVED — TARGET-50 CAPABILITY PROBE NEXT; PRODUCTION TAXI OWNERSHIP NOT YET AUTHORIZED.**
 
 ## Verified State
 
 - Phase F is complete.
-- G.1 is complete; the current DynamicCam `RPG` profile is captured durably.
-- G.2 is complete; the primary MoveView camera capability passed out of combat
-  and in genuine live combat.
-- G.3 is complete on runtime `0.0.42-dev` with World transition/no-op,
-  live-combat transition/no-op, fresh combat-exit World evaluation, interruption,
-  Run All, DynamicCam coexistence, and clean addon-owned diagnostics proven.
-- P0104 at `0b676083` resolved the City/resting contract.
-- P0105 at `69560080`, runtime `0.0.43-dev`, implements City/resting ownership.
-- G.4 runtime acceptance on P0105 proves:
-  - real resting state selects `context=city` automatically;
-  - a clean targeted City transition moved from about `13.090` toward target `5`
-    and completed near `5.178` with `targetReached=true`;
-  - City at zoom `<=5` is a no-op and does not zoom outward;
-  - leaving City fresh-evaluates World rather than restoring a remembered
-    pre-City zoom;
-  - Run All completes with camera diagnostics clean;
-  - DynamicCam loaded blocks/relinquishes Logres ownership;
-  - accepted diagnostics retained `failures=0`, `secret=false`, `error=nil`.
-- The earlier City `18 -> 0`, `targetReached=false` observation is preserved as
-  ambiguous environmental evidence; it was not accepted as PASS and was followed
-  by the clean target proof above.
-- Natural live-combat + resting overlap was unavailable and remains an
-  environmental deferral. Static contract coverage enforces live combat before
-  City, and the live-combat path is already runtime-proven.
-- P0106 at `b2fce832` is docs-only and establishes D-035 NPC quest interaction as
-  a future Logres-owned experience with Blizzard fail-open fallback until each
-  replacement is capability-proven.
-- City UI fade, City `cameraDistanceMaxZoomFactor`, reactive zoom, startup instant
-  transition parity, rotation, and later contexts remain separately gated.
+- G.1 captured the current DynamicCam `RPG` profile durably.
+- G.2 proved the primary MoveView camera capability out of combat and in genuine
+  live combat.
+- G.3 World/Combat production ownership is runtime + integration PASS.
+- G.4 City/resting ownership is runtime + integration PASS on `0.0.43-dev`.
+- P0107 at `ab83882f` durably records the G.4 PASS and opens G.5.
+- A.2 already runtime-proved `state.onTaxi` true during a real flight path and
+  false again after Taxi ended. `UnitOnTaxi("player")` is the authoritative fact.
+- Pinned DynamicCam source defines Taxi `160` as `UnitOnTaxi("player")`,
+  priority `1000`, with `PLAYER_CONTROL_LOST` / `PLAYER_CONTROL_GAINED` as
+  refresh events.
+- DynamicCam selects the highest numeric priority. Taxi therefore outranks the
+  captured NPC Interaction `110`, World (Combat) `50`, City `1`, and World `0`.
+- Logres retains its existing instance fail-open boundary. Inside the non-instance
+  camera slice, eventual Taxi ownership precedes interaction, combat, City, and
+  World.
+- Captured Taxi zoom is conditional-out absolute target `50`.
+- Taxi entry uses `5` seconds. Under zoom restore `never`, ordinary Taxi exit to
+  World/City/Combat uses the destination situation's entering transition rather
+  than Taxi's stored `timeToExit = 5`.
+- DynamicCam permits target `50` on non-mainline clients, but its source also
+  ties effective camera distance to `cameraDistanceMaxZoomFactor`.
+- The captured profile contains no explicit standard runtime value proving that
+  the current Forever session can physically reach zoom `50`.
+- Existing Logres production camera ownership does not mutate camera-distance
+  CVar state and must not silently clamp the intended Taxi target.
+- Taxi rotation is source-separable from zoom and remains capability-gated.
+- Taxi UI hide/fade remains presentation policy and is outside the first Taxi
+  camera slice.
+- D-035 quest interaction ownership remains a valid future endpoint with Blizzard
+  fail-open controls until each replacement capability is proven.
 
 ## Next Action
 
-Resolve G.5 Taxi camera ownership from captured profile + DynamicCam source before
-writing runtime code.
+Prepare a **developer-panel GUI target-50 capability probe** before production
+Taxi code.
 
-Known starting facts from the captured `RPG` profile:
-- Taxi situation `160`;
-- on-taxi activation;
-- priority `1000`;
-- enter/exit `5` seconds;
-- conditional-out absolute target `50`;
-- rotation speed `-20`;
-- UI hide/fade stored;
-- profile-wide zoom restore `never`.
+The probe must:
+- refuse while DynamicCam is loaded;
+- read but never mutate `cameraDistanceMaxZoomFactor`;
+- report the source-derived effective ceiling (`factor * 15`);
+- attempt absolute target `50` through the proven `MoveView*Start/Stop` path;
+- restore the captured starting zoom;
+- record targetReached / secret / error state;
+- avoid `SetCVar`, `CameraZoomIn`, and `CameraZoomOut`.
 
-The contract review must determine:
-- exact Taxi precedence relative to live combat, City, World, and interaction;
-- ordinary entry/destination transition semantics;
-- whether target 50 is usable without taking unproven camera-distance CVar
-  ownership;
-- whether the first runtime slice is zoom-only or must separately capability-gate
-  rotation;
-- explicit exclusion or later treatment of Taxi UI hide/fade;
-- the smallest safe runtime proof.
+This probe does not require a real flight path.
 
-The existing Taxi fail-open exclusion remains in production until that contract is
-explicit.
+If target `50` passes, the next patch may implement zoom-only Taxi ownership.
+
+If target `50` fails, preserve the negative result and investigate
+camera-distance ownership separately. Do not substitute a guessed lower Taxi
+target.
 
 ## Success Criteria
 
-G.5 contract review completes only when repository evidence defines:
-- exact Taxi activation and precedence;
-- exact conditional zoom target and transition semantics;
-- exit behavior under restore `never`;
-- target-50 capability/CVar boundary;
-- rotation scope;
-- UI-hide/fade scope;
-- fail-open/coexistence behavior;
-- the smallest runtime slice and validation plan.
+The target-50 capability checkpoint completes only after:
+- the current camera-distance CVar is observed without mutation;
+- target `50` is either proven reachable or explicitly proven unavailable;
+- the starting zoom is restored;
+- no secret-value, Lua, taint, or protected-action error is observed;
+- the result is recorded durably.
 
-No G.5 runtime implementation is authorized until those points are explicit.
+Production Taxi ownership remains gated until that evidence exists.
 
 ## Do Not Reopen Without New Evidence
 
 - **Phase F:** complete.
 - **G.1 DynamicCam profile capture:** complete.
-- **G.2 World/Combat camera capability:** runtime + integration PASS.
-- **G.3 production World/Combat ownership:** runtime + integration PASS.
-- **G.4 City camera ownership:** runtime + integration PASS on `0.0.43-dev`.
-- **G.2/G.3 live combat classifier:** live `UnitAffectingCombat("player")`.
-- **World/City zoom semantics:** conditional-in target 5.
-- **Combat zoom semantics:** conditional-out target 15.
-- **Accepted ordinary World/City/Combat transition:** 2.5 seconds.
+- **G.2 primary zoom capability:** runtime + integration PASS.
+- **G.3 World/Combat ownership:** runtime + integration PASS.
+- **G.4 City ownership:** runtime + integration PASS on `0.0.43-dev`.
+- **World/City zoom:** conditional-in target 5.
+- **Combat zoom:** conditional-out target 15.
 - **Zoom restoration:** `never`.
-- **City UI hide/fade:** presentation-policy question, not silently camera-owned.
-- **City `cameraDistanceMaxZoomFactor`:** known deferred CVar parity item.
-- **Temporary camera CVar fallback:** unproven and not accepted.
+- **Taxi source precedence:** Taxi `1000` > Interaction `110` > Combat `50` >
+  City `1` > World `0` inside the captured profile.
+- **Taxi entry:** 5 seconds.
+- **Taxi ordinary destination exit:** entering destination time, no remembered
+  restore.
+- **Taxi rotation/UI fade:** separately gated.
+- **Camera-distance CVar mutation:** not accepted.
 - **D-032/D-033/D-034 visual direction:** accepted future Phase H+ direction.
-- **D-035 quest interaction ownership:** accepted future endpoint; existing Phase F
-  additive runtime remains valid until replacement capabilities are proven.
+- **D-035 quest interaction ownership:** accepted future endpoint.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
 
 - `docs/memory/evidence/G1_DYNAMICCAM_PROFILE_CAPTURE_2026-10-02.md`
+- `docs/memory/evidence/G1_DYNAMICCAM_RPG_PROFILE_2026-10-02.json`
 - `docs/memory/evidence/G2_DYNAMICCAM_ZOOM_SOURCE_AUDIT_2026-10-02.md`
-- `docs/memory/evidence/G3_P0102_RUNTIME_PASS_2026-10-03.md`
-- `docs/memory/evidence/G4_CITY_CAMERA_SOURCE_AUDIT_2026-10-03.md`
+- `docs/memory/evidence/A2_CONTEXT_SENSOR_SOURCE_AUDIT_2026-09-30.md`
+- `docs/memory/evidence/A2_CONTEXT_SENSOR_RUNTIME_PROOF_2026-09-30.md`
 - `docs/memory/evidence/G4_P0105_RUNTIME_PASS_2026-10-03.md`
-- `docs/memory/investigations/G4_CITY_CAMERA_OWNERSHIP.md`
+- `docs/memory/evidence/G5_TAXI_CAMERA_SOURCE_AUDIT_2026-10-03.md`
 - `docs/memory/investigations/G5_TAXI_CAMERA_OWNERSHIP.md`
 - `docs/memory/architecture/CAMERA.md`
-- `docs/memory/patches/P0105_G4_CITY_CAMERA_IMPLEMENTATION.md`
-- `docs/memory/patches/P0106_QUEST_INTERACTION_OWNERSHIP.md`
 - `docs/memory/patches/P0107_CLOSE_G4_OPEN_G5_TAXI.md`
-- `docs/memory/decisions/D-035_QUEST_INTERACTION_OWNERSHIP.md`
-- `docs/memory/architecture/QUESTING.md`
 - `docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`

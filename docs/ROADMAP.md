@@ -34,24 +34,24 @@ The roadmap is capability-gated. A phase advances only when its success criteria
 
 ## Phase G — Cinematic Camera
 
-**Status: ACTIVE — G.5 Taxi camera ownership contract review.**
+**Status: ACTIVE — G.5 Taxi target-50 capability proof.**
 
 G.1 captured the current DynamicCam `RPG` profile durably.
 
-G.2 runtime-proved the primary camera capability and correct conditional zoom
-semantics in real combat.
+G.2 runtime-proved the primary camera capability and conditional zoom semantics.
 
-G.3 production World/Combat ownership is closed with runtime + integration PASS.
+G.3 World/Combat production ownership is runtime + integration PASS.
 
-G.4 City/resting ownership is closed with runtime + integration PASS on P0105
-runtime `0.0.43-dev`: automatic City selection, target-5 transition/no-op,
-fresh destination evaluation, Run All, and DynamicCam coexistence are proven.
+G.4 City/resting ownership is runtime + integration PASS on `0.0.43-dev`.
 
-G.5 now resolves the Taxi camera contract before removing the current fail-open
-Taxi exclusion. Captured profile facts include priority 1000, enter/exit 5
-seconds, conditional-out target 50, rotation speed -20, and stored UI hide/fade;
-source precedence, target capability/CVar boundaries, rotation scope, and
-presentation scope must be explicit before runtime code.
+G.5 source/profile review now resolves Taxi precedence, conditional target,
+entry/exit timing, rotation separation, and UI-presentation boundaries.
+Production Taxi ownership remains gated on proving that current Forever can reach
+the intended target `50` through the existing MoveView path without mutating
+`cameraDistanceMaxZoomFactor`.
+
+The next checkpoint is a developer-panel target-50 capability probe, not
+production Taxi code.
 
 Canonical phase record:
 `memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
@@ -61,15 +61,11 @@ Canonical phase record:
 **Status: QUEUED.**
 
 D-032 records the accepted world-first integration direction. D-033 permits
-parallel art-direction/mockup work. D-034 refines the current visual anchor to
-Selective Hybrid E: World Ghost restraint, authored ornament on meaning-heavy
-surfaces, simple high-density interaction controls, and a shared percentage-bar
-primitive for percentage-based Logres-owned values except player health.
+parallel art-direction/mockup work. D-034 refines the visual anchor to Selective
+Hybrid E and the shared percentage-bar direction.
 
-D-035 additionally establishes NPC quest interaction as a future Logres-owned
-experience: source-text paging, accept/decline, continue/complete, reward
-selection, and required quest-related gossip transitions, with Blizzard
-fail-open fallback until each replacement is capability-proven.
+D-035 establishes NPC quest interaction as a future Logres-owned experience with
+Blizzard fail-open fallback until each replacement capability is proven.
 
 Canonical phase record:
 `memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`
