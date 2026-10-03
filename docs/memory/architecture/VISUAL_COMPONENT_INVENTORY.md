@@ -101,19 +101,31 @@ Compass core objects:
 - restrained compass end-cap/heraldic ornament;
 - hidden/suspended transition treatment.
 
-D-037 future marker roles:
-- manual waypoint: explicit player destination, authored muted-blue Logres glyph;
-- quest destination: distinct quest/heraldic destination glyph, only when a real
-  destination bearing is capability-proven;
-- local radius POI: restrained nearby service/place marker within realistic local
-  awareness; exact categories/radius/positions remain capability work;
-- tracking: tiny repeated generic Logres tracker glyph, same visual meaning across
-  tracked categories and not a literal stock yellow dot.
+D-037/D-038 future marker roles and working glyphs:
+- manual waypoint: explicit player destination; open muted-blue destination diamond
+  with exact-bearing stem;
+- quest destination: aged pale-gold heraldic pennon/shield with exact-bearing stem,
+  only when a real destination bearing is capability-proven;
+- local radius POI: small neutral open wayfinder seal / roundel for nearby useful
+  services/places; exact categories/radius/positions remain capability work;
+- tracking: tiny repeated muted-amber faceted diamond / four-point pip, generic across
+  tracked categories and never a literal stock yellow dot.
+
+Additional D-038 compass objects/states:
+- center-focused identity label with continuous angular opacity fade;
+- focus acquisition/retention state with restrained hysteresis;
+- exact-bearing attachment stems/anchors;
+- vertical collision lanes for coincident semantic markers;
+- restrained POI/tracking same-role clustering;
+- bounded near/far scale states for manual/quest destinations;
+- mostly stable POI scale and effectively fixed tracking scale;
+- edge-recession state with no clamped off-screen arrow.
 
 Manual waypoint is currently runtime-proven. Quest destination, local POI, and
 tracking-result source/position capability remain separate future proof domains.
-Exact glyph construction and marker collision/density behavior remain focused art
-work.
+Source-provided identity and comparable distance are also capability inputs; art must
+not imply they are available before proof. Exact pixel sizes, angle thresholds, and
+scale/fade curves remain calibration work.
 
 ## 5. Active Quest
 
@@ -323,7 +335,7 @@ Before component implementation/polish, art studies should cover at least:
    - NPC quest interaction: short/paged narrative, wrapped objective text, and
      future action/reward control states;
    - four navigation marker roles: manual waypoint, quest destination, local POI,
-     generic tracking glyph;
+     generic tracking glyph, plus center-focus identity/fade and depth/collision states;
 
 2. **Combat-density board**
    - full 36 ordinary action buttons;

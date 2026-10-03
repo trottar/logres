@@ -138,6 +138,28 @@ destination, local radius POI, and tracking. Tracking uses one small generic
 Logres-styled repeated glyph regardless of tracked category; it must not literally
 copy stock yellow dots.
 
-These semantic roles are accepted. Exact glyph construction remains the next
-focused compass design work, and unproven marker sources must not be represented as
-implemented capability.
+These semantic roles are accepted. D-038 now accepts the detailed working compass
+glyph/focus system while preserving all D-037 capability gates.
+
+## Compass focus/depth system — D-038
+
+Accepted visual family:
+- weathered antique-brass heading tape and fixed center gnomon;
+- open muted-blue manual destination diamond;
+- aged pale-gold heraldic quest pennon/shield;
+- small neutral open POI wayfinder seal;
+- tiny repeated muted-amber faceted tracking pip.
+
+Markers retain their true horizontal bearing anchors; vertical lanes and restrained
+within-role clustering solve density instead of sideways bearing falsification.
+Markers recede off the tape rather than becoming clamped off-screen arrows.
+
+One safely identified marker near center may expose a contextual identity label.
+Where comparable physical/world distance is capability-proven, proximity chooses
+that focused candidate before angular alignment. The identity name fades continuously
+as angle deviates from center, with optional wider logical hysteresis to avoid
+flicker.
+
+Manual/quest markers may use restrained bounded proximity scale. POIs remain mostly
+stable and tracking remains effectively fixed-size. Exact thresholds/curves remain
+calibration work, and unavailable identity/distance data must never be fabricated.

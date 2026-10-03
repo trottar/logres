@@ -16,6 +16,7 @@ Canonical direction:
 - `../decisions/D-035_QUEST_INTERACTION_OWNERSHIP.md`
 - `../decisions/D-036_HEALTH_TUNNEL_VISIBLE_FIELD_CONTRACT.md`
 - `../decisions/D-037_NAVIGATION_MARKER_ROLES_AND_MINIMAP_DIRECTION.md`
+- `../decisions/D-038_COMPASS_VISUAL_FOCUS_AND_DEPTH_CONTRACT.md`
 - `../architecture/WORLD_FIRST_LAYOUT.md`
 - `../architecture/VISUAL_SYSTEM_DIRECTION.md`
 - `../architecture/VISUAL_COMPONENT_INVENTORY.md`
@@ -28,6 +29,9 @@ Phase H begins from these settled directions:
   roughly follows remaining health, with increasingly severe critical collapse;
 - four semantic navigation roles: manual waypoint, quest destination, local radius
   POI, and tracking; local POI/tracking capability remains unproven;
+- D-038 compass focus/depth treatment: exact-bearing glyph anchors, center-focused
+  identity with continuous angular fade, proximity-first focus selection when safe
+  comparable distance exists, and bounded depth scaling for major destinations;
 - stock minimap remains available until the complete D-037 replacement gate is
   satisfied;
 - authored semantic screen regions;
@@ -79,7 +83,8 @@ Parallel deliverables may include:
 - health-tunnel asset/mask implementation studies constrained by the frozen D-036
   visible-field mapping;
 - compass state/detail sheets covering heading, manual waypoint, quest destination,
-  local POI, and generic tracking glyph roles without implying source capability;
+  local POI, generic tracking glyphs, center-focus identity/fade, collision lanes, and
+  bounded depth states without implying source capability;
 - canonical component boards from `VISUAL_COMPONENT_INVENTORY.md`, including full 36-button combat-density stress tests and state sheets.
 
 Current preferred working direction:

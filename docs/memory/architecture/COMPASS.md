@@ -86,8 +86,60 @@ The player's selected tracking mode supplies the category meaning; the assumed
 Forever selection semantics and individual result positions remain unproven until
 the dedicated capability audit.
 
-Exact glyph geometry, color values, collision behavior, density limits, and
-inspection treatment remain visual-design work.
+D-038 now resolves the accepted working glyph/focus treatment; exact pixel values,
+focus-angle thresholds, scale curves, and source capability remain later calibration.
+
+## D-038 visual/focus contract
+
+Compass structure:
+- transparent/world-first top-center tape;
+- thin weathered antique-brass baseline;
+- cardinal directions stronger than intercardinal;
+- fixed brighter-brass center gnomon / spear-notch;
+- quiet local contrast only, not a visible backing panel;
+- clean heading-only presentation is the normal no-marker state.
+
+Marker silhouettes:
+- manual waypoint: open muted-blue destination diamond with exact-bearing stem;
+- quest destination: aged pale-gold heraldic pennon/shield with exact-bearing stem;
+- local POI: small neutral open wayfinder seal / roundel;
+- tracking: tiny repeated muted-amber faceted diamond / four-point pip.
+
+Bearing truth:
+- marker horizontal attachment points remain true to bearing;
+- collision handling uses vertical lanes instead of horizontal jitter;
+- manual/quest destinations remain individually legible;
+- dense POI/tracking evidence may use restrained same-role stacking/clustering;
+- lower-priority repeated tracking yields before obscuring stronger semantic markers.
+
+Center focus:
+- one safely identified navigation candidate near the fixed center may expose a
+  contextual identity label;
+- where comparable physical/world distance is capability-proven, the nearest
+  candidate wins before angular alignment;
+- angular alignment is the fallback/secondary discriminator; semantic priority may
+  break a remaining practical tie;
+- name opacity fades continuously as angular deviation from center increases;
+- logical focus may use wider hysteresis to prevent flicker while visible opacity
+  remains continuous;
+- unavailable identity or incomparable distance is never fabricated.
+
+Depth treatment:
+- manual and quest destinations may use restrained bounded distance-dependent scale
+  when safe comparable distance exists;
+- local POI scale stays mostly stable;
+- tracking remains effectively fixed-size;
+- focus may add only a small opacity/scale/material emphasis.
+
+Edge/motion treatment:
+- markers recede and disappear toward the visible tape edge;
+- no clamped edge arrows or fabricated off-screen guidance;
+- no bounce/spring overshoot or stale last-known marker;
+- smoothing may hide update stepping only when it preserves directional truth.
+
+Only manual waypoint capability is currently runtime-proven. Quest/POI/tracking
+identity, bearing, and comparable-distance inputs remain gated by D-037 and the
+future capability audit.
 
 ## Minimap boundary
 

@@ -1,0 +1,24 @@
+P0113 — Compass Visual Focus and Depth Contract
+Baseline: bd0a9da3c7abc49ff527e8901bfd5c77846414a5
+Runtime: 0.0.44-dev unchanged
+Parallel-safe: unrelated G.5 working-tree changes preserved
+
+Files:
+044da38a8a0b81b60d6808b51723ee278e5b309c8cc1b1fc9ff3c6fd0b3f77fc  docs/memory/architecture/COMPASS.md
+c459e4b00887a524cf2c39be68d1512221d46f6e7720b22611050bfc71da1b1e  docs/memory/architecture/VISUAL_COMPONENT_INVENTORY.md
+b09ebe50831fdb1b9c569fc9c5d0581216186a9c900205ae5be768f57711bc75  docs/memory/architecture/VISUAL_SYSTEM_DIRECTION.md
+86dbcf13c799934acc6a25b5c6a4d95fd7042ee27df47ea47a8207c9198ec861  docs/memory/decisions/D-038_COMPASS_VISUAL_FOCUS_AND_DEPTH_CONTRACT.md
+f167af4441433a5e892d8f257490906576bbff6ebb97aa63ff580c5ad28f8f16  docs/memory/patches/P0113_COMPASS_VISUAL_FOCUS_AND_DEPTH_CONTRACT.md
+0aa761409336c4dd73634012d7a48a77cd1a21a2009190a85d3a63c2e2776569  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+
+Validation:
+P0113-owned baseline/blob and clean-path guards
+P0113-owned text hygiene check
+python3 tools/check_memory_health.py (global diagnostic)
+git diff --check -- <P0113-owned tracked files>
+
+Deferred shared synchronization:
+CURRENT.md / CURRENT_HANDOFF.md / STATUS.md / docs/ROADMAP.md / PATCH_INDEX.md
+remain owned by the in-flight G.5 worktree and are not touched here.
+
+Deployment: docs-only; no WoW redeploy required.
