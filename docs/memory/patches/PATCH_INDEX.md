@@ -107,6 +107,8 @@
 
 | P0094 | 2026-10-02 | INSTALLED / PUSHED — G.1 PASS | Capture current DynamicCam RPG profile; close G.1; open G.2 (`9db11d2b`) |
 
-| P0095 | 2026-10-02 | PREPARED — G.2 RUNTIME PROOF PENDING | Correct DynamicCam zoom semantics; add isolated Camera Zoom Probe |
+| P0095 | 2026-10-02 | INSTALLED / PUSHED — OOC CAMERA PASS; COMBAT CLASSIFIER FAIL | Correct DynamicCam zoom semantics; add isolated Camera Zoom Probe (`b65ea1af`) |
+
+| P0096 | 2026-10-02 | PREPARED — G.2 LIVE-COMBAT RETEST PENDING | Use DynamicCam-equivalent live combat classification in camera probe |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

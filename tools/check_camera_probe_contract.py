@@ -28,6 +28,11 @@ if PROBE.is_file():
         'GetCameraZoom',
         'GetCVar',
         '"cameraZoomSpeed"',
+        'pcall(UnitAffectingCombat, "player")',
+        'pcall(InCombatLockdown)',
+        'self.lastCombat = combatEngaged',
+        'self.lastCachedCombat = state.combat == true',
+        'self.lastCombatMismatch =',
         'MoveViewInStart',
         'MoveViewInStop',
         'MoveViewOutStart',
@@ -53,6 +58,7 @@ if PROBE.is_file():
         'PLAYER_REGEN_ENABLED',
         'CameraZoomIn(',
         'CameraZoomOut(',
+        'self.lastCombat = state.combat == true',
     ]
 
     for fragment in forbidden:
@@ -74,6 +80,7 @@ if COMMANDS.is_file():
         '"camerazoomprobe"',
         'camerazoomprobe: STARTED',
         'click Camera Zoom Probe again after the movement finishes',
+        'lockdown=%s cachedCombat=%s mismatch=%s',
     ]
 
     for fragment in required:

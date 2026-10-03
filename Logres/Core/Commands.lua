@@ -2601,8 +2601,11 @@ local function runCameraZoomProbe()
 
     if mode == "started" then
         emit(string.format(
-            "Logres camerazoomprobe: STARTED (combat=%s start=%s target=%s speed=%s; click Camera Zoom Probe again after the movement finishes)",
+            "Logres camerazoomprobe: STARTED (combat=%s lockdown=%s cachedCombat=%s mismatch=%s start=%s target=%s speed=%s; click Camera Zoom Probe again after the movement finishes)",
             tostring(debugStatus.lastCombat),
+            tostring(debugStatus.lastCombatLockdown),
+            tostring(debugStatus.lastCachedCombat),
+            tostring(debugStatus.lastCombatMismatch),
             tostring(debugStatus.startZoom),
             tostring(debugStatus.targetZoom),
             tostring(debugStatus.lastZoomSpeed)
@@ -2622,10 +2625,13 @@ local function runCameraZoomProbe()
     local passed = debugStatus.lastState == "pass"
 
     emit(string.format(
-        "Logres camerazoomprobe: %s (mode=%s combat=%s dynamicCam=%s/%s api=%s speed=%s start=%s target=%s turn=%s final=%s targetReached=%s moved=%s restored=%s secret=%s elapsed=%s/%s runs=%s pass=%s fail=%s error=%s)",
+        "Logres camerazoomprobe: %s (mode=%s combat=%s lockdown=%s cachedCombat=%s mismatch=%s dynamicCam=%s/%s api=%s speed=%s start=%s target=%s turn=%s final=%s targetReached=%s moved=%s restored=%s secret=%s elapsed=%s/%s runs=%s pass=%s fail=%s error=%s)",
         passed and "PASS" or "FAIL",
         tostring(mode),
         tostring(debugStatus.lastCombat),
+        tostring(debugStatus.lastCombatLockdown),
+        tostring(debugStatus.lastCachedCombat),
+        tostring(debugStatus.lastCombatMismatch),
         tostring(debugStatus.lastDynamicCamLoaded),
         tostring(debugStatus.lastDynamicCamStatusSource),
         tostring(debugStatus.lastAPIAvailable),

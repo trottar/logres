@@ -1,7 +1,7 @@
 # P0095 — G.2 Camera Zoom Capability Probe
 
 Date: 2026-10-02
-Result: PREPARED — RUNTIME PROOF PENDING
+Result: INSTALLED / PUSHED — OOC CAMERA PATH PASS; COMBAT CLASSIFICATION DEFECT (`b65ea1af`)
 
 ## Baseline
 
@@ -89,3 +89,15 @@ Required:
 4. no Lua/taint/protected/secret errors.
 
 Only then may G.2 specify production World/Combat camera ownership.
+
+## P0095 runtime result
+
+Two reversible camera runs passed target/movement/restoration with DynamicCam
+disabled and no secret/error result.
+
+Both reported `combat=false`.
+
+Cause: the probe classified combat from cached `Logres:GetState().combat`, not
+DynamicCam's live `UnitAffectingCombat("player")` predicate.
+
+P0096 owns the diagnostic correction.

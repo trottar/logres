@@ -26,37 +26,20 @@ State:
 | G — Cinematic Camera | ACTIVE — G.2 |
 | H — Integration and Polish | QUEUED |
 
-## Phase G
+## G.2
 
-| Item | State |
-| --- | --- |
-| G.1 Current DynamicCam profile capture | COMPLETE — exact RPG evidence preserved |
-| G.2 World/Combat camera zoom capability | ACTIVE — source PASS; runtime probe pending |
-| G.3+ Production/context slices | QUEUED — evidence-driven |
+Source semantics:
+**PASS.**
 
-## G.2 source result
+Primary camera path out of combat:
+**PASS.**
 
-Correct semantics:
-- World -> conditional target 5;
-- World (Combat) -> conditional target 15;
-- ordinary transition 2.5 seconds;
-- restore policy never.
+Combat classification:
+**P0095 DEFECT — cached state used instead of DynamicCam predicate.**
 
-Primary camera path:
-`GetCameraZoom` + read-only `cameraZoomSpeed` + `MoveView*Start/Stop`.
-
-P0095 adds the isolated manual runtime probe.
-
-## Runtime proof next
-
-With DynamicCam disabled:
-- Camera Zoom Probe PASS out of combat;
-- Camera Zoom Probe PASS in combat;
-- starting zoom restored both times;
-- no camera/security errors.
-
-## Deferred navigation
-
-Quest IDs `436`, `237`, and `1338` remain negative waypoint samples.
-
-Quest compass marker remains unsupported.
+P0096:
+- live UnitAffectingCombat classification;
+- live InCombatLockdown diagnostic;
+- cached State.combat diagnostic;
+- no core state-engine change;
+- in-combat retest pending.

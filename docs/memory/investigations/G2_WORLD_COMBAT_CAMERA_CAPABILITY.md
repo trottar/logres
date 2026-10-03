@@ -1,6 +1,6 @@
 # G.2 — World/Combat Camera Zoom Capability
 
-Status: ACTIVE — SOURCE REVIEW PASS; FOREVER RUNTIME PROBE PENDING
+Status: ACTIVE — PRIMARY PATH OOC PASS; COMBAT CLASSIFICATION FIX PENDING RETEST
 Opened: 2026-10-02
 
 Profile evidence:
@@ -9,117 +9,93 @@ Profile evidence:
 Source audit:
 `../evidence/G2_DYNAMICCAM_ZOOM_SOURCE_AUDIT_2026-10-02.md`
 
-Phase roadmap:
-`../roadmap/PHASE_G_CINEMATIC_CAMERA.md`
+P0095 runtime evidence:
+`../evidence/G2_P0095_COMBAT_CLASSIFICATION_FAIL_2026-10-02.md`
 
 ## Correct target behavior
 
 World:
-- if current zoom > `5`, target zoom `5`;
-- otherwise leave the closer current zoom alone;
-- ordinary enter transition `2.5` seconds.
+- if current zoom > 5, target 5;
+- otherwise leave the closer zoom alone;
+- ordinary transition 2.5 seconds.
 
 World (Combat):
-- if current zoom < `15`, target zoom `15`;
-- otherwise leave the farther current zoom alone;
-- ordinary enter transition `2.5` seconds.
+- if current zoom < 15, target 15;
+- otherwise leave the farther zoom alone;
+- ordinary transition 2.5 seconds.
 
-These are conditional absolute targets, not deltas.
+## Combat predicate correction
 
-P0094's `by 5` / `by 15` wording is superseded.
+DynamicCam situation 006 explicitly uses:
 
-## Source-resolved camera path
+`return not IsInInstance() and UnitAffectingCombat("player")`
 
-DynamicCam:
-- computes the conditional target;
-- calls `LibCamera:SetZoom(target, transitionTime, easing)`;
-- stops an existing transition before replacing it.
+P0095 did not measure that predicate.
 
-LibCamera primary zoom:
-- reads `GetCameraZoom()`;
-- reads `cameraZoomSpeed`;
-- drives `MoveViewOutStart()` / `MoveViewInStart()` from a frame animation;
-- stops both directions on completion/interruption.
+It recorded:
+`Logres:GetState().combat`.
 
-The primary path does not set a CVar.
+Core State currently derives that cached field from `InCombatLockdown()` during
+registered state refreshes.
 
-LibCamera's temporary-CVar corrective fallback remains unaccepted and is not
-part of P0095.
+I-001 already established a timing nuance:
+- `PLAYER_REGEN_DISABLED` may still see lockdown false;
+- `ADDON_RESTRICTION_STATE_CHANGED` may still see lockdown false;
+- a later event while fighting may finally see lockdown true.
 
-## Existing Logres state inputs
+Therefore the cached field may be false when the DynamicCam combat predicate is
+already true.
 
-Use existing observed state:
-- combat;
-- instance/world;
-- resting.
+This invalidates P0095 combat classification, not the camera movement result.
 
-Do not create duplicate sensors.
+## P0095 runtime result
 
-## P0095 runtime probe
+Two captured runs:
+- DynamicCam loaded: false;
+- API available: true;
+- cameraZoomSpeed: 15.5;
+- target reached: true;
+- movement observed: true;
+- starting zoom restored: true;
+- secret: false;
+- error: nil;
+- reported combat: false on both runs.
 
-P0095 adds a manual `Camera Zoom Probe` panel action.
+Classification:
+**PRIMARY CAMERA PATH OUT-OF-COMBAT PASS; IN-COMBAT CAPABILITY UNPROVEN.**
 
-The probe:
-- is excluded from Run All;
-- has no state subscription or automatic event trigger;
-- refuses while DynamicCam is loaded;
-- reads camera zoom and camera zoom speed secret-safely;
-- makes a small reversible movement with the `MoveView*` path;
-- does not call `SetCVar`;
-- records whether it began in combat.
+## P0096 diagnostic contract
 
-Panel sequence:
-1. click once to start;
-2. wait about two seconds;
-3. click again to persist the final result.
+At probe start capture independently:
 
-Required proof:
-- PASS out of combat;
-- PASS in combat;
-- starting zoom restored both times;
-- no Lua/taint/protected/secret errors.
+- `combat` from live `UnitAffectingCombat("player")`;
+- `lockdown` from live `InCombatLockdown()`;
+- `cachedCombat` from `Logres:GetState().combat`;
+- `mismatch` from live combat versus cached combat.
 
-## Coexistence contract
+The first value matches DynamicCam's situation predicate.
+The other values remain useful diagnostics but do not define G.2 context.
 
-DynamicCam must be disabled for the isolated G.2 proof.
+P0096 does not modify the core state engine and does not add polling/events.
 
-Until production Logres camera ownership exists:
-- DynamicCam may be re-enabled after proof;
-- Logres performs no automatic camera mutation.
+## Runtime acceptance
 
-## Fail-open / interruption contract
+With DynamicCam disabled:
 
-For eventual production:
-- stop the previous Logres transition before starting another;
-- stop movement immediately when ownership is relinquished;
-- leave no temporary CVar mutation;
-- do not restore pre-combat zoom merely because combat ended;
-- instead, entering World applies its conditional target rule.
+1. out-of-combat reversible probe remains PASS;
+2. naturally engage a mob;
+3. start a probe while `UnitAffectingCombat("player")` is true;
+4. second-click result reports `combat=true`;
+5. targetReached/moved/restored all true;
+6. record lockdown/cachedCombat/mismatch exactly as observed;
+7. no Lua/taint/protected/secret error;
+8. Run All PASS.
+
+A `cachedCombat=false` result during live combat is evidence about cached state,
+not a reason to relabel the live DynamicCam predicate as false.
 
 ## Out of scope
 
-G.2 does not implement:
-- City UI fading;
-- NPC interaction yaw/shoulder/UI hiding;
-- Taxi UI hiding/rotation;
-- Hearth/Teleport detection/rotation;
-- Fishing rotation;
-- Gathering rotation;
-- AFK behavior;
-- global target-focus/dynamic-pitch ownership;
-- instance-specific camera policy.
-
-## Success criteria
-
-G.2 closes only after:
-- source review remains accepted;
-- P0095 passes out of combat;
-- P0095 passes in combat;
-- both runs restore the starting zoom;
-- no camera/security error occurs;
-- production World/Combat can be specified without adopting the unproven CVar
-  fallback.
-
-## Next action
-
-Apply/push P0095 and run the isolated panel probe outside and inside combat.
+No automatic World/Combat camera behavior yet.
+No core combat-state redesign in G.2.
+No DynamicCam CVar fallback.

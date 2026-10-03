@@ -81,3 +81,16 @@ G.2 is the current capability slice:
 
 It excludes rotation, UI hiding, shoulder offsets, spell-detection contexts,
 taxi, and global camera-CVar ownership.
+
+## Combat signal distinction
+
+DynamicCam's captured World (Combat) situation is keyed by live
+`UnitAffectingCombat("player")`, not Logres's cached `State.combat`.
+
+For camera-context ownership, use the profile's actual predicate.
+
+`InCombatLockdown()` remains a separate restriction/protection signal and must
+not be conflated with whether DynamicCam considers the player in combat.
+
+P0096 records live combat, live lockdown, and cached combat independently before
+production ownership is designed.

@@ -47,8 +47,10 @@ G.2 source review corrected the profile interpretation:
 The first runtime capability proof uses the primary camera mechanism:
 `GetCameraZoom` + `MoveView*Start/Stop`, with read-only `cameraZoomSpeed`.
 
-P0095 adds a manual reversible probe; automatic Logres camera ownership remains
-absent until that probe passes outside and inside combat.
+P0095 proved the reversible primary camera path out of combat, but its combat
+classifier used cached Logres state rather than DynamicCam's live
+`UnitAffectingCombat("player")` predicate. P0096 corrects only that diagnostic
+classification; one live-combat proof remains before automatic ownership.
 
 Canonical phase record:
 `memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`

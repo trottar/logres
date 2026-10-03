@@ -76,6 +76,43 @@ local function queryDynamicCamLoaded()
     return false, false, "unavailable"
 end
 
+local function readCombatSignals()
+    if type(UnitAffectingCombat) ~= "function" then
+        return nil, nil, "UnitAffectingCombat unavailable", false
+    end
+
+    if type(InCombatLockdown) ~= "function" then
+        return nil, nil, "InCombatLockdown unavailable", false
+    end
+
+    local combatOK, combatValue =
+        pcall(UnitAffectingCombat, "player")
+
+    if not combatOK then
+        return nil, nil, tostring(combatValue), false
+    end
+
+    if isSecret(combatValue) then
+        return nil, nil, "UnitAffectingCombat returned secret value", true
+    end
+
+    local lockdownOK, lockdownValue = pcall(InCombatLockdown)
+
+    if not lockdownOK then
+        return nil, nil, tostring(lockdownValue), false
+    end
+
+    if isSecret(lockdownValue) then
+        return nil, nil, "InCombatLockdown returned secret value", true
+    end
+
+    return
+        combatValue and true or false,
+        lockdownValue and true or false,
+        nil,
+        false
+end
+
 local function stopMotion()
     local firstError
 
@@ -125,6 +162,9 @@ local Probe = Logres:RegisterModule("CameraCapabilityProbe", {
         self.lastError = nil
         self.lastSecret = false
         self.lastCombat = false
+        self.lastCombatLockdown = false
+        self.lastCachedCombat = false
+        self.lastCombatMismatch = false
         self.lastDynamicCamLoaded = false
         self.lastDynamicCamStatusKnown = false
         self.lastDynamicCamStatusSource = nil
@@ -148,6 +188,10 @@ local Probe = Logres:RegisterModule("CameraCapabilityProbe", {
 function Probe:ResetTransient()
     self.lastError = nil
     self.lastSecret = false
+    self.lastCombat = false
+    self.lastCombatLockdown = false
+    self.lastCachedCombat = false
+    self.lastCombatMismatch = false
     self.lastAPIAvailable = false
     self.lastZoomSpeed = nil
     self.startZoom = nil
@@ -387,6 +431,8 @@ function Probe:StartProbe()
     local required = {
         GetCameraZoom,
         GetCVar,
+        UnitAffectingCombat,
+        InCombatLockdown,
         MoveViewInStart,
         MoveViewInStop,
         MoveViewOutStart,
@@ -424,7 +470,18 @@ function Probe:StartProbe()
     end
 
     local state = Logres:GetState()
-    self.lastCombat = state.combat == true
+    local combatEngaged, combatLockdown, combatError, combatSecret =
+        readCombatSignals()
+
+    if combatEngaged == nil then
+        return self:FailImmediate(combatError, combatSecret)
+    end
+
+    self.lastCombat = combatEngaged
+    self.lastCombatLockdown = combatLockdown
+    self.lastCachedCombat = state.combat == true
+    self.lastCombatMismatch =
+        self.lastCombat ~= self.lastCachedCombat
 
     self.runCount = self.runCount + 1
     self.lastState = "running"
@@ -476,6 +533,9 @@ function Probe:GetDebugStatus()
         lastError = self.lastError,
         lastSecret = self.lastSecret,
         lastCombat = self.lastCombat,
+        lastCombatLockdown = self.lastCombatLockdown,
+        lastCachedCombat = self.lastCachedCombat,
+        lastCombatMismatch = self.lastCombatMismatch,
         lastDynamicCamLoaded = self.lastDynamicCamLoaded,
         lastDynamicCamStatusKnown = self.lastDynamicCamStatusKnown,
         lastDynamicCamStatusSource = self.lastDynamicCamStatusSource,

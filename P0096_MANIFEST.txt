@@ -1,0 +1,33 @@
+Project Logres P0096
+Date: 2026-10-02
+Baseline: b65ea1afb5915377029dff52a260668d388cd831
+Runtime: 0.0.40-dev
+Purpose: correct G.2 combat classification to live DynamicCam predicate
+
+Files:
+d0057ad30906e0e9e2dc3971fc7c2c13b761a22dc5306eb42dfb52894eb77b7c  Logres/Camera/Probe.lua
+37a8f38ce4d486db857dd779ec408c30ca9f7349ccac0a80c825e5ffcf36ab6a  Logres/Core/Bootstrap.lua
+2f63f4cf2b09438244a9977f8d7f1f886eb9db3823a09392e2e939cd73074332  Logres/Core/Commands.lua
+51c5dc03085007b5d553e69ac35173ea4020e4990387c74d04f38d13fc7bfc86  Logres/Logres.toc
+2a9e98aecd362a2efd53d91ea4256d64e05c77058d45775aebcb03c9e3300f5e  docs/ROADMAP.md
+e6b5c5b48ebfe772f8b2dd45a577d63467217f179fcd313edd3bf5444c647eab  docs/memory/CURRENT.md
+68b0f0f63b322c2fb65115a2cc1fb3c85a16f6e3dd4f9f677171b707609e78a2  docs/memory/architecture/CAMERA.md
+65e1c9ee6b376bc7e08bf2e57a5be37ece5aaa368943049e79cd74009ac979c8  docs/memory/evidence/G2_P0095_COMBAT_CLASSIFICATION_FAIL_2026-10-02.md
+9e3fefaa42a1e028cacb52893d4977602a6a8ab89dbabcde5a1fefca5441fa88  docs/memory/handoffs/CURRENT_HANDOFF.md
+a5b9076776e2ab6f259e0140a8d4306c35cca347545b40bad666c8382ff7d0ae  docs/memory/investigations/ACTIVE.md
+57cbb848089fe61f67255401afd1837ce0a02e99e3ed6b5bec4177afdacddfcc  docs/memory/investigations/G2_WORLD_COMBAT_CAMERA_CAPABILITY.md
+d4071da74252dbe9df941fb40f1199150a4ba2e363059ed325f3d52eb24ca20b  docs/memory/patches/P0095_CAMERA_ZOOM_CAPABILITY_PROBE.md
+f9b7d6adfa890fff6f6990c5f27854e78060a192d94e37711d2d2843866f4b37  docs/memory/patches/P0096_FIX_CAMERA_COMBAT_CLASSIFICATION.md
+ac81dce71f4479a8113ee1ee29bd0ee9fc28e6d83cffd566fd60a61adc849b9d  docs/memory/patches/PATCH_INDEX.md
+d6cc90d396f9ff3a55d0b1ba653fcfc09ca48121b4995791b88c879556bd8c01  docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md
+5c36b9611641c93a6dd25df9e2e66915b426a01178cc6e3d002bb9dc5de7b965  docs/memory/roadmap/STATUS.md
+04d8526228fe91d005f7b5d3cfe8e757644a8cdebb241e95d20b98b3fab76488  tools/check_camera_probe_contract.py
+
+Validation:
+exact verified P0095 HEAD
+temporary full-tree validation before mutation
+all tools/check_*.py compiled and executed
+live UnitAffectingCombat + lockdown + cached-state contract
+git diff --check
+
+Runtime code changed: WoW redeploy required after verified push.
