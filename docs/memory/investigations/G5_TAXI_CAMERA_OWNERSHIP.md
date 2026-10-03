@@ -1,6 +1,6 @@
 # G.5 — Taxi Camera Ownership
 
-Status: **DYNAMICCAM PARITY CORRECTED — P0117 PRODUCTION TAXI ZOOM PROOF NEXT**
+Status: **P0117 TAXI ENTRY PASS / LANDING TRANSITION FAIL — P0119 RETEST NEXT**
 Opened: 2026-10-03
 Contract review resolved: 2026-10-03
 Target-50 no-CVar runtime result: 2026-10-03
@@ -66,5 +66,18 @@ Do not:
 
 ## Next
 
-Runtime-prove automatic Taxi ownership on `0.0.47-dev` with the existing Phase G
-camera check, then verify destination-context convergence after landing.
+P0117 automatic Taxi ownership passed, but landing destination convergence
+failed: City `18 -> 5` ended at zoom `0`. P0119 corrects the shared transition
+driver; repeat one normal Taxi flight on `0.0.49-dev`.
+
+## P0117 runtime failure
+
+Canonical:
+`../evidence/G5_P0117_TAXI_LANDING_OVERSHOOT_2026-10-03.md`.
+
+Taxi entry passed, but the post-Taxi City transition `18 -> 5` finished at zoom
+`0` / first person. Earlier `0.0.43-dev` diagnostics contain the same failure.
+
+P0119 corrects the shared transition driver with frame-shaped velocity and
+crossed-target correction. Taxi target/priority/no-SetCVar boundaries remain
+unchanged.

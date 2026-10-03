@@ -1,7 +1,7 @@
 # P0117 — G.5 DynamicCam Taxi Parity + Production Zoom
 
 Date: 2026-10-03
-Result: **INSTALLED / PUSHED — RUNTIME PROOF PENDING** (`82bdb4f3`)
+Result: **INSTALLED / PUSHED — TAXI ENTRY PASS / LANDING TRANSITION FAIL** (`82bdb4f3`)
 Baseline: `c64fcc97698e0dbe98a8d52469444f2ef15a76ec`
 Commit: `82bdb4f33b8199c6794f486eff0067f99e22b4d0`
 Runtime: `0.0.46-dev -> 0.0.47-dev`
@@ -99,3 +99,13 @@ A normal Taxi flight is the essential environmental proof for automatic
 Runtime code changes.
 
 WoW redeploy required after verified push.
+
+## Runtime result
+
+Taxi entry PASS: context=taxi, owns=true, requested=50, effective=18, duration=5,
+failures=0, secret=false, error=nil.
+
+Landing FAIL: post-Taxi City `18 -> 5` finished at zoom `0` / first person.
+
+Canonical:
+`../evidence/G5_P0117_TAXI_LANDING_OVERSHOOT_2026-10-03.md`.

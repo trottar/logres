@@ -22,7 +22,8 @@ Runtime-proven production Logres camera ownership covers:
 - World (Combat);
 - City/resting.
 
-Taxi remains fail-open.
+P0117 adds Taxi zoom ownership, but runtime acceptance is OPEN because the
+post-Taxi destination transition exposed a shared overshoot defect.
 
 ## Taxi precedence and zoom intent
 
@@ -182,5 +183,18 @@ G.5 camera-distance default/metadata proof:
 G.5 DynamicCam parity correction:
 **RESOLVED — REQUESTED TARGET 50 MAY BE ENGINE-CLAMPED.**
 
+G.5 P0117 runtime:
+**TAXI ENTRY PASS / LANDING TRANSITION FAIL on `0.0.47-dev`.**
+
 G.5 next:
-**P0117 PRODUCTION TAXI ZOOM RUNTIME PROOF on `0.0.47-dev`.**
+**P0119 FRAME-SHAPED TRANSITION RETEST on `0.0.49-dev`.**
+
+## P0117 landing overshoot failure
+
+Canonical:
+`../evidence/G5_P0117_TAXI_LANDING_OVERSHOOT_2026-10-03.md`.
+
+The landing City transition from zoom `18` toward `5` reached `0` / first person.
+Earlier `0.0.43-dev` diagnostics show the same City overshoot, so the defect
+predates Taxi production ownership. P0119 replaces the one-shot constant-rate
+MoveView drive with frame-shaped velocity and bounded correction.

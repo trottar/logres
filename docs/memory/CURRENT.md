@@ -12,26 +12,25 @@ project: logres
 
 ## Current Work Item
 
-**G.5 — Runtime-prove DynamicCam-parity production Taxi zoom with engine-clamped target semantics.**
+**G.5 — Correct P0117 landing overshoot with a frame-shaped MoveView driver; retest Taxi.**
 
 Latest verified durable checkpoint:
-P0117 `82bdb4f33b8199c6794f486eff0067f99e22b4d0`.
+P0118 `6fad23f595a4abc9f5f2bd3fd6f12b825ef204e2`.
 
 Current pushed runtime:
-`0.0.47-dev` — DynamicCam-parity Taxi production zoom; runtime proof pending.
+`0.0.48-dev` — action-keybind polish; visual proof pending.
 
-Parallel visual evidence:
-P0116 `c64fcc97` core action primitive runtime + visual PASS; detailed state
-coverage remains deferred.
+Parallel camera evidence:
+P0117 Taxi entry PASS / landing transition FAIL on `0.0.47-dev`.
 
-P0118 prepared runtime:
-`0.0.48-dev` — action-keybind polish: stronger dark tag fill, compact modifier labels, and 42 px buttons; visual proof pending.
+P0119 prepared runtime:
+`0.0.49-dev` — shared frame-shaped camera transition correction.
 
 G.4 status:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
 G.5 status:
-**DYNAMICCAM PARITY CONTRACT CORRECTED; TARGET 50 IS REQUESTED, NOT GUARANTEED PHYSICAL; P0117 TAXI ZOOM RUNTIME PROOF NEXT.**
+**P0117 TAXI ENTRY PASS / LANDING TRANSITION FAIL; P0119 FRAME-SHAPED DRIVER RETEST NEXT.**
 
 ## Verified State
 
@@ -99,6 +98,12 @@ G.5 status:
   reachability of requested Taxi target `50`; it requests the target and accepts
   the engine max-distance clamp. The previous above-default-CVar gate was an
   over-interpretation, not a DynamicCam parity requirement.
+- P0117 runtime on `0.0.47-dev` proves automatic Taxi entry but landing City
+  `18 -> 5` overshot to final zoom `0` / first person.
+- Earlier `0.0.43-dev` diagnostics show the same City failure, proving a latent
+  shared transition-driver defect rather than a Taxi-specific ownership defect.
+- P0118 at `6fad23f` is durable on `0.0.48-dev`; its action-keybind polish is
+  parallel and does not change the G.5 camera result.
 - Taxi rotation and Taxi UI hide/fade remain separately gated.
 - D-035 quest interaction ownership remains a valid future endpoint with Blizzard
   fail-open controls until each replacement capability is proven.
@@ -112,44 +117,43 @@ G.5 status:
 
 ## Next Action
 
-Deploy/runtime-prove the pushed P0117 Taxi implementation. P0118 is an independent
-parallel visual refinement and does not change the G.5 acceptance gate.
+After P0119 is verified pushed, deploy runtime `0.0.49-dev`.
 
-Use the existing Phase G developer-panel GUI and obtain one normal Taxi-flight
-runtime proof:
-- automatic context becomes `taxi`;
-- requested target remains `50`;
-- effective target reflects the current live physical max-distance ceiling;
-- duration is `5`;
-- engine/geometry limitation is not counted as a Taxi controller failure;
-- failures=0, secret=false, error=nil;
-- after landing, destination context reconciles normally.
+Use one normal Taxi flight:
+- confirm Taxi entry remains `context=taxi`, owns=true, requested=50, duration=5;
+- land normally;
+- allow the destination City/World transition to settle;
+- confirm the destination camera finishes near its requested target instead of
+  zoom `0`;
+- confirm failures=0, secret=false, error=nil;
+- export diagnostics.
+
+P0118 action-keybind visual proof remains a parallel concern and is not a G.5
+acceptance condition.
 
 No SetCVar, Taxi rotation, or Taxi UI fade is part of this checkpoint.
 
 ## Decision Gate
 
-Pinned DynamicCam + LibCamera resolve the prior interpretation:
+P0117 resolves two separate facts:
 
-- Taxi `50` is the requested conditional-out target;
-- DynamicCam does not first make physical zoom 50 reachable;
-- the engine may clamp below 50;
-- a clamped endpoint is not treated as situation failure.
+- DynamicCam parity for Taxi target `50` is valid: requested 50 may be
+  engine-clamped.
+- The existing Logres constant-rate MoveView transition driver is not robust:
+  large inward transitions can overshoot far beyond their target before the next
+  observation frame.
 
-Therefore above-default max-distance mutation is **not a prerequisite** for the
-Taxi zoom action.
-
-P0112 current/default measurements remain valid evidence for later full CVar
-parity work, but that work no longer blocks this Taxi slice.
+Pinned LibCamera already uses frame-shaped MoveView velocity. P0119 therefore
+corrects the shared transition driver rather than adding Taxi-specific landing
+special cases.
 
 ## Success Criteria
 
-This P0117 runtime checkpoint completes when a normal Taxi flight proves:
-- Taxi wins the non-instance camera priority slice;
-- requested target `50` is retained;
-- live effective ceiling is reported when readable;
-- the 5-second transition completes without addon-owned error/secret failure;
-- Taxi exit returns to the correct destination context.
+P0119 completes this corrective checkpoint when a normal Taxi flight proves:
+- Taxi entry remains correct;
+- destination transition no longer lands in first person;
+- City/World target convergence is within tolerance;
+- no addon failure/secret error is introduced.
 
 ## Do Not Reopen Without New Evidence
 
@@ -166,7 +170,10 @@ This P0117 runtime checkpoint completes when a normal Taxi flight proves:
 - **CVar metadata:** account-stored=true; character-stored=false; locked=false; secure=false; readOnly=false.
 - **Camera-distance mutation:** not required for Taxi zoom parity; still not authorized.
 - **Taxi target 50 semantics:** requested target; engine-clamped physical endpoint is valid.
-- **Production Taxi ownership:** P0117 prepared; runtime proof pending.
+- **P0117 Taxi entry:** PASS on `0.0.47-dev`.
+- **P0117 landing transition:** FAIL — City `18 -> 5` ended at zoom `0`.
+- **Single constant-rate MoveView driver:** REJECTED by runtime evidence.
+- **Production Taxi ownership:** not closed until P0119 retest passes.
 - **Taxi rotation/UI fade:** separately gated.
 - **D-036 health tunnel:** accepted/frozen future visual contract.
 - **D-037 navigation/minimap direction:** accepted future endpoint; capability-gated.
@@ -179,6 +186,7 @@ This P0117 runtime checkpoint completes when a normal Taxi flight proves:
 - `docs/memory/evidence/G5_CAMERA_DISTANCE_SOURCE_AUDIT_2026-10-03.md`
 - `docs/memory/evidence/G5_P0112_CAMERA_DISTANCE_INFO_2026-10-03.md`
 - `docs/memory/evidence/G5_DYNAMICCAM_TAXI_PARITY_CORRECTION_2026-10-03.md`
+- `docs/memory/evidence/G5_P0117_TAXI_LANDING_OVERSHOOT_2026-10-03.md`
 - `docs/memory/investigations/G5_CAMERA_DISTANCE_CVAR_OWNERSHIP.md`
 - `docs/memory/investigations/G5_TAXI_CAMERA_OWNERSHIP.md`
 - `docs/memory/architecture/CAMERA.md`

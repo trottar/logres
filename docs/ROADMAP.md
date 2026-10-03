@@ -34,7 +34,7 @@ The roadmap is capability-gated. A phase advances only when its success criteria
 
 ## Phase G — Cinematic Camera
 
-**Status: ACTIVE — G.5 DynamicCam-parity production Taxi zoom runtime proof.**
+**Status: ACTIVE — G.5 P0117 landing-transition correction and Taxi retest.**
 
 G.1 captured the DynamicCam profile.
 
@@ -60,8 +60,13 @@ Pinned DynamicCam/LibCamera then resolves the earlier interpretation error:
 Taxi target 50 is requested, while the engine may clamp to the live max-distance
 ceiling without making the situation fail.
 
-P0117 prepares production Taxi zoom on `0.0.47-dev` with no SetCVar and leaves
-rotation/UI fade separate.
+P0117 runtime proves Taxi entry but fails post-Taxi destination convergence: an
+`18 -> 5` City transition overshot to zoom `0` / first person. Earlier City
+diagnostics show the same latent shared transition-driver defect.
+
+P0118 is durable at `6fad23f` on `0.0.48-dev` and is parallel action presentation
+work. P0119 prepares a frame-shaped MoveView driver on `0.0.49-dev`; no SetCVar
+is added and rotation/UI fade remain separate.
 
 Production Taxi remains runtime-proof pending.
 

@@ -105,8 +105,19 @@ Contract:
 - no Taxi rotation;
 - no Taxi UI fade.
 
+P0117 runtime result:
+- Taxi automatic ownership/target semantics PASS;
+- landing destination convergence FAIL;
+- City `18 -> 5` overshot to zoom `0`.
+
+Canonical:
+`../evidence/G5_P0117_TAXI_LANDING_OVERSHOOT_2026-10-03.md`.
+
+P0119 replaces the constant-rate transition driver with frame-shaped MoveView
+velocity and crossed-target correction.
+
 Next:
-runtime-prove automatic Taxi ownership and destination convergence.
+runtime-retest Taxi entry plus landing destination convergence on `0.0.49-dev`.
 
 Production Taxi is not considered closed until that runtime proof passes.
 

@@ -137,5 +137,6 @@
 | P0115 | 2026-10-03 | INSTALLED / PUSHED — DOCS / DESIGN ASSETS / STATIC CHECKER ONLY | Preserve twelve approved visual sheets; accept D-039; add visual implementation audit (`4ba63931`) |
 | P0116 | 2026-10-03 | INSTALLED / PUSHED — CORE RUNTIME + VISUAL PASS; STATE COVERAGE DEFERRED | Establish production media/tokens and wire approved action-button state assets (`c64fcc97`, `0.0.46-dev`) |
 | P0117 | 2026-10-03 | INSTALLED / PUSHED — RUNTIME PROOF PENDING | Correct DynamicCam target-50 parity semantics; add production Taxi zoom (`82bdb4f3`, `0.0.47-dev`) |
-| P0118 | 2026-10-03 | PREPARED — VISUAL PROOF PENDING | Polish action keybind tag contrast/modifier labels and increase buttons to 42 px (`0.0.48-dev`) |
+| P0118 | 2026-10-03 | INSTALLED / PUSHED — VISUAL PROOF PENDING | Polish action keybind tag contrast/modifier labels and increase buttons to 42 px (`6fad23f`, `0.0.48-dev`) |
+| P0119 | 2026-10-03 | PREPARED — RUNTIME RETEST PENDING | Replace constant-rate camera motion with frame-shaped MoveView driver (`0.0.49-dev`) |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

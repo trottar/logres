@@ -7,17 +7,16 @@ Phase G:
 **ACTIVE — G.5.**
 
 Latest verified durable checkpoint:
-P0117 `82bdb4f33b8199c6794f486eff0067f99e22b4d0`.
+P0118 `6fad23f595a4abc9f5f2bd3fd6f12b825ef204e2`.
 
 Current pushed runtime:
-`0.0.47-dev` — P0117 Taxi production zoom; runtime proof pending.
+`0.0.48-dev` — action-keybind polish; visual proof pending.
 
-Parallel visual evidence:
-P0116 `c64fcc97` core action primitive runtime + visual PASS; detailed state
-coverage deferred.
+P0117 camera runtime result:
+Taxi entry PASS / landing transition FAIL on `0.0.47-dev`.
 
-P0118 prepared runtime:
-`0.0.48-dev` — action-keybind polish: stronger dark tag fill, compact modifier labels, and 42 px buttons; visual proof pending.
+P0119 prepared runtime:
+`0.0.49-dev` — shared frame-shaped camera transition correction.
 
 Target 50 without max-distance mutation:
 **CLOSED — CLEAN NEGATIVE.**
@@ -54,11 +53,16 @@ LibCamera accepts the engine max-distance clamp.
 P0117 is pushed at `82bdb4f3` on runtime `0.0.47-dev`:
 requested=50, effective=min(50, live ceiling), entry=5s, no SetCVar.
 
-Next:
-deploy/use Phase G GUI, obtain one normal Taxi-flight automatic ownership proof,
-then verify destination context after landing.
+P0117 runtime result:
+Taxi entry PASS; landing City transition FAIL. The observed `18 -> 5` transition
+overshot to final zoom `0` / first person. Earlier `0.0.43-dev` diagnostics show
+the same latent shared transition-driver failure.
 
-Production Taxi: P0117 prepared; runtime proof pending.
+P0119 prepares frame-shaped MoveView velocity plus crossed-target correction.
+
+Next after verified push:
+deploy `0.0.49-dev`, repeat one normal Taxi flight, and verify landing settles
+near the destination target rather than zoom `0`.
 
 Parallel accepted Phase H+ direction remains unchanged:
 - D-036 health-tunnel visible-field contract;

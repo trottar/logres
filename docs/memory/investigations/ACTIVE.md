@@ -3,7 +3,7 @@
 ## G.5 — Taxi zoom parity
 
 Status:
-**DYNAMICCAM PARITY CORRECTED — P0117 PRODUCTION RUNTIME PROOF NEXT**
+**P0117 TAXI ENTRY PASS / LANDING TRANSITION FAIL — P0119 RETEST NEXT**
 
 Canonical Taxi investigation:
 `G5_TAXI_CAMERA_OWNERSHIP.md`
@@ -21,16 +21,21 @@ Established:
   failure;
 - no max-distance mutation is needed for the narrow Taxi zoom slice.
 
-P0117 runtime `0.0.47-dev` extends the existing production controller with Taxi
-requested/effective diagnostic target semantics.
+P0117 runtime `0.0.47-dev` proves automatic Taxi entry but exposes a shared
+transition failure on landing: City `18 -> 5` reached final zoom `0`.
 
-No Taxi rotation or UI fade is included.
+Canonical failure evidence:
+`../evidence/G5_P0117_TAXI_LANDING_OVERSHOOT_2026-10-03.md`.
+
+P0119 prepares a frame-shaped MoveView transition driver with crossed-target
+correction. No Taxi rotation or UI fade is included.
 
 ## G.5 Taxi contract status
 
 `G5_TAXI_CAMERA_OWNERSHIP.md`
 
-P0117 production Taxi zoom is prepared; runtime proof is pending.
+P0117 Taxi entry passed, but production Taxi acceptance remains OPEN because
+landing reconciliation failed. P0119 runtime retest is pending.
 
 Taxi requested target remains 50. The engine's live physical clamp is valid
 DynamicCam-parity behavior and is not rewritten as a hard-coded substitute.

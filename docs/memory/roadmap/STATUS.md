@@ -7,7 +7,7 @@ As of 2026-10-03.
 **Phase G — Cinematic Camera**
 
 Active work item:
-**G.5 DynamicCam-parity production Taxi zoom runtime proof**
+**G.5 P0117 landing-transition correction and Taxi retest**
 
 State:
 **Phase F COMPLETE; Phase G ACTIVE — G.5**
@@ -66,11 +66,18 @@ DynamicCam parity correction:
 requested target `50` may be physically engine-clamped; reachability of literal
 50 is not a production prerequisite.
 
-P0117 is verified pushed at `82bdb4f3` on runtime `0.0.47-dev` with requested
-target 50, live effective-ceiling diagnostics, and 5-second entry transition.
+P0117 runtime `0.0.47-dev` proves automatic Taxi entry, requested target `50`,
+and 5-second ownership semantics, but landing fails: City `18 -> 5` overshot to
+zoom `0` / first person.
+
+P0118 is durable at `6fad23f` on `0.0.48-dev`; its action-keybind polish is
+parallel to G.5.
+
+P0119 prepares runtime `0.0.49-dev` with a shared frame-shaped MoveView driver
+and crossed-target correction.
 
 Next:
-runtime-prove automatic Taxi ownership and destination convergence.
+retest one normal Taxi flight and destination convergence.
 
 No max-distance mutation, Taxi rotation, or Taxi UI fade is authorized.
 

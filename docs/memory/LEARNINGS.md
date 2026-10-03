@@ -268,3 +268,19 @@ Reusable rule:
 
 This is the text-transformation analogue of manifest gating: assumptions made by
 the delivery mechanism must themselves be checked before user execution.
+
+## L-018 — Camera target crossing is not target convergence
+
+P0117 exposed a latent camera transition defect after Taxi landing: a City
+transition from zoom `18` toward `5` reached `0` / first person before the
+controller stopped it.
+
+Reusable rule:
+- shape continuous camera velocity during the transition rather than issuing one
+  fixed rate and observing later;
+- distinguish being within target tolerance from merely having crossed target;
+- correct a non-Taxi overshoot back toward target within a bounded fail-safe
+  window;
+- use pinned LibCamera as the reference for MoveView transition control.
+
+Animation-frame control is not context polling.

@@ -9,6 +9,7 @@ local TAXI_TRANSITION_DURATION = 5
 local TRANSITION_TIMEOUT_EXTRA = 0.75
 local TARGET_TOLERANCE = 0.25
 local CAMERA_DISTANCE_SCALE = 15
+local NOMINAL_FRAME_INTERVAL = 1 / 60
 
 local function isSecret(value)
     if type(issecretvalue) ~= "function" then
@@ -391,6 +392,64 @@ function Controller:CheckCoexistence()
     return true, nil
 end
 
+local function boundedVelocity(value, limit)
+    if value > limit then
+        return limit
+    end
+    if value < -limit then
+        return -limit
+    end
+    return value
+end
+
+local function transitionVelocity(
+    startZoom,
+    targetZoom,
+    duration,
+    elapsed,
+    currentZoom
+)
+    local change = targetZoom - startZoom
+    if change == 0 then
+        return 0
+    end
+
+    if duration <= 0 then
+        return (targetZoom - currentZoom) / NOMINAL_FRAME_INTERVAL
+    end
+
+    local maxVelocity = (math.abs(change) * 2) / duration
+    local crossedTarget =
+        (change > 0 and currentZoom > targetZoom)
+        or (change < 0 and currentZoom < targetZoom)
+    local remainingTime = duration - elapsed
+
+    if crossedTarget
+        or remainingTime <= (2 * NOMINAL_FRAME_INTERVAL)
+    then
+        return boundedVelocity(
+            (targetZoom - currentZoom) / NOMINAL_FRAME_INTERVAL,
+            maxVelocity
+        )
+    end
+
+    local progress = elapsed / duration
+    if progress < 0 then
+        progress = 0
+    elseif progress > 1 then
+        progress = 1
+    end
+
+    local slopeScale
+    if progress < 0.5 then
+        slopeScale = 4 * progress
+    else
+        slopeScale = 4 * (1 - progress)
+    end
+
+    return (change / duration) * slopeScale
+end
+
 function Controller:BeginTransition(
     context,
     currentZoom,
@@ -398,21 +457,6 @@ function Controller:BeginTransition(
     effectiveTargetZoom,
     transitionDuration
 )
-    local zoomSpeed, speedError, speedSecret = readZoomSpeed()
-    if zoomSpeed == nil then
-        self.lastSecret = speedSecret and true or false
-        self.lastError = speedError
-        self.failureCount = self.failureCount + 1
-        self.lastAction = "transition-failed"
-        self:Relinquish("zoom-speed-failed", false)
-        return false, speedError
-    end
-
-    local delta = requestedTargetZoom - currentZoom
-    local desiredUnitsPerSecond =
-        math.abs(delta) / transitionDuration
-    local factor = desiredUnitsPerSecond / zoomSpeed
-
     local stopOK, stopError = stopMotion()
     if not stopOK then
         self.lastError = stopError
@@ -422,26 +466,7 @@ function Controller:BeginTransition(
         return false, stopError
     end
 
-    local moveFunc
-    local direction
-    if delta > 0 then
-        moveFunc = MoveViewOutStart
-        direction = "out"
-    else
-        moveFunc = MoveViewInStart
-        direction = "in"
-    end
-
-    local ok, moveError = pcall(moveFunc, factor)
-    if not ok then
-        self.lastError = tostring(moveError)
-        self.failureCount = self.failureCount + 1
-        self.lastAction = "transition-failed"
-        self:Relinquish("move-start-failed", false)
-        return false, self.lastError
-    end
-
-    self.lastZoomSpeed = zoomSpeed
+    self.lastZoomSpeed = nil
     self.lastCurrentZoom = currentZoom
     self.lastFinalZoom = nil
     self.lastTransitionElapsed = nil
@@ -453,13 +478,75 @@ function Controller:BeginTransition(
     self.transitionEffectiveTargetZoom = effectiveTargetZoom
     self.transitionDuration = transitionDuration
     self.transitionStartTime = GetTime()
-    self.transitionDirection = direction
+    self.transitionDirection = nil
     self.transitionStartCount = self.transitionStartCount + 1
     self.lastAction = "transition-started"
     self.lastReason = context
     self:SetAnimationActive(true)
 
     return true, "transition-started"
+end
+
+function Controller:ApplyTransitionMotion(currentZoom, elapsed)
+    local startZoom = self.transitionStartZoom
+    local requestedTargetZoom = self.transitionRequestedZoom
+    local transitionDuration = self.transitionDuration
+
+    if type(startZoom) ~= "number"
+        or type(requestedTargetZoom) ~= "number"
+        or type(transitionDuration) ~= "number"
+    then
+        self.lastError = "camera transition state invalid"
+        self.failureCount = self.failureCount + 1
+        self:Relinquish("transition-state-invalid", false)
+        return false, self.lastError
+    end
+
+    local velocity = transitionVelocity(
+        startZoom,
+        requestedTargetZoom,
+        transitionDuration,
+        elapsed,
+        currentZoom
+    )
+
+    if math.abs(velocity) < 0.0001 then
+        return true, "transition-waiting"
+    end
+
+    local zoomSpeed, speedError, speedSecret = readZoomSpeed()
+    if zoomSpeed == nil then
+        self.lastSecret = speedSecret and true or false
+        self.lastError = speedError
+        self.failureCount = self.failureCount + 1
+        self.lastAction = "transition-failed"
+        self:Relinquish("zoom-speed-failed", false)
+        return false, speedError
+    end
+
+    local moveFunc
+    local direction
+    if velocity > 0 then
+        moveFunc = MoveViewOutStart
+        direction = "out"
+    else
+        moveFunc = MoveViewInStart
+        direction = "in"
+    end
+
+    local factor = math.abs(velocity) / zoomSpeed
+    local ok, moveError = pcall(moveFunc, factor)
+    if not ok then
+        self.lastError = tostring(moveError)
+        self.failureCount = self.failureCount + 1
+        self.lastAction = "transition-failed"
+        self:Relinquish("move-update-failed", false)
+        return false, self.lastError
+    end
+
+    self.lastZoomSpeed = zoomSpeed
+    self.transitionDirection = direction
+    return true, "transition-driving"
 end
 
 function Controller:FinishTransition(currentZoom, elapsed, timedOut)
@@ -520,11 +607,9 @@ function Controller:OnUpdate()
 
     local elapsed = GetTime() - self.transitionStartTime
     local requestedTargetZoom = self.transitionRequestedZoom
-    local delta = requestedTargetZoom - self.transitionStartZoom
-    local reachedRequested =
-        math.abs(currentZoom - requestedTargetZoom) <= TARGET_TOLERANCE
-        or (delta > 0 and currentZoom >= requestedTargetZoom)
-        or (delta < 0 and currentZoom <= requestedTargetZoom)
+    local atRequested =
+        type(requestedTargetZoom) == "number"
+        and math.abs(currentZoom - requestedTargetZoom) <= TARGET_TOLERANCE
 
     local timeoutExtra = TRANSITION_TIMEOUT_EXTRA
     if self.transitionContext == "taxi" then
@@ -534,8 +619,15 @@ function Controller:OnUpdate()
     local timedOut =
         elapsed >= (self.transitionDuration + timeoutExtra)
 
-    if reachedRequested or timedOut then
+    if atRequested or timedOut then
         self:FinishTransition(currentZoom, elapsed, timedOut)
+        return
+    end
+
+    self.lastCurrentZoom = currentZoom
+    local motionOK = self:ApplyTransitionMotion(currentZoom, elapsed)
+    if not motionOK then
+        return
     end
 end
 
