@@ -58,3 +58,16 @@ Canonical phase record:
 ## Phase H — Integration and Polish
 
 **Status: QUEUED.**
+
+D-032 records the accepted world-first integration direction: authored semantic
+regions, optional Active Quest, shared transient Context, fixed Primary plus
+Secondary/Utility source-role assignment, separate class/pet controls,
+world-attached target presentation as the intended default, and status placement
+by owner/urgency.
+
+Logres owns its aesthetic rather than becoming a general UI/action-bar profile
+editor. Limited safe layout presets may be considered; unrestricted layout can
+use stock/specialist addons with the Logres action presentation disabled.
+
+Canonical phase record:
+`memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`

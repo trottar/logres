@@ -32,9 +32,18 @@ It needs its own information policy:
 Do not suppress stock player/target aura/status presentation until Logres has a
 deliberate replacement/fallback for the information being removed.
 
-## Placement
+## Placement direction — D-032
 
-This is future integration/design work, not a D.4 blocker.
+Status placement should communicate both owner and urgency:
 
-It should be revisited before final Phase H integration/polish and may require a
-dedicated earlier implementation item if later phases depend on aura ownership.
+- urgent/actionable **player debuffs**: near player resources and the central
+  reaction space;
+- lower-urgency **player buffs/auras**: quieter peripheral/right-side region;
+- **target status**: attached to or spatially associated with the actual world
+  target when safe and useful.
+
+This direction does not yet choose exact icon filtering, duration presentation,
+PvP emphasis, or healer/support fallbacks.
+
+It remains future integration/design work, not a D.4 blocker. Revisit before
+final Phase H integration/polish and capability-gate any stock suppression.

@@ -322,21 +322,22 @@ Phase C completes when:
 - stock action bars can be safely suppressed/restored;
 - Phase B HUD and action constellation coexist;
 - no required player control is lost.
-## Deferred layout-profile requirement
+## Deferred Phase H action integration direction
 
-D-020 is canonical.
+D-032 supersedes D-020's general layout-profile/editor requirement.
 
-Phase C architecture must remain compatible with future configurable action
-layout profiles:
-- action domain assignment;
-- role assignment;
-- variable rows/columns/visible slot count;
-- compact six-slot clusters;
-- position/spacing/scale;
-- contextual visibility policy.
+Phase H action integration should preserve the proven secure execution model
+while moving to a narrower product contract:
+- Primary fixed as the central role;
+- user assignment of supported extra source bars to Secondary or Utility;
+- Logres-authored placement and contextual presentation;
+- optional small grid-shape/whole-cluster adjustments only if they remain
+  simple and safe;
+- no requirement for unrestricted Logres bar/profile editing;
+- explicit stock/specialist-addon fallback when Logres action presentation is
+  disabled.
 
-The full in-game layout editor is not required to complete C.4.
-
+Separate pet/stance/totem/special controls remain separate capability domains.
 
 ### C.5 replacement boundary
 

@@ -1,0 +1,31 @@
+Project Logres P0097
+Date: 2026-10-02
+Baseline: a556a19a569fe2c539b6b61ab5946f6fa7e91c68
+Runtime: 0.0.40-dev (unchanged)
+Purpose: record accepted world-first Phase H+ layout and action-role direction
+
+Files:
+59dda565327576964e21b6d36cee4476a87c2fbacd4b6b85966019706d60fb7b  docs/ROADMAP.md
+e8f932d621dfe8f442bdd6817ef930d28ca49d0365082ae1bff05c10dee69474  docs/memory/CURRENT.md
+91d664316fcc78bb50d94fccc7d7a062b90a60709b8f5453367e22ce4dfd2f7d  docs/memory/DESIGN_PRINCIPLES.md
+bb25dfaa8578fba3c35211d9abbe35302a4b703ea20599f41e6e847dd0b4c83c  docs/memory/architecture/ACTION_CLUSTERS.md
+a66c14a741d26ae0e7626925af92fc5fbae7912818ce86f9e1447d45cfdfc48c  docs/memory/architecture/WORLD_FIRST_LAYOUT.md
+dfc91c7c53b8adfc7e624ea4b415cc789cf4e40fa21634133c24601b7652a962  docs/memory/decisions/D-020_ACTION_LAYOUT_CUSTOMIZATION_DIRECTION.md
+2cbf6e5a428c719b6bf3aba908a35956f64eae848c52603819eaaf91d5fd3913  docs/memory/decisions/D-027_TARGET_SELECTIVE_SUPPRESSION.md
+922284d3849a756e5d851785bffa5c3f6afc52da4a75beaac502ba66e129663f  docs/memory/decisions/D-032_WORLD_FIRST_LAYOUT_AND_ACTION_ROLES.md
+9d98a33c11b533adf699c14062169383c8f2c7fc2274ad3fd6f8a48c714afa0a  docs/memory/handoffs/CURRENT_HANDOFF.md
+e481a74df17629f5bfb6d42897a797e9e81b6ab582c97467037d9d07285dc87f  docs/memory/investigations/FUTURE_AURA_STATUS_PRESENTATION.md
+0b721abc4653c5f83213cb1860fdfd9b00ec5bb389c474142c6cd2a872346842  docs/memory/patches/P0096_FIX_CAMERA_COMBAT_CLASSIFICATION.md
+c16834129df78ba1485a97f11327fc83dccc42c4cb6f6ffc7d237fa4f6c7734e  docs/memory/patches/P0097_WORLD_FIRST_LAYOUT_DIRECTION.md
+9630a2f58dc1d8ca7f516eb157c7d37fcecb7a864ca57022e01dbf25e08f1252  docs/memory/patches/PATCH_INDEX.md
+1066e958b820eb94186fa5e2cb5bfd3894a7e17c1608106b36b7bb81a53d1d72  docs/memory/roadmap/PHASE_C_ACTION_INTERFACE.md
+021f777ad4753b34da3b30eb53d13c9e997a2fb87652adb2bcd6a12dc3348920  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+bec9afbe408f478cf6bc696992a0638d0a7ba8e07e972f3640229c6f3c6f1bb4  docs/memory/roadmap/STATUS.md
+
+Validation:
+exact verified P0096 HEAD
+tracked working tree/index clean before apply
+all tools/check_*.py PASS
+git diff --check
+
+Docs-only patch: no WoW redeploy required.

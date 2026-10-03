@@ -14,12 +14,9 @@ project: logres
 
 **G.2 — World/Combat camera zoom capability contract and runtime proof.**
 
-P0095 is verified pushed at `b65ea1af`.
+P0096 is verified pushed at `a556a19a`.
 
 Current pushed runtime:
-`0.0.39-dev`.
-
-P0096 runtime target:
 `0.0.40-dev`.
 
 G.2 status:
@@ -30,6 +27,7 @@ G.2 status:
 - Phase F is complete.
 - G.1 is complete.
 - P0095 is durable at `b65ea1af`.
+- P0096 is durable at `a556a19a`, runtime `0.0.40-dev`.
 - G.2 source semantics remain:
   - World conditionally targets zoom 5 when farther than 5;
   - World (Combat) conditionally targets zoom 15 when closer than 15;
@@ -60,14 +58,15 @@ G.2 status:
   - `cachedCombat` = existing Logres state value;
   - `mismatch` records disagreement.
 - Automatic Logres camera ownership remains absent.
+- Future Phase H+ world-first layout and action-role direction is accepted in D-032; it does not change the active G.2 runtime scope.
 
 ## Next Action
 
-Apply and push P0096.
+Run the P0096 live-combat retest.
 
-After verified push:
+Before the retest, deploy Logres `0.0.40-dev` if it is not already deployed.
+Then:
 - keep DynamicCam disabled for the isolated test;
-- deploy Logres `0.0.40-dev`;
 - `/reload`;
 - run one out-of-combat Camera Zoom Probe and record the second-click result;
 - engage a mob naturally;
@@ -115,4 +114,7 @@ G.2 completes only after:
 - `docs/memory/architecture/CAMERA.md`
 - `docs/memory/patches/P0095_CAMERA_ZOOM_CAPABILITY_PROBE.md`
 - `docs/memory/patches/P0096_FIX_CAMERA_COMBAT_CLASSIFICATION.md`
+- `docs/memory/decisions/D-032_WORLD_FIRST_LAYOUT_AND_ACTION_ROLES.md`
+- `docs/memory/architecture/WORLD_FIRST_LAYOUT.md`
 - `docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
+- `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`

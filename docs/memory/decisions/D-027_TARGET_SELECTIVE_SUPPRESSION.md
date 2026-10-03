@@ -183,3 +183,21 @@ Do not alpha-zero the contextual parent.
 Captured alpha values remain opaque restoration tokens and are never inspected.
 
 Stock restoration still occurs before Logres secure interaction is removed.
+
+
+## Phase H+ target direction — D-032
+
+D-027 remains the accepted implementation/fallback contract for the current
+sparse detached target presentation.
+
+The desired default endpoint is now world-attached target presentation: show
+relevant target information through or near the actual creature/player in the
+world whenever capability permits.
+
+Therefore the detached Logres target block should become optional/fallback
+rather than the default final presentation.
+
+This future direction does not authorize removing the current target block,
+secure target interaction, or preserved Blizzard information. Those remain
+until world-attached presentation deliberately replaces every required
+information/control surface with a safe fallback.

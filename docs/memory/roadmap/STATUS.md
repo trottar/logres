@@ -43,3 +43,20 @@ P0096:
 - cached State.combat diagnostic;
 - no core state-engine change;
 - in-combat retest pending.
+
+
+## Phase H queued direction
+
+D-032 accepted the world-first integration composition.
+
+Queued direction:
+- optional one-quest Active Quest context with exact hover details;
+- shared transient Context region;
+- fixed Primary plus supported source-bar assignment to Secondary/Utility;
+- no general Logres action layout/profile editor requirement;
+- class/pet/special controls remain separate domains;
+- world target preferred over a detached target frame;
+- urgent player debuffs central, passive buffs peripheral, target status in
+  world space where safe.
+
+This does not change active G.2 scope.

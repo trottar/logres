@@ -1,7 +1,9 @@
 # D-020 — Action layout customization direction
 
-Status: ACCEPTED
+Status: ACCEPTED HISTORICAL DIRECTION — SUPERSEDED IN PART BY D-032
 Date: 2026-10-01
+
+D-032 supersedes the requirement for arbitrary Logres layout profiles and a full Logres layout/editor product. Historical sections below are retained because they explain the earlier requirement and runtime editing gap.
 
 ## Trigger
 
@@ -152,3 +154,21 @@ This does not reopen the secure execution or selective replacement proofs.
 
 It does block treating persistent stock suppression as the final player-facing
 action-editing experience until an editor or stock-edit mode exists.
+
+## 2026-10-02 product refinement — D-032
+
+The final product direction is narrower than the original profile/editor plan.
+
+Accepted now:
+- Primary is a fixed Logres role;
+- supported extra source bars may be assigned to Secondary or Utility roles;
+- Logres owns the authored role geometry, placement, spacing, and contextual
+  visual policy;
+- limited authored grid presets or whole-cluster positioning may be considered;
+- unrestricted action-bar layout/profile editing is not a Logres requirement;
+- users who want full bar customization may disable Logres action presentation
+  and use stock or specialist action-bar tooling.
+
+The live editing gap remains relevant only as a fail-open requirement: Logres
+must not strand the user without a safe way to edit actions. It no longer
+requires Logres itself to become a full layout/editor addon.

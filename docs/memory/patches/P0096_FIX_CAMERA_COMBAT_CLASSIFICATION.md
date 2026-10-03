@@ -1,7 +1,7 @@
 # P0096 — Fix Camera Combat Classification
 
 Date: 2026-10-02
-Result: PREPARED — G.2 LIVE-COMBAT RETEST PENDING
+Result: INSTALLED / PUSHED — G.2 LIVE-COMBAT RETEST PENDING (`a556a19a`)
 
 ## Baseline
 

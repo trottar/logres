@@ -73,3 +73,14 @@ Where a role or player need requires more explicit information, provide configur
 ## 12. A failure that teaches is progress
 
 Technical and aesthetic failures are recorded and used to narrow the design space.
+
+
+## 13. Placement communicates meaning
+
+Place information according to ownership, urgency, and relationship to the
+world.
+
+Urgent player state belongs near the player's reaction space. Passive state can
+recede to the periphery. Target information should live on the world target
+when safe. Detached frames are fallbacks when the world cannot carry required
+information or interaction reliably.

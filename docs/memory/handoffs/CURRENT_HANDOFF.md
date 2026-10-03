@@ -6,13 +6,10 @@ Authoritative state:
 Phase G:
 **ACTIVE — G.2.**
 
-P0095 is verified pushed at:
-`b65ea1af`.
+P0096 is verified pushed at:
+`a556a19a`.
 
 Current pushed runtime:
-`0.0.39-dev`.
-
-P0096 runtime target:
 `0.0.40-dev`.
 
 G.2 source review:
@@ -43,5 +40,7 @@ Core state semantics are not changed by P0096.
 
 Next proof:
 one reversible probe with `combat=true` while naturally fighting.
+
+Future Phase H+ layout direction is recorded in D-032 and `architecture/WORLD_FIRST_LAYOUT.md`; it does not alter the active G.2 proof.
 
 User performs all commits/pushes.

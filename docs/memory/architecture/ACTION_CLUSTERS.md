@@ -263,41 +263,34 @@ Static alpha weighting is presentation-only.
 C.4 remains responsible for context-driven visibility.
 
 No stock bar suppression occurs in P0036.
-## Action layout customization direction
+## Action role assignment direction
 
-D-020 makes the current hardcoded constellation explicitly provisional.
+D-032 supersedes the earlier general profile/editor direction in D-020.
 
-The product model must eventually allow variable cluster definitions.
+The current hardcoded constellation remains a development/proof layout, but the
+final Logres product is not intended to become a general-purpose action-bar
+builder.
 
-A cluster definition should be conceptually data-driven:
+Long-term model:
+- Primary is a fixed role;
+- supported extra action-bar sources are assigned by the user to Secondary or
+  Utility roles;
+- Logres authors the role placement, spacing, contextual visibility, and visual
+  language;
+- a small set of grid-shape presets or whole-cluster position adjustments may
+  be considered if secure implementation stays simple;
+- unrestricted per-bar/per-button layout belongs to stock or specialist addons
+  when Logres action presentation is disabled.
 
-```text
-ClusterDefinition = {
-    source = <action domain>,
-    role = <primary|secondary|utility|...>,
-    slots = <range/list>,
-    rows = <n>,
-    columns = <n>,
-    visibleSlotCount = <n>,
-    anchor = <position>,
-    spacing = <n>,
-    scale = <n>,
-    visibilityPolicy = <policy>,
-}
-```
+Role assignment must never silently rewrite saved bindings.
 
-This is architectural direction, not a frozen Lua schema.
+Pet, stance/form, totem, possess, and other special controls remain separate
+capability domains even when visually colocated with Secondary controls.
 
-Important example:
-the user's current Forever setup includes a useful six-slot fifth bar.
+C.2/C.3 runtime modules remain valid secure-action proofs. Future integration
+may broaden supported source bars one domain at a time after execution,
+routing, feedback, suppression, and restoration are proven for each domain.
 
-Logres must be capable of representing that as a genuine compact cluster
-rather than forcing all domains into 12-button geometry.
-
-C.2/C.3 runtime modules remain valid secure-action proofs.
-
-Future refactoring may turn their hardcoded definitions into profile-driven
-cluster data after C.4 establishes safe contextual visibility behavior.
 ## C.4 source resolution
 
 D-021 separates action context policy from protected paging.
@@ -332,11 +325,11 @@ Vehicle/override/temp-shapeshift/bonus/possess coverage is capability-gated.
 
 Stock bars remain visible until relevant paths are runtime-proven.
 
-### Future profile compatibility
+### Future role-assignment compatibility
 
 Context alpha is a role policy, not a permanent hardcoded frame policy.
 
-D-020 profile-defined clusters should be able to consume the same policy.
+D-032 role-assigned Secondary/Utility sources should consume the same policy without requiring arbitrary user-defined layout profiles.
 ## C.4 P0039 implementation
 
 Context policy now lives in `Actions/Context.lua`.
