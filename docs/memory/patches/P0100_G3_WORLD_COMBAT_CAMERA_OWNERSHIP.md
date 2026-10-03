@@ -1,7 +1,7 @@
 # P0100 — G.3 Production World/Combat Camera Ownership
 
 Date: 2026-10-02
-Result: INSTALLED / PUSHED — RUNTIME PROOF PENDING (`31a2a7f`)
+Result: INSTALLED / PUSHED — FIRST RUNTIME OBSERVATION DEFERRED (`31a2a7f`)
 
 ## Baseline
 
@@ -89,8 +89,27 @@ Adds:
 
 The static checker enforces the live combat predicate, conditional targets,
 2.5-second transition, primary MoveView path, event-driven architecture,
-coexistence/probe gates, no temporary-CVar fallback, runtime version, and dev
-panel integration.
+coexistence/probe gates, no temporary-CVar fallback, and dev-panel integration.
+Global TOC/Bootstrap version synchronization is enforced separately by
+`tools/check_addon_structure.py`; the camera feature checker does not own a
+specific addon runtime version.
+
+## First runtime observation
+
+The first deployed `0.0.41-dev` screenshot showed the production controller in
+`outside-slice:resting`, with context none and ownership false. DynamicCam was
+not loaded, camera APIs were available, and no secret/error result was shown.
+
+Classification:
+**ENVIRONMENTAL DEFERRAL — EXPECTED RESTING RELINQUISH; MOVEMENT UNPROVEN.**
+
+The same screenshot exposed a separate reproduced developer-panel overflow: the
+flat action grid overlapped diagnostic output after the camera actions were
+added. P0102 corrects that presentation defect with roadmap-phase tabs and does
+not change camera semantics.
+
+Canonical evidence:
+`../evidence/G3_P0100_RESTING_DEFERRAL_PANEL_OVERFLOW_2026-10-02.md`.
 
 ## Runtime acceptance
 

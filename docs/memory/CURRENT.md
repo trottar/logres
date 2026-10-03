@@ -14,18 +14,20 @@ project: logres
 
 **G.3 — Production World/Combat camera ownership.**
 
-P0100 is verified pushed at:
-`31a2a7f63298252325938897ba653d33d8e384ec`.
+P0101 is verified pushed at:
+`86660959f4ba7d48a0d205c992e39712343a6aca`.
 
 Current pushed runtime:
 `0.0.41-dev`.
 
+P0102 runtime target:
+`0.0.42-dev`.
+
 G.2 status:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
-P0100 implements the first production World/Combat camera controller. Runtime
-acceptance remains pending until the pushed build is deployed and exercised in
-WoW Forever.
+G.3 status:
+**ACTIVE — FIRST P0100 MOVEMENT OBSERVATION ENVIRONMENTALLY DEFERRED; DEV-PANEL OVERFLOW DEFECT PROVEN.**
 
 ## Verified State
 
@@ -38,13 +40,15 @@ WoW Forever.
   action-role direction without changing Phase G camera scope.
 - P0098 is durable at `903e65c8`; D-033 records parallel World Ghost visual
   direction without changing Phase G runtime scope.
-- D-034 refines the visual anchor to Selective Hybrid E and establishes the canonical visual-component inventory / percentage-bar direction for parallel art work.
 - P0099 is durable at `10c7255f`; G.2 is closed and G.3 is active.
-- P0100 is durable at `31a2a7f`, runtime `0.0.41-dev`; G.3 production runtime proof remains pending.
+- P0100 is durable at `31a2a7f6`, runtime `0.0.41-dev`; production runtime proof
+  remains pending.
+- P0101 is durable at `86660959`; D-034 refines the parallel visual anchor to
+  Selective Hybrid E and establishes the canonical visual-component inventory /
+  percentage-bar direction without changing G.3 runtime scope.
 - The P0096 `cachedCombat=false` / `mismatch=true` evidence remains authoritative:
   camera combat selection uses live `UnitAffectingCombat("player")`, not cached
   `State.combat`.
-- Core `State.combat` semantics remain unchanged.
 - G.3 profile semantics remain:
   - World conditionally targets zoom `5` only when farther than 5;
   - World (Combat) conditionally targets zoom `15` only when closer than 15;
@@ -55,70 +59,44 @@ WoW Forever.
 - The temporary `SetCVar` / `CameraZoomIn/Out` corrective fallback remains
   unproven and is not adopted.
 - DynamicCam and Logres must never drive camera movement simultaneously.
-
-## G.3 P0100 Implementation
-
-P0100 adds `CameraWorldCombat`, an auto-enabled production module.
-
-Selection is event/state-driven:
-- cached state subscription handles ordinary instance/resting/taxi/interaction
-  changes;
-- targeted combat/restriction events force reevaluation of the live
-  `UnitAffectingCombat("player")` predicate even when cached State publishes no
-  change;
-- `OnUpdate` exists only while an active camera transition is running and is
-  not context polling.
-
-Known higher/out-of-slice contexts gated by current proven state are:
-- instance;
-- taxi;
-- NPC interaction;
-- resting/City when not overridden by live combat.
-
-Unimplemented later DynamicCam contexts such as fishing, gathering,
-hearth/teleport, and AFK remain future Phase G slices and are not newly modeled
-by P0100.
-
-Ownership/fail-open behavior:
-- DynamicCam loaded -> Logres relinquishes movement ownership;
-- historical G.2 probe running -> production controller relinquishes;
-- historical probe refuses to start while production controller is enabled;
-- active movement stops before replacement transitions and on disable,
-  ownership loss, or failure;
-- no speculative camera restoration occurs.
-
-Developer diagnostics add:
-- Camera World/Combat Check;
-- Camera World/Combat Reconcile;
-- Camera World/Combat ON;
-- Camera World/Combat OFF.
-
-The non-mutating Camera World/Combat Check is included in Run All. Manual
-Reconcile is deliberately excluded from Run All because it may move the camera.
+- The first P0100 production-controller screenshot did not exercise World
+  movement because addon-owned state reported `outside-slice:resting`:
+  - selected context `none`;
+  - ownership false;
+  - live combat false;
+  - DynamicCam false;
+  - camera API available;
+  - no secret/error result.
+- Classification of that camera observation:
+  **ENVIRONMENTAL DEFERRAL — EXPECTED RESTING RELINQUISH; MOVEMENT UNPROVEN.**
+- The same screenshot proved a separate developer-panel presentation defect: the
+  flat action grid exceeded its fixed button area and overlapped diagnostic
+  output.
+- Accepted corrective panel direction is one tab per roadmap phase
+  `0/A/B/C/D/E/F/G/H`, with only the selected phase's controls rendered.
+- Global addon version synchronization is already enforced by
+  `tools/check_addon_structure.py`; feature-specific camera checks must not pin
+  the whole addon to one exact runtime version.
 
 ## Next Action
 
-Deploy pushed P0100 runtime `0.0.41-dev` and validate with DynamicCam disabled:
-- World target transition from farther than 5;
-- World no-op at 5 or closer;
-- automatic live-combat transition from closer than 15;
-- combat no-op at 15 or farther;
-- automatic combat-exit World transition without remembered pre-combat restore;
-- movement interruption by controller disable;
-- clean re-enable/reconcile;
-- Run All PASS with Camera World/Combat Check PASS;
-- no Lua, taint, protected-action, or secret-value errors.
+Apply and push P0102 from verified P0101 baseline `86660959`.
 
-A separate coexistence validation with DynamicCam loaded must show Logres
-blocked/relinquished with no simultaneous movement.
+After verified push:
+- deploy `0.0.42-dev`;
+- `/reload`;
+- confirm the developer panel presents phase tabs without control/result overlap;
+- use Phase G for camera controls;
+- leave resting/City and retry G.3 World movement from zoom >5;
+- continue the P0100 G.3 acceptance sequence only after World movement is
+  actually exercised.
 
-Parallel Phase H+ art-direction work remains valid under D-032/D-033 and does
-not change this runtime next action.
+Do not classify the resting observation as a camera movement PASS or FAIL.
 
 ## Success Criteria
 
 G.3 completes only after production ownership proves:
-- World conditional target behavior;
+- World conditional target behavior outside resting/City;
 - live-combat World (Combat) conditional target behavior;
 - ordinary 2.5-second transition behavior;
 - no invented pre-combat zoom restoration;
@@ -127,20 +105,23 @@ G.3 completes only after production ownership proves:
 - no Lua, taint, protected-action, or secret-value errors;
 - integrated checks remain clean on the current runtime.
 
+The P0102 developer-panel correction additionally requires:
+- tabs `0/A/B/C/D/E/F/G/H`;
+- only the selected phase's actions rendered;
+- no control/result overlap at the supported panel size;
+- diagnostics persistence unchanged;
+- camera feature checks remain independent of unrelated global version bumps.
+
 ## Do Not Reopen Without New Evidence
 
 - **Phase F:** complete.
-- **F.6 contextual objective progress pulse:** complete.
 - **G.1 DynamicCam profile capture:** complete.
 - **G.2 World/Combat camera capability:** runtime + integration PASS.
 - **G.2 DynamicCam zoom semantics:** conditional absolute targets, not deltas.
-- **P0095 out-of-combat primary camera path:** PASS.
-- **P0095 combat classifier:** INVALID for G.2; used cached State.combat.
 - **P0096 live-combat classifier and primary path:** PASS.
 - **Core State.combat redesign:** not authorized by the camera investigation.
-- **Instance camera custom profile:** absent from captured RPG profile.
 - **Temporary camera CVar fallback:** unproven and not accepted.
-- **Quest destination / compass marker:** unsupported until runtime-proven.
+- **P0100 first resting observation:** environmental deferral, not movement failure.
 - **D-032 world-first layout direction:** accepted future Phase H+ direction.
 - **D-033 World Ghost art direction:** accepted parallel visual hypothesis.
 - **D-034 Selective Hybrid E + component taxonomy:** accepted parallel art-direction refinement; no Lua implementation implied.
@@ -148,18 +129,17 @@ G.3 completes only after production ownership proves:
 
 ## Relevant References
 
-- `docs/memory/evidence/G1_DYNAMICCAM_PROFILE_CAPTURE_2026-10-02.md`
-- `docs/memory/evidence/G2_DYNAMICCAM_ZOOM_SOURCE_AUDIT_2026-10-02.md`
 - `docs/memory/evidence/G2_P0096_RUNTIME_PASS_2026-10-02.md`
+- `docs/memory/evidence/G3_P0100_RESTING_DEFERRAL_PANEL_OVERFLOW_2026-10-02.md`
 - `docs/memory/investigations/G3_WORLD_COMBAT_CAMERA_OWNERSHIP.md`
 - `docs/memory/architecture/CAMERA.md`
-- `docs/memory/patches/P0099_CLOSE_G2_OPEN_G3.md`
+- `docs/memory/architecture/DEV_PANEL.md`
 - `docs/memory/patches/P0100_G3_WORLD_COMBAT_CAMERA_OWNERSHIP.md`
+- `docs/memory/patches/P0101_VISUAL_COMPONENT_INVENTORY_AND_HYBRID_E.md`
+- `docs/memory/patches/P0102_PHASE_TABBED_DEV_PANEL.md`
 - `docs/memory/decisions/D-032_WORLD_FIRST_LAYOUT_AND_ACTION_ROLES.md`
 - `docs/memory/decisions/D-033_PARALLEL_ART_DIRECTION_AND_WORLD_GHOST.md`
 - `docs/memory/decisions/D-034_SELECTIVE_HYBRID_E_AND_VISUAL_COMPONENTS.md`
-- `docs/memory/architecture/WORLD_FIRST_LAYOUT.md`
-- `docs/memory/architecture/VISUAL_SYSTEM_DIRECTION.md`
 - `docs/memory/architecture/VISUAL_COMPONENT_INVENTORY.md`
 - `docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
 - `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`

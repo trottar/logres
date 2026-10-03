@@ -15,7 +15,19 @@ local function emit(message)
     print(message)
 end
 
-function Logres:RegisterDevPanelAction(id, label, command)
+local VALID_DEV_PANEL_PHASES = {
+    ["0"] = true,
+    A = true,
+    B = true,
+    C = true,
+    D = true,
+    E = true,
+    F = true,
+    G = true,
+    H = true,
+}
+
+function Logres:RegisterDevPanelAction(id, label, command, phase)
     if type(id) ~= "string" or id == "" then
         error("Logres:RegisterDevPanelAction requires a non-empty id")
     end
@@ -28,6 +40,10 @@ function Logres:RegisterDevPanelAction(id, label, command)
         error("Logres:RegisterDevPanelAction requires a non-empty command")
     end
 
+    if type(phase) ~= "string" or not VALID_DEV_PANEL_PHASES[phase] then
+        error("Logres:RegisterDevPanelAction requires roadmap phase 0/A/B/C/D/E/F/G/H")
+    end
+
     if devPanelActionsByID[id] then
         error("Duplicate Logres dev-panel action: " .. id)
     end
@@ -36,6 +52,7 @@ function Logres:RegisterDevPanelAction(id, label, command)
         id = id,
         label = label,
         command = command,
+        phase = phase,
     }
 
     devPanelActionsByID[id] = action
@@ -51,6 +68,7 @@ function Logres:GetDevPanelActions()
             id = action.id,
             label = action.label,
             command = action.command,
+            phase = action.phase,
         }
     end
 
@@ -3140,179 +3158,257 @@ function Logres:RunDevCommand(message, output)
     return true
 end
 
-Logres:RegisterDevPanelAction("runall", "Run All", "checkall")
-Logres:RegisterDevPanelAction("status", "Status", "status")
-Logres:RegisterDevPanelAction("state", "State Check", "statecheck")
-Logres:RegisterDevPanelAction("sensor", "Sensor Check", "sensorcheck")
+Logres:RegisterDevPanelAction(
+    "runall",
+    "Run All",
+    "checkall",
+    "0"
+)
+Logres:RegisterDevPanelAction(
+    "status",
+    "Status",
+    "status",
+    "0"
+)
+Logres:RegisterDevPanelAction(
+    "state",
+    "State Check",
+    "statecheck",
+    "A"
+)
+Logres:RegisterDevPanelAction(
+    "sensor",
+    "Sensor Check",
+    "sensorcheck",
+    "A"
+)
 Logres:RegisterDevPanelAction(
     "preference",
     "Preference Check",
-    "preferencecheck"
+    "preferencecheck",
+    "0"
 )
 Logres:RegisterDevPanelAction(
     "lifecycle",
     "Lifecycle Check",
-    "lifecyclecheck"
+    "lifecyclecheck",
+    "0"
 )
-Logres:RegisterDevPanelAction("hud", "HUD Check", "hudcheck")
-Logres:RegisterDevPanelAction("action", "Action Check", "actioncheck")
-Logres:RegisterDevPanelAction("actionFeedback", "Feedback Test", "actionfeedback")
-Logres:RegisterDevPanelAction("actionKeysOn", "Action Keys ON", "actionbindings on")
-Logres:RegisterDevPanelAction("actionKeysOff", "Action Keys OFF", "actionbindings off")
+Logres:RegisterDevPanelAction(
+    "hud",
+    "HUD Check",
+    "hudcheck",
+    "B"
+)
+Logres:RegisterDevPanelAction(
+    "action",
+    "Action Check",
+    "actioncheck",
+    "C"
+)
+Logres:RegisterDevPanelAction(
+    "actionFeedback",
+    "Feedback Test",
+    "actionfeedback",
+    "C"
+)
+Logres:RegisterDevPanelAction(
+    "actionKeysOn",
+    "Action Keys ON",
+    "actionbindings on",
+    "C"
+)
+Logres:RegisterDevPanelAction(
+    "actionKeysOff",
+    "Action Keys OFF",
+    "actionbindings off",
+    "C"
+)
 Logres:RegisterDevPanelAction(
     "secondaryKeysOn",
     "Secondary Keys ON",
-    "secondarybindings on"
+    "secondarybindings on",
+    "C"
 )
 Logres:RegisterDevPanelAction(
     "secondaryKeysOff",
     "Secondary Keys OFF",
-    "secondarybindings off"
+    "secondarybindings off",
+    "C"
 )
 Logres:RegisterDevPanelAction(
     "utilityKeysOn",
     "Utility Keys ON",
-    "utilitybindings on"
+    "utilitybindings on",
+    "C"
 )
 Logres:RegisterDevPanelAction(
     "utilityKeysOff",
     "Utility Keys OFF",
-    "utilitybindings off"
+    "utilitybindings off",
+    "C"
 )
 Logres:RegisterDevPanelAction(
     "stockReplaceCheck",
     "Stock Replace Check",
-    "stockreplacecheck"
+    "stockreplacecheck",
+    "C"
 )
 Logres:RegisterDevPanelAction(
     "stockReplaceOn",
     "Stock Replace ON",
-    "stockreplace on"
+    "stockreplace on",
+    "C"
 )
 Logres:RegisterDevPanelAction(
     "stockReplaceOff",
     "Stock Replace OFF",
-    "stockreplace off"
+    "stockreplace off",
+    "C"
 )
 Logres:RegisterDevPanelAction(
     "immersionCheck",
     "Immersion Check",
-    "immersioncheck"
+    "immersioncheck",
+    "D"
 )
 Logres:RegisterDevPanelAction(
     "quietCheck",
     "Quiet Check",
-    "quietcheck"
+    "quietcheck",
+    "D"
 )
 Logres:RegisterDevPanelAction(
     "playerFrameCheck",
     "Player Frame Check",
-    "playerframecheck"
+    "playerframecheck",
+    "D"
 )
 Logres:RegisterDevPanelAction(
     "targetFrameCheck",
     "Target Frame Check",
-    "targetframecheck"
+    "targetframecheck",
+    "D"
 )
 Logres:RegisterDevPanelAction(
     "restorationCheck",
     "Restoration Check",
-    "restorationcheck"
+    "restorationcheck",
+    "D"
 )
 Logres:RegisterDevPanelAction(
     "contextPolicyCheck",
     "Context Policy Check",
-    "contextpolicycheck"
+    "contextpolicycheck",
+    "D"
 )
 Logres:RegisterDevPanelAction(
     "compassCheck",
     "Compass Check",
-    "compasscheck"
+    "compasscheck",
+    "E"
 )
 Logres:RegisterDevPanelAction(
     "waypointProbe",
     "Waypoint Probe",
-    "waypointprobe"
+    "waypointprobe",
+    "E"
 )
 Logres:RegisterDevPanelAction(
     "questProbe",
     "Quest Probe",
-    "questprobe"
+    "questprobe",
+    "F"
 )
 Logres:RegisterDevPanelAction(
     "cameraWorldCombatCheck",
     "Camera World/Combat Check",
-    "cameraworldcombatcheck"
+    "cameraworldcombatcheck",
+    "G"
 )
 Logres:RegisterDevPanelAction(
     "cameraWorldCombatReconcile",
     "Camera World/Combat Reconcile",
-    "cameraworldcombatreconcile"
+    "cameraworldcombatreconcile",
+    "G"
 )
 Logres:RegisterDevPanelAction(
     "cameraWorldCombatOn",
     "Camera World/Combat ON",
-    "cameraworldcombat on"
+    "cameraworldcombat on",
+    "G"
 )
 Logres:RegisterDevPanelAction(
     "cameraWorldCombatOff",
     "Camera World/Combat OFF",
-    "cameraworldcombat off"
+    "cameraworldcombat off",
+    "G"
 )
 Logres:RegisterDevPanelAction(
     "cameraZoomProbe",
     "Camera Zoom Probe",
-    "camerazoomprobe"
+    "camerazoomprobe",
+    "G"
 )
 Logres:RegisterDevPanelAction(
     "xpCheck",
     "XP Check",
-    "xpcheck"
+    "xpcheck",
+    "F"
 )
 Logres:RegisterDevPanelAction(
     "xpPreview",
     "XP Preview",
-    "xppreview"
+    "xppreview",
+    "F"
 )
 Logres:RegisterDevPanelAction(
     "objectiveProgressCheck",
     "Objective Progress Check",
-    "objectiveprogresscheck"
+    "objectiveprogresscheck",
+    "F"
 )
 Logres:RegisterDevPanelAction(
     "objectiveProgressPreview",
     "Objective Progress Preview",
-    "objectiveprogresspreview"
+    "objectiveprogresspreview",
+    "F"
 )
 Logres:RegisterDevPanelAction(
     "questDialogueCheck",
     "Quest Dialogue Check",
-    "questdialoguecheck"
+    "questdialoguecheck",
+    "F"
 )
 Logres:RegisterDevPanelAction(
     "questDialoguePreview",
     "Quest Dialogue Preview",
-    "questdialoguepreview"
+    "questdialoguepreview",
+    "F"
 )
 Logres:RegisterDevPanelAction(
     "immersionOn",
     "Immersion ON",
-    "immersion on"
+    "immersion on",
+    "D"
 )
 Logres:RegisterDevPanelAction(
     "immersionOff",
     "Immersion OFF",
-    "immersion off"
+    "immersion off",
+    "D"
 )
 Logres:RegisterDevPanelAction(
     "previewOn",
     "HUD Preview ON",
-    "hudpreview on"
+    "hudpreview on",
+    "B"
 )
 Logres:RegisterDevPanelAction(
     "previewOff",
     "HUD Preview OFF",
-    "hudpreview off"
+    "hudpreview off",
+    "B"
 )
 
 SLASH_LOGRES1 = "/logres"

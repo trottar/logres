@@ -1,6 +1,6 @@
 # G.3 — Production World/Combat Camera Ownership
 
-Status: ACTIVE — P0100 IMPLEMENTATION PREPARED; RUNTIME PROOF PENDING
+Status: ACTIVE — P0100 PUSHED; FIRST MOVEMENT OBSERVATION ENVIRONMENTALLY DEFERRED
 Opened: 2026-10-02
 
 G.1 profile evidence:
@@ -136,6 +136,21 @@ P0100 does not implement City behavior, taxi behavior, NPC interaction camera
 behavior, fishing/gathering/hearth/AFK behavior, rotation, shoulder offsets,
 DynamicCam UI hiding, global camera CVar ownership, the temporary-CVar fallback,
 or a core State.combat redesign.
+
+## First P0100 runtime observation
+
+The first production validation occurred while the player was resting. Addon-owned
+status reported `outside-slice:resting`, context none, and ownership false.
+DynamicCam was false, the camera API was available, and no secret/error result
+was reported.
+
+That is expected G.3 relinquish behavior, so World movement remains untested.
+
+The same screenshot reproduced a developer-panel overflow defect. P0102 groups
+diagnostics by roadmap-phase tabs and leaves this camera contract unchanged.
+
+Canonical evidence:
+`../evidence/G3_P0100_RESTING_DEFERRAL_PANEL_OVERFLOW_2026-10-02.md`.
 
 ## Runtime acceptance
 

@@ -118,7 +118,8 @@
 | P0099 | 2026-10-02 | INSTALLED / PUSHED — DOCS/EVIDENCE ONLY | Record P0096 PASS; close G.2; open G.3 production World/Combat camera ownership (`10c7255f`) |
 
 
-| P0100 | 2026-10-02 | INSTALLED / PUSHED — RUNTIME PROOF PENDING | Implement G.3 production World/Combat camera ownership (`31a2a7f`) |
+| P0100 | 2026-10-02 | INSTALLED / PUSHED — FIRST RUNTIME OBSERVATION DEFERRED | Implement G.3 production World/Combat camera ownership (`31a2a7f`) |
 
-| P0101 | 2026-10-02 | PREPARED — DOCS-ONLY | Record Selective Hybrid E, percentage-bar direction, and full visual component inventory |
+| P0101 | 2026-10-02 | INSTALLED / PUSHED — DOCS-ONLY | Record Selective Hybrid E, percentage-bar direction, and full visual component inventory (`86660959`) |
+| P0102 | 2026-10-02 | PREPARED — RUNTIME UI CORRECTION | Organize developer diagnostics by roadmap phase tabs; remove camera checker global version pin |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

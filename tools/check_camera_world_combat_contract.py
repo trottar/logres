@@ -7,12 +7,11 @@ ROOT = Path(__file__).resolve().parents[1]
 CONTROLLER = ROOT / "Logres" / "Camera" / "WorldCombat.lua"
 PROBE = ROOT / "Logres" / "Camera" / "Probe.lua"
 COMMANDS = ROOT / "Logres" / "Core" / "Commands.lua"
-BOOTSTRAP = ROOT / "Logres" / "Core" / "Bootstrap.lua"
 TOC = ROOT / "Logres" / "Logres.toc"
 
 errors = []
 
-for path in (CONTROLLER, PROBE, COMMANDS, BOOTSTRAP, TOC):
+for path in (CONTROLLER, PROBE, COMMANDS, TOC):
     if not path.is_file():
         errors.append(f"missing required file: {path.relative_to(ROOT)}")
 
@@ -114,16 +113,8 @@ if COMMANDS.is_file():
         if "runCameraWorldCombatReconcile()" in run_all:
             errors.append("Run All must not invoke mutating camera reconcile")
 
-if BOOTSTRAP.is_file():
-    source = BOOTSTRAP.read_text(encoding="utf-8")
-    if 'Logres.VERSION = "0.0.41-dev"' not in source:
-        errors.append("Bootstrap.lua must declare runtime 0.0.41-dev")
-
 if TOC.is_file():
     source = TOC.read_text(encoding="utf-8")
-    if "## Version: 0.0.41-dev" not in source:
-        errors.append("Logres.toc must declare runtime 0.0.41-dev")
-
     controller_index = source.find("Camera\\WorldCombat.lua")
     probe_index = source.find("Camera\\Probe.lua")
     commands_index = source.find("Core\\Commands.lua")

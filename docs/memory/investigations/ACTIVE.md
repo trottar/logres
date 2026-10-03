@@ -3,33 +3,36 @@
 ## G.3 — Production World/Combat camera ownership
 
 Status:
-**ACTIVE — P0100 PUSHED; RUNTIME PROOF PENDING**
+**ACTIVE — P0100 PUSHED; FIRST MOVEMENT OBSERVATION ENVIRONMENTALLY DEFERRED**
 
 Canonical:
 `G3_WORLD_COMBAT_CAMERA_OWNERSHIP.md`
 
-G.2 runtime evidence:
-`../evidence/G2_P0096_RUNTIME_PASS_2026-10-02.md`
+P0100 is durable at `31a2a7f6`, runtime `0.0.41-dev`.
 
-P0100 production implementation:
-- auto-enabled `CameraWorldCombat` controller;
-- World -> conditional target 5;
-- World (Combat) -> conditional target 15;
-- ordinary transition 2.5 seconds;
-- zoom restore never;
-- live `UnitAffectingCombat("player")` selects combat;
-- targeted combat/restriction event reevaluation prevents dependence on cached
-  state publication;
-- primary MoveView path only;
-- no temporary-CVar fallback;
-- explicit interruption/disable/ownership-loss stop;
-- DynamicCam coexistence gate;
-- historical G.2 probe mutually gated from production ownership;
-- addon-owned developer diagnostics and non-mutating Run All check.
+First runtime observation:
+- controller reason `outside-slice:resting`;
+- selected context `none`;
+- ownership false;
+- live combat false;
+- DynamicCam false;
+- camera API available;
+- no secret/error result;
+- no accepted World movement proof because resting intentionally relinquishes.
 
-P0100 is durable at `31a2a7f`.
+Classification:
+**ENVIRONMENTAL DEFERRAL — EXPECTED RESTING RELINQUISH.**
 
-Required next evidence is production runtime validation on `0.0.41-dev`.
+Separate reproduced runtime UI defect:
+- developer-panel flat action grid overflowed into diagnostics;
+- P0102 introduces roadmap-phase tabs and preserves diagnostics persistence.
+
+P0102 also removes the G.3 feature checker's stale exact-runtime pin; global
+TOC/Bootstrap version synchronization remains enforced by
+`tools/check_addon_structure.py`.
+
+Required next camera evidence remains production validation outside resting/City
+on the corrected panel runtime.
 
 ## Closed Phase G investigations
 

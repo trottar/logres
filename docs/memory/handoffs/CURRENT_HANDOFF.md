@@ -6,31 +6,42 @@ Authoritative state:
 Phase G:
 **ACTIVE — G.3.**
 
-P0100 is verified pushed at:
-`31a2a7f`.
+P0101 is verified pushed at:
+`86660959`.
 
 Current pushed runtime:
 `0.0.41-dev`.
 
+P0102 runtime target:
+`0.0.42-dev`.
+
 G.2:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
-P0100 adds production World/Combat camera ownership:
-- World conditional target 5;
-- World (Combat) conditional target 15;
-- ordinary transition 2.5 seconds;
-- zoom restore never;
-- live UnitAffectingCombat combat selection;
-- targeted combat/restriction event reevaluation;
-- primary MoveView path only;
-- no temporary-CVar fallback;
-- explicit interruption/disable/failure stop;
-- DynamicCam coexistence gate;
-- manual G.2 probe mutually gated from production controller;
-- developer Check/Reconcile/ON/OFF diagnostics.
+P0100 production camera ownership is durable at `31a2a7f6`, but its first
+observed movement attempt occurred while addon-owned state reported
+`outside-slice:resting`. The controller correctly relinquished ownership and no
+World transition was exercised. Classification: **ENVIRONMENTAL DEFERRAL**, not
+PASS/FAIL.
 
-P0100 is verified pushed. Deploy `0.0.41-dev` before WoW validation.
+The same screenshot exposed a separate developer-panel defect: the flat action
+grid overflowed its fixed button region and obscured diagnostics.
 
-Future Phase H+ D-032 layout, D-033 World Ghost, and D-034 Selective Hybrid E / visual-component work remain parallel and do not alter G.3 acceptance.
+P0102 correction:
+- roadmap tabs `0/A/B/C/D/E/F/G/H`;
+- every developer-panel action declares one phase;
+- only the selected phase renders;
+- Phase G is the default tab for current work;
+- Run All / Status live under Phase 0;
+- diagnostics persistence remains unchanged;
+- the G.3 camera checker no longer pins the whole addon to an exact runtime;
+  `check_addon_structure.py` remains the canonical TOC/Bootstrap version-sync
+  contract.
+
+P0101 D-034 Selective Hybrid E / visual-component work remains durable and is
+preserved unchanged by P0102.
+
+After P0102 is verified pushed, deploy `0.0.42-dev`, verify the tabbed panel,
+then leave resting/City and resume G.3 World movement validation.
 
 User performs all commits/pushes.

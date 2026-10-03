@@ -1,0 +1,41 @@
+Project Logres P0102
+Date: 2026-10-02
+Baseline: 86660959f4ba7d48a0d205c992e39712343a6aca
+Runtime: 0.0.42-dev
+Purpose: phase-tab the developer panel; preserve P0100 resting deferral; decouple feature checkers from global runtime/panel geometry
+
+Files:
+3bed6f96cfd358cead15bfc2f059df9dd4bcfd9c02688313d8f57bea2f621b87  Logres/Core/Bootstrap.lua
+9a966da45c7c468d747160ac2f54739380ee361fba78a06ce67121e62fad2f30  Logres/Core/Commands.lua
+3e8831e384df881e5a5c52c24afe4a09eea8ed0f4201ff995bf6d54b94acc7fa  Logres/Dev/Panel.lua
+6a869483d70bc3f65411e8a3db3bc74137aa4c8fff8ce63a908f616e2de56072  Logres/Logres.toc
+478e5fb611386b691c7bf3194e969122765f045baf48acf1dc57e76c1f284495  docs/memory/CURRENT.md
+b6b56080ee7fca45975e7dc3a5f8bd93ac416220d95c8815d7b28e9a9ae1b0d3  docs/memory/architecture/DEV_PANEL.md
+5f2db9794f2e4e53b1c58ea437ba50436315c7e74bc8fd1aea333e47cf297fb4  docs/memory/evidence/G3_P0100_RESTING_DEFERRAL_PANEL_OVERFLOW_2026-10-02.md
+8df37fc850d1a11c6612a7dadbc1cb855128be9e67a54ac70c8fbfa13c5e9a99  docs/memory/handoffs/CURRENT_HANDOFF.md
+e19675d5ba2e041208dbf08486a292542d4b9a3404a58eafdb82f8ec175b488c  docs/memory/investigations/ACTIVE.md
+8ebe1dbbb74a37085b40f700af11f4ef70a7e1d4d2522996eb7841d3e934271c  docs/memory/investigations/G3_WORLD_COMBAT_CAMERA_OWNERSHIP.md
+305225176ce3b2244ce2420f7ac9348dcff418fa12fdeb4d62edd7bdcbb662db  docs/memory/patches/P0100_G3_WORLD_COMBAT_CAMERA_OWNERSHIP.md
+2ea95577e30ebe9eaea78d8e2377457a63d69e3cabd996bbef93b2ce1e28a879  docs/memory/patches/P0101_VISUAL_COMPONENT_INVENTORY_AND_HYBRID_E.md
+ceb9b970443b0c8bd438cf3c4ab00125b7abaa956754e935d0fd035158f8dcd5  docs/memory/patches/P0102_PHASE_TABBED_DEV_PANEL.md
+53de3b95011864ba59e3d4a7fbbe1ebb1ff74284cf57d13fddf1e48aa006c324  docs/memory/patches/PATCH_INDEX.md
+760ec587f8fc102883c27a73bd71c7e543b8d5aaa99150bc61ccf2e77653716a  docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md
+59a33fcd028d4d1c57e8f6763a64763d775b0f8fca289d3566551c40d11dbde5  docs/memory/roadmap/STATUS.md
+6f34b8fd12b8b1868c850fc3a1a84ff62c509d974027301a30b1d1a5e5febed1  tools/check_camera_world_combat_contract.py
+f4b767225a2289eb404a4145025ea04a53311d93d2dc0a1d60561ad40a19f5b3  tools/check_dev_panel_contract.py
+3c4c99548df932dcb441494c0ecf8405bfd80484bbd306a37b893bda907570df  tools/check_stock_replacement_contract.py
+
+Validation:
+exact verified P0101 HEAD
+verified expected baseline blob for every modified tracked file
+known local LOGRES_DIAGNOSTICS_LATEST.lua allowed but not modified/tracked
+all tools/check_*.py syntax-compiled and executed
+phase-tabbed developer panel static contract
+camera feature checker has no exact addon-runtime pin
+stock replacement checker has no developer-panel geometry dependency
+global addon structure checker retains TOC/Bootstrap version synchronization
+git diff --check
+
+Runtime code changed: yes.
+WoW redeploy required after verified push: yes.
+G.3 camera semantics changed: no.

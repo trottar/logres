@@ -7,11 +7,10 @@ ROOT = Path(__file__).resolve().parents[1]
 REPLACEMENT = ROOT / "Logres" / "Actions" / "StockReplacement.lua"
 COMMANDS = ROOT / "Logres" / "Core" / "Commands.lua"
 TOC = ROOT / "Logres" / "Logres.toc"
-PANEL = ROOT / "Logres" / "Dev" / "Panel.lua"
 
 errors = []
 
-for path in (REPLACEMENT, COMMANDS, TOC, PANEL):
+for path in (REPLACEMENT, COMMANDS, TOC):
     if not path.is_file():
         errors.append(f"missing required file: {path.relative_to(ROOT)}")
 
@@ -90,19 +89,6 @@ if TOC.is_file():
         errors.append(
             "StockReplacement must load after Context and before Commands"
         )
-
-if PANEL.is_file():
-    source = PANEL.read_text(encoding="utf-8")
-
-    for fragment in (
-        "local PANEL_HEIGHT = 590",
-        "buttonHost:SetHeight(270)",
-        'resultsBackground:SetPoint("TOPLEFT", frame, "TOPLEFT", 18, -348)',
-    ):
-        if fragment not in source:
-            errors.append(
-                f"Panel.lua missing replacement control capacity: {fragment}"
-            )
 
 print("Logres stock replacement contract")
 print("=================================")

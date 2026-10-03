@@ -43,12 +43,20 @@ Classification: **CLOSED — RUNTIME + INTEGRATION PASS.**
 Production World/Combat ownership:
 **P0100 PUSHED — RUNTIME PROOF PENDING.**
 
-Current runtime: `0.0.41-dev` (`31a2a7f`).
+Current pushed runtime: `0.0.41-dev` (`31a2a7f`).
+P0102 runtime target: `0.0.42-dev`.
 
-P0100 uses the proven primary camera path, live combat predicate, targeted
-combat-event reevaluation, zoom restore `never`, explicit fail-open stopping,
-and a DynamicCam coexistence gate. It does not adopt the temporary-CVar
-fallback or redesign core combat state.
+First P0100 movement observation:
+**ENVIRONMENTAL DEFERRAL — resting/City relinquish; movement not exercised.**
+
+The same runtime screenshot reproduced a developer-panel overflow defect. P0102
+organizes diagnostics by roadmap phase and leaves camera semantics unchanged.
+
+The global TOC/Bootstrap version-sync contract remains owned by
+`tools/check_addon_structure.py`; the G.3 feature checker no longer pins a
+specific addon runtime.
+
+Next camera evidence must be collected outside resting/City.
 
 ## Phase H queued direction
 
