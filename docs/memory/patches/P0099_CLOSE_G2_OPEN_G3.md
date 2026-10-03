@@ -1,7 +1,7 @@
 # P0099 — Close G.2 / Open G.3
 
 Date: 2026-10-02
-Result: PREPARED — DOCS/EVIDENCE ONLY
+Result: INSTALLED / PUSHED — DOCS/EVIDENCE ONLY (`10c7255f`)
 
 ## Baseline
 

@@ -14,90 +14,106 @@ project: logres
 
 **G.3 — Production World/Combat camera ownership.**
 
-P0096 is verified pushed at:
-`a556a19a569fe2c539b6b61ab5946f6fa7e91c68`.
-
-P0097 world-first layout direction is verified pushed at:
-`86d062d3a6be264a29f3b9d36cccdc7ac1ff5987`.
-
-P0098 parallel World Ghost art direction is verified pushed at:
-`903e65c88dde36cc31d6f64af8cc6ff3da4623fd`.
+P0099 is verified pushed at:
+`10c7255f7e04c73108c22d457bed6178002c0ae6`.
 
 Current pushed runtime:
 `0.0.40-dev`.
 
+P0100 runtime target:
+`0.0.41-dev`.
+
 G.2 status:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
-P0099 is the docs/evidence transition checkpoint that records that closure and
-opens G.3. It does not change runtime code.
+P0100 implements the first production World/Combat camera controller. Runtime
+acceptance remains pending until the pushed build is deployed and exercised in
+WoW Forever.
 
 ## Verified State
 
 - Phase F is complete.
 - G.1 is complete.
 - G.2 is complete.
-- P0096 is durable at `a556a19a`.
-- P0097 is durable at `86d062d3`; D-032 records future world-first layout and action-role direction without changing Phase G camera scope.
-- P0098 is durable at `903e65c8`; D-033 records parallel World Ghost visual direction without changing Phase G runtime scope.
-- P0096 corrected only the camera probe's combat classifier:
-  - `combat` = live `UnitAffectingCombat("player")`;
-  - `lockdown` = live `InCombatLockdown()`;
-  - `cachedCombat` = existing Logres state;
-  - `mismatch` = live combat versus cached combat disagreement.
-- The captured `0.0.40-dev` diagnostics contain two genuine live-combat probes,
-  both with:
-  - `combat=true`;
-  - `lockdown=true`;
-  - `cachedCombat=false`;
-  - `mismatch=true`;
-  - `targetReached=true`;
-  - `moved=true`;
-  - `restored=true`;
-  - `secret=false`;
-  - `error=nil`.
-- The out-of-combat probe path remained clean.
-- A post-combat probe returned to `combat=false` and restoration PASS.
-- Run All was performed on the current `0.0.40-dev` runtime and every emitted
-  check passed through `checkall: complete`.
-- The `cachedCombat=false` / `mismatch=true` result is retained as evidence that
-  camera context must use DynamicCam's actual live combat predicate rather than
-  cached Logres combat state.
-- Core `State.combat` semantics are not changed by G.2.
-- Automatic Logres production camera ownership is still absent at this
-  checkpoint.
-
-## G.3 Production Contract
-
-Context selection for this first production slice follows the captured profile:
-- World (Combat): not in an instance and live
-  `UnitAffectingCombat("player") == true`; this has priority over World.
-- World: not resting and not in an instance when World (Combat) is not active.
-- Other contexts are outside G.3 and must not acquire invented camera behavior.
-
-Camera behavior:
-- World conditionally targets zoom `5` only when currently farther than 5.
-- World (Combat) conditionally targets zoom `15` only when currently closer
-  than 15.
-- Ordinary World <-> World (Combat) transition time is `2.5` seconds.
-- Zoom restore remains `never`.
-- Use the proven `GetCameraZoom` + `MoveView*Start/Stop` mechanism.
-- Do not adopt the unproven temporary-`SetCVar` / `CameraZoomIn/Out` fallback.
-- `InCombatLockdown()` is a separate restriction signal, not the camera-context
-  predicate.
-- Stop active movement cleanly on interruption, disable, ownership loss, or
-  failure.
+- P0096 is durable at `a556a19a`; its two genuine live-combat probes proved the
+  primary MoveView path with live `UnitAffectingCombat("player")`.
+- P0097 is durable at `86d062d3`; D-032 records future world-first layout and
+  action-role direction without changing Phase G camera scope.
+- P0098 is durable at `903e65c8`; D-033 records parallel World Ghost visual
+  direction without changing Phase G runtime scope.
+- P0099 is durable at `10c7255f`; G.2 is closed and G.3 is active.
+- The P0096 `cachedCombat=false` / `mismatch=true` evidence remains authoritative:
+  camera combat selection uses live `UnitAffectingCombat("player")`, not cached
+  `State.combat`.
+- Core `State.combat` semantics remain unchanged.
+- G.3 profile semantics remain:
+  - World conditionally targets zoom `5` only when farther than 5;
+  - World (Combat) conditionally targets zoom `15` only when closer than 15;
+  - ordinary transition duration is `2.5` seconds;
+  - zoom restore is `never`.
+- G.3 uses the proven `GetCameraZoom` + read-only `cameraZoomSpeed` +
+  `MoveView*Start/Stop` mechanism.
+- The temporary `SetCVar` / `CameraZoomIn/Out` corrective fallback remains
+  unproven and is not adopted.
 - DynamicCam and Logres must never drive camera movement simultaneously.
-- Fail open to a usable current camera position.
+
+## G.3 P0100 Implementation
+
+P0100 adds `CameraWorldCombat`, an auto-enabled production module.
+
+Selection is event/state-driven:
+- cached state subscription handles ordinary instance/resting/taxi/interaction
+  changes;
+- targeted combat/restriction events force reevaluation of the live
+  `UnitAffectingCombat("player")` predicate even when cached State publishes no
+  change;
+- `OnUpdate` exists only while an active camera transition is running and is
+  not context polling.
+
+Known higher/out-of-slice contexts gated by current proven state are:
+- instance;
+- taxi;
+- NPC interaction;
+- resting/City when not overridden by live combat.
+
+Unimplemented later DynamicCam contexts such as fishing, gathering,
+hearth/teleport, and AFK remain future Phase G slices and are not newly modeled
+by P0100.
+
+Ownership/fail-open behavior:
+- DynamicCam loaded -> Logres relinquishes movement ownership;
+- historical G.2 probe running -> production controller relinquishes;
+- historical probe refuses to start while production controller is enabled;
+- active movement stops before replacement transitions and on disable,
+  ownership loss, or failure;
+- no speculative camera restoration occurs.
+
+Developer diagnostics add:
+- Camera World/Combat Check;
+- Camera World/Combat Reconcile;
+- Camera World/Combat ON;
+- Camera World/Combat OFF.
+
+The non-mutating Camera World/Combat Check is included in Run All. Manual
+Reconcile is deliberately excluded from Run All because it may move the camera.
 
 ## Next Action
 
-After P0099 is verified pushed, implement G.3 production World/Combat camera
-ownership from the above contract.
+Apply and push P0100.
 
-The implementation must remain capability-gated and event/state-driven; active
-animation frames are allowed only while a camera transition is running and must
-not become context polling.
+After verified push, deploy `0.0.41-dev` and validate with DynamicCam disabled:
+- World target transition from farther than 5;
+- World no-op at 5 or closer;
+- automatic live-combat transition from closer than 15;
+- combat no-op at 15 or farther;
+- automatic combat-exit World transition without remembered pre-combat restore;
+- movement interruption by controller disable;
+- clean re-enable/reconcile;
+- Run All PASS with Camera World/Combat Check PASS;
+- no Lua, taint, protected-action, or secret-value errors.
+
+A separate coexistence validation with DynamicCam loaded must show Logres
+blocked/relinquished with no simultaneous movement.
 
 Parallel Phase H+ art-direction work remains valid under D-032/D-033 and does
 not change this runtime next action.
@@ -136,13 +152,11 @@ G.3 completes only after production ownership proves:
 
 - `docs/memory/evidence/G1_DYNAMICCAM_PROFILE_CAPTURE_2026-10-02.md`
 - `docs/memory/evidence/G2_DYNAMICCAM_ZOOM_SOURCE_AUDIT_2026-10-02.md`
-- `docs/memory/evidence/G2_P0095_COMBAT_CLASSIFICATION_FAIL_2026-10-02.md`
 - `docs/memory/evidence/G2_P0096_RUNTIME_PASS_2026-10-02.md`
-- `docs/memory/investigations/G2_WORLD_COMBAT_CAMERA_CAPABILITY.md`
 - `docs/memory/investigations/G3_WORLD_COMBAT_CAMERA_OWNERSHIP.md`
 - `docs/memory/architecture/CAMERA.md`
-- `docs/memory/patches/P0096_FIX_CAMERA_COMBAT_CLASSIFICATION.md`
 - `docs/memory/patches/P0099_CLOSE_G2_OPEN_G3.md`
+- `docs/memory/patches/P0100_G3_WORLD_COMBAT_CAMERA_OWNERSHIP.md`
 - `docs/memory/decisions/D-032_WORLD_FIRST_LAYOUT_AND_ACTION_ROLES.md`
 - `docs/memory/decisions/D-033_PARALLEL_ART_DIRECTION_AND_WORLD_GHOST.md`
 - `docs/memory/architecture/WORLD_FIRST_LAYOUT.md`

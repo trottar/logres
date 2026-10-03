@@ -3,7 +3,7 @@
 ## G.3 — Production World/Combat camera ownership
 
 Status:
-**ACTIVE — IMPLEMENTATION NEXT**
+**ACTIVE — P0100 IMPLEMENTATION PREPARED; RUNTIME PROOF PENDING**
 
 Canonical:
 `G3_WORLD_COMBAT_CAMERA_OWNERSHIP.md`
@@ -11,17 +11,23 @@ Canonical:
 G.2 runtime evidence:
 `../evidence/G2_P0096_RUNTIME_PASS_2026-10-02.md`
 
-Accepted production contract:
+P0100 production implementation:
+- auto-enabled `CameraWorldCombat` controller;
 - World -> conditional target 5;
 - World (Combat) -> conditional target 15;
 - ordinary transition 2.5 seconds;
 - zoom restore never;
-- combat selection uses live `UnitAffectingCombat("player")`;
-- lockdown remains a separate restriction signal;
-- use the proven primary MoveView path;
+- live `UnitAffectingCombat("player")` selects combat;
+- targeted combat/restriction event reevaluation prevents dependence on cached
+  state publication;
+- primary MoveView path only;
 - no temporary-CVar fallback;
-- stop movement on interruption/disable/failure;
-- DynamicCam and Logres must not move the camera simultaneously.
+- explicit interruption/disable/ownership-loss stop;
+- DynamicCam coexistence gate;
+- historical G.2 probe mutually gated from production ownership;
+- addon-owned developer diagnostics and non-mutating Run All check.
+
+Required next evidence is production runtime validation on `0.0.41-dev`.
 
 ## Closed Phase G investigations
 

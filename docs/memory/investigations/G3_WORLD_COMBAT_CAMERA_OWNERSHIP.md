@@ -1,6 +1,6 @@
 # G.3 — Production World/Combat Camera Ownership
 
-Status: ACTIVE — IMPLEMENTATION NEXT
+Status: ACTIVE — P0100 IMPLEMENTATION PREPARED; RUNTIME PROOF PENDING
 Opened: 2026-10-02
 
 G.1 profile evidence:
@@ -21,145 +21,131 @@ Do not broaden this checkpoint into the rest of the DynamicCam profile.
 
 ## Context contract
 
-Use the captured profile's actual situation meanings and priority:
+World (Combat): not in an instance and live `UnitAffectingCombat("player")` is
+true. It has higher priority than World.
 
-### World (Combat)
+World: not resting and not in an instance when World (Combat) is not selected.
 
-Active when:
-- not in an instance; and
-- live `UnitAffectingCombat("player")` is true.
+Known higher/out-of-slice states already proven in the Logres state engine are
+also treated as relinquish conditions in P0100:
+- taxi;
+- active NPC interaction;
+- instance.
 
-This situation has higher priority than World.
-
-### World
-
-Active when:
-- not resting; and
-- not in an instance; and
-- World (Combat) is not selected.
-
-### Outside this slice
-
-City/resting, instances, taxi, NPC interaction, fishing, AFK, gathering,
-hearth/teleport, and other later contexts are not implemented by G.3.
-
-When neither G.3 situation owns the camera, G.3 must stop any active movement
-and relinquish ownership without inventing a new target.
+Resting/City relinquishes when live combat is not selected. Fishing, gathering,
+hearth/teleport, AFK, and other later DynamicCam situations remain future slices;
+P0100 does not invent their predicates.
 
 ## Zoom contract
 
 World:
 - read current zoom;
 - if current zoom > 5, target 5;
-- otherwise do not zoom out merely to reach 5.
+- otherwise no-op.
 
 World (Combat):
 - read current zoom;
 - if current zoom < 15, target 15;
-- otherwise do not zoom in merely to reach 15.
+- otherwise no-op.
 
-Ordinary World <-> World (Combat) transition:
-`2.5` seconds.
+Ordinary transition: `2.5` seconds.
 
-Zoom restoration policy:
-`never`.
+Zoom restoration: `never`.
 
-Leaving combat therefore does not restore a remembered pre-combat zoom. The
-World rule is evaluated normally and conditionally targets 5 when needed.
+Combat exit evaluates the World rule normally; it does not restore a remembered
+pre-combat zoom.
 
 ## Signal contract
 
-Combat selection uses live:
-`UnitAffectingCombat("player")`.
+Combat selection uses live `UnitAffectingCombat("player")`; cached
+`Logres:GetState().combat` is diagnostic only.
 
-Do not substitute cached:
-`Logres:GetState().combat`.
+P0096 runtime evidence showed those values can disagree in real combat.
 
-P0096 runtime evidence showed the two can disagree during real combat.
+Because the core state publisher emits only when tracked state changes, P0100
+also reevaluates on `PLAYER_REGEN_DISABLED`, `PLAYER_REGEN_ENABLED`, and
+`ADDON_RESTRICTION_STATE_CHANGED`. This is targeted event handling, not polling,
+and avoids redesigning core State.
 
-`InCombatLockdown()` remains a separate restriction/protection signal. It may
-inform whether a particular operation is legal, but it does not define the
-World (Combat) situation.
+`InCombatLockdown()` remains a separate diagnostic/restriction signal.
 
 ## Movement contract
 
-Use the runtime-proven primary path:
+P0100 uses:
 - `GetCameraZoom()`;
 - read-only `cameraZoomSpeed`;
 - `MoveViewOutStart()` / `MoveViewOutStop()`;
 - `MoveViewInStart()` / `MoveViewInStop()`;
-- frame-based animation only while a transition is active.
+- frame updates only while an active transition runs.
 
-Do not adopt the unproven LibCamera corrective fallback:
-- no temporary `SetCVar("cameraZoomSpeed", ...)`;
-- no `CameraZoomIn()` / `CameraZoomOut()` fallback.
+Movement factor is derived from current-to-target zoom distance divided by the
+2.5-second profile transition time and the current camera zoom speed.
 
-Frame updates for active animation are allowed. Periodic context polling is not.
+P0100 does not use:
+- temporary `SetCVar("cameraZoomSpeed", ...)`;
+- `CameraZoomIn()` / `CameraZoomOut()` fallback;
+- `C_Timer` polling.
 
 ## Interruption and fail-open contract
 
-Production ownership must:
-- stop an active movement before starting a replacement transition;
-- stop both movement directions on cleanup;
-- stop on module disable;
-- stop when the G.3 context loses ownership;
-- stop on movement/controller failure;
-- leave the current camera usable rather than forcing a speculative restore.
+Production ownership stops active movement:
+- before a replacement transition;
+- when the controller is disabled;
+- when the selected context leaves the G.3 slice;
+- when DynamicCam becomes loaded;
+- if a camera/controller operation fails.
 
-No pre-combat zoom restoration is added because the captured profile explicitly
-uses `zoomRestoreSetting = never`.
+No speculative restoration is performed. Timeout/failure leaves the current
+camera usable.
 
-## DynamicCam coexistence
+## DynamicCam and probe coexistence
 
-DynamicCam and Logres must not drive camera movement simultaneously.
+DynamicCam loaded means Logres does not own G.3 movement.
 
-G.3 must capability-gate ownership so that Logres does not begin or continue a
-camera transition while DynamicCam is the active camera owner.
+`ADDON_LOADED` for DynamicCam triggers immediate reconciliation so a late load
+also relinquishes active movement.
 
-Runtime validation of Logres production behavior is performed with DynamicCam
-movement ownership disabled. Any coexistence gate must fail open to a usable
-camera rather than competing for it.
+The historical `CameraCapabilityProbe` refuses to start while the production
+controller is enabled. The production controller also blocks if it observes an
+already-running probe.
+
+## P0100 diagnostics
+
+Addon-owned status includes:
+- selected context / ownership;
+- active transition context/direction;
+- current/start/target/final zoom;
+- transition elapsed time and target result;
+- live combat, lockdown, cached combat, mismatch;
+- DynamicCam loaded/status source;
+- reconcile/transition/no-op/stop/block/failure counters;
+- last action/reason/stop/block/error/secret state.
+
+Developer-panel actions:
+- Camera World/Combat Check;
+- Camera World/Combat Reconcile;
+- Camera World/Combat ON;
+- Camera World/Combat OFF.
+
+Check is non-mutating and included in Run All. Reconcile may move the camera and
+is excluded from Run All.
 
 ## Scope exclusions
 
-G.3 does not implement:
-- City camera behavior;
-- taxi camera behavior;
-- NPC interaction camera behavior;
-- fishing/gathering/hearth/AFK contexts;
-- camera rotation;
-- shoulder offsets;
-- DynamicCam UI hiding;
-- global camera CVar ownership;
-- the temporary-CVar corrective zoom fallback;
-- a core State.combat redesign.
-
-## Parallel design boundary
-
-D-032 world-first layout planning and D-033 World Ghost visual planning are
-parallel future integration work. They do not alter camera context predicates,
-movement ownership, restoration policy, or G.3 runtime acceptance.
-
-## Implementation direction
-
-The next runtime patch should add the smallest production controller that:
-1. selects only the two G.3 contexts from event/state changes;
-2. applies conditional targets using the proven primary path;
-3. handles interruption and ownership loss explicitly;
-4. exposes enough addon-owned diagnostic state to validate selection,
-   transition, no-op, stop, and coexistence behavior;
-5. remains fail-open.
+P0100 does not implement City behavior, taxi behavior, NPC interaction camera
+behavior, fishing/gathering/hearth/AFK behavior, rotation, shoulder offsets,
+DynamicCam UI hiding, global camera CVar ownership, the temporary-CVar fallback,
+or a core State.combat redesign.
 
 ## Runtime acceptance
 
-G.3 is not complete until current-runtime evidence shows:
-- World target behavior PASS when current zoom is farther than 5;
-- World no-op behavior when already 5 or closer;
-- live-combat target behavior PASS when current zoom is closer than 15;
-- combat no-op behavior when already 15 or farther;
-- clean World <-> World (Combat) transition behavior;
-- no invented pre-combat zoom restoration;
+G.3 remains open until current-runtime evidence shows:
+- World transition PASS when current zoom is farther than 5;
+- World no-op when already 5 or closer;
+- automatic live-combat transition PASS when current zoom is closer than 15;
+- combat no-op when already 15 or farther;
+- clean combat-exit World behavior with no remembered pre-combat restoration;
 - active movement stops on disable/ownership loss;
-- DynamicCam and Logres do not move the camera simultaneously;
-- no Lua, taint, protected-action, or secret-value errors;
-- integrated checks remain PASS.
+- DynamicCam loaded causes Logres to remain blocked/relinquished;
+- Run All PASS including Camera World/Combat Check;
+- no Lua, taint, protected-action, or secret-value errors.

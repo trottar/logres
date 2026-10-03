@@ -28,46 +28,30 @@ State:
 
 ## G.2
 
-Source semantics:
-**PASS.**
+Source semantics: **PASS.**
 
-Primary camera path out of combat:
-**PASS.**
+Primary camera path out of combat: **PASS.**
 
-Primary camera path in live DynamicCam-equivalent combat:
-**PASS.**
+Primary camera path in live DynamicCam-equivalent combat: **PASS.**
 
-Integration on `0.0.40-dev`:
-**PASS.**
+Integration on `0.0.40-dev`: **PASS.**
 
-Classification:
-**CLOSED — RUNTIME + INTEGRATION PASS.**
+Classification: **CLOSED — RUNTIME + INTEGRATION PASS.**
 
 ## G.3
 
 Production World/Combat ownership:
-**ACTIVE — IMPLEMENTATION NEXT.**
+**P0100 IMPLEMENTATION PREPARED — RUNTIME PROOF PENDING.**
 
-The implementation uses the proven primary camera path and live combat
-predicate, preserves zoom restore `never`, keeps lockdown separate, and must not
-compete with DynamicCam for movement ownership.
+Runtime target: `0.0.41-dev`.
+
+P0100 uses the proven primary camera path, live combat predicate, targeted
+combat-event reevaluation, zoom restore `never`, explicit fail-open stopping,
+and a DynamicCam coexistence gate. It does not adopt the temporary-CVar
+fallback or redesign core combat state.
 
 ## Phase H queued direction
 
-D-032 accepted the world-first integration composition.
-
-Queued direction:
-- optional one-quest Active Quest context with exact hover details;
-- shared transient Context region;
-- fixed Primary plus supported source-bar assignment to Secondary/Utility;
-- no general Logres action layout/profile editor requirement;
-- class/pet/special controls remain separate domains;
-- world target preferred over a detached target frame;
-- urgent player debuffs central, passive buffs peripheral, target status in
-  world space where safe.
-
-Parallel art-direction / mockup work may proceed outside Lua implementation.
-Current preferred working hypothesis: World Ghost.
-
-These Phase H+ directions remain parallel planning and do not change active G.3
-runtime scope.
+D-032 accepted the world-first integration composition. D-033 accepted parallel
+World Ghost art-direction work. These remain parallel planning and do not change
+active G.3 runtime scope.

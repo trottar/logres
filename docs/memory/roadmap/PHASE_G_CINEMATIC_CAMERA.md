@@ -21,44 +21,28 @@ Correct profile behavior:
 - ordinary transitions 2.5 seconds;
 - zoom restore never.
 
-DynamicCam situation 006 uses live:
-`UnitAffectingCombat("player")`.
-
-P0095 proved the primary camera movement/restoration path out of combat but
-classified combat from cached Logres state.
-
-P0096 corrected the diagnostic classifier and then passed two genuine
-live-combat probes on `0.0.40-dev`:
-- live combat true;
-- lockdown true;
-- cached combat false;
-- mismatch true;
-- target/movement/restoration true;
-- no secret/error result.
-
-Out-of-combat and post-combat paths remained clean. Run All passed every emitted
-check through `checkall: complete` on the same runtime.
+P0096 passed two genuine live-combat probes on `0.0.40-dev` using live
+`UnitAffectingCombat("player")`; the retained cached/live mismatch proves cached
+Logres combat state is not an equivalent camera-context predicate.
 
 Canonical evidence:
 `../evidence/G2_P0096_RUNTIME_PASS_2026-10-02.md`.
 
 ## G.3 — Production World/Combat camera ownership
 
-**ACTIVE — IMPLEMENTATION NEXT.**
+**ACTIVE — P0100 IMPLEMENTATION PREPARED; RUNTIME PROOF PENDING.**
 
-Evidence-backed contract:
-- World (Combat) uses live `UnitAffectingCombat("player")` while not in an
-  instance and has priority over World;
-- World applies when not resting and not in an instance;
-- World conditionally targets zoom 5 only when farther than 5;
-- World (Combat) conditionally targets zoom 15 only when closer than 15;
-- ordinary transition is 2.5 seconds;
-- zoom restore is never;
-- use the proven `GetCameraZoom` + `MoveView*Start/Stop` mechanism;
-- treat `InCombatLockdown()` as a separate restriction signal;
-- do not use the unproven temporary-CVar fallback;
-- stop movement cleanly on interruption, disable, ownership loss, or failure;
-- DynamicCam and Logres must not move the camera simultaneously.
+P0100 adds the smallest production controller:
+- event/state-driven World/Combat selection;
+- targeted live-combat reevaluation independent of cached state publication;
+- World conditional target 5;
+- World (Combat) conditional target 15;
+- 2.5-second primary MoveView transition;
+- zoom restore never;
+- DynamicCam coexistence gate;
+- explicit stop/fail-open behavior;
+- no temporary-CVar fallback;
+- addon-owned diagnostics and Run All integration.
 
 Canonical G.3 investigation:
 `../investigations/G3_WORLD_COMBAT_CAMERA_OWNERSHIP.md`.
@@ -73,4 +57,4 @@ scope or waive camera capability gates.
 
 More complex City/NPC/taxi/teleport/fishing/gathering/global settings remain
 later slices. Rotation, UI hiding, shoulder offsets, and broader camera CVar
-ownership are also outside G.3.
+ownership are also outside P0100.

@@ -1,0 +1,35 @@
+Project Logres P0100
+Date: 2026-10-02
+Baseline: 10c7255f7e04c73108c22d457bed6178002c0ae6
+Runtime: 0.0.41-dev
+Purpose: implement G.3 production World/Combat camera ownership
+
+Files:
+dcf3d1b07ffe65f11548f0e3c487382983bfbf6cf07f4bdcba52fd3613b47e9a  Logres/Camera/Probe.lua
+ddf884eca168bdd007253cad527a5cad7cb9f59341f7450f16bdfee98e2161d2  Logres/Camera/WorldCombat.lua
+ee90496092ef4c48e0f80dade8a4e4ddad33df497a08565f57a6a18a2ad827ed  Logres/Core/Bootstrap.lua
+a2bb12cacce4636783974fb31440ba4c191abaacee85f73a073da93ffeeceaf8  Logres/Core/Commands.lua
+4af12729c2012510f3c60d584529cfcceeac45d9473400964e7a866708d9aa4c  Logres/Logres.toc
+1efe825e6a50444062e9b8c09651f21cd51f97a838c0025b979dfbe82985db5c  docs/ROADMAP.md
+33177868c7a27ecd49e81bf864bccb1ebd570f068dc1a491ea2fbd29a7a05f0f  docs/memory/CURRENT.md
+cfd5c38827874ccb766a7129defb3e2e8df42bafff602be727721b6dd26a43a3  docs/memory/architecture/CAMERA.md
+d3d1a8cd1d86242b6a330ec479288cb9a03a750103fb2e70ba1577eb6a8413dd  docs/memory/handoffs/CURRENT_HANDOFF.md
+a497d51628faf63413cd525ad5ca74b13709d6df69fba30c514b5ce08d9e7fda  docs/memory/investigations/ACTIVE.md
+185e7606039c88f16d3de2beadb85d46e372b99af67cec3fae826e38fef5a2d5  docs/memory/investigations/G3_WORLD_COMBAT_CAMERA_OWNERSHIP.md
+00a20fbecab81e817d2922e21d94f7758fb5b7246654eb988b92fbd602ba7013  docs/memory/patches/P0099_CLOSE_G2_OPEN_G3.md
+b45ebecd3f378085164dce69ee96053adce0f614f2c43b0007556c8778edea2a  docs/memory/patches/P0100_G3_WORLD_COMBAT_CAMERA_OWNERSHIP.md
+44cfcdf2c6669550809dbc951d46ec21faea5edeb28d209aa67511f0cc1d05ed  docs/memory/patches/PATCH_INDEX.md
+9267eb10b5ac523e5bf6e48f4a48b389ec6049539237a5ba3f973e7a51803253  docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md
+cbd298ac251ab4c33c7cdc7e11599c7487bb5b99af35365dd94f2c6ecd751d9e  docs/memory/roadmap/STATUS.md
+46c5e472a440842f844cde811d190ca50f18c7a8d6ab8908c7203470daf0d012  tools/check_camera_world_combat_contract.py
+
+Validation:
+exact verified P0099 HEAD
+verified expected baseline blob for every modified tracked file
+known local LOGRES_DIAGNOSTICS_LATEST.lua allowed but not modified/tracked
+all tools/check_*.py syntax-compiled and executed
+G.3 camera production static contract
+git diff --check
+
+Runtime code changed: yes.
+WoW redeploy required after verified push: yes.

@@ -115,6 +115,8 @@
 
 | P0098 | 2026-10-02 | INSTALLED / PUSHED — DOCS-ONLY | Record parallel World Ghost art direction and visual-system workflow (`903e65c8`) |
 
-| P0099 | 2026-10-02 | PREPARED — DOCS/EVIDENCE ONLY | Record P0096 PASS; close G.2; open G.3 production World/Combat camera ownership |
+| P0099 | 2026-10-02 | INSTALLED / PUSHED — DOCS/EVIDENCE ONLY | Record P0096 PASS; close G.2; open G.3 production World/Combat camera ownership (`10c7255f`) |
 
+
+| P0100 | 2026-10-02 | PREPARED — RUNTIME PROOF PENDING | Implement G.3 production World/Combat camera ownership |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

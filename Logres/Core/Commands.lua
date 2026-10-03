@@ -2594,6 +2594,135 @@ local function runQuestProbe()
     end
 end
 
+local function cameraWorldCombatStatusPasses(status)
+    local coexistenceSafe =
+        status.lastDynamicCamStatusKnown == true
+        and (
+            status.lastDynamicCamLoaded ~= true
+            or (
+                status.ownsContext == false
+                and status.transitionActive == false
+            )
+        )
+
+    local ownershipCoherent =
+        (
+            status.selectedContext == "none"
+            and status.ownsContext == false
+        )
+        or (
+            (
+                status.selectedContext == "world"
+                or status.selectedContext == "combat"
+            )
+            and status.ownsContext == true
+        )
+
+    local transitionCoherent =
+        status.transitionActive ~= true
+        or (
+            status.transitionContext == "world"
+            or status.transitionContext == "combat"
+        )
+
+    return
+        status.moduleEnabled == true
+        and status.apiAvailable == true
+        and status.lastSecret == false
+        and status.lastError == nil
+        and coexistenceSafe
+        and ownershipCoherent
+        and transitionCoherent
+end
+
+local function emitCameraWorldCombatStatus(prefix, status, passed)
+    emit(string.format(
+        "Logres cameraworldcombat: %s (enabled=%s context=%s owns=%s transition=%s/%s action=%s reason=%s stop=%s blocked=%s liveCombat=%s lockdown=%s cachedCombat=%s mismatch=%s dynamicCam=%s/%s api=%s current=%s start=%s target=%s final=%s elapsed=%s targetReached=%s reconcile=%s starts=%s complete=%s stops=%s noop=%s blockedCount=%s relinquish=%s failures=%s secret=%s error=%s)",
+        prefix or (passed and "PASS" or "FAIL"),
+        tostring(status.moduleEnabled),
+        tostring(status.selectedContext),
+        tostring(status.ownsContext),
+        tostring(status.transitionActive),
+        tostring(status.transitionContext),
+        tostring(status.lastAction),
+        tostring(status.lastReason),
+        tostring(status.lastStopReason),
+        tostring(status.lastBlockedReason),
+        tostring(status.lastLiveCombat),
+        tostring(status.lastLockdown),
+        tostring(status.lastCachedCombat),
+        tostring(status.lastCombatMismatch),
+        tostring(status.lastDynamicCamLoaded),
+        tostring(status.lastDynamicCamStatusSource),
+        tostring(status.apiAvailable),
+        tostring(status.lastCurrentZoom),
+        tostring(status.transitionStartZoom),
+        tostring(status.transitionTargetZoom),
+        tostring(status.lastFinalZoom),
+        tostring(status.lastTransitionElapsed),
+        tostring(status.lastTargetReached),
+        tostring(status.reconcileCount),
+        tostring(status.transitionStartCount),
+        tostring(status.transitionCompleteCount),
+        tostring(status.transitionStopCount),
+        tostring(status.noOpCount),
+        tostring(status.blockedCount),
+        tostring(status.relinquishCount),
+        tostring(status.failureCount),
+        tostring(status.lastSecret),
+        tostring(status.lastError)
+    ))
+end
+
+local function runCameraWorldCombatCheck()
+    local controller = Logres:GetModule("CameraWorldCombat")
+    local status = controller:GetDebugStatus()
+    local passed = cameraWorldCombatStatusPasses(status)
+    emitCameraWorldCombatStatus(passed and "PASS" or "FAIL", status, passed)
+end
+
+local function runCameraWorldCombatReconcile()
+    local controller = Logres:GetModule("CameraWorldCombat")
+    local ok, reason = controller:Reconcile("manual-diagnostic")
+    local status = controller:GetDebugStatus()
+
+    emitCameraWorldCombatStatus(
+        ok and "RECONCILE" or "BLOCKED",
+        status,
+        ok
+    )
+
+    if not ok and reason then
+        emit("Logres cameraworldcombat reconcile reason: " .. tostring(reason))
+    end
+end
+
+local function handleCameraWorldCombat(argument)
+    local controller = Logres:GetModule("CameraWorldCombat")
+
+    if argument == "on" then
+        Logres:EnableModule("CameraWorldCombat")
+        emit("Logres cameraworldcombat: controller enabled")
+        runCameraWorldCombatCheck()
+        return
+    end
+
+    if argument == "off" then
+        Logres:DisableModule("CameraWorldCombat")
+        emit("Logres cameraworldcombat: controller disabled")
+        return
+    end
+
+    if argument == "" or argument == "status" then
+        local status = controller:GetDebugStatus()
+        emitCameraWorldCombatStatus("STATUS", status, true)
+        return
+    end
+
+    emit("Usage: /logres cameraworldcombat [on|off|status]")
+end
+
+
 local function runCameraZoomProbe()
     local probe = Logres:GetModule("CameraCapabilityProbe")
     local mode, reason = probe:HandlePanelAction()
@@ -2676,6 +2805,7 @@ local function runAllChecks()
     runTargetFrameCheck()
     runRestorationCheck()
     runContextPolicyCheck()
+    runCameraWorldCombatCheck()
     runCompassCheck()
     emit("Logres checkall: complete")
 end
@@ -2757,6 +2887,9 @@ local function printHelp()
     emit("  /logres compasscheck")
     emit("  /logres waypointprobe")
     emit("  /logres questprobe")
+    emit("  /logres cameraworldcombatcheck")
+    emit("  /logres cameraworldcombatreconcile")
+    emit("  /logres cameraworldcombat [on|off|status]")
     emit("  /logres camerazoomprobe")
     emit("  /logres xpcheck")
     emit("  /logres xppreview")
@@ -2904,6 +3037,21 @@ local function handleCommand(message)
 
     if command == "questprobe" then
         runQuestProbe()
+        return
+    end
+
+    if command == "cameraworldcombatcheck" then
+        runCameraWorldCombatCheck()
+        return
+    end
+
+    if command == "cameraworldcombatreconcile" then
+        runCameraWorldCombatReconcile()
+        return
+    end
+
+    if command == "cameraworldcombat" then
+        handleCameraWorldCombat(argument)
         return
     end
 
@@ -3090,6 +3238,26 @@ Logres:RegisterDevPanelAction(
     "questProbe",
     "Quest Probe",
     "questprobe"
+)
+Logres:RegisterDevPanelAction(
+    "cameraWorldCombatCheck",
+    "Camera World/Combat Check",
+    "cameraworldcombatcheck"
+)
+Logres:RegisterDevPanelAction(
+    "cameraWorldCombatReconcile",
+    "Camera World/Combat Reconcile",
+    "cameraworldcombatreconcile"
+)
+Logres:RegisterDevPanelAction(
+    "cameraWorldCombatOn",
+    "Camera World/Combat ON",
+    "cameraworldcombat on"
+)
+Logres:RegisterDevPanelAction(
+    "cameraWorldCombatOff",
+    "Camera World/Combat OFF",
+    "cameraworldcombat off"
 )
 Logres:RegisterDevPanelAction(
     "cameraZoomProbe",

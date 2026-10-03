@@ -407,6 +407,14 @@ function Probe:StartProbe()
 
     self:ResetTransient()
 
+    local productionController = Logres:GetModule("CameraWorldCombat")
+    if productionController:IsEnabled() then
+        return self:FailImmediate(
+            "production camera controller enabled; disable it before manual camera probe",
+            false
+        )
+    end
+
     local dynamicCamLoaded, statusKnown, statusSource =
         queryDynamicCamLoaded()
 
