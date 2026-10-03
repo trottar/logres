@@ -4,13 +4,13 @@ As of 2026-10-02.
 
 ## Active
 
-**Phase F — Quest Experience**
+**Phase G — Cinematic Camera**
 
 Active work item:
-**F.6 Contextual objective progress pulse**
+**G.1 Current DynamicCam profile capture**
 
 State:
-**Phase E COMPLETE; Phase F ACTIVE — F.6**
+**Phase F COMPLETE; Phase G ACTIVE — G.1**
 
 ## Phase status
 
@@ -22,11 +22,11 @@ State:
 | C — Action Interface | COMPLETE |
 | D — Immersion Controller | COMPLETE |
 | E — Compass and Navigation | COMPLETE |
-| F — Quest Experience | ACTIVE — F.6 |
-| G — Cinematic Camera | QUEUED |
+| F — Quest Experience | COMPLETE |
+| G — Cinematic Camera | ACTIVE — G.1 |
 | H — Integration and Polish | QUEUED |
 
-## Phase F
+## Phase F final state
 
 | Item | State |
 | --- | --- |
@@ -35,28 +35,26 @@ State:
 | F.3 Contextual XP pulse | COMPLETE — runtime + integration + visual PASS |
 | F.4 Additive NPC quest detail presentation | COMPLETE — runtime + integration + visual PASS |
 | F.5 Objective / progress runtime capability proof | COMPLETE — runtime PASS |
-| F.6 Contextual objective progress pulse | ACTIVE — production identity defect proven; P0092 retest pending |
-| F.7+ Remaining quest slices | QUEUED — capability-gated |
+| F.6 Contextual objective progress pulse | COMPLETE — P0092 runtime + visual PASS |
+| F.7+ Additional quest work | DEFERRED — only with new accepted evidence/capability |
 
-## F.6 current state
+P0092 final:
+- durable at `5f8e9e96`;
+- runtime `0.0.38-dev`;
+- one natural objective change -> `changes=1`, `pulses=1`;
+- matching quest 237 update to Skullthumper `6/10`, Seer `4/10`;
+- user visual acceptance PASS.
 
-P0091:
-- durable at `a2c5e863`;
-- runtime `0.0.37-dev`;
-- current-objective Preview execution PASS;
-- Immersion Preview policy PASS;
-- two Run All executions PASS;
-- latest quest 237 probe `5/10` Skullthumper, `4/10` Seer;
-- raw-text production identity defect proven.
+## Phase G
 
-P0092:
-- stable count-prefix-free same-objective identity;
-- same-index comparison retained;
-- no source/event/baseline/polling change;
-- runtime target `0.0.38-dev`;
-- runtime + visual retest pending.
+| Item | State |
+| --- | --- |
+| G.1 Current DynamicCam profile capture | ACTIVE — fresh export required |
+| G.2+ Camera implementation slices | QUEUED — selected after G.1 evidence |
 
-## Navigation
+G.1 must obtain a current profile before exact camera behavior is designed.
+
+## Deferred navigation
 
 Quest IDs `436`, `237`, and `1338` remain negative waypoint samples.
 

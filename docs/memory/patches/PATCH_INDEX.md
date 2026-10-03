@@ -101,6 +101,8 @@
 
 | P0091 | 2026-10-02 | INSTALLED / PUSHED — INTEGRATION PASS; PRODUCTION IDENTITY DEFECT EXPOSED | Normalize objective progress labels (`a2c5e863`) |
 
-| P0092 | 2026-10-02 | PREPARED — RUNTIME + VISUAL RETEST PENDING | Use stable count-prefix-free objective identity for production change detection |
+| P0092 | 2026-10-02 | INSTALLED / PUSHED — RUNTIME + VISUAL PASS | Use stable count-prefix-free objective identity for production change detection (`5f8e9e96`) |
+
+| P0093 | 2026-10-02 | PREPARED — DOCS-ONLY | Record P0092 PASS; close Phase F; open Phase G / G.1 |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

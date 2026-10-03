@@ -1,46 +1,30 @@
 # Active Investigations
 
-## F.6 — Contextual objective progress pulse
+## G.1 — Current DynamicCam profile capture
 
 Status:
-**ACTIVE — LIVE SOURCE PASS; LIVE PREVIEW PASS; PRODUCTION IDENTITY DEFECT
-PROVEN; PULSE FIX RETEST PENDING**
+**ACTIVE — FRESH EXPORT REQUIRED**
 
 Canonical:
-`F6_CONTEXTUAL_OBJECTIVE_PROGRESS.md`
+`G1_DYNAMICCAM_PROFILE_CAPTURE.md`
 
-P0089 live source freshness:
-**PASS.**
+Architecture:
+`../architecture/CAMERA.md`
 
-P0090 current-objective Preview:
-**PASS.**
+Purpose:
+capture the user's actual current DynamicCam behavior before any Phase G camera
+implementation.
 
-P0091:
-- durable at `a2c5e863`;
-- runtime `0.0.37-dev`;
-- Preview path PASS;
-- Immersion Preview policy PASS;
-- two Run All executions PASS;
-- latest quest 237 probe captured `5/10` Skullthumper and `4/10` Seer.
+Required evidence:
+- current export/profile;
+- exact configured context values;
+- transition rules and timing;
+- world/combat/NPC/gathering/fishing/taxi/hearth/instance behavior;
+- any configured rest/AFK/travel behavior.
 
-Production detection defect:
-**PROVEN.**
+Do not reconstruct exact values from conversational memory.
 
-Forever count-based objective text changes with the leading count token.
-Current `FindChangedRows()` requires raw text equality before it checks
-`fulfilled` / `required`, so a real count transition changes the identity gate
-and prevents the change branch from running.
-
-P0092:
-- stable count-prefix-free objective identity;
-- same-index comparison retained;
-- no source/event/baseline/timer/polling changes.
-
-Do not add polling/retry/reassertion.
-
-Stock Objective Tracker remains Blizzard-owned.
-
-## Closed Phase F slices
+## Closed Phase F
 
 F.3 contextual XP:
 **CLOSED — RUNTIME + INTEGRATION + VISUAL PASS.**
@@ -50,6 +34,15 @@ F.4 additive NPC quest detail presentation:
 
 F.5 objective/progress capability proof:
 **CLOSED — RUNTIME PASS.**
+
+F.6 contextual objective progress pulse:
+**CLOSED — RUNTIME + VISUAL PASS.**
+
+P0092 final production proof:
+- `changes=1`;
+- `pulses=1`;
+- quest 237 Skullthumper `6/10`, Seer `4/10`;
+- user visual acceptance PASS.
 
 ## Other tracked non-blocking defects / deferred domains
 

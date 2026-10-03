@@ -1,6 +1,7 @@
 # Phase F — Quest Experience
 
-Status: ACTIVE — F.6
+Status: COMPLETE
+Closed: 2026-10-02
 
 ## Product Objective
 
@@ -13,60 +14,99 @@ safe replacements exist.
 Phase F owns passive quest/XP presentation policy and restrained runtime-proven
 objective updates.
 
-Blizzard retains quest interaction controls, watch/super-track mutation, stock
-quest-log interaction, and the stock Objective Tracker until a safe replacement
-exists.
+Blizzard retains:
+- quest interaction controls;
+- watch/super-track mutation;
+- stock quest-log interaction;
+- stock Objective Tracker interaction.
 
-## F.1
+These retained surfaces are deliberate fail-open/control boundaries, not
+unfinished Phase F work.
+
+## F.1 — Quest-experience capability contract
 
 **COMPLETE — D-031.**
 
-## F.2
+Established passive observation versus Blizzard-owned interaction/control.
+
+## F.2 — Quest/XP runtime capability proof
 
 **COMPLETE.**
+
+Runtime-proven quest/XP sources and event behavior.
+
+Quest destination APIs produced negative samples rather than a usable route.
 
 ## F.3 — Contextual XP pulse
 
 **COMPLETE — RUNTIME + INTEGRATION + VISUAL PASS.**
 
+Brief XP-change presentation without a permanent XP bar.
+
 ## F.4 — Additive NPC quest detail presentation
 
 **COMPLETE — RUNTIME + INTEGRATION + VISUAL PASS.**
+
+Blizzard quest/gossip controls remain available.
 
 ## F.5 — Objective / progress runtime capability proof
 
 **COMPLETE — RUNTIME PASS.**
 
+Proved populated incomplete/completed objective rows and same-quest progress
+refresh.
+
 ## F.6 — Contextual objective progress pulse
 
-**ACTIVE — PRODUCTION IDENTITY DEFECT PROVEN; P0092 RETEST PENDING.**
+**COMPLETE — RUNTIME + VISUAL PASS.**
 
-P0091 is durable at `a2c5e863`, runtime `0.0.37-dev`.
+Final P0092 commit:
+`5f8e9e96`.
 
-P0091 runtime integration passed, and the latest quest 237 probe captured
-Skullthumper `5/10` and Seer `4/10`.
+Runtime:
+`0.0.38-dev`.
 
-The remaining production defect is now source-proven:
-count-based Forever objective text embeds the changing count, while P0091
-production comparison requires raw text equality before comparing numeric
-progress.
+Final proof:
+- baseline two rows with no false pulse;
+- natural same-quest progress;
+- one meaningful change;
+- one production pulse;
+- immediate live Quest Probe update;
+- user visual acceptance.
 
-P0092 target `0.0.38-dev` compares a full, count-prefix-free stable objective
-label at the same objective index, then compares count/finished state.
+Canonical evidence:
+`../evidence/F6_P0092_RUNTIME_VISUAL_PASS_2026-10-02.md`.
 
-No event/source/baseline/polling change.
-
-Do not add polling/retry/reassertion.
-
-## Quest navigation
+## Deferred quest/navigation capability
 
 Quest IDs `436`, `237`, and `1338` remain negative destination samples.
 
 Quest compass marker remains unsupported until a real usable destination is
 runtime-proven.
 
+This is a capability deferral, not a Phase F blocker.
+
+## Deferred stock replacement
+
+Phase F intentionally does not replace:
+- stock Objective Tracker;
+- quest-log controls;
+- quest accept/decline/continue/complete controls;
+- reward selection;
+- watch/super-track controls.
+
+Any future replacement requires a separately accepted secure/fail-open
+capability contract.
+
 ## Phase F Exit
 
-Phase F completes only when accepted quest/XP presentation is runtime-proven and
-every suppressed Blizzard surface has a deliberate replacement and
-restoration/fallback contract.
+Exit criteria are satisfied:
+- accepted quest/XP presentation is runtime-proven;
+- no Phase F implementation depends on speculative quest destination data;
+- no Blizzard control surface was removed without a deliberate replacement;
+- retained Blizzard surfaces have explicit ownership/fallback boundaries.
+
+**PHASE F COMPLETE.**
+
+Further quest work requires new evidence or a new accepted capability slice;
+there is no mandatory undefined F.7 implementation.

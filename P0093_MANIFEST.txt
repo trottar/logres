@@ -1,0 +1,31 @@
+Project Logres P0093
+Date: 2026-10-02
+Baseline: 5f8e9e9669999f79edb94d089a91cf17420a9fa8
+Purpose: record P0092 runtime/visual PASS; close Phase F; open Phase G / G.1
+Type: docs-only
+
+Files:
+c314bddc80259059169b47b79ccc15204dbe01e811b2ea7e9d8b836a7ba8505c  docs/ROADMAP.md
+81b12e688ee020dd292a70074300c5c75fe0de9bec2da01767399fe6f2b24e8e  docs/memory/CURRENT.md
+fa720a1b4ec65a40d907bfe1a668027204153ab1e7f63b1e12f30744b1214739  docs/memory/evidence/F6_P0092_RUNTIME_VISUAL_PASS_2026-10-02.md
+640fcfb88ee119a02c70013498ca3df443c3982dbc1b091dec228a275693a28f  docs/memory/handoffs/CURRENT_HANDOFF.md
+f94153f91b61f1984e7c140e4c48d6e267c4445461a76ce820ba981ebd567c30  docs/memory/investigations/ACTIVE.md
+c831781afd72d92e67dd62dc5cd7ef3914b5e396e3ffed4799395d105a38ffa7  docs/memory/investigations/F6_CONTEXTUAL_OBJECTIVE_PROGRESS.md
+488e1355fe0d371998778b317f00f8e905c48a1909b0eed3c370151b344baf13  docs/memory/investigations/G1_DYNAMICCAM_PROFILE_CAPTURE.md
+88243d656efc104fa58e45d4591504be5ef435a66e03a70523bfdf96805d4cbd  docs/memory/patches/P0092_FIX_OBJECTIVE_PROGRESS_IDENTITY.md
+78f21fad249ed2045d5fca1877e1cb49b60571b524807ed80d69d7347b982e36  docs/memory/patches/P0093_CLOSE_PHASE_F_OPEN_PHASE_G.md
+e12028969f50c9a2e85944ed8c55aa2f0cf40a55f9bb78e9a49dd3df30d21749  docs/memory/patches/PATCH_INDEX.md
+5fe9086ca563aefcb0888995b8eed57d01266081981b4d2f7c3f4fd7fccb7d09  docs/memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md
+6cd692e966247b16e3c2a568c8bb1ae271834357e2b01beb6f60b76b29301426  docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md
+0244e926dec5bf3a716e127f71136aa446361aca069f0d4adc6b8a389b9282ee  docs/memory/roadmap/STATUS.md
+
+Validation:
+exact verified P0092 HEAD
+exact-byte verification of P0093-owned tracked inputs against HEAD
+full temporary git-archive final-tree construction
+compile and execute every tools/check_*.py in temporary and real trees
+CURRENT canonical heading validation
+Phase F COMPLETE / Phase G ACTIVE G.1 status assertions
+git diff --check
+
+Docs-only: no WoW redeploy required.

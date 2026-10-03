@@ -1,7 +1,7 @@
 # P0092 — Fix Objective Progress Identity
 
 Date: 2026-10-02
-Result: PREPARED — RUNTIME + VISUAL RETEST PENDING
+Result: INSTALLED / PUSHED — RUNTIME + VISUAL PASS (`5f8e9e96`)
 
 ## Baseline
 
@@ -14,24 +14,20 @@ P0091 verified pushed:
 
 ## Trigger
 
-P0091 established that Forever count-based objective text embeds the current
-count prefix.
+Forever count-based objective text embeds the current count prefix.
 
-Current production comparison still requires raw objective-text equality before
-checking the numeric count fields.
-
-That means a real count increment changes the text identity and blocks its own
-change detection.
+P0091 production comparison required raw objective-text equality before checking
+numeric progress, so a count increment changed the text identity and blocked its
+own change detection.
 
 ## Change
 
-Introduce a full, untruncated stable objective identity:
+P0092 introduced a full, untruncated stable objective identity:
 - start from safe addon-owned `row.text`;
-- if the text begins with the exact current `fulfilled/required` token followed
-  by whitespace, remove that token and leading whitespace;
-- return the remaining full label without presentation truncation.
-
-`NormalizeObjectiveLabel()` now truncates that stable label only for display.
+- remove only the exact current `fulfilled/required` prefix when followed by
+  whitespace;
+- keep the remaining full label untruncated for identity;
+- keep presentation truncation separate.
 
 `FindChangedRows()` compares:
 - same objective index;
@@ -52,23 +48,35 @@ No change to:
 - stock Objective Tracker ownership;
 - polling/retry/hook behavior.
 
-## Static contract
+## Runtime result
 
-The F.6 checker now:
-- requires `StableObjectiveText`;
-- requires previous/current stable-identity comparison;
-- rejects raw `previous.text == current.text` production identity.
+P0092 runtime:
+`0.0.38-dev`.
 
-## Runtime validation
+Quest `237` baseline:
+- two rows;
+- `changes=0`;
+- `pulses=0`.
 
-After verified push:
-1. establish baseline;
-2. Preview current objectives and confirm one count per row;
-3. make one natural same-quest objective count change;
-4. confirm exactly one automatic pulse;
-5. immediately run Objective Progress Check;
-6. immediately run Quest Probe;
-7. confirm no duplicate pulse without another change;
-8. Run All once.
+After one natural qualifying kill:
+- `changes=1`;
+- `pulses=1`;
+- `sampleReason=QUEST_LOG_UPDATE`;
+- `error=nil`.
 
-WoW redeploy required after verified push.
+Immediate Quest Probe:
+- Skullthumper `6/10`;
+- Seer `4/10`;
+- QUEST_LOG_UPDATE `99`;
+- QUEST_WATCH_UPDATE `10`.
+
+User visual acceptance:
+the mob kill produced the objective popup correctly and the result looked good.
+
+Classification:
+**RUNTIME + VISUAL PASS.**
+
+Evidence:
+`../evidence/F6_P0092_RUNTIME_VISUAL_PASS_2026-10-02.md`.
+
+WoW redeploy was required for P0092 and has already been validated.

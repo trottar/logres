@@ -32,29 +32,45 @@ Established heading compass, manual user-waypoint compass marker, fail-open navi
 
 ## Phase F — Quest Experience
 
-**Status: ACTIVE — F.6 contextual objective progress pulse.**
+**Status: COMPLETE.**
 
-F.1/F.2 complete. F.3 contextual XP and F.4 additive NPC quest detail presentation are complete with runtime/integration/visual proof. F.5 objective/progress capability proof is complete.
+Completed:
+- F.1 passive quest/XP versus Blizzard control contract;
+- F.2 runtime capability proof;
+- F.3 contextual XP pulse;
+- F.4 additive NPC quest detail presentation;
+- F.5 objective/progress capability proof;
+- F.6 contextual objective progress pulse.
 
-F.6 current evidence:
-- P0091 durable at `a2c5e863`;
-- current-objective Preview execution PASS;
-- Immersion Preview policy PASS;
-- latest quest 237 source remains live;
-- production raw-text objective identity defect is proven;
-- P0092 introduces stable count-prefix-free objective identity;
-- production automatic pulse retest pending.
+Final F.6 evidence:
+P0092 (`5f8e9e96`) produced one production pulse for one natural same-quest
+objective change, with a matching live Quest Probe update and user visual
+acceptance.
 
-F.6 constraints remain baseline-first, no permanent tracker, no stock Objective Tracker suppression, no watch/super-track mutation, fail-open secret/invalid handling, and no polling/retry workaround without evidence.
+Deferred boundaries remain deliberate:
+- stock Objective Tracker remains Blizzard-owned;
+- quest interaction controls remain Blizzard-owned;
+- quest compass marker remains unsupported without a runtime-proven
+  destination.
 
-Deferred: stock Objective Tracker replacement/suppression and quest destination / quest compass marker.
-
-Canonical phase record: `memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md`
+Canonical phase record:
+`memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md`
 
 ## Phase G — Cinematic Camera
 
-Translate the user's established DynamicCam behavior into Logres when Phase G begins; request a fresh export then.
+**Status: ACTIVE — G.1 current DynamicCam profile capture.**
+
+Before camera implementation:
+- obtain a fresh current DynamicCam export/profile;
+- preserve exact settings durably;
+- map configured context behavior;
+- do not reconstruct exact values from old uploads or conversation.
+
+Canonical phase record:
+`memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
 
 ## Phase H — Integration and Polish
+
+**Status: QUEUED.**
 
 Unified settings, profiles, visual consistency, performance, accessibility/configurability, packaging, release documentation, and compatibility testing.
