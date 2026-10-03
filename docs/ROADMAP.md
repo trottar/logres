@@ -44,10 +44,10 @@ semantics in real combat.
 G.3 production World/Combat ownership is closed with runtime + integration PASS
 on `0.0.42-dev`.
 
-G.4 source/profile review resolves the City camera contract. P0105 prepares
-runtime `0.0.43-dev` by selecting City from resting after live-combat precedence
-and reusing the proven conditional target-5 / 2.5-second MoveView path. Runtime
-acceptance is the next narrow checkpoint.
+G.4 source/profile review resolves the City camera contract. P0105 is verified
+pushed at `69560080`, runtime `0.0.43-dev`, selecting City from resting after
+live-combat precedence and reusing the proven conditional target-5 / 2.5-second
+MoveView path. Runtime acceptance is the next narrow checkpoint.
 
 City UI hide/fade, City/global CVar ownership, reactive zoom, startup instant
 transition parity, and later DynamicCam situations remain separately gated.
@@ -64,6 +64,11 @@ parallel art-direction/mockup work. D-034 refines the current visual anchor to
 Selective Hybrid E: World Ghost restraint, authored ornament on meaning-heavy
 surfaces, simple high-density interaction controls, and a shared percentage-bar
 primitive for percentage-based Logres-owned values except player health.
+
+D-035 additionally establishes NPC quest interaction as a future Logres-owned
+experience: source-text paging, accept/decline, continue/complete, reward
+selection, and required quest-related gossip transitions, with Blizzard
+fail-open fallback until each replacement is capability-proven.
 
 Canonical phase record:
 `memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`

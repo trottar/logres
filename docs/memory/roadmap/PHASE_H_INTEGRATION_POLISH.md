@@ -13,6 +13,7 @@ Canonical direction:
 - `../decisions/D-032_WORLD_FIRST_LAYOUT_AND_ACTION_ROLES.md`
 - `../decisions/D-033_PARALLEL_ART_DIRECTION_AND_WORLD_GHOST.md`
 - `../decisions/D-034_SELECTIVE_HYBRID_E_AND_VISUAL_COMPONENTS.md`
+- `../decisions/D-035_QUEST_INTERACTION_OWNERSHIP.md`
 - `../architecture/WORLD_FIRST_LAYOUT.md`
 - `../architecture/VISUAL_SYSTEM_DIRECTION.md`
 - `../architecture/VISUAL_COMPONENT_INVENTORY.md`
@@ -23,6 +24,8 @@ Phase H begins from these settled directions:
 - world before abstraction;
 - authored semantic screen regions;
 - optional Active Quest current-focus presentation;
+- NPC quest interaction is a future Logres-owned experience, with Blizzard
+  fallback retained until each information/control surface is capability-proven;
 - dedicated transient Context region;
 - fixed Primary role plus user assignment of supported bars to
   Secondary/Utility roles;
@@ -41,6 +44,9 @@ Likely slices include:
 - establish authored layout anchors / integration geometry;
 - decouple transient Context from incidental module anchors;
 - Active Quest toggle, ambient wording, and exact hover detail;
+- Logres-owned NPC quest interaction: bounded/paged source text,
+  accept/decline, continue/complete, reward choice, required quest-related
+  gossip transitions, eligibility/error feedback, and fail-open fallback;
 - broaden supported action sources and role assignment safely;
 - optional limited action-grid/whole-cluster adjustments if justified;
 - world-attached target capability and fallback policy;

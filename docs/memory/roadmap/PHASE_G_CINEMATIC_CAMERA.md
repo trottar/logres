@@ -42,7 +42,7 @@ Canonical evidence:
 
 ## G.4 — City camera ownership
 
-**IMPLEMENTATION PREPARED — RUNTIME PROOF PENDING.**
+**IMPLEMENTATION PUSHED — RUNTIME PROOF PENDING.**
 
 P0104 source/profile audit resolves the camera-only City slice:
 - City activation uses existing resting state from `IsResting()`;
@@ -63,10 +63,11 @@ Explicitly outside the first City implementation:
 Canonical audit:
 `../evidence/G4_CITY_CAMERA_SOURCE_AUDIT_2026-10-03.md`.
 
-P0105 prepares runtime `0.0.43-dev`: the existing production controller now
-selects `city` after live combat, uses conditional target 5, exposes resting/City
-diagnostics, and is guarded by a dedicated G.4 static contract checker. Stable
-internal World/Combat command/module identifiers remain for compatibility.
+P0105 is verified pushed at `69560080`, runtime `0.0.43-dev`: the existing
+production controller now selects `city` after live combat, uses conditional
+target 5, exposes resting/City diagnostics, and is guarded by a dedicated G.4
+static contract checker. Stable internal World/Combat command/module identifiers
+remain for compatibility.
 
 Implementation runtime proof should cover automatic City entry, City >5
 transition, City <=5 no-op, fresh destination evaluation on City exit, Run All,
@@ -77,9 +78,9 @@ live-combat-before-City enforcement and record runtime environmental deferral.
 ## Parallel future integration direction
 
 D-032 world-first layout/action-role planning, D-033 World Ghost visual planning,
-and D-034 Selective Hybrid E / component-system direction remain valid parallel
-Phase H+ work. They do not broaden Phase G runtime scope or waive capability
-gates.
+D-034 Selective Hybrid E / component-system direction, and D-035 future NPC
+quest-interaction ownership remain valid parallel Phase H+ work. They do not
+broaden Phase G runtime scope or waive capability gates.
 
 ## Later Phase G Work
 

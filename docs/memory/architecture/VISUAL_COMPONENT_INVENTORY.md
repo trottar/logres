@@ -138,18 +138,36 @@ Shared Context region objects:
 XP, objective change, completion, and later accepted transient producers should
 share this visual family rather than each inventing unrelated chrome.
 
-## 7. NPC quest dialogue
+## 7. NPC quest interaction
 
-Temporary world-oriented presentation:
+Current runtime is still additive, but D-035 establishes the future authored
+quest-interaction family.
+
+Narrative objects:
 - quest title;
-- restrained quest-body excerpt;
-- optional objective summary;
-- entrance/reveal treatment;
-- timeout/recede treatment;
+- fixed-height source-text reading area;
+- short single-page presentation;
+- discrete long-text pages;
+- subtle page indicator;
+- previous/next-page affordance where needed;
+- objective/action text with controlled multi-line wrapping;
+- entrance/reveal and recede treatment;
 - optional faint divider/flourish.
 
-Do not automatically turn this into the same persistent parchment box used by
-Active Quest; its role is temporary narrative presentation.
+Interaction objects for future capability-proven ownership:
+- Accept;
+- Decline;
+- Continue;
+- Complete Quest;
+- reward-choice presentation;
+- selected-reward state;
+- eligibility/error feedback;
+- quest-related gossip entry treatment where Logres owns that transition.
+
+Do not invent quest narrative or silently summarize away source meaning.
+
+Blizzard quest/gossip controls remain visible/available fallback until the
+corresponding Logres interaction and information are deliberately proven.
 
 ## 8. Target / world-target system
 
@@ -256,9 +274,10 @@ currently replace:
 - minimap;
 - Objective Tracker;
 - quest log;
-- quest accept/decline/continue/complete controls;
-- reward selection;
-- gossip controls;
+- quest accept/decline/continue/complete controls while corresponding Logres
+  replacements are not yet capability-proven;
+- reward selection while the Logres reward-choice replacement is unproven;
+- gossip controls outside proven Logres quest-related transitions;
 - PartyFrame / CompactPartyFrame;
 - alternate-power area;
 - un-replaced direct player class-resource children;
@@ -288,7 +307,8 @@ Before component implementation/polish, art studies should cover at least:
    - health tunnel;
    - percentage-bar primitive;
    - Context;
-   - NPC quest dialogue;
+   - NPC quest interaction: short/paged narrative, wrapped objective text, and
+     future action/reward control states;
    - waypoint treatment.
 
 2. **Combat-density board**

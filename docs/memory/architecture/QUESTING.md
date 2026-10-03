@@ -2,39 +2,95 @@
 
 ## Intent
 
-Quest presentation should be world-focused and visually consistent with Logres:
-- restrained NPC quest dialogue;
+Quest experience is a core Logres product domain.
+
+Presentation should remain world-focused and visually consistent with Logres:
+- authored NPC quest interaction;
+- bounded/paged narrative reading;
 - brief objective updates;
-- minimal persistent tracker;
+- optional current-focus Active Quest context;
 - compass integration where technically possible;
 - contextual XP display rather than a permanent conventional bar.
 
-## D-031 capability boundary
+Canonical future-ownership decision:
+`../decisions/D-035_QUEST_INTERACTION_OWNERSHIP.md`.
 
-Phase F separates:
+## Phase F implementation boundary — D-031
+
+Phase F separated:
 - passive quest/XP information;
 - Blizzard-owned quest interaction/control.
 
-Blizzard retains:
-- accept/decline;
-- continue/complete;
-- reward choice;
-- gossip navigation;
-- quest-log/watch controls;
-- stock objective-tracker interaction.
+That boundary remains authoritative for the **existing Phase F runtime**.
 
-No stock quest/objective/XP suppression occurs until the corresponding Logres
-replacement and restoration/fallback behavior are runtime-proven.
+Current proven Phase F behavior is therefore additive/fail-open:
+- contextual XP pulse;
+- additive NPC quest detail presentation;
+- contextual objective progress pulse;
+- stock Blizzard quest interaction remains available.
+
+D-035 changes the future endpoint, not the historical proof.
+
+## Future NPC quest ownership — D-035
+
+When safely capability-proven, Logres should own the player-facing NPC quest
+flow:
+- offer/progress/completion narrative;
+- paging for long source text;
+- objective/action text;
+- accept / decline;
+- continue / complete;
+- reward presentation and reward selection;
+- quest-related gossip transitions needed to reach those quest states.
+
+No quest choice is automated.
+
+Blizzard remains the fallback for any corresponding surface Logres has not
+deliberately replaced and runtime-proven.
+
+The full quest log, watch/super-track management, stock Objective Tracker, and
+non-quest gossip remain separate capability domains.
+
+## Narrative interaction
+
+Preferred quest-reading composition:
+- title;
+- fixed-height source-text reading area;
+- one page for short text;
+- discrete player-driven pages for longer text;
+- subtle page indicator/navigation;
+- objective/action text that may wrap when needed.
+
+Logres must not invent narrative facts or replace source quest text with
+fabricated prose.
+
+Paging source text is distinct from quest-state actions such as Continue,
+Complete, Accept, or Decline.
+
+## Control replacement gate
+
+Before suppressing a Blizzard quest control, Logres must replace the matching
+information and interaction.
+
+Applicable replacements must preserve:
+- clear player intent;
+- quest-state correctness;
+- eligibility/error feedback;
+- reward identity and choice information;
+- usable cancellation/decline paths where present;
+- fail-open restoration/fallback.
+
+A visual prototype is not replacement proof.
 
 ## Destination / compass boundary
 
-Phase F owns quest state and destination discovery.
-
-The existing Compass remains the navigation renderer.
+Quest state/destination discovery feeds the existing Compass when capability is
+proven.
 
 Quest destination APIs may return nothing.
 
-Tested quest IDs `436` and `237` have not produced a usable destination.
+Tested quest IDs `436`, `237`, and later negative samples remain evidence that a
+quest compass marker cannot be assumed available.
 
 A quest compass marker requires a runtime-proven real destination.
 
@@ -47,34 +103,36 @@ Production contextual XP:
 - `+N XP · progress%`;
 - approximately two seconds;
 - no permanent XP bar;
-- no stock XP suppression.
+- no stock XP suppression without a separate replacement gate.
 
 Runtime, integration, and visual proof are accepted.
 
-## NPC quest detail boundary
+## Existing NPC quest detail runtime
 
-F.2 runtime-proved the `QUEST_DETAIL` passive read path.
+F.4 is complete.
 
-F.4 uses that path additively.
-
-Production presentation:
+The current production slice remains additive:
 - title;
 - restrained body excerpt;
 - optional objective line;
 - temporary world-oriented text;
-- no mouse interaction.
+- no Logres-owned quest controls yet.
 
-Blizzard retains the complete quest interaction frame and every control.
+This remains valid runtime behavior while D-035 defines the future replacement
+direction.
 
-Cleanup is fail-open:
-- accepted/finished/world events;
-- timeout;
-- Immersion OFF.
+## Objective boundary
 
-The Logres presentation does not carry authoritative interaction state.
+Runtime-proven objective rows and progress pulses do not by themselves replace
+the stock Objective Tracker or quest-log management.
 
-## Current work
+Missing/uncached objective data must not be converted into a fabricated empty or
+completed state.
 
-F.4 runtime + visual proof of additive NPC quest detail presentation.
+## Fail-open
 
-Populated objective rows and quest destination presentation remain deferred.
+Missing, secret, invalid, uncached, or failed inputs leave the relevant Blizzard
+information/control surface available.
+
+No stale quest destination, objective state, NPC text, reward choice, or quest
+action is fabricated.

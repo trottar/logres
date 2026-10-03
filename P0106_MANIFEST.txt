@@ -1,0 +1,16 @@
+P0106 — Quest Interaction Ownership
+Baseline: 6956008033b3f86c5b70d68c50486a4bed0ecdf1
+Type: docs-only
+
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/architecture/QUESTING.md
+docs/memory/architecture/VISUAL_COMPONENT_INVENTORY.md
+docs/memory/decisions/D-031_QUEST_EXPERIENCE_CAPABILITY_CONTRACT.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_F_QUEST_EXPERIENCE.md
+docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md

@@ -125,4 +125,5 @@
 | P0103 | 2026-10-03 | INSTALLED / PUSHED — DOCS/EVIDENCE ONLY | Record G.3 runtime + integration PASS; open G.4 City camera ownership review (`4adf400a`) |
 | P0104 | 2026-10-03 | INSTALLED / PUSHED — DOCS/SOURCE EVIDENCE ONLY | Resolve G.4 City camera contract; authorize narrow City zoom implementation (`0b676083`) |
 | P0105 | 2026-10-03 | PREPARED — RUNTIME IMPLEMENTATION; PROOF PENDING | Extend production camera ownership with City/resting conditional target 5 |
+| P0106 | 2026-10-03 | PREPARED — DOCS-ONLY | Make full player-facing quest interaction an intended Logres-owned domain; retain Blizzard fail-open fallback until capability-proven |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

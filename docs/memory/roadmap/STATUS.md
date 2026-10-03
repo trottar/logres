@@ -44,7 +44,7 @@ Canonical evidence:
 
 ## G.4
 
-**IMPLEMENTATION PREPARED — RUNTIME PROOF PENDING.**
+**IMPLEMENTATION PUSHED — RUNTIME PROOF PENDING.**
 
 P0104 source/profile review resolves:
 - resting -> City;
@@ -58,9 +58,10 @@ City UI fade, City `cameraDistanceMaxZoomFactor`, reactive zoom, startup instant
 transition parity, and later DynamicCam contexts remain outside the first City
 runtime slice.
 
-P0105 prepares runtime `0.0.43-dev` with City selected from resting after
-live-combat precedence, conditional target 5, City-aware diagnostics, and a
-dedicated static contract. Runtime acceptance remains pending.
+P0105 is verified pushed at `69560080`, runtime `0.0.43-dev`, with City
+selected from resting after live-combat precedence, conditional target 5,
+City-aware diagnostics, and a dedicated static contract. Runtime acceptance
+remains pending.
 
 Canonical source evidence:
 `../evidence/G4_CITY_CAMERA_SOURCE_AUDIT_2026-10-03.md`.
@@ -70,5 +71,7 @@ Canonical source evidence:
 D-032 accepted the world-first integration composition. D-033 accepted parallel
 World Ghost art-direction work. D-034 refines the working visual anchor to
 Selective Hybrid E and establishes the canonical component inventory and
-percentage-bar direction. These remain parallel planning and do not change
-active Phase G camera scope.
+percentage-bar direction. D-035 now also defines NPC quest interaction as a
+future Logres-owned experience with Blizzard fallback until each interaction
+surface is proven. These remain parallel planning and do not change active Phase
+G camera scope.

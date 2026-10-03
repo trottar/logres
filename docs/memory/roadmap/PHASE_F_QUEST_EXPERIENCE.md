@@ -11,17 +11,21 @@ safe replacements exist.
 
 ## Standing Boundaries
 
-Phase F owns passive quest/XP presentation policy and restrained runtime-proven
-objective updates.
+Phase F owns the capability work it actually completed:
+- passive quest/XP presentation policy;
+- additive NPC quest detail;
+- restrained runtime-proven objective updates.
 
-Blizzard retains:
+During Phase F, Blizzard retained:
 - quest interaction controls;
 - watch/super-track mutation;
 - stock quest-log interaction;
 - stock Objective Tracker interaction.
 
-These retained surfaces are deliberate fail-open/control boundaries, not
-unfinished Phase F work.
+That was the accepted **Phase F implementation boundary**. D-035 now clarifies
+that Blizzard ownership of NPC quest interaction is not the final product
+endpoint. Future Logres quest-interaction ownership is a separate capability
+slice and does not reopen or invalidate the completed Phase F proofs.
 
 ## F.1 — Quest-experience capability contract
 
@@ -86,17 +90,22 @@ runtime-proven.
 
 This is a capability deferral, not a Phase F blocker.
 
-## Deferred stock replacement
+## Deferred future ownership
 
-Phase F intentionally does not replace:
+Phase F intentionally did not replace:
 - stock Objective Tracker;
 - quest-log controls;
 - quest accept/decline/continue/complete controls;
 - reward selection;
 - watch/super-track controls.
 
-Any future replacement requires a separately accepted secure/fail-open
-capability contract.
+D-035 now accepts **NPC quest interaction** as a future Logres-owned product
+domain, including accept/decline, continue/complete, reward selection, source
+text paging, and required quest-related gossip transitions.
+
+That future work remains capability-gated and fail-open. Quest-log management,
+watch/super-track mutation, stock Objective Tracker ownership, and non-quest
+gossip are not automatically claimed by D-035.
 
 ## Phase F Exit
 

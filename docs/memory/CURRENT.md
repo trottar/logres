@@ -14,20 +14,17 @@ project: logres
 
 **G.4 — Implement the resolved City/resting zoom slice.**
 
-P0104 is verified pushed at:
-`0b6760838441a896b97a656099e38e6c6f399bfd`.
+P0105 is verified pushed at:
+`6956008033b3f86c5b70d68c50486a4bed0ecdf1`.
 
 Current pushed runtime:
-`0.0.42-dev`.
-
-P0105 runtime target:
 `0.0.43-dev`.
 
 G.3 status:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
 G.4 status:
-**IMPLEMENTATION PREPARED — RUNTIME PROOF PENDING.**
+**IMPLEMENTATION PUSHED — RUNTIME PROOF PENDING.**
 
 ## Verified State
 
@@ -41,6 +38,12 @@ G.4 status:
 - P0103 is durable at `4adf400a`; it records the G.3 runtime pass and opens G.4.
 - P0104 is durable at `0b676083`; it resolves the City/resting camera contract
   from captured profile + source evidence and authorizes the narrow runtime slice.
+- P0105 is durable at `69560080`, runtime `0.0.43-dev`; City/resting ownership is
+  implemented and awaits targeted G.4 runtime proof.
+- D-035 accepts NPC quest interaction as a future Logres-owned experience:
+  bounded/paged source text, accept/decline, continue/complete, reward selection,
+  and required quest-related gossip transitions, all capability-gated with
+  Blizzard fail-open fallback until proven.
 - G.4 source/profile audit resolves City as DynamicCam situation `001`:
   - activation is `IsResting()` / existing Logres `state.resting`;
   - priority `1`, while World (Combat) priority `50` uses live
@@ -68,8 +71,7 @@ G.4 status:
 
 ## Next Action
 
-Apply and push P0105 from verified P0104 baseline `0b676083`, then deploy
-`0.0.43-dev` and collect G.4 runtime evidence.
+Deploy pushed P0105 runtime `0.0.43-dev` and collect G.4 runtime evidence.
 
 P0105 extends the existing production controller only:
 - `city` is selected from `state.resting` after live combat and before World;
@@ -115,6 +117,8 @@ G.4 implementation completes only after:
 - **P0100 first resting observation:** expected environmental deferral, retained
   as historical evidence.
 - **D-032/D-033/D-034 visual direction:** accepted future Phase H+ direction.
+- **D-035 quest interaction ownership:** accepted future endpoint; existing Phase F
+  additive runtime remains valid until replacement capabilities are proven.
 - **Git authority:** user performs commits/pushes.
 
 ## Relevant References
@@ -128,4 +132,6 @@ G.4 implementation completes only after:
 - `docs/memory/patches/P0103_G3_RUNTIME_PASS_AND_G4_OPEN.md`
 - `docs/memory/patches/P0104_G4_CITY_CAMERA_CONTRACT.md`
 - `docs/memory/patches/P0105_G4_CITY_CAMERA_IMPLEMENTATION.md`
+- `docs/memory/decisions/D-035_QUEST_INTERACTION_OWNERSHIP.md`
+- `docs/memory/architecture/QUESTING.md`
 - `docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`

@@ -148,3 +148,21 @@ F.2 runs a single passive panel-driven probe covering:
 - relevant event registration/counts.
 
 No stock suppression occurs in F.2.
+
+## Supersession note — D-035
+
+D-031 remains authoritative for the **initial Phase F implementation boundary**
+and the runtime evidence collected under that boundary.
+
+It does **not** define the final product ownership of NPC quest interaction.
+
+D-035 establishes the future Logres endpoint:
+- NPC quest interaction is a core Logres experience;
+- Logres should own offer/progress/completion reading and paging, player
+  accept/decline, continue/complete, and reward selection when each surface is
+  deliberately capability-proven;
+- Blizzard quest/gossip controls remain fail-open fallback until the
+  corresponding Logres information and interaction are safely replaced.
+
+Quest-log/watch/super-track management remains a separate capability question
+unless later accepted explicitly.
