@@ -1,0 +1,25 @@
+P0107 — Close G.4 Runtime Proof; Open G.5 Taxi Contract Review
+Baseline: b2fce832ef689ebf70732bc8a9f1c07fa11faa35
+Runtime: 0.0.43-dev (unchanged)
+Type: docs/evidence only
+
+Files:
+1a27b76d177cb6357ceaa8097fc0d389ad3a29f83563a029b8e3726807708656  docs/ROADMAP.md
+914f03f63030e212044319bb7f5512dbac1032327af1222701c4814b083a91db  docs/memory/CURRENT.md
+616b712877e775cb6cb7b57bcb80ac117308e3e68cd609d2a1dab1b18bba4d91  docs/memory/architecture/CAMERA.md
+b8e31296bafe02b0702bf04f3b936bf367a2ce484444eef87cfcb5650b25ced1  docs/memory/handoffs/CURRENT_HANDOFF.md
+9241ec7a836ee941406aae4a57f42a1c3a552f8e196bf4ee658708f7141bfba8  docs/memory/investigations/ACTIVE.md
+34f42de865ee8d8133b633ce93e33fc240451cfaaad2b4886e7f9c894ced6cbe  docs/memory/investigations/G4_CITY_CAMERA_OWNERSHIP.md
+33390618154033d5e640653e48ada9d23c856308efd9ed03bd488ba932a7eb84  docs/memory/patches/P0105_G4_CITY_CAMERA_IMPLEMENTATION.md
+30256d0988e620a49366881d4c0d29d615280fcb2d857cdaabc2dcdcc2292886  docs/memory/patches/PATCH_INDEX.md
+6e4cd064c311578d7d7bd7fa0ba7f0e4f3bc7f6edf46088929d4a8381be136d1  docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md
+4bfe25b37bd87b3753de0f3cd2e959fd1ffe3c985ae81ac6140e23acf7c4d681  docs/memory/roadmap/STATUS.md
+74e9240043f789b083ab7124ce7f34f9705454eae509ec086585ea5dcde6fe51  docs/memory/evidence/G4_P0105_RUNTIME_PASS_2026-10-03.md
+af8ea4be09459df36bd3de5bd4220a0759b842d3ccead7aee336ad3d8dae925f  docs/memory/investigations/G5_TAXI_CAMERA_OWNERSHIP.md
+ca31e201c967e4f3f8f176176f3aabd3c9030def3dd18558d85c3e47edfe8764  docs/memory/patches/P0107_CLOSE_G4_OPEN_G5_TAXI.md
+
+Validation:
+python3 tools/check_memory_health.py
+git diff --check
+
+Deployment: docs/evidence only; no WoW redeploy required.

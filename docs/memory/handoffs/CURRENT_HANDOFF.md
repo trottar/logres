@@ -4,47 +4,53 @@ Authoritative state:
 `../CURRENT.md`.
 
 Phase G:
-**ACTIVE — G.4.**
+**ACTIVE — G.5.**
 
-Current pushed checkpoint:
-P0105 at `69560080`, runtime `0.0.43-dev`.
+Current pushed runtime:
+`0.0.43-dev` from P0105 at `69560080`.
 
-G.3:
-**CLOSED — RUNTIME + INTEGRATION PASS.**
+Current remote baseline before P0107:
+`b2fce832ef689ebf70732bc8a9f1c07fa11faa35` (P0106 docs-only).
 
 G.4:
-**IMPLEMENTATION PUSHED — RUNTIME PROOF PENDING.**
+**CLOSED — RUNTIME + INTEGRATION PASS.**
 
-Canonical source/profile audit:
-`../evidence/G4_CITY_CAMERA_SOURCE_AUDIT_2026-10-03.md`.
+Canonical runtime evidence:
+`../evidence/G4_P0105_RUNTIME_PASS_2026-10-03.md`.
 
-Accepted City camera contract:
-- existing `state.resting` selects City;
-- live `UnitAffectingCombat("player")` remains higher priority;
-- City conditionally targets zoom 5 only when farther than 5;
-- ordinary City entry uses 2.5 seconds;
-- exit fresh-evaluates the destination; zoom restore remains `never`;
-- reuse proven G.3 MoveView/coexistence/fail-open behavior.
+Accepted G.4 proof:
+- automatic resting -> City selection;
+- clean City >5 -> target 5 transition;
+- City <=5 no-op;
+- City exit fresh destination evaluation / no remembered restore;
+- Run All;
+- DynamicCam coexistence;
+- clean addon-owned failure/secret/error diagnostics.
 
-Explicitly excluded from the first City runtime slice:
-- DynamicCam City UI hide/fade;
-- `cameraDistanceMaxZoomFactor = 1` CVar parity;
-- reactive-zoom ownership;
-- startup instant-transition parity;
-- later DynamicCam situations/rotation/shoulder offsets.
+The first City `18 -> 0` observation remains preserved as ambiguous environmental
+evidence; a later targeted retest from about `13.090` completed near `5.178` with
+`targetReached=true`.
 
-P0104 is verified durable at `0b676083`.
+Natural combat + resting overlap remains an environmental deferral; static
+live-combat-before-City ordering remains enforced.
 
-P0105 is verified durable at `69560080`. It adds the narrow City context in the
-existing production controller, extends diagnostics with resting/City visibility,
-and adds the dedicated G.4 static contract checker.
+G.5:
+**ACTIVE — TAXI CONTRACT REVIEW; NO RUNTIME CODE YET.**
 
-Parallel product direction:
-D-035 now defines NPC quest interaction as a future Logres-owned experience,
-while preserving Blizzard fail-open controls until each replacement is proven.
+Known profile starting point:
+- Taxi `160`, priority `1000`;
+- on-taxi activation;
+- enter/exit `5`;
+- conditional-out target `50`;
+- rotation speed `-20`;
+- UI hide/fade stored;
+- restore `never`.
 
-Next: deploy `0.0.43-dev`, then validate automatic City entry, City
-transition/no-op, City exit destination evaluation, Run All, and DynamicCam
-coexistence.
+Next: audit DynamicCam source + captured profile for Taxi precedence,
+transition/exit semantics, target-50 capability/CVar boundaries, rotation scope,
+presentation separation, and smallest runtime proof.
+
+The existing Taxi fail-open exclusion remains authoritative until that contract is
+resolved.
 
 User performs all commits/pushes.

@@ -34,23 +34,24 @@ The roadmap is capability-gated. A phase advances only when its success criteria
 
 ## Phase G — Cinematic Camera
 
-**Status: ACTIVE — G.4 City camera ownership implementation.**
+**Status: ACTIVE — G.5 Taxi camera ownership contract review.**
 
 G.1 captured the current DynamicCam `RPG` profile durably.
 
 G.2 runtime-proved the primary camera capability and correct conditional zoom
 semantics in real combat.
 
-G.3 production World/Combat ownership is closed with runtime + integration PASS
-on `0.0.42-dev`.
+G.3 production World/Combat ownership is closed with runtime + integration PASS.
 
-G.4 source/profile review resolves the City camera contract. P0105 is verified
-pushed at `69560080`, runtime `0.0.43-dev`, selecting City from resting after
-live-combat precedence and reusing the proven conditional target-5 / 2.5-second
-MoveView path. Runtime acceptance is the next narrow checkpoint.
+G.4 City/resting ownership is closed with runtime + integration PASS on P0105
+runtime `0.0.43-dev`: automatic City selection, target-5 transition/no-op,
+fresh destination evaluation, Run All, and DynamicCam coexistence are proven.
 
-City UI hide/fade, City/global CVar ownership, reactive zoom, startup instant
-transition parity, and later DynamicCam situations remain separately gated.
+G.5 now resolves the Taxi camera contract before removing the current fail-open
+Taxi exclusion. Captured profile facts include priority 1000, enter/exit 5
+seconds, conditional-out target 50, rotation speed -20, and stored UI hide/fade;
+source precedence, target capability/CVar boundaries, rotation scope, and
+presentation scope must be explicit before runtime code.
 
 Canonical phase record:
 `memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`

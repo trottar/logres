@@ -7,10 +7,10 @@ As of 2026-10-03.
 **Phase G — Cinematic Camera**
 
 Active work item:
-**G.4 City camera ownership implementation**
+**G.5 Taxi camera ownership contract review**
 
 State:
-**Phase F COMPLETE; Phase G ACTIVE — G.4**
+**Phase F COMPLETE; Phase G ACTIVE — G.5**
 
 ## Phase status
 
@@ -23,7 +23,7 @@ State:
 | D — Immersion Controller | COMPLETE |
 | E — Compass and Navigation | COMPLETE |
 | F — Quest Experience | COMPLETE |
-| G — Cinematic Camera | ACTIVE — G.4 |
+| G — Cinematic Camera | ACTIVE — G.5 |
 | H — Integration and Polish | QUEUED |
 
 ## G.2
@@ -37,41 +37,48 @@ Production World/Combat ownership:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
 Final validation runtime:
-`0.0.42-dev` from P0102 at `20ad55ba`.
-
-Canonical evidence:
-`../evidence/G3_P0102_RUNTIME_PASS_2026-10-03.md`.
+`0.0.42-dev`.
 
 ## G.4
 
-**IMPLEMENTATION PUSHED — RUNTIME PROOF PENDING.**
+City/resting camera ownership:
+**CLOSED — RUNTIME + INTEGRATION PASS.**
 
-P0104 source/profile review resolves:
-- resting -> City;
-- live combat precedence over City;
-- conditional City target 5;
-- ordinary 2.5-second entry;
-- restore never / fresh destination evaluation;
-- existing G.3 fail-open/coexistence model reused.
+Implementation:
+P0105 at `69560080`, runtime `0.0.43-dev`.
 
-City UI fade, City `cameraDistanceMaxZoomFactor`, reactive zoom, startup instant
-transition parity, and later DynamicCam contexts remain outside the first City
-runtime slice.
+Accepted runtime evidence proves automatic City selection, City >5 target-5
+movement, City <=5 no-op, fresh destination evaluation on exit, Run All, and
+DynamicCam coexistence with clean addon-owned failure/secret/error state.
 
-P0105 is verified pushed at `69560080`, runtime `0.0.43-dev`, with City
-selected from resting after live-combat precedence, conditional target 5,
-City-aware diagnostics, and a dedicated static contract. Runtime acceptance
-remains pending.
+Canonical evidence:
+`../evidence/G4_P0105_RUNTIME_PASS_2026-10-03.md`.
 
-Canonical source evidence:
-`../evidence/G4_CITY_CAMERA_SOURCE_AUDIT_2026-10-03.md`.
+Natural combat + resting overlap remains an environmental deferral.
+
+## G.5
+
+**ACTIVE — TAXI CONTRACT REVIEW; NO RUNTIME CODE YET.**
+
+Captured profile starting point:
+- Taxi `160`;
+- priority `1000`;
+- enter/exit `5`;
+- conditional-out target `50`;
+- rotation speed `-20`;
+- UI hide/fade stored;
+- restore `never`.
+
+The current Taxi fail-open exclusion remains until source/profile review resolves
+precedence, transition semantics, target capability/CVar boundaries, rotation
+scope, presentation scope, coexistence, and the smallest runtime slice.
 
 ## Phase H queued direction
 
 D-032 accepted the world-first integration composition. D-033 accepted parallel
 World Ghost art-direction work. D-034 refines the working visual anchor to
 Selective Hybrid E and establishes the canonical component inventory and
-percentage-bar direction. D-035 now also defines NPC quest interaction as a
-future Logres-owned experience with Blizzard fallback until each interaction
-surface is proven. These remain parallel planning and do not change active Phase
-G camera scope.
+percentage-bar direction. D-035 defines NPC quest interaction as a future
+Logres-owned experience with Blizzard fallback until each interaction surface is
+proven. These remain parallel planning and do not change active Phase G camera
+scope.

@@ -21,22 +21,30 @@ The captured `RPG` profile enables City, World, World (Combat), Taxi,
 Hearth/Teleport, NPC Interaction, Fishing, AFK, and Gathering. No explicit
 enabled instance camera situation is present.
 
-G.3 runtime-proves World / World (Combat). G.4 source/profile review resolves the
-City/resting slice, and P0105 prepares that extension on runtime `0.0.43-dev`;
-later contexts remain separately capability-gated.
+Runtime-proven Logres ownership now covers:
+- World;
+- World (Combat);
+- City/resting.
 
-## Context precedence
+Taxi is the next contract-review slice. Later contexts remain separately
+capability-gated.
 
-For the accepted City extension, existing proven safety exclusions remain first:
-instance, taxi, and active NPC interaction relinquish camera ownership.
+## Proven context precedence
 
-Within the World/City/Combat slice:
+Existing production safety exclusions remain first:
+- instance;
+- taxi;
+- active NPC interaction.
+
+Within the proven World/City/Combat slice:
 - live `UnitAffectingCombat("player")` -> Combat;
 - otherwise resting -> City;
 - otherwise -> World.
 
-This preserves DynamicCam's source priority relationship: Combat priority 50,
-City priority 1, World priority 0.
+This preserves the accepted DynamicCam priority relationship for those contexts.
+
+Taxi remains an exclusion until G.5 resolves whether and how Logres should own
+that situation.
 
 ## Correct zoom semantics
 
@@ -45,34 +53,45 @@ DynamicCam `zoomType = in/out` is a conditional absolute target:
 - City: target 5 only when currently farther away;
 - World (Combat): target 15 only when currently closer.
 
-Ordinary transition duration for all three accepted contexts is 2.5 seconds.
+Ordinary transition duration for all three proven contexts is 2.5 seconds.
 Zoom restore is `never`.
 
-DynamicCam ordinary context changes use the entering situation's
-`timeToEnter`. Therefore leaving City for World or Combat uses the destination
-context's transition rather than a City-exit restore.
+City exit runtime evidence confirms fresh destination evaluation rather than a
+remembered pre-City restore.
 
-Canonical audits:
+Canonical audits/evidence:
 - `../evidence/G2_DYNAMICCAM_ZOOM_SOURCE_AUDIT_2026-10-02.md`
 - `../evidence/G4_CITY_CAMERA_SOURCE_AUDIT_2026-10-03.md`
+- `../evidence/G4_P0105_RUNTIME_PASS_2026-10-03.md`
 
 ## City-specific scope boundary
 
 The City profile also stores UI hide/fade at opacity 0.65 and
 `cameraDistanceMaxZoomFactor = 1`.
 
-Neither is automatically part of G.4 camera motion:
-- UI fade is presentation policy that must be reconciled with the Immersion
-  Controller / Quiet Mode / Phase H direction;
-- camera-distance CVar ownership remains a separate capability and parity item.
+Neither is part of proven G.4 camera motion:
+- UI fade remains presentation policy;
+- camera-distance CVar ownership remains a separate capability/parity item.
 
-City's stored reactive-zoom values are effectively the same as the captured
-standard settings, and City `cameraZoomSpeed = 15.5` matches standard. No
-City-specific reactive-zoom or speed ownership is required for the first slice.
+DynamicCam's first-situation-after-login transition-time 0 behavior also remains
+a separately gated global initialization question.
 
-DynamicCam's first-situation-after-login transition-time 0 behavior is a global
-initialization special case. G.4 does not introduce it through City and thereby
-change already-proven G.3 behavior.
+## Taxi contract-review boundary
+
+Captured Taxi situation `160` stores:
+- on-taxi activation;
+- priority `1000`;
+- enter/exit `5`;
+- conditional-out target `50`;
+- rotation speed `-20`;
+- UI hide/fade;
+- profile-wide restore remains `never`.
+
+G.5 must verify source precedence and transition semantics and determine whether
+target 50 can be supported without unproven global camera-distance mutation.
+
+Rotation and UI hide/fade must not be silently imported into the first Taxi
+runtime slice. Each requires an explicit capability/presentation decision.
 
 ## Combat signal distinction
 
@@ -80,15 +99,12 @@ World (Combat) selection uses live `UnitAffectingCombat("player")`, never cached
 `State.combat` as an equivalent predicate. `InCombatLockdown()` remains a
 separate restriction/protection signal.
 
-P0100 combines state subscription with targeted combat/restriction events. Core
-State semantics remain unchanged.
-
 ## Ownership boundary
 
 DynamicCam and Logres must never drive camera movement simultaneously.
 
 The production controller queries DynamicCam load status on every reconciliation
-and handles late DynamicCam load. G.3 runtime evidence proves loaded DynamicCam
+and handles late DynamicCam load. Runtime evidence proves loaded DynamicCam
 blocks/relinquishes Logres ownership.
 
 The historical manual camera probe and production controller remain mutually
@@ -96,9 +112,8 @@ gated.
 
 ## Transition architecture
 
-Proven production direction reused by G.4:
+Proven production direction:
 - event/state-driven context selection;
-- existing state subscription supplies resting transitions;
 - `OnUpdate` only while an active transition runs;
 - no periodic context polling;
 - `GetCameraZoom` + read-only `cameraZoomSpeed`;
@@ -111,14 +126,17 @@ Proven production direction reused by G.4:
 - no remembered zoom restoration;
 - no `SetCVar` or `CameraZoomIn/Out` fallback.
 
+G.5 must reuse this architecture unless new Taxi-specific capability evidence
+requires an explicit, separately proven extension.
+
 ## Diagnostic ownership
 
 The production controller exposes addon-owned context, transition, coexistence,
-live/cached combat distinction, zoom, counters, and last reason/error state.
+live/cached combat distinction, resting state, zoom, counters, and last
+reason/error state.
 
-P0105 makes `city` and resting state observable through this same diagnostic
-surface and adds a dedicated static contract enforcing live-combat-before-City
-ordering. Runtime proof remains pending.
+G.4 runtime evidence is complete. G.5 diagnostics should be designed only after
+the Taxi contract is explicit.
 
 ## Implementation sequence
 
@@ -128,8 +146,9 @@ G.2: **COMPLETE — World/Combat primary camera capability runtime + integration
 
 G.3: **COMPLETE — production World/Combat ownership runtime + integration PASS.**
 
-G.4: **IMPLEMENTATION PREPARED — RUNTIME PROOF PENDING.**
+G.4: **COMPLETE — City ownership runtime + integration PASS on `0.0.43-dev`.**
+
+G.5: **ACTIVE — TAXI CONTRACT REVIEW; NO RUNTIME CODE YET.**
 
 Rotation, UI-hide integration, shoulder offsets, startup snap parity, later
-profile contexts, and broader camera-CVar ownership remain outside the accepted
-G.4 slice and must be separately capability-gated.
+profile contexts, and broader camera-CVar ownership remain separately gated.

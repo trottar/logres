@@ -1,35 +1,30 @@
 # Active Investigations
 
-## G.4 — City camera ownership
+## G.5 — Taxi camera ownership
 
 Status:
-**IMPLEMENTATION PUSHED — RUNTIME PROOF PENDING**
+**ACTIVE — CONTRACT REVIEW; NO RUNTIME CODE YET**
 
 Canonical:
-`G4_CITY_CAMERA_OWNERSHIP.md`
+`G5_TAXI_CAMERA_OWNERSHIP.md`
 
-Source/profile audit:
-`../evidence/G4_CITY_CAMERA_SOURCE_AUDIT_2026-10-03.md`
+Known captured-profile facts:
+- Taxi situation `160`;
+- on-taxi activation;
+- priority `1000`;
+- enter/exit `5`;
+- conditional-out target `50`;
+- rotation speed `-20`;
+- UI hide/fade stored;
+- restore `never`.
 
-Resolved contract:
-- existing resting sensor selects City after higher proven exclusions;
-- live combat precedes City;
-- City conditional-in target is 5;
-- ordinary City entry is 2.5 seconds;
-- destination context is freshly evaluated on exit; restore remains `never`;
-- proven G.3 movement/coexistence/fail-open behavior is reused.
-
-Deferred deliberately:
-- City UI hide/fade presentation;
-- City `cameraDistanceMaxZoomFactor` override / broader CVar ownership;
-- reactive-zoom implementation;
-- startup first-situation instant transition parity;
-- later DynamicCam situations.
-
-P0105 is verified pushed at `69560080`, runtime `0.0.43-dev`.
+Current production behavior:
+Taxi remains a fail-open/out-of-slice gate.
 
 Next action:
-deploy P0105 and collect targeted City runtime proof.
+audit DynamicCam source/profile semantics for precedence, transition/exit
+behavior, target-50 capability/CVar boundaries, rotation scope, UI presentation
+scope, coexistence, and the smallest runtime proof before authorizing code.
 
 ## Closed Phase G investigations
 
@@ -42,8 +37,14 @@ G.2 World/Combat camera zoom capability:
 G.3 production World/Combat camera ownership:
 **CLOSED — RUNTIME + INTEGRATION PASS on `0.0.42-dev`.**
 
-Canonical G.3 evidence:
-`../evidence/G3_P0102_RUNTIME_PASS_2026-10-03.md`
+G.4 City camera ownership:
+**CLOSED — RUNTIME + INTEGRATION PASS on `0.0.43-dev`.**
+
+Canonical G.4 evidence:
+`../evidence/G4_P0105_RUNTIME_PASS_2026-10-03.md`
+
+Natural live-combat + resting overlap remains an environmental deferral. Static
+ordering plus the already-proven live-combat path remain authoritative.
 
 ## Other tracked non-blocking defects / deferred domains
 

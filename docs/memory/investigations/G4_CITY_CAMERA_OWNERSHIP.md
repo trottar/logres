@@ -1,8 +1,10 @@
 # G.4 — City Camera Ownership
 
-Status: IMPLEMENTATION PREPARED — RUNTIME PROOF PENDING
+Status: **CLOSED — RUNTIME + INTEGRATION PASS**
 Opened: 2026-10-03
 Contract resolved: 2026-10-03
+Runtime closed: 2026-10-03
+Final runtime: `0.0.43-dev`
 
 ## Objective
 
@@ -14,23 +16,9 @@ CVar policy.
 
 `../evidence/G4_CITY_CAMERA_SOURCE_AUDIT_2026-10-03.md`
 
-The audit resolves:
-- City activation: existing `state.resting`, sourced from `IsResting()`;
-- precedence: live World (Combat) wins over City;
-- City conditional target: zoom `5` only when currently farther than 5;
-- ordinary City entry: `2.5` seconds;
-- City exit: fresh destination evaluation, never remembered zoom restoration;
-- coexistence/fail-open behavior: reuse proven G.3 ownership;
-- City UI hide/fade: explicitly outside the camera slice;
-- City `cameraDistanceMaxZoomFactor = 1`: known deferred CVar parity item;
-- City reactive-zoom values: no effective City-specific delta from captured
-  standard settings;
-- DynamicCam first-situation instant transition: global startup special case,
-  deferred rather than introduced through City.
+## Accepted contract
 
-## Accepted context order
-
-Inside the existing proven G.3 safety exclusions:
+Inside the proven safety exclusions:
 1. instance / taxi / active interaction -> relinquish;
 2. live `UnitAffectingCombat("player")` -> `combat`;
 3. resting -> `city`;
@@ -41,27 +29,46 @@ Targets:
 - city -> conditional target `5`;
 - world -> conditional target `5`.
 
-Zoom restoration remains `never`.
+City ordinary entry is 2.5 seconds. Zoom restoration is `never`.
 
-## Implementation boundary
+## Implementation
 
-The next patch should make the smallest coherent extension to the existing
-production controller:
-- add `city` context selection after live combat and before World;
-- map City to target 5 using the existing conditional-in behavior;
-- keep the existing MoveView transition mechanism and 2.5-second duration;
-- reuse state subscription; no new resting poller;
-- preserve DynamicCam/probe coexistence and fail-open interruption behavior;
-- extend diagnostics/static contracts so `city` is observable and precedence is
-  enforced.
+P0105 at `69560080`, runtime `0.0.43-dev`, extends the existing
+`CameraWorldCombat` controller:
+- `CITY_TARGET = 5`;
+- resting state in addon-owned diagnostics;
+- City selection after live combat and before World;
+- conditional-in target 5;
+- existing 2.5-second MoveView transition/fail-open architecture;
+- City-aware diagnostics;
+- `tools/check_camera_city_contract.py` static ordering/scope coverage.
 
-Existing internal command/module identifiers may remain for compatibility in
-this narrow slice; any broader naming consolidation is separate from City
-capability proof.
+## Runtime evidence
 
-## Explicit exclusions
+Canonical:
+`../evidence/G4_P0105_RUNTIME_PASS_2026-10-03.md`
 
-G.4 does not authorize:
+Accepted evidence proves:
+- automatic resting -> City selection;
+- clean City >5 target-5 transition;
+- City <=5 no-op;
+- fresh World evaluation on City exit;
+- Run All;
+- DynamicCam coexistence;
+- clean addon-owned failure/secret/error state.
+
+The first City transition observation from zoom 18 reported final zoom 0 with
+`targetReached=false`. It remains preserved as ambiguous environmental evidence
+and was not accepted as PASS. A later targeted retest from about 13.090 completed
+near 5.178 with `targetReached=true`.
+
+Natural live-combat + resting overlap was unavailable and remains an
+environmental deferral; static ordering plus the already-proven live-combat path
+remain authoritative.
+
+## Explicit exclusions retained
+
+G.4 does not own:
 - City UI hide/fade;
 - City/global camera CVar ownership;
 - reactive-zoom implementation;
@@ -75,33 +82,9 @@ G.4 does not authorize:
 - rotation;
 - shoulder offsets.
 
-## P0105 implementation checkpoint
+## Result
 
-P0105 prepares runtime `0.0.43-dev` by extending the existing
-`CameraWorldCombat` controller without renaming stable module/command identifiers:
-- adds explicit `CITY_TARGET = 5`;
-- records `state.resting` in addon-owned diagnostics;
-- selects `city` only after live combat and before World;
-- maps City to conditional-in target 5;
-- reuses the same 2.5-second MoveView transition and fail-open logic;
-- extends integrated diagnostics to accept/print City;
-- adds `tools/check_camera_city_contract.py` for City target, ordering, and scope
-  exclusions.
+**G.4 CLOSED — RUNTIME + INTEGRATION PASS on `0.0.43-dev`.**
 
-Runtime behavior is not considered proven until the deployed acceptance sequence
-is completed.
-
-## Runtime acceptance
-
-Required after implementation/deployment:
-- automatic City selection on a real resting transition;
-- City >5 transition PASS;
-- City <=5 no-op PASS;
-- clean City exit with destination reevaluation and no remembered restore;
-- Run All PASS;
-- DynamicCam coexistence still blocks Logres ownership;
-- no Lua, taint, protected-action, or secret-value errors.
-
-Live combat + resting overlap should be tested only if naturally available.
-Otherwise record it as an environmental deferral while retaining the static
-live-combat-before-City contract.
+Next Phase G work:
+`G5_TAXI_CAMERA_OWNERSHIP.md`.

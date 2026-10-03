@@ -124,6 +124,7 @@
 | P0102 | 2026-10-02 | INSTALLED / PUSHED — RUNTIME UI CORRECTION | Organize developer diagnostics by roadmap phase tabs; remove camera checker global version pin (`20ad55ba`) |
 | P0103 | 2026-10-03 | INSTALLED / PUSHED — DOCS/EVIDENCE ONLY | Record G.3 runtime + integration PASS; open G.4 City camera ownership review (`4adf400a`) |
 | P0104 | 2026-10-03 | INSTALLED / PUSHED — DOCS/SOURCE EVIDENCE ONLY | Resolve G.4 City camera contract; authorize narrow City zoom implementation (`0b676083`) |
-| P0105 | 2026-10-03 | PREPARED — RUNTIME IMPLEMENTATION; PROOF PENDING | Extend production camera ownership with City/resting conditional target 5 |
-| P0106 | 2026-10-03 | PREPARED — DOCS-ONLY | Make full player-facing quest interaction an intended Logres-owned domain; retain Blizzard fail-open fallback until capability-proven |
+| P0105 | 2026-10-03 | INSTALLED / PUSHED — G.4 RUNTIME + INTEGRATION PASS | Extend production camera ownership with City/resting conditional target 5 (`69560080`) |
+| P0106 | 2026-10-03 | INSTALLED / PUSHED — DOCS-ONLY | Make full player-facing quest interaction an intended Logres-owned domain; retain Blizzard fail-open fallback until capability-proven (`b2fce832`) |
+| P0107 | 2026-10-03 | PREPARED — DOCS/EVIDENCE ONLY | Record G.4 runtime + integration PASS; open G.5 Taxi camera ownership contract review |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.
