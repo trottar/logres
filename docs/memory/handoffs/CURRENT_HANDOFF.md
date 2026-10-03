@@ -43,4 +43,6 @@ one reversible probe with `combat=true` while naturally fighting.
 
 Future Phase H+ layout direction is recorded in D-032 and `architecture/WORLD_FIRST_LAYOUT.md`; it does not alter the active G.2 proof.
 
+Parallel art-direction preparation is also accepted in D-033 and `architecture/VISUAL_SYSTEM_DIRECTION.md`; current preferred hypothesis: World Ghost.
+
 User performs all commits/pushes.

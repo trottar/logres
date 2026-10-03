@@ -111,6 +111,8 @@
 
 | P0096 | 2026-10-02 | INSTALLED / PUSHED — G.2 LIVE-COMBAT RETEST PENDING | Use DynamicCam-equivalent live combat classification in camera probe (`a556a19a`) |
 
-| P0097 | 2026-10-02 | PREPARED — DOCS-ONLY | Record world-first layout, target, status, Active Quest, and action-role direction |
+| P0097 | 2026-10-02 | INSTALLED / PUSHED — DOCS-ONLY | Record world-first layout, target, status, Active Quest, and action-role direction (`86d062d3`) |
+
+| P0098 | 2026-10-02 | PREPARED — DOCS-ONLY | Record parallel World Ghost art direction and visual-system workflow |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

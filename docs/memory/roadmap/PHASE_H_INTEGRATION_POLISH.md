@@ -45,6 +45,25 @@ Likely slices include:
 - accessibility, compatibility, restoration, performance, packaging, and final
   visual consistency.
 
+## Parallel art-direction preparation
+
+Phase H visual preparation can begin before Lua integration work reaches this
+phase.
+
+Parallel deliverables may include:
+- moodboards / art-direction sheets;
+- full-screen representative mockups;
+- typography/color/opacity/spacing/motion tokens;
+- reusable asset-family exploration;
+- perceptual-effect studies such as health-tunnel styling.
+
+Current preferred working direction:
+**World Ghost** — simple, immersive, Warcraft-native, with a subtle Logres /
+Camelot inflection and ghosted low-visual-weight presentation.
+
+These outputs inform implementation later; they do not replace capability
+proofs.
+
 ## Non-goals
 
 Phase H does not automatically imply:

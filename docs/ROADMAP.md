@@ -69,5 +69,7 @@ Logres owns its aesthetic rather than becoming a general UI/action-bar profile
 editor. Limited safe layout presets may be considered; unrestricted layout can
 use stock/specialist addons with the Logres action presentation disabled.
 
+Parallel art-direction / mockup work may proceed before Lua integration. Current preferred working hypothesis: World Ghost — simple, immersive, Warcraft-native, with a subtle Logres / Camelot inflection.
+
 Canonical phase record:
 `memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`

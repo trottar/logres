@@ -59,4 +59,7 @@ Queued direction:
 - urgent player debuffs central, passive buffs peripheral, target status in
   world space where safe.
 
+- parallel art-direction / mockup work may proceed outside Lua implementation;
+- current preferred working hypothesis: World Ghost.
+
 This does not change active G.2 scope.

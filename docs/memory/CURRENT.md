@@ -59,6 +59,7 @@ G.2 status:
   - `mismatch` records disagreement.
 - Automatic Logres camera ownership remains absent.
 - Future Phase H+ world-first layout and action-role direction is accepted in D-032; it does not change the active G.2 runtime scope.
+- Parallel Phase H+ art-direction planning is accepted in D-033; the current preferred visual hypothesis is World Ghost.
 
 ## Next Action
 
@@ -115,6 +116,8 @@ G.2 completes only after:
 - `docs/memory/patches/P0095_CAMERA_ZOOM_CAPABILITY_PROBE.md`
 - `docs/memory/patches/P0096_FIX_CAMERA_COMBAT_CLASSIFICATION.md`
 - `docs/memory/decisions/D-032_WORLD_FIRST_LAYOUT_AND_ACTION_ROLES.md`
+- `docs/memory/decisions/D-033_PARALLEL_ART_DIRECTION_AND_WORLD_GHOST.md`
 - `docs/memory/architecture/WORLD_FIRST_LAYOUT.md`
+- `docs/memory/architecture/VISUAL_SYSTEM_DIRECTION.md`
 - `docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
 - `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`

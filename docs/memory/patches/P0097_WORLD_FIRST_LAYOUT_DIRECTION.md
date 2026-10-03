@@ -1,7 +1,7 @@
 # P0097 — Record World-First Layout Direction
 
 Date: 2026-10-02
-Result: PREPARED — DOCS-ONLY
+Result: INSTALLED / PUSHED — DOCS-ONLY (`86d062d3`)
 
 ## Baseline
 

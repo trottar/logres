@@ -1,0 +1,25 @@
+Project Logres P0098
+Date: 2026-10-02
+Baseline: 86d062d3a6be264a29f3b9d36cccdc7ac1ff5987
+Runtime: 0.0.40-dev (unchanged)
+Purpose: record parallel World Ghost art direction and visual-system workflow
+
+Files:
+5a35da6eed4dbdd640f8b19c82cfd905ac1ff8a6928988e0ba4cef6c2894b764  docs/ROADMAP.md
+6b49116fbba07c0a0c2c1c0b38db3845b271185ce1673499ca836bd1a37cbdf4  docs/memory/CURRENT.md
+df3b00e34afd09da28e26aa27630fc1a09a96b568f4c8657fdf5972198ce1d0f  docs/memory/architecture/VISUAL_SYSTEM_DIRECTION.md
+66ac32bfc931a75db7a0f7d18b3cf6435e98c5cdabb27eb7a8c1d9085beaf3fb  docs/memory/decisions/D-033_PARALLEL_ART_DIRECTION_AND_WORLD_GHOST.md
+8af64513ba6d7a80c921f20b2f3371576528faa557bfef15de2e3196919702e7  docs/memory/handoffs/CURRENT_HANDOFF.md
+e50ebdb5ee5b78d8f708af5cf1cd411fe1be92e70f07e6a345e82684a68af3cf  docs/memory/patches/P0097_WORLD_FIRST_LAYOUT_DIRECTION.md
+c7d414238b733a19a755ca5084f514c6820b6f37bf50a98e70e0003c07ab341a  docs/memory/patches/P0098_PARALLEL_WORLD_GHOST_ART_DIRECTION.md
+96cf103a6a193a336bb0c2304cb5561fac48377f5e776cb57fcee45d37eed325  docs/memory/patches/PATCH_INDEX.md
+a1268563d7bed05602f1a88cf1315197c6cc433dc2daf0cd412ac426ad03ccd9  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+c5b9f3072b296c7876efbc2c1bd3e182223f4283b9f906447b8568febd23341b  docs/memory/roadmap/STATUS.md
+
+Validation:
+exact verified P0097 HEAD
+tracked working tree/index clean before apply
+all tools/check_*.py PASS
+git diff --check
+
+Docs-only patch: no WoW redeploy required.
