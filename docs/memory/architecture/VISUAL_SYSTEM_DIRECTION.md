@@ -163,3 +163,30 @@ flicker.
 Manual/quest markers may use restrained bounded proximity scale. POIs remain mostly
 stable and tracking remains effectively fixed-size. Exact thresholds/curves remain
 calibration work, and unavailable identity/distance data must never be fabricated.
+
+## Approved visual baseline — D-039
+
+D-039 closes broad component-art exploration for the twelve approved reference
+sheets tracked at `../../design/approved/README.md`.
+
+Those sheets now define the canonical visual reference for:
+- World Ghost / Selective Hybrid E composition;
+- shared percentage/resource bars;
+- action button states;
+- status/aura icons;
+- cast-state cues;
+- target/relative-danger treatment;
+- NPC quest narrative and interaction states;
+- transient Context messages;
+- Active Quest;
+- player-health tunnel;
+- Compass glyph/focus/lane behavior.
+
+Detailed component sheets outrank the overview sheet for their domain. Product,
+secret-value, protected-action, fallback, and source-capability decisions still
+outrank incidental mockup content.
+
+Future work on these families should normally produce addon-capable textures,
+masks, glyphs, nine-slice pieces, typography/layout constants, and in-client
+calibration rather than re-opening the overall style. See
+`VISUAL_IMPLEMENTATION_STATUS.md` for the current implementation audit.

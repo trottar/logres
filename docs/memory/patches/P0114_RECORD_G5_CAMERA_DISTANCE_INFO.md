@@ -1,9 +1,12 @@
 # P0114 — Record G.5 Camera-Distance Info Runtime Evidence
 
 Date: 2026-10-03
-Result: **PREPARED — DOCS/EVIDENCE ONLY**
+Result: **INSTALLED / PUSHED — DOCS/EVIDENCE ONLY** (`f89efd53`)
 Baseline: `dea48e04dfdb46f0f443222806e0d6bc81afd2e8`
 Runtime: `0.0.45-dev` unchanged
+
+Durable identity:
+`f89efd53ae47b41a6c843f203186a225f0b347c4`.
 
 ## Purpose
 

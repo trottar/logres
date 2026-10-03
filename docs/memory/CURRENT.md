@@ -15,7 +15,7 @@ project: logres
 **G.5 — Resolve product/ownership policy for any above-default Taxi camera-distance CVar.**
 
 Latest verified durable checkpoint:
-P0112 `dea48e04dfdb46f0f443222806e0d6bc81afd2e8`.
+P0114 `f89efd53ae47b41a6c843f203186a225f0b347c4`.
 
 Current pushed runtime:
 `0.0.45-dev`.
@@ -41,6 +41,13 @@ G.5 status:
 - P0111 at `bd0a9da3` durably records the parallel D-036/D-037 future visual and
   navigation direction without changing runtime.
 - P0113 at `19c0d1ff` durably records D-038 compass focus/depth visual direction.
+- D-039 now accepts the twelve tracked visual reference sheets as the canonical
+  World Ghost / Selective Hybrid E visual baseline and records the final Compass
+  lane/focus calibration. This is parallel Phase H+ design state, not a G.5
+  runtime change.
+- `VISUAL_IMPLEMENTATION_STATUS.md` separates approved art from remaining asset
+  wiring, runtime ownership, and capability gates; broad component art exploration
+  is no longer the main missing work for the covered families.
 - P0112 at `dea48e04` is durable on runtime `0.0.45-dev`; its read-only
   Camera Distance Info runtime PASS measured current factor `1.2`, default
   factor `1`, ceilings `18`/`15`, and required target-50 factor
@@ -155,3 +162,6 @@ The next G.5 contract checkpoint completes when:
 - `docs/memory/architecture/CAMERA.md`
 - `docs/memory/patches/P0112_G5_CAMERA_DISTANCE_INFO.md`
 - `docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
+- `docs/memory/decisions/D-039_APPROVED_VISUAL_BASELINE.md`
+- `docs/memory/architecture/VISUAL_IMPLEMENTATION_STATUS.md`
+- `docs/design/approved/README.md`

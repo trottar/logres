@@ -17,9 +17,12 @@ Canonical direction:
 - `../decisions/D-036_HEALTH_TUNNEL_VISIBLE_FIELD_CONTRACT.md`
 - `../decisions/D-037_NAVIGATION_MARKER_ROLES_AND_MINIMAP_DIRECTION.md`
 - `../decisions/D-038_COMPASS_VISUAL_FOCUS_AND_DEPTH_CONTRACT.md`
+- `../decisions/D-039_APPROVED_VISUAL_BASELINE.md`
 - `../architecture/WORLD_FIRST_LAYOUT.md`
 - `../architecture/VISUAL_SYSTEM_DIRECTION.md`
 - `../architecture/VISUAL_COMPONENT_INVENTORY.md`
+- `../architecture/VISUAL_IMPLEMENTATION_STATUS.md`
+- `../../design/approved/README.md`
 
 ## Accepted inputs
 
@@ -107,3 +110,25 @@ Phase H does not automatically imply:
 Phase H completes when the accepted Logres experience is integrated,
 configurable at the intended product boundaries, fail-open, visually coherent,
 and validated across the contexts/capabilities the project claims to own.
+
+## Approved visual baseline — D-039
+
+The twelve approved visual reference sheets are now tracked under
+`docs/design/approved/` and accepted by D-039.
+
+For the represented families, Phase H should default to implementation translation,
+not another broad concept pass:
+- derive production texture/mask/glyph assets;
+- establish reusable art/tokens and stable authored anchors;
+- wire approved primitives into already-proven runtime producers first;
+- open separate capability slices where controls/data/ownership are still unproven;
+- validate the final treatment in client at realistic density and world contrast.
+
+The canonical component-by-component split between art, runtime plumbing, and
+capability ownership is `../architecture/VISUAL_IMPLEMENTATION_STATUS.md`.
+
+Residual visual design remains for class-specific discrete mechanics,
+settings/accessibility, exact hotkey/count/36-button density calibration, and any
+future capability-proven surface absent from the approved sheets.
+
+This parallel visual checkpoint does not change the active Phase G / G.5 objective.

@@ -355,3 +355,22 @@ Before component implementation/polish, art studies should cover at least:
    - hover/inspection states;
    - opacity/context states;
    - target world/fallback treatments.
+
+## 16. Approved visual baseline / implementation status
+
+D-039 accepts the twelve sheets under `docs/design/approved/` as the current
+approved visual baseline for the component families they cover.
+
+This inventory should therefore be read primarily as an **implementation and
+coexistence checklist**, not as evidence that every listed component still needs a
+new concept design.
+
+Canonical implementation audit:
+`VISUAL_IMPLEMENTATION_STATUS.md`.
+
+Still-open visual design is narrower: class-specific discrete mechanics,
+settings/accessibility, final high-density hotkey/count/spacing calibration, and
+future capability-proven surfaces not represented by the approved sheets.
+
+All runtime, source, secret-value, restoration, and Blizzard-fallback gates remain
+unchanged.

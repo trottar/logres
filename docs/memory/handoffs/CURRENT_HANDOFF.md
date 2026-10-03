@@ -7,7 +7,7 @@ Phase G:
 **ACTIVE — G.5.**
 
 Latest verified durable checkpoint:
-P0112 `dea48e04dfdb46f0f443222806e0d6bc81afd2e8`.
+P0114 `f89efd53ae47b41a6c843f203186a225f0b347c4`.
 
 Current pushed runtime:
 `0.0.45-dev`.
@@ -51,6 +51,10 @@ Parallel accepted Phase H+ direction remains unchanged:
 - D-037 four navigation roles and future minimap-replacement endpoint;
 - D-038 compass focus/depth visual contract;
 - D-030 stock minimap remains current runtime authority until replacement proof;
-- POI/tracking source capability remains deferred/unproven.
+- POI/tracking source capability remains deferred/unproven;
+- D-039 preserves the twelve approved visual reference sheets as the canonical
+  visual baseline;
+- `../architecture/VISUAL_IMPLEMENTATION_STATUS.md` is the implementation audit
+  for translating those designs into addon assets/runtime.
 
 User performs all commits/pushes.

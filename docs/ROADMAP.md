@@ -77,3 +77,6 @@ freezes the continuous health-tunnel visible-field contract. D-037 defines the
 future four-role navigation/minimap endpoint while preserving the current D-030
 stock-minimap boundary until all required capabilities are proven. D-038 defines
 the accepted compass focus/depth visual contract under the same capability gates.
+D-039 preserves the approved twelve-sheet visual baseline and shifts covered Phase-H
+visual work toward production asset/runtime translation rather than broad concept
+exploration.

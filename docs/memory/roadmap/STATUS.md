@@ -79,4 +79,7 @@ D-036 freezes the approved health-tunnel visible-field progression. D-037 define
 the future four-role navigation/minimap endpoint while preserving D-030 until
 local POI/tracking/quest and remaining minimap capabilities are runtime-proven.
 D-038 defines the accepted compass focus/depth visual contract while all
-source-dependent quest/POI/tracking inputs remain capability-gated.
+source-dependent quest/POI/tracking inputs remain capability-gated. D-039 now
+preserves the twelve approved visual sheets as the canonical art baseline and
+moves the covered component families from broad concept exploration to asset /
+runtime translation. See `../architecture/VISUAL_IMPLEMENTATION_STATUS.md`.
