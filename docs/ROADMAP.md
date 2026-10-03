@@ -34,23 +34,23 @@ The roadmap is capability-gated. A phase advances only when its success criteria
 
 ## Phase G — Cinematic Camera
 
-**Status: ACTIVE — G.4 City camera ownership contract review.**
+**Status: ACTIVE — G.4 City camera ownership implementation.**
 
 G.1 captured the current DynamicCam `RPG` profile durably.
 
 G.2 runtime-proved the primary camera capability and correct conditional zoom
 semantics in real combat.
 
-G.3 production World/Combat ownership is closed with runtime + integration PASS.
-P0100 supplies the controller; final acceptance on P0102 runtime `0.0.42-dev`
-proved World transition/no-op, live-combat transition/no-op, combat-exit World
-evaluation, disable interruption, Run All integration, and DynamicCam
-coexistence blocking.
+G.3 production World/Combat ownership is closed with runtime + integration PASS
+on `0.0.42-dev`.
 
-G.4 now reviews the City/resting camera contract from the already-captured
-profile. Runtime code waits until City precedence, transition/zoom behavior, and
-the separation between camera ownership and DynamicCam UI hide/fade behavior are
-explicit.
+G.4 source/profile review now resolves the City camera contract: existing
+resting state selects City after live-combat precedence, City conditionally
+targets zoom 5 over the ordinary 2.5-second path, and exit never restores a
+remembered pre-City zoom. Runtime implementation is the next narrow checkpoint.
+
+City UI hide/fade, City/global CVar ownership, reactive zoom, startup instant
+transition parity, and later DynamicCam situations remain separately gated.
 
 Canonical phase record:
 `memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`

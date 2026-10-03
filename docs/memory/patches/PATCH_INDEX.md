@@ -122,5 +122,6 @@
 
 | P0101 | 2026-10-02 | INSTALLED / PUSHED — DOCS-ONLY | Record Selective Hybrid E, percentage-bar direction, and full visual component inventory (`86660959`) |
 | P0102 | 2026-10-02 | INSTALLED / PUSHED — RUNTIME UI CORRECTION | Organize developer diagnostics by roadmap phase tabs; remove camera checker global version pin (`20ad55ba`) |
-| P0103 | 2026-10-03 | PREPARED — DOCS/EVIDENCE ONLY | Record G.3 runtime + integration PASS; open G.4 City camera ownership review |
+| P0103 | 2026-10-03 | INSTALLED / PUSHED — DOCS/EVIDENCE ONLY | Record G.3 runtime + integration PASS; open G.4 City camera ownership review (`4adf400a`) |
+| P0104 | 2026-10-03 | PREPARED — DOCS/SOURCE EVIDENCE ONLY | Resolve G.4 City camera contract; authorize narrow City zoom implementation |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

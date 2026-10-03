@@ -7,7 +7,7 @@ As of 2026-10-03.
 **Phase G — Cinematic Camera**
 
 Active work item:
-**G.4 City camera ownership contract review**
+**G.4 City camera ownership implementation**
 
 State:
 **Phase F COMPLETE; Phase G ACTIVE — G.4**
@@ -36,30 +36,30 @@ Classification:
 Production World/Combat ownership:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
-Implementation checkpoint:
-P0100 at `31a2a7f`, introduced on runtime `0.0.41-dev`.
-
 Final validation runtime:
 `0.0.42-dev` from P0102 at `20ad55ba`.
-
-Accepted evidence includes World transition/no-op, automatic live-combat
-transition, combat no-op, fresh World reevaluation on combat exit, disable
-interruption, Run All integration, DynamicCam coexistence block, and clean
-addon-owned failure/secret/error diagnostics.
 
 Canonical evidence:
 `../evidence/G3_P0102_RUNTIME_PASS_2026-10-03.md`.
 
-The first P0100 resting observation remains retained as expected environmental
-deferral evidence rather than being rewritten as failure or success.
-
 ## G.4
 
-**ACTIVE — City camera ownership contract review.**
+**CONTRACT RESOLVED — CITY ZOOM IMPLEMENTATION NEXT.**
 
-Resolve exact City/resting zoom and precedence semantics from captured profile
-and source before runtime implementation. DynamicCam City UI hide/fade remains a
-separate presentation-policy question until explicitly accepted.
+P0104 source/profile review resolves:
+- resting -> City;
+- live combat precedence over City;
+- conditional City target 5;
+- ordinary 2.5-second entry;
+- restore never / fresh destination evaluation;
+- existing G.3 fail-open/coexistence model reused.
+
+City UI fade, City `cameraDistanceMaxZoomFactor`, reactive zoom, startup instant
+transition parity, and later DynamicCam contexts remain outside the first City
+runtime slice.
+
+Canonical evidence:
+`../evidence/G4_CITY_CAMERA_SOURCE_AUDIT_2026-10-03.md`.
 
 ## Phase H queued direction
 

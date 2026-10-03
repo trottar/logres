@@ -24,10 +24,6 @@ Correct profile behavior:
 - ordinary transitions 2.5 seconds;
 - zoom restore never.
 
-P0096 proved the primary `GetCameraZoom` + `MoveView*Start/Stop` path in two
-genuine live-combat probes and proved production combat classification must use
-live `UnitAffectingCombat("player")` rather than cached Logres combat state.
-
 Canonical evidence:
 `../evidence/G2_P0096_RUNTIME_PASS_2026-10-02.md`.
 
@@ -35,60 +31,43 @@ Canonical evidence:
 
 **COMPLETE — RUNTIME + INTEGRATION PASS.**
 
-P0100 at `31a2a7f6` implements:
-- event/state-driven World/Combat selection;
-- targeted live-combat reevaluation independent of cached state publication;
-- World conditional target 5;
-- World (Combat) conditional target 15;
-- 2.5-second primary MoveView transition;
-- zoom restore never;
-- DynamicCam coexistence gate;
-- explicit stop/fail-open behavior;
-- no temporary-CVar fallback;
-- addon-owned diagnostics and Run All integration.
+P0100 at `31a2a7f6` supplies the production controller. Final validation on
+P0102 runtime `0.0.42-dev` proves World transition/no-op, live-combat
+transition/no-op, fresh World evaluation after combat, disable interruption,
+Run All integration, DynamicCam coexistence blocking, and clean addon-owned
+failure/secret/error diagnostics.
 
-Final production validation occurred on P0102 runtime `0.0.42-dev` and proved:
-- World >5 transition PASS;
-- World <=5 no-op PASS;
-- automatic live-combat <15 transition PASS;
-- combat >=15 no-op PASS;
-- combat exit fresh World evaluation PASS;
-- active transition disable interruption PASS (`stop=module-disabled`);
-- Run All integration PASS;
-- DynamicCam loaded blocks Logres ownership PASS;
-- no accepted-sequence addon-owned failure/secret/error result.
-
-Canonical final evidence:
+Canonical evidence:
 `../evidence/G3_P0102_RUNTIME_PASS_2026-10-03.md`.
-
-The earlier resting/City relinquish observation remains retained as expected
-environmental deferral evidence:
-`../evidence/G3_P0100_RESTING_DEFERRAL_PANEL_OVERFLOW_2026-10-02.md`.
 
 ## G.4 — City camera ownership
 
-**ACTIVE — CONTRACT REVIEW; NO RUNTIME CODE YET.**
+**CONTRACT RESOLVED — IMPLEMENTATION NEXT.**
 
-Captured profile facts already available:
-- City situation is enabled;
-- activation meaning is resting;
-- priority is 1 in the captured DynamicCam mapping;
-- enter transition stored as 2.5 seconds;
-- conditional zoom-in target is 5;
-- DynamicCam also stores City UI hide/fade behavior at opacity 0.65.
+P0104 source/profile audit resolves the camera-only City slice:
+- City activation uses existing resting state from `IsResting()`;
+- live World (Combat) remains higher priority than City;
+- City conditionally targets zoom 5 only when farther than 5;
+- ordinary City entry uses 2.5 seconds;
+- City exit fresh-evaluates its destination and never restores remembered zoom;
+- proven G.3 MoveView/coexistence/fail-open architecture is reused.
 
-Next step is not implementation. First resolve:
-- exact City entry/exit camera semantics;
-- precedence with live World (Combat), which must continue to win during combat;
-- whether any City UI-hide behavior belongs in Phase G at all, versus remaining a
-  separate Logres presentation-policy concern;
-- the smallest fail-open/coexistence-gated runtime slice for proof.
+Explicitly outside the first City implementation:
+- DynamicCam City UI hide/fade;
+- City `cameraDistanceMaxZoomFactor = 1` and broader CVar ownership;
+- reactive-zoom implementation;
+- DynamicCam's global first-situation instant-transition special case;
+- Taxi, Hearth/Teleport, NPC Interaction, Fishing, AFK, Gathering;
+- rotation and shoulder offsets.
 
-Do not broaden G.4 into Taxi, NPC Interaction, fishing, gathering, hearth,
-rotation, shoulder offsets, or global camera CVar ownership.
+Canonical audit:
+`../evidence/G4_CITY_CAMERA_SOURCE_AUDIT_2026-10-03.md`.
 
-Canonical investigation:
-`../investigations/G4_CITY_CAMERA_OWNERSHIP.md`.
+Implementation runtime proof should cover automatic City entry, City >5
+transition, City <=5 no-op, fresh destination evaluation on City exit, Run All,
+and DynamicCam coexistence. Live combat + resting overlap should not be
+manufactured solely for proof; if naturally unavailable, retain static
+live-combat-before-City enforcement and record runtime environmental deferral.
 
 ## Parallel future integration direction
 
@@ -100,5 +79,6 @@ gates.
 ## Later Phase G Work
 
 Taxi, Hearth/Teleport, NPC Interaction, Fishing, AFK, Gathering, rotation,
-shoulder offsets, UI-hide integration questions, and broader camera-CVar
-ownership remain later slices unless evidence changes the order.
+shoulder offsets, UI-hide integration questions, startup instant-transition
+parity, and broader camera-CVar ownership remain later slices unless evidence
+changes the order.

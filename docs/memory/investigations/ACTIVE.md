@@ -3,23 +3,31 @@
 ## G.4 — City camera ownership
 
 Status:
-**ACTIVE — CONTRACT REVIEW; NO RUNTIME CODE YET**
+**CONTRACT RESOLVED — CITY ZOOM IMPLEMENTATION NEXT**
 
 Canonical:
 `G4_CITY_CAMERA_OWNERSHIP.md`
 
-Starting evidence:
-- G.1 captured City as an enabled DynamicCam situation activated by resting;
-- City stores an enter transition of `2.5` seconds;
-- City uses conditional zoom-in target `5`;
-- City also stores DynamicCam UI-hide/fade behavior, which is not automatically a
-  Logres camera responsibility;
-- G.3 already proves live World (Combat) must take priority over ordinary World
-  and resting/City context selection.
+Source/profile audit:
+`../evidence/G4_CITY_CAMERA_SOURCE_AUDIT_2026-10-03.md`
 
-Next question:
-define exact City camera ownership/precedence/exit semantics and explicitly
-separate camera behavior from UI-hide presentation policy before implementation.
+Resolved contract:
+- existing resting sensor selects City after higher proven exclusions;
+- live combat precedes City;
+- City conditional-in target is 5;
+- ordinary City entry is 2.5 seconds;
+- destination context is freshly evaluated on exit; restore remains `never`;
+- proven G.3 movement/coexistence/fail-open behavior is reused.
+
+Deferred deliberately:
+- City UI hide/fade presentation;
+- City `cameraDistanceMaxZoomFactor` override / broader CVar ownership;
+- reactive-zoom implementation;
+- startup first-situation instant transition parity;
+- later DynamicCam situations.
+
+Next action:
+implement the smallest City context extension and collect targeted runtime proof.
 
 ## Closed Phase G investigations
 

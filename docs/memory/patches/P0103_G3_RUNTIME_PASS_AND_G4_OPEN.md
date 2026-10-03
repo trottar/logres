@@ -1,7 +1,7 @@
 # P0103 — Close G.3 Runtime Proof and Open G.4
 
 Date: 2026-10-03
-Result: PREPARED — DOCS/EVIDENCE ONLY
+Result: INSTALLED / PUSHED — DOCS/EVIDENCE ONLY (`4adf400a`)
 
 ## Baseline
 
@@ -10,6 +10,11 @@ P0102 verified pushed:
 
 Runtime remains:
 `0.0.42-dev`.
+
+## Durable checkpoint
+
+P0103 was pushed as:
+`4adf400a4b2ee66a29a398f14364610288a6b4b9`.
 
 ## Purpose
 
@@ -40,9 +45,9 @@ The earlier resting/City environmental deferral is preserved and not rewritten.
 
 ## G.4 opening
 
-G.4 opens as a contract review, not a runtime implementation.
+G.4 opened as a contract review, not a runtime implementation.
 
-The narrow next question is City/resting camera ownership using the captured
+The narrow question was City/resting camera ownership using the captured
 DynamicCam profile and proven Logres resting sensor. Live World (Combat) remains
 higher priority. DynamicCam City UI hide/fade is explicitly separated from
 camera ownership until Logres presentation policy decides whether to adopt an
@@ -51,8 +56,11 @@ equivalent behavior.
 Canonical investigation:
 `../investigations/G4_CITY_CAMERA_OWNERSHIP.md`.
 
+P0104 subsequently resolves that source/profile contract without changing
+runtime code.
+
 ## Deployment
 
 Docs/evidence only.
 
-**No WoW redeploy is required.**
+**No WoW redeploy was required.**

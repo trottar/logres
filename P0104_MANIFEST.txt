@@ -1,0 +1,24 @@
+P0104 — G.4 City Camera Contract
+Baseline: 4adf400a4b2ee66a29a398f14364610288a6b4b9
+Runtime: 0.0.42-dev (unchanged)
+Purpose: resolve City/resting camera semantics from captured profile + DynamicCam source; authorize narrow City zoom implementation
+
+Files:
+3f575f65869eaa35f697782bd9e9bbbbac68efbd73bc2ef35fca0f533abe3ea9  docs/ROADMAP.md
+85091989ac9c0cd09ca62bba769f4b748d785e268e477d1ac1cbcdc1a9a36e5e  docs/memory/CURRENT.md
+359a4867c29718b92bc93377e7312cb43b8658da108e982764f80f8cbaf850b6  docs/memory/architecture/CAMERA.md
+cb7dab34510565e4a3149701b60d23c0185327b80b5dc97dd27339e6340dc023  docs/memory/evidence/G4_CITY_CAMERA_SOURCE_AUDIT_2026-10-03.md
+49d3dc8d5197899d71fc48802f5d82fea03cde4a6b05220875a3df6d306b923f  docs/memory/handoffs/CURRENT_HANDOFF.md
+7a3c93caac1a07710d1c457b14ac32e1c07d80127c67e5c1f461e542f3f93525  docs/memory/investigations/ACTIVE.md
+ffabb9ed98a82a105a49925b70f1d4bb8be582462abcda53349db6c428c60574  docs/memory/investigations/G4_CITY_CAMERA_OWNERSHIP.md
+a84ecb788156ab52d2b6432fd1232b9196965e219fb1cc82c7d4b97bf8b0c7ae  docs/memory/patches/P0103_G3_RUNTIME_PASS_AND_G4_OPEN.md
+661fb453eeff7f2e7eec7ed3f1e2d34776908e5f209684999e6ec832225714c1  docs/memory/patches/P0104_G4_CITY_CAMERA_CONTRACT.md
+2d6ca45ad153468fb75c0394354374bcefb91d734241544e5d3dae35fa0b5e13  docs/memory/patches/PATCH_INDEX.md
+518c9c21efe08edeec3442fd2555800160c423d23aa4cb045b82112b772c4465  docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md
+da8e004dfd05c0bb34b17a258e3e3ed56398fee768f0ba04118b087b5ecc0ca9  docs/memory/roadmap/STATUS.md
+
+Validation:
+python3 tools/check_memory_health.py
+git diff --check
+
+Deployment: docs/source-evidence only; no WoW redeploy required.

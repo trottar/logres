@@ -7,31 +7,35 @@ Phase G:
 **ACTIVE — G.4.**
 
 Current pushed checkpoint:
-P0102 at `20ad55ba`, runtime `0.0.42-dev`.
+P0103 at `4adf400a`, runtime remains `0.0.42-dev`.
 
 G.3:
 **CLOSED — RUNTIME + INTEGRATION PASS.**
 
-Final `0.0.42-dev` evidence proves World >5 transition, World <=5 no-op,
-automatic live-combat transition, combat >=15 no-op, fresh World behavior on
-combat exit, disable interruption with `stop=module-disabled`, Run All PASS, and
-DynamicCam coexistence blocking. Addon-owned diagnostics ended with
-`failures=0`, `secret=false`, and `error=nil`.
+G.4 contract:
+**RESOLVED — CITY ZOOM IMPLEMENTATION NEXT.**
 
-Canonical evidence:
-`../evidence/G3_P0102_RUNTIME_PASS_2026-10-03.md`.
+Canonical source/profile audit:
+`../evidence/G4_CITY_CAMERA_SOURCE_AUDIT_2026-10-03.md`.
 
-The earlier P0100 resting/City observation remains an environmental deferral and
-is retained as historical evidence.
+Accepted City camera contract:
+- existing `state.resting` selects City;
+- live `UnitAffectingCombat("player")` remains higher priority;
+- City conditionally targets zoom 5 only when farther than 5;
+- ordinary City entry uses 2.5 seconds;
+- exit fresh-evaluates the destination; zoom restore remains `never`;
+- reuse proven G.3 MoveView/coexistence/fail-open behavior.
 
-Next work item:
-**G.4 City camera ownership contract review.**
+Explicitly excluded from the first City runtime slice:
+- DynamicCam City UI hide/fade;
+- `cameraDistanceMaxZoomFactor = 1` CVar parity;
+- reactive-zoom ownership;
+- startup instant-transition parity;
+- later DynamicCam situations/rotation/shoulder offsets.
 
-Use the captured DynamicCam profile and existing resting sensor to define the
-smallest City camera slice. Preserve live-combat precedence. Do not silently
-import DynamicCam City UI hide/fade into camera ownership; resolve that as an
-explicit presentation-policy question first.
+P0104 is docs/source-evidence only. No WoW redeploy is required.
 
-P0103 is docs/evidence only. No WoW redeploy is required for P0103.
+Next patch: implement the narrow City context in the existing production camera
+controller and extend diagnostics/static coverage.
 
 User performs all commits/pushes.
