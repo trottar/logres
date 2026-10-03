@@ -34,18 +34,8 @@ Established heading compass, manual user-waypoint compass marker, fail-open navi
 
 **Status: COMPLETE.**
 
-Completed:
-- F.1 passive quest/XP versus Blizzard control contract;
-- F.2 runtime capability proof;
-- F.3 contextual XP pulse;
-- F.4 additive NPC quest detail presentation;
-- F.5 objective/progress capability proof;
-- F.6 contextual objective progress pulse.
-
-Final F.6 evidence:
-P0092 (`5f8e9e96`) produced one production pulse for one natural same-quest
-objective change, with a matching live Quest Probe update and user visual
-acceptance.
+Contextual XP, additive NPC quest detail, objective capability proof, and
+contextual objective progress are runtime-proven.
 
 Deferred boundaries remain deliberate:
 - stock Objective Tracker remains Blizzard-owned;
@@ -58,13 +48,34 @@ Canonical phase record:
 
 ## Phase G — Cinematic Camera
 
-**Status: ACTIVE — G.1 current DynamicCam profile capture.**
+**Status: ACTIVE — G.2 World/Combat camera zoom capability.**
 
-Before camera implementation:
-- obtain a fresh current DynamicCam export/profile;
-- preserve exact settings durably;
-- map configured context behavior;
-- do not reconstruct exact values from old uploads or conversation.
+G.1:
+complete. The user's current DynamicCam `RPG` profile is preserved as durable
+evidence.
+
+Captured enabled contexts:
+- City;
+- World;
+- World (Combat);
+- Taxi;
+- Hearth/Teleport;
+- NPC Interaction;
+- Fishing;
+- AFK;
+- Gathering.
+
+There is no explicit enabled instance camera situation in the captured profile.
+
+G.2:
+source-audit and runtime-prove the narrow World/Combat zoom path before
+production implementation.
+
+Target behavior:
+- World: zoom in by 5;
+- World (Combat): zoom out by 15;
+- 2.5-second enter transitions;
+- no UI-hide or rotation behavior in this first slice.
 
 Canonical phase record:
 `memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`

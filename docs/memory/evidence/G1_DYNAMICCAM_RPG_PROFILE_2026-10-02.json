@@ -1,0 +1,330 @@
+{
+  "situations": {
+    "001": {
+      "enabled": true,
+      "hideUI": {
+        "enabled": true,
+        "fadeOpacity": 0.65,
+        "keepCustomFrames": true
+      },
+      "situationSettings": {
+        "cvars": {
+          "cameraDistanceMaxZoomFactor": 1,
+          "cameraZoomSpeed": 15.5
+        },
+        "reactiveZoomAddIncrements": 2.5,
+        "reactiveZoomAddIncrementsAlways": 0.1000000000000001,
+        "reactiveZoomEnabled": true,
+        "reactiveZoomIncAddDifference": 1.2,
+        "reactiveZoomMaxZoomTime": 2.5
+      },
+      "transitionTime": {
+        "timeToEnter": 2.5
+      },
+      "viewZoom": {
+        "enabled": true,
+        "zoomType": "in",
+        "zoomValue": 5
+      }
+    },
+    "004": {
+      "enabled": true,
+      "transitionTime": {
+        "timeToEnter": 2.5,
+        "timeToExit": 0
+      },
+      "viewZoom": {
+        "enabled": true,
+        "zoomType": "in",
+        "zoomValue": 5
+      }
+    },
+    "006": {
+      "enabled": true,
+      "transitionTime": {
+        "timeToEnter": 2.5,
+        "timeToExit": 0
+      },
+      "viewZoom": {
+        "enabled": true,
+        "zoomType": "out",
+        "zoomValue": 15
+      }
+    },
+    "160": {
+      "enabled": true,
+      "hideUI": {
+        "customFramesToKeep": {
+          "BagBrotherFrame1": true,
+          "BagBrotherFrame2": true,
+          "BagBrotherFrame3": true,
+          "BagBrotherFrame4": true,
+          "BagBrotherFrame5": true,
+          "BagBrotherFramebank": true,
+          "BagBrotherFrameinventory": true,
+          "BagFrame": true,
+          "BagnonBankFrame2": true,
+          "BagnonBankFrame3": true,
+          "BagnonBankFrame4": true,
+          "BagnonBankFrame5": true,
+          "BagnonFrame1": true,
+          "BagnonFrameinventory": true,
+          "BagnonInventory1": true,
+          "BankFrame": false,
+          "CharacterBag0Slot": true,
+          "ContainerFrame1": true,
+          "ContainerFrame2": true,
+          "ContainerFrame3": true,
+          "ContainerFrame4": true,
+          "ContainerFrame5": true,
+          "FirstAidFrame": true,
+          "Tooltip": true,
+          "VendorPriceTooltip": true
+        },
+        "enabled": true,
+        "fadeOpacity": 0,
+        "keepAlertFrames": false,
+        "keepCustomFrames": true,
+        "keepTooltip": false
+      },
+      "rotation": {
+        "enabled": true,
+        "rotationSpeed": -20
+      },
+      "transitionTime": {
+        "timeToEnter": 5,
+        "timeToExit": 5
+      },
+      "viewZoom": {
+        "enabled": true,
+        "zoomType": "out",
+        "zoomValue": 50
+      }
+    },
+    "200": {
+      "enabled": true,
+      "hideUI": {
+        "customFramesToKeep": {
+          "BagBrotherFrame1": true,
+          "BagBrotherFrame2": true,
+          "BagBrotherFrame3": true,
+          "BagBrotherFrame4": true,
+          "BagBrotherFrame5": true,
+          "BagBrotherFramebank": true,
+          "BagBrotherFrameinventory": true,
+          "BagFrame": true,
+          "BagnonBankFrame2": true,
+          "BagnonBankFrame3": true,
+          "BagnonBankFrame4": true,
+          "BagnonBankFrame5": true,
+          "BagnonFrame1": true,
+          "BagnonFrameinventory": true,
+          "BagnonInventory1": true,
+          "BankFrame": false,
+          "CharacterBag0Slot": true,
+          "ContainerFrame1": true,
+          "ContainerFrame2": true,
+          "ContainerFrame3": true,
+          "ContainerFrame4": true,
+          "ContainerFrame5": true,
+          "FirstAidFrame": true,
+          "Tooltip": true,
+          "VendorPriceTooltip": true
+        },
+        "enabled": true,
+        "fadeOpacity": 0,
+        "keepAlertFrames": false,
+        "keepCustomFrames": true,
+        "keepTooltip": false
+      },
+      "rotation": {
+        "enabled": true,
+        "rotationSpeed": 15
+      },
+      "transitionTime": {
+        "timeToEnter": 5,
+        "timeToExit": 5
+      },
+      "viewZoom": {
+        "enabled": true,
+        "zoomType": "out",
+        "zoomValue": 20
+      }
+    },
+    "300": {
+      "enabled": true,
+      "hideUI": {
+        "customFramesToKeep": {
+          "BagBrotherFrame1": true,
+          "BagBrotherFrame2": true,
+          "BagBrotherFrame3": true,
+          "BagBrotherFrame4": true,
+          "BagBrotherFrame5": true,
+          "BagBrotherFramebank": true,
+          "BagBrotherFrameinventory": true,
+          "BagFrame": true,
+          "BagnonBank1": true,
+          "BagnonBankFrame": true,
+          "BagnonBankFrame2": true,
+          "BagnonBankFrame3": true,
+          "BagnonBankFrame4": true,
+          "BagnonBankFrame5": true,
+          "BagnonFrame1": true,
+          "BagnonFrameBank": true,
+          "BagnonFrameinventory": true,
+          "BagnonInventory1": true,
+          "Bagnon_Bank": true,
+          "BagonBank1": true,
+          "BankFrame": false,
+          "CharacterBag0Slot": true,
+          "ContainerFrame1": true,
+          "ContainerFrame2": true,
+          "ContainerFrame3": true,
+          "ContainerFrame4": true,
+          "ContainerFrame5": true,
+          "FirstAidFrame": true,
+          "StackSplitFrame": true,
+          "Tooltip": true,
+          "VendorPriceTooltip": true
+        },
+        "emergencyShowEscEnabled": false,
+        "enabled": true,
+        "fadeOpacity": 0,
+        "keepAlertFrames": false,
+        "keepCustomFrames": true,
+        "keepTooltip": false
+      },
+      "rotation": {
+        "enabled": true,
+        "rotationType": "degrees",
+        "yawDegrees": -45
+      },
+      "situationSettings": {
+        "cvars": {
+          "test_cameraOverShoulder": -2
+        },
+        "cvarsZoomBased": {
+          "test_cameraOverShoulder": {
+            "enabled": true,
+            "points": [
+              {
+                "value": 0,
+                "zoom": 0
+              },
+              {
+                "value": 0,
+                "zoom": 2
+              },
+              {
+                "value": -2,
+                "zoom": 7
+              },
+              {
+                "value": -2,
+                "zoom": 50
+              }
+            ]
+          }
+        },
+        "shoulderOffsetZoomEnabled": true,
+        "shoulderOffsetZoomLowerBound": 2,
+        "shoulderOffsetZoomUpperBound": 7
+      },
+      "transitionTime": {
+        "timeToEnter": 2.5
+      },
+      "viewZoom": {
+        "enabled": true,
+        "zoomType": "in",
+        "zoomValue": 5
+      }
+    },
+    "302": {
+      "enabled": true,
+      "rotation": {
+        "enabled": true,
+        "pitchDegrees": 10,
+        "rotationSpeed": 15,
+        "rotationType": "degrees",
+        "yawDegrees": 10
+      },
+      "transitionTime": {
+        "timeToEnter": 2
+      },
+      "viewZoom": {
+        "enabled": true,
+        "zoomType": "out",
+        "zoomValue": 50
+      }
+    },
+    "303": {
+      "enabled": true,
+      "transitionTime": {
+        "timeToEnter": 0,
+        "timeToExit": 0
+      }
+    },
+    "320": {
+      "enabled": true,
+      "rotation": {
+        "enabled": true,
+        "pitchDegrees": 15,
+        "rotationType": "degrees",
+        "yawDegrees": -15
+      },
+      "transitionTime": {
+        "timeToEnter": 3,
+        "timeToExit": 3
+      },
+      "viewZoom": {
+        "enabled": true,
+        "zoomType": "in",
+        "zoomValue": 5
+      }
+    }
+  },
+  "standardSettings": {
+    "cvars": {
+      "cameraZoomSpeed": 15.5,
+      "test_cameraDynamicPitch": 1,
+      "test_cameraDynamicPitchBaseFovPad": 0.75,
+      "test_cameraDynamicPitchBaseFovPadDownScale": 1,
+      "test_cameraDynamicPitchBaseFovPadFlying": 0.5,
+      "test_cameraDynamicPitchSmartPivotCutoffDist": 25,
+      "test_cameraOverShoulder": 1,
+      "test_cameraTargetFocusEnemyEnable": 1,
+      "test_cameraTargetFocusEnemyStrengthPitch": 0.5,
+      "test_cameraTargetFocusEnemyStrengthYaw": 0.75,
+      "test_cameraTargetFocusInteractEnable": 1,
+      "test_cameraTargetFocusInteractStrengthPitch": 0.5,
+      "test_cameraTargetFocusInteractStrengthYaw": 0.75
+    },
+    "cvarsZoomBased": {
+      "test_cameraOverShoulder": {
+        "enabled": true,
+        "points": [
+          {
+            "value": 0,
+            "zoom": 0
+          },
+          {
+            "value": 0,
+            "zoom": 2
+          },
+          {
+            "value": 1,
+            "zoom": 7
+          },
+          {
+            "value": 1,
+            "zoom": 50
+          }
+        ]
+      }
+    },
+    "reactiveZoomAddIncrementsAlways": 0.1000000000000001,
+    "reactiveZoomMaxZoomTime": 2.5
+  },
+  "version": 5,
+  "zoomRestoreSetting": "never"
+}

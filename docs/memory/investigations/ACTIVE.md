@@ -1,28 +1,31 @@
 # Active Investigations
 
-## G.1 — Current DynamicCam profile capture
+## G.2 — World/Combat camera zoom capability
 
 Status:
-**ACTIVE — FRESH EXPORT REQUIRED**
+**ACTIVE — SOURCE REVIEW / RUNTIME PROOF PENDING**
 
 Canonical:
-`G1_DYNAMICCAM_PROFILE_CAPTURE.md`
+`G2_WORLD_COMBAT_CAMERA_CAPABILITY.md`
 
-Architecture:
-`../architecture/CAMERA.md`
+Profile evidence:
+`../evidence/G1_DYNAMICCAM_PROFILE_CAPTURE_2026-10-02.md`
 
-Purpose:
-capture the user's actual current DynamicCam behavior before any Phase G camera
-implementation.
+Target:
+- World: zoom in by 5, enter 2.5, exit 0;
+- World (Combat): zoom out by 15, enter 2.5, exit 0.
 
-Required evidence:
-- current export/profile;
-- exact configured context values;
-- transition rules and timing;
-- world/combat/NPC/gathering/fishing/taxi/hearth/instance behavior;
-- any configured rest/AFK/travel behavior.
+G.2 must prove the exact current DynamicCam zoom API/CVar path and establish
+safe transition interruption/restoration on Forever.
 
-Do not reconstruct exact values from conversational memory.
+Do not add production camera behavior before that proof.
+
+## Closed Phase G investigations
+
+G.1 DynamicCam profile capture:
+**CLOSED — PASS.**
+
+Current `RPG` profile is preserved durably.
 
 ## Closed Phase F
 
@@ -37,12 +40,6 @@ F.5 objective/progress capability proof:
 
 F.6 contextual objective progress pulse:
 **CLOSED — RUNTIME + VISUAL PASS.**
-
-P0092 final production proof:
-- `changes=1`;
-- `pulses=1`;
-- quest 237 Skullthumper `6/10`, Seer `4/10`;
-- user visual acceptance PASS.
 
 ## Other tracked non-blocking defects / deferred domains
 

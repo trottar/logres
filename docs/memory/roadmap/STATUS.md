@@ -7,10 +7,10 @@ As of 2026-10-02.
 **Phase G — Cinematic Camera**
 
 Active work item:
-**G.1 Current DynamicCam profile capture**
+**G.2 World/Combat camera zoom capability**
 
 State:
-**Phase F COMPLETE; Phase G ACTIVE — G.1**
+**Phase F COMPLETE; Phase G ACTIVE — G.2**
 
 ## Phase status
 
@@ -23,36 +23,48 @@ State:
 | D — Immersion Controller | COMPLETE |
 | E — Compass and Navigation | COMPLETE |
 | F — Quest Experience | COMPLETE |
-| G — Cinematic Camera | ACTIVE — G.1 |
+| G — Cinematic Camera | ACTIVE — G.2 |
 | H — Integration and Polish | QUEUED |
-
-## Phase F final state
-
-| Item | State |
-| --- | --- |
-| F.1 Quest-experience source/capability review | COMPLETE — D-031 |
-| F.2 Quest/XP runtime capability probe | COMPLETE |
-| F.3 Contextual XP pulse | COMPLETE — runtime + integration + visual PASS |
-| F.4 Additive NPC quest detail presentation | COMPLETE — runtime + integration + visual PASS |
-| F.5 Objective / progress runtime capability proof | COMPLETE — runtime PASS |
-| F.6 Contextual objective progress pulse | COMPLETE — P0092 runtime + visual PASS |
-| F.7+ Additional quest work | DEFERRED — only with new accepted evidence/capability |
-
-P0092 final:
-- durable at `5f8e9e96`;
-- runtime `0.0.38-dev`;
-- one natural objective change -> `changes=1`, `pulses=1`;
-- matching quest 237 update to Skullthumper `6/10`, Seer `4/10`;
-- user visual acceptance PASS.
 
 ## Phase G
 
 | Item | State |
 | --- | --- |
-| G.1 Current DynamicCam profile capture | ACTIVE — fresh export required |
-| G.2+ Camera implementation slices | QUEUED — selected after G.1 evidence |
+| G.1 Current DynamicCam profile capture | COMPLETE — exact RPG evidence preserved |
+| G.2 World/Combat camera zoom capability | ACTIVE — source review / runtime proof pending |
+| G.3+ Camera implementation/context slices | QUEUED — evidence-driven |
 
-G.1 must obtain a current profile before exact camera behavior is designed.
+## G.1 captured profile
+
+Enabled RPG contexts:
+- City;
+- World;
+- World (Combat);
+- Taxi;
+- Hearth/Teleport;
+- NPC Interaction;
+- Fishing;
+- AFK;
+- Gathering.
+
+No explicit enabled instance situation is present.
+
+Canonical evidence:
+`../evidence/G1_DYNAMICCAM_PROFILE_CAPTURE_2026-10-02.md`.
+
+## G.2 target
+
+World:
+- zoom in by 5;
+- enter 2.5;
+- exit 0.
+
+World (Combat):
+- zoom out by 15;
+- enter 2.5;
+- exit 0.
+
+No WoW redeploy is required for P0094.
 
 ## Deferred navigation
 

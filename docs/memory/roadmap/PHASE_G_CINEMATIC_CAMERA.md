@@ -1,6 +1,6 @@
 # Phase G — Cinematic Camera
 
-Status: ACTIVE — G.1
+Status: ACTIVE — G.2
 Opened: 2026-10-02
 
 ## Product Objective
@@ -14,68 +14,82 @@ profile.
 Canonical camera architecture:
 `../architecture/CAMERA.md`.
 
-The previously uploaded DynamicCam files are not durable repository evidence.
+Current profile evidence:
+- `../evidence/G1_DYNAMICCAM_PROFILE_CAPTURE_2026-10-02.md`
+- `../evidence/G1_DYNAMICCAM_RPG_PROFILE_2026-10-02.json`
 
-Exact camera values must not be reconstructed from:
-- assistant memory;
-- chat summaries;
-- old uploads;
-- generic DynamicCam defaults.
-
-Before production camera implementation, obtain the user's **current** export or
-profile and preserve the relevant settings durably.
-
-## Known Context Categories
-
-Existing product intent includes:
-- world;
-- combat;
-- NPC interaction;
-- gathering;
-- fishing;
-- taxi;
-- hearth/teleport;
-- instance;
-- possibly AFK/rest/travel contexts when actually configured.
-
-The fresh export determines which categories and exact values are real.
+Exact camera values must come from durable evidence, not conversational memory.
 
 ## G.1 — Current DynamicCam profile capture
 
-**ACTIVE.**
+**COMPLETE — PASS.**
 
-Goal:
-obtain and preserve the current profile before code design.
+The user supplied current `DynamicCam.lua` and `.bak` files.
 
-Required work:
-1. obtain the current DynamicCam export/profile;
-2. preserve the raw export or a faithful derived evidence record;
-3. map every enabled situation/context;
-4. record exact camera values, transitions, delays, shoulder offsets, zoom,
-   pitch, and other relevant behavior actually present;
-5. identify disabled/unused situations separately;
-6. distinguish exported facts from proposed Logres policy;
-7. identify any DynamicCam behavior that depends on APIs or mechanisms needing
-   Forever capability proof.
+They parse to identical semantic data.
 
-No production camera code in G.1.
+The canonical `RPG` profile is preserved as machine-readable JSON and mapped
+against current upstream DynamicCam situation IDs.
 
-## G.1 Success Criteria
+Enabled `RPG` contexts:
+- City;
+- World;
+- World (Combat);
+- Taxi;
+- Hearth/Teleport;
+- NPC Interaction;
+- Fishing;
+- AFK;
+- Gathering.
 
-- current export/profile captured;
-- exact relevant values preserved in repository evidence;
-- all enabled situations mapped;
-- ambiguous or unsupported settings identified;
-- next narrow implementation/capability question selected.
+No explicit enabled instance situation is present.
+
+## G.2 — World/Combat camera zoom capability
+
+**ACTIVE — SOURCE REVIEW / RUNTIME PROOF PENDING.**
+
+Evidence-backed target:
+
+World:
+- zoom in by 5;
+- enter 2.5;
+- exit 0.
+
+World (Combat):
+- zoom out by 15;
+- enter 2.5;
+- exit 0.
+
+G.2 intentionally excludes:
+- UI hiding;
+- rotation;
+- shoulder offsets;
+- spell-detection contexts;
+- global camera CVar ownership.
+
+Use existing Logres world/combat/resting/instance state where sufficient.
+
+## G.2 Success Criteria
+
+- current DynamicCam zoom implementation understood from source;
+- Forever camera API/CVar path identified;
+- combat/world safety established;
+- transition interruption/restoration contract explicit;
+- coexistence with DynamicCam during staged validation is safe;
+- first production World/Combat camera patch can be specified without guessing.
 
 ## Later Phase G Work
 
-After G.1 evidence:
-- define Logres camera ownership/state contract;
-- prove required camera APIs on Forever where needed;
-- implement context slices narrowly;
-- preserve fail-open behavior;
-- validate transitions in-client.
+After World/Combat zoom is proven, select later slices from captured evidence:
+- City;
+- NPC interaction;
+- Gathering;
+- Fishing;
+- Taxi;
+- Hearth/Teleport;
+- AFK;
+- standard/global camera settings.
 
-Exact later slice numbering is selected from the captured profile rather than
-invented before evidence exists.
+Do not invent an instance camera slice while the captured profile has none.
+
+Exact later ordering remains evidence-driven.

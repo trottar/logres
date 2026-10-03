@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-09-30
+as_of: 2026-10-02
 project: logres
 ---
 
@@ -49,11 +49,11 @@ Three information classes guide the design:
 - Source repository lives in the WSL Linux filesystem.
 - User performs all commits and pushes.
 - Failures/rejections/rollbacks are durable knowledge and must be recorded.
-- The exact DynamicCam profile must be re-supplied before Phase G; do not reconstruct detailed camera values from conversational memory.
+- The current DynamicCam `RPG` profile was captured in G.1 on 2026-10-02; exact camera values must come from `docs/memory/evidence/G1_DYNAMICCAM_PROFILE_CAPTURE_2026-10-02.md` and its canonical JSON, not conversational memory. Request a fresh export again only if the profile changes or later evidence conflicts.
 
 ## Open technical facts
 
-WoW Forever API feasibility is not considered settled until Phase 0 audit records it.
+WoW Forever API feasibility is not considered settled until the relevant capability work records it.
 
 In particular, do not assume unrestricted availability of:
 - health/power data during combat;

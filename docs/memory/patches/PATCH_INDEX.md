@@ -103,6 +103,8 @@
 
 | P0092 | 2026-10-02 | INSTALLED / PUSHED — RUNTIME + VISUAL PASS | Use stable count-prefix-free objective identity for production change detection (`5f8e9e96`) |
 
-| P0093 | 2026-10-02 | PREPARED — DOCS-ONLY | Record P0092 PASS; close Phase F; open Phase G / G.1 |
+| P0093 | 2026-10-02 | INSTALLED / PUSHED — DOCS-ONLY | Record P0092 PASS; close Phase F; open Phase G / G.1 (`de30c6f3`) |
+
+| P0094 | 2026-10-02 | PREPARED — DOCS/EVIDENCE ONLY | Capture current DynamicCam RPG profile; close G.1; open G.2 |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

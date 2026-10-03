@@ -1,0 +1,34 @@
+Project Logres P0094
+Date: 2026-10-02
+Baseline: de30c6f3dfd9855a9c96c25d1d48e3c628fe9748
+Purpose: capture current DynamicCam RPG evidence; close G.1; open G.2
+Type: docs/evidence only
+
+Files:
+7d4a2c05b9a2e41dbe18c47fbdeb2a01455541e38965df1fb31e754982e8f865  docs/ROADMAP.md
+c6e4330c2191fca591274c3ded04a87aa8331ba04666934439c60ead630bf3df  docs/memory/CURRENT.md
+24b156e66a31c93f9ab1f8d7e861dfc56726efe39cb3f467ec4b52337140813d  docs/memory/MEMORY.md
+3c62d0feebf9a5f6715ce7f1ac7cd9b716c42fb905fdde4b8b48f160add19df8  docs/memory/architecture/CAMERA.md
+7f6580898d818177add7c39c0d2380b0fef397d7f0cdbf23aefc79ea73a5ac5c  docs/memory/evidence/G1_DYNAMICCAM_PROFILE_CAPTURE_2026-10-02.md
+b2833df63303aed238790e78f9cea68289772336d847a1ec82cb26464f1c607a  docs/memory/evidence/G1_DYNAMICCAM_RPG_PROFILE_2026-10-02.json
+832f191e56fc7278ae3bc5763f39d8a352729e6fbc5a7ad96c1d2a786048f2a2  docs/memory/handoffs/CURRENT_HANDOFF.md
+dffb561444bb2e7971a72a2bdc8a686f395dd792df58a6777469d075a89fc8bb  docs/memory/investigations/ACTIVE.md
+53d4a58f5754d3f14a0587a769bb35d6a54877ea7e36fc3a794597705c07d7e6  docs/memory/investigations/G1_DYNAMICCAM_PROFILE_CAPTURE.md
+faa6738579df0c12993ab8dcdcc08b184727940f2e2a7ef1cbd29c55c39729ad  docs/memory/investigations/G2_WORLD_COMBAT_CAMERA_CAPABILITY.md
+d3c01d39fef434570ea94e831fd8b925e8acd57ea4a79b408790ac56067e102c  docs/memory/patches/P0093_CLOSE_PHASE_F_OPEN_PHASE_G.md
+ccd5cc49ba4dd0105f2977dad84fbb6b1a6261cdb599723374bd1503aa1c1ede  docs/memory/patches/P0094_CAPTURE_DYNAMICCAM_PROFILE.md
+abc18061b9768597e3e39f9cbf634e78d80fcf898db4e3cdcd7bf6cf4a8b48e3  docs/memory/patches/PATCH_INDEX.md
+3aafff16792c195eb3b629b7ec454bfb1bb953c1e4ebe0a164b92df010805fa9  docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md
+9d73d6385a0c43fe696592859934054aa438a816687474720a71022d0f175f7a  docs/memory/roadmap/STATUS.md
+
+Validation:
+exact verified P0093 HEAD
+exact-byte verification of P0094-owned tracked inputs against HEAD
+full temporary git-archive final-tree construction
+compile and execute every tools/check_*.py in temporary and real trees
+CURRENT canonical heading validation
+canonical RPG JSON SHA/version/situation validation
+G.1 COMPLETE / G.2 ACTIVE assertions
+git diff --check
+
+Docs/evidence only: no WoW redeploy required.

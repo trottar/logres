@@ -1,41 +1,44 @@
 # Current Handoff
 
-Authoritative state: `../CURRENT.md`.
+Authoritative state:
+`../CURRENT.md`.
 
-Phase F — Quest Experience:
+Phase F:
 **COMPLETE.**
 
-P0092 is verified pushed at:
-`5f8e9e96`.
+Phase G:
+**ACTIVE — G.2.**
 
-Current pushed runtime:
+P0093 is verified pushed at:
+`de30c6f3`.
+
+Current runtime remains:
 `0.0.38-dev`.
 
-F.6 final proof:
-- quest 237 baseline established with two rows;
-- live Preview `shown-current`;
-- natural Skullthumper progress produced `changes=1`, `pulses=1`;
-- post-change Quest Probe captured Skullthumper `6/10`, Seer `4/10`;
-- sample reason `QUEST_LOG_UPDATE`;
-- no fixed error/secret issue;
-- user reports the mob kill produced the popup correctly and it looked good.
+G.1:
+**CLOSED — PASS.**
 
-F.6 is therefore:
-**CLOSED — RUNTIME + VISUAL PASS.**
+Fresh current DynamicCam files were supplied and parsed.
 
-Active phase:
-**Phase G — Cinematic Camera.**
+Key facts:
+- `DynamicCam.lua` and `.bak` are semantically identical;
+- exact `RPG` profile preserved as canonical JSON;
+- RPG has nine enabled contexts;
+- no explicit enabled instance situation;
+- World = zoom in by 5, enter 2.5, exit 0;
+- World (Combat) = zoom out by 15, enter 2.5, exit 0.
 
 Active work:
-**G.1 — Current DynamicCam profile capture.**
-
-Do not reconstruct exact camera values from prior conversation or old uploads.
+**G.2 — World/Combat camera zoom capability.**
 
 Next:
-obtain a fresh current DynamicCam export/profile, preserve it as repository
-evidence, then map exact context behavior before implementation.
+source-audit DynamicCam's current timed zoom implementation and the relevant
+Forever camera APIs/CVars before any production mutation.
 
-P0093 is docs-only.
-No WoW redeploy is required.
+G.2 scope excludes rotation, UI hiding, shoulder offset, taxi, teleport,
+fishing, gathering, City, AFK, and global camera-CVar ownership.
+
+P0094 is docs/evidence-only.
+No WoW redeploy required.
 
 User performs all commits/pushes.
