@@ -1,8 +1,8 @@
 # P0121 — Cast-State Cue Visual Translation
 
-Date: 2026-10-04  
-Result: **PREPARED — RUNTIME + VISUAL PROOF PENDING**  
-Baseline: `6c5f8901d3f5b7434b76f05af1f22a0add8c1b10`  
+Date: 2026-10-04
+Result: **INSTALLED / PUSHED — PLAYER CAST RUNTIME + VISUAL PASS; TARGET DEFERRED** (`fc928d99`)
+Baseline: `6c5f8901d3f5b7434b76f05af1f22a0add8c1b10`
 Runtime: `0.0.50-dev -> 0.0.51-dev`
 
 ## Purpose
@@ -44,6 +44,18 @@ Theme-owned production frame/glyph textures.
 P0120 is durable at `6c5f8901` and is recorded as **CORE RUNTIME + VISUAL PASS —
 SIMPLIFIED PRODUCTION BASELINE ACCEPTED**. Additional ornament matching the
 approved resource-bar sheet remains deferred polish.
+
+
+## Runtime result
+
+P0121 is durable at `fc928d9972d6eef43586b1d852281a7b95c229a4`.
+The user accepted the player-side cast visual result in client. No nearby enemy
+caster was available, so target cast/channel remains environmentally deferred.
+Player channel/interrupted variants were not individually called out and are not
+over-claimed.
+
+Canonical evidence:
+`../evidence/P0121_CAST_CUE_RUNTIME_VISUAL_PASS_2026-10-04.md`.
 
 ## Validation gate
 

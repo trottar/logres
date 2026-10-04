@@ -401,6 +401,7 @@ end
 
 function Progress:FindChangedRows(previousRows, currentRows)
     local changed = {}
+    local completed = false
     local maximum =
         math.max(#previousRows, #currentRows)
 
@@ -435,16 +436,20 @@ function Progress:FindChangedRows(previousRows, currentRows)
 
                     if line then
                         changed[#changed + 1] = line
+
+                        if finishedChanged and current.finished == true then
+                            completed = true
+                        end
                     end
                 end
             end
         end
     end
 
-    return changed
+    return changed, completed
 end
 
-function Progress:PresentLines(lines, reason)
+function Progress:PresentLines(lines, reason, completed)
     if not self.moduleEnabled then
         self:HidePulse("module-disabled")
         return false, "module-disabled"
@@ -476,6 +481,12 @@ function Progress:PresentLines(lines, reason)
 
     self.pulseGeneration = self.pulseGeneration + 1
     local generation = self.pulseGeneration
+
+    Logres.ContextVisual.SetComplete(
+        self.contextSurface,
+        completed == true
+    )
+    self.lastCompletionPresentation = completed == true
 
     self.text:SetText(table.concat(visible, "\n"))
     self.root:Show()
@@ -549,7 +560,7 @@ function Progress:Refresh(reason, forceBaseline)
         return true
     end
 
-    local changed =
+    local changed, completed =
         self:FindChangedRows(
             self.baselineRows,
             rows
@@ -576,7 +587,8 @@ function Progress:Refresh(reason, forceBaseline)
     self.pulseCount = self.pulseCount + 1
     self:PresentLines(
         changed,
-        reason or "objective-change"
+        reason or "objective-change",
+        completed
     )
 
     return true
@@ -607,6 +619,7 @@ function Progress:BuildCurrentPreviewLines()
     end
 
     local lines = {}
+    local completed = false
     local count =
         math.min(
             #rows,
@@ -619,6 +632,10 @@ function Progress:BuildCurrentPreviewLines()
 
         if line then
             lines[#lines + 1] = line
+
+            if rows[index].finished == true then
+                completed = true
+            end
         end
     end
 
@@ -626,7 +643,7 @@ function Progress:BuildCurrentPreviewLines()
         return nil
     end
 
-    return lines
+    return lines, completed
 end
 
 function Progress:ShowPreview()
@@ -641,14 +658,15 @@ function Progress:ShowPreview()
         return true, "suppressed-immersion-off"
     end
 
-    local lines =
+    local lines, completed =
         self:BuildCurrentPreviewLines()
 
     if lines then
         local ok, state =
             self:PresentLines(
                 lines,
-                "preview-current"
+                "preview-current",
+                completed
             )
 
         if ok and state == "shown" then
@@ -661,7 +679,8 @@ function Progress:ShowPreview()
     local ok, state =
         self:PresentLines(
             { PREVIEW_TEXT },
-            "preview-fallback"
+            "preview-fallback",
+            false
         )
 
     if ok and state == "shown" then
@@ -676,6 +695,8 @@ function Progress:GetDebugStatus()
         moduleEnabled = self.moduleEnabled == true,
         rootReady = self.root ~= nil,
         textReady = self.text ~= nil,
+        contextVisualReady = self.contextSurface ~= nil,
+        lastCompletionPresentation = self.lastCompletionPresentation == true,
         eventFrameReady = self.eventFrame ~= nil,
         timerAvailable = self.timerAvailable == true,
         objectiveAPIAvailable =
@@ -760,11 +781,12 @@ function Progress:OnInitialize()
     self.lastPresentationReason = "initialize"
     self.lastError = nil
 
-    local root = CreateFrame(
-        "Frame",
+    local surface = Logres.ContextVisual.Create(
+        UIParent,
         "LogresQuestObjectiveProgress",
-        UIParent
+        "objective"
     )
+    local root = surface.root
     root:SetSize(
         PRESENTATION_WIDTH,
         PRESENTATION_HEIGHT
@@ -793,21 +815,12 @@ function Progress:OnInitialize()
     root:EnableMouse(false)
     root:Hide()
 
-    local text = root:CreateFontString(
-        "LogresQuestObjectiveProgressText",
-        "OVERLAY",
-        "GameFontHighlight"
-    )
-    text:SetAllPoints(root)
-    text:SetJustifyH("CENTER")
-    text:SetJustifyV("MIDDLE")
-    text:SetTextColor(0.88, 0.78, 0.54, 0.96)
-    text:SetShadowColor(0, 0, 0, 0.90)
-    text:SetShadowOffset(1, -1)
-    text:ClearText()
+    local text = surface.text
 
     self.root = root
     self.text = text
+    self.contextSurface = surface
+    self.lastCompletionPresentation = false
 
     local eventFrame = CreateFrame("Frame")
     local events = {

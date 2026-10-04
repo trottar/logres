@@ -144,6 +144,7 @@ function XP:PresentText(text, reason)
     self.pulseGeneration = self.pulseGeneration + 1
     local generation = self.pulseGeneration
 
+    Logres.ContextVisual.SetComplete(self.contextSurface, false)
     self.text:SetText(text)
     self.root:Show()
     self.pulseShown = true
@@ -279,6 +280,7 @@ function XP:GetDebugStatus()
             and self.root:IsShown()
             or false,
         textReady = self.text ~= nil,
+        contextVisualReady = self.contextSurface ~= nil,
         eventFrameReady = self.eventFrame ~= nil,
         timerAvailable = self.timerAvailable == true,
         xpAPIAvailable = self.xpAPIAvailable == true,
@@ -346,12 +348,12 @@ function XP:OnInitialize()
     self.lastPresentationReason = "initialize"
     self.lastError = nil
 
-    local root = CreateFrame(
-        "Frame",
+    local surface = Logres.ContextVisual.Create(
+        UIParent,
         "LogresQuestXPPulse",
-        UIParent
+        "xp"
     )
-    root:SetSize(280, 32)
+    local root = surface.root
     root:SetPoint(
         "CENTER",
         UIParent,
@@ -363,20 +365,11 @@ function XP:OnInitialize()
     root:EnableMouse(false)
     root:Hide()
 
-    local text = root:CreateFontString(
-        "LogresQuestXPPulseText",
-        "OVERLAY",
-        "GameFontNormalLarge"
-    )
-    text:SetAllPoints(root)
-    text:SetJustifyH("CENTER")
-    text:SetTextColor(0.88, 0.76, 0.46, 0.96)
-    text:SetShadowColor(0, 0, 0, 0.85)
-    text:SetShadowOffset(1, -1)
-    text:ClearText()
+    local text = surface.text
 
     self.root = root
     self.text = text
+    self.contextSurface = surface
 
     local eventFrame = CreateFrame("Frame")
     local events = {

@@ -66,3 +66,21 @@ comes from the existing unit-filtered spellcast event path.
 
 Canonical art reference:
 `docs/design/approved/05_cast_state_cue_primitive.png`.
+
+
+## Context message
+
+P0122 translates approved D-039 Context sheet 09 into one shared transient
+presentation family for XP and objective-progress pulses.
+
+Files:
+- `Context/context_line.tga` — restrained line treatment;
+- `Context/context_diamond.tga` — central authored diamond;
+- `Context/context_glow.tga` — subtle additive completion emphasis.
+
+`Quest/ContextVisual.lua` owns construction/style only; XP and objective modules
+retain their existing data/event producers. A warmer completion palette is used
+only from the existing objective `finished` transition.
+
+Canonical art reference:
+`docs/design/approved/09_context_message_component.png`.

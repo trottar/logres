@@ -1,0 +1,34 @@
+P0122 — Context Message Visual Translation
+Baseline: fc928d9972d6eef43586b1d852281a7b95c229a4
+Runtime: 0.0.51-dev -> 0.0.52-dev
+Deployment: runtime code change; WoW redeploy required
+Camera / G.5 files intentionally untouched
+
+Files:
+8557b435ace665803e12bb740ac1aeaee7047283358bb9e504715ab9838e3c87  Logres/Core/Bootstrap.lua
+a24f1594c62e7fe74278bc79207b62795e327d4586ec8efe8835bd5ba88dfcbf  Logres/Logres.toc
+2d631fea15721660129b04d0dac743c01aacbc226209063e60975837f31348a8  Logres/Media/Context/context_diamond.tga
+d0fb93a54425327034fa7c70b0a7c6c59336ce7e0e01ced8c2eda1fa4f0a17fe  Logres/Media/Context/context_glow.tga
+874a4ae45fac34eea1541fea7100d9520cf2b51a5a70829dfd930939bd0d683c  Logres/Media/Context/context_line.tga
+36170fe17521e040a07f0b570bec11d89edc0803bf2c4a167311034a8e9c7600  Logres/Media/README.md
+d72d7a64a6db3e9f984c3b1e3650a4e5c5662d96740baf6c39fc7e5208a4fb75  Logres/Media/Theme.lua
+7881a74be955dbe06fbdfc06a802a217647a8768b53965e472b21226a8b5b07e  Logres/Quest/ContextVisual.lua
+4c9aa11f744943017eaa18c3c96158c4b55be4729ef24971a728e9c3e40aa2ea  Logres/Quest/Progress.lua
+5081d86f796a655a755a09f7a9acb2f2db6f1d5284808b8864d30dca94005323  Logres/Quest/XP.lua
+0bca912c181302db1b1f641027b71e16391b836417a824d0e9c26e5b563bd59b  docs/memory/architecture/QUESTING.md
+7961718e240913bfdcb8246958e02c84dce22abd63a43f9f04de067b654626a4  docs/memory/architecture/VISUAL_IMPLEMENTATION_STATUS.md
+110ff0426a4a397442731ac1be2cb2e9873f1aa2c6e3aabfebc9ef9ee7444e5f  docs/memory/evidence/P0121_CAST_CUE_RUNTIME_VISUAL_PASS_2026-10-04.md
+012b9cc88b99a3da8609943612cbedf78fe23825f3aeb115be168bc51785fd1d  docs/memory/patches/P0121_CAST_CUE_VISUAL_TRANSLATION.md
+e749c9a2030d6e4917d405ab2f50448ba568f389c17b0fa62c28b2cf4a71bc3b  docs/memory/patches/P0122_CONTEXT_MESSAGE_VISUAL_TRANSLATION.md
+1fa8a1559f10f1c7cf47373bfd117ee74cc618afdeda6d6d194189b65e87f631  docs/memory/patches/PATCH_INDEX.md
+bc0c5a6ac9dad1bdb379bb4f8dc2a4c00e695137aeba0a082b7ca21863769df2  tools/check_context_visual_contract.py
+
+Checks:
+python3 tools/check_xp_pulse_contract.py
+python3 tools/check_objective_progress_contract.py
+python3 tools/check_context_visual_contract.py
+python3 tools/check_addon_structure.py
+python3 tools/check_memory_health.py
+git diff --check
+
+Runtime + visual proof: core XP/objective Context presentation PASS; completion styling remains naturally conditional on a completed-objective event.

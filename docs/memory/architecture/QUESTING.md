@@ -136,3 +136,19 @@ information/control surface available.
 
 No stale quest destination, objective state, NPC text, reward choice, or quest
 action is fabricated.
+
+
+## Phase H+ Context-message production primitive — P0122
+
+P0122 translates the approved Context-message sheet into one shared visual
+primitive consumed by the already-proven XP and objective-progress producers.
+It adds the thin line / center-diamond treatment and keeps presentation transient,
+world-first, and mouse-transparent.
+
+XP source/timing semantics are unchanged. Objective source/change-detection
+semantics are unchanged.
+
+The warmer/brighter completion treatment is capability-grounded: it is selected
+only when an existing objective row reports a real `finished` transition to true.
+Logres does not infer completion from counts or text and does not add quest turn-in
+/control events for this styling.

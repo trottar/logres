@@ -87,4 +87,53 @@ theme.castCue = {
     },
 }
 
+
+theme.contextMessage = {
+    variants = {
+        xp = {
+            width = 360,
+            height = 38,
+            textWidth = 330,
+            lineWidth = 138,
+            lineHeight = 8,
+            lineOffset = 7,
+            diamondSize = 10,
+            glowSize = 34,
+            font = "GameFontNormalLarge",
+        },
+        objective = {
+            width = 520,
+            height = 54,
+            textWidth = 500,
+            lineWidth = 205,
+            lineHeight = 8,
+            lineOffset = 7,
+            diamondSize = 10,
+            glowSize = 38,
+            font = "GameFontHighlight",
+        },
+    },
+
+    colors = {
+        normal = {
+            text = { 0.88, 0.78, 0.54, 0.96 },
+            line = { 0.58, 0.42, 0.22, 0.78 },
+            diamond = { 0.82, 0.58, 0.20, 0.96 },
+            glow = { 0.84, 0.55, 0.14, 0.24 },
+        },
+        complete = {
+            text = { 1.00, 0.86, 0.48, 1.00 },
+            line = { 0.84, 0.58, 0.20, 0.94 },
+            diamond = { 1.00, 0.70, 0.24, 1.00 },
+            glow = { 1.00, 0.58, 0.12, 0.58 },
+        },
+    },
+
+    assets = {
+        line = MEDIA_ROOT .. "Context\\context_line.tga",
+        diamond = MEDIA_ROOT .. "Context\\context_diamond.tga",
+        glow = MEDIA_ROOT .. "Context\\context_glow.tga",
+    },
+}
+
 Logres.Theme = theme
