@@ -26,3 +26,24 @@ Canonical art reference:
 
 These 64x64 RGBA TGA files are production derivatives, not replacements for the
 approved reference sheet.
+
+
+## Percentage bar
+
+P0120 translates the approved D-039 resource/percentage-bar primitive into a
+reusable normal/compact runtime surface.
+
+Files:
+- `Bar/percentage_fill.tga` — neutral textured fill recolored by the native
+  StatusBar consumer;
+- `Bar/percentage_diamond.tga` — restrained bronze/dark diamond endcap shared by
+  normal and compact bars.
+
+`Theme.lua` owns normal/compact geometry, track/border/text tokens, resource
+color families, target/ally health colors, and the media paths.
+
+The runtime bar retains visible percentage text. Player health remains excluded:
+it continues to use the D-036 health-tunnel/peripheral-pressure path.
+
+Canonical art reference:
+`docs/design/approved/02_resource_bar_primitive.png`.

@@ -86,6 +86,52 @@ local ALLY_UNITS = {
     "party4",
 }
 
+local percentageBarStyle =
+    (Logres.Theme and Logres.Theme.percentageBar) or {}
+local percentageBarAssets = percentageBarStyle.assets or {}
+local percentageBarColors = percentageBarStyle.colors or {}
+
+local DEFAULT_PERCENTAGE_BAR = {
+    normal = {
+        trackWidth = 142,
+        trackHeight = 12,
+        frameHeight = 18,
+        textWidth = 34,
+        textGap = 8,
+        diamondSize = 10,
+        font = "GameFontNormal",
+    },
+    compact = {
+        trackWidth = 58,
+        trackHeight = 8,
+        frameHeight = 14,
+        textWidth = 30,
+        textGap = 4,
+        diamondSize = 8,
+        font = "GameFontNormalSmall",
+    },
+}
+
+local DEFAULT_TRACK_COLOR = { 0.012, 0.010, 0.008, 0.94 }
+local DEFAULT_BORDER_COLOR = { 0.45, 0.32, 0.15, 0.96 }
+local DEFAULT_TEXT_COLOR = { 0.94, 0.90, 0.80, 1.00 }
+local DEFAULT_RESOURCE_COLOR = { 0.72, 0.49, 0.13, 1.00 }
+local DEFAULT_TARGET_COLOR = { 0.62, 0.11, 0.07, 1.00 }
+local DEFAULT_ALLY_COLOR = { 0.18, 0.55, 0.27, 1.00 }
+
+local RESOURCE_COLOR_KEYS = {
+    MANA = "mana",
+    RAGE = "rage",
+    ENERGY = "energy",
+    FOCUS = "focus",
+    RUNIC_POWER = "runicPower",
+    LUNAR_POWER = "alternate",
+    MAELSTROM = "alternate",
+    INSANITY = "alternate",
+    FURY = "alternate",
+    PAIN = "alternate",
+}
+
 local function createCastCue(parent, name)
     local cue = CreateFrame("Frame", name, parent)
     cue:SetSize(18, 18)
@@ -216,6 +262,166 @@ local function createScaleTo100Curve()
     return curve
 end
 
+local function percentageBarSpec(variant)
+    return percentageBarStyle[variant]
+        or DEFAULT_PERCENTAGE_BAR[variant]
+        or DEFAULT_PERCENTAGE_BAR.normal
+end
+
+local function percentageBarColor(color, fallback)
+    if type(color) == "table" then
+        return color
+    end
+
+    return fallback
+end
+
+local function setPercentageBarColor(bar, color)
+    bar.status:SetStatusBarColor(
+        color[1],
+        color[2],
+        color[3],
+        color[4] or 1
+    )
+end
+
+local function createPercentageBar(parent, name, variant, initialColor)
+    local spec = percentageBarSpec(variant)
+    local trackColor = percentageBarColor(
+        percentageBarStyle.trackColor,
+        DEFAULT_TRACK_COLOR
+    )
+    local borderColor = percentageBarColor(
+        percentageBarStyle.borderColor,
+        DEFAULT_BORDER_COLOR
+    )
+    local textColor = percentageBarColor(
+        percentageBarStyle.textColor,
+        DEFAULT_TEXT_COLOR
+    )
+    local diamondSize = spec.diamondSize
+    local totalWidth =
+        spec.trackWidth + diamondSize + spec.textGap + spec.textWidth
+
+    local frame = CreateFrame("Frame", name, parent)
+    frame:SetSize(totalWidth, spec.frameHeight)
+    frame:EnableMouse(false)
+
+    local status = CreateFrame("StatusBar", nil, frame)
+    status:SetPoint("LEFT", frame, "LEFT", diamondSize / 2, 0)
+    status:SetSize(spec.trackWidth, spec.trackHeight)
+    status:SetMinMaxValues(0, 100)
+    status:SetValue(0)
+    status:SetStatusBarTexture(
+        percentageBarAssets.fill
+            or "Interface\\Buttons\\WHITE8x8"
+    )
+
+    local track = status:CreateTexture(nil, "BACKGROUND")
+    track:SetAllPoints(status)
+    track:SetColorTexture(
+        trackColor[1],
+        trackColor[2],
+        trackColor[3],
+        trackColor[4]
+    )
+
+    local top = status:CreateTexture(nil, "BORDER")
+    top:SetPoint("TOPLEFT", status, "TOPLEFT", 0, 0)
+    top:SetPoint("TOPRIGHT", status, "TOPRIGHT", 0, 0)
+    top:SetHeight(1)
+    top:SetColorTexture(
+        borderColor[1],
+        borderColor[2],
+        borderColor[3],
+        borderColor[4]
+    )
+
+    local bottom = status:CreateTexture(nil, "BORDER")
+    bottom:SetPoint("BOTTOMLEFT", status, "BOTTOMLEFT", 0, 0)
+    bottom:SetPoint("BOTTOMRIGHT", status, "BOTTOMRIGHT", 0, 0)
+    bottom:SetHeight(1)
+    bottom:SetColorTexture(
+        borderColor[1],
+        borderColor[2],
+        borderColor[3],
+        borderColor[4]
+    )
+
+    local leftEdge = status:CreateTexture(nil, "BORDER")
+    leftEdge:SetPoint("TOPLEFT", status, "TOPLEFT", 0, 0)
+    leftEdge:SetPoint("BOTTOMLEFT", status, "BOTTOMLEFT", 0, 0)
+    leftEdge:SetWidth(1)
+    leftEdge:SetColorTexture(
+        borderColor[1],
+        borderColor[2],
+        borderColor[3],
+        borderColor[4]
+    )
+
+    local rightEdge = status:CreateTexture(nil, "BORDER")
+    rightEdge:SetPoint("TOPRIGHT", status, "TOPRIGHT", 0, 0)
+    rightEdge:SetPoint("BOTTOMRIGHT", status, "BOTTOMRIGHT", 0, 0)
+    rightEdge:SetWidth(1)
+    rightEdge:SetColorTexture(
+        borderColor[1],
+        borderColor[2],
+        borderColor[3],
+        borderColor[4]
+    )
+
+    local leftDiamond = frame:CreateTexture(nil, "ARTWORK")
+    leftDiamond:SetSize(diamondSize, diamondSize)
+    leftDiamond:SetPoint("CENTER", status, "LEFT", 0, 0)
+    leftDiamond:SetTexture(
+        percentageBarAssets.diamond
+            or "Interface\\Buttons\\WHITE8x8"
+    )
+
+    local rightDiamond = frame:CreateTexture(nil, "ARTWORK")
+    rightDiamond:SetSize(diamondSize, diamondSize)
+    rightDiamond:SetPoint("CENTER", status, "RIGHT", 0, 0)
+    rightDiamond:SetTexture(
+        percentageBarAssets.diamond
+            or "Interface\\Buttons\\WHITE8x8"
+    )
+
+    local percentText = frame:CreateFontString(
+        nil,
+        "OVERLAY",
+        spec.font or "GameFontNormalSmall"
+    )
+    percentText:SetPoint(
+        "LEFT",
+        status,
+        "RIGHT",
+        (diamondSize / 2) + spec.textGap,
+        0
+    )
+    percentText:SetWidth(spec.textWidth)
+    percentText:SetJustifyH("RIGHT")
+    percentText:SetTextColor(
+        textColor[1],
+        textColor[2],
+        textColor[3],
+        textColor[4]
+    )
+    percentText:SetShadowColor(0, 0, 0, 0.90)
+    percentText:SetShadowOffset(1, -1)
+    percentText:ClearText()
+
+    frame.status = status
+    frame.percentText = percentText
+    frame.variant = variant
+
+    setPercentageBarColor(
+        frame,
+        initialColor or DEFAULT_RESOURCE_COLOR
+    )
+
+    return frame
+end
+
 local function createEdgeTextures(root, band)
     local textures = {}
     local r, g, b = band.color[1], band.color[2], band.color[3]
@@ -307,10 +513,17 @@ function HUD:UpdateResource()
         return
     end
 
-    -- Primary player power may be secret on Forever. Scale it to 0-100
-    -- inside the native curve system and pass the resulting secret number
-    -- directly to SetFormattedText. Never perform arithmetic, comparison,
-    -- tostring/string.format, or persistence on the value in Lua.
+    local _, powerToken = UnitPowerType("player")
+    local colorKey = RESOURCE_COLOR_KEYS[powerToken] or "alternate"
+    local resourceColor =
+        percentageBarColors[colorKey] or DEFAULT_RESOURCE_COLOR
+    setPercentageBarColor(self.resourceBar, resourceColor)
+
+    -- Primary player power is secret-capable on Forever. The native curve
+    -- scales it to 0-100 and the opaque result is forwarded directly to two
+    -- native consumers: StatusBar:SetValue and FontString:SetFormattedText.
+    -- Never branch, compare, stringify, persist, or perform Lua arithmetic on
+    -- the returned percentage.
     local percent = UnitPowerPercent(
         "player",
         nil,
@@ -318,6 +531,7 @@ function HUD:UpdateResource()
         self.percentScaleCurve
     )
 
+    self.resourceBar.status:SetValue(percent)
     self.resourceText:SetFormattedText("%.0f%%", percent)
 end
 
@@ -343,13 +557,15 @@ function HUD:UpdateAllyUnit(unit)
     row.nameText:SetText(UnitName(unit))
 
     -- Ally/pet health is secret-capable. The native curve performs the
-    -- 0-100 scale and the secret result goes directly to SetFormattedText.
+    -- 0-100 scale and the opaque result goes directly to native bar/text
+    -- consumers without Lua inspection.
     local percent = UnitHealthPercent(
         unit,
         true,
         self.percentScaleCurve
     )
 
+    row.healthBar.status:SetValue(percent)
     row.healthText:SetFormattedText("%.0f%%", percent)
     row.frame:Show()
 end
@@ -376,13 +592,15 @@ function HUD:UpdateTarget()
     self.targetNameText:SetText(UnitName("target"))
 
     -- Target health is secret-capable. Scale it to 0-100 inside the native
-    -- curve system and forward the result directly to SetFormattedText.
+    -- curve system and forward the opaque result directly to native bar/text
+    -- consumers. Reaction/danger coloring remains separately capability-gated.
     local percent = UnitHealthPercent(
         "target",
         true,
         self.percentScaleCurve
     )
 
+    self.targetHealthBar.status:SetValue(percent)
     self.targetHealthText:SetFormattedText("%.0f%%", percent)
     self.targetFrame:Show()
 end
@@ -417,10 +635,12 @@ function HUD:GetDebugStatus()
         textureCount = self.healthTextureCount or 0,
         curvesReady = self.curvesReady and true or false,
         resourceTextReady = self.resourceText ~= nil,
+        resourceBarReady = self.resourceBar ~= nil,
         resourceCurveReady = self.percentScaleCurve ~= nil,
         targetFrameReady = self.targetFrame ~= nil,
         targetNameTextReady = self.targetNameText ~= nil,
         targetHealthTextReady = self.targetHealthText ~= nil,
+        targetHealthBarReady = self.targetHealthBar ~= nil,
         targetEventFrameReady = self.targetEventFrame ~= nil,
         playerCastCueReady = self.playerCastCue ~= nil,
         targetCastCueReady = self.targetCastCue ~= nil,
@@ -464,19 +684,16 @@ function HUD:OnInitialize()
 
     self.percentScaleCurve = createScaleTo100Curve()
 
-    local resourceText = root:CreateFontString(
-        "LogresHUDResourceText",
-        "OVERLAY",
-        "GameFontNormalLarge"
+    local resourceBar = createPercentageBar(
+        root,
+        "LogresHUDResourceBar",
+        "normal",
+        percentageBarColors.alternate or DEFAULT_RESOURCE_COLOR
     )
-    resourceText:SetPoint("CENTER", root, "CENTER", 0, -118)
-    resourceText:SetTextColor(0.82, 0.78, 0.68, 0.92)
-    resourceText:SetShadowColor(0, 0, 0, 0.85)
-    resourceText:SetShadowOffset(1, -1)
-    resourceText:SetJustifyH("CENTER")
-    resourceText:ClearText()
+    resourceBar:SetPoint("CENTER", root, "CENTER", 0, -118)
 
-    self.resourceText = resourceText
+    self.resourceBar = resourceBar
+    self.resourceText = resourceBar.percentText
 
     local targetFrame = CreateFrame("Frame", "LogresHUDTarget", root)
     targetFrame:SetSize(260, 54)
@@ -495,23 +712,21 @@ function HUD:OnInitialize()
     targetNameText:SetJustifyH("CENTER")
     targetNameText:SetWidth(250)
 
-    local targetHealthText = targetFrame:CreateFontString(
-        "LogresHUDTargetHealthText",
-        "OVERLAY",
-        "GameFontNormalLarge"
+    local targetHealthBar = createPercentageBar(
+        targetFrame,
+        "LogresHUDTargetHealthBar",
+        "normal",
+        percentageBarColors.targetHealth or DEFAULT_TARGET_COLOR
     )
-    targetHealthText:SetPoint("TOP", targetNameText, "BOTTOM", 0, -2)
-    targetHealthText:SetTextColor(0.76, 0.72, 0.66, 0.95)
-    targetHealthText:SetShadowColor(0, 0, 0, 0.85)
-    targetHealthText:SetShadowOffset(1, -1)
-    targetHealthText:SetJustifyH("CENTER")
+    targetHealthBar:SetPoint("TOP", targetNameText, "BOTTOM", 0, -4)
 
     self.targetFrame = targetFrame
     self.targetNameText = targetNameText
-    self.targetHealthText = targetHealthText
+    self.targetHealthBar = targetHealthBar
+    self.targetHealthText = targetHealthBar.percentText
 
     local playerCastCue = createCastCue(root, "LogresHUDPlayerCastCue")
-    playerCastCue:SetPoint("RIGHT", resourceText, "LEFT", -12, 0)
+    playerCastCue:SetPoint("RIGHT", resourceBar, "LEFT", -12, 0)
 
     local targetCastCue = createCastCue(
         targetFrame,
@@ -549,27 +764,27 @@ function HUD:OnInitialize()
             "GameFontNormalSmall"
         )
         nameText:SetPoint("LEFT", rowFrame, "LEFT", 0, 0)
-        nameText:SetWidth(138)
+        nameText:SetWidth(80)
         nameText:SetJustifyH("LEFT")
         nameText:SetTextColor(0.78, 0.75, 0.69, 0.92)
         nameText:SetShadowColor(0, 0, 0, 0.80)
         nameText:SetShadowOffset(1, -1)
 
-        local healthText = rowFrame:CreateFontString(
+        local healthBar = createPercentageBar(
+            rowFrame,
             nil,
-            "OVERLAY",
-            "GameFontNormalSmall"
+            "compact",
+            percentageBarColors.allyHealth or DEFAULT_ALLY_COLOR
         )
-        healthText:SetPoint("RIGHT", rowFrame, "RIGHT", 0, 0)
-        healthText:SetJustifyH("RIGHT")
-        healthText:SetTextColor(0.84, 0.80, 0.73, 0.95)
-        healthText:SetShadowColor(0, 0, 0, 0.80)
-        healthText:SetShadowOffset(1, -1)
+        healthBar:SetPoint("RIGHT", rowFrame, "RIGHT", 0, 0)
+
+        local healthText = healthBar.percentText
 
         local row = {
             unit = unit,
             frame = rowFrame,
             nameText = nameText,
+            healthBar = healthBar,
             healthText = healthText,
         }
 
@@ -671,6 +886,10 @@ function HUD:OnEnable()
     )
     self.resourceEventFrame:RegisterUnitEvent(
         "UNIT_MAXPOWER",
+        "player"
+    )
+    self.resourceEventFrame:RegisterUnitEvent(
+        "UNIT_DISPLAYPOWER",
         "player"
     )
 

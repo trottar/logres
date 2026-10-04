@@ -477,3 +477,32 @@ player-health bar.
 This visual refinement must continue to use native secret-safe transport. D-036 is
 not permission to branch on, inspect, stringify, or perform Lua arithmetic on the
 secret-capable health value.
+
+
+## Phase H+ shared percentage-bar production primitive — P0120
+
+D-034/D-039 make the compact percentage bar the default final presentation for
+Logres-owned percentage values except player health.
+
+P0120 prepares one reusable normal/compact primitive and applies it to:
+- player primary resource percentage;
+- detached target health percentage;
+- pet health percentage;
+- party1–party4 health percentage.
+
+The visible `%` text remains part of the primitive. Player health is explicitly
+excluded and continues to use the D-036 health tunnel.
+
+Secret-safe transport remains native-only. The existing 0–100 native curve
+produces an opaque secret percentage which is forwarded directly to both:
+- `StatusBar:SetValue`;
+- `FontString:SetFormattedText`.
+
+No Lua arithmetic, comparison, threshold branch, persistence, or value readback
+is introduced. Health-to-StatusBar transport is already runtime-proven by D-008.
+P0120 intentionally makes player `UnitPowerPercent` -> `StatusBar:SetValue` an
+in-client runtime gate; static reasoning alone is not recorded as proof.
+
+The target bar uses a fixed restrained target-health tint in this slice.
+Reaction-color semantics and relative-danger styling remain separately
+capability-gated rather than branching on an unproven target-reaction source.

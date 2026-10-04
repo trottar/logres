@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static checks for the Logres Phase B HUD health-vignette boundary."""
+"""Static checks for the Logres HUD secret-safe presentation boundary."""
 
 from pathlib import Path
 
@@ -81,9 +81,10 @@ for forbidden in [
     "UnitLevel(",
     "UnitClassification(",
     "SetPortraitTexture",
-    'CreateFrame("StatusBar"',
     "UnitCastingInfo(",
     "UnitChannelInfo(",
+    "LogresHUDPlayerHealthBar",
+    "self.playerHealthBar",
     "LogresDB",
 ]:
     if forbidden in hud:

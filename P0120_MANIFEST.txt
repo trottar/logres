@@ -1,0 +1,29 @@
+P0120 — Shared Percentage-Bar Primitive
+Verified baseline ancestor: c342bc176a9d5de80ec116d0c6b31fa595cd75b3
+Applied HEAD: c342bc176a9d5de80ec116d0c6b31fa595cd75b3
+Runtime: 0.0.49-dev -> 0.0.50-dev
+Deployment: runtime code change; WoW redeploy required
+Parallel boundary: no Camera/G.5/CURRENT/Handoff files modified
+
+Files:
+e805a6190c1e091fa4c16bc98ef723f6cb1e648e031392b15752ca5b20bc0093  Logres/Core/Bootstrap.lua
+2d3cc3cbcca54361883f4354350dedeaabdf8e910d22d897ff3a2f5c35f7a5d8  Logres/HUD/HUD.lua
+307bd570f9fca3207a0b1c92273587bfb995fc03862914288c641e3787833c71  Logres/Logres.toc
+375ce1f4ae723bdaca1d4ae9d3c6688729fa3d66e77d0e62fd2d1d29937ad62d  Logres/Media/Bar/percentage_diamond.tga
+5a54e8d8962debecae6fd116cbebc7bb8dc08b4eed63a750aea157b0f4cedee0  Logres/Media/Bar/percentage_fill.tga
+eca181476cbda9f4e77c18de38becc003666e8a365130095b0b623254e7f4510  Logres/Media/README.md
+a006ad971c03a10e7d58eb5cf185b5b0d34532a234ac8fec37224a0370093d87  Logres/Media/Theme.lua
+3602b55ab6c97a51a39b5262b18dbbbf441598582fe2fca39e248f7895a5a77b  docs/memory/architecture/HUD.md
+d62e3b5eb66026392f27d8ca76f32dd81d12a46814262b59aef2f84a41acb645  docs/memory/architecture/VISUAL_IMPLEMENTATION_STATUS.md
+d1a18594559ff7290f4b914b31a61085cef6df80de603146a7ea1b5e999d2d73  docs/memory/patches/P0120_SHARED_PERCENTAGE_BAR_PRIMITIVE.md
+734c35cf09e0f7ed67a54155ec978168b119329b0697decfdcee6739e3e10f1b  tools/check_hud_contract.py
+94b0686512d1c372daa9ad121fafa4b7531444b706597b3e8d3f167e3ff3bb67  tools/check_percentage_bar_contract.py
+
+Checks:
+python3 tools/check_hud_contract.py
+python3 tools/check_percentage_bar_contract.py
+python3 tools/check_addon_structure.py
+python3 tools/check_memory_health.py
+git diff --check
+
+Runtime + visual proof pending.
