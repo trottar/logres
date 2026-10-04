@@ -1,0 +1,36 @@
+P0121 — Cast-State Cue Visual Translation
+Baseline: 6c5f8901d3f5b7434b76f05af1f22a0add8c1b10
+Runtime: 0.0.50-dev -> 0.0.51-dev
+Deployment: runtime code/media change; WoW redeploy required
+Camera/Taxi: untouched
+
+Files:
+fea6a0e719f4a399a70f13103bc2f61bd41f1f9bb6d0b949274949a073671f6a  Logres/Core/Bootstrap.lua
+4fd43c4ce9205dfa3462f92b14fb827af059a5ea00e352c8ffc0651e2c0dfeee  Logres/HUD/HUD.lua
+3994a651f5e4aa989b70e27120f0099bac1e69ec9b178c2ddd15330c49c0264c  Logres/Logres.toc
+0e31ad5519fe6612367e3e6c6acc669ee5630ce25f6838a843a59666d2eedfb6  Logres/Media/Cast/cast_frame.tga
+4caf691477f853d8a8433f5bb46f2e666037ab2fd4df83e03caf25c33660820c  Logres/Media/Cast/interrupted.tga
+3af6ad72cc30affe4f890550cfe88c40cbf69cdbdd9c3e84eb9ad3c23869837d  Logres/Media/Cast/player_cast.tga
+cb31fc0405cd1729bdc0beaf9e3f10053bc24e3d2ed7579beb1260a987b99fb3  Logres/Media/Cast/player_channel.tga
+b318c075f066ef1b76a20282948e25de08392b8f62bae1e55a3c475c3159a759  Logres/Media/Cast/target_cast.tga
+a58b5fabf89d11da4a70db58840a2336a21d8519052935d766800c1bfc7558f7  Logres/Media/Cast/target_channel.tga
+d9ce590e2b927c7078598885daffb7c5b414f59b015a24873d6dce00ead8a2c5  Logres/Media/README.md
+7bf123f685c8566020ed4836872e7bc691963166500e4dc5d3d59833b84a56b3  Logres/Media/Theme.lua
+d3868efef260861a3cdba2a9cc23364c2bed81ef96f715240b3c8412482f91e1  docs/memory/architecture/HUD.md
+66c81edb48a0f9dd5c0ebfe5e99e03219985172cf3558f7512bb4f65a14ca1af  docs/memory/architecture/VISUAL_IMPLEMENTATION_STATUS.md
+490bdea9093df4daeea7c500292b134ccc1b6784eda8fc60eb8c687ea2689121  docs/memory/evidence/P0120_PERCENTAGE_BAR_RUNTIME_VISUAL_PASS_2026-10-04.md
+afab69318b8e0f992e6d64b0b09c6d0a58c4b3ef97bd48fc791c8de4d0b93c71  docs/memory/patches/P0120_SHARED_PERCENTAGE_BAR_PRIMITIVE.md
+4482e6872e3700ddf06a499a173b479c30360fcda2055f1065b66687f93c4e11  docs/memory/patches/P0121_CAST_CUE_VISUAL_TRANSLATION.md
+449fc643842662fcd5bf383b759dc52602e2b306ece8475e06d935db9a3c8021  docs/memory/patches/PATCH_INDEX.md
+5391b8258e38e71317822afb4706f6f7d4aebf83b7a5450c3f47e98130689ee5  tools/check_cast_visual_contract.py
+
+Checks:
+python3 tools/check_hud_contract.py
+python3 tools/check_percentage_bar_contract.py
+python3 tools/check_cast_visual_contract.py
+python3 tools/check_approved_visual_baseline.py
+python3 tools/check_addon_structure.py
+python3 tools/check_memory_health.py
+git diff --check
+
+Runtime + visual proof pending for P0121 cast cue assets.

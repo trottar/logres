@@ -506,3 +506,29 @@ in-client runtime gate; static reasoning alone is not recorded as proof.
 The target bar uses a fixed restrained target-health tint in this slice.
 Reaction-color semantics and relative-danger styling remain separately
 capability-gated rather than branching on an unproven target-reaction source.
+
+
+## P0120 runtime / visual result
+
+The shared percentage-bar production baseline is runtime + visual PASS at
+`6c5f8901` / `0.0.50-dev`. The current production treatment is intentionally
+simpler than the approved sheet and is accepted as the baseline for now; richer
+ornament remains later polish. Player health remains excluded from this bar
+family.
+
+## Phase H+ cast-state cue production translation — P0121
+
+P0121 keeps the B.4 event-driven cast lifecycle unchanged and replaces only the
+procedural square cue treatment with Theme-owned production textures derived
+from approved sheet 05.
+
+Production states:
+- player cast: amber angular glyph;
+- player channel: blue flowing glyph;
+- target cast: orange/red angular glyph;
+- target channel: violet flowing glyph;
+- interrupted/failed: brief red shattered glyph.
+
+The cue remains symbolic only. There is still no cast progress bar, timer, spell
+text, spell icon, `UnitCastingInfo`, or `UnitChannelInfo` dependency. Target
+spellcast payload fields remain ignored.

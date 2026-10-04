@@ -1,7 +1,7 @@
 # P0120 — Shared Percentage-Bar Primitive
 
 Date: 2026-10-04
-Result: **PREPARED — RUNTIME + VISUAL PROOF PENDING**
+Result: **INSTALLED / PUSHED — CORE RUNTIME + VISUAL PASS; ORNAMENT DEFERRED** (`6c5f8901`)
 Verified baseline ancestor: `c342bc176a9d5de80ec116d0c6b31fa595cd75b3`
 Runtime: `0.0.49-dev -> 0.0.50-dev`
 
@@ -65,3 +65,15 @@ In client:
 6. Player health must remain the tunnel/vignette treatment; no player health bar.
 
 Any Lua, secret-value, taint, or protected-action error is a failure.
+
+
+## Runtime / visual result
+
+P0120 is durable at `6c5f8901`. The deployed `0.0.50-dev` build passed HUD
+diagnostics and the user accepted the in-client bar result as working well.
+The production primitive is intentionally simpler than the approved sheet; that
+simplification is accepted for now and additional ornament is deferred to later
+whole-screen visual calibration.
+
+Canonical evidence:
+`../evidence/P0120_PERCENTAGE_BAR_RUNTIME_VISUAL_PASS_2026-10-04.md`.

@@ -47,3 +47,22 @@ it continues to use the D-036 health-tunnel/peripheral-pressure path.
 
 Canonical art reference:
 `docs/design/approved/02_resource_bar_primitive.png`.
+
+
+## Cast-state cue
+
+P0121 translates approved D-039 cast-state sheet 05 into one shared heraldic
+frame and semantic glyph textures:
+- `Cast/cast_frame.tga`;
+- `Cast/player_cast.tga`;
+- `Cast/player_channel.tga`;
+- `Cast/target_cast.tga`;
+- `Cast/target_channel.tga`;
+- `Cast/interrupted.tga`.
+
+The cue remains symbolic only: shape is primary, color secondary, and no cast
+progress/timing/spell text/icon metadata is added. Production lifecycle still
+comes from the existing unit-filtered spellcast event path.
+
+Canonical art reference:
+`docs/design/approved/05_cast_state_cue_primitive.png`.

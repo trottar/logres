@@ -73,4 +73,18 @@ theme.percentageBar = {
     },
 }
 
+
+theme.castCue = {
+    size = 24,
+
+    assets = {
+        frame = MEDIA_ROOT .. "Cast\\cast_frame.tga",
+        playerCast = MEDIA_ROOT .. "Cast\\player_cast.tga",
+        playerChannel = MEDIA_ROOT .. "Cast\\player_channel.tga",
+        targetCast = MEDIA_ROOT .. "Cast\\target_cast.tga",
+        targetChannel = MEDIA_ROOT .. "Cast\\target_channel.tga",
+        interrupted = MEDIA_ROOT .. "Cast\\interrupted.tga",
+    },
+}
+
 Logres.Theme = theme

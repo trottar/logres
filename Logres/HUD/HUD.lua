@@ -91,6 +91,11 @@ local percentageBarStyle =
 local percentageBarAssets = percentageBarStyle.assets or {}
 local percentageBarColors = percentageBarStyle.colors or {}
 
+local castCueStyle =
+    (Logres.Theme and Logres.Theme.castCue) or {}
+local castCueAssets = castCueStyle.assets or {}
+local DEFAULT_CAST_CUE_SIZE = castCueStyle.size or 24
+
 local DEFAULT_PERCENTAGE_BAR = {
     normal = {
         trackWidth = 142,
@@ -134,24 +139,21 @@ local RESOURCE_COLOR_KEYS = {
 
 local function createCastCue(parent, name)
     local cue = CreateFrame("Frame", name, parent)
-    cue:SetSize(18, 18)
+    cue:SetSize(DEFAULT_CAST_CUE_SIZE, DEFAULT_CAST_CUE_SIZE)
     cue:Hide()
 
-    local border = cue:CreateTexture(nil, "OVERLAY")
-    border:SetAllPoints(cue)
-    border:SetColorTexture(0.04, 0.03, 0.02, 0.92)
+    local glyph = cue:CreateTexture(nil, "ARTWORK")
+    glyph:SetAllPoints(cue)
+    glyph:Hide()
 
-    local inner = cue:CreateTexture(nil, "OVERLAY")
-    inner:SetPoint("TOPLEFT", cue, "TOPLEFT", 3, -3)
-    inner:SetPoint("BOTTOMRIGHT", cue, "BOTTOMRIGHT", -3, 3)
+    local frameTexture = cue:CreateTexture(nil, "OVERLAY")
+    frameTexture:SetAllPoints(cue)
+    frameTexture:SetTexture(
+        castCueAssets.frame or "Interface\\Buttons\\UI-Quickslot2"
+    )
 
-    local core = cue:CreateTexture(nil, "OVERLAY")
-    core:SetSize(4, 4)
-    core:SetPoint("CENTER", cue, "CENTER", 0, 0)
-
-    cue.border = border
-    cue.inner = inner
-    cue.core = core
+    cue.frameTexture = frameTexture
+    cue.glyph = glyph
     cue.generation = 0
     cue.terminalHold = false
 
@@ -159,29 +161,27 @@ local function createCastCue(parent, name)
 end
 
 local function styleCastCue(cue, state, scope)
+    local asset
+
     if state == "channel" then
         if scope == "player" then
-            cue.inner:SetColorTexture(0.18, 0.55, 0.82, 0.95)
-            cue.core:SetColorTexture(0.72, 0.88, 1.00, 1.00)
+            asset = castCueAssets.playerChannel
         else
-            cue.inner:SetColorTexture(0.42, 0.30, 0.72, 0.95)
-            cue.core:SetColorTexture(0.82, 0.72, 1.00, 1.00)
+            asset = castCueAssets.targetChannel
         end
-        return
-    end
-
-    if state == "interrupted" then
-        cue.inner:SetColorTexture(0.68, 0.04, 0.025, 1.00)
-        cue.core:SetColorTexture(1.00, 0.42, 0.22, 1.00)
-        return
-    end
-
-    if scope == "player" then
-        cue.inner:SetColorTexture(0.70, 0.48, 0.12, 0.95)
-        cue.core:SetColorTexture(1.00, 0.85, 0.42, 1.00)
+    elseif state == "interrupted" then
+        asset = castCueAssets.interrupted
+    elseif scope == "player" then
+        asset = castCueAssets.playerCast
     else
-        cue.inner:SetColorTexture(0.68, 0.28, 0.08, 0.95)
-        cue.core:SetColorTexture(1.00, 0.66, 0.28, 1.00)
+        asset = castCueAssets.targetCast
+    end
+
+    if asset then
+        cue.glyph:SetTexture(asset)
+        cue.glyph:Show()
+    else
+        cue.glyph:Hide()
     end
 end
 
