@@ -1,6 +1,6 @@
 # G.5 — Taxi Camera Ownership
 
-Status: **P0117 TAXI ENTRY PASS / LANDING TRANSITION FAIL — P0119 RETEST NEXT**
+Status: **P0119 IMPLEMENTATION DURABLE — NORMAL-TAXI LANDING RETEST PENDING / CAMERA FROZEN**
 Opened: 2026-10-03
 Contract review resolved: 2026-10-03
 Target-50 no-CVar runtime result: 2026-10-03
@@ -67,8 +67,15 @@ Do not:
 ## Next
 
 P0117 automatic Taxi ownership passed, but landing destination convergence
-failed: City `18 -> 5` ended at zoom `0`. P0119 corrects the shared transition
-driver; repeat one normal Taxi flight on `0.0.49-dev`.
+failed: City `18 -> 5` ended at zoom `0`.
+
+P0119 is durable at `c342bc176a9d5de80ec116d0c6b31fa595cd75b3` and corrects
+the shared transition driver with frame-shaped velocity and bounded target
+correction.
+
+The user has frozen Camera work until the approved visual translation sequence is
+finished. When Camera resumes, repeat one normal Taxi flight and record the
+landing convergence result. Until then this investigation remains OPEN / PAUSED.
 
 ## P0117 runtime failure
 

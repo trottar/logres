@@ -1,6 +1,6 @@
 # HUD Architecture
 
-Status: PHASE B / B.2 ACTIVE
+Status: PHASE B COMPLETE; production visual primitives extended through P0124
 
 ## Intent
 
@@ -571,3 +571,20 @@ so normal visual calibration requires no manual slash-command entry.
 
 The legacy `/logres hudpreview on` remains a compatibility alias for the 30%
 preview; `/logres healthpreview off` returns immediately to the live native path.
+
+## P0124 runtime / visual result
+
+P0124 is durable at `1e7e27e` / `0.0.54-dev`.
+
+The five-mask organic tunnel replaced the procedural rectangular presentation
+without changing the native secret-safe health transport.
+
+Validated:
+- `/logres hudcheck` PASS with `bands=5`, `textures=5`, and tunnel state present;
+- deterministic 100/80/70/60/50/40/30/20/15/5/0 previews all executed;
+- Health Live restored the real native health path;
+- Immersion OFF/ON hid and restored the tunnel;
+- the production visual baseline was accepted.
+
+Final contrast/scale polish is deferred to the whole-interface calibration pass.
+The no-conventional-player-health-bar rule remains unchanged.

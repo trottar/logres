@@ -1,7 +1,7 @@
 # P0124 — Organic Player-Health Tunnel + Deterministic Preview Matrix
 
 Date: 2026-10-04
-Result: **PREPARED — RUNTIME + VISUAL PROOF PENDING**
+Result: **INSTALLED / PUSHED — RUNTIME + VISUAL BASELINE ACCEPTED; FINAL POLISH DEFERRED** (`1e7e27e`)
 Baseline: `1721eb4dac7bb90057de5666767f2736bc48fdc6`
 Runtime: `0.0.53-dev -> 0.0.54-dev`
 
@@ -93,9 +93,27 @@ player health.
 The legacy `/logres hudpreview on|off` remains available and maps `on` to the
 30% deterministic preview for compatibility.
 
+## Runtime / visual result
+
+Canonical evidence:
+`../evidence/P0124_HEALTH_TUNNEL_RUNTIME_VISUAL_PASS_2026-10-04.md`.
+
+Accepted on pushed runtime `0.0.54-dev`:
+- `/logres hudcheck` PASS with the five-mask tunnel path active;
+- every deterministic preview anchor from 100% through 0% executed successfully;
+- Health Live restored the production native health path;
+- Immersion OFF/ON hid and restored the presentation;
+- no Lua/secret/taint/protected-action failure was reported in the tested scope;
+- visual review accepted the production baseline, with broader polish deferred to
+  the final whole-interface calibration pass.
+
+Natural damage/heal observation is not promoted to an acceptance requirement
+because the deterministic preview matrix exists specifically to avoid contrived
+dangerous gameplay.
+
 ## Validation gate
 
-In client:
+The acceptance gate used in client was:
 
 1. `/logres hudcheck` PASS on `0.0.54-dev`.
 2. In Phase B of the developer panel, click every Health preview state from 100% through 0%, then Health Live.

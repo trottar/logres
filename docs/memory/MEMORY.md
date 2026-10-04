@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-10-02
+as_of: 2026-10-04
 project: logres
 ---
 
@@ -29,8 +29,8 @@ Three information classes guide the design:
 ## Established design facts
 
 - Player health has no conventional health bar.
-- Player danger is communicated through a screen-edge red/black vignette that intensifies and closes inward as health worsens.
-- Resource presentation is compact and percentage-oriented.
+- Player danger is communicated through an organic charcoal/cold-burgundy peripheral health tunnel whose clear usable field contracts as health worsens; no conventional player health bar is used.
+- Resource presentation is compact and percentage-oriented; the accepted production baseline uses a shared compact bar with visible `%` text for percentage-based Logres-owned values except player health.
 - Cast bars are not part of the intended visual language. A minimal cast-confirmation glyph may exist only to confirm that a cast/channel is active when animation alone is ambiguous.
 - Enemy level is not shown numerically.
 - Enemy relative danger may be hinted by restrained name color/text treatment.
@@ -39,9 +39,12 @@ Three information classes guide the design:
 - Action buttons are organized as square/rectangular clusters, not primarily as a long horizontal row.
 - Primary actions remain legible; secondary/tertiary and utility clusters are contextually faded/revealed.
 - Immersion mode is an orchestrated project state, not merely "hide chat."
-- The compass is part of immersion/world presentation and should automatically disappear in instances.
+- The compass is part of immersion/world presentation and should automatically disappear in instances. Heading and manual-waypoint production visuals are proven; quest/POI/tracking roles remain capability-gated.
 - PvP flagging modifies immersion toward greater situational usefulness rather than simply turning immersion off.
 - Questing, XP presentation, camera behavior, social silence, and later navigation should share one visual/state language.
+- D-039 is the approved twelve-sheet World Ghost / Selective Hybrid E visual baseline.
+- D-040 makes `Logres/Media/` plus `Logres/Media/Theme.lua` the production asset/token boundary for approved visual translation.
+- Active Quest is an optional one-focus presentation, not a permanent multi-quest tracker; exact mechanical counts belong behind deliberate inspection/hover in the approved baseline.
 
 ## Development facts
 

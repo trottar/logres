@@ -1,7 +1,7 @@
 # Visual Implementation Status
 
 Status: **CANONICAL IMPLEMENTATION AUDIT**
-Date: 2026-10-03
+Date: 2026-10-04
 
 Canonical visual decision:
 `../decisions/D-039_APPROVED_VISUAL_BASELINE.md`.
@@ -38,7 +38,7 @@ A component can be visually complete while runtime ownership remains incomplete.
 | NPC quest controls / rewards | Yes | Not Logres-owned at runtime | Capability-prove and implement Accept/Decline, Continue/Complete, reward choice, quest-related gossip transitions, errors/eligibility, fail-open restoration | **Major new runtime capability** |
 | Context messages | Yes | P0122 is durable at `62353ecf`; XP preview, live XP producer/check, objective preview, live objective producer/check, and full checkall passed on `0.0.52-dev` | Dedicated warmer completion variant remains naturally deferred; final whole-screen placement/contrast calibration remains polish | **Runtime + preview path proven — completion state deferred** |
 | Active Quest | Yes | No final optional Active Quest panel exists | Implement one-focus source selection, ambient phrase policy, progress bars, hover/inspection counts, complete state, toggle, and stable Phase-H anchor | **New presentation using mostly proven data** |
-| Player-health tunnel | Yes / D-036 frozen | P0124 prepares five Theme-owned organic tunnel/death masks on the proven native secret-safe health-to-alpha path, plus deterministic D-036 preview percentages | In-client calibration of the full preview progression and live damage/heal direction; preserve no-player-health-bar rule | **Implementation prepared — runtime/visual proof pending** |
+| Player-health tunnel | Yes / D-036 frozen | P0124 is durable at `1e7e27e` / `0.0.54-dev`; five Theme-owned organic tunnel/death masks run on the proven native secret-safe health-to-alpha path, with deterministic D-036 preview percentages | Whole-interface contrast/scale polish remains; natural damage/heal may be observed opportunistically but is not required to re-prove the accepted preview matrix | **Runtime + visual baseline accepted — final polish deferred** |
 | Compass heading + manual waypoint | Yes | P0123 is durable at `1721eb4d` / `0.0.53-dev`; heading/manual-waypoint runtime + visual PASS includes truthful off-tape suppression and near-center marker proof | Distance-dependent depth and identity remain gated because comparable distance/name inputs are not proven; quest/POI/tracking remain separate capability work | **Production primitive proven — extended roles gated** |
 | Compass quest / POI / tracking roles | Yes | Sources not generally proven; only manual waypoint is production-proven | Dedicated source/runtime capability audit; implement only proven roles; keep stock minimap until D-037 replacement gate completes | **Capability blocked** |
 | Class/pet/special controls | Shared button language approved; class-specific mechanics only partially covered | Existing Blizzard-owned child/special surfaces remain available; Logres ordinary action roles are separate | Apply button family where ownership is proven; design/implement discrete class-resource art (runes/combo points/etc.) separately as needed | **Residual art + capability** |
@@ -62,16 +62,21 @@ invalidates an approved treatment.
 Phase H ordering remains capability-gated rather than frozen, but the lowest-risk
 translation work is now clear:
 
-1. establish a reusable production asset/tokens directory and naming convention;
-2. implement the approved action-button and shared percentage-bar primitives;
-3. assetize the already-proven cast cue, Context messages, heading compass, and
-   manual waypoint;
-4. replace the procedural health bands with the approved secret-safe tunnel treatment;
-5. implement Active Quest using already-proven passive quest/objective data;
+Completed translation sequence:
+1. production asset/token boundary plus action-button primitive;
+2. shared percentage/resource bar;
+3. player cast cue, Context messages, heading compass, and manual waypoint;
+4. organic secret-safe player-health tunnel.
+
+Next:
+5. implement Active Quest using already-proven passive quest/objective data.
+
+After that:
 6. separately open capability slices for Logres-owned quest controls, aura/status,
    world-attached target, and unproven compass roles;
 7. finish class-specific discrete resources, settings/accessibility, and final
    whole-screen composition calibration.
 
-This is a dependency-oriented implementation map, not a claim that Phase H has
-started while Phase G remains active.
+This is a dependency-oriented implementation map, not a claim that formal Phase H
+has started. Phase G remains open but is explicitly frozen while this approved
+visual sequence is completed.

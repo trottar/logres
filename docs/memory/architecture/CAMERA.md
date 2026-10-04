@@ -25,6 +25,10 @@ Runtime-proven production Logres camera ownership covers:
 P0117 adds Taxi zoom ownership, but runtime acceptance is OPEN because the
 post-Taxi destination transition exposed a shared overshoot defect.
 
+P0119 is durable at `c342bc176a9d5de80ec116d0c6b31fa595cd75b3` and replaces
+the constant-rate transition driver with frame-shaped MoveView motion plus bounded
+target correction. The normal-Taxi landing retest remains pending.
+
 ## Taxi precedence and zoom intent
 
 Inside the existing non-instance boundary, the source-resolved intended order is:
@@ -186,8 +190,11 @@ G.5 DynamicCam parity correction:
 G.5 P0117 runtime:
 **TAXI ENTRY PASS / LANDING TRANSITION FAIL on `0.0.47-dev`.**
 
-G.5 next:
-**P0119 FRAME-SHAPED TRANSITION RETEST on `0.0.49-dev`.**
+G.5 current:
+**P0119 IMPLEMENTATION DURABLE; NORMAL-TAXI LANDING RETEST PENDING / CAMERA FROZEN.**
+
+The user has explicitly frozen Camera work until the approved visual translation
+sequence is finished. This is a sequencing deferral, not a PASS or closure.
 
 ## P0117 landing overshoot failure
 

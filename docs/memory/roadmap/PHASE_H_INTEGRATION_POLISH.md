@@ -165,13 +165,13 @@ behavior remain unchanged.
 This remains parallel Phase H preparation while Phase G / G.5 runtime proof is
 active.
 
-## Parallel production visual translation — P0120–P0123
+## Parallel production visual translation — P0120–P0124
 
 While Phase G remains the formal active roadmap phase, the user has explicitly
 chosen to finish the already-approved visual translation sequence before
 returning to Camera work.
 
-Current parallel visual checkpoints:
+Accepted parallel visual checkpoints:
 
 - P0120: shared percentage-bar production baseline — accepted, additional
   ornament deferred;
@@ -181,9 +181,13 @@ Current parallel visual checkpoints:
   objective-completion variant naturally deferred;
 - P0123: heading/manual-waypoint Compass asset translation — runtime + visual
   PASS at `1721eb4d` / `0.0.53-dev`;
-- P0124: organic player-health tunnel asset translation plus deterministic
-  D-036 preview percentages — prepared for in-client proof.
+- P0124: organic player-health tunnel — runtime + visual baseline accepted at
+  `1e7e27e` / `0.0.54-dev`; broad final polish deferred to whole-interface
+  calibration.
+
+Next parallel objective:
+**Active Quest one-focus presentation using proven passive quest/objective data.**
 
 This remains implementation translation under D-039/D-040. It does not authorize
 Phase-H-only capability expansion, minimap suppression, unproven navigation
-sources, or Camera changes.
+sources, Logres-owned quest controls, or Camera changes.

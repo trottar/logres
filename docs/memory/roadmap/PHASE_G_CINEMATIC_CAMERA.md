@@ -1,6 +1,6 @@
 # Phase G — Cinematic Camera
 
-Status: ACTIVE — G.5
+Status: ACTIVE — G.5 OPEN / PAUSED FOR APPROVED VISUAL TRANSLATION
 Opened: 2026-10-02
 
 ## Product Objective
@@ -116,17 +116,34 @@ Canonical:
 P0119 replaces the constant-rate transition driver with frame-shaped MoveView
 velocity and crossed-target correction.
 
-Next:
-runtime-retest Taxi entry plus landing destination convergence on `0.0.49-dev`.
+P0119 is installed/pushed at:
+`c342bc176a9d5de80ec116d0c6b31fa595cd75b3`
+on runtime `0.0.49-dev`.
+
+The normal-Taxi landing retest has not been durably recorded as PASS. The user
+has explicitly frozen Camera work while the approved visual translation sequence
+is finished.
+
+Next when Camera resumes:
+runtime-retest Taxi entry plus landing destination convergence on `0.0.49-dev`
+behavior as preserved by later runtimes.
 
 Production Taxi is not considered closed until that runtime proof passes.
 
-## Parallel future integration direction
+## Parallel approved visual implementation direction
 
-D-032/D-033/D-034 visual direction, D-035 quest-interaction ownership, D-036
-health-tunnel contract, and D-037 navigation/minimap direction remain valid
-parallel Phase H+ work. D-030 remains current minimap runtime authority until
-replacement capabilities are proven.
+The user explicitly chose to finish the already-approved visual translation
+sequence before returning to Camera.
+
+P0120 through P0124 have translated and accepted the shared percentage bar,
+player cast cue, Context message treatment, heading/manual-waypoint Compass, and
+organic player-health tunnel respectively.
+
+The next parallel work item is the D-039 Active Quest one-focus presentation.
+
+D-035 quest-interaction ownership and D-037 unproven navigation/minimap roles
+remain separately capability-gated. D-030 remains current minimap runtime
+authority until replacement capabilities are proven.
 
 ## Later Phase G Work
 

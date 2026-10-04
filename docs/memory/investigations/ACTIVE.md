@@ -1,46 +1,39 @@
 # Active Investigations
 
-## G.5 — Taxi zoom parity
+## G.5 — Taxi camera ownership
 
 Status:
-**P0117 TAXI ENTRY PASS / LANDING TRANSITION FAIL — P0119 RETEST NEXT**
+**OPEN / PAUSED — P0119 IMPLEMENTATION DURABLE; NORMAL-TAXI LANDING RETEST PENDING.**
 
 Canonical Taxi investigation:
 `G5_TAXI_CAMERA_OWNERSHIP.md`
 
-Parity correction:
-`../evidence/G5_DYNAMICCAM_TAXI_PARITY_CORRECTION_2026-10-03.md`
+P0117 runtime `0.0.47-dev` proved automatic Taxi entry but exposed the shared
+landing transition failure: City `18 -> 5` reached final zoom `0`.
 
-Established:
-- requested Taxi target remains `50`;
-- current factor `1.2` physically caps at `18`;
-- client default factor `1` caps at `15`;
-- pinned DynamicCam/LibCamera does not require requested target 50 to be
-  physically reachable;
-- engine-clamped endpoint is normal source behavior rather than a situation
-  failure;
-- no max-distance mutation is needed for the narrow Taxi zoom slice.
+P0119 is durable at `c342bc176a9d5de80ec116d0c6b31fa595cd75b3`
+on `0.0.49-dev`. It replaces constant-rate transition motion with frame-shaped
+MoveView velocity plus bounded target correction.
 
-P0117 runtime `0.0.47-dev` proves automatic Taxi entry but exposes a shared
-transition failure on landing: City `18 -> 5` reached final zoom `0`.
+The user has frozen Camera work while the approved visual translation sequence is
+finished. Therefore the P0119 runtime retest is **deferred by sequencing**, not
+PASS, FAIL, or abandoned.
 
-Canonical failure evidence:
-`../evidence/G5_P0117_TAXI_LANDING_OVERSHOOT_2026-10-03.md`.
+When Camera resumes, use one normal Taxi flight and record:
+- Taxi entry ownership/target semantics;
+- post-landing City/World target convergence;
+- failures/secret/error state.
 
-P0119 prepares a frame-shaped MoveView transition driver with crossed-target
-correction. No Taxi rotation or UI fade is included.
+No max-distance mutation, Taxi rotation, or Taxi UI fade is part of that proof.
 
-## G.5 Taxi contract status
+## Active Quest
 
-`G5_TAXI_CAMERA_OWNERSHIP.md`
+No new capability investigation is opened merely by starting Active Quest.
 
-P0117 Taxi entry passed, but production Taxi acceptance remains OPEN because
-landing reconciliation failed. P0119 runtime retest is pending.
-
-Taxi requested target remains 50. The engine's live physical clamp is valid
-DynamicCam-parity behavior and is not rewritten as a hard-coded substitute.
-
-Taxi rotation and UI hide/fade remain separately gated.
+The next work item is a narrow presentation implementation using already-proven
+passive quest/objective data. Any missing one-focus selection fact, hover-detail
+source, or completion-state fact discovered during the source audit should be
+recorded as a targeted investigation rather than silently inferred.
 
 ## Closed Phase G investigations
 
@@ -63,6 +56,4 @@ G.5 target-50 without CVar mutation:
 
 - `D4_TARGETFRAME_REASSERTION_INTERMITTENT.md`
 - `FUTURE_AURA_STATUS_PRESENTATION.md`
-- `FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md` — future Phase H+ source/runtime
-  audit for local radius POIs, tracking results, quest destination, and minimap
-  replacement completeness.
+- `FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md`

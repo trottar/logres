@@ -3,81 +3,62 @@
 Authoritative state:
 `../CURRENT.md`.
 
-Phase G:
-**ACTIVE — G.5.**
-
 Latest verified durable checkpoint:
-P0118 `6fad23f595a4abc9f5f2bd3fd6f12b825ef204e2`.
+P0124 `1e7e27e37b91fc6ee9dc39c015456626414b7964`.
 
 Current pushed runtime:
-`0.0.48-dev` — action-keybind polish; visual proof pending.
+`0.0.54-dev`.
 
-P0117 camera runtime result:
-Taxi entry PASS / landing transition FAIL on `0.0.47-dev`.
+## Active work stream
 
-P0119 prepared runtime:
-`0.0.49-dev` — shared frame-shaped camera transition correction.
+The user has explicitly chosen to finish the approved visual translation sequence
+before returning to Camera.
 
-Target 50 without max-distance mutation:
-**CLOSED — CLEAN NEGATIVE.**
+Next objective:
+**Active Quest — approved one-focus presentation.**
 
-Camera-distance default/metadata proof:
-**COMPLETE — READ-ONLY PASS; DEFAULT FACTOR 1 / CEILING 15 DOES NOT SUPPORT TARGET 50.**
+Camera remains frozen, not complete.
 
-Canonical source audit:
-`../evidence/G5_CAMERA_DISTANCE_SOURCE_AUDIT_2026-10-03.md`.
+## Accepted visual translation checkpoints
 
-Key source result:
-- DynamicCam's displayed max-distance mapping is factor × 15;
-- target 50 needs factor >= 50/15;
-- DynamicCam standard max-distance inherits `GetCVarDefault`;
-- G.1 captured no explicit standard max-distance value;
-- Taxi has no max-distance override;
-- LibCamera does not raise the max-distance CVar.
+- P0120 shared percentage bar — accepted production baseline;
+- P0121 player cast cue — runtime + visual PASS; target proof deferred;
+- P0122 Context messages — runtime/preview PASS; completion styling deferred;
+- P0123 Compass heading/manual waypoint — runtime + visual PASS;
+- P0124 organic health tunnel — runtime + visual baseline accepted; broad final
+  polish deferred to whole-interface calibration.
 
-Therefore do not jump from current factor 1.2 to a mutation policy.
+## Camera preservation
 
-P0112 runtime `0.0.45-dev` read-only PASS recorded:
-- current factor `1.2`, ceiling `18`;
-- default factor `1`, ceiling `15`;
-- required factor `3.3333333333333`;
-- current/default support false/false;
-- account-stored=true, character-stored=false;
-- locked=false, secure=false, readOnly=false;
-- DynamicCam not loaded; secret=false; error=nil.
+P0119 is durable at `c342bc176a9d5de80ec116d0c6b31fa595cd75b3`
+on `0.0.49-dev`.
 
-DynamicCam parity correction:
-requested Taxi target `50` is not a physical-reachability guarantee. Pinned
-LibCamera accepts the engine max-distance clamp.
+The frame-shaped transition correction is installed, but the normal-Taxi landing
+retest has not been durably recorded as PASS. Resume that exact G.5 proof only
+after the visual sequence is finished.
 
-P0117 is pushed at `82bdb4f3` on runtime `0.0.47-dev`:
-requested=50, effective=min(50, live ceiling), entry=5s, no SetCVar.
+No SetCVar, Taxi rotation, or Taxi UI fade is authorized by this handoff.
 
-P0117 runtime result:
-Taxi entry PASS; landing City transition FAIL. The observed `18 -> 5` transition
-overshot to final zoom `0` / first person. Earlier `0.0.43-dev` diagnostics show
-the same latent shared transition-driver failure.
+## Active Quest boundary
 
-P0119 prepares frame-shaped MoveView velocity plus crossed-target correction.
+Use the D-039 one-focus contract:
+- optional current-focus quest panel;
+- title + restrained ambient phrase;
+- objective rows;
+- shared progress-bar language where percentage progress is appropriate;
+- exact counts only on deliberate hover/inspection;
+- quiet complete state;
+- no permanent multi-quest tracker.
 
-Next after verified push:
-deploy `0.0.49-dev`, repeat one normal Taxi flight, and verify landing settles
-near the destination target rather than zoom `0`.
+Reuse proven Phase-F passive quest/objective data. Do not bundle quest-control
+ownership, minimap suppression, quest-destination navigation, aura replacement, or
+other unrelated capability work into this slice.
 
-Parallel accepted Phase H+ direction remains unchanged:
-- D-036 health-tunnel visible-field contract;
-- D-037 four navigation roles and future minimap-replacement endpoint;
-- D-038 compass focus/depth visual contract;
-- D-030 stock minimap remains current runtime authority until replacement proof;
-- POI/tracking source capability remains deferred/unproven;
-- D-039 preserves the twelve approved visual reference sheets as the canonical
-  visual baseline;
-- `../architecture/VISUAL_IMPLEMENTATION_STATUS.md` is the implementation audit
-  for translating those designs into addon assets/runtime.
-- D-040 establishes `Logres/Media/Theme.lua` as the production visual token/path
-  boundary; P0116 core action presentation/feedback is runtime + visual PASS.
-  P0118 refines action-button readability only: stronger dark tag fill, compact
-  modifier labels, and modest size increase; detailed P0116 state coverage remains
-  deferred.
+## Key references
 
-User performs all commits/pushes.
+- `../decisions/D-039_APPROVED_VISUAL_BASELINE.md`
+- `../architecture/VISUAL_IMPLEMENTATION_STATUS.md`
+- `../evidence/P0124_HEALTH_TUNNEL_RUNTIME_VISUAL_PASS_2026-10-04.md`
+- `../roadmap/PHASE_H_INTEGRATION_POLISH.md`
+- `../roadmap/PHASE_G_CINEMATIC_CAMERA.md`
+- `../architecture/CAMERA.md`

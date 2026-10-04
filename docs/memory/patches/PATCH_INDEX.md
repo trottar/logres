@@ -138,10 +138,11 @@
 | P0116 | 2026-10-03 | INSTALLED / PUSHED — CORE RUNTIME + VISUAL PASS; STATE COVERAGE DEFERRED | Establish production media/tokens and wire approved action-button state assets (`c64fcc97`, `0.0.46-dev`) |
 | P0117 | 2026-10-03 | INSTALLED / PUSHED — RUNTIME PROOF PENDING | Correct DynamicCam target-50 parity semantics; add production Taxi zoom (`82bdb4f3`, `0.0.47-dev`) |
 | P0118 | 2026-10-03 | INSTALLED / PUSHED — RUNTIME + VISUAL PASS | Polish action keybind tag contrast/modifier labels and increase buttons to 42 px (`6fad23f`, `0.0.48-dev`) |
-| P0119 | 2026-10-03 | PREPARED — RUNTIME RETEST PENDING | Replace constant-rate camera motion with frame-shaped MoveView driver (`0.0.49-dev`) |
+| P0119 | 2026-10-03 | INSTALLED / PUSHED — RUNTIME RETEST PENDING | Replace constant-rate camera motion with frame-shaped MoveView driver (`c342bc17`, `0.0.49-dev`) |
 | P0120 | 2026-10-04 | INSTALLED / PUSHED — CORE RUNTIME + VISUAL PASS; ORNAMENT DEFERRED | Add reusable normal/compact percentage-bar primitive (`6c5f8901`, `0.0.50-dev`) |
 | P0121 | 2026-10-04 | INSTALLED / PUSHED — PLAYER CAST RUNTIME + VISUAL PASS; TARGET DEFERRED | Translate approved cast-state cue frame/glyph family (`fc928d99`, `0.0.51-dev`) |
 | P0122 | 2026-10-04 | INSTALLED / PUSHED — RUNTIME + PREVIEW PATH PASS; COMPLETION VARIANT DEFERRED | Translate approved Context line/diamond visual primitive (`62353ecf`, `0.0.52-dev`) |
 | P0123 | 2026-10-04 | INSTALLED / PUSHED — RUNTIME + VISUAL PASS | Assetize approved heading/manual-waypoint Compass treatment while preserving proven source scope (`1721eb4d`, `0.0.53-dev`) |
-| P0124 | 2026-10-04 | PREPARED — RUNTIME + VISUAL PROOF PENDING | Replace procedural player-health rectangles with organic tunnel masks and deterministic D-036 preview matrix (`0.0.54-dev`) |
+| P0124 | 2026-10-04 | INSTALLED / PUSHED — RUNTIME + VISUAL BASELINE ACCEPTED; FINAL POLISH DEFERRED | Replace procedural player-health rectangles with organic tunnel masks and deterministic D-036 preview matrix (`1e7e27e`, `0.0.54-dev`) |
+| P0125 | 2026-10-04 | PREPARED — DOCS-ONLY | Synchronize authoritative state through accepted P0124; Active Quest next |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

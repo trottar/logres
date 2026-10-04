@@ -1,7 +1,7 @@
 # P0119 — Fix Camera Transition Overshoot
 
 Date: 2026-10-03
-Result: **PREPARED — RUNTIME RETEST PENDING**
+Result: **INSTALLED / PUSHED — RUNTIME RETEST PENDING** (`c342bc17`)
 Baseline: `6fad23f595a4abc9f5f2bd3fd6f12b825ef204e2`
 Runtime: `0.0.48-dev -> 0.0.49-dev`
 
@@ -49,9 +49,20 @@ P0118 is verified pushed at:
 Its action keybind presentation changes and `0.0.48-dev` runtime are preserved.
 P0119 changes no action-button/theme implementation.
 
+## Durable implementation
+
+Pushed commit:
+`c342bc176a9d5de80ec116d0c6b31fa595cd75b3`.
+
+The code correction is durable. The normal-Taxi landing retest is still pending;
+later visual checkpoints do not count as camera runtime proof.
+
+The user has explicitly frozen Camera work until the approved visual translation
+sequence is finished.
+
 ## Runtime acceptance
 
-After verified push and deploy:
+When Camera work resumes:
 
 1. use the Developer Panel GUI only;
 2. take one normal Taxi flight;
