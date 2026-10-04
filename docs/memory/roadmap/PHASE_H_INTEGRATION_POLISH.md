@@ -164,3 +164,24 @@ behavior remain unchanged.
 
 This remains parallel Phase H preparation while Phase G / G.5 runtime proof is
 active.
+
+## Parallel production visual translation — P0120–P0123
+
+While Phase G remains the formal active roadmap phase, the user has explicitly
+chosen to finish the already-approved visual translation sequence before
+returning to Camera work.
+
+Current parallel visual checkpoints:
+
+- P0120: shared percentage-bar production baseline — accepted, additional
+  ornament deferred;
+- P0121: cast-state production glyph family — player cast runtime + visual PASS,
+  target cast/channel naturally deferred;
+- P0122: shared Context-message primitive — durable runtime/preview path PASS,
+  objective-completion variant naturally deferred;
+- P0123: heading/manual-waypoint Compass asset translation — prepared for
+  in-client proof.
+
+This remains implementation translation under D-039/D-040. It does not authorize
+Phase-H-only capability expansion, minimap suppression, unproven navigation
+sources, or Camera changes.

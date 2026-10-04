@@ -158,3 +158,29 @@ audited before suppression.
 
 Until that complete gate passes, unsupported Logres marker roles are simply omitted
 and Blizzard navigation remains available.
+
+## P0123 production visual translation
+
+P0123 assetizes the already-proven heading + manual-user-waypoint subset without
+expanding navigation source ownership.
+
+Production presentation:
+
+- weathered brass baseline asset with restrained edge recession;
+- fixed authored center gnomon / spear-notch asset;
+- authored cardinal/intercardinal tick assets with the approved weight hierarchy;
+- muted steel-blue open-diamond manual destination glyph with an exact-bearing
+  stem in the major-destination lane above the tape;
+- angular edge fade for the proven manual bearing;
+- restrained near-center scale emphasis capped at approximately 7%.
+
+The horizontal bearing remains authoritative. P0123 does not jitter markers
+sideways or clamp off-screen guidance to the edge.
+
+The current manual waypoint path proves bearing, but not safe comparable physical
+world distance or a source-provided destination identity. Therefore P0123 does
+not implement distance-dependent depth scale or centered identity text from map
+coordinate deltas. Those D-038 behaviors remain capability-gated.
+
+Quest destination, local POI, tracking, and minimap replacement remain unchanged
+and unproven. D-030/D-037 continue to keep the Blizzard minimap stock.

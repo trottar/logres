@@ -1,12 +1,48 @@
 local _, Logres = ...
 
+local compassStyle =
+    (Logres.Theme and Logres.Theme.compass) or {}
+local compassAssets = compassStyle.assets or {}
+local compassLabels = compassStyle.labels or {}
+local baselineStyle = compassStyle.baseline or {}
+local centerStyle = compassStyle.center or {}
+local tickStyle = compassStyle.ticks or {}
+local cardinalTickStyle = tickStyle.cardinal or {}
+local intercardinalTickStyle = tickStyle.intercardinal or {}
+local manualWaypointStyle = compassStyle.manualWaypoint or {}
+
 local UPDATE_INTERVAL = 0.05
 local WAYPOINT_UPDATE_INTERVAL = 0.15
-local COMPASS_WIDTH = 400
-local COMPASS_HEIGHT = 42
-local TAPE_WIDTH = 360
-local VISIBLE_HALF_ANGLE = 100
+local COMPASS_WIDTH = compassStyle.width or 400
+local COMPASS_HEIGHT = compassStyle.height or 54
+local TAPE_WIDTH = compassStyle.tapeWidth or 360
+local TAPE_Y = compassStyle.tapeY or -4
+local VISIBLE_HALF_ANGLE = compassStyle.visibleHalfAngle or 100
+local EDGE_FADE_START = compassStyle.edgeFadeStart or 78
 local PIXELS_PER_DEGREE = TAPE_WIDTH / (VISIBLE_HALF_ANGLE * 2)
+
+local BASELINE_HEIGHT = baselineStyle.height or 8
+local CENTER_WIDTH = centerStyle.width or 8
+local CENTER_HEIGHT = centerStyle.height or 24
+
+local CARDINAL_TICK_WIDTH = cardinalTickStyle.width or 7
+local CARDINAL_TICK_HEIGHT = cardinalTickStyle.height or 16
+local CARDINAL_LABEL_GAP = cardinalTickStyle.labelGap or 3
+
+local INTERCARDINAL_TICK_WIDTH = intercardinalTickStyle.width or 5
+local INTERCARDINAL_TICK_HEIGHT = intercardinalTickStyle.height or 11
+local INTERCARDINAL_LABEL_GAP = intercardinalTickStyle.labelGap or 3
+
+local MANUAL_WIDTH = manualWaypointStyle.width or 12
+local MANUAL_HEIGHT = manualWaypointStyle.height or 20
+local MANUAL_ALPHA = manualWaypointStyle.alpha or 0.95
+local MANUAL_FOCUS_ANGLE = manualWaypointStyle.focusAngle or 8
+local MANUAL_FOCUS_SCALE = manualWaypointStyle.focusScale or 1.07
+
+local CARDINAL_LABEL_COLOR =
+    compassLabels.cardinal or { 0.94, 0.84, 0.62, 0.96 }
+local INTERCARDINAL_LABEL_COLOR =
+    compassLabels.intercardinal or { 0.72, 0.68, 0.60, 0.82 }
 
 local DIRECTIONS = {
     { label = "N", degrees = 0, cardinal = true },
@@ -34,6 +70,33 @@ end
 
 local function headingFromFacing(facing)
     return (360 - math.deg(facing)) % 360
+end
+
+local function edgeFadeForMagnitude(magnitude)
+    if magnitude <= EDGE_FADE_START then
+        return 1
+    end
+
+    if magnitude >= VISIBLE_HALF_ANGLE then
+        return 0
+    end
+
+    return math.max(
+        0,
+        (VISIBLE_HALF_ANGLE - magnitude)
+            / (VISIBLE_HALF_ANGLE - EDGE_FADE_START)
+    )
+end
+
+local function manualWaypointScaleForMagnitude(magnitude)
+    if magnitude >= MANUAL_FOCUS_ANGLE then
+        return 1
+    end
+
+    local focus =
+        1 - (magnitude / MANUAL_FOCUS_ANGLE)
+
+    return 1 + focus * (MANUAL_FOCUS_SCALE - 1)
 end
 
 local function readVectorXY(value)
@@ -108,46 +171,45 @@ local Compass = Logres:RegisterModule("Compass", {
         frame:Hide()
 
         local baseline = frame:CreateTexture(nil, "BACKGROUND")
-        baseline:SetSize(TAPE_WIDTH, 1)
-        baseline:SetPoint("CENTER", frame, "CENTER", 0, -2)
-        baseline:SetColorTexture(0.58, 0.46, 0.27, 0.38)
+        baseline:SetSize(TAPE_WIDTH, BASELINE_HEIGHT)
+        baseline:SetPoint("CENTER", frame, "CENTER", 0, TAPE_Y)
+        baseline:SetTexture(compassAssets.baseline)
 
-        local center = frame:CreateTexture(nil, "ARTWORK")
-        center:SetSize(2, 22)
-        center:SetPoint("CENTER", frame, "CENTER", 0, -1)
-        center:SetColorTexture(0.93, 0.76, 0.39, 0.92)
-
-        local centerCap = frame:CreateTexture(nil, "ARTWORK")
-        centerCap:SetSize(8, 2)
-        centerCap:SetPoint("TOP", center, "TOP", 0, 0)
-        centerCap:SetColorTexture(0.93, 0.76, 0.39, 0.92)
+        local center = frame:CreateTexture(nil, "OVERLAY")
+        center:SetSize(CENTER_WIDTH, CENTER_HEIGHT)
+        center:SetPoint("BOTTOM", frame, "CENTER", 0, TAPE_Y)
+        center:SetTexture(compassAssets.center)
 
         local waypointMarker = frame:CreateTexture(nil, "OVERLAY")
-        waypointMarker:SetSize(2, 18)
-        waypointMarker:SetColorTexture(0.36, 0.78, 0.95, 0.95)
+        waypointMarker:SetSize(MANUAL_WIDTH, MANUAL_HEIGHT)
+        waypointMarker:SetTexture(compassAssets.manualWaypoint)
+        waypointMarker:SetAlpha(MANUAL_ALPHA)
         waypointMarker:Hide()
 
-        local waypointCap = frame:CreateTexture(nil, "OVERLAY")
-        waypointCap:SetSize(8, 2)
-        waypointCap:SetColorTexture(0.36, 0.78, 0.95, 0.95)
-        waypointCap:Hide()
-
         self.frame = frame
+        self.baseline = baseline
+        self.centerMarker = center
         self.waypointMarker = waypointMarker
-        self.waypointCap = waypointCap
         self.directionWidgets = {}
 
         for index = 1, #DIRECTIONS do
             local definition = DIRECTIONS[index]
 
             local tick = frame:CreateTexture(nil, "ARTWORK")
-            tick:SetSize(1, definition.cardinal and 12 or 8)
-            tick:SetColorTexture(
-                0.76,
-                0.66,
-                0.48,
-                definition.cardinal and 0.72 or 0.45
-            )
+
+            if definition.cardinal then
+                tick:SetSize(
+                    CARDINAL_TICK_WIDTH,
+                    CARDINAL_TICK_HEIGHT
+                )
+                tick:SetTexture(compassAssets.cardinalTick)
+            else
+                tick:SetSize(
+                    INTERCARDINAL_TICK_WIDTH,
+                    INTERCARDINAL_TICK_HEIGHT
+                )
+                tick:SetTexture(compassAssets.intercardinalTick)
+            end
 
             local label = frame:CreateFontString(
                 nil,
@@ -158,11 +220,17 @@ local Compass = Logres:RegisterModule("Compass", {
             )
             label:SetText(definition.label)
 
-            if definition.cardinal then
-                label:SetTextColor(0.94, 0.84, 0.62, 0.96)
-            else
-                label:SetTextColor(0.72, 0.68, 0.60, 0.82)
-            end
+            local labelColor =
+                definition.cardinal
+                and CARDINAL_LABEL_COLOR
+                or INTERCARDINAL_LABEL_COLOR
+
+            label:SetTextColor(
+                labelColor[1],
+                labelColor[2],
+                labelColor[3],
+                labelColor[4]
+            )
 
             self.directionWidgets[index] = {
                 definition = definition,
@@ -243,10 +311,8 @@ function Compass:SetWaypointMarkerShown(shown)
 
     if shown then
         self.waypointMarker:Show()
-        self.waypointCap:Show()
     else
         self.waypointMarker:Hide()
-        self.waypointCap:Hide()
     end
 end
 
@@ -282,23 +348,31 @@ function Compass:UpdateTape(headingDegrees)
 
         if magnitude <= VISIBLE_HALF_ANGLE then
             local x = offset * PIXELS_PER_DEGREE
-            local fade = 1
-
-            if magnitude > 78 then
-                fade = math.max(
-                    0,
-                    (VISIBLE_HALF_ANGLE - magnitude)
-                        / (VISIBLE_HALF_ANGLE - 78)
-                )
-            end
+            local fade = edgeFadeForMagnitude(magnitude)
+            local labelGap =
+                widget.definition.cardinal
+                and CARDINAL_LABEL_GAP
+                or INTERCARDINAL_LABEL_GAP
 
             widget.tick:ClearAllPoints()
-            widget.tick:SetPoint("CENTER", self.frame, "CENTER", x, -2)
+            widget.tick:SetPoint(
+                "CENTER",
+                self.frame,
+                "CENTER",
+                x,
+                TAPE_Y
+            )
             widget.tick:SetAlpha(fade)
             widget.tick:Show()
 
             widget.label:ClearAllPoints()
-            widget.label:SetPoint("BOTTOM", widget.tick, "TOP", 0, 4)
+            widget.label:SetPoint(
+                "BOTTOM",
+                widget.tick,
+                "TOP",
+                0,
+                labelGap
+            )
             widget.label:SetAlpha(fade)
             widget.label:Show()
         else
@@ -326,29 +400,31 @@ function Compass:UpdateWaypointMarker()
 
     self.waypointRelativeDegrees = relative
 
-    if math.abs(relative) > VISIBLE_HALF_ANGLE then
+    local magnitude = math.abs(relative)
+
+    if magnitude > VISIBLE_HALF_ANGLE then
         return
     end
 
     local x = relative * PIXELS_PER_DEGREE
+    local edgeAlpha =
+        MANUAL_ALPHA * edgeFadeForMagnitude(magnitude)
+    local scale =
+        manualWaypointScaleForMagnitude(magnitude)
 
     self.waypointMarker:ClearAllPoints()
     self.waypointMarker:SetPoint(
-        "CENTER",
+        "BOTTOM",
         self.frame,
         "CENTER",
         x,
-        -1
+        TAPE_Y
     )
-
-    self.waypointCap:ClearAllPoints()
-    self.waypointCap:SetPoint(
-        "TOP",
-        self.waypointMarker,
-        "TOP",
-        0,
-        0
+    self.waypointMarker:SetSize(
+        MANUAL_WIDTH * scale,
+        MANUAL_HEIGHT * scale
     )
+    self.waypointMarker:SetAlpha(edgeAlpha)
 
     self:SetWaypointMarkerShown(true)
 end
@@ -620,9 +696,7 @@ function Compass:GetDebugStatus()
         waypointBearingAvailable = self.waypointBearingAvailable == true,
         waypointBearingDegrees = self.waypointBearingDegrees,
         waypointRelativeDegrees = self.waypointRelativeDegrees,
-        waypointMarkerReady =
-            self.waypointMarker ~= nil
-            and self.waypointCap ~= nil,
+        waypointMarkerReady = self.waypointMarker ~= nil,
         waypointMarkerShown = self.waypointMarkerShown == true,
         waypointMapID = self.waypointMapID,
         lastWaypointReason = self.lastWaypointReason,

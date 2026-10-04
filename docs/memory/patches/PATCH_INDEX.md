@@ -141,5 +141,6 @@
 | P0119 | 2026-10-03 | PREPARED — RUNTIME RETEST PENDING | Replace constant-rate camera motion with frame-shaped MoveView driver (`0.0.49-dev`) |
 | P0120 | 2026-10-04 | INSTALLED / PUSHED — CORE RUNTIME + VISUAL PASS; ORNAMENT DEFERRED | Add reusable normal/compact percentage-bar primitive (`6c5f8901`, `0.0.50-dev`) |
 | P0121 | 2026-10-04 | INSTALLED / PUSHED — PLAYER CAST RUNTIME + VISUAL PASS; TARGET DEFERRED | Translate approved cast-state cue frame/glyph family (`fc928d99`, `0.0.51-dev`) |
-| P0122 | 2026-10-04 | PREPARED — RUNTIME + VISUAL PROOF PENDING | Translate approved Context line/diamond visual primitive (`0.0.52-dev`) |
+| P0122 | 2026-10-04 | INSTALLED / PUSHED — RUNTIME + PREVIEW PATH PASS; COMPLETION VARIANT DEFERRED | Translate approved Context line/diamond visual primitive (`62353ecf`, `0.0.52-dev`) |
+| P0123 | 2026-10-04 | PREPARED — RUNTIME + VISUAL PROOF PENDING | Assetize approved heading/manual-waypoint Compass treatment while preserving proven source scope (`0.0.53-dev`) |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

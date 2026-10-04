@@ -84,3 +84,25 @@ only from the existing objective `finished` transition.
 
 Canonical art reference:
 `docs/design/approved/09_context_message_component.png`.
+
+## Compass
+
+P0123 translates the proven heading/manual-waypoint subset of approved D-039
+Compass sheet 12 into production media:
+
+- `Compass/compass_baseline.tga` — weathered brass tape baseline with restrained
+  edge recession;
+- `Compass/compass_center.tga` — fixed brighter-brass center
+  gnomon/spear-notch;
+- `Compass/compass_tick_cardinal.tga` — stronger cardinal tick;
+- `Compass/compass_tick_intercardinal.tga` — quieter intercardinal tick;
+- `Compass/compass_manual_waypoint.tga` — muted steel-blue open destination
+  diamond with exact-bearing stem.
+
+`Theme.lua` owns the geometry and runtime paths. The Compass runtime continues to
+own only its proven heading and manual user-waypoint sources. P0123 does not add
+quest/POI/tracking sources, fabricate waypoint identity, derive pseudo-distance
+from map-coordinate deltas, or change the stock-minimap boundary.
+
+Canonical art reference:
+`docs/design/approved/12_compass_glyph_and_state_sheet.png`.

@@ -1,8 +1,9 @@
 # P0122 — Context Message Visual Translation
 
 Date: 2026-10-04
-Result: **PREPARED — RUNTIME + VISUAL PROOF PENDING**
+Result: **INSTALLED / PUSHED — RUNTIME + PREVIEW PATH PASS; COMPLETION VARIANT DEFERRED**
 Baseline: `fc928d9972d6eef43586b1d852281a7b95c229a4`
+Commit: `62353ecfc6eb3c3adc61b8d11af251f05637a6a3`
 Runtime: `0.0.51-dev -> 0.0.52-dev`
 
 ## Purpose
@@ -70,3 +71,20 @@ In client:
 7. No Lua, secret-value, taint, or protected-action error occurs.
 
 The completion variant does not require contrived gameplay solely for proof.
+
+## Runtime / preview result
+
+Captured `0.0.52-dev` diagnostics show:
+
+- XP Preview PASS (`state=shown`);
+- XP Check PASS with real XP events/pulses;
+- Objective Progress Preview PASS (`state=shown-current`);
+- Objective Progress Check PASS with real objective changes/pulses;
+- full `checkall` completion with no reported Lua/secret/taint failure.
+
+The dedicated warmer objective-completion visual state was not separately
+observed and remains **DEFERRED** until a natural `finished -> true` transition is
+available.
+
+Canonical evidence:
+`../evidence/P0122_CONTEXT_MESSAGE_RUNTIME_PREVIEW_PASS_2026-10-04.md`.

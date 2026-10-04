@@ -136,4 +136,57 @@ theme.contextMessage = {
     },
 }
 
+
+theme.compass = {
+    width = 400,
+    height = 54,
+    tapeWidth = 360,
+    tapeY = -4,
+    visibleHalfAngle = 100,
+    edgeFadeStart = 78,
+
+    baseline = {
+        height = 8,
+    },
+
+    center = {
+        width = 8,
+        height = 24,
+    },
+
+    ticks = {
+        cardinal = {
+            width = 7,
+            height = 16,
+            labelGap = 3,
+        },
+        intercardinal = {
+            width = 5,
+            height = 11,
+            labelGap = 3,
+        },
+    },
+
+    manualWaypoint = {
+        width = 12,
+        height = 20,
+        alpha = 0.95,
+        focusAngle = 8,
+        focusScale = 1.07,
+    },
+
+    labels = {
+        cardinal = { 0.94, 0.84, 0.62, 0.96 },
+        intercardinal = { 0.72, 0.68, 0.60, 0.82 },
+    },
+
+    assets = {
+        baseline = MEDIA_ROOT .. "Compass\\compass_baseline.tga",
+        center = MEDIA_ROOT .. "Compass\\compass_center.tga",
+        cardinalTick = MEDIA_ROOT .. "Compass\\compass_tick_cardinal.tga",
+        intercardinalTick = MEDIA_ROOT .. "Compass\\compass_tick_intercardinal.tga",
+        manualWaypoint = MEDIA_ROOT .. "Compass\\compass_manual_waypoint.tga",
+    },
+}
+
 Logres.Theme = theme
