@@ -4,17 +4,50 @@ local HUD = Logres:RegisterModule("HUD", {
     autoEnable = true,
 })
 
+local HEALTH_PREVIEW_PERCENTAGES = {
+    [100] = true,
+    [80] = true,
+    [70] = true,
+    [60] = true,
+    [50] = true,
+    [40] = true,
+    [30] = true,
+    [20] = true,
+    [15] = true,
+    [5] = true,
+    [0] = true,
+}
+
 local HEALTH_BANDS = {
     {
         name = "outerDark",
-        inset = 0,
-        thickness = 56,
-        color = { 0.00, 0.00, 0.00 },
-        previewAlpha = 0.18,
+        assetKey = "outer",
+        fallbackColor = { 0.040, 0.035, 0.045, 1.00 },
         points = {
-            { 0.00, 0.46 },
-            { 0.15, 0.38 },
-            { 0.30, 0.28 },
+            { 0.00, 0.92 },
+            { 0.05, 0.90 },
+            { 0.15, 0.82 },
+            { 0.20, 0.74 },
+            { 0.30, 0.62 },
+            { 0.40, 0.48 },
+            { 0.50, 0.34 },
+            { 0.60, 0.24 },
+            { 0.70, 0.15 },
+            { 0.80, 0.08 },
+            { 1.00, 0.00 },
+        },
+    },
+    {
+        name = "injuryRed",
+        assetKey = "injury",
+        fallbackColor = { 0.31, 0.035, 0.065, 1.00 },
+        points = {
+            { 0.00, 0.72 },
+            { 0.05, 0.70 },
+            { 0.15, 0.62 },
+            { 0.20, 0.54 },
+            { 0.30, 0.42 },
+            { 0.40, 0.28 },
             { 0.50, 0.16 },
             { 0.60, 0.08 },
             { 0.70, 0.00 },
@@ -22,50 +55,47 @@ local HEALTH_BANDS = {
         },
     },
     {
-        name = "injuryRed",
-        inset = 18,
-        thickness = 96,
-        color = { 0.45, 0.015, 0.01 },
-        previewAlpha = 0.16,
+        name = "criticalPressure",
+        assetKey = "critical",
+        fallbackColor = { 0.17, 0.020, 0.040, 1.00 },
         points = {
-            { 0.00, 0.38 },
-            { 0.15, 0.30 },
-            { 0.30, 0.18 },
-            { 0.40, 0.09 },
+            { 0.00, 0.90 },
+            { 0.05, 0.86 },
+            { 0.10, 0.76 },
+            { 0.15, 0.64 },
+            { 0.20, 0.48 },
+            { 0.30, 0.26 },
+            { 0.40, 0.10 },
             { 0.50, 0.00 },
             { 1.00, 0.00 },
         },
     },
     {
-        name = "criticalPressure",
-        inset = 48,
-        thickness = 156,
-        color = { 0.25, 0.00, 0.00 },
-        previewAlpha = 0.12,
+        name = "nearDeathTunnel",
+        assetKey = "nearDeath",
+        fallbackColor = { 0.055, 0.012, 0.025, 1.00 },
         points = {
-            { 0.00, 0.32 },
-            { 0.08, 0.26 },
-            { 0.15, 0.18 },
-            { 0.22, 0.09 },
+            { 0.00, 1.00 },
+            { 0.05, 0.92 },
+            { 0.10, 0.76 },
+            { 0.15, 0.56 },
+            { 0.20, 0.30 },
+            { 0.25, 0.10 },
             { 0.30, 0.00 },
             { 1.00, 0.00 },
         },
     },
     {
-        name = "nearDeathTunnel",
-        inset = 96,
-        thickness = 238,
-        color = { 0.05, 0.00, 0.00 },
-        previewAlpha = 0.10,
+        name = "deathCollapse",
+        assetKey = "death",
+        fallbackColor = { 0.008, 0.004, 0.008, 1.00 },
         points = {
-            { 0.00, 0.35 },
-            { 0.05, 0.28 },
-            { 0.10, 0.16 },
-            { 0.15, 0.00 },
+            { 0.00, 1.00 },
+            { 0.01, 0.15 },
+            { 0.02, 0.00 },
             { 1.00, 0.00 },
         },
     },
-
 }
 
 local CAST_EVENTS = {
@@ -95,6 +125,11 @@ local castCueStyle =
     (Logres.Theme and Logres.Theme.castCue) or {}
 local castCueAssets = castCueStyle.assets or {}
 local DEFAULT_CAST_CUE_SIZE = castCueStyle.size or 24
+
+local healthTunnelStyle =
+    (Logres.Theme and Logres.Theme.healthTunnel) or {}
+local healthTunnelAssets = healthTunnelStyle.assets or {}
+local healthTunnelColors = healthTunnelStyle.colors or {}
 
 local DEFAULT_PERCENTAGE_BAR = {
     normal = {
@@ -422,69 +457,110 @@ local function createPercentageBar(parent, name, variant, initialColor)
     return frame
 end
 
-local function createEdgeTextures(root, band)
-    local textures = {}
-    local r, g, b = band.color[1], band.color[2], band.color[3]
-    local inset = band.inset
-    local thickness = band.thickness
+local function createHealthTunnelTexture(root, band)
+    local texture = root:CreateTexture(nil, "BACKGROUND")
+    texture:SetAllPoints(root)
 
-    local left = root:CreateTexture(nil, "BACKGROUND")
-    left:SetColorTexture(r, g, b, 1)
-    left:SetPoint("TOPLEFT", root, "TOPLEFT", inset, -inset)
-    left:SetPoint("BOTTOMLEFT", root, "BOTTOMLEFT", inset, inset)
-    left:SetWidth(thickness)
-    textures[#textures + 1] = left
+    local asset = healthTunnelAssets[band.assetKey]
+    texture:SetTexture(asset)
 
-    local right = root:CreateTexture(nil, "BACKGROUND")
-    right:SetColorTexture(r, g, b, 1)
-    right:SetPoint("TOPRIGHT", root, "TOPRIGHT", -inset, -inset)
-    right:SetPoint("BOTTOMRIGHT", root, "BOTTOMRIGHT", -inset, inset)
-    right:SetWidth(thickness)
-    textures[#textures + 1] = right
+    local color =
+        healthTunnelColors[band.assetKey]
+        or band.fallbackColor
 
-    local top = root:CreateTexture(nil, "BACKGROUND")
-    top:SetColorTexture(r, g, b, 1)
-    top:SetPoint("TOPLEFT", root, "TOPLEFT", inset, -inset)
-    top:SetPoint("TOPRIGHT", root, "TOPRIGHT", -inset, -inset)
-    top:SetHeight(thickness)
-    textures[#textures + 1] = top
+    texture:SetVertexColor(
+        color[1],
+        color[2],
+        color[3],
+        color[4] or 1
+    )
+    texture:SetAlpha(0)
 
-    local bottom = root:CreateTexture(nil, "BACKGROUND")
-    bottom:SetColorTexture(r, g, b, 1)
-    bottom:SetPoint("BOTTOMLEFT", root, "BOTTOMLEFT", inset, inset)
-    bottom:SetPoint("BOTTOMRIGHT", root, "BOTTOMRIGHT", -inset, inset)
-    bottom:SetHeight(thickness)
-    textures[#textures + 1] = bottom
+    return texture
+end
 
-    for index = 1, #textures do
-        textures[index]:SetAlpha(0)
+local function samplePreviewCurve(points, normalizedPreview)
+    if normalizedPreview <= points[1][1] then
+        return points[1][2]
     end
 
-    return textures
+    for index = 2, #points do
+        local left = points[index - 1]
+        local right = points[index]
+
+        if normalizedPreview <= right[1] then
+            local width = right[1] - left[1]
+
+            if width <= 0 then
+                return right[2]
+            end
+
+            local position =
+                (normalizedPreview - left[1]) / width
+
+            return left[2]
+                + ((right[2] - left[2]) * position)
+        end
+    end
+
+    return points[#points][2]
+end
+
+function HUD:ApplyHealthPreviewPercent(previewPercent)
+    local normalizedPreview = previewPercent / 100
+
+    for index = 1, #self.healthBands do
+        local band = self.healthBands[index]
+        local previewValue =
+            samplePreviewCurve(
+                band.points,
+                normalizedPreview
+            )
+
+        band.texture:SetAlpha(previewValue)
+    end
+end
+
+function HUD:SetHealthPreviewPercent(previewPercent)
+    if previewPercent == nil then
+        self.previewEnabled = false
+        self.previewPercent = nil
+
+        if self.root and self.root:IsShown() then
+            self:UpdateHealthVignette()
+        end
+
+        return true, "live"
+    end
+
+    if type(previewPercent) ~= "number"
+        or not HEALTH_PREVIEW_PERCENTAGES[previewPercent]
+    then
+        return false, "unsupported-preview-percent"
+    end
+
+    self.previewEnabled = true
+    self.previewPercent = previewPercent
+
+    if self.root and self.root:IsShown() then
+        self:ApplyHealthPreviewPercent(previewPercent)
+    end
+
+    return true, "preview"
 end
 
 function HUD:ApplyPreview()
-    for index = 1, #self.healthBands do
-        local band = self.healthBands[index]
-
-        for textureIndex = 1, #band.textures do
-            band.textures[textureIndex]:SetAlpha(band.previewAlpha)
-        end
-    end
+    self:ApplyHealthPreviewPercent(
+        self.previewPercent or 30
+    )
 end
 
 function HUD:SetPreviewEnabled(enabled)
-    self.previewEnabled = enabled and true or false
-
-    if not self.root or not self.root:IsShown() then
-        return
+    if enabled then
+        return self:SetHealthPreviewPercent(30)
     end
 
-    if self.previewEnabled then
-        self:ApplyPreview()
-    else
-        self:UpdateHealthVignette()
-    end
+    return self:SetHealthPreviewPercent(nil)
 end
 
 function HUD:UpdateHealthVignette()
@@ -501,12 +577,9 @@ function HUD:UpdateHealthVignette()
         -- persist, or perform arithmetic on this value in Lua.
         local alpha = UnitHealthPercent("player", true, band.curve)
 
-        for textureIndex = 1, #band.textures do
-            band.textures[textureIndex]:SetAlpha(alpha)
-        end
+        band.texture:SetAlpha(alpha)
     end
 end
-
 
 function HUD:UpdateResource()
     if not self.root or not self.root:IsShown() then
@@ -631,6 +704,7 @@ function HUD:GetDebugStatus()
         rootShown = self.root and self.root:IsShown() or false,
         immersionEnabled = preferences.immersionEnabled,
         previewEnabled = self.previewEnabled and true or false,
+        previewPercent = self.previewPercent,
         bandCount = self.healthBands and #self.healthBands or 0,
         textureCount = self.healthTextureCount or 0,
         curvesReady = self.curvesReady and true or false,
@@ -662,6 +736,7 @@ function HUD:OnInitialize()
 
     self.root = root
     self.previewEnabled = false
+    self.previewPercent = nil
     self.healthBands = {}
     self.healthTextureCount = 0
 
@@ -669,13 +744,17 @@ function HUD:OnInitialize()
         local spec = HEALTH_BANDS[index]
         local band = {
             name = spec.name,
-            previewAlpha = spec.previewAlpha,
+            assetKey = spec.assetKey,
+            points = spec.points,
+            fallbackColor = spec.fallbackColor,
             curve = createCurve(spec.points),
-            textures = createEdgeTextures(root, spec),
         }
 
+        band.texture =
+            createHealthTunnelTexture(root, band)
+
         self.healthTextureCount =
-            self.healthTextureCount + #band.textures
+            self.healthTextureCount + 1
 
         self.healthBands[#self.healthBands + 1] = band
     end
@@ -941,6 +1020,7 @@ end
 
 function HUD:OnDisable()
     self.previewEnabled = false
+    self.previewPercent = nil
     hideCastCue(self.playerCastCue, true)
     hideCastCue(self.targetCastCue, true)
     self.targetFrame:Hide()

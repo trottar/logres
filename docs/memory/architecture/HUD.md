@@ -532,3 +532,42 @@ Production states:
 The cue remains symbolic only. There is still no cast progress bar, timer, spell
 text, spell icon, `UnitCastingInfo`, or `UnitChannelInfo` dependency. Target
 spellcast payload fields remain ignored.
+
+## Phase H+ organic health-tunnel production translation — P0124
+
+P0124 replaces the procedural four-sided rectangle constructor with Theme-owned
+full-screen alpha masks derived from the frozen D-036 / approved sheet-11
+health-tunnel direction.
+
+Production layers:
+
+- soft outer charcoal pressure;
+- cold-burgundy injury pressure;
+- narrower critical pressure;
+- severe near-death tunnel;
+- death-only effective clear-field collapse.
+
+The live transport boundary is unchanged:
+
+```text
+UnitHealthPercent("player", true, nativeCurve)
+    -> Texture:SetAlpha(secret)
+```
+
+Lua does not compare, stringify, persist, or perform arithmetic on the live
+secret-capable health value.
+
+P0124 also adds deterministic developer previews for the D-036 calibration
+anchors:
+
+`100 / 80 / 70 / 60 / 50 / 40 / 30 / 20 / 15 / 5 / 0`
+
+Those percentages are ordinary developer-supplied preview inputs and are isolated
+from live health. They exist specifically so critical/near-death visual
+calibration does not require deliberately endangering the character.
+
+The Phase-B developer panel exposes every D-036 calibration state plus **Health Live**,
+so normal visual calibration requires no manual slash-command entry.
+
+The legacy `/logres hudpreview on` remains a compatibility alias for the 30%
+preview; `/logres healthpreview off` returns immediately to the live native path.

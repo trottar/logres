@@ -20,11 +20,14 @@ required_hud_fragments = [
     "C_CurveUtil.CreateCurve()",
     "curve:SetType(Enum.LuaCurveType.Linear)",
     'UnitHealthPercent("player", true, band.curve)',
-    "band.textures[textureIndex]:SetAlpha(alpha)",
+    "band.texture:SetAlpha(alpha)",
     "function HUD:UpdateHealthVignette()",
     "function HUD:ApplyImmersionPreference(preferences)",
     "function HUD:SetPreviewEnabled(enabled)",
     "function HUD:ApplyPreview()",
+    "function HUD:SetHealthPreviewPercent(previewPercent)",
+    "function HUD:ApplyHealthPreviewPercent(previewPercent)",
+    "local HEALTH_PREVIEW_PERCENTAGES = {",
     "function HUD:UpdateResource()",
     'UnitPowerPercent(',
     'self.resourceText:SetFormattedText("%.0f%%", percent)',
@@ -90,8 +93,7 @@ for forbidden in [
     if forbidden in hud:
         errors.append(f"HUD.lua contains forbidden health/persistence path: {forbidden}")
 
-# The health result may only be forwarded to native consumers. Keep obvious
-# secret-value inspection/branching patterns out of production HUD code.
+# The live secret-derived values may only be forwarded to native consumers.
 for forbidden in [
     "if alpha",
     "alpha <",
@@ -114,7 +116,10 @@ for forbidden in [
     "targetHealthText:GetText",
 ]:
     if forbidden in hud:
-        errors.append(f"HUD.lua inspects secret-derived alpha in Lua: {forbidden}")
+        errors.append(f"HUD.lua inspects secret-derived value in Lua: {forbidden}")
+
+if "local function createEdgeTextures" in hud:
+    errors.append("HUD.lua must not retain the procedural rectangular health-band constructor")
 
 if "HUD\\HUD.lua" not in toc:
     errors.append("Logres.toc does not load HUD\\HUD.lua")
@@ -138,7 +143,10 @@ if "/logres hudcheck" not in commands:
     errors.append("Commands.lua must expose /logres hudcheck")
 
 if "/logres hudpreview [on|off]" not in commands:
-    errors.append("Commands.lua must expose /logres hudpreview [on|off]")
+    errors.append("Commands.lua must preserve /logres hudpreview [on|off]")
+
+if "/logres healthpreview [100|80|70|60|50|40|30|20|15|5|0|off]" not in commands:
+    errors.append("Commands.lua must expose deterministic health preview percentages")
 
 print("Logres HUD contract")
 print("===================")

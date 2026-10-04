@@ -11,7 +11,7 @@ TOC = ROOT / "Logres" / "Logres.toc"
 
 errors = []
 PHASES = set("0ABCDEFGH")
-MAX_ACTIONS_PER_PHASE = 12
+MAX_ACTIONS_PER_PHASE = 15
 EXPECTED_PHASES = {
     "runall": "0",
     "status": "0",
@@ -20,8 +20,18 @@ EXPECTED_PHASES = {
     "state": "A",
     "sensor": "A",
     "hud": "B",
-    "previewOn": "B",
-    "previewOff": "B",
+    "healthPreview100": "B",
+    "healthPreview80": "B",
+    "healthPreview70": "B",
+    "healthPreview60": "B",
+    "healthPreview50": "B",
+    "healthPreview40": "B",
+    "healthPreview30": "B",
+    "healthPreview20": "B",
+    "healthPreview15": "B",
+    "healthPreview5": "B",
+    "healthPreview0": "B",
+    "healthPreviewLive": "B",
     "action": "C",
     "actionFeedback": "C",
     "actionKeysOn": "C",
@@ -156,7 +166,7 @@ if PANEL.is_file():
         "function Panel:SetActivePhase(phase)",
         "function Panel:RefreshPhaseTabs()",
         "action.phase == self.activePhase",
-        "MAX_ACTIONS_PER_PHASE = BUTTON_COLUMNS * 4",
+        "MAX_ACTIONS_PER_PHASE = BUTTON_COLUMNS * 5",
         "Logres:GetDevPanelActions()",
         "Logres:RunDevCommand(command",
         "function Logres:ToggleDevPanel()",

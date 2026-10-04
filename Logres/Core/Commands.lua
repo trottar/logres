@@ -414,8 +414,8 @@ local function runHUDCheck()
         status.initialized == true
         and status.enabled == true
         and debugStatus.moduleEnabled == true
-        and debugStatus.bandCount == 4
-        and debugStatus.textureCount == 16
+        and debugStatus.bandCount == 5
+        and debugStatus.textureCount == 5
         and debugStatus.curvesReady == true
         and debugStatus.resourceTextReady == true
         and debugStatus.resourceCurveReady == true
@@ -434,7 +434,7 @@ local function runHUDCheck()
 
     if passed then
         emit(string.format(
-            "Logres hudcheck: PASS (bands=4 textures=16 curves=true resourceText=true resourceCurve=true target=true casts=true allies=5 immersion=%s visible=%s)",
+            "Logres hudcheck: PASS (bands=5 textures=5 tunnel=true curves=true resourceText=true resourceCurve=true target=true casts=true allies=5 immersion=%s visible=%s)",
             boolText(debugStatus.immersionEnabled),
             boolText(debugStatus.rootShown)
         ))
@@ -2972,6 +2972,40 @@ local function handleHUDPreview(argument)
     ))
 end
 
+
+local function handleHealthPreview(argument)
+    local hud = Logres:GetModule("HUD")
+
+    if argument == "off" or argument == "live" then
+        local ok, state =
+            hud:SetHealthPreviewPercent(nil)
+
+        emit(string.format(
+            "Logres healthpreview: %s (state=%s percent=live)",
+            ok and "PASS" or "FAIL",
+            tostring(state)
+        ))
+        return
+    end
+
+    local previewPercent = tonumber(argument)
+    local ok, state =
+        hud:SetHealthPreviewPercent(previewPercent)
+
+    if not ok then
+        emit(
+            "Usage: /logres healthpreview [100|80|70|60|50|40|30|20|15|5|0|off]"
+        )
+        return
+    end
+
+    emit(string.format(
+        "Logres healthpreview: PASS (state=%s percent=%s)",
+        tostring(state),
+        tostring(previewPercent)
+    ))
+end
+
 local function handleImmersion(argument)
     if argument == "" or argument == "status" then
         printPreferences()
@@ -3042,6 +3076,7 @@ local function printHelp()
     emit("  /logres questdialoguecheck")
     emit("  /logres questdialoguepreview")
     emit("  /logres hudpreview [on|off]")
+    emit("  /logres healthpreview [100|80|70|60|50|40|30|20|15|5|0|off]")
     emit("  /logres immersion [on|off|toggle]")
     emit("  /logres debug on")
     emit("  /logres debug off")
@@ -3241,6 +3276,11 @@ local function handleCommand(message)
 
     if command == "questdialoguepreview" then
         runQuestDialoguePreview()
+        return
+    end
+
+    if command == "healthpreview" then
+        handleHealthPreview(argument)
         return
     end
 
@@ -3547,15 +3587,75 @@ Logres:RegisterDevPanelAction(
     "D"
 )
 Logres:RegisterDevPanelAction(
-    "previewOn",
-    "HUD Preview ON",
-    "hudpreview on",
+    "healthPreview100",
+    "Health 100%",
+    "healthpreview 100",
     "B"
 )
 Logres:RegisterDevPanelAction(
-    "previewOff",
-    "HUD Preview OFF",
-    "hudpreview off",
+    "healthPreview80",
+    "Health 80%",
+    "healthpreview 80",
+    "B"
+)
+Logres:RegisterDevPanelAction(
+    "healthPreview70",
+    "Health 70%",
+    "healthpreview 70",
+    "B"
+)
+Logres:RegisterDevPanelAction(
+    "healthPreview60",
+    "Health 60%",
+    "healthpreview 60",
+    "B"
+)
+Logres:RegisterDevPanelAction(
+    "healthPreview50",
+    "Health 50%",
+    "healthpreview 50",
+    "B"
+)
+Logres:RegisterDevPanelAction(
+    "healthPreview40",
+    "Health 40%",
+    "healthpreview 40",
+    "B"
+)
+Logres:RegisterDevPanelAction(
+    "healthPreview30",
+    "Health 30%",
+    "healthpreview 30",
+    "B"
+)
+Logres:RegisterDevPanelAction(
+    "healthPreview20",
+    "Health 20%",
+    "healthpreview 20",
+    "B"
+)
+Logres:RegisterDevPanelAction(
+    "healthPreview15",
+    "Health 15%",
+    "healthpreview 15",
+    "B"
+)
+Logres:RegisterDevPanelAction(
+    "healthPreview5",
+    "Health 5%",
+    "healthpreview 5",
+    "B"
+)
+Logres:RegisterDevPanelAction(
+    "healthPreview0",
+    "Health 0%",
+    "healthpreview 0",
+    "B"
+)
+Logres:RegisterDevPanelAction(
+    "healthPreviewLive",
+    "Health Live",
+    "healthpreview off",
     "B"
 )
 

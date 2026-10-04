@@ -179,8 +179,10 @@ Current parallel visual checkpoints:
   target cast/channel naturally deferred;
 - P0122: shared Context-message primitive — durable runtime/preview path PASS,
   objective-completion variant naturally deferred;
-- P0123: heading/manual-waypoint Compass asset translation — prepared for
-  in-client proof.
+- P0123: heading/manual-waypoint Compass asset translation — runtime + visual
+  PASS at `1721eb4d` / `0.0.53-dev`;
+- P0124: organic player-health tunnel asset translation plus deterministic
+  D-036 preview percentages — prepared for in-client proof.
 
 This remains implementation translation under D-039/D-040. It does not authorize
 Phase-H-only capability expansion, minimap suppression, unproven navigation

@@ -1,0 +1,36 @@
+P0124 — Organic Player-Health Tunnel + Full Developer-Panel Preview Matrix
+Baseline: 1721eb4dac7bb90057de5666767f2736bc48fdc6
+Runtime: 0.0.54-dev
+Repair state: completed P0124 R2 working tree -> full Phase-B preview matrix
+
+Files:
+8e7b6a2ed90a052bc24e41ed5a0b1afd3e335e5286f331708d9546c5db07217c  Logres/Core/Bootstrap.lua
+b7257035be7f777a56ef39eaba43db35968d41889b5765472635e6364912d373  Logres/Core/Commands.lua
+f99ac97f0c4afeb1ef130602ad2472d50ce804d22d0bada84f00d02747747e6f  Logres/Dev/Panel.lua
+a9852d7e72268d85b269110dd229a7bf714b95b61f65b4e6fa40d187006d2ffe  Logres/HUD/HUD.lua
+f27d0c8bf80904e13360d85329944b9699cf23a71c52645a556e261b53851a24  Logres/Logres.toc
+77bf7069bc39da520bb0c6e0793c934454968bf275453b1743c6224482ddf54f  Logres/Media/README.md
+27bfd8dd05978c13936adc53241d0f991b7b5e1c82702753f097b5d21727e0f4  Logres/Media/Theme.lua
+1988d6ad4d3f4989b90a750aa80d2add3aff88738eba13eb038155bdbe60beb3  Logres/Media/Health/health_outer.tga
+d3e230df4accc6149fada2307185a43b323a5d1ec6c2d12af8ac708480d04ee8  Logres/Media/Health/health_injury.tga
+b4ba397e05d379652968224d6ccb315489d67bbb2111cb94fc6a13ef40ac2fac  Logres/Media/Health/health_critical.tga
+47b0f4ffe97fad786e8081097a84b0ff4f75a6f83a12c6da5663740c21067791  Logres/Media/Health/health_near_death.tga
+54f18019f502f3b75c8518d0a766da25d5f0a2ceeadcfdd34980ab151cf3a940  Logres/Media/Health/health_death.tga
+b96e9fb2427c59e374a9819064a1262a4b74668b47fd78e93852cdb67b2ab8ca  tools/check_dev_panel_contract.py
+658720dd22b150ab468abdc659e0a3973b3d11305420a36e46ee932b664854be  tools/check_hud_contract.py
+539078160befc0b10b5b27e24abf1f614ec93c841ee4dce4d4cf28d54021518c  tools/check_health_tunnel_visual_contract.py
+7f600bbed7e27dfe073c354844322c1adaea860737df1f2c2332ead3a4baa324  docs/memory/architecture/HUD.md
+5ee8af1e250cccd596466255f0097e27ec24338a4549e3adc4f5f72d7c8e382e  docs/memory/architecture/VISUAL_IMPLEMENTATION_STATUS.md
+8949dff860d31792e69f2e1db3b693671570e2c7920c52c58a5562bd457e7633  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+9bad1960db254e5961d8812421f8c425906a1c1f1a1cb5e8919fe90af54feb5f  docs/memory/evidence/P0123_COMPASS_RUNTIME_VISUAL_PASS_2026-10-04.md
+bd00007aa0647b6e2de29b6289f67d6fb7e36b05d3890d7461ae92942e8d28ef  docs/memory/patches/P0123_COMPASS_VISUAL_TRANSLATION.md
+ee019a17f78100a2ab9fcd8dc655bf86d51c3d0f1609a66511e3ba0e2e9e6ba3  docs/memory/patches/P0124_HEALTH_TUNNEL_VISUAL_TRANSLATION.md
+d6dc0aaa7b087dcdd300d2c76776159677f4fc84d7644f1f25891c1551d31433  docs/memory/patches/PATCH_INDEX.md
+
+Validation:
+- expected HEAD verified
+- completed P0124 R2 dirty-state shape verified
+- R3-specific files verified untouched before repair
+- all tools/check_*.py syntax-compiled and executed
+- git diff --check PASS
+- runtime/in-client visual proof still required

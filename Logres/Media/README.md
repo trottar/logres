@@ -106,3 +106,22 @@ from map-coordinate deltas, or change the stock-minimap boundary.
 
 Canonical art reference:
 `docs/design/approved/12_compass_glyph_and_state_sheet.png`.
+
+## Player-health tunnel
+
+P0124 translates the frozen D-036 / approved sheet-11 health-tunnel direction
+into five full-screen alpha-mask layers:
+
+- `Health/health_outer.tga` — soft outer charcoal pressure;
+- `Health/health_injury.tga` — cold-burgundy injury pressure;
+- `Health/health_critical.tga` — narrower critical aperture;
+- `Health/health_near_death.tga` — severe near-death tunnel;
+- `Health/health_death.tga` — death-only clear-field collapse.
+
+`Theme.lua` owns the asset paths and tint families. The masks are production
+derivatives; the approved reference remains
+`docs/design/approved/11_health_tunnel_continuous_progression.png`.
+
+Live health still uses native secret-safe
+`UnitHealthPercent -> CurveObject -> Texture:SetAlpha` transport. The assets do
+not authorize Lua inspection or threshold branching on live health.

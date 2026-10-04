@@ -1,8 +1,9 @@
 # P0123 — Compass Heading / Manual Waypoint Visual Translation
 
 Date: 2026-10-04
-Result: **PREPARED — RUNTIME + VISUAL PROOF PENDING**
+Result: **INSTALLED / PUSHED — RUNTIME + VISUAL PASS**
 Baseline: `62353ecfc6eb3c3adc61b8d11af251f05637a6a3`
+Commit: `1721eb4dac7bb90057de5666767f2736bc48fdc6`
 Runtime: `0.0.52-dev -> 0.0.53-dev`
 
 ## Purpose
@@ -108,3 +109,23 @@ In client:
 
 Distance-dependent waypoint scale and centered identity text are not acceptance
 conditions for this checkpoint because their required inputs are not proven.
+
+## Runtime + visual result
+
+P0123 passed in client and is durable at `1721eb4d`.
+
+Evidence includes:
+
+- off-tape real waypoint: relative `115.5`, `marker=false`;
+- independent waypoint audit bearing `64.0`;
+- immersion OFF/ON restoration;
+- near-center real waypoint: heading `44.1`, bearing `41.8`, relative `-2.3`,
+  `marker=true`;
+- `compasscheck: PASS`;
+- accepted in-client production appearance.
+
+Canonical evidence:
+`../evidence/P0123_COMPASS_RUNTIME_VISUAL_PASS_2026-10-04.md`.
+
+Quest/POI/tracking roles, world-distance depth scaling, centered identity, and
+minimap replacement remain capability-gated.

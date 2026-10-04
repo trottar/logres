@@ -10,7 +10,7 @@ local BUTTON_HEIGHT = 24
 local BUTTON_GAP_X = 8
 local BUTTON_GAP_Y = 6
 local BUTTON_COLUMNS = 3
-local MAX_ACTIONS_PER_PHASE = BUTTON_COLUMNS * 4
+local MAX_ACTIONS_PER_PHASE = BUTTON_COLUMNS * 5
 local DEFAULT_PHASE = "G"
 
 local MAX_DIAGNOSTIC_RUNS = 100
@@ -113,7 +113,7 @@ local Panel = Logres:RegisterModule("DevPanel", {
         local buttonHost = CreateFrame("Frame", nil, frame)
         buttonHost:SetPoint("TOPLEFT", frame, "TOPLEFT", 18, -124)
         buttonHost:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -18, -124)
-        buttonHost:SetHeight(120)
+        buttonHost:SetHeight(150)
 
         local emptyLabel = buttonHost:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
         emptyLabel:SetPoint("TOPLEFT", buttonHost, "TOPLEFT", 2, -8)
@@ -121,7 +121,7 @@ local Panel = Logres:RegisterModule("DevPanel", {
         emptyLabel:Hide()
 
         local resultsBackground = frame:CreateTexture(nil, "ARTWORK")
-        resultsBackground:SetPoint("TOPLEFT", frame, "TOPLEFT", 18, -258)
+        resultsBackground:SetPoint("TOPLEFT", frame, "TOPLEFT", 18, -288)
         resultsBackground:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -18, 44)
         resultsBackground:SetColorTexture(0.015, 0.012, 0.01, 0.88)
 

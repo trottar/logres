@@ -137,6 +137,26 @@ theme.contextMessage = {
 }
 
 
+
+theme.healthTunnel = {
+    colors = {
+        outer = { 0.040, 0.035, 0.045, 1.00 },
+        injury = { 0.31, 0.035, 0.065, 1.00 },
+        critical = { 0.17, 0.020, 0.040, 1.00 },
+        nearDeath = { 0.055, 0.012, 0.025, 1.00 },
+        death = { 0.008, 0.004, 0.008, 1.00 },
+    },
+
+    assets = {
+        outer = MEDIA_ROOT .. "Health\\health_outer.tga",
+        injury = MEDIA_ROOT .. "Health\\health_injury.tga",
+        critical = MEDIA_ROOT .. "Health\\health_critical.tga",
+        nearDeath = MEDIA_ROOT .. "Health\\health_near_death.tga",
+        death = MEDIA_ROOT .. "Health\\health_death.tga",
+    },
+}
+
+
 theme.compass = {
     width = 400,
     height = 54,
