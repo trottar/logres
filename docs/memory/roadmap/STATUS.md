@@ -4,7 +4,7 @@ As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — P0145 manual-waypoint distance/depth accepted; P0146 evidence checkpoint prepared; P0147 class/pet/special-control source audit next.**
+**Approved visual implementation translation — P0145 distance/clear-state proven but depth variation reopened; P0147 local-awareness recalibration/revalidation next; class/pet/special audit moves to P0148.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -140,14 +140,15 @@ current/quest/user-waypoint destination, so those paths and actual destination
 distance remain DEFERRED. Integrated `Run All` passed.
 
 P0145 is durable at `60244841` / `0.0.70-dev`:
-**manual-waypoint comparable-distance / bounded-depth changed-scope runtime PASS.**
+**manual-waypoint same-map distance + clear-state runtime PASS; depth variation later reopened.**
 
-Ordinary same-map yard distance, bounded depth/render scale, and clean waypoint
-clear-state fallback are proven. P0123 remains the actual off-tape runtime sample.
+All accepted populated depth samples were inside the old near threshold and thus did
+not prove distance-dependent marker-size variation. P0146 recorded the raw evidence
+but overstated depth acceptance. P0147 corrects the record and recalibrates depth to
+live minimap-radius semantic bands with explicit cross-band visual proof required.
+
 Quest/current-navigation, AreaPOI/service, and tracking-result roles remain
-deferred/source-blocked; stock minimap ownership is unchanged.
-
-P0146 records this evidence. After it is durable, P0147 audits the residual
-class/pet/special-control source and ownership layer. This does not authorize
+deferred/source-blocked; stock minimap ownership is unchanged. The class/pet/special
+source audit moves to P0148. This does not authorize
 stock suppression, broader aura ownership, production world-target relocation, or
 unrelated Camera changes.

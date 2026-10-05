@@ -38,12 +38,20 @@ local MANUAL_HEIGHT = manualWaypointStyle.height or 20
 local MANUAL_ALPHA = manualWaypointStyle.alpha or 0.95
 local MANUAL_FOCUS_ANGLE = manualWaypointStyle.focusAngle or 8
 local MANUAL_FOCUS_SCALE = manualWaypointStyle.focusScale or 1.07
-local MANUAL_DEPTH_NEAR_YARDS =
-    manualWaypointStyle.depthNearYards or 120
-local MANUAL_DEPTH_FAR_YARDS =
-    manualWaypointStyle.depthFarYards or 1200
+local MANUAL_DEPTH_CLOSE_RADIUS_FACTOR =
+    manualWaypointStyle.depthCloseRadiusFactor or 0.50
+local MANUAL_DEPTH_NEAR_RADIUS_FACTOR =
+    manualWaypointStyle.depthNearRadiusFactor or 1.00
+local MANUAL_DEPTH_MEDIUM_RADIUS_FACTOR =
+    manualWaypointStyle.depthMediumRadiusFactor or 4.00
+local MANUAL_DEPTH_FAR_RADIUS_FACTOR =
+    manualWaypointStyle.depthFarRadiusFactor or 8.00
+local MANUAL_DEPTH_CLOSE_SCALE =
+    manualWaypointStyle.depthCloseScale or 1.05
 local MANUAL_DEPTH_NEAR_SCALE =
-    manualWaypointStyle.depthNearScale or 1.05
+    manualWaypointStyle.depthNearScale or 1.00
+local MANUAL_DEPTH_MEDIUM_SCALE =
+    manualWaypointStyle.depthMediumScale or 0.95
 local MANUAL_DEPTH_FAR_SCALE =
     manualWaypointStyle.depthFarScale or 0.90
 local MANUAL_RENDER_SCALE_MIN =
@@ -115,31 +123,68 @@ local function clamp(value, minimum, maximum)
     return math.max(minimum, math.min(maximum, value))
 end
 
-local function manualWaypointDepthScaleForDistance(distanceYards)
-    if type(distanceYards) ~= "number" then
-        return 1
-    end
-
-    if distanceYards <= MANUAL_DEPTH_NEAR_YARDS then
-        return MANUAL_DEPTH_NEAR_SCALE
-    end
-
-    if distanceYards >= MANUAL_DEPTH_FAR_YARDS then
-        return MANUAL_DEPTH_FAR_SCALE
-    end
-
-    local span =
-        MANUAL_DEPTH_FAR_YARDS - MANUAL_DEPTH_NEAR_YARDS
+local function interpolateDepthScale(
+    ratio,
+    startRatio,
+    endRatio,
+    startScale,
+    endScale
+)
+    local span = endRatio - startRatio
 
     if span <= 0 then
-        return 1
+        return startScale
     end
 
-    local progress =
-        (distanceYards - MANUAL_DEPTH_NEAR_YARDS) / span
+    local progress = (ratio - startRatio) / span
+    return startScale + progress * (endScale - startScale)
+end
 
-    return MANUAL_DEPTH_NEAR_SCALE
-        + progress * (MANUAL_DEPTH_FAR_SCALE - MANUAL_DEPTH_NEAR_SCALE)
+local function manualWaypointDepthScaleForDistance(distanceYards, viewRadiusYards)
+    if type(distanceYards) ~= "number"
+        or type(viewRadiusYards) ~= "number"
+        or viewRadiusYards <= 0
+    then
+        return 1, nil, nil
+    end
+
+    local ratio = distanceYards / viewRadiusYards
+
+    if ratio <= MANUAL_DEPTH_CLOSE_RADIUS_FACTOR then
+        return MANUAL_DEPTH_CLOSE_SCALE, "close", ratio
+    end
+
+    if ratio <= MANUAL_DEPTH_NEAR_RADIUS_FACTOR then
+        return interpolateDepthScale(
+            ratio,
+            MANUAL_DEPTH_CLOSE_RADIUS_FACTOR,
+            MANUAL_DEPTH_NEAR_RADIUS_FACTOR,
+            MANUAL_DEPTH_CLOSE_SCALE,
+            MANUAL_DEPTH_NEAR_SCALE
+        ), "near", ratio
+    end
+
+    if ratio <= MANUAL_DEPTH_MEDIUM_RADIUS_FACTOR then
+        return interpolateDepthScale(
+            ratio,
+            MANUAL_DEPTH_NEAR_RADIUS_FACTOR,
+            MANUAL_DEPTH_MEDIUM_RADIUS_FACTOR,
+            MANUAL_DEPTH_NEAR_SCALE,
+            MANUAL_DEPTH_MEDIUM_SCALE
+        ), "medium", ratio
+    end
+
+    if ratio <= MANUAL_DEPTH_FAR_RADIUS_FACTOR then
+        return interpolateDepthScale(
+            ratio,
+            MANUAL_DEPTH_MEDIUM_RADIUS_FACTOR,
+            MANUAL_DEPTH_FAR_RADIUS_FACTOR,
+            MANUAL_DEPTH_MEDIUM_SCALE,
+            MANUAL_DEPTH_FAR_SCALE
+        ), "far", ratio
+    end
+
+    return MANUAL_DEPTH_FAR_SCALE, "far", ratio
 end
 
 local function readVectorXY(value)
@@ -201,11 +246,18 @@ local Compass = Logres:RegisterModule("Compass", {
         self.waypointDistanceAPIAvailable = false
         self.waypointDistanceAvailable = false
         self.waypointDistanceYards = nil
+        self.waypointViewRadiusAPIAvailable = false
+        self.waypointViewRadiusAvailable = false
+        self.waypointViewRadiusYards = nil
+        self.waypointDistanceRadiusRatio = nil
+        self.waypointDepthBand = nil
         self.waypointDepthScale = 1
         self.waypointRenderScale = nil
         self.waypointElapsed = 0
         self.lastWaypointDistanceReason = "initialize"
         self.lastWaypointDistanceError = nil
+        self.lastWaypointDepthReason = "initialize"
+        self.lastWaypointDepthError = nil
         self.lastWaypointReason = "initialize"
         self.lastWaypointError = nil
 
@@ -367,11 +419,21 @@ function Compass:SetWaypointMarkerShown(shown)
     end
 end
 
+function Compass:ClearWaypointDepth(reason, errorText)
+    self.waypointViewRadiusAvailable = false
+    self.waypointViewRadiusYards = nil
+    self.waypointDistanceRadiusRatio = nil
+    self.waypointDepthBand = nil
+    self.waypointDepthScale = 1
+    self.waypointRenderScale = nil
+    self.lastWaypointDepthReason = reason or "depth-unavailable"
+    self.lastWaypointDepthError = errorText
+end
+
 function Compass:ClearWaypointDistance(reason, errorText)
     self.waypointDistanceAvailable = false
     self.waypointDistanceYards = nil
-    self.waypointDepthScale = 1
-    self.waypointRenderScale = nil
+    self:ClearWaypointDepth(reason or "distance-unavailable", errorText)
     self.lastWaypointDistanceReason = reason or "distance-unavailable"
     self.lastWaypointDistanceError = errorText
 end
@@ -411,6 +473,9 @@ function Compass:RefreshWaypointDistance(
     self.waypointDistanceAPIAvailable =
         C_Map ~= nil
         and type(C_Map.GetMapWorldSize) == "function"
+    self.waypointViewRadiusAPIAvailable =
+        C_Minimap ~= nil
+        and type(C_Minimap.GetViewRadius) == "function"
 
     self:ClearWaypointDistance("distance-unavailable")
 
@@ -491,10 +556,55 @@ function Compass:RefreshWaypointDistance(
 
     self.waypointDistanceAvailable = true
     self.waypointDistanceYards = distanceYards
-    self.waypointDepthScale =
-        manualWaypointDepthScaleForDistance(distanceYards)
     self.lastWaypointDistanceReason = "distance-available"
     self.lastWaypointDistanceError = nil
+
+    if not self.waypointViewRadiusAPIAvailable then
+        self:ClearWaypointDepth(
+            "view-radius-api-unavailable",
+            "GetViewRadius unavailable"
+        )
+        return true
+    end
+
+    local radiusOK, viewRadiusYards = pcall(C_Minimap.GetViewRadius)
+
+    if not radiusOK then
+        self:ClearWaypointDepth(
+            "view-radius-call-failed",
+            "GetViewRadius call failed"
+        )
+        return true
+    end
+
+    if isSecret(viewRadiusYards) then
+        self:ClearWaypointDepth("view-radius-secret")
+        return true
+    end
+
+    if type(viewRadiusYards) ~= "number"
+        or viewRadiusYards <= 0
+    then
+        self:ClearWaypointDepth(
+            "view-radius-invalid",
+            "GetViewRadius returned invalid yards"
+        )
+        return true
+    end
+
+    local depthScale, band, ratio =
+        manualWaypointDepthScaleForDistance(
+            distanceYards,
+            viewRadiusYards
+        )
+
+    self.waypointViewRadiusAvailable = true
+    self.waypointViewRadiusYards = viewRadiusYards
+    self.waypointDistanceRadiusRatio = ratio
+    self.waypointDepthBand = band
+    self.waypointDepthScale = depthScale
+    self.lastWaypointDepthReason = "depth-available"
+    self.lastWaypointDepthError = nil
     return true
 end
 
@@ -613,6 +723,9 @@ function Compass:RefreshWaypointBearing(reason)
     self.waypointDistanceAPIAvailable =
         C_Map ~= nil
         and type(C_Map.GetMapWorldSize) == "function"
+    self.waypointViewRadiusAPIAvailable =
+        C_Minimap ~= nil
+        and type(C_Minimap.GetViewRadius) == "function"
 
     if not self.policyEligible then
         self:ClearWaypointPresentation(reason or "policy-ineligible")
@@ -912,10 +1025,17 @@ function Compass:GetDebugStatus()
         waypointDistanceAPIAvailable = self.waypointDistanceAPIAvailable == true,
         waypointDistanceAvailable = self.waypointDistanceAvailable == true,
         waypointDistanceYards = self.waypointDistanceYards,
+        waypointViewRadiusAPIAvailable = self.waypointViewRadiusAPIAvailable == true,
+        waypointViewRadiusAvailable = self.waypointViewRadiusAvailable == true,
+        waypointViewRadiusYards = self.waypointViewRadiusYards,
+        waypointDistanceRadiusRatio = self.waypointDistanceRadiusRatio,
+        waypointDepthBand = self.waypointDepthBand,
         waypointDepthScale = self.waypointDepthScale,
         waypointRenderScale = self.waypointRenderScale,
         lastWaypointDistanceReason = self.lastWaypointDistanceReason,
         lastWaypointDistanceError = self.lastWaypointDistanceError,
+        lastWaypointDepthReason = self.lastWaypointDepthReason,
+        lastWaypointDepthError = self.lastWaypointDepthError,
         lastWaypointReason = self.lastWaypointReason,
         lastWaypointError = self.lastWaypointError,
 

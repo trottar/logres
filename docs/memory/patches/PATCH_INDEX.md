@@ -164,6 +164,7 @@
 | P0142 | 2026-10-05 | INSTALLED / PUSHED — DOCS / PRIMARY-SOURCE EVIDENCE ONLY | Resolve D-037 navigation/minimap source layer; accept D-043; open P0143 read-only runtime probe (`82682ece`) |
 | P0143 | 2026-10-05 | INSTALLED / PUSHED — RUNTIME PASS WITH ENVIRONMENTAL DESTINATION/AREA-POI DEFERRALS; INITIAL ARTIFACT FAILURE PRESERVED | Current-map/player geometry, view radius, and 23/23 tracking selector metadata PASS (`b9b2f90b`, `0.0.69-dev`) |
 | P0144 | 2026-10-05 | INSTALLED / PUSHED — DOCS / RUNTIME-EVIDENCE CHECKPOINT | Record P0143 result; open P0145 manual-waypoint comparable-distance / bounded-depth slice (`47534363`) |
-| P0145 | 2026-10-05 | INSTALLED / PUSHED — RUNTIME + INTEGRATION PASS FOR CHANGED SCOPE; INITIAL + R1 ARTIFACT ROLLBACKS PRESERVED | Same-map manual-waypoint distance + bounded D-038 depth accepted; clear-state fallback PASS; P0123 remains off-tape runtime authority (`60244841`, `0.0.70-dev`) |
-| P0146 | 2026-10-05 | PREPARED — DOCS / RUNTIME-EVIDENCE CHECKPOINT | Record P0145 runtime result; preserve navigation deferrals; open P0147 class/pet/special-control source audit |
+| P0145 | 2026-10-05 | INSTALLED / PUSHED — DISTANCE + CLEAR-STATE PASS; DEPTH VARIATION LATER REOPENED | Same-map manual-waypoint distance and clear-state PASS; all accepted samples hit only old near endpoint; cross-band visual depth superseded by P0147 (`60244841`, `0.0.70-dev`) |
+| P0146 | 2026-10-05 | INSTALLED / PUSHED — DOCS / RUNTIME-EVIDENCE CHECKPOINT; DEPTH ACCEPTANCE PARTIALLY SUPERSEDED | Record raw P0145 runtime result; depth acceptance later corrected by P0147 (`9606379c`) |
+| P0147 | 2026-10-05 | PREPARED — RUNTIME + VISUAL REVALIDATION REQUIRED | Reopen manual-waypoint depth acceptance; use live minimap-radius semantic bands; move class/pet/special audit to P0148 |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

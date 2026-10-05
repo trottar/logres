@@ -140,13 +140,13 @@ skips/failures; four selector states were independently active. The tested state
 had no AreaPOI rows and no current/quest/user-waypoint destination, so those paths
 and actual destination distance remain DEFERRED. Integrated `Run All` passed.
 
-P0145 is durable at `60244841` / `0.0.70-dev` and passes the changed manual-waypoint
-distance/depth scope: ordinary same-map yard distance, bounded depth/render scale,
-and clean waypoint clear-state fallback. P0123 remains the actual off-tape runtime
-sample. Quest/current-navigation, AreaPOI/service, and tracking-result roles remain
-deferred/source-blocked and stock minimap presentation remains available.
+P0145 is durable at `60244841` / `0.0.70-dev` and proves ordinary same-map manual-
+waypoint yard distance plus clean waypoint clear-state fallback. Its accepted depth
+samples all exercised only the old near endpoint, so distance-dependent visible size
+variation is reopened by P0147. P0146's stronger acceptance wording is superseded.
 
-After the P0146 evidence checkpoint, the next approved visual/capability slice is
-P0147: source/capability audit for class/pet/special-control territory. No direct
+P0147 uses live `C_Minimap.GetViewRadius()` local-awareness bands and requires
+deliberate close/near/medium/far diagnostics plus explicit user visual confirmation.
+After P0147 is accepted, P0148 becomes the class/pet/special-control source audit. No direct
 class-resource child, RuneFrame, TotemFrame, PetFrame, alternate-power, or
 possess/override/vehicle surface is suppressed from source evidence alone.

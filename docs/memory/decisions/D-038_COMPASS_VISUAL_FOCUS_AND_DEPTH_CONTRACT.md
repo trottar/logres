@@ -238,3 +238,19 @@ protected/secret inspection, or production source assumptions.
 D-038 accepts the detailed compass visual/focus direction while leaving exact pixel
 sizes, final color values, focus-angle thresholds, scale curves, and animation
 constants for later art/runtime calibration.
+## P0147 local-awareness calibration refinement
+
+The first production calibration used absolute `120` / `1200` yard thresholds, but
+its runtime acceptance sampled only the near endpoint and did not visually prove
+variation. P0147 therefore grounds manual-waypoint depth in the live local-awareness
+radius returned by `C_Minimap.GetViewRadius()`.
+
+Accepted semantic bands for the manual waypoint are:
+- close: at or within one-half local-awareness radius;
+- near: from one-half through one full local-awareness radius;
+- medium: beyond local awareness through four radii;
+- far: four through eight radii, with the bounded minimum retained beyond eight.
+
+The calibration remains restrained and is still a depth cue rather than a distance
+meter. Runtime acceptance now requires cross-band diagnostics plus explicit user
+visual confirmation that the marker changes size perceptibly.

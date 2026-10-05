@@ -67,12 +67,19 @@ if COMPASS.is_file():
         "GetNextWaypoint",
         "SUPER_TRACKING_CHANGED",
         "SUPER_TRACKING_PATH_UPDATED",
-        "Minimap",
     ):
         if forbidden in source:
             errors.append(
                 "E.4 Compass.lua exceeds proven user-waypoint scope: "
                 f"{forbidden}"
+            )
+
+    minimap_names = re.findall(r"C_Minimap\.([A-Za-z0-9_]+)", source)
+    for name in minimap_names:
+        if name != "GetViewRadius":
+            errors.append(
+                "Compass.lua exceeds proven minimap source scope: "
+                f"C_Minimap.{name}"
             )
 
     facing_secret = source.find("if isSecret(facing) then")

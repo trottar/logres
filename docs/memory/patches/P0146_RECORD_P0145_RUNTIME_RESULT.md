@@ -3,7 +3,7 @@
 Date: 2026-10-05
 Baseline: `60244841d0ecfa35b58c7db60293145b8962b6dc`
 Runtime: unchanged at `0.0.70-dev`
-Result: **PREPARED — DOCS / RUNTIME-EVIDENCE CHECKPOINT**
+Result: **INSTALLED / PUSHED — DOCS / RUNTIME-EVIDENCE CHECKPOINT; DEPTH ACCEPTANCE PARTIALLY SUPERSEDED BY P0147**
 
 ## Purpose
 
@@ -50,3 +50,9 @@ suppressed merely because a read or action API exists.
 
 None. This is a docs/evidence-only checkpoint. No WoW redeploy or `/reload` is
 required.
+## P0147 correction
+
+P0146 is durable at `9606379c1c8f600d26a5fe9659e448c14df76e7b`, but its depth
+acceptance wording was too strong. The recorded P0145 samples all exercised only
+the old near endpoint. P0147 preserves the distance/clear-state PASS and reopens
+cross-band visible depth behavior for source-grounded revalidation.

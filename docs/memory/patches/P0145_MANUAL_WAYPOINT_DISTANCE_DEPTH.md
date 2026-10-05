@@ -169,3 +169,14 @@ Classification:
 
 Quest/current-navigation, AreaPOI/service, tracking-result roles, identity text,
 exact distance text, and stock minimap suppression remain outside this checkpoint.
+## P0147 acceptance correction
+
+The final P0145 classification above is partially superseded. All populated
+`0.0.70-dev` samples were inside the original 120-yard near threshold, so they
+proved distance arithmetic and the near endpoint only; they did not prove that
+depth scale changes across distance bands. The user reported no visible size change
+during the original test.
+
+P0147 therefore reopens only the distance-dependent depth/visual acceptance while
+retaining P0145's same-map distance and clean clear-state PASS. See
+`../evidence/P0147_P0145_DEPTH_VALIDATION_CORRECTION_2026-10-05.md`.

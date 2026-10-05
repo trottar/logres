@@ -90,3 +90,10 @@ Still not authorized/proven:
 - stock minimap suppression.
 
 P0142/D-043 and P0143 deferrals remain authoritative for those domains.
+## P0147 correction
+
+This evidence remains authoritative for the raw P0145 observations, but its
+classification of the distance-dependent depth behavior as accepted is superseded.
+Every populated sample was within the old 120-yard near threshold and exercised the
+same `depth=1.050` endpoint. P0147 records the corrected classification and required
+cross-band visual revalidation.

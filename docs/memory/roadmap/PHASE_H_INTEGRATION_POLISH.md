@@ -311,14 +311,16 @@ quest, or user-waypoint destination; those branches remain DEFERRED. Integrated
 P0144 is durable at `47534363`.
 
 P0145:
-**INSTALLED / PUSHED — MANUAL-WAYPOINT COMPARABLE-DISTANCE / BOUNDED-DEPTH CHANGED-SCOPE RUNTIME PASS at `60244841` / `0.0.70-dev`.**
+**INSTALLED / PUSHED — SAME-MAP DISTANCE + CLEAR-STATE PASS; DEPTH VARIATION REOPENED BY P0147 at `60244841` / `0.0.70-dev`.**
 
-Ordinary same-map yard distance, bounded depth/render scale, and clean waypoint
-clear-state fallback are proven. P0123 remains the actual off-tape runtime sample.
+The accepted samples proved ordinary same-map yard distance and clear-state fallback
+but all hit only the old near-depth endpoint. P0147 replaces the arbitrary absolute
+thresholds with live minimap-radius close/near/medium/far bands and requires explicit
+cross-band user visual confirmation. P0123 remains the off-tape runtime authority.
 Quest/POI/tracking roles and stock minimap ownership remain unchanged.
 
-Next after the P0146 evidence checkpoint:
-**P0147 source/capability audit for class/pet/special-control territory.**
+Next:
+**P0147 depth correction/revalidation, then P0148 class/pet/special-control source audit.**
 
 Preserve direct class-resource children, RuneFrame, TotemFrame, PetFrame, alternate
 power, and unsupported special-control fallbacks until each domain is deliberately

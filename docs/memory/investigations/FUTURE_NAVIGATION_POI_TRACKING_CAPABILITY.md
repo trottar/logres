@@ -1,6 +1,6 @@
 # Future Navigation — Local POI / Tracking Capability Audit
 
-Status: **OPEN — P0145 MANUAL-WAYPOINT DISTANCE/DEPTH ACCEPTED; QUEST/AREA-POI DEFERRED; TRACKING RESULTS BLOCKED**
+Status: **OPEN — P0145 DISTANCE PASS; DEPTH VARIATION REOPENED BY P0147; QUEST/AREA-POI DEFERRED; TRACKING RESULTS BLOCKED**
 Opened: 2026-10-03
 Canonical direction: `../decisions/D-037_NAVIGATION_MARKER_ROLES_AND_MINIMAP_DIRECTION.md`
 Source/fallback policy: `../decisions/D-043_NAVIGATION_SOURCE_AND_MINIMAP_FALLBACK_POLICY.md`
@@ -224,17 +224,23 @@ condition restores depth scale `1.0` while leaving the P0123 bearing marker usab
 The only player-facing effect is restrained bounded scale. No exact distance text,
 identity, quest/POI/tracking marker, or minimap mutation is added.
 
-Runtime + integration proof is complete for the changed P0145 scope.
-## P0145 runtime result
+P0145 runtime proof is complete for ordinary same-map distance arithmetic and clear-state fallback only.
+## P0145 / P0146 correction
 
-P0145 is durable at `60244841` / `0.0.70-dev`. Normal current-map manual waypoint
-samples produced ordinary non-negative yard distances and bounded depth/render
-scales. Clearing the waypoint returned to `waypoint=false`, `marker=false`,
-`distance=false`, `depth=1.000`, and no stale render scale.
+P0145 is durable at `60244841` / `0.0.70-dev`. Its populated samples produced
+ordinary yard distances, but every sample was inside the original `120` yard near
+threshold and therefore every sample reported the same `depth=1.050`. The user
+reported the marker appeared the same size during that test. Cross-band distance
+variation and visible depth change are therefore UNPROVEN; P0146's stronger
+acceptance wording is superseded by P0147.
 
-P0123 remains the recorded off-tape runtime authority; P0145 did not capture a new
-off-tape diagnostic row.
+P0147 replaces absolute thresholds with live local-awareness radius `R` from
+`C_Minimap.GetViewRadius()`: close `<=0.5R`, near through `1R`, medium through `4R`,
+far through `8R`, with bounded scale anchors `1.05/1.00/0.95/0.90`.
 
-This closes only the manual-waypoint comparable-distance/depth branch.
-Quest/current-navigation destination, AreaPOI/service, and tracking-result roles
-remain deferred/source-blocked and stock minimap ownership is unchanged.
+P0123 remains the recorded off-tape runtime authority. Quest/current-navigation
+destination, AreaPOI/service, and tracking-result roles remain deferred/source-
+blocked and stock minimap ownership is unchanged.
+
+P0147 requires deliberate cross-band runtime samples and explicit user visual
+confirmation before manual-waypoint depth is accepted.
