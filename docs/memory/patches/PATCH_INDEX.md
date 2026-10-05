@@ -163,5 +163,6 @@
 | P0141 | 2026-10-05 | INSTALLED / PUSHED — DOCS/EVIDENCE ONLY; INITIAL ARTIFACT FAILURE PRESERVED | Record P0140 runtime result; preserve world-anchor deferral; open P0142 navigation/minimap source audit (`44720c22`) |
 | P0142 | 2026-10-05 | INSTALLED / PUSHED — DOCS / PRIMARY-SOURCE EVIDENCE ONLY | Resolve D-037 navigation/minimap source layer; accept D-043; open P0143 read-only runtime probe (`82682ece`) |
 | P0143 | 2026-10-05 | INSTALLED / PUSHED — RUNTIME PASS WITH ENVIRONMENTAL DESTINATION/AREA-POI DEFERRALS; INITIAL ARTIFACT FAILURE PRESERVED | Current-map/player geometry, view radius, and 23/23 tracking selector metadata PASS (`b9b2f90b`, `0.0.69-dev`) |
-| P0144 | 2026-10-05 | PREPARED — DOCS / RUNTIME-EVIDENCE CHECKPOINT | Record P0143 result; open P0145 manual-waypoint comparable-distance / bounded-depth slice |
+| P0144 | 2026-10-05 | INSTALLED / PUSHED — DOCS / RUNTIME-EVIDENCE CHECKPOINT | Record P0143 result; open P0145 manual-waypoint comparable-distance / bounded-depth slice (`47534363`) |
+| P0145 | 2026-10-05 | PREPARED R2 — RUNTIME + VISUAL PROOF PENDING; INITIAL + R1 ARTIFACT ROLLBACKS PRESERVED | Add fail-open same-map manual-waypoint distance and bounded D-038 depth on `0.0.70-dev`; R1 caught by `git diff --check` blank-at-EOF gate |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

@@ -38,6 +38,18 @@ local MANUAL_HEIGHT = manualWaypointStyle.height or 20
 local MANUAL_ALPHA = manualWaypointStyle.alpha or 0.95
 local MANUAL_FOCUS_ANGLE = manualWaypointStyle.focusAngle or 8
 local MANUAL_FOCUS_SCALE = manualWaypointStyle.focusScale or 1.07
+local MANUAL_DEPTH_NEAR_YARDS =
+    manualWaypointStyle.depthNearYards or 120
+local MANUAL_DEPTH_FAR_YARDS =
+    manualWaypointStyle.depthFarYards or 1200
+local MANUAL_DEPTH_NEAR_SCALE =
+    manualWaypointStyle.depthNearScale or 1.05
+local MANUAL_DEPTH_FAR_SCALE =
+    manualWaypointStyle.depthFarScale or 0.90
+local MANUAL_RENDER_SCALE_MIN =
+    manualWaypointStyle.renderScaleMin or 0.90
+local MANUAL_RENDER_SCALE_MAX =
+    manualWaypointStyle.renderScaleMax or 1.12
 
 local CARDINAL_LABEL_COLOR =
     compassLabels.cardinal or { 0.94, 0.84, 0.62, 0.96 }
@@ -99,6 +111,37 @@ local function manualWaypointScaleForMagnitude(magnitude)
     return 1 + focus * (MANUAL_FOCUS_SCALE - 1)
 end
 
+local function clamp(value, minimum, maximum)
+    return math.max(minimum, math.min(maximum, value))
+end
+
+local function manualWaypointDepthScaleForDistance(distanceYards)
+    if type(distanceYards) ~= "number" then
+        return 1
+    end
+
+    if distanceYards <= MANUAL_DEPTH_NEAR_YARDS then
+        return MANUAL_DEPTH_NEAR_SCALE
+    end
+
+    if distanceYards >= MANUAL_DEPTH_FAR_YARDS then
+        return MANUAL_DEPTH_FAR_SCALE
+    end
+
+    local span =
+        MANUAL_DEPTH_FAR_YARDS - MANUAL_DEPTH_NEAR_YARDS
+
+    if span <= 0 then
+        return 1
+    end
+
+    local progress =
+        (distanceYards - MANUAL_DEPTH_NEAR_YARDS) / span
+
+    return MANUAL_DEPTH_NEAR_SCALE
+        + progress * (MANUAL_DEPTH_FAR_SCALE - MANUAL_DEPTH_NEAR_SCALE)
+end
+
 local function readVectorXY(value)
     if value == nil then
         return nil, nil, "position-unavailable"
@@ -154,7 +197,15 @@ local Compass = Logres:RegisterModule("Compass", {
         self.waypointRelativeDegrees = nil
         self.waypointMarkerShown = false
         self.waypointMapID = nil
+        self.waypointSourceMapID = nil
+        self.waypointDistanceAPIAvailable = false
+        self.waypointDistanceAvailable = false
+        self.waypointDistanceYards = nil
+        self.waypointDepthScale = 1
+        self.waypointRenderScale = nil
         self.waypointElapsed = 0
+        self.lastWaypointDistanceReason = "initialize"
+        self.lastWaypointDistanceError = nil
         self.lastWaypointReason = "initialize"
         self.lastWaypointError = nil
 
@@ -316,12 +367,23 @@ function Compass:SetWaypointMarkerShown(shown)
     end
 end
 
+function Compass:ClearWaypointDistance(reason, errorText)
+    self.waypointDistanceAvailable = false
+    self.waypointDistanceYards = nil
+    self.waypointDepthScale = 1
+    self.waypointRenderScale = nil
+    self.lastWaypointDistanceReason = reason or "distance-unavailable"
+    self.lastWaypointDistanceError = errorText
+end
+
 function Compass:ClearWaypointPresentation(reason, errorText)
     self.waypointSourcePresent = false
     self.waypointBearingAvailable = false
     self.waypointBearingDegrees = nil
     self.waypointRelativeDegrees = nil
     self.waypointMapID = nil
+    self.waypointSourceMapID = nil
+    self:ClearWaypointDistance(reason or "waypoint-unavailable")
     self.lastWaypointReason = reason or "waypoint-unavailable"
     self.lastWaypointError = errorText
     self:SetWaypointMarkerShown(false)
@@ -336,6 +398,104 @@ function Compass:ClearPresentation(reason, errorText)
     self.lastError = errorText
     self:SetWaypointMarkerShown(false)
     self.frame:Hide()
+end
+
+function Compass:RefreshWaypointDistance(
+    mapID,
+    waypointSourceMapID,
+    playerX,
+    playerY,
+    destinationX,
+    destinationY
+)
+    self.waypointDistanceAPIAvailable =
+        C_Map ~= nil
+        and type(C_Map.GetMapWorldSize) == "function"
+
+    self:ClearWaypointDistance("distance-unavailable")
+
+    if not self.waypointDistanceAPIAvailable then
+        self:ClearWaypointDistance(
+            "distance-api-unavailable",
+            "GetMapWorldSize unavailable"
+        )
+        return false
+    end
+
+    if type(mapID) ~= "number"
+        or type(waypointSourceMapID) ~= "number"
+    then
+        self:ClearWaypointDistance("distance-map-unavailable")
+        return false
+    end
+
+    if waypointSourceMapID ~= mapID then
+        self:ClearWaypointDistance("distance-map-mismatch")
+        return false
+    end
+
+    if type(playerX) ~= "number"
+        or type(playerY) ~= "number"
+        or type(destinationX) ~= "number"
+        or type(destinationY) ~= "number"
+    then
+        self:ClearWaypointDistance(
+            "distance-position-invalid",
+            "ordinary position inputs unavailable"
+        )
+        return false
+    end
+
+    local sizeOK, width, height = pcall(C_Map.GetMapWorldSize, mapID)
+
+    if not sizeOK then
+        self:ClearWaypointDistance(
+            "distance-map-size-call-failed",
+            "GetMapWorldSize call failed"
+        )
+        return false
+    end
+
+    if isSecret(width) or isSecret(height) then
+        self:ClearWaypointDistance("distance-map-size-secret")
+        return false
+    end
+
+    if type(width) ~= "number"
+        or type(height) ~= "number"
+        or width <= 0
+        or height <= 0
+    then
+        self:ClearWaypointDistance(
+            "distance-map-size-invalid",
+            "GetMapWorldSize returned invalid dimensions"
+        )
+        return false
+    end
+
+    local dxYards = (destinationX - playerX) * width
+    local dyYards = (destinationY - playerY) * height
+    local distanceYards =
+        math.sqrt(dxYards * dxYards + dyYards * dyYards)
+
+    if type(distanceYards) ~= "number"
+        or distanceYards ~= distanceYards
+        or distanceYards < 0
+    then
+        self:ClearWaypointDistance(
+            "distance-invalid",
+            "distance arithmetic returned invalid result"
+        )
+        return false
+    end
+
+    self.waypointDistanceAvailable = true
+    self.waypointDistanceYards = distanceYards
+    self.waypointDepthScale =
+        manualWaypointDepthScaleForDistance(distanceYards)
+    self.lastWaypointDistanceReason = "distance-available"
+    self.lastWaypointDistanceError = nil
+    return true
 end
 
 function Compass:UpdateTape(headingDegrees)
@@ -385,6 +545,7 @@ end
 function Compass:UpdateWaypointMarker()
     self:SetWaypointMarkerShown(false)
     self.waypointRelativeDegrees = nil
+    self.waypointRenderScale = nil
 
     if not self.presentationActive
         or type(self.headingDegrees) ~= "number"
@@ -409,8 +570,19 @@ function Compass:UpdateWaypointMarker()
     local x = relative * PIXELS_PER_DEGREE
     local edgeAlpha =
         MANUAL_ALPHA * edgeFadeForMagnitude(magnitude)
-    local scale =
+    local angularScale =
         manualWaypointScaleForMagnitude(magnitude)
+    local depthScale =
+        type(self.waypointDepthScale) == "number"
+        and self.waypointDepthScale
+        or 1
+    local scale = clamp(
+        angularScale * depthScale,
+        MANUAL_RENDER_SCALE_MIN,
+        MANUAL_RENDER_SCALE_MAX
+    )
+
+    self.waypointRenderScale = scale
 
     self.waypointMarker:ClearAllPoints()
     self.waypointMarker:SetPoint(
@@ -437,6 +609,10 @@ function Compass:RefreshWaypointBearing(reason)
         and type(C_Map.GetUserWaypoint) == "function"
         and type(C_Map.GetUserWaypointPositionForMap) == "function"
         and type(math.atan2) == "function"
+
+    self.waypointDistanceAPIAvailable =
+        C_Map ~= nil
+        and type(C_Map.GetMapWorldSize) == "function"
 
     if not self.policyEligible then
         self:ClearWaypointPresentation(reason or "policy-ineligible")
@@ -472,6 +648,28 @@ function Compass:RefreshWaypointBearing(reason)
     end
 
     self.waypointSourcePresent = true
+    self.waypointSourceMapID = nil
+    self:ClearWaypointDistance("distance-source-pending")
+
+    local waypointMapOK, rawWaypointSourceMapID = pcall(function()
+        return waypoint.uiMapID
+    end)
+
+    if not waypointMapOK then
+        self:ClearWaypointDistance(
+            "waypoint-map-read-failed",
+            "waypoint uiMapID read failed"
+        )
+    elseif isSecret(rawWaypointSourceMapID) then
+        self:ClearWaypointDistance("waypoint-map-secret")
+    elseif type(rawWaypointSourceMapID) == "number" then
+        self.waypointSourceMapID = rawWaypointSourceMapID
+    else
+        self:ClearWaypointDistance(
+            "waypoint-map-invalid",
+            "waypoint uiMapID unavailable or invalid"
+        )
+    end
 
     local mapOK, mapID = pcall(C_Map.GetBestMapForUnit, "player")
 
@@ -553,6 +751,17 @@ function Compass:RefreshWaypointBearing(reason)
     self.waypointMapID = mapID
     self.lastWaypointReason = reason or "waypoint-refresh"
     self.lastWaypointError = nil
+
+    if type(self.waypointSourceMapID) == "number" then
+        self:RefreshWaypointDistance(
+            mapID,
+            self.waypointSourceMapID,
+            playerX,
+            playerY,
+            destinationX,
+            destinationY
+        )
+    end
 
     self:UpdateWaypointMarker()
     return true
@@ -699,6 +908,14 @@ function Compass:GetDebugStatus()
         waypointMarkerReady = self.waypointMarker ~= nil,
         waypointMarkerShown = self.waypointMarkerShown == true,
         waypointMapID = self.waypointMapID,
+        waypointSourceMapID = self.waypointSourceMapID,
+        waypointDistanceAPIAvailable = self.waypointDistanceAPIAvailable == true,
+        waypointDistanceAvailable = self.waypointDistanceAvailable == true,
+        waypointDistanceYards = self.waypointDistanceYards,
+        waypointDepthScale = self.waypointDepthScale,
+        waypointRenderScale = self.waypointRenderScale,
+        lastWaypointDistanceReason = self.lastWaypointDistanceReason,
+        lastWaypointDistanceError = self.lastWaypointDistanceError,
         lastWaypointReason = self.lastWaypointReason,
         lastWaypointError = self.lastWaypointError,
 

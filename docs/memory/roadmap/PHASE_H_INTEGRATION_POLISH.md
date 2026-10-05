@@ -308,8 +308,14 @@ secret skips/failures. The tested state had no AreaPOI rows and no current,
 quest, or user-waypoint destination; those branches remain DEFERRED. Integrated
 `Run All` passed.
 
-P0144 records the result. Next:
-**P0145 manual-waypoint comparable-distance / bounded-depth integration only.**
+P0144 is durable at `47534363`.
+
+P0145:
+**PREPARED — MANUAL-WAYPOINT COMPARABLE-DISTANCE / BOUNDED-DEPTH INTEGRATION on candidate `0.0.70-dev`; RUNTIME + VISUAL PROOF PENDING.**
+
+Only the proven manual waypoint is extended. Same-map yard distance is secret-first
+and non-fatal; the player-facing effect is bounded scale only. Quest/POI/tracking
+roles and stock minimap ownership remain unchanged.
 
 This remains capability preparation under D-035/D-039. It does not authorize
 minimap suppression, source-blocked tracking-result markers, broader aura

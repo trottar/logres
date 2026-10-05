@@ -4,43 +4,42 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0143 `b9b2f90b37ad9d10b4ce6d55ef932e113172d3b3`.
+P0144 `47534363bd5754306c31d5e860739289504417de`.
 
-Current pushed/tested runtime:
+Current pushed/tested runtime before P0145 deployment:
 `0.0.69-dev`.
 
-P0143:
-**INSTALLED / PUSHED — READ-ONLY RUNTIME PASS FOR OBSERVED NAVIGATION-SOURCE SCOPE; DESTINATION/AREA-POI PATHS DEFERRED.**
+P0144:
+**INSTALLED / PUSHED — P0143 RUNTIME PASS RECORDED WITH DESTINATION/AREA-POI DEFERRALS.**
 
 ## Active work stream
 
-P0143 runtime evidence proves ordinary:
-- current map/player position;
-- map world size;
-- minimap view radius;
-- all 23 tested tracking selector rows and independent multi-select active state;
-- zero secret skips / call-shape failures;
-- integrated `Run All` PASS.
+Current objective:
+**P0145 — manual-waypoint comparable-distance / bounded-depth integration.**
 
-The captured state had:
-- zero current-map AreaPOI rows;
-- no super-tracking/current navigation;
-- no super-tracked quest waypoint;
-- no user waypoint;
-- no exercised destination-distance branch;
-- no `C_Minimap.GetUiMapID()` result.
+Candidate runtime:
+`0.0.70-dev`.
 
-Those absences are environmental DEFERRED, not failures.
+P0145 preserves the proven P0123 bearing path and adds a non-fatal distance side
+channel only when:
+- player/current map ID is ordinary;
+- user waypoint `uiMapID` is ordinary and matches the current map;
+- player and destination normalized coordinates are ordinary;
+- `C_Map.GetMapWorldSize` returns ordinary positive yard dimensions.
 
-Tracking-result/service-instance positions remain source-blocked by P0142/D-043,
-regardless of the proven selector metadata. Stock minimap remains available.
+The distance result drives only restrained Theme-owned scale:
+- distance depth scale: `0.90–1.05`;
+- combined render scale after existing near-center focus: `0.90–1.12`.
 
-Next after P0144 durability:
-**P0145 manual-waypoint comparable-distance / bounded-depth slice.**
+If distance is unavailable, secret, invalid, or cross-map, depth returns to `1.0`
+and the existing waypoint marker remains usable.
 
-Use the existing proven manual waypoint source, compute distance only from ordinary
-same-map inputs, fail open to the current fixed marker treatment, and add no new
-quest/POI/tracking marker role.
+P0145 adds no distance label, waypoint identity, quest/POI/tracking marker, minimap
+mutation, or stock suppression.
+
+Runtime + visual proof is pending. Place one normal current-map user waypoint,
+run **Phase E -> Compass Check**, rotate to confirm bearing/off-tape behavior, clear
+the waypoint, then run **Phase 0 -> Run All**.
 
 World-target positive anchoring remains environmentally deferred. Camera remains
 frozen, not complete.
@@ -48,12 +47,11 @@ frozen, not complete.
 ## Key references
 
 - `../CURRENT.md`
+- `../patches/P0145_MANUAL_WAYPOINT_DISTANCE_DEPTH.md`
 - `../evidence/P0144_P0143_NAVIGATION_RUNTIME_PASS_WITH_DEFERRALS_2026-10-05.md`
-- `../patches/P0144_RECORD_P0143_NAVIGATION_RUNTIME_RESULT.md`
-- `../patches/P0143_NAVIGATION_SOURCE_READ_ONLY_PROBE.md`
 - `../decisions/D-043_NAVIGATION_SOURCE_AND_MINIMAP_FALLBACK_POLICY.md`
-- `../investigations/FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md`
 - `../decisions/D-038_COMPASS_VISUAL_FOCUS_AND_DEPTH_CONTRACT.md`
-- `../architecture/VISUAL_IMPLEMENTATION_STATUS.md`
+- `../investigations/FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md`
+- `../patches/P0123_COMPASS_VISUAL_TRANSLATION.md`
 - `../roadmap/PHASE_H_INTEGRATION_POLISH.md`
 - `../roadmap/PHASE_G_CINEMATIC_CAMERA.md`

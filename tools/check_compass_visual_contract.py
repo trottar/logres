@@ -92,17 +92,18 @@ if COMPASS.is_file():
                 f"unexpected {fragment}"
             )
 
-    # P0123 may style the proven manual bearing only. It must not add fabricated
-    # map-coordinate distance/depth semantics or a manual identity label.
+    # P0145 may extend the proven manual bearing with capability-proven, bounded
+    # same-map distance/depth diagnostics. It still must not invent player-facing
+    # identity or exact-distance labels.
     for fragment in (
-        "waypointDistance",
-        "distanceScale",
         "manualWaypointName",
         "waypointLabel",
+        "waypointDistanceLabel",
+        "distanceText",
     ):
         if fragment in source:
             errors.append(
-                "P0123 exceeds proven manual-waypoint data: "
+                "Compass exceeds accepted manual-waypoint presentation: "
                 f"unexpected {fragment}"
             )
 

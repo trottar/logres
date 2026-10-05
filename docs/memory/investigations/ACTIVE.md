@@ -173,7 +173,7 @@ remains blocked and the screen-space target remains canonical fallback.
 ## Navigation / minimap capability
 
 Status:
-**OPEN — P0143 RUNTIME PASS FOR OBSERVED SOURCE SCOPE; MANUAL-WAYPOINT DISTANCE/DEPTH NEXT.**
+**OPEN — P0145 MANUAL-WAYPOINT DISTANCE/DEPTH PREPARED; RUNTIME + VISUAL PROOF PENDING.**
 
 Canonical investigation:
 `FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md`.
@@ -206,3 +206,11 @@ Next after the P0144 evidence checkpoint:
 
 Stock minimap presentation remains Blizzard-owned. No quest/POI/tracking marker
 expansion is authorized by P0143.
+
+### P0145 manual-waypoint depth checkpoint
+
+P0144 is durable at `47534363`. P0145 is prepared on `0.0.70-dev` and uses only
+the existing manual user-waypoint role. Same-map yard distance is a non-fatal side
+channel; distance failure falls back to the P0123 fixed treatment. Quest/current
+navigation, AreaPOI/service, and tracking-result production roles remain
+deferred/blocked. Runtime + visual proof is pending.

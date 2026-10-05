@@ -4,7 +4,7 @@ As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — P0143 navigation-source runtime PASS recorded; P0145 manual-waypoint distance/depth next after P0144 evidence checkpoint.**
+**Approved visual implementation translation — P0144 is durable; P0145 manual-waypoint distance/depth prepared for runtime + visual proof.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -139,8 +139,11 @@ selectors were independently active. The tested map had no AreaPOI rows and no
 current/quest/user-waypoint destination, so those paths and actual destination
 distance remain DEFERRED. Integrated `Run All` passed.
 
-P0144 records this evidence. Next after P0144 durability:
-**P0145 manual-waypoint comparable-distance / bounded-depth slice.**
+P0144 is durable at `47534363`. P0145 is prepared on candidate `0.0.70-dev`:
+**manual-waypoint comparable-distance / bounded-depth integration only.**
+
+The existing P0123 bearing remains authoritative. Distance is same-map, secret-first,
+non-fatal, and scale-only. Runtime + visual proof is pending.
 
 This remains capability-gated preparation under D-037/D-039/D-040. It does not
 authorize stock minimap suppression, unproven navigation markers, broader aura

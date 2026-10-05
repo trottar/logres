@@ -188,6 +188,20 @@ global unique-anchor replacement for it: scope the replacement to the owning
 function/block or use an explicitly validated occurrence. Keep transform
 construction pre-write so an anchor failure cannot leave tracked partial state.
 
+When a patch adds or changes a static checker that validates generated source,
+validate the checker against the exact prepared post-transform candidate before
+any tracked write. Use a shadow tree when necessary. Do not validate the checker
+and generator only in isolation; a checker/source self-mismatch is an artifact
+validation failure that must be caught before handoff.
+
+When an applier will run `git diff --check` after writes, also run an equivalent
+pre-write hygiene check against the exact prepared candidate. A practical pattern
+is `git diff --no-index --check <baseline-shadow> <candidate-shadow>` without any
+commit or ref creation; return code 1 means ordinary differences, while whitespace
+or conflict-marker errors must fail before tracked writes. Normalize generated
+text to one intentional terminal newline unless the baseline contract explicitly
+requires otherwise.
+
 ## Commands
 
 Commands given to the user must be:

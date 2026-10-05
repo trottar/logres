@@ -304,6 +304,12 @@ theme.compass = {
         alpha = 0.95,
         focusAngle = 8,
         focusScale = 1.07,
+        depthNearYards = 120,
+        depthFarYards = 1200,
+        depthNearScale = 1.05,
+        depthFarScale = 0.90,
+        renderScaleMin = 0.90,
+        renderScaleMax = 1.12,
     },
 
     labels = {

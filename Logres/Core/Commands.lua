@@ -1965,6 +1965,38 @@ local function runCompassCheck()
             and debugStatus.waypointMarkerShown == false
     end
 
+    local waypointDistanceCoherent =
+        debugStatus.waypointDistanceAPIAvailable == true
+        and debugStatus.lastWaypointDistanceError == nil
+        and type(debugStatus.waypointDepthScale) == "number"
+        and debugStatus.waypointDepthScale >= 0.90
+        and debugStatus.waypointDepthScale <= 1.05
+        and (
+            (
+                debugStatus.waypointDistanceAvailable == true
+                and type(debugStatus.waypointDistanceYards) == "number"
+                and debugStatus.waypointDistanceYards >= 0
+                and debugStatus.lastWaypointDistanceReason == "distance-available"
+            )
+            or (
+                debugStatus.waypointDistanceAvailable == false
+                and debugStatus.waypointDistanceYards == nil
+                and debugStatus.waypointDepthScale == 1
+            )
+        )
+
+    local waypointScaleCoherent =
+        (
+            debugStatus.waypointMarkerShown == false
+            and debugStatus.waypointRenderScale == nil
+        )
+        or (
+            debugStatus.waypointMarkerShown == true
+            and type(debugStatus.waypointRenderScale) == "number"
+            and debugStatus.waypointRenderScale >= 0.90
+            and debugStatus.waypointRenderScale <= 1.12
+        )
+
     local passed =
         status.initialized == true
         and status.enabled == true
@@ -1974,12 +2006,17 @@ local function runCompassCheck()
         and policyMatches
         and presentationMatches
         and waypointCoherent
+        and waypointDistanceCoherent
+        and waypointScaleCoherent
         and debugStatus.lastError == nil
         and debugStatus.lastWaypointError == nil
 
     local headingText = "nil"
     local waypointBearingText = "nil"
     local waypointRelativeText = "nil"
+    local waypointDistanceText = "nil"
+    local waypointDepthText = "nil"
+    local waypointRenderText = "nil"
 
     if type(debugStatus.headingDegrees) == "number" then
         headingText = string.format("%.1f", debugStatus.headingDegrees)
@@ -1995,9 +2032,24 @@ local function runCompassCheck()
             string.format("%.1f", debugStatus.waypointRelativeDegrees)
     end
 
+    if type(debugStatus.waypointDistanceYards) == "number" then
+        waypointDistanceText =
+            string.format("%.1f", debugStatus.waypointDistanceYards)
+    end
+
+    if type(debugStatus.waypointDepthScale) == "number" then
+        waypointDepthText =
+            string.format("%.3f", debugStatus.waypointDepthScale)
+    end
+
+    if type(debugStatus.waypointRenderScale) == "number" then
+        waypointRenderText =
+            string.format("%.3f", debugStatus.waypointRenderScale)
+    end
+
     if passed then
         emit(string.format(
-            "Logres compasscheck: PASS (immersion=%s context=%s policy=%s facing=%s update=%s active=%s heading=%s waypointAPI=%s event=%s waypoint=%s bearing=%s relative=%s marker=%s waypointReason=%s reason=%s)",
+            "Logres compasscheck: PASS (immersion=%s context=%s policy=%s facing=%s update=%s active=%s heading=%s waypointAPI=%s event=%s waypoint=%s bearing=%s relative=%s marker=%s distanceAPI=%s distance=%s yards=%s depth=%s renderScale=%s distanceReason=%s waypointReason=%s reason=%s)",
             boolText(preferences.immersionEnabled == true),
             tostring(state.context),
             boolText(debugStatus.policyEligible),
@@ -2011,6 +2063,12 @@ local function runCompassCheck()
             waypointBearingText,
             waypointRelativeText,
             boolText(debugStatus.waypointMarkerShown),
+            boolText(debugStatus.waypointDistanceAPIAvailable),
+            boolText(debugStatus.waypointDistanceAvailable),
+            waypointDistanceText,
+            waypointDepthText,
+            waypointRenderText,
+            tostring(debugStatus.lastWaypointDistanceReason),
             tostring(debugStatus.lastWaypointReason),
             tostring(debugStatus.lastReason)
         ))
@@ -2018,7 +2076,7 @@ local function runCompassCheck()
     end
 
     emit(string.format(
-        "Logres compasscheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s rootReady=%s directions=%s policyMatches=%s presentationMatches=%s waypointCoherent=%s expectedPolicy=%s immersion=%s/%s context=%s/%s facingAPI=%s facing=%s update=%s active=%s shown=%s heading=%s headingOK=%s waypointAPI=%s event=%s waypoint=%s bearingAvailable=%s bearing=%s relative=%s markerReady=%s markerShown=%s expectedMarker=%s waypointReason=%s waypointError=%s reason=%s error=%s)",
+        "Logres compasscheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s rootReady=%s directions=%s policyMatches=%s presentationMatches=%s waypointCoherent=%s distanceCoherent=%s scaleCoherent=%s expectedPolicy=%s immersion=%s/%s context=%s/%s facingAPI=%s facing=%s update=%s active=%s shown=%s heading=%s headingOK=%s waypointAPI=%s event=%s waypoint=%s bearingAvailable=%s bearing=%s relative=%s markerReady=%s markerShown=%s expectedMarker=%s distanceAPI=%s distance=%s yards=%s depth=%s renderScale=%s sourceMap=%s currentMap=%s distanceReason=%s distanceError=%s waypointReason=%s waypointError=%s reason=%s error=%s)",
         tostring(status.initialized),
         tostring(status.enabled),
         tostring(debugStatus.moduleEnabled),
@@ -2027,6 +2085,8 @@ local function runCompassCheck()
         tostring(policyMatches),
         tostring(presentationMatches),
         tostring(waypointCoherent),
+        tostring(waypointDistanceCoherent),
+        tostring(waypointScaleCoherent),
         tostring(expectedPolicy),
         tostring(debugStatus.immersionEnabled),
         tostring(preferences.immersionEnabled == true),
@@ -2048,6 +2108,15 @@ local function runCompassCheck()
         tostring(debugStatus.waypointMarkerReady),
         tostring(debugStatus.waypointMarkerShown),
         tostring(expectedMarkerShown),
+        tostring(debugStatus.waypointDistanceAPIAvailable),
+        tostring(debugStatus.waypointDistanceAvailable),
+        waypointDistanceText,
+        waypointDepthText,
+        waypointRenderText,
+        tostring(debugStatus.waypointSourceMapID),
+        tostring(debugStatus.waypointMapID),
+        tostring(debugStatus.lastWaypointDistanceReason),
+        tostring(debugStatus.lastWaypointDistanceError),
         tostring(debugStatus.lastWaypointReason),
         tostring(debugStatus.lastWaypointError),
         tostring(debugStatus.lastReason),

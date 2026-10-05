@@ -1,6 +1,6 @@
 # Future Navigation — Local POI / Tracking Capability Audit
 
-Status: **OPEN — P0143 RUNTIME PASS; MANUAL-WAYPOINT DISTANCE/DEPTH NEXT; QUEST/AREA-POI DEFERRED**
+Status: **OPEN — P0145 MANUAL-WAYPOINT DISTANCE/DEPTH PREPARED; QUEST/AREA-POI DEFERRED; TRACKING RESULTS BLOCKED**
 Opened: 2026-10-03
 Canonical direction: `../decisions/D-037_NAVIGATION_MARKER_ROLES_AND_MINIMAP_DIRECTION.md`
 Source/fallback policy: `../decisions/D-043_NAVIGATION_SOURCE_AND_MINIMAP_FALLBACK_POLICY.md`
@@ -210,3 +210,18 @@ fallback to the current fixed marker treatment.
 
 Quest/current-navigation, AreaPOI, service, and tracking-result production roles
 remain gated/blocked exactly as before.
+
+## P0145 implementation checkpoint
+
+P0145 targets `0.0.70-dev` and consumes only the already-proven manual waypoint.
+It secret-checks the user waypoint's `uiMapID`, requires exact current-map equality
+for comparable distance, reads ordinary positive `C_Map.GetMapWorldSize` yard
+dimensions, and computes Euclidean yard distance from ordinary normalized
+player/destination coordinates.
+
+Distance is intentionally non-owning: any absent, secret, invalid, or cross-map
+condition restores depth scale `1.0` while leaving the P0123 bearing marker usable.
+The only player-facing effect is restrained bounded scale. No exact distance text,
+identity, quest/POI/tracking marker, or minimap mutation is added.
+
+Runtime + visual proof remains pending.

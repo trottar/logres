@@ -1,0 +1,31 @@
+P0145 MANIFEST
+Baseline: 47534363bd5754306c31d5e860739289504417de
+Candidate runtime: 0.0.70-dev
+Scope: manual user-waypoint same-map yard distance + bounded D-038 marker depth only
+Depth: 120y=1.05; 1200y=0.90; final render cap 0.90-1.12
+Fallback: distance-only absence/secret/mismatch/invalid -> depth 1.0; proven bearing retained
+No quest/POI/tracking marker, no distance label, no minimap mutation/suppression
+Prepared-candidate gates: git diff --no-index --check + P0145/compass/compass-visual PASS before tracked writes
+Checks: tools/check_manual_waypoint_depth_contract.py, tools/check_compass_contract.py, tools/check_compass_visual_contract.py, tools/check_addon_structure.py, tools/check_memory_health.py, git diff --check
+Files:
+228dfcc71c3d7f218e5f376f353390d63ed183af9e37c52f49b3ed82e67fe791  Logres/Core/Bootstrap.lua
+7ed0f92daa68f4ddd7672674786e950c1a623f006379a9f2e86abc7711af17d6  Logres/Core/Commands.lua
+c7b05f1cd35f9920d1a59967e1fa4a026f24ef40101d51f10b4ec15a08cdd3a9  Logres/Logres.toc
+b75a01d7ac8ec94fb8588a2d15ecceb933680fa6db8d201cf8504498eddb41b0  Logres/Media/Theme.lua
+276fdab055502422f13a858f3087b3c9ee53c56927ec10752f754b274cba849b  Logres/Navigation/Compass.lua
+da35003eec480cbf41b591f734679d443adcc154c3d058661a04fd30586f90de  docs/ROADMAP.md
+b9d73af3f16c60cb2e6e37171b259415d666a1e4f19d8ed442f02060ab2e93cb  docs/memory/2026-10-05.md
+06326ee8b2183644cf6925fe17d8f367f6eefe8d0d534446a9165c5867c039ef  docs/memory/AGENTS.md
+9499fd6a027e89175be4fbcf2cb9aeeb8ef6e699fb403a5f02ce14d07c59f15f  docs/memory/CURRENT.md
+fea78e4df807b9e04115991f7942c6e8b36b4137d13d033702888711c6bc183d  docs/memory/MEMORY.md
+c2e6f59ee05c713b1b3af590e5c9eb867f01d330b51e6d8c50e3a66062aff2a2  docs/memory/architecture/VISUAL_IMPLEMENTATION_STATUS.md
+f1f31dc47727bb9f25c615ef343a696ec634ee646802dfb65ff35e0b9a7c172d  docs/memory/handoffs/CURRENT_HANDOFF.md
+8410dd504a87c3516dae2da06335d5c21160532c972ada8ec037dab63177bf80  docs/memory/investigations/ACTIVE.md
+762bc4fd4381a9313fb830d674f6b050073419c0c0b5ed8e1df061c0774824f2  docs/memory/investigations/FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md
+6f0714fab2b574c2fc9669da0c0743927c32ca383dd624534139401b1ae71765  docs/memory/patches/P0144_RECORD_P0143_NAVIGATION_RUNTIME_RESULT.md
+361a49efffe9629c6e9ffb3adc5ff7b9a60e9ae3485fae92e1bd12d9cc63db9e  docs/memory/patches/P0145_MANUAL_WAYPOINT_DISTANCE_DEPTH.md
+b909acca1a225077ce0d56fdfe7661dc57e51ce86e768f58ac6c14e4d3b4467a  docs/memory/patches/PATCH_INDEX.md
+7ee6e3449dafb1ec7c4fdd72bde642e9d451eb61394f5e7306a3d6c3641c54a6  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+7b5ecaa3a9e67bc33ad5e459011e70f16d163dbef950fd5ce4f5c4ebc03c88b8  docs/memory/roadmap/STATUS.md
+693312f8b16ad9b55b47de5e6d345b76a83818b230e2baa3b7a934342d4741fc  tools/check_compass_visual_contract.py
+57f3076335b8bcb5cbbd2e374a987b5ef0faf0bab86f54201a93a94b651b3b92  tools/check_manual_waypoint_depth_contract.py
