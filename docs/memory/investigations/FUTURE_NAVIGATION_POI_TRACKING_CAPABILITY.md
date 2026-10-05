@@ -1,6 +1,6 @@
 # Future Navigation — Local POI / Tracking Capability Audit
 
-Status: **OPEN — P0145 MANUAL-WAYPOINT DISTANCE/DEPTH PREPARED; QUEST/AREA-POI DEFERRED; TRACKING RESULTS BLOCKED**
+Status: **OPEN — P0145 MANUAL-WAYPOINT DISTANCE/DEPTH ACCEPTED; QUEST/AREA-POI DEFERRED; TRACKING RESULTS BLOCKED**
 Opened: 2026-10-03
 Canonical direction: `../decisions/D-037_NAVIGATION_MARKER_ROLES_AND_MINIMAP_DIRECTION.md`
 Source/fallback policy: `../decisions/D-043_NAVIGATION_SOURCE_AND_MINIMAP_FALLBACK_POLICY.md`
@@ -224,4 +224,17 @@ condition restores depth scale `1.0` while leaving the P0123 bearing marker usab
 The only player-facing effect is restrained bounded scale. No exact distance text,
 identity, quest/POI/tracking marker, or minimap mutation is added.
 
-Runtime + visual proof remains pending.
+Runtime + integration proof is complete for the changed P0145 scope.
+## P0145 runtime result
+
+P0145 is durable at `60244841` / `0.0.70-dev`. Normal current-map manual waypoint
+samples produced ordinary non-negative yard distances and bounded depth/render
+scales. Clearing the waypoint returned to `waypoint=false`, `marker=false`,
+`distance=false`, `depth=1.000`, and no stale render scale.
+
+P0123 remains the recorded off-tape runtime authority; P0145 did not capture a new
+off-tape diagnostic row.
+
+This closes only the manual-waypoint comparable-distance/depth branch.
+Quest/current-navigation destination, AreaPOI/service, and tracking-result roles
+remain deferred/source-blocked and stock minimap ownership is unchanged.

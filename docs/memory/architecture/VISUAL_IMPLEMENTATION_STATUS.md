@@ -39,7 +39,7 @@ A component can be visually complete while runtime ownership remains incomplete.
 | Context messages | Yes | P0122 is durable at `62353ecf`; XP preview, live XP producer/check, objective preview, live objective producer/check, and full checkall passed on `0.0.52-dev` | Dedicated warmer completion variant remains naturally deferred; final whole-screen placement/contrast calibration remains polish | **Runtime + preview path proven — completion state deferred** |
 | Active Quest | Yes | P0126 is durable at `89b0c563` / `0.0.58-dev`; final R3 runtime + visual PASS uses one-focus title, count-free normalized objective labels, bar-only progress, hover-only exact detail, quiet completion, and an independent persisted toggle | Final whole-screen spacing/contrast calibration remains polish; do not reopen persistent `%`/`N/M` mechanics without new evidence | **Runtime + visual production baseline accepted** |
 | Player-health tunnel | Yes / D-036 frozen | P0124 is durable at `1e7e27e` / `0.0.54-dev`; five Theme-owned organic tunnel/death masks run on the proven native secret-safe health-to-alpha path, with deterministic D-036 preview percentages | Whole-interface contrast/scale polish remains; natural damage/heal may be observed opportunistically but is not required to re-prove the accepted preview matrix | **Runtime + visual baseline accepted — final polish deferred** |
-| Compass heading + manual waypoint | Yes | P0123 bearing/visual baseline remains accepted; P0145 prepares same-map yard distance + bounded scale on candidate `0.0.70-dev` with non-fatal fallback to the P0123 treatment | In-client proof must exercise a normal current-map waypoint distance and confirm restrained scale/off-tape behavior; identity remains unavailable | **Depth implementation prepared — runtime + visual proof pending** |
+| Compass heading + manual waypoint | Yes | P0123 bearing/visual baseline remains accepted; P0145 `60244841` / `0.0.70-dev` runtime-proves ordinary same-map yard distance, bounded depth/render scale, and clean clear-state fallback | P0123 remains the actual off-tape runtime sample; identity remains unavailable; final whole-screen spacing/contrast calibration remains polish | **Production manual-waypoint distance/depth accepted** |
 | Compass quest / POI / tracking roles | Yes | P0143 `b9b2f90b` / `0.0.69-dev` runtime-proves current-map/player geometry, minimap view radius, and 23/23 multi-select tracking selector metadata rows; individual tracked-result/service-instance positions remain source-blocked | Current-map AreaPOI population and current/quest waypoint output were absent and remain deferred; keep stock minimap until replacement completeness is proven | **Geometry/selector metadata proven — destination/AreaPOI deferred; tracking-result markers blocked** |
 | Class/pet/special controls | Shared button language approved; class-specific mechanics only partially covered | Existing Blizzard-owned child/special surfaces remain available; Logres ordinary action roles are separate | Apply button family where ownership is proven; design/implement discrete class-resource art (runes/combo points/etc.) separately as needed | **Residual art + capability** |
 | Settings / accessibility | Visual language only, no dedicated final sheet | Preference infrastructure exists, not final Phase-H settings UI | Design compact settings/accessibility presentation and expose only accepted product choices | **Residual design / integration** |
@@ -119,14 +119,19 @@ Completed with environmental deferrals:
     radius, and tracking selector metadata/state PASS; AreaPOI/current/quest
     destination paths deferred.
 
+Completed:
+20. P0145 manual-waypoint comparable-distance / bounded-depth changed-scope runtime
+    proof — accepted at `60244841` / `0.0.70-dev`; P0123 remains the off-tape
+    runtime authority.
+
 Next:
-20. P0145 manual-waypoint comparable-distance / bounded-depth runtime + visual proof.
+21. P0147 source/capability audit for class/pet/special-control territory.
 
 After that:
-21. implement only further runtime-proven navigation roles or preserve their
-    negative / deferred results;
-22. finish class-specific discrete resources, settings/accessibility, and final
-    whole-screen composition calibration.
+22. implement only source/runtime-proven class/pet/special slices, preserve stock
+    fallback for the rest, and continue settings/accessibility/final whole-screen
+    composition calibration. Deferred navigation roles remain deferred until natural
+    evidence or new source capability justifies reopening them.
 
 This is a dependency-oriented implementation map, not a claim that formal Phase H
 has started. Phase G remains open but is explicitly frozen while this approved

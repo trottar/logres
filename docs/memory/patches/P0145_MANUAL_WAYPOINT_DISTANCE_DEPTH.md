@@ -2,8 +2,9 @@
 
 Date: 2026-10-05
 Baseline: `47534363bd5754306c31d5e860739289504417de`
-Candidate runtime: `0.0.70-dev`
-Result: **PREPARED R2 — RUNTIME + VISUAL PROOF PENDING**
+Runtime: `0.0.70-dev`
+Commit: `60244841d0ecfa35b58c7db60293145b8962b6dc`
+Result: **INSTALLED / PUSHED — RUNTIME + INTEGRATION PASS FOR CHANGED SCOPE; P0123 OFF-TAPE BASELINE RETAINED**
 
 ## Purpose
 
@@ -144,3 +145,27 @@ After deployment and `/reload`:
 6. run **Phase 0 -> Run All**.
 
 Any Lua, secret-value, taint, protected-action, or source failure is FAIL.
+## Final runtime result
+
+P0145 is durable at `60244841d0ecfa35b58c7db60293145b8962b6dc` on
+`0.0.70-dev`.
+
+Observed populated `Compass Check` samples reported ordinary same-map distances
+`115.8`, `45.5`, `51.7`, and `116.0` yards. Depth remained `1.050` in those
+samples and visible render scale remained within the accepted `0.90–1.12` bound.
+
+After clearing the user waypoint, `Compass Check` passed with
+`waypoint=false`, `marker=false`, `distance=false`, `yards=nil`, `depth=1.000`,
+`renderScale=nil`, and `waypoint-absent` reasons. Integrated `Run All` had already
+completed cleanly on the same runtime before that targeted clear-state capture.
+
+P0145 did not capture a fresh off-tape diagnostic row. P0123 remains the actual
+runtime authority for off-tape suppression (`relative=115.5`, `marker=false`).
+P0145's new scale path is downstream of the existing off-tape return, so this
+record does not invent a new runtime sample.
+
+Classification:
+**RUNTIME + INTEGRATION PASS FOR P0145 CHANGED SCOPE.**
+
+Quest/current-navigation, AreaPOI/service, tracking-result roles, identity text,
+exact distance text, and stock minimap suppression remain outside this checkpoint.

@@ -173,7 +173,7 @@ remains blocked and the screen-space target remains canonical fallback.
 ## Navigation / minimap capability
 
 Status:
-**OPEN — P0145 MANUAL-WAYPOINT DISTANCE/DEPTH PREPARED; RUNTIME + VISUAL PROOF PENDING.**
+**OPEN — P0145 MANUAL-WAYPOINT DISTANCE/DEPTH ACCEPTED; QUEST/AREA-POI DEFERRED; TRACKING RESULTS BLOCKED.**
 
 Canonical investigation:
 `FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md`.
@@ -209,8 +209,24 @@ expansion is authorized by P0143.
 
 ### P0145 manual-waypoint depth checkpoint
 
-P0144 is durable at `47534363`. P0145 is prepared on `0.0.70-dev` and uses only
-the existing manual user-waypoint role. Same-map yard distance is a non-fatal side
-channel; distance failure falls back to the P0123 fixed treatment. Quest/current
-navigation, AreaPOI/service, and tracking-result production roles remain
-deferred/blocked. Runtime + visual proof is pending.
+P0145 is durable at `60244841` / `0.0.70-dev`. The changed same-map distance/depth
+path passes with ordinary yard values and bounded scale, and clearing the waypoint
+returns cleanly to depth `1.000` with no stale marker/distance state. P0123 remains
+the actual off-tape runtime sample. Quest/current navigation, AreaPOI/service, and
+tracking-result production roles remain deferred/blocked exactly as before.
+## Class / pet / special-control ownership
+
+Status:
+**OPEN — P0147 SOURCE/CAPABILITY AUDIT NEXT.**
+
+Canonical investigation:
+`FUTURE_CLASS_PET_SPECIAL_CONTROL_CAPABILITY.md`.
+
+The residual approved visual inventory separates pet actions, stance/form,
+totem/class-special controls, discrete class resources, and possess/override/vehicle
+surfaces from ordinary Primary/Secondary/Utility action roles.
+
+D-026 still preserves direct player class-resource children, RuneFrame, TotemFrame,
+PetFrame, alternate-power, and unknown/unproven children. P0147 must resolve source,
+secure ownership, combat restrictions, event/update semantics, restoration, and
+fail-open stock coexistence per domain before any runtime replacement is proposed.

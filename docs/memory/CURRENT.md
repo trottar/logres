@@ -8,39 +8,39 @@ project: logres
 
 ## Active Objective
 
-**Approved visual implementation translation — P0145 R2 manual-waypoint comparable-distance / bounded-depth integration prepared; in-client proof next.**
+**Approved visual implementation translation — P0145 manual-waypoint comparable-distance / bounded-depth runtime result accepted; P0146 evidence checkpoint prepared; P0147 class/pet/special-control source audit next.**
 
 This remains parallel Phase-H preparation while formal Phase G / G.5 is open and
 explicitly frozen until the approved visual sequence is finished.
 
 ## Current Work Item
 
-**P0145 runtime candidate `0.0.70-dev` — extend only the proven manual user-waypoint marker with fail-open same-map yard distance and restrained D-038 depth scale.**
+**P0146 docs/evidence checkpoint — record the P0145 `0.0.70-dev` result without widening navigation ownership, then advance to P0147 source/capability audit for class, pet, and special-control territory.**
 
 Latest verified durable checkpoint:
-P0144 `47534363bd5754306c31d5e860739289504417de`.
+P0145 `60244841d0ecfa35b58c7db60293145b8962b6dc`.
 
-Current pushed/tested runtime before P0145 deployment:
-`0.0.69-dev`.
+Current pushed/tested runtime:
+`0.0.70-dev`.
 
-P0143/P0144 remain authoritative:
-- current player map position and map world size are ordinary in the observed runtime;
-- the tested map's world size was approximately `2758.33 x 1839.58` yards;
-- minimap view radius was ordinary;
-- tracking selector metadata/state is ordinary and multi-select;
+P0145 result:
+- current-map manual user-waypoint distance is ordinary and usable;
+- populated Compass checks recorded `115.8`, `45.5`, `51.7`, and `116.0` yards;
+- populated depth remained `1.050` and render scale stayed within the accepted `0.90–1.12` bound;
+- waypoint removal returned cleanly to `waypoint=false`, `marker=false`, `distance=false`, `yards=nil`, `depth=1.000`, `renderScale=nil`, with `waypoint-absent` reasons;
+- integrated `Run All` passed on the same runtime before the targeted clear-state capture;
+- no Lua, secret-value, taint, protected-action, or source failure was reported in the tested scope.
+
+P0123 remains the runtime authority for off-tape suppression (`relative=115.5`,
+`marker=false`). P0145 did not obtain a new off-tape diagnostic row; its new depth
+application remains downstream of the existing off-tape early-return path. Do not
+rewrite that as a newly sampled P0145 runtime result.
+
+Navigation boundaries remain unchanged:
+- manual waypoint bearing + comparable distance/depth are production-proven;
 - current-map AreaPOI population and current/quest navigation output remain environmental DEFERRED;
 - individual tracking-result and service-instance positions remain source-blocked;
 - Blizzard minimap remains stock and available.
-
-P0145 preserves the existing P0123 manual-waypoint source/bearing path. It adds only:
-- secret-first `UiMapPoint.uiMapID` inspection;
-- `C_Map.GetMapWorldSize` yard dimensions;
-- same-map distance from ordinary normalized player/destination coordinates;
-- a Theme-owned bounded scale cue;
-- addon-owned diagnostic distance/depth state.
-
-Distance failure is non-fatal to the existing waypoint marker: absent, secret,
-invalid, or cross-map distance state falls back to depth scale `1.0`.
 
 ## Verified State
 
@@ -53,7 +53,8 @@ Accepted production baselines remain:
 - P0126 one-focus Active Quest;
 - P0130 bounded/paged quest-offer narrative;
 - P0133 Accept-left / Decline-right offer controls for the proven offer state;
-- P0137 passive player `HELPFUL|PLAYER` aura lane.
+- P0137 passive player `HELPFUL|PLAYER` aura lane;
+- P0145 same-map manual-waypoint distance with bounded depth scale.
 
 World target:
 - P0140 fallback/reaction runtime paths pass for the observed scope;
@@ -61,12 +62,15 @@ World target:
 - production target placement remains screen-space.
 
 Navigation:
-- heading/manual waypoint are production-proven through P0123;
-- P0143 proves ordinary current-map/player geometry and map world size;
-- P0145 is the first production use of those geometry inputs and is runtime-unproven until in-client validation;
-- current-map AreaPOI, current-navigation, and ordinary quest-waypoint output remain environmental DEFERRED;
-- individual tracking-result and service-instance positions remain source-blocked;
-- Blizzard minimap remains stock and available.
+- heading/manual waypoint remain production-proven;
+- P0145 closes the comparable-distance / bounded-depth branch for normal same-map user waypoints;
+- quest/current-navigation, AreaPOI/service, and tracking-result roles remain deferred/blocked exactly as before;
+- stock minimap remains the completeness fallback.
+
+Class / pet / special-control territory:
+- Blizzard-owned direct player class-resource children, RuneFrame, TotemFrame, PetFrame, alternate-power, and unsupported possess/override/vehicle surfaces remain preserved;
+- approved visual language exists only at the shared-button / broad composition level;
+- source, secure interaction, mutation, restoration, and class-specific discrete-resource ownership have not yet been audited as one coherent capability layer.
 
 Camera:
 - P0119 remains durable at `c342bc176a9d5de80ec116d0c6b31fa595cd75b3`;
@@ -74,37 +78,30 @@ Camera:
 
 ## Next Action
 
-Deploy P0145, `/reload`, then place a normal manual user waypoint on the current map.
+Apply and push P0146 as a docs/evidence-only checkpoint.
 
-Run **Phase E -> Compass Check** while the waypoint exists and record:
-- `waypoint=true`;
-- ordinary bearing/relative state;
-- `distance=true` with a non-negative yard value;
-- `depth` within the bounded `0.90–1.05` distance range;
-- when the marker is visible, `renderScale` within `0.90–1.12`;
-- `distanceReason=distance-available`;
-- no waypoint or distance error.
+After P0146 is durable, perform **P0147 source/capability audit only** for:
+- pet action controls;
+- stance/form controls;
+- totem/class-special controls;
+- discrete class resources such as runes/combo-point-style pips;
+- possess/override/vehicle/special control fallback;
+- secure action ownership, combat restrictions, events, restoration, and Blizzard coexistence for each domain.
 
-Rotate normally to verify the exact-bearing stem/off-tape behavior is unchanged and
-the depth cue remains restrained. Clear the waypoint and confirm fallback state
-returns cleanly without stale distance presentation.
-
-Then run **Phase 0 -> Run All**.
-
-Do not add quest, AreaPOI, service, or tracking-result markers and do not modify
-Blizzard minimap presentation or controls.
+The audit must pin the exact Forever source generation before proposing runtime
+replacement. It must distinguish information presentation from secure interaction
+and action mutation. No Blizzard class/pet/special surface is suppressed from
+source availability alone.
 
 ## Success Criteria
 
-P0145 succeeds only when:
-- the existing manual waypoint still reports a truthful bearing and off-tape suppression;
-- a normal current-map user waypoint produces ordinary same-map yard distance;
-- the depth cue remains bounded and visually restrained;
-- no exact distance number or persistent waypoint identity is presented to the player;
-- distance absence/secret/invalid/cross-map state fails open to the accepted fixed marker treatment;
-- no secret, Lua, taint, protected-action, or source failure occurs;
-- integrated `Run All` remains PASS;
-- no new quest/POI/tracking role or minimap ownership is implied.
+P0146 succeeds when repository memory records exactly what P0145 proved, preserves
+its unsampled/deferred boundaries, and identifies P0147 as the next independent
+source-only work item.
+
+P0147 may authorize a later runtime probe only where the source audit establishes a
+supported, bounded, fail-open path. It does not itself authorize stock suppression
+or production replacement.
 
 ## Do Not Reopen Without New Evidence
 
@@ -117,19 +114,24 @@ P0145 succeeds only when:
 - P0143 empty AreaPOI/current-navigation/quest-waypoint results remain environmental deferrals;
 - stock minimap remains until D-037/D-043 replacement completeness is proven;
 - party/CompactPartyFrame remain stock until secure interaction and required group/aura information are safely replaced;
+- direct player class-resource children, RuneFrame, TotemFrame, PetFrame, alternate-power, and unsupported special-control surfaces remain Blizzard-owned until separately capability-proven;
 - Continue/Complete/reward/gossip quest ownership remains separately gated;
 - P0119 Taxi landing retest remains pending/frozen;
 - no max-distance CVar mutation, Taxi rotation, or Taxi UI fade is authorized.
 
 ## Relevant References
 
+- `docs/memory/evidence/P0146_P0145_MANUAL_WAYPOINT_DISTANCE_DEPTH_RUNTIME_PASS_2026-10-05.md`
+- `docs/memory/patches/P0146_RECORD_P0145_RUNTIME_RESULT.md`
 - `docs/memory/patches/P0145_MANUAL_WAYPOINT_DISTANCE_DEPTH.md`
-- `docs/memory/evidence/P0144_P0143_NAVIGATION_RUNTIME_PASS_WITH_DEFERRALS_2026-10-05.md`
-- `docs/memory/patches/P0144_RECORD_P0143_NAVIGATION_RUNTIME_RESULT.md`
+- `docs/memory/patches/P0123_COMPASS_VISUAL_TRANSLATION.md`
 - `docs/memory/decisions/D-043_NAVIGATION_SOURCE_AND_MINIMAP_FALLBACK_POLICY.md`
 - `docs/memory/decisions/D-038_COMPASS_VISUAL_FOCUS_AND_DEPTH_CONTRACT.md`
 - `docs/memory/investigations/FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md`
-- `docs/memory/patches/P0123_COMPASS_VISUAL_TRANSLATION.md`
+- `docs/memory/investigations/FUTURE_CLASS_PET_SPECIAL_CONTROL_CAPABILITY.md`
+- `docs/memory/decisions/D-026_SELECTIVE_UNIT_FRAME_SUPPRESSION.md`
 - `docs/memory/architecture/VISUAL_IMPLEMENTATION_STATUS.md`
+- `docs/memory/architecture/VISUAL_COMPONENT_INVENTORY.md`
 - `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`
 - `docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
+- `docs/ROADMAP.md`

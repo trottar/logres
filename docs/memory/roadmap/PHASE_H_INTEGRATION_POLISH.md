@@ -311,12 +311,17 @@ quest, or user-waypoint destination; those branches remain DEFERRED. Integrated
 P0144 is durable at `47534363`.
 
 P0145:
-**PREPARED — MANUAL-WAYPOINT COMPARABLE-DISTANCE / BOUNDED-DEPTH INTEGRATION on candidate `0.0.70-dev`; RUNTIME + VISUAL PROOF PENDING.**
+**INSTALLED / PUSHED — MANUAL-WAYPOINT COMPARABLE-DISTANCE / BOUNDED-DEPTH CHANGED-SCOPE RUNTIME PASS at `60244841` / `0.0.70-dev`.**
 
-Only the proven manual waypoint is extended. Same-map yard distance is secret-first
-and non-fatal; the player-facing effect is bounded scale only. Quest/POI/tracking
-roles and stock minimap ownership remain unchanged.
+Ordinary same-map yard distance, bounded depth/render scale, and clean waypoint
+clear-state fallback are proven. P0123 remains the actual off-tape runtime sample.
+Quest/POI/tracking roles and stock minimap ownership remain unchanged.
 
-This remains capability preparation under D-035/D-039. It does not authorize
-minimap suppression, source-blocked tracking-result markers, broader aura
-ownership, automated quest choices, or Camera changes.
+Next after the P0146 evidence checkpoint:
+**P0147 source/capability audit for class/pet/special-control territory.**
+
+Preserve direct class-resource children, RuneFrame, TotemFrame, PetFrame, alternate
+power, and unsupported special-control fallbacks until each domain is deliberately
+proven. This remains capability preparation under D-035/D-039 and does not
+authorize minimap suppression, broader aura ownership, automated quest choices,
+or Camera changes.

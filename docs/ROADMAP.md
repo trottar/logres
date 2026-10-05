@@ -140,9 +140,13 @@ skips/failures; four selector states were independently active. The tested state
 had no AreaPOI rows and no current/quest/user-waypoint destination, so those paths
 and actual destination distance remain DEFERRED. Integrated `Run All` passed.
 
-P0144 is durable at `47534363`. P0145 is prepared on candidate `0.0.70-dev`:
-manual-waypoint comparable-distance / bounded-depth integration only. It preserves
-the proven bearing, requires ordinary same-map geometry for yard distance, fails
-open to the fixed marker when distance is unavailable, and adds no distance label
-or new navigation role. Runtime + visual proof is pending. Stock minimap
-presentation remains available until the replacement gate is actually proven.
+P0145 is durable at `60244841` / `0.0.70-dev` and passes the changed manual-waypoint
+distance/depth scope: ordinary same-map yard distance, bounded depth/render scale,
+and clean waypoint clear-state fallback. P0123 remains the actual off-tape runtime
+sample. Quest/current-navigation, AreaPOI/service, and tracking-result roles remain
+deferred/source-blocked and stock minimap presentation remains available.
+
+After the P0146 evidence checkpoint, the next approved visual/capability slice is
+P0147: source/capability audit for class/pet/special-control territory. No direct
+class-resource child, RuneFrame, TotemFrame, PetFrame, alternate-power, or
+possess/override/vehicle surface is suppressed from source evidence alone.

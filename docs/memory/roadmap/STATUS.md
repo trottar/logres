@@ -4,7 +4,7 @@ As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — P0144 is durable; P0145 manual-waypoint distance/depth prepared for runtime + visual proof.**
+**Approved visual implementation translation — P0145 manual-waypoint distance/depth accepted; P0146 evidence checkpoint prepared; P0147 class/pet/special-control source audit next.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -139,12 +139,15 @@ selectors were independently active. The tested map had no AreaPOI rows and no
 current/quest/user-waypoint destination, so those paths and actual destination
 distance remain DEFERRED. Integrated `Run All` passed.
 
-P0144 is durable at `47534363`. P0145 is prepared on candidate `0.0.70-dev`:
-**manual-waypoint comparable-distance / bounded-depth integration only.**
+P0145 is durable at `60244841` / `0.0.70-dev`:
+**manual-waypoint comparable-distance / bounded-depth changed-scope runtime PASS.**
 
-The existing P0123 bearing remains authoritative. Distance is same-map, secret-first,
-non-fatal, and scale-only. Runtime + visual proof is pending.
+Ordinary same-map yard distance, bounded depth/render scale, and clean waypoint
+clear-state fallback are proven. P0123 remains the actual off-tape runtime sample.
+Quest/current-navigation, AreaPOI/service, and tracking-result roles remain
+deferred/source-blocked; stock minimap ownership is unchanged.
 
-This remains capability-gated preparation under D-037/D-039/D-040. It does not
-authorize stock minimap suppression, unproven navigation markers, broader aura
-ownership, production world-target relocation, or unrelated Camera changes.
+P0146 records this evidence. After it is durable, P0147 audits the residual
+class/pet/special-control source and ownership layer. This does not authorize
+stock suppression, broader aura ownership, production world-target relocation, or
+unrelated Camera changes.

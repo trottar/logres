@@ -4,42 +4,38 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0144 `47534363bd5754306c31d5e860739289504417de`.
+P0145 `60244841d0ecfa35b58c7db60293145b8962b6dc`.
 
-Current pushed/tested runtime before P0145 deployment:
-`0.0.69-dev`.
+Current pushed/tested runtime:
+`0.0.70-dev`.
 
-P0144:
-**INSTALLED / PUSHED — P0143 RUNTIME PASS RECORDED WITH DESTINATION/AREA-POI DEFERRALS.**
+P0145:
+**INSTALLED / PUSHED — MANUAL-WAYPOINT SAME-MAP DISTANCE + BOUNDED DEPTH RUNTIME PASS FOR CHANGED SCOPE.**
 
 ## Active work stream
 
 Current objective:
-**P0145 — manual-waypoint comparable-distance / bounded-depth integration.**
+**P0146 — record P0145 evidence, then open P0147 class/pet/special-control source audit.**
 
-Candidate runtime:
-`0.0.70-dev`.
+P0145 runtime evidence proves:
+- normal current-map manual waypoint distance is ordinary;
+- observed populated distances: `115.8`, `45.5`, `51.7`, `116.0` yards;
+- depth remained bounded at `1.050` in those samples;
+- render scale remained within `0.90–1.12`;
+- clearing the waypoint produced `waypoint=false`, `marker=false`, `distance=false`, `yards=nil`, `depth=1.000`, `renderScale=nil`;
+- integrated `Run All` passed before the targeted clear-state capture.
 
-P0145 preserves the proven P0123 bearing path and adds a non-fatal distance side
-channel only when:
-- player/current map ID is ordinary;
-- user waypoint `uiMapID` is ordinary and matches the current map;
-- player and destination normalized coordinates are ordinary;
-- `C_Map.GetMapWorldSize` returns ordinary positive yard dimensions.
+P0123 remains the recorded off-tape runtime sample (`relative=115.5`,
+`marker=false`). P0145 did not add a fresh off-tape diagnostic sample; do not claim
+otherwise.
 
-The distance result drives only restrained Theme-owned scale:
-- distance depth scale: `0.90–1.05`;
-- combined render scale after existing near-center focus: `0.90–1.12`.
+Quest/current-navigation destination, AreaPOI/service, and tracking-result roles
+remain deferred/source-blocked. Stock minimap remains Blizzard-owned.
 
-If distance is unavailable, secret, invalid, or cross-map, depth returns to `1.0`
-and the existing waypoint marker remains usable.
-
-P0145 adds no distance label, waypoint identity, quest/POI/tracking marker, minimap
-mutation, or stock suppression.
-
-Runtime + visual proof is pending. Place one normal current-map user waypoint,
-run **Phase E -> Compass Check**, rotate to confirm bearing/off-tape behavior, clear
-the waypoint, then run **Phase 0 -> Run All**.
+After this docs-only checkpoint is durable, P0147 is a source/capability audit for
+class/pet/special-control territory. Preserve Blizzard direct class-resource
+children, RuneFrame, TotemFrame, PetFrame, alternate power, and unsupported
+possess/override/vehicle surfaces until each ownership path is proven.
 
 World-target positive anchoring remains environmentally deferred. Camera remains
 frozen, not complete.
@@ -47,11 +43,13 @@ frozen, not complete.
 ## Key references
 
 - `../CURRENT.md`
+- `../evidence/P0146_P0145_MANUAL_WAYPOINT_DISTANCE_DEPTH_RUNTIME_PASS_2026-10-05.md`
+- `../patches/P0146_RECORD_P0145_RUNTIME_RESULT.md`
 - `../patches/P0145_MANUAL_WAYPOINT_DISTANCE_DEPTH.md`
-- `../evidence/P0144_P0143_NAVIGATION_RUNTIME_PASS_WITH_DEFERRALS_2026-10-05.md`
-- `../decisions/D-043_NAVIGATION_SOURCE_AND_MINIMAP_FALLBACK_POLICY.md`
-- `../decisions/D-038_COMPASS_VISUAL_FOCUS_AND_DEPTH_CONTRACT.md`
-- `../investigations/FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md`
 - `../patches/P0123_COMPASS_VISUAL_TRANSLATION.md`
+- `../investigations/FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md`
+- `../investigations/FUTURE_CLASS_PET_SPECIAL_CONTROL_CAPABILITY.md`
+- `../decisions/D-026_SELECTIVE_UNIT_FRAME_SUPPRESSION.md`
+- `../architecture/VISUAL_IMPLEMENTATION_STATUS.md`
 - `../roadmap/PHASE_H_INTEGRATION_POLISH.md`
 - `../roadmap/PHASE_G_CINEMATIC_CAMERA.md`
