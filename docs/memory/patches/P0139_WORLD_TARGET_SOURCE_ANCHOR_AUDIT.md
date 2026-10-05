@@ -1,9 +1,10 @@
 # P0139 — World-Attached Target Source + Anchoring/Fallback Audit
 
 Date: 2026-10-05
-Result: **SOURCE + FALLBACK POLICY RESOLVED — P0140 READ-ONLY RUNTIME PROBE NEXT**
+Result: **INSTALLED / PUSHED — SOURCE + FALLBACK POLICY RESOLVED** (`b0122136`)
 Baseline: `6392b2e447f710e84d6add4ef46b972afc95bf4c`
 Runtime: unchanged at `0.0.67-dev`
+Durable commit: `b012213662a93b455b1ed3af2325a2bacdb2a59d`
 
 ## Purpose
 

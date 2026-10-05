@@ -4,7 +4,7 @@ As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — read-only world-target anchor/reaction runtime probe next.**
+**Approved visual implementation translation — P0140 prepared; world-target runtime proof pending.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -105,16 +105,24 @@ Player harmful/urgent and populated target aura categories remain environmental
 deferrals; private/group aura ownership and stock suppression remain gated.
 
 P0139:
-**SOURCE + FALLBACK POLICY LAYER RESOLVED — DOCS/SOURCE EVIDENCE ONLY.**
+**INSTALLED / PUSHED — SOURCE + FALLBACK POLICY LAYER RESOLVED** at `b0122136`.
 
 D-042 accepts a conditional accessible nameplate as the only world-anchor
 candidate, preserves the current screen-space target fallback, restricts reaction
 to ordinary runtime-proven state, and limits relative danger to trivial-target
 de-emphasis without exact difficulty inspection.
 
+P0140:
+**PREPARED on `0.0.68-dev` — READ-ONLY WORLD-TARGET RUNTIME PROOF PENDING.**
+
+The new contextual probe uses only event-driven direct `"target"` re-query,
+`includeForbidden=false`, hidden addon-owned out-of-combat attachment testing, and
+secret-first reaction/triviality reads. Production target placement and Blizzard
+surfaces remain unchanged.
+
 Next:
-**P0140 read-only world-target anchor/reaction runtime probe.**
+**Deploy P0140 and record the in-client result.**
 
 This is implementation translation under D-039/D-040. It does not authorize
-Phase-H-only capability expansion, stock minimap suppression, Logres-owned quest
-controls, unproven navigation roles, or unrelated Camera changes.
+Phase-H-only capability expansion, stock minimap suppression, broader aura
+ownership, production world-target relocation, or unrelated Camera changes.

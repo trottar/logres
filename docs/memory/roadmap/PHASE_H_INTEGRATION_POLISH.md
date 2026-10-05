@@ -268,7 +268,7 @@ Player harmful/urgent and populated target aura data remain environmental
 deferrals. Private/group aura ownership and stock suppression remain gated.
 
 P0139:
-**SOURCE + FALLBACK POLICY LAYER RESOLVED.**
+**INSTALLED / PUSHED — SOURCE + FALLBACK POLICY LAYER RESOLVED** at `b0122136`.
 
 D-042 accepts only conditional accessible nameplate anchoring, with
 `includeForbidden=false`, behind-camera/no-nameplate fallback, no nameplate CVar
@@ -277,11 +277,17 @@ mutation, and no Blizzard frame mutation.
 Reaction candidates are source-available; relative danger is restricted to
 `UnitIsTrivial` low-danger de-emphasis if runtime-proven ordinary.
 
-No production target relocation is authorized yet.
+P0140:
+**PREPARED — `0.0.68-dev`, IN-CLIENT RUNTIME PROOF PENDING.**
+
+The diagnostic-only `WorldTargetProbe` preserves the current production target,
+uses the D-042 event/fallback contract, tests only a hidden addon-owned anchor
+relation outside combat, and reads reaction/triviality through secret-first
+wrappers. It does not suppress or mutate Blizzard target/nameplate UI.
 
 Next:
-**P0140 read-only world-target anchor/reaction runtime probe.**
+**Deploy P0140 and record runtime evidence before any production relocation.**
 
 This remains capability preparation under D-035/D-039. It does not authorize
-minimap suppression, unproven navigation sources, automated quest choices, or
-Camera changes.
+minimap suppression, unproven navigation sources, broader aura ownership,
+automated quest choices, or Camera changes.

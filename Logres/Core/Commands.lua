@@ -2812,6 +2812,79 @@ local function runAuraStatusProbe()
     end
 end
 
+local function runWorldTargetProbe()
+    local status =
+        Logres:GetModuleStatus("WorldTargetProbe")
+    local probe =
+        Logres:GetModule("WorldTargetProbe")
+    local capture = probe:CaptureManual()
+    local debugStatus = probe:GetDebugStatus()
+    local captureOK = type(capture) == "table"
+
+    local passed =
+        captureOK
+        and status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and debugStatus.eventFrameReady == true
+        and debugStatus.proxyReady == true
+        and debugStatus.secretCheckerAvailable == true
+        and debugStatus.nameplateAPIAvailable == true
+        and debugStatus.behindCameraAPIAvailable == true
+        and debugStatus.reactionAPIAvailable == true
+        and debugStatus.canAttackAPIAvailable == true
+        and debugStatus.isFriendAPIAvailable == true
+        and debugStatus.isTrivialAPIAvailable == true
+        and debugStatus.combatLockdownAPIAvailable == true
+        and debugStatus.targetChangedRegistered == true
+        and debugStatus.nameplateAddedRegistered == true
+        and debugStatus.nameplateRemovedRegistered == true
+        and debugStatus.behindCameraChangedRegistered == true
+        and debugStatus.enteringWorldRegistered == true
+        and debugStatus.failureCount == 0
+
+    emit(string.format(
+        "Logres worldtargetprobe: %s (capture=%s captures=%s manual=%s last=%s events=target:%s add:%s remove:%s behind:%s world:%s api=secret:%s plate:%s behind:%s reaction:%s attack:%s friend:%s trivial:%s combat:%s anchor=%s candidate=%s attachment=%s fallback=%s reactionCategory=%s canAttack=%s friend=%s trivial=%s secretSkips=%s failures=%s)",
+        passed and "PASS" or "FAIL",
+        tostring(captureOK),
+        tostring(debugStatus.captureCount),
+        tostring(debugStatus.manualCount),
+        tostring(debugStatus.lastReason),
+        tostring(debugStatus.targetChangedEvents),
+        tostring(debugStatus.nameplateAddedEvents),
+        tostring(debugStatus.nameplateRemovedEvents),
+        tostring(debugStatus.behindCameraChangedEvents),
+        tostring(debugStatus.enteringWorldEvents),
+        tostring(debugStatus.secretCheckerAvailable),
+        tostring(debugStatus.nameplateAPIAvailable),
+        tostring(debugStatus.behindCameraAPIAvailable),
+        tostring(debugStatus.reactionAPIAvailable),
+        tostring(debugStatus.canAttackAPIAvailable),
+        tostring(debugStatus.isFriendAPIAvailable),
+        tostring(debugStatus.isTrivialAPIAvailable),
+        tostring(debugStatus.combatLockdownAPIAvailable),
+        tostring(debugStatus.anchorPresent),
+        tostring(debugStatus.worldCandidate),
+        tostring(debugStatus.attachmentState),
+        tostring(debugStatus.fallback),
+        tostring(debugStatus.reactionCategory),
+        tostring(debugStatus.canAttack),
+        tostring(debugStatus.isFriend),
+        tostring(debugStatus.isTrivial),
+        tostring(debugStatus.secretSkipCount),
+        tostring(debugStatus.failureCount)
+    ))
+
+    local lines = probe:GetDiagnosticLines()
+
+    for index = 1, #lines do
+        emit(
+            "Logres worldtargetprobe: "
+            .. tostring(lines[index])
+        )
+    end
+end
+
 local function runPlayerHelpfulAuraCheck()
     local status =
         Logres:GetModuleStatus("PlayerHelpfulAuras")
@@ -3589,6 +3662,7 @@ local function printHelp()
     emit("  /logres questoffercontrolscheck")
     emit("  /logres questinteractionprobe")
     emit("  /logres aurastatusprobe")
+    emit("  /logres worldtargetprobe")
     emit("  /logres helpfulauracheck")
     emit("  /logres helpfulaurapreview [on|off]")
     emit("  /logres questofferacceptprobe")
@@ -3831,6 +3905,11 @@ local function handleCommand(message)
 
     if command == "aurastatusprobe" then
         runAuraStatusProbe()
+        return
+    end
+
+    if command == "worldtargetprobe" then
+        runWorldTargetProbe()
         return
     end
 
@@ -4195,6 +4274,12 @@ Logres:RegisterDevPanelAction(
     "auraStatusProbe",
     "Aura Status Probe",
     "aurastatusprobe",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "worldTargetProbe",
+    "World Target Probe",
+    "worldtargetprobe",
     "H"
 )
 Logres:RegisterDevPanelAction(

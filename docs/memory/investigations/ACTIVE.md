@@ -151,7 +151,7 @@ gated/deferred. Do not manufacture those states solely to advance sequencing.
 ## World-attached target presentation
 
 Status:
-**OPEN — SOURCE + FALLBACK POLICY RESOLVED; P0140 READ-ONLY RUNTIME PROBE NEXT.**
+**OPEN — P0140 PREPARED; IN-CLIENT RUNTIME PROOF PENDING.**
 
 Canonical investigation:
 `FUTURE_WORLD_TARGET_PRESENTATION.md`.
@@ -168,5 +168,17 @@ P0139 resolves the source/policy layer and accepts D-042:
 - existing screen-space Logres target remains canonical fallback;
 - no target/nameplate suppression is authorized.
 
-P0140 must now prove target-token nameplate behavior, hidden addon-owned attachment,
-reaction/triviality, and fallback observations in client.
+P0139 is durable at `b0122136`.
+
+P0140 prepares runtime `0.0.68-dev` with a diagnostic-only `WorldTargetProbe`:
+- direct `C_NamePlate.GetNamePlateForUnit("target", false)` re-query;
+- target/nameplate/behind-camera/world event invalidation only;
+- hidden addon-owned `UIParent` proxy attachment test outside combat, followed by
+  immediate detach;
+- secret-first `UnitReaction`, `UnitCanAttack`, `UnitIsFriend`, and
+  `UnitIsTrivial` reads;
+- no polling, nameplate enumeration, Blizzard mutation, CVar changes, or
+  production target relocation.
+
+Runtime evidence is still required. Environmental absence of an accessible
+nameplate is DEFERRED/fallback-observed rather than FAIL.

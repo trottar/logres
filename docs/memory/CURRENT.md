@@ -8,7 +8,7 @@ project: logres
 
 ## Active Objective
 
-**Approved visual implementation translation — read-only world-target anchor/reaction runtime probe next.**
+**Approved visual implementation translation — P0140 world-target runtime proof pending.**
 
 This is parallel Phase-H preparation while the formal Phase G camera phase remains
 open. The user has explicitly frozen Camera work until the already-approved visual
@@ -16,16 +16,22 @@ sequence is finished.
 
 ## Current Work Item
 
-**P0140 planning target — read-only world-target anchor/reaction runtime probe.**
+**P0140 prepared — read-only world-target anchor/reaction runtime probe; in-client proof pending.**
 
 Latest verified durable checkpoint:
-P0138 `6392b2e447f710e84d6add4ef46b972afc95bf4c`.
+P0139 `b012213662a93b455b1ed3af2325a2bacdb2a59d`.
 
-Current pushed/tested runtime:
+Current durable runtime:
 `0.0.67-dev`.
 
+Prepared candidate runtime:
+`0.0.68-dev`.
+
+P0140 implementation:
+**PREPARED — IN-CLIENT RUNTIME PROOF PENDING.**
+
 P0139 source + fallback-policy audit:
-**RESOLVED.**
+**RESOLVED / DURABLE.**
 
 P0136 runtime probe:
 **INSTALLED / PUSHED — PASS WITH ENVIRONMENTAL DEFERRALS.**
@@ -163,38 +169,37 @@ Preserved deferrals/gates:
 
 ## Next Action
 
-Prepare P0140 as a **read-only world-target anchor/reaction runtime probe**.
+Deploy P0140 candidate runtime `0.0.68-dev` and perform the **read-only
+world-target anchor/reaction runtime proof**.
 
-Contract:
-1. preserve current production target placement unchanged;
-2. event-driven invalidation only: target change, nameplate add/remove,
-   behind-camera change, entering world;
-3. ignore nameplate event payloads and re-query `"target"` directly;
-4. query `C_NamePlate.GetNamePlateForUnit("target", false)` behind `pcall`;
-5. never request forbidden nameplates;
-6. secret-check every returned value before branching/inspection;
-7. query behind-camera state only when an accessible nameplate exists;
-8. outside combat only, test an invisible addon-owned proxy anchored relative to
-   the returned nameplate, then immediately detach;
-9. probe `UnitReaction`, `UnitCanAttack`, `UnitIsFriend`, and `UnitIsTrivial`
-   through secret-first wrappers;
-10. do not read exact enemy level/classification/difficulty, selection state, or
-    threat values;
-11. do not hide/reparent/mutate Blizzard target/nameplate UI;
-12. do not poll.
+Required validation:
+1. run Phase H -> `World Target Probe` out of combat with no target;
+2. target an ordinary nearby unit with a naturally visible Blizzard nameplate and
+   run the probe again;
+3. if naturally convenient, observe a no-nameplate / behind-camera fallback state;
+4. require zero probe failures and no Lua/secret/protected-frame errors;
+5. require ordinary reaction/triviality diagnostics where available;
+6. require `attachment=passed candidate=true` for at least one accessible
+   out-of-combat target plate before production anchoring can advance;
+7. confirm the current production Logres target remains screen-space and Blizzard
+   target/nameplate UI remains untouched;
+8. Phase 0 -> `Run All` remains PASS.
 
 Environmental absence of an accessible target nameplate is a fallback observation
-/ DEFERRED state, not FAIL.
+/ DEFERRED state, not FAIL. Combat defers the hidden attachment test.
+
+Production target relocation remains prohibited until the runtime evidence is
+recorded durably.
 
 ## Success Criteria
 
-P0140 succeeds when the tested client proves the `"target"` nameplate query and
-addon-owned anchor relation are safe where available, ordinary reaction/trivial
-inputs can be read, and fallback states are observable without altering production
-presentation.
+P0140 runtime validation succeeds when the tested client proves the `"target"`
+nameplate query and hidden addon-owned anchor relation are safe where available,
+ordinary reaction/trivial inputs are readable, fallback states are observable,
+and the existing production target/Blizzard presentation remain unchanged.
 
-Any Lua, secret-value, forbidden/protected-frame, or Blizzard-mutation error is
-FAIL.
+Any Lua error, secret-value violation, forbidden/protected-frame error, failed
+addon-owned detach, or Blizzard-presentation mutation is FAIL.
 
 ## Do Not Reopen Without New Evidence
 
@@ -213,6 +218,7 @@ FAIL.
 
 ## Relevant References
 
+- `docs/memory/patches/P0140_WORLD_TARGET_READ_ONLY_PROBE.md`
 - `docs/memory/patches/P0139_WORLD_TARGET_SOURCE_ANCHOR_AUDIT.md`
 - `docs/memory/evidence/P0139_WORLD_TARGET_SOURCE_ANCHOR_AUDIT_2026-10-05.md`
 - `docs/memory/decisions/D-042_WORLD_TARGET_ANCHOR_AND_FALLBACK_POLICY.md`

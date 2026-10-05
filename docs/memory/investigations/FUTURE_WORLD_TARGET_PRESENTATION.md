@@ -1,6 +1,6 @@
 # Future — World-Attached Target Presentation
 
-Status: **OPEN — SOURCE + FALLBACK POLICY RESOLVED; P0140 RUNTIME PROBE NEXT**
+Status: **OPEN — P0140 PREPARED; IN-CLIENT RUNTIME PROOF PENDING**
 Opened: 2026-10-05
 
 ## Product direction
@@ -107,4 +107,27 @@ Still unproven:
 - ordinary reaction/triviality runtime values.
 
 Next:
-P0140 read-only runtime probe.
+Deploy and validate the prepared P0140 read-only runtime probe.
+
+## P0140 implementation checkpoint
+
+P0140 prepares `WorldTargetProbe` on candidate runtime `0.0.68-dev`.
+
+Implementation boundary:
+- event-driven only: target change, nameplate add/remove, behind-camera change,
+  entering world;
+- event payloads discarded; `"target"` is re-queried directly;
+- `C_NamePlate.GetNamePlateForUnit("target", false)` only;
+- returned source values pass through secret-first wrappers before inspection;
+- behind-camera state is queried only after an ordinary accessible plate exists;
+- one hidden addon-owned `UIParent` proxy tests relative `SetPoint` only outside
+  combat and is immediately detached;
+- reaction/triviality reads are limited to `UnitReaction`, `UnitCanAttack`,
+  `UnitIsFriend`, and `UnitIsTrivial`;
+- only sanitized booleans/categories/fallback state/errors are retained;
+- no exact enemy level/classification/difficulty/selection/threat read;
+- no nameplate enumeration/CVar changes/Blizzard-frame mutation/polling;
+- current screen-space Logres target remains unchanged.
+
+Runtime evidence remains pending. A clean no-nameplate state is a valid fallback
+observation; an actual Lua/secret/protected-frame/attachment failure is not.

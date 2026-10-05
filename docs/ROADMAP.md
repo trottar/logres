@@ -112,7 +112,7 @@ Player harmful/urgent and populated target aura data remain environmental
 deferrals. Private/group ownership and stock aura suppression remain gated.
 
 P0139 resolves the world-target source + fallback policy against the exact
-Forever `1.60.1.70205` source generation.
+Forever `1.60.1.70205` source generation and is durable at `b0122136`.
 
 D-042 permits only a conditional accessible nameplate candidate using
 `includeForbidden=false`, preserves the existing screen-space Logres target as
@@ -120,7 +120,12 @@ fallback, keeps Blizzard target/nameplate UI available, uses ordinary reaction
 state only, and limits relative-danger policy to `UnitIsTrivial` low-danger
 de-emphasis without exact difficulty inspection.
 
-P0140 is next: a read-only world-target anchor/reaction runtime probe. Production
-target placement does not move before that proof.
+P0140 is prepared on candidate runtime `0.0.68-dev` as a diagnostic-only,
+event-driven runtime probe. It tests the exact `"target"` nameplate query,
+behind-camera state, hidden addon-owned out-of-combat attachment, and
+secret-first reaction/triviality reads without moving production presentation.
+
+Next is in-client P0140 validation. Production target placement does not move
+before that proof is recorded.
 
 D-037 unproven navigation/minimap roles remain separately gated.

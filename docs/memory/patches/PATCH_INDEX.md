@@ -158,5 +158,6 @@
 | P0136 | 2026-10-05 | INSTALLED / PUSHED — RUNTIME PROBE PASS WITH ENVIRONMENTAL DEFERRALS | Player helpful ordinary payload/metadata proven; player harmful and populated target categories deferred (`ef769f6`, `0.0.66-dev`) |
 | P0137 | 2026-10-05 | INSTALLED / PUSHED — RUNTIME + VISUAL PASS | Production player `HELPFUL|PLAYER` passive aura lane accepted at real UI scale (`2b578759`, `0.0.67-dev`) |
 | P0138 | 2026-10-05 | INSTALLED / PUSHED — DOCS-ONLY ACCEPTANCE CHECKPOINT | Record P0137 acceptance; preserve aura deferrals; open P0139 world-attached target source + anchoring/fallback audit (`6392b2e4`) |
-| P0139 | 2026-10-05 | PREPARED — SOURCE + FALLBACK POLICY LAYER RESOLVED | Pin conditional nameplate anchor/reaction/triviality policy; accept D-042; open P0140 read-only runtime probe |
+| P0139 | 2026-10-05 | INSTALLED / PUSHED — SOURCE + FALLBACK POLICY LAYER RESOLVED | Pin conditional nameplate anchor/reaction/triviality policy; accept D-042; open P0140 read-only runtime probe (`b0122136`) |
+| P0140 | 2026-10-05 | PREPARED — READ-ONLY RUNTIME PROOF PENDING | Event-driven world-target nameplate/anchor/reaction diagnostic on candidate `0.0.68-dev`; no production relocation |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.
