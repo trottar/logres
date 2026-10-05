@@ -1,8 +1,9 @@
 # Future Navigation — Local POI / Tracking Capability Audit
 
-Status: **OPEN — P0142 SOURCE-CAPABILITY AUDIT NEXT**
+Status: **OPEN — P0142 SOURCE LAYER RESOLVED; P0143 READ-ONLY RUNTIME PROBE NEXT**
 Opened: 2026-10-03
 Canonical direction: `../decisions/D-037_NAVIGATION_MARKER_ROLES_AND_MINIMAP_DIRECTION.md`
+Source/fallback policy: `../decisions/D-043_NAVIGATION_SOURCE_AND_MINIMAP_FALLBACK_POLICY.md`
 
 ## Why this exists
 
@@ -12,93 +13,160 @@ D-037 accepts a future four-role navigation system:
 - local radius POI;
 - tracking.
 
-Only the manual user-waypoint marker is currently runtime-proven.
+Only heading/manual waypoint are currently production-proven.
 
-The local POI and tracking roles are plausible product directions, but their
-actual Forever addon capabilities have not yet been established. This record
-prevents visual planning from being mistaken for runtime proof.
+P0142 resolves the source layer sufficiently to separate three concepts:
+1. tracking **filter definitions/state**;
+2. positioned map `AreaPOI` rows;
+3. engine-rendered minimap tracking/service blips.
 
-## Questions to answer
+They are not interchangeable capabilities.
 
-### Tracking
+## P0142 source result
 
-Determine from the current Forever client:
-- all tracking types actually exposed;
-- whether tracking selection is singular or can be simultaneous;
-- update events / refresh semantics;
-- whether addon code can enumerate individual matching tracked entities;
-- whether usable map/world positions or bearings are available for each result;
-- whether results are secret/protected in any context;
-- how stale/disappearing results are signaled.
+Canonical evidence:
+`../evidence/P0142_NAVIGATION_MINIMAP_SOURCE_CAPABILITY_AUDIT_2026-10-05.md`.
 
-The desired presentation remains one generic Logres tracker glyph independent of
-tracked category. That visual policy does not prove the source exists.
-
-### Local radius POI
-
-Determine:
-- which service/location POIs the Forever minimap actually exposes;
-- whether those POIs can be enumerated by addon code;
-- whether individual usable positions/bearings are available;
-- whether the client exposes a trustworthy local/minimap view radius;
-- whether different maps/indoors/cities require different coordinate handling;
-- whether POI identity/category is safely available for inspection;
-- update/removal semantics.
-
-Do not hard-code an assumed service list before the client is enumerated.
+Pinned source:
+`Gethe/wow-ui-source@e3ecc27b64d30fdc735a3f6579b866858f9f9df1`
+(`1.60.1.70205`).
 
 ### Quest destination
 
-Revisit quest destination only with new evidence.
+Source-positive:
+- `C_QuestLog.GetNextWaypoint`;
+- `C_QuestLog.GetNextWaypointForMap`;
+- `C_QuestLog.GetNextWaypointText`;
+- `C_SuperTrack.GetSuperTrackedQuestID`;
+- `SUPER_TRACKING_CHANGED`;
+- `SUPER_TRACKING_PATH_UPDATED`;
+- `C_Navigation.GetNextWaypointForMap`.
 
-Phase E runtime found no usable next waypoint for the accepted tested
-super-tracked quests. D-037 does not convert that negative result into a success.
+Blizzard's quest map provider uses `C_QuestLog.GetNextWaypointForMap` for a
+focused/super-tracked ordinary quest. The separate super-track waypoint provider
+uses `C_Navigation.GetNextWaypointForMap` for broader current-navigation paths
+rather than replacing the ordinary quest path.
+
+Therefore the earlier Phase-E runtime result remains authoritative for its tested
+scope: those super-tracked quests produced no usable quest waypoint. P0142 does
+not reinterpret absence as success.
+
+P0143 may compare both source families read-only in naturally available states.
+
+### Tracking
+
+`C_Minimap` exposes:
+- `GetNumTrackingTypes`;
+- `GetTrackingInfo`;
+- `GetTrackingFilter`;
+- `MINIMAP_UPDATE_TRACKING`.
+
+`MinimapScriptTrackingInfo` contains metadata such as name, texture, active state,
+type, subtype, and spell ID.
+
+Blizzard's own tracking menu is checkbox/per-index based and retains independent
+selected state. Tracking is therefore **multi-select capable**, disproving the
+earlier working assumption that one selected mode necessarily supplies all marker
+meaning.
+
+The audited public `C_Minimap` surface does **not** expose an enumerator for the
+individual detected blips/entities produced by active tracking, nor coordinates
+or bearings for those results.
+
+Consequence:
+the D-037 repeated generic tracking-result glyph is source-blocked on the current
+public API surface. Do not create a runtime probe that polls or inspects Blizzard
+presentation to recover those hidden results.
+
+### Local service / POI
+
+`Enum.MinimapTrackingFilter` includes service-like categories such as banker,
+taxi node, innkeeper, mailbox, profession/class trainer, repair, stablemaster,
+auctioneer, barber, and others.
+
+Those entries are **filter categories**, not enumerable service instances. Their
+presence does not establish individual service positions.
+
+A separate source exists:
+`C_AreaPoiInfo.GetAreaPOIForMap` plus `GetAreaPOIInfo`.
+
+`AreaPOIInfo` includes a map position and name, and `AREA_POIS_UPDATED` supplies
+invalidation.
+
+This makes bounded current-map `AreaPOI` rows a plausible local-POI input, but it
+does not prove that Forever ordinary zones expose the service/place semantics
+desired by D-037. P0143 must sample real runtime rows before any product mapping.
+
+### Local radius / comparable distance
+
+Source candidates:
+- `C_Minimap.GetViewRadius()` -> yards;
+- `C_Map.GetBestMapForUnit("player")`;
+- `C_Map.GetPlayerMapPosition`;
+- `C_Map.GetMapWorldSize` -> map width/height in yards;
+- `C_Map.GetWorldPosFromMapPos` / `GetMapPosFromWorldPos`.
+
+These make a same-map physical-distance path source-plausible. P0143 must still
+secret-first prove ordinary values and compatible map/position behavior before
+D-038 proximity-first focus or depth scaling can use them.
+
+Do not mix arbitrary normalized-map deltas, `C_Navigation.GetDistance`, quest
+distance, and POI distance as if their units/frames are automatically comparable.
+
+### Update / staleness model
+
+Candidate event-driven invalidation is available:
+- `PLAYER_MAP_CHANGED`;
+- `QUEST_LOG_UPDATE`;
+- `SUPER_TRACKING_CHANGED`;
+- `SUPER_TRACKING_PATH_UPDATED`;
+- `AREA_POIS_UPDATED`;
+- `MINIMAP_UPDATE_TRACKING`;
+- `PLAYER_ENTERING_WORLD`.
+
+P0143 should discard payloads and re-query owned diagnostic state. No polling is
+needed to establish the source capability.
 
 ### Minimap completeness
 
-Separately enumerate current Forever minimap responsibilities, including
-information and interactions that are not marker bearings.
+Pinned Blizzard minimap source confirms at least these current responsibilities:
+- zone/subzone and PvP-territory context;
+- click-to-ping;
+- zoom controls / mouse wheel;
+- tracking-filter management;
+- Blizzard-rendered blips and hover interaction;
+- target-related blip refresh;
+- world-map access from the minimap header/zone control.
 
-The capability audit must identify what Logres would need to replace, what the
-product may deliberately omit, and what must remain Blizzard-owned.
+`MINIMAP_PING` is explicitly restricted and carries secret payloads.
 
-## Method
+These responsibilities are not replaced merely because Logres can draw additional
+compass markers. D-030/D-037/D-043 keep the stock minimap available.
 
-Use the normal project method:
+## P0143 runtime scope
 
-**narrow source question -> targeted diagnostic -> runtime evidence -> explicit
-result -> coherent implementation/decision**
+The next justified probe is read-only and bounded:
+- current player map/position/map world size;
+- minimap view radius;
+- tracking type/state metadata only;
+- current supertracking + quest/current-navigation waypoint sources;
+- bounded current-map AreaPOI rows;
+- same-map comparable-distance arithmetic only from ordinary proven inputs.
 
-Prefer current Forever source/API evidence first, then the smallest in-game
-probe needed to prove actual behavior.
-
-Do not add production polling, broad hooks, or minimap suppression as a probe.
+No individual tracking-result probe exists because the source audit found no
+supported result enumerator.
 
 ## Current result
 
-**UNPROVEN / DEFERRED.**
+**SOURCE LAYER RESOLVED / PRODUCTION EXPANSION STILL GATED.**
 
-No local POI, tracking-result, or quest-destination production marker is
-authorized by this record.
+Authorized next:
+P0143 read-only runtime capability proof.
 
-D-030 remains the current minimap runtime boundary until the complete replacement
-gate is deliberately satisfied.
-
-## P0141 sequencing checkpoint
-
-P0140 closed its observed runtime scope with safe fallback/reaction PASS but an
-environmental positive-nameplate/attachment deferral. Project sequencing therefore
-advances to this independent approved capability slice rather than forcing
-nameplate state.
-
-P0142 is source evidence only. It must audit the exact current Forever generation
-before any new runtime code and determine:
-- quest-destination source viability;
-- tracking selection and individual-result enumerability;
-- local POI/service enumerability and usable position/bearing data;
-- safe player/map coordinate and comparable-distance inputs;
-- update/removal/staleness and secret/protected behavior;
-- stock minimap information/control responsibilities;
-- the smallest justified read-only runtime probes, if any.
-
-The stock minimap remains Blizzard-owned.
+Not authorized:
+- new production quest/POI/tracking marker roles;
+- tracking filter mutation;
+- minimap CVar mutation;
+- engine/minimap blip inspection to infer hidden tracking results;
+- stock minimap suppression;
+- polling or broad hooks.

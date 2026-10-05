@@ -1,0 +1,32 @@
+P0142 — D-037 Navigation / Minimap Source-Capability Audit
+Baseline: 44720c22f0206c37dc6c1559f51b9319f3ee6647
+Runtime: unchanged at 0.0.68-dev
+Scope: docs / primary-source evidence only
+Source pin: Gethe/wow-ui-source@e3ecc27b64d30fdc735a3f6579b866858f9f9df1 (1.60.1.70205)
+Decision: D-043 Navigation Source and Minimap Fallback Policy
+Artifact: R1 corrects initial exact-multiline-anchor applier failure
+Next: P0143 read-only navigation source runtime probe
+Deployment: docs/source evidence only; no WoW redeploy required
+
+58bca6944eefe307fe5a12916c8a99df26bca317f089816d065627cf1361082d  docs/ROADMAP.md
+f30d63a2af0a12301be286d06a773e0f06b659aac1fb25b0a92a7c2e8971b441  docs/memory/2026-10-05.md
+4f0de3c82cfb0831b63cc98737e2541fea4e41a7df46dfccf72c93aa9ffd5a20  docs/memory/CURRENT.md
+d0dc1cf790b2058d7ae5bf62172bb3b7e4c1a11f088f1f64c35e343551a78e16  docs/memory/MEMORY.md
+38489d9fe3b9a02e23a07d173e1130b150d035b3a6dbbc39efdd3db8fbbb81bf  docs/memory/architecture/VISUAL_IMPLEMENTATION_STATUS.md
+126aee5380f391c058fc58bfa6f87832a0fdfa0e97559db0c455f34d86058c7e  docs/memory/decisions/D-037_NAVIGATION_MARKER_ROLES_AND_MINIMAP_DIRECTION.md
+fcf70a5c9ac424dc82acde17bee8915f96216a5932aff80de360788d9e9c7f4f  docs/memory/decisions/D-043_NAVIGATION_SOURCE_AND_MINIMAP_FALLBACK_POLICY.md
+5c83de2575ee35b64f6b97660828c3b8d8611f02502ee1ceb17d3e3fcb478e15  docs/memory/evidence/P0142_NAVIGATION_MINIMAP_SOURCE_CAPABILITY_AUDIT_2026-10-05.md
+f7a0cd8a27e2bb14a22f8fa05b2b8bda8f861b537c6fe2a2ef690b6c19238a00  docs/memory/handoffs/CURRENT_HANDOFF.md
+6d59001c31493dd594d8fd3d63dab25ce6d72931c6a7645d069e6a048e90a984  docs/memory/investigations/ACTIVE.md
+029312fd906cbf81a18fc437bb7973b8bf3b3d776a46105b5b9eca34d003d8b5  docs/memory/investigations/FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md
+365be78236177b8709cbff882552aef0b6bc6c444b28ebfed8f10d94d21ca301  docs/memory/patches/P0141_RECORD_P0140_PASS_OPEN_NAVIGATION_AUDIT.md
+872efcc19bfbf582bb0bf592d96739df8ae7fe4d919c7b05498cacacb63962ce  docs/memory/patches/P0142_NAVIGATION_MINIMAP_SOURCE_CAPABILITY_AUDIT.md
+1b5b089bd014128ee3b6828eb5e9dc6d69249a7395b8d3905216688fff591080  docs/memory/patches/PATCH_INDEX.md
+50ea33dd1c9c229444a629e90d26ce7f61ed1617f455ed79a8d8f46637011bc6  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+c1c2ba1d2244195866d983d2e868ca869a97c77bc3edabad9c9ce9e5343f9d8b  docs/memory/roadmap/STATUS.md
+
+Checks:
+python3 tools/check_memory_health.py
+git diff --check -- <P0142-owned tracked files>
+
+No runtime code changed.

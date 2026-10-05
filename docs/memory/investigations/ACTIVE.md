@@ -173,13 +173,23 @@ remains blocked and the screen-space target remains canonical fallback.
 ## Navigation / minimap capability
 
 Status:
-**OPEN — P0142 D-037 SOURCE-CAPABILITY AUDIT NEXT.**
+**OPEN — P0142 SOURCE LAYER RESOLVED; P0143 READ-ONLY RUNTIME PROBE NEXT.**
 
 Canonical investigation:
 `FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md`.
 
-Only heading/manual waypoint are production-proven. P0142 will audit the exact
-Forever source layer for quest destination, local POI/service, tracking-result,
-safe coordinate/distance inputs, update semantics, and minimap completeness.
+P0142 pins the exact Forever `1.60.1.70205` source and accepts D-043.
 
-No new marker role or minimap suppression is authorized by opening this audit.
+Resolved source facts:
+- ordinary quest waypoint remains `C_QuestLog.GetNextWaypoint*`; earlier tested
+  quest negatives remain valid;
+- `C_Navigation.GetNextWaypointForMap` is a separate broader navigation candidate;
+- tracking selection is multi-select;
+- filter metadata/state are enumerable, but individual tracked-result positions
+  are not exposed by the audited public API;
+- service/townsfolk filters likewise do not expose individual service positions;
+- `C_AreaPoiInfo`, `C_Minimap.GetViewRadius`, and `C_Map` geometry are surviving
+  read-only runtime candidates.
+
+P0143 will test only those surviving candidates. Stock minimap presentation remains
+Blizzard-owned; no new marker role is production-authorized.

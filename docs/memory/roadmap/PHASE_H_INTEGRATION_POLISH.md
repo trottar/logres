@@ -285,13 +285,26 @@ reaction/triviality reads with zero recorded failures. No accessible target
 nameplate was observed, so behind-camera and hidden attachment proof remain
 environmentally deferred. Production target relocation stays blocked.
 
-Next:
-**P0142 D-037 navigation/minimap source-capability audit.**
+P0142:
+**SOURCE-CAPABILITY LAYER RESOLVED — DOCS/PRIMARY-SOURCE EVIDENCE ONLY.**
 
-P0142 is source evidence only: audit quest destination, local POI/service,
-tracking-result, safe coordinate/distance inputs, event semantics, and minimap
-completeness before defining any runtime probe.
+The exact Forever source establishes:
+- ordinary quest waypoint and broader current-navigation source families;
+- multi-select tracking filter state;
+- no public per-detected tracking-result positions;
+- no service-instance positions from service tracking filters;
+- positioned `C_AreaPoiInfo` as a distinct runtime candidate;
+- minimap view radius and map/world geometry as runtime-gated distance inputs;
+- continued stock minimap completeness requirements.
+
+D-043 records the fail-open/source policy.
+
+Next:
+**P0143 read-only navigation source runtime probe.**
+
+P0143 tests only surviving source candidates and makes no production or Blizzard
+presentation changes.
 
 This remains capability preparation under D-035/D-039. It does not authorize
-minimap suppression, unproven navigation sources, broader aura ownership,
-automated quest choices, or Camera changes.
+minimap suppression, source-blocked tracking-result markers, broader aura
+ownership, automated quest choices, or Camera changes.

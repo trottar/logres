@@ -40,7 +40,7 @@ A component can be visually complete while runtime ownership remains incomplete.
 | Active Quest | Yes | P0126 is durable at `89b0c563` / `0.0.58-dev`; final R3 runtime + visual PASS uses one-focus title, count-free normalized objective labels, bar-only progress, hover-only exact detail, quiet completion, and an independent persisted toggle | Final whole-screen spacing/contrast calibration remains polish; do not reopen persistent `%`/`N/M` mechanics without new evidence | **Runtime + visual production baseline accepted** |
 | Player-health tunnel | Yes / D-036 frozen | P0124 is durable at `1e7e27e` / `0.0.54-dev`; five Theme-owned organic tunnel/death masks run on the proven native secret-safe health-to-alpha path, with deterministic D-036 preview percentages | Whole-interface contrast/scale polish remains; natural damage/heal may be observed opportunistically but is not required to re-prove the accepted preview matrix | **Runtime + visual baseline accepted — final polish deferred** |
 | Compass heading + manual waypoint | Yes | P0123 is durable at `1721eb4d` / `0.0.53-dev`; heading/manual-waypoint runtime + visual PASS includes truthful off-tape suppression and near-center marker proof | Distance-dependent depth and identity remain gated because comparable distance/name inputs are not proven; quest/POI/tracking remain separate capability work | **Production primitive proven — extended roles gated** |
-| Compass quest / POI / tracking roles | Yes | Sources not generally proven; only manual waypoint is production-proven | P0142 D-037 source-capability audit next; implement only runtime-proven roles and keep stock minimap until the full replacement gate completes | **Capability audit active next** |
+| Compass quest / POI / tracking roles | Yes | P0142 resolves the source layer: ordinary quest/current-navigation paths and `C_AreaPoiInfo`/view-radius/map geometry have runtime candidates; individual tracked-result and service-instance positions are source-blocked | P0143 read-only runtime proof for surviving candidates; keep stock minimap until full replacement completeness is proven | **Source layer resolved — runtime candidates gated; tracking-result markers blocked** |
 | Class/pet/special controls | Shared button language approved; class-specific mechanics only partially covered | Existing Blizzard-owned child/special surfaces remain available; Logres ordinary action roles are separate | Apply button family where ownership is proven; design/implement discrete class-resource art (runes/combo points/etc.) separately as needed | **Residual art + capability** |
 | Settings / accessibility | Visual language only, no dedicated final sheet | Preference infrastructure exists, not final Phase-H settings UI | Design compact settings/accessibility presentation and expose only accepted product choices | **Residual design / integration** |
 
@@ -110,13 +110,18 @@ Completed with environmental deferral:
 17. P0140 read-only world-target runtime probe — fallback/reaction PASS on
     `f7e2c31d` / `0.0.68-dev`; positive anchor/attachment remains deferred.
 
+Completed:
+18. P0142 D-037 navigation/minimap source-capability audit — source layer resolved;
+    D-043 accepted; individual tracking-result/service-instance positions blocked.
+
 Next:
-18. P0142 D-037 navigation/minimap source-capability audit.
+19. P0143 read-only runtime proof for current-navigation, current-map AreaPOI,
+    minimap view-radius, tracking metadata/state, and same-map geometry candidates.
 
 After that:
-19. implement only capability-proven navigation roles or preserve their negative /
+20. implement only runtime-proven navigation roles or preserve their negative /
     deferred results;
-20. finish class-specific discrete resources, settings/accessibility, and final
+21. finish class-specific discrete resources, settings/accessibility, and final
     whole-screen composition calibration.
 
 This is a dependency-oriented implementation map, not a claim that formal Phase H

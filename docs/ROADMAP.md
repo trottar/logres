@@ -126,7 +126,13 @@ ordinary friendly reaction, ordinary `UnitIsTrivial=false`, zero recorded probe
 failures/secret skips, and integrated checks. No accessible target nameplate was
 observed, so production world-attached placement remains blocked.
 
-P0142 is next: a D-037 navigation/minimap source-capability audit for quest
-destination, local POI/service, tracking results, safe coordinate/distance inputs,
-update semantics, and minimap completeness. Stock minimap presentation remains
-available until the replacement gate is actually proven.
+P0142 resolves the D-037 navigation/minimap source layer against the exact
+Forever `1.60.1.70205` generation and accepts D-043. Tracking filter state is
+multi-select, but individual detected tracking-result and service-instance
+positions are not exposed by the audited public source surface. Current-map
+`C_AreaPoiInfo`, `C_Minimap.GetViewRadius`, broader current navigation, and
+same-map geometry survive as runtime candidates.
+
+P0143 is next: a bounded read-only runtime probe for only those surviving
+candidates. Stock minimap presentation remains available until the replacement
+gate is actually proven.

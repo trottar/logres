@@ -4,7 +4,7 @@ As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — P0140 fallback/reaction runtime PASS with anchor deferral; P0142 navigation source audit next.**
+**Approved visual implementation translation — P0142 navigation/minimap source layer resolved; P0143 read-only runtime probe next.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -122,8 +122,19 @@ are proven for the observed scope. No accessible target nameplate was observed, 
 positive anchoring, behind-camera behavior, and hidden attachment remain deferred.
 Production target placement remains screen-space.
 
+P0142:
+**SOURCE-CAPABILITY LAYER RESOLVED — DOCS/PRIMARY-SOURCE EVIDENCE ONLY.**
+
+D-043 records the source/fallback policy. Tracking selection is multi-select;
+individual tracked-result and service-instance positions are not exposed by the
+audited public source surface. Current-map `C_AreaPoiInfo`, minimap view radius,
+broader current navigation, and same-map geometry survive as runtime candidates.
+
 Next:
-**P0142 D-037 navigation/minimap source-capability audit.**
+**P0143 read-only navigation source runtime probe.**
+
+Stock minimap presentation remains available. P0143 does not mutate tracking,
+supertracking, minimap CVars/settings, or production presentation.
 
 This remains capability-gated preparation under D-037/D-039/D-040. It does not
 authorize stock minimap suppression, unproven navigation markers, broader aura

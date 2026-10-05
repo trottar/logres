@@ -94,9 +94,15 @@ Visual direction:
 - do not create a separate icon taxonomy for beasts, herbs, minerals, humanoids,
   or other track categories merely for ornament.
 
-The player's tracking selection supplies the semantic meaning. The working
-Forever assumption that ordinary tracking exposes one selected tracking mode at
-a time must be confirmed in the capability audit before implementation.
+P0142 resolves the tracking-selection question against the pinned Forever source:
+tracking state is per-index and multi-select capable. The earlier singular-mode
+working assumption is therefore rejected.
+
+Because the audited public API exposes tracking filter metadata/state but not
+individual detected-result positions, the repeated generic tracking-glyph endpoint
+remains visual-only and source-blocked until a supported per-result source exists.
+D-043 is authoritative for this source/fallback boundary.
+
 
 ## Visual-system relationship
 
@@ -171,3 +177,18 @@ Phase E's runtime work and D-030 remain valid historical/current evidence.
 
 D-037 is accepted future Phase H+ product direction and should drive later
 source/runtime capability investigations and compass visual studies.
+
+## P0142 source-policy refinement
+
+P0142 source evidence is recorded in
+`../evidence/P0142_NAVIGATION_MINIMAP_SOURCE_CAPABILITY_AUDIT_2026-10-05.md`.
+
+D-043 refines this decision without changing its world-first intent:
+- tracking filter selection is multi-select;
+- individual tracking-result positions are not publicly enumerable;
+- service/townsfolk tracking categories do not expose service-instance positions;
+- positioned `C_AreaPoiInfo` rows are a separate candidate family;
+- `C_Minimap.GetViewRadius` and `C_Map` geometry are runtime-gated candidates;
+- the Blizzard minimap remains the completeness fallback.
+
+P0143 is the next read-only runtime proof for only the surviving candidates.

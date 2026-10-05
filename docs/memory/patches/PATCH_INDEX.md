@@ -160,5 +160,6 @@
 | P0138 | 2026-10-05 | INSTALLED / PUSHED — DOCS-ONLY ACCEPTANCE CHECKPOINT | Record P0137 acceptance; preserve aura deferrals; open P0139 world-attached target source + anchoring/fallback audit (`6392b2e4`) |
 | P0139 | 2026-10-05 | INSTALLED / PUSHED — SOURCE + FALLBACK POLICY LAYER RESOLVED | Pin conditional nameplate anchor/reaction/triviality policy; accept D-042; open P0140 read-only runtime probe (`b0122136`) |
 | P0140 | 2026-10-05 | INSTALLED / PUSHED — RUNTIME PASS WITH ENVIRONMENTAL ANCHOR/ATTACHMENT DEFERRAL | Safe no-nameplate fallback + ordinary friendly reaction proven; no accessible plate/attachment observed (`f7e2c31d`, `0.0.68-dev`) |
-| P0141 | 2026-10-05 | PREPARED R1 — DOCS/EVIDENCE ONLY; INITIAL ARTIFACT ROLLED BACK ON MEMORY-HEALTH HEADING CONTRACT | Record P0140 runtime result; preserve world-anchor deferral; open P0142 D-037 navigation/minimap source audit |
+| P0141 | 2026-10-05 | INSTALLED / PUSHED — DOCS/EVIDENCE ONLY; INITIAL ARTIFACT FAILURE PRESERVED | Record P0140 runtime result; preserve world-anchor deferral; open P0142 navigation/minimap source audit (`44720c22`) |
+| P0142 | 2026-10-05 | PREPARED — DOCS / PRIMARY-SOURCE EVIDENCE ONLY | Resolve D-037 navigation/minimap source layer; accept D-043; open P0143 read-only runtime probe |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

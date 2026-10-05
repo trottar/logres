@@ -2,8 +2,9 @@
 
 Date: 2026-10-05
 Baseline: `f7e2c31dd656dd1a7478670c56a32747db32a66e`
+Durable: `44720c22f0206c37dc6c1559f51b9319f3ee6647`
 Runtime: unchanged at `0.0.68-dev`
-Result: **PREPARED — DOCS/EVIDENCE ONLY**
+Result: **INSTALLED / PUSHED — DOCS/EVIDENCE ONLY**
 
 ## Purpose
 
