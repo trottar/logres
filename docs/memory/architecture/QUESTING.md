@@ -200,3 +200,22 @@ corrected it and the final R3 runtime/checkall passed.
 The next questing work is not Active Quest expansion. It is the D-035 NPC
 quest-interaction source/capability audit before any Blizzard interaction surface
 is replaced.
+
+## P0128 NPC quest interaction source audit
+
+P0128 resolves the source/API layer for D-035 without changing runtime ownership.
+
+Current Forever source references expose:
+- offer/progress/completion narrative reads;
+- reward item/choice/currency/spell reads;
+- Accept/Decline/Continue/finalize quest functions;
+- structured gossip quest/option reads and quest/option selection functions.
+
+Only the historical `QUEST_DETAIL` passive read path and reward XP have prior
+runtime proof in this interaction domain.
+
+The next slice is therefore read-only. P0129 must observe real interaction states,
+reward/gossip data, secret/failure behavior, and function presence before any
+mutation-specific probe is selected.
+
+Blizzard quest/gossip UI remains authoritative and visible.

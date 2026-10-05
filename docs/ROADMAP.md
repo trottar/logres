@@ -71,9 +71,13 @@ Parallel translation has accepted:
 - P0124 organic player-health tunnel;
 - P0126 Active Quest one-focus presentation (`89b0c563`, `0.0.58-dev`).
 
-P0126 is runtime + visual PASS. The next parallel gate is the **D-035 NPC quest
-interaction source/capability audit** before any Logres-owned quest controls or
-Blizzard quest/gossip suppression.
+P0126 is runtime + visual PASS. P0128 resolves the D-035 source/API layer:
+narrative/reward/gossip reads and expected action functions exist, but mutation
+ownership is not runtime-proven.
+
+The next parallel gate is **P0129: a read-only NPC quest interaction runtime
+capability probe** before any Logres-owned quest controls or Blizzard quest/gossip
+suppression.
 
 D-037 unproven navigation/minimap roles, aura ownership, world-target anchoring,
 and other capability expansions remain separately gated.

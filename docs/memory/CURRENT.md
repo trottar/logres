@@ -8,7 +8,7 @@ project: logres
 
 ## Active Objective
 
-**Approved visual implementation translation — NPC quest interaction capability audit next.**
+**Approved visual implementation translation — NPC quest interaction read-only runtime probe next.**
 
 This is parallel Phase-H preparation while the formal Phase G camera phase remains
 open. The user has explicitly frozen Camera work until the already-approved visual
@@ -16,23 +16,25 @@ sequence is finished.
 
 ## Current Work Item
 
-**D-035 NPC quest interaction — source/capability audit before any replacement.**
+**P0129 planning target — read-only NPC quest interaction runtime capability
+probe.**
 
 Latest verified durable checkpoint:
-P0126 `89b0c563d1ff5e12c61baa3e407725a90d9cefd4`.
+P0127 `ef56075dbea1fdb8c613e3ee88c38e2684ef4170`.
 
 Current pushed runtime:
 `0.0.58-dev`.
 
-P0126 Active Quest is accepted:
-- initial `0.0.55-dev` hover failure preserved;
-- R1 `0.0.56-dev` tooltip correction runtime/hover PASS;
-- R2 `0.0.57-dev` bar-only progress visually preferred;
-- R3 `0.0.58-dev` count-free objective labels + bar-only progress accepted;
-- final Active Quest Check and integrated `checkall` PASS.
+P0128 source audit resolves the source/API layer:
+- offer/progress/completion narrative APIs are source-available;
+- reward item/choice/currency/spell reads are source-available;
+- Accept/Decline/Continue/finalize APIs are source-available but mutation remains
+  runtime-unproven;
+- structured gossip quest/option reads and selection APIs are source-available;
+- no Blizzard replacement is authorized from source evidence alone.
 
-The next work item is not another Active Quest refinement. It is the separate
-D-035 NPC quest-interaction capability audit.
+The exact next work item is one read-only runtime probe; it must not invoke quest
+or gossip mutation.
 
 ## Verified State
 
@@ -88,30 +90,29 @@ Preserved deferrals/gates:
 
 ## Next Action
 
-Perform the D-035 NPC quest-interaction source/capability audit.
+Prepare P0129: one event-driven, read-only NPC quest interaction runtime probe.
 
-Before any runtime replacement:
-1. inventory safe source information for offer, progress, completion, objectives,
-   rewards, and quest state;
-2. inventory player-action/control paths for Accept/Decline, Continue/Complete,
-   reward choice, and required quest-related gossip transitions;
-3. classify secret/protected/combat/event constraints per surface;
-4. define the exact Blizzard fail-open fallback for every unproven surface;
-5. choose the smallest evidence-backed first implementation slice.
+The probe should:
+1. observe `GOSSIP_SHOW`, `GOSSIP_CLOSED`, `QUEST_DETAIL`, `QUEST_PROGRESS`,
+   `QUEST_COMPLETE`, and `QUEST_FINISHED`;
+2. read narrative/reward/gossip information secret-first;
+3. bound reward/list capture so diagnostics remain compact;
+4. record action/selection function presence without invoking mutation;
+5. expose one Phase-H developer-panel action;
+6. leave all Blizzard quest/gossip information and controls visible.
 
-Do not suppress Blizzard quest/gossip information or controls during the audit.
+Natural missing interaction states are environmental deferrals, not failures.
 
 ## Success Criteria
 
-The next checkpoint succeeds when the NPC quest-interaction audit can state, per
-surface:
-- the information source available for offer/progress/completion/rewards;
-- the player action/control path available, if any;
-- secret/protected/combat/runtime restrictions;
-- the Blizzard fallback that remains visible when capability is absent;
-- the smallest coherent first runtime slice supported by evidence.
+The next checkpoint succeeds when the read-only runtime probe establishes:
+- which NPC quest/gossip states occur naturally;
+- which narrative/reward/gossip reads return safe ordinary values;
+- whether reward-choice metadata is sufficient for an informed player choice;
+- whether gossip quest rows expose stable IDs/titles;
+- missing/secret/invalid/failure states without unsafe inspection.
 
-The audit itself must not mutate quest state or suppress Blizzard controls.
+No quest/gossip mutation call may be used in this first runtime probe.
 
 ## Do Not Reopen Without New Evidence
 
@@ -130,6 +131,7 @@ The audit itself must not mutate quest state or suppress Blizzard controls.
 
 ## Relevant References
 
+- `docs/memory/evidence/P0128_NPC_QUEST_INTERACTION_SOURCE_AUDIT_2026-10-05.md`
 - `docs/memory/evidence/P0126_ACTIVE_QUEST_RUNTIME_VISUAL_PASS_2026-10-05.md`
 - `docs/memory/patches/P0126_ACTIVE_QUEST_PRESENTATION.md`
 - `docs/memory/investigations/NPC_QUEST_INTERACTION_CAPABILITY.md`

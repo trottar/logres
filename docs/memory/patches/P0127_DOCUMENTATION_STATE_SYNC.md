@@ -1,7 +1,7 @@
 # P0127 — P0126 Acceptance / Next Objective Synchronization
 
 Date: 2026-10-05
-Result: **PREPARED — DOCS-ONLY**
+Result: **INSTALLED / PUSHED — DOCS-ONLY** (`ef56075d`)
 Baseline: `89b0c563d1ff5e12c61baa3e407725a90d9cefd4`
 Runtime: unchanged at `0.0.58-dev`
 

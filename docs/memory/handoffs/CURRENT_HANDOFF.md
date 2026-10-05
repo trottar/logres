@@ -18,7 +18,7 @@ The user has explicitly chosen to finish the approved visual translation sequenc
 before returning to Camera.
 
 Current objective:
-**D-035 NPC quest interaction — source/capability audit before replacement.**
+**P0129 read-only NPC quest interaction runtime capability probe.**
 
 Camera remains frozen, not complete.
 
@@ -46,16 +46,21 @@ No SetCVar, Taxi rotation, or Taxi UI fade is authorized by this handoff.
 
 ## Next quest-interaction boundary
 
-D-035 is the accepted future ownership direction, but no Blizzard quest/gossip
-surface may be suppressed until its matching Logres information and interaction
-are capability-proven.
+P0128 resolves the source layer: the needed narrative/reward/gossip APIs exist,
+and the quest-action APIs exist, but mutation ownership remains runtime-unproven.
 
-The next audit must separate narrative/reward information from quest actions,
-quest-related gossip transitions, runtime restrictions, and fail-open fallback.
+P0129 must be read-only:
+- observe interaction events;
+- capture safe narrative/reward/gossip values;
+- record mutation-function presence only;
+- never call Accept/Decline/Complete/GetQuestReward or gossip-selection APIs;
+- leave Blizzard UI fully available.
+
 Do not automate quest choices or bundle quest navigation/minimap ownership.
 
 ## Key references
 
+- `../evidence/P0128_NPC_QUEST_INTERACTION_SOURCE_AUDIT_2026-10-05.md`
 - `../decisions/D-035_QUEST_INTERACTION_OWNERSHIP.md`
 - `../investigations/NPC_QUEST_INTERACTION_CAPABILITY.md`
 - `../evidence/P0126_ACTIVE_QUEST_RUNTIME_VISUAL_PASS_2026-10-05.md`

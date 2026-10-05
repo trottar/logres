@@ -1,6 +1,6 @@
 # NPC Quest Interaction Capability Audit
 
-Status: **OPEN — NEXT WORK ITEM**
+Status: **OPEN — SOURCE LAYER RESOLVED; READ-ONLY RUNTIME PROBE NEXT**
 Opened: 2026-10-05
 
 Canonical product decision:
@@ -107,3 +107,26 @@ This audit does not claim:
 - non-quest gossip generally;
 - quest-destination navigation;
 - automatic quest choices.
+
+## P0128 source-audit result
+
+Canonical source evidence:
+`../evidence/P0128_NPC_QUEST_INTERACTION_SOURCE_AUDIT_2026-10-05.md`.
+
+Resolved from current Forever source references:
+- narrative/progress/completion text sources exist;
+- reward item/choice/currency/spell sources exist;
+- Accept/Decline/Continue/finalize action functions exist;
+- structured gossip quest/option reads and selection functions exist.
+
+Still unproven at runtime:
+- progress/complete text flow;
+- reward-choice/item/currency/spell sufficiency;
+- structured gossip rows on real NPCs;
+- every quest/gossip mutation path.
+
+Therefore P0128 does not authorize suppression or mutation.
+
+Next:
+**P0129 read-only runtime capability probe**, integrated into the Phase-H
+developer panel.

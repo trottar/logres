@@ -188,13 +188,18 @@ Accepted parallel visual checkpoints:
   `89b0c563` / `0.0.58-dev`; count-free objective labels, bar-only progress,
   hover-only exact detail; final whole-screen polish deferred.
 
-Next parallel objective:
-**D-035 NPC quest interaction source/capability audit.**
+P0128 source-audit result:
+**SOURCE LAYER RESOLVED.**
 
-The audit must inventory narrative/reward information, quest actions,
-quest-related gossip transitions, runtime restrictions, and fail-open fallback per
-surface. No Blizzard quest/gossip surface is suppressed merely because its visual
-state is approved.
+Narrative/reward/gossip read sources exist on Forever, and the expected quest and
+gossip action APIs exist, but mutation ownership remains runtime-unproven.
+
+Next parallel objective:
+**P0129 read-only NPC quest interaction runtime capability probe.**
+
+The probe must inspect narrative/reward/gossip state secret-first, record mutation
+function presence without calling it, and keep every Blizzard interaction surface
+available.
 
 This remains capability preparation under D-035/D-039. It does not authorize
 minimap suppression, unproven navigation sources, automated quest choices, or
