@@ -167,3 +167,29 @@ Canonical art reference:
 
 These assets do not authorize Accept/Decline/Continue/reward/gossip mutation or
 Blizzard quest/gossip suppression.
+
+## NPC quest offer controls
+
+P0132 translates the approved D-039 sheet-08 quest-offer interaction controls into
+the production offer presentation while Blizzard's own controls remain visible as
+fallback.
+
+Production derivative:
+- `Quest/quest_offer_action_rule.tga` — restrained thin authored underline/glint
+  beneath the text-first offer action labels.
+
+The offer controls intentionally remain simple:
+- Decline is quiet parchment text;
+- Accept carries the stronger gold emphasis;
+- hover/pressed state changes tint only;
+- long offers expose Accept / Decline only on the final narrative page;
+- deterministic preview is non-mutating;
+- blocked/unsupported state points the player back to the standard quest controls.
+
+`Theme.lua` owns control geometry, typography, colors, and the media path.
+
+Canonical art reference:
+`docs/design/approved/08_npc_quest_interaction_states.png`.
+
+P0132 does not suppress Blizzard controls and does not authorize Continue,
+Complete, reward selection/claim, or gossip selection.

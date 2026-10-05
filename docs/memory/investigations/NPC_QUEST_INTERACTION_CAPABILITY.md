@@ -302,3 +302,24 @@ are proven in-client.
 
 Continue / Complete, reward selection/claim, and quest-related gossip mutation
 remain unproven and separately gated.
+
+## P0132 production offer controls prepared
+
+P0131 is durable at `68233e64` / `0.0.63-dev` with Accept + Decline capability
+proven.
+
+P0132 `0.0.64-dev` translates only that proven offer-action subset into production
+Logres controls:
+- restrained text-first `Decline` / `Accept`;
+- final-page gating for multi-page offers;
+- deterministic non-mutating preview;
+- exact cached offer ID/title bound into the production action route;
+- shared P0131 mutation call sites and event correlation;
+- non-mutating `Quest Offer Controls Check`;
+- Blizzard controls retained as visible fallback.
+
+P0132 does not suppress Blizzard offer controls and does not include Continue,
+Complete, rewards, or gossip transitions.
+
+Runtime + visual proof is required before the production offer control surface is
+accepted.

@@ -1,7 +1,7 @@
 # P0131 — Player-Triggered Quest Offer Accept / Decline Probe
 
 Date: 2026-10-05
-Result: **ACCEPT + DECLINE RUNTIME CAPABILITY PASS — READY FOR SINGLE COMMIT**
+Result: **INSTALLED / PUSHED — ACCEPT + DECLINE RUNTIME CAPABILITY PASS** (`68233e64`)
 Baseline: `ab6473b25944f6d8e17318235b370a6cb5a74cc5`
 Runtime: `0.0.61-dev -> 0.0.63-dev`
 

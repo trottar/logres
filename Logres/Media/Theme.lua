@@ -190,6 +190,29 @@ theme.questDialogue = {
     },
 }
 
+theme.questOfferControls = {
+    width = 410,
+    height = 62,
+    y = -4,
+    buttonWidth = 150,
+    buttonHeight = 38,
+    buttonGap = 42,
+    font = "GameFontHighlightLarge",
+    feedbackFont = "GameFontHighlightSmall",
+
+    colors = {
+        decline = { 0.86, 0.82, 0.73, 0.96 },
+        accept = { 0.96, 0.72, 0.24, 1.00 },
+        hover = { 1.00, 0.86, 0.48, 1.00 },
+        pressed = { 0.78, 0.55, 0.18, 1.00 },
+        feedback = { 0.72, 0.64, 0.50, 0.92 },
+    },
+
+    assets = {
+        rule = MEDIA_ROOT .. "Quest\\quest_offer_action_rule.tga",
+    },
+}
+
 theme.activeQuest = {
     width = 320,
     minHeight = 136,

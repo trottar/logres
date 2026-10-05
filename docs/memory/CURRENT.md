@@ -8,7 +8,7 @@ project: logres
 
 ## Active Objective
 
-**Approved visual implementation translation — quest-offer Accept / Decline capability probe next.**
+**Approved visual implementation translation — production quest-offer Accept / Decline controls next.**
 
 This is parallel Phase-H preparation while the formal Phase G camera phase remains
 open. The user has explicitly frozen Camera work until the already-approved visual
@@ -16,17 +16,17 @@ sequence is finished.
 
 ## Current Work Item
 
-**P0132 planning target — production Logres quest-offer Accept / Decline controls
-with Blizzard controls retained as visible fallback during proof.**
+**P0132 — production Logres quest-offer Accept / Decline controls prepared for
+runtime + visual proof with Blizzard controls retained as visible fallback.**
 
 Latest verified durable checkpoint:
-P0130 `ab6473b25944f6d8e17318235b370a6cb5a74cc5`.
+P0131 `68233e647279c8651a83626952ad409531c71832`.
 
 Current pushed runtime:
-`0.0.61-dev`.
-
-Current tested runtime:
 `0.0.63-dev`.
+
+Prepared runtime:
+`0.0.64-dev`.
 
 P0129 read-only runtime evidence passes the naturally observed offer/gossip path:
 - three real `QUEST_DETAIL` states;
@@ -48,8 +48,16 @@ P0130 R1 is runtime + visual PASS. The OFF -> ON restore path executed directly
 with `presentationReason=immersion-on-restore`; the same real offer remained shown,
 body/objective data remained ordinary/non-secret, and integrated checks passed.
 
-P0130 is accepted as the production quest-offer narrative baseline. Quest/gossip
-mutation ownership remains unproven.
+P0130 is accepted as the production quest-offer narrative baseline.
+
+P0131 is durable at `68233e64` / `0.0.63-dev` and proves both player-triggered
+offer mutations on Forever:
+- Decline -> `QUEST_FINISHED`, event-confirmed;
+- Accept -> matched `QUEST_ACCEPTED` after intermediate `QUEST_FINISHED`.
+
+P0132 therefore advances only the offer-phase production control surface. It does
+not suppress Blizzard controls or expand into Continue / Complete / rewards /
+gossip.
 
 ## Verified State
 
@@ -97,7 +105,8 @@ Preserved deferrals/gates:
 - Compass quest/POI/tracking, identity, and comparable-distance inputs:
   capability-gated;
 - stock minimap remains until the complete D-037 replacement surface is proven;
-- NPC quest controls/rewards remain Blizzard-owned until D-035 capability gates pass;
+- Blizzard quest-offer controls remain available through P0132 proof; Continue /
+  Complete / reward / gossip ownership remains separately capability-gated;
 - target auras/status remain preserved until a dedicated replacement policy exists;
 - party/CompactPartyFrame remain stock until secure interaction and required
   group/aura information are replaced safely;
@@ -105,31 +114,34 @@ Preserved deferrals/gates:
 
 ## Next Action
 
-Prepare P0132 as the first **production** quest-offer action surface.
+Deploy P0132 `0.0.64-dev` and prove the production offer controls.
 
-Scope:
-1. use the already-proven P0130 quest-offer narrative state;
-2. add explicit Logres-owned Accept / Decline controls for the offer phase only;
-3. route those controls through the proven Accept / Decline capability path;
-4. keep Blizzard Accept / Decline controls visible and usable during proof;
-5. preserve exact offer identity, cancellation, and fail-open behavior;
-6. add deterministic visual preview plus real in-client proof;
-7. do not include Continue / Complete, rewards, or gossip transitions.
+Validation:
+1. use `Quest Dialogue Preview` to verify controls are hidden before the final
+   page and visible on the final page;
+2. click a preview control and confirm it is non-mutating;
+3. Phase H -> `Quest Offer Controls Check`;
+4. open a real quest offer and confirm both Logres and Blizzard offer controls are
+   simultaneously visible/usable;
+5. test Logres Decline and Accept separately where naturally convenient, checking
+   production event outcomes after each;
+6. Phase 0 -> `Run All`.
 
-Only after those production controls are proven may a later checkpoint consider
-capability-gated Blizzard offer-control suppression.
+Do not test Continue / Complete, reward selection, or gossip selection in P0132.
 
 ## Success Criteria
 
 P0132 succeeds only when:
 - Logres offer controls are explicit player-owned buttons;
+- long offers gate those controls to the final page;
 - exact current offer identity is bound to the action surface;
-- Accept / Decline use the proven mutation path with no automatic choice;
+- preview controls cannot mutate quest state;
+- Accept / Decline reuse the proven P0131 mutation path with no automatic choice;
 - Blizzard controls remain fully usable as fallback throughout proof;
 - unsupported/missing/secret/invalid state fails open;
-- visual state matches the approved quest-interaction direction;
-- no Lua, taint, protected-action, secret-value, wrong-quest, or duplicate-action
-  defect occurs.
+- visual state matches approved sheet 08;
+- no Lua, taint, protected-action, secret-value, wrong-quest, duplicate-action, or
+  invisible-click-surface defect occurs.
 
 ## Do Not Reopen Without New Evidence
 
@@ -148,6 +160,7 @@ P0132 succeeds only when:
 
 ## Relevant References
 
+- `docs/memory/patches/P0132_PRODUCTION_QUEST_OFFER_CONTROLS.md`
 - `docs/memory/evidence/P0131_QUEST_OFFER_ACTION_RUNTIME_PASS_2026-10-05.md`
 - `docs/memory/evidence/P0131_ACCEPT_EVENT_ORDER_FAILURE_2026-10-05.md`
 - `docs/memory/evidence/P0130_QUEST_DIALOGUE_R1_RUNTIME_VISUAL_PASS_2026-10-05.md`

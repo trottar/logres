@@ -4,13 +4,14 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0130 `ab6473b25944f6d8e17318235b370a6cb5a74cc5`.
+P0131 `68233e647279c8651a83626952ad409531c71832`.
 
 Current pushed runtime:
-`0.0.61-dev`.
+`0.0.63-dev`.
 
-Current tested runtime:
-`0.0.63-dev` — P0131 Accept + Decline mutation capability PASS.
+Prepared P0132 runtime:
+`0.0.64-dev` — production offer Accept / Decline controls; runtime + visual proof
+pending.
 
 ## Active work stream
 
@@ -18,8 +19,8 @@ The user has explicitly chosen to finish the approved visual translation sequenc
 before returning to Camera.
 
 Current objective:
-**P0132 — production Logres quest-offer Accept / Decline controls, with Blizzard
-controls retained as visible fallback during proof.**
+**P0132 — deploy/prove production Logres quest-offer Accept / Decline controls,
+with Blizzard controls retained as visible fallback throughout proof.**
 
 Camera remains frozen, not complete.
 

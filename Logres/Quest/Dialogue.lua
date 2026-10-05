@@ -12,6 +12,10 @@ local dialogueStyle = theme.questDialogue or {}
 local dialogueAssets = dialogueStyle.assets or {}
 local dialogueColors = dialogueStyle.colors or {}
 
+local offerStyle = theme.questOfferControls or {}
+local offerAssets = offerStyle.assets or {}
+local offerColors = offerStyle.colors or {}
+
 local DEFAULT_STYLE = {
     width = 640,
     height = 320,
@@ -39,6 +43,25 @@ local DEFAULT_COLORS = {
     pageInactive = { 0.34, 0.30, 0.24, 0.55 },
 }
 
+local DEFAULT_OFFER_STYLE = {
+    width = 410,
+    height = 62,
+    y = -4,
+    buttonWidth = 150,
+    buttonHeight = 38,
+    buttonGap = 42,
+    font = "GameFontHighlightLarge",
+    feedbackFont = "GameFontHighlightSmall",
+}
+
+local DEFAULT_OFFER_COLORS = {
+    decline = { 0.86, 0.82, 0.73, 0.96 },
+    accept = { 0.96, 0.72, 0.24, 1.00 },
+    hover = { 1.00, 0.86, 0.48, 1.00 },
+    pressed = { 0.78, 0.55, 0.18, 1.00 },
+    feedback = { 0.72, 0.64, 0.50, 0.92 },
+}
+
 local function styleValue(name)
     local value = dialogueStyle[name]
 
@@ -51,6 +74,20 @@ end
 
 local function colorValue(name)
     return dialogueColors[name] or DEFAULT_COLORS[name]
+end
+
+local function offerStyleValue(name)
+    local value = offerStyle[name]
+
+    if value ~= nil then
+        return value
+    end
+
+    return DEFAULT_OFFER_STYLE[name]
+end
+
+local function offerColor(name)
+    return offerColors[name] or DEFAULT_OFFER_COLORS[name]
 end
 
 local function isSecret(value)
@@ -201,6 +238,210 @@ local function setFontColor(fontString, color)
     )
 end
 
+local function setOfferVisual(button, color)
+    button.label:SetTextColor(
+        color[1],
+        color[2],
+        color[3],
+        color[4]
+    )
+    button.rule:SetVertexColor(
+        color[1],
+        color[2],
+        color[3],
+        color[4]
+    )
+end
+
+local function createOfferButton(
+    owner,
+    parent,
+    kind,
+    label
+)
+    local button = CreateFrame(
+        "Button",
+        nil,
+        parent
+    )
+    button:SetSize(
+        offerStyleValue("buttonWidth"),
+        offerStyleValue("buttonHeight")
+    )
+    button:EnableMouse(true)
+    button:RegisterForClicks("LeftButtonUp")
+
+    local text = button:CreateFontString(
+        nil,
+        "OVERLAY",
+        offerStyleValue("font")
+    )
+    text:SetPoint("CENTER", button, "CENTER", 0, 3)
+    text:SetText(label)
+    text:SetJustifyH("CENTER")
+    text:SetShadowColor(0, 0, 0, 0.90)
+    text:SetShadowOffset(1, -1)
+
+    local rule = button:CreateTexture(
+        nil,
+        "ARTWORK"
+    )
+    rule:SetTexture(
+        offerAssets.rule
+        or "Interface\\Buttons\\WHITE8x8"
+    )
+    rule:SetSize(
+        offerStyleValue("buttonWidth"),
+        12
+    )
+    rule:SetPoint(
+        "TOP",
+        text,
+        "BOTTOM",
+        0,
+        -2
+    )
+
+    button.label = text
+    button.rule = rule
+    button.kind = kind
+
+    local normalColor =
+        kind == "accept"
+        and offerColor("accept")
+        or offerColor("decline")
+
+    setOfferVisual(button, normalColor)
+
+    button:SetScript("OnEnter", function()
+        setOfferVisual(
+            button,
+            offerColor("hover")
+        )
+    end)
+
+    button:SetScript("OnLeave", function()
+        setOfferVisual(
+            button,
+            normalColor
+        )
+    end)
+
+    button:SetScript("OnMouseDown", function()
+        setOfferVisual(
+            button,
+            offerColor("pressed")
+        )
+    end)
+
+    button:SetScript("OnMouseUp", function()
+        setOfferVisual(
+            button,
+            offerColor("hover")
+        )
+    end)
+
+    button:SetScript("OnClick", function()
+        owner:HandleOfferAction(kind)
+    end)
+
+    return button
+end
+
+function Dialogue:SetOfferActionFeedback(text)
+    if text == nil or text == "" then
+        self.offerActionFeedback:ClearText()
+        self.offerActionFeedback:Hide()
+        return
+    end
+
+    self.offerActionFeedback:SetText(text)
+    self.offerActionFeedback:Show()
+end
+
+function Dialogue:UpdateOfferControls()
+    local pageCount = #self.pages
+    local finalPage =
+        pageCount <= 1
+        or self.currentPage == pageCount
+
+    self.offerControlsFinalPage = finalPage
+
+    local shouldShow =
+        self.moduleEnabled
+        and self.immersionEnabled
+        and self.presentationShown
+        and self.offerActionsEnabled
+        and finalPage
+
+    if shouldShow then
+        self.offerActionRoot:Show()
+    else
+        self.offerActionRoot:Hide()
+    end
+end
+
+function Dialogue:HandleOfferAction(kind)
+    self.offerActionClickCount =
+        self.offerActionClickCount + 1
+    self.lastOfferActionKind = kind
+
+    if self.offerActionPreview then
+        self.lastOfferActionResult =
+            "preview-only"
+        self.lastOfferActionError = nil
+        self:SetOfferActionFeedback(
+            "Preview only"
+        )
+        return true, "preview-only"
+    end
+
+    local detail = self.activeDetail
+
+    if not detail then
+        self.lastOfferActionResult =
+            "blocked"
+        self.lastOfferActionError =
+            "no-active-detail"
+        self:SetOfferActionFeedback(
+            "Use the standard quest controls."
+        )
+        return false, "no-active-detail"
+    end
+
+    local actionRuntime =
+        Logres:GetModule(
+            "QuestOfferActionProbe"
+        )
+    local ok, reason =
+        actionRuntime:TriggerProductionAction(
+            kind,
+            detail.questID,
+            detail.title
+        )
+
+    if ok then
+        self.offerActionPending = true
+        self.lastOfferActionResult =
+            "started"
+        self.lastOfferActionError = nil
+        self:SetOfferActionFeedback(nil)
+        self.offerActionRoot:Hide()
+        return true, reason
+    end
+
+    self.offerActionPending = false
+    self.lastOfferActionResult =
+        "blocked"
+    self.lastOfferActionError = reason
+    self:SetOfferActionFeedback(
+        "Use the standard quest controls."
+    )
+    self:UpdateOfferControls()
+
+    return false, reason
+end
+
 function Dialogue:HidePresentation(reason)
     self.presentationGeneration =
         self.presentationGeneration + 1
@@ -211,6 +452,14 @@ function Dialogue:HidePresentation(reason)
     if self.root then
         self.root:Hide()
     end
+
+    if self.offerActionRoot then
+        self.offerActionRoot:Hide()
+    end
+
+    self.offerActionsEnabled = false
+    self.offerActionPreview = false
+    self.offerActionPending = false
 
     if reason then
         self.lastPresentationReason = reason
@@ -376,6 +625,7 @@ function Dialogue:SetPage(index)
         self.pages[index] or ""
     )
     self:UpdatePageControls()
+    self:UpdateOfferControls()
 
     return true, "page-shown"
 end
@@ -397,7 +647,9 @@ function Dialogue:PresentText(
     body,
     objective,
     reason,
-    autoHide
+    autoHide,
+    showOfferActions,
+    previewMode
 )
     if not self.moduleEnabled then
         self:HidePresentation("module-disabled")
@@ -421,6 +673,13 @@ function Dialogue:PresentText(
 
     self.pages = buildPages(body)
     self.currentPage = 1
+    self.offerActionsEnabled =
+        showOfferActions == true
+    self.offerActionPreview =
+        previewMode == true
+    self.offerActionPending = false
+    self.lastOfferActionError = nil
+    self:SetOfferActionFeedback(nil)
 
     self.titleText:SetText(title)
 
@@ -442,6 +701,7 @@ function Dialogue:PresentText(
         reason or "presentation"
     self.lastPageCount = #self.pages
     self.lastCurrentPage = self.currentPage
+    self:UpdateOfferControls()
 
     if autoHide then
         C_Timer.After(PREVIEW_SECONDS, function()
@@ -506,6 +766,8 @@ function Dialogue:HandleQuestDetail()
         detail.body,
         detail.objective,
         "QUEST_DETAIL",
+        false,
+        true,
         false
     )
 end
@@ -537,6 +799,8 @@ function Dialogue:ApplyPreferences(preferences)
             detail.body,
             detail.objective,
             "immersion-on-restore",
+            false,
+            true,
             false
         )
     end
@@ -561,6 +825,8 @@ function Dialogue:ShowPreview()
         "The road from the old watchtower has grown quiet. Travelers who once crossed the ridge at dusk now turn back before the first milestone. A patrol found signs of a struggle near the ruined wall, but no one returned with the standard that marked the northern post.\n\nThe captain asks that you follow the broken road, search the stones beyond the ridge, and recover what remains of the watch. If the raiders still hold the pass, drive them out before returning to town.\n\nThere may be more to the silence than simple banditry. Keep your eyes on the valley as you climb.",
         "Recover the lost standard beyond the northern ridge and return it to the captain.",
         "preview",
+        true,
+        true,
         true
     )
 end
@@ -620,6 +886,32 @@ function Dialogue:GetDebugStatus()
         presentationShown =
             self.presentationShown == true,
 
+        offerControlsReady =
+            self.offerActionRoot ~= nil
+            and self.declineButton ~= nil
+            and self.acceptButton ~= nil
+            and self.offerActionFeedback ~= nil,
+        offerControlsShown =
+            self.offerActionRoot ~= nil
+            and self.offerActionRoot:IsVisible()
+            or false,
+        offerActionsEnabled =
+            self.offerActionsEnabled == true,
+        offerControlsFinalPage =
+            self.offerControlsFinalPage == true,
+        offerActionPreview =
+            self.offerActionPreview == true,
+        offerActionPending =
+            self.offerActionPending == true,
+        offerActionClickCount =
+            self.offerActionClickCount,
+        lastOfferActionKind =
+            self.lastOfferActionKind,
+        lastOfferActionResult =
+            self.lastOfferActionResult,
+        lastOfferActionError =
+            self.lastOfferActionError,
+
         pageCount = #self.pages,
         currentPage = self.currentPage,
         lastPageCount = self.lastPageCount,
@@ -665,6 +957,15 @@ function Dialogue:OnInitialize()
     self.restoreCount = 0
     self.presentationGeneration = 0
     self.presentationShown = false
+
+    self.offerActionsEnabled = false
+    self.offerActionPreview = false
+    self.offerActionPending = false
+    self.offerControlsFinalPage = false
+    self.offerActionClickCount = 0
+    self.lastOfferActionKind = nil
+    self.lastOfferActionResult = "initialize"
+    self.lastOfferActionError = nil
 
     self.pages = {}
     self.currentPage = 0
@@ -945,6 +1246,85 @@ function Dialogue:OnInitialize()
         end
     )
 
+    local offerActionRoot =
+        CreateFrame(
+            "Frame",
+            nil,
+            root
+        )
+    offerActionRoot:SetSize(
+        offerStyleValue("width"),
+        offerStyleValue("height")
+    )
+    offerActionRoot:SetPoint(
+        "TOP",
+        root,
+        "BOTTOM",
+        0,
+        offerStyleValue("y")
+    )
+    offerActionRoot:EnableMouse(false)
+    offerActionRoot:Hide()
+
+    local declineButton =
+        createOfferButton(
+            self,
+            offerActionRoot,
+            "decline",
+            "Decline"
+        )
+    declineButton:SetPoint(
+        "CENTER",
+        offerActionRoot,
+        "CENTER",
+        -(
+            offerStyleValue("buttonWidth")
+            + offerStyleValue("buttonGap")
+        ) / 2,
+        9
+    )
+
+    local acceptButton =
+        createOfferButton(
+            self,
+            offerActionRoot,
+            "accept",
+            "Accept"
+        )
+    acceptButton:SetPoint(
+        "CENTER",
+        offerActionRoot,
+        "CENTER",
+        (
+            offerStyleValue("buttonWidth")
+            + offerStyleValue("buttonGap")
+        ) / 2,
+        9
+    )
+
+    local offerActionFeedback =
+        offerActionRoot:CreateFontString(
+            nil,
+            "OVERLAY",
+            offerStyleValue("feedbackFont")
+        )
+    offerActionFeedback:SetPoint(
+        "BOTTOM",
+        offerActionRoot,
+        "BOTTOM",
+        0,
+        0
+    )
+    offerActionFeedback:SetWidth(
+        offerStyleValue("width")
+    )
+    offerActionFeedback:SetJustifyH("CENTER")
+    setFontColor(
+        offerActionFeedback,
+        offerColor("feedback")
+    )
+    offerActionFeedback:Hide()
+
     self.root = root
     self.panel = panel
     self.titleText = titleText
@@ -962,6 +1342,11 @@ function Dialogue:OnInitialize()
         previousTexture
     self.nextButton = nextButton
     self.nextTexture = nextTexture
+    self.offerActionRoot = offerActionRoot
+    self.declineButton = declineButton
+    self.acceptButton = acceptButton
+    self.offerActionFeedback =
+        offerActionFeedback
 
     local eventFrame = CreateFrame("Frame")
     local events = {

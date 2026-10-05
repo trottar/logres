@@ -41,7 +41,8 @@ for fragment in (
     'if isSecret(questID) then',
     'if isSecret(title) then',
     'function Probe:CaptureOffer(reason)',
-    'function Probe:TriggerAction(kind)',
+    'function Probe:TriggerAction(kind, source)',
+    'function Probe:TriggerProductionAction(',
     'function Probe:HandlePanelAction(kind)',
     'function Probe:MarkReported(kind)',
     'function Probe:ResolveAccepted(...)',
@@ -92,7 +93,7 @@ if probe.count("pcall(AcceptQuest)") != 1:
 if probe.count("pcall(DeclineQuest)") != 1:
     errors.append("DeclineQuest must have exactly one explicit probe call site")
 
-trigger_start = probe.find("function Probe:TriggerAction(kind)")
+trigger_start = probe.find("function Probe:TriggerAction(kind, source)")
 trigger_end = probe.find("function Probe:HandlePanelAction(kind)", trigger_start)
 trigger_block = (
     probe[trigger_start:trigger_end]
@@ -166,8 +167,7 @@ if bootstrap_version is None or toc_version is None:
     errors.append("P0131 checker could not read runtime versions")
 elif bootstrap_version != toc_version:
     errors.append("Bootstrap and TOC runtime versions must match")
-elif bootstrap_version != "0.0.63-dev":
-    errors.append(f"P0131 runtime must be 0.0.63-dev, got {bootstrap_version}")
+# P0131 remains a durable behavior contract across later runtime checkpoints.
 
 for fragment in (
     '"questOfferAcceptProbe": "H"',

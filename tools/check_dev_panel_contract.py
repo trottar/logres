@@ -61,6 +61,7 @@ EXPECTED_PHASES = {
     "questDialogueCheck": "F",
     "questDialoguePreview": "F",
     "questInteractionProbe": "H",
+    "questOfferControlsCheck": "H",
     "questOfferAcceptProbe": "H",
     "questOfferDeclineProbe": "H",
     "cameraWorldCombatCheck": "G",

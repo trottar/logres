@@ -218,12 +218,19 @@ Decline is proven by `QUEST_FINISHED`; Accept is proven by a matched
 `QUEST_ACCEPTED` after the intermediate `QUEST_FINISHED`, with no polling/timer or
 new mutation surface.
 
-P0132 next:
-**production Logres quest-offer Accept / Decline controls**, translating the
-approved offer interaction state while Blizzard controls remain visible as
-fallback throughout proof.
+P0132:
+**PREPARED — `0.0.64-dev`, runtime + visual proof pending.**
 
-No Continue / Complete / reward / gossip mutation is bundled into that slice.
+P0132 translates approved sheet-08 offer controls into the existing P0130
+narrative:
+- text-first Decline / Accept;
+- controls only on the final page of multi-page offers;
+- non-mutating deterministic preview;
+- exact offer identity binding;
+- P0131-proven action routing;
+- Blizzard controls still visible.
+
+No Continue / Complete / reward / gossip mutation is bundled into the slice.
 
 This remains capability preparation under D-035/D-039. It does not authorize
 minimap suppression, unproven navigation sources, automated quest choices, or

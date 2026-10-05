@@ -363,3 +363,26 @@ was introduced.
 Capability proof is not production ownership. P0132 must add and prove Logres-owned
 Accept / Decline controls while Blizzard controls remain visible. Only a later
 capability-gated checkpoint may suppress stock offer controls.
+
+## P0132 production offer controls
+
+P0132 does not create a second mutation implementation.
+
+`QuestDialogue` owns presentation and explicit player click surfaces.
+`QuestOfferActionProbe` remains the shared proven action runtime and now exposes a
+production route that:
+- requires the Dialogue-bound quest ID/title;
+- verifies the probe's current observed offer matches that identity;
+- reuses the single AcceptQuest / DeclineQuest call sites;
+- preserves the proven Accept event-order handling;
+- auto-acknowledges terminal production results so diagnostic reporting semantics
+  cannot block a future real offer.
+
+Approved sheet-08 presentation rules implemented in this slice:
+- text-first Decline / Accept controls;
+- Accept receives stronger gold emphasis;
+- controls hidden on earlier pages of a long offer;
+- controls available on the final page;
+- preview button presses are presentation-only.
+
+Blizzard controls remain visible and authoritative fallback during P0132 proof.

@@ -4,7 +4,7 @@ As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — quest-offer Accept / Decline capability probe next.**
+**Approved visual implementation translation — production quest-offer controls next.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -69,9 +69,14 @@ P0131:
 on corrected `0.0.63-dev` with matched `QUEST_ACCEPTED` after intermediate
 `QUEST_FINISHED`.
 
+P0132:
+**PREPARED on `0.0.64-dev` — production Decline / Accept controls, final-page
+gating, non-mutating preview, and Blizzard-visible fallback; runtime + visual proof
+pending.**
+
 Next:
-**P0132 production Logres offer controls with Blizzard controls retained as visible
-fallback during proof.**
+**Deploy P0132 and prove the replacement controls before considering any Blizzard
+offer-control suppression.**
 
 This is implementation translation under D-039/D-040. It does not authorize
 Phase-H-only capability expansion, stock minimap suppression, Logres-owned quest

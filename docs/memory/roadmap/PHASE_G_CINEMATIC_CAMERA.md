@@ -150,8 +150,13 @@ bounded/paged quest-offer narrative, including Immersion restore.
 P0131 is runtime-proven: Decline passes on `0.0.62-dev`; Accept passes on
 `0.0.63-dev` with matched `QUEST_ACCEPTED` after intermediate `QUEST_FINISHED`.
 
-P0132 is the next parallel visual/control slice: production Logres offer Accept /
-Decline controls while Blizzard controls remain visible. Camera remains frozen.
+P0131 is durable at `68233e64` / `0.0.63-dev`.
+
+P0132 `0.0.64-dev` prepares the next parallel visual/control slice: production
+Logres offer Decline / Accept controls, final-page gated for long offers and routed
+through the proven mutation path while Blizzard controls remain visible.
+
+Camera remains frozen.
 
 D-037 unproven navigation/minimap roles remain separately capability-gated.
 D-030 remains current minimap runtime authority until replacement capabilities

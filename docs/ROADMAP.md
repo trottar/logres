@@ -88,9 +88,13 @@ P0131 now proves both player-triggered offer mutations on the tested Forever
 path: Decline via `QUEST_FINISHED`, and Accept via matched `QUEST_ACCEPTED` after an
 intermediate `QUEST_FINISHED` on `0.0.63-dev`.
 
-P0132 is next: production Logres offer Accept / Decline controls with Blizzard
-controls retained as visible fallback during proof. Only after that replacement
-surface is proven may a later checkpoint consider suppression.
+P0132 `0.0.64-dev` prepares production Logres offer Decline / Accept controls.
+Long offers gate them to the final narrative page, deterministic preview is
+non-mutating, and real clicks bind the exact current offer into the P0131-proven
+action route. Blizzard controls remain visible throughout proof.
+
+Only after this replacement surface is accepted may a later checkpoint consider
+capability-gated Blizzard offer-control suppression.
 
 Continue / Complete, reward selection, progress/completion presentation, and
 gossip mutation remain separately gated.

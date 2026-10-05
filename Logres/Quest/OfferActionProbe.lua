@@ -171,6 +171,11 @@ function Probe:CaptureOffer(reason)
         action.state = "offer-replaced-before-outcome"
         action.event = "QUEST_DETAIL"
         action.success = false
+
+        if action.source == "production" then
+            action.reported = true
+        end
+
         self.pendingAction = nil
         self.lastAction = action
         self.failureCount = self.failureCount + 1
@@ -235,6 +240,10 @@ function Probe:ResolveAccepted(...)
         self.successCount = self.successCount + 1
     end
 
+    if action.source == "production" then
+        action.reported = true
+    end
+
     self.pendingAction = nil
     self.lastAction = action
     self.offerOpen = false
@@ -252,6 +261,11 @@ function Probe:ResolveFinished()
             action.state = "event-confirmed"
             action.success = true
             self.successCount = self.successCount + 1
+
+            if action.source == "production" then
+                action.reported = true
+            end
+
             self.pendingAction = nil
         else
             action.state = "awaiting-accepted-after-finished"
@@ -272,6 +286,10 @@ function Probe:ResolveWorldTransition()
         action.event = "PLAYER_ENTERING_WORLD"
         action.state = "world-transition-before-outcome"
         action.success = false
+        if action.source == "production" then
+            action.reported = true
+        end
+
         self.pendingAction = nil
         self.lastAction = action
         self.failureCount = self.failureCount + 1
@@ -281,7 +299,9 @@ function Probe:ResolveWorldTransition()
     self.currentOffer = nil
 end
 
-function Probe:TriggerAction(kind)
+function Probe:TriggerAction(kind, source)
+    source = source or "diagnostic"
+
     if not self.moduleEnabled then
         self:RecordBlocked(
             kind,
@@ -378,6 +398,7 @@ function Probe:TriggerAction(kind)
     end
 
     local action = {
+        source = source,
         kind = kind,
         questID = offer.questID,
         title = offer.title,
@@ -397,6 +418,11 @@ function Probe:TriggerAction(kind)
         self.actionAttemptCount + 1
     self.mutationCallCount =
         self.mutationCallCount + 1
+
+    if source == "production" then
+        self.productionAttemptCount =
+            self.productionAttemptCount + 1
+    end
 
     if kind == "accept" then
         self.acceptAttemptCount =
@@ -426,6 +452,10 @@ function Probe:TriggerAction(kind)
         action.state = "call-failed"
         action.success = false
 
+        if action.source == "production" then
+            action.reported = true
+        end
+
         if self.pendingAction == action then
             self.pendingAction = nil
         end
@@ -445,6 +475,63 @@ function Probe:TriggerAction(kind)
     return true, "started"
 end
 
+function Probe:TriggerProductionAction(
+    kind,
+    expectedQuestID,
+    expectedTitle
+)
+    if type(expectedQuestID) ~= "number"
+        or expectedQuestID <= 0
+    then
+        self:RecordBlocked(
+            kind,
+            "expected-quest-invalid",
+            false
+        )
+        return false, "expected-quest-invalid"
+    end
+
+    if type(expectedTitle) ~= "string"
+        or expectedTitle == ""
+    then
+        self:RecordBlocked(
+            kind,
+            "expected-title-invalid",
+            false
+        )
+        return false, "expected-title-invalid"
+    end
+
+    if not self.offerOpen
+        or not self.currentOffer
+    then
+        self:RecordBlocked(
+            kind,
+            "no-current-offer",
+            false
+        )
+        return false, "no-current-offer"
+    end
+
+    if self.currentOffer.questID
+            ~= expectedQuestID
+        or self.currentOffer.title
+            ~= expectedTitle
+    then
+        self:RecordBlocked(
+            kind,
+            "bound-offer-mismatch",
+            false
+        )
+        return false, "bound-offer-mismatch"
+    end
+
+    return self:TriggerAction(
+        kind,
+        "production"
+    )
+end
+
 function Probe:HandlePanelAction(kind)
     if self.pendingAction ~= nil then
         return "pending", self.pendingAction.state
@@ -461,7 +548,11 @@ function Probe:HandlePanelAction(kind)
         return "blocked", "unreported-result"
     end
 
-    local ok, reason = self:TriggerAction(kind)
+    local ok, reason =
+        self:TriggerAction(
+            kind,
+            "diagnostic"
+        )
 
     if ok then
         return "started", reason
@@ -520,6 +611,8 @@ function Probe:GetDebugStatus()
         lastOfferReason = self.lastOfferReason,
 
         actionAttemptCount = self.actionAttemptCount,
+        productionAttemptCount =
+            self.productionAttemptCount,
         acceptAttemptCount = self.acceptAttemptCount,
         declineAttemptCount = self.declineAttemptCount,
         mutationCallCount = self.mutationCallCount,
@@ -536,6 +629,8 @@ function Probe:GetDebugStatus()
             and self.pendingAction.state
             or nil,
 
+        lastActionSource =
+            action and action.source or nil,
         lastActionKind = action and action.kind or nil,
         lastActionState = action and action.state or nil,
         lastActionSuccess =
@@ -578,6 +673,7 @@ function Probe:OnInitialize()
     self.lastOfferReason = "initialize"
 
     self.actionAttemptCount = 0
+    self.productionAttemptCount = 0
     self.acceptAttemptCount = 0
     self.declineAttemptCount = 0
     self.mutationCallCount = 0

@@ -2758,6 +2758,71 @@ local function runQuestInteractionProbe()
     end
 end
 
+local function runQuestOfferControlsCheck()
+    local status =
+        Logres:GetModuleStatus("QuestDialogue")
+    local dialogue =
+        Logres:GetModule("QuestDialogue")
+    local debugStatus =
+        dialogue:GetDebugStatus()
+    local probe =
+        Logres:GetModule("QuestOfferActionProbe")
+    local probeDebug =
+        probe:GetDebugStatus()
+
+    local finalPage =
+        debugStatus.pageCount <= 1
+        or debugStatus.currentPage
+            == debugStatus.pageCount
+
+    local expectedShown =
+        debugStatus.presentationShown
+        and debugStatus.offerActionsEnabled
+        and finalPage
+
+    local visibilityCoherent =
+        debugStatus.offerControlsShown
+        == expectedShown
+
+    local productionResultCoherent =
+        probeDebug.lastActionSource
+            ~= "production"
+        or probeDebug.lastActionReported == true
+
+    local passed =
+        status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and debugStatus.offerControlsReady == true
+        and visibilityCoherent
+        and productionResultCoherent
+        and debugStatus.lastOfferActionError == nil
+
+    emit(string.format(
+        "Logres questoffercontrolscheck: %s (ready=%s shown=%s expectedShown=%s finalPage=%s preview=%s pending=%s clicks=%s lastKind=%s lastResult=%s lastError=%s probeSource=%s probeState=%s probeEvent=%s probeIdentity=%s probeCallOK=%s finishedObserved=%s probeReported=%s probeSuccess=%s probeError=%s)",
+        passed and "PASS" or "FAIL",
+        tostring(debugStatus.offerControlsReady),
+        tostring(debugStatus.offerControlsShown),
+        tostring(expectedShown),
+        tostring(debugStatus.offerControlsFinalPage),
+        tostring(debugStatus.offerActionPreview),
+        tostring(debugStatus.offerActionPending),
+        tostring(debugStatus.offerActionClickCount),
+        tostring(debugStatus.lastOfferActionKind),
+        tostring(debugStatus.lastOfferActionResult),
+        tostring(debugStatus.lastOfferActionError),
+        tostring(probeDebug.lastActionSource),
+        tostring(probeDebug.lastActionState),
+        tostring(probeDebug.lastActionEvent),
+        tostring(probeDebug.lastActionEventIdentityState),
+        tostring(probeDebug.lastActionCallOK),
+        tostring(probeDebug.lastActionFinishedObserved),
+        tostring(probeDebug.lastActionReported),
+        tostring(probeDebug.lastActionSuccess),
+        tostring(probeDebug.lastActionError)
+    ))
+end
+
 local function runQuestOfferActionProbe(kind)
     local probe =
         Logres:GetModule("QuestOfferActionProbe")
@@ -3217,6 +3282,7 @@ local function runAllChecks()
     runObjectiveProgressCheck()
     runActiveQuestCheck()
     runQuestDialogueCheck()
+    runQuestOfferControlsCheck()
     runActionCheck()
     runStockReplacementCheck()
     runImmersionCheck()
@@ -3354,6 +3420,7 @@ local function printHelp()
     emit("  /logres activequest [on|off|toggle]")
     emit("  /logres questdialoguecheck")
     emit("  /logres questdialoguepreview")
+    emit("  /logres questoffercontrolscheck")
     emit("  /logres questinteractionprobe")
     emit("  /logres questofferacceptprobe")
     emit("  /logres questofferdeclineprobe")
@@ -3580,6 +3647,11 @@ local function handleCommand(message)
 
     if command == "questdialoguepreview" then
         runQuestDialoguePreview()
+        return
+    end
+
+    if command == "questoffercontrolscheck" then
+        runQuestOfferControlsCheck()
         return
     end
 
@@ -3933,6 +4005,12 @@ Logres:RegisterDevPanelAction(
     "questInteractionProbe",
     "Quest Interaction Probe",
     "questinteractionprobe",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "questOfferControlsCheck",
+    "Quest Offer Controls Check",
+    "questoffercontrolscheck",
     "H"
 )
 Logres:RegisterDevPanelAction(
