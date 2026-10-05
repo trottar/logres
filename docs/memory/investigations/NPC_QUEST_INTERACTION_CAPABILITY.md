@@ -227,3 +227,78 @@ Next capability decision:
 The probe must leave Blizzard controls visible, require explicit player-triggered
 diagnostic actions, prove event/outcome behavior separately, and fail open. It
 must not bundle Continue / Complete, reward choice, or gossip selection.
+
+## P0131 Accept / Decline probe prepared
+
+P0131 `0.0.62-dev` isolates the first quest mutation slice in a dedicated
+`QuestOfferActionProbe` module.
+
+Contract:
+- only Accept / Decline may be invoked;
+- the player must explicitly click the matching Phase-H diagnostic action;
+- an observed current `QUEST_DETAIL` identity is re-read and matched before the
+  call;
+- secret/missing/invalid/mismatched state blocks mutation and fails open;
+- Accept requires `QUEST_ACCEPTED` outcome evidence;
+- Decline requires `QUEST_FINISHED` outcome evidence;
+- Blizzard controls remain visible and usable;
+- the same diagnostic button reports the resolved result on a subsequent click
+  rather than repeating an unreported mutation;
+- the probe is excluded from `Run All`.
+
+No Continue / Complete, reward, or gossip selection call is authorized by this
+slice.
+
+Runtime evidence is required before either mutation can be classified as proven.
+
+## P0131 first runtime result / R2 event-order correction
+
+Canonical failure/result evidence:
+`../evidence/P0131_ACCEPT_EVENT_ORDER_FAILURE_2026-10-05.md`.
+
+`0.0.62-dev` result:
+- Decline: **PASS** on quest 436, `callOK=true`, `QUEST_FINISHED`,
+  `state=event-confirmed`, secret=false, error=nil;
+- Accept: callOK, but the probe reported `finished-without-accepted` after seeing
+  `QUEST_FINISHED` first;
+- the same runtime session later recorded `QUEST_ACCEPTED` through the existing
+  QuestDialogue event counter;
+- integrated `checkall` PASS.
+
+Classification:
+Accept capability is **not yet marked PASS** because the probe lost correlation
+before the accepted event. The failure is diagnostic event-order handling, not
+permission to infer success.
+
+P0131 R2 `0.0.63-dev` changes only that correlation rule:
+- Decline still resolves immediately on `QUEST_FINISHED`;
+- Accept records `QUEST_FINISHED` as intermediate and remains pending;
+- a later `QUEST_ACCEPTED` resolves the same action;
+- no polling, timer, broad hook, or new mutation is introduced.
+
+Only Accept requires retest.
+
+## P0131 final capability result / P0132 decision
+
+Canonical final evidence:
+`../evidence/P0131_QUEST_OFFER_ACTION_RUNTIME_PASS_2026-10-05.md`.
+
+P0131 final result:
+- **Decline capability PASS** from the tested `0.0.62-dev` run;
+- **Accept capability PASS** on `0.0.63-dev`;
+- Accept exact quest identity matched on `QUEST_ACCEPTED`;
+- intermediate `QUEST_FINISHED` was observed and retained through correlation;
+- secret=false;
+- error=nil;
+- integrated `checkall` PASS.
+
+Therefore Accept / Decline mutation capability is proven for the tested Forever
+quest-offer path.
+
+This does not authorize suppression of Blizzard offer controls. The next
+checkpoint is P0132: production Logres Accept / Decline controls for the offer
+state, with Blizzard controls retained as visible fallback until those controls
+are proven in-client.
+
+Continue / Complete, reward selection/claim, and quest-related gossip mutation
+remain unproven and separately gated.

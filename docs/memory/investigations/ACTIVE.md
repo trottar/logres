@@ -41,7 +41,7 @@ not an open Active Quest capability issue.
 ## NPC quest interaction ownership
 
 Status:
-**OPEN — P0130 QUEST-OFFER NARRATIVE PASS; ACCEPT / DECLINE MUTATION OWNERSHIP NEXT.**
+**OPEN — P0131 ACCEPT + DECLINE CAPABILITY PASS; P0132 PRODUCTION OFFER CONTROLS NEXT.**
 
 Canonical investigation:
 `NPC_QUEST_INTERACTION_CAPABILITY.md`
@@ -57,9 +57,14 @@ P0130 R1 closes the narrative lifecycle defect: OFF -> ON restores the same acti
 quest offer with `presentationReason=immersion-on-restore`, and integrated checks
 remain clean.
 
-Quest/gossip mutation ownership remains unproven. The next audit/probe slice is
-Accept / Decline only; Continue / Complete, rewards, and gossip selection remain
-separate gates.
+P0131 final runtime evidence proves both tested offer mutations:
+- Decline: `QUEST_FINISHED`, event-confirmed;
+- Accept: matched `QUEST_ACCEPTED` after intermediate `QUEST_FINISHED`, with
+  `finishedObserved=true` and no polling/timer.
+
+Capability is proven, but production ownership is not. P0132 must prove Logres
+Accept / Decline controls while Blizzard controls remain visible. Continue /
+Complete, rewards, and gossip selection remain separate gates.
 
 ## Closed Phase G investigations
 

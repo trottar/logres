@@ -2758,6 +2758,89 @@ local function runQuestInteractionProbe()
     end
 end
 
+local function runQuestOfferActionProbe(kind)
+    local probe =
+        Logres:GetModule("QuestOfferActionProbe")
+    local mode, reason =
+        probe:HandlePanelAction(kind)
+    local debugStatus =
+        probe:GetDebugStatus()
+
+    if mode == "started" then
+        emit(string.format(
+            "Logres questoffer%sprobe: STARTED (questID=%s title=%s attempts=%s mutationCalls=%s state=%s; click the same action again after the quest event resolves)",
+            tostring(kind),
+            tostring(debugStatus.lastActionQuestID),
+            tostring(debugStatus.lastActionTitle),
+            tostring(debugStatus.actionAttemptCount),
+            tostring(debugStatus.mutationCallCount),
+            tostring(debugStatus.lastActionState)
+        ))
+        return
+    end
+
+    if mode == "pending" then
+        emit(string.format(
+            "Logres questoffer%sprobe: PENDING (kind=%s questID=%s state=%s event=%s error=%s)",
+            tostring(kind),
+            tostring(debugStatus.pendingKind),
+            tostring(debugStatus.lastActionQuestID),
+            tostring(debugStatus.pendingState),
+            tostring(debugStatus.lastActionEvent),
+            tostring(debugStatus.lastActionError)
+        ))
+        return
+    end
+
+    if mode == "blocked" then
+        emit(string.format(
+            "Logres questoffer%sprobe: BLOCKED (reason=%s offerOpen=%s currentQuestID=%s pending=%s/%s attempts=%s mutationCalls=%s secret=%s error=%s)",
+            tostring(kind),
+            tostring(reason),
+            tostring(debugStatus.offerOpen),
+            tostring(debugStatus.currentQuestID),
+            tostring(debugStatus.pendingKind),
+            tostring(debugStatus.pendingState),
+            tostring(debugStatus.actionAttemptCount),
+            tostring(debugStatus.mutationCallCount),
+            tostring(debugStatus.lastSecret),
+            tostring(debugStatus.lastError)
+        ))
+        return
+    end
+
+    local passed =
+        mode == "result"
+        and debugStatus.lastActionKind == kind
+        and debugStatus.lastActionState == "event-confirmed"
+        and debugStatus.lastActionSuccess == true
+        and debugStatus.lastActionCallOK == true
+        and debugStatus.lastActionEventSecret == false
+
+    emit(string.format(
+        "Logres questoffer%sprobe: %s (questID=%s title=%s callOK=%s event=%s eventIdentity=%s state=%s finishedObserved=%s attempts=%s accept=%s decline=%s mutationCalls=%s success=%s failure=%s secret=%s error=%s)",
+        tostring(kind),
+        passed and "PASS" or "FAIL",
+        tostring(debugStatus.lastActionQuestID),
+        tostring(debugStatus.lastActionTitle),
+        tostring(debugStatus.lastActionCallOK),
+        tostring(debugStatus.lastActionEvent),
+        tostring(debugStatus.lastActionEventIdentityState),
+        tostring(debugStatus.lastActionState),
+        tostring(debugStatus.lastActionFinishedObserved),
+        tostring(debugStatus.actionAttemptCount),
+        tostring(debugStatus.acceptAttemptCount),
+        tostring(debugStatus.declineAttemptCount),
+        tostring(debugStatus.mutationCallCount),
+        tostring(debugStatus.successCount),
+        tostring(debugStatus.failureCount),
+        tostring(debugStatus.lastActionEventSecret),
+        tostring(debugStatus.lastActionError)
+    ))
+
+    probe:MarkReported(kind)
+end
+
 local function runWaypointProbe()
     if type(LogresWaypointAudit_Run) ~= "function" then
         emit(
@@ -3272,6 +3355,8 @@ local function printHelp()
     emit("  /logres questdialoguecheck")
     emit("  /logres questdialoguepreview")
     emit("  /logres questinteractionprobe")
+    emit("  /logres questofferacceptprobe")
+    emit("  /logres questofferdeclineprobe")
     emit("  /logres hudpreview [on|off]")
     emit("  /logres healthpreview [100|80|70|60|50|40|30|20|15|5|0|off]")
     emit("  /logres immersion [on|off|toggle]")
@@ -3500,6 +3585,16 @@ local function handleCommand(message)
 
     if command == "questinteractionprobe" then
         runQuestInteractionProbe()
+        return
+    end
+
+    if command == "questofferacceptprobe" then
+        runQuestOfferActionProbe("accept")
+        return
+    end
+
+    if command == "questofferdeclineprobe" then
+        runQuestOfferActionProbe("decline")
         return
     end
 
@@ -3838,6 +3933,18 @@ Logres:RegisterDevPanelAction(
     "questInteractionProbe",
     "Quest Interaction Probe",
     "questinteractionprobe",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "questOfferAcceptProbe",
+    "TEST Accept Current Quest",
+    "questofferacceptprobe",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "questOfferDeclineProbe",
+    "TEST Decline Current Quest",
+    "questofferdeclineprobe",
     "H"
 )
 Logres:RegisterDevPanelAction(

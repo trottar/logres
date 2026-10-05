@@ -144,9 +144,14 @@ P0128 resolved the D-035 source/API layer. P0129 is durable at `e50676b9` /
 `0.0.59-dev` and passes the naturally observed read-only offer/gossip scope with
 mutation invariant `invoked=0`.
 
-P0130 prepares the bounded/paged NPC quest-offer narrative on `0.0.60-dev` using
-only the proven `QUEST_DETAIL` path. Blizzard controls remain available; no quest
-or gossip action ownership is added.
+P0130 is durable at `ab6473b2` / `0.0.61-dev` and runtime + visual PASS for the
+bounded/paged quest-offer narrative, including Immersion restore.
+
+P0131 is runtime-proven: Decline passes on `0.0.62-dev`; Accept passes on
+`0.0.63-dev` with matched `QUEST_ACCEPTED` after intermediate `QUEST_FINISHED`.
+
+P0132 is the next parallel visual/control slice: production Logres offer Accept /
+Decline controls while Blizzard controls remain visible. Camera remains frozen.
 
 D-037 unproven navigation/minimap roles remain separately capability-gated.
 D-030 remains current minimap runtime authority until replacement capabilities

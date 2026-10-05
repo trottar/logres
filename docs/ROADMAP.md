@@ -84,9 +84,16 @@ P0130 is runtime + visual PASS on `0.0.61-dev`: approved bounded/paged NPC
 quest-offer narrative is production-proven, including same-conversation Immersion
 OFF -> ON restoration, while Blizzard controls remain available.
 
-The next D-035 gate is P0131: a player-triggered Accept / Decline capability probe
-with Blizzard controls still visible. Continue / Complete, reward selection,
-progress/completion presentation, and gossip mutation remain separately gated.
+P0131 now proves both player-triggered offer mutations on the tested Forever
+path: Decline via `QUEST_FINISHED`, and Accept via matched `QUEST_ACCEPTED` after an
+intermediate `QUEST_FINISHED` on `0.0.63-dev`.
+
+P0132 is next: production Logres offer Accept / Decline controls with Blizzard
+controls retained as visible fallback during proof. Only after that replacement
+surface is proven may a later checkpoint consider suppression.
+
+Continue / Complete, reward selection, progress/completion presentation, and
+gossip mutation remain separately gated.
 
 D-037 unproven navigation/minimap roles, aura ownership, world-target anchoring,
 and other capability expansions remain separately gated.

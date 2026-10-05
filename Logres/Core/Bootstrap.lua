@@ -5,7 +5,7 @@ if type(Logres) ~= "table" then
 end
 
 Logres.NAME = addonName
-Logres.VERSION = "0.0.61-dev"
+Logres.VERSION = "0.0.63-dev"
 Logres.DEVELOPMENT = true
 
 local eventFrame = CreateFrame("Frame")

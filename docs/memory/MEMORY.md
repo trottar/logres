@@ -74,3 +74,5 @@ In particular, do not assume unrestricted availability of:
 - camera changes in every context.
 
 Record source findings and runtime behavior separately.
+
+- P0131 proves quest-offer Accept / Decline mutation capability on Forever: Decline passed on `0.0.62-dev`; Accept passed on corrected `0.0.63-dev` after preserving correlation across intermediate `QUEST_FINISHED` until matched `QUEST_ACCEPTED`. Capability proof does not authorize Blizzard control suppression; production Logres controls must be proven first.

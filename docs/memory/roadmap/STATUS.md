@@ -4,7 +4,7 @@ As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — bounded/paged NPC quest-offer narrative next.**
+**Approved visual implementation translation — quest-offer Accept / Decline capability probe next.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -64,9 +64,14 @@ P0130:
 **RUNTIME + VISUAL PASS on `0.0.61-dev`** — bounded/paged offer narrative accepted;
 initial immersion-restore failure preserved and corrected in R1.
 
+P0131:
+**ACCEPT + DECLINE CAPABILITY PASS** — Decline proven on `0.0.62-dev`; Accept proven
+on corrected `0.0.63-dev` with matched `QUEST_ACCEPTED` after intermediate
+`QUEST_FINISHED`.
+
 Next:
-**P0131 player-triggered Accept / Decline capability probe, Blizzard controls kept
-visible.**
+**P0132 production Logres offer controls with Blizzard controls retained as visible
+fallback during proof.**
 
 This is implementation translation under D-039/D-040. It does not authorize
 Phase-H-only capability expansion, stock minimap suppression, Logres-owned quest

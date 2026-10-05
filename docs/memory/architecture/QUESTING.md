@@ -299,3 +299,67 @@ The initial `0.0.60-dev` restore failure remains preserved and was corrected in 
 
 Next ownership slice is a separately capability-gated Accept / Decline mutation
 probe. P0130 itself does not authorize mutation or Blizzard control suppression.
+
+## P0131 Accept / Decline mutation probe
+
+P0131 adds no production quest control. It is a capability probe only.
+
+A dedicated addon-owned module:
+- tracks the current ordinary `QUEST_DETAIL` offer identity;
+- revalidates quest ID/title immediately before mutation;
+- exposes explicit player-triggered Accept and Decline diagnostics;
+- records call attempt plus event-confirmed outcome;
+- treats `QUEST_ACCEPTED` as Accept evidence;
+- treats `QUEST_FINISHED` as Decline evidence;
+- never runs inside `checkall`;
+- never suppresses Blizzard quest controls.
+
+A missing/secret/invalid/mismatched offer blocks the action and fails open. No
+Continue / Complete, reward, or gossip mutation is part of P0131.
+
+## P0131 Accept event-order correction
+
+The first `0.0.62-dev` mutation run established an important event-order fact for
+Forever:
+- Decline resolves on `QUEST_FINISHED` and passed;
+- Accept may emit `QUEST_FINISHED` before the later `QUEST_ACCEPTED` event.
+
+The initial probe treated the first event as terminal failure and therefore lost
+correlation before acceptance arrived.
+
+R2 changes no mutation API surface. For pending Accept only:
+- `QUEST_FINISHED` sets `finishedObserved=true` and
+  `awaiting-accepted-after-finished`;
+- the pending action remains intact;
+- `QUEST_ACCEPTED` remains the required terminal success event;
+- a replacement offer or world transition before acceptance remains failure;
+- no timer/polling/broad hook is added.
+
+Decline's proven `QUEST_FINISHED` success contract is unchanged.
+
+## P0131 accepted offer-action capability
+
+P0131 proves both offer-phase mutations on the tested Forever client path.
+
+Decline:
+- explicit player-triggered action;
+- callOK;
+- `QUEST_FINISHED`;
+- event-confirmed.
+
+Accept:
+- explicit player-triggered action;
+- callOK;
+- intermediate `QUEST_FINISHED` observed;
+- pending correlation preserved;
+- later `QUEST_ACCEPTED` matched the exact preflight quest ID;
+- event-confirmed;
+- secret=false;
+- error=nil.
+
+The corrected Accept path uses only event correlation; no timer/polling/broad hook
+was introduced.
+
+Capability proof is not production ownership. P0132 must add and prove Logres-owned
+Accept / Decline controls while Blizzard controls remain visible. Only a later
+capability-gated checkpoint may suppress stock offer controls.

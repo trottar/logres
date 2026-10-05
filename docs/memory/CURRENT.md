@@ -8,7 +8,7 @@ project: logres
 
 ## Active Objective
 
-**Approved visual implementation translation — bounded/paged NPC quest-offer narrative next.**
+**Approved visual implementation translation — quest-offer Accept / Decline capability probe next.**
 
 This is parallel Phase-H preparation while the formal Phase G camera phase remains
 open. The user has explicitly frozen Camera work until the already-approved visual
@@ -16,17 +16,17 @@ sequence is finished.
 
 ## Current Work Item
 
-**P0131 planning target — player-triggered quest-offer action capability probe
-(Accept / Decline only).**
+**P0132 planning target — production Logres quest-offer Accept / Decline controls
+with Blizzard controls retained as visible fallback during proof.**
 
 Latest verified durable checkpoint:
-P0129 `e50676b993b9f5bc544eab610f99c7532dc98148`.
+P0130 `ab6473b25944f6d8e17318235b370a6cb5a74cc5`.
 
 Current pushed runtime:
-`0.0.59-dev`.
+`0.0.61-dev`.
 
 Current tested runtime:
-`0.0.61-dev`.
+`0.0.63-dev`.
 
 P0129 read-only runtime evidence passes the naturally observed offer/gossip path:
 - three real `QUEST_DETAIL` states;
@@ -105,31 +105,31 @@ Preserved deferrals/gates:
 
 ## Next Action
 
-Prepare P0131 as a **player-triggered Accept / Decline capability probe only**.
+Prepare P0132 as the first **production** quest-offer action surface.
 
-Requirements:
-1. use only the already-proven `QUEST_DETAIL` offer state;
-2. expose explicit developer-panel test actions rather than automatic mutation;
-3. keep Blizzard Accept / Decline controls visible and usable during the probe;
-4. record the exact offered quest identity before the player-triggered action;
-5. record success/failure/event outcome without inferring completion from source
-   availability alone;
-6. fail open to Blizzard on missing/secret/invalid/failed state;
-7. do not include Continue / Complete, reward selection, or gossip selection in
-   the same slice.
+Scope:
+1. use the already-proven P0130 quest-offer narrative state;
+2. add explicit Logres-owned Accept / Decline controls for the offer phase only;
+3. route those controls through the proven Accept / Decline capability path;
+4. keep Blizzard Accept / Decline controls visible and usable during proof;
+5. preserve exact offer identity, cancellation, and fail-open behavior;
+6. add deterministic visual preview plus real in-client proof;
+7. do not include Continue / Complete, rewards, or gossip transitions.
+
+Only after those production controls are proven may a later checkpoint consider
+capability-gated Blizzard offer-control suppression.
 
 ## Success Criteria
 
-The next checkpoint succeeds only when the P0131 probe can establish, separately
-for Accept and Decline where naturally testable:
-- the player explicitly triggered the mutation;
-- the action targeted the currently proven offer state;
-- the expected quest/event outcome occurred or a real failure was recorded;
-- Blizzard fallback remained usable;
-- no taint, protected-action, secret-value, or unintended automatic choice
-  occurred.
-
-Absence of a naturally suitable Decline test is a deferral, not PASS or FAIL.
+P0132 succeeds only when:
+- Logres offer controls are explicit player-owned buttons;
+- exact current offer identity is bound to the action surface;
+- Accept / Decline use the proven mutation path with no automatic choice;
+- Blizzard controls remain fully usable as fallback throughout proof;
+- unsupported/missing/secret/invalid state fails open;
+- visual state matches the approved quest-interaction direction;
+- no Lua, taint, protected-action, secret-value, wrong-quest, or duplicate-action
+  defect occurs.
 
 ## Do Not Reopen Without New Evidence
 
@@ -148,6 +148,8 @@ Absence of a naturally suitable Decline test is a deferral, not PASS or FAIL.
 
 ## Relevant References
 
+- `docs/memory/evidence/P0131_QUEST_OFFER_ACTION_RUNTIME_PASS_2026-10-05.md`
+- `docs/memory/evidence/P0131_ACCEPT_EVENT_ORDER_FAILURE_2026-10-05.md`
 - `docs/memory/evidence/P0130_QUEST_DIALOGUE_R1_RUNTIME_VISUAL_PASS_2026-10-05.md`
 - `docs/memory/evidence/P0130_QUEST_DIALOGUE_IMMERSION_RESTORE_FAILURE_2026-10-05.md`
 - `docs/memory/evidence/P0129_NPC_QUEST_INTERACTION_RUNTIME_READ_PASS_2026-10-05.md`

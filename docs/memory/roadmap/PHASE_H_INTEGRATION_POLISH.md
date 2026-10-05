@@ -211,10 +211,19 @@ paging, Previous / Next, wrapped objective text, Blizzard-control coexistence, a
 same-conversation Immersion OFF -> ON restoration. The initial restore failure is
 preserved in evidence and corrected in R1.
 
-Next parallel gate:
-**P0131 player-triggered Accept / Decline capability probe**, with Blizzard
-controls still visible and no Continue / Complete / reward / gossip mutation
-bundled into the same slice.
+P0131:
+**ACCEPT + DECLINE CAPABILITY PASS.**
+
+Decline is proven by `QUEST_FINISHED`; Accept is proven by a matched
+`QUEST_ACCEPTED` after the intermediate `QUEST_FINISHED`, with no polling/timer or
+new mutation surface.
+
+P0132 next:
+**production Logres quest-offer Accept / Decline controls**, translating the
+approved offer interaction state while Blizzard controls remain visible as
+fallback throughout proof.
+
+No Continue / Complete / reward / gossip mutation is bundled into that slice.
 
 This remains capability preparation under D-035/D-039. It does not authorize
 minimap suppression, unproven navigation sources, automated quest choices, or
