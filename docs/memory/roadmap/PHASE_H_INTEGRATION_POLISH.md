@@ -194,12 +194,16 @@ P0128 source-audit result:
 Narrative/reward/gossip read sources exist on Forever, and the expected quest and
 gossip action APIs exist, but mutation ownership remains runtime-unproven.
 
-Next parallel objective:
-**P0129 read-only NPC quest interaction runtime capability probe.**
+P0129:
+**PREPARED — `0.0.59-dev`, runtime evidence pending.**
 
-The probe must inspect narrative/reward/gossip state secret-first, record mutation
-function presence without calling it, and keep every Blizzard interaction surface
-available.
+The read-only probe inspects narrative/reward/gossip state secret-first, records
+mutation-function presence without calling it, exposes one Phase-H developer-panel
+action, and keeps every Blizzard interaction surface available.
+
+Next parallel gate:
+**collect natural P0129 runtime evidence before choosing any mutation-specific
+follow-up.**
 
 This remains capability preparation under D-035/D-039. It does not authorize
 minimap suppression, unproven navigation sources, automated quest choices, or

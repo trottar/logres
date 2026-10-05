@@ -219,3 +219,20 @@ reward/gossip data, secret/failure behavior, and function presence before any
 mutation-specific probe is selected.
 
 Blizzard quest/gossip UI remains authoritative and visible.
+
+## P0129 read-only interaction probe
+
+P0129 adds a diagnostic-only, event-driven runtime producer for the D-035
+capability gate.
+
+It retains the Phase-F fail-open ownership model:
+- no quest action is invoked;
+- no gossip selection is invoked;
+- no Blizzard quest/gossip presentation is suppressed.
+
+The probe captures only bounded sanitized evidence and keeps event history for
+detail/progress/complete/gossip states so a later developer-panel click can report
+naturally observed interaction state.
+
+The probe does not run inside `checkall`; contextual absence is a deferral rather
+than a generic addon failure.

@@ -130,3 +130,24 @@ Therefore P0128 does not authorize suppression or mutation.
 Next:
 **P0129 read-only runtime capability probe**, integrated into the Phase-H
 developer panel.
+
+## P0129 read-only runtime probe prepared
+
+P0129 runtime `0.0.59-dev` adds an addon-owned event-driven diagnostic probe.
+
+It observes:
+- `GOSSIP_SHOW` / `GOSSIP_CLOSED`;
+- `QUEST_DETAIL`;
+- `QUEST_PROGRESS`;
+- `QUEST_COMPLETE`;
+- `QUEST_FINISHED`.
+
+It captures bounded narrative/reward/gossip state using secret-first guards and
+records action-function presence without invoking mutation.
+
+One Phase-H developer-panel action exposes the captured evidence. The contextual
+probe is deliberately excluded from `Run All` so absence of an NPC quest state is
+not misreported as a generic addon failure.
+
+Runtime evidence is still required before this investigation can authorize any
+mutation-specific follow-up.

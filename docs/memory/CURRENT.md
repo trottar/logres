@@ -16,25 +16,24 @@ sequence is finished.
 
 ## Current Work Item
 
-**P0129 planning target — read-only NPC quest interaction runtime capability
-probe.**
+**P0129 — read-only NPC quest interaction runtime capability probe prepared for
+in-client evidence.**
 
 Latest verified durable checkpoint:
-P0127 `ef56075dbea1fdb8c613e3ee88c38e2684ef4170`.
+P0128 `0ec74fe5a8e41a8bab7bf9eee6946a4d3d58c133`.
 
 Current pushed runtime:
 `0.0.58-dev`.
 
-P0128 source audit resolves the source/API layer:
-- offer/progress/completion narrative APIs are source-available;
-- reward item/choice/currency/spell reads are source-available;
-- Accept/Decline/Continue/finalize APIs are source-available but mutation remains
-  runtime-unproven;
-- structured gossip quest/option reads and selection APIs are source-available;
-- no Blizzard replacement is authorized from source evidence alone.
+Prepared runtime:
+`0.0.59-dev`.
 
-The exact next work item is one read-only runtime probe; it must not invoke quest
-or gossip mutation.
+P0128 source audit is durable. P0129 adds one event-driven diagnostic module that
+captures bounded quest narrative/reward/gossip state secret-first, records
+quest/gossip mutation-function presence without calling it, and exposes one
+Phase-H developer-panel action.
+
+Blizzard quest/gossip UI remains untouched and authoritative.
 
 ## Verified State
 
@@ -90,29 +89,32 @@ Preserved deferrals/gates:
 
 ## Next Action
 
-Prepare P0129: one event-driven, read-only NPC quest interaction runtime probe.
+Deploy P0129 runtime `0.0.59-dev` and use Phase H -> `Quest Interaction Probe`.
 
-The probe should:
-1. observe `GOSSIP_SHOW`, `GOSSIP_CLOSED`, `QUEST_DETAIL`, `QUEST_PROGRESS`,
-   `QUEST_COMPLETE`, and `QUEST_FINISHED`;
-2. read narrative/reward/gossip information secret-first;
-3. bound reward/list capture so diagnostics remain compact;
-4. record action/selection function presence without invoking mutation;
-5. expose one Phase-H developer-panel action;
-6. leave all Blizzard quest/gossip information and controls visible.
+Validation:
+1. run once with no NPC quest interaction open;
+2. interact naturally with a quest NPC and run it again;
+3. capture offer/detail state if naturally available;
+4. capture progress/complete/reward state only when naturally available;
+5. confirm `invoked=0` and Blizzard quest/gossip UI remains usable;
+6. inspect persisted panel diagnostics for safe ordinary, missing, secret, invalid,
+   or failed reads.
 
-Natural missing interaction states are environmental deferrals, not failures.
+Do not travel or manufacture special quest states solely for this probe.
 
 ## Success Criteria
 
-The next checkpoint succeeds when the read-only runtime probe establishes:
-- which NPC quest/gossip states occur naturally;
-- which narrative/reward/gossip reads return safe ordinary values;
-- whether reward-choice metadata is sufficient for an informed player choice;
-- whether gossip quest rows expose stable IDs/titles;
-- missing/secret/invalid/failure states without unsafe inspection.
+P0129 succeeds when:
+- the probe module/action is runtime-safe;
+- event registration and naturally observed interaction states are recorded;
+- narrative/reward/gossip values are captured without secret-value misuse;
+- mutation function presence is reported with `invoked=0`;
+- Blizzard interaction remains fully usable;
+- any unavailable interaction states are classified as environmental deferrals,
+  not invented PASS results.
 
-No quest/gossip mutation call may be used in this first runtime probe.
+Any Lua, secret-value, taint, protected-action, or unintended quest-state mutation
+is a real failure.
 
 ## Do Not Reopen Without New Evidence
 

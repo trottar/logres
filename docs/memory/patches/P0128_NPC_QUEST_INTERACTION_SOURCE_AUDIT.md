@@ -1,7 +1,7 @@
 # P0128 — NPC Quest Interaction Source / Capability Audit
 
 Date: 2026-10-05
-Result: **PREPARED — DOCS / SOURCE EVIDENCE ONLY**
+Result: **INSTALLED / PUSHED — DOCS / SOURCE EVIDENCE ONLY** (`0ec74fe5`)
 Baseline: `ef56075dbea1fdb8c613e3ee88c38e2684ef4170`
 Runtime: unchanged at `0.0.58-dev`
 

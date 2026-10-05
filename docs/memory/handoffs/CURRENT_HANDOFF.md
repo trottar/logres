@@ -4,13 +4,13 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0126 `89b0c563d1ff5e12c61baa3e407725a90d9cefd4`.
+P0128 `0ec74fe5a8e41a8bab7bf9eee6946a4d3d58c133`.
 
 Current pushed runtime:
 `0.0.58-dev`.
 
-P0126 Active Quest is runtime + visual PASS. The initial hover failure remains
-recorded; R1 corrected it and the final R3 composition is the accepted baseline.
+Prepared P0129 runtime:
+`0.0.59-dev` — read-only NPC quest interaction probe; runtime evidence pending.
 
 ## Active work stream
 
@@ -18,7 +18,8 @@ The user has explicitly chosen to finish the approved visual translation sequenc
 before returning to Camera.
 
 Current objective:
-**P0129 read-only NPC quest interaction runtime capability probe.**
+**P0129 read-only NPC quest interaction runtime capability probe — deploy and
+collect natural interaction evidence.**
 
 Camera remains frozen, not complete.
 
@@ -49,12 +50,13 @@ No SetCVar, Taxi rotation, or Taxi UI fade is authorized by this handoff.
 P0128 resolves the source layer: the needed narrative/reward/gossip APIs exist,
 and the quest-action APIs exist, but mutation ownership remains runtime-unproven.
 
-P0129 must be read-only:
-- observe interaction events;
-- capture safe narrative/reward/gossip values;
-- record mutation-function presence only;
-- never call Accept/Decline/Complete/GetQuestReward or gossip-selection APIs;
-- leave Blizzard UI fully available.
+P0129 is prepared as read-only:
+- observes gossip/detail/progress/complete lifecycle events;
+- captures bounded narrative/reward/gossip values secret-first;
+- records mutation-function presence only;
+- statically forbids quest/gossip mutation calls;
+- provides one Phase-H `Quest Interaction Probe` action;
+- leaves Blizzard UI fully available.
 
 Do not automate quest choices or bundle quest navigation/minimap ownership.
 

@@ -41,14 +41,14 @@ not an open Active Quest capability issue.
 ## NPC quest interaction ownership
 
 Status:
-**OPEN — SOURCE LAYER RESOLVED; READ-ONLY RUNTIME PROBE NEXT.**
+**OPEN — P0129 READ-ONLY PROBE PREPARED; RUNTIME EVIDENCE PENDING.**
 
 Canonical investigation:
 `NPC_QUEST_INTERACTION_CAPABILITY.md`
 
 P0128 establishes source/API availability but does not authorize mutation.
-P0129 should collect read-only runtime evidence for narrative/reward/gossip
-surfaces while leaving Blizzard interaction fully available.
+P0129 `0.0.59-dev` is prepared to collect read-only narrative/reward/gossip
+runtime evidence while leaving Blizzard interaction fully available.
 
 ## Closed Phase G investigations
 

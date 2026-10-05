@@ -140,9 +140,10 @@ cast cue, Context message treatment, heading/manual-waypoint Compass, and organi
 player-health tunnel. P0126 adds the accepted Active Quest one-focus presentation
 at `89b0c563` / `0.0.58-dev`.
 
-P0128 resolves the D-035 source/API layer. The next parallel work item is the
-P0129 read-only NPC quest-interaction runtime probe. It is an evidence gate, not
-permission to suppress Blizzard quest/gossip surfaces or invoke quest actions.
+P0128 resolves the D-035 source/API layer. P0129 prepares the read-only NPC
+quest-interaction runtime probe on `0.0.59-dev`; in-client evidence is pending.
+It remains an evidence gate, not permission to suppress Blizzard quest/gossip
+surfaces or invoke quest actions.
 
 D-037 unproven navigation/minimap roles remain separately capability-gated.
 D-030 remains current minimap runtime authority until replacement capabilities

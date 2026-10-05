@@ -53,8 +53,11 @@ Accepted checkpoints:
 P0128 source audit:
 **RESOLVED — API/source layer available; mutation capability not proven.**
 
+P0129:
+**PREPARED on `0.0.59-dev` — read-only runtime evidence pending.**
+
 Next:
-**P0129 read-only NPC quest interaction runtime capability probe.**
+**Deploy P0129 and collect natural NPC quest/gossip interaction evidence.**
 
 This is implementation translation under D-039/D-040. It does not authorize
 Phase-H-only capability expansion, stock minimap suppression, Logres-owned quest
