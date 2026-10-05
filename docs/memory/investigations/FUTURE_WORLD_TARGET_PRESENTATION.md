@@ -1,6 +1,6 @@
 # Future — World-Attached Target Presentation
 
-Status: **OPEN — SOURCE + ANCHORING/FALLBACK AUDIT NEXT (P0139)**
+Status: **OPEN — SOURCE + FALLBACK POLICY RESOLVED; P0140 RUNTIME PROBE NEXT**
 Opened: 2026-10-05
 
 ## Product direction
@@ -71,3 +71,40 @@ P0139 succeeds when the repo can state:
 
 Source availability alone does not authorize making world-attached target the
 default.
+
+## P0139 source / policy result
+
+Canonical evidence:
+`../evidence/P0139_WORLD_TARGET_SOURCE_ANCHOR_AUDIT_2026-10-05.md`.
+
+Accepted decision:
+`../decisions/D-042_WORLD_TARGET_ANCHOR_AND_FALLBACK_POLICY.md`.
+
+Source generation:
+`Gethe/wow-ui-source@e3ecc27b64d30fdc735a3f6579b866858f9f9df1`
+(`1.60.1.70205`).
+
+Resolved:
+- `C_NamePlate.GetNamePlateForUnit` is the conditional anchor-source family;
+- Logres must always use `includeForbidden=false`;
+- nameplate add/remove/behind-camera plus target-change events support
+  event-driven invalidation;
+- the existing screen-space target is the canonical fallback;
+- nameplate CVars/settings are never changed to manufacture an anchor;
+- Blizzard frames are never reparented/mutated to obtain one;
+- reaction source candidates are `UnitReaction`, `UnitCanAttack`, and
+  `UnitIsFriend`;
+- relative danger is intentionally limited to `UnitIsTrivial` low-danger
+  de-emphasis if runtime-proven ordinary;
+- exact level/classification/difficulty, selection type/color, boss
+  classification, and threat values are excluded.
+
+Still unproven:
+- `"target"` token behavior on `GetNamePlateForUnit` on the tested client;
+- accessible nameplate availability in representative gameplay;
+- behind-camera query behavior;
+- safe addon-owned anchor relation;
+- ordinary reaction/triviality runtime values.
+
+Next:
+P0140 read-only runtime probe.

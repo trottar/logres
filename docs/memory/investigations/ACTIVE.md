@@ -151,14 +151,22 @@ gated/deferred. Do not manufacture those states solely to advance sequencing.
 ## World-attached target presentation
 
 Status:
-**OPEN — SOURCE + ANCHORING/FALLBACK AUDIT NEXT (P0139).**
+**OPEN — SOURCE + FALLBACK POLICY RESOLVED; P0140 READ-ONLY RUNTIME PROBE NEXT.**
 
 Canonical investigation:
 `FUTURE_WORLD_TARGET_PRESENTATION.md`.
 
-The visual endpoint is approved by D-039, but the world/nameplate anchor source,
-availability states, reaction/relative-danger source, protected-frame boundary,
-and fail-open screen-space fallback are not yet proven.
+P0139 resolves the source/policy layer and accepts D-042:
+- conditional accessible nameplate is the only world-anchor candidate;
+- `includeForbidden=false` is mandatory;
+- nameplate/target events provide event-driven invalidation;
+- behind-camera state is an explicit fallback condition;
+- reaction uses ordinary runtime-proven reaction APIs only;
+- relative danger is limited to runtime-proven `UnitIsTrivial` low-danger
+  de-emphasis;
+- exact level/classification/difficulty/selection/threat inference is excluded;
+- existing screen-space Logres target remains canonical fallback;
+- no target/nameplate suppression is authorized.
 
-P0139 is audit-only. No target/nameplate suppression or production anchor change
-is authorized.
+P0140 must now prove target-token nameplate behavior, hidden addon-owned attachment,
+reaction/triviality, and fallback observations in client.

@@ -157,5 +157,6 @@
 | P0135 | 2026-10-05 | INSTALLED / PUSHED — SOURCE + PRIORITY-POLICY LAYER RESOLVED | Pin Forever aura/secrecy source contract, accept D-041, open P0136 read-only runtime probe (`b69eb109`) |
 | P0136 | 2026-10-05 | INSTALLED / PUSHED — RUNTIME PROBE PASS WITH ENVIRONMENTAL DEFERRALS | Player helpful ordinary payload/metadata proven; player harmful and populated target categories deferred (`ef769f6`, `0.0.66-dev`) |
 | P0137 | 2026-10-05 | INSTALLED / PUSHED — RUNTIME + VISUAL PASS | Production player `HELPFUL|PLAYER` passive aura lane accepted at real UI scale (`2b578759`, `0.0.67-dev`) |
-| P0138 | 2026-10-05 | PREPARED — DOCS-ONLY ACCEPTANCE CHECKPOINT | Record P0137 acceptance; preserve aura deferrals; open P0139 world-attached target source + anchoring/fallback audit |
+| P0138 | 2026-10-05 | INSTALLED / PUSHED — DOCS-ONLY ACCEPTANCE CHECKPOINT | Record P0137 acceptance; preserve aura deferrals; open P0139 world-attached target source + anchoring/fallback audit (`6392b2e4`) |
+| P0139 | 2026-10-05 | PREPARED — SOURCE + FALLBACK POLICY LAYER RESOLVED | Pin conditional nameplate anchor/reaction/triviality policy; accept D-042; open P0140 read-only runtime probe |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

@@ -111,9 +111,16 @@ minimal framing, ordinary stack metadata, and event-driven updates.
 Player harmful/urgent and populated target aura data remain environmental
 deferrals. Private/group ownership and stock aura suppression remain gated.
 
-P0139 is next: world-attached target source + anchoring/fallback audit. The
-approved D-039 target visual already has a working sparse name/percentage
-producer; the unresolved work is safe world/nameplate anchoring, reaction /
-relative-danger source policy, and fail-open fallback.
+P0139 resolves the world-target source + fallback policy against the exact
+Forever `1.60.1.70205` source generation.
+
+D-042 permits only a conditional accessible nameplate candidate using
+`includeForbidden=false`, preserves the existing screen-space Logres target as
+fallback, keeps Blizzard target/nameplate UI available, uses ordinary reaction
+state only, and limits relative-danger policy to `UnitIsTrivial` low-danger
+de-emphasis without exact difficulty inspection.
+
+P0140 is next: a read-only world-target anchor/reaction runtime probe. Production
+target placement does not move before that proof.
 
 D-037 unproven navigation/minimap roles remain separately gated.

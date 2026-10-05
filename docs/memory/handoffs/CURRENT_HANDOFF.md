@@ -4,13 +4,13 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0137 `2b578759e503bdfb5ca27c57d088f15caca79672`.
+P0138 `6392b2e447f710e84d6add4ef46b972afc95bf4c`.
 
 Current pushed/tested runtime:
 `0.0.67-dev`.
 
-P0137 runtime + visual result:
-**PASS.**
+P0139 source + fallback-policy result:
+**RESOLVED — P0140 READ-ONLY RUNTIME PROBE NEXT.**
 
 P0136:
 **INSTALLED / PUSHED — RUNTIME PROBE PASS WITH ENVIRONMENTAL DEFERRALS.**
@@ -28,7 +28,7 @@ The user has explicitly chosen to finish the approved visual translation sequenc
 before returning to Camera.
 
 Current objective:
-**P0139 — world-attached target source + anchoring/fallback audit.**
+**P0140 — read-only world-target anchor/reaction runtime probe.**
 
 Camera remains frozen, not complete.
 
@@ -74,6 +74,9 @@ Do not automate quest choices or bundle quest navigation/minimap ownership.
 
 ## Key references
 
+- `../patches/P0139_WORLD_TARGET_SOURCE_ANCHOR_AUDIT.md`
+- `../evidence/P0139_WORLD_TARGET_SOURCE_ANCHOR_AUDIT_2026-10-05.md`
+- `../decisions/D-042_WORLD_TARGET_ANCHOR_AND_FALLBACK_POLICY.md`
 - `../patches/P0138_CLOSE_P0137_OPEN_WORLD_TARGET_AUDIT.md`
 - `../evidence/P0137_PLAYER_HELPFUL_AURA_RUNTIME_VISUAL_PASS_2026-10-05.md`
 - `../investigations/FUTURE_WORLD_TARGET_PRESENTATION.md`

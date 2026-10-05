@@ -8,7 +8,7 @@ project: logres
 
 ## Active Objective
 
-**Approved visual implementation translation — world-attached target source + anchoring/fallback audit next.**
+**Approved visual implementation translation — read-only world-target anchor/reaction runtime probe next.**
 
 This is parallel Phase-H preparation while the formal Phase G camera phase remains
 open. The user has explicitly frozen Camera work until the already-approved visual
@@ -16,17 +16,16 @@ sequence is finished.
 
 ## Current Work Item
 
-**P0139 planning target — world-attached target source +
-anchoring/fallback audit.**
+**P0140 planning target — read-only world-target anchor/reaction runtime probe.**
 
 Latest verified durable checkpoint:
-P0137 `2b578759e503bdfb5ca27c57d088f15caca79672`.
+P0138 `6392b2e447f710e84d6add4ef46b972afc95bf4c`.
 
 Current pushed/tested runtime:
 `0.0.67-dev`.
 
-P0137:
-**RUNTIME + VISUAL PASS.**
+P0139 source + fallback-policy audit:
+**RESOLVED.**
 
 P0136 runtime probe:
 **INSTALLED / PUSHED — PASS WITH ENVIRONMENTAL DEFERRALS.**
@@ -164,29 +163,38 @@ Preserved deferrals/gates:
 
 ## Next Action
 
-Prepare P0139 as a **world-attached target source + anchoring/fallback audit**.
+Prepare P0140 as a **read-only world-target anchor/reaction runtime probe**.
 
-Audit:
-1. safe current-target world/nameplate anchor sources on Forever;
-2. target-change / target-loss / nameplate-create/remove event model;
-3. on-screen vs off-screen vs no-nameplate behavior;
-4. protected/combat-lockdown constraints on attachment;
-5. ordinary safe reaction input;
-6. whether any relative-danger input is usable without exact
-   level/classification/difficulty inspection;
-7. fallback policy when no world-attached anchor is available;
-8. exact narrow read-only runtime probe required next.
+Contract:
+1. preserve current production target placement unchanged;
+2. event-driven invalidation only: target change, nameplate add/remove,
+   behind-camera change, entering world;
+3. ignore nameplate event payloads and re-query `"target"` directly;
+4. query `C_NamePlate.GetNamePlateForUnit("target", false)` behind `pcall`;
+5. never request forbidden nameplates;
+6. secret-check every returned value before branching/inspection;
+7. query behind-camera state only when an accessible nameplate exists;
+8. outside combat only, test an invisible addon-owned proxy anchored relative to
+   the returned nameplate, then immediately detach;
+9. probe `UnitReaction`, `UnitCanAttack`, `UnitIsFriend`, and `UnitIsTrivial`
+   through secret-first wrappers;
+10. do not read exact enemy level/classification/difficulty, selection state, or
+    threat values;
+11. do not hide/reparent/mutate Blizzard target/nameplate UI;
+12. do not poll.
 
-Do not hide the current screen-space Logres target fallback or Blizzard
-target/nameplate surfaces in P0139.
+Environmental absence of an accessible target nameplate is a fallback observation
+/ DEFERRED state, not FAIL.
 
 ## Success Criteria
 
-P0139 succeeds when the repo can state the safe anchor source(s), availability
-states, reaction/relative-danger source boundary, and fail-open fallback policy
-well enough to define a narrow runtime probe.
+P0140 succeeds when the tested client proves the `"target"` nameplate query and
+addon-owned anchor relation are safe where available, ordinary reaction/trivial
+inputs can be read, and fallback states are observable without altering production
+presentation.
 
-Source presence alone does not authorize moving the production target surface.
+Any Lua, secret-value, forbidden/protected-frame, or Blizzard-mutation error is
+FAIL.
 
 ## Do Not Reopen Without New Evidence
 
@@ -205,6 +213,9 @@ Source presence alone does not authorize moving the production target surface.
 
 ## Relevant References
 
+- `docs/memory/patches/P0139_WORLD_TARGET_SOURCE_ANCHOR_AUDIT.md`
+- `docs/memory/evidence/P0139_WORLD_TARGET_SOURCE_ANCHOR_AUDIT_2026-10-05.md`
+- `docs/memory/decisions/D-042_WORLD_TARGET_ANCHOR_AND_FALLBACK_POLICY.md`
 - `docs/memory/patches/P0138_CLOSE_P0137_OPEN_WORLD_TARGET_AUDIT.md`
 - `docs/memory/evidence/P0137_PLAYER_HELPFUL_AURA_RUNTIME_VISUAL_PASS_2026-10-05.md`
 - `docs/memory/investigations/FUTURE_WORLD_TARGET_PRESENTATION.md`

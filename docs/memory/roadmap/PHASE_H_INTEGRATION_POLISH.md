@@ -267,11 +267,20 @@ The passive player `HELPFUL|PLAYER` lane is accepted at real UI scale:
 Player harmful/urgent and populated target aura data remain environmental
 deferrals. Private/group aura ownership and stock suppression remain gated.
 
-Next:
-**P0139 world-attached target source + anchoring/fallback audit.**
+P0139:
+**SOURCE + FALLBACK POLICY LAYER RESOLVED.**
 
-The audit must preserve the current screen-space target fallback and Blizzard
-target/nameplate surfaces until a safe anchor and fallback contract is proven.
+D-042 accepts only conditional accessible nameplate anchoring, with
+`includeForbidden=false`, behind-camera/no-nameplate fallback, no nameplate CVar
+mutation, and no Blizzard frame mutation.
+
+Reaction candidates are source-available; relative danger is restricted to
+`UnitIsTrivial` low-danger de-emphasis if runtime-proven ordinary.
+
+No production target relocation is authorized yet.
+
+Next:
+**P0140 read-only world-target anchor/reaction runtime probe.**
 
 This remains capability preparation under D-035/D-039. It does not authorize
 minimap suppression, unproven navigation sources, automated quest choices, or

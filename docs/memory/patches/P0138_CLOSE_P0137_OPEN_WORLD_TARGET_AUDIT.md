@@ -1,7 +1,7 @@
 # P0138 — Close P0137; Open World-Attached Target Audit
 
 Date: 2026-10-05
-Result: **DOCS-ONLY ACCEPTANCE CHECKPOINT**
+Result: **INSTALLED / PUSHED — DOCS-ONLY ACCEPTANCE CHECKPOINT** (`6392b2e4`)
 Baseline: `2b578759e503bdfb5ca27c57d088f15caca79672`
 Runtime: unchanged at `0.0.67-dev`
 
