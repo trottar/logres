@@ -8,58 +8,37 @@ project: logres
 
 ## Active Objective
 
-**Approved visual implementation translation — P0142 D-037 navigation/minimap source-capability audit resolved; P0143 read-only runtime probe next.**
+**Approved visual implementation translation — P0143 read-only navigation-source runtime probe prepared; in-client proof next.**
 
 This remains parallel Phase-H preparation while formal Phase G / G.5 is open and
 explicitly frozen until the approved visual sequence is finished.
 
 ## Current Work Item
 
-**P0142 source/policy checkpoint prepared — D-043 accepted; P0143 narrow read-only navigation runtime proof next after P0142 is durable.**
+**P0143 diagnostic-only navigation-source probe on candidate runtime `0.0.69-dev`; runtime proof pending.**
 
 Latest verified durable checkpoint:
-P0141 `44720c22f0206c37dc6c1559f51b9319f3ee6647`.
+P0142 `82682ece15ad21aa7d5ee2dfaba5e5a3c68c97b6`.
 
-Current pushed/tested runtime:
+Current pushed/tested runtime before P0143 deployment:
 `0.0.68-dev`.
 
-P0142 source generation:
-`Gethe/wow-ui-source@e3ecc27b64d30fdc735a3f6579b866858f9f9df1`
-(`1.60.1.70205`).
+P0142 / D-043 remains authoritative:
+- tracking selection is multi-select;
+- tracking/filter APIs expose selector metadata/state, not individual detected-object
+  positions;
+- service/town tracking filters do not expose individual service-instance positions;
+- bounded current-map `C_AreaPoiInfo` is the surviving local-POI runtime candidate;
+- `C_Navigation.GetNextWaypointForMap` is a distinct broader current-navigation
+  candidate;
+- ordinary quest waypoint behavior remains on `C_QuestLog.GetNextWaypoint*`, with
+  prior tested empty results preserved as negative evidence;
+- same-map comparable distance is source-plausible through ordinary player
+  position + map world size + destination map coordinates;
+- Blizzard minimap remains stock.
 
-P0142 result:
-**SOURCE-CAPABILITY LAYER RESOLVED — PRODUCTION NAVIGATION EXPANSION REMAINS GATED.**
-
-Source findings:
-- normal focused/super-tracked quest waypoints use
-  `C_QuestLog.GetNextWaypointForMap`; prior Phase-E empty results remain valid
-  negative runtime evidence for the tested quests;
-- `C_Navigation.GetNextWaypointForMap` is a separate current-navigation source
-  used by Blizzard for broader super-tracked content/world-quest waypoint paths;
-- `C_Minimap` exposes tracking-filter metadata, active state, update events, and
-  `GetViewRadius()`, but no public per-detected-entity result/position enumerator;
-- Blizzard tracking selection is multi-select, not singular;
-- current minimap tracking-filter enums include service categories, but those APIs
-  expose filter definitions/state rather than service-instance coordinates;
-- `C_AreaPoiInfo` is a separate positioned map-POI source with name/position and
-  `AREA_POIS_UPDATED`; runtime usefulness on Forever ordinary maps is unproven;
-- `C_Map.GetPlayerMapPosition`, `GetMapWorldSize`, and map/world conversion make
-  same-map yard-distance computation source-plausible, but secret-first runtime
-  proof is still required;
-- stock minimap responsibilities include at least zone/PvP context, click ping,
-  zoom, tracking management, Blizzard blips/hover interaction, and world-map
-  access; `MINIMAP_PING` has restricted secret payloads.
-
-D-043 consequences:
-- manual waypoint remains the only production-proven moving marker role;
-- repeated generic tracking-result glyphs are source-blocked on the current public
-  API surface unless new evidence exposes individual detected-object positions;
-- service/townsfolk minimap filters do not authorize local service markers;
-- bounded current-map AreaPOIs are the only surviving new local-POI candidate for
-  runtime proof;
-- the Blizzard minimap remains stock and available;
-- no tracking-filter mutation, minimap CVar mutation, polling, broad hooks, or
-  production marker expansion is authorized.
+P0143 adds no production marker or Blizzard presentation change. It observes only
+sanitized addon-owned diagnostic state.
 
 ## Verified State
 
@@ -82,13 +61,10 @@ World target:
 
 Navigation:
 - heading/manual waypoint are production-proven;
-- ordinary quest destination remains runtime-unproven beyond the prior negative
-  tested quests;
-- broader current-navigation and current-map AreaPOI source paths are plausible
-  and require P0143 runtime proof;
-- individual tracked-result positions and service-instance positions are not
-  exposed by the audited public source surface;
-- comparable distance remains runtime-gated;
+- P0142 source capability and fallback policy are durable;
+- individual tracking-result and service-instance positions remain source-blocked;
+- quest/current-navigation, current-map AreaPOI, minimap view radius, and comparable
+  distance remain runtime-gated until P0143 evidence;
 - Blizzard minimap remains stock and available.
 
 Camera:
@@ -97,46 +73,44 @@ Camera:
 
 ## Next Action
 
-After P0142 is pushed and verified, prepare P0143 as one **read-only navigation
-source runtime probe** on `0.0.69-dev`.
+Deploy P0143 and run the Phase-H **Navigation Source Probe** in ordinary current
+gameplay.
 
-P0143 should:
-1. re-query the current player map with `C_Map.GetBestMapForUnit("player")`;
-2. secret-first sample player map position and `C_Map.GetMapWorldSize`;
-3. read `C_Minimap.GetViewRadius()` without changing zoom/tracking/settings;
-4. enumerate tracking **types/state only** with bounded
-   `GetNumTrackingTypes` / `GetTrackingInfo` / `GetTrackingFilter`;
-5. read current super-tracking state and compare:
-   - `C_QuestLog.GetNextWaypoint*` for a super-tracked quest when present;
-   - `C_Navigation.GetNextWaypointForMap(currentMapID)` for current navigation;
-6. bounded-scan current-map `C_AreaPoiInfo.GetAreaPOIForMap` results and
-   secret-first inspect only ordinary name/position fields;
-7. prove or defer same-map comparable-distance arithmetic using ordinary player,
-   map-size, and POI/waypoint coordinates;
-8. invalidate only from existing events such as `PLAYER_MAP_CHANGED`,
-   `SUPER_TRACKING_CHANGED`, `SUPER_TRACKING_PATH_UPDATED`, `QUEST_LOG_UPDATE`,
-   `AREA_POIS_UPDATED`, `MINIMAP_UPDATE_TRACKING`, and
-   `PLAYER_ENTERING_WORLD`;
-9. discard event payloads and retain only sanitized addon-owned diagnostic state;
-10. make no production presentation or Blizzard minimap change.
+The probe must establish, without mutation:
+1. current map, player map position, and map world size;
+2. minimap view radius;
+3. bounded tracking type/filter metadata and active-state enumeration;
+4. bounded current-map AreaPOI rows;
+5. current super-tracking state and `C_Navigation.GetNextWaypointForMap`;
+6. ordinary quest `C_QuestLog.GetNextWaypoint*` output when a naturally
+   super-tracked quest exists;
+7. same-map distance only when all required inputs are ordinary;
+8. event registration/counts, secret skips, and call failures.
 
-Do not create a runtime path for individual tracking-result glyphs in P0143; the
-source audit found no supported result enumerator to probe.
+Then run integrated `Run All`.
+
+Environmental absence of a waypoint or AreaPOI is DEFERRED, not FAIL. Any secret
+skip, API/call failure, Lua error, taint/protected-action issue, or other runtime
+failure must be preserved and investigated before production work advances.
+
+Do not change tracking selection, supertracking, map/waypoint state, minimap CVars,
+Blizzard pins/frames, player location, or gameplay state merely to manufacture
+proof.
 
 ## Success Criteria
 
-P0143 succeeds when the tested client establishes which of the surviving
-source-plausible inputs are ordinary and usable in real runtime:
-- current player map/position/world-size;
-- minimap view radius;
-- tracking type/state metadata;
-- current navigation/quest waypoint output when naturally present;
-- bounded current-map AreaPOI rows when naturally present;
-- comparable same-map distance only when all inputs are ordinary.
+P0143 can close its tested runtime scope only when:
+- the diagnostic loads and all required events register;
+- required pinned-source APIs are present;
+- the manual capture completes with zero secret skips and zero call failures;
+- ordinary values are recorded only after secret preflight;
+- current-map comparable distance is reported only from compatible ordinary inputs;
+- environmental absence remains explicitly deferred;
+- integrated `Run All` remains PASS;
+- no production presentation or Blizzard minimap behavior changes.
 
-Environmental absence of a waypoint or AreaPOI is DEFERRED, not FAIL. Secret,
-call, or Lua errors are failures. Source-blocked individual tracking-result
-positions remain CLOSED unless new primary source evidence appears.
+A P0143 PASS does not authorize repeated tracking-result glyphs or minimap
+suppression.
 
 ## Do Not Reopen Without New Evidence
 
@@ -155,6 +129,7 @@ positions remain CLOSED unless new primary source evidence appears.
 
 ## Relevant References
 
+- `docs/memory/patches/P0143_NAVIGATION_SOURCE_READ_ONLY_PROBE.md`
 - `docs/memory/evidence/P0142_NAVIGATION_MINIMAP_SOURCE_CAPABILITY_AUDIT_2026-10-05.md`
 - `docs/memory/decisions/D-043_NAVIGATION_SOURCE_AND_MINIMAP_FALLBACK_POLICY.md`
 - `docs/memory/patches/P0142_NAVIGATION_MINIMAP_SOURCE_CAPABILITY_AUDIT.md`

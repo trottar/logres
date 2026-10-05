@@ -3,7 +3,7 @@
 Date: 2026-10-05
 Baseline: `44720c22f0206c37dc6c1559f51b9319f3ee6647`
 Runtime: unchanged at `0.0.68-dev`
-Result: **PREPARED — DOCS / PRIMARY-SOURCE EVIDENCE ONLY**
+Result: **INSTALLED / PUSHED — DOCS / PRIMARY-SOURCE EVIDENCE ONLY**
 
 ## Purpose
 
@@ -55,9 +55,14 @@ P0142 R1 keeps the source-audit scope unchanged. It preserves unique-anchor
 validation but tolerates whitespace/line-wrapping differences while requiring all
 non-whitespace anchor tokens to match exactly and in order.
 
+## Durable checkpoint
+
+P0142 is verified on `main` at
+`82682ece15ad21aa7d5ee2dfaba5e5a3c68c97b6`.
+
 ## Next
 
-After P0142 is durable, prepare P0143:
+Prepare P0143:
 **read-only navigation source runtime probe**.
 
 It will test only surviving source-plausible inputs and will not mutate tracking,

@@ -130,11 +130,12 @@ individual tracked-result and service-instance positions are not exposed by the
 audited public source surface. Current-map `C_AreaPoiInfo`, minimap view radius,
 broader current navigation, and same-map geometry survive as runtime candidates.
 
-Next:
-**P0143 read-only navigation source runtime probe.**
+P0143:
+**PREPARED — READ-ONLY RUNTIME PROBE; IN-CLIENT PROOF PENDING on `0.0.69-dev`.**
 
-Stock minimap presentation remains available. P0143 does not mutate tracking,
-supertracking, minimap CVars/settings, or production presentation.
+The diagnostic is bounded, event-driven, secret-first, and excludes all tracking,
+supertracking, minimap, waypoint, and production-presentation mutation. Stock
+minimap presentation remains available.
 
 This remains capability-gated preparation under D-037/D-039/D-040. It does not
 authorize stock minimap suppression, unproven navigation markers, broader aura

@@ -133,6 +133,7 @@ positions are not exposed by the audited public source surface. Current-map
 `C_AreaPoiInfo`, `C_Minimap.GetViewRadius`, broader current navigation, and
 same-map geometry survive as runtime candidates.
 
-P0143 is next: a bounded read-only runtime probe for only those surviving
-candidates. Stock minimap presentation remains available until the replacement
+P0143 is prepared on candidate runtime `0.0.69-dev`: a bounded, event-driven,
+secret-first read-only probe for only those surviving candidates. In-client proof
+is pending. Stock minimap presentation remains available until the replacement
 gate is actually proven.

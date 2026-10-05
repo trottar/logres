@@ -299,11 +299,11 @@ The exact Forever source establishes:
 
 D-043 records the fail-open/source policy.
 
-Next:
-**P0143 read-only navigation source runtime probe.**
+P0143:
+**PREPARED — READ-ONLY NAVIGATION SOURCE RUNTIME PROBE on `0.0.69-dev`; PROOF PENDING.**
 
 P0143 tests only surviving source candidates and makes no production or Blizzard
-presentation changes.
+presentation changes. It remains excluded from integrated `Run All`.
 
 This remains capability preparation under D-035/D-039. It does not authorize
 minimap suppression, source-blocked tracking-result markers, broader aura

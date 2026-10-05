@@ -4,49 +4,51 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0141 `44720c22f0206c37dc6c1559f51b9319f3ee6647`.
+P0142 `82682ece15ad21aa7d5ee2dfaba5e5a3c68c97b6`.
 
-Current pushed/tested runtime:
+Current pushed/tested runtime before P0143 deployment:
 `0.0.68-dev`.
 
 P0142:
-**SOURCE-CAPABILITY AUDIT RESOLVED IN THE PREPARED DOCS CHECKPOINT; P0143 RUNTIME PROBE NEXT AFTER PUSH.**
+**INSTALLED / PUSHED — SOURCE-CAPABILITY LAYER RESOLVED; D-043 ACCEPTED.**
 
 ## Active work stream
 
-P0142 pins exact Forever source
-`Gethe/wow-ui-source@e3ecc27b64d30fdc735a3f6579b866858f9f9df1`
-(`1.60.1.70205`) and accepts D-043.
+Current objective:
+**P0143 — read-only navigation-source runtime probe.**
 
-Key result:
-- ordinary quest waypoint source remains `C_QuestLog.GetNextWaypoint*`; earlier
-  negative tested quests remain negative evidence;
-- `C_Navigation.GetNextWaypointForMap` is a distinct current-navigation candidate;
-- tracking types/state are enumerable and multi-select;
-- individual tracked-result positions are not exposed by audited public APIs;
-- service tracking filters expose categories/state, not service-instance positions;
-- positioned `C_AreaPoiInfo` rows are a separate local-POI candidate;
-- `C_Minimap.GetViewRadius` plus `C_Map` map/world geometry are source-plausible
-  local-radius/comparable-distance inputs;
-- minimap stock ownership remains mandatory.
+Candidate runtime after applying P0143:
+`0.0.69-dev`.
 
-Next after P0142 durability:
-**P0143 read-only navigation source runtime probe.**
+The diagnostic is event-driven and read-only. It samples current map/player
+geometry, minimap view radius, tracking selector metadata/state, current
+super-tracking/navigation, ordinary quest waypoints when naturally present, and a
+bounded current-map `C_AreaPoiInfo` set.
 
-Do not add tracking-result glyphs, mutate tracking filters, change minimap CVars,
-suppress the minimap, or fabricate bearings.
+It does not:
+- mutate tracking or supertracking;
+- create/clear waypoints;
+- modify minimap CVars/zoom/pings/presentation;
+- inspect Blizzard pins/frames for hidden blip coordinates;
+- poll;
+- add production navigation markers;
+- suppress the minimap.
+
+Runtime proof is pending. Environmental absence of a waypoint or AreaPOI is a
+deferral. Secret/call/Lua failures are failures.
 
 World-target positive anchoring remains environmentally deferred. Camera remains
 frozen, not complete.
 
 ## Key references
 
+- `../CURRENT.md`
+- `../patches/P0143_NAVIGATION_SOURCE_READ_ONLY_PROBE.md`
 - `../evidence/P0142_NAVIGATION_MINIMAP_SOURCE_CAPABILITY_AUDIT_2026-10-05.md`
 - `../decisions/D-043_NAVIGATION_SOURCE_AND_MINIMAP_FALLBACK_POLICY.md`
 - `../patches/P0142_NAVIGATION_MINIMAP_SOURCE_CAPABILITY_AUDIT.md`
 - `../investigations/FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md`
 - `../decisions/D-037_NAVIGATION_MARKER_ROLES_AND_MINIMAP_DIRECTION.md`
 - `../decisions/D-038_COMPASS_VISUAL_FOCUS_AND_DEPTH_CONTRACT.md`
-- `../architecture/VISUAL_IMPLEMENTATION_STATUS.md`
 - `../roadmap/PHASE_H_INTEGRATION_POLISH.md`
 - `../roadmap/PHASE_G_CINEMATIC_CAMERA.md`

@@ -173,7 +173,7 @@ remains blocked and the screen-space target remains canonical fallback.
 ## Navigation / minimap capability
 
 Status:
-**OPEN — P0142 SOURCE LAYER RESOLVED; P0143 READ-ONLY RUNTIME PROBE NEXT.**
+**OPEN — P0143 READ-ONLY RUNTIME PROBE PREPARED; IN-CLIENT PROOF PENDING.**
 
 Canonical investigation:
 `FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md`.
@@ -191,5 +191,7 @@ Resolved source facts:
 - `C_AreaPoiInfo`, `C_Minimap.GetViewRadius`, and `C_Map` geometry are surviving
   read-only runtime candidates.
 
-P0143 will test only those surviving candidates. Stock minimap presentation remains
-Blizzard-owned; no new marker role is production-authorized.
+P0143 is prepared on candidate runtime `0.0.69-dev`. The diagnostic tests only
+those surviving candidates with bounded, secret-first, event-driven reads. Stock
+minimap presentation remains Blizzard-owned; no new marker role is
+production-authorized. Runtime proof is pending.

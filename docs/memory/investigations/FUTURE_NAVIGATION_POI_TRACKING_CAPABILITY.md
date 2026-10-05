@@ -170,3 +170,20 @@ Not authorized:
 - engine/minimap blip inspection to infer hidden tracking results;
 - stock minimap suppression;
 - polling or broad hooks.
+
+## P0143 implementation checkpoint
+
+P0143 prepares an event-driven, read-only runtime probe on candidate
+`0.0.69-dev`.
+
+It tests only P0142/D-043 surviving candidates: tracking selector metadata/state,
+minimap view radius, current map/player geometry, bounded current-map AreaPOIs,
+current super-tracking/navigation, naturally present ordinary quest waypoints, and
+same-map comparable-distance arithmetic when all inputs are ordinary.
+
+The probe does not mutate tracking/supertracking/waypoints/minimap state, inspect
+Blizzard pins for hidden blips, poll, add production markers, or suppress stock
+minimap presentation.
+
+Runtime proof is pending. Environmental absence is a deferral; secret/call/Lua
+errors are failures.

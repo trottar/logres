@@ -63,6 +63,7 @@ EXPECTED_PHASES = {
     "questInteractionProbe": "H",
     "auraStatusProbe": "H",
     "worldTargetProbe": "H",
+    "navigationSourceProbe": "H",
     "playerHelpfulAuraCheck": "H",
     "playerHelpfulAuraPreview": "H",
     "questOfferControlsCheck": "H",

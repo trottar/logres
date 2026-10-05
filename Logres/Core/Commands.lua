@@ -2885,6 +2885,81 @@ local function runWorldTargetProbe()
     end
 end
 
+local function runNavigationSourceProbe()
+    local status =
+        Logres:GetModuleStatus("NavigationSourceProbe")
+    local probe =
+        Logres:GetModule("NavigationSourceProbe")
+    local capture = probe:CaptureManual()
+    local debugStatus = probe:GetDebugStatus()
+    local captureOK = type(capture) == "table"
+
+    local passed =
+        captureOK
+        and status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and debugStatus.eventFrameReady == true
+        and debugStatus.secretCheckerAvailable == true
+        and debugStatus.requiredAPIReady == true
+        and debugStatus.minimapTrackingRegistered == true
+        and debugStatus.areaPoisRegistered == true
+        and debugStatus.superTrackingRegistered == true
+        and debugStatus.superTrackingPathRegistered == true
+        and debugStatus.questLogRegistered == true
+        and debugStatus.playerMapRegistered == true
+        and debugStatus.enteringWorldRegistered == true
+        and debugStatus.secretSkipCount == 0
+        and debugStatus.failureCount == 0
+
+    emit(string.format(
+        "Logres navigationsourceprobe: %s (capture=%s captures=%s manual=%s last=%s events=tracking:%s poi:%s super:%s path:%s quest:%s map:%s world:%s api=secret:%s required:%s mapID=%s minimapMap=%s player=%s worldSize=%s viewRadius=%s tracking=%s/%s active=%s areaPOI=%s positioned=%s withinRadius=%s super=%s quest=%s userWaypoint=%s questID=%s navigation=%s questWaypoint=%s/%s secretSkips=%s failures=%s)",
+        passed and "PASS" or "FAIL",
+        tostring(captureOK),
+        tostring(debugStatus.captureCount),
+        tostring(debugStatus.manualCount),
+        tostring(debugStatus.lastReason),
+        tostring(debugStatus.minimapTrackingEvents),
+        tostring(debugStatus.areaPoisEvents),
+        tostring(debugStatus.superTrackingEvents),
+        tostring(debugStatus.superTrackingPathEvents),
+        tostring(debugStatus.questLogEvents),
+        tostring(debugStatus.playerMapEvents),
+        tostring(debugStatus.enteringWorldEvents),
+        tostring(debugStatus.secretCheckerAvailable),
+        tostring(debugStatus.requiredAPIReady),
+        tostring(debugStatus.currentMapID),
+        tostring(debugStatus.minimapMapID),
+        tostring(debugStatus.playerPositionAvailable),
+        tostring(debugStatus.mapWorldSizeAvailable),
+        tostring(debugStatus.viewRadius),
+        tostring(debugStatus.trackingCount),
+        tostring(debugStatus.trackingScanned),
+        tostring(debugStatus.trackingActive),
+        tostring(debugStatus.areaPoiScanned),
+        tostring(debugStatus.areaPoiOrdinary),
+        tostring(debugStatus.areaPoiWithinRadius),
+        tostring(debugStatus.superTrackingAnything),
+        tostring(debugStatus.superTrackingQuest),
+        tostring(debugStatus.superTrackingUserWaypoint),
+        tostring(debugStatus.superTrackedQuestID),
+        tostring(debugStatus.navigationAvailable),
+        tostring(debugStatus.questWaypointAvailable),
+        tostring(debugStatus.questWaypointForMapAvailable),
+        tostring(debugStatus.secretSkipCount),
+        tostring(debugStatus.failureCount)
+    ))
+
+    local lines = probe:GetDiagnosticLines()
+
+    for index = 1, #lines do
+        emit(
+            "Logres navigationsourceprobe: "
+            .. tostring(lines[index])
+        )
+    end
+end
+
 local function runPlayerHelpfulAuraCheck()
     local status =
         Logres:GetModuleStatus("PlayerHelpfulAuras")
@@ -3663,6 +3738,7 @@ local function printHelp()
     emit("  /logres questinteractionprobe")
     emit("  /logres aurastatusprobe")
     emit("  /logres worldtargetprobe")
+    emit("  /logres navigationsourceprobe")
     emit("  /logres helpfulauracheck")
     emit("  /logres helpfulaurapreview [on|off]")
     emit("  /logres questofferacceptprobe")
@@ -3910,6 +3986,11 @@ local function handleCommand(message)
 
     if command == "worldtargetprobe" then
         runWorldTargetProbe()
+        return
+    end
+
+    if command == "navigationsourceprobe" then
+        runNavigationSourceProbe()
         return
     end
 
@@ -4280,6 +4361,12 @@ Logres:RegisterDevPanelAction(
     "worldTargetProbe",
     "World Target Probe",
     "worldtargetprobe",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "navigationSourceProbe",
+    "Navigation Source Probe",
+    "navigationsourceprobe",
     "H"
 )
 Logres:RegisterDevPanelAction(
