@@ -8,7 +8,7 @@ project: logres
 
 ## Active Objective
 
-**Approved visual implementation translation — aura/status source + priority-policy audit next.**
+**Approved visual implementation translation — read-only aura/status runtime probe next.**
 
 This is parallel Phase-H preparation while the formal Phase G camera phase remains
 open. The user has explicitly frozen Camera work until the already-approved visual
@@ -16,13 +16,23 @@ sequence is finished.
 
 ## Current Work Item
 
-**P0135 planning target — aura/status source + priority-policy audit.**
+**P0136 planning target — read-only player/target aura-status runtime probe.**
 
 Latest verified durable checkpoint:
-P0133 `f2feead6ef528d9cf91bab09bce32d92a6763824`.
+P0134 `93b43d4bed2ff97a07cc0d9687f7d99ed474d0f2`.
 
 Current pushed/tested runtime:
 `0.0.65-dev`.
+
+P0135 source + policy audit:
+**RESOLVED.**
+
+The exact Forever source generation is pinned to
+`Gethe/wow-ui-source@e3ecc27b64d30fdc735a3f6579b866858f9f9df1`
+(`1.60.1.70205`), matching the tested client.
+
+D-041 establishes the aura/status priority and fallback policy. Runtime payload
+secrecy/population remains unproven.
 
 P0129 read-only runtime evidence passes the naturally observed offer/gossip path:
 - three real `QUEST_DETAIL` states;
@@ -119,36 +129,43 @@ Preserved deferrals/gates:
 - stock minimap remains until the complete D-037 replacement surface is proven;
 - Blizzard quest-offer controls remain available through P0132 proof; Continue /
   Complete / reward / gossip ownership remains separately capability-gated;
-- target auras/status remain preserved until a dedicated replacement policy exists;
+- D-041 defines aura/status priority/fallback policy, but target/player stock
+  aura surfaces remain preserved until runtime data and replacement completeness
+  are proven;
 - party/CompactPartyFrame remain stock until secure interaction and required
   group/aura information are replaced safely;
 - Camera G.5 P0119 Taxi landing retest remains pending and frozen.
 
 ## Next Action
 
-Prepare P0135 as an evidence-first aura/status capability audit.
+Prepare P0136 as a **read-only aura/status runtime probe**.
 
-Audit:
-1. player aura/debuff source APIs and event model;
-2. target aura/status source APIs and event model;
-3. secret-capable fields and required secret-first handling;
-4. duration/count/caster/dispellable metadata availability;
-5. policy split for urgent player debuffs vs passive player buffs;
-6. target-status relevance and world-target association constraints;
-7. PvP/group/accessibility fallback requirements;
-8. exact stock aura/status surfaces that must remain until replacement completeness
-   is proven.
+Contract:
+1. event-driven only (`UNIT_AURA`, target change, initial world state);
+2. treat `UNIT_AURA` only as invalidation; do not inspect secret-capable
+   `UnitAuraUpdateInfo.addedAuras`;
+3. probe `player` and `target` independently;
+4. use fixed bounded indices and explicit source-defined filters;
+5. call `C_Secrets.ShouldUnitAuraIndexBeSecret` before every aura payload read;
+6. skip secret/unavailable/error states without inspecting their payload;
+7. record only ordinary addon-owned diagnostic summaries;
+8. do not hide, mutate, cancel, reparent, or replace Blizzard aura/status UI;
+9. do not poll.
 
-Do not suppress any Blizzard aura/status surface in P0135.
+Representative categories should include player harmful/helpful and the
+source-defined actionable filters needed by D-041. Environmental absence of a
+category is DEFERRED, not FAIL.
 
 ## Success Criteria
 
-P0135 succeeds when the repo has a source/policy decision sufficient to identify
-which aura/status information can be read safely, how it should be prioritized,
-and what Blizzard fallback must remain before any production replacement work
-begins.
+P0136 succeeds when the client establishes, separately for player and target,
+which representative aura categories can be queried as ordinary non-secret data
+and which metadata is safely usable.
 
-Source presence alone does not authorize suppression.
+A source API existing is not runtime PASS.
+
+A secret or unavailable aura/category is a safe skip/defer unless the probe itself
+branches on or inspects a secret value, which is FAIL.
 
 ## Do Not Reopen Without New Evidence
 
@@ -167,6 +184,9 @@ Source presence alone does not authorize suppression.
 
 ## Relevant References
 
+- `docs/memory/patches/P0135_AURA_STATUS_SOURCE_PRIORITY_AUDIT.md`
+- `docs/memory/evidence/P0135_AURA_STATUS_SOURCE_PRIORITY_AUDIT_2026-10-05.md`
+- `docs/memory/decisions/D-041_AURA_STATUS_SOURCE_AND_PRIORITY_POLICY.md`
 - `docs/memory/patches/P0134_CLOSE_P0133_OPEN_AURA_STATUS_AUDIT.md`
 - `docs/memory/evidence/P0133_QUEST_OFFER_ORDER_RUNTIME_VISUAL_PASS_2026-10-05.md`
 - `docs/memory/investigations/FUTURE_AURA_STATUS_PRESENTATION.md`

@@ -236,11 +236,17 @@ preview/final-page gating, production routing, and integrated checks remain clea
 
 The quest-offer visual/control slice is accepted.
 
-Next capability-gated visual domain:
-**P0135 aura/status source + priority-policy audit.**
+P0135:
+**SOURCE + PRIORITY-POLICY LAYER RESOLVED.**
 
-P0135 is evidence/policy work only; stock aura/status presentation remains
-preserved.
+The exact Forever `C_UnitAuras` / `C_Secrets` source contract is pinned, and D-041
+defines urgent player, passive player, target-status, private/group, PvP, and
+accessibility boundaries.
+
+No aura/status stock suppression is authorized.
+
+Next:
+**P0136 read-only player/target aura-status runtime probe.**
 
 This remains capability preparation under D-035/D-039. It does not authorize
 minimap suppression, unproven navigation sources, automated quest choices, or

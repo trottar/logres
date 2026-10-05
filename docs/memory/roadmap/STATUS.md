@@ -4,7 +4,7 @@ As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — aura/status source + priority-policy audit next.**
+**Approved visual implementation translation — read-only aura/status runtime probe next.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -83,8 +83,14 @@ P0133:
 Accept-left / Decline-right now matches Blizzard while the fallback remains
 visible; preview/final-page behavior and integrated checks pass.
 
+P0135:
+**SOURCE + PRIORITY-POLICY LAYER RESOLVED — DOCS/SOURCE EVIDENCE ONLY.**
+
+D-041 establishes the urgency/fallback policy and pins the exact Forever aura
+source/secrecy contract. Production ownership remains unproven.
+
 Next:
-**P0135 aura/status source + priority-policy audit.**
+**P0136 read-only player/target aura-status runtime probe.**
 
 This is implementation translation under D-039/D-040. It does not authorize
 Phase-H-only capability expansion, stock minimap suppression, Logres-owned quest

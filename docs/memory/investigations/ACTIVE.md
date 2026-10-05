@@ -102,13 +102,21 @@ G.5 target-50 without CVar mutation:
 ## Aura / status ownership
 
 Status:
-**OPEN — SOURCE + PRIORITY-POLICY AUDIT NEXT (P0135).**
+**OPEN — SOURCE + PRIORITY POLICY RESOLVED; P0136 READ-ONLY RUNTIME PROBE NEXT.**
 
 Canonical investigation:
 `FUTURE_AURA_STATUS_PRESENTATION.md`.
 
 No stock aura/status suppression is authorized.
 
-P0135 must resolve safe sources, secret handling, urgent/passive priority policy,
-target-status placement constraints, and required PvP/group/accessibility
-fallbacks before implementation translation begins.
+P0135 resolves the source/policy layer and accepts D-041:
+- `C_UnitAuras` is the source family;
+- per-index aura secrecy preflight is mandatory;
+- `UNIT_AURA` is invalidation only;
+- urgent player harmful status outranks passive helpful status;
+- target actionable status remains gated by world-target placement;
+- private/group aura surfaces remain Blizzard-owned;
+- no stock suppression is authorized.
+
+P0136 must now prove representative ordinary player/target runtime data before
+implementation translation begins.

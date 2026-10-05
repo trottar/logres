@@ -4,13 +4,13 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0133 `f2feead6ef528d9cf91bab09bce32d92a6763824`.
+P0134 `93b43d4bed2ff97a07cc0d9687f7d99ed474d0f2`.
 
 Current pushed/tested runtime:
 `0.0.65-dev`.
 
-P0133 runtime + visual result:
-**PASS.**
+P0135 source + priority-policy result:
+**RESOLVED — P0136 READ-ONLY RUNTIME PROBE NEXT.**
 
 ## Active work stream
 
@@ -18,7 +18,7 @@ The user has explicitly chosen to finish the approved visual translation sequenc
 before returning to Camera.
 
 Current objective:
-**P0135 — aura/status source + priority-policy audit.**
+**P0136 — read-only player/target aura-status runtime probe.**
 
 Camera remains frozen, not complete.
 
@@ -64,6 +64,9 @@ Do not automate quest choices or bundle quest navigation/minimap ownership.
 
 ## Key references
 
+- `../evidence/P0135_AURA_STATUS_SOURCE_PRIORITY_AUDIT_2026-10-05.md`
+- `../decisions/D-041_AURA_STATUS_SOURCE_AND_PRIORITY_POLICY.md`
+- `../investigations/FUTURE_AURA_STATUS_PRESENTATION.md`
 - `../evidence/P0129_NPC_QUEST_INTERACTION_RUNTIME_READ_PASS_2026-10-05.md`
 - `../evidence/P0128_NPC_QUEST_INTERACTION_SOURCE_AUDIT_2026-10-05.md`
 - `../decisions/D-035_QUEST_INTERACTION_OWNERSHIP.md`

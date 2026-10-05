@@ -81,3 +81,5 @@ Record source findings and runtime behavior separately.
 
 - P0133 accepts the production quest-offer action ordering on `0.0.65-dev`: Accept left / Decline right, matching Blizzard while the fallback remains simultaneously visible. P0133 is runtime + visual PASS at `f2feead6`; quest Continue/Complete/reward/gossip ownership remains separately gated.
 - After P0133, the next exact approved visual capability slice is P0135: aura/status source + priority-policy audit. Stock aura/status surfaces remain until replacement completeness is proven.
+
+- P0135 resolves the aura/status source and priority-policy layer against exact Forever source `e3ecc27b` / `1.60.1.70205`: `C_UnitAuras` payload reads are secret-capable, `C_Secrets` exposes per-index/instance/slot aura secrecy predicates, and `UNIT_AURA` is the event model. D-041 prioritizes urgent player harmful status over passive helpful status, keeps target status world-associated as a future endpoint, and preserves private/group/stock surfaces. P0136 read-only runtime proof is required before production aura/status wiring.

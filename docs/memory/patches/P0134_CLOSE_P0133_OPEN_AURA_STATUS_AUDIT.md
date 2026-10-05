@@ -1,7 +1,7 @@
 # P0134 — Close P0133; Open Aura / Status Audit
 
 Date: 2026-10-05
-Result: **DOCS-ONLY ACCEPTANCE CHECKPOINT**
+Result: **INSTALLED / PUSHED — DOCS-ONLY ACCEPTANCE CHECKPOINT** (`93b43d4`)
 Baseline: `f2feead6ef528d9cf91bab09bce32d92a6763824`
 Runtime: unchanged at `0.0.65-dev`
 

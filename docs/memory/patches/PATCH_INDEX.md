@@ -153,5 +153,6 @@
 | P0131 | 2026-10-05 | INSTALLED / PUSHED — ACCEPT + DECLINE RUNTIME CAPABILITY PASS | Decline proven on `0.0.62-dev`; Accept proven on corrected `0.0.63-dev` with matched event correlation (`68233e64`) |
 | P0132 | 2026-10-05 | INSTALLED / PUSHED — RUNTIME + CONTROL PASS; VISUAL ORDER CORRECTION REQUIRED | Production quest-offer controls; mutation/fallback path passes, left/right order opposite Blizzard (`671f9836`, `0.0.64-dev`) |
 | P0133 | 2026-10-05 | INSTALLED / PUSHED — RUNTIME + VISUAL PASS | Align offer controls to Blizzard fallback order: Accept left / Decline right (`f2feead6`, `0.0.65-dev`) |
-| P0134 | 2026-10-05 | PREPARED — DOCS-ONLY ACCEPTANCE CHECKPOINT | Record P0133 acceptance and open P0135 aura/status source + priority-policy audit |
+| P0134 | 2026-10-05 | INSTALLED / PUSHED — DOCS-ONLY ACCEPTANCE CHECKPOINT | Record P0133 acceptance and open P0135 aura/status source + priority-policy audit (`93b43d4`) |
+| P0135 | 2026-10-05 | PREPARED — SOURCE + PRIORITY-POLICY LAYER RESOLVED | Pin Forever aura/secrecy source contract, accept D-041, open P0136 read-only runtime probe |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

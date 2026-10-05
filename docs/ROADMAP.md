@@ -95,9 +95,12 @@ while Blizzard fallback remains visible.
 Continue / Complete, reward selection, progress/completion presentation, gossip
 mutation, and Blizzard offer-control suppression remain separately gated.
 
-The next approved visual capability slice is P0135: aura/status source +
-priority-policy audit. Stock aura/status presentation remains until replacement
-completeness is proven.
+P0135 resolves the aura/status source + priority-policy layer against the exact
+Forever `1.60.1.70205` source generation. D-041 preserves stock/private/group aura
+fallback and requires secret-first per-aura reads.
+
+P0136 is next: a read-only player/target aura-status runtime probe. Stock
+aura/status presentation remains until replacement completeness is proven.
 
 D-037 unproven navigation/minimap roles and world-target anchoring remain
 separately gated.

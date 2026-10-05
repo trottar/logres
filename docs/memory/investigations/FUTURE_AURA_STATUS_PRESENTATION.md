@@ -1,6 +1,6 @@
 # Future — Aura / Status Presentation Domain
 
-Status: OPEN — SOURCE + PRIORITY-POLICY AUDIT NEXT (P0135)
+Status: OPEN — SOURCE + PRIORITY POLICY RESOLVED; P0136 RUNTIME PROBE NEXT
 Opened: 2026-10-01
 
 ## Observation
@@ -66,3 +66,36 @@ Required outputs:
 - explicit stock-surface retention boundary.
 
 Do not suppress Blizzard aura/status presentation from source evidence alone.
+
+## P0135 source / policy result
+
+Canonical evidence:
+`../evidence/P0135_AURA_STATUS_SOURCE_PRIORITY_AUDIT_2026-10-05.md`.
+
+Accepted decision:
+`../decisions/D-041_AURA_STATUS_SOURCE_AND_PRIORITY_POLICY.md`.
+
+Source generation:
+`Gethe/wow-ui-source@e3ecc27b64d30fdc735a3f6579b866858f9f9df1`
+(`1.60.1.70205`).
+
+Resolved:
+- `C_UnitAuras` read APIs and `UNIT_AURA` event model exist;
+- aura payload reads are secret-capable when unit aura access is restricted;
+- `C_Secrets.ShouldUnitAuraIndexBeSecret` / instance / slot predicates exist;
+- source-defined filter vocabulary includes helpful, harmful, player, raid,
+  crowd-control, big-defensive, important, and dispellable categories;
+- duration/count/caster/dispellable metadata is source-available but not yet
+  runtime-proven ordinary;
+- private auras remain Blizzard-owned.
+
+D-041 policy:
+- urgent player harmful status near reaction/resources;
+- passive helpful state peripheral;
+- target actionable status eventually world-associated;
+- PvP modifies emphasis but never relaxes safety;
+- party/CompactPartyFrame aura/dispel surfaces remain stock;
+- no stock aura/status suppression from source evidence.
+
+Next:
+P0136 read-only runtime probe.
