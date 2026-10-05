@@ -16,16 +16,20 @@ sequence is finished.
 
 ## Current Work Item
 
-**P0136 planning target — read-only player/target aura-status runtime probe.**
+**P0137 — production player helpful aura presentation prepared for runtime +
+visual proof.**
 
 Latest verified durable checkpoint:
-P0135 `b69eb109ab9d65477414e66864fef484c244eabc`.
+P0136 `ef769f6df00eea4fd9d0d6686b47c1d99a47e401`.
 
-Current tested runtime:
+Current pushed/tested runtime:
 `0.0.66-dev`.
 
+Prepared runtime:
+`0.0.67-dev`.
+
 P0136 runtime probe:
-**PASS WITH ENVIRONMENTAL DEFERRALS.**
+**INSTALLED / PUSHED — PASS WITH ENVIRONMENTAL DEFERRALS.**
 
 P0135 source + policy audit:
 **RESOLVED.**
@@ -160,29 +164,32 @@ Preserved deferrals/gates:
 
 ## Next Action
 
-Prepare P0137 as the first production aura/status presentation slice.
+Deploy and prove P0137 `0.0.67-dev`.
 
-Scope:
-1. use only runtime-proven ordinary player helpful data;
-2. include player-origin helpful status where source filters support it;
-3. translate the approved status/aura icon primitive into the passive player lane;
-4. keep Blizzard player buff/debuff presentation visible and complete throughout
-   proof;
-5. preserve secret-first bounded reads and fail-open behavior;
-6. add deterministic preview and non-mutating diagnostics;
-7. do not add player harmful/urgent, target, private, or group aura replacement.
+Validation:
+1. Phase H -> `Player Helpful Aura Preview`;
+2. confirm four compact native-icon tiles with restrained passive frames and
+   lower-right stack metadata;
+3. confirm the lane is peripheral beside the resource/reaction region and does
+   not crowd core combat information;
+4. disable preview and verify live player-origin helpful auras render/update;
+5. Phase H -> `Player Helpful Aura Check` -> PASS;
+6. confirm Blizzard player buff/debuff presentation remains visible/usable;
+7. Phase 0 -> `Run All` -> PASS.
 
-Player harmful and populated target categories remain DEFERRED from P0136.
+Do not use P0137 to manufacture harmful/target/private/group capability evidence.
 
 ## Success Criteria
 
-P0137 succeeds only when the production player-helpful surface:
-- consumes only ordinary runtime-proven data;
-- remains non-authoritative/complementary while Blizzard stock is visible;
-- never inspects secret data;
-- fails open on unsupported/secret/error state;
-- introduces no polling;
-- leaves player harmful, target, private, and group ownership unchanged.
+P0137 succeeds only when:
+- the approved passive aura primitive reads clearly at actual UI scale;
+- only ordinary `HELPFUL|PLAYER` data feeds production;
+- stack count appears only from ordinary application metadata;
+- no duration countdown/timer sweep/polling is introduced;
+- event-driven add/remove changes do not leave stale Logres icons;
+- Blizzard stock remains the visible completeness fallback;
+- `Player Helpful Aura Check` and `Run All` pass;
+- no Lua, secret-value, taint/protected-action, or fallback regression occurs.
 
 ## Do Not Reopen Without New Evidence
 
@@ -201,6 +208,7 @@ P0137 succeeds only when the production player-helpful surface:
 
 ## Relevant References
 
+- `docs/memory/patches/P0137_PLAYER_HELPFUL_AURA_PRESENTATION.md`
 - `docs/memory/evidence/P0136_AURA_STATUS_RUNTIME_PASS_WITH_DEFERRALS_2026-10-05.md`
 - `docs/memory/evidence/P0136_INITIAL_APPLIER_STATIC_CONTRACT_FAILURE_2026-10-05.md`
 - `docs/memory/patches/P0136_AURA_STATUS_READ_ONLY_PROBE.md`

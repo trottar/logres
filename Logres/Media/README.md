@@ -193,3 +193,31 @@ Canonical art reference:
 
 P0132 does not suppress Blizzard controls and does not authorize Continue,
 Complete, reward selection/claim, or gossip selection.
+
+## Player helpful aura/status
+
+P0137 translates the runtime-proven player `HELPFUL|PLAYER` subset into the
+approved D-039 sheet-04 passive aura primitive.
+
+Production derivatives:
+- `Aura/aura_frame_passive.tga` — restrained bronze/dark minimal icon frame;
+- `Aura/aura_count_plate.tga` — compact lower-right stack-count backing.
+
+The native WoW spell icon remains unchanged and dominant.
+
+Production behavior:
+- at most four player-origin helpful icons;
+- stack count only when the ordinary application count is greater than one;
+- no duration countdown in this checkpoint;
+- no timer sweep;
+- no hover/click behavior;
+- event-driven updates only.
+
+`Theme.lua` owns geometry, colors, and media paths.
+
+Canonical art reference:
+`docs/design/approved/04_status_aura_icon_primitive.png`.
+
+Blizzard player aura presentation remains visible and complete. P0137 does not
+claim player harmful/urgent, target, private, or group aura ownership and does
+not authorize stock suppression.

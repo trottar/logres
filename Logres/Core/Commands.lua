@@ -2812,6 +2812,117 @@ local function runAuraStatusProbe()
     end
 end
 
+local function runPlayerHelpfulAuraCheck()
+    local status =
+        Logres:GetModuleStatus("PlayerHelpfulAuras")
+    local module =
+        Logres:GetModule("PlayerHelpfulAuras")
+
+    local refreshOK, refreshReason =
+        module:Refresh("diagnostic-check")
+    local debugStatus = module:GetDebugStatus()
+
+    local expectedShown =
+        debugStatus.immersionEnabled == true
+        and debugStatus.visibleCount > 0
+
+    local visibilityCoherent =
+        debugStatus.rootShown == expectedShown
+        and debugStatus.presentationShown
+            == expectedShown
+
+    local passed =
+        status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and debugStatus.rootReady == true
+        and debugStatus.slotCount == 4
+        and debugStatus.unitAuraRegistered == true
+        and debugStatus.worldRegistered == true
+        and debugStatus.sourceAvailable == true
+        and refreshOK == true
+        and debugStatus.failureCount == 0
+        and visibilityCoherent
+
+    emit(string.format(
+        "Logres helpfulauracheck: %s (refresh=%s reason=%s root=%s expected=%s immersion=%s preview=%s slots=%s visible=%s shown=%s events=aura:%s world:%s source=%s filter=%s secretSkips=%s secretFields=%s failures=%s lastRefresh=%s presentation=%s error=%s)",
+        passed and "PASS" or "FAIL",
+        tostring(refreshOK),
+        tostring(refreshReason),
+        tostring(debugStatus.rootShown),
+        tostring(expectedShown),
+        tostring(debugStatus.immersionEnabled),
+        tostring(debugStatus.previewEnabled),
+        tostring(debugStatus.slotCount),
+        tostring(debugStatus.visibleCount),
+        tostring(debugStatus.presentationShown),
+        tostring(debugStatus.unitAuraEvents),
+        tostring(debugStatus.worldEvents),
+        tostring(debugStatus.sourceAvailable),
+        tostring(debugStatus.filter),
+        tostring(debugStatus.secretSkipCount),
+        tostring(debugStatus.secretFieldCount),
+        tostring(debugStatus.failureCount),
+        tostring(debugStatus.lastRefreshReason),
+        tostring(debugStatus.lastPresentationReason),
+        tostring(debugStatus.lastError)
+    ))
+end
+
+local function runPlayerHelpfulAuraPreview(argument)
+    local module =
+        Logres:GetModule("PlayerHelpfulAuras")
+    local debugBefore = module:GetDebugStatus()
+
+    local enabled
+
+    if argument == "" then
+        enabled = not debugBefore.previewEnabled
+    elseif argument == "on" then
+        enabled = true
+    elseif argument == "off" then
+        enabled = false
+    else
+        emit(
+            "Logres helpfulaurapreview: FAIL "
+            .. "(expected on/off)"
+        )
+        return
+    end
+
+    local ok, reason =
+        module:SetPreviewEnabled(enabled)
+    local debugAfter = module:GetDebugStatus()
+
+    local expectedShown =
+        debugAfter.immersionEnabled == true
+        and (
+            debugAfter.previewEnabled == true
+            or debugAfter.visibleCount > 0
+        )
+
+    local passed =
+        ok == true
+        and debugAfter.failureCount == 0
+        and (
+            debugAfter.previewEnabled ~= true
+            or debugAfter.visibleCount == 4
+        )
+        and debugAfter.rootShown
+            == expectedShown
+
+    emit(string.format(
+        "Logres helpfulaurapreview: %s (enabled=%s reason=%s root=%s visible=%s previews=%s failures=%s)",
+        passed and "PASS" or "FAIL",
+        tostring(debugAfter.previewEnabled),
+        tostring(reason),
+        tostring(debugAfter.rootShown),
+        tostring(debugAfter.visibleCount),
+        tostring(debugAfter.previewCount),
+        tostring(debugAfter.failureCount)
+    ))
+end
+
 local function runQuestOfferControlsCheck()
     local status =
         Logres:GetModuleStatus("QuestDialogue")
@@ -3337,6 +3448,7 @@ local function runAllChecks()
     runActiveQuestCheck()
     runQuestDialogueCheck()
     runQuestOfferControlsCheck()
+    runPlayerHelpfulAuraCheck()
     runActionCheck()
     runStockReplacementCheck()
     runImmersionCheck()
@@ -3477,6 +3589,8 @@ local function printHelp()
     emit("  /logres questoffercontrolscheck")
     emit("  /logres questinteractionprobe")
     emit("  /logres aurastatusprobe")
+    emit("  /logres helpfulauracheck")
+    emit("  /logres helpfulaurapreview [on|off]")
     emit("  /logres questofferacceptprobe")
     emit("  /logres questofferdeclineprobe")
     emit("  /logres hudpreview [on|off]")
@@ -3717,6 +3831,16 @@ local function handleCommand(message)
 
     if command == "aurastatusprobe" then
         runAuraStatusProbe()
+        return
+    end
+
+    if command == "helpfulauracheck" then
+        runPlayerHelpfulAuraCheck()
+        return
+    end
+
+    if command == "helpfulaurapreview" then
+        runPlayerHelpfulAuraPreview(argument)
         return
     end
 
@@ -4071,6 +4195,18 @@ Logres:RegisterDevPanelAction(
     "auraStatusProbe",
     "Aura Status Probe",
     "aurastatusprobe",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "playerHelpfulAuraCheck",
+    "Player Helpful Aura Check",
+    "helpfulauracheck",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "playerHelpfulAuraPreview",
+    "Player Helpful Aura Preview",
+    "helpfulaurapreview",
     "H"
 )
 Logres:RegisterDevPanelAction(

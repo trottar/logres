@@ -253,9 +253,23 @@ Player harmful populated categories and populated target categories were absent,
 so those remain DEFERRED. No secret branch was encountered. Integrated checks
 pass.
 
+P0137:
+**PREPARED — `0.0.67-dev`, runtime + visual proof pending.**
+
+P0137 translates only the P0136-proven player `HELPFUL|PLAYER` category:
+- native icon dominant;
+- approved minimal passive frame;
+- lower-right ordinary stack count;
+- four-icon peripheral lane;
+- event-driven updates;
+- no duration countdown/timer sweep/polling;
+- Blizzard player aura presentation retained.
+
+Player harmful/urgent, target, private, and group aura ownership remains
+unchanged.
+
 Next:
-**P0137 production player helpful aura presentation only**, with Blizzard stock
-retained as completeness fallback.
+**validate P0137 in client at real UI scale.**
 
 This remains capability preparation under D-035/D-039. It does not authorize
 minimap suppression, unproven navigation sources, automated quest choices, or

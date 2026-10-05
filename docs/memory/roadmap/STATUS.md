@@ -90,15 +90,21 @@ D-041 establishes the urgency/fallback policy and pins the exact Forever aura
 source/secrecy contract. Production ownership remains unproven.
 
 P0136:
-**RUNTIME PROBE PASS WITH ENVIRONMENTAL DEFERRALS** on `0.0.66-dev`.
+**INSTALLED / PUSHED — RUNTIME PROBE PASS WITH ENVIRONMENTAL DEFERRALS** at
+`ef769f6` / `0.0.66-dev`.
 
 Ordinary populated player helpful data is proven. Player harmful populated data,
 populated target data, and the runtime secret-skip branch remain DEFERRED.
 Integrated checks pass.
 
+P0137:
+**PREPARED on `0.0.67-dev` — production player `HELPFUL|PLAYER` passive aura
+presentation; runtime + visual proof pending.**
+
+Blizzard stock remains visible and complete.
+
 Next:
-**P0137 production player helpful aura presentation with Blizzard stock retained
-as completeness fallback.**
+**deploy and validate P0137 at real UI scale.**
 
 This is implementation translation under D-039/D-040. It does not authorize
 Phase-H-only capability expansion, stock minimap suppression, Logres-owned quest

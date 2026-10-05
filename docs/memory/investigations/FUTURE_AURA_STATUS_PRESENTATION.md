@@ -149,3 +149,23 @@ No failures were recorded, and integrated `Run All` remained clean.
 Next:
 P0137 production player helpful aura presentation only, with Blizzard player aura
 presentation retained as completeness fallback.
+
+## P0137 production player-helpful checkpoint
+
+P0136 is durable at `ef769f6` / `0.0.66-dev` with ordinary populated
+`HELPFUL|PLAYER` data proven.
+
+P0137 `0.0.67-dev` translates only that category into production presentation:
+- bounded six-index secret-first scan;
+- at most four visible passive icons;
+- native icon preserved;
+- approved minimal passive frame;
+- lower-right ordinary stack metadata;
+- no duration countdown or timer sweep;
+- no polling;
+- deterministic preview and non-mutating check;
+- Blizzard player aura UI retained as completeness fallback.
+
+Player harmful/urgent, target, private, and group status remain outside P0137.
+
+Runtime + visual proof is required before this player-helpful lane is accepted.

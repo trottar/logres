@@ -104,9 +104,14 @@ deferrals: ordinary populated player helpful data is proven; player harmful and
 populated target categories remain deferred; no runtime secret branch was
 encountered.
 
-P0137 is next and may translate only the proven player helpful category into
-production presentation while Blizzard aura presentation remains visible and
-complete.
+P0137 `0.0.67-dev` prepares production presentation only for the proven player
+`HELPFUL|PLAYER` category: a four-icon passive peripheral lane using native icons,
+approved minimal framing, and ordinary stack metadata. It is event-driven and
+introduces no duration polling/timer sweep.
+
+Blizzard player aura presentation remains visible and complete throughout proof.
+Player harmful/urgent, target, private, and group aura ownership remains
+unchanged.
 
 D-037 unproven navigation/minimap roles and world-target anchoring remain
 separately gated.

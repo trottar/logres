@@ -4,13 +4,16 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0135 `b69eb109ab9d65477414e66864fef484c244eabc`.
+P0136 `ef769f6df00eea4fd9d0d6686b47c1d99a47e401`.
 
-Current tested runtime:
+Current pushed/tested runtime:
 `0.0.66-dev`.
 
+Prepared P0137 runtime:
+`0.0.67-dev`.
+
 P0136:
-**RUNTIME PROBE PASS WITH ENVIRONMENTAL DEFERRALS.**
+**INSTALLED / PUSHED — RUNTIME PROBE PASS WITH ENVIRONMENTAL DEFERRALS.**
 
 P0135 source + priority-policy result:
 **RESOLVED.**
@@ -25,7 +28,8 @@ The user has explicitly chosen to finish the approved visual translation sequenc
 before returning to Camera.
 
 Current objective:
-**P0137 — production player helpful aura presentation with Blizzard fallback retained.**
+**P0137 — runtime + visual proof of the production player helpful aura
+presentation with Blizzard completeness fallback retained.**
 
 Camera remains frozen, not complete.
 
@@ -71,6 +75,7 @@ Do not automate quest choices or bundle quest navigation/minimap ownership.
 
 ## Key references
 
+- `../patches/P0137_PLAYER_HELPFUL_AURA_PRESENTATION.md`
 - `../evidence/P0136_AURA_STATUS_RUNTIME_PASS_WITH_DEFERRALS_2026-10-05.md`
 - `../patches/P0136_AURA_STATUS_READ_ONLY_PROBE.md`
 - `../evidence/P0135_AURA_STATUS_SOURCE_PRIORITY_AUDIT_2026-10-05.md`

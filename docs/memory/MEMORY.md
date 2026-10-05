@@ -87,3 +87,5 @@ Record source findings and runtime behavior separately.
 - P0136 implements the first aura/status runtime probe on `0.0.66-dev`: player/target only, bounded indexed scans, `ShouldUnitAuraIndexBeSecret` before every payload query, field-level secret checks, `UNIT_AURA` payload arguments discarded, and no polling/mutation/suppression. Runtime capability evidence remains pending; stock/private/group surfaces stay Blizzard-owned.
 
 - P0136 `0.0.66-dev` runtime-proves ordinary populated player `HELPFUL` / `HELPFUL|PLAYER` aura data and selected metadata with zero failures. Populated player harmful and target aura categories, plus the runtime secret-skip branch, remain deferred. Production work may advance only for player helpful status, with Blizzard stock retained as completeness fallback.
+
+- P0137 keeps production aura presentation deliberately narrow: only runtime-proven player `HELPFUL|PLAYER` data, at most four passive native-icon tiles, ordinary stack count only, no duration countdown/timer sweep/polling, and Blizzard player aura presentation retained as completeness fallback. Player harmful/urgent, target, private, and group aura ownership remains gated.

@@ -138,6 +138,28 @@ theme.contextMessage = {
 
 
 
+theme.playerHelpfulAuras = {
+    maxIcons = 4,
+    iconSize = 36,
+    iconInset = 4,
+    frameOverscan = 2,
+    gap = 7,
+    x = 118,
+    y = -118,
+    countWidth = 24,
+    countHeight = 16,
+    countFont = "GameFontHighlightSmall",
+
+    colors = {
+        countText = { 0.96, 0.92, 0.82, 1.00 },
+    },
+
+    assets = {
+        frame = MEDIA_ROOT .. "Aura\\aura_frame_passive.tga",
+        countPlate = MEDIA_ROOT .. "Aura\\aura_count_plate.tga",
+    },
+}
+
 theme.healthTunnel = {
     colors = {
         outer = { 0.040, 0.035, 0.045, 1.00 },

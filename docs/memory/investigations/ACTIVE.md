@@ -102,7 +102,7 @@ G.5 target-50 without CVar mutation:
 ## Aura / status ownership
 
 Status:
-**OPEN — P0136 RUNTIME PROBE PASS WITH ENVIRONMENTAL DEFERRALS; P0137 PLAYER HELPFUL PRODUCTION SLICE NEXT.**
+**OPEN — P0136 DURABLE; P0137 PLAYER HELPFUL PRODUCTION PRESENTATION PREPARED.**
 
 Canonical investigation:
 `FUTURE_AURA_STATUS_PRESENTATION.md`.
@@ -130,3 +130,16 @@ DEFERRED, and no secret-skip branch was encountered.
 
 Production implementation may therefore advance only for player helpful status,
 with Blizzard completeness fallback preserved.
+
+P0136 is durable at `ef769f6` / `0.0.66-dev`.
+
+P0137 `0.0.67-dev` prepares only `HELPFUL|PLAYER` presentation:
+- maximum four passive icons from a six-index bounded scan;
+- native icon unchanged;
+- minimal sheet-04 frame;
+- ordinary lower-right stack count when >1;
+- no duration/timer sweep/polling;
+- event-driven `UNIT_AURA` invalidation;
+- Blizzard player aura presentation untouched.
+
+Runtime + visual proof remains pending.

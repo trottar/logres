@@ -2,7 +2,7 @@
 ## Title: Logres
 ## Notes: Immersive, world-first interface for World of Warcraft Forever.
 ## Author: trottar
-## Version: 0.0.66-dev
+## Version: 0.0.67-dev
 ## SavedVariables: LogresDB, LogresDiagnosticsDB
 
 Core\Bootstrap.lua
@@ -13,6 +13,7 @@ Core\Modules.lua
 Media\Theme.lua
 HUD\HUD.lua
 HUD\AuraStatusProbe.lua
+HUD\PlayerHelpfulAuras.lua
 Actions\Button.lua
 Actions\Primary.lua
 Actions\SecondaryUtility.lua

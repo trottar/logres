@@ -30,7 +30,7 @@ A component can be visually complete while runtime ownership remains incomplete.
 | World Ghost / Hybrid E composition | Yes | Existing modules are independently placed | Establish shared production asset/token library and Phase-H integration anchors; in-client spacing/contrast calibration | **Integration / organization** |
 | Shared percentage/resource bar | Yes | P0120 reusable normal/compact production bar is runtime + visual PASS for the core production baseline; visible `%` text is retained and player health remains excluded | Preserve the accepted simpler production baseline; defer additional approved-sheet ornament and final spacing/color calibration to whole-screen polish | **Production primitive proven — ornament deferred** |
 | Action button primitive | Yes | Secure Primary/Secondary/Utility buttons consume the production D-040 frame/state family; P0116 core presentation is proven and P0118 keybind plate/compact modifier/42 px polish is visually accepted | Checked/cooldown/range/resource/unusable visual states remain coverage-deferred; final 36-button density calibration remains whole-screen polish | **Production primitive + metadata polish proven** |
-| Status / aura icon primitive | Yes | P0136 `0.0.66-dev` runtime-proves ordinary populated player `HELPFUL` / `HELPFUL|PLAYER` data and selected metadata; player harmful and populated target categories are environmentally deferred; integrated checks pass | P0137 production player-helpful presentation only, with Blizzard completeness fallback; retain harmful/target/private/group stock ownership | **Player helpful runtime capability proven — narrow production slice next** |
+| Status / aura icon primitive | Yes | P0136 `ef769f6` / `0.0.66-dev` runtime-proves populated player helpful data. P0137 `0.0.67-dev` prepares the approved passive native-icon frame, lower-right ordinary stack count, four-icon peripheral lane, deterministic preview, and stock-visible fallback | In-client runtime + visual proof for P0137; retain harmful/target/private/group stock ownership | **Player helpful production slice prepared — proof pending** |
 | Cast-state cue | Yes | P0121 is durable at `fc928d99`; player cast runtime + visual result is accepted on the approved heraldic frame/glyph family | Target cast/channel remains environmentally deferred; player channel/interrupted variants remain state-coverage items unless naturally observed | **Player cast production primitive proven — target proof deferred** |
 | Target health/name + relative danger | Yes | P0120 detached percentage bar under the existing sparse target name is part of the accepted core bar baseline; secure target interaction/selective stock-shell fallback remain unchanged | Audit safe reaction/relative-danger source; prove world-attached anchoring and fallback before making it default | **Capability + integration** |
 | Pet / party compact health | Covered by bar + target/ally sheets | P0120 integrates compact percentage bars inside the runtime-proven pet/party rows using the accepted shared primitive | Natural group-composition density calibration remains; preserve Blizzard secure party/aura surfaces until separately replaced | **Production primitive integrated — group calibration deferred** |
@@ -98,7 +98,8 @@ Next:
 13. P0136 read-only player/target aura-status runtime probe — PASS with environmental deferrals.
 
 Next:
-14. P0137 production player helpful aura presentation only.
+14. P0137 production player helpful aura presentation only — prepared on
+    `0.0.67-dev`; runtime + visual proof pending.
 
 After that:
 15. revisit player harmful/urgent production only after populated runtime proof;
