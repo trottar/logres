@@ -75,9 +75,18 @@ P0126 is runtime + visual PASS. P0128 resolves the D-035 source/API layer:
 narrative/reward/gossip reads and expected action functions exist, but mutation
 ownership is not runtime-proven.
 
-P0129 prepares that read-only NPC quest interaction runtime capability probe on
-`0.0.59-dev`. The next gate is in-client evidence from natural NPC quest/gossip
-states before any Logres-owned quest controls or Blizzard quest/gossip suppression.
+P0129 is durable at `e50676b9` / `0.0.59-dev` and passes the naturally observed
+read-only offer/gossip scope: real offer narrative, available-gossip quest
+identity, and one two-choice reward metadata sample were ordinary/non-secret while
+all mutation groups remained `invoked=0`.
+
+P0130 is runtime + visual PASS on `0.0.61-dev`: approved bounded/paged NPC
+quest-offer narrative is production-proven, including same-conversation Immersion
+OFF -> ON restoration, while Blizzard controls remain available.
+
+The next D-035 gate is P0131: a player-triggered Accept / Decline capability probe
+with Blizzard controls still visible. Continue / Complete, reward selection,
+progress/completion presentation, and gossip mutation remain separately gated.
 
 D-037 unproven navigation/minimap roles, aura ownership, world-target anchoring,
 and other capability expansions remain separately gated.

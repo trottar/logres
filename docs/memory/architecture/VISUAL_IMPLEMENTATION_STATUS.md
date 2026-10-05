@@ -34,8 +34,8 @@ A component can be visually complete while runtime ownership remains incomplete.
 | Cast-state cue | Yes | P0121 is durable at `fc928d99`; player cast runtime + visual result is accepted on the approved heraldic frame/glyph family | Target cast/channel remains environmentally deferred; player channel/interrupted variants remain state-coverage items unless naturally observed | **Player cast production primitive proven — target proof deferred** |
 | Target health/name + relative danger | Yes | P0120 detached percentage bar under the existing sparse target name is part of the accepted core bar baseline; secure target interaction/selective stock-shell fallback remain unchanged | Audit safe reaction/relative-danger source; prove world-attached anchoring and fallback before making it default | **Capability + integration** |
 | Pet / party compact health | Covered by bar + target/ally sheets | P0120 integrates compact percentage bars inside the runtime-proven pet/party rows using the accepted shared primitive | Natural group-composition density calibration remains; preserve Blizzard secure party/aura surfaces until separately replaced | **Production primitive integrated — group calibration deferred** |
-| NPC quest narrative | Yes | Additive temporary title/body/objective presentation exists and has visual/runtime proof | Replace temporary excerpt-style surface with bounded/paged authored reader when the future ownership slice is implemented | **Integration + future ownership** |
-| NPC quest controls / rewards | Yes | P0128 resolves source/API availability; P0129 `0.0.59-dev` prepares an event-driven read-only probe for narrative/reward/gossip runtime evidence and mutation-function presence without invoking mutation | Collect natural P0129 evidence; only after review choose one player-triggered mutation probe with Blizzard fallback still visible | **Read-only runtime probe prepared — ownership unproven** |
+| NPC quest narrative | Yes | P0130 R1 `0.0.61-dev` is runtime + visual PASS: full-source paging, Previous/Next, real offer rendering, Blizzard-control coexistence, and same-conversation Immersion OFF -> ON restoration all proven | Final whole-screen spacing/contrast calibration remains polish; progress/completion narrative stays gated by deferred runtime states | **Runtime + visual production baseline accepted** |
+| NPC quest controls / rewards | Yes | P0129 read-only runtime proves one available-gossip quest row and one real two-choice reward metadata sample; all expected mutation function groups are present but remained `invoked=0`. Progress/complete and broader reward/gossip categories remain deferred | Keep Blizzard controls authoritative through P0130; choose any future mutation probe separately only after required interaction-state evidence | **Partial read capability proven — mutation ownership unproven** |
 | Context messages | Yes | P0122 is durable at `62353ecf`; XP preview, live XP producer/check, objective preview, live objective producer/check, and full checkall passed on `0.0.52-dev` | Dedicated warmer completion variant remains naturally deferred; final whole-screen placement/contrast calibration remains polish | **Runtime + preview path proven — completion state deferred** |
 | Active Quest | Yes | P0126 is durable at `89b0c563` / `0.0.58-dev`; final R3 runtime + visual PASS uses one-focus title, count-free normalized objective labels, bar-only progress, hover-only exact detail, quiet completion, and an independent persisted toggle | Final whole-screen spacing/contrast calibration remains polish; do not reopen persistent `%`/`N/M` mechanics without new evidence | **Runtime + visual production baseline accepted** |
 | Player-health tunnel | Yes / D-036 frozen | P0124 is durable at `1e7e27e` / `0.0.54-dev`; five Theme-owned organic tunnel/death masks run on the proven native secret-safe health-to-alpha path, with deterministic D-036 preview percentages | Whole-interface contrast/scale polish remains; natural damage/heal may be observed opportunistically but is not required to re-prove the accepted preview matrix | **Runtime + visual baseline accepted — final polish deferred** |
@@ -74,14 +74,21 @@ Completed:
 Completed:
 6. D-035 NPC quest-interaction source/API audit (P0128).
 
+Completed:
+7. P0129 read-only NPC quest interaction runtime probe for the naturally observed
+   offer/gossip scope.
+
+Completed:
+8. P0130 bounded/paged NPC quest-offer narrative runtime + visual proof.
+
 Next:
-7. deploy P0129 read-only NPC quest interaction runtime capability probe and
-   collect natural interaction evidence.
+9. run a separately capability-gated P0131 Accept / Decline player-triggered
+   mutation probe while Blizzard controls remain visible.
 
 After that:
-8. separately open aura/status, world-attached target, and unproven compass-role
+10. separately open aura/status, world-attached target, and unproven compass-role
    capability slices as evidence supports;
-9. finish class-specific discrete resources, settings/accessibility, and final
+11. finish class-specific discrete resources, settings/accessibility, and final
    whole-screen composition calibration.
 
 This is a dependency-oriented implementation map, not a claim that formal Phase H

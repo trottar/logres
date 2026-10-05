@@ -47,6 +47,8 @@ Three information classes guide the design:
 - Active Quest is an optional one-focus presentation, not a permanent multi-quest tracker; exact mechanical counts belong behind deliberate inspection/hover in the approved baseline.
 - P0126 makes that Active Quest baseline production-proven at `89b0c563` / `0.0.58-dev`: count-free objective labels remain visible, progress is bar-only, exact counts stay hover-only, and Blizzard quest-management surfaces remain available.
 - D-035 defines NPC quest interaction as a future Logres-owned experience only after per-surface information/control capability is proven; fail open to Blizzard until then.
+- P0129 makes the observed NPC quest-offer read path runtime-proven at `e50676b9` / `0.0.59-dev`: real offer title/body/objective, stable available-gossip quest ID/title, and one two-choice reward metadata sample were ordinary/non-secret with zero call failures; all quest/gossip mutation function groups were present but `invoked=0`. `QUEST_PROGRESS` / `QUEST_COMPLETE` and other unobserved categories remain deferred.
+- P0130 makes the bounded/paged NPC quest-offer narrative production-proven on `0.0.61-dev`: full source prose is paged, objective text is wrapped, Blizzard controls remain available, and the active narrative restores across Immersion OFF -> ON. The initial `0.0.60-dev` restore failure remains preserved as evidence.
 
 ## Development facts
 

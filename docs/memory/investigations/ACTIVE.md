@@ -41,14 +41,25 @@ not an open Active Quest capability issue.
 ## NPC quest interaction ownership
 
 Status:
-**OPEN — P0129 READ-ONLY PROBE PREPARED; RUNTIME EVIDENCE PENDING.**
+**OPEN — P0130 QUEST-OFFER NARRATIVE PASS; ACCEPT / DECLINE MUTATION OWNERSHIP NEXT.**
 
 Canonical investigation:
 `NPC_QUEST_INTERACTION_CAPABILITY.md`
 
-P0128 establishes source/API availability but does not authorize mutation.
-P0129 `0.0.59-dev` is prepared to collect read-only narrative/reward/gossip
-runtime evidence while leaving Blizzard interaction fully available.
+P0129 runtime proves the naturally observed offer/detail path, one available
+gossip quest row, and one two-choice reward metadata sample without secret/call
+failures. Mutation function presence remained `invoked=0`.
+
+`QUEST_PROGRESS` / `QUEST_COMPLETE` and other unobserved categories remain
+environmentally deferred.
+
+P0130 R1 closes the narrative lifecycle defect: OFF -> ON restores the same active
+quest offer with `presentationReason=immersion-on-restore`, and integrated checks
+remain clean.
+
+Quest/gossip mutation ownership remains unproven. The next audit/probe slice is
+Accept / Decline only; Continue / Complete, rewards, and gossip selection remain
+separate gates.
 
 ## Closed Phase G investigations
 

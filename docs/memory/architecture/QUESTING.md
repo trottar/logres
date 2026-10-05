@@ -236,3 +236,66 @@ naturally observed interaction state.
 
 The probe does not run inside `checkall`; contextual absence is a deferral rather
 than a generic addon failure.
+
+## P0129 read-only runtime result / P0130 narrative paging
+
+P0129 is durable at `e50676b9` / `0.0.59-dev`.
+
+Observed read-only runtime proof:
+- three real `QUEST_DETAIL` states;
+- available-gossip quest ID/title;
+- one two-choice reward metadata sample;
+- no observed secret values or call failures;
+- mutation function presence with `invoked=0`;
+- integrated `checkall` PASS.
+
+`QUEST_PROGRESS` / `QUEST_COMPLETE` and other unobserved categories remain
+environmental deferrals.
+
+P0130 therefore replaces only the temporary `QUEST_DETAIL` excerpt presentation
+with the approved bounded/paged source reader:
+- full source body retained across discrete pages;
+- word-boundary page split;
+- presentation-only previous/next controls;
+- page indicator only for multi-page content;
+- wrapped objective region;
+- real offer remains until established quest lifecycle hides it;
+- deterministic preview uses a preview-only timeout.
+
+No Blizzard quest/gossip control is suppressed or invoked by this slice.
+
+## P0130 immersion lifecycle correction
+
+The initial P0130 `0.0.60-dev` candidate proved paging and real offer rendering but
+failed to restore the Logres narrative when Immersion was turned OFF and then ON
+without leaving the active quest conversation.
+
+R1 corrects only presentation lifecycle:
+- successful ordinary `QUEST_DETAIL` data is retained as addon-owned cached
+  presentation state;
+- Immersion OFF hides Logres without discarding that active source snapshot;
+- OFF -> ON re-renders the cached source snapshot;
+- accepted/finished/world/module-disable lifecycle clears the cache;
+- failed/secret detail reads clear the cache and fail open to Blizzard.
+
+No quest/gossip mutation ownership is added.
+
+## P0130 accepted quest-offer narrative
+
+P0130 is accepted on `0.0.61-dev`.
+
+Production behavior now proven:
+- fixed authored quest-offer reading area;
+- full source body preserved through discrete paging;
+- presentation-only Previous / Next controls;
+- page indicator for multi-page content;
+- wrapped objective text;
+- real Blizzard quest controls remain available;
+- active quest-offer narrative restores across Immersion OFF -> ON from cached
+  addon-owned presentation state;
+- accepted/finished/world/module-disable lifecycle clears that cache.
+
+The initial `0.0.60-dev` restore failure remains preserved and was corrected in R1.
+
+Next ownership slice is a separately capability-gated Accept / Decline mutation
+probe. P0130 itself does not authorize mutation or Blizzard control suppression.

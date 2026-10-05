@@ -195,15 +195,26 @@ Narrative/reward/gossip read sources exist on Forever, and the expected quest an
 gossip action APIs exist, but mutation ownership remains runtime-unproven.
 
 P0129:
-**PREPARED — `0.0.59-dev`, runtime evidence pending.**
+**INSTALLED / PUSHED + READ-ONLY PASS FOR OBSERVED OFFER/GOSSIP SCOPE** at
+`e50676b9` / `0.0.59-dev`.
 
-The read-only probe inspects narrative/reward/gossip state secret-first, records
-mutation-function presence without calling it, exposes one Phase-H developer-panel
-action, and keeps every Blizzard interaction surface available.
+Observed evidence proves offer title/body/objective, one stable available-gossip
+quest row, and one real two-choice reward metadata sample without secret/call
+failures. All expected mutation function groups were present with `invoked=0`.
+Progress/complete and other unobserved categories remain deferred.
+
+P0130:
+**RUNTIME + VISUAL PASS — `0.0.61-dev`.**
+
+Approved sheet 07 is now production-proven for the quest-offer state: full source
+paging, Previous / Next, wrapped objective text, Blizzard-control coexistence, and
+same-conversation Immersion OFF -> ON restoration. The initial restore failure is
+preserved in evidence and corrected in R1.
 
 Next parallel gate:
-**collect natural P0129 runtime evidence before choosing any mutation-specific
-follow-up.**
+**P0131 player-triggered Accept / Decline capability probe**, with Blizzard
+controls still visible and no Continue / Complete / reward / gossip mutation
+bundled into the same slice.
 
 This remains capability preparation under D-035/D-039. It does not authorize
 minimap suppression, unproven navigation sources, automated quest choices, or

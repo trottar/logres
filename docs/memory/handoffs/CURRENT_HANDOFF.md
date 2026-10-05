@@ -4,13 +4,13 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0128 `0ec74fe5a8e41a8bab7bf9eee6946a4d3d58c133`.
+P0129 `e50676b993b9f5bc544eab610f99c7532dc98148`.
 
 Current pushed runtime:
-`0.0.58-dev`.
+`0.0.59-dev`.
 
-Prepared P0129 runtime:
-`0.0.59-dev` — read-only NPC quest interaction probe; runtime evidence pending.
+Current tested runtime:
+`0.0.61-dev` — P0130 bounded/paged quest-offer narrative runtime + visual PASS.
 
 ## Active work stream
 
@@ -18,8 +18,8 @@ The user has explicitly chosen to finish the approved visual translation sequenc
 before returning to Camera.
 
 Current objective:
-**P0129 read-only NPC quest interaction runtime capability probe — deploy and
-collect natural interaction evidence.**
+**P0131 player-triggered quest-offer action capability probe — Accept / Decline
+only, Blizzard controls still visible.**
 
 Camera remains frozen, not complete.
 
@@ -50,18 +50,22 @@ No SetCVar, Taxi rotation, or Taxi UI fade is authorized by this handoff.
 P0128 resolves the source layer: the needed narrative/reward/gossip APIs exist,
 and the quest-action APIs exist, but mutation ownership remains runtime-unproven.
 
-P0129 is prepared as read-only:
-- observes gossip/detail/progress/complete lifecycle events;
-- captures bounded narrative/reward/gossip values secret-first;
-- records mutation-function presence only;
-- statically forbids quest/gossip mutation calls;
-- provides one Phase-H `Quest Interaction Probe` action;
-- leaves Blizzard UI fully available.
+P0129 runtime evidence is accepted for the observed read-only scope:
+- three real `QUEST_DETAIL` captures;
+- one stable available-gossip quest row;
+- one real two-choice reward metadata sample;
+- no observed secret/call failures;
+- all expected mutation APIs present with `invoked=0`;
+- `QUEST_PROGRESS` / `QUEST_COMPLETE` remain environmental deferrals.
+
+P0130 uses only the proven offer/detail path for bounded/paged narrative
+presentation. Blizzard interaction remains fully available.
 
 Do not automate quest choices or bundle quest navigation/minimap ownership.
 
 ## Key references
 
+- `../evidence/P0129_NPC_QUEST_INTERACTION_RUNTIME_READ_PASS_2026-10-05.md`
 - `../evidence/P0128_NPC_QUEST_INTERACTION_SOURCE_AUDIT_2026-10-05.md`
 - `../decisions/D-035_QUEST_INTERACTION_OWNERSHIP.md`
 - `../investigations/NPC_QUEST_INTERACTION_CAPABILITY.md`

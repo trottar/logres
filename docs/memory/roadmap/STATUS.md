@@ -4,7 +4,7 @@ As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — NPC quest interaction read-only runtime probe next.**
+**Approved visual implementation translation — bounded/paged NPC quest-offer narrative next.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -54,10 +54,19 @@ P0128 source audit:
 **RESOLVED — API/source layer available; mutation capability not proven.**
 
 P0129:
-**PREPARED on `0.0.59-dev` — read-only runtime evidence pending.**
+**INSTALLED / PUSHED + READ-ONLY RUNTIME PASS FOR OBSERVED OFFER/GOSSIP SCOPE** at
+`e50676b9` / `0.0.59-dev`.
+
+Progress/complete and other unobserved categories remain deferred. Mutation
+function presence was proven without invocation.
+
+P0130:
+**RUNTIME + VISUAL PASS on `0.0.61-dev`** — bounded/paged offer narrative accepted;
+initial immersion-restore failure preserved and corrected in R1.
 
 Next:
-**Deploy P0129 and collect natural NPC quest/gossip interaction evidence.**
+**P0131 player-triggered Accept / Decline capability probe, Blizzard controls kept
+visible.**
 
 This is implementation translation under D-039/D-040. It does not authorize
 Phase-H-only capability expansion, stock minimap suppression, Logres-owned quest

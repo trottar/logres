@@ -227,14 +227,37 @@ else:
             "InteractionProbe.lua must load before Commands.lua"
         )
 
-for source_name, source in (
-    ("Bootstrap.lua", bootstrap),
-    ("Logres.toc", toc),
-):
-    if "0.0.59-dev" not in source:
-        errors.append(
-            f"{source_name} missing P0129 runtime 0.0.59-dev"
-        )
+import re
+
+bootstrap_match = re.search(
+    r'Logres\.VERSION = "([^"]+)"',
+    bootstrap,
+)
+toc_match = re.search(
+    r"^## Version: (.+)$",
+    toc,
+    re.MULTILINE,
+)
+
+bootstrap_version = (
+    bootstrap_match.group(1)
+    if bootstrap_match
+    else None
+)
+toc_version = (
+    toc_match.group(1).strip()
+    if toc_match
+    else None
+)
+
+if bootstrap_version is None or toc_version is None:
+    errors.append(
+        "P0129 probe checker could not read runtime versions"
+    )
+elif bootstrap_version != toc_version:
+    errors.append(
+        "Bootstrap and TOC runtime versions must match"
+    )
 
 if '"questInteractionProbe": "H"' not in dev_checker:
     errors.append(

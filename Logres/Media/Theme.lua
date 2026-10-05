@@ -157,6 +157,39 @@ theme.healthTunnel = {
 }
 
 
+theme.questDialogue = {
+    width = 640,
+    height = 320,
+    x = 0,
+    y = -110,
+    titleWidth = 560,
+    bodyWidth = 548,
+    bodyHeight = 134,
+    objectiveWidth = 548,
+    objectiveHeight = 50,
+    titleFont = "GameFontHighlightLarge",
+    bodyFont = "GameFontHighlight",
+    objectiveHeaderFont = "GameFontNormalSmall",
+    objectiveFont = "GameFontNormal",
+    pageFont = "GameFontHighlightSmall",
+
+    colors = {
+        title = { 0.94, 0.83, 0.60, 1.00 },
+        body = { 0.92, 0.89, 0.81, 0.97 },
+        objectiveHeader = { 0.66, 0.50, 0.28, 0.95 },
+        objective = { 0.84, 0.76, 0.60, 0.97 },
+        page = { 0.64, 0.56, 0.43, 0.90 },
+        pageActive = { 0.92, 0.78, 0.48, 1.00 },
+        pageInactive = { 0.34, 0.30, 0.24, 0.55 },
+    },
+
+    assets = {
+        panel = MEDIA_ROOT .. "Quest\\quest_narrative_panel.tga",
+        divider = MEDIA_ROOT .. "Quest\\quest_narrative_divider.tga",
+        pageChevron = MEDIA_ROOT .. "Quest\\quest_page_chevron.tga",
+    },
+}
+
 theme.activeQuest = {
     width = 320,
     minHeight = 136,

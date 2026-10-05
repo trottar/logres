@@ -1,7 +1,7 @@
 # P0129 — Read-Only NPC Quest Interaction Runtime Probe
 
 Date: 2026-10-05
-Result: **PREPARED — RUNTIME EVIDENCE PENDING**
+Result: **INSTALLED / PUSHED — READ-ONLY RUNTIME PASS FOR OBSERVED SCOPE** (`e50676b9`)
 Baseline: `0ec74fe5a8e41a8bab7bf9eee6946a4d3d58c133`
 Runtime: `0.0.58-dev -> 0.0.59-dev`
 
@@ -105,3 +105,32 @@ Runtime evidence determines whether the next slice is:
   still visible.
 
 No mutation slice is authorized until P0129 evidence is reviewed.
+
+## Runtime result
+
+Durable commit:
+`e50676b993b9f5bc544eab610f99c7532dc98148`.
+
+Canonical evidence:
+`../evidence/P0129_NPC_QUEST_INTERACTION_RUNTIME_READ_PASS_2026-10-05.md`.
+
+Observed PASS:
+- three real `QUEST_DETAIL` states;
+- one available-gossip quest row with stable ID/title;
+- one real two-choice reward metadata sample;
+- observed snapshots `secret=false`, failures `0`;
+- all expected mutation function groups present;
+- `invoked=0`;
+- integrated `checkall` PASS.
+
+Environmental deferrals:
+- `QUEST_PROGRESS`;
+- `QUEST_COMPLETE`;
+- active gossip rows;
+- generic gossip options;
+- reward currencies;
+- reward spells.
+
+Decision:
+P0130 advances only the runtime-proven offer/detail narrative presentation.
+Mutation ownership remains unproven.

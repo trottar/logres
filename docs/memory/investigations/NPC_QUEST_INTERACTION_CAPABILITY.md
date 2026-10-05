@@ -151,3 +151,79 @@ not misreported as a generic addon failure.
 
 Runtime evidence is still required before this investigation can authorize any
 mutation-specific follow-up.
+
+## P0129 runtime result / P0130 decision
+
+Canonical runtime evidence:
+`../evidence/P0129_NPC_QUEST_INTERACTION_RUNTIME_READ_PASS_2026-10-05.md`.
+
+Observed runtime PASS:
+- three real offer/detail states;
+- available-gossip quest row with stable quest ID/title;
+- one real two-choice reward sample with item identity/link metadata;
+- observed snapshots secret=false and call failures=0;
+- expected mutation function groups present;
+- mutation invariant `invoked=0`;
+- integrated `checkall` PASS.
+
+Environmental deferrals:
+- `QUEST_PROGRESS`;
+- `QUEST_COMPLETE`;
+- active gossip quest rows;
+- generic gossip options;
+- reward currencies;
+- reward spells.
+
+Decision:
+the next implementation slice is **P0130 bounded/paged NPC quest-offer narrative**
+using only the proven `QUEST_DETAIL` path.
+
+P0130 remains presentation-only. Blizzard Accept/Decline/reward/gossip controls
+stay available. No mutation-specific probe is authorized by this result.
+
+## P0130 immersion-restore failure
+
+P0130 `0.0.60-dev` passed deterministic multi-page preview, previous/next paging,
+real `QUEST_DETAIL` rendering, Blizzard Accept/Decline coexistence, and integrated
+checks.
+
+A real lifecycle defect remained:
+after Immersion OFF then ON during the same open quest offer, the Logres narrative
+stayed hidden until the conversation was exited/reopened.
+
+Canonical failure evidence:
+`../evidence/P0130_QUEST_DIALOGUE_IMMERSION_RESTORE_FAILURE_2026-10-05.md`.
+
+Cause:
+preference OFF hid presentation, but preference ON had no restore path because no
+new `QUEST_DETAIL` event fires solely from the preference change.
+
+P0130 R1 caches only the successfully read active detail snapshot, preserves it
+while immersion is off, restores it on OFF -> ON, and clears it on accepted /
+finished / world / module-disable lifecycle termination.
+
+This correction does not expand quest/gossip ownership.
+
+## P0130 R1 acceptance / P0131 decision
+
+Canonical final evidence:
+`../evidence/P0130_QUEST_DIALOGUE_R1_RUNTIME_VISUAL_PASS_2026-10-05.md`.
+
+P0130 R1 `0.0.61-dev` is runtime + visual PASS:
+- bounded multi-page preview worked;
+- Previous / Next worked;
+- real offer rendering coexisted with usable Blizzard Accept / Decline;
+- Immersion OFF hid Logres while Blizzard remained usable;
+- Immersion ON during the same offer restored Logres directly;
+- diagnostic reason was `immersion-on-restore`;
+- body/objective remained present, secret=false, error=nil;
+- integrated `checkall` completed cleanly.
+
+The initial `0.0.60-dev` lifecycle failure remains preserved as negative evidence.
+
+Next capability decision:
+**P0131 player-triggered Accept / Decline mutation probe only.**
+
+The probe must leave Blizzard controls visible, require explicit player-triggered
+diagnostic actions, prove event/outcome behavior separately, and fail open. It
+must not bundle Continue / Complete, reward choice, or gossip selection.

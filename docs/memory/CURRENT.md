@@ -8,7 +8,7 @@ project: logres
 
 ## Active Objective
 
-**Approved visual implementation translation — NPC quest interaction read-only runtime probe next.**
+**Approved visual implementation translation — bounded/paged NPC quest-offer narrative next.**
 
 This is parallel Phase-H preparation while the formal Phase G camera phase remains
 open. The user has explicitly frozen Camera work until the already-approved visual
@@ -16,24 +16,40 @@ sequence is finished.
 
 ## Current Work Item
 
-**P0129 — read-only NPC quest interaction runtime capability probe prepared for
-in-client evidence.**
+**P0131 planning target — player-triggered quest-offer action capability probe
+(Accept / Decline only).**
 
 Latest verified durable checkpoint:
-P0128 `0ec74fe5a8e41a8bab7bf9eee6946a4d3d58c133`.
+P0129 `e50676b993b9f5bc544eab610f99c7532dc98148`.
 
 Current pushed runtime:
-`0.0.58-dev`.
-
-Prepared runtime:
 `0.0.59-dev`.
 
-P0128 source audit is durable. P0129 adds one event-driven diagnostic module that
-captures bounded quest narrative/reward/gossip state secret-first, records
-quest/gossip mutation-function presence without calling it, and exposes one
-Phase-H developer-panel action.
+Current tested runtime:
+`0.0.61-dev`.
 
-Blizzard quest/gossip UI remains untouched and authoritative.
+P0129 read-only runtime evidence passes the naturally observed offer/gossip path:
+- three real `QUEST_DETAIL` states;
+- stable available-gossip quest ID/title;
+- one real two-choice reward metadata sample;
+- secret=false / failures=0 in observed snapshots;
+- all expected mutation APIs present but `invoked=0`;
+- integrated `checkall` PASS.
+
+`QUEST_PROGRESS` / `QUEST_COMPLETE`, active-gossip rows, generic gossip options,
+reward currencies, and reward spells remain environmentally deferred.
+
+P0130 runtime/visual proof passed paging, real `QUEST_DETAIL`, and Blizzard
+control coexistence, but exposed a real lifecycle defect: after Immersion OFF then
+ON during the same open quest offer, the Logres narrative did not restore until a
+fresh `QUEST_DETAIL`.
+
+P0130 R1 is runtime + visual PASS. The OFF -> ON restore path executed directly
+with `presentationReason=immersion-on-restore`; the same real offer remained shown,
+body/objective data remained ordinary/non-secret, and integrated checks passed.
+
+P0130 is accepted as the production quest-offer narrative baseline. Quest/gossip
+mutation ownership remains unproven.
 
 ## Verified State
 
@@ -89,32 +105,31 @@ Preserved deferrals/gates:
 
 ## Next Action
 
-Deploy P0129 runtime `0.0.59-dev` and use Phase H -> `Quest Interaction Probe`.
+Prepare P0131 as a **player-triggered Accept / Decline capability probe only**.
 
-Validation:
-1. run once with no NPC quest interaction open;
-2. interact naturally with a quest NPC and run it again;
-3. capture offer/detail state if naturally available;
-4. capture progress/complete/reward state only when naturally available;
-5. confirm `invoked=0` and Blizzard quest/gossip UI remains usable;
-6. inspect persisted panel diagnostics for safe ordinary, missing, secret, invalid,
-   or failed reads.
-
-Do not travel or manufacture special quest states solely for this probe.
+Requirements:
+1. use only the already-proven `QUEST_DETAIL` offer state;
+2. expose explicit developer-panel test actions rather than automatic mutation;
+3. keep Blizzard Accept / Decline controls visible and usable during the probe;
+4. record the exact offered quest identity before the player-triggered action;
+5. record success/failure/event outcome without inferring completion from source
+   availability alone;
+6. fail open to Blizzard on missing/secret/invalid/failed state;
+7. do not include Continue / Complete, reward selection, or gossip selection in
+   the same slice.
 
 ## Success Criteria
 
-P0129 succeeds when:
-- the probe module/action is runtime-safe;
-- event registration and naturally observed interaction states are recorded;
-- narrative/reward/gossip values are captured without secret-value misuse;
-- mutation function presence is reported with `invoked=0`;
-- Blizzard interaction remains fully usable;
-- any unavailable interaction states are classified as environmental deferrals,
-  not invented PASS results.
+The next checkpoint succeeds only when the P0131 probe can establish, separately
+for Accept and Decline where naturally testable:
+- the player explicitly triggered the mutation;
+- the action targeted the currently proven offer state;
+- the expected quest/event outcome occurred or a real failure was recorded;
+- Blizzard fallback remained usable;
+- no taint, protected-action, secret-value, or unintended automatic choice
+  occurred.
 
-Any Lua, secret-value, taint, protected-action, or unintended quest-state mutation
-is a real failure.
+Absence of a naturally suitable Decline test is a deferral, not PASS or FAIL.
 
 ## Do Not Reopen Without New Evidence
 
@@ -133,6 +148,9 @@ is a real failure.
 
 ## Relevant References
 
+- `docs/memory/evidence/P0130_QUEST_DIALOGUE_R1_RUNTIME_VISUAL_PASS_2026-10-05.md`
+- `docs/memory/evidence/P0130_QUEST_DIALOGUE_IMMERSION_RESTORE_FAILURE_2026-10-05.md`
+- `docs/memory/evidence/P0129_NPC_QUEST_INTERACTION_RUNTIME_READ_PASS_2026-10-05.md`
 - `docs/memory/evidence/P0128_NPC_QUEST_INTERACTION_SOURCE_AUDIT_2026-10-05.md`
 - `docs/memory/evidence/P0126_ACTIVE_QUEST_RUNTIME_VISUAL_PASS_2026-10-05.md`
 - `docs/memory/patches/P0126_ACTIVE_QUEST_PRESENTATION.md`

@@ -145,3 +145,25 @@ Canonical art reference:
 Exact objective wording and mechanical counts are inspection-only. The assets do
 not authorize quest-control ownership, Objective Tracker suppression, or quest
 navigation.
+
+## NPC quest narrative
+
+P0130 translates approved D-039 sheet 07 into the production `QUEST_DETAIL`
+reader while keeping Blizzard quest controls fully available.
+
+Files:
+- `Quest/quest_narrative_panel.tga` — broad aged-parchment / bronze reading field;
+- `Quest/quest_narrative_divider.tga` — restrained authored narrative divider;
+- `Quest/quest_page_chevron.tga` — presentation-only page navigation glyph.
+
+`Theme.lua` owns geometry, typography, colors, and media paths.
+
+The production reader preserves source quest prose, splits long body text into
+discrete word-boundary pages, wraps objective text in its own bounded region, and
+shows page controls only when multiple pages exist.
+
+Canonical art reference:
+`docs/design/approved/07_npc_quest_narrative_block.png`.
+
+These assets do not authorize Accept/Decline/Continue/reward/gossip mutation or
+Blizzard quest/gossip suppression.

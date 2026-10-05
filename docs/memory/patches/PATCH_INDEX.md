@@ -148,5 +148,6 @@
 | P0126 | 2026-10-04 | INSTALLED / PUSHED — RUNTIME + VISUAL PASS | Active Quest one-focus presentation; count-free objective labels + bar-only progress + hover exact detail (`89b0c563`, `0.0.58-dev`) |
 | P0127 | 2026-10-05 | INSTALLED / PUSHED — DOCS-ONLY | Record P0126 acceptance; open D-035 NPC quest-interaction capability audit (`ef56075d`) |
 | P0128 | 2026-10-05 | INSTALLED / PUSHED — DOCS / SOURCE EVIDENCE ONLY | Resolve NPC quest-interaction source layer; P0129 read-only runtime probe next (`0ec74fe5`) |
-| P0129 | 2026-10-05 | PREPARED — RUNTIME EVIDENCE PENDING | Add read-only event-driven NPC quest interaction capability probe (`0.0.59-dev`) |
+| P0129 | 2026-10-05 | INSTALLED / PUSHED — READ-ONLY RUNTIME PASS FOR OBSERVED SCOPE | Read-only NPC quest interaction probe; offer/gossip/reward-choice reads PASS, progress/complete deferred, mutation `invoked=0` (`e50676b9`, `0.0.59-dev`) |
+| P0130 | 2026-10-05 | RUNTIME + VISUAL PASS — READY FOR SINGLE COMMIT | Bounded/paged quest-offer narrative; R1 restore correction accepted on `0.0.61-dev` |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.
