@@ -1983,8 +1983,8 @@ local function runCompassCheck()
 
     local depthBandCoherent =
         type(debugStatus.waypointDepthScale) == "number"
-        and debugStatus.waypointDepthScale >= 0.90
-        and debugStatus.waypointDepthScale <= 1.05
+        and debugStatus.waypointDepthScale >= 0.70
+        and debugStatus.waypointDepthScale <= 1.20
         and (
             (
                 debugStatus.waypointDistanceAvailable == true
@@ -2021,8 +2021,8 @@ local function runCompassCheck()
         or (
             debugStatus.waypointMarkerShown == true
             and type(debugStatus.waypointRenderScale) == "number"
-            and debugStatus.waypointRenderScale >= 0.90
-            and debugStatus.waypointRenderScale <= 1.12
+            and debugStatus.waypointRenderScale >= 0.70
+            and debugStatus.waypointRenderScale <= 1.28
         )
 
     local passed =

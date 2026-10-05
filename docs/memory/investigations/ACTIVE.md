@@ -207,22 +207,17 @@ Next after the P0144 evidence checkpoint:
 Stock minimap presentation remains Blizzard-owned. No quest/POI/tracking marker
 expansion is authorized by P0143.
 
-### P0145/P0147 manual-waypoint depth correction
+### P0145/P0147/P0148 manual-waypoint depth correction
 
-P0145 is durable at `60244841` / `0.0.70-dev` and proves ordinary same-map yard
-distance plus clean clear-state fallback. All accepted populated samples were inside
-the old 120-yard near threshold, so cross-band depth variation and visible marker
-size change remain UNPROVEN. The user reported no visible size change in the
-inadequate original test.
+P0145 is durable at `60244841` / `0.0.70-dev` and proves ordinary same-map yard distance plus clean clear-state fallback.
 
-P0147 revalidates the feature using live minimap radius semantic bands and requires
-explicit user visual confirmation. P0123 remains off-tape runtime authority. Quest/
-current navigation, AreaPOI/service, and tracking-result production roles remain
-deferred/blocked exactly as before.
+P0147 is durable at `c274a9d1` / `0.0.71-dev` and mechanically proves live minimap-radius close/near/medium/far bands across real waypoint samples, plus clean fail-open/integration behavior. Visual validation FAILS: the user reported the marker remained effectively the same size; the `1.05 -> 0.90` range is too subtle for the 12x20 glyph.
+
+P0148 retains the proven P0147 source/band semantics and widens only scale amplitude to `1.20 / 1.05 / 0.85 / 0.70`, with final render clamp `0.70–1.28`. Explicit visual confirmation remains mandatory. P0123 remains off-tape runtime authority. Quest/current navigation, AreaPOI/service, and tracking-result production roles remain deferred/blocked exactly as before.
 ## Class / pet / special-control ownership
 
 Status:
-**OPEN — P0148 SOURCE/CAPABILITY AUDIT AFTER P0147 DEPTH CORRECTION.**
+**OPEN — P0149 SOURCE/CAPABILITY AUDIT AFTER P0148 DEPTH VISUAL ACCEPTANCE.**
 
 Canonical investigation:
 `FUTURE_CLASS_PET_SPECIAL_CONTROL_CAPABILITY.md`.
@@ -232,6 +227,6 @@ totem/class-special controls, discrete class resources, and possess/override/veh
 surfaces from ordinary Primary/Secondary/Utility action roles.
 
 D-026 still preserves direct player class-resource children, RuneFrame, TotemFrame,
-PetFrame, alternate-power, and unknown/unproven children. P0148 must resolve source,
+PetFrame, alternate-power, and unknown/unproven children. P0149 must resolve source,
 secure ownership, combat restrictions, event/update semantics, restoration, and
 fail-open stock coexistence per domain before any runtime replacement is proposed.

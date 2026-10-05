@@ -327,3 +327,6 @@ power, and unsupported special-control fallbacks until each domain is deliberate
 proven. This remains capability preparation under D-035/D-039 and does not
 authorize minimap suppression, broader aura ownership, automated quest choices,
 or Camera changes.
+## P0147 visual failure / P0148 waypoint-depth amplitude correction
+
+P0147 proves live-radius close/near/medium/far depth mechanics but fails visual calibration: the `1.05 -> 0.90` scale range was too subtle at real UI scale. P0148 retains those source/band semantics and widens only manual-waypoint scale amplitude to `1.20 / 1.05 / 0.85 / 0.70`, with user visual confirmation required. The class/pet/special-control source audit is now P0149 and remains blocked on this visual checkpoint.

@@ -4,7 +4,7 @@ As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — P0145 distance/clear-state proven but depth variation reopened; P0147 local-awareness recalibration/revalidation next; class/pet/special audit moves to P0148.**
+**Approved visual implementation translation — P0147 live-radius depth mechanics PASS but visual amplitude FAIL; P0148 perceptible scale correction next; class/pet/special audit moves to P0149.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -152,3 +152,4 @@ deferred/source-blocked; stock minimap ownership is unchanged. The class/pet/spe
 source audit moves to P0148. This does not authorize
 stock suppression, broader aura ownership, production world-target relocation, or
 unrelated Camera changes.
+P0147 is durable at `c274a9d1` / `0.0.71-dev`: live-radius close/near/medium/far mechanics and integrated checks pass, but manual visual review fails because the `1.05 -> 0.90` scale range is barely noticeable. P0148 widens only the depth scale amplitude to `1.20 / 1.05 / 0.85 / 0.70`; P0149 becomes the deferred class/pet/special source audit.

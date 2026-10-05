@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static contract for the P0147 local-awareness waypoint depth correction."""
+"""Static contract for the P0148 perceptible local-awareness waypoint depth correction."""
 
 from pathlib import Path
 import re
@@ -27,16 +27,21 @@ required_theme = (
     "depthNearRadiusFactor = 1.00",
     "depthMediumRadiusFactor = 4.00",
     "depthFarRadiusFactor = 8.00",
-    "depthCloseScale = 1.05",
-    "depthNearScale = 1.00",
-    "depthMediumScale = 0.95",
-    "depthFarScale = 0.90",
-    "renderScaleMin = 0.90",
-    "renderScaleMax = 1.12",
+    "depthCloseScale = 1.20",
+    "depthNearScale = 1.05",
+    "depthMediumScale = 0.85",
+    "depthFarScale = 0.70",
+    "renderScaleMin = 0.70",
+    "renderScaleMax = 1.28",
 )
 for fragment in required_theme:
     if fragment not in theme:
-        errors.append(f"Theme.lua missing P0147 token: {fragment}")
+        errors.append(f"Theme.lua missing P0148 token: {fragment}")
+
+# The P0147 1.05 -> 0.90 span was runtime-correct but visually imperceptible
+# on the 12x20 glyph. Preserve a materially perceptible calibrated span.
+if "depthCloseScale = 1.20" not in theme or "depthFarScale = 0.70" not in theme:
+    errors.append("P0148 visual amplitude must retain close 1.20 / far 0.70 endpoints")
 
 required_compass = (
     "MANUAL_DEPTH_CLOSE_RADIUS_FACTOR",
@@ -124,7 +129,7 @@ for fragment in (
     "band=%s",
 ):
     if fragment not in check:
-        errors.append(f"Commands.lua missing P0147 Compass Check integration: {fragment}")
+        errors.append(f"Commands.lua missing P0148 Compass Check integration: {fragment}")
 
 for forbidden in ("C_Map.", "C_Minimap.", "GetUserWaypoint(", "GetViewRadius("):
     if forbidden in check:
@@ -147,11 +152,11 @@ bootstrap_match = re.search(r'Logres\.VERSION = "([^"]+)"', bootstrap)
 toc_match = re.search(r"^## Version: (.+)$", toc, re.MULTILINE)
 bootstrap_version = bootstrap_match.group(1) if bootstrap_match else None
 toc_version = toc_match.group(1).strip() if toc_match else None
-if bootstrap_version != "0.0.71-dev" or toc_version != "0.0.71-dev":
-    errors.append(f"P0147 runtime version must be 0.0.71-dev, got {bootstrap_version}/{toc_version}")
+if bootstrap_version != "0.0.72-dev" or toc_version != "0.0.72-dev":
+    errors.append(f"P0148 runtime version must be 0.0.72-dev, got {bootstrap_version}/{toc_version}")
 
-print("Logres P0147 local-awareness waypoint depth contract")
-print("=====================================================")
+print("Logres P0148 perceptible waypoint depth contract")
+print("================================================")
 if errors:
     for error in errors:
         print(f"ERROR: {error}")

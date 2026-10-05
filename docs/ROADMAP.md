@@ -150,3 +150,6 @@ deliberate close/near/medium/far diagnostics plus explicit user visual confirmat
 After P0147 is accepted, P0148 becomes the class/pet/special-control source audit. No direct
 class-resource child, RuneFrame, TotemFrame, PetFrame, alternate-power, or
 possess/override/vehicle surface is suppressed from source evidence alone.
+## P0147/P0148 manual-waypoint depth calibration
+
+P0147 is durable at `c274a9d1` / `0.0.71-dev`. Live minimap-radius depth mechanics pass across real close/near/medium/far samples, but visual review fails because the `1.05 -> 0.90` scale range is barely perceptible on the 12x20 marker. P0148 widens only the visual amplitude to `1.20 / 1.05 / 0.85 / 0.70` with final clamp `0.70–1.28`. Explicit visual acceptance remains required before the next source audit; class/pet/special-control work moves to P0149.

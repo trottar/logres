@@ -308,12 +308,12 @@ theme.compass = {
         depthNearRadiusFactor = 1.00,
         depthMediumRadiusFactor = 4.00,
         depthFarRadiusFactor = 8.00,
-        depthCloseScale = 1.05,
-        depthNearScale = 1.00,
-        depthMediumScale = 0.95,
-        depthFarScale = 0.90,
-        renderScaleMin = 0.90,
-        renderScaleMax = 1.12,
+        depthCloseScale = 1.20,
+        depthNearScale = 1.05,
+        depthMediumScale = 0.85,
+        depthFarScale = 0.70,
+        renderScaleMin = 0.70,
+        renderScaleMax = 1.28,
     },
 
     labels = {

@@ -70,3 +70,12 @@ the sampled bands. Diagnostics alone are insufficient for acceptance.
 
 No quest/POI/tracking marker, exact distance text, label, minimap mutation, or stock
 minimap suppression is added.
+## Final runtime / visual result
+
+P0147 is durable at `c274a9d13c677082cf4ce90b9fbbd0152e9989ec` on `0.0.71-dev`.
+
+Runtime mechanics passed across real close/near/medium/far samples and integrated `Run All` passed. The user nevertheless reported the marker looked effectively the same size, with any shrink barely noticeable.
+
+Classification: **RUNTIME / MECHANICAL PASS; VISUAL FAIL.**
+
+The `1.05 -> 0.90` scale range is therefore rejected as final calibration. P0148 retains the proven live-radius band mechanics and increases only visual amplitude.

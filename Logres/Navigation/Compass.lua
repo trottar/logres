@@ -47,17 +47,17 @@ local MANUAL_DEPTH_MEDIUM_RADIUS_FACTOR =
 local MANUAL_DEPTH_FAR_RADIUS_FACTOR =
     manualWaypointStyle.depthFarRadiusFactor or 8.00
 local MANUAL_DEPTH_CLOSE_SCALE =
-    manualWaypointStyle.depthCloseScale or 1.05
+    manualWaypointStyle.depthCloseScale or 1.20
 local MANUAL_DEPTH_NEAR_SCALE =
-    manualWaypointStyle.depthNearScale or 1.00
+    manualWaypointStyle.depthNearScale or 1.05
 local MANUAL_DEPTH_MEDIUM_SCALE =
-    manualWaypointStyle.depthMediumScale or 0.95
+    manualWaypointStyle.depthMediumScale or 0.85
 local MANUAL_DEPTH_FAR_SCALE =
-    manualWaypointStyle.depthFarScale or 0.90
+    manualWaypointStyle.depthFarScale or 0.70
 local MANUAL_RENDER_SCALE_MIN =
-    manualWaypointStyle.renderScaleMin or 0.90
+    manualWaypointStyle.renderScaleMin or 0.70
 local MANUAL_RENDER_SCALE_MAX =
-    manualWaypointStyle.renderScaleMax or 1.12
+    manualWaypointStyle.renderScaleMax or 1.28
 
 local CARDINAL_LABEL_COLOR =
     compassLabels.cardinal or { 0.94, 0.84, 0.62, 0.96 }

@@ -1,6 +1,6 @@
 # Future Class / Pet / Special-Control Capability Audit
 
-Status: **OPEN — P0148 SOURCE/CAPABILITY AUDIT AFTER P0147 DEPTH CORRECTION**
+Status: **OPEN — P0149 SOURCE/CAPABILITY AUDIT AFTER P0148 DEPTH VISUAL ACCEPTANCE**
 Opened: 2026-10-05
 
 ## Why this exists
@@ -21,7 +21,7 @@ D-026 and the current player-shell replacement deliberately preserve direct play
 class-resource children, RuneFrame, TotemFrame, PetFrame, alternate-power, and
 unknown/unproven children.
 
-## P0148 audit questions
+## P0149 audit questions
 
 Pin the exact Forever `1.60.1.70205` matching source generation and resolve, per
 domain:
@@ -65,8 +65,8 @@ Until a later capability checkpoint proves otherwise:
 
 Protected setup/mutation must remain combat-safe and fail open to stock UI.
 
-## Expected P0148 result
+## Expected P0149 result
 
-After P0147 is accepted, produce a per-domain capability matrix and identify the smallest justified runtime
+After P0148 is visually accepted, produce a per-domain capability matrix and identify the smallest justified runtime
 probe or production slice, if any. Source evidence alone does not authorize stock
 suppression.

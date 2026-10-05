@@ -244,3 +244,8 @@ blocked and stock minimap ownership is unchanged.
 
 P0147 requires deliberate cross-band runtime samples and explicit user visual
 confirmation before manual-waypoint depth is accepted.
+## P0147 visual result / P0148 correction
+
+P0147 `c274a9d1` / `0.0.71-dev` proves live minimap-radius band mechanics across close, near, medium, and far real waypoint samples, plus clean fail-open/integration behavior. It does **not** pass visual calibration: the user reported the marker looked effectively unchanged, and the `1.05 -> 0.90` span was too subtle on the 12x20 glyph.
+
+P0148 retains the exact P0147 semantic bands (`0.5R / 1R / 4R / 8R`) and changes only scale amplitude to `1.20 / 1.05 / 0.85 / 0.70` with final clamp `0.70–1.28`. Quest/current-navigation, AreaPOI/service, tracking-result, and stock-minimap ownership remain unchanged.

@@ -1,0 +1,31 @@
+P0148 — increase manual-waypoint depth visual amplitude
+Baseline: c274a9d13c677082cf4ce90b9fbbd0152e9989ec
+Candidate runtime: 0.0.72-dev
+P0147 classification: runtime/mechanical PASS; visual FAIL
+Depth bands retained: close <=0.5R; near <=1R; medium <=4R; far <=8R+
+Scale anchors: 1.20 / 1.05 / 0.85 / 0.70; render clamp 0.70-1.28
+No quest/POI/tracking ownership, distance label, or minimap suppression added
+Visual acceptance still required before P0149 class/pet/special-control audit
+
+Files:
+d2becfd18753dadec71e5bacd08f511e402f762f7c2ac755053719a65828a23f  Logres/Core/Bootstrap.lua
+31c495dcee087065240dfbd14e182bfc44fab23f99bbbf864bcd2ad7d332d280  Logres/Core/Commands.lua
+a9297bf68582c4cf50e28f60909fbb9e0fae6c17ec58b1f838bdc4654620894d  Logres/Logres.toc
+bea68b4717da76da94f13c44ce881fb1ba6547ee959acd963781451b48a9497c  Logres/Media/Theme.lua
+5d016529b0a32331aa7dfe7fe9ab7a2808c8c7d473dd9f52e7d380544df4e545  Logres/Navigation/Compass.lua
+b477045c0b90af0ebdd703ce2fc438859a88308569220ed08f3aa03388ad9a00  docs/ROADMAP.md
+8ee0a91e7a27843cf2eaa864540053fda9fd20f8a0c94881585322f32b93d1de  docs/memory/2026-10-05.md
+c04bc922ac4ec49e7e6dd7361abb5f05f0d475313cb8bd73b2c5cd0e6ccd5e72  docs/memory/CURRENT.md
+2149bd68d256b959a2d4be1b80cafd6d345131b85dc8ec330eb77071b0c1dd31  docs/memory/MEMORY.md
+1ed46e72922e5b39332b488dbfda15aa2d60b1286deeb2a55ec183d32cebea5f  docs/memory/architecture/VISUAL_IMPLEMENTATION_STATUS.md
+0546b80739f6522c35611cba609493bdfda463c86ef6bb49dcc6e30e2f94651f  docs/memory/evidence/P0148_P0147_WAYPOINT_DEPTH_VISUAL_FAIL_2026-10-05.md
+48476b8b726929b2093efdba8a1f2767f8ef93a4cfcea8d45a1996798022a060  docs/memory/handoffs/CURRENT_HANDOFF.md
+20252be70c3271ea0aa96a1d21575822ba8a322827395ee243c13b8faa7bdc39  docs/memory/investigations/ACTIVE.md
+2bcf1563a39076cf34a4c3f2d7156f743419b2352b3ca43f0bc70380bd3c2dc9  docs/memory/investigations/FUTURE_CLASS_PET_SPECIAL_CONTROL_CAPABILITY.md
+4fa4c0fce3cc327dec36456cc3818faf272bce7c0fbe3be34cc3defcd1155c70  docs/memory/investigations/FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md
+73959d63cc1723dc295bcdc5285586a0a6810195ab5098791604e277cbe35e73  docs/memory/patches/P0147_CORRECT_MANUAL_WAYPOINT_DEPTH_CALIBRATION.md
+9a4065d77779a6cda8d2f90e846d8fbf2bf85c273e3395eadbfbf01b9af7dc82  docs/memory/patches/P0148_INCREASE_MANUAL_WAYPOINT_DEPTH_AMPLITUDE.md
+70f4a44d3d8d53d994af39a5ac4a5f4d45e5a5f7404d78eab5883557215e55b6  docs/memory/patches/PATCH_INDEX.md
+a59280a8f00f5d2065b3d1176f745323a432c861cfab74e17f8b8a988f1eb656  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+21d786051a26ed1e4520646de646e6cd8e5bb5d779ce0cfd1255c930d891c607  docs/memory/roadmap/STATUS.md
+2cd45301d829e6dfebb484a408b001f7f5d40e55adf1bfcbf3dd9fc0dc2b5cc4  tools/check_manual_waypoint_depth_contract.py

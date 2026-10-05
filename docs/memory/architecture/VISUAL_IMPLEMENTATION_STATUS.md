@@ -137,3 +137,6 @@ After that:
 This is a dependency-oriented implementation map, not a claim that formal Phase H
 has started. Phase G remains open but is explicitly frozen while this approved
 visual sequence is completed.
+## P0147/P0148 waypoint-depth calibration correction
+
+P0147 mechanically proves local-awareness-relative depth bands, but visual validation failed because `1.05 -> 0.90` was not perceptible enough on the 12x20 manual-waypoint glyph. P0148 widens only the visual scale amplitude to `1.20 / 1.05 / 0.85 / 0.70`; acceptance still requires explicit in-client visual confirmation before the sequence advances.

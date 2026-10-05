@@ -8,47 +8,48 @@ project: logres
 
 ## Active Objective
 
-**Correct the manual-waypoint distance/depth acceptance before advancing the approved visual sequence. P0147 replaces arbitrary absolute depth thresholds with live local-awareness-relative bands and requires real cross-band visual proof.**
+**Correct the manual-waypoint distance/depth visual amplitude before advancing the approved visual sequence. P0147 proved the local-awareness-relative curve mechanically but failed visual validation because the `1.05 -> 0.90` size range was not perceptible enough on the 12x20 waypoint glyph.**
 
 Formal Phase G / G.5 remains open and paused while the approved visual sequence is finished.
 
 ## Current Work Item
 
-**P0147 — manual-waypoint depth calibration + evidence correction.**
+**P0148 — increase manual-waypoint depth visual amplitude and revalidate near/medium/far appearance.**
 
 Latest verified durable checkpoint:
-P0146 `9606379c1c8f600d26a5fe9659e448c14df76e7b`.
+P0147 `c274a9d13c677082cf4ce90b9fbbd0152e9989ec`.
 
 Current pushed/tested runtime:
-`0.0.70-dev`.
-
-Corrected P0145/P0146 classification:
-- same-map manual-waypoint yard distance is runtime-proven;
-- clear-state fallback is runtime-proven;
-- P0123 remains the actual off-tape runtime authority;
-- all P0145 populated samples (`45.5`, `51.7`, `115.8`, `116.0` yards) were inside the old `120` yard near threshold and therefore all reported `depth=1.050`;
-- those samples prove only the old near endpoint, not distance-dependent variation;
-- the user reported the marker appeared the same size throughout that inadequate test;
-- distance-dependent visible scale change is therefore **UNPROVEN**, and P0146's stronger acceptance wording is superseded by P0147.
-
-P0147 candidate runtime:
 `0.0.71-dev`.
 
-P0147 depth reference:
-`R = C_Minimap.GetViewRadius()`.
+P0147 result:
+- live `C_Minimap.GetViewRadius()` reference works;
+- cross-band distance/radius classification works;
+- sampled bands included close, near, medium, and far;
+- depth values changed coherently from `1.050` down to `0.900`;
+- integrated `Run All` passed;
+- the user reported the waypoint remained effectively the same size, with any shrink barely noticeable;
+- therefore P0147 is **RUNTIME/MECHANICAL PASS, VISUAL FAIL**.
 
-Semantic bands:
+The failure is explained by glyph geometry: the base manual waypoint is only `12x20` px, so `1.05 -> 0.90` changes nominal size only from about `12.6x21` px to `10.8x18` px.
+
+P0148 candidate runtime:
+`0.0.72-dev`.
+
+P0148 keeps the P0147 semantic bands:
 - close: `<=0.5R`;
 - near: `0.5R–1R`;
 - medium: `1R–4R`;
-- far: `4R–8R`, with minimum retained beyond `8R`.
+- far: `4R–8R`, minimum beyond `8R`.
 
-Scale anchors:
-- close `1.05`;
-- near endpoint `1.00`;
-- medium endpoint `0.95`;
-- far endpoint `0.90`;
-- final angular-focus-combined render scale remains capped at `0.90–1.12`.
+P0148 scale anchors:
+- close `1.20`;
+- near endpoint `1.05`;
+- medium endpoint `0.85`;
+- far endpoint `0.70`;
+- final angular-focus-combined render clamp `0.70–1.28`.
+
+At the existing 12x20 glyph, the un-focused endpoints are approximately `14.4x24` px close and `8.4x14` px far, making the intended depth cue materially visible without adding numeric distance text or a new marker role.
 
 Navigation boundaries otherwise remain unchanged:
 - quest/current-navigation destination remains environmental DEFERRED;
@@ -69,7 +70,7 @@ Accepted production baselines remain:
 - P0133 Accept-left / Decline-right offer controls for the proven offer state;
 - P0137 passive player `HELPFUL|PLAYER` aura lane.
 
-P0145 remains accepted only for manual-waypoint same-map distance arithmetic and clean clear-state fallback. Its distance-dependent visual depth behavior is reopened by P0147.
+P0145 remains accepted for manual-waypoint same-map distance arithmetic and clear-state fallback. P0147 additionally proves the live-radius band/reference mechanics, but its visual amplitude is rejected.
 
 World target:
 - P0140 fallback/reaction runtime paths pass for the observed scope;
@@ -78,7 +79,7 @@ World target:
 
 Class / pet / special-control territory:
 - Blizzard-owned direct player class-resource children, RuneFrame, TotemFrame, PetFrame, alternate-power, and unsupported possess/override/vehicle surfaces remain preserved;
-- the source/capability audit is postponed to P0148 until P0147 is genuinely accepted.
+- the source/capability audit moves to P0149 and does not begin until P0148 is visually accepted.
 
 Camera:
 - P0119 remains durable at `c342bc176a9d5de80ec116d0c6b31fa595cd75b3`;
@@ -86,29 +87,27 @@ Camera:
 
 ## Next Action
 
-Apply P0147, deploy `0.0.71-dev`, then deliberately sample multiple manual-waypoint depth bands.
+Apply P0148, deploy `0.0.72-dev`, and re-sample the already-proven close/near/medium/far waypoint bands.
 
 Required in-client proof:
-1. close waypoint `<=0.5R`;
-2. near waypoint `0.5R–1R`;
-3. medium waypoint `>1R`, preferably `2R–4R`;
-4. far waypoint, preferably `>=8R` to exercise the minimum endpoint;
-5. cleared waypoint fallback;
-6. integrated `Run All` after successful band testing.
+1. one close/near sample at or inside local awareness;
+2. one medium sample beyond `1R`;
+3. one far sample beyond `4R`, preferably `>=8R`;
+4. keep marker bearing reasonably similar when visually comparing size so angular focus does not dominate the comparison;
+5. clear waypoint fallback;
+6. integrated `Run All` after successful visual testing.
 
-For each populated sample, record `yards`, live `radius`, `ratio`, semantic `band`, `depth`, and `renderScale` from Compass Check.
+Acceptance requires explicit user confirmation that the size difference is clearly perceptible and still aesthetically acceptable. Diagnostics alone cannot close P0148.
 
-Acceptance also requires explicit user visual confirmation that marker size changes perceptibly across bands while remaining restrained. Diagnostics alone are insufficient.
-
-After P0147 is accepted and recorded, perform **P0148 source/capability audit only** for class/pet/special-control territory.
+After P0148 is accepted and recorded, perform **P0149 source/capability audit only** for class/pet/special-control territory.
 
 ## Success Criteria
 
-P0147 succeeds only when:
-- live minimap radius is ordinary and usable for the observed samples;
-- reported semantic bands match `distance / radius`;
-- depth changes coherently across sampled bands;
-- marker size visibly changes across bands according to user observation;
+P0148 succeeds only when:
+- close/near, medium, and far diagnostics remain coherent with the P0147 live-radius bands;
+- close/near marker size is visibly stronger than medium;
+- far marker size is visibly smaller than close/near;
+- the larger amplitude is not judged excessive or distracting;
 - existing bearing/off-tape/fail-open behavior remains intact;
 - clear state resets depth/render state;
 - integrated checks remain clean;
@@ -132,10 +131,10 @@ P0147 succeeds only when:
 
 ## Relevant References
 
-- `docs/memory/evidence/P0147_P0145_DEPTH_VALIDATION_CORRECTION_2026-10-05.md`
+- `docs/memory/evidence/P0148_P0147_WAYPOINT_DEPTH_VISUAL_FAIL_2026-10-05.md`
+- `docs/memory/patches/P0148_INCREASE_MANUAL_WAYPOINT_DEPTH_AMPLITUDE.md`
 - `docs/memory/patches/P0147_CORRECT_MANUAL_WAYPOINT_DEPTH_CALIBRATION.md`
-- `docs/memory/patches/P0146_RECORD_P0145_RUNTIME_RESULT.md`
-- `docs/memory/patches/P0145_MANUAL_WAYPOINT_DISTANCE_DEPTH.md`
+- `docs/memory/evidence/P0147_P0145_DEPTH_VALIDATION_CORRECTION_2026-10-05.md`
 - `docs/memory/decisions/D-038_COMPASS_VISUAL_FOCUS_AND_DEPTH_CONTRACT.md`
 - `docs/memory/decisions/D-043_NAVIGATION_SOURCE_AND_MINIMAP_FALLBACK_POLICY.md`
 - `docs/memory/investigations/FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md`
