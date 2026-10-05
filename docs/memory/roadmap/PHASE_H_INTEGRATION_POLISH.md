@@ -300,10 +300,16 @@ The exact Forever source establishes:
 D-043 records the fail-open/source policy.
 
 P0143:
-**PREPARED — READ-ONLY NAVIGATION SOURCE RUNTIME PROBE on `0.0.69-dev`; PROOF PENDING.**
+**INSTALLED / PUSHED — RUNTIME PASS FOR OBSERVED NAVIGATION-SOURCE SCOPE WITH ENVIRONMENTAL DEFERRALS** at `b9b2f90b` / `0.0.69-dev`.
 
-P0143 tests only surviving source candidates and makes no production or Blizzard
-presentation changes. It remains excluded from integrated `Run All`.
+P0143 proves ordinary current-map/player geometry, map world size, minimap view
+radius, and bounded multi-select tracking selector metadata/state with zero
+secret skips/failures. The tested state had no AreaPOI rows and no current,
+quest, or user-waypoint destination; those branches remain DEFERRED. Integrated
+`Run All` passed.
+
+P0144 records the result. Next:
+**P0145 manual-waypoint comparable-distance / bounded-depth integration only.**
 
 This remains capability preparation under D-035/D-039. It does not authorize
 minimap suppression, source-blocked tracking-result markers, broader aura

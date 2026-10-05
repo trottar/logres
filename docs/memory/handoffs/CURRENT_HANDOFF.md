@@ -4,38 +4,43 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0142 `82682ece15ad21aa7d5ee2dfaba5e5a3c68c97b6`.
+P0143 `b9b2f90b37ad9d10b4ce6d55ef932e113172d3b3`.
 
-Current pushed/tested runtime before P0143 deployment:
-`0.0.68-dev`.
+Current pushed/tested runtime:
+`0.0.69-dev`.
 
-P0142:
-**INSTALLED / PUSHED — SOURCE-CAPABILITY LAYER RESOLVED; D-043 ACCEPTED.**
+P0143:
+**INSTALLED / PUSHED — READ-ONLY RUNTIME PASS FOR OBSERVED NAVIGATION-SOURCE SCOPE; DESTINATION/AREA-POI PATHS DEFERRED.**
 
 ## Active work stream
 
-Current objective:
-**P0143 — read-only navigation-source runtime probe.**
+P0143 runtime evidence proves ordinary:
+- current map/player position;
+- map world size;
+- minimap view radius;
+- all 23 tested tracking selector rows and independent multi-select active state;
+- zero secret skips / call-shape failures;
+- integrated `Run All` PASS.
 
-Candidate runtime after applying P0143:
-`0.0.69-dev`.
+The captured state had:
+- zero current-map AreaPOI rows;
+- no super-tracking/current navigation;
+- no super-tracked quest waypoint;
+- no user waypoint;
+- no exercised destination-distance branch;
+- no `C_Minimap.GetUiMapID()` result.
 
-The diagnostic is event-driven and read-only. It samples current map/player
-geometry, minimap view radius, tracking selector metadata/state, current
-super-tracking/navigation, ordinary quest waypoints when naturally present, and a
-bounded current-map `C_AreaPoiInfo` set.
+Those absences are environmental DEFERRED, not failures.
 
-It does not:
-- mutate tracking or supertracking;
-- create/clear waypoints;
-- modify minimap CVars/zoom/pings/presentation;
-- inspect Blizzard pins/frames for hidden blip coordinates;
-- poll;
-- add production navigation markers;
-- suppress the minimap.
+Tracking-result/service-instance positions remain source-blocked by P0142/D-043,
+regardless of the proven selector metadata. Stock minimap remains available.
 
-Runtime proof is pending. Environmental absence of a waypoint or AreaPOI is a
-deferral. Secret/call/Lua failures are failures.
+Next after P0144 durability:
+**P0145 manual-waypoint comparable-distance / bounded-depth slice.**
+
+Use the existing proven manual waypoint source, compute distance only from ordinary
+same-map inputs, fail open to the current fixed marker treatment, and add no new
+quest/POI/tracking marker role.
 
 World-target positive anchoring remains environmentally deferred. Camera remains
 frozen, not complete.
@@ -43,12 +48,12 @@ frozen, not complete.
 ## Key references
 
 - `../CURRENT.md`
+- `../evidence/P0144_P0143_NAVIGATION_RUNTIME_PASS_WITH_DEFERRALS_2026-10-05.md`
+- `../patches/P0144_RECORD_P0143_NAVIGATION_RUNTIME_RESULT.md`
 - `../patches/P0143_NAVIGATION_SOURCE_READ_ONLY_PROBE.md`
-- `../evidence/P0142_NAVIGATION_MINIMAP_SOURCE_CAPABILITY_AUDIT_2026-10-05.md`
 - `../decisions/D-043_NAVIGATION_SOURCE_AND_MINIMAP_FALLBACK_POLICY.md`
-- `../patches/P0142_NAVIGATION_MINIMAP_SOURCE_CAPABILITY_AUDIT.md`
 - `../investigations/FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md`
-- `../decisions/D-037_NAVIGATION_MARKER_ROLES_AND_MINIMAP_DIRECTION.md`
 - `../decisions/D-038_COMPASS_VISUAL_FOCUS_AND_DEPTH_CONTRACT.md`
+- `../architecture/VISUAL_IMPLEMENTATION_STATUS.md`
 - `../roadmap/PHASE_H_INTEGRATION_POLISH.md`
 - `../roadmap/PHASE_G_CINEMATIC_CAMERA.md`

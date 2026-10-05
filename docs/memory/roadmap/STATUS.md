@@ -4,7 +4,7 @@ As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — P0142 navigation/minimap source layer resolved; P0143 read-only runtime probe next.**
+**Approved visual implementation translation — P0143 navigation-source runtime PASS recorded; P0145 manual-waypoint distance/depth next after P0144 evidence checkpoint.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -131,11 +131,16 @@ audited public source surface. Current-map `C_AreaPoiInfo`, minimap view radius,
 broader current navigation, and same-map geometry survive as runtime candidates.
 
 P0143:
-**PREPARED — READ-ONLY RUNTIME PROBE; IN-CLIENT PROOF PENDING on `0.0.69-dev`.**
+**INSTALLED / PUSHED — RUNTIME PASS FOR OBSERVED READ-ONLY SOURCE SCOPE WITH ENVIRONMENTAL DEFERRALS** at `b9b2f90b` / `0.0.69-dev`.
 
-The diagnostic is bounded, event-driven, secret-first, and excludes all tracking,
-supertracking, minimap, waypoint, and production-presentation mutation. Stock
-minimap presentation remains available.
+Current map/player position, map world size, minimap view radius, and 23/23
+tracking selector rows were ordinary with zero secret skips/failures. Four tracking
+selectors were independently active. The tested map had no AreaPOI rows and no
+current/quest/user-waypoint destination, so those paths and actual destination
+distance remain DEFERRED. Integrated `Run All` passed.
+
+P0144 records this evidence. Next after P0144 durability:
+**P0145 manual-waypoint comparable-distance / bounded-depth slice.**
 
 This remains capability-gated preparation under D-037/D-039/D-040. It does not
 authorize stock minimap suppression, unproven navigation markers, broader aura

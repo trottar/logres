@@ -3,7 +3,8 @@
 Date: 2026-10-05
 Baseline: `82682ece15ad21aa7d5ee2dfaba5e5a3c68c97b6`
 Candidate runtime: `0.0.69-dev`
-Result: **PREPARED — IN-CLIENT RUNTIME PROOF PENDING**
+Durable commit: `b9b2f90b37ad9d10b4ce6d55ef932e113172d3b3`
+Result: **INSTALLED / PUSHED — RUNTIME PASS WITH ENVIRONMENTAL NAVIGATION/POI DEFERRALS**
 
 ## Purpose
 
@@ -104,6 +105,22 @@ Environmental absence of a current navigation waypoint, ordinary quest waypoint,
 or AreaPOI is not a diagnostic failure.
 
 After the probe, integrated `Run All` must remain PASS.
+
+## Runtime result
+
+P0143 is durable at `b9b2f90b37ad9d10b4ce6d55ef932e113172d3b3`.
+
+The recorded `0.0.69-dev` manual probe passes with zero secret skips and zero
+failures. Current map/player geometry, map world size, minimap view radius, and
+all 23 tested tracking selector rows were ordinary. Four selectors were
+independently active.
+
+The tested map had no AreaPOI rows, no current/super-tracked navigation
+destination, and no user waypoint. Those branches remain environmental DEFERRED;
+the destination-distance branch was not exercised. Integrated `Run All` passed.
+
+Canonical evidence:
+`../evidence/P0144_P0143_NAVIGATION_RUNTIME_PASS_WITH_DEFERRALS_2026-10-05.md`.
 
 No P0143 result by itself authorizes repeated tracking-result glyphs or minimap
 suppression.

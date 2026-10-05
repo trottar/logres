@@ -173,25 +173,36 @@ remains blocked and the screen-space target remains canonical fallback.
 ## Navigation / minimap capability
 
 Status:
-**OPEN — P0143 READ-ONLY RUNTIME PROBE PREPARED; IN-CLIENT PROOF PENDING.**
+**OPEN — P0143 RUNTIME PASS FOR OBSERVED SOURCE SCOPE; MANUAL-WAYPOINT DISTANCE/DEPTH NEXT.**
 
 Canonical investigation:
 `FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md`.
 
-P0142 pins the exact Forever `1.60.1.70205` source and accepts D-043.
+P0142 / D-043 source policy remains authoritative.
 
-Resolved source facts:
-- ordinary quest waypoint remains `C_QuestLog.GetNextWaypoint*`; earlier tested
-  quest negatives remain valid;
-- `C_Navigation.GetNextWaypointForMap` is a separate broader navigation candidate;
-- tracking selection is multi-select;
-- filter metadata/state are enumerable, but individual tracked-result positions
-  are not exposed by the audited public API;
-- service/townsfolk filters likewise do not expose individual service positions;
-- `C_AreaPoiInfo`, `C_Minimap.GetViewRadius`, and `C_Map` geometry are surviving
-  read-only runtime candidates.
+P0143 is durable at `b9b2f90b` / `0.0.69-dev`.
 
-P0143 is prepared on candidate runtime `0.0.69-dev`. The diagnostic tests only
-those surviving candidates with bounded, secret-first, event-driven reads. Stock
-minimap presentation remains Blizzard-owned; no new marker role is
-production-authorized. Runtime proof is pending.
+Runtime evidence proves:
+- ordinary current player map ID and player map position;
+- ordinary map world size in yards;
+- ordinary minimap view radius in yards;
+- 23/23 ordinary tracking selector rows;
+- four independently active tracking selectors;
+- zero secret skips / source failures;
+- integrated `Run All` PASS.
+
+Environmental DEFERRED in the captured state:
+- current-map AreaPOI population;
+- current/super-tracked navigation waypoint;
+- super-tracked quest waypoint;
+- user waypoint and the resulting actual destination-distance branch;
+- minimap map ID output.
+
+Tracking-result and service-instance positions remain source-blocked by P0142 /
+D-043. Selector metadata does not reopen that path.
+
+Next after the P0144 evidence checkpoint:
+**P0145 manual-waypoint comparable-distance / bounded-depth slice.**
+
+Stock minimap presentation remains Blizzard-owned. No quest/POI/tracking marker
+expansion is authorized by P0143.

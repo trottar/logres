@@ -39,8 +39,8 @@ A component can be visually complete while runtime ownership remains incomplete.
 | Context messages | Yes | P0122 is durable at `62353ecf`; XP preview, live XP producer/check, objective preview, live objective producer/check, and full checkall passed on `0.0.52-dev` | Dedicated warmer completion variant remains naturally deferred; final whole-screen placement/contrast calibration remains polish | **Runtime + preview path proven — completion state deferred** |
 | Active Quest | Yes | P0126 is durable at `89b0c563` / `0.0.58-dev`; final R3 runtime + visual PASS uses one-focus title, count-free normalized objective labels, bar-only progress, hover-only exact detail, quiet completion, and an independent persisted toggle | Final whole-screen spacing/contrast calibration remains polish; do not reopen persistent `%`/`N/M` mechanics without new evidence | **Runtime + visual production baseline accepted** |
 | Player-health tunnel | Yes / D-036 frozen | P0124 is durable at `1e7e27e` / `0.0.54-dev`; five Theme-owned organic tunnel/death masks run on the proven native secret-safe health-to-alpha path, with deterministic D-036 preview percentages | Whole-interface contrast/scale polish remains; natural damage/heal may be observed opportunistically but is not required to re-prove the accepted preview matrix | **Runtime + visual baseline accepted — final polish deferred** |
-| Compass heading + manual waypoint | Yes | P0123 is durable at `1721eb4d` / `0.0.53-dev`; heading/manual-waypoint runtime + visual PASS includes truthful off-tape suppression and near-center marker proof | Distance-dependent depth and identity remain gated because comparable distance/name inputs are not proven; quest/POI/tracking remain separate capability work | **Production primitive proven — extended roles gated** |
-| Compass quest / POI / tracking roles | Yes | P0142 resolves the source layer: ordinary quest/current-navigation paths and `C_AreaPoiInfo`/view-radius/map geometry have runtime candidates; individual tracked-result and service-instance positions are source-blocked | P0143 read-only runtime proof for surviving candidates; keep stock minimap until full replacement completeness is proven | **Source layer resolved — runtime candidates gated; tracking-result markers blocked** |
+| Compass heading + manual waypoint | Yes | P0123 is durable at `1721eb4d` / `0.0.53-dev`; heading/manual-waypoint runtime + visual PASS includes truthful off-tape suppression and near-center marker proof | P0143 runtime-proves current map/player/world-size inputs, but no destination was present, so actual comparable manual-waypoint distance/depth remains unexercised; identity remains unavailable | **Production primitive proven — manual depth proof next** |
+| Compass quest / POI / tracking roles | Yes | P0143 `b9b2f90b` / `0.0.69-dev` runtime-proves current-map/player geometry, minimap view radius, and 23/23 multi-select tracking selector metadata rows; individual tracked-result/service-instance positions remain source-blocked | Current-map AreaPOI population and current/quest waypoint output were absent and remain deferred; keep stock minimap until replacement completeness is proven | **Geometry/selector metadata proven — destination/AreaPOI deferred; tracking-result markers blocked** |
 | Class/pet/special controls | Shared button language approved; class-specific mechanics only partially covered | Existing Blizzard-owned child/special surfaces remain available; Logres ordinary action roles are separate | Apply button family where ownership is proven; design/implement discrete class-resource art (runes/combo points/etc.) separately as needed | **Residual art + capability** |
 | Settings / accessibility | Visual language only, no dedicated final sheet | Preference infrastructure exists, not final Phase-H settings UI | Design compact settings/accessibility presentation and expose only accepted product choices | **Residual design / integration** |
 
@@ -114,14 +114,18 @@ Completed:
 18. P0142 D-037 navigation/minimap source-capability audit — source layer resolved;
     D-043 accepted; individual tracking-result/service-instance positions blocked.
 
+Completed with environmental deferrals:
+19. P0143 read-only runtime proof — current-map/player geometry, minimap view
+    radius, and tracking selector metadata/state PASS; AreaPOI/current/quest
+    destination paths deferred.
+
 Next:
-19. P0143 read-only runtime proof for current-navigation, current-map AreaPOI,
-    minimap view-radius, tracking metadata/state, and same-map geometry candidates.
+20. P0145 manual-waypoint comparable-distance / bounded-depth integration only.
 
 After that:
-20. implement only runtime-proven navigation roles or preserve their negative /
-    deferred results;
-21. finish class-specific discrete resources, settings/accessibility, and final
+21. implement only further runtime-proven navigation roles or preserve their
+    negative / deferred results;
+22. finish class-specific discrete resources, settings/accessibility, and final
     whole-screen composition calibration.
 
 This is a dependency-oriented implementation map, not a claim that formal Phase H

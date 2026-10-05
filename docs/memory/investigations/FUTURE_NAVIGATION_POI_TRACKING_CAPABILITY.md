@@ -1,6 +1,6 @@
 # Future Navigation — Local POI / Tracking Capability Audit
 
-Status: **OPEN — P0142 SOURCE LAYER RESOLVED; P0143 READ-ONLY RUNTIME PROBE NEXT**
+Status: **OPEN — P0143 RUNTIME PASS; MANUAL-WAYPOINT DISTANCE/DEPTH NEXT; QUEST/AREA-POI DEFERRED**
 Opened: 2026-10-03
 Canonical direction: `../decisions/D-037_NAVIGATION_MARKER_ROLES_AND_MINIMAP_DIRECTION.md`
 Source/fallback policy: `../decisions/D-043_NAVIGATION_SOURCE_AND_MINIMAP_FALLBACK_POLICY.md`
@@ -185,5 +185,28 @@ The probe does not mutate tracking/supertracking/waypoints/minimap state, inspec
 Blizzard pins for hidden blips, poll, add production markers, or suppress stock
 minimap presentation.
 
-Runtime proof is pending. Environmental absence is a deferral; secret/call/Lua
-errors are failures.
+## P0143 runtime result
+
+P0143 is durable at `b9b2f90b` / `0.0.69-dev` and passes its observed read-only
+scope:
+- current map/player position and map world size are ordinary;
+- minimap view radius is ordinary;
+- 23/23 tracking selector rows are ordinary, with four independently active;
+- secret skips = 0;
+- failures = 0;
+- integrated `Run All` passes.
+
+The captured map had zero AreaPOI rows and no active user/quest/current-navigation
+destination. Those paths remain environmental DEFERRED. Because no destination was
+present, actual same-map destination-distance output was not exercised.
+
+`C_Minimap.GetUiMapID()` yielded no value in the sample; current-map ownership
+continues to use the proven `C_Map.GetBestMapForUnit("player")` path.
+
+Next:
+P0145 may advance only the already-proven manual user-waypoint role into
+same-map comparable-distance / bounded D-038 depth behavior, with fail-open
+fallback to the current fixed marker treatment.
+
+Quest/current-navigation, AreaPOI, service, and tracking-result production roles
+remain gated/blocked exactly as before.

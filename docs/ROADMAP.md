@@ -133,7 +133,13 @@ positions are not exposed by the audited public source surface. Current-map
 `C_AreaPoiInfo`, `C_Minimap.GetViewRadius`, broader current navigation, and
 same-map geometry survive as runtime candidates.
 
-P0143 is prepared on candidate runtime `0.0.69-dev`: a bounded, event-driven,
-secret-first read-only probe for only those surviving candidates. In-client proof
-is pending. Stock minimap presentation remains available until the replacement
-gate is actually proven.
+P0143 is durable at `b9b2f90b` / `0.0.69-dev` and passes the observed
+read-only source scope. Current map/player geometry, map world size, minimap view
+radius, and all 23 tested tracking selector rows were ordinary with zero secret
+skips/failures; four selector states were independently active. The tested state
+had no AreaPOI rows and no current/quest/user-waypoint destination, so those paths
+and actual destination distance remain DEFERRED. Integrated `Run All` passed.
+
+P0144 records the evidence. Next after durability is P0145: manual-waypoint
+comparable-distance / bounded-depth integration only. Stock minimap presentation
+remains available until the replacement gate is actually proven.
