@@ -178,3 +178,25 @@ Deliberate row hover reveals exact source objective wording and exact counts.
 The full Blizzard quest log and Objective Tracker remain available. P0126 performs
 no quest watch/super-track mutation, no quest-control action, and no quest waypoint
 lookup.
+
+## P0126 runtime / visual acceptance
+
+P0126 is durable at `89b0c563` / `0.0.58-dev`.
+
+Accepted Active Quest behavior:
+- super-tracked quest first, selected fallback;
+- exact title;
+- restrained qualitative ambient phrase;
+- count-free normalized objective labels;
+- bar-only progress;
+- exact source wording/counts on deliberate hover;
+- quiet complete/ready state;
+- independent persisted toggle;
+- Blizzard quest log / Objective Tracker remain available.
+
+The initial `0.0.55-dev` hover tooltip failure remains preserved as evidence; R1
+corrected it and the final R3 runtime/checkall passed.
+
+The next questing work is not Active Quest expansion. It is the D-035 NPC
+quest-interaction source/capability audit before any Blizzard interaction surface
+is replaced.

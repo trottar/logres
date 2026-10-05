@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-10-04
+as_of: 2026-10-05
 project: logres
 ---
 
@@ -45,6 +45,8 @@ Three information classes guide the design:
 - D-039 is the approved twelve-sheet World Ghost / Selective Hybrid E visual baseline.
 - D-040 makes `Logres/Media/` plus `Logres/Media/Theme.lua` the production asset/token boundary for approved visual translation.
 - Active Quest is an optional one-focus presentation, not a permanent multi-quest tracker; exact mechanical counts belong behind deliberate inspection/hover in the approved baseline.
+- P0126 makes that Active Quest baseline production-proven at `89b0c563` / `0.0.58-dev`: count-free objective labels remain visible, progress is bar-only, exact counts stay hover-only, and Blizzard quest-management surfaces remain available.
+- D-035 defines NPC quest interaction as a future Logres-owned experience only after per-surface information/control capability is proven; fail open to Blizzard until then.
 
 ## Development facts
 

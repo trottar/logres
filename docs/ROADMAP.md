@@ -68,12 +68,12 @@ Parallel translation has accepted:
 - P0121 player cast cue;
 - P0122 Context messages;
 - P0123 heading/manual-waypoint Compass;
-- P0124 organic player-health tunnel.
+- P0124 organic player-health tunnel;
+- P0126 Active Quest one-focus presentation (`89b0c563`, `0.0.58-dev`).
 
-P0126 prepares the optional **Active Quest** one-focus presentation using proven
-passive quest/objective data. Runtime + visual proof on `0.0.55-dev` is the next
-gate.
+P0126 is runtime + visual PASS. The next parallel gate is the **D-035 NPC quest
+interaction source/capability audit** before any Logres-owned quest controls or
+Blizzard quest/gossip suppression.
 
-D-035 Logres-owned quest controls, D-037 unproven navigation/minimap roles, aura
-ownership, world-target anchoring, and other capability expansions remain
-separately gated.
+D-037 unproven navigation/minimap roles, aura ownership, world-target anchoring,
+and other capability expansions remain separately gated.

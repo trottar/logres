@@ -145,5 +145,6 @@
 | P0123 | 2026-10-04 | INSTALLED / PUSHED — RUNTIME + VISUAL PASS | Assetize approved heading/manual-waypoint Compass treatment while preserving proven source scope (`1721eb4d`, `0.0.53-dev`) |
 | P0124 | 2026-10-04 | INSTALLED / PUSHED — RUNTIME + VISUAL BASELINE ACCEPTED; FINAL POLISH DEFERRED | Replace procedural player-health rectangles with organic tunnel masks and deterministic D-036 preview matrix (`1e7e27e`, `0.0.54-dev`) |
 | P0125 | 2026-10-04 | INSTALLED / PUSHED — DOCS-ONLY | Synchronize authoritative state through accepted P0124; Active Quest next (`72d2f040`) |
-| P0126 | 2026-10-04 | PREPARED — R1 RUNTIME/HOVER PASS; R3 VISUAL CONFIRMATION PENDING | Active Quest one-focus presentation; count-free objective labels + bar-only progress in R3 (`0.0.58-dev`) |
+| P0126 | 2026-10-04 | INSTALLED / PUSHED — RUNTIME + VISUAL PASS | Active Quest one-focus presentation; count-free objective labels + bar-only progress + hover exact detail (`89b0c563`, `0.0.58-dev`) |
+| P0127 | 2026-10-05 | PREPARED — DOCS-ONLY | Record P0126 acceptance; open D-035 NPC quest-interaction capability audit |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

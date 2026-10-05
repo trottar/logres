@@ -1,7 +1,7 @@
 # P0126 — Active Quest One-Focus Presentation
 
 Date: 2026-10-04
-Result: **PREPARED — RUNTIME + VISUAL PROOF PENDING**
+Result: **INSTALLED / PUSHED — RUNTIME + VISUAL PASS** (`89b0c563`)
 Baseline: `72d2f040d9a4b5a5a5fa125e22da58884c07cbeb`
 Runtime: `0.0.54-dev -> 0.0.58-dev`
 
@@ -149,3 +149,30 @@ Canonical R2 review:
 
 No source, focus-policy, quest-control, navigation, Blizzard fallback, or Camera
 ownership change.
+
+## Final R3 acceptance
+
+Durable commit:
+`89b0c563d1ff5e12c61baa3e407725a90d9cefd4`.
+
+Runtime:
+`0.0.58-dev`.
+
+Canonical final evidence:
+`../evidence/P0126_ACTIVE_QUEST_RUNTIME_VISUAL_PASS_2026-10-05.md`.
+
+Final result:
+- normal preview PASS;
+- complete preview PASS;
+- live restore PASS;
+- real super-tracked quest `237` with two rows;
+- Active Quest Check PASS;
+- integrated `checkall` complete with all recorded checks PASS;
+- count-free objective wording + bar-only progress visually accepted;
+- hover remains the deliberate exact-detail path.
+
+The earlier `0.0.55-dev` hover failure remains part of P0126 history and is not
+erased by the final success.
+
+Classification:
+**RUNTIME + VISUAL PASS / ACCEPTED PRODUCTION BASELINE.**

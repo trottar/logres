@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-10-04
+as_of: 2026-10-05
 project: logres
 ---
 
@@ -8,7 +8,7 @@ project: logres
 
 ## Active Objective
 
-**Approved visual implementation translation — Active Quest next.**
+**Approved visual implementation translation — NPC quest interaction capability audit next.**
 
 This is parallel Phase-H preparation while the formal Phase G camera phase remains
 open. The user has explicitly frozen Camera work until the already-approved visual
@@ -16,25 +16,23 @@ sequence is finished.
 
 ## Current Work Item
 
-**P0126 — Active Quest one-focus presentation prepared for in-client runtime +
-visual proof.**
+**D-035 NPC quest interaction — source/capability audit before any replacement.**
 
 Latest verified durable checkpoint:
-P0125 `72d2f040d9a4b5a5a5fa125e22da58884c07cbeb`.
+P0126 `89b0c563d1ff5e12c61baa3e407725a90d9cefd4`.
 
 Current pushed runtime:
-`0.0.54-dev`.
-
-Prepared refinement runtime:
 `0.0.58-dev`.
 
-Initial P0126 runtime `0.0.55-dev` exposed the hover tooltip API failure.
-P0126 R1 `0.0.56-dev` corrected it and passed runtime/hover validation.
-P0126 R2 `0.0.57-dev` removed persistent `%` labels and was visually preferred.
+P0126 Active Quest is accepted:
+- initial `0.0.55-dev` hover failure preserved;
+- R1 `0.0.56-dev` tooltip correction runtime/hover PASS;
+- R2 `0.0.57-dev` bar-only progress visually preferred;
+- R3 `0.0.58-dev` count-free objective labels + bar-only progress accepted;
+- final Active Quest Check and integrated `checkall` PASS.
 
-P0126 R3 adds count-free persistent objective labels from the existing normalized
-objective text above each bar, while preserving hover-only exact counts. Narrow
-visual confirmation is pending.
+The next work item is not another Active Quest refinement. It is the separate
+D-035 NPC quest-interaction capability audit.
 
 ## Verified State
 
@@ -51,6 +49,9 @@ Visual translation:
 - P0124 organic player-health tunnel: runtime + visual baseline accepted at
   `1e7e27e` / `0.0.54-dev`; final visual polish is deferred to the broader
   whole-interface calibration pass.
+- P0126 Active Quest: runtime + visual PASS at `89b0c563` / `0.0.58-dev`;
+  one-focus title + count-free objective labels + bar-only progress + hover exact
+  detail is the accepted production baseline; final whole-screen polish deferred.
 
 Camera:
 - Phase G / G.5 remains open but is intentionally frozen while visuals are
@@ -87,33 +88,30 @@ Preserved deferrals/gates:
 
 ## Next Action
 
-After P0126 is verified pushed, deploy runtime `0.0.55-dev` and validate Active
-Quest from the Phase-F developer panel:
+Perform the D-035 NPC quest-interaction source/capability audit.
 
-1. Active Quest Check;
-2. Active Quest Preview;
-3. Active Quest Complete;
-4. Active Quest Live;
-5. Active Quest OFF / ON;
-6. with a real selected/super-tracked quest when naturally available, confirm one
-   live focus and hover-only exact objective wording/counts;
-7. confirm Blizzard quest log / Objective Tracker remain available;
-8. Immersion OFF / ON hides and restores the panel.
+Before any runtime replacement:
+1. inventory safe source information for offer, progress, completion, objectives,
+   rewards, and quest state;
+2. inventory player-action/control paths for Accept/Decline, Continue/Complete,
+   reward choice, and required quest-related gossip transitions;
+3. classify secret/protected/combat/event constraints per surface;
+4. define the exact Blizzard fail-open fallback for every unproven surface;
+5. choose the smallest evidence-backed first implementation slice.
 
-No quest travel or contrived completion is required.
+Do not suppress Blizzard quest/gossip information or controls during the audit.
 
 ## Success Criteria
 
-The next Active Quest checkpoint succeeds when:
-- one current-focus quest can be selected from proven passive quest/objective data;
-- the panel presents title, ambient progress wording, objective rows, and a quiet
-  completion treatment without becoming a permanent multi-quest tracker;
-- exact mechanical counts appear only through deliberate inspection/hover;
-- percentage progress reuses the accepted shared bar language where applicable;
-- no new quest-control, navigation, minimap, aura, protected, or secret-value
-  ownership is implied;
-- static contracts pass and the production result receives in-client runtime +
-  visual proof before being called complete.
+The next checkpoint succeeds when the NPC quest-interaction audit can state, per
+surface:
+- the information source available for offer/progress/completion/rewards;
+- the player action/control path available, if any;
+- secret/protected/combat/runtime restrictions;
+- the Blizzard fallback that remains visible when capability is absent;
+- the smallest coherent first runtime slice supported by evidence.
+
+The audit itself must not mutate quest state or suppress Blizzard controls.
 
 ## Do Not Reopen Without New Evidence
 
@@ -122,6 +120,8 @@ The next Active Quest checkpoint succeeds when:
 - P0120 simplified shared percentage-bar baseline remains accepted pending final
   whole-screen polish;
 - P0123 heading/manual-waypoint Compass remains accepted;
+- P0126 Active Quest remains accepted; do not reintroduce persistent `%`/`N/M`
+  objective mechanics without new evidence;
 - Compass quest/POI/tracking roles remain capability-gated;
 - stock minimap remains until D-037 replacement completeness is proven;
 - NPC quest controls remain Blizzard-owned until D-035 capability proof;
@@ -130,8 +130,10 @@ The next Active Quest checkpoint succeeds when:
 
 ## Relevant References
 
-- `docs/memory/evidence/P0126_ACTIVE_QUEST_SOURCE_AUDIT_2026-10-04.md`
+- `docs/memory/evidence/P0126_ACTIVE_QUEST_RUNTIME_VISUAL_PASS_2026-10-05.md`
 - `docs/memory/patches/P0126_ACTIVE_QUEST_PRESENTATION.md`
+- `docs/memory/investigations/NPC_QUEST_INTERACTION_CAPABILITY.md`
+- `docs/memory/decisions/D-035_QUEST_INTERACTION_OWNERSHIP.md`
 - `docs/memory/decisions/D-039_APPROVED_VISUAL_BASELINE.md`
 - `docs/memory/decisions/D-040_PRODUCTION_VISUAL_ASSET_TRANSLATION_CONTRACT.md`
 - `docs/memory/architecture/VISUAL_IMPLEMENTATION_STATUS.md`

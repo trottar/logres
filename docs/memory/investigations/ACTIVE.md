@@ -28,12 +28,26 @@ No max-distance mutation, Taxi rotation, or Taxi UI fade is part of that proof.
 
 ## Active Quest
 
-No new capability investigation is opened merely by starting Active Quest.
+Status:
+**CLOSED — P0126 RUNTIME + VISUAL PASS.**
 
-The next work item is a narrow presentation implementation using already-proven
-passive quest/objective data. Any missing one-focus selection fact, hover-detail
-source, or completion-state fact discovered during the source audit should be
-recorded as a targeted investigation rather than silently inferred.
+P0126 is durable at `89b0c563d1ff5e12c61baa3e407725a90d9cefd4`
+on `0.0.58-dev`.
+
+The initial hover tooltip failure is preserved in evidence; R1 corrected it and
+the final R3 composition passed. Whole-screen polish remains later calibration,
+not an open Active Quest capability issue.
+
+## NPC quest interaction ownership
+
+Status:
+**OPEN — NEXT SOURCE/CAPABILITY AUDIT.**
+
+Canonical investigation:
+`NPC_QUEST_INTERACTION_CAPABILITY.md`
+
+Resolve D-035 information/control/fallback capability per quest-interaction
+surface before suppressing any Blizzard quest/gossip presentation or control.
 
 ## Closed Phase G investigations
 

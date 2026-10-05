@@ -4,15 +4,13 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0125 `72d2f040d9a4b5a5a5fa125e22da58884c07cbeb`.
+P0126 `89b0c563d1ff5e12c61baa3e407725a90d9cefd4`.
 
 Current pushed runtime:
-`0.0.54-dev`.
+`0.0.58-dev`.
 
-P0126 refinement runtime:
-`0.0.58-dev` — R1 hover correction passed; R2 bar-only progress was visually
-preferred; R3 adds count-free objective labels above the bars while preserving
-hover-only exact counts. Narrow visual confirmation remains.
+P0126 Active Quest is runtime + visual PASS. The initial hover failure remains
+recorded; R1 corrected it and the final R3 composition is the accepted baseline.
 
 ## Active work stream
 
@@ -20,7 +18,7 @@ The user has explicitly chosen to finish the approved visual translation sequenc
 before returning to Camera.
 
 Current objective:
-**P0126 Active Quest — deploy and validate the prepared one-focus presentation.**
+**D-035 NPC quest interaction — source/capability audit before replacement.**
 
 Camera remains frozen, not complete.
 
@@ -31,7 +29,9 @@ Camera remains frozen, not complete.
 - P0122 Context messages — runtime/preview PASS; completion styling deferred;
 - P0123 Compass heading/manual waypoint — runtime + visual PASS;
 - P0124 organic health tunnel — runtime + visual baseline accepted; broad final
-  polish deferred to whole-interface calibration.
+  polish deferred to whole-interface calibration;
+- P0126 Active Quest — runtime + visual PASS at `89b0c563` / `0.0.58-dev`;
+  count-free objective labels, bar-only progress, hover-only exact detail.
 
 ## Camera preservation
 
@@ -44,23 +44,21 @@ after the visual sequence is finished.
 
 No SetCVar, Taxi rotation, or Taxi UI fade is authorized by this handoff.
 
-## Active Quest boundary
+## Next quest-interaction boundary
 
-Use the D-039 one-focus contract:
-- optional current-focus quest panel;
-- title + restrained ambient phrase;
-- objective rows;
-- shared progress-bar language where percentage progress is appropriate;
-- exact counts only on deliberate hover/inspection;
-- quiet complete state;
-- no permanent multi-quest tracker.
+D-035 is the accepted future ownership direction, but no Blizzard quest/gossip
+surface may be suppressed until its matching Logres information and interaction
+are capability-proven.
 
-Reuse proven Phase-F passive quest/objective data. Do not bundle quest-control
-ownership, minimap suppression, quest-destination navigation, aura replacement, or
-other unrelated capability work into this slice.
+The next audit must separate narrative/reward information from quest actions,
+quest-related gossip transitions, runtime restrictions, and fail-open fallback.
+Do not automate quest choices or bundle quest navigation/minimap ownership.
 
 ## Key references
 
+- `../decisions/D-035_QUEST_INTERACTION_OWNERSHIP.md`
+- `../investigations/NPC_QUEST_INTERACTION_CAPABILITY.md`
+- `../evidence/P0126_ACTIVE_QUEST_RUNTIME_VISUAL_PASS_2026-10-05.md`
 - `../decisions/D-039_APPROVED_VISUAL_BASELINE.md`
 - `../architecture/VISUAL_IMPLEMENTATION_STATUS.md`
 - `../evidence/P0124_HEALTH_TUNNEL_RUNTIME_VISUAL_PASS_2026-10-04.md`

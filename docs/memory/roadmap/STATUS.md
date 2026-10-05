@@ -1,10 +1,10 @@
 # Roadmap Status
 
-As of 2026-10-04.
+As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — Active Quest next.**
+**Approved visual implementation translation — NPC quest interaction capability audit next.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -46,10 +46,12 @@ Accepted checkpoints:
   deferred;
 - P0123 heading/manual-waypoint Compass — runtime + visual PASS;
 - P0124 organic player-health tunnel — runtime + visual baseline accepted;
-  whole-interface polish deferred.
+  whole-interface polish deferred;
+- P0126 Active Quest one-focus presentation — runtime + visual PASS at
+  `89b0c563` / `0.0.58-dev`; whole-interface polish deferred.
 
 Next:
-**P0126 Active Quest one-focus runtime + visual validation.**
+**D-035 NPC quest interaction source/capability audit.**
 
 This is implementation translation under D-039/D-040. It does not authorize
 Phase-H-only capability expansion, stock minimap suppression, Logres-owned quest

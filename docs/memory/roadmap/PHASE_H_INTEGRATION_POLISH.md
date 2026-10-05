@@ -165,7 +165,7 @@ behavior remain unchanged.
 This remains parallel Phase H preparation while Phase G / G.5 runtime proof is
 active.
 
-## Parallel production visual translation — P0120–P0124
+## Parallel production visual translation — P0120–P0126
 
 While Phase G remains the formal active roadmap phase, the user has explicitly
 chosen to finish the already-approved visual translation sequence before
@@ -183,17 +183,19 @@ Accepted parallel visual checkpoints:
   PASS at `1721eb4d` / `0.0.53-dev`;
 - P0124: organic player-health tunnel — runtime + visual baseline accepted at
   `1e7e27e` / `0.0.54-dev`; broad final polish deferred to whole-interface
-  calibration.
+  calibration;
+- P0126: Active Quest one-focus presentation — runtime + visual PASS at
+  `89b0c563` / `0.0.58-dev`; count-free objective labels, bar-only progress,
+  hover-only exact detail; final whole-screen polish deferred.
 
 Next parallel objective:
-**P0126 Active Quest one-focus presentation — prepared for runtime + visual proof.**
+**D-035 NPC quest interaction source/capability audit.**
 
-P0126 reuses the proven super-tracked/selected identity policy, quest
-title/completion flags, and guarded objective rows. It adds an independent
-persisted toggle, shared percentage-bar progress rows, hover-only exact
-wording/counts, deterministic normal/complete previews, and a stable upper-right
-anchor without suppressing Blizzard quest management.
+The audit must inventory narrative/reward information, quest actions,
+quest-related gossip transitions, runtime restrictions, and fail-open fallback per
+surface. No Blizzard quest/gossip surface is suppressed merely because its visual
+state is approved.
 
-This remains implementation translation under D-039/D-040. It does not authorize
-Phase-H-only capability expansion, minimap suppression, unproven navigation
-sources, Logres-owned quest controls, or Camera changes.
+This remains capability preparation under D-035/D-039. It does not authorize
+minimap suppression, unproven navigation sources, automated quest choices, or
+Camera changes.

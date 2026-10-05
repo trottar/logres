@@ -135,15 +135,18 @@ Production Taxi is not considered closed until that runtime proof passes.
 The user explicitly chose to finish the already-approved visual translation
 sequence before returning to Camera.
 
-P0120 through P0124 have translated and accepted the shared percentage bar,
-player cast cue, Context message treatment, heading/manual-waypoint Compass, and
-organic player-health tunnel respectively.
+P0120 through P0124 translated and accepted the shared percentage bar, player
+cast cue, Context message treatment, heading/manual-waypoint Compass, and organic
+player-health tunnel. P0126 adds the accepted Active Quest one-focus presentation
+at `89b0c563` / `0.0.58-dev`.
 
-The next parallel work item is the D-039 Active Quest one-focus presentation.
+The next parallel work item is the D-035 NPC quest-interaction source/capability
+audit. This is an evidence gate, not permission to suppress Blizzard quest/gossip
+surfaces.
 
-D-035 quest-interaction ownership and D-037 unproven navigation/minimap roles
-remain separately capability-gated. D-030 remains current minimap runtime
-authority until replacement capabilities are proven.
+D-037 unproven navigation/minimap roles remain separately capability-gated.
+D-030 remains current minimap runtime authority until replacement capabilities
+are proven.
 
 ## Later Phase G Work
 
