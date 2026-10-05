@@ -8,7 +8,7 @@ project: logres
 
 ## Active Objective
 
-**Approved visual implementation translation — align quest-offer action order with Blizzard fallback.**
+**Approved visual implementation translation — aura/status source + priority-policy audit next.**
 
 This is parallel Phase-H preparation while the formal Phase G camera phase remains
 open. The user has explicitly frozen Camera work until the already-approved visual
@@ -16,16 +16,12 @@ sequence is finished.
 
 ## Current Work Item
 
-**P0133 — align production Logres quest-offer action order with Blizzard's
-simultaneously visible fallback.**
+**P0135 planning target — aura/status source + priority-policy audit.**
 
 Latest verified durable checkpoint:
-P0132 `671f9836c43f3a4c9755f296ccad4a9574a62848`.
+P0133 `f2feead6ef528d9cf91bab09bce32d92a6763824`.
 
-Current pushed runtime:
-`0.0.64-dev`.
-
-Prepared runtime:
+Current pushed/tested runtime:
 `0.0.65-dev`.
 
 P0129 read-only runtime evidence passes the naturally observed offer/gossip path:
@@ -64,11 +60,16 @@ Runtime/control validation passes:
 - Blizzard quest UI remained visible/usable;
 - integrated `checkall` passed.
 
-Manual visual review found one positional defect: Logres used Decline-left /
-Accept-right, opposite Blizzard's simultaneously visible fallback. P0133 swaps
-only those positions to Accept-left / Decline-right.
+P0133 is runtime + visual PASS at `f2feead6` / `0.0.65-dev`:
+- Accept is left;
+- Decline is right;
+- Logres order matches Blizzard while the fallback remains visible;
+- preview/final-page gating remains correct;
+- Quest Offer Controls Check PASS;
+- integrated `Run All` PASS.
 
-No mutation semantics or ownership boundary changes.
+The quest-offer visual/control slice is accepted. Continue / Complete, rewards,
+gossip transitions, and Blizzard suppression remain separately gated.
 
 ## Verified State
 
@@ -125,30 +126,29 @@ Preserved deferrals/gates:
 
 ## Next Action
 
-Deploy P0133 `0.0.65-dev` and perform a narrow visual/integration retest.
+Prepare P0135 as an evidence-first aura/status capability audit.
 
-Validation:
-1. `Quest Dialogue Preview` final page: Accept left / Decline right;
-2. earlier preview pages still hide offer controls;
-3. real quest offer: Logres order matches Blizzard's visible fallback order;
-4. Blizzard quest controls remain visible/usable;
-5. Phase H -> `Quest Offer Controls Check` -> PASS;
-6. Phase 0 -> `Run All` -> PASS.
+Audit:
+1. player aura/debuff source APIs and event model;
+2. target aura/status source APIs and event model;
+3. secret-capable fields and required secret-first handling;
+4. duration/count/caster/dispellable metadata availability;
+5. policy split for urgent player debuffs vs passive player buffs;
+6. target-status relevance and world-target association constraints;
+7. PvP/group/accessibility fallback requirements;
+8. exact stock aura/status surfaces that must remain until replacement completeness
+   is proven.
 
-Real quest mutation does not need to be repeated solely for this positional
-correction.
+Do not suppress any Blizzard aura/status surface in P0135.
 
 ## Success Criteria
 
-P0133 succeeds when:
-- Accept is left and Decline is right;
-- the relative order matches Blizzard while both surfaces coexist;
-- final-page gating and non-mutating preview behavior are unchanged;
-- `Quest Offer Controls Check` passes;
-- `Run All` passes;
-- Blizzard controls remain visible/usable;
-- no Lua, taint, protected-action, secret-value, wrong-quest, duplicate-action, or
-  invisible-click-surface regression occurs.
+P0135 succeeds when the repo has a source/policy decision sufficient to identify
+which aura/status information can be read safely, how it should be prioritized,
+and what Blizzard fallback must remain before any production replacement work
+begins.
+
+Source presence alone does not authorize suppression.
 
 ## Do Not Reopen Without New Evidence
 
@@ -167,6 +167,9 @@ P0133 succeeds when:
 
 ## Relevant References
 
+- `docs/memory/patches/P0134_CLOSE_P0133_OPEN_AURA_STATUS_AUDIT.md`
+- `docs/memory/evidence/P0133_QUEST_OFFER_ORDER_RUNTIME_VISUAL_PASS_2026-10-05.md`
+- `docs/memory/investigations/FUTURE_AURA_STATUS_PRESENTATION.md`
 - `docs/memory/patches/P0133_QUEST_OFFER_CONTROL_ORDER_ALIGNMENT.md`
 - `docs/memory/evidence/P0132_PRODUCTION_OFFER_CONTROLS_RUNTIME_VISUAL_ORDER_2026-10-05.md`
 - `docs/memory/patches/P0132_PRODUCTION_QUEST_OFFER_CONTROLS.md`

@@ -88,16 +88,16 @@ P0131 now proves both player-triggered offer mutations on the tested Forever
 path: Decline via `QUEST_FINISHED`, and Accept via matched `QUEST_ACCEPTED` after an
 intermediate `QUEST_FINISHED` on `0.0.63-dev`.
 
-P0132 `0.0.64-dev` prepares production Logres offer Decline / Accept controls.
-Long offers gate them to the final narrative page, deterministic preview is
-non-mutating, and real clicks bind the exact current offer into the P0131-proven
-action route. Blizzard controls remain visible throughout proof.
+P0132 production offer controls pass. P0133 `f2feead6` / `0.0.65-dev` is
+runtime + visual PASS for the corrected Accept-left / Decline-right arrangement
+while Blizzard fallback remains visible.
 
-Only after this replacement surface is accepted may a later checkpoint consider
-capability-gated Blizzard offer-control suppression.
+Continue / Complete, reward selection, progress/completion presentation, gossip
+mutation, and Blizzard offer-control suppression remain separately gated.
 
-Continue / Complete, reward selection, progress/completion presentation, and
-gossip mutation remain separately gated.
+The next approved visual capability slice is P0135: aura/status source +
+priority-policy audit. Stock aura/status presentation remains until replacement
+completeness is proven.
 
-D-037 unproven navigation/minimap roles, aura ownership, world-target anchoring,
-and other capability expansions remain separately gated.
+D-037 unproven navigation/minimap roles and world-target anchoring remain
+separately gated.

@@ -4,14 +4,13 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0132 `671f9836c43f3a4c9755f296ccad4a9574a62848`.
+P0133 `f2feead6ef528d9cf91bab09bce32d92a6763824`.
 
-Current pushed runtime:
-`0.0.64-dev`.
+Current pushed/tested runtime:
+`0.0.65-dev`.
 
-Prepared P0133 runtime:
-`0.0.65-dev` — Accept-left / Decline-right visual alignment correction; retest
-pending.
+P0133 runtime + visual result:
+**PASS.**
 
 ## Active work stream
 
@@ -19,8 +18,7 @@ The user has explicitly chosen to finish the approved visual translation sequenc
 before returning to Camera.
 
 Current objective:
-**P0133 — align Logres offer-control ordering with Blizzard's visible fallback:
-Accept left, Decline right.**
+**P0135 — aura/status source + priority-policy audit.**
 
 Camera remains frozen, not complete.
 

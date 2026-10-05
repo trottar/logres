@@ -1,6 +1,6 @@
 # Future — Aura / Status Presentation Domain
 
-Status: DEFERRED DESIGN DOMAIN
+Status: OPEN — SOURCE + PRIORITY-POLICY AUDIT NEXT (P0135)
 Opened: 2026-10-01
 
 ## Observation
@@ -47,3 +47,22 @@ PvP emphasis, or healer/support fallbacks.
 
 It remains future integration/design work, not a D.4 blocker. Revisit before
 final Phase H integration/polish and capability-gate any stock suppression.
+
+## P0135 audit gate
+
+P0133 closes the current quest-offer visual/control slice, so aura/status becomes
+the next exact capability-gated visual domain.
+
+P0135 is source/policy work only.
+
+Required outputs:
+- current player/target aura read APIs and events;
+- secret-capable field classification;
+- safe handling contract for duration/count/caster/dispellable data;
+- urgent player debuff policy;
+- passive player buff policy;
+- target-status policy and world-target association constraints;
+- PvP/group/accessibility fallback requirements;
+- explicit stock-surface retention boundary.
+
+Do not suppress Blizzard aura/status presentation from source evidence alone.

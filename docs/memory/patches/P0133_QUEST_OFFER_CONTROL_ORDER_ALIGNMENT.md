@@ -1,7 +1,7 @@
 # P0133 — Align Quest-Offer Action Order With Blizzard Fallback
 
 Date: 2026-10-05
-Result: **PREPARED — VISUAL / INTEGRATION RETEST PENDING**
+Result: **INSTALLED / PUSHED — RUNTIME + VISUAL PASS** (`f2feead6`)
 Baseline: `671f9836c43f3a4c9755f296ccad4a9574a62848`
 Runtime: `0.0.64-dev -> 0.0.65-dev`
 
@@ -59,3 +59,24 @@ change.
 
 P0133 does not authorize Blizzard offer-control suppression and does not expand
 into Continue / Complete, rewards, or gossip transitions.
+
+## Final result
+
+Durable commit:
+`f2feead6ef528d9cf91bab09bce32d92a6763824`.
+
+Canonical evidence:
+`../evidence/P0133_QUEST_OFFER_ORDER_RUNTIME_VISUAL_PASS_2026-10-05.md`.
+
+Final result:
+- runtime `0.0.65-dev`;
+- Accept left / Decline right;
+- order matches Blizzard while fallback remains visible;
+- earlier/final-page behavior remains correct;
+- Quest Dialogue Preview PASS;
+- Quest Offer Controls Check PASS;
+- integrated `Run All` PASS;
+- user visual acceptance.
+
+Classification:
+**RUNTIME + VISUAL PASS / ACCEPTED PRODUCTION BASELINE FOR THE PROVEN OFFER STATE.**

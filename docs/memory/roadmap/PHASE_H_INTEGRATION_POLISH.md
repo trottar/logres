@@ -229,12 +229,18 @@ Manual review found one visual integration defect: Logres placed Decline left /
 Accept right, opposite Blizzard's simultaneously visible fallback.
 
 P0133:
-**PREPARED — `0.0.65-dev`.**
+**RUNTIME + VISUAL PASS — `0.0.65-dev`.**
 
-P0133 swaps only the positions to Accept left / Decline right and statically
-protects that alignment. No mutation or ownership boundary changes.
+Accept-left / Decline-right now matches Blizzard's simultaneous fallback, while
+preview/final-page gating, production routing, and integrated checks remain clean.
 
-No Continue / Complete / reward / gossip mutation is bundled into the slice.
+The quest-offer visual/control slice is accepted.
+
+Next capability-gated visual domain:
+**P0135 aura/status source + priority-policy audit.**
+
+P0135 is evidence/policy work only; stock aura/status presentation remains
+preserved.
 
 This remains capability preparation under D-035/D-039. It does not authorize
 minimap suppression, unproven navigation sources, automated quest choices, or

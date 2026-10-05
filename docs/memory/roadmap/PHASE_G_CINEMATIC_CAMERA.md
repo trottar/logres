@@ -152,9 +152,12 @@ P0131 is runtime-proven: Decline passes on `0.0.62-dev`; Accept passes on
 
 P0131 is durable at `68233e64` / `0.0.63-dev`.
 
-P0132 `0.0.64-dev` prepares the next parallel visual/control slice: production
-Logres offer Decline / Accept controls, final-page gated for long offers and routed
-through the proven mutation path while Blizzard controls remain visible.
+P0132 production offer controls are durable at `671f9836` / `0.0.64-dev`.
+P0133 is durable at `f2feead6` / `0.0.65-dev` and runtime + visual PASS for the
+Accept-left / Decline-right alignment while Blizzard fallback remains visible.
+
+The approved visual sequence now moves to P0135 aura/status source +
+priority-policy audit.
 
 Camera remains frozen.
 

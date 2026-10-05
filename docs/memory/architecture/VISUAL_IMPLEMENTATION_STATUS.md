@@ -35,7 +35,7 @@ A component can be visually complete while runtime ownership remains incomplete.
 | Target health/name + relative danger | Yes | P0120 detached percentage bar under the existing sparse target name is part of the accepted core bar baseline; secure target interaction/selective stock-shell fallback remain unchanged | Audit safe reaction/relative-danger source; prove world-attached anchoring and fallback before making it default | **Capability + integration** |
 | Pet / party compact health | Covered by bar + target/ally sheets | P0120 integrates compact percentage bars inside the runtime-proven pet/party rows using the accepted shared primitive | Natural group-composition density calibration remains; preserve Blizzard secure party/aura surfaces until separately replaced | **Production primitive integrated — group calibration deferred** |
 | NPC quest narrative | Yes | P0130 R1 `0.0.61-dev` is runtime + visual PASS: full-source paging, Previous/Next, real offer rendering, Blizzard-control coexistence, and same-conversation Immersion OFF -> ON restoration all proven | Final whole-screen spacing/contrast calibration remains polish; progress/completion narrative stays gated by deferred runtime states | **Runtime + visual production baseline accepted** |
-| NPC quest controls / rewards | Yes | P0132 is durable at `671f9836` / `0.0.64-dev`; production Decline and Accept, final-page gating, non-mutating preview, exact identity binding, Blizzard-visible fallback, and integrated checks all pass. Manual visual review found the Logres left/right order opposite Blizzard | P0133 swaps to Accept-left / Decline-right and requires narrow visual/integration retest; Continue/Complete/reward/gossip mutation stays separately gated | **Offer runtime/control path proven — visual order correction pending** |
+| NPC quest controls / rewards | Yes | P0132 production controls pass; P0133 `f2feead6` / `0.0.65-dev` is runtime + visual PASS with Accept-left / Decline-right aligned to Blizzard while fallback remains visible | Continue/Complete/reward/gossip mutation remains separately gated; later suppression requires further proof | **Offer production baseline accepted for proven state** |
 | Context messages | Yes | P0122 is durable at `62353ecf`; XP preview, live XP producer/check, objective preview, live objective producer/check, and full checkall passed on `0.0.52-dev` | Dedicated warmer completion variant remains naturally deferred; final whole-screen placement/contrast calibration remains polish | **Runtime + preview path proven — completion state deferred** |
 | Active Quest | Yes | P0126 is durable at `89b0c563` / `0.0.58-dev`; final R3 runtime + visual PASS uses one-focus title, count-free normalized objective labels, bar-only progress, hover-only exact detail, quiet completion, and an independent persisted toggle | Final whole-screen spacing/contrast calibration remains polish; do not reopen persistent `%`/`N/M` mechanics without new evidence | **Runtime + visual production baseline accepted** |
 | Player-health tunnel | Yes / D-036 frozen | P0124 is durable at `1e7e27e` / `0.0.54-dev`; five Theme-owned organic tunnel/death masks run on the proven native secret-safe health-to-alpha path, with deterministic D-036 preview percentages | Whole-interface contrast/scale polish remains; natural damage/heal may be observed opportunistically but is not required to re-prove the accepted preview matrix | **Runtime + visual baseline accepted — final polish deferred** |
@@ -88,15 +88,17 @@ Completed:
 10. P0132 production offer-control runtime/control proof; one left/right visual
     alignment defect recorded.
 
+Completed:
+11. P0133 Accept-left / Decline-right alignment runtime + visual PASS.
+
 Next:
-11. deploy/prove P0133 Accept-left / Decline-right alignment while Blizzard
-    controls remain visible as fallback.
+12. P0135 aura/status source + priority-policy audit.
 
 After that:
-12. separately open aura/status, world-attached target, and unproven compass-role
-   capability slices as evidence supports;
-13. finish class-specific discrete resources, settings/accessibility, and final
-   whole-screen composition calibration.
+13. separately open world-attached target and unproven compass-role capability
+    slices as evidence supports;
+14. finish class-specific discrete resources, settings/accessibility, and final
+    whole-screen composition calibration.
 
 This is a dependency-oriented implementation map, not a claim that formal Phase H
 has started. Phase G remains open but is explicitly frozen while this approved

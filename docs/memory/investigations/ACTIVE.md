@@ -41,7 +41,7 @@ not an open Active Quest capability issue.
 ## NPC quest interaction ownership
 
 Status:
-**OPEN — P0132 RUNTIME/CONTROL PASS; VISUAL ORDER DEFECT; P0133 CORRECTION PREPARED.**
+**OPEN — OFFER SLICE ACCEPTED THROUGH P0133; LATER D-035 STATES REMAIN GATED.**
 
 Canonical investigation:
 `NPC_QUEST_INTERACTION_CAPABILITY.md`
@@ -69,9 +69,9 @@ P0132 is durable at `671f9836` / `0.0.64-dev`.
 Runtime/control behavior passes, including production Decline, production Accept,
 non-mutating preview, Blizzard-visible fallback, and integrated checks.
 
-Manual visual review found the Logres order opposite Blizzard's fallback:
-Decline left / Accept right. P0133 swaps positions only to Accept left / Decline
-right and adds a static order contract.
+P0133 is durable at `f2feead6` / `0.0.65-dev` and runtime + visual PASS:
+Accept-left / Decline-right matches Blizzard while the fallback remains visible,
+and integrated checks remain clean.
 
 Continue / Complete, rewards, gossip selection, and Blizzard suppression remain
 separate gates.
@@ -98,3 +98,17 @@ G.5 target-50 without CVar mutation:
 - `D4_TARGETFRAME_REASSERTION_INTERMITTENT.md`
 - `FUTURE_AURA_STATUS_PRESENTATION.md`
 - `FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md`
+
+## Aura / status ownership
+
+Status:
+**OPEN — SOURCE + PRIORITY-POLICY AUDIT NEXT (P0135).**
+
+Canonical investigation:
+`FUTURE_AURA_STATUS_PRESENTATION.md`.
+
+No stock aura/status suppression is authorized.
+
+P0135 must resolve safe sources, secret handling, urgent/passive priority policy,
+target-status placement constraints, and required PvP/group/accessibility
+fallbacks before implementation translation begins.

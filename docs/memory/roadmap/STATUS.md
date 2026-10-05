@@ -4,7 +4,7 @@ As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — quest-offer control order alignment next.**
+**Approved visual implementation translation — aura/status source + priority-policy audit next.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -78,10 +78,13 @@ Manual review found the Logres horizontal order opposite Blizzard's simultaneous
 fallback.
 
 P0133:
-**PREPARED on `0.0.65-dev` — Accept-left / Decline-right alignment correction.**
+**INSTALLED / PUSHED — RUNTIME + VISUAL PASS** at `f2feead6` / `0.0.65-dev`.
+
+Accept-left / Decline-right now matches Blizzard while the fallback remains
+visible; preview/final-page behavior and integrated checks pass.
 
 Next:
-**Deploy P0133 and verify visual order alignment plus integrated checks.**
+**P0135 aura/status source + priority-policy audit.**
 
 This is implementation translation under D-039/D-040. It does not authorize
 Phase-H-only capability expansion, stock minimap suppression, Logres-owned quest
