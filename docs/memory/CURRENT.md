@@ -8,7 +8,7 @@ project: logres
 
 ## Active Objective
 
-**Approved visual implementation translation — production player helpful aura presentation next.**
+**Approved visual implementation translation — world-attached target source + anchoring/fallback audit next.**
 
 This is parallel Phase-H preparation while the formal Phase G camera phase remains
 open. The user has explicitly frozen Camera work until the already-approved visual
@@ -16,17 +16,17 @@ sequence is finished.
 
 ## Current Work Item
 
-**P0137 — production player helpful aura presentation prepared for runtime +
-visual proof.**
+**P0139 planning target — world-attached target source +
+anchoring/fallback audit.**
 
 Latest verified durable checkpoint:
-P0136 `ef769f6df00eea4fd9d0d6686b47c1d99a47e401`.
+P0137 `2b578759e503bdfb5ca27c57d088f15caca79672`.
 
 Current pushed/tested runtime:
-`0.0.66-dev`.
-
-Prepared runtime:
 `0.0.67-dev`.
+
+P0137:
+**RUNTIME + VISUAL PASS.**
 
 P0136 runtime probe:
 **INSTALLED / PUSHED — PASS WITH ENVIRONMENTAL DEFERRALS.**
@@ -164,32 +164,29 @@ Preserved deferrals/gates:
 
 ## Next Action
 
-Deploy and prove P0137 `0.0.67-dev`.
+Prepare P0139 as a **world-attached target source + anchoring/fallback audit**.
 
-Validation:
-1. Phase H -> `Player Helpful Aura Preview`;
-2. confirm four compact native-icon tiles with restrained passive frames and
-   lower-right stack metadata;
-3. confirm the lane is peripheral beside the resource/reaction region and does
-   not crowd core combat information;
-4. disable preview and verify live player-origin helpful auras render/update;
-5. Phase H -> `Player Helpful Aura Check` -> PASS;
-6. confirm Blizzard player buff/debuff presentation remains visible/usable;
-7. Phase 0 -> `Run All` -> PASS.
+Audit:
+1. safe current-target world/nameplate anchor sources on Forever;
+2. target-change / target-loss / nameplate-create/remove event model;
+3. on-screen vs off-screen vs no-nameplate behavior;
+4. protected/combat-lockdown constraints on attachment;
+5. ordinary safe reaction input;
+6. whether any relative-danger input is usable without exact
+   level/classification/difficulty inspection;
+7. fallback policy when no world-attached anchor is available;
+8. exact narrow read-only runtime probe required next.
 
-Do not use P0137 to manufacture harmful/target/private/group capability evidence.
+Do not hide the current screen-space Logres target fallback or Blizzard
+target/nameplate surfaces in P0139.
 
 ## Success Criteria
 
-P0137 succeeds only when:
-- the approved passive aura primitive reads clearly at actual UI scale;
-- only ordinary `HELPFUL|PLAYER` data feeds production;
-- stack count appears only from ordinary application metadata;
-- no duration countdown/timer sweep/polling is introduced;
-- event-driven add/remove changes do not leave stale Logres icons;
-- Blizzard stock remains the visible completeness fallback;
-- `Player Helpful Aura Check` and `Run All` pass;
-- no Lua, secret-value, taint/protected-action, or fallback regression occurs.
+P0139 succeeds when the repo can state the safe anchor source(s), availability
+states, reaction/relative-danger source boundary, and fail-open fallback policy
+well enough to define a narrow runtime probe.
+
+Source presence alone does not authorize moving the production target surface.
 
 ## Do Not Reopen Without New Evidence
 
@@ -208,6 +205,9 @@ P0137 succeeds only when:
 
 ## Relevant References
 
+- `docs/memory/patches/P0138_CLOSE_P0137_OPEN_WORLD_TARGET_AUDIT.md`
+- `docs/memory/evidence/P0137_PLAYER_HELPFUL_AURA_RUNTIME_VISUAL_PASS_2026-10-05.md`
+- `docs/memory/investigations/FUTURE_WORLD_TARGET_PRESENTATION.md`
 - `docs/memory/patches/P0137_PLAYER_HELPFUL_AURA_PRESENTATION.md`
 - `docs/memory/evidence/P0136_AURA_STATUS_RUNTIME_PASS_WITH_DEFERRALS_2026-10-05.md`
 - `docs/memory/evidence/P0136_INITIAL_APPLIER_STATIC_CONTRACT_FAILURE_2026-10-05.md`

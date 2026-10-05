@@ -156,9 +156,13 @@ P0132 production offer controls are durable at `671f9836` / `0.0.64-dev`.
 P0133 is durable at `f2feead6` / `0.0.65-dev` and runtime + visual PASS for the
 Accept-left / Decline-right alignment while Blizzard fallback remains visible.
 
-P0135 resolves the aura/status source + priority-policy layer without runtime UI
-changes. P0136 is the next approved visual-sequence checkpoint: a read-only
-player/target aura-status runtime probe.
+P0135/P0136 resolve and runtime-prove the narrow aura source layer. P0137 is
+durable at `2b578759` / `0.0.67-dev` and runtime + visual PASS for the passive
+player-helpful production lane.
+
+The approved visual sequence now moves to P0139 world-attached target source +
+anchoring/fallback audit. Deferred harmful/target aura categories are not forced
+solely to advance sequencing.
 
 Camera remains frozen.
 

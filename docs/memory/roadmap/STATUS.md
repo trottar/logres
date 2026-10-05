@@ -4,7 +4,7 @@ As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — production player helpful aura presentation next.**
+**Approved visual implementation translation — world-attached target source + anchoring/fallback audit next.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -98,13 +98,14 @@ populated target data, and the runtime secret-skip branch remain DEFERRED.
 Integrated checks pass.
 
 P0137:
-**PREPARED on `0.0.67-dev` — production player `HELPFUL|PLAYER` passive aura
-presentation; runtime + visual proof pending.**
+**INSTALLED / PUSHED — RUNTIME + VISUAL PASS** at `2b578759` / `0.0.67-dev`.
 
-Blizzard stock remains visible and complete.
+The production player `HELPFUL|PLAYER` passive lane is accepted at real UI scale.
+Player harmful/urgent and populated target aura categories remain environmental
+deferrals; private/group aura ownership and stock suppression remain gated.
 
 Next:
-**deploy and validate P0137 at real UI scale.**
+**P0139 world-attached target source + anchoring/fallback audit.**
 
 This is implementation translation under D-039/D-040. It does not authorize
 Phase-H-only capability expansion, stock minimap suppression, Logres-owned quest

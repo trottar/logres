@@ -1,6 +1,6 @@
 # Future — Aura / Status Presentation Domain
 
-Status: OPEN — SOURCE + PRIORITY POLICY RESOLVED; P0136 RUNTIME PROBE NEXT
+Status: OPEN — PLAYER HELPFUL PRODUCTION BASELINE ACCEPTED; HARMFUL/TARGET/PRIVATE/GROUP OWNERSHIP REMAINS GATED
 Opened: 2026-10-01
 
 ## Observation
@@ -169,3 +169,34 @@ P0137 `0.0.67-dev` translates only that category into production presentation:
 Player harmful/urgent, target, private, and group status remain outside P0137.
 
 Runtime + visual proof is required before this player-helpful lane is accepted.
+
+## P0137 runtime + visual result
+
+Canonical evidence:
+`../evidence/P0137_PLAYER_HELPFUL_AURA_RUNTIME_VISUAL_PASS_2026-10-05.md`.
+
+Durable commit:
+`2b578759e503bdfb5ca27c57d088f15caca79672`.
+
+Result:
+**RUNTIME + VISUAL PASS.**
+
+Accepted:
+- production player `HELPFUL|PLAYER` lane;
+- native icon dominant;
+- restrained passive frame;
+- lower-right ordinary stack metadata;
+- event-driven refresh;
+- deterministic preview;
+- no duration timer sweep/polling.
+
+Still gated/deferred:
+- populated player harmful/urgent status;
+- populated target aura/status;
+- private/restricted aura ownership;
+- party/group aura replacement;
+- stock aura/status suppression.
+
+The aura domain does not require contrived gameplay to continue the broader
+approved visual sequence. P0139 moves to the separately approved world-attached
+target capability audit.

@@ -254,22 +254,24 @@ so those remain DEFERRED. No secret branch was encountered. Integrated checks
 pass.
 
 P0137:
-**PREPARED — `0.0.67-dev`, runtime + visual proof pending.**
+**RUNTIME + VISUAL PASS — `0.0.67-dev`.**
 
-P0137 translates only the P0136-proven player `HELPFUL|PLAYER` category:
-- native icon dominant;
-- approved minimal passive frame;
-- lower-right ordinary stack count;
-- four-icon peripheral lane;
+The passive player `HELPFUL|PLAYER` lane is accepted at real UI scale:
+- native icon remains dominant;
+- approved minimal frame;
+- lower-right stack metadata;
 - event-driven updates;
-- no duration countdown/timer sweep/polling;
-- Blizzard player aura presentation retained.
+- no countdown/timer sweep/polling;
+- integrated check remains clean.
 
-Player harmful/urgent, target, private, and group aura ownership remains
-unchanged.
+Player harmful/urgent and populated target aura data remain environmental
+deferrals. Private/group aura ownership and stock suppression remain gated.
 
 Next:
-**validate P0137 in client at real UI scale.**
+**P0139 world-attached target source + anchoring/fallback audit.**
+
+The audit must preserve the current screen-space target fallback and Blizzard
+target/nameplate surfaces until a safe anchor and fallback contract is proven.
 
 This remains capability preparation under D-035/D-039. It does not authorize
 minimap suppression, unproven navigation sources, automated quest choices, or

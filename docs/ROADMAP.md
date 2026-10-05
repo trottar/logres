@@ -104,14 +104,16 @@ deferrals: ordinary populated player helpful data is proven; player harmful and
 populated target categories remain deferred; no runtime secret branch was
 encountered.
 
-P0137 `0.0.67-dev` prepares production presentation only for the proven player
-`HELPFUL|PLAYER` category: a four-icon passive peripheral lane using native icons,
-approved minimal framing, and ordinary stack metadata. It is event-driven and
-introduces no duration polling/timer sweep.
+P0137 `2b578759` / `0.0.67-dev` is runtime + visual PASS for the proven player
+`HELPFUL|PLAYER` category: a passive peripheral native-icon lane with approved
+minimal framing, ordinary stack metadata, and event-driven updates.
 
-Blizzard player aura presentation remains visible and complete throughout proof.
-Player harmful/urgent, target, private, and group aura ownership remains
-unchanged.
+Player harmful/urgent and populated target aura data remain environmental
+deferrals. Private/group ownership and stock aura suppression remain gated.
 
-D-037 unproven navigation/minimap roles and world-target anchoring remain
-separately gated.
+P0139 is next: world-attached target source + anchoring/fallback audit. The
+approved D-039 target visual already has a working sparse name/percentage
+producer; the unresolved work is safe world/nameplate anchoring, reaction /
+relative-danger source policy, and fail-open fallback.
+
+D-037 unproven navigation/minimap roles remain separately gated.

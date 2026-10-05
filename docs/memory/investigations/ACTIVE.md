@@ -102,7 +102,7 @@ G.5 target-50 without CVar mutation:
 ## Aura / status ownership
 
 Status:
-**OPEN — P0136 DURABLE; P0137 PLAYER HELPFUL PRODUCTION PRESENTATION PREPARED.**
+**OPEN — P0137 PLAYER HELPFUL PRODUCTION BASELINE ACCEPTED; HARMFUL/TARGET AURA CATEGORIES REMAIN DEFERRED.**
 
 Canonical investigation:
 `FUTURE_AURA_STATUS_PRESENTATION.md`.
@@ -142,4 +142,23 @@ P0137 `0.0.67-dev` prepares only `HELPFUL|PLAYER` presentation:
 - event-driven `UNIT_AURA` invalidation;
 - Blizzard player aura presentation untouched.
 
-Runtime + visual proof remains pending.
+P0137 is durable at `2b578759` / `0.0.67-dev` and runtime + visual PASS.
+
+The passive player-helpful lane is accepted. Populated player harmful/urgent,
+populated target aura/status, private, and group ownership remain separately
+gated/deferred. Do not manufacture those states solely to advance sequencing.
+
+## World-attached target presentation
+
+Status:
+**OPEN — SOURCE + ANCHORING/FALLBACK AUDIT NEXT (P0139).**
+
+Canonical investigation:
+`FUTURE_WORLD_TARGET_PRESENTATION.md`.
+
+The visual endpoint is approved by D-039, but the world/nameplate anchor source,
+availability states, reaction/relative-danger source, protected-frame boundary,
+and fail-open screen-space fallback are not yet proven.
+
+P0139 is audit-only. No target/nameplate suppression or production anchor change
+is authorized.

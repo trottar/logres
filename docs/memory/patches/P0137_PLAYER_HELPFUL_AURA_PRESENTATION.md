@@ -1,7 +1,7 @@
 # P0137 — Production Player Helpful Aura Presentation
 
 Date: 2026-10-05
-Result: **PREPARED — RUNTIME + VISUAL PROOF PENDING**
+Result: **INSTALLED / PUSHED — RUNTIME + VISUAL PASS** (`2b578759`)
 Baseline: `ef769f6df00eea4fd9d0d6686b47c1d99a47e401`
 Runtime: `0.0.66-dev -> 0.0.67-dev`
 
@@ -141,3 +141,26 @@ P0137 does not authorize:
 - stock aura suppression.
 
 Those remain separately capability-gated.
+
+## Final result
+
+Durable commit:
+`2b578759e503bdfb5ca27c57d088f15caca79672`.
+
+Canonical evidence:
+`../evidence/P0137_PLAYER_HELPFUL_AURA_RUNTIME_VISUAL_PASS_2026-10-05.md`.
+
+Final result:
+- runtime `0.0.67-dev`;
+- deterministic preview PASS;
+- live `HELPFUL|PLAYER` presentation PASS;
+- one live ordinary helpful aura shown;
+- zero secret skips / secret selected fields / source failures;
+- integrated `Run All` PASS;
+- user visual acceptance at normal UI scale.
+
+Classification:
+**RUNTIME + VISUAL PASS / ACCEPTED PLAYER-HELPFUL PRODUCTION BASELINE.**
+
+This acceptance does not expand harmful/target/private/group ownership and does
+not authorize stock aura suppression.
