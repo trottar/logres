@@ -4,13 +4,13 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0131 `68233e647279c8651a83626952ad409531c71832`.
+P0132 `671f9836c43f3a4c9755f296ccad4a9574a62848`.
 
 Current pushed runtime:
-`0.0.63-dev`.
+`0.0.64-dev`.
 
-Prepared P0132 runtime:
-`0.0.64-dev` — production offer Accept / Decline controls; runtime + visual proof
+Prepared P0133 runtime:
+`0.0.65-dev` — Accept-left / Decline-right visual alignment correction; retest
 pending.
 
 ## Active work stream
@@ -19,8 +19,8 @@ The user has explicitly chosen to finish the approved visual translation sequenc
 before returning to Camera.
 
 Current objective:
-**P0132 — deploy/prove production Logres quest-offer Accept / Decline controls,
-with Blizzard controls retained as visible fallback throughout proof.**
+**P0133 — align Logres offer-control ordering with Blizzard's visible fallback:
+Accept left, Decline right.**
 
 Camera remains frozen, not complete.
 

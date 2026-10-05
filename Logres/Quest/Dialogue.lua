@@ -1277,7 +1277,7 @@ function Dialogue:OnInitialize()
         "CENTER",
         offerActionRoot,
         "CENTER",
-        -(
+        (
             offerStyleValue("buttonWidth")
             + offerStyleValue("buttonGap")
         ) / 2,
@@ -1295,7 +1295,7 @@ function Dialogue:OnInitialize()
         "CENTER",
         offerActionRoot,
         "CENTER",
-        (
+        -(
             offerStyleValue("buttonWidth")
             + offerStyleValue("buttonGap")
         ) / 2,

@@ -76,3 +76,5 @@ In particular, do not assume unrestricted availability of:
 Record source findings and runtime behavior separately.
 
 - P0131 proves quest-offer Accept / Decline mutation capability on Forever: Decline passed on `0.0.62-dev`; Accept passed on corrected `0.0.63-dev` after preserving correlation across intermediate `QUEST_FINISHED` until matched `QUEST_ACCEPTED`. Capability proof does not authorize Blizzard control suppression; production Logres controls must be proven first.
+
+- While Blizzard quest-offer fallback remains simultaneously visible, Logres mirrors its left/right action order: Accept left, Decline right. P0132's opposite ordering was functionally correct but confusing in-client, so P0133 makes this an explicit visual-integration contract.

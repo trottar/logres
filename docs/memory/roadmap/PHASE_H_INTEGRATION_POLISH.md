@@ -219,16 +219,20 @@ Decline is proven by `QUEST_FINISHED`; Accept is proven by a matched
 new mutation surface.
 
 P0132:
-**PREPARED — `0.0.64-dev`, runtime + visual proof pending.**
+**RUNTIME + CONTROL PASS; VISUAL ORDER CORRECTION REQUIRED — `0.0.64-dev`.**
 
-P0132 translates approved sheet-08 offer controls into the existing P0130
-narrative:
-- text-first Decline / Accept;
-- controls only on the final page of multi-page offers;
-- non-mutating deterministic preview;
-- exact offer identity binding;
-- P0131-proven action routing;
-- Blizzard controls still visible.
+Production Decline and Accept both pass through the proven action path, preview is
+non-mutating, final-page gating works, Blizzard controls remain visible, and
+integrated checks pass.
+
+Manual review found one visual integration defect: Logres placed Decline left /
+Accept right, opposite Blizzard's simultaneously visible fallback.
+
+P0133:
+**PREPARED — `0.0.65-dev`.**
+
+P0133 swaps only the positions to Accept left / Decline right and statically
+protects that alignment. No mutation or ownership boundary changes.
 
 No Continue / Complete / reward / gossip mutation is bundled into the slice.
 

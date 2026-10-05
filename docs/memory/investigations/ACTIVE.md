@@ -41,7 +41,7 @@ not an open Active Quest capability issue.
 ## NPC quest interaction ownership
 
 Status:
-**OPEN — P0131 CAPABILITY DURABLE; P0132 PRODUCTION OFFER CONTROLS PREPARED.**
+**OPEN — P0132 RUNTIME/CONTROL PASS; VISUAL ORDER DEFECT; P0133 CORRECTION PREPARED.**
 
 Canonical investigation:
 `NPC_QUEST_INTERACTION_CAPABILITY.md`
@@ -64,13 +64,17 @@ P0131 final runtime evidence proves both tested offer mutations:
 
 P0131 is durable at `68233e64` / `0.0.63-dev`.
 
-P0132 `0.0.64-dev` prepares text-first Logres Decline / Accept controls integrated
-with the P0130 narrative. Multi-page offers expose them only on the final page;
-preview clicks are non-mutating; real clicks route through the P0131-proven action
-runtime with exact offer binding.
+P0132 is durable at `671f9836` / `0.0.64-dev`.
 
-Blizzard controls remain visible. Continue / Complete, rewards, and gossip
-selection remain separate gates.
+Runtime/control behavior passes, including production Decline, production Accept,
+non-mutating preview, Blizzard-visible fallback, and integrated checks.
+
+Manual visual review found the Logres order opposite Blizzard's fallback:
+Decline left / Accept right. P0133 swaps positions only to Accept left / Decline
+right and adds a static order contract.
+
+Continue / Complete, rewards, gossip selection, and Blizzard suppression remain
+separate gates.
 
 ## Closed Phase G investigations
 

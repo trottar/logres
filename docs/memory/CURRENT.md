@@ -8,7 +8,7 @@ project: logres
 
 ## Active Objective
 
-**Approved visual implementation translation — production quest-offer Accept / Decline controls next.**
+**Approved visual implementation translation — align quest-offer action order with Blizzard fallback.**
 
 This is parallel Phase-H preparation while the formal Phase G camera phase remains
 open. The user has explicitly frozen Camera work until the already-approved visual
@@ -16,17 +16,17 @@ sequence is finished.
 
 ## Current Work Item
 
-**P0132 — production Logres quest-offer Accept / Decline controls prepared for
-runtime + visual proof with Blizzard controls retained as visible fallback.**
+**P0133 — align production Logres quest-offer action order with Blizzard's
+simultaneously visible fallback.**
 
 Latest verified durable checkpoint:
-P0131 `68233e647279c8651a83626952ad409531c71832`.
+P0132 `671f9836c43f3a4c9755f296ccad4a9574a62848`.
 
 Current pushed runtime:
-`0.0.63-dev`.
+`0.0.64-dev`.
 
 Prepared runtime:
-`0.0.64-dev`.
+`0.0.65-dev`.
 
 P0129 read-only runtime evidence passes the naturally observed offer/gossip path:
 - three real `QUEST_DETAIL` states;
@@ -55,9 +55,20 @@ offer mutations on Forever:
 - Decline -> `QUEST_FINISHED`, event-confirmed;
 - Accept -> matched `QUEST_ACCEPTED` after intermediate `QUEST_FINISHED`.
 
-P0132 therefore advances only the offer-phase production control surface. It does
-not suppress Blizzard controls or expand into Continue / Complete / rewards /
-gossip.
+P0132 is durable at `671f9836` / `0.0.64-dev`.
+
+Runtime/control validation passes:
+- deterministic preview is non-mutating;
+- production Decline is event-confirmed;
+- production Accept is matched/event-confirmed;
+- Blizzard quest UI remained visible/usable;
+- integrated `checkall` passed.
+
+Manual visual review found one positional defect: Logres used Decline-left /
+Accept-right, opposite Blizzard's simultaneously visible fallback. P0133 swaps
+only those positions to Accept-left / Decline-right.
+
+No mutation semantics or ownership boundary changes.
 
 ## Verified State
 
@@ -114,34 +125,30 @@ Preserved deferrals/gates:
 
 ## Next Action
 
-Deploy P0132 `0.0.64-dev` and prove the production offer controls.
+Deploy P0133 `0.0.65-dev` and perform a narrow visual/integration retest.
 
 Validation:
-1. use `Quest Dialogue Preview` to verify controls are hidden before the final
-   page and visible on the final page;
-2. click a preview control and confirm it is non-mutating;
-3. Phase H -> `Quest Offer Controls Check`;
-4. open a real quest offer and confirm both Logres and Blizzard offer controls are
-   simultaneously visible/usable;
-5. test Logres Decline and Accept separately where naturally convenient, checking
-   production event outcomes after each;
-6. Phase 0 -> `Run All`.
+1. `Quest Dialogue Preview` final page: Accept left / Decline right;
+2. earlier preview pages still hide offer controls;
+3. real quest offer: Logres order matches Blizzard's visible fallback order;
+4. Blizzard quest controls remain visible/usable;
+5. Phase H -> `Quest Offer Controls Check` -> PASS;
+6. Phase 0 -> `Run All` -> PASS.
 
-Do not test Continue / Complete, reward selection, or gossip selection in P0132.
+Real quest mutation does not need to be repeated solely for this positional
+correction.
 
 ## Success Criteria
 
-P0132 succeeds only when:
-- Logres offer controls are explicit player-owned buttons;
-- long offers gate those controls to the final page;
-- exact current offer identity is bound to the action surface;
-- preview controls cannot mutate quest state;
-- Accept / Decline reuse the proven P0131 mutation path with no automatic choice;
-- Blizzard controls remain fully usable as fallback throughout proof;
-- unsupported/missing/secret/invalid state fails open;
-- visual state matches approved sheet 08;
+P0133 succeeds when:
+- Accept is left and Decline is right;
+- the relative order matches Blizzard while both surfaces coexist;
+- final-page gating and non-mutating preview behavior are unchanged;
+- `Quest Offer Controls Check` passes;
+- `Run All` passes;
+- Blizzard controls remain visible/usable;
 - no Lua, taint, protected-action, secret-value, wrong-quest, duplicate-action, or
-  invisible-click-surface defect occurs.
+  invisible-click-surface regression occurs.
 
 ## Do Not Reopen Without New Evidence
 
@@ -160,6 +167,8 @@ P0132 succeeds only when:
 
 ## Relevant References
 
+- `docs/memory/patches/P0133_QUEST_OFFER_CONTROL_ORDER_ALIGNMENT.md`
+- `docs/memory/evidence/P0132_PRODUCTION_OFFER_CONTROLS_RUNTIME_VISUAL_ORDER_2026-10-05.md`
 - `docs/memory/patches/P0132_PRODUCTION_QUEST_OFFER_CONTROLS.md`
 - `docs/memory/evidence/P0131_QUEST_OFFER_ACTION_RUNTIME_PASS_2026-10-05.md`
 - `docs/memory/evidence/P0131_ACCEPT_EVENT_ORDER_FAILURE_2026-10-05.md`

@@ -1,7 +1,7 @@
 # P0132 — Production Quest-Offer Accept / Decline Controls
 
 Date: 2026-10-05
-Result: **PREPARED — RUNTIME + VISUAL PROOF PENDING**
+Result: **INSTALLED / PUSHED — RUNTIME + CONTROL PASS; VISUAL ORDER CORRECTION REQUIRED** (`671f9836`)
 Baseline: `68233e647279c8651a83626952ad409531c71832`
 Runtime: `0.0.63-dev -> 0.0.64-dev`
 
@@ -141,3 +141,26 @@ controls.
 
 A later checkpoint may consider capability-gated stock offer-control suppression
 only after this production replacement surface is accepted.
+
+## Runtime / visual result
+
+Durable commit:
+`671f9836c43f3a4c9755f296ccad4a9574a62848`.
+
+Canonical evidence:
+`../evidence/P0132_PRODUCTION_OFFER_CONTROLS_RUNTIME_VISUAL_ORDER_2026-10-05.md`.
+
+Runtime/control PASS:
+- preview non-mutating;
+- production Decline event-confirmed;
+- production Accept matched/event-confirmed;
+- Blizzard quest UI remained visible/usable;
+- integrated `checkall` PASS.
+
+Manual visual review found one defect:
+- Logres Decline was left;
+- Logres Accept was right;
+- Blizzard's simultaneously visible fallback uses the opposite order;
+- the mismatch was confusing.
+
+P0133 corrects positions only: Accept left / Decline right.

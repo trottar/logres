@@ -78,6 +78,63 @@ for fragment in (
     if fragment not in dialogue:
         errors.append(f"Dialogue.lua missing P0132 control fragment: {fragment}")
 
+decline_position_start = dialogue.find(
+    "declineButton:SetPoint("
+)
+decline_position_end = dialogue.find(
+    "local acceptButton",
+    decline_position_start,
+)
+accept_position_start = dialogue.find(
+    "acceptButton:SetPoint("
+)
+accept_position_end = dialogue.find(
+    "local offerActionFeedback",
+    accept_position_start,
+)
+
+decline_position_block = (
+    dialogue[
+        decline_position_start:
+        decline_position_end
+    ]
+    if decline_position_start != -1
+    and decline_position_end != -1
+    else ""
+)
+accept_position_block = (
+    dialogue[
+        accept_position_start:
+        accept_position_end
+    ]
+    if accept_position_start != -1
+    and accept_position_end != -1
+    else ""
+)
+
+left_offset = (
+    '-(\n'
+    '            offerStyleValue("buttonWidth")\n'
+    '            + offerStyleValue("buttonGap")\n'
+    '        ) / 2'
+)
+right_offset = (
+    '(\n'
+    '            offerStyleValue("buttonWidth")\n'
+    '            + offerStyleValue("buttonGap")\n'
+    '        ) / 2'
+)
+
+if left_offset not in accept_position_block:
+    errors.append(
+        "Accept must occupy the left offer-control position"
+    )
+
+if right_offset not in decline_position_block:
+    errors.append(
+        "Decline must occupy the right offer-control position"
+    )
+
 for forbidden in (
     "AcceptQuest(",
     "DeclineQuest(",
