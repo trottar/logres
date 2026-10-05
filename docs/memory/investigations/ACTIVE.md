@@ -199,7 +199,7 @@ quest/POI/tracking roles remain unchanged.
 ## Class / pet / special-control ownership
 
 Status:
-**SOURCE/CAPABILITY LAYER RESOLVED BY P0149 / D-044 — P0150 READ-ONLY RUNTIME PROBE NEXT.**
+**P0150 READ-ONLY RUNTIME PROBE PREPARED — RUNTIME EVIDENCE PENDING.**
 
 Canonical investigation:
 `FUTURE_CLASS_PET_SPECIAL_CONTROL_CAPABILITY.md`.
@@ -220,4 +220,4 @@ Resolved boundaries:
 
 No P0149 stock suppression or runtime mutation is authorized.
 
-P0150 is the smallest justified next step: one bounded non-mutating source probe.
+P0150 is prepared on candidate `0.0.73-dev`: one bounded non-mutating source probe with secret-first sanitization, source-owned invalidation, Phase-H diagnostic integration, and no production ownership. Runtime evidence is pending; environmental absence remains DEFERRED.

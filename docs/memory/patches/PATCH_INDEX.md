@@ -168,5 +168,6 @@
 | P0146 | 2026-10-05 | INSTALLED / PUSHED — DOCS / RUNTIME-EVIDENCE CHECKPOINT; DEPTH ACCEPTANCE PARTIALLY SUPERSEDED | Record raw P0145 runtime result; depth acceptance later corrected by P0147 (`9606379c`) |
 | P0147 | 2026-10-05 | INSTALLED / PUSHED — RUNTIME/MECHANICAL PASS; VISUAL FAIL | Live minimap-radius depth bands work across real samples, but `1.05 -> 0.90` scale is barely perceptible (`c274a9d1`, `0.0.71-dev`) |
 | P0148 | 2026-10-05 | INSTALLED / PUSHED — RUNTIME + VISUAL PASS; LATER POLISH DEFERRED | Stronger `1.20 / 1.05 / 0.85 / 0.70` depth amplitude accepted (`6f381a77`, `0.0.72-dev`) |
-| P0149 | 2026-10-05 | PREPARED — DOCS / PRIMARY-SOURCE CAPABILITY AUDIT | Resolve class/pet/special-control source/fallback policy; accept D-044; P0150 read-only probe next |
+| P0149 | 2026-10-05 | INSTALLED / PUSHED — SOURCE/CAPABILITY LAYER RESOLVED | Resolve class/pet/special-control source/fallback policy; accept D-044 (`dbe468f7`) |
+| P0150 | 2026-10-05 | PREPARED — READ-ONLY RUNTIME PROBE | Bounded secret-first class/pet/special current-state probe on candidate `0.0.73-dev`; no mutation/suppression |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

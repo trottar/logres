@@ -3026,6 +3026,68 @@ local function runNavigationSourceProbe()
     end
 end
 
+local function runClassPetSpecialProbe()
+    local status =
+        Logres:GetModuleStatus("ClassPetSpecialProbe")
+    local probe =
+        Logres:GetModule("ClassPetSpecialProbe")
+    local capture = probe:CaptureManual()
+    local debugStatus = probe:GetDebugStatus()
+    local captureOK = type(capture) == "table"
+
+    local passed =
+        captureOK
+        and status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and debugStatus.eventFrameReady == true
+        and debugStatus.secretCheckerAvailable == true
+        and debugStatus.requiredAPIReady == true
+        and debugStatus.eventRegistrationComplete == true
+        and debugStatus.failureCount == 0
+
+    emit(string.format(
+        "Logres classpetspecialprobe: %s (capture=%s captures=%s manual=%s last=%s events=%s/%s api=secret:%s required:%s missing:%s ordinary=%s absent=%s secretSkips=%s failures=%s pet=%s/%s stance=%s/%s totems=%s/%s class=%s resource=%s runes=%s special=possess:%s vehicle:%s override:%s temp:%s extra:%s)",
+        passed and "PASS" or "FAIL",
+        tostring(captureOK),
+        tostring(debugStatus.captureCount),
+        tostring(debugStatus.manualCount),
+        tostring(debugStatus.lastReason),
+        tostring(debugStatus.registeredEventCount),
+        tostring(debugStatus.expectedEventCount),
+        tostring(debugStatus.secretCheckerAvailable),
+        tostring(debugStatus.requiredAPIReady),
+        tostring(debugStatus.missingAPI),
+        tostring(debugStatus.ordinaryFieldCount),
+        tostring(debugStatus.absentFieldCount),
+        tostring(debugStatus.secretSkipCount),
+        tostring(debugStatus.failureCount),
+        tostring(debugStatus.petHasActionBar),
+        tostring(debugStatus.petOccupied),
+        tostring(debugStatus.stanceCount),
+        tostring(debugStatus.stanceScanned),
+        tostring(debugStatus.activeTotems),
+        tostring(debugStatus.totemSlots),
+        tostring(debugStatus.playerClass),
+        tostring(debugStatus.selectedResource),
+        tostring(debugStatus.runeScanned),
+        tostring(debugStatus.possess),
+        tostring(debugStatus.vehicle),
+        tostring(debugStatus.override),
+        tostring(debugStatus.tempShapeshift),
+        tostring(debugStatus.extra)
+    ))
+
+    local lines = probe:GetDiagnosticLines()
+
+    for index = 1, #lines do
+        emit(
+            "Logres classpetspecialprobe: "
+            .. tostring(lines[index])
+        )
+    end
+end
+
 local function runPlayerHelpfulAuraCheck()
     local status =
         Logres:GetModuleStatus("PlayerHelpfulAuras")
@@ -3805,6 +3867,7 @@ local function printHelp()
     emit("  /logres aurastatusprobe")
     emit("  /logres worldtargetprobe")
     emit("  /logres navigationsourceprobe")
+    emit("  /logres classpetspecialprobe")
     emit("  /logres helpfulauracheck")
     emit("  /logres helpfulaurapreview [on|off]")
     emit("  /logres questofferacceptprobe")
@@ -4057,6 +4120,11 @@ local function handleCommand(message)
 
     if command == "navigationsourceprobe" then
         runNavigationSourceProbe()
+        return
+    end
+
+    if command == "classpetspecialprobe" then
+        runClassPetSpecialProbe()
         return
     end
 
@@ -4433,6 +4501,12 @@ Logres:RegisterDevPanelAction(
     "navigationSourceProbe",
     "Navigation Source Probe",
     "navigationsourceprobe",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "classPetSpecialProbe",
+    "Class / Pet / Special Probe",
+    "classpetspecialprobe",
     "H"
 )
 Logres:RegisterDevPanelAction(

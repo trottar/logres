@@ -334,9 +334,12 @@ D-044 separates pet secure casting, stance/form, totem, class-resource,
 alternate-power, PetFrame, and possess/override/vehicle/extra-action ownership.
 No stock suppression or runtime mutation is authorized by the source audit.
 
-Next:
-**P0150 bounded read-only class/pet/special-control runtime probe.**
+P0150:
+**PREPARED — BOUNDED READ-ONLY CLASS/PET/SPECIAL RUNTIME PROBE on candidate `0.0.73-dev`.**
 
-Preserve direct class-resource children, RuneFrame, TotemFrame, PetFrame,
-alternate power, and all unsupported special-control fallbacks until each domain
-is deliberately runtime/capability-proven.
+The diagnostic is source-event-driven and secret-first. It does not mutate pet actions, forms, totems, action pages, vehicle/possess state, special controls, or Blizzard presentation. Environmental absence is DEFERRED.
+
+Next:
+**Run P0150 in client, then run integrated Run All separately and record exact evidence.**
+
+Preserve direct class-resource children, RuneFrame, TotemFrame, PetFrame, alternate power, and all unsupported special-control fallbacks until each domain is deliberately runtime/capability-proven.

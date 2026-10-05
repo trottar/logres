@@ -4,7 +4,7 @@ As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — P0148 manual-waypoint depth baseline accepted; P0149 class/pet/special source layer resolved; P0150 read-only runtime probe next.**
+**Approved visual implementation translation — P0149 class/pet/special source policy durable; P0150 read-only runtime probe prepared on `0.0.73-dev`; runtime evidence next.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -156,3 +156,10 @@ P0149 resolves the class/pet/special-control source layer against pinned Forever
 `1.60.1.70205` source and accepts D-044. Pet secure casting is the strongest
 control candidate, but no stock class/pet/special suppression is authorized.
 P0150 bounded read-only runtime proof is next.
+
+P0150:
+**PREPARED — BOUNDED READ-ONLY CLASS/PET/SPECIAL RUNTIME PROBE on candidate `0.0.73-dev`.**
+
+The probe observes only addon-safe current state across pet actions, stance/forms, totems, player class/discrete resource candidates, naturally applicable DK runes, and special action-bar mode flags/indexes. Secret-capable values are checked before inspection; contextual absence is DEFERRED. No cast, autocast, pet edit, shapeshift, totem dismissal, action-page/state-driver mutation, special-mode exit/cancel, or Blizzard presentation mutation is included.
+
+Runtime proof requires the Phase-H Class / Pet / Special Probe followed by a separate integrated Run All pass.

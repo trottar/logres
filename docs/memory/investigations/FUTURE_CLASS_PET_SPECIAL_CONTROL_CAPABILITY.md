@@ -1,6 +1,6 @@
 # Future Class / Pet / Special-Control Capability Audit
 
-Status: **SOURCE/CAPABILITY LAYER RESOLVED BY P0149 / D-044 — P0150 READ-ONLY RUNTIME PROBE NEXT**
+Status: **P0150 READ-ONLY RUNTIME PROBE PREPARED — RUNTIME EVIDENCE PENDING**
 Opened: 2026-10-05
 Source pin: `Gethe/wow-ui-source@e3ecc27b64d30fdc735a3f6579b866858f9f9df1`
 Forever client: `1.60.1.70205`
@@ -183,3 +183,17 @@ Until later runtime/capability checkpoints prove replacement completeness:
 - do not force discrete class mechanics into the shared percentage-bar primitive.
 
 Protected setup/mutation must remain combat-safe and fail open to stock UI.
+
+## P0150 implementation checkpoint
+
+P0150 targets candidate runtime `0.0.73-dev` and adds one addon-owned diagnostic module, `ClassPetSpecialProbe`.
+
+The probe is bounded and read-only. It observes naturally available pet actions, stance/forms, totems, current class/resource state, Death Knight runes only when the ordinary player class is Death Knight, and special action-bar mode flags/indexes.
+
+Secret-capable values are checked before nil/type/value inspection. Charged-point tables are bounded by fixed index rather than counted or generically iterated. Secret observations are counted/deferred; they are not formatted or used for branching.
+
+Source-owned invalidation refreshes only the affected domain where practical. Event payloads are discarded.
+
+P0150 does not cast, toggle autocast, reorder, shapeshift, dismiss totems, mutate action pages/state drivers, exit/cancel special modes, invoke extra/override actions, or alter Blizzard presentation.
+
+Runtime proof must use the Phase-H **Class / Pet / Special Probe** action, followed by a separate **Run All** regression pass. Environmental absence remains DEFERRED and must not be manufactured solely for proof.

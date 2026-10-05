@@ -159,3 +159,5 @@ remain runtime/capability-gated.
 
 No stock class/pet/special surface is suppressed by P0149. P0150 read-only runtime
 proof is next.
+
+P0150 prepares candidate `0.0.73-dev` as a bounded read-only runtime probe for the P0149/D-044 class/pet/special source families. It observes naturally available pet/form/totem/resource/rune/special-mode state with secret-first sanitization and source-owned invalidation only. It does not mutate controls or suppress Blizzard surfaces. Contextual absence remains environmental DEFERRED; production ownership remains separately gated.

@@ -3,7 +3,7 @@
 Date: 2026-10-05
 Baseline: `6f381a77f857cb9305cf6870fc2621e6aff826dc`
 Runtime: unchanged at `0.0.72-dev`
-Result: **PREPARED — SOURCE/CAPABILITY LAYER RESOLVED; P0150 READ-ONLY RUNTIME PROBE NEXT**
+Result: **INSTALLED / PUSHED — SOURCE/CAPABILITY LAYER RESOLVED; D-044 DURABLE** (`dbe468f7`)
 
 ## Purpose
 
@@ -39,5 +39,4 @@ this checkpoint.
 
 ## Next
 
-After this checkpoint is committed/pushed and verified, prepare P0150 diagnostic
-runtime proof only.
+P0149 is verified durable at `dbe468f7994a947e9e350e0f66b214679bd110f5`. P0150 is the next diagnostic runtime proof only.

@@ -64,6 +64,7 @@ EXPECTED_PHASES = {
     "auraStatusProbe": "H",
     "worldTargetProbe": "H",
     "navigationSourceProbe": "H",
+    "classPetSpecialProbe": "H",
     "playerHelpfulAuraCheck": "H",
     "playerHelpfulAuraPreview": "H",
     "questOfferControlsCheck": "H",
