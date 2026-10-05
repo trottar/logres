@@ -4,37 +4,52 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0147 `c274a9d13c677082cf4ce90b9fbbd0152e9989ec`.
+P0148 `6f381a77f857cb9305cf6870fc2621e6aff826dc`.
 
 Current pushed/tested runtime:
-`0.0.71-dev`.
+`0.0.72-dev`.
 
 ## Active work stream
 
-**P0148 — correct the P0147 manual-waypoint depth visual-amplitude failure before advancing to class/pet/special-control work.**
+**P0149 — class/pet/special-control source-capability audit; docs/source evidence only.**
 
-P0147 mechanically proves live `C_Minimap.GetViewRadius()` depth reference and close/near/medium/far band classification. Runtime samples reached `depth=1.050` close and `depth=0.900` far, with integrated checks passing.
+P0148 is runtime + visual PASS for the manual-waypoint depth baseline. Live-radius
+bands remain `0.5R / 1R / 4R / 8R`; the accepted production anchors are
+`1.20 / 1.05 / 0.85 / 0.70`, with later amplitude refinement deferred to
+whole-interface polish.
 
-Visual review failed: the user reported the marker looked effectively the same size, with any shrink barely noticeable. On the 12x20 base glyph, the prior `1.05 -> 0.90` range changed nominal geometry by only about 1.8 px width / 3 px height.
+P0149 pins exact Forever source
+`Gethe/wow-ui-source@e3ecc27b64d30fdc735a3f6579b866858f9f9df1`
+(`1.60.1.70205`) and accepts D-044.
 
-P0148 retains the same semantic bands but increases scale anchors to `1.20 / 1.05 / 0.85 / 0.70`, with final render clamp `0.70–1.28`. Runtime candidate is `0.0.72-dev`.
+Key source policy:
+- pet actions have source-proven secure `type="pet"` casting, but stock autocast,
+  drag/reorder, bindings, and restoration remain separate completeness gates;
+- stance/form state is readable but secure replacement ownership remains unproven;
+- totem and class-power sources are secret-capable and require secret-first runtime proof;
+- runes/combo points/shards/charges/holy power/essence remain discrete class mechanics;
+- PetFrame is a separate secure unit-frame surface;
+- possess/override/vehicle/extra-action remain Blizzard special-mode surfaces and
+  are not ordinary Secondary/Utility routing.
 
-P0148 requires explicit close/medium/far visual confirmation. Diagnostics alone cannot close it.
+No P0149 runtime code or stock suppression is authorized.
 
-Quest/current-navigation, AreaPOI/service, tracking-result, and minimap-ownership boundaries remain unchanged. P0123 remains off-tape runtime authority.
+After P0149 is durable, P0150 is a bounded read-only runtime probe for naturally
+available pet/stance/totem/class-resource/special-mode states. Environmental
+absence remains DEFERRED.
 
-The class/pet/special-control source audit moves to P0149 and remains source-only when resumed.
-
-Camera remains frozen; P0119 Taxi landing proof is still pending.
+Quest/current-navigation, AreaPOI/service, tracking-result, and minimap ownership
+boundaries remain unchanged. Camera remains frozen; P0119 Taxi landing proof is
+still pending.
 
 ## Key references
 
 - `../CURRENT.md`
-- `../evidence/P0148_P0147_WAYPOINT_DEPTH_VISUAL_FAIL_2026-10-05.md`
-- `../patches/P0148_INCREASE_MANUAL_WAYPOINT_DEPTH_AMPLITUDE.md`
-- `../patches/P0147_CORRECT_MANUAL_WAYPOINT_DEPTH_CALIBRATION.md`
-- `../decisions/D-038_COMPASS_VISUAL_FOCUS_AND_DEPTH_CONTRACT.md`
-- `../investigations/FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md`
+- `../evidence/P0149_P0148_WAYPOINT_DEPTH_RUNTIME_VISUAL_PASS_2026-10-05.md`
+- `../evidence/P0149_CLASS_PET_SPECIAL_CONTROL_SOURCE_CAPABILITY_AUDIT_2026-10-05.md`
+- `../decisions/D-044_CLASS_PET_SPECIAL_CONTROL_SOURCE_AND_FALLBACK_POLICY.md`
 - `../investigations/FUTURE_CLASS_PET_SPECIAL_CONTROL_CAPABILITY.md`
+- `../decisions/D-026_SELECTIVE_UNIT_FRAME_SUPPRESSION.md`
+- `../patches/P0149_CLASS_PET_SPECIAL_CONTROL_SOURCE_CAPABILITY_AUDIT.md`
 - `../architecture/VISUAL_IMPLEMENTATION_STATUS.md`
 - `../roadmap/PHASE_H_INTEGRATION_POLISH.md`

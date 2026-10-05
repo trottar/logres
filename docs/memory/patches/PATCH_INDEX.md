@@ -167,5 +167,6 @@
 | P0145 | 2026-10-05 | INSTALLED / PUSHED — DISTANCE + CLEAR-STATE PASS; DEPTH VARIATION LATER REOPENED | Same-map manual-waypoint distance and clear-state PASS; all accepted samples hit only old near endpoint; cross-band visual depth superseded by P0147 (`60244841`, `0.0.70-dev`) |
 | P0146 | 2026-10-05 | INSTALLED / PUSHED — DOCS / RUNTIME-EVIDENCE CHECKPOINT; DEPTH ACCEPTANCE PARTIALLY SUPERSEDED | Record raw P0145 runtime result; depth acceptance later corrected by P0147 (`9606379c`) |
 | P0147 | 2026-10-05 | INSTALLED / PUSHED — RUNTIME/MECHANICAL PASS; VISUAL FAIL | Live minimap-radius depth bands work across real samples, but `1.05 -> 0.90` scale is barely perceptible (`c274a9d1`, `0.0.71-dev`) |
-| P0148 | 2026-10-05 | PREPARED — VISUAL AMPLITUDE CORRECTION | Retain live-radius bands; widen manual-waypoint depth scale to `1.20 / 1.05 / 0.85 / 0.70`; visual revalidation required |
+| P0148 | 2026-10-05 | INSTALLED / PUSHED — RUNTIME + VISUAL PASS; LATER POLISH DEFERRED | Stronger `1.20 / 1.05 / 0.85 / 0.70` depth amplitude accepted (`6f381a77`, `0.0.72-dev`) |
+| P0149 | 2026-10-05 | PREPARED — DOCS / PRIMARY-SOURCE CAPABILITY AUDIT | Resolve class/pet/special-control source/fallback policy; accept D-044; P0150 read-only probe next |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

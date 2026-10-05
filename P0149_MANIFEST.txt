@@ -1,0 +1,28 @@
+P0149 — Class / Pet / Special-Control Source-Capability Audit
+Baseline: 6f381a77f857cb9305cf6870fc2621e6aff826dc
+Runtime: unchanged at 0.0.72-dev
+Scope: docs / primary-source evidence only
+Source pin: Gethe/wow-ui-source@e3ecc27b64d30fdc735a3f6579b866858f9f9df1 (1.60.1.70205)
+Decision: D-044 Class / Pet / Special-Control Source and Fallback Policy
+P0148: runtime + visual PASS; production waypoint-depth baseline accepted; later amplitude polish deferred
+P0149: source/capability layer resolved; no runtime mutation or stock suppression
+Next: P0150 bounded read-only class/pet/special-control runtime probe
+
+Files:
+327032a1c43e16c6ef86b27fd272f65b668664c2b9883c810820602654c3d751  docs/ROADMAP.md
+30848ed927919373b5ea00101714d4ff86ce6e65c4c2e051827e06df002a8237  docs/memory/2026-10-05.md
+c4b4cda6bdd701063c79d92ba57d9d761a18d3c6f8554e14bfb19811e641e104  docs/memory/CURRENT.md
+a8ea8922722b87da0016b6f8d43091aa5324c7f712652c2a747a75bfee5d849a  docs/memory/MEMORY.md
+5aa946103374085afd28c1a38f4488bdde977bc11e76f1ac456eed3a62974a17  docs/memory/architecture/VISUAL_IMPLEMENTATION_STATUS.md
+eb340a8da7e095154c4715dfbfb5b7d67c4ac580df1c8e8c925ba7601b66db31  docs/memory/decisions/D-044_CLASS_PET_SPECIAL_CONTROL_SOURCE_AND_FALLBACK_POLICY.md
+38ee158bab0256d76610a54954bc7c780c44e674cc2b2d64a7bff9950889ac5b  docs/memory/evidence/P0149_CLASS_PET_SPECIAL_CONTROL_SOURCE_CAPABILITY_AUDIT_2026-10-05.md
+cafb9aa11736df6acf7ca61098028dd90638631ddf1829e080c1e6bec51bb9eb  docs/memory/evidence/P0149_P0148_WAYPOINT_DEPTH_RUNTIME_VISUAL_PASS_2026-10-05.md
+ae35a5e1f98b057feae101de8d3385fdef68e198df75d059fb0d8cfc4b0090ee  docs/memory/handoffs/CURRENT_HANDOFF.md
+96e31857875a932b4309b5dff0ffea9a824c82316797ed57e7b57f8319227b5b  docs/memory/investigations/ACTIVE.md
+61926c48b0f60107f6761e29f376f4f3c486f4ad02399ba60a85c32aa141707d  docs/memory/investigations/FUTURE_CLASS_PET_SPECIAL_CONTROL_CAPABILITY.md
+0a40085163053da01093c6ade23af9ab6706b37f9a40c191b5895ab20490323e  docs/memory/investigations/FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md
+8d666b6ecad159af56affdb8ebfcd89a4b8c47e89f506884ac3d775b626824eb  docs/memory/patches/P0148_INCREASE_MANUAL_WAYPOINT_DEPTH_AMPLITUDE.md
+54e24bd2fa221f267f3bde3fa82c6b4349cbfb5fd2b88081afd7336f08473dbf  docs/memory/patches/P0149_CLASS_PET_SPECIAL_CONTROL_SOURCE_CAPABILITY_AUDIT.md
+073e1b23a493739885bed917fcdf1a3cecafc93506489bc7ce493005fb5355e7  docs/memory/patches/PATCH_INDEX.md
+bb61e7013cdaaae9fe7263cf46bbf2dd18be47929f7815e031a4f25f1da6bfba  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+e7eae6727f3b089f9fe3c9d310c486dc9c9875e2bf8268989eaada6c54bb6322  docs/memory/roadmap/STATUS.md

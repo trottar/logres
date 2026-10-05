@@ -211,41 +211,25 @@ fallback to the current fixed marker treatment.
 Quest/current-navigation, AreaPOI, service, and tracking-result production roles
 remain gated/blocked exactly as before.
 
-## P0145 implementation checkpoint
+## Manual-waypoint distance / depth result
 
-P0145 targets `0.0.70-dev` and consumes only the already-proven manual waypoint.
-It secret-checks the user waypoint's `uiMapID`, requires exact current-map equality
-for comparable distance, reads ordinary positive `C_Map.GetMapWorldSize` yard
-dimensions, and computes Euclidean yard distance from ordinary normalized
-player/destination coordinates.
+P0145 `60244841` / `0.0.70-dev` proves ordinary same-map manual-waypoint yard
+distance and clean clear-state fallback.
 
-Distance is intentionally non-owning: any absent, secret, invalid, or cross-map
-condition restores depth scale `1.0` while leaving the P0123 bearing marker usable.
-The only player-facing effect is restrained bounded scale. No exact distance text,
-identity, quest/POI/tracking marker, or minimap mutation is added.
+P0147 `c274a9d1` / `0.0.71-dev` replaces arbitrary absolute thresholds with live
+local-awareness radius `R = C_Minimap.GetViewRadius()` and mechanically proves
+close/near/medium/far bands across real samples. Its original `1.05 -> 0.90` scale
+span fails visual calibration and remains preserved as negative evidence.
 
-P0145 runtime proof is complete for ordinary same-map distance arithmetic and clear-state fallback only.
-## P0145 / P0146 correction
+P0148 `6f381a77` / `0.0.72-dev` retains the exact live-radius bands
+(`0.5R / 1R / 4R / 8R`) and increases only scale amplitude to
+`1.20 / 1.05 / 0.85 / 0.70`, final clamp `0.70–1.28`.
 
-P0145 is durable at `60244841` / `0.0.70-dev`. Its populated samples produced
-ordinary yard distances, but every sample was inside the original `120` yard near
-threshold and therefore every sample reported the same `depth=1.050`. The user
-reported the marker appeared the same size during that test. Cross-band distance
-variation and visible depth change are therefore UNPROVEN; P0146's stronger
-acceptance wording is superseded by P0147.
+P0148 is runtime + visual PASS. The user confirmed that the depth cue now works.
+Further amplitude refinement is deferred to later whole-interface polish.
 
-P0147 replaces absolute thresholds with live local-awareness radius `R` from
-`C_Minimap.GetViewRadius()`: close `<=0.5R`, near through `1R`, medium through `4R`,
-far through `8R`, with bounded scale anchors `1.05/1.00/0.95/0.90`.
+P0123 remains the recorded off-tape runtime authority.
 
-P0123 remains the recorded off-tape runtime authority. Quest/current-navigation
-destination, AreaPOI/service, and tracking-result roles remain deferred/source-
-blocked and stock minimap ownership is unchanged.
-
-P0147 requires deliberate cross-band runtime samples and explicit user visual
-confirmation before manual-waypoint depth is accepted.
-## P0147 visual result / P0148 correction
-
-P0147 `c274a9d1` / `0.0.71-dev` proves live minimap-radius band mechanics across close, near, medium, and far real waypoint samples, plus clean fail-open/integration behavior. It does **not** pass visual calibration: the user reported the marker looked effectively unchanged, and the `1.05 -> 0.90` span was too subtle on the 12x20 glyph.
-
-P0148 retains the exact P0147 semantic bands (`0.5R / 1R / 4R / 8R`) and changes only scale amplitude to `1.20 / 1.05 / 0.85 / 0.70` with final clamp `0.70–1.28`. Quest/current-navigation, AreaPOI/service, tracking-result, and stock-minimap ownership remain unchanged.
+Quest/current-navigation destination and current-map AreaPOI/service usefulness
+remain environmental DEFERRED. Tracking-result/service-instance positions remain
+source-blocked by P0142/D-043. Stock minimap ownership is unchanged.

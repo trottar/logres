@@ -173,60 +173,51 @@ remains blocked and the screen-space target remains canonical fallback.
 ## Navigation / minimap capability
 
 Status:
-**OPEN — P0145 DISTANCE/CLEAR PASS; DEPTH VARIATION REOPENED BY P0147; QUEST/AREA-POI DEFERRED; TRACKING RESULTS BLOCKED.**
+**OPEN WITH ACCEPTED MANUAL-WAYPOINT BASELINE — P0148 RUNTIME + VISUAL PASS; QUEST/AREA-POI DEFERRED; TRACKING RESULTS BLOCKED.**
 
 Canonical investigation:
 `FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md`.
 
 P0142 / D-043 source policy remains authoritative.
 
-P0143 is durable at `b9b2f90b` / `0.0.69-dev`.
+P0143 proves current-map/player geometry, map world size, minimap view radius, and
+multi-select tracking selector metadata/state. AreaPOI/current/quest destination
+paths remain environmental DEFERRED; tracking-result/service-instance positions
+remain source-blocked.
 
-Runtime evidence proves:
-- ordinary current player map ID and player map position;
-- ordinary map world size in yards;
-- ordinary minimap view radius in yards;
-- 23/23 ordinary tracking selector rows;
-- four independently active tracking selectors;
-- zero secret skips / source failures;
-- integrated `Run All` PASS.
+P0145 proves same-map manual-waypoint distance and clear fallback.
 
-Environmental DEFERRED in the captured state:
-- current-map AreaPOI population;
-- current/super-tracked navigation waypoint;
-- super-tracked quest waypoint;
-- user waypoint and the resulting actual destination-distance branch;
-- minimap map ID output.
+P0147 proves the live minimap-radius band mechanics but fails visual calibration.
 
-Tracking-result and service-instance positions remain source-blocked by P0142 /
-D-043. Selector metadata does not reopen that path.
+P0148 is durable at `6f381a77` / `0.0.72-dev` and is runtime + visual PASS:
+the stronger `1.20 / 1.05 / 0.85 / 0.70` scale anchors make close/medium/far depth
+perceptible. Further amplitude tuning is deferred to later whole-interface polish.
 
-Next after the P0144 evidence checkpoint:
-**P0145 manual-waypoint comparable-distance / bounded-depth slice.**
+P0123 remains off-tape runtime authority. Stock minimap ownership and unproven
+quest/POI/tracking roles remain unchanged.
 
-Stock minimap presentation remains Blizzard-owned. No quest/POI/tracking marker
-expansion is authorized by P0143.
-
-### P0145/P0147/P0148 manual-waypoint depth correction
-
-P0145 is durable at `60244841` / `0.0.70-dev` and proves ordinary same-map yard distance plus clean clear-state fallback.
-
-P0147 is durable at `c274a9d1` / `0.0.71-dev` and mechanically proves live minimap-radius close/near/medium/far bands across real waypoint samples, plus clean fail-open/integration behavior. Visual validation FAILS: the user reported the marker remained effectively the same size; the `1.05 -> 0.90` range is too subtle for the 12x20 glyph.
-
-P0148 retains the proven P0147 source/band semantics and widens only scale amplitude to `1.20 / 1.05 / 0.85 / 0.70`, with final render clamp `0.70–1.28`. Explicit visual confirmation remains mandatory. P0123 remains off-tape runtime authority. Quest/current navigation, AreaPOI/service, and tracking-result production roles remain deferred/blocked exactly as before.
 ## Class / pet / special-control ownership
 
 Status:
-**OPEN — P0149 SOURCE/CAPABILITY AUDIT AFTER P0148 DEPTH VISUAL ACCEPTANCE.**
+**SOURCE/CAPABILITY LAYER RESOLVED BY P0149 / D-044 — P0150 READ-ONLY RUNTIME PROBE NEXT.**
 
 Canonical investigation:
 `FUTURE_CLASS_PET_SPECIAL_CONTROL_CAPABILITY.md`.
 
-The residual approved visual inventory separates pet actions, stance/form,
-totem/class-special controls, discrete class resources, and possess/override/vehicle
-surfaces from ordinary Primary/Secondary/Utility action roles.
+P0149 pins exact Forever source `e3ecc27b64d30fdc735a3f6579b866858f9f9df1`
+(`1.60.1.70205`).
 
-D-026 still preserves direct player class-resource children, RuneFrame, TotemFrame,
-PetFrame, alternate-power, and unknown/unproven children. P0149 must resolve source,
-secure ownership, combat restrictions, event/update semantics, restoration, and
-fail-open stock coexistence per domain before any runtime replacement is proposed.
+Resolved boundaries:
+- pet secure casting is source-plausible through `type="pet"`, but full PetActionBar
+  replacement completeness is not proven;
+- PetFrame remains a separate secure unit-frame surface;
+- stance/form state is readable but replacement control ownership is unproven;
+- totem state is secret-capable and dismiss mutation remains separate;
+- runes/class resources remain secret-first, class-specific, and discrete;
+- alternate power remains stock;
+- possess/override/vehicle/extra action remain integrated Blizzard special modes,
+  not ordinary action roles.
+
+No P0149 stock suppression or runtime mutation is authorized.
+
+P0150 is the smallest justified next step: one bounded non-mutating source probe.

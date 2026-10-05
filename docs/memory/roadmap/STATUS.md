@@ -4,7 +4,7 @@ As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — P0147 live-radius depth mechanics PASS but visual amplitude FAIL; P0148 perceptible scale correction next; class/pet/special audit moves to P0149.**
+**Approved visual implementation translation — P0148 manual-waypoint depth baseline accepted; P0149 class/pet/special source layer resolved; P0150 read-only runtime probe next.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -139,17 +139,20 @@ selectors were independently active. The tested map had no AreaPOI rows and no
 current/quest/user-waypoint destination, so those paths and actual destination
 distance remain DEFERRED. Integrated `Run All` passed.
 
-P0145 is durable at `60244841` / `0.0.70-dev`:
-**manual-waypoint same-map distance + clear-state runtime PASS; depth variation later reopened.**
+P0145 `60244841` / `0.0.70-dev` proves manual-waypoint same-map distance and
+clear-state fallback.
 
-All accepted populated depth samples were inside the old near threshold and thus did
-not prove distance-dependent marker-size variation. P0146 recorded the raw evidence
-but overstated depth acceptance. P0147 corrects the record and recalibrates depth to
-live minimap-radius semantic bands with explicit cross-band visual proof required.
+P0147 `c274a9d1` / `0.0.71-dev` proves the live-radius band mechanics but fails
+visual calibration because the original scale span is too subtle.
 
-Quest/current-navigation, AreaPOI/service, and tracking-result roles remain
-deferred/source-blocked; stock minimap ownership is unchanged. The class/pet/special
-source audit moves to P0148. This does not authorize
-stock suppression, broader aura ownership, production world-target relocation, or
-unrelated Camera changes.
-P0147 is durable at `c274a9d1` / `0.0.71-dev`: live-radius close/near/medium/far mechanics and integrated checks pass, but manual visual review fails because the `1.05 -> 0.90` scale range is barely noticeable. P0148 widens only the depth scale amplitude to `1.20 / 1.05 / 0.85 / 0.70`; P0149 becomes the deferred class/pet/special source audit.
+P0148 `6f381a77` / `0.0.72-dev` is runtime + visual PASS with stronger
+`1.20 / 1.05 / 0.85 / 0.70` anchors. The user accepts this as the production
+baseline; exact amplitude refinement is deferred to later polish.
+
+Quest/current-navigation, AreaPOI/service, tracking-result, and stock minimap
+boundaries remain unchanged.
+
+P0149 resolves the class/pet/special-control source layer against pinned Forever
+`1.60.1.70205` source and accepts D-044. Pet secure casting is the strongest
+control candidate, but no stock class/pet/special suppression is authorized.
+P0150 bounded read-only runtime proof is next.

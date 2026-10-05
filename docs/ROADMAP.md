@@ -140,16 +140,22 @@ skips/failures; four selector states were independently active. The tested state
 had no AreaPOI rows and no current/quest/user-waypoint destination, so those paths
 and actual destination distance remain DEFERRED. Integrated `Run All` passed.
 
-P0145 is durable at `60244841` / `0.0.70-dev` and proves ordinary same-map manual-
-waypoint yard distance plus clean waypoint clear-state fallback. Its accepted depth
-samples all exercised only the old near endpoint, so distance-dependent visible size
-variation is reopened by P0147. P0146's stronger acceptance wording is superseded.
+P0145 `60244841` / `0.0.70-dev` proves ordinary same-map manual-waypoint
+distance plus clean clear-state fallback.
 
-P0147 uses live `C_Minimap.GetViewRadius()` local-awareness bands and requires
-deliberate close/near/medium/far diagnostics plus explicit user visual confirmation.
-After P0147 is accepted, P0148 becomes the class/pet/special-control source audit. No direct
-class-resource child, RuneFrame, TotemFrame, PetFrame, alternate-power, or
-possess/override/vehicle surface is suppressed from source evidence alone.
-## P0147/P0148 manual-waypoint depth calibration
+P0147 `c274a9d1` / `0.0.71-dev` proves live
+`C_Minimap.GetViewRadius()` close/near/medium/far mechanics but fails visual
+calibration because `1.05 -> 0.90` is too subtle on the 12x20 marker.
 
-P0147 is durable at `c274a9d1` / `0.0.71-dev`. Live minimap-radius depth mechanics pass across real close/near/medium/far samples, but visual review fails because the `1.05 -> 0.90` scale range is barely perceptible on the 12x20 marker. P0148 widens only the visual amplitude to `1.20 / 1.05 / 0.85 / 0.70` with final clamp `0.70–1.28`. Explicit visual acceptance remains required before the next source audit; class/pet/special-control work moves to P0149.
+P0148 `6f381a77` / `0.0.72-dev` is runtime + visual PASS with
+`1.20 / 1.05 / 0.85 / 0.70` anchors and final clamp `0.70–1.28`. The size cue is
+accepted; further refinement is deferred to later polish.
+
+P0149 resolves the class/pet/special-control source layer against exact Forever
+`1.60.1.70205` source and accepts D-044. Pet secure casting has a supported secure
+source path, while stance/totem mutation, discrete class-resource ownership,
+alternate power, PetFrame, and possess/override/vehicle/extra-action replacement
+remain runtime/capability-gated.
+
+No stock class/pet/special surface is suppressed by P0149. P0150 read-only runtime
+proof is next.

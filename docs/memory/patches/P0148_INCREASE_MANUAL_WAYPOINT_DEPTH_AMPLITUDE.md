@@ -2,8 +2,9 @@
 
 Date: 2026-10-05
 Baseline: `c274a9d13c677082cf4ce90b9fbbd0152e9989ec`
-Candidate runtime: `0.0.72-dev`
-Result: **PREPARED — VISUAL REVALIDATION REQUIRED**
+Durable commit: `6f381a77f857cb9305cf6870fc2621e6aff826dc`
+Runtime: `0.0.72-dev`
+Result: **INSTALLED / PUSHED — RUNTIME + VISUAL PASS; PRODUCTION BASELINE ACCEPTED**
 
 ## Purpose
 
@@ -34,10 +35,17 @@ On the 12x20 base marker this yields roughly `14.4x24` px close versus `8.4x14` 
 
 No alpha modulation, numeric distance text, identity label, bounce, glow, quest/POI/tracking marker, minimap mutation, or stock suppression is added.
 
-## Runtime gate
+## Runtime + visual result
 
-Re-use ordinary manual waypoints and compare similar-bearing samples across close/near, medium, and far bands. Compass Check must remain coherent and integrated Run All must pass.
+`0.0.72-dev` samples include:
+- far `1129.5` yd / ratio `8.47` / depth+render `0.700`;
+- medium `482.6` yd / ratio `3.62` / depth+render `0.875`;
+- close `35.7` yd / ratio `0.27` / depth `1.200` / render `1.238`;
+- centered close `14.1` yd / ratio `0.11` / depth `1.200` / render `1.280`.
 
-Acceptance additionally requires explicit user confirmation that the size difference is clearly visible and still aesthetically acceptable.
+Integrated `Run All` passed.
 
-The class/pet/special-control source audit moves to P0149 until this visual checkpoint closes.
+The user confirmed that the stronger depth cue works. Further amplitude refinement
+is deferred to later whole-interface polish and does not block sequencing.
+
+The class/pet/special-control source audit advances as P0149.

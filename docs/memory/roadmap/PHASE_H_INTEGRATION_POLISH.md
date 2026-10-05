@@ -311,22 +311,32 @@ quest, or user-waypoint destination; those branches remain DEFERRED. Integrated
 P0144 is durable at `47534363`.
 
 P0145:
-**INSTALLED / PUSHED — SAME-MAP DISTANCE + CLEAR-STATE PASS; DEPTH VARIATION REOPENED BY P0147 at `60244841` / `0.0.70-dev`.**
+**INSTALLED / PUSHED — SAME-MAP DISTANCE + CLEAR-STATE PASS at `60244841` / `0.0.70-dev`.**
 
-The accepted samples proved ordinary same-map yard distance and clear-state fallback
-but all hit only the old near-depth endpoint. P0147 replaces the arbitrary absolute
-thresholds with live minimap-radius close/near/medium/far bands and requires explicit
-cross-band user visual confirmation. P0123 remains the off-tape runtime authority.
-Quest/POI/tracking roles and stock minimap ownership remain unchanged.
+P0147:
+**RUNTIME/MECHANICAL PASS; VISUAL FAIL at `c274a9d1` / `0.0.71-dev`.**
+
+Live minimap-radius close/near/medium/far mechanics work, but the original
+`1.05 -> 0.90` amplitude was too subtle at real UI scale.
+
+P0148:
+**RUNTIME + VISUAL PASS at `6f381a77` / `0.0.72-dev`.**
+
+The stronger `1.20 / 1.05 / 0.85 / 0.70` depth anchors are accepted as the
+production baseline. Further amplitude refinement is deferred to whole-interface
+polish. P0123 remains off-tape authority; quest/POI/tracking and minimap ownership
+boundaries remain unchanged.
+
+P0149:
+**SOURCE/CAPABILITY LAYER RESOLVED — DOCS/PRIMARY-SOURCE EVIDENCE ONLY.**
+
+D-044 separates pet secure casting, stance/form, totem, class-resource,
+alternate-power, PetFrame, and possess/override/vehicle/extra-action ownership.
+No stock suppression or runtime mutation is authorized by the source audit.
 
 Next:
-**P0147 depth correction/revalidation, then P0148 class/pet/special-control source audit.**
+**P0150 bounded read-only class/pet/special-control runtime probe.**
 
-Preserve direct class-resource children, RuneFrame, TotemFrame, PetFrame, alternate
-power, and unsupported special-control fallbacks until each domain is deliberately
-proven. This remains capability preparation under D-035/D-039 and does not
-authorize minimap suppression, broader aura ownership, automated quest choices,
-or Camera changes.
-## P0147 visual failure / P0148 waypoint-depth amplitude correction
-
-P0147 proves live-radius close/near/medium/far depth mechanics but fails visual calibration: the `1.05 -> 0.90` scale range was too subtle at real UI scale. P0148 retains those source/band semantics and widens only manual-waypoint scale amplitude to `1.20 / 1.05 / 0.85 / 0.70`, with user visual confirmation required. The class/pet/special-control source audit is now P0149 and remains blocked on this visual checkpoint.
+Preserve direct class-resource children, RuneFrame, TotemFrame, PetFrame,
+alternate power, and all unsupported special-control fallbacks until each domain
+is deliberately runtime/capability-proven.
