@@ -1,6 +1,6 @@
 # Future — World-Attached Target Presentation
 
-Status: **OPEN — P0140 PREPARED; IN-CLIENT RUNTIME PROOF PENDING**
+Status: **OPEN / DEFERRED POSITIVE ANCHOR — P0140 RUNTIME FALLBACK/REACTION PASS; PRODUCTION RELOCATION BLOCKED**
 Opened: 2026-10-05
 
 ## Product direction
@@ -99,15 +99,23 @@ Resolved:
 - exact level/classification/difficulty, selection type/color, boss
   classification, and threat values are excluded.
 
-Still unproven:
-- `"target"` token behavior on `GetNamePlateForUnit` on the tested client;
-- accessible nameplate availability in representative gameplay;
-- behind-camera query behavior;
-- safe addon-owned anchor relation;
-- ordinary reaction/triviality runtime values.
+P0140 runtime-proven for the observed scope:
+- direct `"target"` query safely reaches the no-accessible-nameplate fallback;
+- ordinary friendly reaction state is readable;
+- ordinary `UnitIsTrivial=false` was observed;
+- zero probe failures / secret skips were recorded.
 
-Next:
-Deploy and validate the prepared P0140 read-only runtime probe.
+Still unproven / environmentally deferred:
+- positive accessible `"target"` nameplate result;
+- nameplate add/remove and behind-camera runtime paths;
+- safe addon-owned attachment/detach relation;
+- production world-anchor candidate;
+- hostile/neutral/trivial-hostile state coverage.
+
+Next sequencing:
+leave the positive anchor path open for natural evidence and advance the independent
+D-037 navigation source-capability audit. Do not alter nameplate settings merely to
+manufacture the deferred state.
 
 ## P0140 implementation checkpoint
 
@@ -129,5 +137,7 @@ Implementation boundary:
 - no nameplate enumeration/CVar changes/Blizzard-frame mutation/polling;
 - current screen-space Logres target remains unchanged.
 
-Runtime evidence remains pending. A clean no-nameplate state is a valid fallback
-observation; an actual Lua/secret/protected-frame/attachment failure is not.
+Runtime result is now recorded in
+`../evidence/P0140_WORLD_TARGET_RUNTIME_PASS_WITH_DEFERRALS_2026-10-05.md`.
+The fallback/reaction path passed; positive anchor/attachment remains environmental
+DEFERRED and production relocation stays prohibited.

@@ -4,103 +4,46 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0139 `b012213662a93b455b1ed3af2325a2bacdb2a59d`.
+P0140 `f7e2c31dd656dd1a7478670c56a32747db32a66e`.
 
-Current durable runtime:
-`0.0.67-dev`.
-
-Prepared candidate runtime:
+Current pushed/tested runtime:
 `0.0.68-dev`.
 
 P0140:
-**PREPARED — READ-ONLY WORLD-TARGET RUNTIME PROOF PENDING.**
+**RUNTIME PASS WITH ENVIRONMENTAL WORLD-ANCHOR/ATTACHMENT DEFERRAL.**
 
-P0139 source + fallback-policy result:
-**RESOLVED / DURABLE.**
+Observed:
+- safe no-target/no-nameplate fallback;
+- ordinary friendly reaction reads and ordinary `UnitIsTrivial=false`;
+- zero probe failures / zero secret skips in recorded target samples;
+- no accessible target nameplate observed;
+- no attachment attempt or world-anchor candidate was therefore possible;
+- integrated `Run All` PASS;
+- user reported no testing issues.
 
-P0136:
-**INSTALLED / PUSHED — RUNTIME PROBE PASS WITH ENVIRONMENTAL DEFERRALS.**
-
-P0135 source + priority-policy result:
-**RESOLVED.**
-
-P0136:
-**ACCEPTED LOCALLY — player helpful populated data PASS; player harmful and
-populated target categories DEFERRED; integrated checks PASS.**
+Production world-target relocation remains blocked. Do not change nameplate
+settings solely to manufacture the deferred positive-anchor path.
 
 ## Active work stream
 
-The user has explicitly chosen to finish the approved visual translation sequence
-before returning to Camera.
-
 Current objective:
-**Validate prepared P0140 — read-only world-target anchor/reaction runtime probe.**
+**P0142 — D-037 navigation/minimap source-capability audit.**
 
-Camera remains frozen, not complete.
+Audit quest destination, local POI/service, tracking-result, safe position/distance,
+update semantics, and minimap completeness from current Forever source before any
+new runtime probe or marker implementation.
 
-## Accepted visual translation checkpoints
-
-- P0120 shared percentage bar — accepted production baseline;
-- P0121 player cast cue — runtime + visual PASS; target proof deferred;
-- P0122 Context messages — runtime/preview PASS; completion styling deferred;
-- P0123 Compass heading/manual waypoint — runtime + visual PASS;
-- P0124 organic health tunnel — runtime + visual baseline accepted; broad final
-  polish deferred to whole-interface calibration;
-- P0126 Active Quest — runtime + visual PASS at `89b0c563` / `0.0.58-dev`;
-  count-free objective labels, bar-only progress, hover-only exact detail.
-
-## Camera preservation
-
-P0119 is durable at `c342bc176a9d5de80ec116d0c6b31fa595cd75b3`
-on `0.0.49-dev`.
-
-The frame-shaped transition correction is installed, but the normal-Taxi landing
-retest has not been durably recorded as PASS. Resume that exact G.5 proof only
-after the visual sequence is finished.
-
-No SetCVar, Taxi rotation, or Taxi UI fade is authorized by this handoff.
-
-## Next quest-interaction boundary
-
-P0128 resolves the source layer: the needed narrative/reward/gossip APIs exist,
-and the quest-action APIs exist, but mutation ownership remains runtime-unproven.
-
-P0129 runtime evidence is accepted for the observed read-only scope:
-- three real `QUEST_DETAIL` captures;
-- one stable available-gossip quest row;
-- one real two-choice reward metadata sample;
-- no observed secret/call failures;
-- all expected mutation APIs present with `invoked=0`;
-- `QUEST_PROGRESS` / `QUEST_COMPLETE` remain environmental deferrals.
-
-P0130 uses only the proven offer/detail path for bounded/paged narrative
-presentation. Blizzard interaction remains fully available.
-
-Do not automate quest choices or bundle quest navigation/minimap ownership.
+Blizzard minimap remains stock. Camera remains frozen, not complete.
 
 ## Key references
 
+- `../evidence/P0140_WORLD_TARGET_RUNTIME_PASS_WITH_DEFERRALS_2026-10-05.md`
 - `../patches/P0140_WORLD_TARGET_READ_ONLY_PROBE.md`
-- `../patches/P0139_WORLD_TARGET_SOURCE_ANCHOR_AUDIT.md`
-- `../evidence/P0139_WORLD_TARGET_SOURCE_ANCHOR_AUDIT_2026-10-05.md`
-- `../decisions/D-042_WORLD_TARGET_ANCHOR_AND_FALLBACK_POLICY.md`
-- `../patches/P0138_CLOSE_P0137_OPEN_WORLD_TARGET_AUDIT.md`
-- `../evidence/P0137_PLAYER_HELPFUL_AURA_RUNTIME_VISUAL_PASS_2026-10-05.md`
 - `../investigations/FUTURE_WORLD_TARGET_PRESENTATION.md`
-- `../patches/P0137_PLAYER_HELPFUL_AURA_PRESENTATION.md`
-- `../evidence/P0136_AURA_STATUS_RUNTIME_PASS_WITH_DEFERRALS_2026-10-05.md`
-- `../patches/P0136_AURA_STATUS_READ_ONLY_PROBE.md`
-- `../evidence/P0135_AURA_STATUS_SOURCE_PRIORITY_AUDIT_2026-10-05.md`
-- `../decisions/D-041_AURA_STATUS_SOURCE_AND_PRIORITY_POLICY.md`
-- `../investigations/FUTURE_AURA_STATUS_PRESENTATION.md`
-- `../evidence/P0129_NPC_QUEST_INTERACTION_RUNTIME_READ_PASS_2026-10-05.md`
-- `../evidence/P0128_NPC_QUEST_INTERACTION_SOURCE_AUDIT_2026-10-05.md`
-- `../decisions/D-035_QUEST_INTERACTION_OWNERSHIP.md`
-- `../investigations/NPC_QUEST_INTERACTION_CAPABILITY.md`
-- `../evidence/P0126_ACTIVE_QUEST_RUNTIME_VISUAL_PASS_2026-10-05.md`
-- `../decisions/D-039_APPROVED_VISUAL_BASELINE.md`
+- `../investigations/FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md`
+- `../decisions/D-042_WORLD_TARGET_ANCHOR_AND_FALLBACK_POLICY.md`
+- `../decisions/D-037_NAVIGATION_MARKER_ROLES_AND_MINIMAP_DIRECTION.md`
+- `../decisions/D-038_COMPASS_VISUAL_FOCUS_AND_DEPTH_CONTRACT.md`
 - `../architecture/VISUAL_IMPLEMENTATION_STATUS.md`
-- `../evidence/P0124_HEALTH_TUNNEL_RUNTIME_VISUAL_PASS_2026-10-04.md`
 - `../roadmap/PHASE_H_INTEGRATION_POLISH.md`
 - `../roadmap/PHASE_G_CINEMATIC_CAMERA.md`
-- `../architecture/CAMERA.md`

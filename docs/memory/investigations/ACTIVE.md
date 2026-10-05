@@ -151,34 +151,35 @@ gated/deferred. Do not manufacture those states solely to advance sequencing.
 ## World-attached target presentation
 
 Status:
-**OPEN — P0140 PREPARED; IN-CLIENT RUNTIME PROOF PENDING.**
+**OPEN / ENVIRONMENTALLY DEFERRED POSITIVE ANCHOR — P0140 FALLBACK/REACTION RUNTIME PASS.**
 
 Canonical investigation:
 `FUTURE_WORLD_TARGET_PRESENTATION.md`.
 
-P0139 resolves the source/policy layer and accepts D-042:
-- conditional accessible nameplate is the only world-anchor candidate;
-- `includeForbidden=false` is mandatory;
-- nameplate/target events provide event-driven invalidation;
-- behind-camera state is an explicit fallback condition;
-- reaction uses ordinary runtime-proven reaction APIs only;
-- relative danger is limited to runtime-proven `UnitIsTrivial` low-danger
-  de-emphasis;
-- exact level/classification/difficulty/selection/threat inference is excluded;
-- existing screen-space Logres target remains canonical fallback;
-- no target/nameplate suppression is authorized.
+P0139 / D-042 source policy remains authoritative. P0140 is durable at
+`f7e2c31d` / `0.0.68-dev`.
 
-P0139 is durable at `b0122136`.
+Runtime evidence proves:
+- safe no-target/no-nameplate fallback;
+- ordinary friendly reaction;
+- ordinary `UnitIsTrivial=false`;
+- zero probe failures / secret skips in the recorded samples;
+- integrated `Run All` PASS.
 
-P0140 prepares runtime `0.0.68-dev` with a diagnostic-only `WorldTargetProbe`:
-- direct `C_NamePlate.GetNamePlateForUnit("target", false)` re-query;
-- target/nameplate/behind-camera/world event invalidation only;
-- hidden addon-owned `UIParent` proxy attachment test outside combat, followed by
-  immediate detach;
-- secret-first `UnitReaction`, `UnitCanAttack`, `UnitIsFriend`, and
-  `UnitIsTrivial` reads;
-- no polling, nameplate enumeration, Blizzard mutation, CVar changes, or
-  production target relocation.
+No accessible target nameplate was observed, so behind-camera and hidden
+addon-owned attachment paths remain environmental DEFERRED. Production relocation
+remains blocked and the screen-space target remains canonical fallback.
 
-Runtime evidence is still required. Environmental absence of an accessible
-nameplate is DEFERRED/fallback-observed rather than FAIL.
+## Navigation / minimap capability
+
+Status:
+**OPEN — P0142 D-037 SOURCE-CAPABILITY AUDIT NEXT.**
+
+Canonical investigation:
+`FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md`.
+
+Only heading/manual waypoint are production-proven. P0142 will audit the exact
+Forever source layer for quest destination, local POI/service, tracking-result,
+safe coordinate/distance inputs, update semantics, and minimap completeness.
+
+No new marker role or minimap suppression is authorized by opening this audit.

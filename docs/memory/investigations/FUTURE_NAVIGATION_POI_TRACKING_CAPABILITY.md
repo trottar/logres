@@ -1,6 +1,6 @@
 # Future Navigation — Local POI / Tracking Capability Audit
 
-Status: **DEFERRED / FUTURE PHASE H+ — SOURCE + RUNTIME PROOF REQUIRED**
+Status: **OPEN — P0142 SOURCE-CAPABILITY AUDIT NEXT**
 Opened: 2026-10-03
 Canonical direction: `../decisions/D-037_NAVIGATION_MARKER_ROLES_AND_MINIMAP_DIRECTION.md`
 
@@ -83,3 +83,22 @@ authorized by this record.
 
 D-030 remains the current minimap runtime boundary until the complete replacement
 gate is deliberately satisfied.
+
+## P0141 sequencing checkpoint
+
+P0140 closed its observed runtime scope with safe fallback/reaction PASS but an
+environmental positive-nameplate/attachment deferral. Project sequencing therefore
+advances to this independent approved capability slice rather than forcing
+nameplate state.
+
+P0142 is source evidence only. It must audit the exact current Forever generation
+before any new runtime code and determine:
+- quest-destination source viability;
+- tracking selection and individual-result enumerability;
+- local POI/service enumerability and usable position/bearing data;
+- safe player/map coordinate and comparable-distance inputs;
+- update/removal/staleness and secret/protected behavior;
+- stock minimap information/control responsibilities;
+- the smallest justified read-only runtime probes, if any.
+
+The stock minimap remains Blizzard-owned.

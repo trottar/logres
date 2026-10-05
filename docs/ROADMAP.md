@@ -120,12 +120,13 @@ fallback, keeps Blizzard target/nameplate UI available, uses ordinary reaction
 state only, and limits relative-danger policy to `UnitIsTrivial` low-danger
 de-emphasis without exact difficulty inspection.
 
-P0140 is prepared on candidate runtime `0.0.68-dev` as a diagnostic-only,
-event-driven runtime probe. It tests the exact `"target"` nameplate query,
-behind-camera state, hidden addon-owned out-of-combat attachment, and
-secret-first reaction/triviality reads without moving production presentation.
+P0140 `f7e2c31d` / `0.0.68-dev` passes the observed read-only runtime scope
+with environmental anchor/attachment deferrals: safe no-nameplate fallback,
+ordinary friendly reaction, ordinary `UnitIsTrivial=false`, zero recorded probe
+failures/secret skips, and integrated checks. No accessible target nameplate was
+observed, so production world-attached placement remains blocked.
 
-Next is in-client P0140 validation. Production target placement does not move
-before that proof is recorded.
-
-D-037 unproven navigation/minimap roles remain separately gated.
+P0142 is next: a D-037 navigation/minimap source-capability audit for quest
+destination, local POI/service, tracking results, safe coordinate/distance inputs,
+update semantics, and minimap completeness. Stock minimap presentation remains
+available until the replacement gate is actually proven.

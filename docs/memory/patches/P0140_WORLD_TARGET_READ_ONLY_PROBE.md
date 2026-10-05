@@ -3,7 +3,7 @@
 Date: 2026-10-05
 Baseline: `b012213662a93b455b1ed3af2325a2bacdb2a59d`
 Runtime target: `0.0.68-dev`
-Result: **PREPARED — IN-CLIENT RUNTIME PROOF PENDING**
+Result: **INSTALLED / PUSHED — RUNTIME PASS WITH ENVIRONMENTAL ANCHOR/ATTACHMENT DEFERRAL** (`f7e2c31`)
 
 ## Purpose
 
@@ -111,3 +111,25 @@ before advancing.
 
 If the runtime gate passes, record exact evidence before authorizing production
 world-target placement. Target aura/status remains separately gated.
+
+## Runtime result
+
+Canonical evidence:
+`../evidence/P0140_WORLD_TARGET_RUNTIME_PASS_WITH_DEFERRALS_2026-10-05.md`.
+
+Observed PASS:
+- safe no-target/no-nameplate fallback;
+- ordinary friendly reaction state;
+- ordinary `UnitIsTrivial=false`;
+- zero observed secret skips / failures;
+- integrated `Run All`;
+- no user-reported runtime/visual issue.
+
+Environmental deferrals:
+- no accessible target nameplate was observed;
+- no nameplate add/remove/behind-camera event was recorded;
+- hidden addon-owned attachment was not attempted;
+- no production world-anchor candidate was proven.
+
+Therefore P0140 closes as PASS for the observed diagnostic/fallback/reaction scope,
+while production anchoring remains blocked pending natural positive anchor evidence.

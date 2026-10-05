@@ -4,7 +4,7 @@ As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — P0140 prepared; world-target runtime proof pending.**
+**Approved visual implementation translation — P0140 fallback/reaction runtime PASS with anchor deferral; P0142 navigation source audit next.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -113,16 +113,18 @@ to ordinary runtime-proven state, and limits relative danger to trivial-target
 de-emphasis without exact difficulty inspection.
 
 P0140:
-**PREPARED on `0.0.68-dev` — READ-ONLY WORLD-TARGET RUNTIME PROOF PENDING.**
+**INSTALLED / PUSHED — RUNTIME PASS WITH ENVIRONMENTAL ANCHOR/ATTACHMENT DEFERRAL** at
+`f7e2c31d` / `0.0.68-dev`.
 
-The new contextual probe uses only event-driven direct `"target"` re-query,
-`includeForbidden=false`, hidden addon-owned out-of-combat attachment testing, and
-secret-first reaction/triviality reads. Production target placement and Blizzard
-surfaces remain unchanged.
+Safe no-nameplate fallback, ordinary friendly reaction, ordinary
+`UnitIsTrivial=false`, zero probe failures/secret skips, and integrated `Run All`
+are proven for the observed scope. No accessible target nameplate was observed, so
+positive anchoring, behind-camera behavior, and hidden attachment remain deferred.
+Production target placement remains screen-space.
 
 Next:
-**Deploy P0140 and record the in-client result.**
+**P0142 D-037 navigation/minimap source-capability audit.**
 
-This is implementation translation under D-039/D-040. It does not authorize
-Phase-H-only capability expansion, stock minimap suppression, broader aura
+This remains capability-gated preparation under D-037/D-039/D-040. It does not
+authorize stock minimap suppression, unproven navigation markers, broader aura
 ownership, production world-target relocation, or unrelated Camera changes.

@@ -278,15 +278,19 @@ Reaction candidates are source-available; relative danger is restricted to
 `UnitIsTrivial` low-danger de-emphasis if runtime-proven ordinary.
 
 P0140:
-**PREPARED — `0.0.68-dev`, IN-CLIENT RUNTIME PROOF PENDING.**
+**RUNTIME PASS WITH ENVIRONMENTAL ANCHOR/ATTACHMENT DEFERRAL — `f7e2c31d`, `0.0.68-dev`.**
 
-The diagnostic-only `WorldTargetProbe` preserves the current production target,
-uses the D-042 event/fallback contract, tests only a hidden addon-owned anchor
-relation outside combat, and reads reaction/triviality through secret-first
-wrappers. It does not suppress or mutate Blizzard target/nameplate UI.
+The diagnostic proves safe no-nameplate fallback and ordinary friendly
+reaction/triviality reads with zero recorded failures. No accessible target
+nameplate was observed, so behind-camera and hidden attachment proof remain
+environmentally deferred. Production target relocation stays blocked.
 
 Next:
-**Deploy P0140 and record runtime evidence before any production relocation.**
+**P0142 D-037 navigation/minimap source-capability audit.**
+
+P0142 is source evidence only: audit quest destination, local POI/service,
+tracking-result, safe coordinate/distance inputs, event semantics, and minimap
+completeness before defining any runtime probe.
 
 This remains capability preparation under D-035/D-039. It does not authorize
 minimap suppression, unproven navigation sources, broader aura ownership,

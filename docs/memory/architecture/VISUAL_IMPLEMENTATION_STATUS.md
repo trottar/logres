@@ -32,7 +32,7 @@ A component can be visually complete while runtime ownership remains incomplete.
 | Action button primitive | Yes | Secure Primary/Secondary/Utility buttons consume the production D-040 frame/state family; P0116 core presentation is proven and P0118 keybind plate/compact modifier/42 px polish is visually accepted | Checked/cooldown/range/resource/unusable visual states remain coverage-deferred; final 36-button density calibration remains whole-screen polish | **Production primitive + metadata polish proven** |
 | Status / aura icon primitive | Yes | P0137 `2b578759` / `0.0.67-dev` is runtime + visual PASS for the passive player `HELPFUL|PLAYER` native-icon lane with lower-right ordinary stack metadata and event-driven updates | Retain harmful/target/private/group stock ownership until populated runtime proof; no stock suppression | **Player helpful production baseline accepted** |
 | Cast-state cue | Yes | P0121 is durable at `fc928d99`; player cast runtime + visual result is accepted on the approved heraldic frame/glyph family | Target cast/channel remains environmentally deferred; player channel/interrupted variants remain state-coverage items unless naturally observed | **Player cast production primitive proven — target proof deferred** |
-| Target health/name + relative danger | Yes | Existing sparse target name + P0120 percentage bar remain the screen-space fallback. P0139 resolves D-042; P0140 `0.0.68-dev` is prepared as an event-driven read-only nameplate/attachment/reaction diagnostic with no production relocation | In-client P0140 proof of target-token nameplate availability, hidden addon-owned attachment, behind-camera fallback, and ordinary reaction/triviality | **Runtime probe prepared — capability proof pending** |
+| Target health/name + relative danger | Yes | Existing sparse target name + P0120 percentage bar remain the screen-space fallback. P0140 `f7e2c31d` / `0.0.68-dev` runtime-proves safe no-nameplate fallback and ordinary friendly reaction/triviality reads with zero observed failures | Positive accessible-nameplate result, behind-camera path, and hidden addon-owned attachment remain environmental deferrals; production relocation stays blocked | **Fallback/reaction runtime PASS — world-anchor capability deferred** |
 | Pet / party compact health | Covered by bar + target/ally sheets | P0120 integrates compact percentage bars inside the runtime-proven pet/party rows using the accepted shared primitive | Natural group-composition density calibration remains; preserve Blizzard secure party/aura surfaces until separately replaced | **Production primitive integrated — group calibration deferred** |
 | NPC quest narrative | Yes | P0130 R1 `0.0.61-dev` is runtime + visual PASS: full-source paging, Previous/Next, real offer rendering, Blizzard-control coexistence, and same-conversation Immersion OFF -> ON restoration all proven | Final whole-screen spacing/contrast calibration remains polish; progress/completion narrative stays gated by deferred runtime states | **Runtime + visual production baseline accepted** |
 | NPC quest controls / rewards | Yes | P0132 production controls pass; P0133 `f2feead6` / `0.0.65-dev` is runtime + visual PASS with Accept-left / Decline-right aligned to Blizzard while fallback remains visible | Continue/Complete/reward/gossip mutation remains separately gated; later suppression requires further proof | **Offer production baseline accepted for proven state** |
@@ -40,7 +40,7 @@ A component can be visually complete while runtime ownership remains incomplete.
 | Active Quest | Yes | P0126 is durable at `89b0c563` / `0.0.58-dev`; final R3 runtime + visual PASS uses one-focus title, count-free normalized objective labels, bar-only progress, hover-only exact detail, quiet completion, and an independent persisted toggle | Final whole-screen spacing/contrast calibration remains polish; do not reopen persistent `%`/`N/M` mechanics without new evidence | **Runtime + visual production baseline accepted** |
 | Player-health tunnel | Yes / D-036 frozen | P0124 is durable at `1e7e27e` / `0.0.54-dev`; five Theme-owned organic tunnel/death masks run on the proven native secret-safe health-to-alpha path, with deterministic D-036 preview percentages | Whole-interface contrast/scale polish remains; natural damage/heal may be observed opportunistically but is not required to re-prove the accepted preview matrix | **Runtime + visual baseline accepted — final polish deferred** |
 | Compass heading + manual waypoint | Yes | P0123 is durable at `1721eb4d` / `0.0.53-dev`; heading/manual-waypoint runtime + visual PASS includes truthful off-tape suppression and near-center marker proof | Distance-dependent depth and identity remain gated because comparable distance/name inputs are not proven; quest/POI/tracking remain separate capability work | **Production primitive proven — extended roles gated** |
-| Compass quest / POI / tracking roles | Yes | Sources not generally proven; only manual waypoint is production-proven | Dedicated source/runtime capability audit; implement only proven roles; keep stock minimap until D-037 replacement gate completes | **Capability blocked** |
+| Compass quest / POI / tracking roles | Yes | Sources not generally proven; only manual waypoint is production-proven | P0142 D-037 source-capability audit next; implement only runtime-proven roles and keep stock minimap until the full replacement gate completes | **Capability audit active next** |
 | Class/pet/special controls | Shared button language approved; class-specific mechanics only partially covered | Existing Blizzard-owned child/special surfaces remain available; Logres ordinary action roles are separate | Apply button family where ownership is proven; design/implement discrete class-resource art (runes/combo points/etc.) separately as needed | **Residual art + capability** |
 | Settings / accessibility | Visual language only, no dedicated final sheet | Preference infrastructure exists, not final Phase-H settings UI | Design compact settings/accessibility presentation and expose only accepted product choices | **Residual design / integration** |
 
@@ -106,12 +106,17 @@ Deferred:
 Completed:
 16. P0139 world-attached target source + anchoring/fallback audit.
 
-Prepared:
-17. P0140 read-only world-target anchor/reaction runtime probe — candidate `0.0.68-dev`; runtime validation pending.
+Completed with environmental deferral:
+17. P0140 read-only world-target runtime probe — fallback/reaction PASS on
+    `f7e2c31d` / `0.0.68-dev`; positive anchor/attachment remains deferred.
+
+Next:
+18. P0142 D-037 navigation/minimap source-capability audit.
 
 After that:
-18. separately open unproven compass-role capability slices as evidence supports;
-19. finish class-specific discrete resources, settings/accessibility, and final
+19. implement only capability-proven navigation roles or preserve their negative /
+    deferred results;
+20. finish class-specific discrete resources, settings/accessibility, and final
     whole-screen composition calibration.
 
 This is a dependency-oriented implementation map, not a claim that formal Phase H

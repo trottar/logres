@@ -159,5 +159,6 @@
 | P0137 | 2026-10-05 | INSTALLED / PUSHED — RUNTIME + VISUAL PASS | Production player `HELPFUL|PLAYER` passive aura lane accepted at real UI scale (`2b578759`, `0.0.67-dev`) |
 | P0138 | 2026-10-05 | INSTALLED / PUSHED — DOCS-ONLY ACCEPTANCE CHECKPOINT | Record P0137 acceptance; preserve aura deferrals; open P0139 world-attached target source + anchoring/fallback audit (`6392b2e4`) |
 | P0139 | 2026-10-05 | INSTALLED / PUSHED — SOURCE + FALLBACK POLICY LAYER RESOLVED | Pin conditional nameplate anchor/reaction/triviality policy; accept D-042; open P0140 read-only runtime probe (`b0122136`) |
-| P0140 | 2026-10-05 | PREPARED — READ-ONLY RUNTIME PROOF PENDING | Event-driven world-target nameplate/anchor/reaction diagnostic on candidate `0.0.68-dev`; no production relocation |
+| P0140 | 2026-10-05 | INSTALLED / PUSHED — RUNTIME PASS WITH ENVIRONMENTAL ANCHOR/ATTACHMENT DEFERRAL | Safe no-nameplate fallback + ordinary friendly reaction proven; no accessible plate/attachment observed (`f7e2c31d`, `0.0.68-dev`) |
+| P0141 | 2026-10-05 | PREPARED R1 — DOCS/EVIDENCE ONLY; INITIAL ARTIFACT ROLLED BACK ON MEMORY-HEALTH HEADING CONTRACT | Record P0140 runtime result; preserve world-anchor deferral; open P0142 D-037 navigation/minimap source audit |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.
