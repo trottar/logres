@@ -186,7 +186,13 @@ Accepted parallel visual checkpoints:
   calibration.
 
 Next parallel objective:
-**Active Quest one-focus presentation using proven passive quest/objective data.**
+**P0126 Active Quest one-focus presentation — prepared for runtime + visual proof.**
+
+P0126 reuses the proven super-tracked/selected identity policy, quest
+title/completion flags, and guarded objective rows. It adds an independent
+persisted toggle, shared percentage-bar progress rows, hover-only exact
+wording/counts, deterministic normal/complete previews, and a stable upper-right
+anchor without suppressing Blizzard quest management.
 
 This remains implementation translation under D-039/D-040. It does not authorize
 Phase-H-only capability expansion, minimap suppression, unproven navigation

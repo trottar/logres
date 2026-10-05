@@ -4,18 +4,23 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0124 `1e7e27e37b91fc6ee9dc39c015456626414b7964`.
+P0125 `72d2f040d9a4b5a5a5fa125e22da58884c07cbeb`.
 
 Current pushed runtime:
 `0.0.54-dev`.
+
+P0126 refinement runtime:
+`0.0.58-dev` — R1 hover correction passed; R2 bar-only progress was visually
+preferred; R3 adds count-free objective labels above the bars while preserving
+hover-only exact counts. Narrow visual confirmation remains.
 
 ## Active work stream
 
 The user has explicitly chosen to finish the approved visual translation sequence
 before returning to Camera.
 
-Next objective:
-**Active Quest — approved one-focus presentation.**
+Current objective:
+**P0126 Active Quest — deploy and validate the prepared one-focus presentation.**
 
 Camera remains frozen, not complete.
 

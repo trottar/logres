@@ -49,7 +49,7 @@ Accepted checkpoints:
   whole-interface polish deferred.
 
 Next:
-**Active Quest one-focus presentation.**
+**P0126 Active Quest one-focus runtime + visual validation.**
 
 This is implementation translation under D-039/D-040. It does not authorize
 Phase-H-only capability expansion, stock minimap suppression, Logres-owned quest

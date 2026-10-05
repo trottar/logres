@@ -16,15 +16,25 @@ sequence is finished.
 
 ## Current Work Item
 
-**Active Quest — implement the approved one-focus presentation using already-proven
-passive quest/objective data, without turning it into a permanent multi-quest
-tracker.**
+**P0126 — Active Quest one-focus presentation prepared for in-client runtime +
+visual proof.**
 
 Latest verified durable checkpoint:
-P0124 `1e7e27e37b91fc6ee9dc39c015456626414b7964`.
+P0125 `72d2f040d9a4b5a5a5fa125e22da58884c07cbeb`.
 
 Current pushed runtime:
 `0.0.54-dev`.
+
+Prepared refinement runtime:
+`0.0.58-dev`.
+
+Initial P0126 runtime `0.0.55-dev` exposed the hover tooltip API failure.
+P0126 R1 `0.0.56-dev` corrected it and passed runtime/hover validation.
+P0126 R2 `0.0.57-dev` removed persistent `%` labels and was visually preferred.
+
+P0126 R3 adds count-free persistent objective labels from the existing normalized
+objective text above each bar, while preserving hover-only exact counts. Narrow
+visual confirmation is pending.
 
 ## Verified State
 
@@ -77,15 +87,20 @@ Preserved deferrals/gates:
 
 ## Next Action
 
-Implement the narrow Active Quest visual/runtime slice from the approved D-039
-one-focus contract.
+After P0126 is verified pushed, deploy runtime `0.0.55-dev` and validate Active
+Quest from the Phase-F developer panel:
 
-Before writing runtime code:
-1. inspect the current Phase-F quest/objective producers and their addon-owned state;
-2. define the one-focus selection and ambient wording policy using proven data only;
-3. keep exact counts behind deliberate inspection/hover;
-4. preserve Blizzard quest controls and tracker fallback unless a separate
-   replacement capability is proven.
+1. Active Quest Check;
+2. Active Quest Preview;
+3. Active Quest Complete;
+4. Active Quest Live;
+5. Active Quest OFF / ON;
+6. with a real selected/super-tracked quest when naturally available, confirm one
+   live focus and hover-only exact objective wording/counts;
+7. confirm Blizzard quest log / Objective Tracker remain available;
+8. Immersion OFF / ON hides and restores the panel.
+
+No quest travel or contrived completion is required.
 
 ## Success Criteria
 
@@ -115,6 +130,8 @@ The next Active Quest checkpoint succeeds when:
 
 ## Relevant References
 
+- `docs/memory/evidence/P0126_ACTIVE_QUEST_SOURCE_AUDIT_2026-10-04.md`
+- `docs/memory/patches/P0126_ACTIVE_QUEST_PRESENTATION.md`
 - `docs/memory/decisions/D-039_APPROVED_VISUAL_BASELINE.md`
 - `docs/memory/decisions/D-040_PRODUCTION_VISUAL_ASSET_TRANSLATION_CONTRACT.md`
 - `docs/memory/architecture/VISUAL_IMPLEMENTATION_STATUS.md`

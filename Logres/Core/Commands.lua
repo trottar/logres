@@ -141,10 +141,11 @@ local function printPreferences()
     local preferences = Logres:GetPreferences()
 
     emit(string.format(
-        "Logres preferences: schema=%s revision=%s immersionEnabled=%s",
+        "Logres preferences: schema=%s revision=%s immersionEnabled=%s activeQuestEnabled=%s",
         tostring(Logres.db and Logres.db.schema or "?"),
         tostring(preferences.revision),
-        boolText(preferences.immersionEnabled)
+        boolText(preferences.immersionEnabled),
+        boolText(preferences.activeQuestEnabled)
     ))
 end
 
@@ -2492,6 +2493,146 @@ local function runObjectiveProgressPreview()
     ))
 end
 
+local function runActiveQuestCheck()
+    local status =
+        Logres:GetModuleStatus("ActiveQuest")
+    local active =
+        Logres:GetModule("ActiveQuest")
+
+    local refreshOK, refreshState =
+        active:Refresh("diagnostic-check")
+    local debugStatus = active:GetDebugStatus()
+
+    local policyCoherent =
+        (
+            debugStatus.immersionEnabled == true
+            and debugStatus.activeQuestEnabled == true
+        )
+        or debugStatus.presentationShown == false
+
+    local sourceCoherent =
+        debugStatus.lastQuestID == nil
+        or (
+            type(debugStatus.lastQuestID) == "number"
+            and debugStatus.lastQuestID > 0
+            and debugStatus.lastTitleReady == true
+            and type(debugStatus.lastRowCount) == "number"
+            and debugStatus.lastRowCount >= 0
+        )
+
+    local passed =
+        refreshOK == true
+        and status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and debugStatus.rootReady == true
+        and debugStatus.titleReady == true
+        and debugStatus.ambientReady == true
+        and debugStatus.rowsReady == true
+        and debugStatus.eventFrameReady == true
+        and debugStatus.titleAPIAvailable == true
+        and debugStatus.completeAPIAvailable == true
+        and debugStatus.readyAPIAvailable == true
+        and debugStatus.tooltipAvailable == true
+        and debugStatus.questLogEventRegistered == true
+        and debugStatus.questWatchEventRegistered == true
+        and debugStatus.questWatchListEventRegistered == true
+        and debugStatus.superTrackingEventRegistered == true
+        and debugStatus.worldEventRegistered == true
+        and policyCoherent
+        and sourceCoherent
+        and debugStatus.lastSecret == false
+        and debugStatus.lastError == nil
+
+    emit(string.format(
+        "Logres activequestcheck: %s (initialized=%s enabled=%s module=%s immersion=%s feature=%s preview=%s shown=%s titleAPI=%s completeAPI=%s readyAPI=%s tooltip=%s events=%s/%s/%s/%s/%s eventCounts=%s/%s/%s/%s/%s refreshes=%s presentations=%s previews=%s questID=%s source=%s rows=%s/%s complete=%s ready=%s secret=%s refreshState=%s reason=%s presentationReason=%s error=%s)",
+        passed and "PASS" or "FAIL",
+        tostring(status.initialized),
+        tostring(status.enabled),
+        tostring(debugStatus.moduleEnabled),
+        tostring(debugStatus.immersionEnabled),
+        tostring(debugStatus.activeQuestEnabled),
+        tostring(debugStatus.previewMode),
+        tostring(debugStatus.presentationShown),
+        tostring(debugStatus.titleAPIAvailable),
+        tostring(debugStatus.completeAPIAvailable),
+        tostring(debugStatus.readyAPIAvailable),
+        tostring(debugStatus.tooltipAvailable),
+        tostring(debugStatus.questLogEventRegistered),
+        tostring(debugStatus.questWatchEventRegistered),
+        tostring(debugStatus.questWatchListEventRegistered),
+        tostring(debugStatus.superTrackingEventRegistered),
+        tostring(debugStatus.worldEventRegistered),
+        tostring(debugStatus.questLogEventCount),
+        tostring(debugStatus.questWatchEventCount),
+        tostring(debugStatus.questWatchListEventCount),
+        tostring(debugStatus.superTrackingEventCount),
+        tostring(debugStatus.worldEventCount),
+        tostring(debugStatus.refreshCount),
+        tostring(debugStatus.presentationCount),
+        tostring(debugStatus.previewCount),
+        tostring(debugStatus.lastQuestID),
+        tostring(debugStatus.lastSource),
+        tostring(debugStatus.lastVisibleRowCount),
+        tostring(debugStatus.lastRowCount),
+        tostring(debugStatus.lastComplete),
+        tostring(debugStatus.lastReady),
+        tostring(debugStatus.lastSecret),
+        tostring(refreshState),
+        tostring(debugStatus.lastReason),
+        tostring(debugStatus.lastPresentationReason),
+        tostring(debugStatus.lastError)
+    ))
+end
+
+local function runActiveQuestPreview(mode)
+    local active = Logres:GetModule("ActiveQuest")
+    local ok, state = active:SetPreviewMode(mode)
+
+    emit(string.format(
+        "Logres activequestpreview: %s (mode=%s state=%s)",
+        ok and "PASS" or "FAIL",
+        tostring(mode),
+        tostring(state)
+    ))
+end
+
+local function handleActiveQuest(argument)
+    if argument == "" or argument == "status" then
+        emit(string.format(
+            "Logres: activeQuestEnabled=%s",
+            boolText(Logres:GetPreference("activeQuestEnabled"))
+        ))
+        return
+    end
+
+    local current = Logres:GetPreference("activeQuestEnabled")
+    local newValue
+
+    if argument == "on" then
+        newValue = true
+    elseif argument == "off" then
+        newValue = false
+    elseif argument == "toggle" then
+        newValue = not current
+    else
+        emit("Usage: /logres activequest [on|off|toggle]")
+        return
+    end
+
+    local changed = Logres:SetPreference(
+        "activeQuestEnabled",
+        newValue,
+        "COMMAND_ACTIVE_QUEST"
+    )
+
+    emit(string.format(
+        "Logres: activeQuestEnabled=%s%s",
+        boolText(newValue),
+        changed and "" or " (unchanged)"
+    ))
+end
+
 local function runQuestDialogueCheck()
     local status =
         Logres:GetModuleStatus("QuestDialogue")
@@ -2940,6 +3081,7 @@ local function runAllChecks()
     runHUDCheck()
     runXPCheck()
     runObjectiveProgressCheck()
+    runActiveQuestCheck()
     runQuestDialogueCheck()
     runActionCheck()
     runStockReplacementCheck()
@@ -3073,6 +3215,9 @@ local function printHelp()
     emit("  /logres xppreview")
     emit("  /logres objectiveprogresscheck")
     emit("  /logres objectiveprogresspreview")
+    emit("  /logres activequestcheck")
+    emit("  /logres activequestpreview [normal|complete|live]")
+    emit("  /logres activequest [on|off|toggle]")
     emit("  /logres questdialoguecheck")
     emit("  /logres questdialoguepreview")
     emit("  /logres hudpreview [on|off]")
@@ -3266,6 +3411,28 @@ local function handleCommand(message)
 
     if command == "objectiveprogresspreview" then
         runObjectiveProgressPreview()
+        return
+    end
+
+    if command == "activequestcheck" then
+        runActiveQuestCheck()
+        return
+    end
+
+    if command == "activequestpreview" then
+        if argument == "normal"
+            or argument == "complete"
+            or argument == "live"
+        then
+            runActiveQuestPreview(argument)
+        else
+            emit("Usage: /logres activequestpreview [normal|complete|live]")
+        end
+        return
+    end
+
+    if command == "activequest" then
+        handleActiveQuest(argument)
         return
     end
 
@@ -3560,6 +3727,42 @@ Logres:RegisterDevPanelAction(
     "objectiveProgressPreview",
     "Objective Progress Preview",
     "objectiveprogresspreview",
+    "F"
+)
+Logres:RegisterDevPanelAction(
+    "activeQuestCheck",
+    "Active Quest Check",
+    "activequestcheck",
+    "F"
+)
+Logres:RegisterDevPanelAction(
+    "activeQuestPreviewNormal",
+    "Active Quest Preview",
+    "activequestpreview normal",
+    "F"
+)
+Logres:RegisterDevPanelAction(
+    "activeQuestPreviewComplete",
+    "Active Quest Complete",
+    "activequestpreview complete",
+    "F"
+)
+Logres:RegisterDevPanelAction(
+    "activeQuestLive",
+    "Active Quest Live",
+    "activequestpreview live",
+    "F"
+)
+Logres:RegisterDevPanelAction(
+    "activeQuestOn",
+    "Active Quest ON",
+    "activequest on",
+    "F"
+)
+Logres:RegisterDevPanelAction(
+    "activeQuestOff",
+    "Active Quest OFF",
+    "activequest off",
     "F"
 )
 Logres:RegisterDevPanelAction(

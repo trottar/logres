@@ -1,6 +1,6 @@
 # Preference Architecture
 
-Status: A.3 IMPLEMENTATION PREPARED
+Status: PRODUCTION — schema 3
 
 ## Purpose
 
@@ -26,6 +26,7 @@ Presentation modules will later combine both inputs.
 
 ```text
 immersionEnabled: boolean = true
+activeQuestEnabled: boolean = true
 ```
 
 ## Database schema
@@ -33,10 +34,12 @@ immersionEnabled: boolean = true
 Current SavedVariables schema:
 
 ```text
-2
+3
 ```
 
-Schema 1 -> 2 migration adds `settings.immersionEnabled=true` only when the value is missing.
+Migrations:
+- schema 1 -> 2 adds `settings.immersionEnabled=true` only when missing;
+- schema 2 -> 3 adds `settings.activeQuestEnabled=true` only when missing.
 
 ## Runtime notification
 
@@ -57,6 +60,9 @@ Preference revision is session-local and not persisted.
 /logres immersion on
 /logres immersion off
 /logres immersion toggle
+/logres activequest on
+/logres activequest off
+/logres activequest toggle
 /logres preferencecheck
 ```
 

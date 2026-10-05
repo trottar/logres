@@ -1,7 +1,7 @@
 # P0125 — Documentation State Synchronization
 
 Date: 2026-10-04
-Result: **PREPARED — DOCS-ONLY STATE SYNCHRONIZATION**
+Result: **INSTALLED / PUSHED — DOCS-ONLY** (`72d2f040`)
 Baseline: `1e7e27e37b91fc6ee9dc39c015456626414b7964`
 Runtime: unchanged at `0.0.54-dev`
 

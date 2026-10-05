@@ -125,3 +125,23 @@ derivatives; the approved reference remains
 Live health still uses native secret-safe
 `UnitHealthPercent -> CurveObject -> Texture:SetAlpha` transport. The assets do
 not authorize Lua inspection or threshold branching on live health.
+
+## Active Quest
+
+P0126 translates approved D-039 sheet 10 into an optional one-focus upper-right
+quest presentation.
+
+Files:
+- `Quest/active_quest_panel.tga` — dark aged-parchment / bronze authored panel;
+- `Quest/active_quest_divider.tga` — restrained heraldic divider;
+- `Quest/active_quest_glyph.tga` — compact Logres quest-focus glyph.
+
+`Theme.lua` owns the asset paths, geometry, and color tokens. Objective percentage
+rows reuse the existing shared percentage-bar assets/tokens.
+
+Canonical art reference:
+`docs/design/approved/10_active_quest_component.png`.
+
+Exact objective wording and mechanical counts are inspection-only. The assets do
+not authorize quest-control ownership, Objective Tracker suppression, or quest
+navigation.

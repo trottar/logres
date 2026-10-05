@@ -70,8 +70,9 @@ Parallel translation has accepted:
 - P0123 heading/manual-waypoint Compass;
 - P0124 organic player-health tunnel.
 
-The next approved visual objective is the optional **Active Quest** one-focus
-presentation using proven passive quest/objective data.
+P0126 prepares the optional **Active Quest** one-focus presentation using proven
+passive quest/objective data. Runtime + visual proof on `0.0.55-dev` is the next
+gate.
 
 D-035 Logres-owned quest controls, D-037 unproven navigation/minimap roles, aura
 ownership, world-target anchoring, and other capability expansions remain

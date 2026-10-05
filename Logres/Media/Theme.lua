@@ -157,6 +157,39 @@ theme.healthTunnel = {
 }
 
 
+theme.activeQuest = {
+    width = 320,
+    minHeight = 136,
+    headerHeight = 86,
+    rowHeight = 42,
+    rowGap = 6,
+    bottomPadding = 14,
+    x = -360,
+    y = -150,
+    titleWidth = 258,
+    titleFont = "GameFontNormalLarge",
+    ambientFont = "GameFontHighlightSmall",
+    objectiveFont = "GameFontHighlightSmall",
+    objectiveTextWidth = 250,
+
+    colors = {
+        title = { 0.94, 0.84, 0.62, 1.00 },
+        ambient = { 0.70, 0.64, 0.51, 0.94 },
+        objective = { 0.82, 0.76, 0.64, 0.96 },
+        complete = { 0.94, 0.72, 0.32, 1.00 },
+        progress = { 0.63, 0.45, 0.16, 1.00 },
+        progressComplete = { 0.82, 0.64, 0.24, 1.00 },
+        hover = { 0.86, 0.72, 0.44, 0.10 },
+        unknown = { 0.44, 0.33, 0.18, 0.72 },
+    },
+
+    assets = {
+        panel = MEDIA_ROOT .. "Quest\\active_quest_panel.tga",
+        divider = MEDIA_ROOT .. "Quest\\active_quest_divider.tga",
+        glyph = MEDIA_ROOT .. "Quest\\active_quest_glyph.tga",
+    },
+}
+
 theme.compass = {
     width = 400,
     height = 54,

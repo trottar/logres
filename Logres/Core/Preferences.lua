@@ -7,6 +7,9 @@ local PREFERENCE_SPECS = {
     immersionEnabled = {
         valueType = "boolean",
     },
+    activeQuestEnabled = {
+        valueType = "boolean",
+    },
 }
 
 local function requireDatabase()
@@ -29,6 +32,7 @@ local function copyPreferences()
     return {
         revision = preferenceRevision,
         immersionEnabled = Logres.db.settings.immersionEnabled and true or false,
+        activeQuestEnabled = Logres.db.settings.activeQuestEnabled and true or false,
     }
 end
 
@@ -57,6 +61,7 @@ local function publishPreferenceChange(previous, changes, reason)
                 {
                     revision = previous.revision,
                     immersionEnabled = previous.immersionEnabled,
+                    activeQuestEnabled = previous.activeQuestEnabled,
                 },
                 copyChanges(changes),
                 reason

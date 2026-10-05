@@ -152,3 +152,29 @@ The warmer/brighter completion treatment is capability-grounded: it is selected
 only when an existing objective row reports a real `finished` transition to true.
 Logres does not infer completion from counts or text and does not add quest turn-in
 /control events for this styling.
+
+## Phase H+ Active Quest one-focus presentation — P0126
+
+P0126 implements the D-032/D-039 optional Active Quest surface from already-proven
+passive quest data.
+
+Focus policy:
+1. super-tracked quest when available;
+2. selected quest fallback.
+
+The renderer reuses `QuestObjectiveProgress` guarded quest-ID/objective readers,
+then reads the already-proven title/completion flags with the same secret-first
+boundary.
+
+Default presentation contains:
+- exact quest title;
+- restrained qualitative phrase derived only from safe progress/completion state;
+- count-free normalized objective wording for each visible row;
+- shared progress bars where ordinary measurable counts exist;
+- no persistent `N/M` or `%` mechanical counts.
+
+Deliberate row hover reveals exact source objective wording and exact counts.
+
+The full Blizzard quest log and Objective Tracker remain available. P0126 performs
+no quest watch/super-track mutation, no quest-control action, and no quest waypoint
+lookup.

@@ -40,7 +40,7 @@ Owns:
 - non-sensitive lifecycle metadata.
 
 Current schema:
-`2`
+`3`
 
 Never persist secret combat values.
 
@@ -48,8 +48,9 @@ Never persist secret combat values.
 
 Owns durable user choice separately from observed game state.
 
-Current preference:
-- `immersionEnabled`.
+Current preferences:
+- `immersionEnabled`;
+- `activeQuestEnabled`.
 
 Consumer contract:
 - `GetPreferences`;

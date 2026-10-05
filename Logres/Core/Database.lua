@@ -1,12 +1,13 @@
 local _, Logres = ...
 
-local CURRENT_SCHEMA = 2
+local CURRENT_SCHEMA = 3
 
 local DEFAULTS = {
     schema = CURRENT_SCHEMA,
     settings = {
         debug = true,
         immersionEnabled = true,
+        activeQuestEnabled = true,
     },
     meta = {
         loadCount = 0,
@@ -57,6 +58,18 @@ local function migrateDatabase(db)
         end
 
         schema = 2
+    end
+
+    if schema < 3 then
+        if type(db.settings) ~= "table" then
+            db.settings = {}
+        end
+
+        if db.settings.activeQuestEnabled == nil then
+            db.settings.activeQuestEnabled = true
+        end
+
+        schema = 3
     end
 
     db.schema = schema

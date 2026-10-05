@@ -93,3 +93,16 @@ Layout integration never authorizes premature Blizzard suppression.
 
 Existing secure interaction, restoration, secret-value, combat-lockdown, and
 fail-open contracts continue to apply.
+
+## P0126 Active Quest anchor
+
+P0126 is the first production consumer of the upper-right Active Quest semantic
+region.
+
+The panel is anchored directly to `UIParent`, not to the stock Objective Tracker,
+minimap, target frame, or another incidental module. This preserves the stable
+integration-owned anchor rule while leaving Blizzard quest-management surfaces
+available.
+
+Exact pixel placement remains calibration work for the later whole-screen polish
+pass.

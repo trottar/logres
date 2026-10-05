@@ -18,10 +18,12 @@ commands = COMMANDS.read_text(encoding="utf-8") if COMMANDS.is_file() else ""
 toc = TOC.read_text(encoding="utf-8") if TOC.is_file() else ""
 
 required_database = [
-    "local CURRENT_SCHEMA = 2",
+    "local CURRENT_SCHEMA = 3",
     "immersionEnabled = true",
+    "activeQuestEnabled = true",
     "local function migrateDatabase(db)",
     "schema = 2",
+    "schema = 3",
 ]
 
 for fragment in required_database:
@@ -34,6 +36,7 @@ required_preferences = [
     "function Logres:SetPreference(name, value, reason)",
     "function Logres:SubscribePreferences(handler)",
     'immersionEnabled = {',
+    'activeQuestEnabled = {',
 ]
 
 for fragment in required_preferences:
@@ -43,6 +46,7 @@ for fragment in required_preferences:
 required_commands = [
     "/logres preferencecheck",
     "/logres immersion [on|off|toggle]",
+    "/logres activequest [on|off|toggle]",
     'Logres:SetPreference(',
 ]
 
