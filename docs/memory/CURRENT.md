@@ -8,7 +8,7 @@ project: logres
 
 ## Active Objective
 
-**Approved visual implementation translation — read-only aura/status runtime probe next.**
+**Approved visual implementation translation — production player helpful aura presentation next.**
 
 This is parallel Phase-H preparation while the formal Phase G camera phase remains
 open. The user has explicitly frozen Camera work until the already-approved visual
@@ -19,10 +19,13 @@ sequence is finished.
 **P0136 planning target — read-only player/target aura-status runtime probe.**
 
 Latest verified durable checkpoint:
-P0134 `93b43d4bed2ff97a07cc0d9687f7d99ed474d0f2`.
+P0135 `b69eb109ab9d65477414e66864fef484c244eabc`.
 
-Current pushed/tested runtime:
-`0.0.65-dev`.
+Current tested runtime:
+`0.0.66-dev`.
+
+P0136 runtime probe:
+**PASS WITH ENVIRONMENTAL DEFERRALS.**
 
 P0135 source + policy audit:
 **RESOLVED.**
@@ -31,8 +34,27 @@ The exact Forever source generation is pinned to
 `Gethe/wow-ui-source@e3ecc27b64d30fdc735a3f6579b866858f9f9df1`
 (`1.60.1.70205`), matching the tested client.
 
-D-041 establishes the aura/status priority and fallback policy. Runtime payload
-secrecy/population remains unproven.
+D-041 establishes the aura/status priority and fallback policy.
+
+P0136 is prepared on `0.0.66-dev` as an event-driven read-only probe:
+- player + target only;
+- bounded indexed reads;
+- `ShouldUnitAuraIndexBeSecret` before every payload query;
+- field-by-field secret checks after a non-secret payload;
+- `UNIT_AURA` payload arguments discarded;
+- no polling, aura mutation, or Blizzard UI suppression.
+
+Runtime result:
+- player `HELPFUL`: ordinary populated payload PASS;
+- player `HELPFUL|PLAYER`: ordinary populated payload PASS;
+- selected helpful metadata fields: ordinary/non-secret PASS;
+- target scan path: safe empty-state PASS;
+- populated player harmful categories: DEFERRED;
+- populated target categories: DEFERRED;
+- runtime secret-skip branch: DEFERRED / not encountered;
+- integrated `Run All`: PASS.
+
+The initial static-checker false negative remains preserved as historical evidence.
 
 P0129 read-only runtime evidence passes the naturally observed offer/gossip path:
 - three real `QUEST_DETAIL` states;
@@ -138,34 +160,29 @@ Preserved deferrals/gates:
 
 ## Next Action
 
-Prepare P0136 as a **read-only aura/status runtime probe**.
+Prepare P0137 as the first production aura/status presentation slice.
 
-Contract:
-1. event-driven only (`UNIT_AURA`, target change, initial world state);
-2. treat `UNIT_AURA` only as invalidation; do not inspect secret-capable
-   `UnitAuraUpdateInfo.addedAuras`;
-3. probe `player` and `target` independently;
-4. use fixed bounded indices and explicit source-defined filters;
-5. call `C_Secrets.ShouldUnitAuraIndexBeSecret` before every aura payload read;
-6. skip secret/unavailable/error states without inspecting their payload;
-7. record only ordinary addon-owned diagnostic summaries;
-8. do not hide, mutate, cancel, reparent, or replace Blizzard aura/status UI;
-9. do not poll.
+Scope:
+1. use only runtime-proven ordinary player helpful data;
+2. include player-origin helpful status where source filters support it;
+3. translate the approved status/aura icon primitive into the passive player lane;
+4. keep Blizzard player buff/debuff presentation visible and complete throughout
+   proof;
+5. preserve secret-first bounded reads and fail-open behavior;
+6. add deterministic preview and non-mutating diagnostics;
+7. do not add player harmful/urgent, target, private, or group aura replacement.
 
-Representative categories should include player harmful/helpful and the
-source-defined actionable filters needed by D-041. Environmental absence of a
-category is DEFERRED, not FAIL.
+Player harmful and populated target categories remain DEFERRED from P0136.
 
 ## Success Criteria
 
-P0136 succeeds when the client establishes, separately for player and target,
-which representative aura categories can be queried as ordinary non-secret data
-and which metadata is safely usable.
-
-A source API existing is not runtime PASS.
-
-A secret or unavailable aura/category is a safe skip/defer unless the probe itself
-branches on or inspects a secret value, which is FAIL.
+P0137 succeeds only when the production player-helpful surface:
+- consumes only ordinary runtime-proven data;
+- remains non-authoritative/complementary while Blizzard stock is visible;
+- never inspects secret data;
+- fails open on unsupported/secret/error state;
+- introduces no polling;
+- leaves player harmful, target, private, and group ownership unchanged.
 
 ## Do Not Reopen Without New Evidence
 
@@ -184,6 +201,9 @@ branches on or inspects a secret value, which is FAIL.
 
 ## Relevant References
 
+- `docs/memory/evidence/P0136_AURA_STATUS_RUNTIME_PASS_WITH_DEFERRALS_2026-10-05.md`
+- `docs/memory/evidence/P0136_INITIAL_APPLIER_STATIC_CONTRACT_FAILURE_2026-10-05.md`
+- `docs/memory/patches/P0136_AURA_STATUS_READ_ONLY_PROBE.md`
 - `docs/memory/patches/P0135_AURA_STATUS_SOURCE_PRIORITY_AUDIT.md`
 - `docs/memory/evidence/P0135_AURA_STATUS_SOURCE_PRIORITY_AUDIT_2026-10-05.md`
 - `docs/memory/decisions/D-041_AURA_STATUS_SOURCE_AND_PRIORITY_POLICY.md`

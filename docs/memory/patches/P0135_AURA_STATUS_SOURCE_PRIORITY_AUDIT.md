@@ -1,7 +1,7 @@
 # P0135 — Aura / Status Source + Priority-Policy Audit
 
 Date: 2026-10-05
-Result: **SOURCE + POLICY LAYER RESOLVED — P0136 READ-ONLY RUNTIME PROBE NEXT**
+Result: **INSTALLED / PUSHED — SOURCE + POLICY LAYER RESOLVED** (`b69eb109`)
 Baseline: `93b43d4bed2ff97a07cc0d9687f7d99ed474d0f2`
 Runtime: unchanged at `0.0.65-dev`
 

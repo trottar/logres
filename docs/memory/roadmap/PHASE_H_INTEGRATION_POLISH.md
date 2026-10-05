@@ -245,8 +245,17 @@ accessibility boundaries.
 
 No aura/status stock suppression is authorized.
 
+P0136:
+**RUNTIME PROBE PASS WITH ENVIRONMENTAL DEFERRALS on `0.0.66-dev`.**
+
+Ordinary populated player helpful data is proven; selected metadata is ordinary.
+Player harmful populated categories and populated target categories were absent,
+so those remain DEFERRED. No secret branch was encountered. Integrated checks
+pass.
+
 Next:
-**P0136 read-only player/target aura-status runtime probe.**
+**P0137 production player helpful aura presentation only**, with Blizzard stock
+retained as completeness fallback.
 
 This remains capability preparation under D-035/D-039. It does not authorize
 minimap suppression, unproven navigation sources, automated quest choices, or

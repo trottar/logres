@@ -99,3 +99,53 @@ D-041 policy:
 
 Next:
 P0136 read-only runtime probe.
+
+## P0136 implementation checkpoint
+
+P0136 adds the read-only `AuraStatusProbe` on `0.0.66-dev`.
+
+Implementation boundary:
+- player and target only;
+- event-driven `UNIT_AURA`, target-change, entering-world invalidation;
+- `UNIT_AURA` update payload is deliberately discarded;
+- maximum six indexed candidates per semantic filter;
+- per-index `C_Secrets.ShouldUnitAuraIndexBeSecret` preflight;
+- no aura payload read when the predicate is secret, true, indeterminate, or
+  unavailable;
+- returned payload and selected fields are secret-checked before inspection;
+- contextual probe is excluded from integrated Run All;
+- no aura cancellation/mutation, no polling, no Blizzard aura/status suppression.
+
+Representative source filters cover the D-041 capability priorities.
+
+Runtime evidence is still pending. Environmental absence is DEFERRED; predicate or
+query failures, Lua errors, or secret-value violations are FAIL.
+
+## P0136 runtime result
+
+Canonical evidence:
+`../evidence/P0136_AURA_STATUS_RUNTIME_PASS_WITH_DEFERRALS_2026-10-05.md`.
+
+Result:
+**RUNTIME PROBE PASS WITH ENVIRONMENTAL DEFERRALS.**
+
+Proven ordinary populated category:
+- player `HELPFUL`;
+- player `HELPFUL|PLAYER`.
+
+Ordinary selected metadata was observed for the populated helpful aura.
+
+Safely executed but empty:
+- player harmful / crowd-control / raid-relevant;
+- all tested target categories while a target was available.
+
+Deferred:
+- populated player harmful data;
+- populated target aura data;
+- runtime secret-skip branch.
+
+No failures were recorded, and integrated `Run All` remained clean.
+
+Next:
+P0137 production player helpful aura presentation only, with Blizzard player aura
+presentation retained as completeness fallback.

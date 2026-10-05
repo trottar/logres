@@ -83,3 +83,7 @@ Record source findings and runtime behavior separately.
 - After P0133, the next exact approved visual capability slice is P0135: aura/status source + priority-policy audit. Stock aura/status surfaces remain until replacement completeness is proven.
 
 - P0135 resolves the aura/status source and priority-policy layer against exact Forever source `e3ecc27b` / `1.60.1.70205`: `C_UnitAuras` payload reads are secret-capable, `C_Secrets` exposes per-index/instance/slot aura secrecy predicates, and `UNIT_AURA` is the event model. D-041 prioritizes urgent player harmful status over passive helpful status, keeps target status world-associated as a future endpoint, and preserves private/group/stock surfaces. P0136 read-only runtime proof is required before production aura/status wiring.
+
+- P0136 implements the first aura/status runtime probe on `0.0.66-dev`: player/target only, bounded indexed scans, `ShouldUnitAuraIndexBeSecret` before every payload query, field-level secret checks, `UNIT_AURA` payload arguments discarded, and no polling/mutation/suppression. Runtime capability evidence remains pending; stock/private/group surfaces stay Blizzard-owned.
+
+- P0136 `0.0.66-dev` runtime-proves ordinary populated player `HELPFUL` / `HELPFUL|PLAYER` aura data and selected metadata with zero failures. Populated player harmful and target aura categories, plus the runtime secret-skip branch, remain deferred. Production work may advance only for player helpful status, with Blizzard stock retained as completeness fallback.

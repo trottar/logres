@@ -102,7 +102,7 @@ G.5 target-50 without CVar mutation:
 ## Aura / status ownership
 
 Status:
-**OPEN — SOURCE + PRIORITY POLICY RESOLVED; P0136 READ-ONLY RUNTIME PROBE NEXT.**
+**OPEN — P0136 RUNTIME PROBE PASS WITH ENVIRONMENTAL DEFERRALS; P0137 PLAYER HELPFUL PRODUCTION SLICE NEXT.**
 
 Canonical investigation:
 `FUTURE_AURA_STATUS_PRESENTATION.md`.
@@ -118,5 +118,15 @@ P0135 resolves the source/policy layer and accepts D-041:
 - private/group aura surfaces remain Blizzard-owned;
 - no stock suppression is authorized.
 
-P0136 must now prove representative ordinary player/target runtime data before
-implementation translation begins.
+P0136 is now implemented as a bounded secret-first diagnostic on
+`0.0.66-dev`. It discards `UNIT_AURA` payload arguments, never queries a
+secret/indeterminate aura index, and does not mutate or suppress Blizzard UI.
+
+Runtime evidence now establishes ordinary populated player helpful data and safe
+empty-state target scans with zero failures.
+
+Populated player harmful and populated target categories remain environmental
+DEFERRED, and no secret-skip branch was encountered.
+
+Production implementation may therefore advance only for player helpful status,
+with Blizzard completeness fallback preserved.

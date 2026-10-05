@@ -99,8 +99,14 @@ P0135 resolves the aura/status source + priority-policy layer against the exact
 Forever `1.60.1.70205` source generation. D-041 preserves stock/private/group aura
 fallback and requires secret-first per-aura reads.
 
-P0136 is next: a read-only player/target aura-status runtime probe. Stock
-aura/status presentation remains until replacement completeness is proven.
+P0136 `0.0.66-dev` passes as a read-only runtime probe with environmental
+deferrals: ordinary populated player helpful data is proven; player harmful and
+populated target categories remain deferred; no runtime secret branch was
+encountered.
+
+P0137 is next and may translate only the proven player helpful category into
+production presentation while Blizzard aura presentation remains visible and
+complete.
 
 D-037 unproven navigation/minimap roles and world-target anchoring remain
 separately gated.

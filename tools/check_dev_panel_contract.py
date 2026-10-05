@@ -61,6 +61,7 @@ EXPECTED_PHASES = {
     "questDialogueCheck": "F",
     "questDialoguePreview": "F",
     "questInteractionProbe": "H",
+    "auraStatusProbe": "H",
     "questOfferControlsCheck": "H",
     "questOfferAcceptProbe": "H",
     "questOfferDeclineProbe": "H",

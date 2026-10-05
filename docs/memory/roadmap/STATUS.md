@@ -4,7 +4,7 @@ As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — read-only aura/status runtime probe next.**
+**Approved visual implementation translation — production player helpful aura presentation next.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -89,8 +89,16 @@ P0135:
 D-041 establishes the urgency/fallback policy and pins the exact Forever aura
 source/secrecy contract. Production ownership remains unproven.
 
+P0136:
+**RUNTIME PROBE PASS WITH ENVIRONMENTAL DEFERRALS** on `0.0.66-dev`.
+
+Ordinary populated player helpful data is proven. Player harmful populated data,
+populated target data, and the runtime secret-skip branch remain DEFERRED.
+Integrated checks pass.
+
 Next:
-**P0136 read-only player/target aura-status runtime probe.**
+**P0137 production player helpful aura presentation with Blizzard stock retained
+as completeness fallback.**
 
 This is implementation translation under D-039/D-040. It does not authorize
 Phase-H-only capability expansion, stock minimap suppression, Logres-owned quest

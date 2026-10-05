@@ -4,13 +4,20 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0134 `93b43d4bed2ff97a07cc0d9687f7d99ed474d0f2`.
+P0135 `b69eb109ab9d65477414e66864fef484c244eabc`.
 
-Current pushed/tested runtime:
-`0.0.65-dev`.
+Current tested runtime:
+`0.0.66-dev`.
+
+P0136:
+**RUNTIME PROBE PASS WITH ENVIRONMENTAL DEFERRALS.**
 
 P0135 source + priority-policy result:
-**RESOLVED — P0136 READ-ONLY RUNTIME PROBE NEXT.**
+**RESOLVED.**
+
+P0136:
+**ACCEPTED LOCALLY — player helpful populated data PASS; player harmful and
+populated target categories DEFERRED; integrated checks PASS.**
 
 ## Active work stream
 
@@ -18,7 +25,7 @@ The user has explicitly chosen to finish the approved visual translation sequenc
 before returning to Camera.
 
 Current objective:
-**P0136 — read-only player/target aura-status runtime probe.**
+**P0137 — production player helpful aura presentation with Blizzard fallback retained.**
 
 Camera remains frozen, not complete.
 
@@ -64,6 +71,8 @@ Do not automate quest choices or bundle quest navigation/minimap ownership.
 
 ## Key references
 
+- `../evidence/P0136_AURA_STATUS_RUNTIME_PASS_WITH_DEFERRALS_2026-10-05.md`
+- `../patches/P0136_AURA_STATUS_READ_ONLY_PROBE.md`
 - `../evidence/P0135_AURA_STATUS_SOURCE_PRIORITY_AUDIT_2026-10-05.md`
 - `../decisions/D-041_AURA_STATUS_SOURCE_AND_PRIORITY_POLICY.md`
 - `../investigations/FUTURE_AURA_STATUS_PRESENTATION.md`
