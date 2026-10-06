@@ -335,11 +335,11 @@ alternate-power, PetFrame, and possess/override/vehicle/extra-action ownership.
 No stock suppression or runtime mutation is authorized by the source audit.
 
 P0150:
-**PREPARED — BOUNDED READ-ONLY CLASS/PET/SPECIAL RUNTIME PROBE on candidate `0.0.73-dev`.**
+**INITIAL IMPLEMENTATION DURABLE AT `c7ea3638`; RUNTIME FAIL — R3 CORRECTION PREPARED; runtime remains `0.0.73-dev`.**
 
-The diagnostic is source-event-driven and secret-first. It does not mutate pet actions, forms, totems, action pages, vehicle/possess state, special controls, or Blizzard presentation. Environmental absence is DEFERRED.
+The first runtime registered 22/22 events and required APIs but failed with six `pet.isToken:unexpected-number` diagnostic errors. R3 removes the unsupported boolean-only assumption and preserves false special-mode values in the summary. The diagnostic remains source-event-driven, secret-first, and non-mutating; environmental absence remains DEFERRED.
 
 Next:
-**Run P0150 in client, then run integrated Run All separately and record exact evidence.**
+**Retest P0150 R3 in client, then run integrated Run All separately and record exact evidence.**
 
 Preserve direct class-resource children, RuneFrame, TotemFrame, PetFrame, alternate power, and all unsupported special-control fallbacks until each domain is deliberately runtime/capability-proven.

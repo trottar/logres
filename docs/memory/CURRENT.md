@@ -14,13 +14,16 @@ Formal Phase G / G.5 remains open and paused while the approved visual sequence 
 
 ## Current Work Item
 
-**P0150 — bounded read-only class / pet / special-control runtime probe.**
+**P0150 R3 — correct the durable read-only class / pet / special-control probe contract after the initial runtime failure and two pre-write delivery-artifact refusals.**
 
 Latest verified durable checkpoint:
-P0149 `dbe468f7994a947e9e350e0f66b214679bd110f5`.
+P0150 initial implementation `c7ea363842351f766527a16192a3e2e6535f579e`.
 
-Current pushed/tested runtime:
-`0.0.72-dev`.
+Current durable runtime:
+`0.0.73-dev` — code-durable, but the initial P0150 runtime probe failed on the diagnostic contract below.
+
+Current tested runtime:
+`0.0.73-dev` — initial P0150 probe run **FAILED** on a diagnostic type assumption; R3 correction pending retest.
 
 P0149 result:
 - exact Forever source generation `Gethe/wow-ui-source@e3ecc27b64d30fdc735a3f6579b866858f9f9df1` / `1.60.1.70205` is pinned;
@@ -42,6 +45,18 @@ P0150 adds one diagnostic-only `ClassPetSpecialProbe` that:
 P0150 deliberately does **not** cast, toggle autocast, reorder pet actions, cast forms, dismiss totems, mutate action pages/state drivers, exit vehicles, cancel possession, invoke extra/override controls, or touch Blizzard presentation.
 
 Secret observations are counted and deferred rather than treated as failures. Environmental absence is DEFERRED, not FAIL.
+
+Initial P0150 runtime evidence on `0.0.73-dev`:
+- probe initialized and registered 22/22 events; required APIs were present;
+- pet bar was present with 10 scanned slots / 7 occupied;
+- the probe reported 6 failures, all from `pet.isToken:unexpected-number`;
+- the exact Forever runtime therefore proves `GetPetActionInfo(...).isToken` cannot be treated as boolean-only;
+- one Warlock primary-power value was secret and was safely skipped; the resource domain had zero failures;
+- stance/forms and active totems were absent in the observed state;
+- special-mode detail values were ordinary false, but the summary collapsed false to nil through `and/or`;
+- separate `Run All` completed cleanly.
+
+R3 keeps `0.0.73-dev`, treats `isToken` as an opaque secret-first value, and preserves false special-mode summary values. No ownership or mutation scope changes. The earlier R1 delivery artifact correctly refused before writes because it expected pre-P0150 HEAD `dbe468f7` after the initial implementation was already durable at `c7ea3638`. R2 also refused before writes because its validator incorrectly required the raw string `"classpetspecialprobe"` to occur exactly once in `Commands.lua`; the correct durable file contains it twice by design (dispatch plus developer-panel registration).
 
 P0148 manual-waypoint depth remains the accepted production baseline at `6f381a77` / `0.0.72-dev`; further amplitude refinement is deferred to whole-interface polish.
 
@@ -72,7 +87,7 @@ World target:
 
 Class / pet / special-control territory:
 - P0149/D-044 source families and fallback policy are durable;
-- P0150 is diagnostic-only and runtime proof is pending;
+- P0150 initial implementation is durable at `c7ea3638`; its first runtime exposed an isolated probe-contract failure; R3 correction is prepared and runtime acceptance remains pending;
 - PetFrame, RuneFrame, TotemFrame, alternate-power, PetActionBar, StanceBar, PossessActionBar, OverrideActionBar, ExtraActionBar, and unsupported vehicle/special controls remain Blizzard-owned;
 - pet secure casting remains only a source-plausible future control candidate, not replacement completeness.
 
@@ -82,14 +97,15 @@ Camera:
 
 ## Next Action
 
-Apply P0150, deploy `0.0.73-dev`, then use the Phase-H developer-panel action **Class / Pet / Special Probe** in the player's natural current state.
+Apply P0150 R3 on durable P0150 `c7ea3638`, redeploy the unchanged runtime `0.0.73-dev`, then rerun the Phase-H **Class / Pet / Special Probe**.
 
 Required in-client proof:
-1. run **Class / Pet / Special Probe** once after `/reload`;
-2. preserve all returned probe lines in diagnostics;
-3. treat absent pet/forms/totems/runes/special modes as environmental DEFERRED rather than manufacturing gameplay state;
-4. run **Run All** separately after the probe;
-5. upload the refreshed diagnostics artifact.
+1. confirm the probe reports PASS with `failureCount=0`;
+2. confirm the observed special-mode summary preserves ordinary `false` values rather than `nil`;
+3. preserve all returned probe lines in diagnostics;
+4. treat absent pet/forms/totems/runes/special modes as environmental DEFERRED rather than manufacturing gameplay state;
+5. run **Run All** separately after the probe;
+6. upload the refreshed diagnostics artifact.
 
 A secret skip is valid evidence when safely recorded. A Lua error, secret-value misuse, invalid payload/type failure, taint/protected-action error, or unexpected mutation is a real failure.
 
@@ -128,6 +144,7 @@ P0150 does not by itself authorize any production replacement or stock suppressi
 
 - `docs/memory/decisions/D-044_CLASS_PET_SPECIAL_CONTROL_SOURCE_AND_FALLBACK_POLICY.md`
 - `docs/memory/evidence/P0149_CLASS_PET_SPECIAL_CONTROL_SOURCE_CAPABILITY_AUDIT_2026-10-05.md`
+- `docs/memory/evidence/P0150_INITIAL_RUNTIME_FAIL_2026-10-05.md`
 - `docs/memory/investigations/FUTURE_CLASS_PET_SPECIAL_CONTROL_CAPABILITY.md`
 - `docs/memory/patches/P0150_CLASS_PET_SPECIAL_CONTROL_READ_ONLY_PROBE.md`
 - `docs/memory/patches/P0149_CLASS_PET_SPECIAL_CONTROL_SOURCE_CAPABILITY_AUDIT.md`

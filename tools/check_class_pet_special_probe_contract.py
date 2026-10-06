@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static contract for P0150 class/pet/special-control read-only probe."""
+"""Static contract for P0150 R1 class/pet/special-control read-only probe."""
 
 from pathlib import Path
 import re
@@ -148,6 +148,47 @@ if not (
     errors.append(
         "ordinaryField must secret-check before nil/type inspection"
     )
+
+pet_start = probe.find("local function readPet()")
+pet_end = probe.find("local function readStance()", pet_start)
+pet = (
+    probe[pet_start:pet_end]
+    if pet_start != -1 and pet_end != -1
+    else ""
+)
+expected_is_token = 'row.isToken = ordinaryField(\n                result,\n                rawIsToken,\n                nil,\n                "pet.isToken"\n            )'
+if expected_is_token not in pet:
+    errors.append(
+        "pet isToken must remain an opaque secret-first value; Forever returned numeric values in P0150 initial runtime"
+    )
+if 'rawIsToken,\n                "boolean",\n                "pet.isToken"' in pet:
+    errors.append(
+        "pet isToken must not be forced to boolean"
+    )
+
+debug_start = probe.find("function Probe:GetDebugStatus()")
+debug_end = probe.find("function Probe:OnInitialize()", debug_start)
+debug = (
+    probe[debug_start:debug_end]
+    if debug_start != -1 and debug_end != -1
+    else ""
+)
+for field in (
+    "possess",
+    "vehicle",
+    "override",
+    "tempShapeshift",
+    "extra",
+):
+    expected = f"{field} = self.special and self.special.{field},"
+    if expected not in debug:
+        errors.append(
+            f"GetDebugStatus must preserve false special-mode value for {field}"
+        )
+    if f"{field} = self.special and self.special.{field} or nil" in debug:
+        errors.append(
+            f"GetDebugStatus must not collapse false to nil for {field}"
+        )
 
 charged_start = probe.find("local function readChargedPoints(result)")
 charged_end = probe.find("local function readRunes", charged_start)

@@ -1,6 +1,6 @@
 # Future Class / Pet / Special-Control Capability Audit
 
-Status: **P0150 READ-ONLY RUNTIME PROBE PREPARED — RUNTIME EVIDENCE PENDING**
+Status: **P0150 INITIAL IMPLEMENTATION DURABLE AT `c7ea3638`; RUNTIME FAIL — R3 CORRECTION PREPARED; RETEST PENDING**
 Opened: 2026-10-05
 Source pin: `Gethe/wow-ui-source@e3ecc27b64d30fdc735a3f6579b866858f9f9df1`
 Forever client: `1.60.1.70205`
@@ -197,3 +197,11 @@ Source-owned invalidation refreshes only the affected domain where practical. Ev
 P0150 does not cast, toggle autocast, reorder, shapeshift, dismiss totems, mutate action pages/state drivers, exit/cancel special modes, invoke extra/override actions, or alter Blizzard presentation.
 
 Runtime proof must use the Phase-H **Class / Pet / Special Probe** action, followed by a separate **Run All** regression pass. Environmental absence remains DEFERRED and must not be manufactured solely for proof.
+
+## P0150 initial runtime failure / R3 correction
+
+Initial `0.0.73-dev` runtime reached all 22/22 event registrations and the full required API set, but the probe failed with six `pet.isToken:unexpected-number` errors. This proves the diagnostic's boolean-only assumption was wrong for the observed Forever pet-action rows.
+
+The same run safely secret-skipped one Warlock primary-power value with zero resource failures. Stance/forms and active totems were absent. Special-mode detail flags were ordinary false, while the summary incorrectly collapsed false to nil through Lua `and/or`. Separate integrated `Run All` passed.
+
+P0150 R3 keeps `0.0.73-dev`, treats `isToken` as opaque secret-first value data, preserves false special-mode summary values, and does not change mutation, ownership, polling, or suppression scope. Runtime retest remains required.

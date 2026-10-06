@@ -337,7 +337,7 @@ local function readPet()
             row.isToken = ordinaryField(
                 result,
                 rawIsToken,
-                "boolean",
+                nil,
                 "pet.isToken"
             )
             row.isActive = ordinaryField(
@@ -1394,11 +1394,11 @@ function Probe:GetDebugStatus()
         playerClass = self.resource and self.resource.classFilename or nil,
         selectedResource = self.resource and self.resource.selectedPowerToken or nil,
         runeScanned = self.resource and self.resource.runeScanned or 0,
-        possess = self.special and self.special.possess or nil,
-        vehicle = self.special and self.special.vehicle or nil,
-        override = self.special and self.special.override or nil,
-        tempShapeshift = self.special and self.special.tempShapeshift or nil,
-        extra = self.special and self.special.extra or nil,
+        possess = self.special and self.special.possess,
+        vehicle = self.special and self.special.vehicle,
+        override = self.special and self.special.override,
+        tempShapeshift = self.special and self.special.tempShapeshift,
+        extra = self.special and self.special.extra,
     }
 end
 

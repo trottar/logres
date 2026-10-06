@@ -4,7 +4,7 @@ As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — P0149 class/pet/special source policy durable; P0150 read-only runtime probe prepared on `0.0.73-dev`; runtime evidence next.**
+**Approved visual implementation translation — P0150 initial implementation durable at `c7ea3638`, initial runtime failed on a diagnostic type assumption; R3 retest next.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -163,3 +163,8 @@ P0150:
 The probe observes only addon-safe current state across pet actions, stance/forms, totems, player class/discrete resource candidates, naturally applicable DK runes, and special action-bar mode flags/indexes. Secret-capable values are checked before inspection; contextual absence is DEFERRED. No cast, autocast, pet edit, shapeshift, totem dismissal, action-page/state-driver mutation, special-mode exit/cancel, or Blizzard presentation mutation is included.
 
 Runtime proof requires the Phase-H Class / Pet / Special Probe followed by a separate integrated Run All pass.
+
+P0150 R3:
+**CORRECTION PREPARED AGAINST DURABLE `c7ea3638` — RETEST REQUIRED; runtime remains `0.0.73-dev`.**
+
+Initial P0150 runtime registered 22/22 events and found the required APIs, but six pet rows failed because `isToken` was numeric while the probe assumed boolean. R3 treats the field as opaque secret-first value data and preserves ordinary false special-mode flags in the summary. One Warlock power result was safely secret-skipped with zero resource failures; separate Run All passed. No ownership/mutation scope changes.

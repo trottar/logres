@@ -199,7 +199,7 @@ quest/POI/tracking roles remain unchanged.
 ## Class / pet / special-control ownership
 
 Status:
-**P0150 READ-ONLY RUNTIME PROBE PREPARED — RUNTIME EVIDENCE PENDING.**
+**P0150 INITIAL IMPLEMENTATION DURABLE AT `c7ea3638`; RUNTIME FAIL — R3 CORRECTION PREPARED; RETEST PENDING.**
 
 Canonical investigation:
 `FUTURE_CLASS_PET_SPECIAL_CONTROL_CAPABILITY.md`.
@@ -220,4 +220,4 @@ Resolved boundaries:
 
 No P0149 stock suppression or runtime mutation is authorized.
 
-P0150 is prepared on candidate `0.0.73-dev`: one bounded non-mutating source probe with secret-first sanitization, source-owned invalidation, Phase-H diagnostic integration, and no production ownership. Runtime evidence is pending; environmental absence remains DEFERRED.
+P0150 is durable at `c7ea3638` / `0.0.73-dev`, but its first runtime probe failed on a diagnostic type assumption: six pet rows returned numeric `isToken` values. R3 treats that field as an opaque secret-first value and fixes false-to-nil special-mode summary extraction. Separate Run All passed; retest is pending. No production ownership or stock suppression is authorized.

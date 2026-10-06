@@ -3,7 +3,7 @@
 Date: 2026-10-05
 Baseline: `dbe468f7994a947e9e350e0f66b214679bd110f5`
 Candidate runtime: `0.0.73-dev`
-Result: **PREPARED — READ-ONLY RUNTIME PROOF REQUIRED**
+Result: **INITIAL IMPLEMENTATION DURABLE AT `c7ea3638`; RUNTIME FAIL — R3 CORRECTION PREPARED; RETEST REQUIRED**
 
 ## Purpose
 
@@ -53,3 +53,32 @@ The contextual probe is intentionally excluded from `Run All`. Runtime validatio
 Observed scope passes when the probe initializes/enables, required APIs/event registrations are present, manual capture completes with zero probe failures, secret values are safely skipped, and the separate integrated `Run All` remains clean.
 
 Environmental absence is DEFERRED, not failure. No production ownership follows from this probe alone.
+
+## Initial runtime result — preserved failure
+
+The first `0.0.73-dev` client run reached the probe and all 22/22 event registrations, with the required API set present. The manual capture failed with `failureCount=6`. All six failures came from the probe forcing `GetPetActionInfo(...).isToken` to boolean while Forever returned numeric values for those rows (`lastFailure=pet.isToken:unexpected-number`).
+
+Observed context also established useful non-failure evidence:
+- pet action bar present, 10 slots scanned, 7 occupied;
+- stance/form count 0 — environmental absence;
+- 8 totem slots scanned, no active totems — environmental absence;
+- Warlock / SoulShards resource path populated with one safely skipped secret primary-power value and zero resource failures;
+- all special-mode flags were ordinary `false`;
+- separate integrated `Run All` completed cleanly.
+
+The summary header incorrectly displayed the ordinary false special-mode values as `nil` because `GetDebugStatus()` used Lua `and/or` extraction. The detailed special line correctly showed the values as false.
+
+Classification: **P0150 PROBE-CONTRACT RUNTIME FAIL; NO PRODUCTION/MUTATION FAILURE OBSERVED.**
+
+## Correction history
+
+The first R1 correction artifact expected pre-P0150 HEAD `dbe468f7`. Because the initial P0150 implementation had already become durable at `c7ea3638`, that applier correctly refused before any tracked write.
+
+R2 correctly rebased to durable P0150 `c7ea3638` but then refused before tracked writes because its baseline validator required the raw command token `"classpetspecialprobe"` to occur exactly once. The correct `Commands.lua` contains that token twice by design: command dispatch and developer-panel registration. This was an artifact-validator defect, not repo or runtime evidence.
+
+R3 remains based on durable P0150 `c7ea3638`, keeps runtime `0.0.73-dev`, and changes only diagnostic interpretation/presentation:
+- `isToken` is sanitized as an opaque secret-first value rather than assuming a boolean type;
+- special-mode debug extraction preserves ordinary `false` instead of collapsing it to `nil`;
+- the static checker now enforces both corrections.
+
+No API, event, mutation, ownership, suppression, or polling scope changes. Retest the same Phase-H probe and then run `Run All` separately.

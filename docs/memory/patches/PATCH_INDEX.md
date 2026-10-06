@@ -169,5 +169,5 @@
 | P0147 | 2026-10-05 | INSTALLED / PUSHED — RUNTIME/MECHANICAL PASS; VISUAL FAIL | Live minimap-radius depth bands work across real samples, but `1.05 -> 0.90` scale is barely perceptible (`c274a9d1`, `0.0.71-dev`) |
 | P0148 | 2026-10-05 | INSTALLED / PUSHED — RUNTIME + VISUAL PASS; LATER POLISH DEFERRED | Stronger `1.20 / 1.05 / 0.85 / 0.70` depth amplitude accepted (`6f381a77`, `0.0.72-dev`) |
 | P0149 | 2026-10-05 | INSTALLED / PUSHED — SOURCE/CAPABILITY LAYER RESOLVED | Resolve class/pet/special-control source/fallback policy; accept D-044 (`dbe468f7`) |
-| P0150 | 2026-10-05 | PREPARED — READ-ONLY RUNTIME PROBE | Bounded secret-first class/pet/special current-state probe on candidate `0.0.73-dev`; no mutation/suppression |
+| P0150 | 2026-10-05 | INSTALLED / PUSHED `c7ea3638` — INITIAL RUNTIME FAIL; R3 CORRECTION PREPARED | `0.0.73-dev`: 22/22 events/APIs reached; six numeric `pet.isToken` rows broke boolean-only diagnostic assumption; Run All PASS; R1 stale-baseline and R2 token-uniqueness artifacts both refused pre-write; R3 retest pending |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.
