@@ -163,3 +163,19 @@ proof is next.
 P0150 prepares candidate `0.0.73-dev` as a bounded read-only runtime probe for the P0149/D-044 class/pet/special source families. It observes naturally available pet/form/totem/resource/rune/special-mode state with secret-first sanitization and source-owned invalidation only. It does not mutate controls or suppress Blizzard surfaces. Contextual absence remains environmental DEFERRED; production ownership remains separately gated.
 
 P0150 initial runtime on `0.0.73-dev` reached the intended read-only probe but failed on an isolated diagnostic contract: six pet rows returned numeric `isToken` values while the probe assumed boolean. P0150 R3 corrects that assumption and false-to-nil special-mode summary extraction without widening ownership or mutation scope. Separate Run All was clean. The first R1 delivery artifact refused before writes because it expected pre-P0150 HEAD `dbe468f7` after P0150 was already durable at `c7ea3638`. R2 rebased correctly but also refused before writes because it incorrectly required the raw `"classpetspecialprobe"` token to occur once; the durable file contains it twice by design (dispatch + panel registration). R3 removes that brittle baseline assertion and runtime retest remains required.
+
+P0151 records the accepted P0150 R3 read-only result. `0.0.73-dev` passes on
+client `1.60.1.70235` with all 22 expected events, required APIs, populated pet
+state (10 scanned / 7 occupied), one safely secret-skipped Warlock power value,
+ordinary false special-mode flags, zero failures, and a separate clean Run All.
+Stance/forms, active totems, DK runes, active special modes, and meaningful nonzero
+class-resource presentation remain environmental deferrals.
+
+Matching Forever 70235 source is `a84e2b1b41d3d4137127c07e4da448aa3251d6f1`,
+the direct child of the P0149 70205 pin with only `version.txt` changed. The audited
+secure pet source files are unchanged.
+
+P0152 is therefore the next justified class/pet/special slice: a bounded secure
+pet-action execution probe with stock PetActionBar retained. It does not authorize
+autocast mutation, edit/reorder, binding replacement, PetActionBar suppression, or
+PetFrame ownership.

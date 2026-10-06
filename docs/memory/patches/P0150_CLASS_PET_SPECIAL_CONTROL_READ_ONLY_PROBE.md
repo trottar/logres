@@ -3,7 +3,7 @@
 Date: 2026-10-05
 Baseline: `dbe468f7994a947e9e350e0f66b214679bd110f5`
 Candidate runtime: `0.0.73-dev`
-Result: **INITIAL IMPLEMENTATION DURABLE AT `c7ea3638`; RUNTIME FAIL — R3 CORRECTION PREPARED; RETEST REQUIRED**
+Result: **INSTALLED / PUSHED — R3 RUNTIME PASS FOR OBSERVED READ-ONLY SCOPE WITH ENVIRONMENTAL DEFERRALS (`46e06295`)**
 
 ## Purpose
 
@@ -82,3 +82,25 @@ R3 remains based on durable P0150 `c7ea3638`, keeps runtime `0.0.73-dev`, and ch
 - the static checker now enforces both corrections.
 
 No API, event, mutation, ownership, suppression, or polling scope changes. Retest the same Phase-H probe and then run `Run All` separately.
+
+## R3 runtime acceptance
+
+P0150 R3 is durable at `46e06295695587af07f6f3e1b4a6ac4ace4e4c15` and passes
+on `0.0.73-dev` / client `1.60.1.70235` for the observed read-only scope.
+
+Accepted result:
+- 22/22 expected event registrations;
+- required APIs present;
+- PetActionBar present, 10 slots scanned / 7 occupied;
+- pet-domain failures 0;
+- one Warlock primary-power value secret-skipped safely;
+- resource-domain failures 0;
+- ordinary false special-mode flags preserved;
+- total probe failures 0;
+- separate integrated Run All PASS.
+
+Stance/forms, active totems, DK runes, active special modes, and meaningful nonzero
+class-resource presentation remain environmental DEFERRED.
+
+P0151 records matching-build source continuity and opens P0152 secure pet-action
+execution proof. P0150 read proof alone does not authorize stock suppression.

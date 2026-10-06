@@ -4,7 +4,7 @@ As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — P0150 initial implementation durable at `c7ea3638`, initial runtime failed on a diagnostic type assumption; R3 retest next.**
+**Approved visual implementation translation — P0150 R3 read-only runtime PASS at `46e06295` / `0.0.73-dev`; P0152 secure pet-action execution probe next.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -158,13 +158,28 @@ control candidate, but no stock class/pet/special suppression is authorized.
 P0150 bounded read-only runtime proof is next.
 
 P0150:
-**PREPARED — BOUNDED READ-ONLY CLASS/PET/SPECIAL RUNTIME PROBE on candidate `0.0.73-dev`.**
+**INSTALLED / PUSHED — RUNTIME PASS FOR OBSERVED READ-ONLY SCOPE WITH ENVIRONMENTAL DEFERRALS** at `46e06295` / `0.0.73-dev`.
 
-The probe observes only addon-safe current state across pet actions, stance/forms, totems, player class/discrete resource candidates, naturally applicable DK runes, and special action-bar mode flags/indexes. Secret-capable values are checked before inspection; contextual absence is DEFERRED. No cast, autocast, pet edit, shapeshift, totem dismissal, action-page/state-driver mutation, special-mode exit/cancel, or Blizzard presentation mutation is included.
+The corrected R3 probe passes with 22/22 expected events, required APIs present,
+10 pet slots scanned / 7 occupied, one safely secret-skipped Warlock power value,
+ordinary false special-mode flags, and zero failures. Separate integrated Run All
+passes.
 
-Runtime proof requires the Phase-H Class / Pet / Special Probe followed by a separate integrated Run All pass.
+Stance/forms, active totems, DK runes, active special modes, and meaningful nonzero
+class-resource presentation remain DEFERRED.
 
-P0150 R3:
-**CORRECTION PREPARED AGAINST DURABLE `c7ea3638` — RETEST REQUIRED; runtime remains `0.0.73-dev`.**
+Client build `70235` has matching Forever source at
+`a84e2b1b41d3d4137127c07e4da448aa3251d6f1`; it is the direct child of the
+P0149 `70205` pin and changes only `version.txt`. The audited secure pet source
+files are unchanged.
 
-Initial P0150 runtime registered 22/22 events and found the required APIs, but six pet rows failed because `isToken` was numeric while the probe assumed boolean. R3 treats the field as opaque secret-first value data and preserves ordinary false special-mode flags in the summary. One Warlock power result was safely secret-skipped with zero resource failures; separate Run All passed. No ownership/mutation scope changes.
+P0151:
+**PREPARED — DOCS / RUNTIME-EVIDENCE CHECKPOINT.**
+
+Records P0150 acceptance, source continuity, and the next capability gate.
+
+Next:
+**P0152 bounded secure pet-action execution probe.**
+
+Keep stock PetActionBar available. Do not expand P0152 into autocast mutation,
+edit/reorder, binding replacement, PetActionBar suppression, or PetFrame ownership.

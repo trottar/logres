@@ -335,11 +335,26 @@ alternate-power, PetFrame, and possess/override/vehicle/extra-action ownership.
 No stock suppression or runtime mutation is authorized by the source audit.
 
 P0150:
-**INITIAL IMPLEMENTATION DURABLE AT `c7ea3638`; RUNTIME FAIL — R3 CORRECTION PREPARED; runtime remains `0.0.73-dev`.**
+**RUNTIME PASS FOR OBSERVED READ-ONLY SCOPE WITH ENVIRONMENTAL DEFERRALS — `46e06295`, `0.0.73-dev`.**
 
-The first runtime registered 22/22 events and required APIs but failed with six `pet.isToken:unexpected-number` diagnostic errors. R3 removes the unsupported boolean-only assumption and preserves false special-mode values in the summary. The diagnostic remains source-event-driven, secret-first, and non-mutating; environmental absence remains DEFERRED.
+The corrected R3 probe passes with 22/22 expected events, required APIs present,
+populated pet-action state, one safely secret-skipped Warlock power value, ordinary
+false special-mode flags, zero failures, and a separate clean Run All.
+
+Stance/forms, active totems, DK runes, active special modes, and meaningful nonzero
+class-resource presentation remain DEFERRED.
+
+P0151 also records current-client source continuity: Forever build 70235 commit
+`a84e2b1b41d3d4137127c07e4da448aa3251d6f1` differs from the P0149 70205 pin
+only by `version.txt`; the audited secure pet source files are unchanged.
 
 Next:
-**Retest P0150 R3 in client, then run integrated Run All separately and record exact evidence.**
+**P0152 bounded secure pet-action execution probe.**
 
-Preserve direct class-resource children, RuneFrame, TotemFrame, PetFrame, alternate power, and all unsupported special-control fallbacks until each domain is deliberately runtime/capability-proven.
+Use addon-owned secure `type="pet"` test controls only, configured out of combat.
+Retain stock PetActionBar. Autocast mutation, edit/reorder, bindings, full feedback
+completeness, suppression/restoration, and PetFrame ownership remain separate gates.
+
+Preserve direct class-resource children, RuneFrame, TotemFrame, PetFrame, alternate
+power, and all unsupported special-control fallbacks until each domain is deliberately
+runtime/capability-proven.

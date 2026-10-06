@@ -4,45 +4,52 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0150 initial implementation `c7ea363842351f766527a16192a3e2e6535f579e`.
+P0150 R3 correction `46e06295695587af07f6f3e1b4a6ac4ace4e4c15`.
 
 Current pushed/tested runtime:
-`0.0.73-dev` — initial probe run failed on an isolated diagnostic contract.
+`0.0.73-dev` on client `1.60.1.70235` — P0150 read-only runtime PASS for the observed scope with environmental deferrals.
 
 ## Active work stream
 
-**P0150 R3 — correct the durable read-only class/pet/special-control probe contract on `0.0.73-dev`.**
+**P0152 — bounded secure pet-action execution probe.**
 
-P0149/D-044 resolves the exact Forever source/fallback layer. Pet secure `type="pet"` casting is source-plausible but does not complete PetActionBar ownership; stance/totem mutations remain gated; discrete class resources remain secret-first and non-percentage by default; PetFrame and integrated possess/override/vehicle/extra-action surfaces remain stock.
+P0150 R3 passes with 22/22 expected events, required APIs present, populated pet state (10 scanned / 7 occupied), one safely skipped secret Warlock power value, zero probe failures, ordinary false special-mode flags, and a separate clean Run All.
 
-P0150 adds only `ClassPetSpecialProbe` plus developer-panel/diagnostic integration. It reads bounded current state and source-owned invalidation events. It does not cast, mutate, suppress, page, exit, dismiss, reorder, or alter autocast.
+Stance/forms, active totems, DK runes, active special modes, and meaningful nonzero class-resource presentation remain environmental DEFERRED.
 
-Secret observations are counted/deferred safely. Environmental absence is DEFERRED. The contextual probe is not part of `Run All`; run the probe manually, then run `Run All` separately.
+The client moved from build 70205 to 70235. Matching Forever source `a84e2b1b41d3d4137127c07e4da448aa3251d6f1` is the direct child of the P0149 source pin and changes only `version.txt`; audited `SecureTemplates.lua` and `PetActionBar.lua` are unchanged. D-044 therefore remains source-continuous.
 
-Initial runtime failed only inside the diagnostic contract: Forever returned numeric `GetPetActionInfo(...).isToken` values on six rows, while the probe required boolean. All special-mode detail flags were ordinary false, but the summary collapsed them to nil through Lua `and/or`. One Warlock primary-power value was safely secret-skipped; the resource domain had zero failures. Separate `Run All` passed.
+Pet actions are the next justified slice because they were naturally populated and the source-proven secure `type="pet"` path remains unchanged.
 
-R3 keeps `0.0.73-dev`, treats `isToken` as opaque secret-first value data, preserves false special-mode summary values, and changes no mutation/ownership scope. R1 correctly refused before writes because it expected `dbe468f7` after P0150 was already durable at `c7ea3638`. R2 also refused before writes because it incorrectly asserted the raw command token `"classpetspecialprobe"` was unique; it legitimately appears in both dispatch and developer-panel registration.
+P0152 must remain a capability probe:
+- addon-owned `SecureActionButtonTemplate` test control(s);
+- `type="pet"` plus ordinary slot attributes;
+- protected setup out of combat only;
+- stock PetActionBar retained;
+- deliberate user-triggered execution proof;
+- no autocast mutation, drag/reorder/edit, binding replacement, PetActionBar suppression, or PetFrame ownership.
 
-P0148 waypoint depth remains accepted. Navigation deferrals/blockers and Camera freeze remain unchanged.
+P0148 waypoint depth remains accepted. Navigation/aura/world-target/party deferrals and Camera freeze remain unchanged.
 
-## Runtime proof
+## Runtime proof for P0152
 
-After deployment and `/reload`:
-1. apply/deploy P0150 R3, then Phase H -> **Class / Pet / Special Probe**;
-2. preserve its summary/detail lines;
-3. Phase 0 -> **Run All**;
-4. upload refreshed diagnostics.
-
-Any Lua/secret/taint/protected-action/mutation failure is a real failure. Do not manufacture missing pet/form/totem/rune/vehicle states solely to close deferrals.
+When implemented:
+1. deploy before `/reload`;
+2. use the Phase-H pet secure-action probe surface;
+3. deliberately click a known pet action through Logres;
+4. preserve addon-owned/event evidence and user confirmation;
+5. run **Run All** separately;
+6. treat missing appropriate pet state as environmental DEFERRED;
+7. treat any Lua/secret/taint/protected-action failure as real failure.
 
 ## Key references
 
 - `../CURRENT.md`
 - `../decisions/D-044_CLASS_PET_SPECIAL_CONTROL_SOURCE_AND_FALLBACK_POLICY.md`
-- `../evidence/P0149_CLASS_PET_SPECIAL_CONTROL_SOURCE_CAPABILITY_AUDIT_2026-10-05.md`
+- `../evidence/P0151_P0150_CLASS_PET_SPECIAL_RUNTIME_PASS_2026-10-05.md`
 - `../evidence/P0150_INITIAL_RUNTIME_FAIL_2026-10-05.md`
 - `../investigations/FUTURE_CLASS_PET_SPECIAL_CONTROL_CAPABILITY.md`
+- `../patches/P0151_RECORD_P0150_RUNTIME_PASS.md`
 - `../patches/P0150_CLASS_PET_SPECIAL_CONTROL_READ_ONLY_PROBE.md`
-- `../decisions/D-026_SELECTIVE_UNIT_FRAME_SUPPRESSION.md`
 - `../architecture/VISUAL_IMPLEMENTATION_STATUS.md`
 - `../roadmap/PHASE_H_INTEGRATION_POLISH.md`

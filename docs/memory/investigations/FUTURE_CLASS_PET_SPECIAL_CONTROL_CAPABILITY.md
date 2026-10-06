@@ -1,9 +1,9 @@
 # Future Class / Pet / Special-Control Capability Audit
 
-Status: **P0150 INITIAL IMPLEMENTATION DURABLE AT `c7ea3638`; RUNTIME FAIL — R3 CORRECTION PREPARED; RETEST PENDING**
+Status: **P0150 RUNTIME PASS FOR OBSERVED SCOPE — P0152 SECURE PET-ACTION EXECUTION PROBE NEXT**
 Opened: 2026-10-05
-Source pin: `Gethe/wow-ui-source@e3ecc27b64d30fdc735a3f6579b866858f9f9df1`
-Forever client: `1.60.1.70205`
+Original P0149 source pin: `Gethe/wow-ui-source@e3ecc27b64d30fdc735a3f6579b866858f9f9df1` (`1.60.1.70205`)
+Current matching source: `Gethe/wow-ui-source@a84e2b1b41d3d4137127c07e4da448aa3251d6f1` (`1.60.1.70235`)
 
 ## Why this exists
 
@@ -205,3 +205,38 @@ Initial `0.0.73-dev` runtime reached all 22/22 event registrations and the full 
 The same run safely secret-skipped one Warlock primary-power value with zero resource failures. Stance/forms and active totems were absent. Special-mode detail flags were ordinary false, while the summary incorrectly collapsed false to nil through Lua `and/or`. Separate integrated `Run All` passed.
 
 P0150 R3 keeps `0.0.73-dev`, treats `isToken` as opaque secret-first value data, preserves false special-mode summary values, and does not change mutation, ownership, polling, or suppression scope. Runtime retest remains required.
+
+## P0151 P0150 runtime acceptance / P0152 next
+
+P0150 R3 is durable at `46e06295695587af07f6f3e1b4a6ac4ace4e4c15` and
+runtime PASS for the observed read-only scope on `0.0.73-dev` / client
+`1.60.1.70235`.
+
+Observed proof:
+- 22/22 expected event registrations;
+- required API set present;
+- PetActionBar present, 10 slots scanned / 7 occupied;
+- pet-domain failures `0`;
+- one Warlock primary-power value secret-skipped safely;
+- resource-domain failures `0`;
+- all special-mode flags ordinary `false`;
+- total failures `0`;
+- separate integrated Run All PASS.
+
+Environmental deferrals remain for stance/forms, active totems, DK runes, active
+special modes, and meaningful nonzero class-resource presentation.
+
+Source continuity is resolved for the current client: Forever 70235 commit
+`a84e2b1b41d3d4137127c07e4da448aa3251d6f1` is the direct child of the P0149
+70205 pin and changes only `version.txt`. The audited `SecureTemplates.lua` and
+`PetActionBar.lua` blobs are unchanged.
+
+The strongest next capability candidate is therefore pet secure execution.
+
+P0152 may prove only user-triggered secure pet-action execution through addon-owned
+`SecureActionButtonTemplate` controls using `type="pet"` and ordinary slot
+attributes. Protected setup must be out of combat and fail open.
+
+P0152 must retain the stock PetActionBar and must not toggle autocast, reorder/edit
+pet actions, replace bindings, suppress PetActionBar, or touch PetFrame. Those
+remain separate completeness/restoration gates.

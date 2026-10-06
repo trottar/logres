@@ -8,63 +8,48 @@ project: logres
 
 ## Active Objective
 
-**Runtime-prove the P0149/D-044 class, pet, and special-control source families without taking production ownership or suppressing Blizzard fallback surfaces.**
+**Advance the class/pet/special-control sequence only through runtime-proven capability slices while preserving Blizzard fallback surfaces.**
 
 Formal Phase G / G.5 remains open and paused while the approved visual sequence is finished.
 
 ## Current Work Item
 
-**P0150 R3 — correct the durable read-only class / pet / special-control probe contract after the initial runtime failure and two pre-write delivery-artifact refusals.**
+**P0152 — bounded secure pet-action execution probe.**
 
 Latest verified durable checkpoint:
-P0150 initial implementation `c7ea363842351f766527a16192a3e2e6535f579e`.
-
-Current durable runtime:
-`0.0.73-dev` — code-durable, but the initial P0150 runtime probe failed on the diagnostic contract below.
+P0150 R3 correction `46e06295695587af07f6f3e1b4a6ac4ace4e4c15`.
 
 Current tested runtime:
-`0.0.73-dev` — initial P0150 probe run **FAILED** on a diagnostic type assumption; R3 correction pending retest.
+`0.0.73-dev` on client `1.60.1.70235` — P0150 read-only probe **PASS for the observed scope with environmental deferrals**.
 
-P0149 result:
-- exact Forever source generation `Gethe/wow-ui-source@e3ecc27b64d30fdc735a3f6579b866858f9f9df1` / `1.60.1.70205` is pinned;
-- D-044 separates pet secure casting, stance/form, totem, discrete class resources, alternate power, PetFrame, and integrated special modes;
-- no Blizzard class/pet/special presentation or control surface is suppressed by source evidence alone.
+P0150 accepted runtime evidence:
+- all 22/22 expected event registrations succeeded and required APIs were present;
+- pet action bar present, 10 slots scanned / 7 occupied, pet-domain failures `0`;
+- ordinary active/autocast/usable state was captured without mutation;
+- one Warlock primary-power value was secret and safely skipped; resource-domain failures `0`;
+- stance/form count `0`, no active totems, and non-DK runes are environmental DEFERRED;
+- possess/vehicle/override/temp-shapeshift/extra-action flags were ordinary `false`;
+- total probe failures `0`;
+- separate integrated **Run All** completed cleanly.
 
-P0150 candidate runtime:
-`0.0.73-dev`.
+The accepted client build is now `70235`. Matching Forever source is
+`Gethe/wow-ui-source@a84e2b1b41d3d4137127c07e4da448aa3251d6f1`.
+It is the direct child of the P0149 `70205` source pin and changes only
+`version.txt`; `SecureTemplates.lua` and `PetActionBar.lua` are byte-identical
+across the two source commits. D-044's pet secure-action source finding therefore
+remains applicable to the current client.
 
-P0150 adds one diagnostic-only `ClassPetSpecialProbe` that:
-- reads pet-action-bar presence and at most ten pet slots;
-- reads current stance/form count, state, and cooldowns;
-- reads bounded totem state secret-first;
-- reads player class, primary power, a bounded class-specific discrete resource candidate, charged points where applicable, and DK runes only when naturally class-applicable;
-- reads possess/vehicle/override/temp-shapeshift/extra-action mode flags and ordinary bar indexes;
-- invalidates from source-owned pet/form/totem/power/rune/special/world events and discards event payloads;
-- stores only sanitized addon-owned diagnostic state.
+The strongest naturally populated domain is pet actions. P0152 is limited to
+proving user-triggered secure pet-action execution through the source-established
+`SecureActionButtonTemplate` / `type="pet"` path.
 
-P0150 deliberately does **not** cast, toggle autocast, reorder pet actions, cast forms, dismiss totems, mutate action pages/state drivers, exit vehicles, cancel possession, invoke extra/override controls, or touch Blizzard presentation.
+P0152 does **not** authorize PetActionBar suppression. Stock PetActionBar remains
+visible/usable. Autocast mutation, drag/reorder/edit, key routing/bindings,
+complete cooldown/range/usable/active feedback, combat-safe replacement setup,
+exact restoration, and PetFrame ownership remain separate gates.
 
-Secret observations are counted and deferred rather than treated as failures. Environmental absence is DEFERRED, not FAIL.
-
-Initial P0150 runtime evidence on `0.0.73-dev`:
-- probe initialized and registered 22/22 events; required APIs were present;
-- pet bar was present with 10 scanned slots / 7 occupied;
-- the probe reported 6 failures, all from `pet.isToken:unexpected-number`;
-- the exact Forever runtime therefore proves `GetPetActionInfo(...).isToken` cannot be treated as boolean-only;
-- one Warlock primary-power value was secret and was safely skipped; the resource domain had zero failures;
-- stance/forms and active totems were absent in the observed state;
-- special-mode detail values were ordinary false, but the summary collapsed false to nil through `and/or`;
-- separate `Run All` completed cleanly.
-
-R3 keeps `0.0.73-dev`, treats `isToken` as an opaque secret-first value, and preserves false special-mode summary values. No ownership or mutation scope changes. The earlier R1 delivery artifact correctly refused before writes because it expected pre-P0150 HEAD `dbe468f7` after the initial implementation was already durable at `c7ea3638`. R2 also refused before writes because its validator incorrectly required the raw string `"classpetspecialprobe"` to occur exactly once in `Commands.lua`; the correct durable file contains it twice by design (dispatch plus developer-panel registration).
-
-P0148 manual-waypoint depth remains the accepted production baseline at `6f381a77` / `0.0.72-dev`; further amplitude refinement is deferred to whole-interface polish.
-
-Navigation boundaries remain unchanged:
-- quest/current-navigation destination remains environmental DEFERRED;
-- current-map AreaPOI/service usefulness remains environmental DEFERRED;
-- individual tracking-result/service-instance positions remain source-blocked;
-- Blizzard minimap remains stock and available.
+P0148 manual-waypoint depth remains the accepted production baseline. Navigation,
+aura, world-target, party, and Camera deferrals remain unchanged.
 
 ## Verified State
 
@@ -86,10 +71,12 @@ World target:
 - production target placement remains screen-space.
 
 Class / pet / special-control territory:
-- P0149/D-044 source families and fallback policy are durable;
-- P0150 initial implementation is durable at `c7ea3638`; its first runtime exposed an isolated probe-contract failure; R3 correction is prepared and runtime acceptance remains pending;
-- PetFrame, RuneFrame, TotemFrame, alternate-power, PetActionBar, StanceBar, PossessActionBar, OverrideActionBar, ExtraActionBar, and unsupported vehicle/special controls remain Blizzard-owned;
-- pet secure casting remains only a source-plausible future control candidate, not replacement completeness.
+- P0149 / D-044 source/fallback policy remains authoritative;
+- P0150 R3 is durable at `46e06295` and runtime PASS for the observed read-only scope on client build `70235`;
+- pet action state is the only naturally populated control domain from that run and is the next secure-execution candidate;
+- stance/forms, active totems, DK runes, active possess/vehicle/override/temp-shapeshift/extra-action modes, and meaningful nonzero class-resource presentation remain environmental DEFERRED;
+- PetFrame, RuneFrame, TotemFrame, alternate-power, StanceBar, PossessActionBar, OverrideActionBar, ExtraActionBar, and unsupported vehicle/special controls remain Blizzard-owned;
+- PetActionBar remains Blizzard-owned until casting plus autocast/edit/binding/feedback/setup/restoration completeness is deliberately proven.
 
 Camera:
 - P0119 remains durable at `c342bc176a9d5de80ec116d0c6b31fa595cd75b3`;
@@ -97,32 +84,30 @@ Camera:
 
 ## Next Action
 
-Apply P0150 R3 on durable P0150 `c7ea3638`, redeploy the unchanged runtime `0.0.73-dev`, then rerun the Phase-H **Class / Pet / Special Probe**.
+Prepare P0152 as a **bounded secure pet-action execution probe**, not a production replacement.
 
-Required in-client proof:
-1. confirm the probe reports PASS with `failureCount=0`;
-2. confirm the observed special-mode summary preserves ordinary `false` values rather than `nil`;
-3. preserve all returned probe lines in diagnostics;
-4. treat absent pet/forms/totems/runes/special modes as environmental DEFERRED rather than manufacturing gameplay state;
-5. run **Run All** separately after the probe;
-6. upload the refreshed diagnostics artifact.
+Required scope:
+1. use matching 70235 source continuity from P0151 / D-044;
+2. create addon-owned secure test control(s) only through `SecureActionButtonTemplate` with `type="pet"` and ordinary pet-action slot attributes;
+3. configure protected attributes only out of combat and fail open if setup cannot be completed safely;
+4. retain the stock PetActionBar throughout the test;
+5. prove at least one deliberate user-triggered pet action through the Logres secure surface without Lua, secret, taint, or protected-action failure;
+6. record only addon-owned diagnostic state and source-owned follow-up events; do not infer success from static source alone;
+7. do not toggle autocast, reorder/edit pet actions, replace bindings, suppress PetActionBar, or touch PetFrame.
 
-A secret skip is valid evidence when safely recorded. A Lua error, secret-value misuse, invalid payload/type failure, taint/protected-action error, or unexpected mutation is a real failure.
+A missing usable/appropriate pet action in a later test state is an environmental deferral, not permission to manufacture unsafe gameplay state.
 
 ## Success Criteria
 
-P0150 succeeds for the observed scope when:
-- `ClassPetSpecialProbe` initializes/enables and all source-owned event registrations succeed;
-- the exact required API set is present;
-- manual capture completes with `failureCount=0`;
-- ordinary current-state fields are sanitized into addon-owned diagnostics;
-- secret-capable results are checked before nil/type/value inspection and only counted/deferred when secret;
-- pet/form/totem/resource/rune/special-mode absence is classified as environmental deferral where applicable;
-- DK rune reads occur only when the ordinary class identity is Death Knight;
-- no casts, autocast changes, pet rearrangement, form activation, totem dismissal, action-page mutation, vehicle/possess mutation, state-driver mutation, or Blizzard presentation mutation occurs;
-- **Run All** remains clean.
+P0152 succeeds only for secure pet-action **execution capability** when:
+- secure pet-action buttons are configured out of combat with ordinary slot numbers;
+- a deliberate user click reaches a real pet action through the secure path;
+- observable addon-owned/event evidence plus user confirmation establishes that execution occurred;
+- no Lua, secret-value, taint, forbidden/protected-action, or unintended mutation failure occurs;
+- stock PetActionBar remains available and usable before, during, and after the probe;
+- integrated regression checks remain clean.
 
-P0150 does not by itself authorize any production replacement or stock suppression.
+P0152 does not by itself authorize PetActionBar suppression or full pet-control ownership.
 
 ## Do Not Reopen Without New Evidence
 
@@ -143,11 +128,11 @@ P0150 does not by itself authorize any production replacement or stock suppressi
 ## Relevant References
 
 - `docs/memory/decisions/D-044_CLASS_PET_SPECIAL_CONTROL_SOURCE_AND_FALLBACK_POLICY.md`
-- `docs/memory/evidence/P0149_CLASS_PET_SPECIAL_CONTROL_SOURCE_CAPABILITY_AUDIT_2026-10-05.md`
+- `docs/memory/evidence/P0151_P0150_CLASS_PET_SPECIAL_RUNTIME_PASS_2026-10-05.md`
 - `docs/memory/evidence/P0150_INITIAL_RUNTIME_FAIL_2026-10-05.md`
 - `docs/memory/investigations/FUTURE_CLASS_PET_SPECIAL_CONTROL_CAPABILITY.md`
+- `docs/memory/patches/P0151_RECORD_P0150_RUNTIME_PASS.md`
 - `docs/memory/patches/P0150_CLASS_PET_SPECIAL_CONTROL_READ_ONLY_PROBE.md`
-- `docs/memory/patches/P0149_CLASS_PET_SPECIAL_CONTROL_SOURCE_CAPABILITY_AUDIT.md`
 - `docs/memory/decisions/D-026_SELECTIVE_UNIT_FRAME_SUPPRESSION.md`
 - `docs/memory/architecture/VISUAL_IMPLEMENTATION_STATUS.md`
 - `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`

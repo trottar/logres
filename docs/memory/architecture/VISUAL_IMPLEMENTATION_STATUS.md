@@ -41,7 +41,7 @@ A component can be visually complete while runtime ownership remains incomplete.
 | Player-health tunnel | Yes / D-036 frozen | P0124 is durable at `1e7e27e` / `0.0.54-dev`; five Theme-owned organic tunnel/death masks run on the proven native secret-safe health-to-alpha path, with deterministic D-036 preview percentages | Whole-interface contrast/scale polish remains; natural damage/heal may be observed opportunistically but is not required to re-prove the accepted preview matrix | **Runtime + visual baseline accepted — final polish deferred** |
 | Compass heading + manual waypoint | Yes | P0148 `6f381a77` / `0.0.72-dev` is runtime + visual PASS for the live-radius depth baseline after P0147's too-subtle calibration failed | Preserve P0123 off-tape authority; defer exact amplitude refinement to final whole-screen polish; identity remains unavailable | **Production depth baseline accepted — final calibration deferred** |
 | Compass quest / POI / tracking roles | Yes | P0143 `b9b2f90b` / `0.0.69-dev` runtime-proves current-map/player geometry, minimap view radius, and 23/23 multi-select tracking selector metadata rows; individual tracked-result/service-instance positions remain source-blocked | Current-map AreaPOI population and current/quest waypoint output were absent and remain deferred; keep stock minimap until replacement completeness is proven | **Geometry/selector metadata proven — destination/AreaPOI deferred; tracking-result markers blocked** |
-| Class/pet/special controls | Shared button language approved; class-specific mechanics only partially covered | P0149/D-044 source policy is durable; P0150 is durable at `c7ea3638`; its initial `0.0.73-dev` run exposed an isolated diagnostic `isToken` type-contract defect while separate Run All stayed clean | Apply/retest P0150 R3; preserve environmental deferrals and implement only separately runtime-proven domains | **Source resolved — runtime probe correction pending** |
+| Class/pet/special controls | Shared button language approved; class-specific mechanics only partially covered | P0150 R3 `46e06295` / `0.0.73-dev` is read-only runtime PASS for the observed scope on client 70235; pet state was populated while stance/totem/rune/special modes remain deferred | P0152 secure pet-action execution probe only; retain stock PetActionBar and preserve all unproven class/special fallbacks | **Read path proven — secure pet execution next** |
 | Settings / accessibility | Visual language only, no dedicated final sheet | Preference infrastructure exists, not final Phase-H settings UI | Design compact settings/accessibility presentation and expose only accepted product choices | **Residual design / integration** |
 
 ## Consequence
@@ -130,12 +130,15 @@ Completed:
 23. P0149 class/pet/special-control source-capability audit — source layer resolved,
     D-044 accepted; no runtime suppression or mutation.
 
-Current:
-24. P0150 bounded read-only class/pet/special source probe — durable at `c7ea3638`; initial `0.0.73-dev` runtime FAIL on diagnostic `isToken` type assumption; R3 correction prepared, retest pending.
+Completed with environmental deferrals:
+24. P0150 bounded read-only class/pet/special source probe — R3 durable at
+    `46e06295` / `0.0.73-dev`; observed pet read path PASS, one secret Warlock
+    power safely deferred, stance/totem/rune/active-special branches deferred.
 
-After that:
-25. implement only source/runtime-proven class/pet/special slices, preserve stock
-    fallback for the rest, and continue settings/accessibility/final whole-screen
+Next:
+25. P0152 bounded secure pet-action execution probe with stock PetActionBar retained.
+26. implement only separately runtime-proven pet/class/special slices, preserve stock
+    fallback for the rest, then continue settings/accessibility/final whole-screen
     composition calibration. Deferred navigation roles remain deferred until natural
     evidence or new source capability justifies reopening them.
 

@@ -199,25 +199,31 @@ quest/POI/tracking roles remain unchanged.
 ## Class / pet / special-control ownership
 
 Status:
-**P0150 INITIAL IMPLEMENTATION DURABLE AT `c7ea3638`; RUNTIME FAIL — R3 CORRECTION PREPARED; RETEST PENDING.**
+**P0150 RUNTIME PASS FOR OBSERVED READ-ONLY SCOPE; P0152 SECURE PET-ACTION EXECUTION PROBE NEXT.**
 
 Canonical investigation:
 `FUTURE_CLASS_PET_SPECIAL_CONTROL_CAPABILITY.md`.
 
-P0149 pins exact Forever source `e3ecc27b64d30fdc735a3f6579b866858f9f9df1`
-(`1.60.1.70205`).
+P0149 / D-044 source policy remains authoritative. The current client is
+`1.60.1.70235`; matching Forever source `a84e2b1b41d3d4137127c07e4da448aa3251d6f1`
+is the direct child of the audited 70205 source and changes only `version.txt`.
+The audited pet secure-template and PetActionBar files are byte-identical across
+those builds.
 
-Resolved boundaries:
-- pet secure casting is source-plausible through `type="pet"`, but full PetActionBar
-  replacement completeness is not proven;
-- PetFrame remains a separate secure unit-frame surface;
-- stance/form state is readable but replacement control ownership is unproven;
-- totem state is secret-capable and dismiss mutation remains separate;
-- runes/class resources remain secret-first, class-specific, and discrete;
-- alternate power remains stock;
-- possess/override/vehicle/extra action remain integrated Blizzard special modes,
-  not ordinary action roles.
+P0150 R3 is durable at `46e06295` / `0.0.73-dev` and runtime PASS for the
+observed read-only scope:
+- 22/22 expected events and required APIs;
+- pet bar present, 10 slots scanned / 7 occupied, pet failures `0`;
+- one Warlock primary-power value safely secret-skipped, resource failures `0`;
+- ordinary false special-mode flags preserved correctly;
+- total failures `0`;
+- separate integrated Run All PASS.
 
-No P0149 stock suppression or runtime mutation is authorized.
+Environmental deferrals remain for stance/forms, active totems, DK runes, active
+special modes, and meaningful nonzero class-resource presentation.
 
-P0150 is durable at `c7ea3638` / `0.0.73-dev`, but its first runtime probe failed on a diagnostic type assumption: six pet rows returned numeric `isToken` values. R3 treats that field as an opaque secret-first value and fixes false-to-nil special-mode summary extraction. Separate Run All passed; retest is pending. No production ownership or stock suppression is authorized.
+The next justified control slice is P0152: a bounded secure pet-action execution
+probe using addon-owned `SecureActionButtonTemplate` / `type="pet"` controls.
+Stock PetActionBar remains available. Autocast mutation, edit/reorder, bindings,
+full feedback completeness, suppression/restoration, and PetFrame ownership remain
+separate gates.

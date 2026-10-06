@@ -9,8 +9,10 @@ Use the exact Forever `1.60.1.70205` source audit from P0149 to keep class, pet,
 and special-control ownership split by capability rather than treating them as
 ordinary action-bar or percentage-resource extensions.
 
-Pinned source:
-`Gethe/wow-ui-source@e3ecc27b64d30fdc735a3f6579b866858f9f9df1`.
+Pinned P0149 source:
+`Gethe/wow-ui-source@e3ecc27b64d30fdc735a3f6579b866858f9f9df1` (`1.60.1.70205`).
+
+P0151 source-continuity note: the accepted P0150 R3 runtime client is `1.60.1.70235`. Matching Forever source is `Gethe/wow-ui-source@a84e2b1b41d3d4137127c07e4da448aa3251d6f1`, the direct child of the 70205 pin. That commit changes only `version.txt`; the audited `SecureTemplates.lua` and `PetActionBar.lua` blobs are unchanged. The source findings below therefore remain applicable to the current client.
 
 No stock suppression is authorized by source evidence alone.
 
