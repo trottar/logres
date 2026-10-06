@@ -175,19 +175,8 @@ Matching Forever 70235 source is `a84e2b1b41d3d4137127c07e4da448aa3251d6f1`,
 the direct child of the P0149 70205 pin with only `version.txt` changed. The audited
 secure pet source files are unchanged.
 
-P0152 is therefore the next justified class/pet/special slice: a bounded secure
-pet-action execution probe with stock PetActionBar retained. It does not authorize
-autocast mutation, edit/reorder, binding replacement, PetActionBar suppression, or
-PetFrame ownership.
+P0152 is durable at `00aef4a90e5999140dc9082e68e934cfc854cb05` / `0.0.74-dev` and is accepted for the bounded pet-action control/state-presentation slice. After the preserved correction history, R12 resolves effective click-specific pet bindings for presentation. Runtime evidence shows ten pet bindings, seven naturally readable/occupied slots, two active-state indicators, one autocast indicator, successful default-on arming, and user-confirmed pet button execution. Stock PetActionBar remains available.
 
-P0152 prepares candidate `0.0.74-dev` as the first secure-control proof in
-the class/pet/special sequence. It adds a temporary ten-slot Logres pet strip using
-addon-owned `SecureActionButtonTemplate`, fixed ordinary `action=1..10` slots,
-`type="pet"`, left-click only, and out-of-combat protected setup.
+This does not authorize pet edit/reorder, binding replacement, PetActionBar suppression/restoration, PetFrame ownership, or unrelated class/special ownership. Exact pet-button visual refinement is deferred to later whole-interface polish.
 
-Acceptance is deliberately narrower than PetActionBar ownership: a deliberate user
-click must produce secure PostClick evidence, source-owned pet follow-up events, an
-ordinary active-state transition, explicit user confirmation, zero probe failures,
-and a clean separate Run All. Stock PetActionBar remains visible/usable. Autocast,
-edit/reorder, bindings, full feedback, suppression/restoration, and PetFrame remain
-separate gates.
+P0153 records the final P0152 validation Run All as not globally clean because `cameraworldcombat` timed out once after `PLAYER_ENTERING_WORLD` while moving toward requested target `5`. P0152 did not modify camera runtime files and prior camera checks passed, so this is OPEN / INTERMITTENT / UNREPRODUCED. The next runtime action is one normal `/reload`, Phase G -> **Camera World/Combat Check**, then a separate Phase 0 -> **Run All**. Reproduce before patching.

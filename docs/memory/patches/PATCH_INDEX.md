@@ -171,5 +171,6 @@
 | P0149 | 2026-10-05 | INSTALLED / PUSHED — SOURCE/CAPABILITY LAYER RESOLVED | Resolve class/pet/special-control source/fallback policy; accept D-044 (`dbe468f7`) |
 | P0150 | 2026-10-05 | INSTALLED / PUSHED — R3 RUNTIME PASS WITH ENVIRONMENTAL DEFERRALS | `46e06295`, `0.0.73-dev`: 22/22 events/APIs, pet 10/7 populated, one safe secret skip, zero failures, Run All PASS; initial runtime fail plus R1/R2 pre-write artifact refusals preserved |
 | P0151 | 2026-10-05 | INSTALLED / PUSHED — DOCS / RUNTIME-EVIDENCE CHECKPOINT | Record P0150 R3 PASS, 70235 source continuity, and open P0152 secure pet-action execution probe (`b62397b1`) |
-| P0152 | 2026-10-06 | OPEN — R11 DIAGNOSTIC IDENTIFIED EFFECTIVE-BINDING DEFECT; R12 RETEST REQUIRED | Default-on pet cluster observed working; secure execution retained; R12 resolves effective click-specific pet bindings for persistent active/autocast presentation |
+| P0152 | 2026-10-06 | INSTALLED / PUSHED — R12 RUNTIME + CONTROL + STATE-PRESENTATION PASS; FINAL VISUAL POLISH DEFERRED | `00aef4a9`, `0.0.74-dev`: default-on pet controls; 10 bindings / 7 readable; 2 active + 1 autocast indicators; user-confirmed button execution; stock PetActionBar retained |
+| P0153 | 2026-10-06 | PREPARED — DOCS / EVIDENCE ONLY | Record P0152 acceptance and preserve one `PLAYER_ENTERING_WORLD` Camera World/Combat timeout as OPEN / INTERMITTENT / UNREPRODUCED |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

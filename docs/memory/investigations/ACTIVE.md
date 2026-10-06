@@ -26,6 +26,16 @@ When Camera resumes, use one normal Taxi flight and record:
 
 No max-distance mutation, Taxi rotation, or Taxi UI fade is part of that proof.
 
+### Current world-entry timeout regression watch
+
+Status:
+**OPEN / INTERMITTENT / UNREPRODUCED.**
+
+The final P0152 R12 integrated Run All recorded one `cameraworldcombat` transition timeout after `PLAYER_ENTERING_WORLD` on `0.0.74-dev`. P0152 did not modify camera runtime files and prior camera checks passed, so no causal link or reproducible defect is established. Preserve the failure and retest through Phase G before any code change.
+
+Canonical investigation:
+`CAMERA_WORLD_ENTRY_TRANSITION_TIMEOUT_2026-10-06.md`.
+
 ## Active Quest
 
 Status:
@@ -199,28 +209,15 @@ quest/POI/tracking roles remain unchanged.
 ## Class / pet / special-control ownership
 
 Status:
-**P0150 READ-ONLY RUNTIME PASS; P0152 R1 SECURE PET-ACTION EXECUTION PROBE PREPARED AFTER PRE-WRITE CHECKER REPAIR.**
+**P0152 R12 PET-ACTION RUNTIME + CONTROL + STATE-PRESENTATION PASS; FINAL VISUAL POLISH DEFERRED.**
 
 Canonical investigation:
 `FUTURE_CLASS_PET_SPECIAL_CONTROL_CAPABILITY.md`.
 
-P0149 / D-044 source policy remains authoritative. Forever build 70235 source
-`a84e2b1b41d3d4137127c07e4da448aa3251d6f1` is source-continuous with the 70205
-audit for the secure pet paths.
+P0149 / D-044 source policy remains authoritative. P0150 R3 remains the accepted read-only source baseline.
 
-P0150 R3 is durable at `46e06295` / `0.0.73-dev` and runtime PASS for the observed
-read-only scope: 22/22 events/APIs, pet 10/7 populated with zero pet failures, one
-safe secret Warlock power skip, ordinary false special-mode flags, zero total
-failures, and separate Run All PASS.
+P0152 is durable at `00aef4a90e5999140dc9082e68e934cfc854cb05` / `0.0.74-dev` and is accepted for the bounded pet-action slice. The final pet-state diagnostic recognized ten click-specific pet bindings, seven naturally readable/occupied slots, two active-state indicators, and one autocast indicator. Default-on arming succeeded, and the user confirmed both the visible state treatment and working pet button presses.
 
-Environmental deferrals remain for stance/forms, active totems, DK runes, active
-special modes, and meaningful nonzero class-resource presentation.
+Stock PetActionBar remains available. Pet edit/reorder, binding replacement, PetActionBar suppression/restoration, PetFrame ownership, stance/form, totem, rune, alternate-power, discrete class-resource, and unsupported special-control ownership remain separately gated.
 
-P0152 R1 prepares candidate `0.0.74-dev` as a bounded secure pet-action execution
-probe. Ten addon-owned secure buttons use fixed ordinary slots, `type="pet"`, and
-left-click only. Protected setup is out of combat. Runtime acceptance requires a
-user click plus PostClick, pet-event follow-up, ordinary active-state change, user
-confirmation, and zero failures.
-
-Stock PetActionBar remains available. Autocast, edit/reorder, bindings, complete
-feedback, suppression/restoration, and PetFrame ownership remain separate gates.
+Exact pet-button ornament/contrast refinement is deferred to later whole-interface polish rather than treated as an open control defect.

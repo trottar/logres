@@ -1,0 +1,16 @@
+P0153 — Record P0152 Pass and Camera Timeout
+
+Baseline: 00aef4a90e5999140dc9082e68e934cfc854cb05
+Scope: docs/evidence only; no runtime code changes
+
+Records:
+- P0152 R12 bounded pet-action runtime/control/state-presentation acceptance
+- pet visual refinement deferred to later whole-interface polish
+- one world-entry Camera World/Combat timeout preserved as OPEN / INTERMITTENT / UNREPRODUCED
+
+Checks:
+- tools/check_memory_health.py: PASS
+- tools/check_checker_version_policy.py: PASS
+- git diff --check: PASS
+
+No WoW redeploy required.

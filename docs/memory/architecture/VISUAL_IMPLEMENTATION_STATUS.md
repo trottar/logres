@@ -41,7 +41,7 @@ A component can be visually complete while runtime ownership remains incomplete.
 | Player-health tunnel | Yes / D-036 frozen | P0124 is durable at `1e7e27e` / `0.0.54-dev`; five Theme-owned organic tunnel/death masks run on the proven native secret-safe health-to-alpha path, with deterministic D-036 preview percentages | Whole-interface contrast/scale polish remains; natural damage/heal may be observed opportunistically but is not required to re-prove the accepted preview matrix | **Runtime + visual baseline accepted — final polish deferred** |
 | Compass heading + manual waypoint | Yes | P0148 `6f381a77` / `0.0.72-dev` is runtime + visual PASS for the live-radius depth baseline after P0147's too-subtle calibration failed | Preserve P0123 off-tape authority; defer exact amplitude refinement to final whole-screen polish; identity remains unavailable | **Production depth baseline accepted — final calibration deferred** |
 | Compass quest / POI / tracking roles | Yes | P0143 `b9b2f90b` / `0.0.69-dev` runtime-proves current-map/player geometry, minimap view radius, and 23/23 multi-select tracking selector metadata rows; individual tracked-result/service-instance positions remain source-blocked | Current-map AreaPOI population and current/quest waypoint output were absent and remain deferred; keep stock minimap until replacement completeness is proven | **Geometry/selector metadata proven — destination/AreaPOI deferred; tracking-result markers blocked** |
-| Class/pet/special controls | Shared button language approved; class-specific mechanics only partially covered | P0149/D-044 source policy is durable; P0150 R3 is runtime PASS for the observed read-only scope; P0152 `0.0.74-dev` secure pet-action probe is prepared | Runtime-prove left-click pet execution while stock PetActionBar remains; autocast/edit/bindings/full feedback/restoration stay separate | **Pet read proven — secure execution probe prepared** |
+| Class/pet/special controls | Shared button language approved; class-specific mechanics only partially covered | P0152 `00aef4a9` / `0.0.74-dev` is runtime/control/state-presentation PASS for default-on pet controls: ten bindings recognized, seven readable/occupied, two active indicators, one autocast indicator, user-confirmed button execution | Defer exact pet-button ornament/contrast to whole-screen polish; keep edit/reorder/bindings/PetActionBar suppression/PetFrame and other class/special ownership separately gated | **Pet control/state baseline accepted — final visual polish deferred** |
 | Settings / accessibility | Visual language only, no dedicated final sheet | Preference infrastructure exists, not final Phase-H settings UI | Design compact settings/accessibility presentation and expose only accepted product choices | **Residual design / integration** |
 
 ## Consequence
@@ -135,8 +135,11 @@ Completed with environmental deferrals:
     `46e06295` / `0.0.73-dev`; observed pet read path PASS, one secret Warlock
     power safely deferred, stance/totem/rune/active-special branches deferred.
 
-Current:
-25. P0152 R1 bounded secure pet-action execution probe — candidate `0.0.74-dev` prepared after stale-checker repair; runtime proof pending with stock PetActionBar retained.
+Completed with correction history:
+25. P0152 bounded pet-action control/state-presentation slice — R12 durable at
+    `00aef4a9` / `0.0.74-dev`; default-on controls, active/autocast state treatment,
+    and user-confirmed button execution accepted. Exact ornament/contrast remains
+    later whole-interface polish.
 
 After that:
 26. implement only separately runtime-proven pet/class/special slices, preserve stock
@@ -145,5 +148,6 @@ After that:
     evidence or new source capability justifies reopening them.
 
 This is a dependency-oriented implementation map, not a claim that formal Phase H
-has started. Phase G remains open but is explicitly frozen while this approved
-visual sequence is completed.
+has started. Phase G remains open. Before the next runtime slice, classify the
+one-off world-entry camera timeout recorded with the final P0152 Run All; do not
+speculatively patch an unreproduced camera failure.

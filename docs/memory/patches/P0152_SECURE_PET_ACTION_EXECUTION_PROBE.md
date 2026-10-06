@@ -113,3 +113,19 @@ R7 retains shared `Logres.ActionButton` construction and the accepted pet-slot m
 - uses a 5x2 lower-left cluster anchored below `LogresHUDAllies`, matching D-032 instead of crossing the central resource/action lane.
 
 Stock PetActionBar remains visible and usable. No suppression/edit/binding/PetFrame ownership is added.
+
+## R8–R12 presentation/default-on correction history
+
+After R7 restored working pet execution/layout, the remaining acceptance defect was presentation/lifecycle clarity. R8 and the first R10 panel delivery were refused by exact baseline checks; R9 made the pet cluster default-on but produced no visible state change; R11 diagnostics identified the root presentation mismatch: the working pet controls stored effective pet bindings on click-specific secure attributes while the presentation layer inspected only raw generic attributes.
+
+R12 resolves effective `type1=pet` / `action1=slot` bindings for presentation and strengthens persistent active/autocast treatment without changing the working secure execution path.
+
+## Final P0152 runtime acceptance
+
+P0152 is durable at `00aef4a90e5999140dc9082e68e934cfc854cb05` / `0.0.74-dev`. The final pet-state diagnostic reports ten pet bindings, seven naturally readable/occupied slots, two active indicators, one autocast indicator, and successful default-on arming. The user confirmed the visual state treatment works and pet button presses remain functional.
+
+Classification: **RUNTIME + CONTROL + STATE-PRESENTATION PASS for the bounded pet-action slice.**
+
+Stock PetActionBar remains available. Edit/reorder, binding replacement, suppression/restoration, PetFrame ownership, and unrelated class/special domains remain separately gated. Exact pet-button ornament/contrast is deferred to later whole-interface polish.
+
+The final integrated Run All also exposed one unrelated Camera World/Combat transition timeout. That global regression is preserved separately by P0153 and does not erase the accepted P0152 pet result.

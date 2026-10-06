@@ -349,20 +349,13 @@ P0151 also records current-client source continuity: Forever build 70235 commit
 only by `version.txt`; the audited secure pet source files are unchanged.
 
 P0152:
-**R1 PREPARED — BOUNDED SECURE PET-ACTION EXECUTION PROBE on candidate `0.0.74-dev`; initial checker refusal preserved.**
+**R12 RUNTIME + CONTROL + STATE-PRESENTATION PASS — `00aef4a9`, `0.0.74-dev`.**
 
-The diagnostic strip uses ten fixed ordinary pet slots on addon-owned
-`SecureActionButtonTemplate` controls, left-click only, with out-of-combat
-attribute setup. Runtime proof requires PostClick + pet event + ordinary active
-state change + explicit user confirmation.
+The pet-action slice now uses the shared Logres action-button language, appears by default, resolves ten click-specific pet bindings, reports seven naturally readable/occupied slots, shows two active-state indicators and one autocast indicator, and retains working user-confirmed button execution. Stock PetActionBar remains available.
 
-Stock PetActionBar remains available. Autocast mutation, edit/reorder, bindings,
-complete feedback, suppression/restoration, and PetFrame ownership remain separate
-gates.
+Exact pet-button ornament/contrast is deferred to later whole-interface polish. Pet edit/reorder, binding replacement, PetActionBar suppression/restoration, PetFrame ownership, and unrelated class/special controls remain separately gated.
 
-Next:
-**Run P0152 in client, then run integrated Run All separately and record exact
-evidence.**
+P0153 records one unrelated final Run All camera World/Combat timeout as OPEN / INTERMITTENT / UNREPRODUCED. Before the next runtime slice, use the existing Phase-G developer-panel check to classify recurrence; do not patch an unreproduced camera event.
 
 Preserve direct class-resource children, RuneFrame, TotemFrame, PetFrame, alternate
 power, and all unsupported special-control fallbacks until each domain is deliberately

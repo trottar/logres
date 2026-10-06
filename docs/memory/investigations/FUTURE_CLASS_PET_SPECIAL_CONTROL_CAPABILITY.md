@@ -1,6 +1,6 @@
 # Future Class / Pet / Special-Control Capability Audit
 
-Status: **P0150 RUNTIME PASS FOR OBSERVED SCOPE — P0152 SECURE PET-ACTION EXECUTION PROBE PREPARED**
+Status: **P0152 R12 PET-ACTION RUNTIME + CONTROL + STATE-PRESENTATION PASS — FULL PET/CLASS/SPECIAL OWNERSHIP STILL GATED**
 Opened: 2026-10-05
 Original P0149 source pin: `Gethe/wow-ui-source@e3ecc27b64d30fdc735a3f6579b866858f9f9df1` (`1.60.1.70205`)
 Current matching source: `Gethe/wow-ui-source@a84e2b1b41d3d4137127c07e4da448aa3251d6f1` (`1.60.1.70235`)
@@ -267,3 +267,19 @@ Stock PetActionBar remains the completeness fallback throughout.
 R5 supplies negative runtime evidence that the direct addon secure `type1="pet"` / `action1=slot` implementation is not accepted on Forever 70235: a hardware left click produced Blizzard's protected-action block. Source plausibility alone is not sufficient to reopen that direct path.
 
 R6 therefore narrows the capability proof to secure click delegation from a Logres shared-action button to the matching Blizzard `PetActionBar.actionButtons[slot]`. This keeps Blizzard in control of protected left-click execution and right-click autocast while Logres owns presentation. Because this retains a Blizzard control dependency, it does **not** authorize PetActionBar suppression or claim complete replacement ownership.
+
+## P0152 final runtime acceptance
+
+P0152 is durable at `00aef4a90e5999140dc9082e68e934cfc854cb05` on `0.0.74-dev`. After the preserved R1–R11 delivery/runtime correction history, R12 resolves persistent presentation from the effective click-specific secure pet bindings used by the working controls.
+
+Accepted observed state:
+- ten pet bindings recognized;
+- seven naturally readable/occupied slots;
+- two ordinary active-state indicators;
+- one ordinary autocast-enabled indicator;
+- default-on pet cluster without manual diagnostic ARM;
+- user-confirmed visible state treatment and working pet button presses.
+
+This proves the bounded Logres pet-action control/state-presentation slice, not full PetActionBar replacement completeness. Stock PetActionBar remains available. Edit/reorder, binding replacement, PetActionBar suppression/restoration, PetFrame ownership, and every other class/special domain remain separately gated.
+
+Exact pet-button ornament/contrast tuning is deferred to later whole-interface polish.

@@ -1,10 +1,10 @@
 # Roadmap Status
 
-As of 2026-10-05.
+As of 2026-10-06.
 
 ## Active work stream
 
-**Approved visual implementation translation — P0150 read-only runtime PASS; P0152 secure pet-action execution probe prepared on candidate `0.0.74-dev`.**
+**P0152 pet-action control/state baseline accepted on `0.0.74-dev`; one world-entry camera timeout is OPEN / INTERMITTENT / UNREPRODUCED before further runtime advancement.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -34,6 +34,8 @@ landing retest has not been durably recorded as PASS. G.5 therefore remains open
 
 Camera work resumes only after the current approved visual sequence is finished.
 No max-distance mutation, Taxi rotation, or Taxi UI fade is authorized.
+
+The final P0152 R12 Run All also recorded one `PLAYER_ENTERING_WORLD` Camera World/Combat transition timeout. Because it is one occurrence, prior camera checks passed, and P0152 did not modify camera runtime files, it remains OPEN / INTERMITTENT / UNREPRODUCED pending one targeted Phase-G retest.
 
 ## Parallel approved visual translation
 
@@ -179,13 +181,14 @@ P0151:
 Records P0150 acceptance, 70235 source continuity, and opens P0152.
 
 P0152:
-**R1 PREPARED — BOUNDED SECURE PET-ACTION EXECUTION PROBE on candidate `0.0.74-dev`; initial checker refusal preserved.**
+**INSTALLED / PUSHED — R12 RUNTIME + CONTROL + STATE-PRESENTATION PASS; FINAL VISUAL POLISH DEFERRED** at `00aef4a9` / `0.0.74-dev`.
 
-Ten addon-owned secure buttons use fixed pet slots, `type="pet"`, and left-click
-only. Protected setup occurs only out of combat. Stock PetActionBar remains
-available and no autocast/edit/binding/suppression/PetFrame scope is added.
+The accepted pet-state diagnostic recognizes ten click-specific pet bindings, seven naturally readable/occupied slots, two active indicators, and one autocast indicator. Default-on arming succeeds, and the user confirmed the visible state treatment and pet button execution. Stock PetActionBar remains available; edit/reorder/bindings/suppression/PetFrame and other class/special ownership remain separately gated.
+
+P0153:
+**PREPARED — DOCS / EVIDENCE ONLY.**
+
+Records P0152 acceptance, defers exact pet visual refinement to whole-interface polish, and preserves the final Run All camera timeout as OPEN / INTERMITTENT / UNREPRODUCED.
 
 Next:
-**Runtime-prove one inactive Follow/Stay-type pet command through the Logres secure
-surface, require event-backed active-state change plus user confirmation, then run
-Run All separately.**
+**Perform one normal `/reload`, Phase G -> Camera World/Combat Check, then Phase 0 -> Run All. Reproduce before patching; if clean, record the prior timeout as intermittent/unreproduced without a speculative camera change.**
