@@ -1,0 +1,12 @@
+P0155 R1 — CAMERA DIRECTION SWITCH STOP
+Baseline: 40dec1874a587156c88319a9caed940088e25db7
+Candidate runtime: 0.0.76-dev
+
+Purpose:
+- preserve the initial P0155 pre-write delivery refusal;
+- record P0154 runtime diagnostic evidence;
+- stop the previously active MoveView direction before crossed-target correction reverses motion;
+- retain P0154 diagnostics and expose direction-switch count;
+- update durable project memory.
+
+No commit or push performed.

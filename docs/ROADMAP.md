@@ -34,7 +34,7 @@ The roadmap is capability-gated. A phase advances only when its success criteria
 
 ## Phase G — Cinematic Camera
 
-**Status: ACTIVE — G.5 OPEN; WORLD-ENTRY TRANSITION REGRESSION REPRODUCED.**
+**Status: ACTIVE — G.5 OPEN; WORLD-ENTRY DIRECTION-SWITCH CORRECTION ACTIVE.**
 
 G.1 through G.4 are runtime-proven.
 
@@ -181,4 +181,6 @@ This does not authorize pet edit/reorder, binding replacement, PetActionBar supp
 
 P0153 is durable at `7ad9be7e` and preserved the initial `PLAYER_ENTERING_WORLD` camera timeout without speculating about a fix. Its targeted normal `/reload` retest reproduced the failure: the direct Phase G check started near `8.524`, targeted `5`, and ended near `12.632`; separate Run All repeated the same timeout.
 
-P0154 prepares candidate `0.0.75-dev` as a diagnostic-only camera checkpoint. It records observed toward/away motion, min/max zoom, easing position error, and MoveView command direction/counts from the existing transition OnUpdate. No camera target, duration, event, CVar, Taxi, or timeout behavior changes until that evidence narrows the cause.
+P0154 is durable at `40dec187` / `0.0.75-dev` and is a diagnostic PASS. Normal world entry again timed out: start about `23.148`, target `5`, final `50`, observed range `0 -> 50`, final/max easing error `45`, and command counts `142` inward / `1` outward.
+
+The single outward correction exposes a concrete P0119 defect: crossed-target correction can reverse MoveView direction without stopping the previously active direction. P0155 R1 prepares a bounded stop-before-reverse correction on `0.0.76-dev`. The external origin of the world-entry `0/50` displacement remains unproven. No positional rebase, arbitrary delay, polling, CVar mutation, target change, Taxi rotation, or Taxi UI fade is authorized by this correction.

@@ -168,6 +168,33 @@ local function stopMotion()
     return firstError == nil, firstError
 end
 
+local function stopMotionDirection(direction)
+    local startFunc
+    local stopFunc
+
+    if direction == "in" then
+        startFunc = MoveViewInStart
+        stopFunc = MoveViewInStop
+    elseif direction == "out" then
+        startFunc = MoveViewOutStart
+        stopFunc = MoveViewOutStop
+    else
+        return false, "invalid camera motion direction"
+    end
+
+    local startOK, startError = pcall(startFunc, 0)
+    if not startOK then
+        return false, tostring(startError)
+    end
+
+    local stopOK, stopError = pcall(stopFunc)
+    if not stopOK then
+        return false, tostring(stopError)
+    end
+
+    return true, nil
+end
+
 local Controller = Logres:RegisterModule("CameraWorldCombat", {
     OnInitialize = function(self)
         local frame = CreateFrame("Frame")
@@ -195,6 +222,7 @@ local Controller = Logres:RegisterModule("CameraWorldCombat", {
         self.transitionPreviousZoom = nil
         self.transitionInCommandCount = 0
         self.transitionOutCommandCount = 0
+        self.transitionDirectionSwitchCount = 0
         self.transitionMaxAbsPositionError = 0
         self.lastExpectedZoom = nil
         self.lastPositionError = nil
@@ -532,6 +560,7 @@ function Controller:BeginTransition(
     self.transitionPreviousZoom = currentZoom
     self.transitionInCommandCount = 0
     self.transitionOutCommandCount = 0
+    self.transitionDirectionSwitchCount = 0
     self.transitionMaxAbsPositionError = 0
     self.lastExpectedZoom = currentZoom
     self.lastPositionError = 0
@@ -592,6 +621,21 @@ function Controller:ApplyTransitionMotion(currentZoom, elapsed)
     else
         moveFunc = MoveViewInStart
         direction = "in"
+    end
+
+    local previousDirection = self.transitionDirection
+    if previousDirection ~= nil and previousDirection ~= direction then
+        local switchOK, switchError = stopMotionDirection(previousDirection)
+        if not switchOK then
+            self.lastError = switchError
+            self.failureCount = self.failureCount + 1
+            self.lastAction = "transition-failed"
+            self:Relinquish("direction-switch-stop-failed", false)
+            return false, switchError
+        end
+
+        self.transitionDirectionSwitchCount =
+            self.transitionDirectionSwitchCount + 1
     end
 
     local factor = math.abs(velocity) / zoomSpeed
@@ -915,6 +959,7 @@ function Controller:GetDebugStatus()
         transitionMaxAbsPositionError = self.transitionMaxAbsPositionError,
         transitionInCommandCount = self.transitionInCommandCount,
         transitionOutCommandCount = self.transitionOutCommandCount,
+        transitionDirectionSwitchCount = self.transitionDirectionSwitchCount,
         lastExpectedZoom = self.lastExpectedZoom,
         lastPositionError = self.lastPositionError,
         lastObservedDirection = self.lastObservedDirection,

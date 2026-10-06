@@ -4,11 +4,11 @@ As of 2026-10-06.
 
 ## Active work stream
 
-**P0152 pet-action baseline remains accepted; the world-entry camera timeout is REPRODUCED and P0154 instruments the transition before any behavior change.**
+**P0152 pet-action baseline remains accepted; P0154 diagnosed a world-entry direction-switch defect and P0155 R1 prepares the bounded correction.**
 
-The formal roadmap remains capability-gated and Phase G is still open. Camera is
-temporarily frozen by explicit user sequencing while the approved D-039/D-040
-visual translation sequence is completed.
+The formal roadmap remains capability-gated and Phase G is still open. Broader
+Camera feature work remains frozen, but the reproduced world-entry regression is
+active until the transition driver is safe again.
 
 ## Phase status
 
@@ -21,7 +21,7 @@ visual translation sequence is completed.
 | D — Immersion Controller | COMPLETE |
 | E — Compass and Navigation | COMPLETE |
 | F — Quest Experience | COMPLETE |
-| G — Cinematic Camera | ACTIVE — G.5 OPEN / PAUSED |
+| G — Cinematic Camera | ACTIVE — G.5 OPEN / WORLD-ENTRY REGRESSION |
 | H — Integration and Polish | QUEUED — approved visual translation underway in parallel |
 
 ## Phase G / G.5
@@ -35,7 +35,9 @@ landing retest has not been durably recorded as PASS. G.5 therefore remains open
 Camera work resumes only after the current approved visual sequence is finished.
 No max-distance mutation, Taxi rotation, or Taxi UI fade is authorized.
 
-The P0153 targeted normal `/reload` retest reproduced the `PLAYER_ENTERING_WORLD` Camera World/Combat timeout. The direct Phase G check started near `8.524`, targeted `5`, and ended near `12.632`; separate Run All repeated the same failure. P0154 adds command-versus-observed motion diagnostics only; no speculative camera correction is authorized yet.
+P0154 is verified durable at `40dec187` / `0.0.75-dev` and the diagnostic passed while the behavior still failed. World entry started near `23.148`, targeted `5`, reached observed range `0 -> 50`, and timed out at `50`. The motion line recorded `142` inward commands and `1` outward command.
+
+That one reversal exposes a concrete P0119 cleanup defect: when crossed-target correction changes direction, the old MoveView direction was not stopped before the opposite direction started. P0155 R1 corrects only that defect on candidate `0.0.76-dev`; positional rebasing and arbitrary world-entry delay remain unauthorized.
 
 ## Parallel approved visual translation
 
@@ -191,9 +193,14 @@ P0153:
 Records P0152 acceptance and the initial world-entry camera timeout.
 
 P0154:
-**PREPARED — TARGETED CAMERA MOTION DIAGNOSTIC on candidate `0.0.75-dev`.**
+**INSTALLED / PUSHED — DIAGNOSTIC PASS; RUNTIME CAMERA FAILURE PRESERVED** at `40dec187` / `0.0.75-dev`.
 
-The targeted P0153 retest reproduced the timeout. P0154 records observed motion, easing position error, and MoveView command direction/counts without changing transition behavior.
+The diagnostic captured `145` samples, observed range `0 -> 50`, final/max easing error `45`, and command counts `142` inward / `1` outward.
+
+P0155:
+**R1 PREPARED — TARGETED DIRECTION-SWITCH CORRECTION on candidate `0.0.76-dev`.**
+
+Stop/reset the previous MoveView direction before starting the opposite direction during P0119 crossed-target correction. No polling, arbitrary delay, positional rebase, CVar mutation, target/timing change, or Taxi expansion.
 
 Next:
-**Deploy P0154, `/reload`, Phase G -> Camera World/Combat Check, then Phase 0 -> Run All, and upload diagnostics.**
+**Deploy P0155 R1, `/reload`, Phase G -> Camera World/Combat Check, then Phase 0 -> Run All, and upload diagnostics.**

@@ -1,6 +1,6 @@
 # Camera World-Entry Transition Timeout — 2026-10-06
 
-Status: **REPRODUCED — TARGETED MOTION DIAGNOSTIC REQUIRED**
+Status: **REPRODUCED — P0154 DIAGNOSTIC PASS; P0155 DIRECTION-SWITCH CORRECTION PREPARED**
 
 ## Initial trigger
 
@@ -14,57 +14,82 @@ Initial observation:
 - one failure;
 - error `camera transition timed out before target`.
 
-P0152 did not modify `Logres/Camera/`, so the initial event was correctly classified as OPEN / INTERMITTENT / UNREPRODUCED pending a targeted retest.
+P0152 did not modify `Logres/Camera/`, so the initial event was correctly classified as OPEN / INTERMITTENT / UNREPRODUCED pending targeted retest.
 
 ## Targeted reproduction
 
 P0153 required one normal `/reload`, Phase G **Camera World/Combat Check**, and a separate Phase 0 **Run All**.
 
 That retest reproduced the failure on loadCount `182`:
-- context `world`, owns=true;
-- reason/stop `PLAYER_ENTERING_WORLD` / `transition-timeout`;
 - start about `8.524`;
 - requested/effective target `5`;
 - final/current about `12.632`;
 - elapsed about `3.258s`;
 - `targetReached=false`;
 - `failures=1`;
-- no secret-value failure;
-- error `camera transition timed out before target`.
+- no secret-value failure.
 
-The separate Run All repeated the same camera state and failure while its other listed checks passed.
+Classification became **REPRODUCED RUNTIME FAILURE**.
 
-Classification is therefore **REPRODUCED RUNTIME FAILURE**.
+## P0154 diagnostic result
 
-## Narrow hypothesis
+P0154 is verified durable at `40dec1874a587156c88319a9caed940088e25db7` on `0.0.75-dev`.
 
-The newest sample is directionally significant: the requested transition is inward (`8.524 -> 5`) but the observed camera ends farther out at `12.632`.
+After normal `/reload`, loadCount `184` reported:
+- start `23.147617340088`;
+- requested/effective target `5`;
+- final/current `50`;
+- elapsed about `3.252s`;
+- `145` transition samples;
+- `1` sample moved toward target, `1` away, `143` were flat;
+- minimum observed zoom `0`, maximum `50`;
+- final/max easing position error `45`;
+- last command inward;
+- `142` inward commands and `1` outward command.
 
-The current P0119 driver maps negative velocity to `MoveViewInStart`, matching the audited LibCamera primary path. Repository search shows production camera ownership and the disabled manual camera probe are the only Logres MoveView users. DynamicCam was reported not loaded.
+The separate Run All preserved the same camera failure while its other listed checks passed.
 
-Therefore the next question is not whether the target selector is wrong. It is whether camera motion outside Logres' commanded direction is displacing the P0119 easing schedule during/after `PLAYER_ENTERING_WORLD`.
+This is a **P0154 DIAGNOSTIC PASS** because the intended command-versus-observed evidence was captured without hiding the failure.
 
-Audited LibCamera source has an additional positional-error rebase step when actual position diverges materially from expected easing position. P0119 adopted frame-shaped velocity and end correction but not that rebase behavior. This is a plausible cause of failure under competing movement, not yet an accepted correction.
+## Narrow cause
 
-## P0154 diagnostic contract
+The original P0154 hypothesis expected inward commands only. Runtime instead produced one outward command because the observed camera crossed below target during the world-entry displacement (`min=0`) before later reaching `50`.
 
-P0154 must not change transition behavior. During the already-existing transition OnUpdate it records only addon-owned diagnostic state derived from the ordinary `GetCameraZoom()` value that the controller already reads:
-- observed sample count;
-- toward/away/flat frame counts relative to target;
-- min/max zoom;
-- expected easing position plus current/max absolute position error;
-- last observed direction/delta;
-- last commanded MoveView direction/factor;
-- inward/outward command counts.
+That exposes a concrete P0119 driver defect:
 
-No timer, ticker, delayed reconcile, CVar mutation, polling loop, or new event hook is authorized.
+- crossed-target correction is allowed to reverse direction;
+- `ApplyTransitionMotion()` starts the new MoveView direction;
+- but it does not stop the previous MoveView direction when that reversal occurs;
+- the previous direction is otherwise stopped only during full transition cleanup.
+
+Therefore an outward correction can remain active while later inward commands are issued. The `1` outward plus `142` inward command sequence is direct evidence that this path occurred.
+
+The source of the discrete `0/50` world-entry displacement remains unproven and is not attributed to Blizzard, Logres, or another addon without further evidence.
+
+## P0155 corrective contract
+
+P0155 changes only direction-switch hygiene:
+- on `in -> out` or `out -> in`, stop/reset the previously active MoveView direction before starting the new one;
+- count direction switches in addon-owned diagnostics;
+- fail open through existing transition cleanup if the directional stop fails;
+- preserve P0154 motion diagnostics;
+- preserve all existing targets, durations, timeout policy, context priority, coexistence gates, Taxi semantics, and CVar policy.
+
+Not authorized:
+- polling/tickers;
+- arbitrary world-entry delay;
+- broad event hooks;
+- periodic reassertion;
+- positional rebasing yet;
+- SetCVar;
+- Taxi rotation or UI fade.
 
 ## Runtime gate
 
-After P0154 deployment:
+After P0155:
 1. normal `/reload`;
-2. developer panel -> Phase G -> **Camera World/Combat Check**;
-3. developer panel -> Phase 0 -> **Run All**;
+2. Phase G -> **Camera World/Combat Check**;
+3. Phase 0 -> **Run All** separately;
 4. preserve diagnostics.
 
-If an inward-target timeout shows inward commands only while observed frames move away and max zoom exceeds start zoom, the competing-motion/stale-easing hypothesis is confirmed strongly enough to design a positional-rebase correction. Otherwise, use the recorded evidence to narrow the driver before changing behavior.
+PASS requires convergence near target `5`, `failures=0`, `secret=false`, and no Lua/taint/protected-action failure. If it still times out, the retained motion line and switch count become the next narrowing evidence.

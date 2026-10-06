@@ -17,6 +17,9 @@ else:
         "(targetZoom - currentZoom) / NOMINAL_FRAME_INTERVAL",
         "function Controller:ApplyTransitionMotion(currentZoom, elapsed)",
         "self:ApplyTransitionMotion(currentZoom, elapsed)",
+        "local function stopMotionDirection(direction)",
+        "previousDirection ~= nil and previousDirection ~= direction",
+        "stopMotionDirection(previousDirection)",
         "self.transitionDirection = direction",
         "elapsed >= (self.transitionDuration + timeoutExtra)",
     ]

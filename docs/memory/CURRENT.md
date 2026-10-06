@@ -8,58 +8,44 @@ project: logres
 
 ## Active Objective
 
-**Diagnose the reproduced `PLAYER_ENTERING_WORLD` camera transition conflict without changing camera behavior speculatively.**
+**Correct the reproduced world-entry camera direction-switch defect, then retest normal world entry without widening camera ownership.**
 
 P0152 remains accepted on `0.0.74-dev`; exact pet-button ornament/contrast refinement remains deferred to later whole-interface polish.
 
-The targeted P0153 retest reproduced the Camera World/Combat timeout after a normal `/reload`, so the camera issue is now a real reproduced runtime defect rather than an intermittent watch.
+P0154 is verified durable at `40dec1874a587156c88319a9caed940088e25db7` on candidate `0.0.75-dev`. Its targeted motion diagnostic reproduced the timeout and exposed a concrete P0119 driver defect.
 
 ## Current Work Item
 
-**P0154 — instrument the existing camera transition driver to distinguish commanded motion from observed camera motion during world-entry transitions.**
+**P0155 R1 — stop the previously active MoveView direction before P0119 correction reverses camera motion.**
 
-Latest verified durable checkpoint:
-P0153 `7ad9be7ecc24c1136bf9a843689f90fb377b2012` (docs/evidence), with P0152 code at `00aef4a90e5999140dc9082e68e934cfc854cb05` / `0.0.74-dev`.
+P0154 runtime evidence on loadCount `184`:
+- world-entry start about `23.148`, requested/effective target `5`, final/current `50`;
+- elapsed about `3.252s`, `targetReached=false`, one timeout failure;
+- `145` samples: `1` toward, `1` away, `143` flat;
+- observed range `0 -> 50`, with final easing position error `45`;
+- Logres issued `142` inward commands and `1` outward command.
 
-Reproduced camera evidence on loadCount `182`:
-- Phase G **Camera World/Combat Check** failed after normal `/reload`;
-- requested/effective target `5`;
-- transition start about `8.524`;
-- final/current about `12.632` after about `3.258s`;
-- `targetReached=false`, `failures=1`;
-- separate Phase 0 **Run All** repeated the same camera failure while the other listed integrated checks passed.
+The one outward command is significant. The observed camera crossed the target during world-entry initialization, so P0119's corrective path reversed direction. Current code starts the new MoveView direction but does not stop the previously active direction until transition cleanup. That is a concrete driver defect independent of the still-unproven external source of the `0/50` world-entry jumps.
 
-Because the requested motion was inward (`8.524 -> 5`) while the observed final zoom moved outward to `12.632`, the next question is whether Logres was commanding inward while the client camera moved away from target. Static source review confirms the existing MoveView direction mapping matches the audited LibCamera path; however the exact competing runtime source is not yet proven.
-
-P0154 changes diagnostics only. It does not alter target selection, transition duration, velocity policy, timeout, CVar ownership, Taxi policy, or camera event ownership.
+P0155 R1 changes only direction-switch hygiene. The initial P0155 artifact refused before tracked writes because it incorrectly treated the differently-indented module and per-transition counter blocks as one repeated baseline fragment. R1 validates them separately. It does not add polling, delay ownership, rebase easing time, mutate CVars, change targets/durations/timeouts, or alter Taxi policy.
 
 ## Verified State
 
-P0152 R12 remains accepted for the bounded pet-action slice: default-on pet controls, working user-triggered execution, ten effective pet bindings, seven readable slots, two active indicators, one autocast indicator, and stock PetActionBar fallback.
+P0152 R12 remains accepted for the bounded pet-action slice.
 
-The camera timeout is now **REPRODUCED**. Two distinct world-entry sessions have timed out toward target `5`; the newest targeted retest is stronger because the camera moved from start `8.524` to final `12.632`, away from the requested target.
+The world-entry camera failure is **REPRODUCED**. P0154 itself is a **DIAGNOSTIC PASS**: it captured the required command-versus-observed evidence and identified a narrow stop-before-reverse defect.
 
-The current P0119 transition driver computes an easing velocity from the original transition start/time and does not currently record per-frame observed-versus-commanded motion. Audited LibCamera source includes positional-error rebasing when the actual camera position departs materially from its expected easing path. That difference is a narrow investigation lead, not yet an accepted fix.
+The origin of the discrete world-entry camera displacement remains unresolved. P0155 does not claim to solve that external displacement; it prevents Logres from leaving opposite MoveView directions concurrently active when correction reverses.
 
 ## Next Action
 
-Apply P0154, redeploy, then perform one normal world-entry diagnostic:
+Apply P0155 R1, redeploy, then:
 1. `/reload` in normal world state;
 2. developer panel -> Phase G -> **Camera World/Combat Check**;
 3. developer panel -> Phase 0 -> **Run All** separately;
 4. upload refreshed diagnostics.
 
-Inspect the new motion line. The key evidence is whether an inward-target transition records `inCommands>0`, `outCommands=0`, while `away>0`, `maxZoom>startZoom`, and position error grows. If so, the stale easing plan is demonstrably being displaced by motion outside Logres' commanded direction and the next patch may address positional rebasing/correction. If not, narrow the driver cause from the recorded command/observation data before changing behavior.
-
-## Success Criteria
-
-P0154 succeeds as a diagnostic checkpoint if:
-- the existing reproduced timeout is preserved, not hidden by changed behavior;
-- addon-owned state records observed samples, toward/away counts, min/max zoom, easing position error, and MoveView command direction/counts;
-- diagnostics remain secret-safe and introduce no polling/timers/CVar mutation;
-- the Phase G panel action exposes the new evidence;
-- no unrelated runtime behavior changes;
-- the separate Run All result is preserved exactly.
+Success requires the world transition to converge near target `5` with `failures=0`, `secret=false`, and no Lua/taint/protected-action error. The motion line must retain P0154 data and report direction-switch count. If the timeout persists after correct stop-before-reverse behavior, use that result to decide whether positional rebasing or a narrower world-entry ownership rule is justified.
 
 ## Do Not Reopen Without New Evidence
 
@@ -75,16 +61,16 @@ P0154 succeeds as a diagnostic checkpoint if:
 - possess/override/vehicle/extra-action surfaces are not ordinary Bar 2–3 roles;
 - Continue/Complete/reward/gossip quest ownership remains separately gated;
 - normal-Taxi landing proof remains pending independently of this world-entry regression;
-- no max-distance CVar mutation, Taxi rotation, Taxi UI fade, polling, broad hooks, or periodic camera reassertion is authorized.
+- no max-distance CVar mutation, Taxi rotation, Taxi UI fade, polling, broad hooks, periodic camera reassertion, or arbitrary world-entry delay is authorized.
 
 ## Relevant References
 
-- `docs/memory/evidence/P0154_WORLD_ENTRY_CAMERA_TIMEOUT_REPRODUCED_2026-10-06.md`
+- `docs/memory/evidence/P0155_P0154_CAMERA_MOTION_RESULT_2026-10-06.md`
 - `docs/memory/investigations/CAMERA_WORLD_ENTRY_TRANSITION_TIMEOUT_2026-10-06.md`
-- `docs/memory/evidence/G2_DYNAMICCAM_ZOOM_SOURCE_AUDIT_2026-10-02.md`
-- `docs/memory/patches/P0119_FIX_CAMERA_TRANSITION_OVERSHOOT.md`
+- `docs/memory/patches/P0155_CAMERA_DIRECTION_SWITCH_STOP.md`
 - `docs/memory/patches/P0154_WORLD_ENTRY_CAMERA_MOTION_DIAGNOSTIC.md`
-- `docs/memory/evidence/P0153_P0152_RUNTIME_ACCEPTANCE_CAMERA_TIMEOUT_2026-10-06.md`
+- `docs/memory/patches/P0119_FIX_CAMERA_TRANSITION_OVERSHOOT.md`
+- `docs/memory/evidence/G2_DYNAMICCAM_ZOOM_SOURCE_AUDIT_2026-10-02.md`
 - `docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
 - `docs/memory/roadmap/STATUS.md`
 - `docs/ROADMAP.md`

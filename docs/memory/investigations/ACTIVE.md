@@ -29,11 +29,13 @@ No max-distance mutation, Taxi rotation, or Taxi UI fade is part of that proof.
 ### Current world-entry timeout regression
 
 Status:
-**REPRODUCED — P0154 TARGETED MOTION DIAGNOSTIC PREPARED.**
+**REPRODUCED — P0154 DIAGNOSTIC PASS; P0155 DIRECTION-SWITCH CORRECTION PREPARED.**
 
-The P0153 normal `/reload` retest reproduced the `PLAYER_ENTERING_WORLD` camera timeout. The direct Phase G check started near `8.524`, targeted `5`, and ended near `12.632`; separate Run All repeated the same failure while its other listed checks passed.
+P0154 is verified durable at `40dec187` / `0.0.75-dev`. The normal `/reload` diagnostic again timed out: start about `23.148`, target `5`, final `50`, observed range `0 -> 50`, and final/max easing position error `45`.
 
-P0154 does not change camera behavior. It records observed toward/away motion, min/max zoom, easing position error, and MoveView command direction/counts so the competing-motion hypothesis can be tested before a corrective patch.
+The decisive command evidence is `142` inward commands plus `1` outward command. Because P0119 permits crossed-target correction but did not stop the previous MoveView direction when reversing, the single outward correction could remain active while later inward commands were issued.
+
+P0155 corrects only that stop-before-reverse defect and retains the P0154 diagnostic. The external source of the world-entry `0/50` displacement remains unproven.
 
 Canonical investigation:
 `CAMERA_WORLD_ENTRY_TRANSITION_TIMEOUT_2026-10-06.md`.

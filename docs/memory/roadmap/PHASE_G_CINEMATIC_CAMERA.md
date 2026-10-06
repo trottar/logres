@@ -1,6 +1,6 @@
 # Phase G — Cinematic Camera
 
-Status: ACTIVE — G.5 OPEN; WORLD-ENTRY TRANSITION REGRESSION REPRODUCED
+Status: ACTIVE — G.5 OPEN; WORLD-ENTRY DIRECTION-SWITCH CORRECTION ACTIVE
 Opened: 2026-10-02
 
 ## Product Objective
@@ -126,7 +126,9 @@ The normal-Taxi landing retest has not been durably recorded as PASS. That Taxi 
 
 After P0152 acceptance, P0153 preserved one `PLAYER_ENTERING_WORLD` transition timeout and required a normal `/reload` retest before any camera patch. The retest reproduced the failure: start about `8.524`, requested target `5`, final/current about `12.632`, elapsed about `3.258s`, and one timeout failure. Separate Run All repeated it.
 
-This reopens camera runtime investigation narrowly. P0154 instruments the existing P0119 driver to record observed toward/away motion, min/max zoom, easing position error, and MoveView command direction/counts. It does not change target selection, transition timing, timeout policy, CVar ownership, event ownership, or Taxi behavior.
+This reopened camera runtime investigation narrowly. P0154 is durable at `40dec187` / `0.0.75-dev` and captured the required evidence: start about `23.148`, target `5`, final `50`, observed range `0 -> 50`, final/max easing error `45`, and `142` inward plus `1` outward MoveView command.
+
+The outward correction proves the transition reversed direction during the world-entry displacement. P0119 did not stop the previous MoveView direction before starting the opposite one, so P0155 R1 corrects that specific stop-before-reverse defect on candidate `0.0.76-dev`. No positional rebase, delay, polling, CVar mutation, target change, or Taxi-policy expansion is included.
 
 The normal-Taxi landing retest remains pending after this world-entry regression is understood.
 
@@ -166,7 +168,7 @@ The approved visual sequence now moves to P0139 world-attached target source +
 anchoring/fallback audit. Deferred harmful/target aura categories are not forced
 solely to advance sequencing.
 
-Camera remains frozen.
+Broader Camera feature work remains frozen; only the reproduced world-entry regression is active.
 
 D-037 unproven navigation/minimap roles remain separately capability-gated.
 D-030 remains current minimap runtime authority until replacement capabilities
