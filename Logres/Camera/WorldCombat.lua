@@ -186,6 +186,22 @@ local Controller = Logres:RegisterModule("CameraWorldCombat", {
         self.transitionDuration = nil
         self.transitionStartTime = nil
         self.transitionDirection = nil
+        self.transitionSampleCount = 0
+        self.transitionTowardCount = 0
+        self.transitionAwayCount = 0
+        self.transitionFlatCount = 0
+        self.transitionMinZoom = nil
+        self.transitionMaxZoom = nil
+        self.transitionPreviousZoom = nil
+        self.transitionInCommandCount = 0
+        self.transitionOutCommandCount = 0
+        self.transitionMaxAbsPositionError = 0
+        self.lastExpectedZoom = nil
+        self.lastPositionError = nil
+        self.lastObservedDirection = nil
+        self.lastObservedDelta = nil
+        self.lastCommandDirection = nil
+        self.lastCommandFactor = nil
         self.lastCurrentZoom = nil
         self.lastFinalZoom = nil
         self.lastZoomSpeed = nil
@@ -402,6 +418,34 @@ local function boundedVelocity(value, limit)
     return value
 end
 
+local function transitionExpectedZoom(
+    startZoom,
+    targetZoom,
+    duration,
+    elapsed
+)
+    if duration <= 0 then
+        return targetZoom
+    end
+
+    local progress = elapsed / duration
+    if progress < 0 then
+        progress = 0
+    elseif progress > 1 then
+        progress = 1
+    end
+
+    local eased
+    if progress < 0.5 then
+        eased = 2 * progress * progress
+    else
+        local inverse = -2 * progress + 2
+        eased = 1 - ((inverse * inverse) / 2)
+    end
+
+    return startZoom + ((targetZoom - startZoom) * eased)
+end
+
 local function transitionVelocity(
     startZoom,
     targetZoom,
@@ -479,6 +523,22 @@ function Controller:BeginTransition(
     self.transitionDuration = transitionDuration
     self.transitionStartTime = GetTime()
     self.transitionDirection = nil
+    self.transitionSampleCount = 0
+    self.transitionTowardCount = 0
+    self.transitionAwayCount = 0
+    self.transitionFlatCount = 0
+    self.transitionMinZoom = currentZoom
+    self.transitionMaxZoom = currentZoom
+    self.transitionPreviousZoom = currentZoom
+    self.transitionInCommandCount = 0
+    self.transitionOutCommandCount = 0
+    self.transitionMaxAbsPositionError = 0
+    self.lastExpectedZoom = currentZoom
+    self.lastPositionError = 0
+    self.lastObservedDirection = "flat"
+    self.lastObservedDelta = 0
+    self.lastCommandDirection = nil
+    self.lastCommandFactor = nil
     self.transitionStartCount = self.transitionStartCount + 1
     self.lastAction = "transition-started"
     self.lastReason = context
@@ -535,6 +595,14 @@ function Controller:ApplyTransitionMotion(currentZoom, elapsed)
     end
 
     local factor = math.abs(velocity) / zoomSpeed
+    self.lastCommandDirection = direction
+    self.lastCommandFactor = factor
+    if direction == "in" then
+        self.transitionInCommandCount = self.transitionInCommandCount + 1
+    else
+        self.transitionOutCommandCount = self.transitionOutCommandCount + 1
+    end
+
     local ok, moveError = pcall(moveFunc, factor)
     if not ok then
         self.lastError = tostring(moveError)
@@ -607,6 +675,61 @@ function Controller:OnUpdate()
 
     local elapsed = GetTime() - self.transitionStartTime
     local requestedTargetZoom = self.transitionRequestedZoom
+
+    self.transitionSampleCount = self.transitionSampleCount + 1
+    if self.transitionMinZoom == nil or currentZoom < self.transitionMinZoom then
+        self.transitionMinZoom = currentZoom
+    end
+    if self.transitionMaxZoom == nil or currentZoom > self.transitionMaxZoom then
+        self.transitionMaxZoom = currentZoom
+    end
+
+    local previousZoom = self.transitionPreviousZoom
+    if type(previousZoom) == "number"
+        and type(requestedTargetZoom) == "number"
+    then
+        local delta = currentZoom - previousZoom
+        local previousDistance = math.abs(previousZoom - requestedTargetZoom)
+        local currentDistance = math.abs(currentZoom - requestedTargetZoom)
+        self.lastObservedDelta = delta
+
+        if delta > 0.0001 then
+            self.lastObservedDirection = "out"
+        elseif delta < -0.0001 then
+            self.lastObservedDirection = "in"
+        else
+            self.lastObservedDirection = "flat"
+        end
+
+        if currentDistance + 0.0001 < previousDistance then
+            self.transitionTowardCount = self.transitionTowardCount + 1
+        elseif currentDistance > previousDistance + 0.0001 then
+            self.transitionAwayCount = self.transitionAwayCount + 1
+        else
+            self.transitionFlatCount = self.transitionFlatCount + 1
+        end
+    end
+    self.transitionPreviousZoom = currentZoom
+
+    if type(self.transitionStartZoom) == "number"
+        and type(requestedTargetZoom) == "number"
+        and type(self.transitionDuration) == "number"
+    then
+        local expectedZoom = transitionExpectedZoom(
+            self.transitionStartZoom,
+            requestedTargetZoom,
+            self.transitionDuration,
+            elapsed
+        )
+        local positionError = currentZoom - expectedZoom
+        self.lastExpectedZoom = expectedZoom
+        self.lastPositionError = positionError
+        local absoluteError = math.abs(positionError)
+        if absoluteError > self.transitionMaxAbsPositionError then
+            self.transitionMaxAbsPositionError = absoluteError
+        end
+    end
+
     local atRequested =
         type(requestedTargetZoom) == "number"
         and math.abs(currentZoom - requestedTargetZoom) <= TARGET_TOLERANCE
@@ -783,6 +906,21 @@ function Controller:GetDebugStatus()
         transitionEffectiveTargetZoom = self.transitionEffectiveTargetZoom,
         transitionDuration = self.transitionDuration,
         transitionDirection = self.transitionDirection,
+        transitionSampleCount = self.transitionSampleCount,
+        transitionTowardCount = self.transitionTowardCount,
+        transitionAwayCount = self.transitionAwayCount,
+        transitionFlatCount = self.transitionFlatCount,
+        transitionMinZoom = self.transitionMinZoom,
+        transitionMaxZoom = self.transitionMaxZoom,
+        transitionMaxAbsPositionError = self.transitionMaxAbsPositionError,
+        transitionInCommandCount = self.transitionInCommandCount,
+        transitionOutCommandCount = self.transitionOutCommandCount,
+        lastExpectedZoom = self.lastExpectedZoom,
+        lastPositionError = self.lastPositionError,
+        lastObservedDirection = self.lastObservedDirection,
+        lastObservedDelta = self.lastObservedDelta,
+        lastCommandDirection = self.lastCommandDirection,
+        lastCommandFactor = self.lastCommandFactor,
         lastCurrentZoom = self.lastCurrentZoom,
         lastFinalZoom = self.lastFinalZoom,
         lastZoomSpeed = self.lastZoomSpeed,

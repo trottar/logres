@@ -26,12 +26,14 @@ When Camera resumes, use one normal Taxi flight and record:
 
 No max-distance mutation, Taxi rotation, or Taxi UI fade is part of that proof.
 
-### Current world-entry timeout regression watch
+### Current world-entry timeout regression
 
 Status:
-**OPEN / INTERMITTENT / UNREPRODUCED.**
+**REPRODUCED — P0154 TARGETED MOTION DIAGNOSTIC PREPARED.**
 
-The final P0152 R12 integrated Run All recorded one `cameraworldcombat` transition timeout after `PLAYER_ENTERING_WORLD` on `0.0.74-dev`. P0152 did not modify camera runtime files and prior camera checks passed, so no causal link or reproducible defect is established. Preserve the failure and retest through Phase G before any code change.
+The P0153 normal `/reload` retest reproduced the `PLAYER_ENTERING_WORLD` camera timeout. The direct Phase G check started near `8.524`, targeted `5`, and ended near `12.632`; separate Run All repeated the same failure while its other listed checks passed.
+
+P0154 does not change camera behavior. It records observed toward/away motion, min/max zoom, easing position error, and MoveView command direction/counts so the competing-motion hypothesis can be tested before a corrective patch.
 
 Canonical investigation:
 `CAMERA_WORLD_ENTRY_TRANSITION_TIMEOUT_2026-10-06.md`.

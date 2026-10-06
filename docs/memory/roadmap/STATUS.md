@@ -4,7 +4,7 @@ As of 2026-10-06.
 
 ## Active work stream
 
-**P0152 pet-action control/state baseline accepted on `0.0.74-dev`; one world-entry camera timeout is OPEN / INTERMITTENT / UNREPRODUCED before further runtime advancement.**
+**P0152 pet-action baseline remains accepted; the world-entry camera timeout is REPRODUCED and P0154 instruments the transition before any behavior change.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -35,7 +35,7 @@ landing retest has not been durably recorded as PASS. G.5 therefore remains open
 Camera work resumes only after the current approved visual sequence is finished.
 No max-distance mutation, Taxi rotation, or Taxi UI fade is authorized.
 
-The final P0152 R12 Run All also recorded one `PLAYER_ENTERING_WORLD` Camera World/Combat transition timeout. Because it is one occurrence, prior camera checks passed, and P0152 did not modify camera runtime files, it remains OPEN / INTERMITTENT / UNREPRODUCED pending one targeted Phase-G retest.
+The P0153 targeted normal `/reload` retest reproduced the `PLAYER_ENTERING_WORLD` Camera World/Combat timeout. The direct Phase G check started near `8.524`, targeted `5`, and ended near `12.632`; separate Run All repeated the same failure. P0154 adds command-versus-observed motion diagnostics only; no speculative camera correction is authorized yet.
 
 ## Parallel approved visual translation
 
@@ -186,9 +186,14 @@ P0152:
 The accepted pet-state diagnostic recognizes ten click-specific pet bindings, seven naturally readable/occupied slots, two active indicators, and one autocast indicator. Default-on arming succeeds, and the user confirmed the visible state treatment and pet button execution. Stock PetActionBar remains available; edit/reorder/bindings/suppression/PetFrame and other class/special ownership remain separately gated.
 
 P0153:
-**PREPARED — DOCS / EVIDENCE ONLY.**
+**INSTALLED / PUSHED — DOCS / EVIDENCE CHECKPOINT** at `7ad9be7e`.
 
-Records P0152 acceptance, defers exact pet visual refinement to whole-interface polish, and preserves the final Run All camera timeout as OPEN / INTERMITTENT / UNREPRODUCED.
+Records P0152 acceptance and the initial world-entry camera timeout.
+
+P0154:
+**PREPARED — TARGETED CAMERA MOTION DIAGNOSTIC on candidate `0.0.75-dev`.**
+
+The targeted P0153 retest reproduced the timeout. P0154 records observed motion, easing position error, and MoveView command direction/counts without changing transition behavior.
 
 Next:
-**Perform one normal `/reload`, Phase G -> Camera World/Combat Check, then Phase 0 -> Run All. Reproduce before patching; if clean, record the prior timeout as intermittent/unreproduced without a speculative camera change.**
+**Deploy P0154, `/reload`, Phase G -> Camera World/Combat Check, then Phase 0 -> Run All, and upload diagnostics.**

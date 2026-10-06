@@ -3556,11 +3556,33 @@ local function emitCameraWorldCombatStatus(prefix, status, passed)
     ))
 end
 
+local function emitCameraWorldCombatMotion(status)
+    emit(string.format(
+        "Logres cameraworldcombat motion: samples=%s toward=%s away=%s flat=%s min=%s max=%s expected=%s posError=%s maxAbsPosError=%s observed=%s/%s command=%s/%s inCommands=%s outCommands=%s",
+        tostring(status.transitionSampleCount),
+        tostring(status.transitionTowardCount),
+        tostring(status.transitionAwayCount),
+        tostring(status.transitionFlatCount),
+        tostring(status.transitionMinZoom),
+        tostring(status.transitionMaxZoom),
+        tostring(status.lastExpectedZoom),
+        tostring(status.lastPositionError),
+        tostring(status.transitionMaxAbsPositionError),
+        tostring(status.lastObservedDirection),
+        tostring(status.lastObservedDelta),
+        tostring(status.lastCommandDirection),
+        tostring(status.lastCommandFactor),
+        tostring(status.transitionInCommandCount),
+        tostring(status.transitionOutCommandCount)
+    ))
+end
+
 local function runCameraWorldCombatCheck()
     local controller = Logres:GetModule("CameraWorldCombat")
     local status = controller:GetDebugStatus()
     local passed = cameraWorldCombatStatusPasses(status)
     emitCameraWorldCombatStatus(passed and "PASS" or "FAIL", status, passed)
+    emitCameraWorldCombatMotion(status)
 end
 
 local function runCameraWorldCombatReconcile()
@@ -3573,6 +3595,8 @@ local function runCameraWorldCombatReconcile()
         status,
         ok
     )
+
+    emitCameraWorldCombatMotion(status)
 
     if not ok and reason then
         emit("Logres cameraworldcombat reconcile reason: " .. tostring(reason))

@@ -3,49 +3,44 @@
 Authoritative state:
 `../CURRENT.md`.
 
-Latest verified durable code checkpoint:
-P0152 `00aef4a90e5999140dc9082e68e934cfc854cb05` on `0.0.74-dev`.
+Latest verified durable checkpoint:
+P0153 `7ad9be7ecc24c1136bf9a843689f90fb377b2012`; P0152 runtime code remains `00aef4a9` / `0.0.74-dev`.
 
 ## Accepted P0152 result
 
-P0152 R12 is accepted for the bounded pet-action slice:
-- pet controls appear by default without manual ARM;
-- effective click-specific pet bindings resolve ten pet slots, with seven naturally readable/occupied in the accepted sample;
-- two active-state indicators and one autocast indicator are shown from ordinary state;
-- the user confirmed the state treatment is visible and pet button presses still execute;
-- stock PetActionBar remains available;
-- exact pet-button visual refinement is deferred to later whole-interface polish.
+P0152 R12 remains accepted: pet controls are default-on, working, state-aware, and retain stock PetActionBar fallback. Exact visual ornament refinement is deferred.
 
-No PetActionBar suppression, edit/reorder, binding replacement, PetFrame ownership, or unrelated class/special ownership is accepted by this result.
+## Reproduced camera defect
 
-## Blocking runtime evidence
+The P0153 targeted retest reproduced the `PLAYER_ENTERING_WORLD` Camera World/Combat timeout. Phase G **Camera World/Combat Check** failed after `/reload` with start about `8.524`, target `5`, final/current about `12.632`, elapsed about `3.258s`, and `failures=1`. Phase 0 **Run All** immediately repeated the same camera failure while the other listed checks passed.
 
-The final integrated Run All on the same `0.0.74-dev` session recorded one `cameraworldcombat` failure during `PLAYER_ENTERING_WORLD`: requested target `5` was not reached before the transition timeout (`elapsed≈3.254s`, `failures=1`, `camera transition timed out before target`).
+Classification: **REPRODUCED RUNTIME FAILURE**.
 
-This is currently **OPEN / INTERMITTENT / UNREPRODUCED**. P0152 did not modify camera runtime files, and prior camera checks passed. Do not invent a camera fix from this one event.
+The camera moved outward while the requested transition was inward. Static source review says Logres' MoveView direction mapping matches audited LibCamera, but the competing runtime motion source is not proven.
 
-Canonical record:
-`../investigations/CAMERA_WORLD_ENTRY_TRANSITION_TIMEOUT_2026-10-06.md`.
+## P0154 diagnostic
 
-## Next runtime proof
+P0154 instruments the existing P0119 transition without changing behavior. It records:
+- sample count;
+- frames moving toward/away/flat relative to target;
+- min/max observed zoom;
+- current/max easing position error;
+- last observed motion direction/delta;
+- last MoveView command direction/factor;
+- inward/outward command counts.
 
-No WoW redeploy is required for P0153 because it is docs-only.
-
-After P0153 is durable:
-1. `/reload` in a normal world state;
-2. developer panel -> Phase G -> **Camera World/Combat Check**;
-3. developer panel -> Phase 0 -> **Run All** separately;
+After deployment:
+1. `/reload` normally;
+2. Phase G -> **Camera World/Combat Check**;
+3. Phase 0 -> **Run All**;
 4. upload refreshed diagnostics.
 
-Recurrence makes the timeout reproduced and blocks advancement pending narrow investigation. A clean targeted retest records the earlier event as intermittent/unreproduced; do not add polling or broad reassertion.
+Do not use slash-command duplicates when the panel action exists. Do not add polling, delays, broad hooks, or speculative camera correction before this evidence is captured.
 
 ## Key references
 
 - `../CURRENT.md`
-- `../evidence/P0153_P0152_RUNTIME_ACCEPTANCE_CAMERA_TIMEOUT_2026-10-06.md`
+- `../evidence/P0154_WORLD_ENTRY_CAMERA_TIMEOUT_REPRODUCED_2026-10-06.md`
 - `../investigations/CAMERA_WORLD_ENTRY_TRANSITION_TIMEOUT_2026-10-06.md`
-- `../investigations/FUTURE_CLASS_PET_SPECIAL_CONTROL_CAPABILITY.md`
-- `../patches/P0152_SECURE_PET_ACTION_EXECUTION_PROBE.md`
-- `../patches/P0153_RECORD_P0152_PASS_CAMERA_TIMEOUT.md`
-- `../architecture/VISUAL_IMPLEMENTATION_STATUS.md`
-- `../roadmap/STATUS.md`
+- `../patches/P0154_WORLD_ENTRY_CAMERA_MOTION_DIAGNOSTIC.md`
+- `../roadmap/PHASE_G_CINEMATIC_CAMERA.md`

@@ -1,0 +1,29 @@
+P0154 — World-Entry Camera Motion Diagnostic
+Baseline: 7ad9be7ecc24c1136bf9a843689f90fb377b2012
+Candidate runtime: 0.0.75-dev
+Result: prepared/applied; runtime diagnostic required
+
+Files:
+072f15ed2c130a7f8f35f7493456d44915a933eb4275c2d3a45ea02be6957349  Logres/Camera/WorldCombat.lua
+24343d4aecf573293017221bfd613d4bfed75172262d06542204d87fdbe7d63b  Logres/Core/Bootstrap.lua
+41aa4de8392e65d7618b6d88a83e0fbe10e029bc62fb00c669a5e39e51bfa24c  Logres/Core/Commands.lua
+9fd56ae1b4ce30bad13ef859c936ea980a8084507ba828bc7bab9ce0c85c6d88  Logres/Logres.toc
+ca22656d8e9d6762d2b64f3caca023ec0b6e74ae08fdf78eb532c349a04d4ef1  docs/ROADMAP.md
+6f1ff163ba1c0e64a772ea733d193d4403cef24ada5328fae8e60a9d26bc6086  docs/memory/2026-10-06.md
+2faece490004fc415d4e0f8cb041a6593730495a1ef96ca6cd0b67395b6595c4  docs/memory/CURRENT.md
+aee677f2a540218c89cbbb7d61d3ec57a686298bdf0c4f52467ed952cbf088c7  docs/memory/evidence/P0154_WORLD_ENTRY_CAMERA_TIMEOUT_REPRODUCED_2026-10-06.md
+82f76cf28eefa11b963eef36a6370b93b51ce81ce75e22719cfa86c4eefd7192  docs/memory/handoffs/CURRENT_HANDOFF.md
+694a7c1962833e63e6a9a1e369d8d862c8d1660c3a6ce983b83c616f8b3df753  docs/memory/investigations/ACTIVE.md
+01463651a82fc62ddc8caa51462a5e9a3ff641f194cef5d395983e66bc2766b8  docs/memory/investigations/CAMERA_WORLD_ENTRY_TRANSITION_TIMEOUT_2026-10-06.md
+d33628e38af141af99139c64a8f378c5db635053efe45b7b2f843f3ccfd50c35  docs/memory/patches/P0154_WORLD_ENTRY_CAMERA_MOTION_DIAGNOSTIC.md
+aacef1ef323f5f617a57ba203000282286760d069e47725e6c0c1f3db3af17d8  docs/memory/patches/PATCH_INDEX.md
+cc11e9da0366d86a2ddee406d20b728b376354c01f73acefb17845a392ab6a83  docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md
+4767b5bcb9349408ee06b5223a699cbd99176789368978ab606e95802b0357ed  docs/memory/roadmap/STATUS.md
+a2f553108ca6f83cf1856a9fe40aeb9dda1f6a58fe742b1a0b8b9cdfe7d63e9c  tools/check_camera_world_entry_motion_diagnostic.py
+
+Validation:
+- exact baseline/head verified
+- exact prepared candidate validated against all tools/check_*.py before writes
+- post-write all tools/check_*.py PASS
+- git diff --check PASS
+- no commit or push performed

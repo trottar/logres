@@ -1,6 +1,6 @@
 # Phase G — Cinematic Camera
 
-Status: ACTIVE — G.5 OPEN / PAUSED FOR APPROVED VISUAL TRANSLATION
+Status: ACTIVE — G.5 OPEN; WORLD-ENTRY TRANSITION REGRESSION REPRODUCED
 Opened: 2026-10-02
 
 ## Product Objective
@@ -120,13 +120,15 @@ P0119 is installed/pushed at:
 `c342bc176a9d5de80ec116d0c6b31fa595cd75b3`
 on runtime `0.0.49-dev`.
 
-The normal-Taxi landing retest has not been durably recorded as PASS. The user
-has explicitly frozen Camera work while the approved visual translation sequence
-is finished.
+The normal-Taxi landing retest has not been durably recorded as PASS. That Taxi proof remains separately pending.
 
-Next when Camera resumes:
-runtime-retest Taxi entry plus landing destination convergence on `0.0.49-dev`
-behavior as preserved by later runtimes.
+### P0154 world-entry transition regression
+
+After P0152 acceptance, P0153 preserved one `PLAYER_ENTERING_WORLD` transition timeout and required a normal `/reload` retest before any camera patch. The retest reproduced the failure: start about `8.524`, requested target `5`, final/current about `12.632`, elapsed about `3.258s`, and one timeout failure. Separate Run All repeated it.
+
+This reopens camera runtime investigation narrowly. P0154 instruments the existing P0119 driver to record observed toward/away motion, min/max zoom, easing position error, and MoveView command direction/counts. It does not change target selection, transition timing, timeout policy, CVar ownership, event ownership, or Taxi behavior.
+
+The normal-Taxi landing retest remains pending after this world-entry regression is understood.
 
 Production Taxi is not considered closed until that runtime proof passes.
 

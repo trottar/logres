@@ -34,7 +34,7 @@ The roadmap is capability-gated. A phase advances only when its success criteria
 
 ## Phase G — Cinematic Camera
 
-**Status: ACTIVE — G.5 OPEN / PAUSED FOR APPROVED VISUAL TRANSLATION.**
+**Status: ACTIVE — G.5 OPEN; WORLD-ENTRY TRANSITION REGRESSION REPRODUCED.**
 
 G.1 through G.4 are runtime-proven.
 
@@ -179,4 +179,6 @@ P0152 is durable at `00aef4a90e5999140dc9082e68e934cfc854cb05` / `0.0.74-dev` an
 
 This does not authorize pet edit/reorder, binding replacement, PetActionBar suppression/restoration, PetFrame ownership, or unrelated class/special ownership. Exact pet-button visual refinement is deferred to later whole-interface polish.
 
-P0153 records the final P0152 validation Run All as not globally clean because `cameraworldcombat` timed out once after `PLAYER_ENTERING_WORLD` while moving toward requested target `5`. P0152 did not modify camera runtime files and prior camera checks passed, so this is OPEN / INTERMITTENT / UNREPRODUCED. The next runtime action is one normal `/reload`, Phase G -> **Camera World/Combat Check**, then a separate Phase 0 -> **Run All**. Reproduce before patching.
+P0153 is durable at `7ad9be7e` and preserved the initial `PLAYER_ENTERING_WORLD` camera timeout without speculating about a fix. Its targeted normal `/reload` retest reproduced the failure: the direct Phase G check started near `8.524`, targeted `5`, and ended near `12.632`; separate Run All repeated the same timeout.
+
+P0154 prepares candidate `0.0.75-dev` as a diagnostic-only camera checkpoint. It records observed toward/away motion, min/max zoom, easing position error, and MoveView command direction/counts from the existing transition OnUpdate. No camera target, duration, event, CVar, Taxi, or timeout behavior changes until that evidence narrows the cause.
