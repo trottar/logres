@@ -1,6 +1,6 @@
 # Future Class / Pet / Special-Control Capability Audit
 
-Status: **P0150 RUNTIME PASS FOR OBSERVED SCOPE — P0152 SECURE PET-ACTION EXECUTION PROBE NEXT**
+Status: **P0150 RUNTIME PASS FOR OBSERVED SCOPE — P0152 SECURE PET-ACTION EXECUTION PROBE PREPARED**
 Opened: 2026-10-05
 Original P0149 source pin: `Gethe/wow-ui-source@e3ecc27b64d30fdc735a3f6579b866858f9f9df1` (`1.60.1.70205`)
 Current matching source: `Gethe/wow-ui-source@a84e2b1b41d3d4137127c07e4da448aa3251d6f1` (`1.60.1.70235`)
@@ -240,3 +240,30 @@ attributes. Protected setup must be out of combat and fail open.
 P0152 must retain the stock PetActionBar and must not toggle autocast, reorder/edit
 pet actions, replace bindings, suppress PetActionBar, or touch PetFrame. Those
 remain separate completeness/restoration gates.
+
+## P0152 implementation checkpoint
+
+P0152 targets candidate runtime `0.0.74-dev` and proves only the secure left-click
+pet-action execution path.
+
+The diagnostic strip contains ten addon-owned `SecureActionButtonTemplate` buttons
+with fixed ordinary pet-slot numbers. It registers only `LeftButtonUp`, sets
+`type="pet"` plus the ordinary `action` slot out of combat, and never calls
+`CastPetAction` directly.
+
+The strip is armed/hidden only out of combat. `PreClick` captures ordinary
+`isActive` baseline state, `PostClick` records the hardware click, and source-owned
+pet events re-read the clicked slot. Mechanical PASS requires PostClick, at least
+one follow-up pet event, an ordinary active-state transition, and zero failures.
+Final project acceptance also requires the user to confirm the pet visibly entered
+the selected inactive Follow/Stay-type state.
+
+P0152 does not register right-click, toggle autocast, pick up/edit/reorder actions,
+replace bindings, suppress PetActionBar, mutate PetFrame, poll, or use timers.
+Stock PetActionBar remains the completeness fallback throughout.
+
+## P0152 R5 protected-control result / R6 delegation boundary
+
+R5 supplies negative runtime evidence that the direct addon secure `type1="pet"` / `action1=slot` implementation is not accepted on Forever 70235: a hardware left click produced Blizzard's protected-action block. Source plausibility alone is not sufficient to reopen that direct path.
+
+R6 therefore narrows the capability proof to secure click delegation from a Logres shared-action button to the matching Blizzard `PetActionBar.actionButtons[slot]`. This keeps Blizzard in control of protected left-click execution and right-click autocast while Logres owns presentation. Because this retains a Blizzard control dependency, it does **not** authorize PetActionBar suppression or claim complete replacement ownership.

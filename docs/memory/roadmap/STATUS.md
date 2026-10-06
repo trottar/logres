@@ -4,7 +4,7 @@ As of 2026-10-05.
 
 ## Active work stream
 
-**Approved visual implementation translation — P0150 R3 read-only runtime PASS at `46e06295` / `0.0.73-dev`; P0152 secure pet-action execution probe next.**
+**Approved visual implementation translation — P0150 read-only runtime PASS; P0152 secure pet-action execution probe prepared on candidate `0.0.74-dev`.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Camera is
 temporarily frozen by explicit user sequencing while the approved D-039/D-040
@@ -174,12 +174,18 @@ P0149 `70205` pin and changes only `version.txt`. The audited secure pet source
 files are unchanged.
 
 P0151:
-**PREPARED — DOCS / RUNTIME-EVIDENCE CHECKPOINT.**
+**INSTALLED / PUSHED — DOCS / RUNTIME-EVIDENCE CHECKPOINT** at `b62397b1`.
 
-Records P0150 acceptance, source continuity, and the next capability gate.
+Records P0150 acceptance, 70235 source continuity, and opens P0152.
+
+P0152:
+**R1 PREPARED — BOUNDED SECURE PET-ACTION EXECUTION PROBE on candidate `0.0.74-dev`; initial checker refusal preserved.**
+
+Ten addon-owned secure buttons use fixed pet slots, `type="pet"`, and left-click
+only. Protected setup occurs only out of combat. Stock PetActionBar remains
+available and no autocast/edit/binding/suppression/PetFrame scope is added.
 
 Next:
-**P0152 bounded secure pet-action execution probe.**
-
-Keep stock PetActionBar available. Do not expand P0152 into autocast mutation,
-edit/reorder, binding replacement, PetActionBar suppression, or PetFrame ownership.
+**Runtime-prove one inactive Follow/Stay-type pet command through the Logres secure
+surface, require event-backed active-state change plus user confirmation, then run
+Run All separately.**

@@ -8,118 +8,102 @@ project: logres
 
 ## Active Objective
 
-**Advance the class/pet/special-control sequence only through runtime-proven capability slices while preserving Blizzard fallback surfaces.**
+**Correct P0152 on the established shared action-button infrastructure, then prove pet execution/autocast while Blizzard fallback remains usable.**
 
 Formal Phase G / G.5 remains open and paused while the approved visual sequence is finished.
 
 ## Current Work Item
 
-**P0152 — bounded secure pet-action execution probe.**
+**P0152 R7 — shared-action pet adapter execution/range/layout correction on candidate runtime `0.0.74-dev`; runtime retest required.**
 
 Latest verified durable checkpoint:
-P0150 R3 correction `46e06295695587af07f6f3e1b4a6ac4ace4e4c15`.
+P0151 `b62397b116cf028326167b7f8bf7010ed94f3717`.
 
-Current tested runtime:
-`0.0.73-dev` on client `1.60.1.70235` — P0150 read-only probe **PASS for the observed scope with environmental deferrals**.
+Current accepted runtime:
+`0.0.73-dev` on Forever `1.60.1.70235` — P0150 read-only class/pet/special probe PASS for the observed scope with environmental deferrals.
 
-P0150 accepted runtime evidence:
-- all 22/22 expected event registrations succeeded and required APIs were present;
-- pet action bar present, 10 slots scanned / 7 occupied, pet-domain failures `0`;
-- ordinary active/autocast/usable state was captured without mutation;
-- one Warlock primary-power value was secret and safely skipped; resource-domain failures `0`;
-- stance/form count `0`, no active totems, and non-DK runes are environmental DEFERRED;
-- possess/vehicle/override/temp-shapeshift/extra-action flags were ordinary `false`;
-- total probe failures `0`;
-- separate integrated **Run All** completed cleanly.
+P0152 R1 is preserved as a **real runtime/control/visual FAIL**:
+- it duplicated the proven action-button infrastructure with a bespoke pet strip;
+- only one pet ability rendered correctly;
+- custom number labels were misleading;
+- a bespoke yellow `A` marker was inappropriate;
+- left click did not execute the intended pet command;
+- stock PetActionBar remained the functional fallback.
 
-The accepted client build is now `70235`. Matching Forever source is
-`Gethe/wow-ui-source@a84e2b1b41d3d4137127c07e4da448aa3251d6f1`.
-It is the direct child of the P0149 `70205` source pin and changes only
-`version.txt`; `SecureTemplates.lua` and `PetActionBar.lua` are byte-identical
-across the two source commits. D-044's pet secure-action source finding therefore
-remains applicable to the current client.
+P0152 R2 corrected the implementation design but was refused during exact prepared-candidate validation before tracked writes because its generated `CURRENT.md` and handoff violated the mandatory memory schema. The shared-action runtime candidate itself had already passed all checkers reached before `check_memory_health.py`.
 
-The strongest naturally populated domain is pet actions. P0152 is limited to
-proving user-triggered secure pet-action execution through the source-established
-`SecureActionButtonTemplate` / `type="pet"` path.
+P0152 R3 then applied the shared-action adapter successfully but failed immediately on `/reload`: `PetActionExecutionProbe.lua:417` attempted to index local upvalue `ActionButton`, which was nil. Cause: the TOC loaded `HUD\PetActionExecutionProbe.lua` before `Actions\Button.lua`, so the module captured `Logres.ActionButton` before the shared action primitive existed. This is a real runtime load-order/integration failure; it does not disprove the secure pet-action path.
 
-P0152 does **not** authorize PetActionBar suppression. Stock PetActionBar remains
-visible/usable. Autocast mutation, drag/reorder/edit, key routing/bindings,
-complete cooldown/range/usable/active feedback, combat-safe replacement setup,
-exact restoration, and PetFrame ownership remain separate gates.
+P0152 R4 changes only dependency order: `Actions\Button.lua` loads before `HUD\PetActionExecutionProbe.lua`, and the P0152 static contract now enforces `Button < PetProbe < Primary`.
 
-P0148 manual-waypoint depth remains the accepted production baseline. Navigation,
-aura, world-target, party, and Camera deferrals remain unchanged.
+P0152 R4 then reached the shared-action UI but failed usability validation because the temporary pet row at `y=-190` overlapped the established player action clusters. R5 moved it to `y=-120`, but that coordinate directly overlaps the established player resource bar at `y=-118`. R5 also exposed a more important control failure: hardware left click on the Logres pet button triggered Blizzard's protected-action block. The direct addon secure `type1="pet"` / `action1=slot` path is therefore **runtime-failed on Forever 70235 in this implementation** and must not be treated as proven.
+
+P0152 R6 keeps the established shared action-button presentation but changes the protected control boundary:
+- `Logres.ActionButton.CreateCluster` / `ActionButton.Create` still own button geometry, art, cooldown frame, checked treatment, hover/press/activation feedback, and sizing;
+- ten pet slots remain in stock left-to-right order;
+- no custom slot-number labels and no yellow `A` marker;
+- Logres pet buttons use secure `type="click"` delegation to the corresponding Blizzard `PetActionBar.actionButtons[slot]`, so Blizzard owns both protected left-click execution and right-click autocast mutation;
+- direct Logres `CastPetAction` / `TogglePetAutocast` calls remain forbidden;
+- the temporary pet row anchors below `LogresHUDResourceBar` with an 18px gap, placing it in the known gap above the primary action cluster rather than using a guessed absolute Y coordinate;
+- pet token textures resolve through Blizzard token globals without interpreting the ambiguous `isToken` runtime payload;
+- ordinary active/autocast state uses the shared button presentation;
+- stock PetActionBar remains visible and usable.
+
+
+P0152 R6B then reached the correct pet-slot/icon mapping without Lua/protected errors, but runtime validation still failed: secure click delegation to Blizzard pet buttons was inert; every pet icon was tinted red because the adapter treated `inRange=false` as authoritative even when `checksRange` was false; and the ten-wide row still intruded into the central player-action territory. This is a real runtime adapter failure, while the slot/presentation mapping itself is accepted.
+
+P0152 R7 keeps the proven shared presentation and correct slot mapping, removes secure click delegation, and retries the source-supported `type1="pet"` path **without the R5 insecure `PreClick` hook**. Baseline state is captured during ARM, so no addon code runs before secure execution. Right-click autocast uses secure `type2="macro"` plus `/petautocasttoggle <ordinary pet spell name>` only for autocast-capable slots. Range tint now requires `checksRange=true`, and the pet cluster moves to D-032's lower-left class/pet territory as a 5x2 cluster anchored below `LogresHUDAllies`.
+
+Still excluded: drag/reorder/edit, keybinding replacement, PetActionBar suppression/restoration, PetFrame ownership, and unrelated class/special controls.
 
 ## Verified State
 
-Accepted production baselines include:
-- P0120 shared percentage/resource bar;
-- P0121 player cast cue, target cast/channel deferred;
-- P0122 Context-message primitive;
-- P0123 heading/manual-waypoint Compass bearing + visual baseline;
-- P0124 organic player-health tunnel;
-- P0126 one-focus Active Quest;
-- P0130 bounded/paged quest-offer narrative;
-- P0133 Accept-left / Decline-right offer controls for the proven offer state;
-- P0137 passive player `HELPFUL|PLAYER` aura lane;
-- P0148 manual-waypoint live-radius depth baseline.
+P0150 R3 remains runtime PASS at `46e06295` / `0.0.73-dev`: 22/22 expected events/APIs, pet 10/7 populated, one safe secret power skip, ordinary false special-mode flags, zero failures, and separate Run All PASS.
 
-World target:
-- P0140 fallback/reaction runtime paths pass for the observed scope;
-- positive accessible-nameplate anchoring, behind-camera behavior, and hidden addon-owned attachment remain environmentally deferred;
-- production target placement remains screen-space.
+P0149 / D-044 source policy remains authoritative. Forever 70235 source is continuous with the audited 70205 secure pet paths; `SecureTemplates.lua` confirms secure `type="pet"` resolves the modified `action` attribute and calls `CastPetAction` internally.
 
-Class / pet / special-control territory:
-- P0149 / D-044 source/fallback policy remains authoritative;
-- P0150 R3 is durable at `46e06295` and runtime PASS for the observed read-only scope on client build `70235`;
-- pet action state is the only naturally populated control domain from that run and is the next secure-execution candidate;
-- stance/forms, active totems, DK runes, active possess/vehicle/override/temp-shapeshift/extra-action modes, and meaningful nonzero class-resource presentation remain environmental DEFERRED;
-- PetFrame, RuneFrame, TotemFrame, alternate-power, StanceBar, PossessActionBar, OverrideActionBar, ExtraActionBar, and unsupported vehicle/special controls remain Blizzard-owned;
-- PetActionBar remains Blizzard-owned until casting plus autocast/edit/binding/feedback/setup/restoration completeness is deliberately proven.
+The established Primary and Secondary/Utility action systems remain the authoritative action-button infrastructure. P0152 must specialize that infrastructure rather than create a parallel button system.
 
-Camera:
-- P0119 remains durable at `c342bc176a9d5de80ec116d0c6b31fa595cd75b3`;
-- normal-Taxi landing retest remains pending/frozen, not PASS.
+All other accepted production baselines and existing navigation/aura/world-target/party/camera deferrals remain unchanged.
 
 ## Next Action
 
-Prepare P0152 as a **bounded secure pet-action execution probe**, not a production replacement.
+Apply P0152 R7 directly over the current P0152 R6B working tree, redeploy, `/reload`, then:
+1. Phase H -> **Pet Action Probe ARM** while out of combat;
+2. verify populated pet abilities render with the normal Logres action-button styling and the same left-to-right slot order as the stock PetActionBar;
+3. verify there are no custom numeric overlays or yellow `A` marker;
+4. left-click an inactive Follow/Stay-type Logres pet slot and confirm the pet visibly changes state;
+5. right-click an autocast-capable pet ability such as Torment and confirm autocast toggles;
+6. run **Pet Action Probe Check** and require zero failures plus secure-click/event/state-change evidence;
+7. run **Pet Action Probe Hide** out of combat;
+8. run **Run All** separately;
+9. upload refreshed diagnostics.
 
-Required scope:
-1. use matching 70235 source continuity from P0151 / D-044;
-2. create addon-owned secure test control(s) only through `SecureActionButtonTemplate` with `type="pet"` and ordinary pet-action slot attributes;
-3. configure protected attributes only out of combat and fail open if setup cannot be completed safely;
-4. retain the stock PetActionBar throughout the test;
-5. prove at least one deliberate user-triggered pet action through the Logres secure surface without Lua, secret, taint, or protected-action failure;
-6. record only addon-owned diagnostic state and source-owned follow-up events; do not infer success from static source alone;
-7. do not toggle autocast, reorder/edit pet actions, replace bindings, suppress PetActionBar, or touch PetFrame.
-
-A missing usable/appropriate pet action in a later test state is an environmental deferral, not permission to manufacture unsafe gameplay state.
+Any Lua, secret-value, taint/protected-action error, missing shared-action presentation, wrong slot mapping, failed left click, failed supported autocast toggle, or stock PetActionBar loss is a real failure.
 
 ## Success Criteria
 
-P0152 succeeds only for secure pet-action **execution capability** when:
-- secure pet-action buttons are configured out of combat with ordinary slot numbers;
-- a deliberate user click reaches a real pet action through the secure path;
-- observable addon-owned/event evidence plus user confirmation establishes that execution occurred;
-- no Lua, secret-value, taint, forbidden/protected-action, or unintended mutation failure occurs;
-- stock PetActionBar remains available and usable before, during, and after the probe;
-- integrated regression checks remain clean.
-
-P0152 does not by itself authorize PetActionBar suppression or full pet-control ownership.
+P0152 succeeds only if:
+- pet buttons visibly reuse the established Logres action-button language and geometry;
+- all naturally populated pet slots appear in correct stock order;
+- left-click execution works through the taint-minimized secure `type1="pet"` path with no insecure PreClick hook;
+- an ordinary active-state transition plus addon-owned click/event evidence is captured;
+- right click uses the secure macro path and toggles autocast for an ordinary autocast-capable slot without affecting non-autocast slots;
+- stock PetActionBar remains usable throughout;
+- no direct `CastPetAction` or `TogglePetAutocast` call is introduced in Logres runtime code;
+- no edit/reorder/binding/suppression/PetFrame ownership is added;
+- separate integrated regression checks remain clean.
 
 ## Do Not Reopen Without New Evidence
 
 - no conventional player health bar;
 - harmful/urgent player and populated target aura production remain deferred;
-- target aura/status remains separately gated from world-target anchoring;
 - positive world-target nameplate anchoring/attachment remains deferred;
-- individual tracking-result positions are source-blocked by P0142/D-043;
-- stock minimap remains until D-037/D-043 replacement completeness is proven;
-- party/CompactPartyFrame remain stock until secure interaction and required group/aura information are safely replaced;
+- individual tracking-result positions remain source-blocked by P0142/D-043;
+- stock minimap remains until replacement completeness is proven;
+- party/CompactPartyFrame remain stock until secure interaction and required group/aura information are replaced safely;
 - PetFrame remains stock independent of pet-action work;
-- RuneFrame, TotemFrame, alternate-power, direct class-resource children, and unsupported special-control surfaces remain Blizzard-owned until separately runtime/capability-proven;
+- RuneFrame, TotemFrame, alternate-power, direct class-resource children, stance/form, and unsupported special-control surfaces remain Blizzard-owned until separately runtime/capability-proven;
 - possess/override/vehicle/extra-action surfaces are not ordinary Bar 2–3 roles;
 - Continue/Complete/reward/gossip quest ownership remains separately gated;
 - P0119 Taxi landing retest remains pending/frozen;
@@ -129,12 +113,15 @@ P0152 does not by itself authorize PetActionBar suppression or full pet-control 
 
 - `docs/memory/decisions/D-044_CLASS_PET_SPECIAL_CONTROL_SOURCE_AND_FALLBACK_POLICY.md`
 - `docs/memory/evidence/P0151_P0150_CLASS_PET_SPECIAL_RUNTIME_PASS_2026-10-05.md`
-- `docs/memory/evidence/P0150_INITIAL_RUNTIME_FAIL_2026-10-05.md`
+- `docs/memory/evidence/P0152_R1_RUNTIME_CONTROL_VISUAL_FAIL_2026-10-05.md`
+- `docs/memory/evidence/P0152_R2_DELIVERY_MEMORY_SCHEMA_FAIL_2026-10-05.md`
+- `docs/memory/evidence/P0152_R3_RUNTIME_LOAD_ORDER_FAIL_2026-10-05.md`
+- `docs/memory/evidence/P0152_R4_RUNTIME_LAYOUT_OVERLAP_FAIL_2026-10-05.md`
+- `docs/memory/evidence/P0152_R5_RUNTIME_PROTECTED_CLICK_RESOURCE_OVERLAP_FAIL_2026-10-05.md`
+- `docs/memory/evidence/P0152_R6_DELIVERY_BASELINE_HASH_FAIL_2026-10-05.md`
+- `docs/memory/evidence/P0152_R6B_RUNTIME_EXECUTION_RANGE_LAYOUT_FAIL_2026-10-05.md`
 - `docs/memory/investigations/FUTURE_CLASS_PET_SPECIAL_CONTROL_CAPABILITY.md`
-- `docs/memory/patches/P0151_RECORD_P0150_RUNTIME_PASS.md`
-- `docs/memory/patches/P0150_CLASS_PET_SPECIAL_CONTROL_READ_ONLY_PROBE.md`
-- `docs/memory/decisions/D-026_SELECTIVE_UNIT_FRAME_SUPPRESSION.md`
+- `docs/memory/patches/P0152_SECURE_PET_ACTION_EXECUTION_PROBE.md`
 - `docs/memory/architecture/VISUAL_IMPLEMENTATION_STATUS.md`
 - `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`
-- `docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
 - `docs/ROADMAP.md`

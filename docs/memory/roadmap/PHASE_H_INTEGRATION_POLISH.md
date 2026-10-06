@@ -348,12 +348,21 @@ P0151 also records current-client source continuity: Forever build 70235 commit
 `a84e2b1b41d3d4137127c07e4da448aa3251d6f1` differs from the P0149 70205 pin
 only by `version.txt`; the audited secure pet source files are unchanged.
 
-Next:
-**P0152 bounded secure pet-action execution probe.**
+P0152:
+**R1 PREPARED — BOUNDED SECURE PET-ACTION EXECUTION PROBE on candidate `0.0.74-dev`; initial checker refusal preserved.**
 
-Use addon-owned secure `type="pet"` test controls only, configured out of combat.
-Retain stock PetActionBar. Autocast mutation, edit/reorder, bindings, full feedback
-completeness, suppression/restoration, and PetFrame ownership remain separate gates.
+The diagnostic strip uses ten fixed ordinary pet slots on addon-owned
+`SecureActionButtonTemplate` controls, left-click only, with out-of-combat
+attribute setup. Runtime proof requires PostClick + pet event + ordinary active
+state change + explicit user confirmation.
+
+Stock PetActionBar remains available. Autocast mutation, edit/reorder, bindings,
+complete feedback, suppression/restoration, and PetFrame ownership remain separate
+gates.
+
+Next:
+**Run P0152 in client, then run integrated Run All separately and record exact
+evidence.**
 
 Preserve direct class-resource children, RuneFrame, TotemFrame, PetFrame, alternate
 power, and all unsupported special-control fallbacks until each domain is deliberately

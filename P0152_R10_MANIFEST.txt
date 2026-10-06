@@ -1,0 +1,16 @@
+P0152 R10 presentation diagnostic manifest
+==========================================
+expected durable HEAD: b62397b116cf028326167b7f8bf7010ed94f3717
+
+files:
+facf7eae5631368cad3fb889c3218ac206921467c24e1f0ecc793b0e57bd9f32  Logres/HUD/PetActionPresentation.lua
+ea558fd83ac88b7560fd867b88f7d4008a2039500fef21bfa64c7f3faed46948  docs/memory/evidence/P0152_R9_RUNTIME_VISUAL_NO_CHANGE_FAIL_2026-10-06.md
+954a2968728994fbd9ee76d5a354fb04dec43ad757d18e29cbdf1d5315693e06  docs/memory/patches/P0152_R10_PRESENTATION_DIAGNOSTIC.md
+ee026f889664200adaa308c5b75c846720f96c7e4ef6a46e15bfe15b4a3a4db1  docs/memory/patches/P0152_R9_PET_STATE_PRESENTATION_DEFAULT_ON.md
+d58ac86066f0e1e5943a3525abd417c820b673ef9dac05d8a100ea625885bdcf  docs/memory/patches/PATCH_INDEX.md
+7897ceff7ce6dcbf12d839cb43d0f217ffd1547e5de15446950568e4b913f7fc  tools/check_pet_action_presentation_contract.py
+
+runtime behavior: diagnostic only
+secure pet execution mutation: none
+Blizzard pet presentation inspection: none
+polling/timers: none

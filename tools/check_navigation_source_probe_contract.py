@@ -137,9 +137,14 @@ else:
     if not (compass_index < probe_index < quest_index):
         errors.append("NavigationSourceProbe.lua must load after Compass and before Quest modules")
 
-for version_source, label in ((toc, "toc"), (bootstrap, "bootstrap")):
-    if "0.0.69-dev" not in version_source:
-        errors.append(f"{label} missing runtime version 0.0.69-dev")
+bootstrap_match = re.search(r'Logres\.VERSION = "([^"]+)"', bootstrap)
+toc_match = re.search(r"^## Version: (.+)$", toc, re.MULTILINE)
+bootstrap_version = bootstrap_match.group(1) if bootstrap_match else None
+toc_version = toc_match.group(1).strip() if toc_match else None
+if bootstrap_version is None or toc_version is None:
+    errors.append("P0143 checker could not read runtime versions")
+elif bootstrap_version != toc_version:
+    errors.append("Bootstrap and TOC runtime versions must match")
 
 if '"navigationSourceProbe": "H"' not in dev_checker:
     errors.append("developer-panel contract missing navigationSourceProbe Phase H expectation")

@@ -1,0 +1,15 @@
+P0152 R7 — shared action pet adapter execution/range/layout correction
+Baseline HEAD: b62397b116cf028326167b7f8bf7010ed94f3717
+Runtime: 0.0.74-dev (unchanged)
+R6B: correct pet mapping/presentation; inert click delegation + ungated red range tint + central layout FAIL
+R7: type1=pet without PreClick; secure right-click autocast macro; checksRange-gated tint; D-032 lower-left 5x2 layout
+Files:
+d8bd3a631db4642f589c1cb385cf9642522843165c40ffb4e27929dc597d01cc  Logres/Actions/Button.lua
+823f5817ff72858185d0ff96f12e120a62fb51f4ec0dd7c5450bf0d4933c1e87  Logres/HUD/PetActionExecutionProbe.lua
+daf571726a235823067624a801ce47f7abe97ea67abad9da0ac3321c02a6e258  docs/memory/2026-10-05.md
+532fae25d30f60cd36a1d4d6ae949065057c10a2bca7784b1817647df7b63c4c  docs/memory/CURRENT.md
+5b5fb7f108e477583cf85a457648c6b10947877807324e4ecef56e77d69f3e93  docs/memory/MEMORY.md
+614379730ee3a12c08299b4b22e2e0090f63745b5c0de1c042955c7bbfe40c4c  docs/memory/evidence/P0152_R6B_RUNTIME_EXECUTION_RANGE_LAYOUT_FAIL_2026-10-05.md
+16bde281452533fafa30907c31a5e7537f25c1e786ec6659181e3871021807cf  docs/memory/handoffs/CURRENT_HANDOFF.md
+0faf17a28158218100dc0f1f40a045290049af5b66a21f9548f250feac055550  docs/memory/patches/P0152_SECURE_PET_ACTION_EXECUTION_PROBE.md
+1cb2dc9d9bb2e954bb8c7edc61729c1886f739106cfe44973c8505a6e9bc9dd1  tools/check_pet_action_execution_probe_contract.py

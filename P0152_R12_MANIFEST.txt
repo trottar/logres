@@ -1,0 +1,17 @@
+P0152 R12 effective pet-binding state presentation manifest
+=========================================================
+expected durable HEAD: b62397b116cf028326167b7f8bf7010ed94f3717
+expected R11 presentation: cbee9148528d630cd8a1c77fcb307e8a55d26c01a1d139b4cc8898e05b75ab36
+expected R11 checker: 8dd77faef8442c1a5e9776a165bc88769910f4ba311daeccaf071530f5f871bb
+runtime candidate: 0.0.74-dev
+
+written/updated files:
+ad453024be28ae5a0030db6383114c8b5e7b9054c88eea9ff8e7382979d28098  Logres/HUD/PetActionPresentation.lua
+7913e268c6a1e39889fd03e26f2d81a0f6bc1fddcb9e9dd5aecaedb6851b6336  docs/memory/evidence/P0152_R11_PANEL_STATE_BINDING_DIAGNOSTIC_2026-10-06.md
+828cde8bb736329fd824519408a51ed21d5e26b9585c07cbea9c2b91160961d7  docs/memory/patches/P0152_R12_EFFECTIVE_PET_BINDING_STATE_PRESENTATION.md
+b7231d37ee831e6f8a6b1c3277f9a00d87408cce549bebd11121c748a425daec  docs/memory/patches/PATCH_INDEX.md
+cb7f8ab1fba7bc99390ac2d90e80173b7ef89d396738af5679ca898b95c1ef05  tools/check_pet_action_presentation_contract.py
+
+observed R11 default-on lifecycle: working
+observed R11 presentation: FAIL (pet=0; generic type/action unavailable)
+R12 runtime/visual status: RETEST REQUIRED

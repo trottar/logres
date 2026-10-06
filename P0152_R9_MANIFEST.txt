@@ -1,0 +1,21 @@
+P0152 R9 pet state presentation/default-on manifest
+==================================================
+expected durable HEAD: b62397b116cf028326167b7f8bf7010ed94f3717
+candidate runtime: 0.0.74-dev
+
+patch files:
+f222e4ae4b649efbecc1fbbdf97455bd32c5ba84b460a233f7ca093396c79bd0  Logres/HUD/PetActionPresentation.lua
+a3ca0d611cc3039402c03b58e74570e162361f5f1688a93954383f087556eba6  Logres/Logres.toc
+b5de82a115eb858932e0496a57a712c07b20202ec5b0ee67ca1111da272cad81  docs/memory/evidence/P0152_R7_STATE_PRESENTATION_DELIVERY_BASELINE_FAIL_2026-10-06.md
+2eecd6f8d6e07cdf69f1adf2904a464ff0d6aaeb371aff09a6a3e69a7aa3c657  docs/memory/evidence/P0152_R8_DELIVERY_PROBE_MARKER_FAIL_2026-10-06.md
+2db361eea261a08012287ef13edae99b86dbcbb11379ddb66d080e04044f6d37  docs/memory/patches/P0152_R9_PET_STATE_PRESENTATION_DEFAULT_ON.md
+d7ae44465ea9356a880e4d8584db36f4045fdd46dc277a08f91b52c4b262440e  docs/memory/patches/PATCH_INDEX.md
+21f4866644b2ecafa0833dfaac9d8a285ebf4adffbf93f1a0ff6ba986a140a44  tools/check_pet_action_presentation_contract.py
+
+shared Button.lua overwritten: no
+PetActionExecutionProbe.lua overwritten: no
+probe implementation marker assumptions: none
+new pet mutation capability: no
+stock PetActionBar/PetFrame suppression: no
+default-on trigger: event-driven bounded existing arm route
+runtime/visual result: RETEST REQUIRED

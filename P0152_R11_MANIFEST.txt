@@ -1,0 +1,22 @@
+P0152 R11 panel presentation diagnostic correction manifest
+===========================================================
+expected durable HEAD: b62397b116cf028326167b7f8bf7010ed94f3717
+expected presentation baseline: facf7eae5631368cad3fb889c3218ac206921467c24e1f0ecc793b0e57bd9f32
+expected presentation checker baseline: 7897ceff7ce6dcbf12d839cb43d0f217ffd1547e5de15446950568e4b913f7fc
+
+files:
+cdbb6c7a6083398593474237765f2fb5f78b55cb530b13ee630d82880abe52c1  Logres/Core/Commands.lua
+cbee9148528d630cd8a1c77fcb307e8a55d26c01a1d139b4cc8898e05b75ab36  Logres/HUD/PetActionPresentation.lua
+253dfc3f36a06f95a0dc0ad5c0b9397f237f2da3cfa60145c73856dddf044a6a  docs/memory/evidence/P0152_R10_PANEL_DELIVERY_BASELINE_FAIL_2026-10-06.md
+8a04a22ac9bd890738815bd2f8621ca16d7684ea82045160f84c469208b54279  docs/memory/patches/P0152_R10_PRESENTATION_DIAGNOSTIC.md
+8bfca2dbb676c43cb7f8a9c82de6761102fb04870deb7097e077933b80931693  docs/memory/patches/P0152_R11_PANEL_PRESENTATION_DIAGNOSTIC_CORRECTION.md
+9cae093c085d781e1f3ebfeb2909816f6096982159c664ef23e30d0ebea5401f  docs/memory/patches/PATCH_INDEX.md
+8dd77faef8442c1a5e9776a165bc88769910f4ba311daeccaf071530f5f871bb  tools/check_pet_action_presentation_contract.py
+
+runtime behavior: diagnostic integration only
+diagnostic surface: Phase H developer panel
+standalone pet diagnostic slash registration: removed
+secure pet execution mutation: none
+pet state presentation policy mutation: none
+Blizzard stock pet surface mutation: none
+polling/timers: none

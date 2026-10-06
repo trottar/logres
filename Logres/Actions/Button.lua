@@ -306,6 +306,222 @@ end)
     return button
 end
 
+local function petValueIsSecret(value)
+    if type(issecretvalue) ~= "function" then
+        return true
+    end
+
+    local ok, secret = pcall(issecretvalue, value)
+    return not ok or secret == true
+end
+
+local function resolvePetActionName(rawName)
+    if petValueIsSecret(rawName) or type(rawName) ~= "string" or rawName == "" then
+        return nil
+    end
+
+    local tokenValue = _G[rawName]
+    if type(tokenValue) == "string" and tokenValue ~= "" then
+        return tokenValue
+    end
+
+    return rawName
+end
+
+function ActionButton.RegisterPet(button, petSlot)
+    if InCombatLockdown() then
+        return false
+    end
+
+    ActionButton.Unregister(button)
+
+    -- Keep the proven shared secure-button object, but do not run addon code
+    -- before protected pet execution. Baseline state is captured by ARM.
+    button:RegisterForClicks("AnyUp")
+    button:SetAttribute("useOnKeyDown", false)
+    button:SetAttribute("type", nil)
+    button:SetAttribute("typerelease", nil)
+    button:SetAttribute("action", nil)
+    button:SetAttribute("clickbutton", nil)
+    button:SetAttribute("clickbutton1", nil)
+    button:SetAttribute("clickbutton2", nil)
+    button:SetAttribute("type1", "pet")
+    button:SetAttribute("action1", petSlot)
+
+    local macrotext
+    if type(GetPetActionInfo) == "function" then
+        local ok, rawName, _texture, _isToken, _isActive,
+            rawAutoCastAllowed = pcall(GetPetActionInfo, petSlot)
+        if ok
+            and not petValueIsSecret(rawAutoCastAllowed)
+            and rawAutoCastAllowed == true
+        then
+            local petName = resolvePetActionName(rawName)
+            if petName then
+                macrotext = "/petautocasttoggle " .. petName
+            end
+        end
+    end
+
+    if macrotext then
+        button:SetAttribute("type2", "macro")
+        button:SetAttribute("macrotext2", macrotext)
+    else
+        button:SetAttribute("type2", nil)
+        button:SetAttribute("macrotext2", nil)
+    end
+    button:SetAttribute("action2", nil)
+
+    button.petActionSlot = petSlot
+    button.petActionDelegate = nil
+    button.petAutocastMacroReady = macrotext ~= nil
+    button.actionSlot = nil
+    ActionButton.SetHotkeyLabel(button, "")
+
+    return true
+end
+
+local function resolvePetTexture(rawTexture)
+    if petValueIsSecret(rawTexture) or rawTexture == nil then
+        return nil
+    end
+
+    local valueType = type(rawTexture)
+    if valueType == "number" then
+        return rawTexture
+    end
+    if valueType ~= "string" then
+        return nil
+    end
+
+    local tokenValue = _G[rawTexture]
+    if type(tokenValue) == "string" or type(tokenValue) == "number" then
+        return tokenValue
+    end
+
+    return rawTexture
+end
+
+function ActionButton.UpdatePet(button, petSlot)
+    local state = {
+        occupied = false,
+        active = nil,
+        autoCastAllowed = nil,
+        autoCastEnabled = nil,
+    }
+
+    if type(GetPetActionInfo) ~= "function" then
+        button.icon:Hide()
+        button:SetChecked(false)
+        return state
+    end
+
+    local ok, rawName, rawTexture, _rawIsToken, rawIsActive,
+        rawAutoCastAllowed, rawAutoCastEnabled, rawSpellID,
+        rawChecksRange, rawInRange = pcall(GetPetActionInfo, petSlot)
+
+    if not ok then
+        button.icon:Hide()
+        button:SetChecked(false)
+        return state
+    end
+
+    local texture = resolvePetTexture(rawTexture)
+    if texture ~= nil then
+        button.icon:SetTexture(texture)
+        button.icon:Show()
+        state.occupied = true
+    else
+        button.icon:Hide()
+    end
+
+    if not petValueIsSecret(rawName) and rawName ~= nil then
+        state.occupied = true
+    end
+    if not petValueIsSecret(rawSpellID) and rawSpellID ~= nil then
+        state.occupied = true
+    end
+
+    local active
+    if not petValueIsSecret(rawIsActive) and type(rawIsActive) == "boolean" then
+        active = rawIsActive
+    end
+    state.active = active
+    button:SetChecked(active == true)
+
+    local autoCastAllowed
+    local autoCastEnabled
+    if not petValueIsSecret(rawAutoCastAllowed) and type(rawAutoCastAllowed) == "boolean" then
+        autoCastAllowed = rawAutoCastAllowed
+    end
+    if not petValueIsSecret(rawAutoCastEnabled) and type(rawAutoCastEnabled) == "boolean" then
+        autoCastEnabled = rawAutoCastEnabled
+    end
+    state.autoCastAllowed = autoCastAllowed
+    state.autoCastEnabled = autoCastEnabled
+    button.petAutoCastAllowed = autoCastAllowed == true
+    button.petAutoCastEnabled = autoCastEnabled == true
+
+    if button.actionFrameArt then
+        if autoCastAllowed == true and autoCastEnabled == true then
+            button.actionFrameArt:SetVertexColor(1.00, 0.72, 0.24, 1.00)
+        elseif autoCastAllowed == true then
+            button.actionFrameArt:SetVertexColor(0.72, 0.58, 0.34, 1.00)
+        else
+            button.actionFrameArt:SetVertexColor(1.00, 1.00, 1.00, 1.00)
+        end
+    end
+
+    if type(GetPetActionCooldown) == "function" then
+        local cooldownOK, start, duration = pcall(GetPetActionCooldown, petSlot)
+        if cooldownOK
+            and not petValueIsSecret(start)
+            and not petValueIsSecret(duration)
+            and type(start) == "number"
+            and type(duration) == "number"
+        then
+            button.cooldown:SetCooldown(start, duration)
+        end
+    end
+
+    local checksRange
+    local inRange
+    if not petValueIsSecret(rawChecksRange) and type(rawChecksRange) == "boolean" then
+        checksRange = rawChecksRange
+    end
+    if not petValueIsSecret(rawInRange) and type(rawInRange) == "boolean" then
+        inRange = rawInRange
+    end
+
+    local usable
+    if type(GetPetActionSlotUsable) == "function" then
+        local usableOK, rawUsable = pcall(GetPetActionSlotUsable, petSlot)
+        if usableOK
+            and not petValueIsSecret(rawUsable)
+            and type(rawUsable) == "boolean"
+        then
+            usable = rawUsable
+        end
+    end
+
+    if checksRange == true and inRange == false then
+        button.icon:SetVertexColor(0.95, 0.28, 0.24, 1.00)
+    elseif usable == false then
+        button.icon:SetVertexColor(0.48, 0.46, 0.43, 0.88)
+    else
+        button.icon:SetVertexColor(1.00, 1.00, 1.00, 1.00)
+    end
+
+    button.countText:SetText("")
+    return state
+end
+
+function ActionButton.UpdatePetAll(buttons)
+    for index = 1, #buttons do
+        ActionButton.UpdatePet(buttons[index], index)
+    end
+end
+
 function ActionButton.Pulse(button)
     local animation = button.activationAnimation
     local flash = button.activationFlash

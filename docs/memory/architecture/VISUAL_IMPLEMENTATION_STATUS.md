@@ -41,7 +41,7 @@ A component can be visually complete while runtime ownership remains incomplete.
 | Player-health tunnel | Yes / D-036 frozen | P0124 is durable at `1e7e27e` / `0.0.54-dev`; five Theme-owned organic tunnel/death masks run on the proven native secret-safe health-to-alpha path, with deterministic D-036 preview percentages | Whole-interface contrast/scale polish remains; natural damage/heal may be observed opportunistically but is not required to re-prove the accepted preview matrix | **Runtime + visual baseline accepted — final polish deferred** |
 | Compass heading + manual waypoint | Yes | P0148 `6f381a77` / `0.0.72-dev` is runtime + visual PASS for the live-radius depth baseline after P0147's too-subtle calibration failed | Preserve P0123 off-tape authority; defer exact amplitude refinement to final whole-screen polish; identity remains unavailable | **Production depth baseline accepted — final calibration deferred** |
 | Compass quest / POI / tracking roles | Yes | P0143 `b9b2f90b` / `0.0.69-dev` runtime-proves current-map/player geometry, minimap view radius, and 23/23 multi-select tracking selector metadata rows; individual tracked-result/service-instance positions remain source-blocked | Current-map AreaPOI population and current/quest waypoint output were absent and remain deferred; keep stock minimap until replacement completeness is proven | **Geometry/selector metadata proven — destination/AreaPOI deferred; tracking-result markers blocked** |
-| Class/pet/special controls | Shared button language approved; class-specific mechanics only partially covered | P0150 R3 `46e06295` / `0.0.73-dev` is read-only runtime PASS for the observed scope on client 70235; pet state was populated while stance/totem/rune/special modes remain deferred | P0152 secure pet-action execution probe only; retain stock PetActionBar and preserve all unproven class/special fallbacks | **Read path proven — secure pet execution next** |
+| Class/pet/special controls | Shared button language approved; class-specific mechanics only partially covered | P0149/D-044 source policy is durable; P0150 R3 is runtime PASS for the observed read-only scope; P0152 `0.0.74-dev` secure pet-action probe is prepared | Runtime-prove left-click pet execution while stock PetActionBar remains; autocast/edit/bindings/full feedback/restoration stay separate | **Pet read proven — secure execution probe prepared** |
 | Settings / accessibility | Visual language only, no dedicated final sheet | Preference infrastructure exists, not final Phase-H settings UI | Design compact settings/accessibility presentation and expose only accepted product choices | **Residual design / integration** |
 
 ## Consequence
@@ -135,8 +135,10 @@ Completed with environmental deferrals:
     `46e06295` / `0.0.73-dev`; observed pet read path PASS, one secret Warlock
     power safely deferred, stance/totem/rune/active-special branches deferred.
 
-Next:
-25. P0152 bounded secure pet-action execution probe with stock PetActionBar retained.
+Current:
+25. P0152 R1 bounded secure pet-action execution probe — candidate `0.0.74-dev` prepared after stale-checker repair; runtime proof pending with stock PetActionBar retained.
+
+After that:
 26. implement only separately runtime-proven pet/class/special slices, preserve stock
     fallback for the rest, then continue settings/accessibility/final whole-screen
     composition calibration. Deferred navigation roles remain deferred until natural

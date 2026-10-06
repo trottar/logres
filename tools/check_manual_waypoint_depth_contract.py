@@ -152,8 +152,10 @@ bootstrap_match = re.search(r'Logres\.VERSION = "([^"]+)"', bootstrap)
 toc_match = re.search(r"^## Version: (.+)$", toc, re.MULTILINE)
 bootstrap_version = bootstrap_match.group(1) if bootstrap_match else None
 toc_version = toc_match.group(1).strip() if toc_match else None
-if bootstrap_version != "0.0.72-dev" or toc_version != "0.0.72-dev":
-    errors.append(f"P0148 runtime version must be 0.0.72-dev, got {bootstrap_version}/{toc_version}")
+if bootstrap_version is None or toc_version is None:
+    errors.append("P0148 checker could not read runtime versions")
+elif bootstrap_version != toc_version:
+    errors.append("Bootstrap and TOC runtime versions must match")
 
 print("Logres P0148 perceptible waypoint depth contract")
 print("================================================")

@@ -3088,6 +3088,80 @@ local function runClassPetSpecialProbe()
     end
 end
 
+local function runPetActionExecutionProbe(argument)
+    local status = Logres:GetModuleStatus("PetActionExecutionProbe")
+
+    if not status.initialized then
+        Logres:InitializeModule("PetActionExecutionProbe")
+    end
+    if not status.enabled then
+        Logres:EnableModule("PetActionExecutionProbe")
+    end
+
+    local probe = Logres:GetModule("PetActionExecutionProbe")
+    local action = argument
+    if action == nil or action == "" then
+        action = "check"
+    end
+
+    local actionOK = true
+    local reason = action
+
+    if action == "arm" then
+        actionOK, reason = probe:Arm()
+    elseif action == "check" then
+        reason = probe:Check()
+    elseif action == "hide" then
+        actionOK, reason = probe:HideProbe()
+    else
+        emit("Usage: /logres petactionexecprobe [arm|check|hide]")
+        return
+    end
+
+    local debugStatus = probe:GetDebugStatus()
+
+    emit(string.format(
+        "Logres petactionexecprobe: %s (action=%s ok=%s reason=%s configured=%s pending=%s armed=%s visible=%s petBar=%s occupied=%s attempts=%s clicks=%s slot=%s followup=%s lastEvent=%s pre=%s/%s post=%s/%s changed=%s secretSkips=%s failures=%s combat=%s)",
+        tostring(debugStatus.result),
+        tostring(action),
+        tostring(actionOK),
+        tostring(reason),
+        tostring(debugStatus.configured),
+        tostring(debugStatus.pendingConfigure),
+        tostring(debugStatus.armed),
+        tostring(debugStatus.visible),
+        tostring(debugStatus.petHasActionBar),
+        tostring(debugStatus.occupiedCount),
+        tostring(debugStatus.attemptCount),
+        tostring(debugStatus.clickCount),
+        tostring(debugStatus.lastClickedSlot),
+        tostring(debugStatus.followupEventCount),
+        tostring(debugStatus.lastFollowupEvent),
+        tostring(debugStatus.preActive),
+        tostring(debugStatus.preActiveState),
+        tostring(debugStatus.postActive),
+        tostring(debugStatus.postActiveState),
+        tostring(debugStatus.activeStateChanged),
+        tostring(debugStatus.secretSkipCount),
+        tostring(debugStatus.failureCount),
+        tostring(debugStatus.combat)
+    ))
+
+    if action == "arm" and actionOK then
+        emit(
+            "Logres petactionexecprobe: shared Logres action buttons are live; "
+            .. "LEFT CLICK executes the pet slot, RIGHT CLICK toggles autocast "
+            .. "when supported. For secure proof, left-click one INACTIVE "
+            .. "Follow/Stay-type slot, then run Check. Stock PetActionBar stays available."
+        )
+    end
+
+    local lines = probe:GetDiagnosticLines()
+    for index = 1, #lines do
+        emit("Logres petactionexecprobe: " .. tostring(lines[index]))
+    end
+end
+
 local function runPlayerHelpfulAuraCheck()
     local status =
         Logres:GetModuleStatus("PlayerHelpfulAuras")
@@ -3823,6 +3897,15 @@ local function handleImmersion(argument)
     ))
 end
 
+local function runPetStateDiagnostic()
+    local presentation = Logres:GetModule("PetActionPresentation")
+    local lines = presentation:GetDiagnosticLines()
+
+    for index = 1, #lines do
+        emit(lines[index])
+    end
+end
+
 local function printHelp()
     emit("Logres development commands:")
     emit("  /logres panel")
@@ -3868,6 +3951,7 @@ local function printHelp()
     emit("  /logres worldtargetprobe")
     emit("  /logres navigationsourceprobe")
     emit("  /logres classpetspecialprobe")
+    emit("  /logres petactionexecprobe [arm|check|hide]")
     emit("  /logres helpfulauracheck")
     emit("  /logres helpfulaurapreview [on|off]")
     emit("  /logres questofferacceptprobe")
@@ -4127,6 +4211,17 @@ local function handleCommand(message)
         runClassPetSpecialProbe()
         return
     end
+
+    if command == "petactionexecprobe" then
+        runPetActionExecutionProbe(argument)
+        return
+    end
+
+    if command == "petstate" then
+        runPetStateDiagnostic()
+        return
+    end
+
 
     if command == "helpfulauracheck" then
         runPlayerHelpfulAuraCheck()
@@ -4507,6 +4602,30 @@ Logres:RegisterDevPanelAction(
     "classPetSpecialProbe",
     "Class / Pet / Special Probe",
     "classpetspecialprobe",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "petActionExecArm",
+    "Pet Action Probe ARM",
+    "petactionexecprobe arm",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "petActionExecCheck",
+    "Pet Action Probe Check",
+    "petactionexecprobe check",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "petActionExecHide",
+    "Pet Action Probe Hide",
+    "petactionexecprobe hide",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "petStateDiagnostic",
+    "Pet State Diagnostic",
+    "petstate",
     "H"
 )
 Logres:RegisterDevPanelAction(

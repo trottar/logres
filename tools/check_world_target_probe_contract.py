@@ -251,10 +251,6 @@ elif bootstrap_version != toc_version:
     errors.append(
         "Bootstrap and TOC runtime versions must match"
     )
-elif bootstrap_version != "0.0.68-dev":
-    errors.append(
-        f"P0140 runtime version must be 0.0.68-dev, got {bootstrap_version}"
-    )
 
 if '"worldTargetProbe": "H"' not in dev_checker:
     errors.append(

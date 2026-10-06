@@ -210,3 +210,9 @@ Commands given to the user must be:
 - explicit about the working directory when repository state matters.
 
 Never ask the user to push on the assistant's behalf; the user performs commits/pushes by design.
+
+## Static checker runtime-version policy
+
+Before any candidate runtime version bump, validate the exact prepared candidate with `tools/check_checker_version_policy.py`. Durable `tools/check_*.py` feature contracts may require that Bootstrap and TOC versions are readable and equal, but must not hard-code an exact historical `0.0.xx-dev` runtime. Exact runtime versions belong in patch/evidence records, not permanent feature contracts.
+
+Runtime-bump patch appliers must run the complete `tools/check_*.py` static checker suite against the exact prepared candidate before tracked writes. Do not hand-pick only the newest/relevant checkers when a synchronized version bump can invalidate older contracts.

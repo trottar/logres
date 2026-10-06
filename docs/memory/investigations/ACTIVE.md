@@ -199,31 +199,28 @@ quest/POI/tracking roles remain unchanged.
 ## Class / pet / special-control ownership
 
 Status:
-**P0150 RUNTIME PASS FOR OBSERVED READ-ONLY SCOPE; P0152 SECURE PET-ACTION EXECUTION PROBE NEXT.**
+**P0150 READ-ONLY RUNTIME PASS; P0152 R1 SECURE PET-ACTION EXECUTION PROBE PREPARED AFTER PRE-WRITE CHECKER REPAIR.**
 
 Canonical investigation:
 `FUTURE_CLASS_PET_SPECIAL_CONTROL_CAPABILITY.md`.
 
-P0149 / D-044 source policy remains authoritative. The current client is
-`1.60.1.70235`; matching Forever source `a84e2b1b41d3d4137127c07e4da448aa3251d6f1`
-is the direct child of the audited 70205 source and changes only `version.txt`.
-The audited pet secure-template and PetActionBar files are byte-identical across
-those builds.
+P0149 / D-044 source policy remains authoritative. Forever build 70235 source
+`a84e2b1b41d3d4137127c07e4da448aa3251d6f1` is source-continuous with the 70205
+audit for the secure pet paths.
 
-P0150 R3 is durable at `46e06295` / `0.0.73-dev` and runtime PASS for the
-observed read-only scope:
-- 22/22 expected events and required APIs;
-- pet bar present, 10 slots scanned / 7 occupied, pet failures `0`;
-- one Warlock primary-power value safely secret-skipped, resource failures `0`;
-- ordinary false special-mode flags preserved correctly;
-- total failures `0`;
-- separate integrated Run All PASS.
+P0150 R3 is durable at `46e06295` / `0.0.73-dev` and runtime PASS for the observed
+read-only scope: 22/22 events/APIs, pet 10/7 populated with zero pet failures, one
+safe secret Warlock power skip, ordinary false special-mode flags, zero total
+failures, and separate Run All PASS.
 
 Environmental deferrals remain for stance/forms, active totems, DK runes, active
 special modes, and meaningful nonzero class-resource presentation.
 
-The next justified control slice is P0152: a bounded secure pet-action execution
-probe using addon-owned `SecureActionButtonTemplate` / `type="pet"` controls.
-Stock PetActionBar remains available. Autocast mutation, edit/reorder, bindings,
-full feedback completeness, suppression/restoration, and PetFrame ownership remain
-separate gates.
+P0152 R1 prepares candidate `0.0.74-dev` as a bounded secure pet-action execution
+probe. Ten addon-owned secure buttons use fixed ordinary slots, `type="pet"`, and
+left-click only. Protected setup is out of combat. Runtime acceptance requires a
+user click plus PostClick, pet-event follow-up, ordinary active-state change, user
+confirmation, and zero failures.
+
+Stock PetActionBar remains available. Autocast, edit/reorder, bindings, complete
+feedback, suppression/restoration, and PetFrame ownership remain separate gates.

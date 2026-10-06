@@ -179,3 +179,15 @@ P0152 is therefore the next justified class/pet/special slice: a bounded secure
 pet-action execution probe with stock PetActionBar retained. It does not authorize
 autocast mutation, edit/reorder, binding replacement, PetActionBar suppression, or
 PetFrame ownership.
+
+P0152 prepares candidate `0.0.74-dev` as the first secure-control proof in
+the class/pet/special sequence. It adds a temporary ten-slot Logres pet strip using
+addon-owned `SecureActionButtonTemplate`, fixed ordinary `action=1..10` slots,
+`type="pet"`, left-click only, and out-of-combat protected setup.
+
+Acceptance is deliberately narrower than PetActionBar ownership: a deliberate user
+click must produce secure PostClick evidence, source-owned pet follow-up events, an
+ordinary active-state transition, explicit user confirmation, zero probe failures,
+and a clean separate Run All. Stock PetActionBar remains visible/usable. Autocast,
+edit/reorder, bindings, full feedback, suppression/restoration, and PetFrame remain
+separate gates.

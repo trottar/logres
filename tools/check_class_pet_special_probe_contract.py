@@ -297,10 +297,6 @@ if bootstrap_version is None or toc_version is None:
     errors.append("P0150 checker could not read runtime versions")
 elif bootstrap_version != toc_version:
     errors.append("Bootstrap and TOC runtime versions must match")
-elif bootstrap_version != "0.0.73-dev":
-    errors.append(
-        f"P0150 runtime version must be 0.0.73-dev, got {bootstrap_version}"
-    )
 
 if '"classPetSpecialProbe": "H"' not in dev_checker:
     errors.append(
