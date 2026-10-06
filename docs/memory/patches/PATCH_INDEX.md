@@ -174,5 +174,6 @@
 | P0152 | 2026-10-06 | INSTALLED / PUSHED — R12 RUNTIME + CONTROL + STATE-PRESENTATION PASS; FINAL VISUAL POLISH DEFERRED | `00aef4a9`, `0.0.74-dev`: default-on pet controls; 10 bindings / 7 readable; 2 active + 1 autocast indicators; user-confirmed button execution; stock PetActionBar retained |
 | P0153 | 2026-10-06 | INSTALLED / PUSHED — DOCS / EVIDENCE CHECKPOINT | Record P0152 acceptance and preserve initial world-entry camera timeout (`7ad9be7e`) |
 | P0154 | 2026-10-06 | INSTALLED / PUSHED — DIAGNOSTIC PASS; DIRECTION-SWITCH DEFECT IDENTIFIED | `40dec187`, `0.0.75-dev`: timeout preserved; 145 samples, range 0->50, 142 inward + 1 outward command |
-| P0155 | 2026-10-06 | R1 PREPARED — TARGETED CAMERA DIRECTION-SWITCH CORRECTION; INITIAL DELIVERY REFUSAL PRESERVED | Stop previous MoveView direction before crossed-target reversal; initial applier refused pre-write on wrong indentation/count baseline; candidate `0.0.76-dev` |
+| P0155 | 2026-10-06 | INSTALLED / PUSHED — RUNTIME FAIL; REVERSAL PATH NOT EXERCISED | `e9be312d`, `0.0.76-dev`: camera remained at 50; first OnUpdate after ~23.523s; 1 sample, 0 commands, 0 switches |
+| P0156 | 2026-10-06 | PREPARED — FIRST-DRIVABLE-FRAME CAMERA TRANSITION | Start motion/timeout clock and transition zoom baseline on first actual OnUpdate; candidate `0.0.77-dev` |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

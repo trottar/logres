@@ -1,6 +1,6 @@
 # Phase G — Cinematic Camera
 
-Status: ACTIVE — G.5 OPEN; WORLD-ENTRY DIRECTION-SWITCH CORRECTION ACTIVE
+Status: ACTIVE — G.5 OPEN; WORLD-ENTRY FIRST-DRIVABLE-FRAME CORRECTION ACTIVE
 Opened: 2026-10-02
 
 ## Product Objective
@@ -128,7 +128,11 @@ After P0152 acceptance, P0153 preserved one `PLAYER_ENTERING_WORLD` transition t
 
 This reopened camera runtime investigation narrowly. P0154 is durable at `40dec187` / `0.0.75-dev` and captured the required evidence: start about `23.148`, target `5`, final `50`, observed range `0 -> 50`, final/max easing error `45`, and `142` inward plus `1` outward MoveView command.
 
-The outward correction proves the transition reversed direction during the world-entry displacement. P0119 did not stop the previous MoveView direction before starting the opposite one, so P0155 R1 corrects that specific stop-before-reverse defect on candidate `0.0.76-dev`. No positional rebase, delay, polling, CVar mutation, target change, or Taxi-policy expansion is included.
+The outward correction proved the transition reversed direction during the world-entry displacement. P0155 R1 corrected that stop-before-reverse defect and is durable at `e9be312d` / `0.0.76-dev`.
+
+Its runtime retest exposed an earlier timebase failure: camera start/current/final `50`, target `5`, elapsed about `23.523s`, one OnUpdate sample, zero MoveView commands, and zero direction switches. The transition timed out before motion could begin because its clock had started during `PLAYER_ENTERING_WORLD`.
+
+P0156 moves only the transition motion/timeout start to the first actual OnUpdate frame and uses that frame's zoom as the transition start baseline. It adds event-arm/first-update-delay diagnostics but no timer, arbitrary delayed reconcile, polling, CVar mutation, target/duration change, or Taxi-policy expansion.
 
 The normal-Taxi landing retest remains pending after this world-entry regression is understood.
 

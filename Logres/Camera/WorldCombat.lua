@@ -211,7 +211,10 @@ local Controller = Logres:RegisterModule("CameraWorldCombat", {
         self.transitionRequestedZoom = nil
         self.transitionEffectiveTargetZoom = nil
         self.transitionDuration = nil
+        self.transitionArmZoom = nil
+        self.transitionArmTime = nil
         self.transitionStartTime = nil
+        self.transitionFirstUpdateDelay = nil
         self.transitionDirection = nil
         self.transitionSampleCount = 0
         self.transitionTowardCount = 0
@@ -549,7 +552,10 @@ function Controller:BeginTransition(
     self.transitionRequestedZoom = requestedTargetZoom
     self.transitionEffectiveTargetZoom = effectiveTargetZoom
     self.transitionDuration = transitionDuration
-    self.transitionStartTime = GetTime()
+    self.transitionArmZoom = currentZoom
+    self.transitionArmTime = GetTime()
+    self.transitionStartTime = nil
+    self.transitionFirstUpdateDelay = nil
     self.transitionDirection = nil
     self.transitionSampleCount = 0
     self.transitionTowardCount = 0
@@ -717,7 +723,25 @@ function Controller:OnUpdate()
         return
     end
 
-    local elapsed = GetTime() - self.transitionStartTime
+    local now = GetTime()
+    if self.transitionStartTime == nil then
+        self.transitionStartTime = now
+        if type(self.transitionArmTime) == "number" then
+            self.transitionFirstUpdateDelay = now - self.transitionArmTime
+        else
+            self.transitionFirstUpdateDelay = nil
+        end
+
+        self.transitionStartZoom = currentZoom
+        self.lastCurrentZoom = currentZoom
+        self.transitionMinZoom = currentZoom
+        self.transitionMaxZoom = currentZoom
+        self.transitionPreviousZoom = currentZoom
+        self.lastExpectedZoom = currentZoom
+        self.lastPositionError = 0
+    end
+
+    local elapsed = now - self.transitionStartTime
     local requestedTargetZoom = self.transitionRequestedZoom
 
     self.transitionSampleCount = self.transitionSampleCount + 1
@@ -949,6 +973,8 @@ function Controller:GetDebugStatus()
         transitionRequestedZoom = self.transitionRequestedZoom,
         transitionEffectiveTargetZoom = self.transitionEffectiveTargetZoom,
         transitionDuration = self.transitionDuration,
+        transitionArmZoom = self.transitionArmZoom,
+        transitionFirstUpdateDelay = self.transitionFirstUpdateDelay,
         transitionDirection = self.transitionDirection,
         transitionSampleCount = self.transitionSampleCount,
         transitionTowardCount = self.transitionTowardCount,

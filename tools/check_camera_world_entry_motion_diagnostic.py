@@ -37,6 +37,8 @@ if CONTROLLER.is_file():
         "transitionInCommandCount = self.transitionInCommandCount",
         "transitionOutCommandCount = self.transitionOutCommandCount",
         "transitionDirectionSwitchCount = self.transitionDirectionSwitchCount",
+        "transitionArmZoom = self.transitionArmZoom",
+        "transitionFirstUpdateDelay = self.transitionFirstUpdateDelay",
     ]
     for fragment in required:
         if fragment not in source:
@@ -56,7 +58,7 @@ if COMMANDS.is_file():
     source = COMMANDS.read_text(encoding="utf-8")
     required = [
         "local function emitCameraWorldCombatMotion(status)",
-        '"Logres cameraworldcombat motion: samples=%s toward=%s away=%s flat=%s min=%s max=%s expected=%s posError=%s maxAbsPosError=%s observed=%s/%s command=%s/%s inCommands=%s outCommands=%s switches=%s"',
+        '"Logres cameraworldcombat motion: samples=%s toward=%s away=%s flat=%s min=%s max=%s expected=%s posError=%s maxAbsPosError=%s observed=%s/%s command=%s/%s inCommands=%s outCommands=%s switches=%s armZoom=%s firstDelay=%s"',
         "emitCameraWorldCombatMotion(status)",
     ]
     for fragment in required:

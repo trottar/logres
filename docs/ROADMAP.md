@@ -34,7 +34,7 @@ The roadmap is capability-gated. A phase advances only when its success criteria
 
 ## Phase G — Cinematic Camera
 
-**Status: ACTIVE — G.5 OPEN; WORLD-ENTRY DIRECTION-SWITCH CORRECTION ACTIVE.**
+**Status: ACTIVE — G.5 OPEN; WORLD-ENTRY FIRST-DRIVABLE-FRAME CORRECTION ACTIVE.**
 
 G.1 through G.4 are runtime-proven.
 
@@ -184,3 +184,8 @@ P0153 is durable at `7ad9be7e` and preserved the initial `PLAYER_ENTERING_WORLD`
 P0154 is durable at `40dec187` / `0.0.75-dev` and is a diagnostic PASS. Normal world entry again timed out: start about `23.148`, target `5`, final `50`, observed range `0 -> 50`, final/max easing error `45`, and command counts `142` inward / `1` outward.
 
 The single outward correction exposes a concrete P0119 defect: crossed-target correction can reverse MoveView direction without stopping the previously active direction. P0155 R1 prepares a bounded stop-before-reverse correction on `0.0.76-dev`. The external origin of the world-entry `0/50` displacement remains unproven. No positional rebase, arbitrary delay, polling, CVar mutation, target change, Taxi rotation, or Taxi UI fade is authorized by this correction.
+
+
+P0155 R1 is durable at `e9be312d` / `0.0.76-dev`, but its runtime retest exposed an earlier timebase defect rather than exercising direction switching. The camera entered at zoom `50`; the first camera OnUpdate did not occur until about `23.523s` after the `PLAYER_ENTERING_WORLD` transition was armed. The transition therefore timed out on sample 1 before issuing any MoveView command (`0` inward, `0` outward, `0` switches), leaving the user visibly max-zoomed out.
+
+P0156 prepares candidate `0.0.77-dev` to start the transition motion/timeout clock on the first actual drivable OnUpdate frame and to use that frame's zoom as the transition start baseline. Event-time arm zoom and first-update delay remain diagnostic. No timer, arbitrary delayed reconcile, polling, CVar mutation, target/duration change, or Taxi-policy expansion is included.

@@ -21,6 +21,8 @@ else:
         "previousDirection ~= nil and previousDirection ~= direction",
         "stopMotionDirection(previousDirection)",
         "self.transitionDirection = direction",
+        "self.transitionStartTime = now",
+        "self.transitionStartZoom = currentZoom",
         "elapsed >= (self.transitionDuration + timeoutExtra)",
     ]
     for fragment in required:

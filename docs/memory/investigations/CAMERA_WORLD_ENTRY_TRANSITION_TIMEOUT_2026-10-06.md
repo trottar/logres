@@ -1,95 +1,96 @@
 # Camera World-Entry Transition Timeout — 2026-10-06
 
-Status: **REPRODUCED — P0154 DIAGNOSTIC PASS; P0155 DIRECTION-SWITCH CORRECTION PREPARED**
+Status: **REPRODUCED — P0155 RUNTIME FAIL EXPOSES FIRST-UPDATE TIMEBASE DEFECT; P0156 PREPARED**
 
 ## Initial trigger
 
-The final integrated Run All used to validate P0152 R12 recorded a `Camera World/Combat` transition timeout after `PLAYER_ENTERING_WORLD` on `0.0.74-dev` / Forever `1.60.1.70235`.
+The integrated P0152 validation first recorded a `PLAYER_ENTERING_WORLD` camera transition timeout on `0.0.74-dev`.
 
-Initial observation:
-- requested/effective target `5`;
-- start about `6.812`;
-- final about `6.753` after about `3.254s`;
-- target not reached;
-- one failure;
-- error `camera transition timed out before target`.
-
-P0152 did not modify `Logres/Camera/`, so the initial event was correctly classified as OPEN / INTERMITTENT / UNREPRODUCED pending targeted retest.
-
-## Targeted reproduction
-
-P0153 required one normal `/reload`, Phase G **Camera World/Combat Check**, and a separate Phase 0 **Run All**.
-
-That retest reproduced the failure on loadCount `182`:
-- start about `8.524`;
-- requested/effective target `5`;
-- final/current about `12.632`;
-- elapsed about `3.258s`;
-- `targetReached=false`;
-- `failures=1`;
-- no secret-value failure.
-
-Classification became **REPRODUCED RUNTIME FAILURE**.
+A targeted retest reproduced the failure, and P0154 then instrumented command-versus-observed motion.
 
 ## P0154 diagnostic result
 
-P0154 is verified durable at `40dec1874a587156c88319a9caed940088e25db7` on `0.0.75-dev`.
+P0154 is durable at `40dec1874a587156c88319a9caed940088e25db7` / `0.0.75-dev`.
 
-After normal `/reload`, loadCount `184` reported:
-- start `23.147617340088`;
-- requested/effective target `5`;
-- final/current `50`;
-- elapsed about `3.252s`;
-- `145` transition samples;
-- `1` sample moved toward target, `1` away, `143` were flat;
-- minimum observed zoom `0`, maximum `50`;
-- final/max easing position error `45`;
-- last command inward;
+LoadCount `184` captured:
+- start about `23.148`;
+- target `5`;
+- final `50`;
+- range `0 -> 50`;
+- `145` samples;
+- final/max easing error `45`;
 - `142` inward commands and `1` outward command.
 
-The separate Run All preserved the same camera failure while its other listed checks passed.
+This exposed a real stop-before-reverse defect in P0119.
 
-This is a **P0154 DIAGNOSTIC PASS** because the intended command-versus-observed evidence was captured without hiding the failure.
+## P0155 R1
+
+P0155 R1 is durable at `e9be312d24c89d6b2d4d9935ea6eb6f9424ca698` / `0.0.76-dev`.
+
+It corrects direction-switch hygiene by stopping the previous MoveView direction before starting the opposite direction.
+
+The initial P0155 delivery refusal remains preserved separately; R1 corrected that artifact baseline.
+
+## P0155 runtime result
+
+LoadCount `185` produced a different and more fundamental failure:
+- user-visible camera remained extremely zoomed out;
+- start/current/final `50`;
+- requested/effective target `5`;
+- elapsed about `23.523s`;
+- samples `1`;
+- toward `0`, away `0`, flat `1`;
+- `inCommands=0`;
+- `outCommands=0`;
+- `switches=0`;
+- one timeout failure;
+- no secret-value failure.
+
+Separate Run All repeated the same state.
 
 ## Narrow cause
 
-The original P0154 hypothesis expected inward commands only. Runtime instead produced one outward command because the observed camera crossed below target during the world-entry displacement (`min=0`) before later reaching `50`.
+This sample proves P0155's reversal correction was not exercised.
 
-That exposes a concrete P0119 driver defect:
+`BeginTransition()` starts `transitionStartTime` inside the `PLAYER_ENTERING_WORLD` reconcile. In this runtime sample, no camera OnUpdate executed for about `23.5s`.
 
-- crossed-target correction is allowed to reverse direction;
-- `ApplyTransitionMotion()` starts the new MoveView direction;
-- but it does not stop the previous MoveView direction when that reversal occurs;
-- the previous direction is otherwise stopped only during full transition cleanup.
+When the first OnUpdate finally ran, the code computed elapsed from the old event time, found the transition already beyond its timeout budget, and called `FinishTransition()` before `ApplyTransitionMotion()`.
 
-Therefore an outward correction can remain active while later inward commands are issued. The `1` outward plus `142` inward command sequence is direct evidence that this path occurred.
+That directly explains:
+- one sample;
+- zero commands;
+- zero switches;
+- unchanged zoom `50`;
+- immediate timeout on first drivable frame.
 
-The source of the discrete `0/50` world-entry displacement remains unproven and is not attributed to Blizzard, Logres, or another addon without further evidence.
+## P0156 corrective contract
 
-## P0155 corrective contract
+P0156 may:
+- record the event-time arm zoom/time for diagnostics;
+- leave `transitionStartTime` unset at event-time arm;
+- on the first actual OnUpdate, set `transitionStartTime` to that frame time;
+- set transition start/min/max/previous/expected zoom to the first actual drivable zoom sample;
+- retain direction-switch hygiene;
+- expose first-update delay in addon-owned diagnostics.
 
-P0155 changes only direction-switch hygiene:
-- on `in -> out` or `out -> in`, stop/reset the previously active MoveView direction before starting the new one;
-- count direction switches in addon-owned diagnostics;
-- fail open through existing transition cleanup if the directional stop fails;
-- preserve P0154 motion diagnostics;
-- preserve all existing targets, durations, timeout policy, context priority, coexistence gates, Taxi semantics, and CVar policy.
-
-Not authorized:
-- polling/tickers;
-- arbitrary world-entry delay;
-- broad event hooks;
-- periodic reassertion;
-- positional rebasing yet;
-- SetCVar;
-- Taxi rotation or UI fade.
+P0156 must not:
+- schedule a delayed timer/reconcile;
+- poll;
+- add events or broad hooks;
+- periodically reassert;
+- mutate camera CVars;
+- change World/City/Combat/Taxi targets;
+- change transition duration or timeout allowance;
+- expand Taxi ownership.
 
 ## Runtime gate
 
-After P0155:
+After P0156:
 1. normal `/reload`;
 2. Phase G -> **Camera World/Combat Check**;
 3. Phase 0 -> **Run All** separately;
 4. preserve diagnostics.
 
-PASS requires convergence near target `5`, `failures=0`, `secret=false`, and no Lua/taint/protected-action failure. If it still times out, the retained motion line and switch count become the next narrowing evidence.
+A large `firstDelay` is acceptable; it must no longer consume the transition's motion budget before the first drivable frame.
+
+PASS requires target convergence, `failures=0`, `secret=false`, and no Lua/taint/protected-action failure.

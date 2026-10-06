@@ -3,7 +3,7 @@
 Date: 2026-10-06
 Baseline: `40dec1874a587156c88319a9caed940088e25db7`
 Candidate runtime: `0.0.76-dev`
-Result: **R1 PREPARED — RUNTIME RETEST REQUIRED**
+Result: **INSTALLED / PUSHED — RUNTIME FAIL; REVERSAL PATH NOT EXERCISED** (`e9be312d`)
 
 ## Trigger
 
@@ -60,3 +60,24 @@ After deployment:
 PASS requires world-entry convergence near target `5`, `failures=0`, `secret=false`, and no Lua/taint/protected-action failure. The retained motion line must expose `switches=<n>`.
 
 If the timeout persists, preserve the failure and use the remaining motion evidence before considering positional rebasing or a narrower world-entry ownership rule.
+
+
+## Durable/runtime result
+
+Verified main:
+`e9be312d24c89d6b2d4d9935ea6eb6f9424ca698`.
+
+Runtime on `0.0.76-dev` / loadCount `185` did not exercise the direction-switch correction:
+- start/current/final `50`;
+- target `5`;
+- elapsed about `23.523s`;
+- samples `1`;
+- inward commands `0`;
+- outward commands `0`;
+- switches `0`;
+- timeout failure preserved;
+- no secret-value failure.
+
+The user reported the camera was extremely zoomed out.
+
+The first camera OnUpdate arrived only after the transition's event-time timeout budget had already expired. P0156 therefore addresses the first-drivable-frame timebase before P0155's reversal behavior can be meaningfully accepted or rejected.

@@ -29,13 +29,15 @@ No max-distance mutation, Taxi rotation, or Taxi UI fade is part of that proof.
 ### Current world-entry timeout regression
 
 Status:
-**REPRODUCED — P0154 DIAGNOSTIC PASS; P0155 DIRECTION-SWITCH CORRECTION PREPARED.**
+**REPRODUCED — P0155 RUNTIME FAIL EXPOSES FIRST-UPDATE TIMEBASE DEFECT; P0156 PREPARED.**
 
-P0154 is verified durable at `40dec187` / `0.0.75-dev`. The normal `/reload` diagnostic again timed out: start about `23.148`, target `5`, final `50`, observed range `0 -> 50`, and final/max easing position error `45`.
+P0155 R1 is durable at `e9be312d` / `0.0.76-dev`. Its runtime retest started and remained at zoom `50`, targeted `5`, but recorded only one OnUpdate sample after about `23.523s`, with zero inward commands, zero outward commands, and zero direction switches.
 
-The decisive command evidence is `142` inward commands plus `1` outward command. Because P0119 permits crossed-target correction but did not stop the previous MoveView direction when reversing, the single outward correction could remain active while later inward commands were issued.
+The user-visible result was an extremely zoomed-out camera.
 
-P0155 corrects only that stop-before-reverse defect and retains the P0154 diagnostic. The external source of the world-entry `0/50` displacement remains unproven.
+This proves the transition timed out on its first drivable frame because its elapsed clock had already been running since `PLAYER_ENTERING_WORLD`. P0155's direction-switch correction was not exercised.
+
+P0156 starts the transition motion/timeout clock on the first actual OnUpdate frame and rebases the transition start zoom to that drivable sample. It adds no timer, polling, arbitrary delayed reconcile, CVar mutation, target change, duration change, or Taxi expansion.
 
 Canonical investigation:
 `CAMERA_WORLD_ENTRY_TRANSITION_TIMEOUT_2026-10-06.md`.

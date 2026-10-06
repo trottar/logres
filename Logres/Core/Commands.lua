@@ -3558,7 +3558,7 @@ end
 
 local function emitCameraWorldCombatMotion(status)
     emit(string.format(
-        "Logres cameraworldcombat motion: samples=%s toward=%s away=%s flat=%s min=%s max=%s expected=%s posError=%s maxAbsPosError=%s observed=%s/%s command=%s/%s inCommands=%s outCommands=%s switches=%s",
+        "Logres cameraworldcombat motion: samples=%s toward=%s away=%s flat=%s min=%s max=%s expected=%s posError=%s maxAbsPosError=%s observed=%s/%s command=%s/%s inCommands=%s outCommands=%s switches=%s armZoom=%s firstDelay=%s",
         tostring(status.transitionSampleCount),
         tostring(status.transitionTowardCount),
         tostring(status.transitionAwayCount),
@@ -3574,7 +3574,9 @@ local function emitCameraWorldCombatMotion(status)
         tostring(status.lastCommandFactor),
         tostring(status.transitionInCommandCount),
         tostring(status.transitionOutCommandCount),
-        tostring(status.transitionDirectionSwitchCount)
+        tostring(status.transitionDirectionSwitchCount),
+        tostring(status.transitionArmZoom),
+        tostring(status.transitionFirstUpdateDelay)
     ))
 end
 

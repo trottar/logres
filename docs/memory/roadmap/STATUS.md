@@ -4,7 +4,7 @@ As of 2026-10-06.
 
 ## Active work stream
 
-**P0152 pet-action baseline remains accepted; P0154 diagnosed a world-entry direction-switch defect and P0155 R1 prepares the bounded correction.**
+**P0152 pet-action baseline remains accepted; P0155 exposed a first-drivable-frame camera timebase defect and P0156 prepares the bounded correction.**
 
 The formal roadmap remains capability-gated and Phase G is still open. Broader
 Camera feature work remains frozen, but the reproduced world-entry regression is
@@ -37,7 +37,9 @@ No max-distance mutation, Taxi rotation, or Taxi UI fade is authorized.
 
 P0154 is verified durable at `40dec187` / `0.0.75-dev` and the diagnostic passed while the behavior still failed. World entry started near `23.148`, targeted `5`, reached observed range `0 -> 50`, and timed out at `50`. The motion line recorded `142` inward commands and `1` outward command.
 
-That one reversal exposes a concrete P0119 cleanup defect: when crossed-target correction changes direction, the old MoveView direction was not stopped before the opposite direction started. P0155 R1 corrects only that defect on candidate `0.0.76-dev`; positional rebasing and arbitrary world-entry delay remain unauthorized.
+P0155 R1 is durable at `e9be312d` / `0.0.76-dev`, but its runtime retest did not exercise reversal: the camera remained at `50`, the first OnUpdate arrived after about `23.523s`, and diagnostics recorded one sample with zero MoveView commands and zero switches.
+
+This proves the world-entry transition's event-time clock could expire before the first drivable frame. P0156 starts motion/timeout timing and the transition zoom baseline on the first actual OnUpdate frame. No timer, arbitrary delayed reconcile, polling, CVar mutation, target/duration change, or Taxi expansion is authorized.
 
 ## Parallel approved visual translation
 
@@ -198,9 +200,14 @@ P0154:
 The diagnostic captured `145` samples, observed range `0 -> 50`, final/max easing error `45`, and command counts `142` inward / `1` outward.
 
 P0155:
-**R1 PREPARED — TARGETED DIRECTION-SWITCH CORRECTION on candidate `0.0.76-dev`.**
+**INSTALLED / PUSHED — RUNTIME FAIL; REVERSAL PATH NOT EXERCISED** at `e9be312d` / `0.0.76-dev`.
 
-Stop/reset the previous MoveView direction before starting the opposite direction during P0119 crossed-target correction. No polling, arbitrary delay, positional rebase, CVar mutation, target/timing change, or Taxi expansion.
+The retest recorded camera `50 -> 50`, elapsed about `23.523s`, one sample, zero commands, and zero switches.
+
+P0156:
+**PREPARED — FIRST-DRIVABLE-FRAME CAMERA TRANSITION on candidate `0.0.77-dev`.**
+
+Start the transition motion/timeout clock and start-zoom baseline only when the first actual camera OnUpdate runs; retain event-arm/first-update-delay diagnostics.
 
 Next:
-**Deploy P0155 R1, `/reload`, Phase G -> Camera World/Combat Check, then Phase 0 -> Run All, and upload diagnostics.**
+**Deploy P0156, `/reload`, Phase G -> Camera World/Combat Check, then Phase 0 -> Run All, and upload diagnostics.**
