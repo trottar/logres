@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+"""Static contract for captured DynamicCam profile context parity."""
+
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -29,6 +31,7 @@ if CONTEXTS.is_file():
     for fragment in required:
         if fragment not in source:
             errors.append(f"ProfileContexts.lua missing: {fragment}")
+
     for fragment in (
         "SetCVar(", "C_CVar.SetCVar", "CameraZoomIn(", "CameraZoomOut(",
         "C_Timer.NewTicker", "C_Timer.NewTimer", "C_Timer.After",
@@ -58,7 +61,7 @@ if CONTROLLER.is_file():
         "self.fishingHoldUntil = GetTime() + FISHING_EXIT_DELAY",
         "self:SetAnimationActive(self.fishingHoldUntil ~= nil)",
         "contextAllowsEngineClamp(context)",
-        "contextAllowsLimitedTarget(transitionContext)",
+        "contextAllowsLimitedTarget(",
         "contextZoomDirection(context)",
         "transitionDurationForContext(",
         'Logres:RegisterEvent("PLAYER_FLAGS_CHANGED"',
@@ -69,17 +72,18 @@ if CONTROLLER.is_file():
     ]
     for fragment in required:
         if fragment not in source:
-            errors.append(f"WorldCombat.lua missing P0159 fragment: {fragment}")
+            errors.append(f"WorldCombat.lua missing profile parity fragment: {fragment}")
+
     order = [
-        'if state.onTaxi then',
-        'if snapshot.teleport then',
-        'if snapshot.afk then',
-        'if snapshot.gathering then',
-        'if snapshot.interaction then',
-        'if not state.inInstance and liveCombat then',
-        'if snapshot.fishing then',
-        'if state.resting then',
-        'if state.inInstance then',
+        "if state.onTaxi then",
+        "if snapshot.teleport then",
+        "if snapshot.afk then",
+        "if snapshot.gathering then",
+        "if snapshot.interaction then",
+        "if not state.inInstance and liveCombat then",
+        "if snapshot.fishing then",
+        "if state.resting then",
+        "if state.inInstance then",
     ]
     positions = [source.find(fragment) for fragment in order]
     if min(positions) == -1:
@@ -87,22 +91,15 @@ if CONTROLLER.is_file():
     elif positions != sorted(positions):
         errors.append("captured-profile priority order is incorrect")
 
-    helper_index = source.find("local function contextTarget(context)")
-    finish_index = source.find(
-        "function Controller:FinishTransition(currentZoom, elapsed, timedOut)"
-    )
-    if helper_index == -1 or finish_index == -1:
-        errors.append("could not locate P0159 helper/FinishTransition ordering")
-    elif helper_index > finish_index:
-        errors.append(
-            "P0159 context helpers must be declared before FinishTransition"
-        )
     for fragment in (
-        "SetCVar(", "C_CVar.SetCVar", "CameraZoomIn(", "CameraZoomOut(",
-        "C_Timer.NewTicker", "C_Timer.NewTimer", "C_Timer.After",
+        'SetCVar("cameraDistanceMaxZoomFactor"',
+        "C_CVar.SetCVar",
+        "C_Timer.NewTicker",
+        "C_Timer.NewTimer",
+        "C_Timer.After",
     ):
         if fragment in source:
-            errors.append(f"WorldCombat.lua P0159 forbidden contract: {fragment}")
+            errors.append(f"WorldCombat.lua profile parity regression: {fragment}")
 
 if COMMANDS.is_file():
     source = COMMANDS.read_text(encoding="utf-8")
@@ -119,7 +116,7 @@ if COMMANDS.is_file():
     ]
     for fragment in required:
         if fragment not in source:
-            errors.append(f"Commands.lua missing P0159 diagnostic fragment: {fragment}")
+            errors.append(f"Commands.lua missing profile diagnostic fragment: {fragment}")
 
 if TOC.is_file():
     source = TOC.read_text(encoding="utf-8")
@@ -130,8 +127,8 @@ if TOC.is_file():
     elif c == -1 or p > c:
         errors.append("Camera\\ProfileContexts.lua must load before Camera\\WorldCombat.lua")
 
-print("Logres P0159 captured DynamicCam profile context/zoom contract")
-print("============================================================")
+print("Logres captured DynamicCam profile context contract")
+print("===============================================")
 if errors:
     for error in errors:
         print(f"ERROR: {error}")

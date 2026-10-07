@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-10-06
+as_of: 2026-10-07
 project: logres
 ---
 
@@ -8,50 +8,82 @@ project: logres
 
 ## Active Objective
 
-**Complete the captured DynamicCam `RPG` camera behavior in consolidated parity layers, then enter Phase H integration/layout and final polish.**
+**Finish captured DynamicCam `RPG` camera parity using the audited DynamicCam/LibCamera source rather than extending the bespoke Logres zoom driver, then enter Phase H integration/layout and final polish.**
 
-The canonical DynamicCam profile is already stored in repository evidence. Do not request another export unless the user's profile has changed.
+The canonical profile is already stored in repository evidence. Do not request another export unless the user's profile changes.
 
-P0158 is verified durable at `27670624e8c001dc341ac92ad9c463f2f61088de`; its high-level order remains authoritative: Camera first, then safe stock-surface suppression/coexistence, authored positioning, then polish.
+P0159 R1 is verified durable at `8ddcf09844961adec7bc90621f0f5ca294f15aef` on runtime `0.0.78-dev`.
 
 ## Current Work Item
 
-**P0159 R1 — captured-profile context + zoom parity.**
+**P0160 R2 — replace the bespoke zoom timing/correction path with the audited LibCamera source behavior.**
 
-P0159 R1 consolidates the remaining source-backed context/zoom behavior rather than opening one investigation per situation:
+P0159 runtime evidence resolves two different facts:
 
-- Taxi: existing conditional-out target `50`, entry `5s`;
-- Hearth/Teleport: conditional-out target `20`, configured `5s` with ordinary/non-secret cast-duration override when available;
-- AFK: priority situation with no zoom mutation;
-- Gathering: conditional-in target `5`, entry `3s`;
-- NPC Interaction: conditional-in target `5`, entry `2.5s`;
-- World Combat: conditional-out target `15`, `2.5s`;
-- Fishing: conditional-out target `50`, entry `2s`, source-defined `1s` exit hold;
-- City: conditional-in target `5`, `2.5s`;
-- World: conditional-in target `5`, `2.5s`.
+- profile/context ownership and Taxi entry are working;
+- the post-Taxi destination zoom driver is not.
 
-The pinned DynamicCam source priority model is preserved. AFK and Gathering both have priority `120`; upstream selection uses `pairs()` plus strict `>`, so it exposes no stable tie-break. Logres chooses deterministic AFK-before-Gathering for the otherwise exceptional simultaneous case.
+Observed normal Taxi:
+- context `taxi`;
+- requested/effective target `50`;
+- current/final about `49.75597`;
+- failures `0`.
 
-The initial P0159 delivery refused in shadow preflight before tracked writes because its renderer inserted the new context helpers and then deleted them while replacing the OnUpdate-to-Reconcile block. R1 corrects that renderer ordering and records the failure durably.
+Observed landing City transition:
+- start about `49.75597`;
+- target `5`;
+- final `0`;
+- elapsed about `3.278s`;
+- `97` samples;
+- `55` inward / `40` outward commands;
+- `80` direction switches;
+- observed range `0 -> 50`;
+- max absolute easing-position error about `49.471`;
+- failures `1`.
 
-P0159 R1 does not mutate camera CVars, rotate the camera, change shoulder offset, or hide UI. Those are the second consolidated parity layer / Phase H presentation boundary, not reasons to fragment context/zoom work into more tiny patches.
+The current custom driver has therefore diverged materially from the open-source motion engine used by DynamicCam.
+
+P0160 R2 ports the ordinary LibCamera zoom behavior from audited commit
+`c0b23135a0b24fbca24b41cb53dd7afc9114e352`:
+
+- source `InOutQuad` easing;
+- source easing-velocity approximation;
+- source position/time rebase at error `> 0.5`;
+- source rebase precision `0.005`, maximum `100` iterations;
+- source final target correction using a temporary `cameraZoomSpeed` override and one `CameraZoomIn` / `CameraZoomOut` request;
+- exact restoration of the captured pre-correction `cameraZoomSpeed`;
+- existing Logres secret checks, DynamicCam coexistence, stop-before-reverse, and fail-open ownership retained.
+
+This checkpoint does **not** mutate `cameraDistanceMaxZoomFactor`. It also does not yet add rotation, shoulder/dynamic-pitch/focus settings, reactive mouse-wheel zoom, or DynamicCam UI fades.
+
+The initial P0160 artifact is a delivery failure only: it refused in shadow preflight because its historical P0154 checker rewrite used an obsolete exact output anchor. It made no tracked writes.
+
+P0160 R1 is also a delivery failure only: after that correction, shadow preparation reached `docs/memory/roadmap/STATUS.md` and refused because the applier expected a stale Phase H table row. The observed worktree status contained no tracked changes. P0160 R2 corrects that exact verified baseline anchor and preserves both failures.
 
 ## Verified State
 
-The exact captured `RPG` profile remains canonical at:
-`docs/memory/evidence/G1_DYNAMICCAM_RPG_PROFILE_2026-10-02.json`.
+P0159 R1 base/profile check is clean on loadCount `189`:
+- world target `5`;
+- profile secret skips `0`;
+- profile read failures `0`;
+- profile error `nil`;
+- separate Run All clean.
 
-Current production ownership before P0159 is World, World Combat, City, and Taxi zoom. P0156 passes observed normal world entry on `0.0.77-dev`.
+Taxi entry is runtime-proven twice at about `49.75597 / 50`.
 
-The normal-Taxi landing proof remains open and must still be captured in runtime evidence. P0159 retains that behavior while broadening the same controller to the other enabled profile situations.
+The landing City failure is reproduced and blocks further Camera parity until the shared zoom engine is corrected.
 
-Pinned DynamicCam source at `ae586a9c973c3f868c10440358d4a6e8c2fab5ff` resolves the remaining predicates and priority order. No new profile export or speculative polling is required.
+The DynamicCam source audit establishes:
+- DynamicCam delegates zoom motion to LibCamera;
+- LibCamera contains the first-frame timing, easing velocity, position-time rebase, stop behavior, and final correction semantics that Logres had been reconstructing incrementally;
+- the source final correction temporarily owns only `cameraZoomSpeed` and restores it;
+- LibCamera does not mutate `cameraDistanceMaxZoomFactor`.
 
-Camera is **not considered complete after P0159**. The next consolidated Camera layer is rotation / shoulder / camera-setting ownership and restoration. DynamicCam-style UI fades are presentation policy and will be reconciled with the Phase H suppression/coexistence pass instead of copied as an unsafe side effect.
+The earlier blanket “no SetCVar in Camera” rule is narrowed: **P0160 R2 may temporarily own `cameraZoomSpeed` only for the source-backed final correction, with exact restoration. `cameraDistanceMaxZoomFactor` remains outside Logres ownership.**
 
 ## Next Action
 
-Apply and deploy P0159 R1, then validate through the developer panel:
+Apply and deploy P0160 R2 (`0.0.79-dev`), then:
 
 1. `/reload`.
 2. Phase G -> **Camera Profile Check**.
@@ -61,31 +93,32 @@ Apply and deploy P0159 R1, then validate through the developer panel:
 6. After landing and settling: Phase G -> **Camera Profile Check** again.
 7. Upload refreshed `LOGRES_DIAGNOSTICS_LATEST.lua`.
 
-Naturally encountered Teleport, AFK, Gathering, NPC Interaction, and Fishing contexts should also be retained as runtime evidence when they occur. Do not require contrived travel/crafting solely to force every context in this checkpoint.
+The landing result is the decisive gate. It must converge near `5` without the prior `0 <-> 50` reversal pattern.
 
-If the base/Taxi path is clean, record P0159 and proceed directly to the consolidated rotation/shoulder/camera-setting parity layer rather than returning to tiny per-situation investigations.
+If clean, proceed directly to the remaining source/profile parity layer: rotations plus camera-setting ownership/restoration. UI fading remains a Phase H presentation-policy integration point.
 
 ## Success Criteria
 
-P0159 succeeds when:
-- the controller represents all nine enabled captured-profile situations with the pinned source priority model;
-- Teleport/Gathering/Fishing source reads are secret-safe and never inspect secret values;
-- AFK is a real priority context without inventing a zoom mutation;
-- Fishing's source-defined one-second exit delay is implemented without a polling ticker or timer;
-- high-out targets retain requested DynamicCam values while respecting the observed engine distance ceiling without `SetCVar`;
-- existing World/Combat/City/Taxi behavior and DynamicCam coexistence remain fail-open;
-- developer diagnostics expose profile predicate health, secret skips, read failures, and the fishing hold;
-- full static checker suite and `git diff --check` pass;
-- runtime validation reports no Lua, taint, protected-action, secret-value, or camera ownership failure in the tested scope.
+P0160 R2 succeeds when:
+- ordinary world/profile baseline remains clean;
+- Taxi entry remains clean at target `50`;
+- post-Taxi City/World converges near target `5`, not first-person `0`;
+- the source position/time rebase is observable when needed;
+- source final correction may temporarily change only `cameraZoomSpeed` and restores the exact captured value;
+- `cameraDistanceMaxZoomFactor` is never mutated;
+- no periodic polling, ticker, or arbitrary delay is introduced;
+- prior high-frequency reversal behavior does not recur;
+- all repository static checks and `git diff --check` pass;
+- runtime shows no Lua, taint, protected-action, secret-value, or restoration error.
 
 ## Do Not Reopen Without New Evidence
 
 - no conventional player health bar;
-- no camera max-distance CVar mutation in P0159;
-- no rotation, shoulder-offset mutation, reactive-zoom ownership, or DynamicCam UI fade in P0159;
+- no `cameraDistanceMaxZoomFactor` mutation;
 - no periodic camera/context polling;
-- P0152 pet execution/state presentation remains accepted; PetActionBar suppression remains separately gated;
-- stock minimap, party/CompactPartyFrame, target aura/status, target-of-target, and unsupported class/special surfaces remain available until their replacement gates are satisfied;
+- no rotation, shoulder-offset/dynamic-pitch/focus settings, reactive mouse-wheel zoom, or DynamicCam UI fade in P0160 R2;
+- P0152 pet execution/state presentation remains accepted;
+- stock minimap, Party/CompactPartyFrame, target aura/status, target-of-target, and unsupported class/special surfaces remain available until their replacement gates are satisfied;
 - player harmful/urgent and populated target aura production remain deferred;
 - positive world-target nameplate attachment remains deferred;
 - individual tracking-result positions remain source-blocked by D-043;
@@ -93,14 +126,14 @@ P0159 succeeds when:
 
 ## Relevant References
 
-- `docs/memory/evidence/G6_DYNAMICCAM_PROFILE_PARITY_AUDIT_2026-10-06.md`
-- `docs/memory/evidence/P0159_INITIAL_SHADOW_PREFLIGHT_FAIL_2026-10-06.md`
-- `docs/memory/investigations/G6_DYNAMICCAM_PROFILE_PARITY.md`
+- `docs/memory/evidence/P0160_LIBCAMERA_ZOOM_SOURCE_AUDIT_2026-10-07.md`
+- `docs/memory/evidence/P0160_P0159_TAXI_LANDING_FAILURE_2026-10-07.md`
+- `docs/memory/patches/P0160_R2_LIBCAMERA_ZOOM_DRIVER.md`
 - `docs/memory/patches/P0159_DYNAMICCAM_PROFILE_CONTEXT_ZOOM_PARITY.md`
 - `docs/memory/evidence/G1_DYNAMICCAM_RPG_PROFILE_2026-10-02.json`
-- `docs/memory/evidence/G1_DYNAMICCAM_PROFILE_CAPTURE_2026-10-02.md`
+- `docs/memory/evidence/G6_DYNAMICCAM_PROFILE_PARITY_AUDIT_2026-10-06.md`
+- `docs/memory/investigations/G6_DYNAMICCAM_PROFILE_PARITY.md`
 - `docs/memory/architecture/CAMERA.md`
 - `docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
-- `docs/memory/patches/P0158_SEQUENCE_CAMERA_INTEGRATION_POLISH.md`
 - `docs/memory/roadmap/STATUS.md`
 - `docs/ROADMAP.md`

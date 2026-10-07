@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# Static contract for P0155 camera stop-before-reverse behavior.
+"""Static contract for stop-before-reverse behavior retained by P0160 R2."""
+
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -33,34 +34,33 @@ if CONTROLLER.is_file():
     ]
     for fragment in required:
         if fragment not in source:
-            errors.append(f"WorldCombat.lua missing P0155 direction-switch fragment: {fragment}")
+            errors.append(f"WorldCombat.lua missing direction-switch fragment: {fragment}")
 
     forbidden = [
+        'SetCVar("cameraDistanceMaxZoomFactor"',
+        "C_CVar.SetCVar",
         "C_Timer.NewTicker",
         "C_Timer.NewTimer",
         "C_Timer.After",
-        "SetCVar(",
     ]
     for fragment in forbidden:
         if fragment in source:
-            errors.append(f"WorldCombat.lua P0155 forbids: {fragment}")
+            errors.append(f"WorldCombat.lua direction-switch regression: {fragment}")
 
 if COMMANDS.is_file():
     source = COMMANDS.read_text(encoding="utf-8")
-    required = [
+    for fragment in [
         "switches=%s",
         "tostring(status.transitionDirectionSwitchCount)",
-    ]
-    for fragment in required:
+    ]:
         if fragment not in source:
-            errors.append(f"Commands.lua missing P0155 diagnostic fragment: {fragment}")
+            errors.append(f"Commands.lua missing direction-switch diagnostic: {fragment}")
 
-print("Logres P0155 camera direction-switch contract")
-print("=============================================")
+print("Logres camera direction-switch contract")
+print("=======================================")
 if errors:
     for error in errors:
         print(f"ERROR: {error}")
     print(f"\nFAILED: {len(errors)} error(s)")
     raise SystemExit(1)
-
 print("PASS: 0 errors")

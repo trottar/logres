@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static contract checks for G.3 production World/Combat camera ownership."""
+"""Static contract checks for production profile camera ownership."""
 
 from pathlib import Path
 
@@ -19,29 +19,29 @@ if CONTROLLER.is_file():
     source = CONTROLLER.read_text(encoding="utf-8")
     required = [
         'Logres:RegisterModule("CameraWorldCombat"',
-        'local WORLD_TARGET = 5',
-        'local COMBAT_TARGET = 15',
-        'local TRANSITION_DURATION = 2.5',
-        'function Controller:Reconcile(reason)',
-        'function Controller:OnUpdate()',
-        'function Controller:GetDebugStatus()',
-        'self:SubscribeState(function(',
+        "local WORLD_TARGET = 5",
+        "local COMBAT_TARGET = 15",
+        "local TRANSITION_DURATION = 2.5",
+        "function Controller:Reconcile(reason)",
+        "function Controller:OnUpdate()",
+        "function Controller:GetDebugStatus()",
+        "self:SubscribeState(function(",
         'readBoolean(UnitAffectingCombat, "player")',
-        'readBoolean(InCombatLockdown)',
-        'state.inInstance',
-        'state.onTaxi',
-        'Logres.CameraProfileContexts',
-        'state.resting',
-        'direction == "in" and currentZoom > requestedTargetZoom',
-        'direction == "out" and currentZoom < requestedTargetZoom',
-        'GetCameraZoom',
-        'GetCVar',
+        "readBoolean(InCombatLockdown)",
+        "state.inInstance",
+        "state.onTaxi",
+        "Logres.CameraProfileContexts",
+        "state.resting",
+        'direction == "in"',
+        'direction == "out"',
+        "GetCameraZoom",
+        "GetCVar",
         '"cameraZoomSpeed"',
-        'MoveViewInStart',
-        'MoveViewInStop',
-        'MoveViewOutStart',
-        'MoveViewOutStop',
-        'queryDynamicCamLoaded()',
+        "MoveViewInStart",
+        "MoveViewInStop",
+        "MoveViewOutStart",
+        "MoveViewOutStop",
+        "queryDynamicCamLoaded()",
         '"dynamiccam-loaded"',
         '"camera-probe-running"',
         'self.frame:SetScript("OnUpdate"',
@@ -56,23 +56,25 @@ if CONTROLLER.is_file():
             errors.append(f"Camera/WorldCombat.lua missing: {fragment}")
 
     forbidden = [
-        'SetCVar(',
-        'CameraZoomIn(',
-        'CameraZoomOut(',
-        'C_Timer.NewTicker',
-        'C_Timer.NewTimer',
-        'if state.combat',
-        'elseif state.combat',
+        'SetCVar("cameraDistanceMaxZoomFactor"',
+        "C_CVar.SetCVar",
+        "C_Timer.NewTicker",
+        "C_Timer.NewTimer",
+        "if state.combat",
+        "elseif state.combat",
     ]
     for fragment in forbidden:
         if fragment in source:
             errors.append(f"Camera/WorldCombat.lua forbidden contract: {fragment}")
 
+    if 'pcall(SetCVar, "cameraZoomSpeed", value)' not in source:
+        errors.append("source-backed correction must only own cameraZoomSpeed temporarily")
+
 if PROBE.is_file():
     source = PROBE.read_text(encoding="utf-8")
     required = [
         'Logres:GetModule("CameraWorldCombat")',
-        'production camera controller enabled; disable it before manual camera probe',
+        "production camera controller enabled; disable it before manual camera probe",
     ]
     for fragment in required:
         if fragment not in source:
@@ -81,9 +83,9 @@ if PROBE.is_file():
 if COMMANDS.is_file():
     source = COMMANDS.read_text(encoding="utf-8")
     required = [
-        'local function runCameraWorldCombatCheck()',
-        'local function runCameraWorldCombatReconcile()',
-        'local function handleCameraWorldCombat(argument)',
+        "local function runCameraWorldCombatCheck()",
+        "local function runCameraWorldCombatReconcile()",
+        "local function handleCameraWorldCombat(argument)",
         'Logres:GetModule("CameraWorldCombat")',
         'if command == "cameraworldcombatcheck" then',
         'if command == "cameraworldcombatreconcile" then',
@@ -96,11 +98,11 @@ if COMMANDS.is_file():
         '"Camera Profile ON"',
         '"cameraWorldCombatOff"',
         '"Camera Profile OFF"',
-        'runCameraWorldCombatCheck()',
+        "runCameraWorldCombatCheck()",
     ]
     for fragment in required:
         if fragment not in source:
-            errors.append(f"Commands.lua missing G.3 camera contract: {fragment}")
+            errors.append(f"Commands.lua missing camera contract: {fragment}")
 
     run_all_start = source.find("local function runAllChecks()")
     run_all_end = source.find("local function handleHUDPreview", run_all_start)
@@ -109,7 +111,7 @@ if COMMANDS.is_file():
     else:
         run_all = source[run_all_start:run_all_end]
         if "runCameraWorldCombatCheck()" not in run_all:
-            errors.append("Run All must include non-mutating Camera World/Combat Check")
+            errors.append("Run All must include non-mutating Camera Profile Check")
         if "runCameraWorldCombatReconcile()" in run_all:
             errors.append("Run All must not invoke mutating camera reconcile")
 
@@ -125,13 +127,11 @@ if TOC.is_file():
     elif commands_index == -1 or controller_index > commands_index:
         errors.append("Camera\\WorldCombat.lua must load before Core\\Commands.lua")
 
-print("Logres G.3 World/Combat camera ownership contract")
+print("Logres production profile camera ownership contract")
 print("=================================================")
-
 if errors:
     for error in errors:
         print(f"ERROR: {error}")
     print(f"\nFAILED: {len(errors)} error(s)")
     raise SystemExit(1)
-
 print("PASS: 0 errors")

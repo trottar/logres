@@ -15,10 +15,19 @@ local TELEPORT_TRANSITION_DURATION = 5
 local FISHING_TRANSITION_DURATION = 2
 local GATHERING_TRANSITION_DURATION = 3
 local FISHING_EXIT_DELAY = 1
-local TRANSITION_TIMEOUT_EXTRA = 0.75
 local TARGET_TOLERANCE = 0.25
 local CAMERA_DISTANCE_SCALE = 15
 local NOMINAL_FRAME_INTERVAL = 1 / 60
+
+-- Source-backed zoom engine constants from mpstark/LibCamera
+-- c0b23135a0b24fbca24b41cb53dd7afc9114e352.
+local LIBCAMERA_SOURCE_COMMIT =
+    "c0b23135a0b24fbca24b41cb53dd7afc9114e352"
+local LIBCAMERA_MAX_POS_ERROR = 0.5
+local LIBCAMERA_REBASE_PRECISION = 0.005
+local LIBCAMERA_REBASE_MAX_ITERATIONS = 100
+local LIBCAMERA_CORRECTION_DURATION = 0.1
+local LIBCAMERA_CORRECTION_TOLERANCE = 0.05
 
 local function isSecret(value)
     if type(issecretvalue) ~= "function" then
@@ -70,6 +79,41 @@ local function readZoomSpeed()
     end
 
     return numberValue, nil, false
+end
+
+local function readZoomSpeedState()
+    if type(GetCVar) ~= "function" then
+        return nil, nil, "GetCVar unavailable", false
+    end
+
+    local ok, value = pcall(GetCVar, "cameraZoomSpeed")
+    if not ok then
+        return nil, nil, tostring(value), false
+    end
+
+    if isSecret(value) then
+        return nil, nil, "cameraZoomSpeed returned secret value", true
+    end
+
+    local numberValue = tonumber(value)
+    if not numberValue or numberValue <= 0 then
+        return nil, nil, "cameraZoomSpeed unavailable or invalid", false
+    end
+
+    return value, numberValue, nil, false
+end
+
+local function setCameraZoomSpeed(value)
+    if type(SetCVar) ~= "function" then
+        return false, "SetCVar unavailable"
+    end
+
+    local ok, callError = pcall(SetCVar, "cameraZoomSpeed", value)
+    if not ok then
+        return false, tostring(callError)
+    end
+
+    return true, nil
 end
 
 local function readCameraDistanceFactor()
@@ -253,6 +297,17 @@ local Controller = Logres:RegisterModule("CameraWorldCombat", {
         self.transitionOutCommandCount = 0
         self.transitionDirectionSwitchCount = 0
         self.transitionMaxAbsPositionError = 0
+        self.transitionRebaseCount = 0
+        self.transitionRebaseIterationCount = 0
+        self.transitionCorrectionCount = 0
+        self.transitionCorrectionActive = false
+        self.transitionCorrectionTriggered = false
+        self.transitionCorrectionOldZoomSpeed = nil
+        self.transitionCorrectionEndTime = nil
+        self.transitionCorrectionLastZoom = nil
+        self.lastRebaseFromElapsed = nil
+        self.lastRebaseToElapsed = nil
+        self.lastCorrectionZoomSpeed = nil
         self.lastExpectedZoom = nil
         self.lastPositionError = nil
         self.lastObservedDirection = nil
@@ -348,6 +403,9 @@ function Controller:ValidateAPIs()
     local required = {
         GetCameraZoom,
         GetCVar,
+        SetCVar,
+        CameraZoomIn,
+        CameraZoomOut,
         UnitAffectingCombat,
         InCombatLockdown,
         MoveViewInStart,
@@ -367,8 +425,181 @@ function Controller:ValidateAPIs()
     return true, nil
 end
 
+function Controller:RestoreSourceCorrectionZoomSpeed()
+    local restoreToken =
+        self.transitionCorrectionOldZoomSpeed
+
+    self.transitionCorrectionOldZoomSpeed = nil
+    self.transitionCorrectionActive = false
+    self.transitionCorrectionTriggered = false
+    self.transitionCorrectionEndTime = nil
+    self.transitionCorrectionLastZoom = nil
+
+    if restoreToken == nil then
+        return true, nil
+    end
+
+    return setCameraZoomSpeed(restoreToken)
+end
+
+function Controller:BeginSourceCorrection(currentZoom, now)
+    local requestedTargetZoom =
+        self.transitionRequestedZoom
+
+    if type(requestedTargetZoom) ~= "number" then
+        return false, "source correction target unavailable"
+    end
+
+    local restoreToken
+    local zoomSpeed
+    local speedError
+    local speedSecret
+
+    restoreToken,
+    zoomSpeed,
+    speedError,
+    speedSecret = readZoomSpeedState()
+
+    if restoreToken == nil then
+        self.lastSecret = speedSecret and true or false
+        return false, speedError
+    end
+
+    local change = requestedTargetZoom - currentZoom
+    local correctionSpeed = math.min(
+        50,
+        math.abs(change / LIBCAMERA_CORRECTION_DURATION)
+    )
+
+    local stopOK, stopError = stopMotion()
+    if not stopOK then
+        return false, stopError
+    end
+
+    local setOK, setError =
+        setCameraZoomSpeed(correctionSpeed)
+    if not setOK then
+        return false, setError
+    end
+
+    self.transitionCorrectionOldZoomSpeed = restoreToken
+    self.transitionCorrectionActive = true
+    self.transitionCorrectionTriggered = false
+    self.transitionCorrectionEndTime =
+        now + LIBCAMERA_CORRECTION_DURATION
+    self.transitionCorrectionLastZoom = currentZoom
+    self.transitionCorrectionCount =
+        self.transitionCorrectionCount + 1
+    self.lastCorrectionZoomSpeed = correctionSpeed
+    self.lastAction = "source-correction-started"
+
+    return true, "source-correction-started"
+end
+
+function Controller:ServiceSourceCorrection(now, currentZoom)
+    local requestedTargetZoom =
+        self.transitionRequestedZoom
+
+    if type(requestedTargetZoom) ~= "number"
+        or self.transitionCorrectionEndTime == nil
+    then
+        return false, "source correction state invalid"
+    end
+
+    if not self.transitionCorrectionTriggered then
+        local change = requestedTargetZoom - currentZoom
+        local zoomFunc
+        local amount
+
+        if change > 0 then
+            zoomFunc = CameraZoomOut
+            amount = change
+        elseif change < 0 then
+            zoomFunc = CameraZoomIn
+            amount = -change
+        end
+
+        if zoomFunc ~= nil and amount ~= nil then
+            local ok, callError =
+                pcall(zoomFunc, amount, true)
+            if not ok then
+                return false, tostring(callError)
+            end
+        end
+
+        self.transitionCorrectionTriggered = true
+
+        local refreshedZoom
+        local zoomError
+        local zoomSecret
+
+        refreshedZoom,
+        zoomError,
+        zoomSecret = readZoom()
+
+        if refreshedZoom == nil then
+            self.lastSecret = zoomSecret and true or false
+            return false, zoomError
+        end
+
+        currentZoom = refreshedZoom
+    end
+
+    local lastValue = self.transitionCorrectionLastZoom
+    local change = requestedTargetZoom - currentZoom
+    local goingWrongWay = false
+
+    if type(lastValue) == "number" then
+        local originalChange =
+            requestedTargetZoom - self.transitionStartZoom
+
+        goingWrongWay =
+            (originalChange > 0 and lastValue > currentZoom)
+            or (
+                originalChange < 0
+                and lastValue < currentZoom
+            )
+    end
+
+    self.transitionCorrectionLastZoom = currentZoom
+    self.lastCurrentZoom = currentZoom
+
+    local timeOver =
+        self.transitionCorrectionEndTime < now
+
+    if not timeOver and not goingWrongWay then
+        return true, "source-correction-driving"
+    end
+
+    local restoreOK, restoreError =
+        self:RestoreSourceCorrectionZoomSpeed()
+
+    local stopOK, stopError = stopMotion()
+    if not restoreOK then
+        return false, restoreError
+    end
+    if not stopOK then
+        return false, stopError
+    end
+
+    local elapsed = 0
+    if self.transitionStartTime ~= nil then
+        elapsed = now - self.transitionStartTime
+    end
+
+    self:FinishTransition(
+        currentZoom,
+        elapsed,
+        timeOver
+    )
+    return true, "source-correction-complete"
+end
+
 function Controller:StopTransition(reason, countAsStop)
     local wasActive = self.transitionActive
+
+    local restoreOK, restoreError =
+        self:RestoreSourceCorrectionZoomSpeed()
     local stopOK, stopError = stopMotion()
 
     self.transitionActive = false
@@ -380,6 +611,13 @@ function Controller:StopTransition(reason, countAsStop)
 
     if wasActive and countAsStop ~= false then
         self.transitionStopCount = self.transitionStopCount + 1
+    end
+
+    if not restoreOK then
+        self.lastError = restoreError
+        self.failureCount = self.failureCount + 1
+        self.lastAction = "stop-failed"
+        return false, restoreError
     end
 
     if not stopOK then
@@ -516,14 +754,16 @@ function Controller:CheckCoexistence()
     return true, nil
 end
 
-local function boundedVelocity(value, limit)
-    if value > limit then
-        return limit
+-- Source-backed equivalents of the ordinary LibCamera eased zoom path.
+local function easeInOutQuad(t, beginValue, change, duration)
+    t = t / duration * 2
+    if t < 1 then
+        return change / 2 * (t * t) + beginValue
     end
-    if value < -limit then
-        return -limit
-    end
-    return value
+
+    return
+        -change / 2 * ((t - 1) * (t - 3) - 1)
+        + beginValue
 end
 
 local function transitionExpectedZoom(
@@ -536,70 +776,147 @@ local function transitionExpectedZoom(
         return targetZoom
     end
 
-    local progress = elapsed / duration
-    if progress < 0 then
-        progress = 0
-    elseif progress > 1 then
-        progress = 1
+    local t = elapsed
+    if t < 0 then
+        t = 0
+    elseif t > duration then
+        t = duration
     end
 
-    local eased
-    if progress < 0.5 then
-        eased = 2 * progress * progress
-    else
-        local inverse = -2 * progress + 2
-        eased = 1 - ((inverse * inverse) / 2)
-    end
-
-    return startZoom + ((targetZoom - startZoom) * eased)
+    return easeInOutQuad(
+        t,
+        startZoom,
+        targetZoom - startZoom,
+        duration
+    )
 end
 
-local function transitionVelocity(
-    startZoom,
-    targetZoom,
-    duration,
-    elapsed,
-    currentZoom
+local function getEaseVelocity(
+    easingFunc,
+    increment,
+    t,
+    beginValue,
+    change,
+    duration
 )
-    local change = targetZoom - startZoom
-    if change == 0 then
-        return 0
-    end
+    local halfIncrement = increment / 2
 
-    if duration <= 0 then
-        return (targetZoom - currentZoom) / NOMINAL_FRAME_INTERVAL
-    end
-
-    local maxVelocity = (math.abs(change) * 2) / duration
-    local crossedTarget =
-        (change > 0 and currentZoom > targetZoom)
-        or (change < 0 and currentZoom < targetZoom)
-    local remainingTime = duration - elapsed
-
-    if crossedTarget
-        or remainingTime <= (2 * NOMINAL_FRAME_INTERVAL)
+    if t > halfIncrement
+        and (t + halfIncrement < duration)
     then
-        return boundedVelocity(
-            (targetZoom - currentZoom) / NOMINAL_FRAME_INTERVAL,
-            maxVelocity
-        )
+        return (
+            easingFunc(
+                t + halfIncrement,
+                beginValue,
+                change,
+                duration
+            )
+            - easingFunc(
+                t - halfIncrement,
+                beginValue,
+                change,
+                duration
+            )
+        ) / increment
     end
 
-    local progress = elapsed / duration
-    if progress < 0 then
-        progress = 0
-    elseif progress > 1 then
-        progress = 1
+    if t < halfIncrement
+        and (t + increment < duration)
+    then
+        return (
+            easingFunc(
+                t + increment,
+                beginValue,
+                change,
+                duration
+            )
+            - easingFunc(
+                t,
+                beginValue,
+                change,
+                duration
+            )
+        ) / increment
     end
 
-    local slopeScale
-    if progress < 0.5 then
-        slopeScale = 4 * progress
-    else
-        slopeScale = 4 * (1 - progress)
+    if t + halfIncrement > duration then
+        return (
+            easingFunc(
+                t,
+                beginValue,
+                change,
+                duration
+            )
+            - easingFunc(
+                t - increment,
+                beginValue,
+                change,
+                duration
+            )
+        ) / increment
     end
 
-    return (change / duration) * slopeScale
+    return nil
+end
+
+local function rebaseEaseTime(
+    easingFunc,
+    precision,
+    currentValue,
+    t,
+    beginValue,
+    change,
+    duration
+)
+    local expectedValue =
+        easingFunc(t, beginValue, change, duration)
+    local tPrime = t
+    local difference = currentValue - expectedValue
+    local step = math.min(duration - t, duration / 12)
+    local lastWasForward
+    local iterations = 0
+
+    while math.abs(difference) > precision
+        and iterations < LIBCAMERA_REBASE_MAX_ITERATIONS
+    do
+        if step <= 0 then
+            break
+        end
+
+        local forward =
+            (difference > 0 and change > 0)
+            or (difference < 0 and change < 0)
+
+        if forward then
+            if lastWasForward ~= nil
+                and not lastWasForward
+            then
+                step = step / 2
+            end
+
+            tPrime = tPrime + step
+            lastWasForward = true
+        else
+            if lastWasForward then
+                step = step / 2
+            end
+
+            tPrime = tPrime - step
+            lastWasForward = false
+        end
+
+        expectedValue =
+            easingFunc(
+                tPrime,
+                beginValue,
+                change,
+                duration
+            )
+        difference = currentValue - expectedValue
+        iterations = iterations + 1
+    end
+
+    return tPrime, iterations
 end
 
 function Controller:BeginTransition(
@@ -645,6 +962,17 @@ function Controller:BeginTransition(
     self.transitionOutCommandCount = 0
     self.transitionDirectionSwitchCount = 0
     self.transitionMaxAbsPositionError = 0
+    self.transitionRebaseCount = 0
+    self.transitionRebaseIterationCount = 0
+    self.transitionCorrectionCount = 0
+    self.transitionCorrectionActive = false
+    self.transitionCorrectionTriggered = false
+    self.transitionCorrectionOldZoomSpeed = nil
+    self.transitionCorrectionEndTime = nil
+    self.transitionCorrectionLastZoom = nil
+    self.lastRebaseFromElapsed = nil
+    self.lastRebaseToElapsed = nil
+    self.lastCorrectionZoomSpeed = nil
     self.lastExpectedZoom = currentZoom
     self.lastPositionError = 0
     self.lastObservedDirection = "flat"
@@ -674,15 +1002,30 @@ function Controller:ApplyTransitionMotion(currentZoom, elapsed)
         return false, self.lastError
     end
 
-    local velocity = transitionVelocity(
-        startZoom,
-        requestedTargetZoom,
-        transitionDuration,
-        elapsed,
-        currentZoom
-    )
+    local speed
+    if transitionDuration <= 0 then
+        speed =
+            (requestedTargetZoom - currentZoom)
+            / NOMINAL_FRAME_INTERVAL
+    elseif transitionDuration - elapsed
+        > (2 * NOMINAL_FRAME_INTERVAL)
+    then
+        speed = getEaseVelocity(
+            easeInOutQuad,
+            NOMINAL_FRAME_INTERVAL,
+            elapsed,
+            startZoom,
+            requestedTargetZoom - startZoom,
+            transitionDuration
+        )
+    else
+        -- LibCamera uses a direct linear correction for the final two frames.
+        speed =
+            (requestedTargetZoom - currentZoom)
+            / NOMINAL_FRAME_INTERVAL
+    end
 
-    if math.abs(velocity) < 0.0001 then
+    if speed == nil or math.abs(speed) < 0.0001 then
         return true, "transition-waiting"
     end
 
@@ -698,7 +1041,7 @@ function Controller:ApplyTransitionMotion(currentZoom, elapsed)
 
     local moveFunc
     local direction
-    if velocity > 0 then
+    if speed > 0 then
         moveFunc = MoveViewOutStart
         direction = "out"
     else
@@ -708,12 +1051,16 @@ function Controller:ApplyTransitionMotion(currentZoom, elapsed)
 
     local previousDirection = self.transitionDirection
     if previousDirection ~= nil and previousDirection ~= direction then
-        local switchOK, switchError = stopMotionDirection(previousDirection)
+        local switchOK, switchError =
+            stopMotionDirection(previousDirection)
         if not switchOK then
             self.lastError = switchError
             self.failureCount = self.failureCount + 1
             self.lastAction = "transition-failed"
-            self:Relinquish("direction-switch-stop-failed", false)
+            self:Relinquish(
+                "direction-switch-stop-failed",
+                false
+            )
             return false, switchError
         end
 
@@ -721,13 +1068,15 @@ function Controller:ApplyTransitionMotion(currentZoom, elapsed)
             self.transitionDirectionSwitchCount + 1
     end
 
-    local factor = math.abs(velocity) / zoomSpeed
+    local factor = math.abs(speed) / zoomSpeed
     self.lastCommandDirection = direction
     self.lastCommandFactor = factor
     if direction == "in" then
-        self.transitionInCommandCount = self.transitionInCommandCount + 1
+        self.transitionInCommandCount =
+            self.transitionInCommandCount + 1
     else
-        self.transitionOutCommandCount = self.transitionOutCommandCount + 1
+        self.transitionOutCommandCount =
+            self.transitionOutCommandCount + 1
     end
 
     local ok, moveError = pcall(moveFunc, factor)
@@ -844,39 +1193,49 @@ end
 function Controller:FinishTransition(currentZoom, elapsed, timedOut)
     local transitionContext = self.transitionContext
     local targetZoom = self.transitionEffectiveTargetZoom
-    local stopOK, stopError = self:StopTransition(
-        timedOut and "transition-timeout" or "transition-complete",
-        false
-    )
+    local stopReason =
+        timedOut
+        and "transition-timeout"
+        or "transition-complete"
+
+    local stopOK, stopError =
+        self:StopTransition(stopReason, false)
 
     self.lastFinalZoom = currentZoom
     self.lastTransitionElapsed = elapsed
     self.lastTargetReached =
         type(targetZoom) == "number"
-        and math.abs(currentZoom - targetZoom) <= TARGET_TOLERANCE
+        and math.abs(currentZoom - targetZoom)
+            <= TARGET_TOLERANCE
 
     if not stopOK then
         self.lastAction = "transition-failed"
         return
     end
 
-    if timedOut
-        and not self.lastTargetReached
-        and not contextAllowsLimitedTarget(transitionContext)
+    if not self.lastTargetReached
+        and not contextAllowsLimitedTarget(
+            transitionContext
+        )
     then
-        self.lastError = "camera transition timed out before target"
+        self.lastError =
+            "camera transition ended before target"
         self.failureCount = self.failureCount + 1
-        self.lastAction = "transition-timeout"
+        self.lastAction = "transition-target-miss"
         return
     end
 
     self.lastError = nil
-    self.transitionCompleteCount = self.transitionCompleteCount + 1
-    if timedOut
-        and contextAllowsLimitedTarget(transitionContext)
-        and not self.lastTargetReached
+    self.transitionCompleteCount =
+        self.transitionCompleteCount + 1
+
+    if not self.lastTargetReached
+        and contextAllowsLimitedTarget(
+            transitionContext
+        )
     then
-        self.lastAction = "transition-complete-limited"
+        self.lastAction =
+            "transition-complete-limited"
     else
         self.lastAction = "transition-complete"
     end
@@ -917,10 +1276,12 @@ function Controller:OnUpdate()
     if self.transitionStartTime == nil then
         self.transitionStartTime = now
         if type(self.transitionArmTime) == "number" then
-            self.transitionFirstUpdateDelay = now - self.transitionArmTime
+            self.transitionFirstUpdateDelay =
+                now - self.transitionArmTime
         else
             self.transitionFirstUpdateDelay = nil
         end
+
         self.transitionStartZoom = currentZoom
         self.lastCurrentZoom = currentZoom
         self.transitionMinZoom = currentZoom
@@ -931,13 +1292,21 @@ function Controller:OnUpdate()
     end
 
     local elapsed = now - self.transitionStartTime
-    local requestedTargetZoom = self.transitionRequestedZoom
+    local requestedTargetZoom =
+        self.transitionRequestedZoom
 
-    self.transitionSampleCount = self.transitionSampleCount + 1
-    if self.transitionMinZoom == nil or currentZoom < self.transitionMinZoom then
+    self.transitionSampleCount =
+        self.transitionSampleCount + 1
+
+    if self.transitionMinZoom == nil
+        or currentZoom < self.transitionMinZoom
+    then
         self.transitionMinZoom = currentZoom
     end
-    if self.transitionMaxZoom == nil or currentZoom > self.transitionMaxZoom then
+
+    if self.transitionMaxZoom == nil
+        or currentZoom > self.transitionMaxZoom
+    then
         self.transitionMaxZoom = currentZoom
     end
 
@@ -946,9 +1315,17 @@ function Controller:OnUpdate()
         and type(requestedTargetZoom) == "number"
     then
         local delta = currentZoom - previousZoom
-        local previousDistance = math.abs(previousZoom - requestedTargetZoom)
-        local currentDistance = math.abs(currentZoom - requestedTargetZoom)
+        local previousDistance =
+            math.abs(
+                previousZoom - requestedTargetZoom
+            )
+        local currentDistance =
+            math.abs(
+                currentZoom - requestedTargetZoom
+            )
+
         self.lastObservedDelta = delta
+
         if delta > 0.0001 then
             self.lastObservedDirection = "out"
         elseif delta < -0.0001 then
@@ -956,55 +1333,213 @@ function Controller:OnUpdate()
         else
             self.lastObservedDirection = "flat"
         end
-        if currentDistance + 0.0001 < previousDistance then
-            self.transitionTowardCount = self.transitionTowardCount + 1
-        elseif currentDistance > previousDistance + 0.0001 then
-            self.transitionAwayCount = self.transitionAwayCount + 1
+
+        if currentDistance + 0.0001
+            < previousDistance
+        then
+            self.transitionTowardCount =
+                self.transitionTowardCount + 1
+        elseif currentDistance
+            > previousDistance + 0.0001
+        then
+            self.transitionAwayCount =
+                self.transitionAwayCount + 1
         else
-            self.transitionFlatCount = self.transitionFlatCount + 1
+            self.transitionFlatCount =
+                self.transitionFlatCount + 1
         end
     end
+
     self.transitionPreviousZoom = currentZoom
 
-    if type(self.transitionStartZoom) == "number"
-        and type(requestedTargetZoom) == "number"
-        and type(self.transitionDuration) == "number"
+    if self.transitionCorrectionActive then
+        local correctionOK, correctionError =
+            self:ServiceSourceCorrection(
+                now,
+                currentZoom
+            )
+
+        if not correctionOK then
+            self.lastError = correctionError
+            self.failureCount =
+                self.failureCount + 1
+            self.lastAction =
+                "source-correction-failed"
+            self:Relinquish(
+                "source-correction-failed",
+                false
+            )
+        end
+        return
+    end
+
+    local startZoom = self.transitionStartZoom
+    local transitionDuration =
+        self.transitionDuration
+
+    if type(startZoom) ~= "number"
+        or type(requestedTargetZoom) ~= "number"
+        or type(transitionDuration) ~= "number"
     then
-        local expectedZoom = transitionExpectedZoom(
-            self.transitionStartZoom,
-            requestedTargetZoom,
-            self.transitionDuration,
-            elapsed
+        self.lastError =
+            "camera transition state invalid"
+        self.failureCount =
+            self.failureCount + 1
+        self:Relinquish(
+            "transition-state-invalid",
+            false
         )
-        local positionError = currentZoom - expectedZoom
+        return
+    end
+
+    local change =
+        requestedTargetZoom - startZoom
+    local beyondPosition =
+        (change > 0
+            and currentZoom >= requestedTargetZoom)
+        or (
+            change < 0
+            and currentZoom <= requestedTargetZoom
+        )
+
+    if not beyondPosition
+        and self.transitionStartTime
+            + transitionDuration
+            > now
+    then
+        local expectedZoom =
+            transitionExpectedZoom(
+                startZoom,
+                requestedTargetZoom,
+                transitionDuration,
+                elapsed
+            )
+        local positionError =
+            currentZoom - expectedZoom
+
         self.lastExpectedZoom = expectedZoom
         self.lastPositionError = positionError
-        local absoluteError = math.abs(positionError)
-        if absoluteError > self.transitionMaxAbsPositionError then
-            self.transitionMaxAbsPositionError = absoluteError
+
+        local absoluteError =
+            math.abs(positionError)
+        if absoluteError
+            > self.transitionMaxAbsPositionError
+        then
+            self.transitionMaxAbsPositionError =
+                absoluteError
         end
-    end
 
-    local atRequested =
-        type(requestedTargetZoom) == "number"
-        and math.abs(currentZoom - requestedTargetZoom) <= TARGET_TOLERANCE
+        if self.transitionSampleCount > 1
+            and absoluteError
+                > LIBCAMERA_MAX_POS_ERROR
+        then
+            local rebasedElapsed
+            local rebaseIterations
 
-    local timeoutExtra = TRANSITION_TIMEOUT_EXTRA
-    if self.transitionContext == "taxi" then
-        timeoutExtra = 0
-    end
+            rebasedElapsed,
+            rebaseIterations = rebaseEaseTime(
+                easeInOutQuad,
+                LIBCAMERA_REBASE_PRECISION,
+                currentZoom,
+                elapsed,
+                startZoom,
+                change,
+                transitionDuration
+            )
 
-    local timedOut = elapsed >= (self.transitionDuration + timeoutExtra)
-    if atRequested or timedOut then
-        self:FinishTransition(currentZoom, elapsed, timedOut)
+            if rebasedElapsed > 0
+                and rebasedElapsed
+                    < transitionDuration
+            then
+                local elapsedDifference =
+                    rebasedElapsed - elapsed
+
+                self.transitionStartTime =
+                    self.transitionStartTime
+                    - elapsedDifference
+                self.transitionRebaseCount =
+                    self.transitionRebaseCount + 1
+                self.transitionRebaseIterationCount =
+                    self.transitionRebaseIterationCount
+                    + rebaseIterations
+                self.lastRebaseFromElapsed =
+                    elapsed
+
+                elapsed =
+                    now
+                    - self.transitionStartTime
+
+                self.lastRebaseToElapsed =
+                    elapsed
+                expectedZoom =
+                    transitionExpectedZoom(
+                        startZoom,
+                        requestedTargetZoom,
+                        transitionDuration,
+                        elapsed
+                    )
+                self.lastExpectedZoom =
+                    expectedZoom
+                self.lastPositionError =
+                    currentZoom - expectedZoom
+            end
+        end
+
+        self.lastCurrentZoom = currentZoom
+
+        local motionOK =
+            self:ApplyTransitionMotion(
+                currentZoom,
+                elapsed
+            )
+        if not motionOK then
+            return
+        end
+
         return
     end
 
-    self.lastCurrentZoom = currentZoom
-    local motionOK = self:ApplyTransitionMotion(currentZoom, elapsed)
-    if not motionOK then
+    local stopOK, stopError = stopMotion()
+    if not stopOK then
+        self.lastError = stopError
+        self.failureCount =
+            self.failureCount + 1
+        self:Relinquish(
+            "source-transition-stop-failed",
+            false
+        )
         return
     end
+
+    if math.abs(
+        currentZoom - requestedTargetZoom
+    ) > LIBCAMERA_CORRECTION_TOLERANCE
+    then
+        local correctionOK, correctionError =
+            self:BeginSourceCorrection(
+                currentZoom,
+                now
+            )
+
+        if not correctionOK then
+            self.lastError = correctionError
+            self.failureCount =
+                self.failureCount + 1
+            self.lastAction =
+                "source-correction-failed"
+            self:Relinquish(
+                "source-correction-start-failed",
+                false
+            )
+        end
+        return
+    end
+
+    self:FinishTransition(
+        currentZoom,
+        elapsed,
+        false
+    )
 end
 
 function Controller:Reconcile(reason)
@@ -1172,6 +1707,13 @@ function Controller:GetDebugStatus()
         transitionInCommandCount = self.transitionInCommandCount,
         transitionOutCommandCount = self.transitionOutCommandCount,
         transitionDirectionSwitchCount = self.transitionDirectionSwitchCount,
+        transitionRebaseCount = self.transitionRebaseCount,
+        transitionRebaseIterationCount = self.transitionRebaseIterationCount,
+        transitionCorrectionCount = self.transitionCorrectionCount,
+        transitionCorrectionActive = self.transitionCorrectionActive,
+        lastRebaseFromElapsed = self.lastRebaseFromElapsed,
+        lastRebaseToElapsed = self.lastRebaseToElapsed,
+        lastCorrectionZoomSpeed = self.lastCorrectionZoomSpeed,
         lastExpectedZoom = self.lastExpectedZoom,
         lastPositionError = self.lastPositionError,
         lastObservedDirection = self.lastObservedDirection,

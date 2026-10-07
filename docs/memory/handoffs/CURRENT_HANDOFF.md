@@ -4,67 +4,84 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0158 `27670624e8c001dc341ac92ad9c463f2f61088de`.
+P0159 R1 `8ddcf09844961adec7bc90621f0f5ca294f15aef`.
 
-## Camera direction
+## P0159 runtime result
 
-The canonical DynamicCam `RPG` profile is already captured. Do not request another export unless the user changed it.
+Clean:
+- ordinary Camera Profile Check;
+- profile secretSkips=0 / readFailures=0;
+- separate Run All;
+- Taxi context/target `50` twice at current/final about `49.75597`.
 
-The user explicitly chose to complete Camera parity before Phase H. P0158's high-level order remains:
+Failure:
+- landing City start about `49.75597`;
+- target `5`;
+- final `0`;
+- elapsed about `3.278s`;
+- 97 samples;
+- 55 inward / 40 outward commands;
+- 80 direction switches;
+- range `0 -> 50`;
+- max absolute position error about `49.471`;
+- failures=1.
 
-1. Camera parity;
-2. safe Blizzard suppression/coexistence;
-3. authored UI positions/layout;
-4. final polish and remaining visuals.
+This is a shared zoom-engine failure, not a P0159 predicate/priority failure.
 
-The previous interpretation that Camera meant only the pending Taxi landing proof is superseded.
+## Source audit
 
-## P0159 R1
+DynamicCam delegates camera motion to LibCamera.
 
-The initial P0159 artifact refused during shadow preflight before tracked writes. Its renderer deleted the just-inserted context-helper block while replacing the OnUpdate-to-Reconcile range. R1 fixes that exact delivery defect and hardens the checker against recurrence.
+Audited LibCamera commit:
+`c0b23135a0b24fbca24b41cb53dd7afc9114e352`.
 
-P0159 R1 is one consolidated context/zoom parity layer for all nine enabled captured situations.
+The current Logres driver independently reconstructed only pieces of that engine.
 
-New source-backed predicates:
-- Hearth/Teleport;
-- AFK;
-- Gathering;
-- NPC Interaction;
-- Fishing.
+LibCamera's ordinary eased zoom includes:
+- first-frame begin time/value;
+- InOutQuad easing;
+- finite-difference easing velocity;
+- position/time rebase when error exceeds 0.5;
+- final two-frame direct correction;
+- a final 0.1-second correction using temporary `cameraZoomSpeed` ownership and CameraZoomIn/Out;
+- restoration of the previous cameraZoomSpeed.
 
-Existing:
-- Taxi;
-- World Combat;
-- City;
-- World.
+LibCamera does not mutate cameraDistanceMaxZoomFactor.
 
-No CVar mutation, rotation, shoulder mutation, or UI fade is added in P0159.
+## P0160 R2
 
-Fishing's upstream `delay=1` is an **exit hold**, implemented through the controller's existing finite OnUpdate activity rather than a timer/ticker.
+P0160 R2 replaces the bespoke timing/correction path with those source-backed semantics while preserving:
+- Logres secret-safe reads;
+- DynamicCam coexistence/fail-open ownership;
+- stop-before-reverse;
+- requested/effective target diagnostics;
+- no max-distance mutation.
+
+The initial P0160 artifact refused during shadow preflight because its historical motion-checker rewrite expected an obsolete exact output string. No tracked files were written.
+
+P0160 R1 also refused in shadow preparation because its STATUS.md transform expected a stale Phase H table row. The observed worktree status again contained no tracked changes. R2 corrects that verified baseline anchor and preserves both delivery failures.
+
+Candidate:
+`0.0.79-dev`.
 
 ## Runtime gate
-
-After P0159 R1 deployment:
 
 1. `/reload`;
 2. Phase G -> **Camera Profile Check**;
 3. Phase 0 -> **Run All**;
-4. one normal Taxi flight;
-5. Phase G -> **Camera Profile Check** during flight;
-6. Phase G -> **Camera Profile Check** after landing/settle;
+4. normal Taxi flight;
+5. Camera Profile Check in flight;
+6. Camera Profile Check after landing/settle;
 7. upload diagnostics.
 
-Other profile contexts may be recorded when naturally encountered; do not manufacture every environment just to advance.
-
-If clean, proceed to the second consolidated Camera parity layer: rotation, shoulder behavior, and camera-setting ownership/restoration. DynamicCam UI fades are reconciled with Phase H presentation/suppression policy.
+Do not proceed to rotation/shoulder/settings parity unless the post-Taxi destination zoom converges cleanly near `5`.
 
 ## Key references
 
 - `../CURRENT.md`
-- `../evidence/G6_DYNAMICCAM_PROFILE_PARITY_AUDIT_2026-10-06.md`
-- `../evidence/P0159_INITIAL_SHADOW_PREFLIGHT_FAIL_2026-10-06.md`
+- `../evidence/P0160_LIBCAMERA_ZOOM_SOURCE_AUDIT_2026-10-07.md`
+- `../evidence/P0160_P0159_TAXI_LANDING_FAILURE_2026-10-07.md`
+- `../patches/P0160_R2_LIBCAMERA_ZOOM_DRIVER.md`
 - `../investigations/G6_DYNAMICCAM_PROFILE_PARITY.md`
-- `../patches/P0159_DYNAMICCAM_PROFILE_CONTEXT_ZOOM_PARITY.md`
-- `../evidence/G1_DYNAMICCAM_RPG_PROFILE_2026-10-02.json`
 - `../architecture/CAMERA.md`
 - `../roadmap/PHASE_G_CINEMATIC_CAMERA.md`

@@ -21,15 +21,16 @@ Runtime-proven production Logres camera ownership covers:
 - World;
 - World (Combat);
 - City/resting;
-- observed normal-world transition behavior through P0156.
+- P0159 profile/context baseline;
+- Taxi entry/target `50` twice.
 
-Taxi zoom ownership is implemented but the normal-Taxi landing retest remains
-pending.
+P0159 R1 is durable at `8ddcf098` / `0.0.78-dev`.
 
-P0159 broadens the same production controller to the captured RPG profile's
-remaining source-backed context/zoom situations: Hearth/Teleport, AFK,
-Gathering, NPC Interaction, and Fishing. Runtime acceptance is required before
-those new branches are called proven.
+The real post-Taxi destination transition remains failed: City start about `49.75597`, target `5`, final `0`, `97` samples, `80` direction switches, and max absolute easing-position error about `49.471`.
+
+This failure is in the shared bespoke zoom engine, not in Taxi or captured-profile context selection.
+
+P0160 R2 therefore replaces the timing/correction path with source-backed LibCamera zoom semantics before any further profile expansion.
 
 ## Taxi precedence and zoom intent
 
@@ -193,14 +194,14 @@ G.5 P0117 runtime:
 **TAXI ENTRY PASS / LANDING TRANSITION FAIL on `0.0.47-dev`.**
 
 G.5 current:
-**P0119/P0156 SHARED DRIVER DURABLE; NORMAL-TAXI LANDING RETEST PENDING.**
+**P0159 TAXI ENTRY PASS / DESTINATION ZOOM FAIL; P0160 R2 SOURCE-BACKED LIBCAMERA ZOOM DRIVER PREPARED.**
 
 G.6 current:
-**P0159 CAPTURED-PROFILE CONTEXT+ZOOM PARITY PREPARED.**
+**P0159 R1 DURABLE; CONTEXT/ZOOM SELECTION PARTIALLY RUNTIME-PROVEN; REMAINING PROFILE PARITY QUEUED BEHIND ZOOM-ENGINE PASS.**
 
-The earlier Camera sequencing freeze is superseded. Camera remains ahead of
-Phase H until the captured profile's deliberate camera behaviors are migrated in
-consolidated layers.
+The custom transition driver is no longer the architectural target. The audited LibCamera source is the zoom-motion authority for P0160 R2.
+
+The earlier blanket no-SetCVar rule is narrowed: temporary `cameraZoomSpeed` ownership is allowed only for the source final correction with exact restoration. `cameraDistanceMaxZoomFactor` remains outside Logres ownership.
 
 ## P0117 landing overshoot failure
 
@@ -229,3 +230,34 @@ ownership/restoration. DynamicCam UI hide/fade is presentation policy and must b
 reconciled with Phase H suppression/coexistence.
 
 The max-distance CVar remains outside Logres ownership.
+
+
+## P0160 R2 source-backed zoom engine
+
+Canonical source audit:
+`../evidence/P0160_LIBCAMERA_ZOOM_SOURCE_AUDIT_2026-10-07.md`.
+
+Audited source:
+`mpstark/LibCamera@c0b23135a0b24fbca24b41cb53dd7afc9114e352`.
+
+P0160 R2 ports the ordinary LibCamera SetZoom mechanics into the production controller instead of continuing bespoke fixes.
+
+Source semantics adopted:
+- InOutQuad;
+- 1/60 finite-difference easing velocity;
+- actual-position/easing-time rebase above 0.5 error;
+- rebase precision 0.005 / max 100 iterations;
+- direct final-two-frame correction;
+- final 0.1-second CameraZoom correction;
+- temporary cameraZoomSpeed capture/set/restore.
+
+Logres-specific safety retained:
+- secret checks before interpreting CVar/zoom values;
+- pcall around mutable calls;
+- exact restoration token;
+- DynamicCam fail-open coexistence;
+- stop-before-reverse;
+- no max-distance CVar mutation;
+- no timer/ticker polling.
+
+The next profile layer after runtime acceptance is rotation plus camera-setting ownership/restoration, not another bespoke zoom adjustment.

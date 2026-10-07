@@ -34,31 +34,43 @@ The roadmap is capability-gated. A phase advances only when its success criteria
 
 ## Phase G — Cinematic Camera
 
-**Status: ACTIVE — G.5 TAXI PROOF + G.6 CAPTURED RPG PROFILE PARITY.**
+**Status: ACTIVE — P0160 R2 SOURCE-BACKED ZOOM DRIVER RETEST, THEN REMAINING CAPTURED-PROFILE PARITY.**
 
 G.1 through G.4 are runtime-proven.
 
-G.5 established that Taxi target `50` is a requested DynamicCam/LibCamera target
-that may be engine-clamped without requiring max-distance CVar mutation.
+P0159 R1 is durable at `8ddcf098` / `0.0.78-dev`.
 
-P0117 proved Taxi entry but exposed a shared post-Taxi destination overshoot:
-City `18 -> 5` reached zoom `0`.
+The captured-profile context layer passes the observed ordinary baseline and Taxi entry:
+- profile reads clean;
+- Taxi target `50` passes twice at about `49.75597`.
 
-P0119 is durable at `c342bc176a9d5de80ec116d0c6b31fa595cd75b3`
-on `0.0.49-dev` and replaces the constant-rate driver with frame-shaped MoveView
-motion plus bounded target correction.
+The real landing transition still fails:
+- City start about `49.75597`;
+- target `5`;
+- final `0`;
+- 97 samples;
+- 80 direction switches;
+- max absolute easing-position error about `49.471`.
 
-The normal-Taxi landing retest has not been durably recorded as PASS. P0158
-supersedes the temporary visual-first freeze: finish this already-open G.5 gate
-now, but do not expand broader Camera scope. If it passes, Phase G closes and
-Phase H becomes primary. No SetCVar, Taxi rotation, or Taxi UI fade is authorized.
+The source audit identifies the architectural cause: DynamicCam delegates camera motion to LibCamera, while Logres had been reconstructing that engine piecemeal.
+
+P0160 R2 therefore replaces the bespoke zoom timing/correction path with the audited ordinary LibCamera behavior:
+- InOutQuad easing;
+- finite-difference easing velocity;
+- source position/time rebase;
+- source final target correction;
+- temporary/restored `cameraZoomSpeed` ownership.
+
+`cameraDistanceMaxZoomFactor` remains outside Logres ownership.
+
+After this zoom gate passes, Phase G continues with the remaining captured-profile rotations and camera-setting ownership/restoration. DynamicCam UI fades are reconciled with Phase H presentation policy.
 
 Canonical phase record:
 `memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
 
 ## Phase H — Integration and Polish
 
-**Status: QUEUED — NEXT AFTER G.5; INTEGRATION/SUPPRESSION + AUTHORED LAYOUT BEFORE FINAL POLISH.**
+**Status: QUEUED — NEXT AFTER PHASE G CAMERA PARITY; INTEGRATION/SUPPRESSION + AUTHORED LAYOUT BEFORE FINAL POLISH.**
 
 D-039 preserves the approved twelve-sheet World Ghost / Selective Hybrid E visual
 baseline. D-040 defines `Logres/Media/` plus `Theme.lua` as the runtime asset/token

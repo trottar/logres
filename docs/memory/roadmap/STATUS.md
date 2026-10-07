@@ -23,8 +23,8 @@ final polish and residual visuals.
 | D — Immersion Controller | COMPLETE |
 | E — Compass and Navigation | COMPLETE |
 | F — Quest Experience | COMPLETE |
-| G — Cinematic Camera | ACTIVE — G.5 TAXI PROOF + G.6 PROFILE PARITY |
-| H — Integration and Polish | QUEUED — approved visual translation underway in parallel |
+| G — Cinematic Camera | ACTIVE — P0160 R2 SOURCE-BACKED ZOOM RETEST + G.6 PROFILE PARITY |
+| H — Integration and Polish | QUEUED — NEXT AFTER PHASE G CAMERA PARITY |
 
 ## Phase G / G.5
 
@@ -219,28 +219,47 @@ P0157:
 Records the P0156 pass, preserves two rolled-back delivery failures, hardens CURRENT heading validation, and returns Phase G.5 to the pending P0119 normal-Taxi landing proof.
 
 P0158:
-**PREPARED — DOCS / ROADMAP SEQUENCING CHECKPOINT.**
+**INSTALLED / PUSHED — DOCS / ROADMAP SEQUENCING CHECKPOINT** at `27670624`.
 
-Freezes the current high-level order:
-1. finish the bounded G.5 Taxi landing gate;
-2. Phase H stock-surface suppression/coexistence plus authored layout/positioning;
-3. final polish, remaining visuals, and settings/accessibility.
-
-Next:
-**Take one normal Taxi flight; use Phase G -> Camera World/Combat Check during flight and after landing, then Phase 0 -> Run All, and upload diagnostics.**
-
+Its high-level order remains:
+Camera parity -> Phase H safe suppression/coexistence -> authored positions -> final polish.
 
 ## P0159 — captured-profile context + zoom parity
 
-P0158 is durable at `27670624`.
+P0159 R1 is **INSTALLED / PUSHED** at
+`8ddcf09844961adec7bc90621f0f5ca294f15aef`
+on `0.0.78-dev`.
 
-The user clarified that Camera should not close after the Taxi gate while most of
-the captured DynamicCam RPG profile remains absent.
+Observed runtime:
+- ordinary Camera Profile Check PASS;
+- separate Run All clean;
+- profile secretSkips=0 / readFailures=0;
+- Taxi target `50` PASS twice around `49.75597`;
+- post-Taxi City `~49.75597 -> 5` FAIL at final zoom `0`;
+- 97 samples / 80 switches / max absolute position error about `49.471`.
 
-P0159 consolidates the remaining context/zoom layer: Teleport, AFK, Gathering,
-NPC Interaction, and Fishing join the existing Taxi/Combat/City/World controller
-with source-backed priorities and secret-safe predicates.
+Classification:
+profile/context and Taxi-entry behavior pass in observed scope; the shared bespoke zoom driver fails the destination transition.
 
-The Taxi landing proof remains part of the runtime gate. If P0159 is clean, the
-next Camera work is one consolidated rotation/shoulder/camera-setting ownership
-layer, after which Phase H suppression/layout/polish becomes primary.
+## P0160 R2 — source-backed LibCamera zoom driver
+
+**PREPARED — RUNTIME RETEST REQUIRED.**
+
+The DynamicCam dependency audit established that the remaining zoom mechanics already exist coherently in LibCamera.
+
+P0160 R2 ports the audited ordinary LibCamera zoom path while preserving Logres secret/coexistence/fail-open behavior.
+
+Allowed setting ownership is narrowly changed:
+- temporary `cameraZoomSpeed` ownership for the source final correction;
+- exact restoration of the captured previous value.
+
+Still forbidden:
+- `cameraDistanceMaxZoomFactor` mutation;
+- periodic/ticker reassertion.
+
+The initial P0160 artifact refused in shadow preflight before tracked writes because of a stale historical checker anchor. R1 supersedes it.
+
+Next:
+**Apply/deploy P0160 R2, run Camera Profile Check + Run All, then repeat one normal Taxi flight and verify the landing City/World transition converges near `5`.**
+
+Phase H remains queued until the remaining captured-profile Camera parity is deliberately closed.

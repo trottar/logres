@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Static contract for P0154 world-entry camera motion diagnostics."""
+"""Static contract for camera motion diagnostics after P0160 R2."""
+
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,9 +27,13 @@ if CONTROLLER.is_file():
         "self.transitionOutCommandCount = 0",
         "self.transitionDirectionSwitchCount = 0",
         "self.transitionMaxAbsPositionError = 0",
+        "self.transitionRebaseCount = 0",
+        "self.transitionRebaseIterationCount = 0",
+        "self.transitionCorrectionCount = 0",
         "self.lastCommandDirection = direction",
         "self.lastCommandFactor = factor",
-        "self.transitionAwayCount = self.transitionAwayCount + 1",
+        "self.transitionAwayCount =",
+        "self.transitionAwayCount + 1",
         "self.lastExpectedZoom = expectedZoom",
         "self.lastPositionError = positionError",
         "transitionSampleCount = self.transitionSampleCount",
@@ -37,36 +42,53 @@ if CONTROLLER.is_file():
         "transitionInCommandCount = self.transitionInCommandCount",
         "transitionOutCommandCount = self.transitionOutCommandCount",
         "transitionDirectionSwitchCount = self.transitionDirectionSwitchCount",
+        "transitionRebaseCount = self.transitionRebaseCount",
+        "transitionRebaseIterationCount = self.transitionRebaseIterationCount",
+        "transitionCorrectionCount = self.transitionCorrectionCount",
+        "transitionCorrectionActive = self.transitionCorrectionActive",
         "transitionArmZoom = self.transitionArmZoom",
         "transitionFirstUpdateDelay = self.transitionFirstUpdateDelay",
     ]
     for fragment in required:
         if fragment not in source:
-            errors.append(f"WorldCombat.lua missing P0154 diagnostic fragment: {fragment}")
+            errors.append(f"WorldCombat.lua missing motion diagnostic fragment: {fragment}")
 
     forbidden = [
+        'SetCVar("cameraDistanceMaxZoomFactor"',
+        "C_CVar.SetCVar",
         "C_Timer.NewTicker",
         "C_Timer.NewTimer",
         "C_Timer.After",
-        "SetCVar(",
     ]
     for fragment in forbidden:
         if fragment in source:
-            errors.append(f"WorldCombat.lua P0154 diagnostic forbids: {fragment}")
+            errors.append(f"WorldCombat.lua motion diagnostic regression: {fragment}")
 
 if COMMANDS.is_file():
     source = COMMANDS.read_text(encoding="utf-8")
     required = [
         "local function emitCameraWorldCombatMotion(status)",
-        '"Logres cameraworldcombat motion: samples=%s toward=%s away=%s flat=%s min=%s max=%s expected=%s posError=%s maxAbsPosError=%s observed=%s/%s command=%s/%s inCommands=%s outCommands=%s switches=%s armZoom=%s firstDelay=%s"',
+        "rebases=%s",
+        "rebaseIters=%s",
+        "corrections=%s",
+        "correctionActive=%s",
+        "correctionSpeed=%s",
+        "rebase=%s->%s",
+        "tostring(status.transitionRebaseCount)",
+        "tostring(status.transitionRebaseIterationCount)",
+        "tostring(status.transitionCorrectionCount)",
+        "tostring(status.transitionCorrectionActive)",
+        "tostring(status.lastCorrectionZoomSpeed)",
+        "tostring(status.lastRebaseFromElapsed)",
+        "tostring(status.lastRebaseToElapsed)",
         "emitCameraWorldCombatMotion(status)",
     ]
     for fragment in required:
         if fragment not in source:
-            errors.append(f"Commands.lua missing P0154 diagnostic fragment: {fragment}")
+            errors.append(f"Commands.lua missing motion diagnostic fragment: {fragment}")
 
-print("Logres P0154 world-entry camera motion diagnostic contract")
-print("========================================================")
+print("Logres camera motion diagnostic contract")
+print("=======================================")
 if errors:
     for error in errors:
         print(f"ERROR: {error}")

@@ -1,6 +1,6 @@
 # Phase G — Cinematic Camera
 
-Status: ACTIVE — G.5 TAXI PROOF + G.6 CAPTURED RPG PROFILE PARITY
+Status: ACTIVE — P0160 R2 SOURCE-BACKED ZOOM DRIVER RETEST + G.6 CAPTURED RPG PROFILE PARITY
 Opened: 2026-10-02
 
 ## Product Objective
@@ -147,88 +147,66 @@ Production Taxi is not considered closed until that runtime proof passes.
 
 ## Sequencing after P0157
 
-The earlier temporary choice to finish all approved visual translation before
-returning to Camera is superseded.
+The temporary visual-first freeze is superseded.
 
 Current order:
-1. finish the already-open G.5 normal-Taxi landing proof;
-2. close Phase G if that proof is clean;
-3. enter Phase H with stock-surface suppression/coexistence and authored layout
-   positioning before final polish.
+1. fix and runtime-prove the shared zoom engine against the real Taxi landing case;
+2. finish the remaining captured-profile Camera parity using audited DynamicCam/LibCamera behavior;
+3. enter Phase H for safe stock-surface suppression/coexistence, authored positions, and final polish.
 
-This does not reopen broader Camera feature work.
+P0159 R1 is durable at `8ddcf098` / `0.0.78-dev`.
 
-P0120 through P0124 translated and accepted the shared percentage bar, player
-cast cue, Context message treatment, heading/manual-waypoint Compass, and organic
-player-health tunnel. P0126 adds the accepted Active Quest one-focus presentation
-at `89b0c563` / `0.0.58-dev`.
+Its runtime result is now authoritative:
+- ordinary profile/base PASS;
+- separate Run All clean;
+- Taxi target `50` PASS twice at about `49.75597`;
+- post-Taxi City `~49.75597 -> 5` FAIL at final zoom `0`;
+- 97 samples, 80 direction switches, range `0 -> 50`;
+- max absolute easing-position error about `49.471`.
 
-P0128 resolved the D-035 source/API layer. P0129 is durable at `e50676b9` /
-`0.0.59-dev` and passes the naturally observed read-only offer/gossip scope with
-mutation invariant `invoked=0`.
-
-P0130 is durable at `ab6473b2` / `0.0.61-dev` and runtime + visual PASS for the
-bounded/paged quest-offer narrative, including Immersion restore.
-
-P0131 is runtime-proven: Decline passes on `0.0.62-dev`; Accept passes on
-`0.0.63-dev` with matched `QUEST_ACCEPTED` after intermediate `QUEST_FINISHED`.
-
-P0131 is durable at `68233e64` / `0.0.63-dev`.
-
-P0132 production offer controls are durable at `671f9836` / `0.0.64-dev`.
-P0133 is durable at `f2feead6` / `0.0.65-dev` and runtime + visual PASS for the
-Accept-left / Decline-right alignment while Blizzard fallback remains visible.
-
-P0135/P0136 resolve and runtime-prove the narrow aura source layer. P0137 is
-durable at `2b578759` / `0.0.67-dev` and runtime + visual PASS for the passive
-player-helpful production lane.
-
-The approved visual sequence now moves to P0139 world-attached target source +
-anchoring/fallback audit. Deferred harmful/target aura categories are not forced
-solely to advance sequencing.
-
-Broader Camera feature work remains frozen; only the existing G.5 Taxi landing gate is active.
-
-D-037 unproven navigation/minimap roles remain separately capability-gated.
-D-030 remains current minimap runtime authority until replacement capabilities
-are proven.
-
-## Later Phase G Work
-
-Taxi rotation, Hearth/Teleport, NPC Interaction, Fishing, AFK, Gathering,
-shoulder offsets, UI-hide integration, startup parity, and broader camera-CVar
-ownership remain separately gated.
-
-
-## P0158 execution handoff
-
-P0158 records the post-G.5 handoff explicitly.
-
-If the normal-Taxi landing retest passes, Phase G closes and the next work is not
-another component-art round. Phase H begins by reconciling the actual screen:
-safe suppression/coexistence for capability-proven replacements, then authored
-positions/anchors, then final polish and residual visuals.
-
-If the Taxi retest fails, preserve that narrow evidence and repair only the
-reproduced Taxi/shared-transition defect before the Phase H handoff.
-
+This finally exercises the P0155 stop-before-reverse path heavily and proves it is not sufficient by itself.
 
 ## G.6 — Captured RPG profile parity
 
-The user confirmed Camera should be completed against the already-captured
-DynamicCam profile before Phase H rather than stopping after one Taxi retest.
+The user confirmed Camera should be completed against the already-captured DynamicCam profile before Phase H.
 
-P0159 is the first consolidated parity layer:
-- source-backed Teleport, AFK, Gathering, NPC Interaction, Fishing context reads;
-- profile priority selection;
-- context zoom targets/durations;
-- Teleport cast-duration override;
-- AFK no-zoom ownership;
-- Fishing one-second exit hold;
-- no CVar mutation, rotation, shoulder mutation, UI fade, or polling.
+P0159 completed the first source-backed context/priority layer.
 
-The G.5 Taxi landing test is retained inside P0159 runtime validation.
+The remaining zoom failure triggered a dependency audit rather than another bespoke algorithm tweak.
 
-After P0159 acceptance, continue directly with a consolidated rotation /
-shoulder / camera-setting ownership-restoration layer. DynamicCam UI fades cross
-into Phase H presentation policy and are not copied blindly into camera code.
+DynamicCam delegates camera motion to LibCamera. The audited source at
+`c0b23135a0b24fbca24b41cb53dd7afc9114e352` already contains the coherent zoom mechanics Logres had been reconstructing incrementally.
+
+## P0160 R2 — source-backed zoom engine
+
+P0160 R2 ports the ordinary LibCamera SetZoom behavior:
+- InOutQuad easing;
+- finite-difference easing velocity;
+- >0.5 actual-position/easing-time rebase;
+- 0.005 precision / max 100 rebase iterations;
+- final two-frame linear correction;
+- final 0.1-second correction using temporary cameraZoomSpeed ownership;
+- exact cameraZoomSpeed restoration.
+
+Logres retains:
+- secret-first reads;
+- DynamicCam fail-open coexistence;
+- stop-before-reverse;
+- requested/effective target diagnostics;
+- no cameraDistanceMaxZoomFactor mutation;
+- no polling/tickers.
+
+The initial P0160 artifact refused pre-write on an obsolete historical-checker output anchor. P0160 R1 then refused pre-write on a stale STATUS Phase H row. P0160 R2 corrects both delivery defects; neither refusal changed tracked files.
+
+Exact runtime gate:
+1. `/reload`;
+2. Phase G -> Camera Profile Check;
+3. Phase 0 -> Run All;
+4. one normal Taxi;
+5. Camera Profile Check in flight;
+6. Camera Profile Check after landing/settle;
+7. refreshed diagnostics.
+
+Only after that landing path is clean does Phase G proceed to the consolidated rotation/camera-setting ownership layer.
+
+UI fading remains a Phase H presentation-policy integration point.

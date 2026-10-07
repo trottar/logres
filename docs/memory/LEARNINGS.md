@@ -306,3 +306,19 @@ Reusable rule:
 
 This extends the P0078/P0087 CURRENT-schema lessons and L-017 generated-anchor
 lesson to generated repository memory.
+
+
+## L-020 — Do not reconstruct a proven open-source dependency piecemeal
+
+The P0119/P0154/P0155/P0156/P0159 camera sequence incrementally rebuilt behaviors already present in DynamicCam's LibCamera dependency.
+
+The real Taxi landing test on P0159 produced a large-driver failure despite the accumulated fixes: about `49.756 -> 5` ended at `0`, with `80` direction switches and max absolute easing-position error about `49.471`.
+
+Source audit showed LibCamera already owns the relevant mechanics as one coherent engine: first-frame timing, easing velocity, position/time rebase, stop behavior, and final target correction.
+
+Reusable rule:
+- when the target behavior comes from an available open-source dependency, audit the dependency boundary before recreating individual symptoms;
+- prefer a source-backed adaptation of the coherent mechanism over a growing chain of local patches;
+- preserve project-specific safety/coexistence rules at the adapter boundary;
+- distinguish a dependency's temporary/restored setting ownership from unrelated persistent setting mutation;
+- runtime-prove the adapted mechanism before layering additional profile features on top.

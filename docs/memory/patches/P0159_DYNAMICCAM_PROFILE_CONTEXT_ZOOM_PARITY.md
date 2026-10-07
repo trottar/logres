@@ -3,7 +3,7 @@
 Date: 2026-10-06
 Baseline: `27670624e8c001dc341ac92ad9c463f2f61088de`
 Candidate runtime: `0.0.78-dev`
-Result: **R1 PREPARED — INITIAL ARTIFACT REFUSED IN SHADOW PREFLIGHT BEFORE TRACKED WRITES; RUNTIME EVIDENCE REQUIRED**
+Result: **INSTALLED / PUSHED — PROFILE/BASE + TAXI ENTRY PASS; POST-TAXI DESTINATION ZOOM FAIL** (`8ddcf098`)
 
 ## Purpose
 
@@ -88,3 +88,28 @@ that helper ordering.
 
 R1 also ensures `StopTransition()` keeps the finite Fishing exit-hold OnUpdate
 alive when a zoom transition completes during that hold.
+
+
+## Durable runtime result
+
+Verified main:
+`8ddcf09844961adec7bc90621f0f5ca294f15aef`.
+
+Observed `0.0.78-dev` / loadCount `189`:
+- ordinary Camera Profile Check PASS;
+- profile secretSkips=0 / readFailures=0;
+- separate Run All clean;
+- Taxi target `50` PASS twice at current/final about `49.75597`;
+- landing City start about `49.75597`, target `5`, final `0`;
+- 97 samples, 55 inward / 40 outward commands, 80 direction switches;
+- range `0 -> 50`;
+- max absolute position error about `49.471`;
+- failures=1.
+
+Classification:
+P0159 context/priority/Taxi-entry behavior passes in the observed scope; the shared bespoke zoom engine fails the large destination transition.
+
+Canonical:
+`../evidence/P0160_P0159_TAXI_LANDING_FAILURE_2026-10-07.md`.
+
+P0160 R2 supersedes the zoom-driver gate with the audited LibCamera source path. The initial P0159 pre-write delivery failure remains preserved.

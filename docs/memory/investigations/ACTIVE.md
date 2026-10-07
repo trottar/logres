@@ -3,32 +3,32 @@
 ## G.5 — Taxi camera ownership
 
 Status:
-**OPEN — P0119/P0156 DRIVER INSTALLED; NORMAL-TAXI LANDING RETEST PENDING.**
+**OPEN — P0159 TAXI ENTRY PASS / POST-TAXI DESTINATION ZOOM FAIL; P0160 R2 SOURCE-BACKED DRIVER RETEST NEXT.**
 
 Canonical Taxi investigation:
 `G5_TAXI_CAMERA_OWNERSHIP.md`
 
-The earlier sequencing pause is superseded. The Taxi entry/landing proof remains
-required and is now part of P0159 runtime validation.
+P0159 finally exercised the real normal-Taxi path:
+- Taxi context/target `50` passed twice at about `49.75597`;
+- landing City `~49.75597 -> 5` failed at final zoom `0`;
+- 97 samples / 80 direction switches / range `0 -> 50`;
+- max absolute easing-position error about `49.471`.
 
-No max-distance mutation is authorized. Rotation remains in the next consolidated
-camera parity layer.
+P0155 stop-before-reverse is therefore exercised and insufficient by itself.
+
+P0160 R2 replaces the bespoke timing/correction path with audited LibCamera zoom semantics. `cameraDistanceMaxZoomFactor` remains outside Logres ownership.
 
 ## G.6 — Captured DynamicCam profile parity
 
 Status:
-**OPEN — P0159 CONSOLIDATED CONTEXT+ZOOM PARITY PREPARED.**
+**OPEN — P0159 R1 DURABLE; BASE/TAXI ENTRY PASS; SHARED ZOOM DRIVER FAIL; P0160 R2 NEXT.**
 
 Canonical:
 `G6_DYNAMICCAM_PROFILE_PARITY.md`
 
-The canonical RPG profile already exists. P0159 adds source-backed Teleport, AFK,
-Gathering, NPC Interaction, and Fishing predicates/zoom semantics to the existing
-Taxi/Combat/City/World controller. It preserves secret-first reads, event-driven
-reevaluation, DynamicCam fail-open coexistence, and no CVar mutation.
+Context/predicate parity is no longer the current blocker. The source audit shows DynamicCam delegates zoom motion to LibCamera, while Logres had been reconstructing that engine incrementally.
 
-Rotation, shoulder/camera-setting ownership, and presentation fade policy remain
-the next consolidated parity layer rather than separate per-situation projects.
+P0160 R2 ports the source zoom behavior first. Rotation and camera-setting ownership remain the next consolidated profile layer after the zoom driver passes. UI fades remain a Phase H presentation boundary.
 
 ### Current world-entry timeout regression
 
@@ -37,12 +37,11 @@ Status:
 
 P0156 is durable at `e1be731b` / `0.0.77-dev`. LoadCount `187` passed Phase G Camera World/Combat Check at world zoom about `5.0795` toward target `5`, with `targetReached=true`, `failures=0`, `secret=false`, and `error=nil`. Separate Run All repeated the PASS and completed cleanly.
 
-The accepted sample reported `firstDelay=0` and `switches=0`. Therefore the prior long-delay branch and P0155 direction-switch stop are not separately runtime-proven. Earlier P0154/P0155 failures remain preserved.
+The accepted P0156 sample reported `firstDelay=0` and `switches=0`.
 
-No additional world-entry patch is justified. Reopen only on new failure evidence.
+P0159 subsequently exercised the direction-switch branch heavily during the real Taxi landing failure (`80` switches). That newer evidence supersedes the earlier “unexercised” branch status while preserving the older P0154/P0155 failures.
 
-Next camera gate:
-the independently pending P0119 normal-Taxi landing retest.
+No additional world-entry-specific patch is justified. P0160 R2 addresses the reproduced shared zoom-engine defect instead.
 
 Canonical investigation:
 `CAMERA_WORLD_ENTRY_TRANSITION_TIMEOUT_2026-10-06.md`.

@@ -1,0 +1,41 @@
+P0160 R2 — SOURCE-BACKED LIBCAMERA ZOOM DRIVER
+
+Baseline:
+8ddcf09844961adec7bc90621f0f5ca294f15aef
+
+Candidate runtime:
+0.0.79-dev
+
+Observed trigger:
+- P0159 profile/base PASS;
+- Taxi target 50 PASS twice at ~49.75597;
+- landing City ~49.75597 -> 5 FAIL, final 0;
+- 97 samples, 80 switches, range 0->50;
+- maxAbsPosError ~49.471.
+
+Source:
+mpstark/LibCamera@c0b23135a0b24fbca24b41cb53dd7afc9114e352
+
+Ported:
+- InOutQuad easing;
+- finite-difference easing velocity;
+- >0.5 position/time rebase;
+- 0.005 precision / max 100 iterations;
+- final two-frame direct correction;
+- final 0.1s CameraZoom correction;
+- temporary exact-restored cameraZoomSpeed ownership.
+
+Preserved:
+- secret-first reads;
+- DynamicCam coexistence;
+- stop-before-reverse;
+- no cameraDistanceMaxZoomFactor mutation;
+- no timer/ticker polling.
+
+Initial P0160 artifact:
+pre-write shadow validation failure only; stale historical checker output anchor.
+
+P0160 R1 artifact:
+pre-write shadow validation failure only; stale STATUS Phase H baseline row.
+
+No commit or push performed.

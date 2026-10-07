@@ -3567,7 +3567,7 @@ end
 
 local function emitCameraWorldCombatMotion(status)
     emit(string.format(
-        "Logres cameraworldcombat motion: samples=%s toward=%s away=%s flat=%s min=%s max=%s expected=%s posError=%s maxAbsPosError=%s observed=%s/%s command=%s/%s inCommands=%s outCommands=%s switches=%s armZoom=%s firstDelay=%s",
+        "Logres cameraworldcombat motion: samples=%s toward=%s away=%s flat=%s min=%s max=%s expected=%s posError=%s maxAbsPosError=%s observed=%s/%s command=%s/%s inCommands=%s outCommands=%s switches=%s rebases=%s rebaseIters=%s corrections=%s correctionActive=%s correctionSpeed=%s rebase=%s->%s armZoom=%s firstDelay=%s",
         tostring(status.transitionSampleCount),
         tostring(status.transitionTowardCount),
         tostring(status.transitionAwayCount),
@@ -3584,6 +3584,13 @@ local function emitCameraWorldCombatMotion(status)
         tostring(status.transitionInCommandCount),
         tostring(status.transitionOutCommandCount),
         tostring(status.transitionDirectionSwitchCount),
+        tostring(status.transitionRebaseCount),
+        tostring(status.transitionRebaseIterationCount),
+        tostring(status.transitionCorrectionCount),
+        tostring(status.transitionCorrectionActive),
+        tostring(status.lastCorrectionZoomSpeed),
+        tostring(status.lastRebaseFromElapsed),
+        tostring(status.lastRebaseToElapsed),
         tostring(status.transitionArmZoom),
         tostring(status.transitionFirstUpdateDelay)
     ))

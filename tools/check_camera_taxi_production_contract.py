@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-# Static contract checks for G.5 production Taxi zoom parity.
+"""Static contract checks for production Taxi zoom parity."""
 
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTROLLER = ROOT / "Logres" / "Camera" / "WorldCombat.lua"
 COMMANDS = ROOT / "Logres" / "Core" / "Commands.lua"
-
 errors = []
 
 for path in (CONTROLLER, COMMANDS):
@@ -26,7 +25,6 @@ if CONTROLLER.is_file():
         "requestedTargetZoom,",
         "cameraDistanceCeiling",
         "transitionDurationForContext(",
-        'direction == "out" and currentZoom < requestedTargetZoom',
         "self.transitionRequestedZoom = requestedTargetZoom",
         "self.transitionEffectiveTargetZoom = effectiveTargetZoom",
         "self.lastCameraDistanceFactor = cameraDistanceFactor",
@@ -36,33 +34,34 @@ if CONTROLLER.is_file():
         "transitionRequestedZoom = self.transitionRequestedZoom",
         "transitionEffectiveTargetZoom = self.transitionEffectiveTargetZoom",
         "transitionDuration = self.transitionDuration",
-        "local requestedTargetZoom = self.transitionRequestedZoom",
-        "contextAllowsLimitedTarget(transitionContext)",
+        "local requestedTargetZoom =",
+        "self.transitionRequestedZoom",
+        "contextAllowsLimitedTarget(",
         '"transition-complete-limited"',
     ]
     for fragment in required:
         if fragment not in source:
             errors.append(f"Camera/WorldCombat.lua missing Taxi contract: {fragment}")
 
-    taxi_index = source.find("if state.onTaxi then")
-    teleport_index = source.find("if snapshot.teleport then")
-    afk_index = source.find("if snapshot.afk then")
-    gathering_index = source.find("if snapshot.gathering then")
-    interaction_index = source.find("if snapshot.interaction then")
-    combat_index = source.find("if not state.inInstance and liveCombat then")
-    fishing_index = source.find("if snapshot.fishing then")
-    city_index = source.find("if state.resting then")
-    instance_index = source.find("if state.inInstance then")
-    positions = [taxi_index, teleport_index, afk_index, gathering_index,
-                 interaction_index, combat_index, fishing_index, city_index,
-                 instance_index]
+    order = [
+        "if state.onTaxi then",
+        "if snapshot.teleport then",
+        "if snapshot.afk then",
+        "if snapshot.gathering then",
+        "if snapshot.interaction then",
+        "if not state.inInstance and liveCombat then",
+        "if snapshot.fishing then",
+        "if state.resting then",
+        "if state.inInstance then",
+    ]
+    positions = [source.find(fragment) for fragment in order]
     if min(positions) == -1:
         errors.append("could not locate captured-profile precedence chain")
     elif positions != sorted(positions):
         errors.append("captured-profile precedence chain is out of order")
 
     forbidden = [
-        "SetCVar(",
+        'SetCVar("cameraDistanceMaxZoomFactor"',
         "C_CVar.SetCVar",
         "C_Timer.NewTicker",
         "C_Timer.NewTimer",
@@ -77,7 +76,7 @@ if CONTROLLER.is_file():
 
 if COMMANDS.is_file():
     source = COMMANDS.read_text(encoding="utf-8")
-    required = [
+    for fragment in [
         'status.selectedContext == "taxi"',
         'status.transitionContext == "taxi"',
         "requested=%s",
@@ -90,18 +89,15 @@ if COMMANDS.is_file():
         "tostring(status.transitionDuration)",
         "tostring(status.lastCameraDistanceFactor)",
         "tostring(status.lastCameraDistanceCeiling)",
-    ]
-    for fragment in required:
+    ]:
         if fragment not in source:
-            errors.append(f"Commands.lua missing Taxi diagnostic contract: {fragment}")
+            errors.append(f"Commands.lua missing Taxi diagnostic: {fragment}")
 
-print("Logres G.5 production Taxi zoom contract")
-print("========================================")
-
+print("Logres production Taxi zoom contract")
+print("===================================")
 if errors:
     for error in errors:
         print(f"ERROR: {error}")
     print(f"\nFAILED: {len(errors)} error(s)")
     raise SystemExit(1)
-
 print("PASS: 0 errors")
