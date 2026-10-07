@@ -53,7 +53,7 @@ Canonical phase record:
 
 ## Phase H — Integration and Polish
 
-**Status: ACTIVE — H.1 STOCK-SURFACE OWNERSHIP/SUPPRESSION AUDIT; AUTHORED LAYOUT THEN FINAL POLISH.**
+**Status: ACTIVE — H.1 AUDIT COMPLETE; P0165 QUEST-OFFER CONTROL SUPPRESSION NEXT; AUTHORED LAYOUT THEN FINAL POLISH.**
 
 D-039 preserves the approved twelve-sheet World Ghost / Selective Hybrid E visual
 baseline. D-040 defines `Logres/Media/` plus `Theme.lua` as the runtime asset/token
@@ -100,6 +100,11 @@ while Blizzard fallback remains visible.
 
 Continue / Complete, reward selection, progress/completion presentation, gossip
 mutation, and Blizzard offer-control suppression remain separately gated.
+
+P0164 resolves the first Phase H ownership audit. Existing Quiet Mode, selective Player/Target, and conditional Bar 2–3 suppression are already proven; the minimap, Party/CompactPartyFrame, target aura/status and target-of-target, Main/Override/special action surfaces, PetActionBar/PetFrame, class/resource/special surfaces, full quest tracking/log, persistent XP, nameplates, and unsupported quest states remain stock.
+
+The first new suppression slice is P0165: source-backed suppression/restoration of the **stock quest-offer Accept/Decline controls only**. This does not authorize hiding the QuestFrame root or any progress/complete/reward/gossip surface.
+
 
 P0135 resolves the aura/status source + priority-policy layer against the exact
 Forever `1.60.1.70205` source generation. D-041 preserves stock/private/group aura

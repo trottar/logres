@@ -8,90 +8,74 @@ project: logres
 
 ## Active Objective
 
-**Execute Phase H integration-first: safe Blizzard-surface ownership/suppression, then authored layout/positions, then final whole-screen polish.**
+**Execute Phase H integration-first: finish safe Blizzard-surface suppression/coexistence, then authored layout/positions, then final whole-screen polish.**
 
-P0162 R3 is verified durable at `4628f49e48ff67b8012fb51d4b80e5d8638c6c28` on runtime `0.0.81-dev` and is runtime-accepted for the bounded reactive mouse-wheel gate.
-
-Phase G is complete for the scope Logres currently claims. Naturally unavailable captured contexts remain explicit environmental deferrals rather than fabricated PASSes.
+Phase G is complete for the scope Logres currently claims. P0164 resolves the Phase H.1 ownership audit without changing runtime behavior.
 
 ## Current Work Item
 
-**P0164 — Phase H.1 stock-surface ownership/suppression audit.**
+**P0165 — narrow Blizzard quest-offer Accept/Decline suppression/restoration.**
 
-The first Phase H slice is an evidence audit, not a blanket hide pass. For each Blizzard surface visible in the current product composition, classify:
-- the information/control functions Blizzard currently supplies;
-- the Logres replacement, if any;
-- runtime proof for that replacement;
-- restoration/fail-open coverage;
-- whether suppression is safe now, must remain stock, or is deferred.
+P0164 classifies the current stock surfaces from durable capability/restoration evidence. Existing Logres suppression that is already runtime-proven remains valid; incomplete domains remain stock.
 
-Do not add new runtime suppression in the audit itself. The audit must identify the first narrow suppression/coexistence slice that is already fully replacement- and restoration-proven.
+P0165 is deliberately narrow: source-audit the exact Forever quest-offer control frames, then suppress only the stock **offer Accept/Decline controls** while the proven Logres offer narrative and controls are ready. Do not hide the whole QuestFrame, gossip, progress/complete, rewards, or any unsupported quest state.
+
+Use the least invasive per-surface technique. Snapshot before mutation, remove invisible click regions, restore exact prior presentation/interaction before withdrawing the Logres replacement, defer protected mutations in combat if applicable, and fail open to Blizzard on any uncertainty.
 
 ## Verified State
 
-P0162 runtime acceptance on `0.0.81-dev`, loadCount `193`, client `1.60.1.70245`:
-- base Camera Profile Check PASS;
-- separate Run All PASS;
-- reactive ownership active/hooked with `OutQuad`;
-- after wheel exercise: `wheel=36`, `quick=9`, `resets=2`, `native=4`, `corrections=15`;
-- same-context City manual zoom remained around `11.10` rather than snapping back to the City entry target `5`;
-- OFF/ON cycle recorded reactive `release=1`, then `acquire=2` with hook restored;
-- user confirmed ordinary Blizzard wheel zoom remained usable while Camera Profile was OFF;
-- reactive hook conflicts `0`, secret skips `0`, failures `0`;
-- final integrated Run All completed cleanly.
+P0164 Phase H.1 audit result:
+- **SUPPRESSIBLE NOW / already implemented and runtime-proven:** Quiet Mode passive chat/social presentation; selective PlayerFrame conventional shell; selective TargetFrame conventional shell/disallowed metadata with preserved Blizzard context; stock Bar 2/3 presentation and mouse path while matching Logres Secondary/Utility routing is active.
+- **KEEP STOCK:** minimap; Party/CompactPartyFrame; target auras/status and target-of-target; Focus/boss frames; player global aura completeness; MainActionBar/OverrideActionBar/Bars 4–5; PetActionBar/PetFrame; class-resource/Rune/Totem/alternate-power; stance/vehicle/override/possess/extra-action surfaces; Objective Tracker/full quest log/watch; persistent XP bar; nameplates.
+- **DEFERRED / NEXT NARROW CANDIDATE:** Blizzard quest-offer Accept/Decline controls. Logres offer narrative plus explicit Accept/Decline are runtime/visual-proven, but stock-control suppression still needs an exact source/restoration slice.
+- quest progress/Continue, completion/Complete, rewards, reward selection, and gossip remain stock/gated.
 
-Classification:
-**P0162 RUNTIME PASS. PHASE G COMPLETE FOR CLAIMED OBSERVED SCOPE.**
-
-Phase G environmental deferrals preserved:
-- Hearth/Teleport;
-- NPC Interaction;
-- Fishing;
-- Gathering;
-- AFK priority behavior not naturally observed.
-
-DynamicCam UI fading is not a missing Camera-engine requirement; it remains Phase H presentation/suppression policy.
+External hiding-addon guidance was audited for mechanics only. Hide Anything is a useful broad product reference; source-backed MoveAny patterns confirm hidden-parent, alpha+mouse suppression, combat guards, and explicit restoration. Logres does **not** adopt blanket parent locks, polling, or permanent reassertion from generic UI-hider addons.
 
 ## Next Action
 
-Begin P0164 by auditing the real current Blizzard/Logres coexistence surface-by-surface. Produce a durable ownership matrix and select the first safe suppression slice from already-proven capability/restoration evidence.
+Prepare P0165 against the verified main baseline:
+1. audit the exact Forever source/lifecycle for stock quest-offer Accept and Decline controls;
+2. implement suppression only when the Logres offer surface is production-ready for that exact offer state;
+3. preserve every other Blizzard quest/gossip surface;
+4. restore stock controls first on Immersion OFF, unsupported state, module disable, or failure;
+5. add a bounded developer-panel check and run the normal integrated regression gate.
 
-Keep stock fallbacks for every incomplete domain. In particular, do not remove the stock minimap, Party/CompactPartyFrame, target aura/status, target-of-target, PetFrame/PetActionBar, unsupported class/resource/special controls, alternate power, RuneFrame, TotemFrame, or vehicle/override/possess surfaces without their separate replacement gates.
+Do not spend another checkpoint on a second broad suppression audit unless new evidence invalidates P0164.
 
 ## Success Criteria
 
-P0164 succeeds when:
-- every candidate Blizzard surface is classified as `SUPPRESSIBLE NOW`, `KEEP STOCK`, or `DEFERRED` with evidence;
-- every `SUPPRESSIBLE NOW` entry names its complete Logres information/control replacement and restoration/fail-open path;
-- existing intentional suppression is distinguished from new Phase H suppression work;
-- no incomplete information/control surface is removed by inference;
-- the audit identifies one narrow next runtime slice rather than a blanket UI mutation;
-- durable memory and the Phase H roadmap remain synchronized.
+P0165 succeeds when:
+- only the stock quest-offer Accept/Decline controls are hidden in the supported offer state;
+- no invisible Blizzard click region remains;
+- Logres Accept/Decline remain explicit player actions and preserve the proven quest identity/event correlation;
+- paging/final-page gating remains coherent;
+- unsupported quest states and all non-offer quest/gossip controls remain Blizzard-visible;
+- Immersion OFF/module disable/failure restores the exact usable stock controls before Logres replacement interaction is removed;
+- no polling, blanket Show/Hide hook, unrelated frame reparenting, saved Blizzard-setting mutation, taint, protected-action, Lua, or secret-value failure is introduced.
 
 ## Do Not Reopen Without New Evidence
 
-- P0162 reactive mouse-wheel zoom is accepted for the tested bounded scope;
-- P0161 Taxi/settings/shoulder-offset behavior is accepted for observed scope;
-- P0160 source-backed Taxi zoom convergence is accepted;
+- P0162 reactive mouse-wheel zoom and Phase G closure are accepted for claimed observed scope;
+- existing Quiet Mode, Player shell, Target selective suppression, and Bar 2–3 replacement remain accepted for their tested scopes;
+- the one-off TargetFrame reappearance remains OPEN / INTERMITTENT / UNREPRODUCED; do not add periodic forcing without recurrence evidence;
 - no conventional player health bar;
 - PvP is a modifier, not Immersion OFF;
-- no arbitrary/global max-distance ownership beyond the captured City override;
-- no periodic Camera context polling;
-- no DynamicCam UI fade as Camera-engine behavior;
-- stock minimap, Party/CompactPartyFrame, target aura/status, target-of-target, PetFrame/PetActionBar, unsupported class/special surfaces, and special-control fallbacks remain until separately replaced;
+- stock minimap, Party/CompactPartyFrame, target aura/status, target-of-target, PetFrame/PetActionBar, Main/Override/special action surfaces, unsupported class/special surfaces, alternate power, RuneFrame, TotemFrame, Objective Tracker, and quest states beyond the proven offer slice remain available until separately replaced;
 - player harmful/urgent and populated target aura production remain deferred;
 - positive world-target nameplate attachment remains deferred;
 - individual tracking-result positions remain source-blocked by D-043.
 
 ## Relevant References
 
-- `docs/memory/evidence/P0163_P0162_RUNTIME_PASS_2026-10-07.md`
-- `docs/memory/patches/P0163_PHASE_G_CLOSURE.md`
-- `docs/memory/patches/P0162_REACTIVE_MOUSE_WHEEL_ZOOM.md`
-- `docs/memory/investigations/G6_DYNAMICCAM_PROFILE_PARITY.md`
-- `docs/memory/architecture/CAMERA.md`
-- `docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
+- `docs/memory/evidence/P0164_BLIZZARD_SURFACE_OWNERSHIP_AUDIT_2026-10-07.md`
+- `docs/memory/patches/P0164_PHASE_H_SUPPRESSION_AUDIT.md`
 - `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`
-- `docs/memory/roadmap/STATUS.md`
-- `docs/memory/patches/P0158_SEQUENCE_CAMERA_INTEGRATION_POLISH.md`
+- `docs/memory/decisions/D-017_BLIZZARD_UI_SUPPRESSION_AND_RESTORATION.md`
+- `docs/memory/decisions/D-023_SELECTIVE_STOCK_ACTION_REPLACEMENT.md`
+- `docs/memory/decisions/D-025_QUIET_MODE_RUNTIME_SUPPRESSION.md`
+- `docs/memory/decisions/D-026_SELECTIVE_UNIT_FRAME_SUPPRESSION.md`
+- `docs/memory/decisions/D-027_TARGET_SELECTIVE_SUPPRESSION.md`
+- `docs/memory/decisions/D-035_QUEST_INTERACTION_OWNERSHIP.md`
+- `docs/memory/evidence/P0133_QUEST_OFFER_ORDER_RUNTIME_VISUAL_PASS_2026-10-05.md`
 - `docs/ROADMAP.md`

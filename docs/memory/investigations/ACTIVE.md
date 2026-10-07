@@ -254,3 +254,15 @@ P0152 is durable at `00aef4a90e5999140dc9082e68e934cfc854cb05` / `0.0.74-dev` an
 Stock PetActionBar remains available. Pet edit/reorder, binding replacement, PetActionBar suppression/restoration, PetFrame ownership, stance/form, totem, rune, alternate-power, discrete class-resource, and unsupported special-control ownership remain separately gated.
 
 Exact pet-button ornament/contrast refinement is deferred to later whole-interface polish rather than treated as an open control defect.
+
+
+## H.1 — Blizzard stock-surface ownership / suppression
+
+Status:
+**AUDIT COMPLETE — P0164; P0165 QUEST-OFFER CONTROL SUPPRESSION NEXT.**
+
+P0164 classifies the current coexistence surface-by-surface. Existing runtime-proven suppression remains valid for Quiet Mode passive chat/social presentation, selective Player and Target shells, and conditional stock Bar 2–3 replacement. All incomplete information/control domains remain stock.
+
+External UI-hider guidance was used narrowly: Hide Anything as a broad product reference and public MoveAny source for inspectable hide/restore mechanics. This does not authorize blanket hooks, parent locks, timer retries, or polling in Logres.
+
+The next narrow investigation/implementation is P0165: identify the exact Forever stock quest-offer Accept/Decline controls and lifecycle, then suppress/restore only those controls while the proven Logres offer surface is ready. Progress/Continue, completion/Complete, rewards, gossip, and the QuestFrame root remain stock.

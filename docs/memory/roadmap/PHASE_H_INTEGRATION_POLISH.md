@@ -1,6 +1,6 @@
 # Phase H — Integration and Polish
 
-Status: ACTIVE — H.1 STOCK-SURFACE OWNERSHIP/SUPPRESSION AUDIT
+Status: ACTIVE — H.1 AUDIT COMPLETE; P0165 QUEST-OFFER CONTROL SUPPRESSION NEXT
 
 ## Product objective
 
@@ -56,7 +56,19 @@ Phase H begins from these settled directions:
 
 P0162 R3 is durable at `4628f49e` / `0.0.81-dev` and runtime-accepted. Phase G is complete for claimed observed scope. Hearth/Teleport, NPC Interaction, Fishing, Gathering, and unobserved AFK priority behavior remain explicit environmental deferrals. DynamicCam UI fading remains a Phase H presentation/suppression policy question.
 
-The exact first Phase H work item is P0164: audit current Blizzard/Logres coexistence surface-by-surface and classify each candidate as `SUPPRESSIBLE NOW`, `KEEP STOCK`, or `DEFERRED` from existing capability/restoration evidence. The audit itself adds no new suppression.
+P0164 completes the first Phase H audit. Existing proven suppression remains authoritative for Quiet Mode chat/social presentation, selective Player/Target shells, and conditional Bar 2–3 replacement. Incomplete domains remain stock. P0165 is the first new suppression slice: only Blizzard quest-offer Accept/Decline controls, with exact source/restoration proof before runtime mutation.
+
+
+## H.1 audit result — P0164
+
+Canonical evidence:
+`../evidence/P0164_BLIZZARD_SURFACE_OWNERSHIP_AUDIT_2026-10-07.md`.
+
+P0164 uses Hide Anything as broad product guidance and source-backed MoveAny mechanics as implementation reference. The transferable rules are snapshot before mutation, disable interaction with invisible presentation, respect protected/combat constraints, restore exactly, and use targeted reconciliation only when a concrete lifecycle requires it.
+
+The audit does **not** authorize a generic Logres hide-anything framework. Broad hidden-parent ownership, global Show/SetShown forcing, timer retries, polling, and parent locking remain inappropriate without surface-specific evidence.
+
+The next narrow coexistence reduction is P0165: suppress/restore the stock quest-offer Accept/Decline controls only when the already-proven Logres offer surface is ready. The QuestFrame root, progress/complete, rewards, gossip, and every unsupported state remain stock/fail-open.
 
 ## Execution order
 

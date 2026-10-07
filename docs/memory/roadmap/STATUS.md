@@ -8,7 +8,7 @@ As of 2026-10-07.
 
 P0162 R3 is durable at `4628f49e` / `0.0.81-dev` and runtime-accepted. Phase G is complete for claimed observed scope with Teleport/NPC/Fishing/Gathering and unobserved AFK behavior preserved as environmental deferrals.
 
-Phase H is now primary. Exact next work item: P0164 H.1 stock-surface ownership/suppression audit. The audit itself adds no new suppression; it selects the first safe narrow runtime slice from existing evidence.
+P0164 resolves the H.1 stock-surface ownership/suppression audit from durable replacement/restoration evidence and external UI-hider mechanics. Existing proven suppression remains in place; incomplete domains remain stock. Exact next work item: P0165 narrow quest-offer Accept/Decline control suppression/restoration.
 
 ## Phase status
 
@@ -22,7 +22,7 @@ Phase H is now primary. Exact next work item: P0164 H.1 stock-surface ownership/
 | E — Compass and Navigation | COMPLETE |
 | F — Quest Experience | COMPLETE |
 | G — Cinematic Camera | COMPLETE — P0162 RUNTIME PASS; ENVIRONMENTAL DEFERRALS PRESERVED |
-| H — Integration and Polish | ACTIVE — H.1 STOCK-SURFACE OWNERSHIP/SUPPRESSION AUDIT |
+| H — Integration and Polish | ACTIVE — H.1 AUDIT COMPLETE; P0165 QUEST-OFFER CONTROL SUPPRESSION NEXT |
 
 ## Phase G / G.5
 
@@ -286,3 +286,14 @@ The bounded wheel gate passed with active/hooked `OutQuad`, final `wheel=36`, `q
 ## P0163 — Phase G closure
 
 P0163 records the P0162 pass, closes Phase G for claimed observed scope, preserves Teleport/NPC/Fishing/Gathering/unobserved-AFK environmental deferrals, and makes Phase H primary. No WoW runtime code changes or redeploy are required.
+
+
+## P0164 — Phase H.1 stock-surface suppression audit
+
+**AUDIT COMPLETE — DOCS/EVIDENCE ONLY; NO RUNTIME MUTATION.**
+
+The ownership matrix confirms existing runtime-proven suppression for Quiet Mode passive chat/social presentation, selective Player and Target shells, and conditional stock Bar 2–3 replacement. It preserves stock minimap, Party/CompactPartyFrame, target aura/status and target-of-target, Main/Override/special action surfaces, PetActionBar/PetFrame, class/resource/special surfaces, full quest tracking/log, persistent XP, nameplates, and unsupported quest states.
+
+Hide Anything-style product guidance plus source-backed MoveAny mechanics were reviewed. Logres adopts only per-surface snapshot/restore, appropriate alpha+mouse or hidden-parent mechanics, combat protection, and evidence-specific reconciliation; it does not adopt blanket hiding, polling, timer retry loops, or permanent parent locks.
+
+P0165 is the selected first new suppression slice: stock quest-offer Accept/Decline controls only, after exact Forever source/lifecycle verification. The whole QuestFrame and all unsupported quest/gossip states remain Blizzard-owned.
