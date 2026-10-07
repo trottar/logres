@@ -37,20 +37,16 @@ The P0159 `0 <-> 50` / 80-switch failure does not recur. G.5 Taxi zoom convergen
 ## G.6 — Captured DynamicCam profile parity
 
 Status:
-**OPEN — P0161 ROTATION/SETTINGS PARITY PREPARED AFTER P0160 ZOOM PASS.**
+**OPEN — P0161 ACCEPTED; P0162 REACTIVE MOUSE-WHEEL ZOOM PREPARED.**
 
 Canonical:
 `G6_DYNAMICCAM_PROFILE_PARITY.md`
 
-P0161 is the active Camera work item:
-- captured Taxi/Teleport/NPC/Fishing/Gathering rotations;
-- rotate-back behavior;
-- captured standard dynamic-pitch/focus settings;
-- standard/NPC zoom-based shoulder curves;
-- explicit City max-distance factor `1`;
-- exact pre-ownership restoration.
+P0161 is durable at `2a959094` / `0.0.80-dev` and runtime-accepted for the observed Taxi/settings/shoulder-offset scope: Taxi target `50`, continuous yaw `-20`, City landing return about `4.97-5.01`, rotate-back completion, City max-distance factor `1` with original factor `4` retained, and zero profile settings/rotation/secret/runtime failures.
 
-Reactive mouse-wheel zoom remains the final non-presentation Camera slice after P0161.
+Teleport/NPC/Fishing/Gathering and unobserved AFK behavior remain environmental deferrals.
+
+P0162 is the active and final planned non-presentation Camera slice: source-backed reactive mouse-wheel zoom using the existing P0160 transition engine plus exact CameraZoom function restoration.
 
 DynamicCam UI fades remain a Phase H presentation boundary.
 

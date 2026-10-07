@@ -6,12 +6,11 @@ As of 2026-10-07.
 
 **Complete captured DynamicCam RPG camera parity in consolidated source-backed layers, then enter Phase H integration-first: safe stock-surface suppression/coexistence, authored UI positioning, then final polish and remaining visuals.**
 
-P0160 R2 closes the observed shared zoom-driver/Taxi convergence gate.
+P0161 is durable at `2a959094` / `0.0.80-dev` and runtime-accepted for the observed Taxi/settings/shoulder-offset scope.
 
-Phase G remains active for:
-1. P0161 captured rotations + camera-setting ownership/restoration;
-2. source-backed reactive mouse-wheel zoom;
-3. explicit closure with environmental deferrals for naturally unavailable contexts.
+Phase G remains active only for:
+1. P0162 source-backed reactive mouse-wheel zoom;
+2. explicit closure with environmental deferrals for naturally unavailable contexts.
 
 Phase H becomes primary after those Camera-only slices close.
 
@@ -26,7 +25,7 @@ Phase H becomes primary after those Camera-only slices close.
 | D — Immersion Controller | COMPLETE |
 | E — Compass and Navigation | COMPLETE |
 | F — Quest Experience | COMPLETE |
-| G — Cinematic Camera | ACTIVE — P0161 ROTATION/SETTINGS + FINAL REACTIVE-ZOOM SLICE |
+| G — Cinematic Camera | ACTIVE — P0162 FINAL REACTIVE-ZOOM SLICE |
 | H — Integration and Polish | QUEUED — NEXT AFTER PHASE G CAMERA PARITY |
 
 ## Phase G / G.5
@@ -61,7 +60,7 @@ Classification:
 
 The earlier P0117/P0159 landing failures remain preserved as historical evidence.
 
-P0161 is now the active G.6 implementation layer.
+P0161 is accepted for observed scope. P0162 reactive mouse-wheel zoom is now the active G.6 implementation layer.
 
 ## Parallel approved visual translation
 

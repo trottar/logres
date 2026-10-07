@@ -275,12 +275,15 @@ local Controller = Logres:RegisterModule("CameraWorldCombat", {
         self.apiAvailable = false
         self.ownsContext = false
         self.selectedContext = "none"
+        self.manualZoomContext = nil
         self.transitionActive = false
         self.transitionContext = nil
         self.transitionStartZoom = nil
         self.transitionRequestedZoom = nil
         self.transitionEffectiveTargetZoom = nil
         self.transitionDuration = nil
+        self.transitionEasingName = nil
+        self.lastTransitionEasingName = nil
         self.transitionArmZoom = nil
         self.transitionArmTime = nil
         self.transitionStartTime = nil
@@ -359,6 +362,11 @@ local Controller = Logres:RegisterModule("CameraWorldCombat", {
             self.profileBehavior:Initialize(self)
         end
 
+        self.reactiveZoom = Logres.CameraReactiveZoom
+        if self.reactiveZoom then
+            self.reactiveZoom:Initialize(self)
+        end
+
         self.reconcileCount = 0
         self.transitionStartCount = 0
         self.transitionCompleteCount = 0
@@ -383,10 +391,20 @@ local Controller = Logres:RegisterModule("CameraWorldCombat", {
         self.moduleEnabled = false
         self.ownsContext = false
         self.selectedContext = "none"
+        self.manualZoomContext = nil
         self.fishingHoldUntil = nil
         self.fishingHoldSatisfied = false
         self.lastFishingHoldRemaining = nil
         self:StopTransition("module-disabled", false)
+
+        if self.reactiveZoom then
+            local reactiveOK, reactiveError =
+                self.reactiveZoom:Release()
+            if not reactiveOK then
+                self.lastError = reactiveError
+                self.failureCount = self.failureCount + 1
+            end
+        end
 
         if self.profileBehavior then
             local behaviorOK, behaviorError =
@@ -630,6 +648,7 @@ function Controller:StopTransition(reason, countAsStop)
     self.transitionContext = nil
     self.transitionDirection = nil
     self.transitionStartTime = nil
+    self.transitionEasingName = nil
     self:SetAnimationActive(self.fishingHoldUntil ~= nil)
     self.lastStopReason = reason
 
@@ -654,12 +673,60 @@ function Controller:StopTransition(reason, countAsStop)
     return true, nil
 end
 
+function Controller:MarkReactiveManualZoom()
+    if self.ownsContext
+        and self.selectedContext ~= nil
+        and self.selectedContext ~= "none"
+    then
+        self.manualZoomContext = self.selectedContext
+    end
+end
+
+function Controller:BeginReactiveZoomTransition(
+    currentZoom,
+    targetZoom,
+    transitionDuration,
+    easingName
+)
+    if not self.moduleEnabled or not self.ownsContext then
+        return false, "camera controller does not own context"
+    end
+
+    if self.transitionActive then
+        local stopOK, stopError =
+            self:StopTransition("reactive-zoom-restart", true)
+        if not stopOK then
+            return false, stopError
+        end
+    end
+
+    self:MarkReactiveManualZoom()
+
+    return self:BeginTransition(
+        "reactive",
+        currentZoom,
+        targetZoom,
+        targetZoom,
+        transitionDuration,
+        easingName or "OutQuad"
+    )
+end
+
 function Controller:Relinquish(reason, blocked)
     local hadOwnership = self.ownsContext or self.transitionActive
     self.fishingHoldUntil = nil
     self.fishingHoldSatisfied = false
     self.lastFishingHoldRemaining = nil
     self:StopTransition(reason, self.transitionActive)
+
+    if self.reactiveZoom then
+        local reactiveOK, reactiveError =
+            self.reactiveZoom:Release()
+        if not reactiveOK and self.lastError == nil then
+            self.lastError = reactiveError
+            self.failureCount = self.failureCount + 1
+        end
+    end
 
     if self.profileBehavior then
         local behaviorOK, behaviorError =
@@ -672,6 +739,7 @@ function Controller:Relinquish(reason, blocked)
 
     self.ownsContext = false
     self.selectedContext = "none"
+    self.manualZoomContext = nil
     self.lastReason = reason
 
     if blocked then
@@ -800,7 +868,21 @@ local function easeInOutQuad(t, beginValue, change, duration)
         + beginValue
 end
 
+local function easeOutQuad(t, beginValue, change, duration)
+    t = t / duration
+    return -change * t * (t - 2) + beginValue
+end
+
+local function easingForName(name)
+    if name == "OutQuad" then
+        return easeOutQuad
+    end
+
+    return easeInOutQuad
+end
+
 local function transitionExpectedZoom(
+    easingFunc,
     startZoom,
     targetZoom,
     duration,
@@ -817,7 +899,7 @@ local function transitionExpectedZoom(
         t = duration
     end
 
-    return easeInOutQuad(
+    return easingFunc(
         t,
         startZoom,
         targetZoom - startZoom,
@@ -958,7 +1040,8 @@ function Controller:BeginTransition(
     currentZoom,
     requestedTargetZoom,
     effectiveTargetZoom,
-    transitionDuration
+    transitionDuration,
+    easingName
 )
     local stopOK, stopError = stopMotion()
     if not stopOK then
@@ -980,6 +1063,8 @@ function Controller:BeginTransition(
     self.transitionRequestedZoom = requestedTargetZoom
     self.transitionEffectiveTargetZoom = effectiveTargetZoom
     self.transitionDuration = transitionDuration
+    self.transitionEasingName = easingName or "InOutQuad"
+    self.lastTransitionEasingName = self.transitionEasingName
     self.transitionArmZoom = currentZoom
     self.transitionArmTime = GetTime()
     self.transitionStartTime = nil
@@ -1045,7 +1130,7 @@ function Controller:ApplyTransitionMotion(currentZoom, elapsed)
         > (2 * NOMINAL_FRAME_INTERVAL)
     then
         speed = getEaseVelocity(
-            easeInOutQuad,
+            easingForName(self.transitionEasingName),
             NOMINAL_FRAME_INTERVAL,
             elapsed,
             startZoom,
@@ -1443,6 +1528,7 @@ function Controller:OnUpdate()
     then
         local expectedZoom =
             transitionExpectedZoom(
+                easingForName(self.transitionEasingName),
                 startZoom,
                 requestedTargetZoom,
                 transitionDuration,
@@ -1472,7 +1558,7 @@ function Controller:OnUpdate()
 
             rebasedElapsed,
             rebaseIterations = rebaseEaseTime(
-                easeInOutQuad,
+                easingForName(self.transitionEasingName),
                 LIBCAMERA_REBASE_PRECISION,
                 currentZoom,
                 elapsed,
@@ -1617,6 +1703,24 @@ function Controller:Reconcile(reason)
         return true, contextReason
     end
 
+    local reactiveZoom = self.reactiveZoom
+    if reactiveZoom == nil then
+        self.lastError = "reactive zoom adapter unavailable"
+        self.failureCount = self.failureCount + 1
+        self:Relinquish("reactive-zoom-unavailable", false)
+        return false, self.lastError
+    end
+
+    if not reactiveZoom:IsActive() then
+        local reactiveOK, reactiveError = reactiveZoom:Acquire()
+        if not reactiveOK then
+            self.lastError = reactiveError
+            self.failureCount = self.failureCount + 1
+            self:Relinquish("reactive-zoom-acquire-failed", false)
+            return false, reactiveError
+        end
+    end
+
     local requestedTargetZoom = contextTarget(context)
     local effectiveTargetZoom = requestedTargetZoom
     local transitionDuration = transitionDurationForContext(
@@ -1625,6 +1729,10 @@ function Controller:Reconcile(reason)
     )
 
     local previousContext = self.selectedContext
+    if previousContext ~= context then
+        self.manualZoomContext = nil
+    end
+
     local behavior = self.profileBehavior
     local behaviorWasInactive = false
 
@@ -1722,6 +1830,16 @@ function Controller:Reconcile(reason)
     end
 
     if self.transitionActive
+        and self.transitionContext == "reactive"
+        and self.manualZoomContext == context
+    then
+        self.selectedContext = context
+        self.ownsContext = true
+        self.lastAction = "reactive-transition-continues"
+        return true, "reactive-transition-continues"
+    end
+
+    if self.transitionActive
         and self.transitionContext == context
         and self.transitionRequestedZoom == requestedTargetZoom
         and self.transitionEffectiveTargetZoom == effectiveTargetZoom
@@ -1743,6 +1861,12 @@ function Controller:Reconcile(reason)
 
     self.selectedContext = context
     self.ownsContext = true
+
+    if self.manualZoomContext == context then
+        self.noOpCount = self.noOpCount + 1
+        self.lastAction = "noop-reactive-manual"
+        return true, "noop-reactive-manual"
+    end
 
     local currentZoom, zoomError, zoomSecret = readZoom()
     if currentZoom == nil then
@@ -1798,6 +1922,9 @@ function Controller:GetDebugStatus()
         transitionRequestedZoom = self.transitionRequestedZoom,
         transitionEffectiveTargetZoom = self.transitionEffectiveTargetZoom,
         transitionDuration = self.transitionDuration,
+        transitionEasingName = self.transitionEasingName,
+        lastTransitionEasingName = self.lastTransitionEasingName,
+        manualZoomContext = self.manualZoomContext,
         transitionArmZoom = self.transitionArmZoom,
         transitionFirstUpdateDelay = self.transitionFirstUpdateDelay,
         transitionDirection = self.transitionDirection,
@@ -1832,6 +1959,9 @@ function Controller:GetDebugStatus()
         lastCameraDistanceCeiling = self.lastCameraDistanceCeiling,
         profileBehavior = self.profileBehavior
             and self.profileBehavior:GetDebugStatus()
+            or nil,
+        reactiveZoom = self.reactiveZoom
+            and self.reactiveZoom:GetDebugStatus()
             or nil,
         lastTransitionElapsed = self.lastTransitionElapsed,
         lastTargetReached = self.lastTargetReached,

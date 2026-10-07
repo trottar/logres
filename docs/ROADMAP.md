@@ -34,35 +34,17 @@ The roadmap is capability-gated. A phase advances only when its success criteria
 
 ## Phase G — Cinematic Camera
 
-**Status: ACTIVE — P0161 ROTATION/SETTINGS PARITY, THEN REACTIVE MOUSE-WHEEL ZOOM.**
+**Status: ACTIVE — P0162 FINAL REACTIVE MOUSE-WHEEL ZOOM SLICE.**
 
-G.1 through G.4 are runtime-proven.
+G.1 through G.5 are runtime-proven for their observed scopes.
 
-P0159 R1 is durable at `8ddcf098` / `0.0.78-dev` for the captured profile context/priority layer.
+P0159 R1 provides captured context/priority ownership. P0160 R2 provides the source-backed LibCamera zoom engine and accepted Taxi convergence.
 
-P0160 R2 is durable at `ae75989b` / `0.0.79-dev` and passes the observed source-backed zoom path:
-- base Camera Profile Check PASS;
-- separate Run All PASS;
-- Taxi `~4.0096 -> 50` PASS;
-- landing `50 -> ~4.9806` PASS;
-- zero direction-switch oscillation;
-- source rebase runtime-exercised both directions;
-- user visually confirmed zoom-out and landing return.
+P0161 is durable at `2a959094` / `0.0.80-dev` and runtime-accepted for the observed Taxi/settings/shoulder-offset scope: target `50`, Taxi yaw `-20`, City return about `4.97-5.01`, rotate-back completion, City max-distance factor `1` with original `4`, and zero profile/camera secret/runtime failures.
 
-G.5 Taxi zoom convergence is therefore closed for observed scope.
+Teleport/NPC/Fishing/Gathering and unobserved AFK behavior remain environmental deferrals.
 
-P0161 is the next consolidated source-backed profile layer:
-- Taxi/Teleport continuous yaw;
-- NPC/Fishing/Gathering degree rotations;
-- rotate-back;
-- captured standard camera settings;
-- standard/NPC shoulder curves;
-- explicit City max-distance factor `1`;
-- exact pre-ownership restoration.
-
-The canonical SavedVariables profile does not store a standard max-distance override. Logres does not fabricate one: outside City, P0161 preserves the live pre-ownership baseline.
-
-After P0161, source-backed reactive mouse-wheel zoom is the final planned non-presentation Camera slice.
+P0162 source-backed reactive mouse-wheel zoom is the final planned non-presentation Camera slice. After a clean bounded wheel/restoration runtime gate, Phase G can close with those deferrals explicit.
 
 DynamicCam UI fades remain a Phase H presentation/suppression policy question rather than an implicit camera-engine side effect.
 

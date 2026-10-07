@@ -35,13 +35,15 @@ if CONTROLLER.is_file():
     elif combat_index > city_index:
         errors.append("live combat must be evaluated before resting/City")
 
+    # Reactive zoom is now a generic P0162 camera-ownership capability and is
+    # separately covered by check_camera_reactive_zoom_contract.py. City still
+    # may not add presentation, timers, or direct max-distance ownership here.
     forbidden = [
         'Logres:RegisterEvent("PLAYER_UPDATE_RESTING"',
         'SetCVar("cameraDistanceMaxZoomFactor"',
         "C_CVar.SetCVar",
         "FadeOutUI",
         "UIParent",
-        "ReactiveZoom",
         "C_Timer.NewTicker",
         "C_Timer.NewTimer",
     ]

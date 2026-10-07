@@ -1,6 +1,6 @@
 # Phase G — Cinematic Camera
 
-Status: ACTIVE — P0161 ROTATION/SETTINGS PARITY + FINAL REACTIVE-ZOOM SLICE
+Status: ACTIVE — P0162 FINAL REACTIVE-ZOOM SLICE
 Opened: 2026-10-02
 
 ## Product Objective
@@ -150,10 +150,9 @@ Production Taxi is not considered closed until that runtime proof passes.
 The source-backed zoom engine is now runtime-accepted for the observed normal-Taxi path.
 
 Current order:
-1. P0161 captured rotations + camera settings/restoration;
-2. source-backed reactive mouse-wheel zoom;
-3. close Phase G with explicit environmental deferrals for naturally unavailable contexts;
-4. enter Phase H for safe stock-surface suppression/coexistence, authored positions, and final polish.
+1. P0162 source-backed reactive mouse-wheel zoom;
+2. close Phase G with explicit environmental deferrals for naturally unavailable contexts;
+3. enter Phase H for safe stock-surface suppression/coexistence, authored positions, and final polish.
 
 P0160 R2 is durable at `ae75989b` / `0.0.79-dev`.
 
@@ -192,19 +191,18 @@ UI fades remain Phase H presentation policy.
 
 ## P0161 — rotation/settings parity
 
-Candidate:
-`0.0.80-dev`.
+P0161 is durable at `2a959094` / `0.0.80-dev` and **RUNTIME PASS for the observed Taxi/settings/shoulder-offset scope**.
 
-Runtime gate:
-1. `/reload`;
-2. Phase G -> Camera Profile Check;
-3. Phase 0 -> Run All;
-4. confirm ordinary manual zoom is usable;
-5. take one normal Taxi;
-6. confirm continuous left yaw in flight and run Camera Profile Check;
-7. after landing, confirm rotation returns while zoom returns close, then run Camera Profile Check again;
-8. upload diagnostics.
+Accepted evidence includes Taxi target `50`, continuous yaw `-20`, City landing return about `4.97-5.01`, rotate-back completion, City max-distance factor `1` with captured original factor `4`, and zero camera/profile secret/runtime/settings/rotation failures.
 
-Do not manufacture Teleport/NPC/Fishing/Gathering contexts solely for proof. Their naturally unavailable branches remain environmental deferrals.
+Teleport/NPC/Fishing/Gathering and unobserved AFK behavior remain environmental deferrals.
 
-After a clean P0161 result, reactive mouse-wheel zoom is the final planned non-presentation Camera slice.
+## P0162 — reactive mouse-wheel zoom
+
+Candidate: `0.0.81-dev`.
+
+P0162 is the final planned non-presentation Camera parity slice. It adapts pinned DynamicCam `MouseZoom.lua` semantics, uses effective captured settings `true / 0.1 / 2.5 / 1.2 / 2.5 / OutQuad`, and reuses the P0160 source-backed transition engine.
+
+The bounded runtime gate is local wheel interaction plus Camera Profile Check / Run All and an OFF/ON restoration check. No Taxi or contrived deferred-context travel is required.
+
+DynamicCam UI fading remains Phase H presentation policy.

@@ -36,7 +36,7 @@ The accepted Taxi sample replaced the earlier oscillation:
 
 The user visually confirmed the camera zoomed out and returned close after landing.
 
-P0161 now adds the next captured-profile layer: rotations plus camera-setting ownership/restoration.
+P0161 adds the captured-profile rotation/settings layer and is runtime-accepted for the observed Taxi/settings/shoulder-offset scope at `2a959094` / `0.0.80-dev`. P0162 now adds the final non-presentation reactive mouse-wheel layer.
 
 ## Taxi precedence and zoom intent
 
@@ -205,12 +205,11 @@ Observed Taxi:
 - zero camera failures.
 
 G.6 current:
-**P0161 ROTATION + CAMERA-SETTING OWNERSHIP/RESTORATION PREPARED** on candidate `0.0.80-dev`.
+**P0161 RUNTIME-ACCEPTED FOR OBSERVED TAXI/SETTINGS/SHOULDER SCOPE; P0162 REACTIVE ZOOM PREPARED** on candidate `0.0.81-dev`.
 
-After P0161 acceptance:
-1. source-backed reactive mouse-wheel zoom;
-2. close Phase G with explicit environmental deferrals for naturally unavailable contexts;
-3. enter Phase H suppression/coexistence, authored layout, and final polish.
+After P0162 runtime acceptance:
+1. close Phase G with explicit environmental deferrals for naturally unavailable contexts;
+2. enter Phase H suppression/coexistence, authored layout, and final polish.
 
 ## P0117 landing overshoot failure
 
@@ -264,3 +263,14 @@ The explicit City max-distance factor `1` is now authorized as a situation-speci
 Reactive mouse-wheel zoom remains the final non-presentation Camera parity slice.
 
 DynamicCam UI fading remains Phase H presentation policy.
+
+## P0162 reactive mouse-wheel layer
+
+Canonical source audit:
+`../evidence/P0162_REACTIVE_ZOOM_SOURCE_AUDIT_2026-10-07.md`.
+
+P0162 captures exact pre-ownership `CameraZoomIn`/`CameraZoomOut` functions, installs a bounded adapter while Logres owns camera context, and restores the captured functions only if the globals still point to Logres wrappers. A newer external hook is preserved rather than overwritten.
+
+The adapter preserves DynamicCam zero-increment suppression, non-wheel pass-through, quick-step accumulation, direction reset, first-person `0.05` escape, live max-distance clamp, short-hop native fallback, and stale-target correction. It reuses P0160 motion with `OutQuad`; ordinary situation transitions remain `InOutQuad`.
+
+A manual-zoom context marker prevents same-context reconciliation from immediately undoing the user's reactive wheel choice. It clears when the camera context changes. No CVar ownership expansion, timer/polling, UI fade, or stock suppression is added.

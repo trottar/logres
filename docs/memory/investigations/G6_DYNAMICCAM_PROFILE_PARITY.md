@@ -1,6 +1,6 @@
 # G.6 — Captured DynamicCam Profile Parity
 
-Status: **OPEN — P0160 ZOOM PASS; P0161 ROTATION/SETTINGS PARITY PREPARED**
+Status: **OPEN — P0161 ACCEPTED; P0162 REACTIVE ZOOM PREPARED**
 
 Opened: 2026-10-06
 
@@ -49,25 +49,12 @@ G.5 Taxi zoom convergence is closed for observed scope.
 
 ## Layer 3 — P0161 rotations and camera settings
 
-P0161 ports:
-- Taxi -20 continuous yaw;
-- Teleport +15 continuous yaw;
-- NPC -45 yaw;
-- Fishing +10/+10 yaw/pitch;
-- Gathering -15/+15 yaw/pitch;
-- rotate-back behavior;
-- captured standard dynamic-pitch/focus CVars;
-- standard and NPC zoom-based shoulder curves;
-- explicit City max-distance factor 1;
-- exact pre-ownership restoration.
+P0161 is durable at `2a959094` / `0.0.80-dev` and runtime-accepted for the observed Taxi/settings/shoulder-offset scope. Accepted evidence includes Taxi target `50`, continuous yaw `-20`, City landing return about `4.97-5.01`, rotate-back completion, City max-distance factor `1` with original factor `4`, and zero profile/camera secret/runtime failures.
 
-UI fading remains Phase H policy.
+Teleport/NPC/Fishing/Gathering and unobserved AFK behavior remain environmental deferrals. UI fading remains Phase H policy.
 
-## Remaining non-presentation slice
+## Layer 4 — P0162 reactive mouse-wheel zoom
 
-After P0161:
-- source-backed reactive mouse-wheel zoom.
+P0162 is the final planned Camera-only behavior before Phase G closure, subject to runtime evidence. It adapts pinned DynamicCam `MouseZoom.lua`, uses the captured effective reactive settings, reuses P0160 motion with `OutQuad`, and restores exact pre-ownership CameraZoom functions.
 
-That is the final planned Camera-only behavior before Phase G closure, subject to runtime evidence.
-
-Naturally unavailable Teleport/NPC/Fishing/Gathering contexts may close as explicit environmental deferrals rather than requiring contrived gameplay.
+Naturally unavailable P0161 contexts may close as explicit environmental deferrals rather than requiring contrived gameplay.

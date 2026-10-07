@@ -4,89 +4,71 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0160 R2 `ae75989bc0acadf550bd26e39c9bc70acee3e46c`.
+P0161 `2a95909495e81104e02891fac94f19d59b1e030c` / `0.0.80-dev`.
 
-## P0160 runtime result
+## P0161 runtime acceptance
 
-`0.0.79-dev`, loadCount `191`, client `1.60.1.70245`.
-
-Base:
-- Camera Profile Check PASS;
-- Run All PASS;
-- failures=0.
-
-Taxi:
-- start about `4.0096`;
-- requested/effective target `50`;
-- final `50`;
-- elapsed about `4.936s`;
-- 347 samples;
-- 346 toward / 0 away;
-- 0 direction switches;
-- 2 source rebases;
-- failures=0.
-
-Landing:
-- World start `50`;
-- target `5`;
-- final about `4.9806`;
-- elapsed about `2.426s`;
-- 158 samples;
-- 156 toward / 1 away;
-- 0 direction switches;
-- 2 source rebases;
-- failures=0.
-
-User visual confirmation:
-Taxi zoomed out and returned close after landing.
+Observed accepted scope:
+- base Camera Profile Check PASS;
+- separate Run All PASS;
+- Taxi target `50` reached;
+- captured Taxi continuous yaw `-20` active;
+- City landing return about `4.97-5.01`;
+- Taxi rotate-back completed, last recorded return about `-29.43` degrees;
+- City max-distance override `1` with captured original factor `4` retained;
+- profile settings/rotation failures `0`;
+- camera/profile secret/runtime failures `0`.
 
 Classification:
-**P0160 RUNTIME PASS; G.5 TAXI ZOOM CONVERGENCE CLOSED FOR OBSERVED SCOPE.**
+**P0161 RUNTIME PASS FOR OBSERVED TAXI/SETTINGS/SHOULDER-OFFSET SCOPE.**
 
-## P0161
+Teleport, NPC Interaction, Fishing, Gathering, and unobserved AFK behavior remain environmental deferrals.
 
-P0161 is the next consolidated profile layer.
+## P0162 R1
 
-It ports:
-- Taxi continuous yaw -20 + return;
-- Teleport continuous yaw +15 + return;
-- NPC yaw -45 + return;
-- Fishing yaw/pitch +10/+10 + return;
-- Gathering yaw/pitch -15/+15 + return;
-- captured standard dynamic-pitch and target-focus settings;
-- standard +1 zoom-based shoulder curve;
-- NPC -2 shoulder curve;
-- City max-distance factor 1;
-- exact pre-ownership CVar restoration.
+P0162 R1 is the exact next work item and the final planned non-presentation Phase G slice.
 
-It uses the audited DynamicCam/LibCamera source behavior and preserves fail-open DynamicCam coexistence.
+It adapts pinned DynamicCam reactive mouse-wheel behavior with effective captured settings:
+- enabled `true`;
+- always-add `0.1000000000000001`;
+- quick additional increment `2.5`;
+- quick threshold `1.2`;
+- max time `2.5` seconds;
+- easing `OutQuad`.
 
-P0161 does not yet replace CameraZoomIn/Out for reactive mouse-wheel zoom and does not implement DynamicCam UI fades.
+Implementation boundaries:
+- reuse P0160's source-backed transition engine;
+- exact pre-ownership CameraZoom function restoration;
+- non-wheel increments pass through to captured native functions;
+- same-context manual zoom persists until context changes;
+- no CVar ownership expansion;
+- no timers/polling;
+- no UI fade or stock suppression.
 
 Candidate runtime:
-`0.0.80-dev`.
+`0.0.81-dev`.
+
+Delivery note: the initial P0162 artifact refused before tracked writes because its exact-baseline guard rejected `LOGRES_DIAGNOSTICS_LATEST.lua`. R1 changes only that guard, allowing the exact diagnostics filename and known patch-delivery inventory while continuing to reject unexpected untracked files.
 
 ## Runtime gate
 
-1. `/reload`;
-2. Phase G -> Camera Profile Check;
-3. Phase 0 -> Run All;
-4. verify ordinary manual zoom remains usable;
-5. normal Taxi:
-   - visible continuous left yaw in flight;
-   - Camera Profile Check in flight;
-   - visible return after landing;
-   - Camera Profile Check after settle;
-6. upload diagnostics.
+1. `/reload`.
+2. Phase G -> Camera Profile Check.
+3. Phase 0 -> Run All.
+4. In place, use one slow wheel tick each way, several quick same-direction ticks, then reverse once.
+5. Phase G -> Camera Profile Check; require reactive active/hooked, wheel count > 0, easing OutQuad, failures/secrets/conflicts `0`.
+6. Phase G -> Camera Profile OFF; verify one normal Blizzard wheel zoom still works.
+7. Phase G -> Camera Profile ON; wheel once and run Camera Profile Check again.
+8. Upload diagnostics.
 
-Do not require contrived Teleport/Fishing/Gathering/NPC proof.
+No Taxi/travel is required for this gate.
 
 ## Key references
 
 - `../CURRENT.md`
-- `../evidence/P0161_P0160_ZOOM_DRIVER_PASS_2026-10-07.md`
-- `../evidence/P0161_PROFILE_BEHAVIOR_SOURCE_AUDIT_2026-10-07.md`
-- `../patches/P0161_PROFILE_ROTATION_SETTINGS_PARITY.md`
+- `../evidence/P0162_P0161_RUNTIME_PASS_2026-10-07.md`
+- `../evidence/P0162_REACTIVE_ZOOM_SOURCE_AUDIT_2026-10-07.md`
+- `../patches/P0162_REACTIVE_MOUSE_WHEEL_ZOOM.md`
 - `../investigations/G6_DYNAMICCAM_PROFILE_PARITY.md`
 - `../architecture/CAMERA.md`
 - `../roadmap/PHASE_G_CINEMATIC_CAMERA.md`

@@ -3502,6 +3502,7 @@ local function cameraWorldCombatStatusPasses(status)
         or status.transitionContext == "gathering"
         or status.transitionContext == "interaction"
         or status.transitionContext == "fishing"
+        or status.transitionContext == "reactive"
 
     local transitionCoherent =
         status.transitionActive ~= true or transitionContext
@@ -3509,6 +3510,25 @@ local function cameraWorldCombatStatusPasses(status)
     local profileHealthy =
         (status.profileReadFailures or 0) == 0
         and status.lastProfileError == nil
+
+    local reactive = status.reactiveZoom
+    local reactiveHealthy =
+        reactive ~= nil
+        and (reactive.failureCount or 0) == 0
+        and (reactive.secretSkipCount or 0) == 0
+        and reactive.lastError == nil
+        and (
+            (
+                status.ownsContext == true
+                and reactive.active == true
+                and reactive.hooked == true
+                and reactive.lastHookConflict ~= true
+            )
+            or (
+                status.ownsContext == false
+                and reactive.active == false
+            )
+        )
 
     local behavior = status.profileBehavior
     local behaviorHealthy =
@@ -3537,6 +3557,7 @@ local function cameraWorldCombatStatusPasses(status)
         and ownershipCoherent
         and transitionCoherent
         and profileHealthy
+        and reactiveHealthy
         and behaviorHealthy
 end
 
@@ -3635,6 +3656,47 @@ local function emitCameraProfileContextStatus(status)
     ))
 end
 
+local function emitCameraReactiveZoomStatus(status)
+    local reactive = status.reactiveZoom
+    if reactive == nil then
+        emit("Logres cameraprofile reactive: unavailable")
+        return
+    end
+
+    emit(string.format(
+        "Logres cameraprofile reactive: active=%s hooked=%s source=%s enabled=%s settings=%s/%s/%s/%s easing=%s target=%s current=%s lastTarget=%s duration=%s direction=%s increment=%s wheel=%s quick=%s resets=%s native=%s corrections=%s fallback=%s acquire=%s release=%s conflicts=%s/%s secrets=%s failures=%s action=%s error=%s",
+        tostring(reactive.active),
+        tostring(reactive.hooked),
+        tostring(reactive.sourceDynamicCamCommit),
+        tostring(reactive.enabled),
+        tostring(reactive.addIncrementsAlways),
+        tostring(reactive.addIncrements),
+        tostring(reactive.incAddDifference),
+        tostring(reactive.maxZoomTime),
+        tostring(reactive.easing),
+        tostring(reactive.target),
+        tostring(reactive.lastCurrentZoom),
+        tostring(reactive.lastTargetZoom),
+        tostring(reactive.lastDuration),
+        tostring(reactive.lastDirection),
+        tostring(reactive.lastIncrement),
+        tostring(reactive.wheelTickCount),
+        tostring(reactive.quickZoomCount),
+        tostring(reactive.directionResetCount),
+        tostring(reactive.nativeZoomCount),
+        tostring(reactive.targetCorrectionCount),
+        tostring(reactive.fallbackCount),
+        tostring(reactive.acquireCount),
+        tostring(reactive.releaseCount),
+        tostring(reactive.hookConflictCount),
+        tostring(reactive.lastHookConflict),
+        tostring(reactive.secretSkipCount),
+        tostring(reactive.failureCount),
+        tostring(reactive.lastAction),
+        tostring(reactive.lastError)
+    ))
+end
+
 local function emitCameraProfileBehaviorStatus(status)
     local behavior = status.profileBehavior
     if behavior == nil then
@@ -3682,6 +3744,7 @@ local function runCameraWorldCombatCheck()
     emitCameraWorldCombatStatus(passed and "PASS" or "FAIL", status, passed)
     emitCameraWorldCombatMotion(status)
     emitCameraProfileContextStatus(status)
+    emitCameraReactiveZoomStatus(status)
     emitCameraProfileBehaviorStatus(status)
 end
 
@@ -3698,6 +3761,8 @@ local function runCameraWorldCombatReconcile()
 
     emitCameraWorldCombatMotion(status)
     emitCameraProfileContextStatus(status)
+    emitCameraReactiveZoomStatus(status)
+    emitCameraProfileBehaviorStatus(status)
 
     if not ok and reason then
         emit("Logres cameraworldcombat reconcile reason: " .. tostring(reason))
