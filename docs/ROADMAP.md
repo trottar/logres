@@ -34,36 +34,37 @@ The roadmap is capability-gated. A phase advances only when its success criteria
 
 ## Phase G — Cinematic Camera
 
-**Status: ACTIVE — P0160 R2 SOURCE-BACKED ZOOM DRIVER RETEST, THEN REMAINING CAPTURED-PROFILE PARITY.**
+**Status: ACTIVE — P0161 ROTATION/SETTINGS PARITY, THEN REACTIVE MOUSE-WHEEL ZOOM.**
 
 G.1 through G.4 are runtime-proven.
 
-P0159 R1 is durable at `8ddcf098` / `0.0.78-dev`.
+P0159 R1 is durable at `8ddcf098` / `0.0.78-dev` for the captured profile context/priority layer.
 
-The captured-profile context layer passes the observed ordinary baseline and Taxi entry:
-- profile reads clean;
-- Taxi target `50` passes twice at about `49.75597`.
+P0160 R2 is durable at `ae75989b` / `0.0.79-dev` and passes the observed source-backed zoom path:
+- base Camera Profile Check PASS;
+- separate Run All PASS;
+- Taxi `~4.0096 -> 50` PASS;
+- landing `50 -> ~4.9806` PASS;
+- zero direction-switch oscillation;
+- source rebase runtime-exercised both directions;
+- user visually confirmed zoom-out and landing return.
 
-The real landing transition still fails:
-- City start about `49.75597`;
-- target `5`;
-- final `0`;
-- 97 samples;
-- 80 direction switches;
-- max absolute easing-position error about `49.471`.
+G.5 Taxi zoom convergence is therefore closed for observed scope.
 
-The source audit identifies the architectural cause: DynamicCam delegates camera motion to LibCamera, while Logres had been reconstructing that engine piecemeal.
+P0161 is the next consolidated source-backed profile layer:
+- Taxi/Teleport continuous yaw;
+- NPC/Fishing/Gathering degree rotations;
+- rotate-back;
+- captured standard camera settings;
+- standard/NPC shoulder curves;
+- explicit City max-distance factor `1`;
+- exact pre-ownership restoration.
 
-P0160 R2 therefore replaces the bespoke zoom timing/correction path with the audited ordinary LibCamera behavior:
-- InOutQuad easing;
-- finite-difference easing velocity;
-- source position/time rebase;
-- source final target correction;
-- temporary/restored `cameraZoomSpeed` ownership.
+The canonical SavedVariables profile does not store a standard max-distance override. Logres does not fabricate one: outside City, P0161 preserves the live pre-ownership baseline.
 
-`cameraDistanceMaxZoomFactor` remains outside Logres ownership.
+After P0161, source-backed reactive mouse-wheel zoom is the final planned non-presentation Camera slice.
 
-After this zoom gate passes, Phase G continues with the remaining captured-profile rotations and camera-setting ownership/restoration. DynamicCam UI fades are reconciled with Phase H presentation policy.
+DynamicCam UI fades remain a Phase H presentation/suppression policy question rather than an implicit camera-engine side effect.
 
 Canonical phase record:
 `memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`

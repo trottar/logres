@@ -148,7 +148,7 @@ reconstructed from the export.
 - enter `2`;
 - `zoomType = out`, target `50` only when closer;
 - degrees rotation yaw `10`, pitch `10`, speed `15`;
-- upstream activation delay `1`.
+- upstream exit delay `1`.
 
 ### 303 — AFK
 - enabled;

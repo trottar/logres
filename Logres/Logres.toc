@@ -2,7 +2,7 @@
 ## Title: Logres
 ## Notes: Immersive, world-first interface for World of Warcraft Forever.
 ## Author: trottar
-## Version: 0.0.79-dev
+## Version: 0.0.80-dev
 ## SavedVariables: LogresDB, LogresDiagnosticsDB
 
 Core\Bootstrap.lua
@@ -37,6 +37,7 @@ Quest\ActiveQuest.lua
 Quest\InteractionProbe.lua
 Quest\OfferActionProbe.lua
 Camera\ProfileContexts.lua
+Camera\ProfileBehavior.lua
 Camera\WorldCombat.lua
 Camera\Probe.lua
 Core\Commands.lua

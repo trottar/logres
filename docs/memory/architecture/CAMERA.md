@@ -20,17 +20,23 @@ Request another export only if the profile changes or later evidence conflicts.
 Runtime-proven production Logres camera ownership covers:
 - World;
 - World (Combat);
-- City/resting;
-- P0159 profile/context baseline;
-- Taxi entry/target `50` twice.
+- City/resting conditional zoom;
+- captured-profile ordinary context selection;
+- normal Taxi outbound target `50`;
+- normal Taxi landing return to target `5`;
+- source-backed LibCamera zoom rebasing in both outbound and return directions.
 
-P0159 R1 is durable at `8ddcf098` / `0.0.78-dev`.
+P0160 R2 is durable at `ae75989b` / `0.0.79-dev`.
 
-The real post-Taxi destination transition remains failed: City start about `49.75597`, target `5`, final `0`, `97` samples, `80` direction switches, and max absolute easing-position error about `49.471`.
+The accepted Taxi sample replaced the earlier oscillation:
+- outbound `~4.0096 -> 50`, final `50`, failures `0`;
+- landing `50 -> 5`, final `~4.9806`, failures `0`;
+- direction switches `0` both ways;
+- source rebases `2` both ways.
 
-This failure is in the shared bespoke zoom engine, not in Taxi or captured-profile context selection.
+The user visually confirmed the camera zoomed out and returned close after landing.
 
-P0160 R2 therefore replaces the timing/correction path with source-backed LibCamera zoom semantics before any further profile expansion.
+P0161 now adds the next captured-profile layer: rotations plus camera-setting ownership/restoration.
 
 ## Taxi precedence and zoom intent
 
@@ -135,30 +141,34 @@ max-distance CVar.
 
 ## Ownership boundary
 
-Camera-distance mutation remains **not authorized** and is no longer required
-for the Taxi zoom slice.
+P0160 established temporary `cameraZoomSpeed` ownership for LibCamera's source final correction with exact restoration.
 
-The CVar is account-stored according to runtime metadata. A future temporary
-write would therefore be deliberate ownership of a persistent user setting,
-not merely use of the inherited DynamicCam default.
+P0161 adds a broader but still bounded camera-setting ownership contract.
 
-If a later mutation capability is justified, it must separately define:
-- old-value capture;
-- restore ownership;
-- concurrent user/other-addon change handling;
-- combat/protected behavior;
-- disable/logout/reload behavior;
-- fail-open state.
+Profile-owned while Logres camera ownership is active:
+- the exact stored standard dynamic-pitch and target-focus settings;
+- zoom-based shoulder offset;
+- the explicit City `cameraDistanceMaxZoomFactor = 1` situation override.
 
-No periodic reassertion is permitted without evidence.
+The canonical SavedVariables profile does **not** store a standard max-distance value. Logres therefore does not invent one. It captures the live pre-ownership max-distance token and uses the ordinary numeric value, when safely readable, as the non-City baseline. City temporarily targets factor `1`; leaving City returns toward the captured baseline.
+
+Before mutation P0161 captures every owned CVar token. On module disable, DynamicCam coexistence block, or any relinquish path, Logres stops rotation/settings work and passes the exact captured tokens back to `SetCVar`.
+
+Secret-capable tokens are opaque restoration tokens only. Logres does not compare, format, count, or numerically inspect a secret token.
+
+No periodic context polling or arbitrary setting reassertion is introduced. The only per-frame settings observation is the source-backed zoom-based shoulder curve while Logres owns camera behavior.
+
+Concurrent external mutation while Logres owns these settings is not treated as a second ownership source. DynamicCam itself is explicitly coexistence-blocked; Logres restores its pre-ownership snapshot when ownership ends.
 
 ## Taxi rotation / UI boundaries
 
-Taxi rotation speed `-20` remains a separate continuous-yaw capability.
+P0161 owns the captured Taxi continuous yaw `-20` and source-backed rotate-back behavior.
 
-Taxi UI hide/fade remains presentation policy.
+The same rotation layer also covers Teleport, NPC Interaction, Fishing, and Gathering according to the canonical profile.
 
-Neither is part of the camera-distance checkpoint.
+Taxi and other DynamicCam UI hide/fade behavior remains presentation policy and is deferred to Phase H.
+
+Reactive mouse-wheel zoom is not part of P0161 and remains the final non-presentation Camera slice.
 
 ## Diagnostic ownership
 
@@ -179,29 +189,28 @@ G.2: **COMPLETE — primary camera capability PASS.**
 
 G.3: **COMPLETE — World/Combat production ownership PASS.**
 
-G.4: **COMPLETE — City ownership PASS on `0.0.43-dev`.**
+G.4: **COMPLETE — City conditional-zoom ownership PASS.**
 
-G.5 target 50 without max-distance mutation:
-**COMPLETE — CLEAN NEGATIVE on `0.0.44-dev`.**
+G.5 target-50 source/capability work:
+**COMPLETE — source semantics resolved; requested target may be engine-clamped.**
 
-G.5 camera-distance default/metadata proof:
-**COMPLETE — READ-ONLY PASS on `0.0.45-dev`; DEFAULT FACTOR 1 / CEILING 15 CANNOT SUPPORT TARGET 50.**
+G.5 shared zoom driver:
+**COMPLETE FOR OBSERVED NORMAL TAXI — P0160 R2 RUNTIME PASS** at `ae75989b` / `0.0.79-dev`.
 
-G.5 DynamicCam parity correction:
-**RESOLVED — REQUESTED TARGET 50 MAY BE ENGINE-CLAMPED.**
-
-G.5 P0117 runtime:
-**TAXI ENTRY PASS / LANDING TRANSITION FAIL on `0.0.47-dev`.**
-
-G.5 current:
-**P0159 TAXI ENTRY PASS / DESTINATION ZOOM FAIL; P0160 R2 SOURCE-BACKED LIBCAMERA ZOOM DRIVER PREPARED.**
+Observed Taxi:
+- `~4.0096 -> 50` PASS;
+- landing `50 -> ~4.9806` PASS;
+- source rebase exercised both ways;
+- zero direction-switch oscillation;
+- zero camera failures.
 
 G.6 current:
-**P0159 R1 DURABLE; CONTEXT/ZOOM SELECTION PARTIALLY RUNTIME-PROVEN; REMAINING PROFILE PARITY QUEUED BEHIND ZOOM-ENGINE PASS.**
+**P0161 ROTATION + CAMERA-SETTING OWNERSHIP/RESTORATION PREPARED** on candidate `0.0.80-dev`.
 
-The custom transition driver is no longer the architectural target. The audited LibCamera source is the zoom-motion authority for P0160 R2.
-
-The earlier blanket no-SetCVar rule is narrowed: temporary `cameraZoomSpeed` ownership is allowed only for the source final correction with exact restoration. `cameraDistanceMaxZoomFactor` remains outside Logres ownership.
+After P0161 acceptance:
+1. source-backed reactive mouse-wheel zoom;
+2. close Phase G with explicit environmental deferrals for naturally unavailable contexts;
+3. enter Phase H suppression/coexistence, authored layout, and final polish.
 
 ## P0117 landing overshoot failure
 
@@ -222,42 +231,36 @@ Priority order:
 Taxi 1000 -> Teleport 130 -> AFK/Gathering 120 -> NPC Interaction 110 ->
 World Combat 50 -> Fishing 20 -> City 1 -> World 0.
 
-Layer 1 owns context + zoom only. AFK intentionally owns no zoom action. Fishing's
-upstream delay is an exit hold, not an activation delay.
-
-Layer 2 will address source-backed rotation plus shoulder/global camera-setting
-ownership/restoration. DynamicCam UI hide/fade is presentation policy and must be
-reconciled with Phase H suppression/coexistence.
-
-The max-distance CVar remains outside Logres ownership.
-
+Layer 1 owns context + conditional zoom. AFK intentionally owns no zoom action. Fishing's upstream delay is an exit hold, not an activation delay.
 
 ## P0160 R2 source-backed zoom engine
 
+Canonical runtime acceptance:
+`../evidence/P0161_P0160_ZOOM_DRIVER_PASS_2026-10-07.md`.
+
+P0160 R2 is durable at `ae75989b` / `0.0.79-dev`.
+
+Its audited LibCamera zoom mechanics pass the observed base + normal-Taxi path. The accepted sample exercised position/time rebasing in both directions and did not require the final correction branch.
+
+G.5 Taxi zoom convergence is closed for observed scope.
+
+## P0161 captured rotation/settings layer
+
 Canonical source audit:
-`../evidence/P0160_LIBCAMERA_ZOOM_SOURCE_AUDIT_2026-10-07.md`.
+`../evidence/P0161_PROFILE_BEHAVIOR_SOURCE_AUDIT_2026-10-07.md`.
 
-Audited source:
-`mpstark/LibCamera@c0b23135a0b24fbca24b41cb53dd7afc9114e352`.
+P0161 adapts the audited DynamicCam/LibCamera rotation semantics:
+- Taxi continuous yaw `-20`;
+- Teleport continuous yaw `+15`;
+- NPC yaw `-45`;
+- Fishing yaw/pitch `+10/+10`;
+- Gathering yaw/pitch `-15/+15`;
+- inherited `rotateBack=true`.
 
-P0160 R2 ports the ordinary LibCamera SetZoom mechanics into the production controller instead of continuing bespoke fixes.
+P0161 also applies the exact captured standard dynamic-pitch/focus settings and the captured shoulder curves.
 
-Source semantics adopted:
-- InOutQuad;
-- 1/60 finite-difference easing velocity;
-- actual-position/easing-time rebase above 0.5 error;
-- rebase precision 0.005 / max 100 iterations;
-- direct final-two-frame correction;
-- final 0.1-second CameraZoom correction;
-- temporary cameraZoomSpeed capture/set/restore.
+The explicit City max-distance factor `1` is now authorized as a situation-specific profile value. The absent standard max-distance field is not reconstructed; Logres captures/restores the live pre-ownership value outside City.
 
-Logres-specific safety retained:
-- secret checks before interpreting CVar/zoom values;
-- pcall around mutable calls;
-- exact restoration token;
-- DynamicCam fail-open coexistence;
-- stop-before-reverse;
-- no max-distance CVar mutation;
-- no timer/ticker polling.
+Reactive mouse-wheel zoom remains the final non-presentation Camera parity slice.
 
-The next profile layer after runtime acceptance is rotation plus camera-setting ownership/restoration, not another bespoke zoom adjustment.
+DynamicCam UI fading remains Phase H presentation policy.

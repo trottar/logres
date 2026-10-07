@@ -1,0 +1,40 @@
+P0161 — CAPTURED PROFILE ROTATION + CAMERA-SETTING PARITY
+
+Baseline:
+ae75989bc0acadf550bd26e39c9bc70acee3e46c
+
+Candidate runtime:
+0.0.80-dev
+
+Accepted prerequisite:
+P0160 R2 runtime PASS
+- Taxi ~4.0096 -> 50, final 50
+- landing 50 -> ~4.9806
+- 0 direction switches
+- source rebase exercised both directions
+- failures=0
+
+P0161:
+- Taxi continuous yaw -20 + rotate-back
+- Teleport continuous yaw +15 + rotate-back
+- NPC yaw -45 + rotate-back
+- Fishing yaw/pitch +10/+10 + rotate-back
+- Gathering yaw/pitch -15/+15 + rotate-back
+- captured standard dynamic-pitch/focus settings
+- standard +1 shoulder zoom curve
+- NPC -2 shoulder zoom curve
+- explicit City cameraDistanceMaxZoomFactor=1
+- exact pre-ownership CVar restoration
+
+Deliberate boundaries:
+- absent standard max-distance SavedVariables value is not fabricated
+- pre-ownership live max-distance is the ordinary baseline outside City
+- no reactive CameraZoomIn/Out hook yet
+- no DynamicCam UI fade
+- no periodic context polling
+
+Source:
+DynamicCam ae586a9c973c3f868c10440358d4a6e8c2fab5ff
+LibCamera c0b23135a0b24fbca24b41cb53dd7afc9114e352
+
+No commit or push performed.

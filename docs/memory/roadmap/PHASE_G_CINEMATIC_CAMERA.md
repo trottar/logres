@@ -1,6 +1,6 @@
 # Phase G — Cinematic Camera
 
-Status: ACTIVE — P0160 R2 SOURCE-BACKED ZOOM DRIVER RETEST + G.6 CAPTURED RPG PROFILE PARITY
+Status: ACTIVE — P0161 ROTATION/SETTINGS PARITY + FINAL REACTIVE-ZOOM SLICE
 Opened: 2026-10-02
 
 ## Product Objective
@@ -145,68 +145,66 @@ The normal-Taxi landing retest from P0119 is now the exact G.5 next gate:
 
 Production Taxi is not considered closed until that runtime proof passes.
 
-## Sequencing after P0157
+## Sequencing after P0160
 
-The temporary visual-first freeze is superseded.
+The source-backed zoom engine is now runtime-accepted for the observed normal-Taxi path.
 
 Current order:
-1. fix and runtime-prove the shared zoom engine against the real Taxi landing case;
-2. finish the remaining captured-profile Camera parity using audited DynamicCam/LibCamera behavior;
-3. enter Phase H for safe stock-surface suppression/coexistence, authored positions, and final polish.
+1. P0161 captured rotations + camera settings/restoration;
+2. source-backed reactive mouse-wheel zoom;
+3. close Phase G with explicit environmental deferrals for naturally unavailable contexts;
+4. enter Phase H for safe stock-surface suppression/coexistence, authored positions, and final polish.
 
-P0159 R1 is durable at `8ddcf098` / `0.0.78-dev`.
+P0160 R2 is durable at `ae75989b` / `0.0.79-dev`.
 
-Its runtime result is now authoritative:
-- ordinary profile/base PASS;
-- separate Run All clean;
-- Taxi target `50` PASS twice at about `49.75597`;
-- post-Taxi City `~49.75597 -> 5` FAIL at final zoom `0`;
-- 97 samples, 80 direction switches, range `0 -> 50`;
-- max absolute easing-position error about `49.471`.
+Accepted Taxi evidence:
+- outbound `~4.0096 -> 50`, final `50`;
+- landing `50 -> ~4.9806`;
+- zero direction switches both ways;
+- source rebases exercised both ways;
+- zero camera failures;
+- user visually confirmed zoom-out and return.
 
-This finally exercises the P0155 stop-before-reverse path heavily and proves it is not sufficient by itself.
+G.5 Taxi zoom convergence is closed for observed scope.
 
 ## G.6 — Captured RPG profile parity
 
-The user confirmed Camera should be completed against the already-captured DynamicCam profile before Phase H.
+The already-captured RPG profile remains authoritative. No new export is required unless it changes.
 
-P0159 completed the first source-backed context/priority layer.
+P0159 supplies context/priority/conditional-zoom ownership.
 
-The remaining zoom failure triggered a dependency audit rather than another bespoke algorithm tweak.
+P0160 supplies the audited LibCamera zoom engine.
 
-DynamicCam delegates camera motion to LibCamera. The audited source at
-`c0b23135a0b24fbca24b41cb53dd7afc9114e352` already contains the coherent zoom mechanics Logres had been reconstructing incrementally.
+P0161 is the active profile-motion/settings layer:
+- Taxi continuous yaw `-20`, rotate back;
+- Teleport continuous yaw `+15`, rotate back;
+- NPC yaw `-45`, rotate back;
+- Fishing yaw/pitch `+10/+10`, rotate back;
+- Gathering yaw/pitch `-15/+15`, rotate back;
+- captured standard cameraZoomSpeed/dynamic-pitch/target-focus settings;
+- standard +1 and NPC -2 zoom-based shoulder curves;
+- explicit City max-distance factor `1`;
+- exact CVar restoration on relinquish/disable/coexistence.
 
-## P0160 R2 — source-backed zoom engine
+The absent standard max-distance SavedVariables field is not reconstructed. Outside City, Logres preserves the pre-ownership baseline.
 
-P0160 R2 ports the ordinary LibCamera SetZoom behavior:
-- InOutQuad easing;
-- finite-difference easing velocity;
-- >0.5 actual-position/easing-time rebase;
-- 0.005 precision / max 100 rebase iterations;
-- final two-frame linear correction;
-- final 0.1-second correction using temporary cameraZoomSpeed ownership;
-- exact cameraZoomSpeed restoration.
+UI fades remain Phase H presentation policy.
 
-Logres retains:
-- secret-first reads;
-- DynamicCam fail-open coexistence;
-- stop-before-reverse;
-- requested/effective target diagnostics;
-- no cameraDistanceMaxZoomFactor mutation;
-- no polling/tickers.
+## P0161 — rotation/settings parity
 
-The initial P0160 artifact refused pre-write on an obsolete historical-checker output anchor. P0160 R1 then refused pre-write on a stale STATUS Phase H row. P0160 R2 corrects both delivery defects; neither refusal changed tracked files.
+Candidate:
+`0.0.80-dev`.
 
-Exact runtime gate:
+Runtime gate:
 1. `/reload`;
 2. Phase G -> Camera Profile Check;
 3. Phase 0 -> Run All;
-4. one normal Taxi;
-5. Camera Profile Check in flight;
-6. Camera Profile Check after landing/settle;
-7. refreshed diagnostics.
+4. confirm ordinary manual zoom is usable;
+5. take one normal Taxi;
+6. confirm continuous left yaw in flight and run Camera Profile Check;
+7. after landing, confirm rotation returns while zoom returns close, then run Camera Profile Check again;
+8. upload diagnostics.
 
-Only after that landing path is clean does Phase G proceed to the consolidated rotation/camera-setting ownership layer.
+Do not manufacture Teleport/NPC/Fishing/Gathering contexts solely for proof. Their naturally unavailable branches remain environmental deferrals.
 
-UI fading remains a Phase H presentation-policy integration point.
+After a clean P0161 result, reactive mouse-wheel zoom is the final planned non-presentation Camera slice.

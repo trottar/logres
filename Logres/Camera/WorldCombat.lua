@@ -353,6 +353,12 @@ local Controller = Logres:RegisterModule("CameraWorldCombat", {
         self.lastDynamicCamLoaded = false
         self.lastDynamicCamStatusKnown = false
         self.lastDynamicCamStatusSource = nil
+        self.lastCameraDistanceTargetFactor = nil
+        self.profileBehavior = Logres.CameraProfileBehavior
+        if self.profileBehavior then
+            self.profileBehavior:Initialize(self)
+        end
+
         self.reconcileCount = 0
         self.transitionStartCount = 0
         self.transitionCompleteCount = 0
@@ -381,6 +387,16 @@ local Controller = Logres:RegisterModule("CameraWorldCombat", {
         self.fishingHoldSatisfied = false
         self.lastFishingHoldRemaining = nil
         self:StopTransition("module-disabled", false)
+
+        if self.profileBehavior then
+            local behaviorOK, behaviorError =
+                self.profileBehavior:Release()
+            if not behaviorOK then
+                self.lastError = behaviorError
+                self.failureCount = self.failureCount + 1
+            end
+        end
+
         self.lastAction = "disabled"
         self.lastReason = "module-disabled"
     end,
@@ -412,6 +428,14 @@ function Controller:ValidateAPIs()
         MoveViewInStop,
         MoveViewOutStart,
         MoveViewOutStop,
+        MoveViewLeftStart,
+        MoveViewLeftStop,
+        MoveViewRightStart,
+        MoveViewRightStop,
+        MoveViewUpStart,
+        MoveViewUpStop,
+        MoveViewDownStart,
+        MoveViewDownStop,
     }
 
     for index = 1, #required do
@@ -636,6 +660,16 @@ function Controller:Relinquish(reason, blocked)
     self.fishingHoldSatisfied = false
     self.lastFishingHoldRemaining = nil
     self:StopTransition(reason, self.transitionActive)
+
+    if self.profileBehavior then
+        local behaviorOK, behaviorError =
+            self.profileBehavior:Release()
+        if not behaviorOK and self.lastError == nil then
+            self.lastError = behaviorError
+            self.failureCount = self.failureCount + 1
+        end
+    end
+
     self.ownsContext = false
     self.selectedContext = "none"
     self.lastReason = reason
@@ -1590,7 +1624,60 @@ function Controller:Reconcile(reason)
         self.lastProfileTeleportDuration
     )
 
+    local previousContext = self.selectedContext
+    local behavior = self.profileBehavior
+    local behaviorWasInactive = false
+
+    if behavior then
+        behaviorWasInactive =
+            not behavior:IsActive()
+
+        if behaviorWasInactive then
+            local acquireOK, acquireError =
+                behavior:Acquire()
+            if not acquireOK then
+                self.lastError = acquireError
+                self.failureCount = self.failureCount + 1
+                self:Relinquish(
+                    "profile-behavior-acquire-failed",
+                    false
+                )
+                return false, acquireError
+            end
+        end
+
+        if behaviorWasInactive
+            or previousContext ~= context
+        then
+            local behaviorOldContext =
+                previousContext ~= "none"
+                and previousContext
+                or nil
+            local behaviorDuration =
+                behaviorWasInactive
+                and 0
+                or transitionDuration
+
+            local behaviorOK, behaviorError =
+                behavior:ChangeContext(
+                    behaviorOldContext,
+                    context,
+                    behaviorDuration
+                )
+            if not behaviorOK then
+                self.lastError = behaviorError
+                self.failureCount = self.failureCount + 1
+                self:Relinquish(
+                    "profile-behavior-change-failed",
+                    false
+                )
+                return false, behaviorError
+            end
+        end
+    end
+
     self.lastCameraDistanceFactor = nil
+    self.lastCameraDistanceTargetFactor = nil
     self.lastCameraDistanceCeiling = nil
 
     if requestedTargetZoom ~= nil and contextAllowsEngineClamp(context) then
@@ -1613,6 +1700,23 @@ function Controller:Reconcile(reason)
         end
 
         self.lastCameraDistanceFactor = cameraDistanceFactor
+
+        local targetDistanceFactor
+        if behavior then
+            targetDistanceFactor =
+                behavior:GetTargetMaxDistanceFactor(
+                    context
+                )
+        end
+
+        if type(targetDistanceFactor) == "number" then
+            self.lastCameraDistanceTargetFactor =
+                targetDistanceFactor
+            cameraDistanceCeiling =
+                targetDistanceFactor
+                * CAMERA_DISTANCE_SCALE
+        end
+
         self.lastCameraDistanceCeiling = cameraDistanceCeiling
         effectiveTargetZoom = math.min(requestedTargetZoom, cameraDistanceCeiling)
     end
@@ -1724,7 +1828,11 @@ function Controller:GetDebugStatus()
         lastFinalZoom = self.lastFinalZoom,
         lastZoomSpeed = self.lastZoomSpeed,
         lastCameraDistanceFactor = self.lastCameraDistanceFactor,
+        lastCameraDistanceTargetFactor = self.lastCameraDistanceTargetFactor,
         lastCameraDistanceCeiling = self.lastCameraDistanceCeiling,
+        profileBehavior = self.profileBehavior
+            and self.profileBehavior:GetDebugStatus()
+            or nil,
         lastTransitionElapsed = self.lastTransitionElapsed,
         lastTargetReached = self.lastTargetReached,
         lastAction = self.lastAction,

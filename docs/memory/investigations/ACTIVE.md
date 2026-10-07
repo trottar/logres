@@ -3,32 +3,56 @@
 ## G.5 — Taxi camera ownership
 
 Status:
-**OPEN — P0159 TAXI ENTRY PASS / POST-TAXI DESTINATION ZOOM FAIL; P0160 R2 SOURCE-BACKED DRIVER RETEST NEXT.**
+**CLOSED FOR OBSERVED TAXI ZOOM SCOPE — P0160 R2 RUNTIME PASS.**
 
 Canonical Taxi investigation:
 `G5_TAXI_CAMERA_OWNERSHIP.md`
 
-P0159 finally exercised the real normal-Taxi path:
-- Taxi context/target `50` passed twice at about `49.75597`;
-- landing City `~49.75597 -> 5` failed at final zoom `0`;
-- 97 samples / 80 direction switches / range `0 -> 50`;
-- max absolute easing-position error about `49.471`.
+P0160 R2 is durable at `ae75989b` / `0.0.79-dev`.
 
-P0155 stop-before-reverse is therefore exercised and insufficient by itself.
+Observed normal Taxi:
+- start about `4.0096`;
+- requested/effective target `50`;
+- final `50`;
+- 347 samples;
+- 346 toward / 0 away;
+- 0 direction switches;
+- 2 source rebases;
+- failures=0.
 
-P0160 R2 replaces the bespoke timing/correction path with audited LibCamera zoom semantics. `cameraDistanceMaxZoomFactor` remains outside Logres ownership.
+After landing:
+- World start `50`;
+- target `5`;
+- final about `4.9806`;
+- 158 samples;
+- 156 toward / 1 away;
+- 0 direction switches;
+- 2 source rebases;
+- failures=0.
+
+The user visually confirmed outbound zoom and return after landing.
+
+The P0159 `0 <-> 50` / 80-switch failure does not recur. G.5 Taxi zoom convergence is therefore closed for observed scope.
 
 ## G.6 — Captured DynamicCam profile parity
 
 Status:
-**OPEN — P0159 R1 DURABLE; BASE/TAXI ENTRY PASS; SHARED ZOOM DRIVER FAIL; P0160 R2 NEXT.**
+**OPEN — P0161 ROTATION/SETTINGS PARITY PREPARED AFTER P0160 ZOOM PASS.**
 
 Canonical:
 `G6_DYNAMICCAM_PROFILE_PARITY.md`
 
-Context/predicate parity is no longer the current blocker. The source audit shows DynamicCam delegates zoom motion to LibCamera, while Logres had been reconstructing that engine incrementally.
+P0161 is the active Camera work item:
+- captured Taxi/Teleport/NPC/Fishing/Gathering rotations;
+- rotate-back behavior;
+- captured standard dynamic-pitch/focus settings;
+- standard/NPC zoom-based shoulder curves;
+- explicit City max-distance factor `1`;
+- exact pre-ownership restoration.
 
-P0160 R2 ports the source zoom behavior first. Rotation and camera-setting ownership remain the next consolidated profile layer after the zoom driver passes. UI fades remain a Phase H presentation boundary.
+Reactive mouse-wheel zoom remains the final non-presentation Camera slice after P0161.
+
+DynamicCam UI fades remain a Phase H presentation boundary.
 
 ### Current world-entry timeout regression
 

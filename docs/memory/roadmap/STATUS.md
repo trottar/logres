@@ -1,16 +1,19 @@
 # Roadmap Status
 
-As of 2026-10-06.
+As of 2026-10-07.
 
 ## Active work stream
 
-**Complete captured DynamicCam RPG camera parity in consolidated layers, then enter Phase H integration-first: safe stock-surface suppression/coexistence, authored UI positioning, then final polish and remaining visuals.**
+**Complete captured DynamicCam RPG camera parity in consolidated source-backed layers, then enter Phase H integration-first: safe stock-surface suppression/coexistence, authored UI positioning, then final polish and remaining visuals.**
 
-The formal roadmap remains capability-gated and Phase G is still open only for
-the existing G.5 Taxi landing proof. Broader Camera feature expansion remains
-frozen. After G.5 closes, Phase H becomes the primary workstream: first
-surface-by-surface suppression/coexistence and authored layout positioning, then
-final polish and residual visuals.
+P0160 R2 closes the observed shared zoom-driver/Taxi convergence gate.
+
+Phase G remains active for:
+1. P0161 captured rotations + camera-setting ownership/restoration;
+2. source-backed reactive mouse-wheel zoom;
+3. explicit closure with environmental deferrals for naturally unavailable contexts.
+
+Phase H becomes primary after those Camera-only slices close.
 
 ## Phase status
 
@@ -23,27 +26,42 @@ final polish and residual visuals.
 | D — Immersion Controller | COMPLETE |
 | E — Compass and Navigation | COMPLETE |
 | F — Quest Experience | COMPLETE |
-| G — Cinematic Camera | ACTIVE — P0160 R2 SOURCE-BACKED ZOOM RETEST + G.6 PROFILE PARITY |
+| G — Cinematic Camera | ACTIVE — P0161 ROTATION/SETTINGS + FINAL REACTIVE-ZOOM SLICE |
 | H — Integration and Polish | QUEUED — NEXT AFTER PHASE G CAMERA PARITY |
 
 ## Phase G / G.5
 
-P0119 is durable at `c342bc176a9d5de80ec116d0c6b31fa595cd75b3`
-on `0.0.49-dev`.
+P0160 R2 is durable at `ae75989b` / `0.0.79-dev`.
 
-Its frame-shaped MoveView transition correction is installed, but the normal-Taxi
-landing retest has not been durably recorded as PASS. G.5 therefore remains open.
+The normal-Taxi zoom gate now passes.
 
-The earlier temporary Camera freeze is superseded: finish the existing G.5 Taxi gate now, then move directly into Phase H integration/layout before final polish.
-No max-distance mutation, Taxi rotation, or Taxi UI fade is authorized.
+Outbound:
+- start about `4.0096`;
+- target/final `50`;
+- 347 samples;
+- 346 toward / 0 away;
+- 0 switches;
+- 2 rebases;
+- failures=0.
 
-P0154 is verified durable at `40dec187` / `0.0.75-dev` and the diagnostic passed while the behavior still failed. World entry started near `23.148`, targeted `5`, reached observed range `0 -> 50`, and timed out at `50`. The motion line recorded `142` inward commands and `1` outward command.
+Landing:
+- start `50`;
+- target `5`;
+- final about `4.9806`;
+- 158 samples;
+- 156 toward / 1 away;
+- 0 switches;
+- 2 rebases;
+- failures=0.
 
-P0155 R1 is durable at `e9be312d` / `0.0.76-dev`; its failure exposed the stale event-time transition clock.
+The user visually confirmed zoom-out during Taxi and return close after landing.
 
-P0156 is durable at `e1be731b` / `0.0.77-dev` and passes the observed normal-world-entry retest: current/start/final about `5.0795` against target `5`, targetReached=true, failures=0, secret=false, error=nil. Separate Run All repeated the PASS.
+Classification:
+**G.5 TAXI ZOOM CONVERGENCE CLOSED FOR OBSERVED SCOPE.**
 
-The accepted sample had `firstDelay=0` and `switches=0`, so the prior long-delay and direction-switch branches remain unexercised. No more world-entry code is justified without new evidence. G.5 returns to the independently pending P0119 normal-Taxi landing retest.
+The earlier P0117/P0159 landing failures remain preserved as historical evidence.
+
+P0161 is now the active G.6 implementation layer.
 
 ## Parallel approved visual translation
 
@@ -243,23 +261,37 @@ profile/context and Taxi-entry behavior pass in observed scope; the shared bespo
 
 ## P0160 R2 — source-backed LibCamera zoom driver
 
-**PREPARED — RUNTIME RETEST REQUIRED.**
+P0160 R2 is **INSTALLED / PUSHED + RUNTIME PASS** at
+`ae75989bc0acadf550bd26e39c9bc70acee3e46c`
+on `0.0.79-dev`.
 
-The DynamicCam dependency audit established that the remaining zoom mechanics already exist coherently in LibCamera.
+Base Camera Profile Check and separate Run All pass.
 
-P0160 R2 ports the audited ordinary LibCamera zoom path while preserving Logres secret/coexistence/fail-open behavior.
+Normal Taxi:
+- outbound `~4.0096 -> 50`, final `50`;
+- landing `50 -> ~4.9806`;
+- source rebase exercised twice in each direction;
+- zero direction-switch oscillation;
+- zero camera failures.
 
-Allowed setting ownership is narrowly changed:
-- temporary `cameraZoomSpeed` ownership for the source final correction;
-- exact restoration of the captured previous value.
+The user visually confirmed the expected zoom-out and landing return.
 
-Still forbidden:
-- `cameraDistanceMaxZoomFactor` mutation;
-- periodic/ticker reassertion.
+## P0161 — captured profile rotation/settings parity
 
-The initial P0160 artifact refused in shadow preflight before tracked writes because of a stale historical checker anchor. R1 supersedes it.
+**PREPARED — RUNTIME EVIDENCE REQUIRED.**
+
+P0161 ports the next audited DynamicCam/LibCamera layer:
+- five captured rotation behaviors with rotate-back;
+- captured standard dynamic-pitch/focus settings;
+- standard/NPC zoom-based shoulder curves;
+- explicit City max-distance factor `1`;
+- exact pre-ownership CVar restoration.
+
+The absent standard max-distance profile field is not invented; the pre-ownership live value is the ordinary baseline outside City.
+
+Reactive mouse-wheel zoom remains the final non-presentation Phase G slice.
+
+DynamicCam UI fade remains Phase H presentation policy.
 
 Next:
-**Apply/deploy P0160 R2, run Camera Profile Check + Run All, then repeat one normal Taxi flight and verify the landing City/World transition converges near `5`.**
-
-Phase H remains queued until the remaining captured-profile Camera parity is deliberately closed.
+**Apply/deploy P0161, run Camera Profile Check + Run All, verify ordinary manual zoom, then verify normal-Taxi continuous left yaw and landing rotate-back.**

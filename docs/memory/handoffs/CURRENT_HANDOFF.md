@@ -4,84 +4,89 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0159 R1 `8ddcf09844961adec7bc90621f0f5ca294f15aef`.
+P0160 R2 `ae75989bc0acadf550bd26e39c9bc70acee3e46c`.
 
-## P0159 runtime result
+## P0160 runtime result
 
-Clean:
-- ordinary Camera Profile Check;
-- profile secretSkips=0 / readFailures=0;
-- separate Run All;
-- Taxi context/target `50` twice at current/final about `49.75597`.
+`0.0.79-dev`, loadCount `191`, client `1.60.1.70245`.
 
-Failure:
-- landing City start about `49.75597`;
+Base:
+- Camera Profile Check PASS;
+- Run All PASS;
+- failures=0.
+
+Taxi:
+- start about `4.0096`;
+- requested/effective target `50`;
+- final `50`;
+- elapsed about `4.936s`;
+- 347 samples;
+- 346 toward / 0 away;
+- 0 direction switches;
+- 2 source rebases;
+- failures=0.
+
+Landing:
+- World start `50`;
 - target `5`;
-- final `0`;
-- elapsed about `3.278s`;
-- 97 samples;
-- 55 inward / 40 outward commands;
-- 80 direction switches;
-- range `0 -> 50`;
-- max absolute position error about `49.471`;
-- failures=1.
+- final about `4.9806`;
+- elapsed about `2.426s`;
+- 158 samples;
+- 156 toward / 1 away;
+- 0 direction switches;
+- 2 source rebases;
+- failures=0.
 
-This is a shared zoom-engine failure, not a P0159 predicate/priority failure.
+User visual confirmation:
+Taxi zoomed out and returned close after landing.
 
-## Source audit
+Classification:
+**P0160 RUNTIME PASS; G.5 TAXI ZOOM CONVERGENCE CLOSED FOR OBSERVED SCOPE.**
 
-DynamicCam delegates camera motion to LibCamera.
+## P0161
 
-Audited LibCamera commit:
-`c0b23135a0b24fbca24b41cb53dd7afc9114e352`.
+P0161 is the next consolidated profile layer.
 
-The current Logres driver independently reconstructed only pieces of that engine.
+It ports:
+- Taxi continuous yaw -20 + return;
+- Teleport continuous yaw +15 + return;
+- NPC yaw -45 + return;
+- Fishing yaw/pitch +10/+10 + return;
+- Gathering yaw/pitch -15/+15 + return;
+- captured standard dynamic-pitch and target-focus settings;
+- standard +1 zoom-based shoulder curve;
+- NPC -2 shoulder curve;
+- City max-distance factor 1;
+- exact pre-ownership CVar restoration.
 
-LibCamera's ordinary eased zoom includes:
-- first-frame begin time/value;
-- InOutQuad easing;
-- finite-difference easing velocity;
-- position/time rebase when error exceeds 0.5;
-- final two-frame direct correction;
-- a final 0.1-second correction using temporary `cameraZoomSpeed` ownership and CameraZoomIn/Out;
-- restoration of the previous cameraZoomSpeed.
+It uses the audited DynamicCam/LibCamera source behavior and preserves fail-open DynamicCam coexistence.
 
-LibCamera does not mutate cameraDistanceMaxZoomFactor.
+P0161 does not yet replace CameraZoomIn/Out for reactive mouse-wheel zoom and does not implement DynamicCam UI fades.
 
-## P0160 R2
-
-P0160 R2 replaces the bespoke timing/correction path with those source-backed semantics while preserving:
-- Logres secret-safe reads;
-- DynamicCam coexistence/fail-open ownership;
-- stop-before-reverse;
-- requested/effective target diagnostics;
-- no max-distance mutation.
-
-The initial P0160 artifact refused during shadow preflight because its historical motion-checker rewrite expected an obsolete exact output string. No tracked files were written.
-
-P0160 R1 also refused in shadow preparation because its STATUS.md transform expected a stale Phase H table row. The observed worktree status again contained no tracked changes. R2 corrects that verified baseline anchor and preserves both delivery failures.
-
-Candidate:
-`0.0.79-dev`.
+Candidate runtime:
+`0.0.80-dev`.
 
 ## Runtime gate
 
 1. `/reload`;
-2. Phase G -> **Camera Profile Check**;
-3. Phase 0 -> **Run All**;
-4. normal Taxi flight;
-5. Camera Profile Check in flight;
-6. Camera Profile Check after landing/settle;
-7. upload diagnostics.
+2. Phase G -> Camera Profile Check;
+3. Phase 0 -> Run All;
+4. verify ordinary manual zoom remains usable;
+5. normal Taxi:
+   - visible continuous left yaw in flight;
+   - Camera Profile Check in flight;
+   - visible return after landing;
+   - Camera Profile Check after settle;
+6. upload diagnostics.
 
-Do not proceed to rotation/shoulder/settings parity unless the post-Taxi destination zoom converges cleanly near `5`.
+Do not require contrived Teleport/Fishing/Gathering/NPC proof.
 
 ## Key references
 
 - `../CURRENT.md`
-- `../evidence/P0160_LIBCAMERA_ZOOM_SOURCE_AUDIT_2026-10-07.md`
-- `../evidence/P0160_P0159_TAXI_LANDING_FAILURE_2026-10-07.md`
-- `../patches/P0160_R2_LIBCAMERA_ZOOM_DRIVER.md`
+- `../evidence/P0161_P0160_ZOOM_DRIVER_PASS_2026-10-07.md`
+- `../evidence/P0161_PROFILE_BEHAVIOR_SOURCE_AUDIT_2026-10-07.md`
+- `../patches/P0161_PROFILE_ROTATION_SETTINGS_PARITY.md`
 - `../investigations/G6_DYNAMICCAM_PROFILE_PARITY.md`
 - `../architecture/CAMERA.md`
 - `../roadmap/PHASE_G_CINEMATIC_CAMERA.md`

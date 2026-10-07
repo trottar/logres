@@ -3510,6 +3510,24 @@ local function cameraWorldCombatStatusPasses(status)
         (status.profileReadFailures or 0) == 0
         and status.lastProfileError == nil
 
+    local behavior = status.profileBehavior
+    local behaviorHealthy =
+        behavior ~= nil
+        and (behavior.settingsFailureCount or 0) == 0
+        and (behavior.rotationFailureCount or 0) == 0
+        and behavior.lastSettingsError == nil
+        and behavior.lastRotationError == nil
+        and (
+            (
+                status.ownsContext == true
+                and behavior.active == true
+            )
+            or (
+                status.ownsContext == false
+                and behavior.active == false
+            )
+        )
+
     return
         status.moduleEnabled == true
         and status.apiAvailable == true
@@ -3519,11 +3537,12 @@ local function cameraWorldCombatStatusPasses(status)
         and ownershipCoherent
         and transitionCoherent
         and profileHealthy
+        and behaviorHealthy
 end
 
 local function emitCameraWorldCombatStatus(prefix, status, passed)
     emit(string.format(
-        "Logres cameraworldcombat: %s (enabled=%s context=%s owns=%s transition=%s/%s action=%s reason=%s stop=%s blocked=%s liveCombat=%s lockdown=%s cachedCombat=%s mismatch=%s resting=%s dynamicCam=%s/%s api=%s current=%s start=%s requested=%s effective=%s duration=%s maxFactor=%s maxCeiling=%s final=%s elapsed=%s targetReached=%s reconcile=%s starts=%s complete=%s stops=%s noop=%s blockedCount=%s relinquish=%s failures=%s secret=%s error=%s)",
+        "Logres cameraworldcombat: %s (enabled=%s context=%s owns=%s transition=%s/%s action=%s reason=%s stop=%s blocked=%s liveCombat=%s lockdown=%s cachedCombat=%s mismatch=%s resting=%s dynamicCam=%s/%s api=%s current=%s start=%s requested=%s effective=%s duration=%s maxFactor=%s targetMaxFactor=%s maxCeiling=%s final=%s elapsed=%s targetReached=%s reconcile=%s starts=%s complete=%s stops=%s noop=%s blockedCount=%s relinquish=%s failures=%s secret=%s error=%s)",
         prefix or (passed and "PASS" or "FAIL"),
         tostring(status.moduleEnabled),
         tostring(status.selectedContext),
@@ -3548,6 +3567,7 @@ local function emitCameraWorldCombatStatus(prefix, status, passed)
         tostring(status.transitionEffectiveTargetZoom),
         tostring(status.transitionDuration),
         tostring(status.lastCameraDistanceFactor),
+        tostring(status.lastCameraDistanceTargetFactor),
         tostring(status.lastCameraDistanceCeiling),
         tostring(status.lastFinalZoom),
         tostring(status.lastTransitionElapsed),
@@ -3615,6 +3635,46 @@ local function emitCameraProfileContextStatus(status)
     ))
 end
 
+local function emitCameraProfileBehaviorStatus(status)
+    local behavior = status.profileBehavior
+    if behavior == nil then
+        emit(
+            "Logres cameraprofile behavior: unavailable"
+        )
+        return
+    end
+
+    emit(string.format(
+        "Logres cameraprofile behavior: active=%s context=%s source=%s/%s settings=%s/%s/%s failures=%s secretSkips=%s shoulder=%s distance=%s targetDistance=%s originalDistance=%s rotation=%s/%s speed=%s starts=%s returns=%s stops=%s failures=%s lastContext=%s lastKind=%s return=%s/%s settingsError=%s rotationError=%s",
+        tostring(behavior.active),
+        tostring(behavior.context),
+        tostring(behavior.sourceDynamicCamCommit),
+        tostring(behavior.sourceLibCameraCommit),
+        tostring(behavior.settingsCaptureCount),
+        tostring(behavior.settingsApplyCount),
+        tostring(behavior.settingsRestoreCount),
+        tostring(behavior.settingsFailureCount),
+        tostring(behavior.settingsSecretSkips),
+        tostring(behavior.lastShoulderOffset),
+        tostring(behavior.lastDistanceFactor),
+        tostring(behavior.lastDistanceTargetFactor),
+        tostring(behavior.originalDistanceFactor),
+        tostring(behavior.yawMode),
+        tostring(behavior.pitchMode),
+        tostring(behavior.yawContinuousSpeed),
+        tostring(behavior.rotationStartCount),
+        tostring(behavior.rotationReturnCount),
+        tostring(behavior.rotationStopCount),
+        tostring(behavior.rotationFailureCount),
+        tostring(behavior.lastRotationContext),
+        tostring(behavior.lastRotationKind),
+        tostring(behavior.lastReturnYaw),
+        tostring(behavior.lastReturnPitch),
+        tostring(behavior.lastSettingsError),
+        tostring(behavior.lastRotationError)
+    ))
+end
+
 local function runCameraWorldCombatCheck()
     local controller = Logres:GetModule("CameraWorldCombat")
     local status = controller:GetDebugStatus()
@@ -3622,6 +3682,7 @@ local function runCameraWorldCombatCheck()
     emitCameraWorldCombatStatus(passed and "PASS" or "FAIL", status, passed)
     emitCameraWorldCombatMotion(status)
     emitCameraProfileContextStatus(status)
+    emitCameraProfileBehaviorStatus(status)
 end
 
 local function runCameraWorldCombatReconcile()

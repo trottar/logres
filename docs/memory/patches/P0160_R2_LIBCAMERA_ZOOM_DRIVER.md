@@ -3,7 +3,7 @@
 Date: 2026-10-07
 Baseline: `8ddcf09844961adec7bc90621f0f5ca294f15aef`
 Candidate runtime: `0.0.79-dev`
-Result: **PREPARED — RUNTIME RETEST REQUIRED**
+Result: **INSTALLED / PUSHED — RUNTIME PASS FOR BASE + NORMAL TAXI OUTBOUND/LANDING** (`ae75989b`)
 
 ## Trigger
 
@@ -75,3 +75,46 @@ After deployment:
 7. refreshed diagnostics.
 
 PASS requires destination convergence near 5 with failures=0 and no recurrence of the 0/50 oscillation.
+
+## Durable runtime result
+
+Verified main:
+`ae75989bc0acadf550bd26e39c9bc70acee3e46c`.
+
+Runtime:
+`0.0.79-dev`, loadCount `191`, client `1.60.1.70245`.
+
+Base:
+- Camera Profile Check PASS;
+- separate Run All PASS.
+
+Taxi outbound:
+- start about `4.0096`;
+- target/final `50`;
+- 347 samples;
+- 346 toward / 0 away;
+- 0 switches;
+- 2 rebases;
+- failures=0.
+
+Landing:
+- start `50`;
+- target `5`;
+- final about `4.9806`;
+- 158 samples;
+- 156 toward / 1 away;
+- 0 switches;
+- 2 rebases;
+- failures=0.
+
+The user visually confirmed the camera zoomed out and returned close after landing.
+
+Classification:
+**P0160 R2 RUNTIME PASS.**
+
+The source rebase branch is runtime-exercised in both directions. The final 0.1-second correction remained installed but was not needed in this accepted sample (`corrections=0`).
+
+G.5 Taxi zoom convergence is closed for observed scope.
+
+Next:
+P0161 captured rotations + camera-setting ownership/restoration.
