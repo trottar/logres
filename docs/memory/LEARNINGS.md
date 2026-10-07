@@ -284,3 +284,25 @@ Reusable rule:
 - use pinned LibCamera as the reference for MoveView transition control.
 
 Animation-frame control is not context polling.
+
+
+## L-019 — Generated CURRENT memory must be schema-validated before mutation
+
+P0157 repeated a known delivery class around the canonical `CURRENT.md` schema.
+
+The first artifact omitted the Success Criteria section. R1 added the section
+but also mentioned its literal Markdown token in prose; the then-current
+`check_memory_health.py` used raw substring counting and reported two
+occurrences.
+
+Reusable rule:
+- treat the seven canonical CURRENT sections as actual Markdown heading lines;
+- validate the fully rendered candidate before writing the real worktree;
+- run memory health in a temporary checkout before mutation for patches that
+  rewrite CURRENT;
+- checker implementations should validate heading syntax, not incidental prose
+  substrings;
+- preserve failed delivery attempts when they expose a reusable workflow defect.
+
+This extends the P0078/P0087 CURRENT-schema lessons and L-017 generated-anchor
+lesson to generated repository memory.

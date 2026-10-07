@@ -175,5 +175,6 @@
 | P0153 | 2026-10-06 | INSTALLED / PUSHED — DOCS / EVIDENCE CHECKPOINT | Record P0152 acceptance and preserve initial world-entry camera timeout (`7ad9be7e`) |
 | P0154 | 2026-10-06 | INSTALLED / PUSHED — DIAGNOSTIC PASS; DIRECTION-SWITCH DEFECT IDENTIFIED | `40dec187`, `0.0.75-dev`: timeout preserved; 145 samples, range 0->50, 142 inward + 1 outward command |
 | P0155 | 2026-10-06 | INSTALLED / PUSHED — RUNTIME FAIL; REVERSAL PATH NOT EXERCISED | `e9be312d`, `0.0.76-dev`: camera remained at 50; first OnUpdate after ~23.523s; 1 sample, 0 commands, 0 switches |
-| P0156 | 2026-10-06 | PREPARED — FIRST-DRIVABLE-FRAME CAMERA TRANSITION | Start motion/timeout clock and transition zoom baseline on first actual OnUpdate; candidate `0.0.77-dev` |
+| P0156 | 2026-10-06 | INSTALLED / PUSHED — OBSERVED NORMAL WORLD-ENTRY RUNTIME PASS | `e1be731b`, `0.0.77-dev`: world ~5.0795 -> target 5, targetReached=true, failures=0; Run All clean |
+| P0157 | 2026-10-06 | R2 PREPARED — DOCS / EVIDENCE + MEMORY-SCHEMA CHECKER HARDENING; TWO DELIVERY FAILURES PRESERVED | Record P0156 observed pass; count actual CURRENT heading lines; temporary-checkout preflight; return G.5 to normal-Taxi landing retest |
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

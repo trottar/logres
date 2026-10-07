@@ -189,3 +189,12 @@ The single outward correction exposes a concrete P0119 defect: crossed-target co
 P0155 R1 is durable at `e9be312d` / `0.0.76-dev`, but its runtime retest exposed an earlier timebase defect rather than exercising direction switching. The camera entered at zoom `50`; the first camera OnUpdate did not occur until about `23.523s` after the `PLAYER_ENTERING_WORLD` transition was armed. The transition therefore timed out on sample 1 before issuing any MoveView command (`0` inward, `0` outward, `0` switches), leaving the user visibly max-zoomed out.
 
 P0156 prepares candidate `0.0.77-dev` to start the transition motion/timeout clock on the first actual drivable OnUpdate frame and to use that frame's zoom as the transition start baseline. Event-time arm zoom and first-update delay remain diagnostic. No timer, arbitrary delayed reconcile, polling, CVar mutation, target/duration change, or Taxi-policy expansion is included.
+
+
+P0156 is durable at `e1be731b` / `0.0.77-dev` and passes the observed normal-world-entry retest. Phase G Camera World/Combat Check reported start/current/final about `5.0795` against target `5`, targetReached=true, failures=0, secret=false, error=nil; separate Run All repeated the PASS.
+
+The accepted sample reported `firstDelay=0` and `switches=0`, so the previously observed large first-update delay and P0155 direction-switch branch were not naturally re-exercised. They remain branch-level deferrals, not claimed runtime PASSes.
+
+The world-entry regression is closed for observed scope. Phase G.5 now returns to the still-pending P0119 normal-Taxi landing retest; no further world-entry camera code is authorized without new failure evidence.
+
+P0157 had two rolled-back memory-schema delivery failures: the initial candidate omitted one canonical CURRENT section, while R1 triggered a false duplicate because memory health counted a literal inline mention as if it were another heading. R2 hardens the checker to count actual Markdown heading lines and preflights the full candidate in a temporary checkout before writing the user's worktree.

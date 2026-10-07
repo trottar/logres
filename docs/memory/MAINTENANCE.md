@@ -106,6 +106,12 @@ Suggested size targets:
 
 The checker treats these as a schema.
 
+The schema applies to actual Markdown heading lines. Inline prose, quoted text,
+and code examples that mention a heading name are not headings and must not be
+counted as duplicate schema entries. Generated patches must validate the fully
+rendered candidate `CURRENT.md` against the heading-line schema before mutating
+the real working tree.
+
 ## Patch/checkpoint memory rule
 
 Any meaningful code or design patch updates the durable records affected by it in the same checkpoint.

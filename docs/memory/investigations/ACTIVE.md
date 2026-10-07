@@ -29,15 +29,16 @@ No max-distance mutation, Taxi rotation, or Taxi UI fade is part of that proof.
 ### Current world-entry timeout regression
 
 Status:
-**REPRODUCED — P0155 RUNTIME FAIL EXPOSES FIRST-UPDATE TIMEBASE DEFECT; P0156 PREPARED.**
+**CLOSED FOR OBSERVED NORMAL WORLD ENTRY — P0156 RUNTIME PASS.**
 
-P0155 R1 is durable at `e9be312d` / `0.0.76-dev`. Its runtime retest started and remained at zoom `50`, targeted `5`, but recorded only one OnUpdate sample after about `23.523s`, with zero inward commands, zero outward commands, and zero direction switches.
+P0156 is durable at `e1be731b` / `0.0.77-dev`. LoadCount `187` passed Phase G Camera World/Combat Check at world zoom about `5.0795` toward target `5`, with `targetReached=true`, `failures=0`, `secret=false`, and `error=nil`. Separate Run All repeated the PASS and completed cleanly.
 
-The user-visible result was an extremely zoomed-out camera.
+The accepted sample reported `firstDelay=0` and `switches=0`. Therefore the prior long-delay branch and P0155 direction-switch stop are not separately runtime-proven. Earlier P0154/P0155 failures remain preserved.
 
-This proves the transition timed out on its first drivable frame because its elapsed clock had already been running since `PLAYER_ENTERING_WORLD`. P0155's direction-switch correction was not exercised.
+No additional world-entry patch is justified. Reopen only on new failure evidence.
 
-P0156 starts the transition motion/timeout clock on the first actual OnUpdate frame and rebases the transition start zoom to that drivable sample. It adds no timer, polling, arbitrary delayed reconcile, CVar mutation, target change, duration change, or Taxi expansion.
+Next camera gate:
+the independently pending P0119 normal-Taxi landing retest.
 
 Canonical investigation:
 `CAMERA_WORLD_ENTRY_TRANSITION_TIMEOUT_2026-10-06.md`.

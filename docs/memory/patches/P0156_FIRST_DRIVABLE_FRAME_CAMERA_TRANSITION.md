@@ -3,7 +3,7 @@
 Date: 2026-10-06
 Baseline: `e9be312d24c89d6b2d4d9935ea6eb6f9424ca698`
 Candidate runtime: `0.0.77-dev`
-Result: **PREPARED — RUNTIME RETEST REQUIRED**
+Result: **INSTALLED / PUSHED — OBSERVED NORMAL WORLD-ENTRY RUNTIME PASS** (`e1be731b`)
 
 ## Trigger
 
@@ -46,3 +46,24 @@ After deployment:
 A large `firstDelay` is not itself failure; the transition must still receive its full motion budget after that first drivable frame.
 
 PASS requires target convergence, `failures=0`, `secret=false`, and no Lua/taint/protected-action failure.
+
+
+## Durable/runtime result
+
+Verified main:
+`e1be731bd64db2acb62480f62fafaea58515989f`.
+
+Runtime on `0.0.77-dev` / loadCount `187`:
+- Phase G Camera World/Combat Check PASS;
+- world start/current/final about `5.0795` against target `5`;
+- targetReached=true;
+- failures=0;
+- secret=false;
+- error=nil;
+- motion diagnostic: one sample, no commands, no switches, armZoom about `5.0795`, firstDelay=0.
+
+Separate Run All repeated the camera PASS and completed cleanly.
+
+The accepted sample does not prove the large nonzero first-delay branch because `firstDelay=0`; it also does not exercise P0155 direction switching. Those are preserved as unexercised branches, not invented PASS results.
+
+The observed normal-world-entry regression is closed. G.5 returns to the pending P0119 normal-Taxi landing retest.

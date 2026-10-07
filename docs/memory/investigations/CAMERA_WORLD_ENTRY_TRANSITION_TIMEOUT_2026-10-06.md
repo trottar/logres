@@ -94,3 +94,43 @@ After P0156:
 A large `firstDelay` is acceptable; it must no longer consume the transition's motion budget before the first drivable frame.
 
 PASS requires target convergence, `failures=0`, `secret=false`, and no Lua/taint/protected-action failure.
+
+
+## P0156 runtime acceptance
+
+P0156 is verified durable at:
+`e1be731bd64db2acb62480f62fafaea58515989f`
+on `0.0.77-dev`.
+
+LoadCount `187` / Forever `1.60.1.70245`:
+- Phase G Camera World/Combat Check PASS;
+- context `world`, owns=true;
+- start/current/final `5.0794949531555`;
+- requested/effective target `5`;
+- elapsed `0`;
+- targetReached=true;
+- failures=0;
+- secret=false;
+- error=nil;
+- samples=1;
+- inCommands=0;
+- outCommands=0;
+- switches=0;
+- armZoom `5.0794949531555`;
+- firstDelay=0.
+
+Separate Run All repeated the same camera PASS and completed cleanly.
+
+## Final classification
+
+**RESOLVED FOR OBSERVED NORMAL WORLD ENTRY — P0156 RUNTIME PASS.**
+
+The earlier failures remain authoritative historical evidence:
+- P0154 reproduced competing world-entry motion;
+- P0155 exposed the stale event-time timeout with one sample and zero commands.
+
+The accepted P0156 run did not naturally reproduce a large first-update delay, so that branch remains unexercised in runtime evidence. It also did not exercise P0155's direction-switch stop (`switches=0`).
+
+Those branch-level deferrals do not justify more speculative code. Reopen this investigation only if normal world entry fails again.
+
+The next Phase G gate is the independently pending normal-Taxi landing retest from P0119.

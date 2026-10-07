@@ -1,0 +1,15 @@
+P0157 R2 — RECORD P0156 CAMERA PASS / MEMORY SCHEMA FIX
+
+Baseline:
+e1be731bd64db2acb62480f62fafaea58515989f
+
+Purpose:
+- record P0156 observed normal-world-entry runtime PASS;
+- preserve prior P0154/P0155 failures and unexercised branches;
+- preserve two rolled-back P0157 delivery failures;
+- harden memory-health CURRENT heading validation;
+- preflight generated repository memory before worktree mutation;
+- return Phase G.5 to the pending P0119 normal-Taxi landing retest.
+
+Docs/repository-tooling only. No WoW runtime code change. No WoW redeploy required.
+No commit or push performed.

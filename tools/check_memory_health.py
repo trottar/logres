@@ -47,7 +47,9 @@ def main() -> int:
     if current.is_file():
         text = current.read_text(encoding="utf-8")
         for heading in CURRENT_HEADINGS:
-            count = text.count(heading)
+            count = len(
+                re.findall(rf"(?m)^{re.escape(heading)}[ 	]*$", text)
+            )
             if count != 1:
                 fail(
                     f"CURRENT heading {heading!r} occurs {count} times; expected exactly 1",

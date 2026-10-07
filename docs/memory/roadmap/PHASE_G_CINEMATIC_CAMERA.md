@@ -1,6 +1,6 @@
 # Phase G — Cinematic Camera
 
-Status: ACTIVE — G.5 OPEN; WORLD-ENTRY FIRST-DRIVABLE-FRAME CORRECTION ACTIVE
+Status: ACTIVE — G.5 OPEN; WORLD-ENTRY REGRESSION CLOSED FOR OBSERVED SCOPE / TAXI LANDING RETEST NEXT
 Opened: 2026-10-02
 
 ## Product Objective
@@ -132,9 +132,16 @@ The outward correction proved the transition reversed direction during the world
 
 Its runtime retest exposed an earlier timebase failure: camera start/current/final `50`, target `5`, elapsed about `23.523s`, one OnUpdate sample, zero MoveView commands, and zero direction switches. The transition timed out before motion could begin because its clock had started during `PLAYER_ENTERING_WORLD`.
 
-P0156 moves only the transition motion/timeout start to the first actual OnUpdate frame and uses that frame's zoom as the transition start baseline. It adds event-arm/first-update-delay diagnostics but no timer, arbitrary delayed reconcile, polling, CVar mutation, target/duration change, or Taxi-policy expansion.
+P0156 is durable at `e1be731b` / `0.0.77-dev` and passes the observed normal-world-entry retest. Phase G Camera World/Combat Check reported start/current/final about `5.0795` against target `5`, targetReached=true, failures=0, secret=false, error=nil; separate Run All repeated the PASS.
 
-The normal-Taxi landing retest remains pending after this world-entry regression is understood.
+The passing sample had `firstDelay=0` and `switches=0`, so the prior large-delay branch and P0155 direction-switch stop remain unexercised runtime branches. No further world-entry code is justified without new evidence.
+
+The normal-Taxi landing retest from P0119 is now the exact G.5 next gate:
+- one normal Taxi flight;
+- during flight verify Taxi ownership/target via Phase G Camera World/Combat Check;
+- after landing verify City/World settles near target `5`, not first-person `0`;
+- failures=0, secret=false, error=nil;
+- separate Run All clean.
 
 Production Taxi is not considered closed until that runtime proof passes.
 
