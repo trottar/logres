@@ -4,11 +4,13 @@ As of 2026-10-06.
 
 ## Active work stream
 
-**P0152 pet-action baseline remains accepted; P0156 passes observed normal world entry and G.5 returns to the pending normal-Taxi landing retest.**
+**Finish the bounded G.5 normal-Taxi landing retest, then enter Phase H integration-first: safe stock-surface suppression/coexistence, authored UI positioning, then final polish and remaining visuals.**
 
-The formal roadmap remains capability-gated and Phase G is still open. Broader
-Camera feature work remains frozen, but the reproduced world-entry regression is
-active until the transition driver is safe again.
+The formal roadmap remains capability-gated and Phase G is still open only for
+the existing G.5 Taxi landing proof. Broader Camera feature expansion remains
+frozen. After G.5 closes, Phase H becomes the primary workstream: first
+surface-by-surface suppression/coexistence and authored layout positioning, then
+final polish and residual visuals.
 
 ## Phase status
 
@@ -32,7 +34,7 @@ on `0.0.49-dev`.
 Its frame-shaped MoveView transition correction is installed, but the normal-Taxi
 landing retest has not been durably recorded as PASS. G.5 therefore remains open.
 
-Camera work resumes only after the current approved visual sequence is finished.
+The earlier temporary Camera freeze is superseded: finish the existing G.5 Taxi gate now, then move directly into Phase H integration/layout before final polish.
 No max-distance mutation, Taxi rotation, or Taxi UI fade is authorized.
 
 P0154 is verified durable at `40dec187` / `0.0.75-dev` and the diagnostic passed while the behavior still failed. World entry started near `23.148`, targeted `5`, reached observed range `0 -> 50`, and timed out at `50`. The motion line recorded `142` inward commands and `1` outward command.
@@ -212,9 +214,17 @@ P0156:
 World start/current/final about `5.0795`, target `5`, targetReached=true, failures=0, secret=false, error=nil; separate Run All clean. `firstDelay=0`, `switches=0`.
 
 P0157:
-**R2 PREPARED — DOCS / EVIDENCE + MEMORY-SCHEMA CHECKER HARDENING; TWO DELIVERY FAILURES PRESERVED.**
+**INSTALLED / PUSHED — DOCS / EVIDENCE + MEMORY-SCHEMA CHECKER HARDENING** at `328f1543`.
 
-Records the P0156 pass, closes the world-entry regression for observed scope, hardens CURRENT heading validation, and returns Phase G.5 to the pending P0119 normal-Taxi landing proof.
+Records the P0156 pass, preserves two rolled-back delivery failures, hardens CURRENT heading validation, and returns Phase G.5 to the pending P0119 normal-Taxi landing proof.
+
+P0158:
+**PREPARED — DOCS / ROADMAP SEQUENCING CHECKPOINT.**
+
+Freezes the current high-level order:
+1. finish the bounded G.5 Taxi landing gate;
+2. Phase H stock-surface suppression/coexistence plus authored layout/positioning;
+3. final polish, remaining visuals, and settings/accessibility.
 
 Next:
 **Take one normal Taxi flight; use Phase G -> Camera World/Combat Check during flight and after landing, then Phase 0 -> Run All, and upload diagnostics.**

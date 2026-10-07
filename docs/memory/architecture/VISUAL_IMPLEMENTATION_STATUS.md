@@ -141,13 +141,19 @@ Completed with correction history:
     and user-confirmed button execution accepted. Exact ornament/contrast remains
     later whole-interface polish.
 
-After that:
-26. implement only separately runtime-proven pet/class/special slices, preserve stock
-    fallback for the rest, then continue settings/accessibility/final whole-screen
-    composition calibration. Deferred navigation roles remain deferred until natural
-    evidence or new source capability justifies reopening them.
+Current roadmap handoff:
+26. finish the bounded Phase G.5 normal-Taxi landing proof;
+27. begin Phase H with a surface-by-surface stock-suppression/coexistence audit,
+    hiding only presentation that already has a complete proven Logres replacement
+    plus restoration/fail-open behavior;
+28. establish the authored whole-screen anchors and proper default positions for
+    Logres-owned surfaces while preserving required stock fallbacks;
+29. perform final whole-screen polish and remaining visual work, including
+    settings/accessibility and accepted residual calibration;
+30. add only separately runtime-proven pet/class/special or deferred capability
+    slices when evidence justifies them.
 
-This is a dependency-oriented implementation map, not a claim that formal Phase H
-has started. Phase G remains open. Before the next runtime slice, classify the
-one-off world-entry camera timeout recorded with the final P0152 Run All; do not
-speculatively patch an unreproduced camera failure.
+This is a dependency-oriented implementation map. Phase G remains open only for
+the existing G.5 Taxi landing gate. The earlier world-entry timeout has been
+classified and corrected for observed scope; it no longer blocks the Phase H
+handoff once G.5 is closed.

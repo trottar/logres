@@ -1,0 +1,15 @@
+P0158 — SEQUENCE CAMERA, INTEGRATION/LAYOUT, THEN POLISH
+
+Baseline:
+328f15431b8b3cc3f4d78d2edf4c40d987f78341
+
+Purpose:
+- synchronize active memory after P0157 R2;
+- finish bounded G.5 Taxi proof first;
+- then Phase H safe stock-surface suppression/coexistence;
+- then authored whole-screen positions/layout;
+- then final polish, remaining visuals, and settings/accessibility;
+- preserve all capability/fail-open suppression gates.
+
+Docs/roadmap only. No WoW runtime code change. No WoW redeploy required.
+No commit or push performed.

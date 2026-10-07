@@ -34,7 +34,7 @@ The roadmap is capability-gated. A phase advances only when its success criteria
 
 ## Phase G — Cinematic Camera
 
-**Status: ACTIVE — G.5 OPEN; WORLD-ENTRY FIRST-DRIVABLE-FRAME CORRECTION ACTIVE.**
+**Status: ACTIVE — G.5 OPEN; NORMAL-TAXI LANDING RETEST NEXT.**
 
 G.1 through G.4 are runtime-proven.
 
@@ -48,20 +48,31 @@ P0119 is durable at `c342bc176a9d5de80ec116d0c6b31fa595cd75b3`
 on `0.0.49-dev` and replaces the constant-rate driver with frame-shaped MoveView
 motion plus bounded target correction.
 
-The normal-Taxi landing retest has not been durably recorded as PASS. Camera work
-is explicitly frozen until the current approved visual translation sequence is
-finished. No SetCVar, Taxi rotation, or Taxi UI fade is authorized.
+The normal-Taxi landing retest has not been durably recorded as PASS. P0158
+supersedes the temporary visual-first freeze: finish this already-open G.5 gate
+now, but do not expand broader Camera scope. If it passes, Phase G closes and
+Phase H becomes primary. No SetCVar, Taxi rotation, or Taxi UI fade is authorized.
 
 Canonical phase record:
 `memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
 
 ## Phase H — Integration and Polish
 
-**Status: QUEUED — approved visual translation underway in parallel.**
+**Status: QUEUED — NEXT AFTER G.5; INTEGRATION/SUPPRESSION + AUTHORED LAYOUT BEFORE FINAL POLISH.**
 
 D-039 preserves the approved twelve-sheet World Ghost / Selective Hybrid E visual
 baseline. D-040 defines `Logres/Media/` plus `Theme.lua` as the runtime asset/token
 boundary.
+
+P0158 sets the Phase H execution order after G.5:
+1. surface-by-surface Blizzard ownership/suppression and coexistence, only where
+   replacement/restoration is already capability-proven;
+2. authored integration anchors and proper default UI positions;
+3. final whole-screen polish, residual visuals, settings/accessibility, and only
+   then remaining capability-proven additions.
+
+This is not authorization for blanket hiding. Stock fallbacks remain wherever the
+replacement gate is incomplete.
 
 Parallel translation has accepted:
 - P0120 shared percentage/resource bar;

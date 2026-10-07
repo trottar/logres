@@ -1,6 +1,6 @@
 # Phase H — Integration and Polish
 
-Status: QUEUED
+Status: QUEUED — NEXT AFTER G.5; INTEGRATION-FIRST EXECUTION ORDER SET
 
 ## Product objective
 
@@ -52,11 +52,55 @@ Phase H begins from these settled directions:
 - target status attached to the world target when safe;
 - every removed Blizzard surface requires a deliberate replacement/fallback.
 
+## Execution order
+
+The high-level Phase H order is now explicit. Exact implementation details remain
+capability-gated inside each step.
+
+### 1. Stock-surface ownership, suppression, and coexistence
+
+Start from the real in-client screen rather than from another broad concept pass.
+
+For each Blizzard surface:
+- determine whether Logres already provides every information/control function it
+  intends to replace;
+- require proven restoration/fail-open behavior;
+- suppress/hide only the proven replaceable presentation layer;
+- preserve Blizzard interaction/information where Logres is incomplete.
+
+This is a surface-by-surface ownership pass, not blanket UI suppression. In
+particular, existing minimap, party/CompactParty, target aura/status,
+target-of-target, unsupported class/special-control, vehicle/override, and other
+explicit fallback gates remain in force until separately replaced.
+
+### 2. Authored layout and proper positions
+
+Once coexistence is correct:
+- establish stable integration-owned anchors for the accepted semantic regions;
+- put Logres surfaces into their intended default positions;
+- decouple incidental cross-module anchors;
+- calibrate spacing and collision behavior at realistic combat/noncombat density;
+- keep stock fallback surfaces in the composition where they remain required.
+
+This step authors the default composition; it does not create an unrestricted
+drag-anything UI construction toolkit.
+
+### 3. Final polish and remaining visuals
+
+Only after the suppression/coexistence and layout baseline is stable:
+- whole-screen spacing, contrast, scale, opacity, and ornament calibration;
+- action-density/hotkey/count refinement;
+- pet-button ornament/contrast;
+- health-tunnel and Compass final calibration;
+- remaining accepted state variants;
+- settings/accessibility presentation;
+- genuinely uncovered visual work for newly capability-proven domains.
+
+Capability-deferred data/control domains remain deferred until evidence exists.
+
 ## Candidate work slices
 
-Exact ordering is intentionally not frozen before Phase H starts.
-
-Likely slices include:
+Within the execution order above, likely slices include:
 - establish authored layout anchors / integration geometry;
 - decouple transient Context from incidental module anchors;
 - Active Quest toggle, ambient wording, and exact hover detail;
@@ -132,7 +176,7 @@ Residual visual design remains for class-specific discrete mechanics,
 settings/accessibility, exact hotkey/count/36-button density calibration, and any
 future capability-proven surface absent from the approved sheets.
 
-This parallel visual checkpoint does not change the active Phase G / G.5 objective.
+This parallel visual checkpoint remains valid, but P0158 now defines the handoff: finish the bounded G.5 Taxi gate, then execute Phase H integration/coexistence and layout before final polish.
 
 ## First production translation — P0116
 

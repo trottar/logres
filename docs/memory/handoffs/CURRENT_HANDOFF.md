@@ -4,57 +4,50 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0156 `e1be731bd64db2acb62480f62fafaea58515989f` / `0.0.77-dev`.
+P0157 R2 `328f15431b8b3cc3f4d78d2edf4c40d987f78341`.
 
-## P0156 runtime result
+## Current sequence
 
-LoadCount `187` / Forever `1.60.1.70245` passed the requested normal-world validation.
+The execution order is now explicit:
 
-Phase G **Camera World/Combat Check**:
-- PASS;
-- context `world`, owns=true;
-- current/start/final about `5.0795`;
-- requested/effective target `5`;
-- targetReached=true;
-- failures=0;
-- secret=false;
-- error=nil;
-- one sample;
-- armZoom about `5.0795`;
-- firstDelay=0.
+1. finish the existing bounded G.5 normal-Taxi landing retest;
+2. enter Phase H with stock-surface ownership/suppression and coexistence first;
+3. establish the authored whole-screen layout and proper UI positions;
+4. then perform final polish, residual visuals, and settings/accessibility work.
 
-Separate Phase 0 **Run All** repeated the camera PASS and completed cleanly.
+This supersedes the older temporary sequencing statement that all approved visual translation must finish before Camera resumes.
 
-The prior timeout/max-zoom failures remain preserved. This passing sample did not naturally reproduce the prior ~23.5s first-update delay and did not exercise a direction switch, so those branches are not separately runtime-proven.
+## Current Camera state
 
-## P0157 delivery diagnosis
+P0156 `e1be731b` / `0.0.77-dev` passes observed normal world entry.
 
-Two P0157 deliveries failed and rolled back before a durable checkpoint:
-- initial artifact omitted a required CURRENT schema section;
-- R1 added it, but the checker used raw substring matching and also counted an inline prose mention of the same Markdown token.
+The only current Camera gate is the pre-existing P0119 Taxi landing proof:
+- during one normal Taxi flight: Phase G -> Camera World/Combat Check;
+- after landing/settle: Phase G -> Camera World/Combat Check again;
+- destination City/World must converge near target `5`, not `0`;
+- failures=0, secret=false, error=nil;
+- Phase 0 -> Run All separately;
+- upload diagnostics.
 
-R2 fixes the checker to count actual heading lines and preflights the complete candidate in a temporary checkout before writing the worktree.
+No broader Camera feature expansion is authorized by this sequence.
 
-## Exact next gate
+## Phase H entry rule
 
-Return to the pre-existing G.5 normal-Taxi landing retest from P0119:
+"Hiding the UI" is not blanket suppression.
 
-1. take one normal Taxi flight;
-2. during flight use Phase G -> **Camera World/Combat Check**;
-3. after landing and settle, use Phase G -> **Camera World/Combat Check** again;
-4. destination City/World must finish near target `5`, not first-person `0`;
-5. require failures=0, secret=false, error=nil;
-6. run Phase 0 -> **Run All** separately;
-7. upload diagnostics.
+The first Phase H integration pass must work surface by surface:
+- suppress/hide only where Logres has a deliberate capability-proven replacement;
+- preserve secure interaction, required information, restoration, and fail-open behavior;
+- retain stock minimap, party/CompactParty, target aura/status, target-of-target, unsupported class/special controls, and other incomplete fallbacks until their replacement gates are satisfied.
 
-No WoW redeploy is required for P0157 R2; it changes docs/repository tooling only.
+Once coexistence/suppression is correct, integration owns the authored anchors and final default positions. Polish follows that stable composition rather than preceding it.
 
 ## Key references
 
 - `../CURRENT.md`
-- `../evidence/P0157_DELIVERY_FAILURES_2026-10-06.md`
-- `../evidence/P0157_P0156_WORLD_ENTRY_CAMERA_PASS_2026-10-06.md`
-- `../investigations/CAMERA_WORLD_ENTRY_TRANSITION_TIMEOUT_2026-10-06.md`
-- `../patches/P0157_RECORD_P0156_CAMERA_PASS.md`
-- `../patches/P0119_FIX_CAMERA_TRANSITION_OVERSHOOT.md`
+- `../patches/P0158_SEQUENCE_CAMERA_INTEGRATION_POLISH.md`
 - `../roadmap/PHASE_G_CINEMATIC_CAMERA.md`
+- `../roadmap/PHASE_H_INTEGRATION_POLISH.md`
+- `../architecture/WORLD_FIRST_LAYOUT.md`
+- `../architecture/VISUAL_IMPLEMENTATION_STATUS.md`
+- `../decisions/D-017_BLIZZARD_UI_SUPPRESSION_AND_RESTORATION.md`

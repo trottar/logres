@@ -2,7 +2,7 @@
 
 Date: 2026-10-06
 Baseline: `e1be731bd64db2acb62480f62fafaea58515989f`
-Result: **R2 PREPARED — DOCS / EVIDENCE + MEMORY-SCHEMA CHECKER HARDENING**
+Result: **INSTALLED / PUSHED — DOCS / EVIDENCE + MEMORY-SCHEMA CHECKER HARDENING** (`328f1543`)
 
 ## Purpose
 
@@ -49,3 +49,14 @@ P0157 R2:
 - returns Phase G.5 to the pending P0119 normal-Taxi landing retest.
 
 No WoW runtime files are changed. No WoW redeploy is required.
+
+
+## Durable result
+
+Verified main:
+`328f15431b8b3cc3f4d78d2edf4c40d987f78341`.
+
+The P0156 observed normal-world-entry PASS, both rolled-back P0157 delivery
+failures, L-019, and the heading-line memory-health correction are durable.
+P0158 supersedes only the active sequencing language; it does not alter the
+accepted P0157 evidence.

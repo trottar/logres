@@ -145,10 +145,18 @@ The normal-Taxi landing retest from P0119 is now the exact G.5 next gate:
 
 Production Taxi is not considered closed until that runtime proof passes.
 
-## Parallel approved visual implementation direction
+## Sequencing after P0157
 
-The user explicitly chose to finish the already-approved visual translation
-sequence before returning to Camera.
+The earlier temporary choice to finish all approved visual translation before
+returning to Camera is superseded.
+
+Current order:
+1. finish the already-open G.5 normal-Taxi landing proof;
+2. close Phase G if that proof is clean;
+3. enter Phase H with stock-surface suppression/coexistence and authored layout
+   positioning before final polish.
+
+This does not reopen broader Camera feature work.
 
 P0120 through P0124 translated and accepted the shared percentage bar, player
 cast cue, Context message treatment, heading/manual-waypoint Compass, and organic
@@ -179,7 +187,7 @@ The approved visual sequence now moves to P0139 world-attached target source +
 anchoring/fallback audit. Deferred harmful/target aura categories are not forced
 solely to advance sequencing.
 
-Broader Camera feature work remains frozen; only the reproduced world-entry regression is active.
+Broader Camera feature work remains frozen; only the existing G.5 Taxi landing gate is active.
 
 D-037 unproven navigation/minimap roles remain separately capability-gated.
 D-030 remains current minimap runtime authority until replacement capabilities
@@ -190,3 +198,16 @@ are proven.
 Taxi rotation, Hearth/Teleport, NPC Interaction, Fishing, AFK, Gathering,
 shoulder offsets, UI-hide integration, startup parity, and broader camera-CVar
 ownership remain separately gated.
+
+
+## P0158 execution handoff
+
+P0158 records the post-G.5 handoff explicitly.
+
+If the normal-Taxi landing retest passes, Phase G closes and the next work is not
+another component-art round. Phase H begins by reconciling the actual screen:
+safe suppression/coexistence for capability-proven replacements, then authored
+positions/anchors, then final polish and residual visuals.
+
+If the Taxi retest fails, preserve that narrow evidence and repair only the
+reproduced Taxi/shared-transition defect before the Phase H handoff.
