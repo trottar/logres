@@ -1,0 +1,23 @@
+P0159 R1 — DYNAMICCAM PROFILE CONTEXT + ZOOM PARITY
+
+Baseline:
+27670624e8c001dc341ac92ad9c463f2f61088de
+
+Candidate runtime:
+0.0.78-dev
+
+Scope:
+- all nine enabled captured profile contexts represented;
+- new Teleport / AFK / Gathering / NPC Interaction / Fishing predicates;
+- context zoom/no-zoom semantics and durations;
+- Fishing one-second exit hold without timers/tickers;
+- DynamicCam fail-open coexistence and no-CVar ownership preserved;
+- durable Camera parity memory updated.
+
+Excluded:
+- rotation;
+- shoulder/global camera-setting mutation;
+- reactive zoom;
+- UI hide/fade.
+
+No commit or push performed.

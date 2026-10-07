@@ -4,50 +4,67 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0157 R2 `328f15431b8b3cc3f4d78d2edf4c40d987f78341`.
+P0158 `27670624e8c001dc341ac92ad9c463f2f61088de`.
 
-## Current sequence
+## Camera direction
 
-The execution order is now explicit:
+The canonical DynamicCam `RPG` profile is already captured. Do not request another export unless the user changed it.
 
-1. finish the existing bounded G.5 normal-Taxi landing retest;
-2. enter Phase H with stock-surface ownership/suppression and coexistence first;
-3. establish the authored whole-screen layout and proper UI positions;
-4. then perform final polish, residual visuals, and settings/accessibility work.
+The user explicitly chose to complete Camera parity before Phase H. P0158's high-level order remains:
 
-This supersedes the older temporary sequencing statement that all approved visual translation must finish before Camera resumes.
+1. Camera parity;
+2. safe Blizzard suppression/coexistence;
+3. authored UI positions/layout;
+4. final polish and remaining visuals.
 
-## Current Camera state
+The previous interpretation that Camera meant only the pending Taxi landing proof is superseded.
 
-P0156 `e1be731b` / `0.0.77-dev` passes observed normal world entry.
+## P0159 R1
 
-The only current Camera gate is the pre-existing P0119 Taxi landing proof:
-- during one normal Taxi flight: Phase G -> Camera World/Combat Check;
-- after landing/settle: Phase G -> Camera World/Combat Check again;
-- destination City/World must converge near target `5`, not `0`;
-- failures=0, secret=false, error=nil;
-- Phase 0 -> Run All separately;
-- upload diagnostics.
+The initial P0159 artifact refused during shadow preflight before tracked writes. Its renderer deleted the just-inserted context-helper block while replacing the OnUpdate-to-Reconcile range. R1 fixes that exact delivery defect and hardens the checker against recurrence.
 
-No broader Camera feature expansion is authorized by this sequence.
+P0159 R1 is one consolidated context/zoom parity layer for all nine enabled captured situations.
 
-## Phase H entry rule
+New source-backed predicates:
+- Hearth/Teleport;
+- AFK;
+- Gathering;
+- NPC Interaction;
+- Fishing.
 
-"Hiding the UI" is not blanket suppression.
+Existing:
+- Taxi;
+- World Combat;
+- City;
+- World.
 
-The first Phase H integration pass must work surface by surface:
-- suppress/hide only where Logres has a deliberate capability-proven replacement;
-- preserve secure interaction, required information, restoration, and fail-open behavior;
-- retain stock minimap, party/CompactParty, target aura/status, target-of-target, unsupported class/special controls, and other incomplete fallbacks until their replacement gates are satisfied.
+No CVar mutation, rotation, shoulder mutation, or UI fade is added in P0159.
 
-Once coexistence/suppression is correct, integration owns the authored anchors and final default positions. Polish follows that stable composition rather than preceding it.
+Fishing's upstream `delay=1` is an **exit hold**, implemented through the controller's existing finite OnUpdate activity rather than a timer/ticker.
+
+## Runtime gate
+
+After P0159 R1 deployment:
+
+1. `/reload`;
+2. Phase G -> **Camera Profile Check**;
+3. Phase 0 -> **Run All**;
+4. one normal Taxi flight;
+5. Phase G -> **Camera Profile Check** during flight;
+6. Phase G -> **Camera Profile Check** after landing/settle;
+7. upload diagnostics.
+
+Other profile contexts may be recorded when naturally encountered; do not manufacture every environment just to advance.
+
+If clean, proceed to the second consolidated Camera parity layer: rotation, shoulder behavior, and camera-setting ownership/restoration. DynamicCam UI fades are reconciled with Phase H presentation/suppression policy.
 
 ## Key references
 
 - `../CURRENT.md`
-- `../patches/P0158_SEQUENCE_CAMERA_INTEGRATION_POLISH.md`
+- `../evidence/G6_DYNAMICCAM_PROFILE_PARITY_AUDIT_2026-10-06.md`
+- `../evidence/P0159_INITIAL_SHADOW_PREFLIGHT_FAIL_2026-10-06.md`
+- `../investigations/G6_DYNAMICCAM_PROFILE_PARITY.md`
+- `../patches/P0159_DYNAMICCAM_PROFILE_CONTEXT_ZOOM_PARITY.md`
+- `../evidence/G1_DYNAMICCAM_RPG_PROFILE_2026-10-02.json`
+- `../architecture/CAMERA.md`
 - `../roadmap/PHASE_G_CINEMATIC_CAMERA.md`
-- `../roadmap/PHASE_H_INTEGRATION_POLISH.md`
-- `../architecture/WORLD_FIRST_LAYOUT.md`
-- `../architecture/VISUAL_IMPLEMENTATION_STATUS.md`
-- `../decisions/D-017_BLIZZARD_UI_SUPPRESSION_AND_RESTORATION.md`

@@ -20,9 +20,9 @@ if CONTROLLER.is_file():
         'self.lastResting = false',
         'self.lastResting = state.resting == true',
         'return "city", "resting-city", false',
-        'elseif context == "city" then',
-        'requestedTargetZoom = CITY_TARGET',
-        'context == "city" and currentZoom > CITY_TARGET',
+        'if context == "city" then',
+        'return CITY_TARGET',
+        'direction == "in" and currentZoom > requestedTargetZoom',
         'lastResting = self.lastResting',
         'self:SubscribeState(function(',
     ]
@@ -30,7 +30,7 @@ if CONTROLLER.is_file():
         if fragment not in source:
             errors.append(f"Camera/WorldCombat.lua missing G.4 City contract: {fragment}")
 
-    combat_index = source.find('if liveCombat then')
+    combat_index = source.find('if not state.inInstance and liveCombat then')
     city_index = source.find('if state.resting then')
     if combat_index == -1 or city_index == -1:
         errors.append("could not locate live-combat / resting context ordering")

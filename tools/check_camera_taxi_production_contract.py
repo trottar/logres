@@ -21,12 +21,12 @@ if CONTROLLER.is_file():
         "local CAMERA_DISTANCE_SCALE = 15",
         "local function readCameraDistanceFactor()",
         'return "taxi", "taxi", false',
-        "requestedTargetZoom = TAXI_TARGET",
+        "return TAXI_TARGET",
         "effectiveTargetZoom = math.min(",
         "requestedTargetZoom,",
         "cameraDistanceCeiling",
-        "transitionDurationForContext(context)",
-        'context == "taxi" and currentZoom < requestedTargetZoom',
+        "transitionDurationForContext(",
+        'direction == "out" and currentZoom < requestedTargetZoom',
         "self.transitionRequestedZoom = requestedTargetZoom",
         "self.transitionEffectiveTargetZoom = effectiveTargetZoom",
         "self.lastCameraDistanceFactor = cameraDistanceFactor",
@@ -37,24 +37,29 @@ if CONTROLLER.is_file():
         "transitionEffectiveTargetZoom = self.transitionEffectiveTargetZoom",
         "transitionDuration = self.transitionDuration",
         "local requestedTargetZoom = self.transitionRequestedZoom",
-        'transitionContext ~= "taxi"',
+        "contextAllowsLimitedTarget(transitionContext)",
         '"transition-complete-limited"',
     ]
     for fragment in required:
         if fragment not in source:
             errors.append(f"Camera/WorldCombat.lua missing Taxi contract: {fragment}")
 
-    instance_index = source.find("if state.inInstance then")
     taxi_index = source.find("if state.onTaxi then")
-    interaction_index = source.find("if state.interacting then")
-    combat_index = source.find("if liveCombat then")
+    teleport_index = source.find("if snapshot.teleport then")
+    afk_index = source.find("if snapshot.afk then")
+    gathering_index = source.find("if snapshot.gathering then")
+    interaction_index = source.find("if snapshot.interaction then")
+    combat_index = source.find("if not state.inInstance and liveCombat then")
+    fishing_index = source.find("if snapshot.fishing then")
     city_index = source.find("if state.resting then")
-    if min(instance_index, taxi_index, interaction_index, combat_index, city_index) == -1:
-        errors.append("could not locate Taxi precedence chain")
-    elif not (instance_index < taxi_index < interaction_index < combat_index < city_index):
-        errors.append(
-            "Taxi precedence must be instance boundary -> Taxi -> interaction -> combat -> City"
-        )
+    instance_index = source.find("if state.inInstance then")
+    positions = [taxi_index, teleport_index, afk_index, gathering_index,
+                 interaction_index, combat_index, fishing_index, city_index,
+                 instance_index]
+    if min(positions) == -1:
+        errors.append("could not locate captured-profile precedence chain")
+    elif positions != sorted(positions):
+        errors.append("captured-profile precedence chain is out of order")
 
     forbidden = [
         "SetCVar(",

@@ -4,8 +4,17 @@ local WORLD_TARGET = 5
 local CITY_TARGET = 5
 local COMBAT_TARGET = 15
 local TAXI_TARGET = 50
+local TELEPORT_TARGET = 20
+local INTERACTION_TARGET = 5
+local FISHING_TARGET = 50
+local GATHERING_TARGET = 5
+
 local TRANSITION_DURATION = 2.5
 local TAXI_TRANSITION_DURATION = 5
+local TELEPORT_TRANSITION_DURATION = 5
+local FISHING_TRANSITION_DURATION = 2
+local GATHERING_TRANSITION_DURATION = 3
+local FISHING_EXIT_DELAY = 1
 local TRANSITION_TIMEOUT_EXTRA = 0.75
 local TARGET_TOLERANCE = 0.25
 local CAMERA_DISTANCE_SCALE = 15
@@ -85,11 +94,28 @@ local function readCameraDistanceFactor()
     return factor, factor * CAMERA_DISTANCE_SCALE, nil, false
 end
 
-local function transitionDurationForContext(context)
+local function transitionDurationForContext(
+    context,
+    teleportDuration
+)
     if context == "taxi" then
         return TAXI_TRANSITION_DURATION
     end
-
+    if context == "teleport" then
+        if type(teleportDuration) == "number" and teleportDuration > 0 then
+            return teleportDuration
+        end
+        return TELEPORT_TRANSITION_DURATION
+    end
+    if context == "fishing" then
+        return FISHING_TRANSITION_DURATION
+    end
+    if context == "gathering" then
+        return GATHERING_TRANSITION_DURATION
+    end
+    if context == "afk" then
+        return 0
+    end
     return TRANSITION_DURATION
 end
 
@@ -252,6 +278,23 @@ local Controller = Logres:RegisterModule("CameraWorldCombat", {
         self.lastCombatMismatch = false
         self.lastResting = false
         self.lastStateRevision = 0
+
+        self.lastProfileTeleport = false
+        self.lastProfileTeleportDuration = nil
+        self.lastProfileAFK = false
+        self.lastProfileGathering = false
+        self.lastProfileInteraction = false
+        self.lastProfileFishing = false
+        self.profileSecretSkips = 0
+        self.profileReadFailures = 0
+        self.lastProfileSecretSource = nil
+        self.lastProfileError = nil
+
+        self.fishingHoldUntil = nil
+        self.fishingHoldSatisfied = false
+        self.fishingHoldCount = 0
+        self.lastFishingHoldRemaining = nil
+
         self.lastDynamicCamLoaded = false
         self.lastDynamicCamStatusKnown = false
         self.lastDynamicCamStatusSource = nil
@@ -279,6 +322,9 @@ local Controller = Logres:RegisterModule("CameraWorldCombat", {
         self.moduleEnabled = false
         self.ownsContext = false
         self.selectedContext = "none"
+        self.fishingHoldUntil = nil
+        self.fishingHoldSatisfied = false
+        self.lastFishingHoldRemaining = nil
         self:StopTransition("module-disabled", false)
         self.lastAction = "disabled"
         self.lastReason = "module-disabled"
@@ -329,7 +375,7 @@ function Controller:StopTransition(reason, countAsStop)
     self.transitionContext = nil
     self.transitionDirection = nil
     self.transitionStartTime = nil
-    self:SetAnimationActive(false)
+    self:SetAnimationActive(self.fishingHoldUntil ~= nil)
     self.lastStopReason = reason
 
     if wasActive and countAsStop ~= false then
@@ -348,6 +394,9 @@ end
 
 function Controller:Relinquish(reason, blocked)
     local hadOwnership = self.ownsContext or self.transitionActive
+    self.fishingHoldUntil = nil
+    self.fishingHoldSatisfied = false
+    self.lastFishingHoldRemaining = nil
     self:StopTransition(reason, self.transitionActive)
     self.ownsContext = false
     self.selectedContext = "none"
@@ -385,34 +434,62 @@ function Controller:ReadContext()
 
     self.lastLiveCombat = liveCombat
     self.lastLockdown = lockdown
-    self.lastCombatMismatch =
-        self.lastLiveCombat ~= self.lastCachedCombat
+    self.lastCombatMismatch = self.lastLiveCombat ~= self.lastCachedCombat
     self.lastResting = state.resting == true
+
+    local profileContexts = Logres.CameraProfileContexts
+    if type(profileContexts) ~= "table"
+        or type(profileContexts.ReadSnapshot) ~= "function"
+    then
+        return nil, "profile-contexts-unavailable", false
+    end
+
+    local snapshot = profileContexts:ReadSnapshot()
+    self.lastProfileTeleport = snapshot.teleport == true
+    self.lastProfileTeleportDuration = snapshot.teleportDuration
+    self.lastProfileAFK = snapshot.afk == true
+    self.lastProfileGathering = snapshot.gathering == true
+    self.lastProfileInteraction = snapshot.interaction == true
+    self.lastProfileFishing = snapshot.fishing == true
+    self.profileSecretSkips = snapshot.secretSkips or 0
+    self.profileReadFailures = snapshot.readFailures or 0
+    self.lastProfileSecretSource = snapshot.lastSecretSource
+    self.lastProfileError = snapshot.lastError
 
     if not state.initialized then
         return "none", "state-uninitialized", false
     end
 
-    if state.inInstance then
-        return "none", "outside-slice:instance", false
-    end
-
+    -- Captured profile priorities:
+    -- Taxi 1000 > Teleport 130 > AFK/Gathering 120 >
+    -- Interaction 110 > Combat 50 > Fishing 20 > City 1 > World 0.
     if state.onTaxi then
         return "taxi", "taxi", false
     end
-
-    if state.interacting then
-        return "none", "outside-slice:interaction", false
+    if snapshot.teleport then
+        return "teleport", "teleport-cast", false
     end
-
-    if liveCombat then
+    if snapshot.afk then
+        return "afk", "afk", false
+    end
+    if snapshot.gathering then
+        return "gathering", "gathering-cast", false
+    end
+    if snapshot.interaction then
+        return "interaction", "npc-interaction", false
+    end
+    if not state.inInstance and liveCombat then
         return "combat", "live-combat", false
     end
-
+    if snapshot.fishing then
+        return "fishing", "fishing-channel", false
+    end
     if state.resting then
         return "city", "resting-city", false
     end
-
+    if state.inInstance then
+        return "none", "no-enabled-instance-profile", false
+    end
     return "world", "world", false
 end
 
@@ -667,6 +744,103 @@ function Controller:ApplyTransitionMotion(currentZoom, elapsed)
     return true, "transition-driving"
 end
 
+local function contextTarget(context)
+    if context == "world" then
+        return WORLD_TARGET
+    end
+    if context == "city" then
+        return CITY_TARGET
+    end
+    if context == "combat" then
+        return COMBAT_TARGET
+    end
+    if context == "taxi" then
+        return TAXI_TARGET
+    end
+    if context == "teleport" then
+        return TELEPORT_TARGET
+    end
+    if context == "interaction" then
+        return INTERACTION_TARGET
+    end
+    if context == "fishing" then
+        return FISHING_TARGET
+    end
+    if context == "gathering" then
+        return GATHERING_TARGET
+    end
+    return nil
+end
+
+local function contextZoomDirection(context)
+    if context == "world"
+        or context == "city"
+        or context == "interaction"
+        or context == "gathering"
+    then
+        return "in"
+    end
+
+    if context == "combat"
+        or context == "taxi"
+        or context == "teleport"
+        or context == "fishing"
+    then
+        return "out"
+    end
+
+    return nil
+end
+
+local function contextAllowsEngineClamp(context)
+    return context == "taxi"
+        or context == "teleport"
+        or context == "fishing"
+end
+
+local function contextAllowsLimitedTarget(context)
+    return contextAllowsEngineClamp(context)
+end
+
+function Controller:ResolveContextDelay(context, reason)
+    if context == "fishing" then
+        self.fishingHoldUntil = nil
+        self.fishingHoldSatisfied = false
+        self.lastFishingHoldRemaining = nil
+        return context, reason
+    end
+
+    if self.selectedContext ~= "fishing" then
+        self.fishingHoldUntil = nil
+        self.fishingHoldSatisfied = false
+        self.lastFishingHoldRemaining = nil
+        return context, reason
+    end
+
+    if self.fishingHoldSatisfied then
+        self.fishingHoldSatisfied = false
+        self.lastFishingHoldRemaining = 0
+        return context, reason
+    end
+
+    local now = GetTime()
+    if self.fishingHoldUntil == nil then
+        self.fishingHoldUntil = GetTime() + FISHING_EXIT_DELAY
+        self.fishingHoldCount = self.fishingHoldCount + 1
+        self:SetAnimationActive(true)
+    end
+
+    local remaining = self.fishingHoldUntil - now
+    if remaining > 0 then
+        self.lastFishingHoldRemaining = remaining
+        return "fishing", "fishing-exit-delay"
+    end
+
+    self.fishingHoldUntil = nil
+    self.lastFishingHoldRemaining = 0
+    return context, reason
+end
+
 function Controller:FinishTransition(currentZoom, elapsed, timedOut)
     local transitionContext = self.transitionContext
     local targetZoom = self.transitionEffectiveTargetZoom
@@ -688,7 +862,7 @@ function Controller:FinishTransition(currentZoom, elapsed, timedOut)
 
     if timedOut
         and not self.lastTargetReached
-        and transitionContext ~= "taxi"
+        and not contextAllowsLimitedTarget(transitionContext)
     then
         self.lastError = "camera transition timed out before target"
         self.failureCount = self.failureCount + 1
@@ -699,7 +873,7 @@ function Controller:FinishTransition(currentZoom, elapsed, timedOut)
     self.lastError = nil
     self.transitionCompleteCount = self.transitionCompleteCount + 1
     if timedOut
-        and transitionContext == "taxi"
+        and contextAllowsLimitedTarget(transitionContext)
         and not self.lastTargetReached
     then
         self.lastAction = "transition-complete-limited"
@@ -709,8 +883,25 @@ function Controller:FinishTransition(currentZoom, elapsed, timedOut)
 end
 
 function Controller:OnUpdate()
+    local now = GetTime()
+
+    if self.fishingHoldUntil ~= nil then
+        local remaining = self.fishingHoldUntil - now
+        if remaining > 0 then
+            self.lastFishingHoldRemaining = remaining
+        else
+            self.fishingHoldUntil = nil
+            self.fishingHoldSatisfied = true
+            self.lastFishingHoldRemaining = 0
+            self:Reconcile("fishing-delay-expired")
+            now = GetTime()
+        end
+    end
+
     if not self.transitionActive then
-        self:SetAnimationActive(false)
+        if self.fishingHoldUntil == nil then
+            self:SetAnimationActive(false)
+        end
         return
     end
 
@@ -723,7 +914,6 @@ function Controller:OnUpdate()
         return
     end
 
-    local now = GetTime()
     if self.transitionStartTime == nil then
         self.transitionStartTime = now
         if type(self.transitionArmTime) == "number" then
@@ -731,7 +921,6 @@ function Controller:OnUpdate()
         else
             self.transitionFirstUpdateDelay = nil
         end
-
         self.transitionStartZoom = currentZoom
         self.lastCurrentZoom = currentZoom
         self.transitionMinZoom = currentZoom
@@ -760,7 +949,6 @@ function Controller:OnUpdate()
         local previousDistance = math.abs(previousZoom - requestedTargetZoom)
         local currentDistance = math.abs(currentZoom - requestedTargetZoom)
         self.lastObservedDelta = delta
-
         if delta > 0.0001 then
             self.lastObservedDirection = "out"
         elseif delta < -0.0001 then
@@ -768,7 +956,6 @@ function Controller:OnUpdate()
         else
             self.lastObservedDirection = "flat"
         end
-
         if currentDistance + 0.0001 < previousDistance then
             self.transitionTowardCount = self.transitionTowardCount + 1
         elseif currentDistance > previousDistance + 0.0001 then
@@ -807,9 +994,7 @@ function Controller:OnUpdate()
         timeoutExtra = 0
     end
 
-    local timedOut =
-        elapsed >= (self.transitionDuration + timeoutExtra)
-
+    local timedOut = elapsed >= (self.transitionDuration + timeoutExtra)
     if atRequested or timedOut then
         self:FinishTransition(currentZoom, elapsed, timedOut)
         return
@@ -856,24 +1041,24 @@ function Controller:Reconcile(reason)
         return false, contextReason
     end
 
+    context, contextReason = self:ResolveContextDelay(context, contextReason)
+
     if context == "none" then
         self:Relinquish(contextReason, false)
         return true, contextReason
     end
 
-    local requestedTargetZoom = WORLD_TARGET
-    if context == "combat" then
-        requestedTargetZoom = COMBAT_TARGET
-    elseif context == "city" then
-        requestedTargetZoom = CITY_TARGET
-    elseif context == "taxi" then
-        requestedTargetZoom = TAXI_TARGET
-    end
-
+    local requestedTargetZoom = contextTarget(context)
     local effectiveTargetZoom = requestedTargetZoom
-    local transitionDuration = transitionDurationForContext(context)
+    local transitionDuration = transitionDurationForContext(
+        context,
+        self.lastProfileTeleportDuration
+    )
 
-    if context == "taxi" then
+    self.lastCameraDistanceFactor = nil
+    self.lastCameraDistanceCeiling = nil
+
+    if requestedTargetZoom ~= nil and contextAllowsEngineClamp(context) then
         local cameraDistanceFactor
         local cameraDistanceCeiling
         local distanceError
@@ -888,22 +1073,20 @@ function Controller:Reconcile(reason)
             self.lastSecret = distanceSecret and true or false
             self.lastError = distanceError
             self.failureCount = self.failureCount + 1
-            self:Relinquish("taxi-camera-distance-read-failed", false)
+            self:Relinquish(context .. "-camera-distance-read-failed", false)
             return false, distanceError
         end
 
         self.lastCameraDistanceFactor = cameraDistanceFactor
         self.lastCameraDistanceCeiling = cameraDistanceCeiling
-        effectiveTargetZoom = math.min(
-            requestedTargetZoom,
-            cameraDistanceCeiling
-        )
+        effectiveTargetZoom = math.min(requestedTargetZoom, cameraDistanceCeiling)
     end
 
     if self.transitionActive
         and self.transitionContext == context
         and self.transitionRequestedZoom == requestedTargetZoom
         and self.transitionEffectiveTargetZoom == effectiveTargetZoom
+        and self.transitionDuration == transitionDuration
     then
         self.selectedContext = context
         self.ownsContext = true
@@ -912,10 +1095,7 @@ function Controller:Reconcile(reason)
     end
 
     if self.transitionActive then
-        local stopOK, stopError = self:StopTransition(
-            "context-reconcile",
-            true
-        )
+        local stopOK, stopError = self:StopTransition("context-reconcile", true)
         if not stopOK then
             self:Relinquish("context-stop-failed", false)
             return false, stopError
@@ -939,11 +1119,17 @@ function Controller:Reconcile(reason)
     self.transitionEffectiveTargetZoom = effectiveTargetZoom
     self.transitionDuration = transitionDuration
 
+    if requestedTargetZoom == nil then
+        self.noOpCount = self.noOpCount + 1
+        self.lastAction = "noop-profile"
+        self.lastTargetReached = true
+        return true, "noop-profile"
+    end
+
+    local direction = contextZoomDirection(context)
     local needsTransition =
-        (context == "world" and currentZoom > WORLD_TARGET)
-        or (context == "city" and currentZoom > CITY_TARGET)
-        or (context == "combat" and currentZoom < COMBAT_TARGET)
-        or (context == "taxi" and currentZoom < requestedTargetZoom)
+        (direction == "in" and currentZoom > requestedTargetZoom)
+        or (direction == "out" and currentZoom < requestedTargetZoom)
 
     if not needsTransition then
         self.noOpCount = self.noOpCount + 1
@@ -1011,6 +1197,21 @@ function Controller:GetDebugStatus()
         lastCombatMismatch = self.lastCombatMismatch,
         lastResting = self.lastResting,
         lastStateRevision = self.lastStateRevision,
+
+        lastProfileTeleport = self.lastProfileTeleport,
+        lastProfileTeleportDuration = self.lastProfileTeleportDuration,
+        lastProfileAFK = self.lastProfileAFK,
+        lastProfileGathering = self.lastProfileGathering,
+        lastProfileInteraction = self.lastProfileInteraction,
+        lastProfileFishing = self.lastProfileFishing,
+        profileSecretSkips = self.profileSecretSkips,
+        profileReadFailures = self.profileReadFailures,
+        lastProfileSecretSource = self.lastProfileSecretSource,
+        lastProfileError = self.lastProfileError,
+        fishingHoldActive = self.fishingHoldUntil ~= nil,
+        fishingHoldCount = self.fishingHoldCount,
+        lastFishingHoldRemaining = self.lastFishingHoldRemaining,
+
         lastDynamicCamLoaded = self.lastDynamicCamLoaded,
         lastDynamicCamStatusKnown = self.lastDynamicCamStatusKnown,
         lastDynamicCamStatusSource = self.lastDynamicCamStatusSource,
@@ -1040,8 +1241,62 @@ local function reconcileFromEvent(event, ...)
     Controller:Reconcile(event)
 end
 
+local function reconcilePlayerSpellEvent(event, unit)
+    if unit ~= nil and unit ~= "player" then
+        return
+    end
+    reconcileFromEvent(event)
+end
+
+local function reconcilePlayerFlagsEvent(event, unit)
+    if unit ~= nil and unit ~= "player" then
+        return
+    end
+    reconcileFromEvent(event)
+end
+
 Logres:RegisterEvent("PLAYER_REGEN_DISABLED", reconcileFromEvent)
 Logres:RegisterEvent("PLAYER_REGEN_ENABLED", reconcileFromEvent)
 Logres:RegisterEvent("ADDON_RESTRICTION_STATE_CHANGED", reconcileFromEvent)
 Logres:RegisterEvent("PLAYER_ENTERING_WORLD", reconcileFromEvent)
 Logres:RegisterEvent("ADDON_LOADED", reconcileFromEvent)
+
+Logres:RegisterEvent("PLAYER_FLAGS_CHANGED", reconcilePlayerFlagsEvent)
+
+Logres:RegisterEvent("UNIT_SPELLCAST_START", reconcilePlayerSpellEvent)
+Logres:RegisterEvent("UNIT_SPELLCAST_STOP", reconcilePlayerSpellEvent)
+Logres:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", reconcilePlayerSpellEvent)
+Logres:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START", reconcilePlayerSpellEvent)
+Logres:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP", reconcilePlayerSpellEvent)
+Logres:RegisterEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", reconcilePlayerSpellEvent)
+Logres:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED", reconcilePlayerSpellEvent)
+
+Logres:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", reconcileFromEvent)
+Logres:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE", reconcileFromEvent)
+Logres:RegisterEvent("PLAYER_TARGET_CHANGED", reconcileFromEvent)
+
+Logres:RegisterEvent("AUCTION_HOUSE_CLOSED", reconcileFromEvent)
+Logres:RegisterEvent("AUCTION_HOUSE_SHOW", reconcileFromEvent)
+Logres:RegisterEvent("BANKFRAME_CLOSED", reconcileFromEvent)
+Logres:RegisterEvent("BANKFRAME_OPENED", reconcileFromEvent)
+Logres:RegisterEvent("CLOSE_TABARD_FRAME", reconcileFromEvent)
+Logres:RegisterEvent("GOSSIP_CLOSED", reconcileFromEvent)
+Logres:RegisterEvent("GOSSIP_SHOW", reconcileFromEvent)
+Logres:RegisterEvent("GUILD_REGISTRAR_CLOSED", reconcileFromEvent)
+Logres:RegisterEvent("GUILD_REGISTRAR_SHOW", reconcileFromEvent)
+Logres:RegisterEvent("MERCHANT_CLOSED", reconcileFromEvent)
+Logres:RegisterEvent("MERCHANT_SHOW", reconcileFromEvent)
+Logres:RegisterEvent("OPEN_TABARD_FRAME", reconcileFromEvent)
+Logres:RegisterEvent("PET_STABLE_CLOSED", reconcileFromEvent)
+Logres:RegisterEvent("PET_STABLE_SHOW", reconcileFromEvent)
+Logres:RegisterEvent("QUEST_COMPLETE", reconcileFromEvent)
+Logres:RegisterEvent("QUEST_DETAIL", reconcileFromEvent)
+Logres:RegisterEvent("QUEST_FINISHED", reconcileFromEvent)
+Logres:RegisterEvent("QUEST_GREETING", reconcileFromEvent)
+Logres:RegisterEvent("QUEST_PROGRESS", reconcileFromEvent)
+Logres:RegisterEvent("SHIPMENT_CRAFTER_CLOSED", reconcileFromEvent)
+Logres:RegisterEvent("SHIPMENT_CRAFTER_OPENED", reconcileFromEvent)
+Logres:RegisterEvent("TRAINER_CLOSED", reconcileFromEvent)
+Logres:RegisterEvent("TRAINER_SHOW", reconcileFromEvent)
+Logres:RegisterEvent("TRANSMOGRIFY_CLOSE", reconcileFromEvent)
+Logres:RegisterEvent("TRANSMOGRIFY_OPEN", reconcileFromEvent)

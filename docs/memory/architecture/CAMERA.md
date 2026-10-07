@@ -20,14 +20,16 @@ Request another export only if the profile changes or later evidence conflicts.
 Runtime-proven production Logres camera ownership covers:
 - World;
 - World (Combat);
-- City/resting.
+- City/resting;
+- observed normal-world transition behavior through P0156.
 
-P0117 adds Taxi zoom ownership, but runtime acceptance is OPEN because the
-post-Taxi destination transition exposed a shared overshoot defect.
+Taxi zoom ownership is implemented but the normal-Taxi landing retest remains
+pending.
 
-P0119 is durable at `c342bc176a9d5de80ec116d0c6b31fa595cd75b3` and replaces
-the constant-rate transition driver with frame-shaped MoveView motion plus bounded
-target correction. The normal-Taxi landing retest remains pending.
+P0159 broadens the same production controller to the captured RPG profile's
+remaining source-backed context/zoom situations: Hearth/Teleport, AFK,
+Gathering, NPC Interaction, and Fishing. Runtime acceptance is required before
+those new branches are called proven.
 
 ## Taxi precedence and zoom intent
 
@@ -191,10 +193,14 @@ G.5 P0117 runtime:
 **TAXI ENTRY PASS / LANDING TRANSITION FAIL on `0.0.47-dev`.**
 
 G.5 current:
-**P0119 IMPLEMENTATION DURABLE; NORMAL-TAXI LANDING RETEST PENDING / CAMERA FROZEN.**
+**P0119/P0156 SHARED DRIVER DURABLE; NORMAL-TAXI LANDING RETEST PENDING.**
 
-The user has explicitly frozen Camera work until the approved visual translation
-sequence is finished. This is a sequencing deferral, not a PASS or closure.
+G.6 current:
+**P0159 CAPTURED-PROFILE CONTEXT+ZOOM PARITY PREPARED.**
+
+The earlier Camera sequencing freeze is superseded. Camera remains ahead of
+Phase H until the captured profile's deliberate camera behaviors are migrated in
+consolidated layers.
 
 ## P0117 landing overshoot failure
 
@@ -205,3 +211,21 @@ The landing City transition from zoom `18` toward `5` reached `0` / first person
 Earlier `0.0.43-dev` diagnostics show the same City overshoot, so the defect
 predates Taxi production ownership. P0119 replaces the one-shot constant-rate
 MoveView drive with frame-shaped velocity and bounded correction.
+
+
+## P0159 captured-profile parity layer
+
+P0159 uses the already-captured RPG profile rather than asking for another export.
+
+Priority order:
+Taxi 1000 -> Teleport 130 -> AFK/Gathering 120 -> NPC Interaction 110 ->
+World Combat 50 -> Fishing 20 -> City 1 -> World 0.
+
+Layer 1 owns context + zoom only. AFK intentionally owns no zoom action. Fishing's
+upstream delay is an exit hold, not an activation delay.
+
+Layer 2 will address source-backed rotation plus shoulder/global camera-setting
+ownership/restoration. DynamicCam UI hide/fade is presentation policy and must be
+reconciled with Phase H suppression/coexistence.
+
+The max-distance CVar remains outside Logres ownership.

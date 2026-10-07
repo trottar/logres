@@ -34,7 +34,7 @@ The roadmap is capability-gated. A phase advances only when its success criteria
 
 ## Phase G — Cinematic Camera
 
-**Status: ACTIVE — G.5 OPEN; NORMAL-TAXI LANDING RETEST NEXT.**
+**Status: ACTIVE — G.5 TAXI PROOF + G.6 CAPTURED RPG PROFILE PARITY.**
 
 G.1 through G.4 are runtime-proven.
 
@@ -209,3 +209,21 @@ The accepted sample reported `firstDelay=0` and `switches=0`, so the previously 
 The world-entry regression is closed for observed scope. Phase G.5 now returns to the still-pending P0119 normal-Taxi landing retest; no further world-entry camera code is authorized without new failure evidence.
 
 P0157 had two rolled-back memory-schema delivery failures: the initial candidate omitted one canonical CURRENT section, while R1 triggered a false duplicate because memory health counted a literal inline mention as if it were another heading. R2 hardens the checker to count actual Markdown heading lines and preflights the full candidate in a temporary checkout before writing the user's worktree.
+
+
+### P0159 — consolidated captured-profile context/zoom parity
+
+The canonical DynamicCam RPG profile remains the migration target. The user
+explicitly chose to finish Camera parity before Phase H.
+
+P0159 broadens production context/zoom ownership from World/Combat/City/Taxi to
+all nine enabled captured situations, adding source-backed Teleport, AFK,
+Gathering, NPC Interaction, and Fishing behavior. It does not yet import
+rotation, shoulder/CVar mutation, reactive zoom, or UI fades.
+
+After this runtime layer is accepted, Phase G continues with one consolidated
+rotation/shoulder/camera-setting ownership-restoration layer. DynamicCam UI fade
+behavior is reconciled with Phase H presentation/suppression policy.
+
+P0158's high-level order remains: Camera -> safe suppression/coexistence ->
+authored layout -> final polish.

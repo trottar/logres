@@ -2,7 +2,7 @@
 
 Date: 2026-10-06
 Baseline: `328f15431b8b3cc3f4d78d2edf4c40d987f78341`
-Result: **PREPARED — DOCS / ROADMAP SEQUENCING CHECKPOINT**
+Result: **INSTALLED / PUSHED — DOCS / ROADMAP SEQUENCING CHECKPOINT** (`27670624`)
 
 ## Purpose
 
@@ -54,3 +54,12 @@ vehicle/override/possess fallbacks remain until deliberately and safely replaced
 ## Runtime impact
 
 Docs/roadmap only. No WoW runtime code changes. No redeploy required.
+
+
+## P0159 sequencing refinement
+
+The high-level P0158 order remains Camera -> integration/layout -> polish.
+
+The user's subsequent clarification expands "Camera" from the single outstanding
+Taxi gate to deliberate parity with the already-captured DynamicCam RPG profile.
+P0159 begins that parity work in consolidated layers.

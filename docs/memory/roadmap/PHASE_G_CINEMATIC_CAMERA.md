@@ -1,6 +1,6 @@
 # Phase G — Cinematic Camera
 
-Status: ACTIVE — G.5 OPEN; WORLD-ENTRY REGRESSION CLOSED FOR OBSERVED SCOPE / TAXI LANDING RETEST NEXT
+Status: ACTIVE — G.5 TAXI PROOF + G.6 CAPTURED RPG PROFILE PARITY
 Opened: 2026-10-02
 
 ## Product Objective
@@ -211,3 +211,24 @@ positions/anchors, then final polish and residual visuals.
 
 If the Taxi retest fails, preserve that narrow evidence and repair only the
 reproduced Taxi/shared-transition defect before the Phase H handoff.
+
+
+## G.6 — Captured RPG profile parity
+
+The user confirmed Camera should be completed against the already-captured
+DynamicCam profile before Phase H rather than stopping after one Taxi retest.
+
+P0159 is the first consolidated parity layer:
+- source-backed Teleport, AFK, Gathering, NPC Interaction, Fishing context reads;
+- profile priority selection;
+- context zoom targets/durations;
+- Teleport cast-duration override;
+- AFK no-zoom ownership;
+- Fishing one-second exit hold;
+- no CVar mutation, rotation, shoulder mutation, UI fade, or polling.
+
+The G.5 Taxi landing test is retained inside P0159 runtime validation.
+
+After P0159 acceptance, continue directly with a consolidated rotation /
+shoulder / camera-setting ownership-restoration layer. DynamicCam UI fades cross
+into Phase H presentation policy and are not copied blindly into camera code.

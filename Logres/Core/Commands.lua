@@ -3478,29 +3478,37 @@ local function cameraWorldCombatStatusPasses(status)
             )
         )
 
+    local ownedContext =
+        status.selectedContext == "world"
+        or status.selectedContext == "city"
+        or status.selectedContext == "combat"
+        or status.selectedContext == "taxi"
+        or status.selectedContext == "teleport"
+        or status.selectedContext == "afk"
+        or status.selectedContext == "gathering"
+        or status.selectedContext == "interaction"
+        or status.selectedContext == "fishing"
+
     local ownershipCoherent =
-        (
-            status.selectedContext == "none"
-            and status.ownsContext == false
-        )
-        or (
-            (
-                status.selectedContext == "world"
-                or status.selectedContext == "city"
-                or status.selectedContext == "combat"
-                or status.selectedContext == "taxi"
-            )
-            and status.ownsContext == true
-        )
+        (status.selectedContext == "none" and status.ownsContext == false)
+        or (ownedContext and status.ownsContext == true)
+
+    local transitionContext =
+        status.transitionContext == "world"
+        or status.transitionContext == "city"
+        or status.transitionContext == "combat"
+        or status.transitionContext == "taxi"
+        or status.transitionContext == "teleport"
+        or status.transitionContext == "gathering"
+        or status.transitionContext == "interaction"
+        or status.transitionContext == "fishing"
 
     local transitionCoherent =
-        status.transitionActive ~= true
-        or (
-            status.transitionContext == "world"
-            or status.transitionContext == "city"
-            or status.transitionContext == "combat"
-            or status.transitionContext == "taxi"
-        )
+        status.transitionActive ~= true or transitionContext
+
+    local profileHealthy =
+        (status.profileReadFailures or 0) == 0
+        and status.lastProfileError == nil
 
     return
         status.moduleEnabled == true
@@ -3510,6 +3518,7 @@ local function cameraWorldCombatStatusPasses(status)
         and coexistenceSafe
         and ownershipCoherent
         and transitionCoherent
+        and profileHealthy
 end
 
 local function emitCameraWorldCombatStatus(prefix, status, passed)
@@ -3580,12 +3589,32 @@ local function emitCameraWorldCombatMotion(status)
     ))
 end
 
+local function emitCameraProfileContextStatus(status)
+    emit(string.format(
+        "Logres cameraprofile contexts: teleport=%s teleportDuration=%s afk=%s gathering=%s interaction=%s fishing=%s secretSkips=%s secretSource=%s readFailures=%s profileError=%s fishingHold=%s holdCount=%s holdRemaining=%s",
+        tostring(status.lastProfileTeleport),
+        tostring(status.lastProfileTeleportDuration),
+        tostring(status.lastProfileAFK),
+        tostring(status.lastProfileGathering),
+        tostring(status.lastProfileInteraction),
+        tostring(status.lastProfileFishing),
+        tostring(status.profileSecretSkips),
+        tostring(status.lastProfileSecretSource),
+        tostring(status.profileReadFailures),
+        tostring(status.lastProfileError),
+        tostring(status.fishingHoldActive),
+        tostring(status.fishingHoldCount),
+        tostring(status.lastFishingHoldRemaining)
+    ))
+end
+
 local function runCameraWorldCombatCheck()
     local controller = Logres:GetModule("CameraWorldCombat")
     local status = controller:GetDebugStatus()
     local passed = cameraWorldCombatStatusPasses(status)
     emitCameraWorldCombatStatus(passed and "PASS" or "FAIL", status, passed)
     emitCameraWorldCombatMotion(status)
+    emitCameraProfileContextStatus(status)
 end
 
 local function runCameraWorldCombatReconcile()
@@ -3600,6 +3629,7 @@ local function runCameraWorldCombatReconcile()
     )
 
     emitCameraWorldCombatMotion(status)
+    emitCameraProfileContextStatus(status)
 
     if not ok and reason then
         emit("Logres cameraworldcombat reconcile reason: " .. tostring(reason))
@@ -4489,25 +4519,25 @@ Logres:RegisterDevPanelAction(
 )
 Logres:RegisterDevPanelAction(
     "cameraWorldCombatCheck",
-    "Camera World/Combat Check",
+    "Camera Profile Check",
     "cameraworldcombatcheck",
     "G"
 )
 Logres:RegisterDevPanelAction(
     "cameraWorldCombatReconcile",
-    "Camera World/Combat Reconcile",
+    "Camera Profile Reconcile",
     "cameraworldcombatreconcile",
     "G"
 )
 Logres:RegisterDevPanelAction(
     "cameraWorldCombatOn",
-    "Camera World/Combat ON",
+    "Camera Profile ON",
     "cameraworldcombat on",
     "G"
 )
 Logres:RegisterDevPanelAction(
     "cameraWorldCombatOff",
-    "Camera World/Combat OFF",
+    "Camera Profile OFF",
     "cameraworldcombat off",
     "G"
 )

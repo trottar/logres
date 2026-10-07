@@ -4,7 +4,7 @@ As of 2026-10-06.
 
 ## Active work stream
 
-**Finish the bounded G.5 normal-Taxi landing retest, then enter Phase H integration-first: safe stock-surface suppression/coexistence, authored UI positioning, then final polish and remaining visuals.**
+**Complete captured DynamicCam RPG camera parity in consolidated layers, then enter Phase H integration-first: safe stock-surface suppression/coexistence, authored UI positioning, then final polish and remaining visuals.**
 
 The formal roadmap remains capability-gated and Phase G is still open only for
 the existing G.5 Taxi landing proof. Broader Camera feature expansion remains
@@ -23,7 +23,7 @@ final polish and residual visuals.
 | D — Immersion Controller | COMPLETE |
 | E — Compass and Navigation | COMPLETE |
 | F — Quest Experience | COMPLETE |
-| G — Cinematic Camera | ACTIVE — G.5 OPEN / TAXI LANDING RETEST NEXT |
+| G — Cinematic Camera | ACTIVE — G.5 TAXI PROOF + G.6 PROFILE PARITY |
 | H — Integration and Polish | QUEUED — approved visual translation underway in parallel |
 
 ## Phase G / G.5
@@ -228,3 +228,19 @@ Freezes the current high-level order:
 
 Next:
 **Take one normal Taxi flight; use Phase G -> Camera World/Combat Check during flight and after landing, then Phase 0 -> Run All, and upload diagnostics.**
+
+
+## P0159 — captured-profile context + zoom parity
+
+P0158 is durable at `27670624`.
+
+The user clarified that Camera should not close after the Taxi gate while most of
+the captured DynamicCam RPG profile remains absent.
+
+P0159 consolidates the remaining context/zoom layer: Teleport, AFK, Gathering,
+NPC Interaction, and Fishing join the existing Taxi/Combat/City/World controller
+with source-backed priorities and secret-safe predicates.
+
+The Taxi landing proof remains part of the runtime gate. If P0159 is clean, the
+next Camera work is one consolidated rotation/shoulder/camera-setting ownership
+layer, after which Phase H suppression/layout/polish becomes primary.

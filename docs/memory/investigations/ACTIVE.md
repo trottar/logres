@@ -3,28 +3,32 @@
 ## G.5 — Taxi camera ownership
 
 Status:
-**OPEN / PAUSED — P0119 IMPLEMENTATION DURABLE; NORMAL-TAXI LANDING RETEST PENDING.**
+**OPEN — P0119/P0156 DRIVER INSTALLED; NORMAL-TAXI LANDING RETEST PENDING.**
 
 Canonical Taxi investigation:
 `G5_TAXI_CAMERA_OWNERSHIP.md`
 
-P0117 runtime `0.0.47-dev` proved automatic Taxi entry but exposed the shared
-landing transition failure: City `18 -> 5` reached final zoom `0`.
+The earlier sequencing pause is superseded. The Taxi entry/landing proof remains
+required and is now part of P0159 runtime validation.
 
-P0119 is durable at `c342bc176a9d5de80ec116d0c6b31fa595cd75b3`
-on `0.0.49-dev`. It replaces constant-rate transition motion with frame-shaped
-MoveView velocity plus bounded target correction.
+No max-distance mutation is authorized. Rotation remains in the next consolidated
+camera parity layer.
 
-The user has frozen Camera work while the approved visual translation sequence is
-finished. Therefore the P0119 runtime retest is **deferred by sequencing**, not
-PASS, FAIL, or abandoned.
+## G.6 — Captured DynamicCam profile parity
 
-When Camera resumes, use one normal Taxi flight and record:
-- Taxi entry ownership/target semantics;
-- post-landing City/World target convergence;
-- failures/secret/error state.
+Status:
+**OPEN — P0159 CONSOLIDATED CONTEXT+ZOOM PARITY PREPARED.**
 
-No max-distance mutation, Taxi rotation, or Taxi UI fade is part of that proof.
+Canonical:
+`G6_DYNAMICCAM_PROFILE_PARITY.md`
+
+The canonical RPG profile already exists. P0159 adds source-backed Teleport, AFK,
+Gathering, NPC Interaction, and Fishing predicates/zoom semantics to the existing
+Taxi/Combat/City/World controller. It preserves secret-first reads, event-driven
+reevaluation, DynamicCam fail-open coexistence, and no CVar mutation.
+
+Rotation, shoulder/camera-setting ownership, and presentation fade policy remain
+the next consolidated parity layer rather than separate per-situation projects.
 
 ### Current world-entry timeout regression
 
