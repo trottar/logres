@@ -1,6 +1,6 @@
 # Phase G — Cinematic Camera
 
-Status: ACTIVE — P0162 FINAL REACTIVE-ZOOM SLICE
+Status: COMPLETE — P0162 RUNTIME PASS; ENVIRONMENTAL DEFERRALS PRESERVED
 Opened: 2026-10-02
 
 ## Product Objective
@@ -149,10 +149,13 @@ Production Taxi is not considered closed until that runtime proof passes.
 
 The source-backed zoom engine is now runtime-accepted for the observed normal-Taxi path.
 
-Current order:
-1. P0162 source-backed reactive mouse-wheel zoom;
-2. close Phase G with explicit environmental deferrals for naturally unavailable contexts;
-3. enter Phase H for safe stock-surface suppression/coexistence, authored positions, and final polish.
+P0162 is runtime-accepted at `4628f49e` / `0.0.81-dev`; the final non-presentation Camera slice is complete. Phase G closes for claimed observed scope with naturally unavailable contexts preserved as environmental deferrals.
+
+Next order:
+1. Phase H H.1 stock-surface ownership/suppression audit;
+2. bounded suppression/coexistence slices only where replacement/restoration is proven;
+3. authored positions;
+4. final whole-screen polish.
 
 P0160 R2 is durable at `ae75989b` / `0.0.79-dev`.
 
@@ -174,7 +177,7 @@ P0159 supplies context/priority/conditional-zoom ownership.
 
 P0160 supplies the audited LibCamera zoom engine.
 
-P0161 is the active profile-motion/settings layer:
+P0161 supplies the captured profile-motion/settings layer:
 - Taxi continuous yaw `-20`, rotate back;
 - Teleport continuous yaw `+15`, rotate back;
 - NPC yaw `-45`, rotate back;
@@ -199,10 +202,23 @@ Teleport/NPC/Fishing/Gathering and unobserved AFK behavior remain environmental 
 
 ## P0162 — reactive mouse-wheel zoom
 
-Candidate: `0.0.81-dev`.
+Durable: `4628f49e` / `0.0.81-dev`.
 
-P0162 is the final planned non-presentation Camera parity slice. It adapts pinned DynamicCam `MouseZoom.lua` semantics, uses effective captured settings `true / 0.1 / 2.5 / 1.2 / 2.5 / OutQuad`, and reuses the P0160 source-backed transition engine.
+**RUNTIME PASS.** The final planned non-presentation Camera parity slice adapts pinned DynamicCam `MouseZoom.lua` semantics, uses effective captured settings `true / 0.1 / 2.5 / 1.2 / 2.5 / OutQuad`, and reuses the P0160 source-backed transition engine.
 
-The bounded runtime gate is local wheel interaction plus Camera Profile Check / Run All and an OFF/ON restoration check. No Taxi or contrived deferred-context travel is required.
+The bounded gate passed with active/hooked ownership, final `wheel=36`, `quick=9`, `resets=2`, `native=4`, `corrections=15`, same-context manual-zoom persistence, OFF/ON release/reacquire, user-confirmed native wheel while OFF, and zero conflicts/secrets/failures.
 
 DynamicCam UI fading remains Phase H presentation policy.
+
+## P0163 — Phase G closure
+
+Phase G is **COMPLETE FOR CLAIMED OBSERVED SCOPE**.
+
+Environmental deferrals remain:
+- Hearth/Teleport;
+- NPC Interaction;
+- Fishing;
+- Gathering;
+- AFK priority behavior not naturally observed.
+
+These are not failures and are not fabricated PASSes. No contrived travel is required solely to manufacture proof. Phase H is now primary.

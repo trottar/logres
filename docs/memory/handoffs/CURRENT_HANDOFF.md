@@ -4,71 +4,46 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0161 `2a95909495e81104e02891fac94f19d59b1e030c` / `0.0.80-dev`.
+P0162 R3 `4628f49e48ff67b8012fb51d4b80e5d8638c6c28` / `0.0.81-dev`.
 
-## P0161 runtime acceptance
+## P0162 runtime acceptance
 
-Observed accepted scope:
-- base Camera Profile Check PASS;
+Observed bounded reactive-zoom gate:
+- Camera Profile Check PASS;
 - separate Run All PASS;
-- Taxi target `50` reached;
-- captured Taxi continuous yaw `-20` active;
-- City landing return about `4.97-5.01`;
-- Taxi rotate-back completed, last recorded return about `-29.43` degrees;
-- City max-distance override `1` with captured original factor `4` retained;
-- profile settings/rotation failures `0`;
-- camera/profile secret/runtime failures `0`.
+- reactive `active=true`, `hooked=true`, `easing=OutQuad`;
+- final wheel diagnostics `wheel=36`, `quick=9`, `resets=2`, `native=4`, `corrections=15`;
+- same-context manual City zoom persisted near `11.10` instead of snapping back to `5`;
+- OFF/ON cycle recorded `release=1`, then `acquire=2`;
+- user confirmed native Blizzard wheel zoom worked while Camera Profile was OFF;
+- conflicts `0`, secret skips `0`, failures `0`;
+- final Run All clean.
 
 Classification:
-**P0161 RUNTIME PASS FOR OBSERVED TAXI/SETTINGS/SHOULDER-OFFSET SCOPE.**
+**P0162 RUNTIME PASS. PHASE G COMPLETE FOR CLAIMED OBSERVED SCOPE.**
 
-Teleport, NPC Interaction, Fishing, Gathering, and unobserved AFK behavior remain environmental deferrals.
+Environmental deferrals remain Hearth/Teleport, NPC Interaction, Fishing, Gathering, and unobserved AFK priority behavior. They are not failures and should not be manufactured solely for proof.
 
-## P0162 R1
+## P0163
 
-P0162 R1 is the exact next work item and the final planned non-presentation Phase G slice.
+P0163 is a docs-only Phase G closure checkpoint. It records P0162 runtime acceptance, closes G.6/Phase G for the claimed observed scope, preserves all environmental deferrals and delivery failures, and makes Phase H primary.
 
-It adapts pinned DynamicCam reactive mouse-wheel behavior with effective captured settings:
-- enabled `true`;
-- always-add `0.1000000000000001`;
-- quick additional increment `2.5`;
-- quick threshold `1.2`;
-- max time `2.5` seconds;
-- easing `OutQuad`.
+No WoW redeploy is required for P0163.
 
-Implementation boundaries:
-- reuse P0160's source-backed transition engine;
-- exact pre-ownership CameraZoom function restoration;
-- non-wheel increments pass through to captured native functions;
-- same-context manual zoom persists until context changes;
-- no CVar ownership expansion;
-- no timers/polling;
-- no UI fade or stock suppression.
+## Exact next work item
 
-Candidate runtime:
-`0.0.81-dev`.
+**P0164 — Phase H.1 stock-surface ownership/suppression audit.**
 
-Delivery note: the initial P0162 artifact refused before tracked writes because its exact-baseline guard rejected `LOGRES_DIAGNOSTICS_LATEST.lua`. R1 changes only that guard, allowing the exact diagnostics filename and known patch-delivery inventory while continuing to reject unexpected untracked files.
+Audit the current in-client Blizzard/Logres coexistence surface-by-surface. Classify each candidate as suppressible now, keep stock, or deferred from existing capability/restoration evidence. Do not add new runtime suppression in the audit itself.
 
-## Runtime gate
-
-1. `/reload`.
-2. Phase G -> Camera Profile Check.
-3. Phase 0 -> Run All.
-4. In place, use one slow wheel tick each way, several quick same-direction ticks, then reverse once.
-5. Phase G -> Camera Profile Check; require reactive active/hooked, wheel count > 0, easing OutQuad, failures/secrets/conflicts `0`.
-6. Phase G -> Camera Profile OFF; verify one normal Blizzard wheel zoom still works.
-7. Phase G -> Camera Profile ON; wheel once and run Camera Profile Check again.
-8. Upload diagnostics.
-
-No Taxi/travel is required for this gate.
+The audit must preserve stock minimap, Party/CompactPartyFrame, target aura/status, target-of-target, PetFrame/PetActionBar, unsupported class/resource/special surfaces, alternate power, RuneFrame, TotemFrame, and vehicle/override/possess fallbacks until their own replacement gates are satisfied.
 
 ## Key references
 
 - `../CURRENT.md`
-- `../evidence/P0162_P0161_RUNTIME_PASS_2026-10-07.md`
-- `../evidence/P0162_REACTIVE_ZOOM_SOURCE_AUDIT_2026-10-07.md`
+- `../evidence/P0163_P0162_RUNTIME_PASS_2026-10-07.md`
+- `../patches/P0163_PHASE_G_CLOSURE.md`
 - `../patches/P0162_REACTIVE_MOUSE_WHEEL_ZOOM.md`
-- `../investigations/G6_DYNAMICCAM_PROFILE_PARITY.md`
-- `../architecture/CAMERA.md`
 - `../roadmap/PHASE_G_CINEMATIC_CAMERA.md`
+- `../roadmap/PHASE_H_INTEGRATION_POLISH.md`
+- `../architecture/CAMERA.md`

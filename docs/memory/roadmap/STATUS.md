@@ -4,15 +4,11 @@ As of 2026-10-07.
 
 ## Active work stream
 
-**Complete captured DynamicCam RPG camera parity in consolidated source-backed layers, then enter Phase H integration-first: safe stock-surface suppression/coexistence, authored UI positioning, then final polish and remaining visuals.**
+**Phase H integration-first: audit and suppress Blizzard surfaces only where replacement/restoration is already capability-proven, then establish authored UI positions, then perform final whole-screen polish.**
 
-P0161 is durable at `2a959094` / `0.0.80-dev` and runtime-accepted for the observed Taxi/settings/shoulder-offset scope.
+P0162 R3 is durable at `4628f49e` / `0.0.81-dev` and runtime-accepted. Phase G is complete for claimed observed scope with Teleport/NPC/Fishing/Gathering and unobserved AFK behavior preserved as environmental deferrals.
 
-Phase G remains active only for:
-1. P0162 source-backed reactive mouse-wheel zoom;
-2. explicit closure with environmental deferrals for naturally unavailable contexts.
-
-Phase H becomes primary after those Camera-only slices close.
+Phase H is now primary. Exact next work item: P0164 H.1 stock-surface ownership/suppression audit. The audit itself adds no new suppression; it selects the first safe narrow runtime slice from existing evidence.
 
 ## Phase status
 
@@ -25,8 +21,8 @@ Phase H becomes primary after those Camera-only slices close.
 | D — Immersion Controller | COMPLETE |
 | E — Compass and Navigation | COMPLETE |
 | F — Quest Experience | COMPLETE |
-| G — Cinematic Camera | ACTIVE — P0162 FINAL REACTIVE-ZOOM SLICE |
-| H — Integration and Polish | QUEUED — NEXT AFTER PHASE G CAMERA PARITY |
+| G — Cinematic Camera | COMPLETE — P0162 RUNTIME PASS; ENVIRONMENTAL DEFERRALS PRESERVED |
+| H — Integration and Polish | ACTIVE — H.1 STOCK-SURFACE OWNERSHIP/SUPPRESSION AUDIT |
 
 ## Phase G / G.5
 
@@ -60,7 +56,7 @@ Classification:
 
 The earlier P0117/P0159 landing failures remain preserved as historical evidence.
 
-P0161 is accepted for observed scope. P0162 reactive mouse-wheel zoom is now the active G.6 implementation layer.
+P0161 remains accepted for observed scope. P0162 reactive mouse-wheel zoom is runtime-accepted at `4628f49e` / `0.0.81-dev`; G.6 and Phase G are closed for claimed observed scope.
 
 ## Parallel approved visual translation
 
@@ -277,20 +273,16 @@ The user visually confirmed the expected zoom-out and landing return.
 
 ## P0161 — captured profile rotation/settings parity
 
-**PREPARED — RUNTIME EVIDENCE REQUIRED.**
+**INSTALLED / PUSHED + RUNTIME PASS FOR OBSERVED TAXI/SETTINGS/SHOULDER SCOPE** at `2a959094` / `0.0.80-dev`.
 
-P0161 ports the next audited DynamicCam/LibCamera layer:
-- five captured rotation behaviors with rotate-back;
-- captured standard dynamic-pitch/focus settings;
-- standard/NPC zoom-based shoulder curves;
-- explicit City max-distance factor `1`;
-- exact pre-ownership CVar restoration.
+Accepted evidence includes Taxi target `50`, continuous yaw `-20`, City landing return about `4.97-5.01`, rotate-back completion, City max-distance factor `1` with captured original factor `4`, and zero profile/camera secret/runtime failures.
 
-The absent standard max-distance profile field is not invented; the pre-ownership live value is the ordinary baseline outside City.
+## P0162 — reactive mouse-wheel zoom
 
-Reactive mouse-wheel zoom remains the final non-presentation Phase G slice.
+**INSTALLED / PUSHED + RUNTIME PASS** at `4628f49e` / `0.0.81-dev`.
 
-DynamicCam UI fade remains Phase H presentation policy.
+The bounded wheel gate passed with active/hooked `OutQuad`, final `wheel=36`, `quick=9`, `resets=2`, `native=4`, `corrections=15`, OFF/ON release/reacquire, user-confirmed native wheel while OFF, and zero hook conflicts/secrets/failures.
 
-Next:
-**Apply/deploy P0161, run Camera Profile Check + Run All, verify ordinary manual zoom, then verify normal-Taxi continuous left yaw and landing rotate-back.**
+## P0163 — Phase G closure
+
+P0163 records the P0162 pass, closes Phase G for claimed observed scope, preserves Teleport/NPC/Fishing/Gathering/unobserved-AFK environmental deferrals, and makes Phase H primary. No WoW runtime code changes or redeploy are required.

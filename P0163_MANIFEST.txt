@@ -1,0 +1,19 @@
+P0163_PHASE_G_CLOSURE
+baseline=4628f49e48ff67b8012fb51d4b80e5d8638c6c28
+runtime_change=false
+redeploy_required=false
+checks=tools/check_memory_health.py; git diff --check
+files:
+  e7e07ccbaaa6813218343fb6d03068dad193de8e34c217b805b5145d35fe105e  docs/ROADMAP.md
+  0e5b2d11767bf6e0913dd6edf39752914e2da48f1281fdcb3c24aa7589401637  docs/memory/2026-10-07.md
+  52dd9c6fc2e89da46a6484e2b15c3c605932e3674b7535969f0c9d200482efcc  docs/memory/CURRENT.md
+  5cc4fed92eb3065e5fe2c700aa6c42f21f45249446e1f5df5e9441201a4e03dd  docs/memory/architecture/CAMERA.md
+  c98af0e6b34fcdf5533374ebb3fd9c9c3af9a79a337038cb66c9453e14de3746  docs/memory/evidence/P0163_P0162_RUNTIME_PASS_2026-10-07.md
+  be2eef9168a976ecbc4af9f8bd44c7ba699a9e748c12882f1b09a4e4a6ca6ae4  docs/memory/handoffs/CURRENT_HANDOFF.md
+  d47152e2d157183d13ea77e83394262fe29b66b8688b0e370cf64ff91e5ee268  docs/memory/investigations/ACTIVE.md
+  b95ad6ea42f1b04ab2bbfb2847df2b8c98915b18a226102441937b1dff3c3358  docs/memory/investigations/G6_DYNAMICCAM_PROFILE_PARITY.md
+  2140868b2220f1c94838865c72f0687a6132091881ba1491d1d3c8b1d77437fe  docs/memory/patches/P0162_REACTIVE_MOUSE_WHEEL_ZOOM.md
+  d0778f26d2752a81dbd7d3fb52b3138ce9b882afac62ec933ed203f0d1a31224  docs/memory/patches/P0163_PHASE_G_CLOSURE.md
+  a96dbec9c35a93f2709dc29b735b25feacacfbb4c3a14f45c01c73602d64f3e6  docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md
+  bab61b6581d30551b6d7165f57ac2719881ee75002a851f5f142dfe09e1b020a  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+  a9a8f7866fccdbc9a63810feb02bf8f1a01a6135359a526d636be5c8467bd4d8  docs/memory/roadmap/STATUS.md

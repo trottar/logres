@@ -37,7 +37,7 @@ The P0159 `0 <-> 50` / 80-switch failure does not recur. G.5 Taxi zoom convergen
 ## G.6 — Captured DynamicCam profile parity
 
 Status:
-**OPEN — P0161 ACCEPTED; P0162 REACTIVE MOUSE-WHEEL ZOOM PREPARED.**
+**CLOSED FOR CLAIMED OBSERVED SCOPE — P0162 RUNTIME PASS.**
 
 Canonical:
 `G6_DYNAMICCAM_PROFILE_PARITY.md`
@@ -46,9 +46,9 @@ P0161 is durable at `2a959094` / `0.0.80-dev` and runtime-accepted for the obser
 
 Teleport/NPC/Fishing/Gathering and unobserved AFK behavior remain environmental deferrals.
 
-P0162 is the active and final planned non-presentation Camera slice: source-backed reactive mouse-wheel zoom using the existing P0160 transition engine plus exact CameraZoom function restoration.
+P0162 R3 is durable at `4628f49e` / `0.0.81-dev` and runtime-accepted. The bounded wheel gate exercised quick accumulation and direction reset, preserved same-context manual zoom, restored/reacquired CameraZoom ownership across OFF/ON, and ended with zero hook conflicts, secret skips, or reactive failures.
 
-DynamicCam UI fades remain a Phase H presentation boundary.
+Phase G is closed for claimed observed scope. Teleport/NPC/Fishing/Gathering and unobserved AFK behavior remain explicit environmental deferrals. DynamicCam UI fades remain a Phase H presentation boundary.
 
 ### Current world-entry timeout regression
 
@@ -132,6 +132,9 @@ G.4 City camera ownership:
 
 G.5 target-50 without CVar mutation:
 **CLOSED — CLEAN NEGATIVE on `0.0.44-dev`.**
+
+G.6 captured DynamicCam profile parity:
+**CLOSED FOR CLAIMED OBSERVED SCOPE — P0162 RUNTIME PASS on `0.0.81-dev`.**
 
 ## Other tracked non-blocking defects / deferred domains
 

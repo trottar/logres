@@ -34,7 +34,7 @@ The roadmap is capability-gated. A phase advances only when its success criteria
 
 ## Phase G — Cinematic Camera
 
-**Status: ACTIVE — P0162 FINAL REACTIVE MOUSE-WHEEL ZOOM SLICE.**
+**Status: COMPLETE — P0162 REACTIVE MOUSE-WHEEL ZOOM RUNTIME PASS; ENVIRONMENTAL DEFERRALS PRESERVED.**
 
 G.1 through G.5 are runtime-proven for their observed scopes.
 
@@ -44,16 +44,16 @@ P0161 is durable at `2a959094` / `0.0.80-dev` and runtime-accepted for the obser
 
 Teleport/NPC/Fishing/Gathering and unobserved AFK behavior remain environmental deferrals.
 
-P0162 source-backed reactive mouse-wheel zoom is the final planned non-presentation Camera slice. After a clean bounded wheel/restoration runtime gate, Phase G can close with those deferrals explicit.
+P0162 R3 is durable at `4628f49e` / `0.0.81-dev` and runtime-accepted. The bounded reactive gate passed with active/hooked `OutQuad`, quick accumulation, direction reset, same-context manual persistence, OFF/ON restoration, user-confirmed native wheel while OFF, and zero conflicts/secrets/failures.
 
-DynamicCam UI fades remain a Phase H presentation/suppression policy question rather than an implicit camera-engine side effect.
+Phase G is complete for claimed observed scope. Hearth/Teleport, NPC Interaction, Fishing, Gathering, and unobserved AFK priority behavior remain environmental deferrals. DynamicCam UI fades remain a Phase H presentation/suppression policy question rather than an implicit camera-engine side effect.
 
 Canonical phase record:
 `memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
 
 ## Phase H — Integration and Polish
 
-**Status: QUEUED — NEXT AFTER PHASE G CAMERA PARITY; INTEGRATION/SUPPRESSION + AUTHORED LAYOUT BEFORE FINAL POLISH.**
+**Status: ACTIVE — H.1 STOCK-SURFACE OWNERSHIP/SUPPRESSION AUDIT; AUTHORED LAYOUT THEN FINAL POLISH.**
 
 D-039 preserves the approved twelve-sheet World Ghost / Selective Hybrid E visual
 baseline. D-040 defines `Logres/Media/` plus `Theme.lua` as the runtime asset/token

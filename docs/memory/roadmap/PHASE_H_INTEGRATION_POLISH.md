@@ -1,6 +1,6 @@
 # Phase H — Integration and Polish
 
-Status: QUEUED — NEXT AFTER G.5; INTEGRATION-FIRST EXECUTION ORDER SET
+Status: ACTIVE — H.1 STOCK-SURFACE OWNERSHIP/SUPPRESSION AUDIT
 
 ## Product objective
 
@@ -51,6 +51,12 @@ Phase H begins from these settled directions:
 - passive player buffs/auras peripheral;
 - target status attached to the world target when safe;
 - every removed Blizzard surface requires a deliberate replacement/fallback.
+
+## Phase G handoff — P0163
+
+P0162 R3 is durable at `4628f49e` / `0.0.81-dev` and runtime-accepted. Phase G is complete for claimed observed scope. Hearth/Teleport, NPC Interaction, Fishing, Gathering, and unobserved AFK priority behavior remain explicit environmental deferrals. DynamicCam UI fading remains a Phase H presentation/suppression policy question.
+
+The exact first Phase H work item is P0164: audit current Blizzard/Logres coexistence surface-by-surface and classify each candidate as `SUPPRESSIBLE NOW`, `KEEP STOCK`, or `DEFERRED` from existing capability/restoration evidence. The audit itself adds no new suppression.
 
 ## Execution order
 
@@ -176,7 +182,7 @@ Residual visual design remains for class-specific discrete mechanics,
 settings/accessibility, exact hotkey/count/36-button density calibration, and any
 future capability-proven surface absent from the approved sheets.
 
-This parallel visual checkpoint remains valid, but P0158 now defines the handoff: finish the bounded G.5 Taxi gate, then execute Phase H integration/coexistence and layout before final polish.
+This parallel visual checkpoint remains valid. P0163 closes Phase G and activates the P0158 handoff: execute Phase H integration/coexistence first, authored layout second, and final polish last.
 
 ## First production translation — P0116
 

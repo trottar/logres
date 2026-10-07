@@ -1,11 +1,14 @@
 # P0162 — Reactive Mouse-Wheel Zoom
 
-Status: **R3 PREPARED — RUNTIME EVIDENCE REQUIRED**
+Status: **R3 DURABLE + RUNTIME PASS**
 
-Candidate runtime:
+Runtime:
 `0.0.81-dev`
 
-Expected baseline:
+Durable commit:
+`4628f49e48ff67b8012fb51d4b80e5d8638c6c28`
+
+Expected implementation baseline:
 `2a95909495e81104e02891fac94f19d59b1e030c`
 
 ## R1/R2/R3 delivery corrections
@@ -16,7 +19,9 @@ P0162 R1 corrected that allowlist. The next apply then exposed a second pre-writ
 
 P0162 R2 left the runtime implementation unchanged and corrected the exact `cd` cleanup, but its bounded full-suite shadow preflight caught another pre-write defect: `tools/check_camera_city_contract.py` still globally forbade the token `ReactiveZoom`, a stale P0161-era prohibition that conflicts with the now-authorized generic P0162 adapter. No tracked write occurred.
 
-P0162 R3 leaves the reactive-zoom implementation, candidate runtime, source contract, and runtime gate unchanged. It removes only that obsolete global `ReactiveZoom` checker prohibition while preserving every City-specific prohibition against direct max-distance mutation, UI fading, UIParent coupling, timers, and duplicate resting-event ownership. The complete checker suite is still required to pass in the shadow tree before any tracked write.
+P0162 R3 left the reactive-zoom implementation, candidate runtime, source contract, and runtime gate unchanged. It removed only that obsolete global `ReactiveZoom` checker prohibition while preserving every City-specific prohibition against direct max-distance mutation, UI fading, UIParent coupling, timers, and duplicate resting-event ownership. The complete checker suite passed before tracked writes.
+
+All three failed delivery attempts remain negative delivery evidence; none wrote tracked state before refusal.
 
 ## Purpose
 
@@ -46,20 +51,23 @@ P0162 does not:
 - suppress Blizzard camera or UI surfaces;
 - require another Taxi or contrived Teleport/NPC/Fishing/Gathering test.
 
-## Runtime acceptance gate
+## Runtime result
 
-1. `/reload`.
-2. Phase G -> Camera Profile Check.
-3. Phase 0 -> Run All.
-4. In the current ordinary world context:
-   - one slow wheel tick inward;
-   - one slow wheel tick outward;
-   - several quick ticks in one direction;
-   - one direction reversal.
-5. Confirm smooth behavior, larger quick accumulation, and no stale-target snapback.
-6. Phase G -> Camera Profile Check again. Require active/hooked reactive status, wheel count > 0, easing `OutQuad`, and zero reactive failures/secret skips/unexpected hook conflicts.
-7. Phase G -> Camera Profile OFF; wheel once and confirm normal Blizzard zoom remains usable.
-8. Phase G -> Camera Profile ON; wheel once; Camera Profile Check again.
-9. Upload refreshed diagnostics.
+Canonical acceptance:
+`../evidence/P0163_P0162_RUNTIME_PASS_2026-10-07.md`.
 
-A clean result makes P0162 a runtime PASS and allows a docs-only Phase G closure checkpoint with the existing environmental deferrals preserved.
+Observed on `0.0.81-dev`, loadCount `193`:
+- base Camera Profile Check PASS;
+- separate Run All PASS;
+- reactive active/hooked with `OutQuad`;
+- after the bounded wheel exercise: `wheel=36`, `quick=9`, `resets=2`, `native=4`, `corrections=15`;
+- same-context manual City zoom persisted around `11.10` instead of returning to `5`;
+- OFF/ON cycle recorded `release=1`, then `acquire=2`;
+- user confirmed ordinary Blizzard wheel zoom while the controller was OFF;
+- conflicts `0`, secrets `0`, failures `0`;
+- final Run All clean.
+
+Classification:
+**P0162 RUNTIME PASS. FINAL NON-PRESENTATION PHASE G SLICE ACCEPTED.**
+
+Phase G closes separately in P0163 with environmental deferrals preserved.

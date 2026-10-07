@@ -8,122 +8,90 @@ project: logres
 
 ## Active Objective
 
-**Finish the final non-presentation DynamicCam camera-parity slice, then close Phase G with explicit environmental deferrals and enter Phase H integration/layout/polish.**
+**Execute Phase H integration-first: safe Blizzard-surface ownership/suppression, then authored layout/positions, then final whole-screen polish.**
 
-The canonical DynamicCam RPG profile is already stored in repository evidence. Do not request another export unless the profile changes.
+P0162 R3 is verified durable at `4628f49e48ff67b8012fb51d4b80e5d8638c6c28` on runtime `0.0.81-dev` and is runtime-accepted for the bounded reactive mouse-wheel gate.
 
-P0161 is verified durable at `2a95909495e81104e02891fac94f19d59b1e030c` on runtime `0.0.80-dev` and is runtime-accepted for the observed Taxi/settings/shoulder-offset scope.
+Phase G is complete for the scope Logres currently claims. Naturally unavailable captured contexts remain explicit environmental deferrals rather than fabricated PASSes.
 
 ## Current Work Item
 
-**P0162 R1 — source-backed DynamicCam reactive mouse-wheel zoom.**
+**P0164 — Phase H.1 stock-surface ownership/suppression audit.**
 
-P0162 is the final planned non-presentation Phase G slice. It adapts pinned DynamicCam `MouseZoom.lua` semantics while reusing Logres's P0160 source-backed transition engine rather than creating another camera driver.
+The first Phase H slice is an evidence audit, not a blanket hide pass. For each Blizzard surface visible in the current product composition, classify:
+- the information/control functions Blizzard currently supplies;
+- the Logres replacement, if any;
+- runtime proof for that replacement;
+- restoration/fail-open coverage;
+- whether suppression is safe now, must remain stock, or is deferred.
 
-Effective captured-profile settings are:
-- reactive zoom enabled;
-- always-add increment `0.1000000000000001`;
-- quick-zoom additional increment `2.5`;
-- quick threshold `1.2`;
-- maximum zoom time `2.5` seconds;
-- `OutQuad` easing from the pinned DynamicCam default.
-
-The implementation must preserve:
-- exact pre-ownership `CameraZoomIn` / `CameraZoomOut` function restoration;
-- zero-increment suppression;
-- non-wheel increment pass-through for P0160/LibCamera correction behavior;
-- direction-change target reset;
-- first-person outward escape through native `0.05` zoom;
-- max-distance clamping from the live factor without changing it;
-- fail-open native zoom on unreadable/secret inputs;
-- same-context manual zoom persistence until the camera context actually changes.
-
-DynamicCam UI fades remain Phase H presentation policy.
-
-The initial P0162 delivery artifact refused before tracked writes because its exact-baseline guard rejected the standard untracked `LOGRES_DIAGNOSTICS_LATEST.lua` evidence file. R1 fixes only that delivery guard and keeps the runtime implementation unchanged.
+Do not add new runtime suppression in the audit itself. The audit must identify the first narrow suppression/coexistence slice that is already fully replacement- and restoration-proven.
 
 ## Verified State
 
-P0161 runtime acceptance on `0.0.80-dev`:
+P0162 runtime acceptance on `0.0.81-dev`, loadCount `193`, client `1.60.1.70245`:
 - base Camera Profile Check PASS;
 - separate Run All PASS;
-- Taxi reached `50` with captured continuous yaw `-20`;
-- profile behavior reported zero settings and rotation failures;
-- after landing, City returned from `50` to about `4.97-5.01`;
-- Taxi rotate-back completed; last recorded return was about `-29.43` degrees;
-- City max-distance override was `1`, while the captured original factor remained `4`;
-- no camera/profile secret or runtime failures were recorded.
+- reactive ownership active/hooked with `OutQuad`;
+- after wheel exercise: `wheel=36`, `quick=9`, `resets=2`, `native=4`, `corrections=15`;
+- same-context City manual zoom remained around `11.10` rather than snapping back to the City entry target `5`;
+- OFF/ON cycle recorded reactive `release=1`, then `acquire=2` with hook restored;
+- user confirmed ordinary Blizzard wheel zoom remained usable while Camera Profile was OFF;
+- reactive hook conflicts `0`, secret skips `0`, failures `0`;
+- final integrated Run All completed cleanly.
 
 Classification:
-**P0161 RUNTIME PASS FOR OBSERVED TAXI/SETTINGS/SHOULDER-OFFSET SCOPE.**
+**P0162 RUNTIME PASS. PHASE G COMPLETE FOR CLAIMED OBSERVED SCOPE.**
 
-Environmental deferrals remain:
+Phase G environmental deferrals preserved:
 - Hearth/Teleport;
 - NPC Interaction;
 - Fishing;
 - Gathering;
-- AFK priority behavior where not naturally observed.
+- AFK priority behavior not naturally observed.
 
-These are deferrals, not failures, and do not require contrived gameplay to close Phase G.
+DynamicCam UI fading is not a missing Camera-engine requirement; it remains Phase H presentation/suppression policy.
 
 ## Next Action
 
-Apply/deploy P0162 R1 (`0.0.81-dev`) and run the bounded reactive-zoom gate:
+Begin P0164 by auditing the real current Blizzard/Logres coexistence surface-by-surface. Produce a durable ownership matrix and select the first safe suppression slice from already-proven capability/restoration evidence.
 
-1. `/reload`.
-2. Phase G -> **Camera Profile Check**.
-3. Phase 0 -> **Run All** separately.
-4. In the current ordinary world context, make one slow wheel tick in each direction, then several quick same-direction ticks and one direction reversal.
-5. Confirm smooth zoom, larger quick-step accumulation, and no snap back toward a stale target after reversal.
-6. Phase G -> **Camera Profile Check** again; require reactive hook active, wheel count > 0, `OutQuad`, zero reactive failures/secrets/hook conflicts.
-7. Phase G -> **Camera Profile OFF**; verify one ordinary wheel zoom still works through restored Blizzard functions.
-8. Phase G -> **Camera Profile ON**; wheel once, then run **Camera Profile Check** again.
-9. Upload refreshed `LOGRES_DIAGNOSTICS_LATEST.lua`.
-
-Do not require another Taxi or travel to deferred contexts for this gate.
-
-If P0162 passes, close Phase G with the explicit environmental deferrals above and make Phase H primary.
+Keep stock fallbacks for every incomplete domain. In particular, do not remove the stock minimap, Party/CompactPartyFrame, target aura/status, target-of-target, PetFrame/PetActionBar, unsupported class/resource/special controls, alternate power, RuneFrame, TotemFrame, or vehicle/override/possess surfaces without their separate replacement gates.
 
 ## Success Criteria
 
-P0162 succeeds when:
-- base Camera Profile Check and separate Run All remain clean;
-- reactive mouse-wheel ownership is active only while Logres owns camera context;
-- one-tick and quick repeated wheel input move smoothly with the captured effective settings;
-- reversing wheel direction resets the stale reactive target;
-- manual reactive zoom is not immediately reasserted back to the same situation entry target;
-- P0160 source-correction/non-wheel calls pass through rather than being mistaken for wheel ticks;
-- Camera Profile OFF restores exact captured zoom functions when Logres still owns the hooks;
-- a later external replacement is not overwritten on release;
-- diagnostics show zero reactive failures, secret skips, and unexpected hook conflicts in the normal no-DynamicCam test;
-- no CVar ownership expansion, timer/polling loop, UI fade, or stock-surface suppression is added;
-- all static checks and `git diff --check` pass;
-- no Lua, taint, protected-action, or secret-value failure occurs.
+P0164 succeeds when:
+- every candidate Blizzard surface is classified as `SUPPRESSIBLE NOW`, `KEEP STOCK`, or `DEFERRED` with evidence;
+- every `SUPPRESSIBLE NOW` entry names its complete Logres information/control replacement and restoration/fail-open path;
+- existing intentional suppression is distinguished from new Phase H suppression work;
+- no incomplete information/control surface is removed by inference;
+- the audit identifies one narrow next runtime slice rather than a blanket UI mutation;
+- durable memory and the Phase H roadmap remain synchronized.
 
 ## Do Not Reopen Without New Evidence
 
-- P0161 is accepted for observed Taxi/settings/shoulder-offset scope;
+- P0162 reactive mouse-wheel zoom is accepted for the tested bounded scope;
+- P0161 Taxi/settings/shoulder-offset behavior is accepted for observed scope;
 - P0160 source-backed Taxi zoom convergence is accepted;
 - no conventional player health bar;
-- no arbitrary/global `cameraDistanceMaxZoomFactor` ownership beyond the captured City override;
-- no periodic context polling;
-- no DynamicCam UI fade in Phase G;
-- P0152 pet execution/state presentation remains accepted;
-- stock minimap, Party/CompactPartyFrame, target aura/status, target-of-target, and unsupported class/special surfaces remain available until their replacement gates are satisfied;
+- PvP is a modifier, not Immersion OFF;
+- no arbitrary/global max-distance ownership beyond the captured City override;
+- no periodic Camera context polling;
+- no DynamicCam UI fade as Camera-engine behavior;
+- stock minimap, Party/CompactPartyFrame, target aura/status, target-of-target, PetFrame/PetActionBar, unsupported class/special surfaces, and special-control fallbacks remain until separately replaced;
 - player harmful/urgent and populated target aura production remain deferred;
 - positive world-target nameplate attachment remains deferred;
-- individual tracking-result positions remain source-blocked by D-043;
-- possess/override/vehicle/extra-action surfaces remain separate domains.
+- individual tracking-result positions remain source-blocked by D-043.
 
 ## Relevant References
 
-- `docs/memory/evidence/P0162_P0161_RUNTIME_PASS_2026-10-07.md`
-- `docs/memory/evidence/P0162_REACTIVE_ZOOM_SOURCE_AUDIT_2026-10-07.md`
+- `docs/memory/evidence/P0163_P0162_RUNTIME_PASS_2026-10-07.md`
+- `docs/memory/patches/P0163_PHASE_G_CLOSURE.md`
 - `docs/memory/patches/P0162_REACTIVE_MOUSE_WHEEL_ZOOM.md`
-- `docs/memory/evidence/P0161_PROFILE_BEHAVIOR_SOURCE_AUDIT_2026-10-07.md`
-- `docs/memory/evidence/G1_DYNAMICCAM_RPG_PROFILE_2026-10-02.json`
 - `docs/memory/investigations/G6_DYNAMICCAM_PROFILE_PARITY.md`
 - `docs/memory/architecture/CAMERA.md`
 - `docs/memory/roadmap/PHASE_G_CINEMATIC_CAMERA.md`
+- `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`
 - `docs/memory/roadmap/STATUS.md`
+- `docs/memory/patches/P0158_SEQUENCE_CAMERA_INTEGRATION_POLISH.md`
 - `docs/ROADMAP.md`
