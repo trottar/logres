@@ -8,7 +8,7 @@ As of 2026-10-07.
 
 P0162 R3 is durable at `4628f49e` / `0.0.81-dev` and runtime-accepted. Phase G is complete for claimed observed scope with Teleport/NPC/Fishing/Gathering and unobserved AFK behavior preserved as environmental deferrals.
 
-P0164 resolves the H.1 stock-surface ownership/suppression audit from durable replacement/restoration evidence and external UI-hider mechanics. Existing proven suppression remains in place; incomplete domains remain stock. Exact next work item: P0165 narrow quest-offer Accept/Decline control suppression/restoration.
+P0164 resolves the H.1 stock-surface ownership/suppression audit. P0165 is prepared on candidate `0.0.82-dev`: source-backed stock quest-offer Accept/Decline alpha+mouse suppression for ordinary non-PvP/non-auto-accept offers, with exact restoration/fail-open. Exact next action is the bounded P0165 runtime gate.
 
 ## Phase status
 
@@ -22,7 +22,7 @@ P0164 resolves the H.1 stock-surface ownership/suppression audit from durable re
 | E — Compass and Navigation | COMPLETE |
 | F — Quest Experience | COMPLETE |
 | G — Cinematic Camera | COMPLETE — P0162 RUNTIME PASS; ENVIRONMENTAL DEFERRALS PRESERVED |
-| H — Integration and Polish | ACTIVE — H.1 AUDIT COMPLETE; P0165 QUEST-OFFER CONTROL SUPPRESSION NEXT |
+| H — Integration and Polish | ACTIVE — P0165 QUEST-OFFER STOCK SUPPRESSION RUNTIME GATE |
 
 ## Phase G / G.5
 

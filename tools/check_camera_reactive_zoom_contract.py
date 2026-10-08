@@ -98,6 +98,30 @@ if CONTROLLER.is_file():
         if fragment not in source:
             errors.append(f"WorldCombat.lua missing P0162 integration: {fragment}")
 
+    corrected_rebase_call = """expectedZoom =
+                    transitionExpectedZoom(
+                        easingForName(self.transitionEasingName),
+                        startZoom,
+                        requestedTargetZoom,
+                        transitionDuration,
+                        elapsed
+                    )"""
+    stale_rebase_call = """expectedZoom =
+                    transitionExpectedZoom(
+                        startZoom,
+                        requestedTargetZoom,
+                        transitionDuration,
+                        elapsed
+                    )"""
+    if corrected_rebase_call not in source:
+        errors.append(
+            "WorldCombat.lua rebase expected-zoom call must pass selected easing first"
+        )
+    if stale_rebase_call in source:
+        errors.append(
+            "WorldCombat.lua retains stale four-argument rebase expected-zoom call"
+        )
+
 if COMMANDS.is_file():
     source = COMMANDS.read_text(encoding="utf-8")
     required = [

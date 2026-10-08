@@ -53,7 +53,7 @@ Canonical phase record:
 
 ## Phase H — Integration and Polish
 
-**Status: ACTIVE — H.1 AUDIT COMPLETE; P0165 QUEST-OFFER CONTROL SUPPRESSION NEXT; AUTHORED LAYOUT THEN FINAL POLISH.**
+**Status: ACTIVE — P0165 QUEST-OFFER STOCK SUPPRESSION RUNTIME GATE; AUTHORED LAYOUT THEN FINAL POLISH.**
 
 D-039 preserves the approved twelve-sheet World Ghost / Selective Hybrid E visual
 baseline. D-040 defines `Logres/Media/` plus `Theme.lua` as the runtime asset/token
@@ -103,7 +103,7 @@ mutation, and Blizzard offer-control suppression remain separately gated.
 
 P0164 resolves the first Phase H ownership audit. Existing Quiet Mode, selective Player/Target, and conditional Bar 2–3 suppression are already proven; the minimap, Party/CompactPartyFrame, target aura/status and target-of-target, Main/Override/special action surfaces, PetActionBar/PetFrame, class/resource/special surfaces, full quest tracking/log, persistent XP, nameplates, and unsupported quest states remain stock.
 
-The first new suppression slice is P0165: source-backed suppression/restoration of the **stock quest-offer Accept/Decline controls only**. This does not authorize hiding the QuestFrame root or any progress/complete/reward/gossip surface.
+P0165 is prepared on candidate `0.0.82-dev` as the first new suppression slice. Exact Forever `1.60.1.70245` source backs alpha+mouse suppression/restoration of the **stock quest-offer Accept/Decline controls only** for ordinary non-PvP/non-auto-accept offers. PvP-confirmation, auto-accept, hidden/gamepad, missing/secret/unreadable, and unsafe protected/combat states fail open. This does not authorize hiding the QuestFrame root or any progress/complete/reward/gossip surface. Runtime evidence is required before H.1 closes.
 
 
 P0135 resolves the aura/status source + priority-policy layer against the exact

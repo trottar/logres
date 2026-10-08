@@ -113,8 +113,7 @@ P0133 is durable at `f2feead6` / `0.0.65-dev` and runtime + visual PASS:
 Accept-left / Decline-right matches Blizzard while the fallback remains visible,
 and integrated checks remain clean.
 
-Continue / Complete, rewards, gossip selection, and Blizzard suppression remain
-separate gates.
+P0165 is prepared on `0.0.82-dev` to close only the ordinary offer-control coexistence gap: exact-source-backed suppression/restoration of stock Accept/Decline with PvP-confirmation and auto-accept fail-open. Continue / Complete, rewards, gossip selection, and all broader Blizzard quest suppression remain separate gates.
 
 ## Closed Phase G investigations
 

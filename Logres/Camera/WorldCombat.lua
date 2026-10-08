@@ -1593,6 +1593,7 @@ function Controller:OnUpdate()
                     elapsed
                 expectedZoom =
                     transitionExpectedZoom(
+                        easingForName(self.transitionEasingName),
                         startZoom,
                         requestedTargetZoom,
                         transitionDuration,

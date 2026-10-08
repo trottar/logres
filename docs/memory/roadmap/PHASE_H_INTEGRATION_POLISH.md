@@ -1,6 +1,6 @@
 # Phase H — Integration and Polish
 
-Status: ACTIVE — H.1 AUDIT COMPLETE; P0165 QUEST-OFFER CONTROL SUPPRESSION NEXT
+Status: ACTIVE — P0165 QUEST-OFFER STOCK SUPPRESSION RUNTIME GATE
 
 ## Product objective
 
@@ -68,7 +68,7 @@ P0164 uses Hide Anything as broad product guidance and source-backed MoveAny mec
 
 The audit does **not** authorize a generic Logres hide-anything framework. Broad hidden-parent ownership, global Show/SetShown forcing, timer retries, polling, and parent locking remain inappropriate without surface-specific evidence.
 
-The next narrow coexistence reduction is P0165: suppress/restore the stock quest-offer Accept/Decline controls only when the already-proven Logres offer surface is ready. The QuestFrame root, progress/complete, rewards, gossip, and every unsupported state remain stock/fail-open.
+P0165 is now prepared on candidate `0.0.82-dev`. Exact Forever `1.60.1.70245` source confirms the two stock offer buttons are direct `QuestFrameDetailPanel` children and separately identifies Blizzard-owned PvP-confirmation and auto-accept semantics. P0165 uses only alpha+mouse suppression on those two buttons for ordinary supported offers, exact restoration before Logres interaction withdrawal, and targeted detail-panel/state reconciliation. The QuestFrame root, progress/complete, rewards, gossip, and every unsupported state remain stock/fail-open. Runtime evidence is required before H.1 closes.
 
 ## Execution order
 

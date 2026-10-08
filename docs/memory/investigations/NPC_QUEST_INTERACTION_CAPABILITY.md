@@ -319,7 +319,13 @@ Logres controls:
 - Blizzard controls retained as visible fallback.
 
 P0132 does not suppress Blizzard offer controls and does not include Continue,
-Complete, rewards, or gossip transitions.
+Complete, rewards, or gossip transitions. P0133 later accepted the corrected
+Accept-left / Decline-right production surface at runtime and visual scale while
+Blizzard remained visible fallback.
 
-Runtime + visual proof is required before the production offer control surface is
-accepted.
+P0165 now prepares the separately gated stock-control suppression step on candidate
+`0.0.82-dev`. Exact Forever `1.60.1.70245` source confirms stock Accept/Decline
+lifecycle and requires fail-open for PvP-confirmation and auto-accept semantics that
+Logres does not own. Only those two ordinary offer buttons are in scope; Continue,
+Complete, rewards, gossip, and the QuestFrame root remain Blizzard-owned. Runtime
+proof is required before this suppression capability is accepted.

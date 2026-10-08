@@ -359,6 +359,44 @@ function Dialogue:SetOfferActionFeedback(text)
     self.offerActionFeedback:Show()
 end
 
+function Dialogue:RequestStockOfferSuppression(enabled, reason)
+    local ok, suppression = pcall(
+        Logres.GetModule,
+        Logres,
+        "QuestOfferStockSuppression"
+    )
+
+    if not ok
+        or not suppression
+        or type(suppression.RequestEnabled) ~= "function"
+    then
+        self.stockOfferSuppressionApplied = false
+        self.lastStockOfferSuppressionResult =
+            "suppression-module-unavailable"
+        return false, "suppression-module-unavailable"
+    end
+
+    local callOK, applied, result = pcall(
+        suppression.RequestEnabled,
+        suppression,
+        enabled == true,
+        reason
+    )
+
+    if not callOK then
+        self.stockOfferSuppressionApplied = false
+        self.lastStockOfferSuppressionResult =
+            "suppression-request-failed"
+        return false, "suppression-request-failed"
+    end
+
+    self.stockOfferSuppressionApplied =
+        enabled == true and applied == true
+    self.lastStockOfferSuppressionResult = result
+
+    return self.stockOfferSuppressionApplied, result
+end
+
 function Dialogue:UpdateOfferControls()
     local pageCount = #self.pages
     local finalPage =
@@ -367,12 +405,40 @@ function Dialogue:UpdateOfferControls()
 
     self.offerControlsFinalPage = finalPage
 
-    local shouldShow =
+    local baseEligible =
         self.moduleEnabled
         and self.immersionEnabled
         and self.presentationShown
         and self.offerActionsEnabled
+
+    local previewEligible =
+        baseEligible
+        and self.offerActionPreview
         and finalPage
+
+    local productionEligible =
+        baseEligible
+        and not self.offerActionPreview
+
+    local stockApplied = false
+
+    if productionEligible then
+        stockApplied = select(1,
+            self:RequestStockOfferSuppression(
+                true,
+                "dialogue-offer"
+            )
+        )
+    else
+        self:RequestStockOfferSuppression(
+            false,
+            "dialogue-offer-not-owned"
+        )
+    end
+
+    local shouldShow =
+        previewEligible
+        or (stockApplied and finalPage)
 
     if shouldShow then
         self.offerActionRoot:Show()
@@ -421,6 +487,11 @@ function Dialogue:HandleOfferAction(kind)
         )
 
     if ok then
+        self:RequestStockOfferSuppression(
+            false,
+            "offer-action-started"
+        )
+        self.offerActionsEnabled = false
         self.offerActionPending = true
         self.lastOfferActionResult =
             "started"
@@ -430,6 +501,11 @@ function Dialogue:HandleOfferAction(kind)
         return true, reason
     end
 
+    self:RequestStockOfferSuppression(
+        false,
+        "offer-action-blocked"
+    )
+    self.offerActionsEnabled = false
     self.offerActionPending = false
     self.lastOfferActionResult =
         "blocked"
@@ -437,12 +513,17 @@ function Dialogue:HandleOfferAction(kind)
     self:SetOfferActionFeedback(
         "Use the standard quest controls."
     )
-    self:UpdateOfferControls()
+    self.offerActionRoot:Hide()
 
     return false, reason
 end
 
 function Dialogue:HidePresentation(reason)
+    self:RequestStockOfferSuppression(
+        false,
+        reason or "hide-presentation"
+    )
+
     self.presentationGeneration =
         self.presentationGeneration + 1
     self.presentationShown = false
@@ -911,6 +992,10 @@ function Dialogue:GetDebugStatus()
             self.lastOfferActionResult,
         lastOfferActionError =
             self.lastOfferActionError,
+        stockOfferSuppressionApplied =
+            self.stockOfferSuppressionApplied == true,
+        lastStockOfferSuppressionResult =
+            self.lastStockOfferSuppressionResult,
 
         pageCount = #self.pages,
         currentPage = self.currentPage,
@@ -966,6 +1051,8 @@ function Dialogue:OnInitialize()
     self.lastOfferActionKind = nil
     self.lastOfferActionResult = "initialize"
     self.lastOfferActionError = nil
+    self.stockOfferSuppressionApplied = false
+    self.lastStockOfferSuppressionResult = "initialize"
 
     self.pages = {}
     self.currentPage = 0
