@@ -45,6 +45,9 @@ CONSUMERS = {
     ADDON / "HUD" / "PlayerHelpfulAuras.lua": (
         'Logres.Layout.Bind(root, "passiveStatus", "LEFT", "CENTER")',
     ),
+    ADDON / "Immersion" / "NativeAccess.lua": (
+        'Logres.Layout.Bind(dock, "nativeAccess", "TOPRIGHT", "TOPRIGHT")',
+    ),
     ADDON / "HUD" / "PetActionExecutionProbe.lua": (
         'self.layoutAnchor = "classPet"',
     ),
@@ -76,6 +79,7 @@ if LAYOUT.is_file():
         'allies = {',
         'classPet = {',
         'passiveStatus = {',
+        'nativeAccess = {',
         "function Layout.GetAnchor(key)",
         "function Layout.Bind(",
         "frame.logresLayoutAnchor = key",

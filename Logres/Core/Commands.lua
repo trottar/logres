@@ -4131,6 +4131,7 @@ local LAYOUT_EXPECTED = {
     { "LogresQuestDialogue", "questDialogue" },
     { "LogresPlayerHelpfulAuras", "passiveStatus" },
     { "LogresPetActionExecutionProbeCluster", "classPet" },
+    { "LogresNativeAccessDock", "nativeAccess" },
 }
 
 local function runLayoutCheck()
@@ -4181,6 +4182,32 @@ local function runLayoutCheck()
     ))
 end
 
+local function runNativeAccessCheck()
+    local status = Logres:GetModuleStatus("NativeAccess")
+    local native = Logres:GetModule("NativeAccess")
+    local result = native:GetDebugStatus()
+    local expected = Logres:GetPreference("immersionEnabled") == true
+    local passed = status.initialized == true
+        and status.enabled == true
+        and result.moduleEnabled == true
+        and result.desired == expected
+        and result.dockShown == expected
+        and result.incompleteDomains == 0
+        and result.foldedDomains + result.openDomains == (expected and 4 or 0)
+        and result.failures == 0
+        and result.lastError == nil
+    emit(string.format(
+        "Logres nativeuicheck: %s (desired=%s dock=%s folded=%s open=%s incomplete=%s attempts=%s folds=%s restores=%s failures=%s event=%s details=%s error=%s mainPetStock=true)",
+        passed and "PASS" or "FAIL",
+        tostring(result.desired), tostring(result.dockShown),
+        tostring(result.foldedDomains), tostring(result.openDomains),
+        tostring(result.incompleteDomains), tostring(result.attempts),
+        tostring(result.folds), tostring(result.restores),
+        tostring(result.failures), tostring(result.lastEvent),
+        tostring(result.domains), tostring(result.lastError)
+    ))
+end
+
 local function runAllChecks()
     emit("Logres checkall: beginning")
     printStatus()
@@ -4190,6 +4217,7 @@ local function runAllChecks()
     runLifecycleCheck()
     runHUDCheck()
     runLayoutCheck()
+    runNativeAccessCheck()
     runXPCheck()
     runObjectiveProgressCheck()
     runActiveQuestCheck()
@@ -4482,6 +4510,19 @@ local function handleCommand(message)
 
     if command == "contextpolicycheck" then
         runContextPolicyCheck()
+        return
+    end
+
+    if command == "nativeuicheck" then
+        runNativeAccessCheck()
+        return
+    end
+
+    if command == "nativeui" then
+        local native = Logres:GetModule("NativeAccess")
+        local domain = argument == "" and "all" or argument
+        local ok, result = native:Toggle(domain)
+        emit("Logres nativeui: " .. tostring(result) .. " (" .. domain .. ")")
         return
     end
 
@@ -4988,6 +5029,12 @@ Logres:RegisterDevPanelAction(
     "layoutCheck",
     "Layout Check",
     "layoutcheck",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "nativeAccessCheck",
+    "Native Access Check",
+    "nativeuicheck",
     "H"
 )
 Logres:RegisterDevPanelAction(

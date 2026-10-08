@@ -109,6 +109,13 @@ local ANCHOR_SPECS = {
         x = 118,
         y = -118,
     },
+    nativeAccess = {
+        name = "LogresLayoutNativeAccess",
+        point = "TOPRIGHT",
+        relativePoint = "TOPRIGHT",
+        x = -22,
+        y = -74,
+    },
 }
 
 local anchors = {}
