@@ -267,3 +267,18 @@ P0164 classifies the current coexistence surface-by-surface. Existing runtime-pr
 External UI-hider guidance was used narrowly: Hide Anything as a broad product reference and public MoveAny source for inspectable hide/restore mechanics. This does not authorize blanket hooks, parent locks, timer retries, or polling in Logres.
 
 The next narrow investigation/implementation is P0165: identify the exact Forever stock quest-offer Accept/Decline controls and lifecycle, then suppress/restore only those controls while the proven Logres offer surface is ready. Progress/Continue, completion/Complete, rewards, gossip, and the QuestFrame root remain stock.
+
+## P0166 — H.2 integration-owned anchors
+
+Status:
+**STRUCTURAL RUNTIME PASS — `a67e0cce`, `0.0.83-dev`.**
+
+The integrated runtime reports 13 anchors, 15 binds, zero failures/missing/mismatches, clean Run All, and pet actions on the integration-owned `classPet` anchor. Objective Progress no longer depends on the detached target fallback.
+
+Whole-screen visual spacing/collision calibration remains open.
+
+Post-push tooling defect:
+Layout Check was not registered in the Phase H developer panel even though the slash command and Run All integration existed. P0167 corrects the panel registration only; anchor geometry and capability policy are unchanged.
+
+P0167 R0 delivery failure:
+The first P0167 artifact failed during candidate construction before the checker suite or any tracked write because its applier assumed this P0166 section already existed in `ACTIVE.md`. The authoritative baseline did not contain that section. R1 used this append-only absence-gated update instead, but its own applier then failed before checker execution or tracked writes because an evidence `write()` call passed four positional arguments to a three-argument helper. R2 corrects that delivery-only defect and preserves both failures as evidence.

@@ -53,7 +53,7 @@ Canonical phase record:
 
 ## Phase H — Integration and Polish
 
-**Status: ACTIVE — H.2 INTEGRATION ANCHORS / AUTHORED LAYOUT; FINAL POLISH AFTER GEOMETRY ACCEPTANCE.**
+**Status: ACTIVE — H.2 P0167 PANEL CORRECTION; VISUAL CALIBRATION NEXT; FINAL POLISH AFTER GEOMETRY ACCEPTANCE.**
 
 D-039 preserves the approved twelve-sheet World Ghost / Selective Hybrid E visual
 baseline. D-040 defines `Logres/Media/` plus `Theme.lua` as the runtime asset/token
@@ -105,7 +105,9 @@ P0164 resolves the first Phase H ownership audit. Existing Quiet Mode, selective
 
 P0165 R1 is durable at `0e83af06` / `0.0.82-dev` and runtime-accepted. Exact Forever `1.60.1.70245` source backs alpha+mouse suppression/restoration of the **stock quest-offer Accept/Decline controls only** for ordinary non-PvP/non-auto-accept offers. PvP-confirmation, auto-accept, hidden/gamepad, missing/secret/unreadable, and unsafe protected/combat states remain Blizzard/fail-open. H.1 is closed for currently replacement-proven stock surfaces.
 
-P0166 begins H.2 on `0.0.83-dev` with integration-owned semantic anchors. The first checkpoint preserves accepted coordinates while removing incidental Objective Progress -> target-frame and pet-action -> allies-frame anchor dependencies.
+P0166 R1 is durable at `a67e0cce` / `0.0.83-dev` and structurally runtime-accepted: all 13 semantic anchors bind with zero failures/missing/mismatches, integrated Run All is clean, and pet actions report the `classPet` anchor. Whole-screen visual spacing/collision calibration remains open.
+
+P0167 fixes the missing Phase H developer-panel registration for Layout Check. To stay within the existing 15-action panel limit, the legacy quest-offer Accept/Decline TEST probes move to Phase F. No geometry, ownership, suppression, secure routing, or camera behavior changes.
 
 
 P0135 resolves the aura/status source + priority-policy layer against the exact

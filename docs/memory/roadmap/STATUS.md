@@ -8,7 +8,7 @@ As of 2026-10-07.
 
 P0162 R3 is durable at `4628f49e` / `0.0.81-dev` and runtime-accepted. Phase G is complete for claimed observed scope with Teleport/NPC/Fishing/Gathering and unobserved AFK behavior preserved as environmental deferrals.
 
-P0165 R1 is durable at `0e83af06` / `0.0.82-dev` and runtime-accepted. H.1 is closed for every stock surface Logres currently has enough replacement/restoration evidence to suppress safely. P0166 begins H.2 on candidate `0.0.83-dev`: integration-owned semantic anchors with current accepted geometry preserved and incidental Context/pet dependencies removed.
+P0165 R1 remains accepted and H.1 remains closed for currently replacement-proven stock surfaces. P0166 R1 is durable at `a67e0cce` / `0.0.83-dev` and structurally runtime-accepted: 13 anchors, 15 binds, zero layout failures/missing/mismatches, clean Run All, and the pet cluster on `classPet`. P0167 corrects the missing Phase H `Layout Check` panel registration without changing geometry; candidate runtime is `0.0.84-dev`.
 
 ## Phase status
 
@@ -22,7 +22,7 @@ P0165 R1 is durable at `0e83af06` / `0.0.82-dev` and runtime-accepted. H.1 is cl
 | E — Compass and Navigation | COMPLETE |
 | F — Quest Experience | COMPLETE |
 | G — Cinematic Camera | COMPLETE — P0162 RUNTIME PASS; ENVIRONMENTAL DEFERRALS PRESERVED |
-| H — Integration and Polish | ACTIVE — H.2 INTEGRATION ANCHORS / AUTHORED LAYOUT |
+| H — Integration and Polish | ACTIVE — H.2 P0167 PANEL CORRECTION; VISUAL CALIBRATION NEXT |
 
 ## Phase G / G.5
 

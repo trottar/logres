@@ -4910,6 +4910,12 @@ Logres:RegisterDevPanelAction(
     "F"
 )
 Logres:RegisterDevPanelAction(
+    "layoutCheck",
+    "Layout Check",
+    "layoutcheck",
+    "H"
+)
+Logres:RegisterDevPanelAction(
     "questInteractionProbe",
     "Quest Interaction Probe",
     "questinteractionprobe",
@@ -4991,13 +4997,13 @@ Logres:RegisterDevPanelAction(
     "questOfferAcceptProbe",
     "TEST Accept Current Quest",
     "questofferacceptprobe",
-    "H"
+    "F"
 )
 Logres:RegisterDevPanelAction(
     "questOfferDeclineProbe",
     "TEST Decline Current Quest",
     "questofferdeclineprobe",
-    "H"
+    "F"
 )
 Logres:RegisterDevPanelAction(
     "immersionOn",

@@ -1,6 +1,6 @@
 # P0166 — Phase H.2 integration anchors
 
-Status: R1 PREPARED — R0 PREFLIGHT SELF-MISMATCH CORRECTED
+Status: **R1 DURABLE — STRUCTURAL RUNTIME PASS; PANEL ACCESS DEFECT HANDED TO P0167**
 Candidate runtime: `0.0.83-dev`
 Baseline: `0e83af06cd03ea18671ff52ef8772bf2a4b8818a`
 
@@ -70,3 +70,23 @@ Runtime:
 - ordinary world visual review;
 - XP/objective Context preview;
 - pet lower-left placement check.
+
+## Runtime acceptance
+
+Durable commit:
+`a67e0cce85e054eddfdd8f75cd17c9f450d66b3b`.
+
+Runtime `0.0.83-dev` reports:
+- layout PASS with 13 anchors / 15 binds / 0 failures / 0 missing / 0 mismatched;
+- clean integrated Run All;
+- clean XP and Objective Progress preview paths;
+- pet-action cluster on `classPet` with zero failures/secrets.
+
+Classification:
+**STRUCTURAL RUNTIME PASS.**
+
+Whole-screen spacing/collision calibration remains pending.
+
+## Post-push panel defect
+
+The user correctly reported that Layout Check was absent from Phase H. The diagnostic function, slash command, and Run All call were present, but the panel registration was missing. P0167 owns that correction and does not reopen P0166 anchor geometry.

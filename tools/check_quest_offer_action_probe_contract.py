@@ -170,8 +170,8 @@ elif bootstrap_version != toc_version:
 # P0131 remains a durable behavior contract across later runtime checkpoints.
 
 for fragment in (
-    '"questOfferAcceptProbe": "H"',
-    '"questOfferDeclineProbe": "H"',
+    '"questOfferAcceptProbe": "F"',
+    '"questOfferDeclineProbe": "F"',
 ):
     if fragment not in dev_checker:
         errors.append("check_dev_panel_contract.py missing P0131 action: " + fragment)

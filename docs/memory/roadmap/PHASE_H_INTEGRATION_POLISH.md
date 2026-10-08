@@ -1,6 +1,6 @@
 # Phase H — Integration and Polish
 
-Status: ACTIVE — H.2 INTEGRATION ANCHORS / AUTHORED LAYOUT
+Status: ACTIVE — H.2 P0167 PANEL CORRECTION; VISUAL CALIBRATION NEXT
 
 ## Product objective
 
@@ -70,7 +70,9 @@ The audit does **not** authorize a generic Logres hide-anything framework. Broad
 
 P0165 R1 is durable at `0e83af06` / `0.0.82-dev` and runtime-accepted. Ordinary supported quest offers now use exact-source-backed stock Accept/Decline alpha+mouse suppression with exact restoration and zero observed suppression failures/secrets in the accepted gate. The preserved R0 camera rebase Lua failure was corrected without changing quest policy. H.1 is closed for currently replacement-proven stock surfaces.
 
-P0166 begins H.2 on candidate `0.0.83-dev`. `Integration/Layout.lua` owns named semantic anchors while preserving the current accepted coordinates. Objective Progress is decoupled from `LogresHUDTarget`; the pet-action cluster is decoupled from `LogresHUDAllies`. No new suppression or capability ownership is added.
+P0166 R1 is durable at `a67e0cce` / `0.0.83-dev` and structurally runtime-accepted. `Integration/Layout.lua` owns named semantic anchors while preserving the current accepted coordinates. Objective Progress is decoupled from `LogresHUDTarget`; the pet-action cluster is decoupled from `LogresHUDAllies`. No new suppression or capability ownership is added.
+
+P0167 corrects one developer-panel integration defect discovered after the push: Layout Check existed as a slash command and Run All diagnostic but was not registered in Phase H. The panel is already capped at 15 actions, so P0167 moves the two legacy quest-offer TEST mutation probes to Phase F and adds Layout Check to H. No layout coordinate or ownership change is included.
 
 ## Execution order
 

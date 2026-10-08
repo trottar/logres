@@ -152,6 +152,18 @@ if COMMANDS.is_file():
         if fragment not in source:
             errors.append(f"Commands.lua missing layout diagnostic: {fragment}")
 
+    panel_pattern = re.compile(
+        r'Logres:RegisterDevPanelAction\(\s*'
+        r'"layoutCheck"\s*,\s*'
+        r'"Layout Check"\s*,\s*'
+        r'"layoutcheck"\s*,\s*'
+        r'"H"\s*'
+        r'\)',
+        re.MULTILINE,
+    )
+    if panel_pattern.search(source) is None:
+        errors.append("Layout Check must be registered in the Phase H developer panel")
+
     run_start = source.find("local function runAllChecks()")
     run_end = source.find("local function handleHUDPreview", run_start)
     if run_start == -1 or run_end == -1:

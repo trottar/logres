@@ -8,81 +8,72 @@ project: logres
 
 ## Active Objective
 
-**Execute Phase H.2 authored integration layout: stable semantic anchors first, then in-client spacing/collision calibration, then final whole-screen polish.**
+**Execute Phase H.2 authored integration layout: close the developer-panel access defect, then perform in-client spacing/collision calibration, then final whole-screen polish.**
 
-Phase G remains complete for claimed observed scope. H.1 stock-surface suppression/coexistence is now complete for every surface Logres currently has enough replacement/restoration evidence to suppress safely.
+Phase G remains complete for claimed observed scope. H.1 stock-surface suppression/coexistence remains complete for every surface Logres currently has enough replacement/restoration evidence to suppress safely.
 
 ## Current Work Item
 
-**P0166 R1 — establish integration-owned semantic anchors without changing ownership or broad visual policy.**
+**P0167 R2 — register Layout Check in the Phase H developer panel without changing layout geometry or ownership.**
 
-P0165 R1 is durable at `0e83af06` / `0.0.82-dev` and runtime-accepted. The initial P0165 camera rebase Lua failure remains preserved as negative evidence; R1 corrected only the stale four-argument rebase call.
+P0166 R1 is durable at `a67e0cce` / `0.0.83-dev` and structurally runtime-accepted:
+- integrated Run All reports `layoutcheck: PASS` with `anchors=13`, `binds=15`, `failures=0`, `missing=0`, `mismatched=0`;
+- XP and Objective Progress preview paths execute cleanly;
+- the pet-action cluster reports integration anchor `classPet`;
+- integrated camera, suppression, action, restoration, and Compass checks remain clean in the accepted run.
 
-The initial P0166 delivery artifact was refused during shadow preflight before any tracked write because the new layout checker demanded the PetAction `Layout.Bind` call as one exact single-line fragment while the generated candidate used the intended multi-line form. P0166 R1 corrects only that checker/source self-mismatch and records it durably; runtime code, geometry, and policy are unchanged.
+The user then identified a real integration defect: `Layout Check` was not available as a Phase H panel action. Repository inspection confirms the slash command and Run All integration exist, but no `RegisterDevPanelAction` entry was added. Phase H was already at its 15-action panel capacity.
 
-P0166 creates `Integration/Layout.lua` and migrates the currently production-owned Logres surfaces to named semantic anchors:
-- Navigation;
-- Active Quest;
-- Quest Dialogue;
-- Context Objective;
-- Context XP;
-- Player Reaction;
-- Target Fallback;
-- Primary Actions;
-- Secondary Actions;
-- Utility Actions;
-- Allies;
-- Class/Pet;
-- Passive Status.
+The first P0167 delivery artifact failed during candidate construction before any tracked write because its applier assumed a P0166 section already existed in `docs/memory/investigations/ACTIVE.md`. The pushed authoritative file did not contain that heading. R1 removed that false assumption, but R1 itself then failed before checker execution or tracked writes because one generated evidence `write()` call passed four positional arguments to a three-argument helper; its ZIP also contained generated Python bytecode. R2 corrects both delivery defects, preserves both failures as negative evidence, and synchronizes the older P0131 panel-phase checker so the complete suite agrees with the deliberate TEST-probe move.
 
-The authored coordinates intentionally preserve the current accepted screen geometry in this first H.2 slice. The material changes are ownership/decoupling: objective progress no longer depends on `LogresHUDTarget`, and the pet-action cluster no longer depends on `LogresHUDAllies`.
+P0167 R2 fixes only that access defect:
+- add `Layout Check` to Phase H;
+- move the two legacy `TEST Accept Current Quest` / `TEST Decline Current Quest` capability probes from H to their natural Phase F Quest Experience tab;
+- keep panel capacity within the existing 15-action limit;
+- leave all layout anchors, coordinates, Blizzard suppression, secure routing, camera policy, and capability ownership unchanged.
 
-No Blizzard suppression, action routing, camera policy, source ownership, aura ownership, or secure execution behavior is expanded.
+Candidate runtime: `0.0.84-dev`.
 
 ## Verified State
 
-P0165 R1 runtime acceptance on Forever `1.60.1.70245` / runtime `0.0.82-dev`:
-- camera check PASS before integrated validation with failures=0, secret=false, reactive/profile failures=0;
-- Run All PASS;
-- natural Fishing re-exercised the previously crashing rebase path without Lua error/sound-spam recurrence; the Fishing camera remained active and reported failures=0;
-- ordinary quest offer stock suppression PASS while open with requested/applied/snapshot=true, exact source `15666a6e67938a1ab5caf041406464251db111ca`, failures=0, secrets=0, emergency=0;
-- Immersion OFF/ON produced exact ownership restoration/reapplication;
-- production Decline resolved through `QUEST_FINISHED` and final Run All remained clean;
-- final camera diagnostics after the Fishing/quest sequence reported targetReached=true, failures=0, secret=false, error=nil.
+P0166 structural runtime evidence on Forever `1.60.1.70245` / runtime `0.0.83-dev`:
+- Run All completed with all included checks PASS;
+- layout diagnostic: `anchors=13`, `binds=15`, `failures=0`, `missing=0`, `mismatched=0`;
+- Objective Progress had one live super-tracked quest row and its preview path passed;
+- XP preview passed;
+- pet-action ARM reported `anchor:classPet`, seven occupied slots, zero failures/secrets;
+- camera diagnostics remained PASS with zero failures/secrets.
 
 Classification:
-**P0165 R1 RUNTIME PASS; H.1 CLOSED FOR CURRENTLY REPLACEMENT-PROVEN STOCK SURFACES.**
+**P0166 STRUCTURAL RUNTIME PASS. WHOLE-SCREEN VISUAL SPACING/COLLISION CALIBRATION REMAINS OPEN.**
 
-Stock fallbacks remain authoritative for every domain not already capability-proven, including minimap, Party/CompactPartyFrame, target aura/status and target-of-target, Main/Override/special actions, PetActionBar/PetFrame, class-resource/special frames, tracker/log, persistent XP, nameplates, and unsupported quest states.
+The missing Phase H panel registration is a separate product/tooling defect, not a failure of the integration anchors themselves.
 
 ## Next Action
 
-Apply/deploy P0166 R1 and run one bounded layout gate:
+Apply/deploy P0167 R2 and run one bounded panel gate:
 1. `/reload`;
-2. `/logres layoutcheck`;
-3. Phase 0 -> Run All;
-4. visually inspect ordinary world state with Primary/Secondary/Utility, resource bar, allies/pet area, passive helpful auras if present, Compass, and Active Quest if naturally available;
-5. trigger XP/objective previews and confirm each remains in the authored central Context region;
-6. arm/show the pet-action cluster and confirm it remains in the lower-left class/pet territory without relying on ally-frame geometry;
-7. report any overlap or position that is materially wrong.
+2. open Phase H and run **Layout Check** from the panel; require PASS with `anchors=13`, `failures=0`, `missing=0`, `mismatched=0`;
+3. Phase 0 -> Run All; require clean completion;
+4. open Phase F and confirm the two legacy quest-offer TEST probe buttons are still available there; do not invoke them merely for this gate;
+5. require no Lua, taint, protected-action, or secret-value regression.
 
-Do not begin ornament/final contrast polish until the integration geometry is accepted.
+After P0167 is accepted, proceed directly to H.2 whole-screen spacing/collision calibration. Do not reopen anchor ownership unless new evidence requires it.
 
 ## Success Criteria
 
-P0166 succeeds when:
-- all thirteen semantic anchors exist with zero bind failures;
-- migrated Logres surfaces report their expected integration-owned anchor;
-- objective progress has no target-frame anchor dependency;
-- the pet cluster has no ally-frame anchor dependency;
-- existing action routing and secure pet/action execution remain unchanged;
-- no new Blizzard surface is hidden;
-- current accepted geometry is visually preserved except where decoupling removes incidental dependency;
+P0167 R2 succeeds when:
+- Phase H visibly contains a `Layout Check` button;
+- that button runs the existing non-mutating layout diagnostic and passes;
+- Phase H stays within panel capacity;
+- the legacy quest-offer TEST probes remain reachable under Phase F;
 - Run All remains clean;
-- no Lua, taint, protected-action, or secret-value regression appears.
+- runtime version is synchronized at `0.0.84-dev`;
+- no layout coordinate, suppression, routing, camera, or secure-execution behavior changes.
 
 ## Do Not Reopen Without New Evidence
 
+- P0166 integration-anchor ownership is accepted for structural/runtime scope;
 - P0165 R1 ordinary quest-offer Accept/Decline stock suppression is accepted for tested scope;
 - PvP-confirmation and auto-accept quest offers remain Blizzard-owned;
 - existing Quiet Mode, Player shell, Target selective suppression, and Bar 2–3 replacement remain accepted for tested scopes;
@@ -95,11 +86,12 @@ P0166 succeeds when:
 
 ## Relevant References
 
+- `docs/memory/evidence/P0167_P0166_RUNTIME_PASS_2026-10-07.md`
+- `docs/memory/evidence/P0167_R0_DELIVERY_ACTIVE_ANCHOR_FAILURE_2026-10-07.md`
+- `docs/memory/evidence/P0167_R1_DELIVERY_WRITE_ARITY_FAILURE_2026-10-07.md`
 - `docs/memory/evidence/P0166_R0_DELIVERY_PREFLIGHT_SELF_MISMATCH_2026-10-07.md`
-- `docs/memory/evidence/P0166_P0165_RUNTIME_PASS_2026-10-07.md`
-- `docs/memory/evidence/P0165_R0_CAMERA_REBASE_RUNTIME_FAILURE_2026-10-07.md`
-- `docs/memory/patches/P0165_QUEST_OFFER_STOCK_SUPPRESSION.md`
 - `docs/memory/patches/P0166_PHASE_H2_INTEGRATION_ANCHORS.md`
+- `docs/memory/patches/P0167_LAYOUT_CHECK_PANEL_REGISTRATION.md`
 - `docs/memory/architecture/WORLD_FIRST_LAYOUT.md`
 - `docs/memory/decisions/D-032_WORLD_FIRST_LAYOUT_AND_ACTION_ROLES.md`
 - `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`
