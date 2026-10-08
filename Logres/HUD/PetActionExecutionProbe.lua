@@ -303,16 +303,19 @@ function Probe:ApplyLayout()
     end
 
     self.cluster:ClearAllPoints()
-    local allyAnchor = _G.LogresHUDAllies
-    if allyAnchor then
-        -- D-032: class/pet controls belong in the lower-left territory.
-        -- The five-by-two pet cluster sits below the established ally/pet
-        -- condition stack and left of Secondary, rather than across the
-        -- central player resource/action lane.
-        self.cluster:SetPoint("TOP", allyAnchor, "BOTTOM", -45, -12)
-        self.layoutAnchor = "allies-lower-left"
+    self.cluster:SetPoint("CENTER", UIParent, "CENTER", -375, -160)
+
+    local bound =
+        Logres.Layout.Bind(
+            self.cluster,
+            "classPet",
+            "CENTER",
+            "CENTER"
+        )
+
+    if bound then
+        self.layoutAnchor = "classPet"
     else
-        self.cluster:SetPoint("CENTER", UIParent, "CENTER", -375, -160)
         self.layoutAnchor = "lower-left-fallback"
     end
 

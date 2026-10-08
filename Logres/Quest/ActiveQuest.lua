@@ -908,6 +908,7 @@ function ActiveQuest:OnInitialize()
         styleValue("x"),
         styleValue("y")
     )
+    Logres.Layout.Bind(root, "activeQuest", "TOPRIGHT", "TOPRIGHT")
     root:SetFrameStrata("MEDIUM")
     root:SetClampedToScreen(true)
     root:EnableMouse(false)

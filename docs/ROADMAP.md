@@ -53,7 +53,7 @@ Canonical phase record:
 
 ## Phase H — Integration and Polish
 
-**Status: ACTIVE — P0165 QUEST-OFFER STOCK SUPPRESSION RUNTIME GATE; AUTHORED LAYOUT THEN FINAL POLISH.**
+**Status: ACTIVE — H.2 INTEGRATION ANCHORS / AUTHORED LAYOUT; FINAL POLISH AFTER GEOMETRY ACCEPTANCE.**
 
 D-039 preserves the approved twelve-sheet World Ghost / Selective Hybrid E visual
 baseline. D-040 defines `Logres/Media/` plus `Theme.lua` as the runtime asset/token
@@ -103,7 +103,9 @@ mutation, and Blizzard offer-control suppression remain separately gated.
 
 P0164 resolves the first Phase H ownership audit. Existing Quiet Mode, selective Player/Target, and conditional Bar 2–3 suppression are already proven; the minimap, Party/CompactPartyFrame, target aura/status and target-of-target, Main/Override/special action surfaces, PetActionBar/PetFrame, class/resource/special surfaces, full quest tracking/log, persistent XP, nameplates, and unsupported quest states remain stock.
 
-P0165 is prepared on candidate `0.0.82-dev` as the first new suppression slice. Exact Forever `1.60.1.70245` source backs alpha+mouse suppression/restoration of the **stock quest-offer Accept/Decline controls only** for ordinary non-PvP/non-auto-accept offers. PvP-confirmation, auto-accept, hidden/gamepad, missing/secret/unreadable, and unsafe protected/combat states fail open. This does not authorize hiding the QuestFrame root or any progress/complete/reward/gossip surface. Runtime evidence is required before H.1 closes.
+P0165 R1 is durable at `0e83af06` / `0.0.82-dev` and runtime-accepted. Exact Forever `1.60.1.70245` source backs alpha+mouse suppression/restoration of the **stock quest-offer Accept/Decline controls only** for ordinary non-PvP/non-auto-accept offers. PvP-confirmation, auto-accept, hidden/gamepad, missing/secret/unreadable, and unsafe protected/combat states remain Blizzard/fail-open. H.1 is closed for currently replacement-proven stock surfaces.
+
+P0166 begins H.2 on `0.0.83-dev` with integration-owned semantic anchors. The first checkpoint preserves accepted coordinates while removing incidental Objective Progress -> target-frame and pet-action -> allies-frame anchor dependencies.
 
 
 P0135 resolves the aura/status source + priority-policy layer against the exact

@@ -4042,6 +4042,70 @@ local function runCameraTaxiTargetProbe()
     end
 end
 
+local LAYOUT_EXPECTED = {
+    { "LogresHUDResourceBar", "playerReaction" },
+    { "LogresHUDTarget", "targetFallback" },
+    { "LogresHUDAllies", "allies" },
+    { "LogresPrimaryActionCluster", "primaryActions" },
+    { "LogresSecondaryActionCluster", "secondaryActions" },
+    { "LogresUtilityActionCluster", "utilityActions" },
+    { "LogresCompassFrame", "navigation" },
+    { "LogresQuestXPPulse", "contextXP" },
+    { "LogresQuestObjectiveProgress", "contextObjective" },
+    { "LogresActiveQuest", "activeQuest" },
+    { "LogresQuestDialogue", "questDialogue" },
+    { "LogresPlayerHelpfulAuras", "passiveStatus" },
+    { "LogresPetActionExecutionProbeCluster", "classPet" },
+}
+
+local function runLayoutCheck()
+    local status =
+        Logres.Layout
+        and Logres.Layout.GetDebugStatus
+        and Logres.Layout.GetDebugStatus()
+        or nil
+
+    if not status then
+        emit(
+            "Logres layoutcheck: FAIL "
+            .. "(layout status unavailable)"
+        )
+        return
+    end
+
+    local missing = 0
+    local mismatched = 0
+
+    for index = 1, #LAYOUT_EXPECTED do
+        local definition = LAYOUT_EXPECTED[index]
+        local frame = _G[definition[1]]
+        local expected = definition[2]
+
+        if not frame then
+            missing = missing + 1
+        elseif frame.logresLayoutAnchor ~= expected then
+            mismatched = mismatched + 1
+        end
+    end
+
+    local passed =
+        status.anchorCount == #LAYOUT_EXPECTED
+        and status.bindFailureCount == 0
+        and missing == 0
+        and mismatched == 0
+
+    emit(string.format(
+        "Logres layoutcheck: %s (anchors=%s binds=%s failures=%s missing=%s mismatched=%s error=%s)",
+        passed and "PASS" or "FAIL",
+        tostring(status.anchorCount),
+        tostring(status.bindCount),
+        tostring(status.bindFailureCount),
+        tostring(missing),
+        tostring(mismatched),
+        tostring(status.lastBindError)
+    ))
+end
+
 local function runAllChecks()
     emit("Logres checkall: beginning")
     printStatus()
@@ -4050,6 +4114,7 @@ local function runAllChecks()
     runPreferenceCheck()
     runLifecycleCheck()
     runHUDCheck()
+    runLayoutCheck()
     runXPCheck()
     runObjectiveProgressCheck()
     runActiveQuestCheck()
@@ -4187,6 +4252,7 @@ local function printHelp()
     emit("  /logres targetframecheck")
     emit("  /logres restorationcheck")
     emit("  /logres contextpolicycheck")
+    emit("  /logres layoutcheck")
     emit("  /logres compasscheck")
     emit("  /logres waypointprobe")
     emit("  /logres questprobe")
@@ -4341,6 +4407,11 @@ local function handleCommand(message)
 
     if command == "contextpolicycheck" then
         runContextPolicyCheck()
+        return
+    end
+
+    if command == "layoutcheck" then
+        runLayoutCheck()
         return
     end
 

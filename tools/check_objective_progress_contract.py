@@ -28,7 +28,6 @@ if PROGRESS.is_file():
         "local TEXT_LIMIT = 86",
         "local PRESENTATION_WIDTH = 520",
         "local PRESENTATION_HEIGHT = 32",
-        "local PRESENTATION_GAP = 6",
         "local FALLBACK_Y = -5",
         "local PREVIEW_TEXT =",
         "PREVIEW",
@@ -62,7 +61,7 @@ if PROGRESS.is_file():
         "previousIdentity == currentIdentity",
         "previous.fulfilled ~= current.fulfilled",
         "previous.finished ~= current.finished",
-        "local targetAnchor = _G.LogresHUDTarget",
+        'Logres.Layout.Bind(root, "contextObjective", "CENTER", "CENTER")',
         "{ PREVIEW_TEXT }",
     ]
 
@@ -70,19 +69,12 @@ if PROGRESS.is_file():
         if fragment not in source:
             errors.append(f"Progress.lua missing: {fragment}")
 
-    anchor_pattern = re.compile(
-        r'root:SetPoint\(\s*'
-        r'"BOTTOM",\s*'
-        r'targetAnchor,\s*'
-        r'"TOP",\s*'
-        r'0,\s*'
-        r'PRESENTATION_GAP\s*'
-        r'\)',
-        re.MULTILINE,
-    )
-    if anchor_pattern.search(source) is None:
+    if (
+        'Logres.Layout.Bind(root, "contextObjective", "CENTER", "CENTER")'
+        not in source
+    ):
         errors.append(
-            "Progress.lua missing target-relative presentation anchor"
+            "Progress.lua missing integration-owned Context anchor"
         )
 
     fallback_pattern = re.compile(
@@ -127,6 +119,7 @@ if PROGRESS.is_file():
         "C_QuestLog.RemoveQuestWatch",
         "C_SuperTrack.Set",
         "ObjectiveTrackerFrame",
+        "_G.LogresHUDTarget",
         "QuestObjectiveTracker",
         "HideUIPanel(",
         "ShowUIPanel(",

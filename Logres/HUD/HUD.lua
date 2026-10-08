@@ -770,6 +770,7 @@ function HUD:OnInitialize()
         percentageBarColors.alternate or DEFAULT_RESOURCE_COLOR
     )
     resourceBar:SetPoint("CENTER", root, "CENTER", 0, -118)
+    Logres.Layout.Bind(resourceBar, "playerReaction", "CENTER", "CENTER")
 
     self.resourceBar = resourceBar
     self.resourceText = resourceBar.percentText
@@ -777,6 +778,7 @@ function HUD:OnInitialize()
     local targetFrame = CreateFrame("Frame", "LogresHUDTarget", root)
     targetFrame:SetSize(260, 54)
     targetFrame:SetPoint("CENTER", root, "CENTER", 0, -54)
+    Logres.Layout.Bind(targetFrame, "targetFallback", "CENTER", "CENTER")
     targetFrame:Hide()
 
     local targetNameText = targetFrame:CreateFontString(
@@ -819,6 +821,7 @@ function HUD:OnInitialize()
     local allyAnchor = CreateFrame("Frame", "LogresHUDAllies", root)
     allyAnchor:SetSize(190, 118)
     allyAnchor:SetPoint("CENTER", root, "CENTER", -330, -44)
+    Logres.Layout.Bind(allyAnchor, "allies", "CENTER", "CENTER")
 
     self.allyAnchor = allyAnchor
     self.allyRows = {}

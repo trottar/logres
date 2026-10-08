@@ -1085,6 +1085,7 @@ function Dialogue:OnInitialize()
         styleValue("x"),
         styleValue("y")
     )
+    Logres.Layout.Bind(root, "questDialogue", "TOP", "TOP")
     root:SetFrameStrata("HIGH")
     root:EnableMouse(false)
     root:Hide()

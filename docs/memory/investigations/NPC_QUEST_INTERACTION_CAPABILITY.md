@@ -323,9 +323,12 @@ Complete, rewards, or gossip transitions. P0133 later accepted the corrected
 Accept-left / Decline-right production surface at runtime and visual scale while
 Blizzard remained visible fallback.
 
-P0165 now prepares the separately gated stock-control suppression step on candidate
-`0.0.82-dev`. Exact Forever `1.60.1.70245` source confirms stock Accept/Decline
-lifecycle and requires fail-open for PvP-confirmation and auto-accept semantics that
-Logres does not own. Only those two ordinary offer buttons are in scope; Continue,
-Complete, rewards, gossip, and the QuestFrame root remain Blizzard-owned. Runtime
-proof is required before this suppression capability is accepted.
+P0165 R1 is durable at `0e83af06` / `0.0.82-dev` and runtime-accepted for the
+separately gated stock-control suppression step. Exact Forever `1.60.1.70245`
+source backs stock Accept/Decline lifecycle ownership for ordinary supported
+offers. The accepted runtime gate observed applied suppression with an exact
+snapshot, exact OFF/ON restoration/reapplication, production Decline outcome,
+and zero suppression failures/secrets/emergency fallback.
+
+PvP-confirmation and auto-accept semantics remain Blizzard-owned. Continue,
+Complete, rewards, gossip, and the QuestFrame root remain separate gates.

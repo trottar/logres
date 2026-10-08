@@ -8,7 +8,7 @@ As of 2026-10-07.
 
 P0162 R3 is durable at `4628f49e` / `0.0.81-dev` and runtime-accepted. Phase G is complete for claimed observed scope with Teleport/NPC/Fishing/Gathering and unobserved AFK behavior preserved as environmental deferrals.
 
-P0164 resolves the H.1 stock-surface ownership/suppression audit. P0165 is prepared on candidate `0.0.82-dev`: source-backed stock quest-offer Accept/Decline alpha+mouse suppression for ordinary non-PvP/non-auto-accept offers, with exact restoration/fail-open. Exact next action is the bounded P0165 runtime gate.
+P0165 R1 is durable at `0e83af06` / `0.0.82-dev` and runtime-accepted. H.1 is closed for every stock surface Logres currently has enough replacement/restoration evidence to suppress safely. P0166 begins H.2 on candidate `0.0.83-dev`: integration-owned semantic anchors with current accepted geometry preserved and incidental Context/pet dependencies removed.
 
 ## Phase status
 
@@ -22,7 +22,7 @@ P0164 resolves the H.1 stock-surface ownership/suppression audit. P0165 is prepa
 | E — Compass and Navigation | COMPLETE |
 | F — Quest Experience | COMPLETE |
 | G — Cinematic Camera | COMPLETE — P0162 RUNTIME PASS; ENVIRONMENTAL DEFERRALS PRESERVED |
-| H — Integration and Polish | ACTIVE — P0165 QUEST-OFFER STOCK SUPPRESSION RUNTIME GATE |
+| H — Integration and Polish | ACTIVE — H.2 INTEGRATION ANCHORS / AUTHORED LAYOUT |
 
 ## Phase G / G.5
 

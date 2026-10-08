@@ -113,7 +113,9 @@ P0133 is durable at `f2feead6` / `0.0.65-dev` and runtime + visual PASS:
 Accept-left / Decline-right matches Blizzard while the fallback remains visible,
 and integrated checks remain clean.
 
-P0165 is prepared on `0.0.82-dev` to close only the ordinary offer-control coexistence gap: exact-source-backed suppression/restoration of stock Accept/Decline with PvP-confirmation and auto-accept fail-open. Continue / Complete, rewards, gossip selection, and all broader Blizzard quest suppression remain separate gates.
+P0165 R1 is durable at `0e83af06` / `0.0.82-dev` and runtime-accepted for ordinary offer-control suppression/restoration. Stock Accept/Decline suppression applied with exact snapshot/restoration and zero observed suppression failures/secrets; production Decline remained event-confirmed. PvP-confirmation and auto-accept remain Blizzard-owned. Continue / Complete, rewards, gossip selection, and all broader Blizzard quest suppression remain separate gates.
+
+P0166 moves the active Phase H work to integration-owned semantic layout anchors; it does not expand any suppression or quest mutation boundary.
 
 ## Closed Phase G investigations
 

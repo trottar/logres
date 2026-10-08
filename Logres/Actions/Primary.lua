@@ -37,6 +37,7 @@ local Primary = Logres:RegisterModule("PrimaryActions", {
             -260,
             1
         )
+        Logres.Layout.Bind(cluster, "primaryActions", "CENTER", "CENTER")
 
         local bindingOwner = CreateFrame(
             "Frame",

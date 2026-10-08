@@ -1,6 +1,6 @@
 # P0165 — Quest-Offer Stock Accept/Decline Suppression
 
-Status: **R1 PREPARED — CORRECTIVE RUNTIME RETEST REQUIRED**
+Status: **R1 RUNTIME PASS — DURABLE AT `0e83af06`**
 Date: 2026-10-07
 Expected baseline: `61bc9a41f290e3fbb2b3282ed3d3e3ffaaa28c58`
 Candidate runtime: `0.0.82-dev`
@@ -86,3 +86,18 @@ Cause: P0162 changed `transitionExpectedZoom` to accept the selected easing func
 A Fishing follow-up produced repeated error/sound spam while camera motion partly continued. This is treated as recurrence of the same OnUpdate exception, not as evidence for a second Fishing-policy defect.
 
 P0165 R1 adds the missing `easingForName(self.transitionEasingName)` argument at the rebase call and extends the reactive-zoom static contract to forbid the stale call shape. Candidate runtime remains `0.0.82-dev` because P0165 has not been accepted. Quest suppression behavior is unchanged.
+
+## R1 runtime acceptance
+
+P0165 R1 is durable at `0e83af06cd03ea18671ff52ef8772bf2a4b8818a` / `0.0.82-dev`.
+
+The corrective gate passes:
+- base camera check and Run All clean;
+- natural Fishing re-exercised the previously crashing rebase path with no Lua-error/sound-spam recurrence and zero camera failures/secrets;
+- ordinary offer suppression applied with snapshot ready, exact 70245 source, and zero suppression failures/secrets/emergency fallback;
+- Immersion OFF/ON restored and reapplied ownership;
+- production Decline resolved by `QUEST_FINISHED`;
+- final Run All remained clean.
+
+Classification:
+**P0165 R1 RUNTIME PASS.**

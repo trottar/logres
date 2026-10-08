@@ -106,3 +106,30 @@ available.
 
 Exact pixel placement remains calibration work for the later whole-screen polish
 pass.
+
+## P0166 integration anchor implementation
+
+Phase H.2 implements the anchor-ownership rule through `Logres/Integration/Layout.lua`.
+
+The initial semantic anchor set is:
+- Navigation;
+- Active Quest;
+- Quest Dialogue;
+- Context Objective;
+- Context XP;
+- Player Reaction;
+- Target Fallback;
+- Primary Actions;
+- Secondary Actions;
+- Utility Actions;
+- Allies;
+- Class/Pet;
+- Passive Status.
+
+This checkpoint intentionally preserves the pre-P0166 accepted coordinates. The purpose is to centralize ownership and remove incidental cross-module geometry before visual calibration.
+
+Two old dependencies are explicitly removed:
+- Objective Progress no longer uses `LogresHUDTarget` as a placement anchor;
+- Pet actions no longer use `LogresHUDAllies` as a placement anchor.
+
+The semantic anchors do not authorize stock suppression or unrestricted player-authored layout profiles.

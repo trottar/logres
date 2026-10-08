@@ -24,6 +24,7 @@ local CLUSTER_CONFIG = {
         buttonPrefix = "LogresSecondaryActionButton",
         bindingOwnerName = "LogresSecondaryActionBindingOwner",
         bindingPrefix = "MULTIACTIONBAR1BUTTON",
+        layoutKey = "secondaryActions",
         firstActionSlot = 61,
         lastActionSlot = 72,
         x = -190,
@@ -35,6 +36,7 @@ local CLUSTER_CONFIG = {
         buttonPrefix = "LogresUtilityActionButton",
         bindingOwnerName = "LogresUtilityActionBindingOwner",
         bindingPrefix = "MULTIACTIONBAR2BUTTON",
+        layoutKey = "utilityActions",
         firstActionSlot = 49,
         lastActionSlot = 60,
         x = 190,
@@ -114,6 +116,7 @@ function SecondaryUtility:CreateFixedCluster(key, config)
         config.y,
         config.alpha
     )
+    Logres.Layout.Bind(frame, config.layoutKey, "CENTER", "CENTER")
 
     local bindingOwner = CreateFrame(
         "Frame",

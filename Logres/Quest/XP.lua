@@ -361,6 +361,7 @@ function XP:OnInitialize()
         0,
         -154
     )
+    Logres.Layout.Bind(root, "contextXP", "CENTER", "CENTER")
     root:SetFrameStrata("HIGH")
     root:EnableMouse(false)
     root:Hide()

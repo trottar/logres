@@ -6,7 +6,6 @@ local MAX_PRESENTATION_ROWS = 2
 local TEXT_LIMIT = 86
 local PRESENTATION_WIDTH = 520
 local PRESENTATION_HEIGHT = 32
-local PRESENTATION_GAP = 6
 local FALLBACK_Y = -5
 local PREVIEW_TEXT = "PREVIEW · Objective progress · 3/10"
 
@@ -792,25 +791,14 @@ function Progress:OnInitialize()
         PRESENTATION_HEIGHT
     )
 
-    local targetAnchor = _G.LogresHUDTarget
-
-    if targetAnchor then
-        root:SetPoint(
-            "BOTTOM",
-            targetAnchor,
-            "TOP",
-            0,
-            PRESENTATION_GAP
-        )
-    else
-        root:SetPoint(
-            "CENTER",
-            UIParent,
-            "CENTER",
-            0,
-            FALLBACK_Y
-        )
-    end
+    root:SetPoint(
+        "CENTER",
+        UIParent,
+        "CENTER",
+        0,
+        FALLBACK_Y
+    )
+    Logres.Layout.Bind(root, "contextObjective", "CENTER", "CENTER")
     root:SetFrameStrata("HIGH")
     root:EnableMouse(false)
     root:Hide()

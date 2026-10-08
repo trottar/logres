@@ -30,9 +30,10 @@ for frag in (
     'COLUMNS = 5',
     'ROWS = 2',
     'function Probe:ApplyLayout()',
-    'local allyAnchor = _G.LogresHUDAllies',
-    'self.cluster:SetPoint("TOP", allyAnchor, "BOTTOM", -45, -12)',
     'self.cluster:SetPoint("CENTER", UIParent, "CENTER", -375, -160)',
+    'Logres.Layout.Bind(',
+    '"classPet"',
+    'self.layoutAnchor = "classPet"',
     'self:ApplyLayout()',
 ):
     if frag not in probe: errors.append(f'probe missing R7 shared/layout fragment: {frag}')
@@ -51,6 +52,7 @@ for forbidden in (
     'SetText("A")',
     'PetActionBar:Hide',
     'LogresHUDResourceBar',
+    '_G.LogresHUDAllies',
     'COLUMNS = 10',
 ):
     if forbidden in probe: errors.append(f'probe contains rejected R7 fragment: {forbidden}')

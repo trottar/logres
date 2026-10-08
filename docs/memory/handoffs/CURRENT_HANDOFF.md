@@ -4,49 +4,55 @@ Authoritative state:
 `../CURRENT.md`.
 
 Latest verified durable checkpoint:
-P0164 `61bc9a41f290e3fbb2b3282ed3d3e3ffaaa28c58`; runtime remains `0.0.81-dev`.
+P0165 R1 `0e83af06cd03ea18671ff52ef8772bf2a4b8818a` / `0.0.82-dev`.
 
-## P0165 R1 corrective gate
+## P0165 R1 accepted
 
-P0165 candidate runtime remains `0.0.82-dev`. The initial P0165 runtime attempt is a blocking FAIL, not an accepted checkpoint.
+The initial P0165 runtime exposed the preserved camera rebase call-shape defect. R1 corrected only that stale four-argument call.
 
-Exact current Forever source:
-`Gethe/wow-ui-source@15666a6e67938a1ab5caf041406464251db111ca` (`1.60.1.70245`). Relevant QuestFrame Lua/XML blobs are unchanged from 70235.
+Final runtime evidence:
+- camera check PASS with zero failures/secrets;
+- Run All PASS;
+- natural Fishing re-exercised the rebase path with no Lua-error/sound-spam recurrence and camera failures=0;
+- ordinary quest-offer stock suppression applied with snapshot ready, exact 70245 source, and zero failures/secrets/emergency fallback;
+- Immersion OFF/ON restored/reapplied ownership;
+- production Decline completed via `QUEST_FINISHED`;
+- final Run All remained clean.
 
-P0165 suppresses only `QuestFrameAcceptButton` / `QuestFrameDeclineButton` for ordinary non-PvP, non-auto-accept offers when the proven Logres offer narrative/control surface is active. Technique: exact alpha/mouse snapshot, alpha 0 + mouse off, exact restore before Logres interaction withdrawal. No whole-QuestFrame hide, parent mutation, timer/polling, or broad Show/Hide hook.
+Classification:
+**P0165 R1 RUNTIME PASS. H.1 is closed for currently replacement-proven stock surfaces.**
 
-Unsupported PvP-confirmation, auto-accept, gamepad/hidden-button, missing/secret/unreadable, or unsafe protected/combat states fail open to Blizzard and do not expose Logres production offer actions.
+## P0166 R1 H.2 anchors
 
-## R0 runtime failure
+P0166 candidate runtime is `0.0.83-dev`.
 
-The quest-offer stock buttons were visibly hidden as intended, but integrated runtime failed in the camera engine:
-`Camera/WorldCombat.lua:896 attempt to compare nil with number`.
+The initial P0166 artifact was refused during shadow preflight before tracked writes: the new layout checker expected the PetAction `Layout.Bind` call on one line while the generated candidate used the intended multi-line form. R1 fixes only that static-contract self-mismatch; runtime candidate and policy are unchanged.
 
-The rebase path around line 1595 called the five-argument `transitionExpectedZoom(easingFunc, startZoom, targetZoom, duration, elapsed)` helper with the old four-argument shape. Screenshot locals (`easingFunc=11.099131`, `startZoom=5`, `targetZoom=2.5`, `duration=0.472958`, `elapsed=nil`) directly identify that argument shift. Fishing subsequently produced repeated error/sound spam consistent with the same OnUpdate exception recurring.
+It introduces integration-owned semantic anchors and migrates the current production Logres surfaces while intentionally preserving the existing accepted coordinates.
 
-P0165 R1 adds the missing `easingForName(self.transitionEasingName)` argument and a static call-shape contract. It does not change quest suppression behavior or camera policy.
+The two direct dependency corrections are:
+- Objective Progress: `LogresHUDTarget` -> `contextObjective`;
+- Pet action cluster: `LogresHUDAllies` -> `classPet`.
+
+No Blizzard suppression, secure routing, camera policy, or capability ownership changes.
 
 ## Runtime gate
 
 1. `/reload`.
-2. Phase G -> Camera Profile Check; Phase 0 -> Run All.
-3. Repeat one natural previously failing transition; one Fishing cast is sufficient. Require no Lua error or repeated error sound.
-4. Camera Profile Check again; require zero camera/reactive/profile failures and secret errors.
-5. Open one ordinary quest offer; stock Accept/Decline hidden, no invisible click regions.
-6. Quest Offer Stock Check while open: applied + snapshot ready + source commit + zero failures/secrets.
-7. Immersion OFF restores stock first; ON reapplies supported ownership.
-8. Use one Logres Accept or Decline; rerun Quest Offer Stock Check + Run All.
-
-## After PASS
-
-Close H.1 for all currently replacement-proven stock surfaces and move to H.2 authored integration anchors/default positions.
+2. `/logres layoutcheck`.
+3. Phase 0 -> Run All.
+4. Inspect ordinary world composition.
+5. Trigger XP and Objective Progress previews; verify central Context placement.
+6. Arm/show pet actions; verify lower-left class/pet placement.
+7. Report only actual overlap/position defects.
 
 ## Key references
 
+- `../evidence/P0166_R0_DELIVERY_PREFLIGHT_SELF_MISMATCH_2026-10-07.md`
 - `../CURRENT.md`
+- `../evidence/P0166_P0165_RUNTIME_PASS_2026-10-07.md`
 - `../evidence/P0165_R0_CAMERA_REBASE_RUNTIME_FAILURE_2026-10-07.md`
-- `../evidence/P0165_QUEST_OFFER_STOCK_SOURCE_AUDIT_2026-10-07.md`
-- `../patches/P0165_QUEST_OFFER_STOCK_SUPPRESSION.md`
-- `../evidence/P0164_BLIZZARD_SURFACE_OWNERSHIP_AUDIT_2026-10-07.md`
-- `../investigations/NPC_QUEST_INTERACTION_CAPABILITY.md`
+- `../patches/P0166_PHASE_H2_INTEGRATION_ANCHORS.md`
+- `../architecture/WORLD_FIRST_LAYOUT.md`
+- `../decisions/D-032_WORLD_FIRST_LAYOUT_AND_ACTION_ROLES.md`
 - `../roadmap/PHASE_H_INTEGRATION_POLISH.md`

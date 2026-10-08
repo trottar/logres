@@ -1,6 +1,6 @@
 # Phase H — Integration and Polish
 
-Status: ACTIVE — P0165 QUEST-OFFER STOCK SUPPRESSION RUNTIME GATE
+Status: ACTIVE — H.2 INTEGRATION ANCHORS / AUTHORED LAYOUT
 
 ## Product objective
 
@@ -68,7 +68,9 @@ P0164 uses Hide Anything as broad product guidance and source-backed MoveAny mec
 
 The audit does **not** authorize a generic Logres hide-anything framework. Broad hidden-parent ownership, global Show/SetShown forcing, timer retries, polling, and parent locking remain inappropriate without surface-specific evidence.
 
-P0165 is now prepared on candidate `0.0.82-dev`. Exact Forever `1.60.1.70245` source confirms the two stock offer buttons are direct `QuestFrameDetailPanel` children and separately identifies Blizzard-owned PvP-confirmation and auto-accept semantics. P0165 uses only alpha+mouse suppression on those two buttons for ordinary supported offers, exact restoration before Logres interaction withdrawal, and targeted detail-panel/state reconciliation. The QuestFrame root, progress/complete, rewards, gossip, and every unsupported state remain stock/fail-open. Runtime evidence is required before H.1 closes.
+P0165 R1 is durable at `0e83af06` / `0.0.82-dev` and runtime-accepted. Ordinary supported quest offers now use exact-source-backed stock Accept/Decline alpha+mouse suppression with exact restoration and zero observed suppression failures/secrets in the accepted gate. The preserved R0 camera rebase Lua failure was corrected without changing quest policy. H.1 is closed for currently replacement-proven stock surfaces.
+
+P0166 begins H.2 on candidate `0.0.83-dev`. `Integration/Layout.lua` owns named semantic anchors while preserving the current accepted coordinates. Objective Progress is decoupled from `LogresHUDTarget`; the pet-action cluster is decoupled from `LogresHUDAllies`. No new suppression or capability ownership is added.
 
 ## Execution order
 
@@ -422,3 +424,15 @@ P0153 records one unrelated final Run All camera World/Combat timeout as OPEN / 
 Preserve direct class-resource children, RuneFrame, TotemFrame, PetFrame, alternate
 power, and all unsupported special-control fallbacks until each domain is deliberately
 runtime/capability-proven.
+
+## P0166 — H.2 integration-owned anchors
+
+P0165 R1 closes H.1 for the currently replacement-proven stock surfaces.
+
+P0166 begins the authored-layout pass with a deliberately low-risk structural checkpoint: stable integration-owned anchors are established first, using the existing accepted coordinates. This makes later spacing/collision calibration explicit and centralized instead of hiding geometry in producer modules.
+
+The first dependency corrections are:
+- Objective Progress no longer anchors to the detached target fallback;
+- the pet-action cluster no longer anchors to the allies container.
+
+All stock fallback and secure/capability gates remain unchanged.
