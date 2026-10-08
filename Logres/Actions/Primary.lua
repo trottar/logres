@@ -351,3 +351,113 @@ function Primary:GetDebugStatus()
         specialPagingCoverage = "normal-pages-only",
     }
 end
+
+-- P0173: source-backed, read-only normal/secure-mode ownership gate.
+-- This is NOT authorization to hide MainActionBar: a normal-mode read does not
+-- establish combat-safe override/vehicle/possess transitions or editing.
+local PRIMARY_SPECIAL_FLAGS = {
+    "IsPossessBarVisible",
+    "HasVehicleActionBar",
+    "HasOverrideActionBar",
+    "HasTempShapeshiftActionBar",
+    "HasExtraActionBar",
+}
+
+local function primaryOrdinaryBoolean(value)
+    if issecretvalue and issecretvalue(value) then
+        return nil, "secret"
+    end
+    if type(value) ~= "boolean" then
+        return nil, "not-ordinary-boolean"
+    end
+    return value, nil
+end
+
+function Primary:GetStockOwnershipGate()
+    local special = false
+    local unresolved = 0
+    local details = {}
+    for index = 1, #PRIMARY_SPECIAL_FLAGS do
+        local name = PRIMARY_SPECIAL_FLAGS[index]
+        local func = C_ActionBar and C_ActionBar[name]
+        local state, reason
+        if type(func) ~= "function" then
+            reason = "api-unavailable"
+        else
+            local ok, result = pcall(func)
+            if ok then
+                state, reason = primaryOrdinaryBoolean(result)
+            else
+                reason = "api-failed"
+            end
+        end
+        if state == nil then
+            unresolved = unresolved + 1
+        elseif state then
+            special = true
+        end
+        details[#details + 1] = name .. ":"
+            .. (state == nil and reason or tostring(state))
+    end
+
+    -- Read the stock object identity, not protected presentation attributes,
+    -- alpha, Show state, or action data. Fixed 12-slot presence probe.
+    local stock = _G.MainActionBar
+    local slots = stock and stock.actionButtons
+    if issecretvalue and issecretvalue(slots) then
+        slots = nil
+    end
+    local rootReady = stock ~= nil and type(slots) == "table"
+    local buttonCount = 0
+    if rootReady then
+        for index = 1, BUTTON_COUNT do
+            local button = slots[index]
+            if issecretvalue and issecretvalue(button) then
+                break
+            end
+            if button == nil then
+                break
+            end
+            buttonCount = buttonCount + 1
+        end
+    end
+    local ordinaryMode = unresolved == 0 and not special
+    local routingReady = self.bindingRoutingEnabled == true
+        and self.bindingsApplied == true
+        and self.pendingBindingRefresh == false
+    local candidate = ordinaryMode
+        and rootReady and buttonCount == BUTTON_COUNT
+        and self.securePagingReady == true
+        and self.registeredCount == BUTTON_COUNT
+        and routingReady
+
+    local reason
+    if not rootReady or buttonCount ~= BUTTON_COUNT then
+        reason = "stock-root-unavailable"
+    elseif unresolved > 0 then
+        reason = "mode-unclassified"
+    elseif special then
+        reason = "special-mode-stock-required"
+    elseif not routingReady then
+        reason = "normal-routing-not-active"
+    elseif not self.securePagingReady then
+        reason = "secure-paging-not-ready"
+    else
+        reason = "normal-mode-candidate-only"
+    end
+    return {
+        sourcePresent = rootReady,
+        stockButtons = buttonCount,
+        flagsTotal = #PRIMARY_SPECIAL_FLAGS,
+        flagsUnresolved = unresolved,
+        specialActive = special,
+        normalMode = ordinaryMode,
+        routingReady = routingReady,
+        securePagingReady = self.securePagingReady == true,
+        candidateNormal = candidate,
+        status = reason,
+        flagDetails = table.concat(details, " "),
+        stockSuppressionAuthorized = false,
+        stockPreserved = true,
+    }
+end

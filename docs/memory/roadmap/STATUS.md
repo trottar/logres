@@ -315,3 +315,7 @@ GitHub main `95aaa593` / `0.0.87-dev` is verified. Uploaded post-login diagnosti
 ## P0172 — coordinated four-domain native access (2026-10-08)
 
 Against verified P0171 `26fa1ef7`, P0172 candidate `0.0.88-dev` implements a compact anchored access dock for navigation, full objective tracking, progress/status and micro-menu/bags, with native root capture/hide/restore, combat deferral and diagnostic counters. User-visible navigation/quest/menu functions remain reachable on demand. Main and pet protected action/control bars remain native until safe coverage exists; their remaining work is part of the same OPEN H.1 integration objective. Static source findings are not a full-screen runtime pass. Test screenshot, click regions, Blizzard lifecycle, manual access, OFF/ON and combat before accepting.
+
+### P0173 — primary stock ownership gate
+
+P0172 is verified on GitHub main `3a5028c8` / `0.0.88-dev`. User confirms most stock presentation folded and dock buttons working; Main normal primary remains visible. The final Native Access diagnostic was post-manual-open (0 folded/4 open), not an independent folded-persistence proof. P0173 `0.0.89-dev` source-backed read-only Primary ownership diagnostic is the current runtime candidate: classify ordinary Main 12-button source, five secure mode flags, current Logres routing/page readiness, while leaving Main and special controls stock. Phase H.1 remains OPEN, with next product gate combat-safe Main special/edit fallback and visual integration. Do not mistake diagnostics-only PASS for suppression.

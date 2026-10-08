@@ -8,34 +8,35 @@ project: logres
 
 ## Active Objective
 
-**Phase H.1 OPEN:** achieve one integrated world-first Immersion screen without redundant Blizzard presentation, while preserving every required stock information and secure-control fallback. User's 2026-10-08 screenshot proves prior selective suppression did not complete this. Diagnostics do not establish visible disappearance.
+**Phase H.1 OPEN:** finish the integrated world-first screen, preserving required Blizzard information and secure controls. User reports P0172 dock buttons work and most native Blizzard presentation is gone, with Main primary action bar still visible. The uploaded post-P0172 diagnostics pass but did not prove every stock domain stayed folded during an uninterrupted normal-world gameplay interval.
 
 ## Current Work Item
 
-**P0172 `0.0.88-dev` multi-domain native access/folding runtime candidate:** one coordinated Logres stock-access dock for minimap/navigation, all tracked objectives, status/progress bars and micro-menu/bags; fold only source-identified roots in Immersion ON, and restore them on player command or dock click. Keep a native-root show-state restoration snapshot and use `Hide` rather than alpha-only suppression to avoid invisible click regions. Module uses event-gated availability, combat-lockdown deferral, safe fail-open when roots are absent/unreadable or hide fails, and a permanent combat-release restoration route if disabled during combat. Add a semantic layout dock anchor and developer panel check. **MainActionBar/Override, PetFrame/PetActionBar and required special/secure controls remain stock**, because no combat-safe substitution is proven. This is one multi-domain trial, not whole-screen completion.
+**P0173 `0.0.89-dev` — Primary action/stock ownership runtime gate:** read-only, source-identified mode/readiness status for MainActionBar and the Logres secure Primary cluster. Add `primaryownershipcheck` (Phase C developer panel, slash command and Run All). No native Main mutation, no automatic Primary key routing, no protected readback, no deletion of special controls. A source-backed normal candidate is not combat-safe suppression authorization. H.1 remains open.
 
 ## Verified State
 
-GitHub main `26fa1ef7844e76e8c91016d0fe56f7f77458225d` contains P0171 docs-only correction; no runtime change after `95aaa593` P0170 `0.0.87-dev`. P0170 first-login Stock Replace Check (expected/requested/applied=true, pending=false, error=nil), one `PLAYER_ENTERING_WORLD` retry, Action Check, Layout Check (15/17) and Run All passed in uploaded diagnostics. Accepted narrow evidence does not replace actual full-screen visual proof. P0171 captured assistant process/scope failures in durable memory.
+GitHub `main` `3a5028c8f8cbf288a22b80d6de902dc7b2762b4e` contains P0172 `0.0.88-dev`. User confirms most stock elements no longer visible (except Main primary) and the dock controls work. Uploaded diagnostics: `nativeuicheck` PASS with `folded=0 open=4` after manual toggles, `layoutcheck` PASS 16/18, stock Bars 2–5 replacement PASS, `actioncheck` PASS, integrated Run All PASS. This is accepted only as stated; four-open diagnostic is not proof of four-folded persistence. Existing Primary diagnostic shows `keys=false/12` and `primaryRoutingOwned=false`; Main/Override and pet secure controls remain stock. P0171 scope/delivery failures stay recorded.
 
 ## Next Action
 
-Apply P0172 only after exact shadow candidate all static checkers + `git diff --check` PASS. Deploy and `/reload`, run Phase H Native Access Check before any Run All or Immersion toggles. Confirm source-proven domains folded and the slim Logres dock is visible; **visually inspect screenshot and click-through**, because stock code may show a root again. Test MAP / QUESTS / XP / MENU / STOCK dock toggles, mouse operation of restored Blizzard controls, Immersion OFF/ON, login, world transitions, and out-of-combat restoration. Phase H Layout Check should report 16 anchors/18 binds; Phase 0 Run All must remain PASS, no Lua, taint, protected or secret errors. On combat restoration deferral, do not call PASS until stock controls are accessible again. If protected roots reject mutation or re-show on events, record failure and correct narrowly. After runtime result, continue secure Main/Pet replacement/fallback and remaining per-surface integration in the same H.1 product objective.
+Apply P0173 after complete shadow static checker suite PASS; deploy and `/reload`. First run Phase C Primary Ownership Check **before Action Keys ON or Run All**; record normal/special mode API coverage and native 12-button presence. Then manually test Action Keys ON with an already-known harmless existing binding and normal mouse execution, Action Keys OFF stock recovery, and any naturally encountered page/special context (unavailable = environmental DEFERRED). Run Primary Ownership Check after each state, then Action Check, Native Access Check, and Run All. Screenshot normal display and inspect accessible stock controls. **Do not fold Main yet.** Next implementation must prove combat-time special-mode route, stock access/editing and restoration before suppressing Main.
 
 ## Success Criteria
 
-The four new domains can be folded and individually restored on demand without invisible clicks, failed native state, lost functionality or runtime errors; the authored access dock is in its semantic anchor, and all previous action/quest/camera behavior remains. Required Main/pet secure controls remain usable. All user-visible and addon-owned tests agree; no premature declaration of H.1 completion from a partial PASS.
+The read-only mode gate reports truthful ordinary/secret/missing classifications, Phase C command and Run All execute without Lua/taint/secret/protected errors, native stock remains accessible and working, and actual Primary keys/clicks plus OFF restoration are observed. A normal candidate alone never closes Main suppression or H.1.
 
 ## Do Not Reopen Without New Evidence
 
-User owns commits/pushes. No blanket Show hooks, polling, protected-state readback, persistent binding changes or combat-unsafe mutation. Do not hide Main/override or pet secure controls without proven in-combat safety, restore stock before withdrawal of Logres interaction, and fail open if native roots are unsafe. PvP remains a modifier; player exact HP/conventional health bar remains absent; enemy target remains sparse; target auras/ToT and party/compact groups stay stock. Preserve P0171 failure evidence.
+No MainActionBar Hide/alpha/click suppression before secure special-mode and combat transition proof. No automatic override key routing without proof. No blanket hooks, polling, protected readback, secret inspection, binding persistence or user-owned Git writes. Keep pet, party, special controls and target aura/ToT fallbacks. Player exact HP/conventional health bar remains absent, PvP remains a modifier. Preserve P0171 and P0172 negative/unproven evidence.
 
 ## Relevant References
 
-- `docs/memory/patches/P0172_NATIVE_ACCESS_INTEGRATION.md`
+- `docs/memory/patches/P0173_PRIMARY_OWNERSHIP_GATE.md`
+- `docs/memory/evidence/P0173_PRIMARY_OWNERSHIP_GATE_2026-10-08.md`
 - `docs/memory/evidence/P0172_NATIVE_SURFACE_SOURCE_AND_RUNTIME_GATE_2026-10-08.md`
 - `docs/memory/evidence/P0171_H1_SCOPE_AND_DELIVERY_FAILURES_2026-10-08.md`
 - `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`
-- `docs/memory/architecture/VISUAL_COMPONENT_INVENTORY.md`
 - `docs/memory/decisions/D-032_WORLD_FIRST_LAYOUT_AND_ACTION_ROLES.md`
+- `docs/memory/decisions/D-044_CLASS_PET_SPECIAL_CONTROL_SOURCE_AND_FALLBACK_POLICY.md`
 - `docs/ROADMAP.md`

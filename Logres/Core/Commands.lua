@@ -745,6 +745,30 @@ local function handleSideActionBindings(key, label, argument)
 end
 
 
+-- P0173 deliberately reports a capability gate, not a replacement PASS.
+local function runPrimaryOwnershipCheck()
+    local moduleStatus = Logres:GetModuleStatus("PrimaryActions")
+    local primary = Logres:GetModule("PrimaryActions")
+    local result = primary:GetStockOwnershipGate()
+    local measured = moduleStatus.initialized == true
+        and moduleStatus.enabled == true
+        and result.sourcePresent
+        and result.stockButtons == 12
+        and result.flagsUnresolved == 0
+    local classification = measured and "PASS" or "DEFERRED"
+    emit(string.format(
+        "Logres primaryownershipcheck: %s (normal=%s special=%s stock=%s buttons=%s flags=%s/%s route=%s paging=%s candidate=%s suppressAuthorized=false stockPreserved=true reason=%s)",
+        classification,
+        tostring(result.normalMode), tostring(result.specialActive),
+        tostring(result.sourcePresent), tostring(result.stockButtons),
+        tostring(result.flagsTotal - result.flagsUnresolved),
+        tostring(result.flagsTotal), tostring(result.routingReady),
+        tostring(result.securePagingReady),
+        tostring(result.candidateNormal), tostring(result.status)
+    ))
+    emit("Logres primaryownership modes: " .. result.flagDetails)
+end
+
 local function runStockReplacementCheck()
     local status =
         Logres:GetModuleStatus("StockActionReplacement")
@@ -4226,6 +4250,7 @@ local function runAllChecks()
     runQuestOfferStockSuppressionCheck()
     runPlayerHelpfulAuraCheck()
     runActionCheck()
+    runPrimaryOwnershipCheck()
     runStockReplacementCheck()
     runImmersionCheck()
     runQuietModeCheck()
@@ -4475,6 +4500,11 @@ local function handleCommand(message)
 
     if command == "stockreplace" then
         handleStockReplacement(argument)
+        return
+    end
+
+    if command == "primaryownershipcheck" then
+        runPrimaryOwnershipCheck()
         return
     end
 
@@ -4837,6 +4867,12 @@ Logres:RegisterDevPanelAction(
     "utilityKeysOff",
     "Utility Keys OFF",
     "utilitybindings off",
+    "C"
+)
+Logres:RegisterDevPanelAction(
+    "primaryOwnershipCheck",
+    "Primary Ownership Check",
+    "primaryownershipcheck",
     "C"
 )
 Logres:RegisterDevPanelAction(
