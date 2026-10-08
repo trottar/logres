@@ -70,6 +70,8 @@ function Context:ApplyPolicy(policyName)
     primary.cluster:SetAlpha(policy.primary)
     sides.clusters.secondary.frame:SetAlpha(policy.secondary)
     sides.clusters.utility.frame:SetAlpha(policy.utility)
+    sides.clusters.bar4.frame:SetAlpha(policy.secondary)
+    sides.clusters.bar5.frame:SetAlpha(policy.utility)
 
     self.policyName = policyName
     self.primaryAlpha = policy.primary

@@ -9,6 +9,8 @@ local STOCK_BARS = {
         frameName = "MultiBarBottomRight",
         buttonCount = 12,
     },
+    bar4 = { frameName = "MultiBarRight", buttonCount = 12 },
+    bar5 = { frameName = "MultiBarLeft", buttonCount = 12 },
 }
 
 local StockReplacement =
@@ -124,6 +126,10 @@ function StockReplacement:GetRoutingState()
         utility =
             actions:GetClusterDebugStatus("utility")
                 .bindingRoutingEnabled == true,
+        bar4 = actions:GetClusterDebugStatus("bar4")
+            .bindingRoutingEnabled == true,
+        bar5 = actions:GetClusterDebugStatus("bar5")
+            .bindingRoutingEnabled == true,
     }
 end
 
@@ -142,7 +148,9 @@ function StockReplacement:RestoreRouting(routing)
             routing.utility
         )
 
-    return secondaryOK and utilityOK
+    local bar4OK = actions:SetBindingRoutingEnabled("bar4", routing.bar4)
+    local bar5OK = actions:SetBindingRoutingEnabled("bar5", routing.bar5)
+    return secondaryOK and utilityOK and bar4OK and bar5OK
 end
 
 function StockReplacement:EnableReplacement()
@@ -175,6 +183,37 @@ function StockReplacement:EnableReplacement()
         return false
     end
 
+    local actions = Logres:GetModule("SecondaryUtilityActions")
+    if not actions:RefreshExtraVisibility() then
+        self.requestedEnabled = false
+        self.lastError = "Bar 4/5 source configuration unreadable"
+        return false
+    end
+    for _, key in ipairs({ "bar4", "bar5" }) do
+        local state = actions:GetClusterDebugStatus(key)
+        if not state.sourceVisibilityKnown
+            or (state.sourceEnabled and not state.shown)
+        then
+            self.requestedEnabled = false
+            self.lastError = "Bar " .. tostring(key)
+                .. " source configuration unavailable or Logres cluster absent"
+            return false
+        end
+    end
+
+    local bar4Snapshot, bar4Error = self:CaptureBar("bar4")
+    if not bar4Snapshot then
+        self.requestedEnabled = false
+        self.lastError = bar4Error
+        return false
+    end
+    local bar5Snapshot, bar5Error = self:CaptureBar("bar5")
+    if not bar5Snapshot then
+        self.requestedEnabled = false
+        self.lastError = bar5Error
+        return false
+    end
+
     local routing = self:GetRoutingState()
     local actions = Logres:GetModule("SecondaryUtilityActions")
 
@@ -194,15 +233,32 @@ function StockReplacement:EnableReplacement()
         return false
     end
 
+    if not actions:SetBindingRoutingEnabled("bar4", true) then
+        self:RestoreRouting(routing)
+        self.requestedEnabled = false
+        self.lastError = "could not enable Bar 4 Logres routing"
+        return false
+    end
+    if not actions:SetBindingRoutingEnabled("bar5", true) then
+        self:RestoreRouting(routing)
+        self.requestedEnabled = false
+        self.lastError = "could not enable Bar 5 Logres routing"
+        return false
+    end
+
     local suppressed, suppressError = pcall(function()
         self:SuppressBar(secondarySnapshot)
         self:SuppressBar(utilitySnapshot)
+        self:SuppressBar(bar4Snapshot)
+        self:SuppressBar(bar5Snapshot)
     end)
 
     if not suppressed then
         pcall(function()
             self:RestoreBar(secondarySnapshot)
             self:RestoreBar(utilitySnapshot)
+            self:RestoreBar(bar4Snapshot)
+            self:RestoreBar(bar5Snapshot)
         end)
 
         self:RestoreRouting(routing)
@@ -216,6 +272,8 @@ function StockReplacement:EnableReplacement()
     self.snapshot = {
         secondary = secondarySnapshot,
         utility = utilitySnapshot,
+        bar4 = bar4Snapshot,
+        bar5 = bar5Snapshot,
         routing = routing,
     }
 
@@ -252,6 +310,8 @@ function StockReplacement:DisableReplacement()
     local restored, restoreError = pcall(function()
         self:RestoreBar(snapshot.secondary)
         self:RestoreBar(snapshot.utility)
+        self:RestoreBar(snapshot.bar4)
+        self:RestoreBar(snapshot.bar5)
     end)
 
     if not restored then
@@ -323,7 +383,8 @@ end
 
 function StockReplacement:IsRoutingManaged(key)
     return self.appliedEnabled
-        and (key == "secondary" or key == "utility")
+        and (key == "secondary" or key == "utility"
+            or key == "bar4" or key == "bar5")
 end
 
 function StockReplacement:IsApplied()
@@ -351,11 +412,15 @@ end
 function StockReplacement:GetDebugStatus()
     local secondaryFrame = _G.MultiBarBottomLeft
     local utilityFrame = _G.MultiBarBottomRight
+    local bar4Frame = _G.MultiBarRight
+    local bar5Frame = _G.MultiBarLeft
     local actions = Logres:GetModule("SecondaryUtilityActions")
     local secondaryRouting =
         actions:GetClusterDebugStatus("secondary")
     local utilityRouting =
         actions:GetClusterDebugStatus("utility")
+    local bar4Routing = actions:GetClusterDebugStatus("bar4")
+    local bar5Routing = actions:GetClusterDebugStatus("bar5")
 
     return {
         moduleEnabled = self:IsEnabled(),
@@ -396,6 +461,20 @@ function StockReplacement:GetDebugStatus()
         utilityBindingsApplied =
             utilityRouting.bindingsApplied == true,
 
+        bar4FrameFound = bar4Frame ~= nil,
+        bar5FrameFound = bar5Frame ~= nil,
+        bar4Alpha = bar4Frame and bar4Frame:GetAlpha() or nil,
+        bar5Alpha = bar5Frame and bar5Frame:GetAlpha() or nil,
+        bar4FrameMouseEnabled = bar4Frame
+            and bar4Frame:IsMouseEnabled() == true or false,
+        bar5FrameMouseEnabled = bar5Frame
+            and bar5Frame:IsMouseEnabled() == true or false,
+        bar4ButtonMouseEnabledCount = countMouseEnabledButtons(bar4Frame),
+        bar5ButtonMouseEnabledCount = countMouseEnabledButtons(bar5Frame),
+        bar4RoutingEnabled = bar4Routing.bindingRoutingEnabled == true,
+        bar4BindingsApplied = bar4Routing.bindingsApplied == true,
+        bar5RoutingEnabled = bar5Routing.bindingRoutingEnabled == true,
+        bar5BindingsApplied = bar5Routing.bindingsApplied == true,
         mainActionBarSuppressed = false,
         unsupportedBarsSuppressed = false,
     }

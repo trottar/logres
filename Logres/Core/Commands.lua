@@ -489,6 +489,8 @@ local function runActionCheck()
 
     local secondary = sideDebug.secondary
     local utility = sideDebug.utility
+    local bar4 = sideDebug.bar4
+    local bar5 = sideDebug.bar5
 
     local primaryDeferredOK =
         primaryDebug.pendingBindingRefresh == false
@@ -533,6 +535,14 @@ local function runActionCheck()
         and utility.firstActionSlot == 49
         and utility.lastActionSlot == 60
         and utilityDeferredOK
+        and bar4.registeredCount == 12
+        and bar4.activationFeedbackReadyCount == 12
+        and bar4.firstActionSlot == 25
+        and bar4.lastActionSlot == 36
+        and bar5.registeredCount == 12
+        and bar5.activationFeedbackReadyCount == 12
+        and bar5.firstActionSlot == 37
+        and bar5.lastActionSlot == 48
         and contextStatus.initialized == true
         and contextStatus.enabled == true
         and contextDebug.moduleEnabled == true
@@ -561,6 +571,15 @@ local function runActionCheck()
             tostring(contextDebug.policyName),
             contextDebug.primaryAlpha,
             tostring(primaryDebug.specialPagingCoverage)
+        ))
+        emit(string.format(
+            "Logres action extras: Bar4 25-36 shown=%s routing=%s keys=%s Bar5 37-48 shown=%s routing=%s keys=%s",
+            boolText(bar4.shown),
+            boolText(bar4.bindingRoutingEnabled),
+            tostring(bar4.boundButtonCount),
+            boolText(bar5.shown),
+            boolText(bar5.bindingRoutingEnabled),
+            tostring(bar5.boundButtonCount)
         ))
         return
     end
@@ -748,6 +767,16 @@ local function runStockReplacementCheck()
             and debugStatus.secondaryBindingsApplied == true
             and debugStatus.utilityRoutingEnabled == true
             and debugStatus.utilityBindingsApplied == true
+            and debugStatus.bar4Alpha == 0
+            and debugStatus.bar5Alpha == 0
+            and debugStatus.bar4FrameMouseEnabled == false
+            and debugStatus.bar5FrameMouseEnabled == false
+            and debugStatus.bar4ButtonMouseEnabledCount == 0
+            and debugStatus.bar5ButtonMouseEnabledCount == 0
+            and debugStatus.bar4RoutingEnabled == true
+            and debugStatus.bar4BindingsApplied == true
+            and debugStatus.bar5RoutingEnabled == true
+            and debugStatus.bar5BindingsApplied == true
     end
 
     local passed =
@@ -756,6 +785,8 @@ local function runStockReplacementCheck()
         and debugStatus.moduleEnabled == true
         and debugStatus.secondaryFrameFound == true
         and debugStatus.utilityFrameFound == true
+        and debugStatus.bar4FrameFound == true
+        and debugStatus.bar5FrameFound == true
         and debugStatus.mainActionBarSuppressed == false
         and debugStatus.unsupportedBarsSuppressed == false
         and appliedConsistent
@@ -777,6 +808,19 @@ local function runStockReplacementCheck()
             boolText(debugStatus.utilityRoutingEnabled),
             boolText(debugStatus.utilityBindingsApplied),
             tostring(debugStatus.lastError)
+        ))
+        emit(string.format(
+            "Logres stockreplacecheck extras: bar4 alpha=%s mouse=%s/%s route=%s/%s bar5 alpha=%s mouse=%s/%s route=%s/%s",
+            tostring(debugStatus.bar4Alpha),
+            boolText(debugStatus.bar4FrameMouseEnabled),
+            tostring(debugStatus.bar4ButtonMouseEnabledCount),
+            boolText(debugStatus.bar4RoutingEnabled),
+            boolText(debugStatus.bar4BindingsApplied),
+            tostring(debugStatus.bar5Alpha),
+            boolText(debugStatus.bar5FrameMouseEnabled),
+            tostring(debugStatus.bar5ButtonMouseEnabledCount),
+            boolText(debugStatus.bar5RoutingEnabled),
+            boolText(debugStatus.bar5BindingsApplied)
         ))
         return
     end
@@ -816,7 +860,7 @@ local function handleStockReplacement(argument)
             emit(
                 "Logres: Stock Bars Replace "
                 .. string.upper(argument)
-                .. " applied for Bars 2-3."
+                .. " applied for Bars 2-5."
             )
         elseif result == "deferred" then
             emit(
@@ -4054,6 +4098,8 @@ local LAYOUT_EXPECTED = {
     { "LogresPrimaryActionCluster", "primaryActions" },
     { "LogresSecondaryActionCluster", "secondaryActions" },
     { "LogresUtilityActionCluster", "utilityActions" },
+    { "LogresBar4ActionCluster", "bar4Actions" },
+    { "LogresBar5ActionCluster", "bar5Actions" },
     { "LogresCompassFrame", "navigation" },
     { "LogresQuestXPPulse", "contextXP" },
     { "LogresQuestObjectiveProgress", "contextObjective" },

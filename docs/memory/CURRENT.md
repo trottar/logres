@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-10-07
+as_of: 2026-10-08
 project: logres
 ---
 
@@ -8,34 +8,34 @@ project: logres
 
 ## Active Objective
 
-**Phase H.1 reopened at the user's direction: finish removing redundant Blizzard presentation where Logres already has a complete safe replacement before H.2 visual calibration.** The previous H.1 closure overstated progress: P0165 hid only stock Quest Accept/Decline; the rest of the cited quiet/player/target/Bar 2–3 suppression predated Phase H. No blanket hiding or loss of required native controls is authorized.
+**Phase H.1 remains open: remove redundant Blizzard UI only where Logres supplies a real control/information replacement and a secure fail-open restoration path.** The user-provided 1916×1198 screenshot on 2026-10-08 is decisive visual evidence that numerous stock domains remain visible. An addon-owned suppression PASS is not a claim that the entire screenshot has been visually cleaned up. H.2 authored layout calibration must remain subordinated to this work.
 
 ## Current Work Item
 
-**P0168 R1 — ordinary supported QuestFrame offer-shell visual suppression, candidate `0.0.85-dev`.** Extend P0165's already runtime-accepted offer-only gate so that the *stock quest frame stays shown for internal lifecycle/escape*, but its redundant offer visual shell becomes alpha-zero and all captured descendant frame mouse regions are disabled. Use exact mouse/alpha snapshots, limited 512-frame recursion, secret-first fail-open, out-of-combat gating, and restore on Immersion OFF, action start/failure, event/quest state transition, or module disable. Progress, completion, reward, gossip, PvP-confirmation, auto-accept, and unsupported states stay native. Existing Quest Offer Stock Check reports addon-owned shell state. R0 failed before tracked writes because its checker looked for the wrong visual snapshot assignment; R1 repairs that contract and removes the false `QUEST_ITEM_UPDATE` restoration trigger. The candidate is **NOT runtime accepted** until in-game proof.
+**P0169 candidate `0.0.86-dev` — extend normal extra action source coverage to native Bar 4 (`MultiBarRight`, 25–36, `MULTIACTIONBAR3BUTTON`) and Bar 5 (`MultiBarLeft`, 37–48, `MULTIACTIONBAR4BUTTON`), with reversible stock suppression and an integrated five-cluster geometry revision.** Reuse established native-registered secure action-button primitive, routing and feedback, existing Controller-owned Immersion policy, combat deferral, precise alpha/mouse snapshots and restoration. Create two optional Logres 3×4 outer action clusters only when the player's native source bars were visible. Phase H Layout Check and Phase C Action/Stock Replace Checks gain extra-domain verification. No Primary/Override suppression is included; no other native UI can be removed without completing its capability gate.
 
 ## Verified State
 
-Verified P0167 main `f58bccfb91fe8f6165b543c936cea4bb0ac29a06` / `0.0.84-dev`; uploaded diagnostics show Phase H Layout Check 13 anchors, 15 bindings, zero failure/missing/mismatch, plus integrated Run All PASS. Phase G previously accepted for its observed scope. P0165 R1 supported offer Accept/Decline suppression and restoration passed; P0166 semantic layout anchors passed; P0167 panel registration passed. These do not establish whole QuestFrame suppression yet.
+GitHub main `b455e7cf32d03f51d15eb0a4e2b73e79b5c03bb5` / `0.0.85-dev` is verified. User confirmed P0168 R1 supported ordinary quest-offer shell was successful and pushed; earlier diagnostics passed for supported runtime scope. This does **not** prove screenshot-wide stock suppression. P0166 anchors/P0167 developer-panel Layout Check remain structurally accepted. Screenshot: pet portrait and native PetActionBar are not failed PlayerFrame suppression; DPS/Issue Reporter ownership is not established.
 
 ## Next Action
 
-Apply P0168 candidate only after shadow full-suite/static and git diff --check pass. Deploy to Forever test client, `/reload`; Phase H Quest Offer Stock Check and Phase 0 Run All must PASS. Open one **ordinary** quest offer: stock QuestFrame visual absent and no invisible click regions, Logres narrative/paging/buttons usable; test Immersion OFF restores full QuestFrame and ON removes it again; use a Logres Accept or Decline and ensure normal quest handoff/restoration. If untestable, record environmental deferral. Any Lua/taint/protected/secret failure blocks advancement. User pushes only after runtime PASS; verify main then address other eligible sub-surfaces before H.2 spacing.
+Apply P0169 only after its full pre-write shadow checker suite and diff check PASS. Deploy and `/reload`, then use Phase C Action Check and Stock Replace Check, Phase H Layout Check and Phase 0 Run All. Verify in one ordinary out-of-combat world screen: native Bar 4 and Bar 5 disappear if previously enabled while new Logres outer clusters retain real slot actions, binding, mouse execution; Bar 2–3 remain suppressed; stock Main, pet, minimap, tracker, XP and micro-menu remain usable. Test Immersion OFF/ON, stock editing recovery, normal combat and no Lua/taint/protected/secret errors. Runtime failure or missing/hidden original extra bars is a classified deferral, not PASS. User alone commits/pushes after test; verify remote main before next candidate.
 
 ## Success Criteria
 
-Normal supported offer: quest frame remains internally shown, its stock visuals and all captured mouse regions are suppressed, Logres narrative and actions operate, no invisible stock clickable areas, exact restore through preference and quest lifecycle. Unsupported offers and states show usable Blizzard UI; candidate checks and Run All pass; no errors. Visual proof is required, not implied by static checks.
+Supported native Bars 2–5 have corresponding Logres secure action surfaces, routing, feedback, stock alpha+mouse suppression and exact restoration; configured-hidden extra bars do not produce additional unwanted visible clusters; primary stock MainActionBar and all unsupported special bars remain accessible. At UI scale, five Logres action clusters occupy separate lower authored roles and Class/Pet is not overlapping Primary. Phase C/H/0 checks pass and user-observed screen and interaction agree with those checks. Do not mistake static-only success for runtime proof.
 
 ## Do Not Reopen Without New Evidence
 
-Existing Quiet Mode, Player/Target selective suppression and Bar 2–3 replacement are accepted for proven scope. Primary MainActionBar/Override and special actions require secure fallback + key routing; PetActionBar needs binding/edit/autocast/feedback coverage; minimap, Party/CompactParty, target auras/ToT, full Objective Tracker/log/watch, permanent XP, class/rune/totem/alternate power, nameplates and unsupported quest states remain native until their capability gaps are closed. No exact player HP/conventional health bar, PvP remains a modifier. The prior P0164 closure classification is superseded, but its blocker matrix remains evidence.
+Player exact HP/conventional player health bar remain absent; sparse enemy target excludes exact level/classification. PvP is a modifier. Existing Quiet Mode, selective Player/Target and offer suppression remain accepted only for proven scope. Main/OverrideActionBar needs vehicle/possess/bonus/special secure path, pet action needs editing/autocast/binding coverage, pet unit frame separate; minimap, full tracker, permanent XP, class/rune/totem, target aura/ToT, party/CompactParty and other native utilities stay stock until safe replacement/fallback. Never force stock suppression through polling, blanket hooks, protected-state inspection or hidden click regions.
 
 ## Relevant References
 
-- `docs/memory/evidence/P0168_QUEST_OFFER_SHELL_SOURCE_GATE_2026-10-07.md`
-- `docs/memory/patches/P0168_QUEST_OFFER_SHELL_SUPPRESSION.md`
+- `docs/memory/evidence/P0169_SCREENSHOT_GAP_2026-10-08.md`
+- `docs/memory/patches/P0169_STOCK_BAR_4_5_LAYOUT.md`
 - `docs/memory/evidence/P0164_BLIZZARD_SURFACE_OWNERSHIP_AUDIT_2026-10-07.md`
-- `docs/memory/patches/P0165_QUEST_OFFER_STOCK_SUPPRESSION.md`
-- `docs/memory/patches/P0167_LAYOUT_CHECK_PANEL_REGISTRATION.md`
+- `docs/memory/evidence/P0168_QUEST_OFFER_SHELL_SOURCE_GATE_2026-10-07.md`
+- `docs/memory/architecture/WORLD_FIRST_LAYOUT.md`
 - `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`
 - `docs/ROADMAP.md`

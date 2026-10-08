@@ -1,6 +1,6 @@
 # Phase H — Integration and Polish
 
-Status: ACTIVE — H.1 REOPENED, P0168 QUEST-OFFER SHELL RUNTIME GATE
+Status: ACTIVE — H.1 REOPENED, P0169 EXTRA BARS/LAYOUT RUNTIME GATE
 
 ## Product objective
 
@@ -444,3 +444,7 @@ All stock fallback and secure/capability gates remain unchanged.
 The user correctly rejected the notion that hiding only quest Accept/Decline in Phase H completed the original removal objective. P0164's ownership matrix remains useful for blockers but its closure classification is superseded. P0168 extends the P0165 ordinary offer ownership to the visible QuestFrame presentation, leaving the Blizzard quest frame shown for internal lifecycle/escape functions. The offer's Logres body/objectives and actions are already runtime-proven. Unsupported quest states (progress/complete/reward/gossip), special offers, missing/secret data, combat and unsafe frame capture fail open to Blizzard. No new primary-action/minimap/party/pet/full-tracker suppression is authorized without completing those capability gates.
 
 **Next:** in-game P0168 visual+interaction/restoration gate, then revisit remaining eligible *sub-surfaces*, then H.2 spacing. No static analysis is runtime PASS.
+
+## P0169 — combined action-source coverage and geometry (candidate)
+
+The user's production screenshot supersedes the misleading generalization that previous selective stock suppression had cleaned up the whole screen. P0169 adds **new working matches** for native Bar 4 and Bar 5 via 12 fixed-slot native-registered secure action buttons each, temporary matching bindings, native cooldown/activation state, and exact stock alpha/mouse restoration. The supplemental Logres clusters are visible only if their original native bar was visible at initialization. Excluded Main/Override and protected special states remain untouched. Integrating five clusters into distinct authored lower regions is a candidate positioning pass; all other geometry remains preserved except class/pet displacement. Check panel action+stock replacement+layout and visual/mouse behavior together. No untested suppression claim.

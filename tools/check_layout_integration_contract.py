@@ -24,6 +24,8 @@ CONSUMERS = {
         'layoutKey = "secondaryActions"',
         'layoutKey = "utilityActions"',
         'Logres.Layout.Bind(frame, config.layoutKey, "CENTER", "CENTER")',
+        'layoutKey = "bar4Actions"',
+        'layoutKey = "bar5Actions"',
     ),
     ADDON / "Navigation" / "Compass.lua": (
         'Logres.Layout.Bind(frame, "navigation", "TOP", "TOP")',
@@ -69,6 +71,8 @@ if LAYOUT.is_file():
         'primaryActions = {',
         'secondaryActions = {',
         'utilityActions = {',
+        'bar4Actions = {',
+        'bar5Actions = {',
         'allies = {',
         'classPet = {',
         'passiveStatus = {',

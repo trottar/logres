@@ -1,15 +1,9 @@
 # Current Handoff
 
-Authoritative state: `../CURRENT.md`. Verified main after P0167: `f58bccfb91fe8f6165b543c936cea4bb0ac29a06`, runtime `0.0.84-dev`, Layout Check 13 anchors / 15 binds / zero errors; Run All PASS.
+Authority: `../CURRENT.md`. Verified main `b455e7cf32d03f51d15eb0a4e2b73e79b5c03bb5` / `0.0.85-dev`, user-confirmed P0168 R1 quest-offer visual runtime success.
 
-## Phase H.1 reopened by user
+The 2026-10-08 user screenshot is authoritative negative screen-wide evidence. Stock Main, PetFrame/PetActionBar, multiple extra action bars, minimap, full Objective Tracker, XP bar and micro-menu are visible; some source domains remain deliberately unsuppressed. The lower-left health/power unit portrait is the pet, not a proven PlayerFrame regression. DPS/Issue Reporter provenance is not established. Do not claim a static suppression flag proves absence from the screen.
 
-P0164 incorrectly called suppression complete when most named hidden surfaces had been implemented before Phase H and the only new suppression was P0165's stock quest Accept/Decline. User requires finishing eligible redundant Blizzard presentation *before* H.2 visual calibration.
+P0169 is **candidate** `0.0.86-dev`: add Bar 4 and Bar 5 ordinary secure matching 3×4 clusters, reversible suppression/routing tied to Immersion, plus corrected five-cluster lower geometry and panel check coverage. Do not claim runtime PASS until in-client checks and screenshot. Main/override, pet edit/secure-mode, full minimap/tracker/XP and unowned utility surfaces stay stock. Do not invent special action coverage.
 
-## P0168 R1 candidate
-
-Source-backed Forever `70245` ordinary quest-offer stock visual suppression expands the existing P0165 ownership, with the full stock QuestFrame staying shown for lifecycle/escape. Its stock shell is alpha-zero and its captured mouse subtree is disabled only when Logres narrative and production actions own the ordinary offer. Exact restore/fail-open for unsupported and state transitions; combat/secret/missing/capture failures refuse suppression. No Main/Override special, full tracker, minimap, party, pet, aura, or XP domain removal.
-
-No runtime PASS is claimed. Static checker + in-game visual/interaction, Immersion OFF/ON, quest accept/decline, and no-error proof gate the patch. After verified push, select the next source-proven redundant sub-surface before H.2 geometry.
-
-R0 failed in a pre-write shadow checker (`visualSnapshot =` contract mismatch). R1 corrects it and removes inappropriate `QUEST_ITEM_UPDATE` restoration during a still-open ordinary offer. All runtime proof remains pending.
+Apply with pre-write shadow suite, deploy; panel Phase C Action Check and Stock Replace Check, Phase H Layout Check, Phase 0 Run All; validate one normal screen including Immersion OFF/ON and action clicks/bindings; stop on errors. After pushed main verification, continue the remaining eligible safe slices, not the notion that H.1 is finished.

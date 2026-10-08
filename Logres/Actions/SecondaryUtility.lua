@@ -16,7 +16,26 @@ local ACTION_EVENTS = {
     "UPDATE_BINDINGS",
     "PLAYER_REGEN_ENABLED",
     "PLAYER_ENTERING_WORLD",
+    "EDIT_MODE_LAYOUTS_UPDATED",
 }
+
+local EXTRA_KEYS = { "bar4", "bar5" }
+
+-- Source configuration is the Blizzard-owned boolean setting, not secret-capable
+-- stock presentation readback. Never branch on an unclassified value.
+local function configuredExtraBar(setting)
+    if not Settings or type(Settings.GetValue) ~= "function" then
+        return nil
+    end
+    local ok, raw = pcall(Settings.GetValue, setting)
+    if not ok or (issecretvalue and issecretvalue(raw)) then
+        return nil
+    end
+    if type(raw) ~= "boolean" then
+        return nil
+    end
+    return raw
+end
 
 local CLUSTER_CONFIG = {
     secondary = {
@@ -30,6 +49,34 @@ local CLUSTER_CONFIG = {
         x = -190,
         y = -260,
         alpha = 0.88,
+    },
+    bar4 = {
+        frameName = "LogresBar4ActionCluster",
+        buttonPrefix = "LogresBar4ActionButton",
+        bindingOwnerName = "LogresBar4ActionBindingOwner",
+        bindingPrefix = "MULTIACTIONBAR3BUTTON",
+        layoutKey = "bar4Actions",
+        stockFrameName = "MultiBarRight",
+        visibilitySetting = "PROXY_SHOW_ACTIONBAR_4",
+        firstActionSlot = 25,
+        lastActionSlot = 36,
+        x = -460,
+        y = -350,
+        alpha = 0.88,
+    },
+    bar5 = {
+        frameName = "LogresBar5ActionCluster",
+        buttonPrefix = "LogresBar5ActionButton",
+        bindingOwnerName = "LogresBar5ActionBindingOwner",
+        bindingPrefix = "MULTIACTIONBAR4BUTTON",
+        layoutKey = "bar5Actions",
+        stockFrameName = "MultiBarLeft",
+        visibilitySetting = "PROXY_SHOW_ACTIONBAR_5",
+        firstActionSlot = 37,
+        lastActionSlot = 48,
+        x = 460,
+        y = -350,
+        alpha = 0.76,
     },
     utility = {
         frameName = "LogresUtilityActionCluster",
@@ -48,6 +95,7 @@ local CLUSTER_CONFIG = {
 local SecondaryUtility =
     Logres:RegisterModule("SecondaryUtilityActions", {
         OnInitialize = function(self)
+            self.extraSourceVisibility = {}
             self.clusters = {
                 secondary = self:CreateFixedCluster(
                     "secondary",
@@ -57,6 +105,8 @@ local SecondaryUtility =
                     "utility",
                     CLUSTER_CONFIG.utility
                 ),
+                bar4 = self:CreateFixedCluster("bar4", CLUSTER_CONFIG.bar4),
+                bar5 = self:CreateFixedCluster("bar5", CLUSTER_CONFIG.bar5),
             }
 
             local eventFrame = CreateFrame("Frame")
@@ -84,7 +134,12 @@ local SecondaryUtility =
 
             self.clusters.secondary.frame:Show()
             self.clusters.utility.frame:Show()
-
+            for _, key in ipairs(EXTRA_KEYS) do
+                local cluster = self.clusters[key]
+                self:RegisterCluster(cluster)
+                self:RefreshBindingLabels(cluster)
+            end
+            self:RefreshExtraVisibility()
             self:UpdateAll()
         end,
 
@@ -98,6 +153,12 @@ local SecondaryUtility =
 
                 self.clusters.secondary.frame:Hide()
                 self.clusters.utility.frame:Hide()
+                for _, key in ipairs(EXTRA_KEYS) do
+                    local cluster = self.clusters[key]
+                    self:SetBindingRoutingEnabled(key, false)
+                    self:UnregisterCluster(cluster)
+                    cluster.frame:Hide()
+                end
             else
                 Logres:DevPrint(
                     "SecondaryUtilityActions disable requested during "
@@ -106,6 +167,27 @@ local SecondaryUtility =
             end
         end,
     })
+
+function SecondaryUtility:RefreshExtraVisibility()
+    if InCombatLockdown() then
+        return false
+    end
+    local ready = true
+    for _, key in ipairs(EXTRA_KEYS) do
+        local cluster = self.clusters[key]
+        local sourceEnabled = configuredExtraBar(CLUSTER_CONFIG[key].visibilitySetting)
+        self.extraSourceVisibility[key] = sourceEnabled
+        if sourceEnabled == true then
+            cluster.frame:Show()
+        else
+            cluster.frame:Hide()
+            if sourceEnabled == nil then
+                ready = false
+            end
+        end
+    end
+    return ready
+end
 
 function SecondaryUtility:CreateFixedCluster(key, config)
     local frame = ActionButton.CreateCluster(
@@ -247,6 +329,9 @@ end
 function SecondaryUtility:UpdateAll()
     ActionButton.UpdateAll(self.clusters.secondary.buttons)
     ActionButton.UpdateAll(self.clusters.utility.buttons)
+    for _, key in ipairs(EXTRA_KEYS) do
+        ActionButton.UpdateAll(self.clusters[key].buttons)
+    end
 end
 
 function SecondaryUtility:UpdateSlot(actionSlot)
@@ -257,15 +342,23 @@ function SecondaryUtility:UpdateSlot(actionSlot)
         return
     end
 
-    ActionButton.UpdateSlot(
-        self.clusters.utility.buttons,
-        actionSlot
-    )
+    if ActionButton.UpdateSlot(self.clusters.utility.buttons, actionSlot) then
+        return
+    end
+    for _, key in ipairs(EXTRA_KEYS) do
+        if ActionButton.UpdateSlot(self.clusters[key].buttons, actionSlot) then
+            return
+        end
+    end
 end
 
 function SecondaryUtility:HandleEvent(event, ...)
+    if event == "EDIT_MODE_LAYOUTS_UPDATED" then
+        self:RefreshExtraVisibility()
+        return
+    end
     if event == "PLAYER_REGEN_ENABLED" then
-        for _, key in ipairs({ "secondary", "utility" }) do
+        for _, key in ipairs({ "secondary", "utility", "bar4", "bar5" }) do
             local cluster = self.clusters[key]
 
             if cluster.pendingBindingRefresh then
@@ -277,7 +370,7 @@ function SecondaryUtility:HandleEvent(event, ...)
     end
 
     if event == "UPDATE_BINDINGS" then
-        for _, key in ipairs({ "secondary", "utility" }) do
+        for _, key in ipairs({ "secondary", "utility", "bar4", "bar5" }) do
             local cluster = self.clusters[key]
 
             self:RefreshBindingLabels(cluster)
@@ -323,6 +416,10 @@ function SecondaryUtility:GetClusterDebugStatus(key)
 
     return {
         shown = cluster.frame and cluster.frame:IsShown() or false,
+        sourceEnabled = CLUSTER_CONFIG[key].stockFrameName == nil
+            or self.extraSourceVisibility[key] == true,
+        sourceVisibilityKnown = CLUSTER_CONFIG[key].stockFrameName == nil
+            or self.extraSourceVisibility[key] ~= nil,
         buttonCount = cluster.buttons and #cluster.buttons or 0,
         registeredCount = cluster.registeredCount or 0,
         activationFeedbackReadyCount =
@@ -343,6 +440,8 @@ function SecondaryUtility:GetDebugStatus()
         moduleEnabled = self:IsEnabled(),
         secondary = self:GetClusterDebugStatus("secondary"),
         utility = self:GetClusterDebugStatus("utility"),
+        bar4 = self:GetClusterDebugStatus("bar4"),
+        bar5 = self:GetClusterDebugStatus("bar5"),
         stockBarsSuppressed = false,
     }
 end

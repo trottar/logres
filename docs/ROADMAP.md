@@ -235,3 +235,7 @@ authored layout -> final polish.
 ### P0168 correction to H.1 sequencing
 
 P0167 is runtime-confirmed at `0.0.84-dev`; all panel/layout checks passed. The user's explicit requirement is to finish safe Blizzard duplication removal *before* visual positioning. P0164's H.1 closure was premature. P0168 is a candidate to suppress the entire **ordinary quest-offer shell presentation** using the already accepted Logres offer surface, while preserving Blizzard's QuestFrame lifecycle/escape and every unsupported quest state. No broader removal is implied until a specific replacement/fallback is proved.
+
+### P0169 — screenshot-backed consolidation candidate (2026-10-08)
+
+The user-provided 1916×1198 screenshot documents unsuppressed native surfaces despite domain-level check PASSes. P0169 `0.0.86-dev` prepares one runtime trial combining source-supported secure Bar 4/5 matching, reversible native Bar 2–5 suppression, and a five-cluster lower-position layout. The MainActionBar/Override, pet editing/action fallback, minimap, full Objective Tracker, XP bar, menu, party and special/class controls remain native, deliberately; broad hiding would remove unproven information/controls. H.1 stays active until the screenshot-visible gaps are addressed safely; the new layout is an intermediate calibration candidate, not completed H.2.

@@ -1,6 +1,8 @@
 # Roadmap Status
 
-As of 2026-10-07.
+As of 2026-10-08.
+
+Current checkpoint: P0168 R1 is verified and user-confirmed; P0169 is a Bars 4–5/layout candidate, not runtime-accepted. Earlier P0168 runtime-pending prose below is historical.
 
 ## Active work stream
 
@@ -297,3 +299,7 @@ The ownership matrix confirms existing runtime-proven suppression for Quiet Mode
 Hide Anything-style product guidance plus source-backed MoveAny mechanics were reviewed. Logres adopts only per-surface snapshot/restore, appropriate alpha+mouse or hidden-parent mechanics, combat protection, and evidence-specific reconciliation; it does not adopt blanket hiding, polling, timer retry loops, or permanent parent locks.
 
 P0165 is the selected first new suppression slice: stock quest-offer Accept/Decline controls only, after exact Forever source/lifecycle verification. The whole QuestFrame and all unsupported quest/gossip states remain Blizzard-owned.
+
+## P0169 — screenshot-grounded Bar 4–5 and layout candidate (2026-10-08)
+
+The verified P0168 main `b455e7cf` and user-confirmed ordinary quest-offer suppression do not establish whole-screen stock-UI completion. The current screenshot reveals significant native presentation still visible. This is negative integration evidence. P0169 candidate `0.0.86-dev` adds source-backed Bar 4/5 secure Logres clusters + reversible normal-bar suppression, extends layout anchors from 13 to 15, and calibrates five ordinary action clusters. Main/Override, PetActionBar/PetFrame, minimap, full tracker, permanent XP, micro-menu and other unsupported controls stay stock and accessible. H.1 is ACTIVE; runtime/manual visual PASS is required before checkpoint acceptance; H.2 final layout is not closed.
