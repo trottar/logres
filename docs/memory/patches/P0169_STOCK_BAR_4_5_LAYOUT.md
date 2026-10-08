@@ -25,3 +25,7 @@ No native MainActionBar or override/possess/vehicle/bonus/pet secure suppression
 5. User commits/pushes only after runtime acceptance; assistant verifies main.
 
 Source: `Gethe/wow-ui-source@15666a6e67938a1ab5caf041406464251db111ca` `Blizzard_ActionBar/Shared/MultiActionBars.{lua,xml}`. Preserve screenshot-negative evidence even on success.
+
+## Post-push runtime finding — 2026-10-08
+
+Verified pushed main `74ff4156376c40d96efc100ed2f33415e6462291` / `0.0.86-dev`. Uploaded diagnostics after the user reported "seems okay so far" show the initial `stockreplacecheck` falsely PASS with `requested=false applied=false pending=false` and `error=Bar 4/5 source configuration unreadable`, while `action extras` were hidden. Only after `Run All` temporarily flipped Immersion did source config and suppression become ready (`requested=true applied=true`, Bar 2–5 native alpha=0/mouse disabled, routing=true, 15 anchors/17 binds zero failures). This is not clean-login PASS. P0170 corrects initialization/recovery and the checker, and requires the first stock check **before** any preference mutation. Preserve this finding permanently.

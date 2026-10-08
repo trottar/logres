@@ -37,6 +37,10 @@ if REPLACEMENT.is_file():
         '"PLAYER_REGEN_ENABLED"',
         "InCombatLockdown()",
         "function StockReplacement:RequestEnabled(enabled)",
+        "self.sourceDeferrals = self.sourceDeferrals + 1",
+        "self.retryCount = self.retryCount + 1",
+        "self.lastRetryEvent = event",
+        "self.pending = true",
         "function StockReplacement:IsRoutingManaged(key)",
         "function StockReplacement:GetDebugStatus()",
         "mainActionBarSuppressed = false",
@@ -79,6 +83,10 @@ if COMMANDS.is_file():
         'replacement owns this routing domain. Turn Stock Bars "',
         '"Replace OFF first."',
         "runStockReplacementCheck()",
+        "local lifecycleConsistent =",
+        "debugStatus.lastError == nil",
+        "debugStatus.snapshotReady == expectedEnabled",
+        "Logres stockreplacecheck startup: deferrals=%s retries=%s lastEvent=%s",
     ]
 
     for fragment in required:

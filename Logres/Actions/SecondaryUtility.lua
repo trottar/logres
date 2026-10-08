@@ -176,14 +176,17 @@ function SecondaryUtility:RefreshExtraVisibility()
     for _, key in ipairs(EXTRA_KEYS) do
         local cluster = self.clusters[key]
         local sourceEnabled = configuredExtraBar(CLUSTER_CONFIG[key].visibilitySetting)
-        self.extraSourceVisibility[key] = sourceEnabled
-        if sourceEnabled == true then
+        if sourceEnabled ~= nil then
+            self.extraSourceVisibility[key] = sourceEnabled
+        else
+            -- Keep the last known safe presentation; a transient nil
+            -- must never hide Logres while stock is suppressed.
+            ready = false
+        end
+        if self.extraSourceVisibility[key] == true then
             cluster.frame:Show()
         else
             cluster.frame:Hide()
-            if sourceEnabled == nil then
-                ready = false
-            end
         end
     end
     return ready
@@ -353,9 +356,13 @@ function SecondaryUtility:UpdateSlot(actionSlot)
 end
 
 function SecondaryUtility:HandleEvent(event, ...)
-    if event == "EDIT_MODE_LAYOUTS_UPDATED" then
+    if event == "EDIT_MODE_LAYOUTS_UPDATED"
+        or event == "PLAYER_ENTERING_WORLD"
+    then
         self:RefreshExtraVisibility()
-        return
+        if event == "EDIT_MODE_LAYOUTS_UPDATED" then
+            return
+        end
     end
     if event == "PLAYER_REGEN_ENABLED" then
         for _, key in ipairs({ "secondary", "utility", "bar4", "bar5" }) do

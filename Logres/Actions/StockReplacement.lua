@@ -19,6 +19,9 @@ local StockReplacement =
             self.requestedEnabled = false
             self.appliedEnabled = false
             self.pending = false
+            self.sourceDeferrals = 0
+            self.retryCount = 0
+            self.lastRetryEvent = nil
             self.snapshot = nil
             self.lastError = nil
 
@@ -31,6 +34,8 @@ local StockReplacement =
 
         OnEnable = function(self)
             self.eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+            self.eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+            self.eventFrame:RegisterEvent("EDIT_MODE_LAYOUTS_UPDATED")
 
             self:OwnCleanup(function()
                 self.eventFrame:UnregisterAllEvents()
@@ -39,6 +44,9 @@ local StockReplacement =
 
         OnDisable = function(self)
             if not self.appliedEnabled then
+                self.requestedEnabled = false
+                self.pending = false
+                self.lastError = nil
                 return
             end
 
@@ -165,6 +173,10 @@ function StockReplacement:EnableReplacement()
         return false
     end
 
+    -- Combat already gates above. Do not carry a stale deferral into a
+    -- hard failure or a successful application.
+    self.pending = false
+
     local secondarySnapshot, secondaryError =
         self:CaptureBar("secondary")
 
@@ -185,8 +197,12 @@ function StockReplacement:EnableReplacement()
 
     local actions = Logres:GetModule("SecondaryUtilityActions")
     if not actions:RefreshExtraVisibility() then
-        self.requestedEnabled = false
-        self.lastError = "Bar 4/5 source configuration unreadable"
+        -- Settings.GetValue can be unavailable at PLAYER_LOGIN.
+        -- Preserve native bars, desired state, and retry only on
+        -- Blizzard lifecycle events; no timer or polling.
+        self.pending = true
+        self.sourceDeferrals = self.sourceDeferrals + 1
+        self.lastError = "awaiting-Bar-4/5-source-configuration"
         return false
     end
     for _, key in ipairs({ "bar4", "bar5" }) do
@@ -360,11 +376,20 @@ function StockReplacement:RequestEnabled(enabled)
         return true, "applied"
     end
 
+    if self.pending and self.requestedEnabled then
+        return false, "deferred"
+    end
     return false, "failed"
 end
 
 function StockReplacement:HandleEvent(event)
-    if event == "PLAYER_REGEN_ENABLED" and self.pending then
+    -- Retry only on lifecycle events; no periodic work.
+    if self.pending and (event == "PLAYER_REGEN_ENABLED"
+        or event == "PLAYER_ENTERING_WORLD"
+        or event == "EDIT_MODE_LAYOUTS_UPDATED")
+    then
+        self.retryCount = self.retryCount + 1
+        self.lastRetryEvent = event
         self:ApplyRequestedState()
     end
 end
@@ -376,6 +401,9 @@ function StockReplacement:GetRecoveryStatus()
         appliedEnabled = self.appliedEnabled == true,
         pending = self.pending == true,
         snapshotReady = self.snapshot ~= nil,
+        sourceDeferrals = self.sourceDeferrals,
+        retryCount = self.retryCount,
+        lastRetryEvent = self.lastRetryEvent,
         routingManaged = self.appliedEnabled == true,
         lastError = self.lastError,
     }
@@ -429,6 +457,9 @@ function StockReplacement:GetDebugStatus()
         pending = self.pending == true,
         lastError = self.lastError,
         snapshotReady = self.snapshot ~= nil,
+        sourceDeferrals = self.sourceDeferrals,
+        retryCount = self.retryCount,
+        lastRetryEvent = self.lastRetryEvent,
 
         secondaryFrameFound = secondaryFrame ~= nil,
         utilityFrameFound = utilityFrame ~= nil,

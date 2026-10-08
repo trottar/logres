@@ -752,6 +752,15 @@ local function runStockReplacementCheck()
         Logres:GetModule("StockActionReplacement")
     local debugStatus = replacement:GetDebugStatus()
 
+    local expectedEnabled =
+        Logres:GetPreference("immersionEnabled") == true
+    local lifecycleConsistent =
+        debugStatus.requestedEnabled == expectedEnabled
+        and debugStatus.appliedEnabled == expectedEnabled
+        and debugStatus.pending == false
+        and debugStatus.lastError == nil
+        and debugStatus.snapshotReady == expectedEnabled
+
     local appliedConsistent = true
 
     if debugStatus.appliedEnabled then
@@ -789,11 +798,13 @@ local function runStockReplacementCheck()
         and debugStatus.bar5FrameFound == true
         and debugStatus.mainActionBarSuppressed == false
         and debugStatus.unsupportedBarsSuppressed == false
+        and lifecycleConsistent
         and appliedConsistent
 
     if passed then
         emit(string.format(
-            "Logres stockreplacecheck: PASS (requested=%s applied=%s pending=%s bar2Alpha=%s bar2Mouse=%s/%s bar3Alpha=%s bar3Mouse=%s/%s secondaryRouting=%s/%s utilityRouting=%s/%s error=%s)",
+            "Logres stockreplacecheck: PASS (expected=%s requested=%s applied=%s pending=%s bar2Alpha=%s bar2Mouse=%s/%s bar3Alpha=%s bar3Mouse=%s/%s secondaryRouting=%s/%s utilityRouting=%s/%s error=%s)",
+            boolText(expectedEnabled),
             boolText(debugStatus.requestedEnabled),
             boolText(debugStatus.appliedEnabled),
             boolText(debugStatus.pending),
@@ -822,13 +833,20 @@ local function runStockReplacementCheck()
             boolText(debugStatus.bar5RoutingEnabled),
             boolText(debugStatus.bar5BindingsApplied)
         ))
+        emit(string.format(
+            "Logres stockreplacecheck startup: deferrals=%s retries=%s lastEvent=%s",
+            tostring(debugStatus.sourceDeferrals),
+            tostring(debugStatus.retryCount),
+            tostring(debugStatus.lastRetryEvent)
+        ))
         return
     end
 
     emit(string.format(
-        "Logres stockreplacecheck: FAIL (initialized=%s enabled=%s requested=%s applied=%s pending=%s frames=%s/%s alphas=%s/%s frameMouse=%s/%s buttonMouse=%s/%s routing=%s/%s/%s/%s error=%s)",
+        "Logres stockreplacecheck: FAIL (initialized=%s enabled=%s expected=%s requested=%s applied=%s pending=%s frames=%s/%s alphas=%s/%s frameMouse=%s/%s buttonMouse=%s/%s routing=%s/%s/%s/%s error=%s)",
         tostring(status.initialized),
         tostring(status.enabled),
+        tostring(expectedEnabled),
         tostring(debugStatus.requestedEnabled),
         tostring(debugStatus.appliedEnabled),
         tostring(debugStatus.pending),
@@ -845,6 +863,12 @@ local function runStockReplacementCheck()
         tostring(debugStatus.utilityRoutingEnabled),
         tostring(debugStatus.utilityBindingsApplied),
         tostring(debugStatus.lastError)
+    ))
+    emit(string.format(
+        "Logres stockreplacecheck startup: deferrals=%s retries=%s lastEvent=%s",
+        tostring(debugStatus.sourceDeferrals),
+        tostring(debugStatus.retryCount),
+        tostring(debugStatus.lastRetryEvent)
     ))
 end
 
