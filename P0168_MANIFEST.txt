@@ -1,0 +1,21 @@
+P0168 — H.1 ordinary quest-offer visual shell
+Baseline: f58bccfb91fe8f6165b543c936cea4bb0ac29a06
+Runtime: 0.0.85-dev
+Files:
+  Logres/Quest/OfferStockSuppression.lua
+  Logres/Core/Commands.lua
+  Logres/Core/Bootstrap.lua
+  Logres/Logres.toc
+  tools/check_quest_offer_stock_suppression_contract.py
+  docs/memory/CURRENT.md
+  docs/memory/handoffs/CURRENT_HANDOFF.md
+  docs/memory/investigations/ACTIVE.md
+  docs/memory/roadmap/STATUS.md
+  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+  docs/ROADMAP.md
+  docs/memory/2026-10-07.md
+  docs/memory/evidence/P0168_QUEST_OFFER_SHELL_SOURCE_GATE_2026-10-07.md
+  docs/memory/patches/P0168_QUEST_OFFER_SHELL_SUPPRESSION.md
+
+Checker suite: PASS
+git diff --check: PASS

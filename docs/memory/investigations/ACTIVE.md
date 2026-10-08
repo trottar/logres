@@ -1,3 +1,9 @@
+## H.1 reopened — remaining redundant Blizzard UI (P0168)
+
+P0168 R0 failed in the shadow checker before tracked writes: the new contract demanded a non-existent `visualSnapshot =` assignment while generated source correctly used `local visualSnapshot, visualError =`. R1 corrects the self-mismatch and removes the unneeded `QUEST_ITEM_UPDATE` restore trigger, because Blizzard processes that event without leaving an ordinary quest offer. The prior failed delivery is preserved as negative evidence.
+
+The user correctly identified that the previous closure counted D/C suppression as if Phase H itself had finished hiding the UI. P0165 suppressed only Accept/Decline. P0168 now targets the remainder of *supported ordinary quest-offer* presentation, not an unsupported quest state. This is candidate work; no runtime PASS until manually observed. Main/override/special actions, pet, party, minimap, persistent XP, full tracker, nameplates, class-resource, unsupported auras, and reward/continue/complete/gossip remain source/capability gated per D-023/D-031/D-044. No blanket frame hider is authorized. The existing P0164 matrix remains a blocker inventory, not a completed-removal claim.
+
 # Active Investigations
 
 ## G.5 — Taxi camera ownership

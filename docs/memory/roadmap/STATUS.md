@@ -4,11 +4,11 @@ As of 2026-10-07.
 
 ## Active work stream
 
-**Phase H integration-first: audit and suppress Blizzard surfaces only where replacement/restoration is already capability-proven, then establish authored UI positions, then perform final whole-screen polish.**
+**Phase H.1 reopened — finish redundant Blizzard presentation suppression before visual calibration.**
 
-P0162 R3 is durable at `4628f49e` / `0.0.81-dev` and runtime-accepted. Phase G is complete for claimed observed scope with Teleport/NPC/Fishing/Gathering and unobserved AFK behavior preserved as environmental deferrals.
+P0167 is verified on main at `f58bccfb` / `0.0.84-dev`; user-supplied runtime confirms Phase H Layout Check (13/15, zero errors) and Run All PASS. The user's correction supersedes the P0164 claim that H.1 was finished merely because P0165 hid Accept/Decline; already-existing D/C suppression is not new H.1 work.
 
-P0165 R1 remains accepted and H.1 remains closed for currently replacement-proven stock surfaces. P0166 R1 is durable at `a67e0cce` / `0.0.83-dev` and structurally runtime-accepted: 13 anchors, 15 binds, zero layout failures/missing/mismatches, clean Run All, and the pet cluster on `classPet`. P0167 corrects the missing Phase H `Layout Check` panel registration without changing geometry; candidate runtime is `0.0.84-dev`.
+P0168 candidate `0.0.85-dev` suppresses the remaining ordinary quest-offer **QuestFrame shell** while the validated Logres narrative/actions own that offer. It preserves QuestFrame lifecycle (no `Hide`, no `SetParent`), disables the full captured stock mouse subtree, and restores exact presentation/mouse state before Logres withdraws. All unsupported offer and quest states remain Blizzard-owned. Runtime validation is pending; no broad UI removal is claimed.
 
 ## Phase status
 
@@ -22,7 +22,7 @@ P0165 R1 remains accepted and H.1 remains closed for currently replacement-prove
 | E — Compass and Navigation | COMPLETE |
 | F — Quest Experience | COMPLETE |
 | G — Cinematic Camera | COMPLETE — P0162 RUNTIME PASS; ENVIRONMENTAL DEFERRALS PRESERVED |
-| H — Integration and Polish | ACTIVE — H.2 P0167 PANEL CORRECTION; VISUAL CALIBRATION NEXT |
+| H — Integration and Polish | ACTIVE — H.1 REOPENED; P0168 QUEST-OFFER SHELL RUNTIME GATE |
 
 ## Phase G / G.5
 

@@ -53,7 +53,7 @@ Canonical phase record:
 
 ## Phase H — Integration and Polish
 
-**Status: ACTIVE — H.2 P0167 PANEL CORRECTION; VISUAL CALIBRATION NEXT; FINAL POLISH AFTER GEOMETRY ACCEPTANCE.**
+**Status: ACTIVE — H.1 REOPENED FOR REDUNDANT STOCK PRESENTATION; H.2 LAYOUT AFTER SUPPRESSION.**
 
 D-039 preserves the approved twelve-sheet World Ghost / Selective Hybrid E visual
 baseline. D-040 defines `Logres/Media/` plus `Theme.lua` as the runtime asset/token
@@ -231,3 +231,7 @@ behavior is reconciled with Phase H presentation/suppression policy.
 
 P0158's high-level order remains: Camera -> safe suppression/coexistence ->
 authored layout -> final polish.
+
+### P0168 correction to H.1 sequencing
+
+P0167 is runtime-confirmed at `0.0.84-dev`; all panel/layout checks passed. The user's explicit requirement is to finish safe Blizzard duplication removal *before* visual positioning. P0164's H.1 closure was premature. P0168 is a candidate to suppress the entire **ordinary quest-offer shell presentation** using the already accepted Logres offer surface, while preserving Blizzard's QuestFrame lifecycle/escape and every unsupported quest state. No broader removal is implied until a specific replacement/fallback is proved.

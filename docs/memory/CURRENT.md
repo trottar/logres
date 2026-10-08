@@ -8,91 +8,34 @@ project: logres
 
 ## Active Objective
 
-**Execute Phase H.2 authored integration layout: close the developer-panel access defect, then perform in-client spacing/collision calibration, then final whole-screen polish.**
-
-Phase G remains complete for claimed observed scope. H.1 stock-surface suppression/coexistence remains complete for every surface Logres currently has enough replacement/restoration evidence to suppress safely.
+**Phase H.1 reopened at the user's direction: finish removing redundant Blizzard presentation where Logres already has a complete safe replacement before H.2 visual calibration.** The previous H.1 closure overstated progress: P0165 hid only stock Quest Accept/Decline; the rest of the cited quiet/player/target/Bar 2–3 suppression predated Phase H. No blanket hiding or loss of required native controls is authorized.
 
 ## Current Work Item
 
-**P0167 R2 — register Layout Check in the Phase H developer panel without changing layout geometry or ownership.**
-
-P0166 R1 is durable at `a67e0cce` / `0.0.83-dev` and structurally runtime-accepted:
-- integrated Run All reports `layoutcheck: PASS` with `anchors=13`, `binds=15`, `failures=0`, `missing=0`, `mismatched=0`;
-- XP and Objective Progress preview paths execute cleanly;
-- the pet-action cluster reports integration anchor `classPet`;
-- integrated camera, suppression, action, restoration, and Compass checks remain clean in the accepted run.
-
-The user then identified a real integration defect: `Layout Check` was not available as a Phase H panel action. Repository inspection confirms the slash command and Run All integration exist, but no `RegisterDevPanelAction` entry was added. Phase H was already at its 15-action panel capacity.
-
-The first P0167 delivery artifact failed during candidate construction before any tracked write because its applier assumed a P0166 section already existed in `docs/memory/investigations/ACTIVE.md`. The pushed authoritative file did not contain that heading. R1 removed that false assumption, but R1 itself then failed before checker execution or tracked writes because one generated evidence `write()` call passed four positional arguments to a three-argument helper; its ZIP also contained generated Python bytecode. R2 corrects both delivery defects, preserves both failures as negative evidence, and synchronizes the older P0131 panel-phase checker so the complete suite agrees with the deliberate TEST-probe move.
-
-P0167 R2 fixes only that access defect:
-- add `Layout Check` to Phase H;
-- move the two legacy `TEST Accept Current Quest` / `TEST Decline Current Quest` capability probes from H to their natural Phase F Quest Experience tab;
-- keep panel capacity within the existing 15-action limit;
-- leave all layout anchors, coordinates, Blizzard suppression, secure routing, camera policy, and capability ownership unchanged.
-
-Candidate runtime: `0.0.84-dev`.
+**P0168 R1 — ordinary supported QuestFrame offer-shell visual suppression, candidate `0.0.85-dev`.** Extend P0165's already runtime-accepted offer-only gate so that the *stock quest frame stays shown for internal lifecycle/escape*, but its redundant offer visual shell becomes alpha-zero and all captured descendant frame mouse regions are disabled. Use exact mouse/alpha snapshots, limited 512-frame recursion, secret-first fail-open, out-of-combat gating, and restore on Immersion OFF, action start/failure, event/quest state transition, or module disable. Progress, completion, reward, gossip, PvP-confirmation, auto-accept, and unsupported states stay native. Existing Quest Offer Stock Check reports addon-owned shell state. R0 failed before tracked writes because its checker looked for the wrong visual snapshot assignment; R1 repairs that contract and removes the false `QUEST_ITEM_UPDATE` restoration trigger. The candidate is **NOT runtime accepted** until in-game proof.
 
 ## Verified State
 
-P0166 structural runtime evidence on Forever `1.60.1.70245` / runtime `0.0.83-dev`:
-- Run All completed with all included checks PASS;
-- layout diagnostic: `anchors=13`, `binds=15`, `failures=0`, `missing=0`, `mismatched=0`;
-- Objective Progress had one live super-tracked quest row and its preview path passed;
-- XP preview passed;
-- pet-action ARM reported `anchor:classPet`, seven occupied slots, zero failures/secrets;
-- camera diagnostics remained PASS with zero failures/secrets.
-
-Classification:
-**P0166 STRUCTURAL RUNTIME PASS. WHOLE-SCREEN VISUAL SPACING/COLLISION CALIBRATION REMAINS OPEN.**
-
-The missing Phase H panel registration is a separate product/tooling defect, not a failure of the integration anchors themselves.
+Verified P0167 main `f58bccfb91fe8f6165b543c936cea4bb0ac29a06` / `0.0.84-dev`; uploaded diagnostics show Phase H Layout Check 13 anchors, 15 bindings, zero failure/missing/mismatch, plus integrated Run All PASS. Phase G previously accepted for its observed scope. P0165 R1 supported offer Accept/Decline suppression and restoration passed; P0166 semantic layout anchors passed; P0167 panel registration passed. These do not establish whole QuestFrame suppression yet.
 
 ## Next Action
 
-Apply/deploy P0167 R2 and run one bounded panel gate:
-1. `/reload`;
-2. open Phase H and run **Layout Check** from the panel; require PASS with `anchors=13`, `failures=0`, `missing=0`, `mismatched=0`;
-3. Phase 0 -> Run All; require clean completion;
-4. open Phase F and confirm the two legacy quest-offer TEST probe buttons are still available there; do not invoke them merely for this gate;
-5. require no Lua, taint, protected-action, or secret-value regression.
-
-After P0167 is accepted, proceed directly to H.2 whole-screen spacing/collision calibration. Do not reopen anchor ownership unless new evidence requires it.
+Apply P0168 candidate only after shadow full-suite/static and git diff --check pass. Deploy to Forever test client, `/reload`; Phase H Quest Offer Stock Check and Phase 0 Run All must PASS. Open one **ordinary** quest offer: stock QuestFrame visual absent and no invisible click regions, Logres narrative/paging/buttons usable; test Immersion OFF restores full QuestFrame and ON removes it again; use a Logres Accept or Decline and ensure normal quest handoff/restoration. If untestable, record environmental deferral. Any Lua/taint/protected/secret failure blocks advancement. User pushes only after runtime PASS; verify main then address other eligible sub-surfaces before H.2 spacing.
 
 ## Success Criteria
 
-P0167 R2 succeeds when:
-- Phase H visibly contains a `Layout Check` button;
-- that button runs the existing non-mutating layout diagnostic and passes;
-- Phase H stays within panel capacity;
-- the legacy quest-offer TEST probes remain reachable under Phase F;
-- Run All remains clean;
-- runtime version is synchronized at `0.0.84-dev`;
-- no layout coordinate, suppression, routing, camera, or secure-execution behavior changes.
+Normal supported offer: quest frame remains internally shown, its stock visuals and all captured mouse regions are suppressed, Logres narrative and actions operate, no invisible stock clickable areas, exact restore through preference and quest lifecycle. Unsupported offers and states show usable Blizzard UI; candidate checks and Run All pass; no errors. Visual proof is required, not implied by static checks.
 
 ## Do Not Reopen Without New Evidence
 
-- P0166 integration-anchor ownership is accepted for structural/runtime scope;
-- P0165 R1 ordinary quest-offer Accept/Decline stock suppression is accepted for tested scope;
-- PvP-confirmation and auto-accept quest offers remain Blizzard-owned;
-- existing Quiet Mode, Player shell, Target selective suppression, and Bar 2–3 replacement remain accepted for tested scopes;
-- no conventional player health bar;
-- PvP is a modifier, not Immersion OFF;
-- stock minimap, Party/CompactPartyFrame, target aura/status, target-of-target, PetFrame/PetActionBar, Main/Override/special action surfaces, unsupported class/special surfaces, alternate power, RuneFrame, TotemFrame, Objective Tracker, persistent XP, nameplates, and unsupported quest states remain available until separately replaced;
-- player harmful/urgent and populated target aura production remain deferred;
-- positive world-target nameplate attachment remains deferred;
-- individual tracking-result positions remain source-blocked by D-043.
+Existing Quiet Mode, Player/Target selective suppression and Bar 2–3 replacement are accepted for proven scope. Primary MainActionBar/Override and special actions require secure fallback + key routing; PetActionBar needs binding/edit/autocast/feedback coverage; minimap, Party/CompactParty, target auras/ToT, full Objective Tracker/log/watch, permanent XP, class/rune/totem/alternate power, nameplates and unsupported quest states remain native until their capability gaps are closed. No exact player HP/conventional health bar, PvP remains a modifier. The prior P0164 closure classification is superseded, but its blocker matrix remains evidence.
 
 ## Relevant References
 
-- `docs/memory/evidence/P0167_P0166_RUNTIME_PASS_2026-10-07.md`
-- `docs/memory/evidence/P0167_R0_DELIVERY_ACTIVE_ANCHOR_FAILURE_2026-10-07.md`
-- `docs/memory/evidence/P0167_R1_DELIVERY_WRITE_ARITY_FAILURE_2026-10-07.md`
-- `docs/memory/evidence/P0166_R0_DELIVERY_PREFLIGHT_SELF_MISMATCH_2026-10-07.md`
-- `docs/memory/patches/P0166_PHASE_H2_INTEGRATION_ANCHORS.md`
+- `docs/memory/evidence/P0168_QUEST_OFFER_SHELL_SOURCE_GATE_2026-10-07.md`
+- `docs/memory/patches/P0168_QUEST_OFFER_SHELL_SUPPRESSION.md`
+- `docs/memory/evidence/P0164_BLIZZARD_SURFACE_OWNERSHIP_AUDIT_2026-10-07.md`
+- `docs/memory/patches/P0165_QUEST_OFFER_STOCK_SUPPRESSION.md`
 - `docs/memory/patches/P0167_LAYOUT_CHECK_PANEL_REGISTRATION.md`
-- `docs/memory/architecture/WORLD_FIRST_LAYOUT.md`
-- `docs/memory/decisions/D-032_WORLD_FIRST_LAYOUT_AND_ACTION_ROLES.md`
 - `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`
 - `docs/ROADMAP.md`

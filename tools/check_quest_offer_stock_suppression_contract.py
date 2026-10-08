@@ -165,6 +165,43 @@ if bootstrap_version is None or toc_version is None:
 elif bootstrap_version != toc_version:
     errors.append("Bootstrap and TOC runtime versions must match")
 
+# P0168 expands P0165's already-proven ordinary-offer ownership to the
+# redundant QuestFrame visual shell while preserving native quest lifecycle.
+for fragment in (
+    'function Suppression:CaptureOfferPresentation()',
+    'local questFrame = _G.QuestFrame',
+    'readShown(questFrame, "quest-frame")',
+    'function Suppression:SuppressOfferPresentation(snapshot)',
+    'snapshot.frame:SetAlpha(0)',
+    'snapshot.mouseFrames[index].frame:EnableMouse(false)',
+    'function Suppression:RestoreOfferPresentation(snapshot)',
+    'entry.frame:EnableMouse(entry.mouseEnabled)',
+    'snapshot.frame:SetAlpha(snapshot.alpha)',
+    'function Suppression:EmergencyRestoreOfferPresentation(snapshot)',
+    'local visualSnapshot, visualError =',
+    'self:CaptureOfferPresentation()',
+    'self:SuppressOfferPresentation(snapshot.visual)',
+    'self:RestoreOfferPresentation(snapshot.visual)',
+    'visualOwned = self.appliedEnabled == true',
+    'visualFrameCount =',
+):
+    if fragment not in suppression:
+        errors.append("P0168 quest visual contract missing: " + fragment)
+
+# The source must never hide/reparent QuestFrame or use polling to reassert it.
+for forbidden in ('QuestFrame:Hide(', 'QuestFrame:SetParent(', 'C_Timer.After(',
+                  'SetScript("OnUpdate"', 'hooksecurefunc('):
+    if forbidden in suppression:
+        errors.append("P0168 broad quest-frame mutation forbidden: " + forbidden)
+
+visual_start = suppression.find('function Suppression:CaptureOfferPresentation()')
+visual_end = suppression.find('function Suppression:ApplySuppression(reason)', visual_start)
+visual = suppression[visual_start:visual_end] if visual_start >= 0 and visual_end > visual_start else ''
+if visual.find('if isSecret(child) then') < 0 or visual.find('return nil, "quest-frame-child-secret"') < 0:
+    errors.append('P0168 must fail open on secret-capable child references')
+if visual.find('return nil, "quest-frame-subtree-too-large"') < 0:
+    errors.append('P0168 must bound QuestFrame subtree walk')
+
 print("Logres P0165 quest-offer stock suppression contract")
 print("====================================================")
 

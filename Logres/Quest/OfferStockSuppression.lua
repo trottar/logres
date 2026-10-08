@@ -112,6 +112,15 @@ end
 function Suppression:CheckSupportedOffer()
     local detailPanel, acceptButton, declineButton = self:GetFrames()
 
+    local combat, combatError, combatSecret =
+        safeBoolean("combat", InCombatLockdown)
+    if combat == nil then
+        return false, combatError, combatSecret, false
+    end
+    if combat then
+        return false, "combat-fail-open", false, true
+    end
+
     if not detailPanel or not acceptButton or not declineButton then
         return false, "stock-controls-unavailable", false, false
     end
@@ -233,9 +242,15 @@ function Suppression:CaptureSnapshot()
         return nil, declineError
     end
 
+    local visualSnapshot, visualError = self:CaptureOfferPresentation()
+    if not visualSnapshot then
+        return nil, visualError
+    end
+
     return {
         accept = acceptSnapshot,
         decline = declineSnapshot,
+        visual = visualSnapshot,
     }, nil
 end
 
@@ -270,13 +285,132 @@ function Suppression:EmergencyRestore(snapshot)
 
     local acceptOK = self:EmergencyRestoreButton(snapshot.accept)
     local declineOK = self:EmergencyRestoreButton(snapshot.decline)
+    local visualOK = self:EmergencyRestoreOfferPresentation(snapshot.visual)
 
-    if acceptOK and declineOK then
+    if acceptOK and declineOK and visualOK then
         self.emergencyRestoreCount = self.emergencyRestoreCount + 1
         return true
     end
 
     return false
+end
+
+-- P0168: quest offer presentation is a complete Logres-owned visual only when
+-- P0165 has already established ordinary offer + usable action controls.
+-- Blizzard's QuestFrame remains SHOWN for quest lifecycle/escape handling.
+-- We never Hide(), reparent, or suppress other quest states.
+function Suppression:CaptureOfferPresentation()
+    local questFrame = _G.QuestFrame
+    if not questFrame then
+        return nil, "quest-frame-unavailable"
+    end
+
+    local shown, shownError, shownSecret =
+        readShown(questFrame, "quest-frame")
+    if shown ~= true then
+        if shownSecret then
+            self.secretBlockCount = self.secretBlockCount + 1
+        end
+        return nil, shownError or "quest-frame-not-shown"
+    end
+
+    if type(questFrame.GetChildren) ~= "function"
+        or type(questFrame.GetAlpha) ~= "function"
+        or type(questFrame.SetAlpha) ~= "function"
+    then
+        return nil, "quest-frame-visual-api-unavailable"
+    end
+
+    local alphaOK, originalAlpha = pcall(questFrame.GetAlpha, questFrame)
+    if not alphaOK then
+        return nil, "quest-frame-alpha-capture-failed"
+    end
+    -- originalAlpha is an OPAQUE restoration token; do not inspect it.
+
+    local queue = { questFrame }
+    local captured = {}
+    local index = 1
+    while index <= #queue do
+        local frame = queue[index]
+        if isSecret(frame) then
+            self.secretBlockCount = self.secretBlockCount + 1
+            return nil, "quest-frame-child-secret"
+        end
+        if type(frame.EnableMouse) ~= "function"
+            or type(frame.GetChildren) ~= "function"
+        then
+            return nil, "quest-frame-child-mutation-api-unavailable"
+        end
+        local mouse, mouseError, mouseSecret =
+            readMouse(frame, "quest-frame-child")
+        if mouse == nil then
+            if mouseSecret then
+                self.secretBlockCount = self.secretBlockCount + 1
+            end
+            return nil, mouseError
+        end
+        captured[#captured + 1] = {
+            frame = frame,
+            mouseEnabled = mouse,
+        }
+        local childrenOK, children = pcall(function()
+            return { frame:GetChildren() }
+        end)
+        if not childrenOK then
+            return nil, "quest-frame-children-read-failed"
+        end
+        for childIndex = 1, #children do
+            local child = children[childIndex]
+            if isSecret(child) then
+                self.secretBlockCount = self.secretBlockCount + 1
+                return nil, "quest-frame-child-secret"
+            end
+            queue[#queue + 1] = child
+            if #queue > 512 then
+                return nil, "quest-frame-subtree-too-large"
+            end
+        end
+        index = index + 1
+    end
+
+    return {
+        frame = questFrame,
+        alpha = originalAlpha,
+        mouseFrames = captured,
+    }, nil
+end
+
+function Suppression:SuppressOfferPresentation(snapshot)
+    -- Invisibility without input removal would leave invisible Blizzard clicks.
+    for index = 1, #snapshot.mouseFrames do
+        snapshot.mouseFrames[index].frame:EnableMouse(false)
+    end
+    snapshot.frame:SetAlpha(0)
+end
+
+function Suppression:RestoreOfferPresentation(snapshot)
+    -- Restore captured mouse ownership and then the opaque original alpha.
+    -- Never restore a blanket 'true' or assume the user's stock defaults.
+    for index = 1, #snapshot.mouseFrames do
+        local entry = snapshot.mouseFrames[index]
+        entry.frame:EnableMouse(entry.mouseEnabled)
+    end
+    snapshot.frame:SetAlpha(snapshot.alpha)
+end
+
+function Suppression:EmergencyRestoreOfferPresentation(snapshot)
+    if not snapshot then
+        return false
+    end
+    local ok = pcall(function()
+        for index = 1, #snapshot.mouseFrames do
+            local entry = snapshot.mouseFrames[index]
+            entry.frame:EnableMouse(entry.mouseEnabled)
+        end
+        -- Emergency fail-open uses visible stock alpha if opaque restore fails.
+        snapshot.frame:SetAlpha(1)
+    end)
+    return ok == true
 end
 
 function Suppression:ApplySuppression(reason)
@@ -319,12 +453,14 @@ function Suppression:ApplySuppression(reason)
     local ok, suppressError = pcall(function()
         self:SuppressButton(snapshot.accept)
         self:SuppressButton(snapshot.decline)
+        self:SuppressOfferPresentation(snapshot.visual)
     end)
 
     if not ok then
         local restored = pcall(function()
             self:RestoreButton(snapshot.accept)
             self:RestoreButton(snapshot.decline)
+            self:RestoreOfferPresentation(snapshot.visual)
         end)
 
         if not restored then
@@ -371,6 +507,7 @@ function Suppression:Restore(reason)
     local ok, restoreError = pcall(function()
         self:RestoreButton(snapshot.accept)
         self:RestoreButton(snapshot.decline)
+        self:RestoreOfferPresentation(snapshot.visual)
     end)
 
     if not ok then
@@ -442,6 +579,9 @@ function Suppression:GetDebugStatus()
         appliedEnabled = self.appliedEnabled == true,
         pending = self.pending == true,
         snapshotReady = self.snapshot ~= nil,
+        visualOwned = self.appliedEnabled == true,
+        visualFrameCount = self.snapshot and self.snapshot.visual
+            and #self.snapshot.visual.mouseFrames or 0,
         detailHooked = self.detailHooked == true,
         eventFrameReady = self.eventFrame ~= nil,
         acceptFound = acceptButton ~= nil,

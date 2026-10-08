@@ -1,6 +1,6 @@
 # Phase H — Integration and Polish
 
-Status: ACTIVE — H.2 P0167 PANEL CORRECTION; VISUAL CALIBRATION NEXT
+Status: ACTIVE — H.1 REOPENED, P0168 QUEST-OFFER SHELL RUNTIME GATE
 
 ## Product objective
 
@@ -438,3 +438,9 @@ The first dependency corrections are:
 - the pet-action cluster no longer anchors to the allies container.
 
 All stock fallback and secure/capability gates remain unchanged.
+
+## P0168 — correct premature H.1 closure
+
+The user correctly rejected the notion that hiding only quest Accept/Decline in Phase H completed the original removal objective. P0164's ownership matrix remains useful for blockers but its closure classification is superseded. P0168 extends the P0165 ordinary offer ownership to the visible QuestFrame presentation, leaving the Blizzard quest frame shown for internal lifecycle/escape functions. The offer's Logres body/objectives and actions are already runtime-proven. Unsupported quest states (progress/complete/reward/gossip), special offers, missing/secret data, combat and unsafe frame capture fail open to Blizzard. No new primary-action/minimap/party/pet/full-tracker suppression is authorized without completing those capability gates.
+
+**Next:** in-game P0168 visual+interaction/restoration gate, then revisit remaining eligible *sub-surfaces*, then H.2 spacing. No static analysis is runtime PASS.

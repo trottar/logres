@@ -3403,6 +3403,11 @@ local function runQuestOfferStockSuppressionCheck()
         tostring(debugStatus.lastReason),
         tostring(debugStatus.lastError)
     ))
+    emit(string.format(
+        "Logres quest offer presentation: owned=%s capturedFrames=%s (QuestFrame remains shown; stock mouse subtree disabled only for supported ordinary offers)",
+        tostring(debugStatus.visualOwned),
+        tostring(debugStatus.visualFrameCount)
+    ))
 end
 
 local function runQuestOfferActionProbe(kind)
