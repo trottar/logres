@@ -4350,6 +4350,31 @@ local function runNativeAccessCheck()
     ))
 end
 
+function Logres:RunUIOwnershipCheck()
+    local report = Logres.UIOwnershipAudit.Capture()
+    local flags = report.flags
+    emit(string.format(
+        "Logres uiownership flags: immersion=%s context=%s combat=%s pvp=%s activeQuest=%s (snapshot, no native mutation)",
+        tostring(flags.immersion), tostring(flags.context),
+        tostring(flags.combat), tostring(flags.pvp), tostring(flags.activeQuest)
+    ))
+    for _, entry in ipairs(report.rows) do
+        emit(string.format(
+            "Logres uiownership %s: %s (Blizzard=%s; Logres=%s; expected=%s; observed=%s; note=%s)",
+            entry.id, entry.status, entry.blizzard, entry.logres,
+            tostring(entry.expected), tostring(entry.observed), tostring(entry.detail)
+        ))
+    end
+    local counts = report.counts
+    local status = counts.FAIL > 0 and "FAIL"
+        or counts.DEFERRED > 0 and "DEFERRED" or "PASS"
+    emit(string.format(
+        "Logres uiownership: %s (total=%s pass=%s stock=%s deferred=%s fail=%s; stock=policy-not-native-visibility)",
+        status, tostring(report.total), tostring(counts.PASS),
+        tostring(counts.STOCK), tostring(counts.DEFERRED), tostring(counts.FAIL)
+    ))
+end
+
 local function runAllChecks()
     emit("Logres checkall: beginning")
     printStatus()
@@ -4379,6 +4404,7 @@ local function runAllChecks()
     runContextPolicyCheck()
     runCameraWorldCombatCheck()
     runCompassCheck()
+    Logres:RunUIOwnershipCheck()
     emit("Logres checkall: complete")
 end
 
@@ -4561,6 +4587,11 @@ local function handleCommand(message)
 
     if command == "checkall" then
         runAllChecks()
+        return
+    end
+
+    if command == "uiownershipcheck" then
+        Logres:RunUIOwnershipCheck()
         return
     end
 
@@ -4914,6 +4945,12 @@ Logres:RegisterDevPanelAction(
     "runall",
     "Run All",
     "checkall",
+    "0"
+)
+Logres:RegisterDevPanelAction(
+    "uiOwnershipCheck",
+    "UI Ownership Check",
+    "uiownershipcheck",
     "0"
 )
 Logres:RegisterDevPanelAction(

@@ -1,0 +1,12 @@
+# P0178 — Expanding Blizzard/Logres ownership matrix
+
+Date: 2026-10-09. Baseline: `0f3f0b7` (`0.0.93-dev`). Candidate: `0.0.94-dev`.
+
+The user requested a **permanent whole-interface checker**, expanding whenever Logres gains a feature, whose observations compare Blizzard UI ownership against Logres equivalents under Immersion/context/combat/PvP and feature flags. Most individual diagnostics already exist. P0178 aggregates those rather than creating new stock frame probes.
+
+- `Logres/Core/UIOwnershipAudit.lua` declares `Logres:RegisterUIOwnershipSurface(spec)` and `Logres.UIOwnershipAudit.Capture()`. Each registration has stable ID, Blizzard category, Logres counterpart, and a read-only evaluator using existing module diagnostic snapshots. Built-in P0164 and subsequent native/cast/aura/quest inventory covers 35 independent surfaces. Future features append registrations using this interface; status counts and output expand without changing the aggregator.
+- Four explicit results: `PASS` for matching observed Logres policy, `FAIL` for actual mismatch/source fault, `DEFERRED` for missing/unproved data/combat, `STOCK` for deliberately retained stock/manual-open fallback. `STOCK` is **policy**, never proof that Blizzard UI is currently visible. Flags include Immersion, context/world Quiet Mode, combat, PvP, and Active Quest preference. Module getters are called with `pcall` and cached once per audit; no new `_G` Blizzard-frame queries, protected presentation reads, mutators, or secret inspection.
+- `/logres uiownershipcheck` and **Phase 0 → UI Ownership Check** expose the full inventory, one durable diagnostic line per surface plus totals. Phase 0 Run All now includes the matrix at the end, within the existing saved-lines budget. Existing individual checks remain and own their current detailed proof. No UI suppression/restore policy or rendering change.
+- New `tools/check_ui_ownership_audit_contract.py` locks source registration, baseline inventory, command/panel/TOC integration, flags, and disallows new direct frame inspection/mutation in the audit module.
+
+This first version cannot prove Blizzard frames visible merely from a retention policy and does not certify full harmful-aura, primary/special/pet/party, or quest reward coverage. It makes their stock/partial status explicit. Source/capability boundaries D-017/D-041/D-042/D-044 unchanged. Runtime verification and tests remain required.

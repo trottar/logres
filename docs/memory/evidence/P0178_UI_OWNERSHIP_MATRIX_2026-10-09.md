@@ -1,0 +1,9 @@
+# P0178 — Baseline evidence, validation gate and risk
+
+Date: 2026-10-09. GitHub main confirmed at `0f3f0b7583b5c496d7b29bbb1de83c891e488fde` after P0177 R1. Its previously missing P0177 source and contract files and both manifests now exist on remote main. Uploaded client loadCount 226 (`0.0.93-dev`) completed Phase 0 Run All with Immersion ON, HUD `visible=true`, 16 anchors/21 bindings, native folded=5/open=0, cast gate escapes=0. Player/target harmful source remains unproven and target absence in latest session is environmental deferral. Earlier loadCount 225 showed general target HELPFUL ordinary=1 versus priority=0 and repeated restricted-index skips, not identifiable distinct auras. Intermittent loot quest flash remains OPEN, and stock primary/special action/pet/party/auras remain guarded.
+
+Hypothesis: static information about ownership and existing check outputs are scattered across many developer-panel actions; a permanent centrally registered matrix can surface discrepancies between desired and observed states without unsafe broad Blizzard-frame sampling.
+
+Static validation required: shadow checkout, complete `tools/check_*.py` suite including P0178 contract and previous P0175 R3 disabled-snapshot contract, `git diff --check`, exact HEAD/blobs and no tracked dirt. This patch must fail before writes if any check rejects the candidate. No WoW PASS from static reasoning.
+
+Runtime gate: deploy, `/reload`, Phase 0 → UI Ownership Check, Immersion ON and OFF, Run All, then native manual-open and combat transitions only when naturally available. Confirm per-row changes correctly distinguish PASS/STOCK/DEFERRED/FAIL, no Lua/secret/taint errors, no mana/cast/quest regression, no user-required gameplay forcing. Report any failed row and raw diagnostics rather than marking audit complete. Future feature registrations require audit mapping and tests.
