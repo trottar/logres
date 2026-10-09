@@ -15,3 +15,7 @@ Replace local diagnostic runner with `Logres:RunUIOwnershipCheck()` and invoke i
 Required in-client evidence: slash registration restored, Phase 0 UI Ownership Check emits 35 rows and totals without Lua error, Run All completes, Immersion OFF/ON appropriately adjusts expected ownership. Note any FAIL/DEFERRED rows without recasting partial/stock coverage as complete. No claim of runtime PASS before test.
 
 Unrelated open items remain: live harmful-aura coverage DEFERRED, unknown hostile-target buff coverage, intermittent ObjectiveTracker flash, and incomplete primary/special/pet/party ownership.
+
+## Verified P0178 R1 runtime acceptance — P0179 checkpoint (2026-10-09)
+
+GitHub `main` verified at `fd0dc88`; user-uploaded `0.0.95-dev` loadCount 229 diagnostics show `/logres status`, `/logres uiownershipcheck`, and Run All complete. ON reports 35 total / 17 PASS / 18 STOCK / 0 FAIL; OFF 35 / 16 PASS / 19 STOCK / 0 FAIL, and later ON returns 17/18. Lifecycle/preference and covered native dock/cast gate checks PASS. This accepts R1 for tested slash startup and ownership audit behavior, superseding the **pending candidate** status above but **not** erasing original P0178's compiler error. STOCK is policy rather than independently verified visibility. See `docs/memory/evidence/P0179_ACCEPT_P0178_R1_RUNTIME_2026-10-09.md` for scope and outstanding deferrals.
