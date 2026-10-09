@@ -1,0 +1,15 @@
+# P0185 — Main-bar-focused Phase H memory consistency reconciliation
+
+Date: 2026-10-09. Verified GitHub `main`: `4e999b1445d784378f8a6030f8f9dc737cb9e985` (P0184 accepted); runtime unchanged at `0.0.98-dev`.
+
+**Documentation-only** correction of stale active-state memory and misleading whole-UI progress language. User confirms that only stock **normal MainActionBar** remains to remove from the intended persistent normal Immersion ON composition. This is user visual testimony, not a new inspection of every stock surface or permission to suppress modes Logres cannot serve. Distinguish the one normal-screen redundant bar from deliberately retained special, pet, class/resource, party, objective, aura, full-quest, menu, minimap and other fallback/control domains; existing `STOCK` ownership rows are policy, not observed native visibility.
+
+Corrections: promote verified P0184 `4e999b1`, retire pending-P0184/debuff-first active headers, disambiguate historical P0168/P0183 candidate status, and align CURRENT, handoff, ACTIVE, STATUS, active Phase H and docs/ROADMAP. Preserve prior evidence and negative results. Add an explicit Main-only normal-screen next-work-item, gated on safe secure routing, editing/fallback, special-mode ownership, combat lockdown, exact restoration and non-clickable hidden stock state. No runtime-code or ownership-audit changes in this patch; no unjustified completion claim.
+
+Applier requires exact `main` HEAD, a clean tracked tree and expected source Git blob IDs; checks explicit shipped payload digests and exact text anchors. It generates a shadow candidate from `git archive HEAD`, runs the repository `tools/check_*.py` suite and whitespace precheck **before** tracked writes, then installs transactionally, verifies `git diff --check`, and writes `P0185_MANIFEST.txt`. Never commits/pushes. **No WoW redeploy or retest for docs-only P0185.**
+
+## P0185 R0 packaging/baseline failure; R1 correction (2026-10-09)
+
+The first P0185 ZIP passed its own synthetic transform/integrity tests but failed on the user's clean pinned P0184 checkout **before any tracked writes**: `P0185 APPLY FAIL — unexpected source blob docs/memory/investigations/ACTIVE.md: 29b3e0b4d347395c5e06214f23cb7df66c4aae97`. Re-query of the **same** GitHub `main` commit `4e999b1` established that P0185 R0 had pinned stale blob IDs for seven memory files changed by P0184. R0's `ACTIVE.md` expectation `1896d955...` was wrong; the committed blob is `29b3e0b4...`. The original pre-write check rejected this, correctly preventing partial edits. **R0 is INVALID / SUPERSEDED, not a runtime FAIL.** No Git reset, WoW change, or repeat acceptance test is justified.
+
+P0185 R1 corrects all seven blob IDs, additionally verifies each expected blob against both `HEAD:path` and the worktree, preserves the existing exact-head/clean-tree and candidate-shadow full-checker gates, and retains the same documentation-only scope. This is a source-locking/delivery correction; no addon behavior changed.

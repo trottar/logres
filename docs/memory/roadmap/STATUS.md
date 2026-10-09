@@ -2,13 +2,13 @@
 
 As of 2026-10-09.
 
-Current checkpoint: P0181 verified `2adce36`; P0182 nameplate-only filter trial did not produce Logres debuffs. P0183 `0.0.98-dev` native secure HARMFUL player/target container is RUNTIME PENDING; Phase H.1 remains on visible debuff delivery, not action ownership. Older statements are historical.
+Current checkpoint: P0184 verified on `main` `4e999b1`; P0183 R1 native Logres debuffs visibly appear. User identifies normal `MainActionBar` as the only remaining unwanted persistent bar. P0185 docs-only reconciles current H.1 pointers; see below.
 
-Current checkpoint: P0168 R1 is verified and user-confirmed; P0169 is a Bars 4–5/layout candidate, not runtime-accepted. Earlier P0168 runtime-pending prose below is historical.
+Historical checkpoint (P0168): P0168 R1 verified; subsequent P0170–P0184 milestones supersede this as current work.
 
 ## Active work stream
 
-**Phase H.1 reopened — finish redundant Blizzard presentation suppression before visual calibration.**
+**Phase H.1 OPEN — last user-reported redundant normal-screen bar is MainActionBar; preserve other intentional stock fallback and control.**
 
 P0167 is verified on main at `f58bccfb` / `0.0.84-dev`; user-supplied runtime confirms Phase H Layout Check (13/15, zero errors) and Run All PASS. The user's correction supersedes the P0164 claim that H.1 was finished merely because P0165 hid Accept/Decline; already-existing D/C suppression is not new H.1 work.
 
@@ -26,7 +26,7 @@ P0168 candidate `0.0.85-dev` suppresses the remaining ordinary quest-offer **Que
 | E — Compass and Navigation | COMPLETE |
 | F — Quest Experience | COMPLETE |
 | G — Cinematic Camera | COMPLETE — P0162 RUNTIME PASS; ENVIRONMENTAL DEFERRALS PRESERVED |
-| H — Integration and Polish | ACTIVE — H.1 REOPENED; P0168 QUEST-OFFER SHELL RUNTIME GATE |
+| H — Integration and Polish | ACTIVE — H.1 normal MainActionBar capability-gated suppression next; H.2/H.3 later |
 
 ## Phase G / G.5
 
@@ -410,3 +410,7 @@ The first P0183 delivery failed before reading the Git baseline or writing track
 ## P0184 — P0183 R1 in-client debuffs accepted, polish deferred (2026-10-09)
 
 P0183 R1 was pushed as `11a342b`, build `0.0.98-dev`. The user explicitly confirms visible **Logres debuffs**, not Blizzard-only. Uploaded loadCount 234 Phase 0 Run All and ownership audits finished: native debuff containers ready/active, 35-surface audit 17 PASS/18 STOCK/0 FAIL, no reported command errors. The ordinary Lua-indexed harmful reader's zero rows do not reflect native secure aura membership. Runtime + visual PASS is limited to the observed native rendering and checks, not every unit/mode, and **does not authorize native Blizzard aura suppression**. Keep player/target/private/group aura stock fallback. P0182 filter-only approach did not resolve visibility; original P0183 ZIP packaging failure was prewrite, corrected in R1. Defer native icon polish to the eventual integrated Phase H whole-screen visual work. Phase H.1 remains OPEN for secure Main/Override/special action control/editing/restoration and other stock-held capabilities. P0184 docs-only memory handoff awaits push; no WoW redeploy needed.
+
+## P0185 — authoritative normal-screen Main-bar scope (2026-10-09)
+
+Verified remote `main` `4e999b1` includes P0184 docs acceptance and visually confirmed P0183 R1 native debuffs (`0.0.98-dev`). Run All complete; 35-surface ON ownership **17 PASS/18 STOCK/0 FAIL**. The user identifies **only the normal Blizzard MainActionBar as the remaining unwanted persistent bar**. `STOCK` is intentional fallback policy, not a list of UI elements that must disappear. P0185 is **docs-only**; next H.1 change must implement safe Main normal-mode visual/mouse suppression *only when* Logres Primary route and editing/restoration fallback are proven, with all special controls fail-open to Blizzard. Prior “P0183 runtime pending”, “P0168 next” and “P0182 active” statements above are historical. H.2/H.3 visual work (including debuff polish) waits for capability-safe H.1 completion.

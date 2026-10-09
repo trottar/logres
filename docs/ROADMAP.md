@@ -53,7 +53,7 @@ Canonical phase record:
 
 ## Phase H — Integration and Polish
 
-**Status: ACTIVE — H.1 REOPENED FOR REDUNDANT STOCK PRESENTATION; H.2 LAYOUT AFTER SUPPRESSION.**
+**Status: ACTIVE — H.1 normal MainActionBar visual/control replacement is the remaining user-reported persistent-bar gate; intentional stock fallback remains; H.2 layout/H.3 polish later.**
 
 D-039 preserves the approved twelve-sheet World Ghost / Selective Hybrid E visual
 baseline. D-040 defines `Logres/Media/` plus `Theme.lua` as the runtime asset/token
@@ -344,3 +344,7 @@ The first P0183 delivery failed before reading the Git baseline or writing track
 ## P0184 — native Logres debuff delivery accepted (2026-10-09)
 
 Verified `main` `11a342b` contains P0183 R1. User visually confirms Logres debuffs now appear, with polish deferred to general Phase H composition. `0.0.98-dev` loadCount 234 Run All is complete, native HARMFUL containers `ready=true active=true`, UI Ownership 17 PASS / 18 STOCK / 0 FAIL; prior Lua-indexed harmful scan emptiness does not contradict secure native rendering. Keep Blizzard stock/private/group fallback, no suppression or completeness claims for unobserved units/modes. Phase H.1 proceeds to protected Main/Override/special action routing, editing and restoration boundaries; remain capability-gated. P0184 is documentation-only and needs no WoW redeploy.
+
+## P0185 — current Phase H.1 remaining visible-bar gate (2026-10-09)
+
+Remote `main` `4e999b1` accepts the user-confirmed P0183 R1 native Logres debuff appearance in P0184, on `0.0.98-dev`; Run All complete, ownership ON 35/17 PASS/18 STOCK/0 FAIL. User reports **normal MainActionBar is the only remaining persistent Blizzard action bar to remove** in the intended normal Immersion screen. That is a visual observation, not permission to eliminate intentional 18 STOCK fallback/control domains. Next H.1 integration work is normal Main secure route/edit/control coverage plus reversible stock presentation/mouse suppression only where proven; retain Override/vehicle/possess/extra and other intentional native access, exact restoration and no invisible click areas. No new debuff work. H.2 layout and H.3 whole-screen polish, including debuff polish, remain next after normal Main gate. Prior P0168/P0183 pending labels are chronological history, superseded for current planning.

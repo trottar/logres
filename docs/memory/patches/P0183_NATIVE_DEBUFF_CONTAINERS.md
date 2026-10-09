@@ -1,6 +1,6 @@
 # P0183 — Native Logres debuff lanes through Blizzard CustomAuraContainer
 
-Date: 2026-10-09. Source-locked to verified `main` `2adce36688ee1d3fdddd75e373598a0e9d6f04e8` (`0.0.96-dev`), with an exact P0182 uncommitted working-tree compatibility branch. Candidate `0.0.98-dev`. Runtime PENDING.
+Date: 2026-10-09. Source-locked to verified `main` `2adce36688ee1d3fdddd75e373598a0e9d6f04e8` (`0.0.96-dev`), with an exact P0182 uncommitted working-tree compatibility branch. Candidate `0.0.98-dev`. Runtime PENDING at initial issuance; subsequently accepted for observed Logres debuff appearance by P0184 (see end).
 
 ## Cause and change
 

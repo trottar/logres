@@ -8,37 +8,40 @@ project: logres
 
 ## Active Objective
 
-**Phase H.1 OPEN — complete capability-gated Blizzard/Logres UI ownership and coexistence.** GitHub `main` verified `11a342b4d7bef3e0e1f4232e9b5f1d227740adf0` contains P0183 R1 native player/target HARMFUL containers at `0.0.98-dev`. The user visually confirmed **Logres debuffs appear**. Uploaded `LOGRES_DIAGNOSTICS_LATEST.lua`, loadCount **234**, records Phase 0 **Run All complete**, native debuff readiness/activation `true/true`, 35-surface UI Ownership **17 PASS / 18 STOCK / 0 FAIL / 0 DEFERRED** in Immersion ON, and no command/Lua failures in that run. STOCK describes intended fallback ownership, not visual inspection of Blizzard frames.
+**Phase H.1 OPEN — remove the last user-reported redundant persistent stock action-bar presentation: the normal Blizzard `MainActionBar`.** GitHub `main` **`4e999b1445d784378f8a6030f8f9dc737cb9e985`** has P0184 docs-only acceptance of P0183 R1. Runtime remains **`0.0.98-dev`**. The user reports that **only the Main action bar remains to remove** from the intended ordinary Immersion ON screen. Treat this as user visual scope, **not** as a claim that all other Blizzard-owned fallback/information/control surfaces have disappeared or can be suppressed.
 
 ## Current Work Item
 
-**P0184 — docs-only acceptance of P0183 R1, PENDING USER PUSH.** Accept the observed native Logres debuff appearance and recorded setup/regression checks. Record P0183 original ZIP prewrite packaging FAIL and its R1 repair, plus P0182 filter-only negative evidence. Preserve Blizzard player/target/private/group aura presentation as completeness fallback. Do not claim full individual player-vs-hostile-target coverage, native child aura counts, untested protected/combat transitions, or authorization to suppress Blizzard auras merely from the user observation and diagnostic PASS.
+**Next implementation: normal-mode MainActionBar visual/interactivity ownership with proven secure routing, existing editing access, special-mode fallback and exact restoration.** Source-backed minimum coherent capability: Logres Primary actions, usable normal-page key routing/feedback, drag/edit/bind access or deliberate accessible stock editing fallback, out-of-combat activation, and seamless fail-open to Blizzard Main/Override/vehicle/possess/extra actions whenever Logres does not safely own a mode. The stock Main must not become an invisible clickable region. Do **not** conflate normal Main suppression with ownership of special actions; preserve special UI. Investigate exact native source/transition semantics before mutation and use a targeted panel regression, not another broad audit or unrelated aura work.
 
 ## Verified State
 
-- P0183 R1 pushed as `11a342b` with `Logres/HUD/NativeDebuffs.lua`, source and static contract, version `0.0.98-dev`, and documentation. User explicitly reports Logres debuffs appearing; further icon styling deferred to the combined Phase H visual pass.
-- Latest loadCount 234 Run All complete, with no recorded Lua/command errors; native secure `HARMFUL` containers `ready=true active=true`; Phase 0 Ownership 35 surfaces / 17 PASS / 18 STOCK / 0 FAIL. Source checker `statusauracheck` still reports zero *ordinary Lua-indexed* player harmful readings and no target at time of check; this does **not** contradict native secure rendering and is not a reliable native icon count.
-- First P0183 packaging FAIL referenced unshipped `__pycache__/P0182_APPLY.cpython-313.pyc`; R1 corrected delivery. P0182 `INCLUDE_NAME_PLATE_ONLY` filter attempt did not fix the reported debuff absence. Preserve both as historical negatives. Earlier P0178 >60-upvalue startup FAIL, P0175 R2 nil-rows and intermittent post-loot ObjectiveTracker flash remain in evidence.
-- P0183 is additive. No Blizzard player/target/private/group aura suppression, protected-state inspection, periodic hooks or broad reassertion was authorized. Player buffs, target helpful, deterministic preview and stock fallback remain.
+- **P0184 pushed and verified on GitHub `main` `4e999b1`.** P0183 R1 native harmful Logres icons are visually present per user, with native containers `ready=true active=true` in `LOGRES_DIAGNOSTICS_LATEST.lua` loadCount **234**. Phase 0 **Run All complete**, 35-row UI Ownership Immersion ON **17 PASS / 18 STOCK / 0 FAIL / 0 DEFERRED**, no reported Lua/command error in that latest run. The 18 STOCK entries are **deliberately retained policy surfaces, not a list of 18 visible unwanted bars**, and are often marked `not inspected`.
+- Existing Logres Secondary/Utility Bars 2–3 are replacement-owned; Bars 4–5 routing and intentionally retained stock access have their own documented policy. Native dock folds navigation, objectives, XP/progress and micro-menu with on-demand Blizzard access; cast native fallback remains available. Quiet chat, Player/Target shell, and relevant Logres HUD surfaces are exercised. The only user-reported **remaining unwanted persistent normal-screen bar** is Main; that narrower visual statement does **not** override deliberate pet, class-resource, party, quest, target-of-target, boss/focus, private/group aura or special-control retention.
+- `Logres/Actions/Primary.lua` explicitly reports `stockSuppressionAuthorized=false`, `specialPagingCoverage=normal-pages-only` and `stockPreserved=true`. UI ownership row `main_action` remains STOCK and `special_actions` remains STOCK. Existing read-only normal-page evidence **does not** authorize a Main hide. D-023/D-044 govern combat/special/edit/restoration. Secure state must be capability-gated and fail open; no blanket frame hiding.
+- Debuff functionality **accepted for visually observed appearance only** (P0183 R1/P0184); defer styling to whole-screen Phase H polish. Blizzard aura presentation still serves completeness fallback; no runtime proof for every separate player/hostile-target state or all combat transitions.
+- Preserve P0182 failed filter-only attempt, first P0183 ZIP's prewrite `__pycache__` hash-manifest failure and R1 repair, original P0178 >60-upvalue startup FAIL, P0175 R2 nil-row FAIL, and the intermittent post-loot ObjectiveTracker flash (OPEN / INTERMITTENT / UNREPRODUCED).
 
 ## Next Action
 
-After the P0184 docs-only acceptance patch is applied and pushed, verify the remote commit. Then continue Phase H.1's remaining **Main/Override/special action** secure-routing, editing/restoration and fail-open ownership boundary with targeted source checks, preserving stock behavior until equivalent controls are proven. Also retain other independent gates (pet, class resources, party, full quest, minimap, target-of-target, boss/focus, persistent XP), and the intermittent loot-linked ObjectiveTracker flash. Finish whole-screen aura styling/positions with other accepted Phase H polish, **not** in a separate immediate debuff patch. Use developer panel actions when available. Do not demand duplicate tests of already accepted observations.
+**P0185 is a documentation-only memory consistency checkpoint** against verified `4e999b1`; no runtime change or WoW retest. After push verification, proceed **directly to the narrow MainActionBar implementation**. Validate actual normal-screen Main disappearance **and no invisible stock click region**, functional Logres Primary normal-page input/edit access, special-mode and combat fail-open/restoration when naturally available, and Immersion OFF recovery. Use the developer panel (Phase 0 **Run All**, **UI Ownership Check**, and corresponding action/ownership controls) for available checks; do not demand redundant reruns of P0183. Do not manufacture rare gameplay to prove environmentally absent special modes.
 
 ## Success Criteria
 
-P0183 runtime/visual acceptance applies to Logres debuffs visibly appearing and to the recorded native container active setup and clean Run All/ownership check, nothing broader. P0184 is documentation-only. Future removal of stock aura presentation still requires separate information/fallback completeness and per-unit transition proofs.
+The visually redundant normal Main presentation is absent when Logres has replacement coverage and present/usable when it does not, including special/override/vehicle/possess requirements. Routing, action execution/feedback, edit access, exact restoration, and interactions remain usable; no hidden clickable stock bar, protected-action, taint, Lua or secret-value failures. No assertion that all STOCK classifications are removed; the whole-screen integration/visual polish stage follows capability-safe H.1 closure.
 
 ## Do Not Reopen Without New Evidence
 
-No exact player HP, conventional player health bar, enemy exact level/class/difficulty, protected or secret payload inspection, blanket native suppression, polling, or combat-unsafe mutation. PvP is a modifier, not Immersion OFF. Stock Main/special/pet/class/party/minimap/full quest/target-of-target/private/group aura fallbacks remain while unsupported. Intermittent ObjectiveTracker flash remains OPEN/INTERMITTENT/UNREPRODUCED.
+No exact player HP, conventional player health bar, enemy exact level/class/difficulty, secret-capable reads, broad stock UI suppression, polling or periodic forcing, or combat-unsafe protected mutation. PvP remains a modifier, not Immersion OFF. Keep class/pet, party/CompactParty, special actions, quest and on-demand native access, target-of-target, nameplates and private/group aura fallbacks until independently replacement-proven. The intermittent ObjectiveTracker flash remains OPEN / INTERMITTENT / UNREPRODUCED.
 
 ## Relevant References
 
+- `docs/memory/patches/P0185_MAIN_BAR_MEMORY_RECONCILIATION.md`
+- `docs/memory/evidence/P0185_MAIN_BAR_MEMORY_AUDIT_2026-10-09.md`
 - `docs/memory/patches/P0184_ACCEPT_P0183_RUNTIME.md`
 - `docs/memory/evidence/P0184_ACCEPT_P0183_RUNTIME_2026-10-09.md`
-- `docs/memory/patches/P0183_NATIVE_DEBUFF_CONTAINERS.md`
-- `docs/memory/evidence/P0183_NATIVE_DEBUFF_CONTAINERS_2026-10-09.md`
-- `docs/memory/decisions/D-041_AURA_STATUS_SOURCE_AND_PRIORITY_POLICY.md`
+- `docs/memory/decisions/D-023_SELECTIVE_STOCK_ACTION_REPLACEMENT.md`
+- `docs/memory/decisions/D-044_CLASS_PET_SPECIAL_CONTROL_SOURCE_AND_FALLBACK_POLICY.md`
 - `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`
+- `docs/memory/investigations/ACTIVE.md`
 - `docs/ROADMAP.md`

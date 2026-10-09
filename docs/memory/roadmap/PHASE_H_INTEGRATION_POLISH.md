@@ -1,6 +1,6 @@
 # Phase H — Integration and Polish
 
-Status: ACTIVE — H.1 OPEN; P0178 R1 ownership audit runtime-accepted; partial/stock gaps remain
+Status: ACTIVE — H.1 OPEN; after P0184, normal MainActionBar is the sole user-reported unwanted persistent stock bar; retain intentional fallbacks; H.2/H.3 later
 
 ## Product objective
 
@@ -553,3 +553,7 @@ The first P0183 delivery failed before reading the Git baseline or writing track
 ## P0184 — secure debuff appearance gate accepted (2026-10-09)
 
 P0183 R1 `0.0.98-dev` is durable at `11a342b`. The user visually confirms **Logres debuffs appear**, and uploaded loadCount 234 Phase 0 Run All completes cleanly with native HARMFUL containers `ready=true active=true` and ownership 17 PASS/18 STOCK/0 FAIL. This closes the initial *missing Logres debuff icon* delivery problem for observed cases. Keep all Blizzard stock/private/group auras and their information/control fallback; native membership is opaque, individual player/hostile-target breadth unproven, and no aura suppression is authorized. Debuff borders, sizes, density, positioning and other visuals should be refined together with the approved Phase H authored-layout/final-polish sequence, not via an immediate new debuff-only patch. **Next H.1 ownership gate:** Main/Override/special actions secure controls, edit path and restoration/fail-open before suppression. No unverified reassertion or probing of secret native members. P0184 documentation acceptance pending push.
+
+## P0185 — current H.1 completion gate after P0184 acceptance (2026-10-09)
+
+P0184 is verified `main` `4e999b1`; user-confirmed Logres native debuffs appear and styling joins whole-screen polish later. The **last user-reported redundant persistent stock bar on the ordinary Immersion ON screen is `MainActionBar`**. Distinguish that narrow visual goal from the 18 intentionally retained `STOCK` surfaces in the Phase 0 matrix; many retain necessary information/control and are not inspected for actual visibility. Main `stockSuppressionAuthorized=false` and special coverage `normal-pages-only` require a coherent capability-gated implementation before removing its normal visual/mouse surface. Preserve Blizzard special/Override/vehicle/possess control, edit access or deliberate on-demand stock editor, pet/class/party/aura and native dock fallbacks, safe protected/combat transitions and exact restoration. No normal Main hide without usable replacement or fail-open stock. **H.1 remains OPEN for this Main work only as the next requested screen-cleanup implementation**; H.2 authored placement and H.3 visual polish proceed after. P0185 changes docs only. The older P0164/P0165 closure and P0168/P0183 candidate paragraphs above remain historical, not current status.

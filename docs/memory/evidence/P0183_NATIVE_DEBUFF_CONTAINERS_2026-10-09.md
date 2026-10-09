@@ -1,6 +1,6 @@
 # P0183 — native restricted-aura rendering hypothesis and gate (2026-10-09)
 
-Status: **source-supported implementation candidate; no runtime validation yet**.
+Status at original P0183 issuance: **source-supported candidate, runtime then pending**. Later P0184 evidence accepts actual user-confirmed Logres debuff visibility (see end).
 
 Verified baseline main `2adce36` contains P0181 acceptance of P0180 `0.0.96-dev`: Phase 0 Run All completed, ownership 17 PASS / 18 STOCK / zero FAIL; event history player harmful ordinary positive=0, target harmful ordinary positive=0 with 6 restricted events across 9 target samples, target HELPFUL one ordinary positive on a friendly target. These source observations are not proof that no debuff existed. The user reports Blizzard debuffs visible and Logres debuffs absent even after P0182 filter-only trial. That failure is not repaired merely by passing source contracts or synthetic reads.
 
