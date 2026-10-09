@@ -8,29 +8,32 @@ project: logres
 
 ## Active Objective
 
-**Phase H.1 OPEN.** `main` verified at `c55b6d7` with combined P0175/R1/R2/R3 (`0.0.91-dev`). The P0175 R2 nil-rows / Run All crash was corrected by R3: uploaded loadCount 222 diagnostics reach `Logres checkall: complete` with HUD `immersion=true visible=true` and no Lua errors. Populated live player/target harmful auras remain DEFERRED; brief loot-associated Objective Tracker flash remains OPEN / INTERMITTENT. Blizzard aura and secure action fallbacks stay intact.
+**Phase H.1 OPEN.** GitHub `main` verified at `5379a9f` (P0176 R1, `0.0.92-dev`). Uploaded loadCount 224 diagnostics prove P0176's preview-excluded live history and clean Run All: target HELPFUL max=1/positiveReads=4, player/target HARMFUL max=0, 456 cumulative secret skips across 53 scan observations. The P0175 R2 nil-rows crash remains a recorded failure corrected by P0175 R3; original P0176 shadow-checker failure is corrected by R1. Stock auras, secure Main/Override fallback and the unresolved loot tracker flash remain guarded.
 
 ## Current Work Item
 
-**P0176 R1 (`0.0.92-dev`, corrective unpushed read-only candidate).** The original P0176 ZIP FAILED safely in the shadow checker before tracked writes: its live-history call altered the disabled-snapshot source shape required by `check_status_aura_disabled_contract.py`. R1 preserves that historical failure, keeps the R3 disabled-snapshot guard unchanged and moves the diagnostic call to the guarded post-snapshot read path. Retain a per-session, preview-excluded history of ordinary aura-row peaks and positive reads for player harmful, target harmful and target helpful on the existing safe `readUnit` event path. Surface these counts through the existing Phase H Status Aura Check, without modifying rendering, source filters, Blizzard aura fallback, native cast gating, target attachment or quest folding. This preserves naturally occurring evidence after the aura or target disappears.
+**P0177 (`0.0.93-dev`, local candidate).** Review WeakAuras and Plater source families and build an independent Logres-owned bounded aura reader that compares plain `HARMFUL`/`HELPFUL` with priority filters using secret-first per-index queries. Keep it read-only via the existing Phase H Status Aura Check; never promote the new candidate to the renderer without populated in-client evidence. Do not copy external addon code or adopt unrestricted slot/delta reads. Preserve all P0176/R3 source contracts and Blizzard fallback.
 
 ## Verified State
 
-P0175 R3 is durable at `c55b6d7`. Uploaded `0.0.91-dev`, loadCount 222 diagnostics record saved Immersion ON, Phase 0 Run All complete, HUD visible=true, Layout 16/21, native access 5 folded/0 open, cast gate armed with 0 escapes, source and status checks PASS within observed scope. No repeat of `StatusAuras.lua:273` nil-rows error. Status preview yielded 2 player harmful, 2 target harmful and 2 target helpful **preview-only** icons; live check had player harmful 0 and no target, so no harmful-source PASS. R1 user observed buffs but no debuffs; R2 split categories, live proof still missing. Loot quest flash remains intermittent/unreproduced. This evidence does not independently prove the mana bar's visual pixels, only HUD visibility diagnostics.
+P0176 R1 `5379a9f` is pushed and accepted for its observed source-history scope: loadCount 224, checkall complete, HUD `immersion=true visible=true`, layout 16/21, native UI folded=5/open=0, castGate 0 escapes, session history preview-excluded, target helpful max=1 and positiveReads=4, zero source failures. Player and target harmful remain at max=0 and are DEFERRED. Accumulated secret skips across multiple scans do not identify unique auras. The one-off quest UI flash while looting remains OPEN/INTERMITTENT, not fixed. User requested an independently implemented aura subsystem informed by other addons; this is P0177's source comparison prerequisite, not a suppression authorization.
 
 ## Next Action
 
-Apply P0176 R1 at exact verified `main` HEAD `c55b6d7` with clean tracked files; its applier preflights source SHA, all static contracts and diff hygiene in a shadow checkout, then writes transactionally. Deploy and `/reload`; use Phase H Status Aura Preview ON/Check/OFF, then Phase 0 Run All and Status Aura Check. When naturally relevant, observe actual player/target harmful effects, inspect a matching Blizzard debuff vs Logres icon, then check Phase H history after the effect expires/target clears. If live history never captures the visible source or any Lua/taint error occurs, preserve FAIL/deferral and do not push. Do not manufacture gameplay merely for proof.
+Apply P0177 against exact `5379a9f` baseline, run full shadow checks, deploy to Forever, `/reload`, Phase H Preview ON/Status Aura Check (source engine DEFERRED), Preview OFF/Status Aura Check (three base vs priority summaries when unit present), Phase 0 Run All (complete, HUD visible). Capture a naturally available harmful target/player effect if present without contrived travel; use the comparison summary to distinguish accessible generic HARMFUL vs priority filtering vs restricted indices. If both inaccessible, do not bypass secret protections or suppress stock frames. Report any Lua/taint/secret fault as FAIL.
 
 ## Success Criteria
 
-No false preview-as-live PASS. Session history accumulates only bounded ordinary per-category counts after the secret-first source path while active and preview OFF; no aura identifiers retained or UNIT_AURA delta inspection. History survives target disappearance and Immersion OFF/ON within the session, resets on `/reload`. Run All passes and HUD/resource stays available with Immersion ON. Actual debuff rendering and full replacement remain unproven until visually/runtime observed, and stock aura coverage remains intact.
+Only ordinary, per-index guarded candidates enter the independent reader; no secret values are inspected or retained. No production aura display, native status, camera, action or quest control changes. Preview performs no source comparison. The check distinguishes per-filter accessible, secret, empty and failure counts while target absence is DEFERRED; full suite and Run All pass for tested scope. Promotion of a new reader into status visuals remains gated on populated runtime evidence, not source speculation.
 
 ## Do Not Reopen Without New Evidence
 
 Preserve deliberate absence of exact player HP and target difficulty. Never inspect secret-capable aura values or `UNIT_AURA` delta payload; never suppress private/group or stock status before replacement coverage. D-041 target priority and D-042 world attachment gating remain authoritative. Do not hide MainActionBar without special/edit secure fallback; do not add polling or general native show hooks. Do not infer WoW runtime PASS from static checker results.
 
 ## Relevant References
+
+- `docs/memory/patches/P0177_AURA_SOURCE_ENGINE_COMPARISON.md`
+- `docs/memory/evidence/P0177_AURA_SOURCE_ENGINE_COMPARISON_2026-10-08.md`
 
 - `docs/memory/patches/P0176_R1_LIVE_AURA_CHECKER_COMPAT.md`
 - `docs/memory/evidence/P0176_R1_LIVE_AURA_CHECKER_COMPAT_2026-10-08.md`

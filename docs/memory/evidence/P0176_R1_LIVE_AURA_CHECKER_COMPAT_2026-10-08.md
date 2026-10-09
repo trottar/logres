@@ -11,3 +11,7 @@ P0175 R3's disabled-source contract recognizes an `elseif active ... else ... en
 ## Evidence boundaries
 
 R1's candidate source/checker tests are static; WoW runtime testing is pending. The full suite is run by the applier before tracked writes. No harmful live aura sample, visual completeness, loot tracker flash fix, or native UI expansion is claimed. Blizzard aura fallback and the original R2 Run All crash evidence remain preserved.
+
+## Post-push observation (verified `5379a9f`)
+
+Two client Run All completions, Preference/HUD PASS, target helpful live history max=1 / positiveReads=4, player/target harmful max=0, aggregate secret skips=456 in 53 scans, zero reported source failures. Preview unchanged source counters. All of these are bounded evidence, not proof of live debuff presentation; the P0176 original prewrite failure remains historical.

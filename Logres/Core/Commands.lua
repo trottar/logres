@@ -3311,6 +3311,36 @@ local function runStatusAuraCheck()
         tostring(d.historyScans), tostring(d.historyFailures),
         tostring(d.historySecrets)
     ))
+    -- Compare our independent source engine only on explicit Phase H/Run All
+    -- checks, never while preview data is active. This does not render icons.
+    if d.preview then
+        emit("Logres aura source engine: DEFERRED (preview active)")
+    elseif not shouldShow then
+        emit("Logres aura source engine: DEFERRED (Immersion OFF)")
+    else
+        local comparison = Logres.AuraSourceEngine.Capture()
+        if not comparison.ready then
+            emit("Logres aura source engine: DEFERRED (" .. comparison.reason .. ")")
+        else
+            for _, source in ipairs(comparison.groups) do
+                if source.reason ~= "scanned" then
+                    emit("Logres aura source " .. source.key .. ": DEFERRED (" .. source.reason .. ")")
+                else
+                    local base, priority = source.base, source.priority
+                    emit(string.format(
+                        "Logres aura source %s: base ordinary=%s secret=%s failures=%s empty=%s inspected=%s priority ordinary=%s secret=%s failures=%s empty=%s inspected=%s (read-only)",
+                        source.key,
+                        tostring(base.ordinary), tostring(base.secret),
+                        tostring(base.failures), tostring(base.empty),
+                        tostring(base.inspected),
+                        tostring(priority.ordinary), tostring(priority.secret),
+                        tostring(priority.failures), tostring(priority.empty),
+                        tostring(priority.inspected)
+                    ))
+                end
+            end
+        end
+    end
 end
 
 local function runStatusAuraPreview(argument)
