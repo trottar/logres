@@ -12,7 +12,7 @@ for token in (
     'bucket[#bucket + 1] = aura',
     'result.rows[#result.rows + 1] = aura',
     'targetHelpful = createLane(',
-    'renderLane(self.lanes.target, snapshot.harmfulRows, active)',
+    'renderLane(self.lanes.target, snapshot.harmfulRows, active and not useNative)',
     'renderLane(self.lanes.targetHelpful, snapshot.helpfulRows, active)',
     'targetHarmfulVisible = self.lanes.target.visible',
     'targetHelpfulVisible = self.lanes.targetHelpful.visible',

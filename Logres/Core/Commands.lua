@@ -3266,6 +3266,13 @@ local function runStatusAuraCheck()
         and d.targetShown == (shouldShow and d.targetVisible > 0)
         and d.targetHarmfulShown == (shouldShow and d.targetHarmfulVisible > 0)
         and d.targetHelpfulShown == (shouldShow and d.targetHelpfulVisible > 0)
+    -- Native aura buttons own restricted icon presentation. Their live aura
+    -- membership is intentionally never inspected by this diagnostic.
+    coherent = coherent or (
+        d.nativeActive == true and not d.preview and shouldShow
+        and d.playerShown == false and d.targetHarmfulShown == false
+        and d.targetHelpfulShown == (shouldShow and d.targetHelpfulVisible > 0)
+    )
     local targetEvidence = d.preview and "preview-only"
         or d.targetVisible > 0 and "live-populated"
         or "deferred-no-populated-target-aura"
@@ -3298,6 +3305,11 @@ local function runStatusAuraCheck()
         tostring(d.playerFields), tostring(d.targetFields),
         tostring(d.failures), tostring(d.duplicatesUnknown),
         tostring(d.refreshes), tostring(d.stockPreserved), tostring(d.lastReason)
+    ))
+
+    emit(string.format(
+        "Logres native debuffs: ready=%s active=%s (native secure player/target HARMFUL; membership not inspected)",
+        tostring(d.nativeReady), tostring(d.nativeActive)
     ))
     -- Event-latched source evidence is intentionally distinct from preview PASS.
     emit(string.format(

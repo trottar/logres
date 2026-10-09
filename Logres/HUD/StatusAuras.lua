@@ -342,6 +342,16 @@ function StatusAuras:Refresh(reason, onlyUnit)
     self.lastReason = reason
     local preferences = Logres:GetPreferences()
     local active = self.moduleEnabled and preferences.immersionEnabled == true
+    -- Native Blizzard aura containers render restricted harmful icons without
+    -- exposing their payloads to addon Lua. Ordinary legacy rows are fallback.
+    local useNative = false
+    if self.nativeDebuffs then
+        local nativeOK = Logres.NativeDebuffs.SetActive(
+            self.nativeDebuffs, active and not self.preview
+        )
+        useNative = nativeOK and active and not self.preview
+    end
+    self.nativeActive = useNative
     for _, unit in ipairs({ "player", "target" }) do
         if onlyUnit == nil or onlyUnit == unit then
             local snapshot
@@ -367,10 +377,10 @@ function StatusAuras:Refresh(reason, onlyUnit)
                 self:RecordLiveSnapshot(unit, snapshot, reason)
             end
             if unit == "target" then
-                renderLane(self.lanes.target, snapshot.harmfulRows, active)
+                renderLane(self.lanes.target, snapshot.harmfulRows, active and not useNative)
                 renderLane(self.lanes.targetHelpful, snapshot.helpfulRows, active)
             else
-                renderLane(self.lanes.player, snapshot.rows, active)
+                renderLane(self.lanes.player, snapshot.rows, active and not useNative)
             end
         end
     end
@@ -419,6 +429,9 @@ function StatusAuras:GetDebugStatus()
         historySecrets = self.liveSecrets,
         lastReason = self.lastReason,
         stockPreserved = true,
+        nativeReady = self.nativeDebuffs ~= nil,
+        nativeActive = self.nativeDebuffs ~= nil and self.nativeActive == true,
+        nativeReason = self.nativeReason,
         eventsReady = self.unitAuraRegistered == true
             and self.targetEventRegistered == true
             and self.worldEventRegistered == true,
@@ -447,6 +460,10 @@ function StatusAuras:OnInitialize()
             "target", "LEFT", "RIGHT", 100, -55, "targetHelpful"
         ),
     }
+    -- Secure native renderer is an additive HARMFUL presentation path.
+    -- Stock Blizzard aura frames and normal helpful presentation are retained.
+    self.nativeDebuffs, self.nativeReason = Logres.NativeDebuffs.Create()
+    self.nativeActive = false
     local eventFrame = CreateFrame("Frame")
     self.unitAuraRegistered = pcall(
         eventFrame.RegisterUnitEvent, eventFrame, "UNIT_AURA", "player", "target"
@@ -456,6 +473,9 @@ function StatusAuras:OnInitialize()
     )
     self.worldEventRegistered = pcall(
         eventFrame.RegisterEvent, eventFrame, "PLAYER_ENTERING_WORLD"
+    )
+    self.regenEventRegistered = pcall(
+        eventFrame.RegisterEvent, eventFrame, "PLAYER_REGEN_ENABLED"
     )
     eventFrame:SetScript("OnEvent", function(_, event, unit)
         if not self.moduleEnabled then

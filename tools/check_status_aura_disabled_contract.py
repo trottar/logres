@@ -35,9 +35,9 @@ else:
             errors.append('disabled snapshot missing zero '+key)
 
 for s in (
-    'renderLane(self.lanes.target, snapshot.harmfulRows, active)',
+    'renderLane(self.lanes.target, snapshot.harmfulRows, active and not useNative)',
     'renderLane(self.lanes.targetHelpful, snapshot.helpfulRows, active)',
-    'renderLane(self.lanes.player, snapshot.rows, active)',
+    'renderLane(self.lanes.player, snapshot.rows, active and not useNative)',
     'self:SubscribePreferences(function()',
     'self:Refresh("preference")',
     'function StatusAuras:OnDisable()',
