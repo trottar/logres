@@ -17,3 +17,7 @@ Deploy/reload, verify `/logres status` and Phase 0 Run All, Phase H Preview ON/O
 ## Limitations
 
 No naturally populated harmful data was available in loadCount 229, and the earlier target HELPFUL observation lacked confirmed hostility. Both remain OPEN/DEFERRED. The intermittent ObjectiveTracker flash remains OPEN/INTERMITTENT/UNREPRODUCED. Primary/special/pet/party/minimap/full-quest ownership remains capability-gated. No production aura renderer promotion occurs in P0180.
+
+## P0181 outcome — observed P0180 acceptance (2026-10-09)
+
+Verified user-pushed `main` `d45097c` with P0180 `0.0.96-dev`; latest loadCount 232 persisted **Phase 0 Run All complete**, including ownership ON `17 PASS / 18 STOCK / 0 FAIL / 0 DEFERRED`, no recorded Lua/command failure. Event history behaved correctly on naturally available source data and preview/Immersion guards in earlier loadCount 230/231. Only a friendly target general-filter HELPFUL candidate was ordinary-positive; player/target HARMFUL and hostile-target HELPFUL population remain DEFERRED. Stock auras stay available. See P0181 evidence for explicit scope and the recorded panel/slash communication failure. Original P0180 candidate text above remains historical.

@@ -15,3 +15,7 @@ Existing StatusAuras event listener calls independent reader only after the prod
 **PENDING**. No in-game source, reaction or harmful visibility PASS follows from static reasoning. A clean Run All with zero harmful rows remains environmental DEFERRED, not live harmful proof. If event-captured ordinary target harmful data appears, compare its actual Logres lane and Blizzard native visual before promoting the renderer. Preserve stock aura fallbacks regardless.
 
 Original P0178 `0.0.94-dev` slash startup compile failure (`handleCommand` >60 upvalues) remains historical FAIL; P0178 R1 observed fix at `fd0dc88`, acceptance checkpoint `8f5d94f`. Post-loot ObjectiveTracker flash remains intermittent/unreproduced; primary secure special ownership remains incomplete.
+
+## P0181 outcome — observed P0180 acceptance (2026-10-09)
+
+Verified user-pushed `main` `d45097c` with P0180 `0.0.96-dev`; latest loadCount 232 persisted **Phase 0 Run All complete**, including ownership ON `17 PASS / 18 STOCK / 0 FAIL / 0 DEFERRED`, no recorded Lua/command failure. Event history behaved correctly on naturally available source data and preview/Immersion guards in earlier loadCount 230/231. Only a friendly target general-filter HELPFUL candidate was ordinary-positive; player/target HARMFUL and hostile-target HELPFUL population remain DEFERRED. Stock auras stay available. See P0181 evidence for explicit scope and the recorded panel/slash communication failure. Original P0180 candidate text above remains historical.
