@@ -2,7 +2,7 @@
 
 As of 2026-10-09.
 
-Current checkpoint: P0178 R1 runtime-accepted at verified `fd0dc88` (`0.0.95-dev`); P0179 records the evidence. The older P0168/P0169 candidate text below is historical.
+Current checkpoint: P0179 verified at `8f5d94f` (P0178 R1 `0.0.95-dev` runtime accepted); P0180 `0.0.96-dev` is an event-evidence candidate, no gameplay PASS yet. The older P0168/P0169 candidate text below is historical.
 
 Current checkpoint: P0168 R1 is verified and user-confirmed; P0169 is a Bars 4–5/layout candidate, not runtime-accepted. Earlier P0168 runtime-pending prose below is historical.
 
@@ -384,3 +384,7 @@ Original P0178 `0.0.94-dev` failed in-client: `/logres` unavailable and another 
 GitHub `main` `fd0dc88` contains corrected P0178 R1 `0.0.95-dev`. Uploaded loadCount 229 diagnostics confirm `/logres` registered, Phase 0 `uiownershipcheck` and Run All completed in Immersion ON and OFF (and ON again), plus lifecycle/preference PASS. Ownership matrix: ON **35 total / 17 PASS / 18 STOCK / 0 FAIL / 0 DEFERRED**; OFF **35 total / 16 PASS / 19 STOCK / 0 FAIL / 0 DEFERRED**. Five native fold domains and cast gate matched expected ON/OFF states; observed HUD visibility and player/target/chat/secondary action ownership cohered. `STOCK` means deliberately retained ownership and often `not inspected`, **not** verified Blizzard-frame visibility or replacement completeness. The original P0178 `0.0.94-dev` compile failure (`handleCommand` >60 upvalues; `/logres` absent) is still FAIL history; R1 fixes the observed startup regression.
 
 The UI ownership registry must expand with future Logres UI ownership changes; existing specialized checks and Run All remain active. No new code or native suppression in P0179. Phase H.1 remains OPEN: naturally populated player/target harmful aura live/visual evidence still deferred, hostile-target buff classification unknown, loot-linked ObjectiveTracker flash intermittent/unreproduced, and primary/special/pet/party/minimap/full-quest stock coverage capability-gated. Canonical evidence `docs/memory/evidence/P0179_ACCEPT_P0178_R1_RUNTIME_2026-10-09.md`.
+
+## P0180 — event-driven harmful-aura evidence checkpoint (2026-10-09)
+
+GitHub `main` verified at `8f5d94f`: P0179 docs-only runtime acceptance durable; P0178 R1 `0.0.95-dev` UI ownership registry is an accepted ongoing regression gate (35 surfaces; Immersion ON 17/18 PASS/STOCK, OFF 16/19, zero FAIL for observed checks). P0180 candidate `0.0.96-dev` adds event-latched canonical-versus-priority aura *diagnostic* via existing `StatusAuras` events, with ordinary-safe friendly/attackable/unknown target classification. Preview and Immersion OFF excluded. No new renderer ownership, native mutation or polling; no harmful-aura runtime proof claimed. Stock fallback remains. Original P0178 >60-upvalue startup FAIL remains historical. Loot ObjectiveTracker flash remains intermittent/unreproduced and primary/special action ownership remains incomplete.

@@ -3341,6 +3341,24 @@ local function runStatusAuraCheck()
             end
         end
     end
+    local history = Logres.AuraSourceEngine.GetEventHistory()
+    for _, group in ipairs(history.groups) do
+        emit(string.format(
+            "Logres aura event %s: samples=%s baseMax=%s positive=%s priorityMax=%s positive=%s scanned=%s restrictedEvents=%s ordinaryEmpty=%s failures=%s relation=hostile:%s/friendly:%s/unknown:%s hostileMax=%s friendlyMax=%s last=%s (session-only, preview-excluded)",
+            group.key, tostring(group.events), tostring(group.baseMax),
+            tostring(group.basePositive), tostring(group.priorityMax),
+            tostring(group.priorityPositive), tostring(group.priorityScans),
+            tostring(group.restricted), tostring(group.empty),
+            tostring(group.failures), tostring(group.hostileEvents),
+            tostring(group.friendlyEvents), tostring(group.unknownEvents),
+            tostring(group.hostileMax), tostring(group.friendlyMax),
+            tostring(group.last)
+        ))
+    end
+    if history.unexpectedFailures > 0 then
+        emit("Logres aura event diagnostic: FAIL (unexpected read errors="
+            .. tostring(history.unexpectedFailures) .. ")")
+    end
 end
 
 local function runStatusAuraPreview(argument)

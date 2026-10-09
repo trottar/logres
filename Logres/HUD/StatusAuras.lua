@@ -477,6 +477,20 @@ function StatusAuras:OnInitialize()
         else
             self:Refresh(event)
         end
+        -- Event-driven diagnostic only: never inspect UNIT_AURA delta payloads.
+        -- The existing renderer remains the only status presentation owner.
+        if (event == "UNIT_AURA" or event == "PLAYER_TARGET_CHANGED")
+            and not self.preview
+        then
+            local preferences = Logres:GetPreferences()
+            if preferences.immersionEnabled == true then
+                local observedUnit = event == "UNIT_AURA" and unit or "target"
+                local ok = pcall(
+                    Logres.AuraSourceEngine.ObserveEvent, observedUnit, event
+                )
+                if not ok then Logres.AuraSourceEngine.NoteEventFailure() end
+            end
+        end
     end)
     self.eventFrame = eventFrame
 end

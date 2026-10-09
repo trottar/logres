@@ -8,42 +8,36 @@ project: logres
 
 ## Active Objective
 
-**Phase H.1 OPEN — ownership/coexistence and incomplete Blizzard replacement coverage.** GitHub `main` verified at `fd0dc88` (`0.0.95-dev`, P0178 R1). The expandable 35-surface Blizzard ↔ Logres UI ownership audit is installed and accepted for **observed Immersion ON/OFF, slash registration and Run All**. It is a policy/diagnostic matrix, not a claim that every retained stock frame was visually inspected or can be removed. The original P0178 `0.0.94-dev` client startup failure (Lua `handleCommand` more than 60 upvalues) remains recorded and corrected, not erased.
+**Phase H.1 OPEN.** Verified GitHub `main` `8f5d94ff8e8c9e2876dd993765f8865ea54e244c` includes P0179 docs-only acceptance and P0178 R1 (`0.0.95-dev`) UI ownership registry. This permanent 35-surface Blizzard ↔ Logres audit passes its observed Immersion ON/OFF transitions and Run All, but STOCK is ownership policy, **not verified frame visibility**. The original P0178 over-60-upvalue slash load failure is preserved as historical FAIL, corrected by R1.
 
 ## Current Work Item
 
-**P0179 — docs-only runtime evidence acceptance, awaiting user commit/push.** Synchronize P0178 R1 verified remote commit and observed 0.0.95-dev loadCount 229 diagnostics, without any addon-runtime or checker changes. Maintain the 35-surface registry and Phase 0 UI Ownership Check as the *ongoing* ownership regression gate whenever Logres adds a replacement or changes an ownership policy. Keep existing specialized checks and Phase 0 Run All.
+**P0180 — source-locked runtime diagnostic candidate (`0.0.96-dev`), NOT PUSHED/NOT IN-GAME VERIFIED.** Use the existing `StatusAuras` UNIT_AURA/target-change event listener to capture bounded, secret-first canonical vs priority aura source observations, and safely classify ordinary target reaction as attackable/friendly/unknown. No new events, UI mutations, polling, renderer changes or suppression. Keep the UI ownership checker at 35 policy entries and use Run All for regression.
 
 ## Verified State
 
-- Remote `main` at `fd0dc882f2a3bf81faab3bb23e5e47923145b438` contains `Logres/Core/UIOwnershipAudit.lua`, `tools/check_ui_ownership_audit_contract.py`, P0178/R1 manifests and the fix records. No unpushed-code claim remains.
-- Uploaded `LOGRES_DIAGNOSTICS_LATEST.lua`, `0.0.95-dev`, loadCount 229: `/logres status`, `/logres uiownershipcheck`, Phase 0 Run All, `/logres lifecyclecheck` and `/logres preferencecheck` executed; Run All completed in Immersion ON and OFF, with no command/Lua error recorded in these runs. Individual lifecycle and preference checks PASS.
-- Immersion ON: ownership `total=35 pass=17 stock=18 deferred=0 fail=0`; HUD `immersion=true visible=true`; five native domains folded, cast gate armed and `gateEscapes=0`. Immersion OFF: `total=35 pass=16 stock=19 deferred=0 fail=0`; Logres player/target/chat/bar replacement released, HUD hidden, five native domains restored, cast gate unarmed, and Run All complete. A subsequent Immersion ON Run All again returned 17/18/0/0.
-- **STOCK is policy-only**, not a proof of native frame visibility; entries often report `observed=not inspected`. A PASS can prove coherent observed addon-owned state without proving every gameplay/context transition or every Blizzard visual.
-- P0177 comparator previously observed one general target HELPFUL candidate missed by narrower priority filters; live player/target harmful data remains unproven, target hostility of buff observation unknown. The loadCount 229 scan had empty player harmful/absent target. Keep no harmful-coverage PASS claim.
+- `main` `8f5d94f` contains P0179 checkpoint and P0178 R1. Uploaded 0.0.95-dev loadCount 229 diagnostics: `/logres` works; Run All completes with no recorded Lua/command errors, HUD visible when ON and hidden when OFF, five native domains folded/restored, cast gate armed/unarmed, `gateEscapes=0`; ownership ON `17 PASS/18 STOCK/0 FAIL`, OFF `16 PASS/19 STOCK/0 FAIL`, restored ON 17/18; lifecycle and preference PASS.
+- P0177 canonical target HELPFUL ordinary candidate read (priority zero) was not identified as hostile; player/target HARMFUL naturally populated live source and visual coverage remain DEFERRED, sometimes ordinary empty and sometimes restricted. Secret skips are per-index scan observations, not count of hidden auras.
+- P0180 has no in-client result yet. Static checks cannot promote source/renderer runtime claims.
 
 ## Next Action
 
-Apply P0179 docs-only source-locked patch, run full repository static suite and `git diff --check`, commit/push only by user, then verify new main before advancing. No WoW redeploy or new in-game validation required for P0179. Thereafter use `/logres uiownershipcheck` and Run All as recurring Phase H audit gates. Next runtime capability investigation remains **naturally encountered live harmful-aura source/presentation vs retained Blizzard auras**; investigate source restrictions and priority-filter differences only on real ordinary evidence. Separately, the occasional post-loot ObjectiveTracker flash is OPEN/INTERMITTENT/UNREPRODUCED, and primary/special/pet/party/minimap/full-quest ownership remains capability-gated STOCK. Do not create a broad hider/polling workaround.
+Apply P0180 ZIP against exact `8f5d94f` main; full shadow static contracts and `git diff --check`, then deploy and `/reload`. Test `/logres status`, Phase H Status Aura Preview ON/OFF + Status Aura Check, Phase 0 Run All, and UI Ownership Check. Record event-latched ordinary-empty/restricted/positive/reaction evidence only if naturally encountered. Any Lua, taint or protected/secret error is FAIL and must be repaired before advance. On clean observed scope user commits/pushes, then verify GitHub main. Do not force combat solely for evidence.
 
 ## Success Criteria
 
-P0179 changes documentation/evidence only and leaves `0.0.95-dev` runtime untouched; static checks and whitespace check PASS; P0178 R1 acceptance is precise, negative history intact; registration guidance for future Logres surfaces remains explicit. Future UI-ownership changes extend the registry, provide a corresponding static contract, and are checked alongside existing Run All; STOCK/DEFERRED never auto-promote to PASS or suppression authorization.
+Event diagnostics are guarded by Immersion ON and preview OFF; no scans mutate Blizzard/UI. Existing aura lanes, mana, stock auras, native cast gate, 35-surface ownership matrix and Run All regressions remain working. `hostileMax` or `baseMax` only establishes an ordinary source candidate, not proven visual or complete replacement. Preserve privacy/restriction skips and environmental DEFERRED outcomes.
 
 ## Do Not Reopen Without New Evidence
 
-No conventional exact player HP bar, enemy exact level/class/difficulty, secret-capable value inspection, global frame suppression or generic reassertion. Preserve native group/party, class/pet, Main/Override/special actions, minimap, target auras/ToT/Focus/boss, full quest/XP, and unsupported interactions until secure and information/control replacements with restoration/fail-open are established. PvP modifies Immersion rather than turning it OFF. Historical failures include P0175 R2 nil-row, original P0176 prewrite regression, P0177 omitted-file push, and original P0178 upvalue failure.
+No exact player HP, exact enemy level/class/difficulty, secret-capable inspection, blanket suppression/reassertion. Stock target/player aura, class/pet, party, Main/Override/possess, minimap, full quest and unsupported interaction fallbacks remain. PvP modifies Immersion rather than turning OFF. Historical FAIL/deferrals: P0175 R2 nil-rows, original P0176 prewrite conflict, P0177 omitted-file push, original P0178 >60-upvalues; intermittent loot ObjectiveTracker flash remains OPEN/INTERMITTENT/UNREPRODUCED.
 
 ## Relevant References
 
+- `docs/memory/patches/P0180_AURA_EVENT_HISTORY.md`
+- `docs/memory/evidence/P0180_AURA_EVENT_HISTORY_2026-10-09.md`
 - `docs/memory/patches/P0179_ACCEPT_P0178_R1_RUNTIME.md`
 - `docs/memory/evidence/P0179_ACCEPT_P0178_R1_RUNTIME_2026-10-09.md`
-- `docs/memory/patches/P0178_R1_SLASH_UPVALUE_FIX.md`
-- `docs/memory/evidence/P0178_R1_SLASH_UPVALUE_FIX_2026-10-09.md`
-- `docs/memory/patches/P0178_UI_OWNERSHIP_MATRIX.md`
-- `docs/memory/evidence/P0178_UI_OWNERSHIP_MATRIX_2026-10-09.md`
-- `docs/memory/evidence/P0177_R1_DURABILITY_REPAIR_2026-10-09.md`
-- `docs/memory/evidence/P0164_BLIZZARD_SURFACE_OWNERSHIP_AUDIT_2026-10-07.md`
 - `docs/memory/decisions/D-041_AURA_STATUS_SOURCE_AND_PRIORITY_POLICY.md`
 - `docs/memory/decisions/D-042_WORLD_TARGET_ANCHOR_AND_FALLBACK_POLICY.md`
 - `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`

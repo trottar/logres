@@ -151,3 +151,113 @@ function Engine.Capture()
     end
     return { ready = true, reason = "read-only-comparison", groups = groups }
 end
+
+
+-- P0180: bounded, event-latched comparator evidence. StatusAuras already owns
+-- UNIT_AURA/target invalidations; this engine must never register a second
+-- event handler or inspect an event delta. No icon or unit identity is cached.
+local eventHistory = {}
+for _, spec in ipairs(GROUPS) do
+    eventHistory[spec.key] = {
+        events = 0, baseMax = 0, basePositive = 0,
+        priorityMax = 0, priorityPositive = 0, priorityScans = 0,
+        restricted = 0, empty = 0, failures = 0,
+        hostileEvents = 0, friendlyEvents = 0, unknownEvents = 0,
+        hostileMax = 0, friendlyMax = 0,
+        last = "not-observed",
+    }
+end
+local unexpectedFailures = 0
+
+local function ordinaryBoolean(func, ...)
+    if type(func) ~= "function" then return nil end
+    local ok, value = pcall(func, ...)
+    if not ok or isSecret(value) or type(value) ~= "boolean" then
+        return nil
+    end
+    return value
+end
+
+local function targetReaction()
+    -- 'hostile' here means ordinary attackable, NOT a hidden faction query.
+    if ordinaryBoolean(UnitCanAttack, "player", "target") == true then
+        return "hostile"
+    end
+    if ordinaryBoolean(UnitIsFriend, "player", "target") == true then
+        return "friendly"
+    end
+    return "unknown"
+end
+
+function Engine.NoteEventFailure()
+    unexpectedFailures = unexpectedFailures + 1
+end
+
+-- Called exclusively from StatusAuras' pre-existing UNIT_AURA and
+-- PLAYER_TARGET_CHANGED handler while Immersion is active and preview is off.
+function Engine.ObserveEvent(unit, event)
+    if isSecret(unit) or (unit ~= "player" and unit ~= "target") then return end
+    if isSecret(event) or (event ~= "UNIT_AURA" and
+        event ~= "PLAYER_TARGET_CHANGED") then return end
+    if not APIsReady() then return end
+    local reaction = unit == "target" and targetReaction() or "unknown"
+    for _, spec in ipairs(GROUPS) do
+        if spec.unit == unit then
+            local h = eventHistory[spec.key]
+            local present = ordinaryBoolean(UnitExists, spec.unit)
+            if present == true then
+                local base = aggregate({ scan(spec.unit, spec.baseline) })
+                h.events = h.events + 1
+                h.baseMax = math.max(h.baseMax, base.ordinary)
+                if base.ordinary > 0 then h.basePositive = h.basePositive + 1 end
+                if base.secret > 0 then h.restricted = h.restricted + 1 end
+                if base.empty > 0 then h.empty = h.empty + 1 end
+                h.failures = h.failures + base.failures
+                -- Priority scans only when base is populated, restricted or
+                -- indeterminate. Ordinary empty base reads need no extra scan.
+                if base.ordinary > 0 or base.secret > 0 or base.failures > 0 then
+                    local priority = {}
+                    for _, filter in ipairs(spec.priority) do
+                        priority[#priority + 1] = scan(spec.unit, filter)
+                    end
+                    local p = aggregate(priority)
+                    h.priorityScans = h.priorityScans + 1
+                    h.priorityMax = math.max(h.priorityMax, p.ordinary)
+                    if p.ordinary > 0 then
+                        h.priorityPositive = h.priorityPositive + 1
+                    end
+                    h.failures = h.failures + p.failures
+                end
+                if reaction == "hostile" then
+                    h.hostileEvents = h.hostileEvents + 1
+                    h.hostileMax = math.max(h.hostileMax, base.ordinary)
+                elseif reaction == "friendly" then
+                    h.friendlyEvents = h.friendlyEvents + 1
+                    h.friendlyMax = math.max(h.friendlyMax, base.ordinary)
+                else
+                    h.unknownEvents = h.unknownEvents + 1
+                end
+                h.last = base.secret > 0 and "restricted"
+                    or base.failures > 0 and "read-failure"
+                    or base.ordinary > 0 and "ordinary"
+                    or base.empty > 0 and "ordinary-empty"
+                    or "indeterminate"
+            else
+                h.last = present == false and "unit-absent"
+                    or "unit-unreadable"
+            end
+        end
+    end
+end
+
+function Engine.GetEventHistory()
+    local groups = {}
+    for _, spec in ipairs(GROUPS) do
+        local h = eventHistory[spec.key]
+        local copy = { key = spec.key }
+        for k, v in pairs(h) do copy[k] = v end
+        groups[#groups + 1] = copy
+    end
+    return { groups = groups, unexpectedFailures = unexpectedFailures,
+        sessionOnly = true }
+end
