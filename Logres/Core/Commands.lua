@@ -4217,18 +4217,34 @@ local function runNativeAccessCheck()
         and result.desired == expected
         and result.dockShown == expected
         and result.incompleteDomains == 0
-        and result.foldedDomains + result.openDomains == (expected and 4 or 0)
+        and result.foldedDomains + result.openDomains == (expected and 5 or 0)
         and result.failures == 0
+        and result.refoldFailures == 0
+        and result.pendingRefolds == 0
+        and result.castGateArmed == result.castGateExpected
+        and result.castGateFailures == 0
+        and result.castGateEscapes == 0
         and result.lastError == nil
+    local classification = passed and "PASS"
+        or (result.pendingRefolds > 0 and InCombatLockdown()
+            and "DEFERRED" or "FAIL")
     emit(string.format(
-        "Logres nativeuicheck: %s (desired=%s dock=%s folded=%s open=%s incomplete=%s attempts=%s folds=%s restores=%s failures=%s event=%s details=%s error=%s mainPetStock=true)",
-        passed and "PASS" or "FAIL",
+        "Logres nativeuicheck: %s (desired=%s dock=%s folded=%s open=%s incomplete=%s attempts=%s folds=%s restores=%s failures=%s event=%s details=%s error=%s refolds=%s/%s lastRefold=%s nativeShows=%s/%s combatDeferred=%s pending=%s lastShow=%s castGate=%s/%s gateCounts=%s/%s/%s gateEscapes=%s mainPetStock=true castStockOnDemand=true)",
+        classification,
         tostring(result.desired), tostring(result.dockShown),
         tostring(result.foldedDomains), tostring(result.openDomains),
         tostring(result.incompleteDomains), tostring(result.attempts),
         tostring(result.folds), tostring(result.restores),
         tostring(result.failures), tostring(result.lastEvent),
-        tostring(result.domains), tostring(result.lastError)
+        tostring(result.domains), tostring(result.lastError),
+        tostring(result.refoldAttempts), tostring(result.refoldFailures),
+        tostring(result.lastRefoldEvent),
+        tostring(result.nativeShows), tostring(result.showRefolds),
+        tostring(result.combatShowDeferrals),
+        tostring(result.pendingRefolds), tostring(result.lastNativeShow),
+        tostring(result.castGateArmed), tostring(result.castGateExpected),
+        tostring(result.castGateAttempts), tostring(result.castGateRestores),
+        tostring(result.castGateFailures), tostring(result.castGateEscapes)
     ))
 end
 

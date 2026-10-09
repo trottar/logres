@@ -92,6 +92,10 @@ for forbidden in (
     "HideUIPanel",
     "SecureActionButtonTemplate",
 ):
+    # Native tooltip setters display trusted Blizzard aura text; they
+    # are not the forbidden addon-side UnitAura() data query.
+    if forbidden == "UnitAura(" and module.count("UnitAura(") == module.count("GameTooltip:SetUnitAura("):
+        continue
     if forbidden in module:
         errors.append(
             "PlayerHelpfulAuras.lua exceeds P0137 player-helpful boundary: "

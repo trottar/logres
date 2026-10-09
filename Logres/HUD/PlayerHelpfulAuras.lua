@@ -173,6 +173,7 @@ local function readAura(index)
     end
 
     return {
+        index = index,
         icon = icon,
         applications = applications,
         applicationsSecret = applicationsSecret,
@@ -218,6 +219,7 @@ function HelpfulAuras:ReadSnapshot()
 end
 
 local function setSlotAura(slot, aura)
+    slot.auraIndex = aura.index
     slot.icon:SetTexture(aura.icon)
     slot.icon:Show()
 
@@ -240,6 +242,7 @@ local function setSlotAura(slot, aura)
 end
 
 local function clearSlot(slot)
+    slot.auraIndex = nil
     slot.frame:Hide()
     slot.icon:SetTexture(nil)
     slot.count:ClearText()
@@ -501,8 +504,27 @@ function HelpfulAuras:OnInitialize()
             (index - 1) * (iconSize + gap),
             0
         )
-        slotFrame:EnableMouse(false)
+        slotFrame:EnableMouse(true)
         slotFrame:Hide()
+        slotFrame.logresAuraIndex = index
+        slotFrame:SetScript("OnEnter", function(current)
+            local slot = self.slots[current.logresAuraIndex]
+            if not slot or type(slot.auraIndex) ~= "number"
+                or not GameTooltip or type(GameTooltip.SetUnitAura) ~= "function"
+            then
+                return
+            end
+            -- The source index was validated by the existing per-index
+            -- secret preflight. The native tooltip renders aura internals.
+            GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
+            GameTooltip:SetUnitAura("player", slot.auraIndex, FILTER)
+            GameTooltip:Show()
+        end)
+        slotFrame:SetScript("OnLeave", function()
+            if GameTooltip then
+                GameTooltip:Hide()
+            end
+        end)
 
         local icon = slotFrame:CreateTexture(
             nil,

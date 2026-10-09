@@ -1,0 +1,15 @@
+# P0174 R2 — user screenshot and native on-show evidence
+
+Date 2026-10-08. Source baseline P0174 `0.0.90-dev` local applier output `P0174_MANIFEST.txt`; remote main `f9c99685` P0173. Status: **runtime failure reported, corrective runtime NOT TESTED**.
+
+R1 delivery failure (preserved): the user ran the P0174 R1 applier and its shadow checker failed in `tools/check_memory_health.py` because R1 generated `CURRENT.md` lacked the mandatory `## Success Criteria` and `## Relevant References` headings. There were no R1 tracked writes. R2 fixes that delivery defect, preserves the same runtime repair design, and remains pending full static shadow checks and in-game validation.
+
+**Observed:** screenshot uploaded 2026-10-08 depicts a full native `All Objectives / Quests` tracker over the upper-right of the game world, overlapping the small Logres `STOCK / QUESTS / XP / MENU / CAST` dock. User reports tracker appears for extended intervals with brief disappearance, cast/channel bars vanish normally but return during combat, Blizzard buff/debuff surfaces are still visible, and Logres lacks target buff/debuff visuals. No new integrated diagnostic capture or combat taint report was supplied; root show timing is inferred from actual visible presentation and exact P0174 source, not directly measured.
+
+**Narrow cause hypothesis:** `NativeAccess:Fold(key)` returns successful `Refold` on subsequent relevant events, but Blizzard can call `Show()` later and no further invalidation need arrive. Frame-scope `OnShow` notification can close that gap. `NativeAccess:Refold` correctly defers mutations while combat-locked, which explains combat cast restoration as a **capability gap**, not a proof that combat-safe suppression is available. No broad hook, tick/poll, secure replacement or protected visual readback is justified.
+
+**Repair candidate:** exact ObjectiveTrackerFrame/PlayerCastingBarFrame/OverlayPlayerCastingBarFrame/TargetFrameSpellBar `OnShow` hooks; guard explicit Restore/manual-open; count native Show/hide and combat pending; resume via existing regen event. The old quest event triggers remain and do not alone establish persistence. Native CAST remains available for cast progress. If normal-world tracker still reappears, record that as FAIL and inspect the actual named frame/source before expanding hooks.
+
+**Auras:** D-041 explicitly preserves stock until player harmful/private/group and target/status replacement, including world-target anchoring, are proven. PlayerHelpfulAuras only provides a bounded HELPFUL|PLAYER lane; it does not replace stock. Enemy aura visuals remain an active feature gap, **not** a visual polish completion. Do not hide existing target aura/status UI in R1.
+
+**Validation pending:** deploy + /reload; test visible tracker over normal play / naturally available quest updates, CAST open/close, Immersion OFF/ON, in-combat casts without forced travel, nativeuicheck before and after, screenshot, Run All. Any in-combat cast display should be classified DEFERRED and its absence of secure suppression recorded. No runtime PASS until observed.

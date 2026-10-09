@@ -40,6 +40,78 @@ local function setActionArtBounds(texture, button)
     )
 end
 
+-- P0174: preserve Blizzard action-slot rearrangement and hover details.
+-- Never edit pet slots, inspect a cursor payload, or mutate action slots in combat.
+local function ordinaryActionSlot(button)
+    local slot = button.actionSlot
+    if issecretvalue and issecretvalue(slot) then
+        return nil
+    end
+    if type(slot) == "number" and slot >= 1 and slot <= 180
+        and button.petActionSlot == nil
+    then
+        return slot
+    end
+    return nil
+end
+
+local function actionBarsUnlocked()
+    if not Settings or type(Settings.GetValue) ~= "function" then
+        return false
+    end
+    local ok, locked = pcall(Settings.GetValue, "lockActionBars")
+    if not ok or (issecretvalue and issecretvalue(locked)) then
+        return false
+    end
+    if type(locked) ~= "boolean" then
+        return false
+    end
+    return not locked or (type(IsModifiedClick) == "function"
+        and IsModifiedClick("PICKUPACTION"))
+end
+
+local function onActionDragStart(button)
+    local slot = ordinaryActionSlot(button)
+    if not slot or InCombatLockdown() or not actionBarsUnlocked() then
+        return
+    end
+    PickupAction(slot)
+end
+
+local function onActionReceiveDrag(button)
+    local slot = ordinaryActionSlot(button)
+    if not slot or InCombatLockdown() then
+        return
+    end
+    PlaceAction(slot)
+    -- ACTIONBAR_SLOT_CHANGED owns the subsequent visual refresh.
+end
+
+local function onActionEnter(button)
+    local slot = ordinaryActionSlot(button)
+    local petSlot = button.petActionSlot
+    if issecretvalue and issecretvalue(petSlot) then
+        return
+    end
+    if slot and GameTooltip and type(GameTooltip.SetAction) == "function" then
+        GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
+        GameTooltip:SetAction(slot)
+        GameTooltip:Show()
+    elseif type(petSlot) == "number" and GameTooltip
+        and type(GameTooltip.SetPetAction) == "function"
+    then
+        GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
+        GameTooltip:SetPetAction(petSlot)
+        GameTooltip:Show()
+    end
+end
+
+local function onActionLeave()
+    if GameTooltip then
+        GameTooltip:Hide()
+    end
+end
+
 function ActionButton.CreateCluster(
     name,
     columns,
@@ -302,6 +374,14 @@ end)
     button.activationFlash = activationFlash
     button.activationAnimation = activationAnimation
     button.activationFeedbackReady = true
+
+    -- Normal action slots: Blizzard-compatible pickup/swap; pet slots
+    -- remain intentionally stock-owned for editing.
+    button:RegisterForDrag("LeftButton", "RightButton")
+    button:SetScript("OnDragStart", onActionDragStart)
+    button:SetScript("OnReceiveDrag", onActionReceiveDrag)
+    button:SetScript("OnEnter", onActionEnter)
+    button:SetScript("OnLeave", onActionLeave)
 
     return button
 end
