@@ -1,0 +1,9 @@
+# P0175 R1 — User-reported panel omission and unseen target status
+
+Status: OPEN / delivery defect CONFIRMED; target no-visual issue NOT YET REPRODUCED in controlled in-game diagnostic.
+
+The initial P0175 release provided `/logres statusauracheck`, `/logres statusaurapreview on|off`, and Run All but no Phase H panel controls, because Phase H had 15 slots. The user explicitly requires routine testing through the developer panel; omitting these buttons was a process and integration failure. R1 relocates all three unchanged pet execution panel commands to Phase C, leaving direct command behavior intact, and registers three status actions in Phase H.
+
+Source review: P0175 target filter order was player-applied harmful, crowd control, dispellable helpful, big defensive, important helpful, general harmful. No unqualified `HELPFUL` filter was present, so normal enemy buffs outside specialized categories could not appear. R1 adds unqualified `HELPFUL` last, keeping priority selection and secret-first checks. User's no-target-icons observation may also reflect target absent, no aura in limited scan, secret/inaccessible indices, target filter availability, or a layout problem; without a populated-source diagnostic/screenshot it is not a proven complete root cause. R1 explicitly marks missing target live evidence as DEFERRED, even if the structural check passes.
+
+Acceptance pending: full static checks, deployment, Phase H Preview ON/Check/Preview OFF panel actions, Phase C pet probe buttons, observable player/target lanes with correct icons and hover, naturally available target helpful and harmful sources, immersion OFF/ON, and Phase 0 Run All. Stock aura information remains visible throughout. Record any Lua/taint/secret failure or real populated target rendering failure as OPEN and do not commit.

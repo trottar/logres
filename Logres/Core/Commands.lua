@@ -3254,6 +3254,66 @@ local function runPetActionExecutionProbe(argument)
     end
 end
 
+local function runStatusAuraCheck()
+    local status = Logres:GetModuleStatus("StatusAuras")
+    local module = Logres:GetModule("StatusAuras")
+    module:Refresh("diagnostic-check")
+    local d = module:GetDebugStatus()
+    local preferences = Logres:GetPreferences()
+    local shouldShow = preferences.immersionEnabled == true
+    local coherent =
+        d.playerShown == (shouldShow and d.playerVisible > 0)
+        and d.targetShown == (shouldShow and d.targetVisible > 0)
+        and d.targetHarmfulShown == (shouldShow and d.targetHarmfulVisible > 0)
+        and d.targetHelpfulShown == (shouldShow and d.targetHelpfulVisible > 0)
+    local targetEvidence = d.preview and "preview-only"
+        or d.targetVisible > 0 and "live-populated"
+        or "deferred-no-populated-target-aura"
+    local harmfulEvidence = d.preview and "preview-only"
+        or d.targetHarmfulVisible > 0 and "live-populated"
+        or "deferred-no-populated-target-harmful"
+    local playerEvidence = d.preview and "preview-only"
+        or d.playerVisible > 0 and "live-populated"
+        or "deferred-no-populated-player-harmful"
+    local pass = status.initialized == true
+        and status.enabled == true
+        and d.enabled == true
+        and d.source == true
+        and d.eventsReady == true
+        and d.failures == 0
+        and d.stockPreserved == true
+        and coherent
+    emit(string.format(
+        "Logres statusauracheck: %s (source=%s player=%s/%s/%s playerHarmfulEvidence=%s target=%s/%s/%s targetEvidence=%s targetHarmful=%s/%s targetHelpful=%s/%s harmfulEvidence=%s preview=%s secrets=%s/%s fields=%s/%s failures=%s duplicatesUnknown=%s refreshes=%s stock=%s reason=%s)",
+        pass and "PASS" or "FAIL",
+        tostring(d.source),
+        tostring(d.playerVisible), tostring(d.playerShown), tostring(d.playerReason),
+        tostring(playerEvidence),
+        tostring(d.targetVisible), tostring(d.targetShown), tostring(d.targetReason),
+        tostring(targetEvidence),
+        tostring(d.targetHarmfulVisible), tostring(d.targetHarmfulShown),
+        tostring(d.targetHelpfulVisible), tostring(d.targetHelpfulShown),
+        tostring(harmfulEvidence), tostring(d.preview),
+        tostring(d.playerSecret), tostring(d.targetSecret),
+        tostring(d.playerFields), tostring(d.targetFields),
+        tostring(d.failures), tostring(d.duplicatesUnknown),
+        tostring(d.refreshes), tostring(d.stockPreserved), tostring(d.lastReason)
+    ))
+end
+
+local function runStatusAuraPreview(argument)
+    local module = Logres:GetModule("StatusAuras")
+    if argument == "on" then
+        module:SetPreview(true)
+    elseif argument == "off" or argument == "live" then
+        module:SetPreview(false)
+    else
+        emit("Usage: /logres statusaurapreview [on|off]")
+        return
+    end
+    runStatusAuraCheck()
+end
+
 local function runPlayerHelpfulAuraCheck()
     local status =
         Logres:GetModuleStatus("PlayerHelpfulAuras")
@@ -4265,6 +4325,7 @@ local function runAllChecks()
     runQuestOfferControlsCheck()
     runQuestOfferStockSuppressionCheck()
     runPlayerHelpfulAuraCheck()
+    runStatusAuraCheck()
     runActionCheck()
     runPrimaryOwnershipCheck()
     runStockReplacementCheck()
@@ -4421,6 +4482,8 @@ local function printHelp()
     emit("  /logres navigationsourceprobe")
     emit("  /logres classpetspecialprobe")
     emit("  /logres petactionexecprobe [arm|check|hide]")
+    emit("  /logres statusauracheck")
+    emit("  /logres statusaurapreview [on|off]")
     emit("  /logres helpfulauracheck")
     emit("  /logres helpfulaurapreview [on|off]")
     emit("  /logres questofferacceptprobe")
@@ -4719,6 +4782,16 @@ local function handleCommand(message)
         return
     end
 
+
+    if command == "statusauracheck" then
+        runStatusAuraCheck()
+        return
+    end
+
+    if command == "statusaurapreview" then
+        runStatusAuraPreview(argument)
+        return
+    end
 
     if command == "helpfulauracheck" then
         runPlayerHelpfulAuraCheck()
@@ -5090,6 +5163,24 @@ Logres:RegisterDevPanelAction(
     "H"
 )
 Logres:RegisterDevPanelAction(
+    "statusAuraCheck",
+    "Status Aura Check",
+    "statusauracheck",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "statusAuraPreviewOn",
+    "Status Aura Preview ON",
+    "statusaurapreview on",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "statusAuraPreviewOff",
+    "Status Aura Preview OFF",
+    "statusaurapreview off",
+    "H"
+)
+Logres:RegisterDevPanelAction(
     "questInteractionProbe",
     "Quest Interaction Probe",
     "questinteractionprobe",
@@ -5123,19 +5214,19 @@ Logres:RegisterDevPanelAction(
     "petActionExecArm",
     "Pet Action Probe ARM",
     "petactionexecprobe arm",
-    "H"
+    "C"
 )
 Logres:RegisterDevPanelAction(
     "petActionExecCheck",
     "Pet Action Probe Check",
     "petactionexecprobe check",
-    "H"
+    "C"
 )
 Logres:RegisterDevPanelAction(
     "petActionExecHide",
     "Pet Action Probe Hide",
     "petactionexecprobe hide",
-    "H"
+    "C"
 )
 Logres:RegisterDevPanelAction(
     "petStateDiagnostic",
