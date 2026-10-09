@@ -1,7 +1,7 @@
 # P0175 R3 — Preference transition / HUD recovery
 
 - **Baseline:** local P0175 R2 `0.0.91-dev` on remotely verified P0174 R3 main `996f6099`.
-- **Status:** corrective candidate, NOT runtime validated or pushed.
+- **Status:** pushed and bounded runtime-accepted at `c55b6d7`; historical candidate testing plan follows below.
 - **Regression:** the user reported Logres mana resource bar missing after Phase 0 Run All. The latest uploaded client diagnostics contain `Logres command error: .../HUD/StatusAuras.lua:273: attempt to index local 'rows' (a nil value)` immediately after state/sensor checks; saved `immersionEnabled=false`.
 - **Narrow cause:** `runPreferenceCheck()` momentarily toggles immersion off. P0175 R2 `StatusAuras:Refresh()` disabled snapshot has only `rows={}` while target lanes unconditionally render `snapshot.harmfulRows` and `snapshot.helpfulRows`, yielding a nil `rows` argument. The preference setter had already changed the persisted value before the callback error aborted the restore path. The HUD intentionally hides its mana resource bar with Immersion OFF.
 - **Correction:** preserve empty `rows`, `harmfulRows`, and `helpfulRows` arrays on the disabled path. All rendering, native aura fallback, target filters, priority, cast gate, and objective-tracker policy remain unchanged. Add `check_status_aura_disabled_contract.py` to make the missing arrays a static FAIL, covering the existing preference/lifecycle/checkall path.

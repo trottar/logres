@@ -3299,6 +3299,18 @@ local function runStatusAuraCheck()
         tostring(d.failures), tostring(d.duplicatesUnknown),
         tostring(d.refreshes), tostring(d.stockPreserved), tostring(d.lastReason)
     ))
+    -- Event-latched source evidence is intentionally distinct from preview PASS.
+    emit(string.format(
+        "Logres statusaura live history: playerHarmful max=%s positiveReads=%s last=%s targetHarmful max=%s positiveReads=%s last=%s targetHelpful max=%s positiveReads=%s last=%s scans=%s failures=%s secrets=%s (session-only, preview-excluded)",
+        tostring(d.historyPlayerMax), tostring(d.historyPlayerPositive),
+        tostring(d.historyPlayerReason),
+        tostring(d.historyTargetHarmfulMax), tostring(d.historyTargetHarmfulPositive),
+        tostring(d.historyTargetHarmfulReason),
+        tostring(d.historyTargetHelpfulMax), tostring(d.historyTargetHelpfulPositive),
+        tostring(d.historyTargetHelpfulReason),
+        tostring(d.historyScans), tostring(d.historyFailures),
+        tostring(d.historySecrets)
+    ))
 end
 
 local function runStatusAuraPreview(argument)

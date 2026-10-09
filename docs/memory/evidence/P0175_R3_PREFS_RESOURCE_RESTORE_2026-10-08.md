@@ -11,3 +11,7 @@ R2 `StatusAuras:Refresh` supplies `snapshot = { rows = {}, reason = "disabled", 
 ## R3 test classification
 
 A source-locked candidate will add the two missing empty arrays and a static regression checker. It has NOT been tested in WoW. Do not mark R2 Run All PASS or harmful source coverage PASS. Existing R2 preview showed player=2, targetHarmful=2, targetHelpful=2; live check remained deferred for unpopulated harmful effects and absent target. Quest loot flash remains intermittent and not causally classified. Validate against the developer panel, then upload diagnostics if any error recurs.
+
+## R3 observed runtime acceptance (verified `c55b6d7`)
+
+After R3 was applied and pushed, uploaded loadCount 222 diagnostics at `0.0.91-dev` show saved Immersion ON, full Phase 0 Run All completion, HUD `visible=true`, Preference/Lifecycle/Status Aura checks PASS, and no recurring `rows` error. This closes the previously reproduced preference-transition failure for the observed scope. Visual mana pixels were not separately confirmed by the user. Harmful sources remain deferred (player empty, target absent); the R2 crash remains historical negative evidence. See `P0176_LIVE_AURA_EVIDENCE_2026-10-08.md`.

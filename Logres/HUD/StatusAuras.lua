@@ -312,6 +312,31 @@ local PREVIEW = {
     },
 }
 
+-- Retain category-level, ordinary-read evidence without retaining aura payloads.
+-- This is session-only and does not poll or read protected Blizzard UI state.
+local function recordLiveBucket(bucket, count, reason)
+    if count <= 0 then
+        return
+    end
+    bucket.positiveReads = bucket.positiveReads + 1
+    if count > bucket.maxRows then
+        bucket.maxRows = count
+    end
+    bucket.lastReason = reason
+end
+
+function StatusAuras:RecordLiveSnapshot(unit, snapshot, reason)
+    self.liveScans = self.liveScans + 1
+    self.liveFailures = self.liveFailures + snapshot.failures
+    self.liveSecrets = self.liveSecrets + snapshot.secretSkips
+    if unit == "player" then
+        recordLiveBucket(self.liveHistory.playerHarmful, #snapshot.rows, reason)
+    else
+        recordLiveBucket(self.liveHistory.targetHarmful, #snapshot.harmfulRows, reason)
+        recordLiveBucket(self.liveHistory.targetHelpful, #snapshot.helpfulRows, reason)
+    end
+end
+
 function StatusAuras:Refresh(reason, onlyUnit)
     self.refreshes = self.refreshes + 1
     self.lastReason = reason
@@ -338,6 +363,9 @@ function StatusAuras:Refresh(reason, onlyUnit)
                 }
             end
             self.last[unit] = snapshot
+            if active and not self.preview then
+                self:RecordLiveSnapshot(unit, snapshot, reason)
+            end
             if unit == "target" then
                 renderLane(self.lanes.target, snapshot.harmfulRows, active)
                 renderLane(self.lanes.targetHelpful, snapshot.helpfulRows, active)
@@ -377,6 +405,18 @@ function StatusAuras:GetDebugStatus()
         failures = p.failures + t.failures,
         duplicatesUnknown = p.duplicateUnknown + t.duplicateUnknown,
         refreshes = self.refreshes,
+        historyPlayerMax = self.liveHistory.playerHarmful.maxRows,
+        historyPlayerPositive = self.liveHistory.playerHarmful.positiveReads,
+        historyPlayerReason = self.liveHistory.playerHarmful.lastReason,
+        historyTargetHarmfulMax = self.liveHistory.targetHarmful.maxRows,
+        historyTargetHarmfulPositive = self.liveHistory.targetHarmful.positiveReads,
+        historyTargetHarmfulReason = self.liveHistory.targetHarmful.lastReason,
+        historyTargetHelpfulMax = self.liveHistory.targetHelpful.maxRows,
+        historyTargetHelpfulPositive = self.liveHistory.targetHelpful.positiveReads,
+        historyTargetHelpfulReason = self.liveHistory.targetHelpful.lastReason,
+        historyScans = self.liveScans,
+        historyFailures = self.liveFailures,
+        historySecrets = self.liveSecrets,
         lastReason = self.lastReason,
         stockPreserved = true,
         eventsReady = self.unitAuraRegistered == true
@@ -391,6 +431,14 @@ function StatusAuras:OnInitialize()
     self.refreshes = 0
     self.lastReason = "initialize"
     self.last = {}
+    self.liveScans = 0
+    self.liveFailures = 0
+    self.liveSecrets = 0
+    self.liveHistory = {
+        playerHarmful = { maxRows = 0, positiveReads = 0, lastReason = nil },
+        targetHarmful = { maxRows = 0, positiveReads = 0, lastReason = nil },
+        targetHelpful = { maxRows = 0, positiveReads = 0, lastReason = nil },
+    }
     self.lanes = {
         player = createLane("player", "RIGHT", "LEFT", -100, 17),
         -- Enemy debuffs and buffs must be inspectable in independent rows.

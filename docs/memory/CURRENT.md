@@ -8,29 +8,34 @@ project: logres
 
 ## Active Objective
 
-**Phase H.1 OPEN.** GitHub `main` verified at `996f6099`, P0174 R3 (`0.0.90-dev`) runtime accepted for observed quest/cast scope. The unpushed P0175/R1/R2 local `0.0.91-dev` candidate now has a confirmed preference callback regression: Phase 0 Run All aborts with `StatusAuras.lua:273` and leaves Immersion OFF, hiding the Logres mana resource. Harmful auras still lack populated live-source proof and a one-off loot-associated quest-tracker flash remains OPEN / INTERMITTENT.
+**Phase H.1 OPEN.** `main` verified at `c55b6d7` with combined P0175/R1/R2/R3 (`0.0.91-dev`). The P0175 R2 nil-rows / Run All crash was corrected by R3: uploaded loadCount 222 diagnostics reach `Logres checkall: complete` with HUD `immersion=true visible=true` and no Lua errors. Populated live player/target harmful auras remain DEFERRED; brief loot-associated Objective Tracker flash remains OPEN / INTERMITTENT. Blizzard aura and secure action fallbacks stay intact.
 
 ## Current Work Item
 
-**P0175 R3 (`0.0.91-dev`, corrective candidate, unpushed).** Fix only the disabled status snapshot shape: provide empty `rows`, `harmfulRows`, and `helpfulRows` to each rendering lane so the existing preference/lifecycle Run All checks do not crash while toggling Immersion OFF. Add a static disabled-snapshot regression contract; preserve all P0175 R2 visual categories, stock aura fallback and previous P0174 source-gated native casts. No speculative polling, aura suppression or objective tracker mutation.
+**P0176 R1 (`0.0.92-dev`, corrective unpushed read-only candidate).** The original P0176 ZIP FAILED safely in the shadow checker before tracked writes: its live-history call altered the disabled-snapshot source shape required by `check_status_aura_disabled_contract.py`. R1 preserves that historical failure, keeps the R3 disabled-snapshot guard unchanged and moves the diagnostic call to the guarded post-snapshot read path. Retain a per-session, preview-excluded history of ordinary aura-row peaks and positive reads for player harmful, target harmful and target helpful on the existing safe `readUnit` event path. Surface these counts through the existing Phase H Status Aura Check, without modifying rendering, source filters, Blizzard aura fallback, native cast gating, target attachment or quest folding. This preserves naturally occurring evidence after the aura or target disappears.
 
 ## Verified State
 
-P0174 R3 is on GitHub `main` `996f6099`, user-confirmed cast/quest runtime success for observed scope. P0175 R1 user confirmed player/enemy helpful visuals; harmful/debuff visuals were not confirmed. P0175 R2 preview produced player harmful 2 / target harmful 2 / target helpful 2, but live source was empty (player) and target absent; therefore harmful live coverage remains DEFERRED, not PASS. User then reported mana resource absent after Run All. Uploaded Logres diagnostics `0.0.91-dev`, loadCount 221, show `immersionEnabled=false` and `Logres command error: Interface/AddOns/Logres/HUD/StatusAuras.lua:273: attempt to index local 'rows' (a nil value)` immediately after State and Sensor checks. The missing disabled category tables are verified from R2 source; Run All **FAILED**, and preference was not restored. HUD hides resource intentionally when immersion is false. R3 has NO in-game result. The one-off loot-related quest UI flash remains OPEN/INTERMITTENT; P0174 R1/R2 history remains preserved in prior evidence.
+P0175 R3 is durable at `c55b6d7`. Uploaded `0.0.91-dev`, loadCount 222 diagnostics record saved Immersion ON, Phase 0 Run All complete, HUD visible=true, Layout 16/21, native access 5 folded/0 open, cast gate armed with 0 escapes, source and status checks PASS within observed scope. No repeat of `StatusAuras.lua:273` nil-rows error. Status preview yielded 2 player harmful, 2 target harmful and 2 target helpful **preview-only** icons; live check had player harmful 0 and no target, so no harmful-source PASS. R1 user observed buffs but no debuffs; R2 split categories, live proof still missing. Loot quest flash remains intermittent/unreproduced. This evidence does not independently prove the mana bar's visual pixels, only HUD visibility diagnostics.
 
 ## Next Action
 
-Apply R3 on the exact locally installed P0175+R1+R2 manifests at baseline GitHub main `996f6099`; the applier must run the full repo checker suite and diff check on the shadow candidate before tracked writes. Immediate recovery is `/logres immersion on` (the current broken R2 source may still fail when toggling OFF). Deploy the R3 candidate, `/reload`; use Phase H Status Aura Preview ON, OFF and Status Aura Check, then Phase 0 Run All. Verify its completion, no Lua/protected/secret errors, resource remains visible when Immersion ON and expected stock restoration while OFF. Do not push if this reproduces; treat populated harmful aura proof and loot quest flash as separate unresolved gates.
+Apply P0176 R1 at exact verified `main` HEAD `c55b6d7` with clean tracked files; its applier preflights source SHA, all static contracts and diff hygiene in a shadow checkout, then writes transactionally. Deploy and `/reload`; use Phase H Status Aura Preview ON/Check/OFF, then Phase 0 Run All and Status Aura Check. When naturally relevant, observe actual player/target harmful effects, inspect a matching Blizzard debuff vs Logres icon, then check Phase H history after the effect expires/target clears. If live history never captures the visible source or any Lua/taint error occurs, preserve FAIL/deferral and do not push. Do not manufacture gameplay merely for proof.
 
 ## Success Criteria
 
-No nil status lane on preference callbacks with Immersion OFF/ON, both target categories receive safe empty arrays, Run All reaches `Logres checkall: complete` with all applicable checks actually executed, and mana/resource HUD returns when Immersion ON. Preview-only harmful rows are never called live-data PASS. Stock aura protection and source-secret rules remain unchanged. P0175 R3 runtime outcome remains pending; Phase H.1 is still open.
+No false preview-as-live PASS. Session history accumulates only bounded ordinary per-category counts after the secret-first source path while active and preview OFF; no aura identifiers retained or UNIT_AURA delta inspection. History survives target disappearance and Immersion OFF/ON within the session, resets on `/reload`. Run All passes and HUD/resource stays available with Immersion ON. Actual debuff rendering and full replacement remain unproven until visually/runtime observed, and stock aura coverage remains intact.
 
 ## Do Not Reopen Without New Evidence
 
 Preserve deliberate absence of exact player HP and target difficulty. Never inspect secret-capable aura values or `UNIT_AURA` delta payload; never suppress private/group or stock status before replacement coverage. D-041 target priority and D-042 world attachment gating remain authoritative. Do not hide MainActionBar without special/edit secure fallback; do not add polling or general native show hooks. Do not infer WoW runtime PASS from static checker results.
 
 ## Relevant References
+
+- `docs/memory/patches/P0176_R1_LIVE_AURA_CHECKER_COMPAT.md`
+- `docs/memory/evidence/P0176_R1_LIVE_AURA_CHECKER_COMPAT_2026-10-08.md`
+- `docs/memory/patches/P0176_LIVE_AURA_EVIDENCE.md`
+- `docs/memory/evidence/P0176_LIVE_AURA_EVIDENCE_2026-10-08.md`
 
 - `docs/memory/evidence/P0175_R3_PREFS_RESOURCE_RESTORE_2026-10-08.md`
 - `docs/memory/patches/P0175_R3_PREFS_RESOURCE_RESTORE.md`
