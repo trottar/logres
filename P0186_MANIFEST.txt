@@ -1,0 +1,15 @@
+P0186 source-gate manifest
+baseline=60886bbededd8203c9a457dec23784cd53b64486
+runtime=0.0.98-dev (unchanged)
+docs-only=true
+shadow_checker_count=77
+files:
+  3e19663a8e92949af81b1d9c91034791e7e3c5413e03233ec47baee71f00d74e  docs/memory/CURRENT.md
+  deca4ec882036930789faca89d4b24db4be4889a801c840d571abafb320fe9a9  docs/memory/handoffs/CURRENT_HANDOFF.md
+  07a3eca197d3a0e0eb9b9cfa6c6aae252147f254bb3f3d2585cc65f809ed92d1  docs/memory/investigations/ACTIVE.md
+  930109bd23b2274e13f4b42a2dfe141dc774b3f0da5365f4a89cc5b168924193  docs/memory/roadmap/STATUS.md
+  e0903155f7bc6ae4440b71df23b22dbe8b5c2f14f0f5d5c61fbc3aff2966b308  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+  8df2169af7bab8c6f5d87a059b4fc18229131507e216865f2f5040b451768ee0  docs/ROADMAP.md
+  938b8286de0c464b9085671244b95d415bb555a14d662b722a1994ddf5fc6697  docs/memory/2026-10-09.md
+  c0089735e2aac9e3b75881faaf706056678fd31e8ccd068ea0be4d6b352e7646  docs/memory/patches/P0186_MAIN_SECURE_TRANSITION_SOURCE_GATE.md
+  4f999fde09c4004a37f58c82bbaab18add8fb08a796d5cafa5d19509cd567ec2  docs/memory/evidence/P0186_MAIN_TRANSITION_SOURCE_GATE_2026-10-09.md

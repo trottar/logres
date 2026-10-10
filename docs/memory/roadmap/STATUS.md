@@ -2,7 +2,7 @@
 
 As of 2026-10-09.
 
-Current checkpoint: P0184 verified on `main` `4e999b1`; P0183 R1 native Logres debuffs visibly appear. User identifies normal `MainActionBar` as the only remaining unwanted persistent bar. P0185 docs-only reconciles current H.1 pointers; see below.
+Current verified checkpoint: P0185 on `main` `60886bb`; P0183 R1 native debuffs visibly appear, runtime `0.0.98-dev`. The user identifies normal Main as the remaining redundant persistent bar. P0186 pinned native-source investigation blocks a naive Main alpha/mouse hide: unskinned special modes reuse Main, but Primary override key routing supports only normal pages. Next runtime-code gate is secure mode-aware action routing plus conditional, exactly reversible normal Main presentation. P0186 changes documentation only.
 
 Historical checkpoint (P0168): P0168 R1 verified; subsequent P0170–P0184 milestones supersede this as current work.
 

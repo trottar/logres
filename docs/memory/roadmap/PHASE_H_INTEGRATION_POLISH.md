@@ -1,6 +1,6 @@
 # Phase H — Integration and Polish
 
-Status: ACTIVE — H.1 OPEN; after P0184, normal MainActionBar is the sole user-reported unwanted persistent stock bar; retain intentional fallbacks; H.2/H.3 later
+Status: ACTIVE — H.1 OPEN; P0185 verified at 60886bb; P0186 source gate requires secure special-mode-safe Primary routing before Main suppression; H.2/H.3 later
 
 ## Product objective
 
@@ -557,3 +557,7 @@ P0183 R1 `0.0.98-dev` is durable at `11a342b`. The user visually confirms **Logr
 ## P0185 — current H.1 completion gate after P0184 acceptance (2026-10-09)
 
 P0184 is verified `main` `4e999b1`; user-confirmed Logres native debuffs appear and styling joins whole-screen polish later. The **last user-reported redundant persistent stock bar on the ordinary Immersion ON screen is `MainActionBar`**. Distinguish that narrow visual goal from the 18 intentionally retained `STOCK` surfaces in the Phase 0 matrix; many retain necessary information/control and are not inspected for actual visibility. Main `stockSuppressionAuthorized=false` and special coverage `normal-pages-only` require a coherent capability-gated implementation before removing its normal visual/mouse surface. Preserve Blizzard special/Override/vehicle/possess control, edit access or deliberate on-demand stock editor, pet/class/party/aura and native dock fallbacks, safe protected/combat transitions and exact restoration. No normal Main hide without usable replacement or fail-open stock. **H.1 remains OPEN for this Main work only as the next requested screen-cleanup implementation**; H.2 authored placement and H.3 visual polish proceed after. P0185 changes docs only. The older P0164/P0165 closure and P0168/P0183 candidate paragraphs above remain historical, not current status.
+
+## P0186 — native Main secure-source boundary (2026-10-09)
+
+Pinned Forever 70245 native `ActionBarController_UpdateAll` may repurpose MainActionBar for unskinned special pages and re-show it on transition. Existing Primary driver/bindings are normal-page-only, so simply copying stock Bar 2–5 alpha+mouse suppression would violate special access in combat. P0186 records this specific source-blocked approach, without code or new runtime claim. The next H.1 runtime candidate is integrated secure routing for all required native-mode fallbacks plus a reversible normal Main visibility and interaction contract, checked with existing developer-panel diagnostics and actual no-ghost-click visual proof. Preserve native special controls whenever incomplete. No unrelated polish or aura work before this gate.

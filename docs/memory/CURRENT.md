@@ -8,11 +8,11 @@ project: logres
 
 ## Active Objective
 
-**Phase H.1 OPEN — remove the last user-reported redundant persistent stock action-bar presentation: the normal Blizzard `MainActionBar`.** GitHub `main` **`4e999b1445d784378f8a6030f8f9dc737cb9e985`** has P0184 docs-only acceptance of P0183 R1. Runtime remains **`0.0.98-dev`**. The user reports that **only the Main action bar remains to remove** from the intended ordinary Immersion ON screen. Treat this as user visual scope, **not** as a claim that all other Blizzard-owned fallback/information/control surfaces have disappeared or can be suppressed.
+**Phase H.1 OPEN — remove the last user-reported redundant persistent stock action-bar presentation: the normal Blizzard `MainActionBar`.** GitHub `main` **`60886bbededd8203c9a457dec23784cd53b64486`** has P0185 Main-only memory reconciliation (P0184 debuff acceptance already durable). Runtime remains **`0.0.98-dev`**. The user reports that **only the Main action bar remains to remove** from the intended ordinary Immersion ON screen. Treat this as user visual scope, **not** as a claim that all other Blizzard-owned fallback/information/control surfaces have disappeared or can be suppressed.
 
 ## Current Work Item
 
-**Next implementation: normal-mode MainActionBar visual/interactivity ownership with proven secure routing, existing editing access, special-mode fallback and exact restoration.** Source-backed minimum coherent capability: Logres Primary actions, usable normal-page key routing/feedback, drag/edit/bind access or deliberate accessible stock editing fallback, out-of-combat activation, and seamless fail-open to Blizzard Main/Override/vehicle/possess/extra actions whenever Logres does not safely own a mode. The stock Main must not become an invisible clickable region. Do **not** conflate normal Main suppression with ownership of special actions; preserve special UI. Investigate exact native source/transition semantics before mutation and use a targeted panel regression, not another broad audit or unrelated aura work.
+**Next implementation: normal-mode MainActionBar visual/interactivity ownership with proven secure routing, existing editing access, special-mode fallback and exact restoration.** Source-backed minimum coherent capability: Logres Primary actions, usable normal-page key routing/feedback, drag/edit/bind access or deliberate accessible stock editing fallback, out-of-combat activation, and seamless fail-open to Blizzard Main/Override/vehicle/possess/extra actions whenever Logres does not safely own a mode. The stock Main must not become an invisible clickable region. Do **not** conflate normal Main suppression with ownership of special actions; preserve special UI. P0186 pinned native source review establishes that the Main bar is repurposed for unskinned special states, and Blizzard may explicitly re-show it; Logres normal-only Primary override bindings lack a corresponding combat-safe special path. **Do not directly copy Bar 2–5 alpha/mouse suppression to Main.** Next code step is one secure mode-aware Primary route/fallback and stock presentation mechanism, then targeted panel and visual regression, not another broad audit or unrelated aura work.
 
 ## Verified State
 
@@ -24,7 +24,7 @@ project: logres
 
 ## Next Action
 
-**P0185 is a documentation-only memory consistency checkpoint** against verified `4e999b1`; no runtime change or WoW retest. After push verification, proceed **directly to the narrow MainActionBar implementation**. Validate actual normal-screen Main disappearance **and no invisible stock click region**, functional Logres Primary normal-page input/edit access, special-mode and combat fail-open/restoration when naturally available, and Immersion OFF recovery. Use the developer panel (Phase 0 **Run All**, **UI Ownership Check**, and corresponding action/ownership controls) for available checks; do not demand redundant reruns of P0183. Do not manufacture rare gameplay to prove environmentally absent special modes.
+**P0185 is pushed and verified at `60886bb`. P0186 is a pinned native Main transition source-gate checkpoint; no runtime change or WoW retest.** The immediate runtime-code implementation must couple special-mode-safe Primary key routing to reversible Main presentation before any native Main hide. Validate actual normal-screen Main disappearance **and no invisible stock click region**, functional Logres Primary normal-page input/edit access, special-mode and combat fail-open/restoration when naturally available, and Immersion OFF recovery. Use the developer panel (Phase 0 **Run All**, **UI Ownership Check**, and corresponding action/ownership controls) for available checks; do not demand redundant reruns of P0183. Do not manufacture rare gameplay to prove environmentally absent special modes.
 
 ## Success Criteria
 
@@ -36,6 +36,8 @@ No exact player HP, conventional player health bar, enemy exact level/class/diff
 
 ## Relevant References
 
+- `docs/memory/patches/P0186_MAIN_SECURE_TRANSITION_SOURCE_GATE.md`
+- `docs/memory/evidence/P0186_MAIN_TRANSITION_SOURCE_GATE_2026-10-09.md`
 - `docs/memory/patches/P0185_MAIN_BAR_MEMORY_RECONCILIATION.md`
 - `docs/memory/evidence/P0185_MAIN_BAR_MEMORY_AUDIT_2026-10-09.md`
 - `docs/memory/patches/P0184_ACCEPT_P0183_RUNTIME.md`
