@@ -7,25 +7,24 @@ project: logres
 # Current State
 
 ## Active Objective
-**Phase H.2 ACTIVE — P0195 `9097f43` on `main`; P0196 R4 correcting uncommitted native target aura duplication.** The approved v4 screen composition and restored Logres player/target buff artwork remain authoritative. Source-backed target native aura configuration is a candidate, not runtime acceptance.
+**Phase H.2 ACTIVE — P0196 R4 verified pushed as `c89692b`, version `0.0.107-dev`; P0197 intermittent pet-bar deferred-reshow recovery is the next runtime candidate.** Approved v4 geometry and restored Logres player/target buff artwork remain accepted; target debuff icon size is deferred to H.3 polish.
 
 ## Current Work Item
-P0196 R4 is an **UNPUSHED RUNTIME CANDIDATE** addressing the R3 verified visual residual: the small Blizzard contextual target aura icon remains despite correct Logres player/target buffs. R3 `0.0.106-dev` loadCount 250 native-surfaces reported targetAuras:stock; Logres helpful and secure harmful lanes remain. Forever 1.60.1.70338 TargetFrameMixin:ConfigureAuraContainer source supports native 0/0 aura limits and restores, without the R1 forbidden OnShow hook. Existing pet/player buff replacement is untouched. TARGET opens the native aura container; Damage Meter and beta reporter unchanged. R1 visual/hook failure and R2 delivery failure remain recorded. Details: `docs/memory/patches/P0196_R4_TARGET_AURA_NATIVE_CONFIG.md` and `docs/memory/evidence/P0196_R4_TARGET_AURA_RUNTIME_EVIDENCE.md`. No R4 runtime PASS yet.
+P0197 is an **UNPUSHED RUNTIME CANDIDATE** with narrow hypothesis: stock PetActionBar can be shown by Blizzard during combat; NativeSurfaceReplacement OnShow defers Hide, yet post-combat Reconcile sees an existing snapshot and skips refold. Record addon-owned OnShow/deferred/recovered counters and retry Hide only once in an out-of-combat event-driven reconciliation when that precise deferred OnShow was observed. No protected visibility inspection, periodic forcing or user-facing artwork changes. Details: `docs/memory/patches/P0197_PET_BAR_DEFERRED_RESHOW_RECOVERY.md` and `docs/memory/evidence/P0197_PET_BAR_RESHOW_EVIDENCE.md`.
 
 ## Verified State
-- P0195 remains the last durable commit on `main` (`9097f43`); P0196 R1/R2/R3/R4 are unpushed. R1 failed player buff visuals and unsupported target aura OnShow hook; R2 failed prewrite memory-health validation. R3 user screenshot accepts original Logres player and target buff presentation, but shows one duplicate Blizzard target icon left of target; diagnostics report `targetAuras:stock`, with secure harmful renderer ready.
-- R4 native owner method is supported by inspected Forever source. Gameplay outcome, secure interactions, retarget stability and restoration are untested.
+- GitHub `main` `c89692b0dec19c6dc03779a1eb57a1536da2124e` verified as P0196 R4 user push. User screenshot and testimony: target helpful/harmful presentation correct; smaller Logres debuff icon is polish, not this work item.
+- User screenshot: a duplicate Blizzard PetActionBar is intermittently visible alongside Logres 5x2 pet controls, exact onset unknown. Uploaded `0.0.107-dev` loadCount 251 diagnostics: `native-surfaces CANDIDATE` reports petFrame/petActions/playerBuffs/targetAuras folded, pending=false, error=nil. This is snapshot state, **not proof that Blizzard remained hidden continuously**. Original OnShow and combat deferral code has a specific event-driven recovery gap; combat trigger remains **INFERRED, NOT OBSERVED**.
+- Prior P0196 R1 unsupported target OnShow hook/art regression and R2 prewrite checker failure remain preserved. Unobserved protected/combat/special pet states are not PASS.
 
 ## Next Action
-Apply P0196 R4 against exact uncommitted R3 worktree; deploy and `/reload`; test native target aura disappearance with target present, TARGET native open/close, Immersion OFF/ON, pet action/control regression, Phase H Native Access, Target Frame, Status Aura, Layout, Phase 0 Run All. A Lua, protected-action, taint, secret, lost aura or visual failure blocks commit. Only after runtime PASS may user commit and push.
+Apply and deploy P0197; observe the pet bar naturally, including when entering/leaving ordinary combat if available; run Phase H Native Access Check when duplicate visible and again after leaving combat. Observe `petbar-reshow` counters, PET open/close stock restoration, Immersion OFF/ON, Pet Action Probe Check and Run All. Do not claim source-only repair complete until in-game evidence. Any Lua/taint/protected-action error or lost pet interaction blocks acceptance. User alone commits/pushes after PASS.
 
 ## Success Criteria
-
-The visually redundant normal Main presentation is absent when Logres has replacement coverage and present/usable when it does not, including special/override/vehicle/possess requirements. Routing, action execution/feedback, edit access, exact restoration, and interactions remain usable; no hidden clickable stock bar, protected-action, taint, Lua or secret-value failures. No assertion that all STOCK classifications are removed; the whole-screen integration/visual polish stage follows capability-safe H.1 closure.
+Blizzard PetActionBar is not redundantly exposed alongside Logres's complete pet cluster during supported ordinary gameplay; intentional PET access/Edit Mode and fallback remain usable. If protected state prevents in-combat folding, defer and retry once at safe post-combat reconciliation without querying Blizzard protected visibility. Preserve the main/special, party, aura and native fallback boundaries of Phase H.
 
 ## Do Not Reopen Without New Evidence
-
-No exact player HP, conventional player health bar, enemy exact level/class/difficulty, secret-capable reads, broad stock UI suppression, polling or periodic forcing, or combat-unsafe protected mutation. PvP remains a modifier, not Immersion OFF. Keep class/pet, party/CompactParty, special actions, quest and on-demand native access, target-of-target, nameplates and private/group aura fallbacks until independently replacement-proven. The intermittent ObjectiveTracker flash remains OPEN / INTERMITTENT / UNREPRODUCED.
+No player exact HP or conventional health bar, enemy exact level/classification, secret-capable reads, broad native suppression, polling, periodic reassertion or combat-unsafe protected mutation. PvP remains a modifier, not Immersion OFF. Preserve Blizzard controls where capability is incomplete. ObjectiveTracker flash remains OPEN / INTERMITTENT / UNREPRODUCED.
 
 ## Relevant References
 

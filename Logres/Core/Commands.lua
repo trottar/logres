@@ -4420,6 +4420,16 @@ local function runNativeAccessCheck()
         tostring(surfaces.pending), tostring(surfaces.details),
         tostring(surfaces.lastError)
     ))
+    -- These are event counters, not a read of protected stock visibility.
+    emit(string.format(
+        "Logres petbar-reshow: AUDIT (onShow=%s combatDeferred=%s immediateRefolds=%s recovered=%s awaiting=%s lastReconcile=%s)",
+        tostring(surfaces.petActionShowEvents),
+        tostring(surfaces.petActionCombatDeferrals),
+        tostring(surfaces.petActionHookRefolds),
+        tostring(surfaces.petActionRecoveryRefolds),
+        tostring(surfaces.petActionDeferredRefold),
+        tostring(surfaces.petActionLastContext)
+    ))
 end
 
 function Logres:RunUIOwnershipCheck()

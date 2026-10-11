@@ -163,7 +163,10 @@ end
 function Native:Restore(key)
     if key == "targetAuras" then return self:RestoreTargetAuras() end
     local snapshot = self.snapshots[key]
-    if not snapshot then return true end
+    if not snapshot then
+        if key == "petActions" then self.petActionDeferredRefold = false end
+        return true
+    end
     if InCombatLockdown() then self.pending = true return false end
     self.restoring[key] = true
     local ok = pcall(snapshot.frame.SetShown, snapshot.frame, snapshot.shown)
@@ -174,6 +177,7 @@ function Native:Restore(key)
         return false
     end
     self.snapshots[key] = nil
+    if key == "petActions" then self.petActionDeferredRefold = false end
     self.restores = self.restores + 1
     return true
 end
@@ -203,10 +207,28 @@ function Native:Fold(key)
         local hooked = pcall(frame.HookScript, frame, "OnShow", function()
             if not self.snapshots[key] or self.restoring[key]
                 or not self.desired or self:ManualOpen(key) then return end
-            if InCombatLockdown() then self.pending = true return end
-            -- Hook only the identified stock source; no polling or native
-            -- visibility readback, and never hide during combat lockdown.
+            if key == "petActions" then
+                -- Logres-owned counts: only an OnShow callback was observed.
+                -- Never query protected Blizzard visibility in diagnostics.
+                self.petActionShowEvents = self.petActionShowEvents + 1
+                self.petActionLastContext = self.lastEvent
+            end
+            if InCombatLockdown() then
+                self.pending = true
+                if key == "petActions" then
+                    -- The existing post-combat Reconcile previously treated
+                    -- its stale snapshot as already folded (no retry).
+                    self.petActionDeferredRefold = true
+                    self.petActionCombatDeferrals =
+                        self.petActionCombatDeferrals + 1
+                end
+                return
+            end
+            -- Respond only to this specific Blizzard OnShow callback.
             local refolded = pcall(frame.Hide, frame)
+            if refolded and key == "petActions" then
+                self.petActionHookRefolds = self.petActionHookRefolds + 1
+            end
             if not refolded then
                 self.failures = self.failures + 1
                 self.lastError = "onshow-refold-failed:" .. key
@@ -249,6 +271,22 @@ function Native:Reconcile(reason)
     for _, key in ipairs(ORDER) do
         if self:ManualOpen(key) or not self:Ready(key) then
             self:Restore(key)
+        elseif key == "petActions" and self.petActionDeferredRefold
+            and self.snapshots.petActions then
+            -- Only retry a refold known to have been deferred by OnShow
+            -- during combat; never poll or inspect stock visibility.
+            local stock = self.snapshots.petActions.frame
+            local recovered = pcall(stock.Hide, stock)
+            if recovered then
+                self.petActionDeferredRefold = false
+                self.petActionRecoveryRefolds =
+                    self.petActionRecoveryRefolds + 1
+            else
+                self.failures = self.failures + 1
+                self.lastError = "pet-action-deferred-refold-failed"
+                -- Fail open to Blizzard stock rather than claiming ownership.
+                self:Restore(key)
+            end
         else
             self:Fold(key)
         end
@@ -292,6 +330,12 @@ function Native:GetDebugStatus()
         details = table.concat(details, " "),
         lastError = self.lastError,
         lastEvent = self.lastEvent,
+        petActionShowEvents = self.petActionShowEvents,
+        petActionCombatDeferrals = self.petActionCombatDeferrals,
+        petActionHookRefolds = self.petActionHookRefolds,
+        petActionRecoveryRefolds = self.petActionRecoveryRefolds,
+        petActionDeferredRefold = self.petActionDeferredRefold,
+        petActionLastContext = self.petActionLastContext,
     }
 end
 
@@ -311,6 +355,13 @@ function Native:OnInitialize()
     self.failures = 0
     self.lastError = nil
     self.lastEvent = "initialize"
+    -- Addon-owned observations from the already-hooked PetActionBar OnShow.
+    self.petActionShowEvents = 0
+    self.petActionCombatDeferrals = 0
+    self.petActionHookRefolds = 0
+    self.petActionRecoveryRefolds = 0
+    self.petActionDeferredRefold = false
+    self.petActionLastContext = "not-observed"
     self.eventFrame = CreateFrame("Frame")
     self.eventFrame:SetScript("OnEvent", function(_, event, unit)
         if event == "UNIT_PET" and unit ~= "player" then return end
