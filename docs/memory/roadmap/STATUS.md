@@ -4,6 +4,10 @@ As of 2026-10-11.
 
 Current verified checkpoint: P0189 on `main` `bd0c36a`, `0.0.101-dev`; fresh automatic Main CANDIDATE, manual OFF STOCK / ON CANDIDATE, final 7 activations/6 restores, no Main error, Primary 12/12 and integrated Run All / 35-row ownership PASS for tested normal mode. User reports all worked as expected. H.1 observed ordinary scope accepted, special combat/vehicle/override/possess/form/petbattle still ENVIRONMENTALLY DEFERRED. Phase H.2 authored geometry calibration next (P0191), H.3 later. Preserve historical delivery/runtime failures and deliberate stock fallback.
 
+## P0191 — accepted H.2 screen-map design baseline (docs-only candidate)
+
+User accepts v4 13 component envelopes in normalized top-left percentage coordinates, with Main/Secondary y=60.4 and right-offset symmetric enemy auras; precise authority: `docs/design/layout/SCREEN_MAP_V4.json`, D-045. Player Debuffs above bottom-center Resource, class/totems above left action bars. This is *design acceptance*, not live UI pixel sizing/collision validation. P0191 preparation remains unpushed until user verification. P0192 follows as real geometry translation, H.3 only after H.2. All native stock fallback/secure/secret constraints and historical failures retained.
+
 Historical checkpoint (P0168): P0168 R1 verified; subsequent P0170–P0184 milestones supersede this as current work.
 
 ## Active work stream

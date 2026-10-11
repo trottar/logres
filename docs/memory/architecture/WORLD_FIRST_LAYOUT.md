@@ -83,6 +83,12 @@ class of information is presented.
 
 This record does not freeze coordinates.
 
+Phase H.2 now has a **user-approved design-only v4 coordinate baseline**:
+`../../design/layout/SCREEN_MAP_V4.json` and `.md` (D-045).
+These percentages define intended component envelopes, not live WoW anchors; the
+runtime still uses preexisting `Integration/Layout.lua` pixel offsets until a
+separate source/collision-gated implementation is tested.
+
 Phase H may establish authored defaults and a small set of safe adjustments,
 but unrestricted frame/profile construction is outside the intended Logres
 product boundary unless a later explicit decision reopens it.

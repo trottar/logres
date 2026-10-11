@@ -2,6 +2,10 @@
 
 Status: ACTIVE — H.1 observed ordinary auto Main ACCEPTED at P0189; special/combat environmental deferrals retained; H.2 authored whole-screen geometry ACTIVE, H.3 later
 
+## P0191 — approved v4 authored screen map (2026-10-11; docs-only)
+
+The user finalized 13 top-left, width, height rectangles as viewport percentages, plus Main Bar Y=60.4 matching Secondary. Canonical approved design: `../../design/layout/SCREEN_MAP_V4.json` and `../../design/layout/SCREEN_MAP_V4.md`; decision D-045. Enemy buffs/debuffs stay beside the right-offset target fallback with equal gaps; player debuffs belong above bottom-center resource, class/totems above left actions; peripheral player buffs/utility remain right. This is **design geometry only**, not P0166 anchor mutation, real density/collision proof, runtime code or native fallback suppression. After P0191 user push verification, P0192 must map actual frames and required fallbacks in a bounded H.2 implementation/audit; H.3 remains later.
+
 ## P0190 accepted automatic normal Main; H.2 starts (2026-10-11)
 
 Verified `main` P0189 at `bd0c36a`, `0.0.101-dev`; user says all worked. LoadCount 239 records fresh automatic `CANDIDATE auto=true optOut=false`, OFF `STOCK optOut=true`, manual ON `CANDIDATE`, and integrated Main 7/6 `error=nil`, Primary 12/12, UI Ownership 17 PASS / 18 STOCK / 0 FAIL. No pixel hit-region/native special-state diagnostic proof; naturally unobserved vehicle/override/possess/form/petbattle/combat states remain **ENVIRONMENTALLY DEFERRED**. Accept H.1 for observed ordinary screen, preserve Blizzard fallback, and open H.2 **P0191 authored layout spacing/collision audit**. P0166 already implemented semantic anchors without moving coordinates; do not redo that infrastructure. See `../evidence/P0190_P0189_AUTO_MAIN_RUNTIME_2026-10-11.md`.

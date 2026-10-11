@@ -185,5 +185,6 @@
 | P0188 | 2026-10-10 | DOCS ACCEPTANCE — P0187 R2 MANUAL NORMAL-MODE RUNTIME PASS | P0187 R2 verified `41c7d97`, `0.0.100-dev`; repeat ON/OFF succeeds, Run All Main 7/6 no errors; special/default H.1 still gated; P0188 R0 whitespace prewrite FAIL, R1 repaired; preserve P0187 R0/R1 failure |
 | P0189 | 2026-10-11 | INSTALLED / PUSHED — OBSERVED AUTOMATIC NORMAL MAIN RUNTIME PASS | `bd0c36a`, `0.0.101-dev`, loadCount 239: automatic CANDIDATE, OFF STOCK/ON CANDIDATE; Run All Main 7/6 error=nil, Primary 12/12; special/combat modes deferred |
 | P0190 | 2026-10-11 | PREPARED — DOCS ACCEPTANCE; H.2 OPEN | Accept bounded P0189 normal startup, preserve special deferrals/history; next P0191 realistic whole-screen layout spacing/collision audit |
+| P0191 | 2026-10-11 | PREPARED — APPROVED DESIGN GEOMETRY, DOCS ONLY | Save exact v4 13-rectangle percent map, D-045, layout contract + memory; Main Y=60.4 matches Secondary; runtime translation P0192 pending user push |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

@@ -8,11 +8,11 @@ project: logres
 
 ## Active Objective
 
-**Phase H.2 ACTIVE — P0189 `0.0.101-dev` automatic normal Main replacement is runtime ACCEPTED for observed ordinary Immersion ON.** Verified remote `main` `bd0c36a2a98439b2332f78fb9c0cc58e67a5b3ef` (P0189). H.1 ordinary coexistence is accepted within observed scope. The secure vehicle/override/possess/bonus/form/petbattle/combat states remain ENVIRONMENTALLY DEFERRED, not PASS. The 18 STOCK matrix entries are deliberately retained fallback policy, not unwanted visible bars.
+**Phase H.2 ACTIVE — user-approved Layout Draft v4 is the authored design target, not an implemented in-game placement.** Verified remote `main` `c67527e` contains P0190's accepted ordinary H.1 auto Main checkpoint (`0.0.101-dev`). Special combat/vehicle/override/possess/form/petbattle states remain ENVIRONMENTALLY DEFERRED. P0191 is a docs-only v4 positioning checkpoint awaiting user push; `Integration/Layout.lua` retains P0166's existing runtime anchors.
 
 ## Current Work Item
 
-**P0190 docs-only acceptance, then P0191 Phase H.2 authored whole-screen spacing/collision calibration.** Existing P0166 `Integration/Layout.lua` owns semantic anchors but intentionally preserved prior coordinates. Audit realistic density and adjust only proven Logres-owned coordinates; preserve secure frame interaction, native stock fallbacks and world-first approved geometry. No blanket stock suppression or generic drag-anything editor.
+**P0191 docs-only publish the exact approved 13-rectangle screen map**: `docs/design/layout/SCREEN_MAP_V4.json` and `.md`, decision D-045 and layout contract checker. User's final correction aligns Main Bar Y to Secondary at **60.4%**. Enemy aura bands are symmetric about the right-offset target, and Player Debuffs are directly above bottom-center Player Resource, not over the left actions. No Lua/TOC, stock UI or anchor mutation.
 
 ## Verified State
 
@@ -24,7 +24,7 @@ project: logres
 
 ## Next Action
 
-**After P0190 is pushed, begin P0191 H.2 geometry audit.** Review the P0166 13 semantic integration regions and the live whole-screen density at standard UI scale. Derive a narrow, safe set of authored default position/collision changes; do not conflate layout with suppression or claim special mode proof. H.3 whole-screen ornament/contrast/accessibility follows accepted H.2 positioning.
+**Apply, commit and push P0191, then verify remote main.** Next proposed P0192: bounded H.2 live geometry translation/collision audit of the approved v4 boxes using existing P0166 semantic anchors, full action density and required native fallbacks. Actual geometry remains runtime-UNTESTED; H.3 styling waits for accepted H.2 composition. No generic drag-anything editor or automatic pixel conversion.
 
 ## Success Criteria
 
@@ -35,6 +35,11 @@ The visually redundant normal Main presentation is absent when Logres has replac
 No exact player HP, conventional player health bar, enemy exact level/class/difficulty, secret-capable reads, broad stock UI suppression, polling or periodic forcing, or combat-unsafe protected mutation. PvP remains a modifier, not Immersion OFF. Keep class/pet, party/CompactParty, special actions, quest and on-demand native access, target-of-target, nameplates and private/group aura fallbacks until independently replacement-proven. The intermittent ObjectiveTracker flash remains OPEN / INTERMITTENT / UNREPRODUCED.
 
 ## Relevant References
+
+- `docs/design/layout/SCREEN_MAP_V4.md`
+- `docs/design/layout/SCREEN_MAP_V4.json`
+- `docs/memory/decisions/D-045_H2_SCREEN_MAP_V4.md`
+- `docs/memory/patches/P0191_H2_SCREEN_MAP_V4_DESIGN_BASELINE.md`
 
 - `docs/memory/patches/P0190_ACCEPT_P0189_AUTO_MAIN_RUNTIME.md`
 - `docs/memory/evidence/P0190_P0189_AUTO_MAIN_RUNTIME_2026-10-11.md`

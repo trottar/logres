@@ -6,6 +6,10 @@ The user correctly identified that the previous closure counted D/C suppression 
 
 # Active Investigations
 
+## H.2 approved v4 design geometry — P0191 (2026-10-11)
+
+Status: **USER-APPROVED DESIGN / RUNTIME GEOMETRY OPEN**. The 13 percent rectangles, exact source export and last agreed Main Y 60.4% correction are canonical at `docs/design/layout/SCREEN_MAP_V4.json`; details and meanings in `.md` and D-045. Target fallback is right-offset with symmetrical left debuffs/right buffs; bottom-center Player Debuffs sit above Player Resource; left class/totem strip sits above Secondary/Main. Assistant's earlier wrong left-side resource/debuff and centered-target map interpretations are superseded design failures, not runtime evidence. This is a **docs-only** P0191 candidate with no Lua changes, actual collision PASS or WoW deploy. Next after verified push: P0192 map boxes to Logres P0166 anchors, assess full density and native fallback collisions, then narrow fail-open implementation/runtime proof. Preserve H.1 special environmental deferrals.
+
 ## H.2 authored whole-screen layout calibration (P0190 handoff)
 
 Status: **OPEN / NEXT P0191.** Verified `main` P0189 `bd0c36a`; loadCount 239 and user confirm automatic Main normal screen, OFF restoration, ON reactivation and integrated checks. H.1 is accepted in observed ordinary scope; special combat/vehicle/possess/override/form/petbattle remain separate environmental deferrals. P0166 integration anchors are already implemented, but realistic crowded-screen default positions and collision/spacing remain uncalibrated. Start from existing `Integration/Layout.lua`, approved D-032/D-034 and actual screen evidence; preserve required Blizzard fallbacks. No broad hide, secure combat mutation or generic layout editor. Canonical P0190 evidence records bounded acceptance.

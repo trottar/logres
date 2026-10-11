@@ -1,0 +1,106 @@
+[
+  {
+    "id": "compass",
+    "name": "Compass",
+    "x": 31.4,
+    "y": 4.8,
+    "w": 37.4,
+    "h": 6.9
+  },
+  {
+    "id": "quest",
+    "name": "Quest Tracker",
+    "x": 80,
+    "y": 5,
+    "w": 19.6,
+    "h": 19.2
+  },
+  {
+    "id": "enemy-debuff",
+    "name": "Enemy Debuffs",
+    "x": 65.2,
+    "y": 40,
+    "w": 6,
+    "h": 9
+  },
+  {
+    "id": "enemy",
+    "name": "Enemy Frame",
+    "x": 72,
+    "y": 40,
+    "w": 13,
+    "h": 9
+  },
+  {
+    "id": "enemy-buff",
+    "name": "Enemy Buffs",
+    "x": 85.8,
+    "y": 40,
+    "w": 6,
+    "h": 9
+  },
+  {
+    "id": "group",
+    "name": "Group / Pet Frame",
+    "x": 21,
+    "y": 32.7,
+    "w": 9,
+    "h": 25.9
+  },
+  {
+    "id": "class",
+    "name": "Class / Totems / etc",
+    "x": 5.1,
+    "y": 53.5,
+    "w": 12,
+    "h": 5
+  },
+  {
+    "id": "secondary",
+    "name": "Secondary Bars",
+    "x": 5.1,
+    "y": 60.4,
+    "w": 12,
+    "h": 38
+  },
+  {
+    "id": "main",
+    "name": "Main Bar",
+    "x": 18.2,
+    "y": 60.4,
+    "w": 12,
+    "h": 38
+  },
+  {
+    "id": "player-debuff",
+    "name": "Player Debuffs",
+    "x": 39.5,
+    "y": 81,
+    "w": 22.5,
+    "h": 5.8
+  },
+  {
+    "id": "resource",
+    "name": "Player Resource",
+    "x": 39.5,
+    "y": 88.3,
+    "w": 22.5,
+    "h": 6
+  },
+  {
+    "id": "player-buff",
+    "name": "Player Buffs",
+    "x": 76,
+    "y": 80.5,
+    "w": 23.4,
+    "h": 6.2
+  },
+  {
+    "id": "utility",
+    "name": "Utility",
+    "x": 76,
+    "y": 88.2,
+    "w": 23.4,
+    "h": 9.3
+  }
+]
