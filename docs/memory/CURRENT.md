@@ -10,7 +10,7 @@ project: logres
 **Phase H integration remains active; P0197 is pushed and its ordinary no-duplicate pet-bar observation is accepted, while the earlier intermittent reappearance remains OPEN / INTERMITTENT / UNREPRODUCED.** P0196 R4 target buffs/debuffs and H.2 v4 screen composition remain user-accepted for observed ordinary presentation. H.3 polish remains separate.
 
 ## Current Work Item
-P0198 records the P0197 ordinary runtime observations without claiming the deferred-combat recovery was exercised. **Next: a coordinated Phase H.3 visual-polish inventory and design review**, beginning with target debuff icon size/legibility and whole-screen consistency, not an isolated Lua size tweak. Confirm any remaining H.2 layout/input concerns before declaring complete integration. Preserve previously identified stock/native fallbacks.
+P0199 is a **DOCS-ONLY H.3 approved-art-to-runtime fidelity audit**, grounded in all 12 approved D-039 sheets, current production Theme/TGA source and the latest user screenshot. Canonical matrix: `docs/design/H3_APPROVED_ART_RUNTIME_FIDELITY.md`; checkpoint: `docs/memory/patches/P0199_H3_VISUAL_FIDELITY_CHECKPOINT.md`. **Next after P0199 push:** one cohesive H.3 runtime visual candidate targeting native harmful aura icon fidelity/fit, readable percentage/name typography and action/native-dock hierarchy, without altering v4 positions, authored player buffs, secure/pet/aura fallbacks or combat behavior. No H.3 runtime PASS is implied by this document.
 
 ## Verified State
 - GitHub `main` P0197 at `0a20eef1de3b77fa26d03d6b1c1ccfd23cde0a7b`, `0.0.108-dev`. Uploaded loadCount 253: `petbar-reshow: AUDIT (onShow=4 combatDeferred=0 immediateRefolds=4 recovered=0 awaiting=false lastReconcile=PET_BAR_UPDATE)` after normal Immersion OFF/ON and diagnostic cycles. All four observed ordinary OnShow events refolded immediately; **combat deferral and recovery were not tested**.
@@ -19,7 +19,7 @@ P0198 records the P0197 ordinary runtime observations without claiming the defer
 - Earlier P0196 R1 aura art/unsupported hook failure, P0196 R2 prewrite error, and intermittent ObjectiveTracker flash remain recorded.
 
 ## Next Action
-Record this docs-only checkpoint, then plan one cohesive H.3 visual polish pass from the approved v4 composition and existing artwork. If the pet bar reappears naturally, immediately capture Phase H Native Access Check and the screen while duplicated, repeat once after combat, and report the triggering activity. Do not add polling or a blanket suppressor. Further runtime changes require evidence, safe stock fallback, and fresh tests.
+Apply the guarded docs-only P0199 audit, verify user push to `main`, then prepare one integrated H.3 candidate based on the mapped reference-to-runtime gaps. Use the approved aura sheet and existing `Media/Aura` art, not generic native icons or speculative source changes. Validate multi-icon player/target debuffs, full-screen density, and native access/Immersion restoration. P0197 pet re-show is still intermittent/unreproduced; record recurrence through existing event counters, do not add polling.
 
 ## Success Criteria
 No redundant stock PetActionBar observed in supported ordinary Immersion ON, with functional native PET access and secure Logres pet controls; safe return to stock for unsupported modes. H.3 polish improves readability/layout while respecting source, interaction and state rules. Unobserved combat/special modes remain deferred, not PASS.
@@ -28,6 +28,11 @@ No redundant stock PetActionBar observed in supported ordinary Immersion ON, wit
 No exact player HP, conventional health bar, enemy exact level/class/difficulty, secret inspection, unqualified Blizzard surface removal, broad hooks, polling or combat-unsafe mutation. PvP is a modifier, not Immersion OFF. Preserve party/class/pet/special/native/aura fallbacks until deliberately replaced.
 
 ## Relevant References
+
+- `docs/design/H3_APPROVED_ART_RUNTIME_FIDELITY.md`
+- `docs/memory/patches/P0199_H3_VISUAL_FIDELITY_CHECKPOINT.md`
+- `docs/design/approved/README.md`
+- `docs/memory/decisions/D-039_APPROVED_VISUAL_BASELINE.md`
 
 - `docs/memory/patches/P0198_P0197_RUNTIME_OBSERVATION.md`
 - `docs/memory/evidence/P0197_PET_BAR_RESHOW_EVIDENCE.md`
