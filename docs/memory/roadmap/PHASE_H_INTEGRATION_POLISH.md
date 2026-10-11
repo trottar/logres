@@ -1,6 +1,10 @@
 # Phase H — Integration and Polish
 
-Status: ACTIVE — H.1 OPEN; P0187 R0 repeat-ON FAILED, P0187 R1 `0.0.100-dev` state-driver re-arm correction runtime PENDING; H.2/H.3 later
+Status: ACTIVE — H.1 OPEN; P0187 R2 `0.0.100-dev` normal manual Main replacement/re-arm runtime ACCEPTED; default startup and naturally unavailable special modes remain GATED; H.2/H.3 later
+
+## P0188 accepted normal-mode checkpoint (2026-10-10)
+
+Verified P0187 R2 on `main` `41c7d97`. Uploaded loadCount 238: ON/OFF/ON/OFF repeat passes, `mainreplacecheck` 7 activations/6 restores, error=nil after integrated Run All, Primary key route true/12, user visually reports expected behavior. Existing 35-row ownership matrix 17 PASS/18 STOCK/0 FAIL is policy-only and still lists Main STOCK. First P0187 R0 runtime and R1 prewrite delivery failures remain documented. **Next:** P0189 safe startup/normal Immersion ON activation with special/edit/combat fail-open and exact restoration; special modes unobserved, not PASS. No new stock suppression authority and no H.1 closure claimed. See `../evidence/P0188_P0187_R2_NORMAL_RUNTIME_2026-10-10.md`.
 
 ## Product objective
 

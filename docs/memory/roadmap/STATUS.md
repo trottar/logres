@@ -2,13 +2,13 @@
 
 As of 2026-10-10.
 
-Current verified checkpoint: P0186 on `main` `2421040`; P0187 R0 `0.0.99-dev` runtime ON/OFF/ON FAILED after successful first ON and OFF. P0187 R1 `0.0.100-dev` repairs the stale addon-owned secure state for re-arm and awaits retest. P0183 debuffs remain visually accepted.
+Current verified checkpoint: P0187 R2 on `main` `41c7d97`, `0.0.100-dev`; normal manual secure Main ON/OFF/ON regression corrected and user-accepted (P0188 evidence). R0 runtime FAIL and R1 prewrite delivery FAIL remain history. P0187 stays OFF after reload; H.1 remains OPEN for safe default/startup mode and special-mode recovery. Phase H.2/H.3 later. P0183 native harmful debuffs remain visually accepted.
 
 Historical checkpoint (P0168): P0168 R1 verified; subsequent P0170–P0184 milestones supersede this as current work.
 
 ## Active work stream
 
-**Phase H.1 OPEN — last user-reported redundant normal-screen bar is MainActionBar; preserve other intentional stock fallback and control.**
+**Phase H.1 OPEN — session-only normal Main suppression/restoration passed P0187 R2; automatic Immersion ON startup and special-state fail-open remain gated.**
 
 P0167 is verified on main at `f58bccfb` / `0.0.84-dev`; user-supplied runtime confirms Phase H Layout Check (13/15, zero errors) and Run All PASS. The user's correction supersedes the P0164 claim that H.1 was finished merely because P0165 hid Accept/Decline; already-existing D/C suppression is not new H.1 work.
 
@@ -26,7 +26,7 @@ P0168 candidate `0.0.85-dev` suppresses the remaining ordinary quest-offer **Que
 | E — Compass and Navigation | COMPLETE |
 | F — Quest Experience | COMPLETE |
 | G — Cinematic Camera | COMPLETE — P0162 RUNTIME PASS; ENVIRONMENTAL DEFERRALS PRESERVED |
-| H — Integration and Polish | ACTIVE — H.1 normal MainActionBar capability-gated suppression next; H.2/H.3 later |
+| H — Integration and Polish | ACTIVE — H.1 manual Main runtime accepted, persistent startup and special fallback next; H.2/H.3 later |
 
 ## Phase G / G.5
 

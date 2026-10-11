@@ -8,23 +8,24 @@ project: logres
 
 ## Active Objective
 
-**Phase H.1 OPEN — P0187 R0 ON/OFF/ON runtime FAILED; P0187 R1 secure state re-arm correction requires in-client retest.** GitHub `main` **`60886bbededd8203c9a457dec23784cd53b64486`** has P0185 Main-only memory reconciliation (P0184 debuff acceptance already durable). Runtime remains **`0.0.98-dev`**. The user reports that **only the Main action bar remains to remove** from the intended ordinary Immersion ON screen. Treat this as user visual scope, **not** as a claim that all other Blizzard-owned fallback/information/control surfaces have disappeared or can be suppressed.
+**Phase H.1 OPEN — P0187 R2 (`0.0.100-dev`) accepted for manual/session-only normal Main replacement and exact ON/OFF/ON re-arm; persistent startup/special fallback still gated.** Verified remote `main` is `41c7d972d8bd32537ccd4a956f85617a081d27b7`. The normal Blizzard `MainActionBar` is the user's only reported unwanted persistent normal-screen bar. All other intentionally retained Blizzard information/control fallback surfaces remain policy-owned; 18 STOCK matrix rows do **not** mean 18 unwanted visible bars.
 
 ## Current Work Item
 
-**Immediate P0187 R1 (`0.0.100-dev`) runtime re-arm regression retest.** R0 ON worked and OFF reported exact stock restoration; subsequent ON repeatedly failed at `MainReplacement.lua:200` (`secure normal mode gate not established`). Secure driver removal left its last `normal` state attribute while the gate was shown; re-registering equal state did not fire `_onstate`. R1 resets the addon-owned secure `state-logresmode` attribute during release and before registration, plus rollback; no native Main attribute/mouse/alpha mutations or polling. Session-only/manual ON remains the only opt-in. Do not call the R0 result PASS or declare H.1 closed. See P0187 evidence/patch record R1 additions.
+**P0188 docs-only acceptance of P0187 R2 normal-mode runtime, followed by P0189 automatic-ownership gate.** Uploaded loadCount 238 diagnostic shows fresh STOCK; ON CANDIDATE → OFF STOCK → ON CANDIDATE → OFF STOCK, plus an idempotent duplicate ON. Integrated Phase 0 Run All reports activations=7/restores=6, error=nil, Primary keys=true/12, and 35 ownership rows 17 PASS/18 STOCK/0 FAIL/0 DEFERRED. User reports it worked as expected. This validates tested normal-mode manual execution, not special-state/combat behavior or persistent default. Existing `main_action` remains STOCK in the read-only policy audit.
 
 ## Verified State
 
-- **P0184 pushed and verified on GitHub `main` `4e999b1`.** P0183 R1 native harmful Logres icons are visually present per user, with native containers `ready=true active=true` in `LOGRES_DIAGNOSTICS_LATEST.lua` loadCount **234**. Phase 0 **Run All complete**, 35-row UI Ownership Immersion ON **17 PASS / 18 STOCK / 0 FAIL / 0 DEFERRED**, no reported Lua/command error in that latest run. The 18 STOCK entries are **deliberately retained policy surfaces, not a list of 18 visible unwanted bars**, and are often marked `not inspected`.
-- Existing Logres Secondary/Utility Bars 2–3 are replacement-owned; Bars 4–5 routing and intentionally retained stock access have their own documented policy. Native dock folds navigation, objectives, XP/progress and micro-menu with on-demand Blizzard access; cast native fallback remains available. Quiet chat, Player/Target shell, and relevant Logres HUD surfaces are exercised. The only user-reported **remaining unwanted persistent normal-screen bar** is Main; that narrower visual statement does **not** override deliberate pet, class-resource, party, quest, target-of-target, boss/focus, private/group aura or special-control retention.
-- `Logres/Actions/Primary.lua` explicitly reports `stockSuppressionAuthorized=false`, `specialPagingCoverage=normal-pages-only` and `stockPreserved=true`. UI ownership row `main_action` remains STOCK and `special_actions` remains STOCK. Existing read-only normal-page evidence **does not** authorize a Main hide. D-023/D-044 govern combat/special/edit/restoration. Secure state must be capability-gated and fail open; no blanket frame hiding.
-- Debuff functionality **accepted for visually observed appearance only** (P0183 R1/P0184); defer styling to whole-screen Phase H polish. Blizzard aura presentation still serves completeness fallback; no runtime proof for every separate player/hostile-target state or all combat transitions.
-- Preserve P0182 failed filter-only attempt, first P0183 ZIP's prewrite `__pycache__` hash-manifest failure and R1 repair, original P0178 >60-upvalue startup FAIL, P0175 R2 nil-row FAIL, and the intermittent post-loot ObjectiveTracker flash (OPEN / INTERMITTENT / UNREPRODUCED).
+- **P0187 R2 pushed/verified `41c7d97`, `0.0.100-dev`, manual normal-mode runtime ACCEPTED for observed scope.** Fresh start STOCK; repeated ON/OFF/ON works, no error in supplied final diagnostics; native secure re-arm R0 failure no longer reproduces. User confirms visual behavior. See P0188 evidence.
+- **P0187 R0 FAIL preserved:** first OFF succeeded but repeat ON failed `secure normal mode gate not established`. **P0187 R1 original delivery FAIL preserved:** checker baseline mismatch before writes; R2 packaging corrected it. Do not erase either failure.
+- **P0184 pushed/verified `4e999b1`:** P0183 R1 native Logres harmful icons visually accepted; aura completion fallbacks remain stock. Prior stock Bar 2–3 replacement, stock on-demand dock, HUD, Quiet Mode, player/target shell, pet/class/party/special-control policies remain unchanged.
+- The 35-row UI Ownership audit is **policy classification**: P0187 candidate Main remains `STOCK` in that audit, not a physical Main visibility check. The final Run All shows 17 PASS/18 STOCK/0 FAIL.
+- Native vehicle/override/possess/bonus/form/pet-battle transitions and combat-time recovery are **ENVIRONMENTALLY DEFERRED**, not tested PASS. Edit Mode/mouse-region proof is limited to user-reported normal-screen success; separate instrumented proof is absent. P0187 still manual and OFF after reload.
+- Retain P0182 ineffective filter-only attempt, initial P0183 ZIP `__pycache__` failure, P0178 Lua upvalue FAIL, P0175 R2 nil-row FAIL, and intermittent post-loot ObjectiveTracker flash as historical/open evidence.
 
 ## Next Action
 
-The **P0187 R0 runtime failure is reproduced and preserved**; R1 correction via R2 delivery must be applied atop the P0187-applied checkout while GitHub HEAD remains verified P0186 `2421040`. Deploy, `/reload`, and validate Phase D Main Replace **Check → ON → Check → OFF → Check → ON → Check → OFF → Check**. Confirm normal Main native visibility/click area truly restored and absent as appropriate; execute Logres Primary action keys and edit access, then Immersion OFF/ON, Edit Mode, Phase 0 Run All/UI Ownership. If repeated ON fails or a Lua/taint/protected error appears, stop; retain FAIL evidence. Special modes require only naturally available checks (DEFERRED otherwise). Commit only after successful bounded runtime check.
+**P0189 runtime startup/default activation integration gate**, not another manual re-arm investigation: implement deliberate, opt-out-capable normal Immersion ON arming after Primary/stock readiness; preserve native special-mode and protected combat fallback via secure driver, exact restoration before relinquishing Logres input, and explicit OFF/Edit Mode recovery. Avoid blindly arming during unresolved/special startup or relying on forced gameplay for proof. Add a targeted static contract, then bounded WoW validation of fresh reload, OFF/ON, Primary execution, and naturally available special transitions. Leave special unavailable cases DEFERRED and H.1 OPEN until default behavior is proven. H.2 authored placement and H.3 whole-screen polish follow.
 
 ## Success Criteria
 
@@ -36,6 +37,8 @@ No exact player HP, conventional player health bar, enemy exact level/class/diff
 
 ## Relevant References
 
+- `docs/memory/patches/P0188_ACCEPT_P0187_NORMAL_RUNTIME.md`
+- `docs/memory/evidence/P0188_P0187_R2_NORMAL_RUNTIME_2026-10-10.md`
 - `docs/memory/patches/P0187_MAIN_SECURE_REPLACEMENT_CANDIDATE.md`
 - `docs/memory/evidence/P0187_MAIN_SECURE_CANDIDATE_2026-10-09.md`
 - `docs/memory/patches/P0186_MAIN_SECURE_TRANSITION_SOURCE_GATE.md`

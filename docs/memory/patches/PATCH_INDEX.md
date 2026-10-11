@@ -182,5 +182,6 @@
 | P0160 | 2026-10-07 | INSTALLED / PUSHED — RUNTIME PASS; G.5 TAXI ZOOM CONVERGENCE CLOSED FOR OBSERVED SCOPE | `ae75989b`, `0.0.79-dev`: Taxi ~4.01->50 PASS; landing 50->~4.98 PASS; 0 switches; source rebase exercised both ways; delivery failures preserved |
 | P0161 | 2026-10-07 | PREPARED — CAPTURED PROFILE ROTATION + CAMERA-SETTING PARITY | Candidate `0.0.80-dev`: five source-backed rotations + rotate-back; dynamic-pitch/focus; shoulder curves; City max factor 1; exact CVar restoration |
 | P0187 R0/R1/R2 | 2026-10-09/10 | R0 RUNTIME FAILED ON/OFF/ON; R1 DELIVERY FAILED; R2 CORRECTIVE CANDIDATE, WoW PENDING | First ON/OFF succeeded, repeat ON failed stale `state-logresmode` / Main gate; R1 resets addon-owned secure state out of combat, `0.0.100-dev`; preserve failure and retest |
+| P0188 | 2026-10-10 | DOCS ACCEPTANCE — P0187 R2 MANUAL NORMAL-MODE RUNTIME PASS | P0187 R2 verified `41c7d97`, `0.0.100-dev`; repeat ON/OFF succeeds, Run All Main 7/6 no errors; special/default H.1 still gated; P0188 R0 whitespace prewrite FAIL, R1 repaired; preserve P0187 R0/R1 failure |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

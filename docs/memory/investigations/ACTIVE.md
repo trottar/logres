@@ -6,6 +6,10 @@ The user correctly identified that the previous closure counted D/C suppression 
 
 # Active Investigations
 
+## Phase H.1 — P0187 R2 manual Main re-arm accepted; startup integration OPEN (2026-10-10)
+
+Latest P0188 evidence: verified `main` `41c7d97`; user confirms the `0.0.100-dev` fix worked. Fresh STOCK → ON CANDIDATE → OFF STOCK → repeat ON CANDIDATE → OFF STOCK; Run All final 7 activations / 6 restores, `error=nil`, Primary keys 12/12, 35-row ownership 17 PASS / 18 STOCK / 0 FAIL. R0 repeat-ON runtime failure and R1 original delivery mismatch remain recorded below, not erased. This CLOSES the observed manual re-arm regression only. Main remains STOCK in the existing policy-only audit. Persistent startup normal-mode ownership and secure special/combat/EDIT fallback remain OPEN / ENVIRONMENTALLY DEFERRED as appropriate; P0189 next. See `../evidence/P0188_P0187_R2_NORMAL_RUNTIME_2026-10-10.md`.
+
 ## G.5 — Taxi camera ownership
 
 Status:
