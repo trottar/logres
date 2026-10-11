@@ -1,14 +1,14 @@
 # Roadmap Status
 
-As of 2026-10-10.
+As of 2026-10-11.
 
-Current verified checkpoint: P0187 R2 on `main` `41c7d97`, `0.0.100-dev`; normal manual secure Main ON/OFF/ON regression corrected and user-accepted (P0188 evidence). R0 runtime FAIL and R1 prewrite delivery FAIL remain history. P0187 stays OFF after reload; H.1 remains OPEN for safe default/startup mode and special-mode recovery. Phase H.2/H.3 later. P0183 native harmful debuffs remain visually accepted.
+Current verified checkpoint: P0188 R1 docs acceptance on `main` `a1e85e7`; P0187 R2 normal Main manual runtime accepted at `0.0.100-dev`. P0189 `0.0.101-dev` is a proposed automatic normal startup runtime candidate, not yet in-client validated. Original P0187 R0 and R1 delivery, P0188 R0 delivery failures preserved. H.1 OPEN for startup/special-safe behavior; H.2/H.3 later. P0183 harmful debuffs remain visually accepted.
 
 Historical checkpoint (P0168): P0168 R1 verified; subsequent P0170–P0184 milestones supersede this as current work.
 
 ## Active work stream
 
-**Phase H.1 OPEN — session-only normal Main suppression/restoration passed P0187 R2; automatic Immersion ON startup and special-state fail-open remain gated.**
+**Phase H.1 OPEN — P0189 automatic Main normal Immersion ON candidate awaiting fresh-login/fallback runtime validation; P0187 manual scope accepted.**
 
 P0167 is verified on main at `f58bccfb` / `0.0.84-dev`; user-supplied runtime confirms Phase H Layout Check (13/15, zero errors) and Run All PASS. The user's correction supersedes the P0164 claim that H.1 was finished merely because P0165 hid Accept/Decline; already-existing D/C suppression is not new H.1 work.
 

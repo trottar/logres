@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-10-10
+as_of: 2026-10-11
 project: logres
 ---
 
@@ -8,24 +8,22 @@ project: logres
 
 ## Active Objective
 
-**Phase H.1 OPEN — P0187 R2 (`0.0.100-dev`) accepted for manual/session-only normal Main replacement and exact ON/OFF/ON re-arm; persistent startup/special fallback still gated.** Verified remote `main` is `41c7d972d8bd32537ccd4a956f85617a081d27b7`. The normal Blizzard `MainActionBar` is the user's only reported unwanted persistent normal-screen bar. All other intentionally retained Blizzard information/control fallback surfaces remain policy-owned; 18 STOCK matrix rows do **not** mean 18 unwanted visible bars.
+**Phase H.1 OPEN — P0189 `0.0.101-dev` default Immersion ON secure Main ownership is a runtime candidate, not a PASS.** GitHub `main` baseline `a1e85e79a89917fa2c3b84b0cb738f1f13e68d37` verified with P0188 R1. P0187 R2 previously passed manual ON/OFF/ON/restoration in tested normal mode. P0189 uses that gate automatically at module enable only after conservative ordinary source readiness; explicit Main Replace OFF opts out until reload. User reports normal Main was the remaining unwanted persistent bar; 18 STOCK UI-ownership rows represent deliberate fallbacks, not 18 unwanted visible elements.
 
 ## Current Work Item
 
-**P0188 docs-only acceptance of P0187 R2 normal-mode runtime, followed by P0189 automatic-ownership gate.** Uploaded loadCount 238 diagnostic shows fresh STOCK; ON CANDIDATE → OFF STOCK → ON CANDIDATE → OFF STOCK, plus an idempotent duplicate ON. Integrated Phase 0 Run All reports activations=7/restores=6, error=nil, Primary keys=true/12, and 35 ownership rows 17 PASS/18 STOCK/0 FAIL/0 DEFERRED. User reports it worked as expected. This validates tested normal-mode manual execution, not special-state/combat behavior or persistent default. Existing `main_action` remains STOCK in the read-only policy audit.
+**P0189 automatic startup/runtime validation.** Install `0.0.101-dev`, deploy and `/reload` with Immersion ON. Without pressing ON, Phase D Main Replace Check must be CANDIDATE (`auto=true optOut=false`, applied/route true). Inspect Main visual and empty mouse region and use Logres Primary keys. Explicit OFF must restore native Main and persist through Immersion OFF/ON and developer lifecycle; explicit ON re-arms, Immersion OFF restores and ON re-engages. Edit Mode recovery and normal integrated Phase 0 Run All/UI Ownership should pass. On missing/unclassified/special startup source, fail open to stock with bounded native-event retry. Combat/vehicle/possess/pet-battle absent from environment remain DEFERRED, not PASS. Stop at any Lua/taint/protected/secret error.
 
 ## Verified State
 
-- **P0187 R2 pushed/verified `41c7d97`, `0.0.100-dev`, manual normal-mode runtime ACCEPTED for observed scope.** Fresh start STOCK; repeated ON/OFF/ON works, no error in supplied final diagnostics; native secure re-arm R0 failure no longer reproduces. User confirms visual behavior. See P0188 evidence.
-- **P0187 R0 FAIL preserved:** first OFF succeeded but repeat ON failed `secure normal mode gate not established`. **P0187 R1 original delivery FAIL preserved:** checker baseline mismatch before writes; R2 packaging corrected it. Do not erase either failure.
-- **P0184 pushed/verified `4e999b1`:** P0183 R1 native Logres harmful icons visually accepted; aura completion fallbacks remain stock. Prior stock Bar 2–3 replacement, stock on-demand dock, HUD, Quiet Mode, player/target shell, pet/class/party/special-control policies remain unchanged.
-- The 35-row UI Ownership audit is **policy classification**: P0187 candidate Main remains `STOCK` in that audit, not a physical Main visibility check. The final Run All shows 17 PASS/18 STOCK/0 FAIL.
-- Native vehicle/override/possess/bonus/form/pet-battle transitions and combat-time recovery are **ENVIRONMENTALLY DEFERRED**, not tested PASS. Edit Mode/mouse-region proof is limited to user-reported normal-screen success; separate instrumented proof is absent. P0187 still manual and OFF after reload.
-- Retain P0182 ineffective filter-only attempt, initial P0183 ZIP `__pycache__` failure, P0178 Lua upvalue FAIL, P0175 R2 nil-row FAIL, and intermittent post-loot ObjectiveTracker flash as historical/open evidence.
+- **P0188 R1 pushed and verified on `main` `a1e85e7` (docs-only).** The P0187 R2 `0.0.100-dev` manual normal secure Main gate is runtime accepted for tested scope: loadCount 238, repeat ON/OFF/ON succeeds, final Run All Main 7/6, `error=nil`, routing true/12, and UI Ownership 17 PASS/18 STOCK/0 FAIL. The UI Ownership `main_action` STOCK line is a policy/fallback designation, not physical presentation inspection.
+- **P0189 candidate, not client-validated.** Startup automatic normal gate shares existing P0187 secure driver; OFF is a session opt-out and resets on reload. Initial unready/special source is stock-visible pending native events, not a hard diagnostic error; actual secure failure is still FAIL. No auto-default proof is claimed yet.
+- **Preserved failures:** P0187 R0 ON/OFF/ON state reset bug; R1 delivery hash rejection; P0188 R0 prewrite whitespace failure. P0182 target-debuff filter miss, P0183 initial package error, P0178 Lua upvalues, P0175 nil rows, and intermittent post-loot ObjectiveTracker flash remain in history.
+- Preserve special-mode native secure fallback, Blizzard pet/class/party/quest/aura/target-of-target, navigation dock, and other deliberate stock controls. Native override/vehicle/possess/bonus/form/petbattle transitions and combat recovery remain environmentally untested.
 
 ## Next Action
 
-**P0189 runtime startup/default activation integration gate**, not another manual re-arm investigation: implement deliberate, opt-out-capable normal Immersion ON arming after Primary/stock readiness; preserve native special-mode and protected combat fallback via secure driver, exact restoration before relinquishing Logres input, and explicit OFF/Edit Mode recovery. Avoid blindly arming during unresolved/special startup or relying on forced gameplay for proof. Add a targeted static contract, then bounded WoW validation of fresh reload, OFF/ON, Primary execution, and naturally available special transitions. Leave special unavailable cases DEFERRED and H.1 OPEN until default behavior is proven. H.2 authored placement and H.3 whole-screen polish follow.
+**P0189 runtime verification first.** Check fresh startup auto ON, OFF session opt-out, re-ON, Immersion and Edit Mode restoration, normal Primary actions and no hidden click surface, then Phase 0 integrated checks. Only checks actually run may be marked PASS. Naturally inaccessible special-state checks remain DEFERRED without contrived travel. If any error appears, preserve it and prepare narrow correction before H.1 advancement. H.2 layout and H.3 polish remain later.
 
 ## Success Criteria
 
@@ -36,6 +34,9 @@ The visually redundant normal Main presentation is absent when Logres has replac
 No exact player HP, conventional player health bar, enemy exact level/class/difficulty, secret-capable reads, broad stock UI suppression, polling or periodic forcing, or combat-unsafe protected mutation. PvP remains a modifier, not Immersion OFF. Keep class/pet, party/CompactParty, special actions, quest and on-demand native access, target-of-target, nameplates and private/group aura fallbacks until independently replacement-proven. The intermittent ObjectiveTracker flash remains OPEN / INTERMITTENT / UNREPRODUCED.
 
 ## Relevant References
+
+- `docs/memory/patches/P0189_MAIN_AUTO_IMMERSION_GATE.md`
+- `docs/memory/evidence/P0189_MAIN_AUTO_GATE_CANDIDATE_2026-10-11.md`
 
 - `docs/memory/patches/P0188_ACCEPT_P0187_NORMAL_RUNTIME.md`
 - `docs/memory/evidence/P0188_P0187_R2_NORMAL_RUNTIME_2026-10-10.md`

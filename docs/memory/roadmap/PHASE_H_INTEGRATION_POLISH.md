@@ -1,10 +1,14 @@
 # Phase H — Integration and Polish
 
-Status: ACTIVE — H.1 OPEN; P0187 R2 `0.0.100-dev` normal manual Main replacement/re-arm runtime ACCEPTED; default startup and naturally unavailable special modes remain GATED; H.2/H.3 later
+Status: ACTIVE — H.1 OPEN; P0189 `0.0.101-dev` automatic Main normal startup candidate runtime PENDING; P0187 R2 manual accepted, special/combat deferred; H.2/H.3 later
 
 ## P0188 accepted normal-mode checkpoint (2026-10-10)
 
 Verified P0187 R2 on `main` `41c7d97`. Uploaded loadCount 238: ON/OFF/ON/OFF repeat passes, `mainreplacecheck` 7 activations/6 restores, error=nil after integrated Run All, Primary key route true/12, user visually reports expected behavior. Existing 35-row ownership matrix 17 PASS/18 STOCK/0 FAIL is policy-only and still lists Main STOCK. First P0187 R0 runtime and R1 prewrite delivery failures remain documented. **Next:** P0189 safe startup/normal Immersion ON activation with special/edit/combat fail-open and exact restoration; special modes unobserved, not PASS. No new stock suppression authority and no H.1 closure claimed. See `../evidence/P0188_P0187_R2_NORMAL_RUNTIME_2026-10-10.md`.
+
+## P0189 default Immersion ON gate (2026-10-11)
+
+P0188 R1 verified at `a1e85e7`. P0189 reuses the tested P0187 secure Main gate and enables default session intent at startup with normal-source preflight, explicit OFF session opt-out, and native-event-only retry. It does not claim safe special/vehicle/combat runtime coverage from static contracts. Native stock remains accessible when ordinary source is not ready and on Immersion OFF / Edit Mode; hard failures fail open. Runtime proof from fresh `/reload`, OFF/ON, edit access and Phase 0 integrated checks required before H.1 closure. See `../patches/P0189_MAIN_AUTO_IMMERSION_GATE.md`.
 
 ## Product objective
 

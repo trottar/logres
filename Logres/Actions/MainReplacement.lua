@@ -1,6 +1,6 @@
 local _, Logres = ...
 
--- P0187: session-only, explicitly armed normal Main replacement candidate.
+-- P0189: default Immersion ON secure Main replacement, session opt-out.
 -- Native Main and all children stay Blizzard-owned; we do not overwrite
 -- their alpha, mouse states, attributes, placement, or Show scripts.
 -- The secure gate owns visibility via ancestry. Native special states open
@@ -47,7 +47,10 @@ local Main = Logres:RegisterModule("MainActionReplacement", {
         )
         self.gate:EnableMouse(false)
         self.gate:SetAttribute("_onstate-logresmode", SECURE_MODE_SCRIPT)
+        -- Armed by default only after module enable and conservative preflight.
+        -- Manual OFF opts out for this login; /reload returns to auto policy.
         self.sessionArmed = false
+        self.manualOptOut = false
         self.appliedEnabled = false
         self.pending = false
         self.editActive = false
@@ -66,6 +69,11 @@ local Main = Logres:RegisterModule("MainActionReplacement", {
     OnEnable = function(self)
         for _, event in ipairs({
             "PLAYER_REGEN_ENABLED", "PLAYER_ENTERING_WORLD",
+            -- Finite native-mode recovery points; no polling or Show hooks.
+            "ACTIONBAR_PAGE_CHANGED", "UPDATE_BONUS_ACTIONBAR",
+            "UPDATE_OVERRIDE_ACTIONBAR", "UPDATE_VEHICLE_ACTIONBAR",
+            "UPDATE_POSSESS_BAR", "UPDATE_SHAPESHIFT_FORM",
+            "PET_BATTLE_CLOSE",
         }) do
             self.eventFrame:RegisterEvent(event)
         end
@@ -89,6 +97,12 @@ local Main = Logres:RegisterModule("MainActionReplacement", {
         self:SubscribePreferences(function()
             self:Reconcile("preferences")
         end)
+        -- PrimaryActions enables before this module (TOC registration order).
+        -- A missing/unsafe normal source remains stock with event-only retry.
+        if not self.manualOptOut then
+            self.sessionArmed = true
+        end
+        self:Reconcile("module-enable")
     end,
 
     OnDisable = function(self)
@@ -145,8 +159,11 @@ function Main:Engage()
     local primary = Logres:GetModule("PrimaryActions")
     local ready, reason = sourceReady(primary)
     if not ready then
-        self.pending = false
-        self.lastError = reason
+        -- Expected unavailable/special startup must fail open to native Main,
+        -- not turn ordinary source deferral into a diagnostic FAIL.
+        self.pending = true
+        -- Keep any earlier real secure error until a successful Engage or
+        -- explicit OFF retires it; a later deferral is not recovery proof.
         return false, reason
     end
 
@@ -314,6 +331,9 @@ function Main:Reconcile(reason)
 end
 
 function Main:RequestSessionArmed(armed)
+    -- Explicit OFF remains effective across Immersion toggles and developer
+    -- lifecycle checks in this session. A reload restores the auto default.
+    self.manualOptOut = armed ~= true
     self.sessionArmed = armed == true
     return self:Reconcile("manual")
 end
@@ -348,6 +368,8 @@ function Main:GetDebugStatus()
     return {
         moduleEnabled = self:IsEnabled(),
         sessionArmed = self.sessionArmed == true,
+        autoDefault = true,
+        manualOptOut = self.manualOptOut == true,
         appliedEnabled = self.appliedEnabled == true,
         pending = self.pending == true,
         editActive = self.editActive == true,
@@ -367,10 +389,11 @@ function Logres:GetMainReplacementDiagnosticLine()
     local state = d.appliedEnabled and "CANDIDATE" or "STOCK"
     if d.lastError then state = "FAIL" end
     return string.format(
-        "Logres mainreplacecheck: %s armed=%s applied=%s pending=%s driver=%s "
+        "Logres mainreplacecheck: %s armed=%s auto=%s optOut=%s applied=%s pending=%s driver=%s "
         .. "parentCaptured=%s route=%s edit=%s activations=%s "
         .. "restores=%s nativeReparents=%s special=%s error=%s",
-        state, tostring(d.sessionArmed), tostring(d.appliedEnabled),
+        state, tostring(d.sessionArmed), tostring(d.autoDefault),
+        tostring(d.manualOptOut), tostring(d.appliedEnabled),
         tostring(d.pending), tostring(d.secureDriverInstalled),
         tostring(d.nativeParentCaptured), tostring(d.routingManaged),
         tostring(d.editActive), tostring(d.activations),

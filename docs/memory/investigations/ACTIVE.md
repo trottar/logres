@@ -6,6 +6,10 @@ The user correctly identified that the previous closure counted D/C suppression 
 
 # Active Investigations
 
+## P0189 — automatic normal Main startup (runtime candidate)
+
+Status: **OPEN / RUNTIME PENDING**. P0188 R1 verified on `main` `a1e85e7`; P0187 R2 manual normal ON/OFF/ON success does not prove automatic startup. P0189 makes session intent default ON under Immersion, with explicit OFF opt-out, native-source readiness, bounded lifecycle/mode retries, and unchanged secure special fallback. Initial unavailable source stays stock; hard engage/restoration errors remain FAIL. Fresh `/reload`, Edit Mode, OFF/ON and Phase 0 runtime checks required. Special/vehicle/combat conditions remain DEFERRED if naturally absent. Preserve P0187 R0, R1 delivery and P0188 R0 failures. See `../patches/P0189_MAIN_AUTO_IMMERSION_GATE.md`.
+
 ## Phase H.1 — P0187 R2 manual Main re-arm accepted; startup integration OPEN (2026-10-10)
 
 Latest P0188 evidence: verified `main` `41c7d97`; user confirms the `0.0.100-dev` fix worked. Fresh STOCK → ON CANDIDATE → OFF STOCK → repeat ON CANDIDATE → OFF STOCK; Run All final 7 activations / 6 restores, `error=nil`, Primary keys 12/12, 35-row ownership 17 PASS / 18 STOCK / 0 FAIL. R0 repeat-ON runtime failure and R1 original delivery mismatch remain recorded below, not erased. This CLOSES the observed manual re-arm regression only. Main remains STOCK in the existing policy-only audit. Persistent startup normal-mode ownership and secure special/combat/EDIT fallback remain OPEN / ENVIRONMENTALLY DEFERRED as appropriate; P0189 next. See `../evidence/P0188_P0187_R2_NORMAL_RUNTIME_2026-10-10.md`.

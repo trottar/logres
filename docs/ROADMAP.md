@@ -53,7 +53,7 @@ Canonical phase record:
 
 ## Phase H — Integration and Polish
 
-**Status: ACTIVE — P0187 R2 manually replaces normal Main and restores/re-arms successfully; startup/default and special-safe H.1 integration remains open; H.2 layout/H.3 polish later.**
+**Status: ACTIVE — P0189 default normal Main startup candidate, runtime PENDING; P0187 R2 manual normal replacement accepted. Special-safe H.1 integration remains open; H.2/H.3 later.**
 
 P0188 verified P0187 R2 on `main` `41c7d97`, `0.0.100-dev`: user accepted manual ON/OFF/ON/restore; Run All shows 7 activations/6 restores with no Main error, Primary routing and 35-row ownership check pass for tested scope. Original R0 re-arm runtime failure and R1 delivery failure are preserved. H.1 remains open: the secure gate starts OFF every reload, and special/vehicle/combat modes are environmentally untested; P0189 addresses safe default Immersion ON integration before H.2/H.3. See `memory/evidence/P0188_P0187_R2_NORMAL_RUNTIME_2026-10-10.md`.
 
