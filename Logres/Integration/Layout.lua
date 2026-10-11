@@ -300,3 +300,131 @@ function Layout.GetDebugStatus()
         lastBindError = lastBindError,
     }
 end
+
+
+-- P0194 R2: one viewport-wide H.2 map. All thirteen approved regions and
+-- all thirteen measured addon-owned proxies are shown together, read-only.
+-- This is a visual calibration tool, NOT a layout mutation or collision PASS.
+local h2MapOverlay = nil
+local h2MapLastReason = "never-opened"
+
+local function createMapOutline(parent, r, g, b, fillAlpha)
+    local box = CreateFrame("Frame", nil, parent)
+    box:EnableMouse(false)
+    box:SetFrameLevel(parent:GetFrameLevel() + 1)
+    local background = box:CreateTexture(nil, "BACKGROUND")
+    background:SetAllPoints(box)
+    background:SetColorTexture(r, g, b, fillAlpha)
+    local function edge(point1, point2, width, height)
+        local line = box:CreateTexture(nil, "BORDER")
+        line:SetColorTexture(r, g, b, 0.95)
+        line:SetPoint(point1, box, point1, 0, 0)
+        line:SetPoint(point2, box, point2, 0, 0)
+        if width then line:SetWidth(width) else line:SetHeight(height) end
+    end
+    edge("TOPLEFT", "TOPRIGHT", nil, 2)
+    edge("BOTTOMLEFT", "BOTTOMRIGHT", nil, 2)
+    edge("TOPLEFT", "BOTTOMLEFT", 2, nil)
+    edge("TOPRIGHT", "BOTTOMRIGHT", 2, nil)
+    local label = box:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    label:SetPoint("TOPLEFT", box, "TOPLEFT", 2, -2)
+    label:SetJustifyH("LEFT")
+    label:SetTextColor(r, g, b, 1)
+    box.logresH2Label = label
+    box:Hide()
+    return box
+end
+
+local function placeMapOutline(box, viewportWidth, viewportHeight,
+                               x, y, w, h, label)
+    box:ClearAllPoints()
+    box:SetPoint("TOPLEFT", UIParent, "TOPLEFT",
+        viewportWidth * x / 100, -viewportHeight * y / 100)
+    box:SetSize(viewportWidth * w / 100, viewportHeight * h / 100)
+    box.logresH2Label:SetText(label)
+    box:Show()
+end
+
+local function getH2MapOverlay()
+    if h2MapOverlay then return h2MapOverlay end
+    local root = CreateFrame("Frame", "LogresH2ViewportMapOverlay", UIParent)
+    root:SetAllPoints(UIParent)
+    root:SetFrameStrata("TOOLTIP")
+    root:EnableMouse(false)
+    root:Hide()
+    root.planned = {}
+    root.measured = {}
+    for index = 1, #H2_SCREEN_MAP_V4 do
+        root.planned[index] = createMapOutline(root, 0.30, 0.66, 1.00, 0.07)
+        root.measured[index] = createMapOutline(root, 1.00, 0.72, 0.22, 0.035)
+    end
+    local legend = root:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    legend:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 12, -12)
+    legend:SetText("LOGRES H.2 SCREEN MAP | BLUE = APPROVED V4 | GOLD = CURRENT LOGRES FRAMES | /logres h2map off")
+    legend:SetTextColor(1, 1, 1, 1)
+    h2MapOverlay = root
+    return root
+end
+
+-- Source for gold rectangles is the existing P0192 secret-first measurement;
+-- no Blizzard frame geometry, visibility, or secure control state is sampled.
+function Layout.SetH2MapVisible(visible)
+    if visible ~= true then
+        if h2MapOverlay then h2MapOverlay:Hide() end
+        h2MapLastReason = "hidden"
+        return true, h2MapLastReason
+    end
+    if type(InCombatLockdown) ~= "function" or InCombatLockdown() then
+        h2MapLastReason = "combat-deferred"
+        return false, h2MapLastReason
+    end
+    local viewport = readAddonRect(UIParent)
+    if not viewport then
+        h2MapLastReason = "viewport-geometry-restricted"
+        return false, h2MapLastReason
+    end
+    local report = Layout.GetH2ScreenMapAudit()
+    if report.reason ~= "read-only-addon-geometry" then
+        h2MapLastReason = report.reason
+        return false, h2MapLastReason
+    end
+    local root = getH2MapOverlay()
+    for index = 1, #H2_SCREEN_MAP_V4 do
+        local plan = H2_SCREEN_MAP_V4[index]
+        placeMapOutline(root.planned[index], viewport.width, viewport.height,
+            plan[3], plan[4], plan[5], plan[6], plan[1] .. " [v4]")
+        local row = report.rows[index]
+        if row and row.state == "MEASURED" then
+            placeMapOutline(root.measured[index], viewport.width,
+                viewport.height, row.x, row.y, row.w, row.h,
+                row.id .. " [actual]")
+        else
+            root.measured[index]:Hide()
+        end
+    end
+    root:Show()
+    h2MapLastReason = "shown"
+    return true, "shown " .. tostring(report.measured)
+        .. "/" .. tostring(report.total) .. " measured"
+end
+
+function Layout.GetH2MapOverlayStatus()
+    return {
+        shown = h2MapOverlay and h2MapOverlay:IsShown() or false,
+        reason = h2MapLastReason,
+    }
+end
+
+-- P0194 R3: copy only the approved non-secret design map to the panel.
+-- Do not expose a live addon frame, native aura payload, or protected state.
+function Layout.GetH2ScreenMapPlan()
+    local result = {}
+    for index = 1, #H2_SCREEN_MAP_V4 do
+        local entry = H2_SCREEN_MAP_V4[index]
+        result[index] = {
+            id = entry[1], x = entry[3], y = entry[4],
+            w = entry[5], h = entry[6],
+        }
+    end
+    return result
+end

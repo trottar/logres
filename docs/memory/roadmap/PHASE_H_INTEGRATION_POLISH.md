@@ -2,6 +2,14 @@
 
 Status: ACTIVE — H.1 observed ordinary auto Main ACCEPTED at P0189; special/combat environmental deferrals retained; H.2 authored whole-screen geometry ACTIVE, H.3 later
 
+## P0194 R3 — native developer-panel H.2 Map view
+
+The user rejected P0194 R2's slash-only overlay UX. Phase H keeps all fifteen current actions; a separate H.2 Map panel subview displays approved blue / currently measurable gold rectangles, overlay ON/OFF, refresh and Layout Check. No repositioning occurs; actual geometry stays a diagnostic, and native/special fallback collisions remain OPEN. Require runtime panel/overlay screenshot and Run All, then ONE screen-wide coordinated move.
+
+## P0194 R2 — entire in-game H.2 screen map (runtime candidate)
+
+User rejected P0194 R0 one-widget-at-a-time placement after screenshot left resource text near former central action positions. R0 runtime root cause is not independently demonstrated. R2 uses existing thirteen D-045 design rectangles and P0192 secret-safe named-frame measurement in an opt-in mouse-transparent in-game overlay (planned blue, actual gold) rather than applying further partial anchor moves. `/logres h2map on|off` permits one uncropped screenshot at actual UI scale. **Then** implement a single coherent percent-based 13-region placement and action reflow pass, preserving stock fallbacks and Bar4/5 access. No H.2 acceptance or collision PASS from source-only geometry; R2 WoW test pending.
+
 ## P0193 accepted P0192 geometry runtime observation (2026-10-11; docs-only)
 
 GitHub `main` `3777620` verified for P0192 R1; uploaded `0.0.102-dev` loadCount 242 yields **13/13 addon-owned geometry MEASURED, 0 missing/deferred**, Layout Check **16/23/0 PASS** and integrated Run All completed PASS for its existing observed scope. No v4 anchors moved. Actual target `16.9%`/aura `11.1%` widths cannot all occupy the planned `13%`/`6%` envelopes by center alignment without collision; Quest/natively retained top-right access and secured native harmful aura frame positions were not proven. Preserving native and special fallbacks remains required. Exact rows and limitations: `../evidence/P0193_H2_GEOMETRY_RUNTIME_2026-10-11.md`. P0192 R0 delivery FAIL retained. Next P0194 eligible action/player-reaction placement and reflow, with in-game validation; H.3 later.

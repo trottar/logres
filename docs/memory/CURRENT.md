@@ -8,29 +8,22 @@ project: logres
 
 ## Active Objective
 
-
-**Phase H.2 ACTIVE — P0192 R1 read-only actual geometry AUDIT is user-tested and pushed on verified `main` `3777620`, addon `0.0.102-dev`; v4 remains the approved design, not yet placed in game.** All 13 addon-owned proxies measured with no missing/deferred geometry. Phase H.1 normal automatic Main remains accepted for observed ordinary scope; special combat/vehicle/override/possess/form/petbattle are ENVIRONMENTALLY DEFERRED. P0193 is the docs-only measurement acceptance checkpoint awaiting user push.
+**Phase H.2 ACTIVE — P0193 R2 verified pushed on `main` `213c526`.** P0194 R0 bottom-center-only placement was visually rejected. User requires one unified in-game screen map then one whole-screen placement pass, not isolated widget trials. P0194 R3 integrates the viewport map as a **dedicated Phase H developer-panel view** without removing the 15 Phase H actions; full-screen overlays are optional. H.1 ordinary Main remains accepted; special native/protected modes deferred.
 
 ## Current Work Item
 
-
-**P0193: record exact P0192 R1 geometry runtime evidence.** Canonical measurements `docs/memory/evidence/P0193_H2_GEOMETRY_RUNTIME_2026-10-11.json`; analysis `.md`. LayoutCheck 16 anchors/23 binds/0 failures; H.2 13/13 named Logres rectangles observed. Existing Primary 4x3 and Utility 3x4 do not fit the intended tall/wide visual regions simply by shifting anchors. Target aura actual widths and Quest/native dock interaction require bounded collision handling. P0193 changes no Lua or geometry.
+**P0194 R3 — in-panel H.2 map candidate.** Phase H gets a dedicated H.2 Map button/view showing 13 D-045 approved regions and current secret-safe Logres-owned frame bounds, with Overlay ON/OFF, Refresh Map, and Layout Check controls. The original R2 offered slash-only controls, rejected as workflow; retain slash shortcut but make panel primary. R0 failed user visual intent; R1 delivery checker failed pre-write; R2 panel omission was rejected before runtime acceptance. No gameplay frame moves in R3.
 
 ## Verified State
 
-
-- **P0192 R1 pushed/verified at `3777620`, `0.0.102-dev`**; user `LOGRES_DIAGNOSTICS_LATEST.lua` loadCount 242: Layout Check PASS 16/23/0; 13/13 normalized named frames measured; Phase 0 Run All complete, all observed existing checks PASS. Normal Main CANDIDATE (4 activations / 3 restores, no error), action routing Primary/Secondary/Utility 12/12; ownership 35/17 PASS/18 STOCK/0 FAIL is policy, not pixel visibility.
-- Read-only measurement is **not** positioning, native AuraContainer frame dimensions, secure hit region, screenshot/whole-screen collision, or special-mode proof. P0192 R0 delivery-anchor failure before tracked writes remains preserved; R1 runtime succeeded.
-- **P0189 pushed/verified at `bd0c36a`**, `0.0.101-dev`; user states all worked as expected. Latest `LOGRES_DIAGNOSTICS_LATEST.lua` loadCount 239: fresh startup Main `CANDIDATE auto=true optOut=false armed=true applied=true driver=true route=true` (1 activation / 0 restores); manual OFF `STOCK optOut=true` (1/1); manual ON `CANDIDATE optOut=false` (2/1); integrated Run All final `CANDIDATE activations=7 restores=6 pending=false error=nil`, Primary keys/feedback 12/12, `checkall: complete`.
-- UI Ownership policy remains **35 / 17 PASS / 18 STOCK / 0 FAIL / 0 DEFERRED**. Main STOCK row is a policy classification and never a physical visibility read.
-- User confirms tested ordinary visual/control behavior. Export does not independently measure mouse hit regions or capture a dedicated Edit Mode result. Opt-out continuity across Immersion toggles was included in user-accepted sequence; no intervening maincheck independently measures that state.
-- Protected special native transitions in combat, vehicle, override, possess, bonus/form and petbattle are **ENVIRONMENTALLY DEFERRED**; do not force gameplay. Stock fallback stays available wherever capability is incomplete.
-- Retain P0187 R0 repeat-ON FAIL, P0187 R1 delivery FAIL, P0188 R0 whitespace FAIL, earlier P0182/P0178/P0175 errors, and intermittent post-loot ObjectiveTracker flash. P0183 harmful aura visual acceptance and other deliberate stock information/control fallbacks unchanged.
+- **P0193 R2 pushed/verified `213c526`**: approved 13 planning zones and 13/13 actual addon proxy measurements durable; no whole-screen geometry applied.
+- **P0194 R0 visually rejected**: cropped screenshot still showed resource text near former action clusters. Deployment/Lua root cause not independently proved; do not claim runtime PASS. User rejected piecemeal positioning.
+- **P0194 R1 pre-write checker failure**: static checker demanded incorrect viewport field expressions; no tracked writes. R2 corrected it but relied on slash commands instead of developer-panel UX. R3 corrects interaction policy; its runtime validation is PENDING.
+- Existing Main ordinary user/runtime PASS and native/special environmental deferrals remain. Native harmful container bounds, Quest/native-access overlap and action Bar 4–5 geometry not collision-proven.
 
 ## Next Action
 
-
-**Apply/push P0193 docs-only evidence, verify remote main, then P0194 bounded H.2 geometry implementation.** Begin with Logres-owned action cluster geometry and player reaction region, out-of-combat/fail-open; keep approved v4 envelopes exact in design. Independently resolve target aura frame-width collisions and native-access dock versus upper-right dynamic Quest. Require in-game visual/runtime confirmation after changes; H.3 polish later. No WoW redeploy for P0193.
+**Apply/deploy P0194 R3.** Open developer panel → Phase H → H.2 Map. Validate 13 approved blue and safe actual gold rectangles; test Overlay ON/OFF, Refresh Map, Layout Check and Back to H. Capture uncropped in-game full-screen overlay screenshot, then Phase H Layout Check / Phase 0 Run All and export diagnostics. Only after runtime acceptance and verified user push, prepare **one coherent P0195 whole-screen anchor/reflow implementation**, preserving native, secure, party, class/pet and special-mode fallback. Do not fragment into one-widget trials.
 
 ## Success Criteria
 
@@ -42,7 +35,7 @@ No exact player HP, conventional player health bar, enemy exact level/class/diff
 
 ## Relevant References
 
-
+- `docs/memory/patches/P0194_R3_H2_PANEL_SCREEN_MAP.md`
 - `docs/memory/evidence/P0193_H2_GEOMETRY_RUNTIME_2026-10-11.md`
 - `docs/memory/evidence/P0193_H2_GEOMETRY_RUNTIME_2026-10-11.json`
 - `docs/memory/patches/P0193_H2_GEOMETRY_EVIDENCE_ACCEPTANCE.md`

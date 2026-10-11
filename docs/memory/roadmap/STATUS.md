@@ -4,6 +4,14 @@ As of 2026-10-11.
 
 Current verified checkpoint: P0192 R1 on `main` `3777620`, `0.0.102-dev`, 13/13 read-only Logres geometry measured and Run All PASS for observed scope. Prior runtime checkpoint: P0189 on `main` `bd0c36a`, `0.0.101-dev`; fresh automatic Main CANDIDATE, manual OFF STOCK / ON CANDIDATE, final 7 activations/6 restores, no Main error, Primary 12/12 and integrated Run All / 35-row ownership PASS for tested normal mode. User reports all worked as expected. H.1 observed ordinary scope accepted, special combat/vehicle/override/possess/form/petbattle still ENVIRONMENTALLY DEFERRED. Phase H.2 authored geometry calibration next (P0191), H.3 later. Preserve historical delivery/runtime failures and deliberate stock fallback.
 
+## P0194 R3 — dedicated Phase H map view (runtime candidate)
+
+P0194 R2 slash-only screen overlay was rejected as a developer workflow. The Phase H grid already has fifteen actions; R3 adds an H.2 Map **subview** without displacing them, displaying all 13 D-045 blue approved envelopes and P0192 gold measured addon bounds with in-panel overlay controls, refresh and Layout Check. Earlier R0 user visual failure and R1 shadow-checker delivery failure remain negative evidence. R3 is NOT a placement or combat/collision acceptance. Next one in-game screenshot and integrated checks, then a single coordinated screen-wide geometry pass.
+
+## P0194 R0 rejection / R1 unified in-game screen map
+
+P0193 R2 `213c526` verified pushed. User reports P0194 R0 failed visual bottom-center placement, showing resource label near old action cluster. Failure recorded without inventing Lua root cause; no P0194 commit was pushed. User directs one complete viewport-based screen map, then one coordinated positioning pass instead of independent widget trials. R1 failed its pre-write shadow contract; no tracked writes. R2 adds an on-demand blue-approved/gold-actual overlay for all 13 P0191 v4 rectangles; no Logres or Blizzard UI geometry is moved. Require screenshot/Run All before the single whole-screen placement patch. H.2 not complete; special and native fallbacks untouched.
+
 ## P0193 — P0192 R1 real geometry acceptance (docs-only)
 
 Verified P0192 R1 on `main` `3777620`; uploaded `0.0.102-dev` loadCount 242 shows Layout Check PASS (16 anchors/23 binds/0 fail), H.2 **13/13 measured, 0 missing/0 deferred**, and Phase 0 Run All completed with existing checks PASS in tested ordinary scope. Measured rectangles are **not** collision or v4-placement PASS. Primary 4x3, Utility 3x4, actual target/aura width conflicts and Quest/native-access top-right crowding remain calibration constraints; native harmful anonymous frames and Blizzard group/special fallbacks unmeasured. P0192 R0 prewrite anchor failure preserved; R1 succeeded. P0194 bounded runtime placement after P0193 push; H.3 later. Canonical `../evidence/P0193_H2_GEOMETRY_RUNTIME_2026-10-11.md`.

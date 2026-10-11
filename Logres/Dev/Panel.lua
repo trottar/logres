@@ -40,6 +40,8 @@ local function ensureDiagnosticsDB()
     return LogresDiagnosticsDB
 end
 
+local createH2PanelBox
+
 local Panel = Logres:RegisterModule("DevPanel", {
     OnInitialize = function(self)
         ensureDiagnosticsDB()
@@ -145,6 +147,85 @@ local Panel = Logres:RegisterModule("DevPanel", {
         local hint = frame:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
         hint:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 18, 17)
         hint:SetText("Panel runs auto-save to LogresDiagnosticsDB on /reload/logout.")
+
+        -- H.2 uses a dedicated panel subview instead of displacing one of the
+        -- fifteen existing Phase H actions or requiring a slash-only workflow.
+        local h2MapButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+        h2MapButton:SetSize(100, 22)
+        h2MapButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -22, -96)
+        h2MapButton:SetText("H.2 Map")
+        h2MapButton:SetScript("OnClick", function()
+            self:SetH2MapMode(not self.h2MapMode)
+        end)
+        h2MapButton:Hide()
+
+        local mapHost = CreateFrame("Frame", nil, frame)
+        mapHost:SetPoint("TOPLEFT", frame, "TOPLEFT", 18, -124)
+        mapHost:SetSize(PANEL_WIDTH - 36, 424)
+        mapHost:EnableMouse(false)
+        local canvas = CreateFrame("Frame", nil, mapHost)
+        canvas:SetSize(552, 310.5) -- 16:9 miniature UIParent viewport
+        canvas:SetPoint("TOP", mapHost, "TOP", 0, -4)
+        canvas:EnableMouse(false)
+        local canvasBG = canvas:CreateTexture(nil, "BACKGROUND")
+        canvasBG:SetAllPoints(canvas)
+        canvasBG:SetColorTexture(0.018, 0.022, 0.03, 0.97)
+        -- Ten-percent grid helps estimate the viewport proportions in game.
+        for index = 1, 9 do
+            local vertical = canvas:CreateTexture(nil, "BORDER")
+            vertical:SetColorTexture(0.24, 0.29, 0.35, 0.45)
+            vertical:SetPoint("TOPLEFT", canvas, "TOPLEFT", 552 * index / 10, 0)
+            vertical:SetSize(1, 310.5)
+            local horizontal = canvas:CreateTexture(nil, "BORDER")
+            horizontal:SetColorTexture(0.24, 0.29, 0.35, 0.45)
+            horizontal:SetPoint("TOPLEFT", canvas, "TOPLEFT", 0, -310.5 * index / 10)
+            horizontal:SetSize(552, 1)
+        end
+        local planned, measured = {}, {}
+        for index = 1, 13 do
+            planned[index] = createH2PanelBox(canvas, 0.30, 0.66, 1.0, 0.07, true)
+            measured[index] = createH2PanelBox(canvas, 1.0, 0.72, 0.22, 0.025, false)
+        end
+        local legend = mapHost:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+        legend:SetPoint("TOPLEFT", canvas, "BOTTOMLEFT", 0, -6)
+        legend:SetText("BLUE approved v4 regions      GOLD actual Logres frame bounds")
+        local info = mapHost:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+        info:SetPoint("TOPLEFT", legend, "BOTTOMLEFT", 0, -4)
+        info:SetText("Awaiting geometry measurements")
+        local overlayInfo = mapHost:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+        overlayInfo:SetPoint("TOPLEFT", info, "BOTTOMLEFT", 0, -4)
+        overlayInfo:SetText("Overlay OFF · use Overlay ON, then close panel for screenshot")
+        local mapControls = {
+            { "Overlay ON", function() self:SetH2OverlayVisible(true) end },
+            { "Overlay OFF", function() self:SetH2OverlayVisible(false) end },
+            { "Refresh Map", function() self:RefreshH2Map() end },
+            { "Layout Check", function()
+                self:RunCommand("layoutcheck")
+                self:RefreshH2Map()
+                self.h2MapOverlayInfo:SetText("Layout Check saved; return to diagnostics for full lines")
+            end },
+        }
+        for index = 1, #mapControls do
+            local definition = mapControls[index]
+            local button = CreateFrame("Button", nil, mapHost, "UIPanelButtonTemplate")
+            button:SetSize(132, 23)
+            button:SetPoint("BOTTOMLEFT", mapHost, "BOTTOMLEFT", (index - 1) * 144, 0)
+            button:SetText(definition[1])
+            button:SetScript("OnClick", definition[2])
+        end
+        mapHost:Hide()
+
+        self.h2MapButton = h2MapButton
+        self.h2MapHost = mapHost
+        self.h2MapCanvas = canvas
+        self.h2MapPlanned = planned
+        self.h2MapMeasured = measured
+        self.h2MapInfo = info
+        self.h2MapOverlayInfo = overlayInfo
+        self.resultsBackground = resultsBackground
+        self.clearButton = clearButton
+        self.hint = hint
+        self.h2MapMode = false
 
         self.frame = frame
         self.tabHost = tabHost
@@ -257,7 +338,11 @@ function Panel:SetActivePhase(phase)
         phase = DEFAULT_PHASE
     end
 
+    if self.h2MapMode and phase ~= "H" then
+        self:SetH2MapMode(false)
+    end
     self.activePhase = phase
+    self.h2MapButton:SetShown(phase == "H")
     self.phaseTitle:SetText(PHASE_BY_ID[phase].title)
     self:RefreshPhaseTabs()
     self:RefreshActionButtons()
@@ -315,6 +400,91 @@ function Panel:RefreshActionButtons()
         end)
         self.actionButtons[index] = button
     end
+end
+
+-- P0194 R3: dedicated H.2 panel screen-map view. This is a read-only
+-- calibration aid; drawn box bounds do not resize any gameplay controls.
+createH2PanelBox = function(canvas, r, g, b, alpha, labeled)
+    local box = CreateFrame("Frame", nil, canvas)
+    box:EnableMouse(false)
+    local fill = box:CreateTexture(nil, "BACKGROUND")
+    fill:SetAllPoints(box)
+    fill:SetColorTexture(r, g, b, alpha)
+    local function line(first, second, isHorizontal)
+        local texture = box:CreateTexture(nil, "BORDER")
+        texture:SetColorTexture(r, g, b, 0.95)
+        texture:SetPoint(first, box, first, 0, 0)
+        texture:SetPoint(second, box, second, 0, 0)
+        if isHorizontal then texture:SetHeight(1) else texture:SetWidth(1) end
+    end
+    line("TOPLEFT", "TOPRIGHT", true)
+    line("BOTTOMLEFT", "BOTTOMRIGHT", true)
+    line("TOPLEFT", "BOTTOMLEFT", false)
+    line("TOPRIGHT", "BOTTOMRIGHT", false)
+    if labeled then
+        local label = box:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+        label:SetPoint("TOPLEFT", box, "TOPLEFT", 2, -1)
+        label:SetJustifyH("LEFT")
+        label:SetTextColor(r, g, b, 1)
+        box.label = label
+    end
+    box:Hide()
+    return box
+end
+
+local function putH2PanelBox(box, canvas, x, y, width, height, label)
+    box:ClearAllPoints()
+    box:SetPoint("TOPLEFT", canvas, "TOPLEFT",
+        canvas:GetWidth() * x / 100, -canvas:GetHeight() * y / 100)
+    box:SetSize(canvas:GetWidth() * width / 100,
+        canvas:GetHeight() * height / 100)
+    if box.label then box.label:SetText(label) end
+    box:Show()
+end
+
+function Panel:RefreshH2Map()
+    if not self.h2MapCanvas then return end
+    local plan = Logres.Layout.GetH2ScreenMapPlan()
+    -- The approved planning rectangles are static and always available. The
+    -- actual boxes remain deferred whenever their secret-safe audit cannot run.
+    local report = Logres.Layout.GetH2ScreenMapAudit()
+    for index = 1, #plan do
+        local entry = plan[index]
+        putH2PanelBox(self.h2MapPlanned[index], self.h2MapCanvas,
+            entry.x, entry.y, entry.w, entry.h, entry.id)
+        local row = report.rows[index]
+        if row and row.state == "MEASURED" then
+            putH2PanelBox(self.h2MapMeasured[index], self.h2MapCanvas,
+                row.x, row.y, row.w, row.h, nil)
+        else
+            self.h2MapMeasured[index]:Hide()
+        end
+    end
+    self.h2MapInfo:SetText(string.format(
+        "Actual: %d/%d measured | %d missing | %d deferred | %s",
+        report.measured, report.total, report.missing, report.deferred,
+        report.reason))
+end
+
+function Panel:SetH2MapMode(visible)
+    self.h2MapMode = visible == true and self.activePhase == "H"
+    local view = self.h2MapMode
+    self.buttonHost:SetShown(not view)
+    self.emptyLabel:SetShown(false)
+    self.resultsBackground:SetShown(not view)
+    self.results:SetShown(not view)
+    self.clearButton:SetShown(not view)
+    self.hint:SetShown(not view)
+    self.h2MapHost:SetShown(view)
+    self.h2MapButton:SetText(view and "Back to H" or "H.2 Map")
+    if view then self:RefreshH2Map() end
+end
+
+function Panel:SetH2OverlayVisible(visible)
+    local ok, reason = Logres.Layout.SetH2MapVisible(visible)
+    self.h2MapOverlayInfo:SetText((ok and "Overlay: " or "Overlay deferred: ")
+        .. tostring(reason))
+    self:RefreshH2Map()
 end
 
 function Logres:ShowDevPanel()

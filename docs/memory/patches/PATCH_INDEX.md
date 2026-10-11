@@ -188,6 +188,7 @@
 | P0191 | 2026-10-11 | INSTALLED / PUSHED — APPROVED V4 DESIGN, NO RUNTIME GEOMETRY | Save exact v4 13-rectangle percent map, D-045, layout contract + memory; Main Y=60.4 matches Secondary; runtime translation P0192 pending user push |
 
 | P0192 | 2026-10-11 | INSTALLED / PUSHED — R1 READ-ONLY GEOMETRY MEASUREMENT PASS; R0 DELIVERY FAIL RETAINED | `3777620` / `0.0.102-dev`, loadCount 242; Phase H Layout Check 16/23/0 PASS, H2 13/13 actual geometry measured, Run All complete; no anchor mutation or collision proof |
-| P0193 | 2026-10-11 | PREPARED — DOCS / RUNTIME-EVIDENCE ACCEPTANCE | Record P0192 R1 13/13 actual vs approved v4; preserve target-aura/Quest-dock collision unknowns and P0192 R0 failure; next P0194 bounded geometry translation |
+| P0193 | 2026-10-11 | INSTALLED / PUSHED — R2 EVIDENCE ACCEPTED; R0/R1 DELIVERY FAILS RETAINED | `213c526`: P0192 13/13 runtime measurement durable; no geometry moved; R0 version policy/R1 EOF fail kept |
+| P0194 R0/R1/R2/R3 | 2026-10-11 | R0 VISUAL FAIL / SUPERSEDED; R1 CHECKER DELIVERY FAIL / R2 SLASH-ONLY VIEW REJECTED / R3 PANEL MAP CANDIDATE | User screenshot rejected isolated player-only placement; R1 shadow checker expected wrong viewport variable names (no tracked writes); R3 integrates all 13 approved+actual regions in Phase H panel without removing any existing actions; fullscreen overlay remains mouse-transparent; R0 visual/R1 prewrite failures retained |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

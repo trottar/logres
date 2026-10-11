@@ -4790,6 +4790,17 @@ local function handleCommand(message)
         return
     end
 
+    if command == "h2map" then
+        if argument ~= "on" and argument ~= "off" then
+            emit("Logres H2 map: use /logres h2map on or off")
+            return
+        end
+        local ok, reason = Logres.Layout.SetH2MapVisible(argument == "on")
+        emit("Logres H2 map: " .. (ok and "PASS" or "DEFERRED")
+            .. " (" .. tostring(reason) .. ")")
+        return
+    end
+
     if command == "compasscheck" then
         runCompassCheck()
         return
