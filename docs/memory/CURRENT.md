@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-10-09
+as_of: 2026-10-10
 project: logres
 ---
 
@@ -8,11 +8,11 @@ project: logres
 
 ## Active Objective
 
-**Phase H.1 OPEN — remove the last user-reported redundant persistent stock action-bar presentation: the normal Blizzard `MainActionBar`.** GitHub `main` **`60886bbededd8203c9a457dec23784cd53b64486`** has P0185 Main-only memory reconciliation (P0184 debuff acceptance already durable). Runtime remains **`0.0.98-dev`**. The user reports that **only the Main action bar remains to remove** from the intended ordinary Immersion ON screen. Treat this as user visual scope, **not** as a claim that all other Blizzard-owned fallback/information/control surfaces have disappeared or can be suppressed.
+**Phase H.1 OPEN — P0187 R0 ON/OFF/ON runtime FAILED; P0187 R1 secure state re-arm correction requires in-client retest.** GitHub `main` **`60886bbededd8203c9a457dec23784cd53b64486`** has P0185 Main-only memory reconciliation (P0184 debuff acceptance already durable). Runtime remains **`0.0.98-dev`**. The user reports that **only the Main action bar remains to remove** from the intended ordinary Immersion ON screen. Treat this as user visual scope, **not** as a claim that all other Blizzard-owned fallback/information/control surfaces have disappeared or can be suppressed.
 
 ## Current Work Item
 
-**Next implementation: normal-mode MainActionBar visual/interactivity ownership with proven secure routing, existing editing access, special-mode fallback and exact restoration.** Source-backed minimum coherent capability: Logres Primary actions, usable normal-page key routing/feedback, drag/edit/bind access or deliberate accessible stock editing fallback, out-of-combat activation, and seamless fail-open to Blizzard Main/Override/vehicle/possess/extra actions whenever Logres does not safely own a mode. The stock Main must not become an invisible clickable region. Do **not** conflate normal Main suppression with ownership of special actions; preserve special UI. P0186 pinned native source review establishes that the Main bar is repurposed for unskinned special states, and Blizzard may explicitly re-show it; Logres normal-only Primary override bindings lack a corresponding combat-safe special path. **Do not directly copy Bar 2–5 alpha/mouse suppression to Main.** Next code step is one secure mode-aware Primary route/fallback and stock presentation mechanism, then targeted panel and visual regression, not another broad audit or unrelated aura work.
+**Immediate P0187 R1 (`0.0.100-dev`) runtime re-arm regression retest.** R0 ON worked and OFF reported exact stock restoration; subsequent ON repeatedly failed at `MainReplacement.lua:200` (`secure normal mode gate not established`). Secure driver removal left its last `normal` state attribute while the gate was shown; re-registering equal state did not fire `_onstate`. R1 resets the addon-owned secure `state-logresmode` attribute during release and before registration, plus rollback; no native Main attribute/mouse/alpha mutations or polling. Session-only/manual ON remains the only opt-in. Do not call the R0 result PASS or declare H.1 closed. See P0187 evidence/patch record R1 additions.
 
 ## Verified State
 
@@ -24,7 +24,7 @@ project: logres
 
 ## Next Action
 
-**P0185 is pushed and verified at `60886bb`. P0186 is a pinned native Main transition source-gate checkpoint; no runtime change or WoW retest.** The immediate runtime-code implementation must couple special-mode-safe Primary key routing to reversible Main presentation before any native Main hide. Validate actual normal-screen Main disappearance **and no invisible stock click region**, functional Logres Primary normal-page input/edit access, special-mode and combat fail-open/restoration when naturally available, and Immersion OFF recovery. Use the developer panel (Phase 0 **Run All**, **UI Ownership Check**, and corresponding action/ownership controls) for available checks; do not demand redundant reruns of P0183. Do not manufacture rare gameplay to prove environmentally absent special modes.
+The **P0187 R0 runtime failure is reproduced and preserved**; R1 correction via R2 delivery must be applied atop the P0187-applied checkout while GitHub HEAD remains verified P0186 `2421040`. Deploy, `/reload`, and validate Phase D Main Replace **Check → ON → Check → OFF → Check → ON → Check → OFF → Check**. Confirm normal Main native visibility/click area truly restored and absent as appropriate; execute Logres Primary action keys and edit access, then Immersion OFF/ON, Edit Mode, Phase 0 Run All/UI Ownership. If repeated ON fails or a Lua/taint/protected error appears, stop; retain FAIL evidence. Special modes require only naturally available checks (DEFERRED otherwise). Commit only after successful bounded runtime check.
 
 ## Success Criteria
 
@@ -36,6 +36,8 @@ No exact player HP, conventional player health bar, enemy exact level/class/diff
 
 ## Relevant References
 
+- `docs/memory/patches/P0187_MAIN_SECURE_REPLACEMENT_CANDIDATE.md`
+- `docs/memory/evidence/P0187_MAIN_SECURE_CANDIDATE_2026-10-09.md`
 - `docs/memory/patches/P0186_MAIN_SECURE_TRANSITION_SOURCE_GATE.md`
 - `docs/memory/evidence/P0186_MAIN_TRANSITION_SOURCE_GATE_2026-10-09.md`
 - `docs/memory/patches/P0185_MAIN_BAR_MEMORY_RECONCILIATION.md`

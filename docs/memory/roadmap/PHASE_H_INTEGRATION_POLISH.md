@@ -1,6 +1,6 @@
 # Phase H — Integration and Polish
 
-Status: ACTIVE — H.1 OPEN; P0185 verified at 60886bb; P0186 source gate requires secure special-mode-safe Primary routing before Main suppression; H.2/H.3 later
+Status: ACTIVE — H.1 OPEN; P0187 R0 repeat-ON FAILED, P0187 R1 `0.0.100-dev` state-driver re-arm correction runtime PENDING; H.2/H.3 later
 
 ## Product objective
 
@@ -561,3 +561,15 @@ P0184 is verified `main` `4e999b1`; user-confirmed Logres native debuffs appear 
 ## P0186 — native Main secure-source boundary (2026-10-09)
 
 Pinned Forever 70245 native `ActionBarController_UpdateAll` may repurpose MainActionBar for unskinned special pages and re-show it on transition. Existing Primary driver/bindings are normal-page-only, so simply copying stock Bar 2–5 alpha+mouse suppression would violate special access in combat. P0186 records this specific source-blocked approach, without code or new runtime claim. The next H.1 runtime candidate is integrated secure routing for all required native-mode fallbacks plus a reversible normal Main visibility and interaction contract, checked with existing developer-panel diagnostics and actual no-ghost-click visual proof. Preserve native special controls whenever incomplete. No unrelated polish or aura work before this gate.
+
+## P0187 — proposed normal Main secure parent and route trial
+
+Manual opt-in after login, normal stock Main secure-hidden by addon-owned ancestor while Logres Primary key overrides are active; secure state transition opens native Main and delegates Primary bindings to stock action buttons for special pages, retaining native special buttons and dedicated Override. Native parent + prior route restored on release before replacement interactions leave. Immersion OFF, Edit Mode and combat deferral are explicit. Requires normal visuals/no click region, primary hotkeys/edit, restoration, naturally available special runtime evidence and zero Lua/protected/secret/taint errors. Until that passes, H.1 is OPEN and source-only state is not native secure API proof. P0183 status visuals and H.2/H.3 styling remain independent.
+
+## P0187 R0 in-client ON/OFF/ON failure and R1 correction (2026-10-09)
+
+User evidence (`LOGRES_DIAGNOSTICS_LATEST.lua`, loadCount 236, `0.0.99-dev`): initial `mainreplace on` CANDIDATE (`applied=true`, activations 1); `mainreplace off` STOCK (`applied=false`, restorations 1); subsequent ON repeatedly FAILED with `MainReplacement.lua:200: secure normal mode gate not established` (`armed=true`, `applied=false`, activations 1, restores 1). OFF afterward reported stale FAIL despite native stock already restored. This establishes a **reproducible re-arm failure, NOT a failed first release**. No special/combat mode was tested; no Lua traceback outside the intentional secure-gate assertion appears in the supplied panel diagnostics. This is not a test that stock was physically clickable afterward.
+
+Narrow inferred cause, supported by secure state-driver implementation: unregistering `state-logresmode` stops updates but retains the `normal` attribute. After OFF explicitly shows the reusable gate, re-registering the same `normal` value does not trigger `_onstate-logresmode`, so Main remains visible under the gate and the fail-open assertion at line 200 fires. R1 clears only its own secure handler `state-logresmode` attribute out of combat when releasing and immediately before re-registering. Original Main parent restoration precedes release reset; routing release remains after native restoration. Failed-ON rollback also clears the addon state. OFF clears a stale failed-ON diagnostic if stock is already released. R1 adds order-sensitive static checker assertions for re-arm safety, without polling/hooks/native attribute mutation.
+
+R1 `0.0.100-dev` is an **untested corrective runtime candidate** against the **P0187-applied but uncommitted** checkout at `HEAD` `2421040`. It has no runtime PASS until panel ON → OFF → ON → OFF is repeated and normal native visibility/click, Primary keys, Immersion OFF and Edit Mode recover. Native special states remain environmentally DEFERRED unless naturally observed. The earlier R0 runtime failure remains durable negative evidence; do not classify H.1 complete until restoration re-test.

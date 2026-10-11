@@ -1,8 +1,8 @@
 # Roadmap Status
 
-As of 2026-10-09.
+As of 2026-10-10.
 
-Current verified checkpoint: P0185 on `main` `60886bb`; P0183 R1 native debuffs visibly appear, runtime `0.0.98-dev`. The user identifies normal Main as the remaining redundant persistent bar. P0186 pinned native-source investigation blocks a naive Main alpha/mouse hide: unskinned special modes reuse Main, but Primary override key routing supports only normal pages. Next runtime-code gate is secure mode-aware action routing plus conditional, exactly reversible normal Main presentation. P0186 changes documentation only.
+Current verified checkpoint: P0186 on `main` `2421040`; P0187 R0 `0.0.99-dev` runtime ON/OFF/ON FAILED after successful first ON and OFF. P0187 R1 `0.0.100-dev` repairs the stale addon-owned secure state for re-arm and awaits retest. P0183 debuffs remain visually accepted.
 
 Historical checkpoint (P0168): P0168 R1 verified; subsequent P0170–P0184 milestones supersede this as current work.
 
@@ -414,3 +414,18 @@ P0183 R1 was pushed as `11a342b`, build `0.0.98-dev`. The user explicitly confir
 ## P0185 — authoritative normal-screen Main-bar scope (2026-10-09)
 
 Verified remote `main` `4e999b1` includes P0184 docs acceptance and visually confirmed P0183 R1 native debuffs (`0.0.98-dev`). Run All complete; 35-surface ON ownership **17 PASS/18 STOCK/0 FAIL**. The user identifies **only the normal Blizzard MainActionBar as the remaining unwanted persistent bar**. `STOCK` is intentional fallback policy, not a list of UI elements that must disappear. P0185 is **docs-only**; next H.1 change must implement safe Main normal-mode visual/mouse suppression *only when* Logres Primary route and editing/restoration fallback are proven, with all special controls fail-open to Blizzard. Prior “P0183 runtime pending”, “P0168 next” and “P0182 active” statements above are historical. H.2/H.3 visual work (including debuff polish) waits for capability-safe H.1 completion.
+
+## P0187 — Main secure normal mode candidate (2026-10-09)
+
+P0186 native source gate durable at `2421040`. P0187 adds session-only manual Main normal gate/secure Primary-to-stock mode delegation and fails open to native stock when released; exact normal visual/interactivity, edit/OFF, combat and special-mode behavior requires in-game proof. Do not mark H.1 complete or change permanent default from static findings. Phase H.2/H.3 deferred until H.1 acceptance.
+
+## P0187 R0 in-client ON/OFF/ON failure and R1 correction (2026-10-09)
+
+User evidence (`LOGRES_DIAGNOSTICS_LATEST.lua`, loadCount 236, `0.0.99-dev`): initial `mainreplace on` CANDIDATE (`applied=true`, activations 1); `mainreplace off` STOCK (`applied=false`, restorations 1); subsequent ON repeatedly FAILED with `MainReplacement.lua:200: secure normal mode gate not established` (`armed=true`, `applied=false`, activations 1, restores 1). OFF afterward reported stale FAIL despite native stock already restored. This establishes a **reproducible re-arm failure, NOT a failed first release**. No special/combat mode was tested; no Lua traceback outside the intentional secure-gate assertion appears in the supplied panel diagnostics. This is not a test that stock was physically clickable afterward.
+
+Narrow inferred cause, supported by secure state-driver implementation: unregistering `state-logresmode` stops updates but retains the `normal` attribute. After OFF explicitly shows the reusable gate, re-registering the same `normal` value does not trigger `_onstate-logresmode`, so Main remains visible under the gate and the fail-open assertion at line 200 fires. R1 clears only its own secure handler `state-logresmode` attribute out of combat when releasing and immediately before re-registering. Original Main parent restoration precedes release reset; routing release remains after native restoration. Failed-ON rollback also clears the addon state. OFF clears a stale failed-ON diagnostic if stock is already released. R1 adds order-sensitive static checker assertions for re-arm safety, without polling/hooks/native attribute mutation.
+
+R1 `0.0.100-dev` is an **untested corrective runtime candidate** against the **P0187-applied but uncommitted** checkout at `HEAD` `2421040`. It has no runtime PASS until panel ON → OFF → ON → OFF is repeated and normal native visibility/click, Primary keys, Immersion OFF and Edit Mode recover. Native special states remain environmentally DEFERRED unless naturally observed. The earlier R0 runtime failure remains durable negative evidence; do not classify H.1 complete until restoration re-test.
+
+
+P0187 R1 delivery FAILED before writes: original checker SHA did not match the local checker. P0187 R2 delivers the same R1 code while accepting only AST-equivalent checker formatting drift, and preserves unrelated untracked files. Runtime PASS remains pending.

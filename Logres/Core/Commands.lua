@@ -4425,6 +4425,7 @@ local function runAllChecks()
     runStatusAuraCheck()
     runActionCheck()
     runPrimaryOwnershipCheck()
+    emit(Logres:GetMainReplacementDiagnosticLine())
     runStockReplacementCheck()
     runImmersionCheck()
     runQuietModeCheck()
@@ -4549,6 +4550,8 @@ local function printHelp()
     emit("  /logres utilitybindings [on|off]")
     emit("  /logres stockreplace [on|off]")
     emit("  /logres stockreplacecheck")
+    emit("  /logres mainreplace [on|off]")
+    emit("  /logres mainreplacecheck")
     emit("  /logres immersioncheck")
     emit("  /logres quietcheck")
     emit("  /logres playerframecheck")
@@ -4677,6 +4680,25 @@ local function handleCommand(message)
 
     if command == "utilitybindings" then
         handleSideActionBindings("utility", "Utility", argument)
+        return
+    end
+
+    if command == "mainreplace" then
+        if argument ~= "on" and argument ~= "off" then
+            emit("Usage: /logres mainreplace [on|off]")
+            return
+        end
+        local ok, reason = Logres:GetModule("MainActionReplacement")
+            :RequestSessionArmed(argument == "on")
+        emit("Logres mainreplace " .. argument .. ": "
+            .. (ok and "requested" or "deferred/failed")
+            .. " reason=" .. tostring(reason))
+        emit(Logres:GetMainReplacementDiagnosticLine())
+        return
+    end
+
+    if command == "mainreplacecheck" then
+        emit(Logres:GetMainReplacementDiagnosticLine())
         return
     end
 
@@ -5095,6 +5117,24 @@ Logres:RegisterDevPanelAction(
     "immersionCheck",
     "Immersion Check",
     "immersioncheck",
+    "D"
+)
+Logres:RegisterDevPanelAction(
+    "mainReplaceCheck",
+    "Main Replace Check",
+    "mainreplacecheck",
+    "D"
+)
+Logres:RegisterDevPanelAction(
+    "mainReplaceOn",
+    "Main Replace ON",
+    "mainreplace on",
+    "D"
+)
+Logres:RegisterDevPanelAction(
+    "mainReplaceOff",
+    "Main Replace OFF",
+    "mainreplace off",
     "D"
 )
 Logres:RegisterDevPanelAction(

@@ -245,6 +245,10 @@ function Primary:RefreshOverrideBindings()
 end
 
 function Primary:SetBindingRoutingEnabled(enabled)
+    -- Main secure trial requires the Logres key route until stock is restored.
+    if enabled ~= true and self.mainReplacementActive then
+        return false
+    end
     self.bindingRoutingEnabled = enabled == true
     self:RefreshBindingLabels()
 

@@ -1,0 +1,20 @@
+P0187 R2 delivery of R1 correction for uncommitted P0187 on verified HEAD 2421040dd82f4918dba83290cced05fb37410bd3
+R0 IN-CLIENT FAIL: first ON/OFF good, re-ON at MainReplacement.lua:200 failed; stale secure state attribute.
+R1 implementation remains untested, candidate 0.0.100-dev. R1 delivery failed prewrite on checker SHA mismatch; R2 accepts AST-equivalent formatting drift only.
+Full shadow tools/check_*.py + hygiene PASS before writes; git diff --check PASS; unrelated untracked preserved.
+Changed:
+Existing checker SHA-256 before R2: 5c90597ee1481278c51b929a1f40b10a57c41d10b1634ec96576117a04793f09
+9842952371aba2e4aafa96d1dcbf921b8c00be43516cc01ba2d9c5bfe11d622b  Logres/Actions/MainReplacement.lua
+22e86037e191d0026e6cc3dd56eed3a53c0276c65bb93b7131a2d71b4738da2d  Logres/Core/Bootstrap.lua
+8dcf4acbb95760015ab5dd0328e5f3c7d0b4e0beedd94bbe75f474ab5cc7bda1  Logres/Logres.toc
+c29382624b3ddf20928bb9f2e57d90f76513b85d757166f59305fa223ccad110  docs/ROADMAP.md
+848ddf7fa2e60ee9917f9c81c76b181dfc9d649e9cb8ea532622b230d1f1879f  docs/memory/2026-10-09.md
+0fab72de5f166d10f2d9d9c8ea19de7b4e608cf3c61b1eaa39e2bfcf0f2e4bec  docs/memory/CURRENT.md
+abcf4d30b0ee180af7f1d93b0edcdd15bd4d4467b9f050877610c06b3902510d  docs/memory/evidence/P0187_MAIN_SECURE_CANDIDATE_2026-10-09.md
+6f868e697318d11180af30ad4ceb15c08483edb981c38f13880adbe8a48b87af  docs/memory/handoffs/CURRENT_HANDOFF.md
+9464f98f7d818226acc18b8e3aa0569913491430503be07cd8156a2311e515ef  docs/memory/investigations/ACTIVE.md
+fecad660960b4e48db9f28ba61cf6544bbbae7aa7d61ba1ae76390def3660d25  docs/memory/patches/P0187_MAIN_SECURE_REPLACEMENT_CANDIDATE.md
+214b45e0aec58719318efadc9647309c3771a9f40cdfb260be2a3ca2c749d342  docs/memory/patches/PATCH_INDEX.md
+a9b0dc1341f04c5549691bb4f98f56794981328a8a93051f225baaf689857e55  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+3f12e423d04653c5a33175cc38bb30e931212c2167f0488cf9eae230c74281c9  docs/memory/roadmap/STATUS.md
+18209245bb8f9f758ee8f8775b60faea5b593e75128e29afaf602ada563d4147  tools/check_main_replacement_contract.py
