@@ -8,6 +8,10 @@ Current verified checkpoint: P0189 on `main` `bd0c36a`, `0.0.101-dev`; fresh aut
 
 User accepts v4 13 component envelopes in normalized top-left percentage coordinates, with Main/Secondary y=60.4 and right-offset symmetric enemy auras; precise authority: `docs/design/layout/SCREEN_MAP_V4.json`, D-045. Player Debuffs above bottom-center Resource, class/totems above left action bars. This is *design acceptance*, not live UI pixel sizing/collision validation. P0191 preparation remains unpushed until user verification. P0192 follows as real geometry translation, H.3 only after H.2. All native stock fallback/secure/secret constraints and historical failures retained.
 
+## P0192 — bounded H.2 read-only geometry observation candidate
+
+P0191 v4 design is **PUSHED / VERIFIED** at `57c3112`. P0192 candidate `0.0.102-dev` adds a 13-row addon-owned actual-frame geometry observation to the existing Phase H Layout Check. Primary 4x3 vs approved tall Main, Secondary/Utility 3x4, pet 5x2, native harmful/quest/fallback extents are explicit audit constraints. No anchor positions changed or Blizzard presentation sampled. Runtime measurement/visibility/collisions remain UNTESTED until WoW validation; P0193 positioning follows accepted measurement, H.3 later. Source audit in `../evidence/P0192_H2_GEOMETRY_AUDIT_2026-10-11.md`.
+
 Historical checkpoint (P0168): P0168 R1 verified; subsequent P0170–P0184 milestones supersede this as current work.
 
 ## Active work stream

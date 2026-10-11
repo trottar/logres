@@ -8,11 +8,11 @@ project: logres
 
 ## Active Objective
 
-**Phase H.2 ACTIVE — user-approved Layout Draft v4 is the authored design target, not an implemented in-game placement.** Verified remote `main` `c67527e` contains P0190's accepted ordinary H.1 auto Main checkpoint (`0.0.101-dev`). Special combat/vehicle/override/possess/form/petbattle states remain ENVIRONMENTALLY DEFERRED. P0191 is a docs-only v4 positioning checkpoint awaiting user push; `Integration/Layout.lua` retains P0166's existing runtime anchors.
+**Phase H.2 ACTIVE — P0191 user-approved v4 screen map is verified durable on remote `main` at `57c3112`; runtime geometry remains unimplemented.** P0192 `0.0.102-dev` is a **read-only** actual Logres widget geometry diagnostic candidate, not an anchor move. H.1 observed ordinary auto Main accepted; special combat/vehicle/override/possess/form/petbattle remains ENVIRONMENTALLY DEFERRED.
 
 ## Current Work Item
 
-**P0191 docs-only publish the exact approved 13-rectangle screen map**: `docs/design/layout/SCREEN_MAP_V4.json` and `.md`, decision D-045 and layout contract checker. User's final correction aligns Main Bar Y to Secondary at **60.4%**. Enemy aura bands are symmetric about the right-offset target, and Player Debuffs are directly above bottom-center Player Resource, not over the left actions. No Lua/TOC, stock UI or anchor mutation.
+**P0192 H.2 diagnostic:** extend existing Phase H Layout Check with 13 secret-gated addon-owned frame bounds in viewport-percent coordinates alongside approved P0191 v4 design envelopes. Source audit finds existing Primary 4x3, Secondary/Utility 3x4, pet 5x2, variable quest height and retained native/access collision risks. Preserve all P0166 live anchor positions. New Lua read-only diagnostic + version `0.0.102-dev`; WoW validation PENDING.
 
 ## Verified State
 
@@ -24,7 +24,7 @@ project: logres
 
 ## Next Action
 
-**Apply, commit and push P0191, then verify remote main.** Next proposed P0192: bounded H.2 live geometry translation/collision audit of the approved v4 boxes using existing P0166 semantic anchors, full action density and required native fallbacks. Actual geometry remains runtime-UNTESTED; H.3 styling waits for accepted H.2 composition. No generic drag-anything editor or automatic pixel conversion.
+**Apply P0192, deploy to WoW and run Phase H Layout Check plus Phase 0 Run All.** Export new `Logres H2 v4 geometry AUDIT` rows and full-screen screenshot at actual scale, then user pushes and remote `main` is verified. P0193 next: a bounded, out-of-combat authored anchor/cluster-geometry translation using P0191 v4 positions and observed source dimensions. Do not call diagnostic measurements collision PASS. H.3 waits for tested H.2 placement.
 
 ## Success Criteria
 
@@ -35,6 +35,9 @@ The visually redundant normal Main presentation is absent when Logres has replac
 No exact player HP, conventional player health bar, enemy exact level/class/difficulty, secret-capable reads, broad stock UI suppression, polling or periodic forcing, or combat-unsafe protected mutation. PvP remains a modifier, not Immersion OFF. Keep class/pet, party/CompactParty, special actions, quest and on-demand native access, target-of-target, nameplates and private/group aura fallbacks until independently replacement-proven. The intermittent ObjectiveTracker flash remains OPEN / INTERMITTENT / UNREPRODUCED.
 
 ## Relevant References
+
+- `docs/memory/patches/P0192_H2_READONLY_GEOMETRY_CHECKPOINT.md`
+- `docs/memory/evidence/P0192_H2_GEOMETRY_AUDIT_2026-10-11.md`
 
 - `docs/design/layout/SCREEN_MAP_V4.md`
 - `docs/design/layout/SCREEN_MAP_V4.json`

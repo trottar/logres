@@ -6,6 +6,10 @@ The user correctly identified that the previous closure counted D/C suppression 
 
 # Active Investigations
 
+## H.2 P0192 geometry observation (2026-10-11)
+
+Status: **SOURCE AUDIT COMPLETE / IN-CLIENT MEASUREMENT OPEN.** Verified user push P0191 `57c3112` makes D-045 and 13 literal v4 percentages durable. P0192 prepares a read-only `0.0.102-dev` extension to **existing Phase H Layout Check**, reporting actual normalized addon-frame geometry with MISSING/DEFERRED for absent/secret-capable/hidden/unlaid-out data; no combat measurement, protected/native visibility inspection, or geometry mutation. Source shows Primary 4x3 183x136, Secondary/Utility 3x4 136x183, pet 5x2 230x89, anonymous native harmful containers beyond named-frame probe, variable Active Quest height and stock native-access dock collision concerns. Source and mapping table: `../evidence/P0192_H2_GEOMETRY_AUDIT_2026-10-11.md`. Next: WoW Layout Check, Run All, screenshot and export; do not claim layout PASS. Historic ObjectiveTracker flash and special combat/vehicle/mode deferrals remain OPEN.
+
 ## H.2 approved v4 design geometry — P0191 (2026-10-11)
 
 Status: **USER-APPROVED DESIGN / RUNTIME GEOMETRY OPEN**. The 13 percent rectangles, exact source export and last agreed Main Y 60.4% correction are canonical at `docs/design/layout/SCREEN_MAP_V4.json`; details and meanings in `.md` and D-045. Target fallback is right-offset with symmetrical left debuffs/right buffs; bottom-center Player Debuffs sit above Player Resource; left class/totem strip sits above Secondary/Main. Assistant's earlier wrong left-side resource/debuff and centered-target map interpretations are superseded design failures, not runtime evidence. This is a **docs-only** P0191 candidate with no Lua changes, actual collision PASS or WoW deploy. Next after verified push: P0192 map boxes to Logres P0166 anchors, assess full density and native fallback collisions, then narrow fail-open implementation/runtime proof. Preserve H.1 special environmental deferrals.

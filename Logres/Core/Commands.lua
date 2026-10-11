@@ -4336,6 +4336,31 @@ local function runLayoutCheck()
         tostring(mismatched),
         tostring(status.lastBindError)
     ))
+
+    -- P0192: geometry is diagnostic only. A successful source measurement is
+    -- NOT collision/visibility/secure-action validation or layout acceptance.
+    local h2 = Logres.Layout.GetH2ScreenMapAudit()
+    emit(string.format(
+        "Logres H2 v4 geometry AUDIT (measured=%s/%s missing=%s deferred=%s reason=%s; layout unchanged)",
+        tostring(h2.measured), tostring(h2.total),
+        tostring(h2.missing), tostring(h2.deferred), tostring(h2.reason)
+    ))
+    for index = 1, #h2.rows do
+        local row = h2.rows[index]
+        if row.state == "MEASURED" then
+            emit(string.format(
+                "Logres H2 %s %s actual=(%.1f,%.1f,%.1f,%.1f) planned=(%.1f,%.1f,%.1f,%.1f)",
+                row.id, row.state, row.x, row.y, row.w, row.h,
+                row.targetX, row.targetY, row.targetW, row.targetH
+            ))
+        else
+            emit(string.format(
+                "Logres H2 %s %s frame=%s planned=(%.1f,%.1f,%.1f,%.1f)",
+                row.id, row.state, row.frameName,
+                row.targetX, row.targetY, row.targetW, row.targetH
+            ))
+        end
+    end
 end
 
 local function runNativeAccessCheck()
