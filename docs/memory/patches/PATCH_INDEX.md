@@ -187,6 +187,7 @@
 | P0190 | 2026-10-11 | PREPARED — DOCS ACCEPTANCE; H.2 OPEN | Accept bounded P0189 normal startup, preserve special deferrals/history; next P0191 realistic whole-screen layout spacing/collision audit |
 | P0191 | 2026-10-11 | INSTALLED / PUSHED — APPROVED V4 DESIGN, NO RUNTIME GEOMETRY | Save exact v4 13-rectangle percent map, D-045, layout contract + memory; Main Y=60.4 matches Secondary; runtime translation P0192 pending user push |
 
-| P0192 | 2026-10-11 | PREPARED — READ-ONLY GEOMETRY AUDIT; WOW RUNTIME PENDING | Source-backed 13-frame screen-percent measurement in Phase H Layout Check, 0.0.102-dev; R0 pre-write PATCH_INDEX anchor FAIL (no tracked writes), R1 corrected; no reposition; P0193 after live measurement |
+| P0192 | 2026-10-11 | INSTALLED / PUSHED — R1 READ-ONLY GEOMETRY MEASUREMENT PASS; R0 DELIVERY FAIL RETAINED | `3777620` / `0.0.102-dev`, loadCount 242; Phase H Layout Check 16/23/0 PASS, H2 13/13 actual geometry measured, Run All complete; no anchor mutation or collision proof |
+| P0193 | 2026-10-11 | PREPARED — DOCS / RUNTIME-EVIDENCE ACCEPTANCE | Record P0192 R1 13/13 actual vs approved v4; preserve target-aura/Quest-dock collision unknowns and P0192 R0 failure; next P0194 bounded geometry translation |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

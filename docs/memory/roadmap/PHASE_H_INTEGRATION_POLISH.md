@@ -2,6 +2,10 @@
 
 Status: ACTIVE — H.1 observed ordinary auto Main ACCEPTED at P0189; special/combat environmental deferrals retained; H.2 authored whole-screen geometry ACTIVE, H.3 later
 
+## P0193 accepted P0192 geometry runtime observation (2026-10-11; docs-only)
+
+GitHub `main` `3777620` verified for P0192 R1; uploaded `0.0.102-dev` loadCount 242 yields **13/13 addon-owned geometry MEASURED, 0 missing/deferred**, Layout Check **16/23/0 PASS** and integrated Run All completed PASS for its existing observed scope. No v4 anchors moved. Actual target `16.9%`/aura `11.1%` widths cannot all occupy the planned `13%`/`6%` envelopes by center alignment without collision; Quest/natively retained top-right access and secured native harmful aura frame positions were not proven. Preserving native and special fallbacks remains required. Exact rows and limitations: `../evidence/P0193_H2_GEOMETRY_RUNTIME_2026-10-11.md`. P0192 R0 delivery FAIL retained. Next P0194 eligible action/player-reaction placement and reflow, with in-game validation; H.3 later.
+
 ## P0192 — source-backed real geometry audit (2026-10-11; runtime diagnostic candidate)
 
 P0191 verified at `57c3112`: 13 exact v4 planning envelopes accepted (D-045). Existing Primary 4x3 vs tall approved Main region and Utility 3x4 vs broad bottom-right region cannot be solved by relocating their P0166 anchors alone. P0192 adds read-only addon-frame bounds to existing Phase H Layout Check (13 rows, secret-guarded, combat-deferred), version `0.0.102-dev`, without mutating coordinates, stock frames or controls. Native HARMFUL aura frame bounds are not covered by the named-frame audit. **Actual collisions, secure hit regions and final H.2 placement are NOT proven**. In-client Layout Check / Run All and screenshot come first. See `../evidence/P0192_H2_GEOMETRY_AUDIT_2026-10-11.md`.

@@ -6,7 +6,11 @@ The user correctly identified that the previous closure counted D/C suppression 
 
 # Active Investigations
 
-## H.2 P0192 geometry observation (2026-10-11)
+## H.2 P0192 measured / P0194 implementation constraints (2026-10-11)
+
+Status: **13/13 READ-ONLY GEOMETRY MEASURED, PLACEMENT/COLLISION OPEN**. Verified `main` `3777620`, user `0.0.102-dev` loadCount 242 Layout Check 16/23/0 PASS; Phase 0 Run All existing checks PASS. Canonical actual/planned pairs in `../evidence/P0193_H2_GEOMETRY_RUNTIME_2026-10-11.json`, caveats in paired Markdown. Primary 4x3 and Utility 3x4 must be coherently reflowed; target actual 16.9% width and aura 11.1% each cannot be centered in 13% + 6%+6% planning boxes without overlap. Quest/native dock not jointly probed; secure native HARMFUL anonymous containers and Blizzard special/group fallback remain unmeasured. P0192 R0 pre-write delivery FAIL retained. **P0193 R0 prewrite delivery FAIL** (historical version pin in evidence checker, corrected in R1 before tracked writes). **P0193 R1 delivery FAIL after shadow checks** (`git diff --check`: `docs/memory/CURRENT.md:79: new blank line at EOF`); transactional applier restored original tracked files and removed new files. R2 strips extra terminal newlines and checks candidate diffs before writing. **Next after P0193 docs checkpoint push: P0194 bounded, out-of-combat/fail-open placement beginning with eligible action and player reaction frames; do not call H.2 complete.**
+
+## Historical H.2 P0192 diagnostic preparation (superseded by P0193 results)
 
 Status: **SOURCE AUDIT COMPLETE / IN-CLIENT MEASUREMENT OPEN.** Verified user push P0191 `57c3112` makes D-045 and 13 literal v4 percentages durable. P0192 prepares a read-only `0.0.102-dev` extension to **existing Phase H Layout Check**, reporting actual normalized addon-frame geometry with MISSING/DEFERRED for absent/secret-capable/hidden/unlaid-out data; no combat measurement, protected/native visibility inspection, or geometry mutation. Source shows Primary 4x3 183x136, Secondary/Utility 3x4 136x183, pet 5x2 230x89, anonymous native harmful containers beyond named-frame probe, variable Active Quest height and stock native-access dock collision concerns. Source and mapping table: `../evidence/P0192_H2_GEOMETRY_AUDIT_2026-10-11.md`. Next: WoW Layout Check, Run All, screenshot and export; do not claim layout PASS. Historic ObjectiveTracker flash and special combat/vehicle/mode deferrals remain OPEN.
 

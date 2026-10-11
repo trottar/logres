@@ -8,14 +8,19 @@ project: logres
 
 ## Active Objective
 
-**Phase H.2 ACTIVE — P0191 user-approved v4 screen map is verified durable on remote `main` at `57c3112`; runtime geometry remains unimplemented.** P0192 `0.0.102-dev` is a **read-only** actual Logres widget geometry diagnostic candidate, not an anchor move. H.1 observed ordinary auto Main accepted; special combat/vehicle/override/possess/form/petbattle remains ENVIRONMENTALLY DEFERRED.
+
+**Phase H.2 ACTIVE — P0192 R1 read-only actual geometry AUDIT is user-tested and pushed on verified `main` `3777620`, addon `0.0.102-dev`; v4 remains the approved design, not yet placed in game.** All 13 addon-owned proxies measured with no missing/deferred geometry. Phase H.1 normal automatic Main remains accepted for observed ordinary scope; special combat/vehicle/override/possess/form/petbattle are ENVIRONMENTALLY DEFERRED. P0193 is the docs-only measurement acceptance checkpoint awaiting user push.
 
 ## Current Work Item
 
-**P0192 H.2 diagnostic:** extend existing Phase H Layout Check with 13 secret-gated addon-owned frame bounds in viewport-percent coordinates alongside approved P0191 v4 design envelopes. Source audit finds existing Primary 4x3, Secondary/Utility 3x4, pet 5x2, variable quest height and retained native/access collision risks. Preserve all P0166 live anchor positions. New Lua read-only diagnostic + version `0.0.102-dev`; WoW validation PENDING.
+
+**P0193: record exact P0192 R1 geometry runtime evidence.** Canonical measurements `docs/memory/evidence/P0193_H2_GEOMETRY_RUNTIME_2026-10-11.json`; analysis `.md`. LayoutCheck 16 anchors/23 binds/0 failures; H.2 13/13 named Logres rectangles observed. Existing Primary 4x3 and Utility 3x4 do not fit the intended tall/wide visual regions simply by shifting anchors. Target aura actual widths and Quest/native dock interaction require bounded collision handling. P0193 changes no Lua or geometry.
 
 ## Verified State
 
+
+- **P0192 R1 pushed/verified at `3777620`, `0.0.102-dev`**; user `LOGRES_DIAGNOSTICS_LATEST.lua` loadCount 242: Layout Check PASS 16/23/0; 13/13 normalized named frames measured; Phase 0 Run All complete, all observed existing checks PASS. Normal Main CANDIDATE (4 activations / 3 restores, no error), action routing Primary/Secondary/Utility 12/12; ownership 35/17 PASS/18 STOCK/0 FAIL is policy, not pixel visibility.
+- Read-only measurement is **not** positioning, native AuraContainer frame dimensions, secure hit region, screenshot/whole-screen collision, or special-mode proof. P0192 R0 delivery-anchor failure before tracked writes remains preserved; R1 runtime succeeded.
 - **P0189 pushed/verified at `bd0c36a`**, `0.0.101-dev`; user states all worked as expected. Latest `LOGRES_DIAGNOSTICS_LATEST.lua` loadCount 239: fresh startup Main `CANDIDATE auto=true optOut=false armed=true applied=true driver=true route=true` (1 activation / 0 restores); manual OFF `STOCK optOut=true` (1/1); manual ON `CANDIDATE optOut=false` (2/1); integrated Run All final `CANDIDATE activations=7 restores=6 pending=false error=nil`, Primary keys/feedback 12/12, `checkall: complete`.
 - UI Ownership policy remains **35 / 17 PASS / 18 STOCK / 0 FAIL / 0 DEFERRED**. Main STOCK row is a policy classification and never a physical visibility read.
 - User confirms tested ordinary visual/control behavior. Export does not independently measure mouse hit regions or capture a dedicated Edit Mode result. Opt-out continuity across Immersion toggles was included in user-accepted sequence; no intervening maincheck independently measures that state.
@@ -24,7 +29,8 @@ project: logres
 
 ## Next Action
 
-**Apply P0192, deploy to WoW and run Phase H Layout Check plus Phase 0 Run All.** Export new `Logres H2 v4 geometry AUDIT` rows and full-screen screenshot at actual scale, then user pushes and remote `main` is verified. P0193 next: a bounded, out-of-combat authored anchor/cluster-geometry translation using P0191 v4 positions and observed source dimensions. Do not call diagnostic measurements collision PASS. H.3 waits for tested H.2 placement.
+
+**Apply/push P0193 docs-only evidence, verify remote main, then P0194 bounded H.2 geometry implementation.** Begin with Logres-owned action cluster geometry and player reaction region, out-of-combat/fail-open; keep approved v4 envelopes exact in design. Independently resolve target aura frame-width collisions and native-access dock versus upper-right dynamic Quest. Require in-game visual/runtime confirmation after changes; H.3 polish later. No WoW redeploy for P0193.
 
 ## Success Criteria
 
@@ -35,6 +41,11 @@ The visually redundant normal Main presentation is absent when Logres has replac
 No exact player HP, conventional player health bar, enemy exact level/class/difficulty, secret-capable reads, broad stock UI suppression, polling or periodic forcing, or combat-unsafe protected mutation. PvP remains a modifier, not Immersion OFF. Keep class/pet, party/CompactParty, special actions, quest and on-demand native access, target-of-target, nameplates and private/group aura fallbacks until independently replacement-proven. The intermittent ObjectiveTracker flash remains OPEN / INTERMITTENT / UNREPRODUCED.
 
 ## Relevant References
+
+
+- `docs/memory/evidence/P0193_H2_GEOMETRY_RUNTIME_2026-10-11.md`
+- `docs/memory/evidence/P0193_H2_GEOMETRY_RUNTIME_2026-10-11.json`
+- `docs/memory/patches/P0193_H2_GEOMETRY_EVIDENCE_ACCEPTANCE.md`
 
 - `docs/memory/patches/P0192_H2_READONLY_GEOMETRY_CHECKPOINT.md`
 - `docs/memory/evidence/P0192_H2_GEOMETRY_AUDIT_2026-10-11.md`
