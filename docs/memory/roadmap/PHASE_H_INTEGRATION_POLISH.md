@@ -1,6 +1,10 @@
 # Phase H — Integration and Polish
 
-Status: ACTIVE — H.1 OPEN; P0189 `0.0.101-dev` automatic Main normal startup candidate runtime PENDING; P0187 R2 manual accepted, special/combat deferred; H.2/H.3 later
+Status: ACTIVE — H.1 observed ordinary auto Main ACCEPTED at P0189; special/combat environmental deferrals retained; H.2 authored whole-screen geometry ACTIVE, H.3 later
+
+## P0190 accepted automatic normal Main; H.2 starts (2026-10-11)
+
+Verified `main` P0189 at `bd0c36a`, `0.0.101-dev`; user says all worked. LoadCount 239 records fresh automatic `CANDIDATE auto=true optOut=false`, OFF `STOCK optOut=true`, manual ON `CANDIDATE`, and integrated Main 7/6 `error=nil`, Primary 12/12, UI Ownership 17 PASS / 18 STOCK / 0 FAIL. No pixel hit-region/native special-state diagnostic proof; naturally unobserved vehicle/override/possess/form/petbattle/combat states remain **ENVIRONMENTALLY DEFERRED**. Accept H.1 for observed ordinary screen, preserve Blizzard fallback, and open H.2 **P0191 authored layout spacing/collision audit**. P0166 already implemented semantic anchors without moving coordinates; do not redo that infrastructure. See `../evidence/P0190_P0189_AUTO_MAIN_RUNTIME_2026-10-11.md`.
 
 ## P0188 accepted normal-mode checkpoint (2026-10-10)
 

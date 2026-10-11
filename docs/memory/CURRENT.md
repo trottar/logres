@@ -8,22 +8,23 @@ project: logres
 
 ## Active Objective
 
-**Phase H.1 OPEN — P0189 `0.0.101-dev` default Immersion ON secure Main ownership is a runtime candidate, not a PASS.** GitHub `main` baseline `a1e85e79a89917fa2c3b84b0cb738f1f13e68d37` verified with P0188 R1. P0187 R2 previously passed manual ON/OFF/ON/restoration in tested normal mode. P0189 uses that gate automatically at module enable only after conservative ordinary source readiness; explicit Main Replace OFF opts out until reload. User reports normal Main was the remaining unwanted persistent bar; 18 STOCK UI-ownership rows represent deliberate fallbacks, not 18 unwanted visible elements.
+**Phase H.2 ACTIVE — P0189 `0.0.101-dev` automatic normal Main replacement is runtime ACCEPTED for observed ordinary Immersion ON.** Verified remote `main` `bd0c36a2a98439b2332f78fb9c0cc58e67a5b3ef` (P0189). H.1 ordinary coexistence is accepted within observed scope. The secure vehicle/override/possess/bonus/form/petbattle/combat states remain ENVIRONMENTALLY DEFERRED, not PASS. The 18 STOCK matrix entries are deliberately retained fallback policy, not unwanted visible bars.
 
 ## Current Work Item
 
-**P0189 automatic startup/runtime validation.** Install `0.0.101-dev`, deploy and `/reload` with Immersion ON. Without pressing ON, Phase D Main Replace Check must be CANDIDATE (`auto=true optOut=false`, applied/route true). Inspect Main visual and empty mouse region and use Logres Primary keys. Explicit OFF must restore native Main and persist through Immersion OFF/ON and developer lifecycle; explicit ON re-arms, Immersion OFF restores and ON re-engages. Edit Mode recovery and normal integrated Phase 0 Run All/UI Ownership should pass. On missing/unclassified/special startup source, fail open to stock with bounded native-event retry. Combat/vehicle/possess/pet-battle absent from environment remain DEFERRED, not PASS. Stop at any Lua/taint/protected/secret error.
+**P0190 docs-only acceptance, then P0191 Phase H.2 authored whole-screen spacing/collision calibration.** Existing P0166 `Integration/Layout.lua` owns semantic anchors but intentionally preserved prior coordinates. Audit realistic density and adjust only proven Logres-owned coordinates; preserve secure frame interaction, native stock fallbacks and world-first approved geometry. No blanket stock suppression or generic drag-anything editor.
 
 ## Verified State
 
-- **P0188 R1 pushed and verified on `main` `a1e85e7` (docs-only).** The P0187 R2 `0.0.100-dev` manual normal secure Main gate is runtime accepted for tested scope: loadCount 238, repeat ON/OFF/ON succeeds, final Run All Main 7/6, `error=nil`, routing true/12, and UI Ownership 17 PASS/18 STOCK/0 FAIL. The UI Ownership `main_action` STOCK line is a policy/fallback designation, not physical presentation inspection.
-- **P0189 candidate, not client-validated.** Startup automatic normal gate shares existing P0187 secure driver; OFF is a session opt-out and resets on reload. Initial unready/special source is stock-visible pending native events, not a hard diagnostic error; actual secure failure is still FAIL. No auto-default proof is claimed yet.
-- **Preserved failures:** P0187 R0 ON/OFF/ON state reset bug; R1 delivery hash rejection; P0188 R0 prewrite whitespace failure. P0182 target-debuff filter miss, P0183 initial package error, P0178 Lua upvalues, P0175 nil rows, and intermittent post-loot ObjectiveTracker flash remain in history.
-- Preserve special-mode native secure fallback, Blizzard pet/class/party/quest/aura/target-of-target, navigation dock, and other deliberate stock controls. Native override/vehicle/possess/bonus/form/petbattle transitions and combat recovery remain environmentally untested.
+- **P0189 pushed/verified at `bd0c36a`**, `0.0.101-dev`; user states all worked as expected. Latest `LOGRES_DIAGNOSTICS_LATEST.lua` loadCount 239: fresh startup Main `CANDIDATE auto=true optOut=false armed=true applied=true driver=true route=true` (1 activation / 0 restores); manual OFF `STOCK optOut=true` (1/1); manual ON `CANDIDATE optOut=false` (2/1); integrated Run All final `CANDIDATE activations=7 restores=6 pending=false error=nil`, Primary keys/feedback 12/12, `checkall: complete`.
+- UI Ownership policy remains **35 / 17 PASS / 18 STOCK / 0 FAIL / 0 DEFERRED**. Main STOCK row is a policy classification and never a physical visibility read.
+- User confirms tested ordinary visual/control behavior. Export does not independently measure mouse hit regions or capture a dedicated Edit Mode result. Opt-out continuity across Immersion toggles was included in user-accepted sequence; no intervening maincheck independently measures that state.
+- Protected special native transitions in combat, vehicle, override, possess, bonus/form and petbattle are **ENVIRONMENTALLY DEFERRED**; do not force gameplay. Stock fallback stays available wherever capability is incomplete.
+- Retain P0187 R0 repeat-ON FAIL, P0187 R1 delivery FAIL, P0188 R0 whitespace FAIL, earlier P0182/P0178/P0175 errors, and intermittent post-loot ObjectiveTracker flash. P0183 harmful aura visual acceptance and other deliberate stock information/control fallbacks unchanged.
 
 ## Next Action
 
-**P0189 runtime verification first.** Check fresh startup auto ON, OFF session opt-out, re-ON, Immersion and Edit Mode restoration, normal Primary actions and no hidden click surface, then Phase 0 integrated checks. Only checks actually run may be marked PASS. Naturally inaccessible special-state checks remain DEFERRED without contrived travel. If any error appears, preserve it and prepare narrow correction before H.1 advancement. H.2 layout and H.3 polish remain later.
+**After P0190 is pushed, begin P0191 H.2 geometry audit.** Review the P0166 13 semantic integration regions and the live whole-screen density at standard UI scale. Derive a narrow, safe set of authored default position/collision changes; do not conflate layout with suppression or claim special mode proof. H.3 whole-screen ornament/contrast/accessibility follows accepted H.2 positioning.
 
 ## Success Criteria
 
@@ -34,6 +35,9 @@ The visually redundant normal Main presentation is absent when Logres has replac
 No exact player HP, conventional player health bar, enemy exact level/class/difficulty, secret-capable reads, broad stock UI suppression, polling or periodic forcing, or combat-unsafe protected mutation. PvP remains a modifier, not Immersion OFF. Keep class/pet, party/CompactParty, special actions, quest and on-demand native access, target-of-target, nameplates and private/group aura fallbacks until independently replacement-proven. The intermittent ObjectiveTracker flash remains OPEN / INTERMITTENT / UNREPRODUCED.
 
 ## Relevant References
+
+- `docs/memory/patches/P0190_ACCEPT_P0189_AUTO_MAIN_RUNTIME.md`
+- `docs/memory/evidence/P0190_P0189_AUTO_MAIN_RUNTIME_2026-10-11.md`
 
 - `docs/memory/patches/P0189_MAIN_AUTO_IMMERSION_GATE.md`
 - `docs/memory/evidence/P0189_MAIN_AUTO_GATE_CANDIDATE_2026-10-11.md`

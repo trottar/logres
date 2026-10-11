@@ -2,13 +2,13 @@
 
 As of 2026-10-11.
 
-Current verified checkpoint: P0188 R1 docs acceptance on `main` `a1e85e7`; P0187 R2 normal Main manual runtime accepted at `0.0.100-dev`. P0189 `0.0.101-dev` is a proposed automatic normal startup runtime candidate, not yet in-client validated. Original P0187 R0 and R1 delivery, P0188 R0 delivery failures preserved. H.1 OPEN for startup/special-safe behavior; H.2/H.3 later. P0183 harmful debuffs remain visually accepted.
+Current verified checkpoint: P0189 on `main` `bd0c36a`, `0.0.101-dev`; fresh automatic Main CANDIDATE, manual OFF STOCK / ON CANDIDATE, final 7 activations/6 restores, no Main error, Primary 12/12 and integrated Run All / 35-row ownership PASS for tested normal mode. User reports all worked as expected. H.1 observed ordinary scope accepted, special combat/vehicle/override/possess/form/petbattle still ENVIRONMENTALLY DEFERRED. Phase H.2 authored geometry calibration next (P0191), H.3 later. Preserve historical delivery/runtime failures and deliberate stock fallback.
 
 Historical checkpoint (P0168): P0168 R1 verified; subsequent P0170–P0184 milestones supersede this as current work.
 
 ## Active work stream
 
-**Phase H.1 OPEN — P0189 automatic Main normal Immersion ON candidate awaiting fresh-login/fallback runtime validation; P0187 manual scope accepted.**
+**Phase H.2 ACTIVE — P0189 automatic Main normal Immersion ON user/runtime acceptance established; H.1 ordinary scope closed, special states deferred.**
 
 P0167 is verified on main at `f58bccfb` / `0.0.84-dev`; user-supplied runtime confirms Phase H Layout Check (13/15, zero errors) and Run All PASS. The user's correction supersedes the P0164 claim that H.1 was finished merely because P0165 hid Accept/Decline; already-existing D/C suppression is not new H.1 work.
 
@@ -26,7 +26,7 @@ P0168 candidate `0.0.85-dev` suppresses the remaining ordinary quest-offer **Que
 | E — Compass and Navigation | COMPLETE |
 | F — Quest Experience | COMPLETE |
 | G — Cinematic Camera | COMPLETE — P0162 RUNTIME PASS; ENVIRONMENTAL DEFERRALS PRESERVED |
-| H — Integration and Polish | ACTIVE — H.1 manual Main runtime accepted, persistent startup and special fallback next; H.2/H.3 later |
+| H — Integration and Polish | ACTIVE — H.1 ordinary normal-screen accepted (special environmental deferrals preserved); H.2 authored geometry next, H.3 later |
 
 ## Phase G / G.5
 

@@ -183,6 +183,7 @@
 | P0161 | 2026-10-07 | PREPARED — CAPTURED PROFILE ROTATION + CAMERA-SETTING PARITY | Candidate `0.0.80-dev`: five source-backed rotations + rotate-back; dynamic-pitch/focus; shoulder curves; City max factor 1; exact CVar restoration |
 | P0187 R0/R1/R2 | 2026-10-09/10 | R0 RUNTIME FAILED ON/OFF/ON; R1 DELIVERY FAILED; R2 CORRECTIVE CANDIDATE, WoW PENDING | First ON/OFF succeeded, repeat ON failed stale `state-logresmode` / Main gate; R1 resets addon-owned secure state out of combat, `0.0.100-dev`; preserve failure and retest |
 | P0188 | 2026-10-10 | DOCS ACCEPTANCE — P0187 R2 MANUAL NORMAL-MODE RUNTIME PASS | P0187 R2 verified `41c7d97`, `0.0.100-dev`; repeat ON/OFF succeeds, Run All Main 7/6 no errors; special/default H.1 still gated; P0188 R0 whitespace prewrite FAIL, R1 repaired; preserve P0187 R0/R1 failure |
-| P0189 | 2026-10-11 | PREPARED — AUTO IMMERSION ON MAIN CANDIDATE, RUNTIME PENDING | Baseline P0188 R1 `a1e85e7`; `0.0.101-dev` uses P0187 secure gate at startup, explicit OFF session opt-out, bounded mode retries; stock fail-open; no special/combat/runtime PASS yet |
+| P0189 | 2026-10-11 | INSTALLED / PUSHED — OBSERVED AUTOMATIC NORMAL MAIN RUNTIME PASS | `bd0c36a`, `0.0.101-dev`, loadCount 239: automatic CANDIDATE, OFF STOCK/ON CANDIDATE; Run All Main 7/6 error=nil, Primary 12/12; special/combat modes deferred |
+| P0190 | 2026-10-11 | PREPARED — DOCS ACCEPTANCE; H.2 OPEN | Accept bounded P0189 normal startup, preserve special deferrals/history; next P0191 realistic whole-screen layout spacing/collision audit |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.

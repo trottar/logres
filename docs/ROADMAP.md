@@ -53,7 +53,9 @@ Canonical phase record:
 
 ## Phase H — Integration and Polish
 
-**Status: ACTIVE — P0189 default normal Main startup candidate, runtime PENDING; P0187 R2 manual normal replacement accepted. Special-safe H.1 integration remains open; H.2/H.3 later.**
+**Status: ACTIVE — P0189 automatic normal Main replacement accepted for observed Immersion ON scope; special combat/mode evidence environmentally deferred. H.2 authored geometry ACTIVE; H.3 later.**
+
+P0190 accepts P0189 after `main` verified at `bd0c36a` (`0.0.101-dev`). LoadCount 239 proves fresh auto-armed CANDIDATE, explicit OFF STOCK, manual ON CANDIDATE, Run All Main 7 activations/6 restores without error, Primary 12/12, ownership 17 PASS/18 STOCK/0 FAIL, and user reports intended behavior. H.1 observed ordinary-screen scope accepted; secure vehicle/override/possess/form/petbattle/combat are **ENVIRONMENTALLY DEFERRED**, not universally passed. `main_action` STOCK row remains policy, not a visual measurement. P0191 begins H.2 spacing/collision calibration using P0166 integration anchors, with retained native fallbacks; H.3 visual polish follows. See `memory/evidence/P0190_P0189_AUTO_MAIN_RUNTIME_2026-10-11.md`.
 
 P0188 verified P0187 R2 on `main` `41c7d97`, `0.0.100-dev`: user accepted manual ON/OFF/ON/restore; Run All shows 7 activations/6 restores with no Main error, Primary routing and 35-row ownership check pass for tested scope. Original R0 re-arm runtime failure and R1 delivery failure are preserved. H.1 remains open: the secure gate starts OFF every reload, and special/vehicle/combat modes are environmentally untested; P0189 addresses safe default Immersion ON integration before H.2/H.3. See `memory/evidence/P0188_P0187_R2_NORMAL_RUNTIME_2026-10-10.md`.
 

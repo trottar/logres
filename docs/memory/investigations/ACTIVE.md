@@ -6,9 +6,14 @@ The user correctly identified that the previous closure counted D/C suppression 
 
 # Active Investigations
 
+## H.2 authored whole-screen layout calibration (P0190 handoff)
+
+Status: **OPEN / NEXT P0191.** Verified `main` P0189 `bd0c36a`; loadCount 239 and user confirm automatic Main normal screen, OFF restoration, ON reactivation and integrated checks. H.1 is accepted in observed ordinary scope; special combat/vehicle/possess/override/form/petbattle remain separate environmental deferrals. P0166 integration anchors are already implemented, but realistic crowded-screen default positions and collision/spacing remain uncalibrated. Start from existing `Integration/Layout.lua`, approved D-032/D-034 and actual screen evidence; preserve required Blizzard fallbacks. No broad hide, secure combat mutation or generic layout editor. Canonical P0190 evidence records bounded acceptance.
+
+
 ## P0189 — automatic normal Main startup (runtime candidate)
 
-Status: **OPEN / RUNTIME PENDING**. P0188 R1 verified on `main` `a1e85e7`; P0187 R2 manual normal ON/OFF/ON success does not prove automatic startup. P0189 makes session intent default ON under Immersion, with explicit OFF opt-out, native-source readiness, bounded lifecycle/mode retries, and unchanged secure special fallback. Initial unavailable source stays stock; hard engage/restoration errors remain FAIL. Fresh `/reload`, Edit Mode, OFF/ON and Phase 0 runtime checks required. Special/vehicle/combat conditions remain DEFERRED if naturally absent. Preserve P0187 R0, R1 delivery and P0188 R0 failures. See `../patches/P0189_MAIN_AUTO_IMMERSION_GATE.md`.
+Status: **CLOSED FOR OBSERVED ORDINARY AUTOMATIC STARTUP / SPECIAL MODES ENVIRONMENTALLY DEFERRED**. GitHub `main` P0189 `bd0c36a` verified and user reports all tests worked. LoadCount 239 confirms fresh automatically armed `CANDIDATE` (1/0), manual OFF `STOCK` with optOut=true (1/1), manual ON `CANDIDATE` (2/1), and final integrated `CANDIDATE` 7/6 `error=nil` with 12/12 Primary routing and ownership 17 PASS / 18 STOCK / 0 FAIL. No intervening `mainreplacecheck` proves opt-out persistence after the toggle, but user accepted the instructed sequence. No direct Edit Mode/geometry/native special-mode trace was exported. Vehicle, override, possess, form, petbattle and combat transitions remain ENVIRONMENTAL DEFERRALS; fallback stays stock as required. Prior P0187 R0/R1 and P0188 R0 negative evidence remains recorded. P0190 evidence is authoritative for bounded acceptance.
 
 ## Phase H.1 — P0187 R2 manual Main re-arm accepted; startup integration OPEN (2026-10-10)
 
