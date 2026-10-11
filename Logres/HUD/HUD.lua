@@ -776,7 +776,7 @@ function HUD:OnInitialize()
     self.resourceText = resourceBar.percentText
 
     local targetFrame = CreateFrame("Frame", "LogresHUDTarget", root)
-    targetFrame:SetSize(260, 54)
+    targetFrame:SetSize(198, 54)
     targetFrame:SetPoint("CENTER", root, "CENTER", 0, -54)
     Logres.Layout.Bind(targetFrame, "targetFallback", "CENTER", "CENTER")
     targetFrame:Hide()
@@ -791,7 +791,7 @@ function HUD:OnInitialize()
     targetNameText:SetShadowColor(0, 0, 0, 0.85)
     targetNameText:SetShadowOffset(1, -1)
     targetNameText:SetJustifyH("CENTER")
-    targetNameText:SetWidth(250)
+    targetNameText:SetWidth(190)
 
     local targetHealthBar = createPercentageBar(
         targetFrame,
@@ -813,7 +813,7 @@ function HUD:OnInitialize()
         targetFrame,
         "LogresHUDTargetCastCue"
     )
-    targetCastCue:SetPoint("LEFT", targetFrame, "RIGHT", 8, 8)
+    targetCastCue:SetPoint("TOP", targetFrame, "BOTTOM", 0, -6)
 
     self.playerCastCue = playerCastCue
     self.targetCastCue = targetCastCue

@@ -2,6 +2,10 @@
 
 Status: ACTIVE — H.1 observed ordinary auto Main ACCEPTED at P0189; special/combat environmental deferrals retained; H.2 authored whole-screen geometry ACTIVE, H.3 later
 
+## P0195 — unified H.2 geometry candidate
+
+Verified GitHub P0194 R3 `f7a67bc`, user screenshot and loadCount 245 confirm panel map and 13/13 measured, but not approved placement. P0195 is the requested ONE screen-wide implementation checkpoint: canonical percent-based viewport anchors, deliberate 2×6 Main/Secondary and 6×2 Utility, target/player aura lanes, separate Bar4/5 side controls and retained native-access dock outside quest envelope. Original stock/fallback/secure policy unchanged. In-client screenshot and checks must precede runtime PASS or H.2 completion. See `../patches/P0195_H2_UNIFIED_V4_LAYOUT.md`.
+
 ## P0194 R3 — native developer-panel H.2 Map view
 
 The user rejected P0194 R2's slash-only overlay UX. Phase H keeps all fifteen current actions; a separate H.2 Map panel subview displays approved blue / currently measurable gold rectangles, overlay ON/OFF, refresh and Layout Check. No repositioning occurs; actual geometry stays a diagnostic, and native/special fallback collisions remain OPEN. Require runtime panel/overlay screenshot and Run All, then ONE screen-wide coordinated move.

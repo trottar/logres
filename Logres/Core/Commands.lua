@@ -4321,7 +4321,7 @@ local function runLayoutCheck()
     end
 
     local passed =
-        status.anchorCount == #LAYOUT_EXPECTED
+        status.anchorCount == #LAYOUT_EXPECTED + 3
         and status.bindFailureCount == 0
         and missing == 0
         and mismatched == 0
@@ -4335,6 +4335,13 @@ local function runLayoutCheck()
         tostring(missing),
         tostring(mismatched),
         tostring(status.lastBindError)
+    ))
+
+    local placement = Logres.Layout.GetH2PlacementStatus()
+    emit(string.format(
+        "Logres H2 v4 placement: %s (reason=%s anchors=%s)",
+        placement.active and "APPLIED" or "DEFERRED",
+        tostring(placement.reason), tostring(placement.anchors)
     ))
 
     -- P0192: geometry is diagnostic only. A successful source measurement is

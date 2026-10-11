@@ -5,6 +5,13 @@ local ActionButton = Logres.ActionButton
 local BUTTON_COUNT = 12
 local COLUMNS = 3
 local ROWS = 4
+-- P0195: per-role secure button geometry. Preserve action slots and routing.
+local ROLE_SHAPES = {
+    secondary = { columns = 2, rows = 6 },
+    utility = { columns = 6, rows = 2 },
+    bar4 = { columns = 2, rows = 6 },
+    bar5 = { columns = 2, rows = 6 },
+}
 
 local ACTION_EVENTS = {
     "ACTIONBAR_SLOT_CHANGED",
@@ -193,10 +200,12 @@ function SecondaryUtility:RefreshExtraVisibility()
 end
 
 function SecondaryUtility:CreateFixedCluster(key, config)
+    local columns = ROLE_SHAPES[key] and ROLE_SHAPES[key].columns or COLUMNS
+    local rows = ROLE_SHAPES[key] and ROLE_SHAPES[key].rows or ROWS
     local frame = ActionButton.CreateCluster(
         config.frameName,
-        COLUMNS,
-        ROWS,
+        columns,
+        rows,
         config.x,
         config.y,
         config.alpha
@@ -229,7 +238,7 @@ function SecondaryUtility:CreateFixedCluster(key, config)
             config.buttonPrefix .. index,
             frame,
             index,
-            COLUMNS
+            columns
         )
     end
 

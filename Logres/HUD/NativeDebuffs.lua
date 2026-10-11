@@ -5,7 +5,7 @@ local _, Logres = ...
 local Native = {}
 Logres.NativeDebuffs = Native
 
-local WIDTH, ICON, GAP, MAX = 170, 30, 5, 5
+local WIDTH, ICON, GAP, MAX = 98, 18, 2, 5
 
 local function createContainer(unit, key, point, relativePoint, dx, dy)
     local frame = CreateFrame(
@@ -15,7 +15,7 @@ local function createContainer(unit, key, point, relativePoint, dx, dy)
     frame:SetSize(WIDTH, ICON)
     frame:SetFrameStrata("HIGH")
     frame:EnableMouse(false)
-    Logres.Layout.Bind(frame, key, point, relativePoint, dx, dy)
+    Logres.Layout.Bind(frame, key, "CENTER", "CENTER")
 
     frame:AddAuraGroup("LogresHarmful", "HARMFUL", {
         maxFrameCount = MAX,
@@ -77,10 +77,10 @@ function Native.Create()
     local frames = {}
     local ok = pcall(function()
         frames.player = createContainer(
-            "player", "playerReaction", "RIGHT", "LEFT", -100, 17
+            "player", "playerHarmful", "CENTER", "CENTER", 0, 0
         )
         frames.target = createContainer(
-            "target", "targetFallback", "LEFT", "RIGHT", 100, -17
+            "target", "targetHarmful", "CENTER", "CENTER", 0, 0
         )
     end)
     if not ok then

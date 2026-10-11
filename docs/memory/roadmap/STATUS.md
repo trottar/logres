@@ -4,6 +4,10 @@ As of 2026-10-11.
 
 Current verified checkpoint: P0192 R1 on `main` `3777620`, `0.0.102-dev`, 13/13 read-only Logres geometry measured and Run All PASS for observed scope. Prior runtime checkpoint: P0189 on `main` `bd0c36a`, `0.0.101-dev`; fresh automatic Main CANDIDATE, manual OFF STOCK / ON CANDIDATE, final 7 activations/6 restores, no Main error, Primary 12/12 and integrated Run All / 35-row ownership PASS for tested normal mode. User reports all worked as expected. H.1 observed ordinary scope accepted, special combat/vehicle/override/possess/form/petbattle still ENVIRONMENTALLY DEFERRED. Phase H.2 authored geometry calibration next (P0191), H.3 later. Preserve historical delivery/runtime failures and deliberate stock fallback.
 
+## P0195 — one coordinated screen-wide v4 placement/reflow (runtime candidate)
+
+P0194 R3 is pushed at `f7a67bc`, with user-confirmed panel map and full-screen blue/gold geometry screenshot; loadCount 245 Layout Check 16/23/0, H2 13/13 measured and Run All PASS in ordinary scope. P0195 translates all v4 authored regions using centralized UIParent-percent anchors and necessary role-specific action/priority aura geometry, while preserving native secure fallback and retained extra actions. This is NOT runtime placement acceptance until screenshot, interaction and error validation. Historical failures and special environmental deferrals retained.
+
 ## P0194 R3 — dedicated Phase H map view (runtime candidate)
 
 P0194 R2 slash-only screen overlay was rejected as a developer workflow. The Phase H grid already has fifteen actions; R3 adds an H.2 Map **subview** without displacing them, displaying all 13 D-045 blue approved envelopes and P0192 gold measured addon bounds with in-panel overlay controls, refresh and Layout Check. Earlier R0 user visual failure and R1 shadow-checker delivery failure remain negative evidence. R3 is NOT a placement or combat/collision acceptance. Next one in-game screenshot and integrated checks, then a single coordinated screen-wide geometry pass.

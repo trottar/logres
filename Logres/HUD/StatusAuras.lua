@@ -8,8 +8,8 @@ local StatusAuras = Logres:RegisterModule("StatusAuras", {
 
 local MAX_SCAN = 6
 local MAX_ICONS = 5
-local ICON_SIZE = 30
-local GAP = 5
+local ICON_SIZE = 25
+local GAP = 3
 
 local FILTERS = {
     player = {
@@ -196,18 +196,28 @@ end
 
 local function createLane(unit, point, relativePoint, offsetX, offsetY, laneName)
     local root = CreateFrame("Frame", "LogresStatusAuras" .. (laneName or unit), UIParent)
-    root:SetSize(MAX_ICONS * ICON_SIZE + (MAX_ICONS - 1) * GAP, ICON_SIZE)
+    local columns = unit == "player" and MAX_ICONS or 2
+    local rows = math.ceil(MAX_ICONS / columns)
+    root:SetSize(
+        columns * ICON_SIZE + (columns - 1) * GAP,
+        rows * ICON_SIZE + (rows - 1) * GAP
+    )
     root:SetFrameStrata("HIGH")
     root:EnableMouse(false)
     root:Hide()
-    local anchorKey = unit == "player" and "playerReaction" or "targetFallback"
-    Logres.Layout.Bind(root, anchorKey, point, relativePoint, offsetX, offsetY)
+    local anchorKey = unit == "player" and "playerHarmful"
+        or laneName == "targetHelpful" and "targetHelpful" or "targetHarmful"
+    Logres.Layout.Bind(root, anchorKey, "CENTER", "CENTER")
 
     local slots = {}
     for i = 1, MAX_ICONS do
         local slot = CreateFrame("Frame", nil, root)
         slot:SetSize(ICON_SIZE, ICON_SIZE)
-        slot:SetPoint("LEFT", root, "LEFT", (i - 1) * (ICON_SIZE + GAP), 0)
+        local index = i - 1
+        local column = index % columns
+        local row = math.floor(index / columns)
+        slot:SetPoint("TOPLEFT", root, "TOPLEFT",
+            column * (ICON_SIZE + GAP), -row * (ICON_SIZE + GAP))
         slot:EnableMouse(true)
         slot:Hide()
         local icon = slot:CreateTexture(nil, "ARTWORK")

@@ -6,6 +6,11 @@ The user correctly identified that the previous closure counted D/C suppression 
 
 # Active Investigations
 
+## H.2 P0194 R3 runtime panel map verified / P0195 unified placement (2026-10-11)
+
+Status: **P0194 R3 USER-VISUAL PANEL PASS, P0195 PLACEMENT UNTESTED**. GitHub `main` `f7a67bc`; uploaded `0.0.103-dev` loadCount 245: Phase H map blue vs gold shown in full-screen capture; Layout Check 16/23/0 PASS, H2 13/13 measured, Run All complete in ordinary tested scope. Blue quest planning box intersects retained top-right native access; old bottom actions overlap intended bottom-center resource territory. R3 changed no gameplay positions. P0195 reflows all supported action clusters and translates anchors once, retains 2 separate native HARMFUL paths, keeps Bar4/5 in distinct satellites and relocates usable native-access dock below the quest box. It does not prove all native/stock overlaps safe. Requires in-client single-map screenshot, panel Layout Check and Run All before acceptance. Earlier R0 visual failure/R1 delivery failure/R2 user-rejected slash-only interaction remain negative history.
+
+
 ## H.2 P0194 R3 developer-panel integration (2026-10-11)
 
 **R3 candidate / runtime OPEN.** P0194 R0 visual placement rejected (root cause not proven); R1 failed pre-write checker/source self-mismatch, R2 addressed checker but exposed the map only through slash, rejected by user. Phase H already holds 15 actions; R3 adds a dedicated H.2 Map subview without removing controls. Both viewport overlay and in-panel miniature use approved D-045 planning boxes and P0192 secret-safe actual named Logres proxy geometry. Next full screenshot and integrated in-game test, then ONE coherent screen-wide placement/reflow. Historical special/secure/native/Quest/Bar4-5 hazards remain OPEN.

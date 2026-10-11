@@ -192,3 +192,4 @@
 | P0194 R0/R1/R2/R3 | 2026-10-11 | R0 VISUAL FAIL / SUPERSEDED; R1 CHECKER DELIVERY FAIL / R2 SLASH-ONLY VIEW REJECTED / R3 PANEL MAP CANDIDATE | User screenshot rejected isolated player-only placement; R1 shadow checker expected wrong viewport variable names (no tracked writes); R3 integrates all 13 approved+actual regions in Phase H panel without removing any existing actions; fullscreen overlay remains mouse-transparent; R0 visual/R1 prewrite failures retained |
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.
+| P0195 | 2026-10-11 | PREPARED — ONE-PASS H2 V4 GEOMETRY / RUNTIME PROOF OPEN | `f7a67bc` panel-map PASS; viewport anchor translation and action/aura reflow; secure/native fallback retained; WoW screenshot / interaction checks pending |

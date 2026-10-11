@@ -8,22 +8,21 @@ project: logres
 
 ## Active Objective
 
-**Phase H.2 ACTIVE — P0193 R2 verified pushed on `main` `213c526`.** P0194 R0 bottom-center-only placement was visually rejected. User requires one unified in-game screen map then one whole-screen placement pass, not isolated widget trials. P0194 R3 integrates the viewport map as a **dedicated Phase H developer-panel view** without removing the 15 Phase H actions; full-screen overlays are optional. H.1 ordinary Main remains accepted; special native/protected modes deferred.
+**Phase H.2 ACTIVE — P0194 R3 pushed/verified `f7a67bc`, `0.0.103-dev`.** In-game user screenshot shows approved blue 13-region map and old gold frame positions simultaneously. H.2 panel map is accepted for observed function, not geometry acceptance. P0195 applies one coordinated percent-based v4 frame layout/reflow with capability-safe native fallbacks; H.1 ordinary Main accepted, special modes deferred.
 
 ## Current Work Item
 
-**P0194 R3 — in-panel H.2 map candidate.** Phase H gets a dedicated H.2 Map button/view showing 13 D-045 approved regions and current secret-safe Logres-owned frame bounds, with Overlay ON/OFF, Refresh Map, and Layout Check controls. The original R2 offered slash-only controls, rejected as workflow; retain slash shortcut but make panel primary. R0 failed user visual intent; R1 delivery checker failed pre-write; R2 panel omission was rejected before runtime acceptance. No gameplay frame moves in R3.
+**P0195 unified v4 layout candidate (`0.0.104-dev`) — runtime validation OPEN.** Apply all approved 13 territories together via centralized UIParent-percent anchors, with 2×6 Main/Secondary, 6×2 Utility, separated target/player harmful and target helpful lanes, and non-overlapping retained Bar4/5 and native access. This is one screen-wide patch, not 13 independent acceptance trials. Frame-sized envelopes are not forced to match planned rectangles. No new stock UI suppression.
 
 ## Verified State
 
-- **P0193 R2 pushed/verified `213c526`**: approved 13 planning zones and 13/13 actual addon proxy measurements durable; no whole-screen geometry applied.
-- **P0194 R0 visually rejected**: cropped screenshot still showed resource text near former action clusters. Deployment/Lua root cause not independently proved; do not claim runtime PASS. User rejected piecemeal positioning.
-- **P0194 R1 pre-write checker failure**: static checker demanded incorrect viewport field expressions; no tracked writes. R2 corrected it but relied on slash commands instead of developer-panel UX. R3 corrects interaction policy; its runtime validation is PENDING.
-- Existing Main ordinary user/runtime PASS and native/special environmental deferrals remain. Native harmful container bounds, Quest/native-access overlap and action Bar 4–5 geometry not collision-proven.
+- **P0194 R3 pushed/verified `f7a67bc`**: user confirms H.2 developer panel additions work and provides a full-screen overlay screenshot. Latest `0.0.103-dev`, loadCount 245 diagnostics: Layout Check 16 anchors / 23 bindings / 0 failures; H.2 13/13 measured; Run All complete with existing checks PASS within observed ordinary scope. **No v4 placement was applied in this checkpoint.**
+- Screenshot: blue quest rectangle overlaps existing top-right native-access dock, while original action clusters and player reaction frames occupy middle/lower-center. Native dock must be preserved and moved separately. Extra Bar4/5 stay accessible as satellite controls; no full-screen layout collision PASS yet.
+- Historical P0194 R0 visual mismatch, R1 prewrite checker failure and R2 rejected slash-only UX preserved in P0194 patch memory. P0195 has not been deployed or proven at runtime. Special protected, vehicle, override, possess, form and petbattle remain environmentally deferred.
 
 ## Next Action
 
-**Apply/deploy P0194 R3.** Open developer panel → Phase H → H.2 Map. Validate 13 approved blue and safe actual gold rectangles; test Overlay ON/OFF, Refresh Map, Layout Check and Back to H. Capture uncropped in-game full-screen overlay screenshot, then Phase H Layout Check / Phase 0 Run All and export diagnostics. Only after runtime acceptance and verified user push, prepare **one coherent P0195 whole-screen anchor/reflow implementation**, preserving native, secure, party, class/pet and special-mode fallback. Do not fragment into one-widget trials.
+Apply/deploy P0195 and `/reload`. In Phase H → H.2 Map select Overlay ON, capture one uncropped full-screen blue/gold screenshot after the move; use Overlay OFF and Layout Check, then Phase 0 Run All. Confirm all action inputs including Bar4/5 remain clickable and native access remains available. If any Lua/taint/protected/secret error or visual collision occurs, preserve failure and correct before commit. **After user runtime approval and push verification**, finish H.2 visual assessment; H.3 is later.
 
 ## Success Criteria
 

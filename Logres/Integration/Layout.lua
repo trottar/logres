@@ -39,6 +39,18 @@ local ANCHOR_SPECS = {
         x = 0,
         y = -154,
     },
+    playerHarmful = {
+        name = "LogresLayoutPlayerHarmful",
+        point = "CENTER", relativePoint = "CENTER", x = -160, y = -118,
+    },
+    targetHarmful = {
+        name = "LogresLayoutTargetHarmful",
+        point = "CENTER", relativePoint = "CENTER", x = 220, y = -54,
+    },
+    targetHelpful = {
+        name = "LogresLayoutTargetHelpful",
+        point = "CENTER", relativePoint = "CENTER", x = 220, y = -100,
+    },
     playerReaction = {
         name = "LogresLayoutPlayerReaction",
         point = "CENTER",
@@ -301,6 +313,97 @@ function Layout.GetDebugStatus()
     }
 end
 
+
+-- P0195: central D-045 viewport translation for addon-owned semantic anchors.
+-- Planning boxes remain immutable; each live widget retains intrinsic size.
+-- No protected frame is moved in combat; legacy P0166 anchors are fallback.
+local H2_APPROVED_ANCHORS = {
+    navigation = { id = "compass", x = 50.1, y = 4.8 },
+    activeQuest = { id = "quest", x = 99.6, y = 5.0 },
+    playerReaction = { id = "resource", x = 50.75, y = 91.3 },
+    playerHarmful = { id = "player-debuff", x = 50.75, y = 83.9 },
+    targetFallback = { id = "enemy", x = 78.5, y = 44.5 },
+    targetHarmful = { id = "enemy-debuff", x = 68.2, y = 44.5 },
+    targetHelpful = { id = "enemy-buff", x = 88.8, y = 44.5 },
+    allies = { id = "group", x = 25.5, y = 45.65 },
+    classPet = { id = "class", x = 11.1, y = 54.5 },
+    secondaryActions = { id = "secondary", x = 11.1, y = 79.4 },
+    primaryActions = { id = "main", x = 24.2, y = 79.4 },
+    passiveStatus = { id = "player-buff", x = 82.35, y = 83.6 },
+    utilityActions = { id = "utility", x = 87.7, y = 92.85 },
+    -- Independent non-D-045 control surfaces: retain separate access.
+    bar4Actions = { id = "bar4-safe-satellite", x = 34.8, y = 79.4 },
+    bar5Actions = { id = "bar5-safe-satellite", x = 3.4, y = 79.4 },
+    nativeAccess = { id = "native-access-safe-dock", x = 98.4, y = 27.8 },
+}
+local h2Placement = { active = false, reason = "not-attempted", anchors = 0 }
+
+local function restoreOriginalLayoutAnchors()
+    for key, anchor in pairs(anchors) do
+        local spec = ANCHOR_SPECS[key]
+        anchor:ClearAllPoints()
+        anchor:SetPoint(
+            spec.point, UIParent, spec.relativePoint, spec.x, spec.y
+        )
+    end
+end
+
+function Layout.ApplyApprovedV4()
+    if type(InCombatLockdown) ~= "function" or InCombatLockdown() then
+        h2Placement.active = false
+        h2Placement.reason = "combat-deferred"
+        return false, h2Placement.reason
+    end
+    local viewport = readAddonRect(UIParent)
+    if not viewport then
+        h2Placement.active = false
+        h2Placement.reason = "viewport-unavailable"
+        return false, h2Placement.reason
+    end
+    local ok, failure = pcall(function()
+        for key, rule in pairs(H2_APPROVED_ANCHORS) do
+            local anchor = anchors[key]
+            anchor:ClearAllPoints()
+            anchor:SetPoint(
+                "CENTER", UIParent, "TOPLEFT",
+                viewport.width * rule.x / 100,
+                -viewport.height * rule.y / 100
+            )
+        end
+    end)
+    if not ok then
+        -- Restore the prior usable layout rather than leaving partial moves.
+        pcall(restoreOriginalLayoutAnchors)
+        h2Placement.active = false
+        h2Placement.reason = "anchor-translation-failed"
+        return false, h2Placement.reason
+    end
+    h2Placement.active = true
+    h2Placement.reason = "approved-v4-anchors"
+    h2Placement.anchors = 16
+    return true, h2Placement.reason
+end
+
+function Layout.GetH2PlacementStatus()
+    return {
+        active = h2Placement.active,
+        reason = h2Placement.reason,
+        anchors = h2Placement.anchors,
+    }
+end
+
+-- Native event rebase, not a timer/polling loop or protected-frame hook.
+local h2ViewportEvents = CreateFrame("Frame")
+for _, event in ipairs({
+    "PLAYER_ENTERING_WORLD", "UI_SCALE_CHANGED",
+    "DISPLAY_SIZE_CHANGED", "PLAYER_REGEN_ENABLED",
+}) do
+    h2ViewportEvents:RegisterEvent(event)
+end
+h2ViewportEvents:SetScript("OnEvent", function()
+    Layout.ApplyApprovedV4()
+end)
+Layout.ApplyApprovedV4()
 
 -- P0194 R2: one viewport-wide H.2 map. All thirteen approved regions and
 -- all thirteen measured addon-owned proxies are shown together, read-only.

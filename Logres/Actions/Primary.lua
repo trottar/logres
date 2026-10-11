@@ -3,8 +3,8 @@ local _, Logres = ...
 local ActionButton = Logres.ActionButton
 
 local BUTTON_COUNT = 12
-local COLUMNS = 4
-local ROWS = 3
+local COLUMNS = 2
+local ROWS = 6
 
 local PRIMARY_PAGE_DRIVER =
     "[bar:2]2;"
