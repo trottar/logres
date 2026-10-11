@@ -1,5 +1,11 @@
 # Project Logres Roadmap
 
+P0196 R4 is an **UNPUSHED RUNTIME CANDIDATE** addressing the R3 verified visual residual: the small Blizzard contextual target aura icon remains despite correct Logres player/target buffs. R3 `0.0.106-dev` loadCount 250 native-surfaces reported targetAuras:stock; Logres helpful and secure harmful lanes remain. Forever 1.60.1.70338 TargetFrameMixin:ConfigureAuraContainer source supports native 0/0 aura limits and restores, without the R1 forbidden OnShow hook. Existing pet/player buff replacement is untouched. TARGET opens the native aura container; Damage Meter and beta reporter unchanged. R1 visual/hook failure and R2 delivery failure remain recorded. Details: `docs/memory/patches/P0196_R4_TARGET_AURA_NATIVE_CONFIG.md` and `docs/memory/evidence/P0196_R4_TARGET_AURA_RUNTIME_EVIDENCE.md`. No R4 runtime PASS yet.
+
+
+P0196 R3 is the next **OPEN / RUNTIME UNTESTED** checkpoint after R1 visual/target-hook runtime FAIL and R2 pre-write memory-health FAIL. The original crafted `PlayerHelpfulAuras` art and old StatusAuras/native harmful sizing are restored; new native 18px helpful icons and override takeover removed. Pet secure replacement candidate retained. Stock BUFFS is manually accessible beyond four authored Logres slots. Target contextual aura suppression is DEFERRED because the R1 OnShow hook failed. Damage Meter and Issue Reporter untouched. See `docs/memory/patches/P0196_R2_BUFF_PRESENTATION_CORRECTION.md` and `docs/memory/evidence/P0196_R2_REGRESSION_EVIDENCE.md`. P0196 R1 and R2 were NOT pushed. R2 passed whitening/own contract and earlier repository checks, then `check_memory_health.py` rejected CURRENT_HANDOFF.md because it omitted CURRENT.md; no tracked R2 writes occurred. See `docs/memory/patches/P0196_R3_PREWRITE_MEMORY_REPAIR.md`.
+
+
 Project Logres is an immersive, world-first interface addon for World of Warcraft Forever.
 
 The roadmap is capability-gated. A phase advances only when its success criteria are satisfied and repository memory is synchronized.
@@ -56,6 +62,8 @@ Canonical phase record:
 **Status: ACTIVE — P0189 automatic normal Main replacement accepted for observed Immersion ON scope; special combat/mode evidence environmentally deferred. H.2 authored geometry ACTIVE; H.3 later.**
 
 P0192 follows verified P0191 `57c3112` with a **read-only Phase H Layout Check geometry audit** of the thirteen Logres-owned frame proxies against the approved v4 rectangles. Existing Primary 4x3 and Utility 3x4 require deliberate layout-shape choices before coordinates can be safely translated. P0192 changes no authored anchor, Blizzard fallback or secure control. In-game measurements/collision evidence are pending; P0193 bounded placement is next after acceptance. See `memory/evidence/P0192_H2_GEOMETRY_AUDIT_2026-10-11.md`.
+
+P0196 R1 is the next H.2 native duplication checkpoint, following user screenshot acceptance of P0195 `9097f43`: capability-gated PetFrame, PetActionBar, BuffFrame, and target contextual Auras replacement with Logres secure pet unit controls and native aura rendering; PET/BUFFS/TARGET dock restoration and fail-open behavior remain mandatory. P0196 docs-only native-retention recommendation was rejected and not pushed. Damage Meter and Issue Reporter are not suppressible by this checkpoint. In-game proof must precede acceptance. See `memory/patches/P0196_R1_NATIVE_PET_AURA_GATE.md`.
 
 P0195 implements the first coordinated full-screen H.2 runtime placement candidate after user visual verification of P0194 R3 (`f7a67bc`). All D-045 regions share central UIParent-percent anchors, with action cluster reflow and separate aura/native controls; no additional stock suppression. One full-screen runtime screenshot, input-path and error check are required before accepted geometry, and special modes remain deferred. See `memory/patches/P0195_H2_UNIFIED_V4_LAYOUT.md`.
 

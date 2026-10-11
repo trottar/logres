@@ -1,8 +1,22 @@
 # Roadmap Status
 
+## P0196 R4 — target stock aura source gate, runtime OPEN
+
+P0196 R4 is an **UNPUSHED RUNTIME CANDIDATE** addressing the R3 verified visual residual: the small Blizzard contextual target aura icon remains despite correct Logres player/target buffs. R3 `0.0.106-dev` loadCount 250 native-surfaces reported targetAuras:stock; Logres helpful and secure harmful lanes remain. Forever 1.60.1.70338 TargetFrameMixin:ConfigureAuraContainer source supports native 0/0 aura limits and restores, without the R1 forbidden OnShow hook. Existing pet/player buff replacement is untouched. TARGET opens the native aura container; Damage Meter and beta reporter unchanged. R1 visual/hook failure and R2 delivery failure remain recorded. Details: `docs/memory/patches/P0196_R4_TARGET_AURA_NATIVE_CONFIG.md` and `docs/memory/evidence/P0196_R4_TARGET_AURA_RUNTIME_EVIDENCE.md`. No R4 runtime PASS yet.
+
+
+## P0196 R3 — corrective buff art regression candidate
+
+P0196 R3 is the next **OPEN / RUNTIME UNTESTED** checkpoint after R1 visual/target-hook runtime FAIL and R2 pre-write memory-health FAIL. The original crafted `PlayerHelpfulAuras` art and old StatusAuras/native harmful sizing are restored; new native 18px helpful icons and override takeover removed. Pet secure replacement candidate retained. Stock BUFFS is manually accessible beyond four authored Logres slots. Target contextual aura suppression is DEFERRED because the R1 OnShow hook failed. Damage Meter and Issue Reporter untouched. See `docs/memory/patches/P0196_R2_BUFF_PRESENTATION_CORRECTION.md` and `docs/memory/evidence/P0196_R2_REGRESSION_EVIDENCE.md`. P0196 R1 and R2 were NOT pushed. R2 passed whitening/own contract and earlier repository checks, then `check_memory_health.py` rejected CURRENT_HANDOFF.md because it omitted CURRENT.md; no tracked R2 writes occurred. See `docs/memory/patches/P0196_R3_PREWRITE_MEMORY_REPAIR.md`.
+
+
 As of 2026-10-11.
 
-Current verified checkpoint: P0192 R1 on `main` `3777620`, `0.0.102-dev`, 13/13 read-only Logres geometry measured and Run All PASS for observed scope. Prior runtime checkpoint: P0189 on `main` `bd0c36a`, `0.0.101-dev`; fresh automatic Main CANDIDATE, manual OFF STOCK / ON CANDIDATE, final 7 activations/6 restores, no Main error, Primary 12/12 and integrated Run All / 35-row ownership PASS for tested normal mode. User reports all worked as expected. H.1 observed ordinary scope accepted, special combat/vehicle/override/possess/form/petbattle still ENVIRONMENTALLY DEFERRED. Phase H.2 authored geometry calibration next (P0191), H.3 later. Preserve historical delivery/runtime failures and deliberate stock fallback.
+Current verified checkpoint: P0195 on `main` `9097f43`, `0.0.104-dev` unified v4 layout, user screenshot confirms overall authored composition with native duplication outstanding; test scope remains ordinary, special combat transitions deferred. P0196 R1 is untested; user rejected unpushed P0196 R0 native-retention audit. Never treat proposed source suppression as validated runtime proof.
+
+## P0196 R1 — native pet, buff and target-aura replacement (runtime candidate)
+
+P0195 is verified pushed at `9097f43`; user approves the overall H.2 composition but reports stock PetFrame, PetActionBar, player buffs and target aura duplication. Prior P0196 docs-only proposal was rejected/unpushed; do not treat it as durable. P0196 R1 adds capability-gated native replacement and on-demand PET / BUFFS / TARGET access. No assertion that full secure pet editing, all 24+/20+ auras or combat/special behavior is proven. Damage Meter and Issue Reporter unchanged. Runtime check and fresh screenshot required before push and advancing.
 
 ## P0195 — one coordinated screen-wide v4 placement/reflow (runtime candidate)
 

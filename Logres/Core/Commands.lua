@@ -4410,6 +4410,16 @@ local function runNativeAccessCheck()
         tostring(result.castGateAttempts), tostring(result.castGateRestores),
         tostring(result.castGateFailures), tostring(result.castGateEscapes)
     ))
+    local surfaces = Logres:GetModule("NativeSurfaceReplacement"):GetDebugStatus()
+    emit(string.format(
+        "Logres native-surfaces: %s (desired=%s folded=%s petInteraction=%s helpful=%s folds=%s restores=%s pending=%s surfaces=%s error=%s)",
+        surfaces.lastError and "FAIL" or "CANDIDATE",
+        tostring(surfaces.desired), tostring(surfaces.folded),
+        tostring(surfaces.petInteractionReady), tostring(surfaces.nativeActive),
+        tostring(surfaces.folds), tostring(surfaces.restores),
+        tostring(surfaces.pending), tostring(surfaces.details),
+        tostring(surfaces.lastError)
+    ))
 end
 
 function Logres:RunUIOwnershipCheck()

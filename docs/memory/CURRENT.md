@@ -7,22 +7,17 @@ project: logres
 # Current State
 
 ## Active Objective
-
-**Phase H.2 ACTIVE — P0194 R3 pushed/verified `f7a67bc`, `0.0.103-dev`.** In-game user screenshot shows approved blue 13-region map and old gold frame positions simultaneously. H.2 panel map is accepted for observed function, not geometry acceptance. P0195 applies one coordinated percent-based v4 frame layout/reflow with capability-safe native fallbacks; H.1 ordinary Main accepted, special modes deferred.
+**Phase H.2 ACTIVE — P0195 `9097f43` on `main`; P0196 R4 correcting uncommitted native target aura duplication.** The approved v4 screen composition and restored Logres player/target buff artwork remain authoritative. Source-backed target native aura configuration is a candidate, not runtime acceptance.
 
 ## Current Work Item
-
-**P0195 unified v4 layout candidate (`0.0.104-dev`) — runtime validation OPEN.** Apply all approved 13 territories together via centralized UIParent-percent anchors, with 2×6 Main/Secondary, 6×2 Utility, separated target/player harmful and target helpful lanes, and non-overlapping retained Bar4/5 and native access. This is one screen-wide patch, not 13 independent acceptance trials. Frame-sized envelopes are not forced to match planned rectangles. No new stock UI suppression.
+P0196 R4 is an **UNPUSHED RUNTIME CANDIDATE** addressing the R3 verified visual residual: the small Blizzard contextual target aura icon remains despite correct Logres player/target buffs. R3 `0.0.106-dev` loadCount 250 native-surfaces reported targetAuras:stock; Logres helpful and secure harmful lanes remain. Forever 1.60.1.70338 TargetFrameMixin:ConfigureAuraContainer source supports native 0/0 aura limits and restores, without the R1 forbidden OnShow hook. Existing pet/player buff replacement is untouched. TARGET opens the native aura container; Damage Meter and beta reporter unchanged. R1 visual/hook failure and R2 delivery failure remain recorded. Details: `docs/memory/patches/P0196_R4_TARGET_AURA_NATIVE_CONFIG.md` and `docs/memory/evidence/P0196_R4_TARGET_AURA_RUNTIME_EVIDENCE.md`. No R4 runtime PASS yet.
 
 ## Verified State
-
-- **P0194 R3 pushed/verified `f7a67bc`**: user confirms H.2 developer panel additions work and provides a full-screen overlay screenshot. Latest `0.0.103-dev`, loadCount 245 diagnostics: Layout Check 16 anchors / 23 bindings / 0 failures; H.2 13/13 measured; Run All complete with existing checks PASS within observed ordinary scope. **No v4 placement was applied in this checkpoint.**
-- Screenshot: blue quest rectangle overlaps existing top-right native-access dock, while original action clusters and player reaction frames occupy middle/lower-center. Native dock must be preserved and moved separately. Extra Bar4/5 stay accessible as satellite controls; no full-screen layout collision PASS yet.
-- Historical P0194 R0 visual mismatch, R1 prewrite checker failure and R2 rejected slash-only UX preserved in P0194 patch memory. P0195 has not been deployed or proven at runtime. Special protected, vehicle, override, possess, form and petbattle remain environmentally deferred.
+- P0195 remains the last durable commit on `main` (`9097f43`); P0196 R1/R2/R3/R4 are unpushed. R1 failed player buff visuals and unsupported target aura OnShow hook; R2 failed prewrite memory-health validation. R3 user screenshot accepts original Logres player and target buff presentation, but shows one duplicate Blizzard target icon left of target; diagnostics report `targetAuras:stock`, with secure harmful renderer ready.
+- R4 native owner method is supported by inspected Forever source. Gameplay outcome, secure interactions, retarget stability and restoration are untested.
 
 ## Next Action
-
-Apply/deploy P0195 and `/reload`. In Phase H → H.2 Map select Overlay ON, capture one uncropped full-screen blue/gold screenshot after the move; use Overlay OFF and Layout Check, then Phase 0 Run All. Confirm all action inputs including Bar4/5 remain clickable and native access remains available. If any Lua/taint/protected/secret error or visual collision occurs, preserve failure and correct before commit. **After user runtime approval and push verification**, finish H.2 visual assessment; H.3 is later.
+Apply P0196 R4 against exact uncommitted R3 worktree; deploy and `/reload`; test native target aura disappearance with target present, TARGET native open/close, Immersion OFF/ON, pet action/control regression, Phase H Native Access, Target Frame, Status Aura, Layout, Phase 0 Run All. A Lua, protected-action, taint, secret, lost aura or visual failure blocks commit. Only after runtime PASS may user commit and push.
 
 ## Success Criteria
 
@@ -33,6 +28,9 @@ The visually redundant normal Main presentation is absent when Logres has replac
 No exact player HP, conventional player health bar, enemy exact level/class/difficulty, secret-capable reads, broad stock UI suppression, polling or periodic forcing, or combat-unsafe protected mutation. PvP remains a modifier, not Immersion OFF. Keep class/pet, party/CompactParty, special actions, quest and on-demand native access, target-of-target, nameplates and private/group aura fallbacks until independently replacement-proven. The intermittent ObjectiveTracker flash remains OPEN / INTERMITTENT / UNREPRODUCED.
 
 ## Relevant References
+
+- `docs/memory/patches/P0196_R4_TARGET_AURA_NATIVE_CONFIG.md`
+- `docs/memory/evidence/P0196_R4_TARGET_AURA_RUNTIME_EVIDENCE.md`
 
 - `docs/memory/patches/P0194_R3_H2_PANEL_SCREEN_MAP.md`
 - `docs/memory/evidence/P0193_H2_GEOMETRY_RUNTIME_2026-10-11.md`

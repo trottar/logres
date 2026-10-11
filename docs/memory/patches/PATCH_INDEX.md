@@ -193,3 +193,7 @@
 
 This index is initially maintained manually. If patch volume grows, replace manual transcription with a generated index and record that decision.
 | P0195 | 2026-10-11 | PREPARED — ONE-PASS H2 V4 GEOMETRY / RUNTIME PROOF OPEN | `f7a67bc` panel-map PASS; viewport anchor translation and action/aura reflow; secure/native fallback retained; WoW screenshot / interaction checks pending |
+| P0196 R0/R1 | 2026-10-11 | R0 DOCS-ONLY REJECTED/UNPUSHED; R1 NATIVE GATE CANDIDATE | `9097f43` v4 user visual accepted; suppress stock pet/auras only with Logres secure/native replacement; native restore buttons; no Damage Meter changes; runtime OPEN |
+| P0196 R2 | 2026-10-11 | PREWRITE FAIL — check_memory_health.py missing handoff CURRENT.md / NOT PUSHED | Intended: Restore P0195 authored Logres player buffs and target lanes, remove 18px native takeover; target contextual fold deferred, pet candidate retained, user acceptance OPEN |
+| P0196 R3 | 2026-10-11 | CORRECTIVE CANDIDATE — R2 checker-memory prewrite FAIL / NOT PUSHED | Preserve R1 runtime failures and R2 prewrite failure, fix handoff authority pointer, restore P0195 authored buff art; runtime acceptance OPEN |
+| P0196 R4 | 2026-10-11 | RUNTIME CANDIDATE — NOT PUSHED | R3 player/target buffs visually restored but Blizzard contextual target aura persisted; replace failed OnShow approach with target native ConfigureAuraContainer 0/0 and opaque restore; tests OPEN |

@@ -1,10 +1,24 @@
 ## Historical H.1 reopening checkpoint — P0168 (superseded for current planning)
 
+## P0196 R3 residual stock target aura — OPEN; R4 candidate (2026-10-11)
+
+P0196 R4 is an **UNPUSHED RUNTIME CANDIDATE** addressing the R3 verified visual residual: the small Blizzard contextual target aura icon remains despite correct Logres player/target buffs. R3 `0.0.106-dev` loadCount 250 native-surfaces reported targetAuras:stock; Logres helpful and secure harmful lanes remain. Forever 1.60.1.70338 TargetFrameMixin:ConfigureAuraContainer source supports native 0/0 aura limits and restores, without the R1 forbidden OnShow hook. Existing pet/player buff replacement is untouched. TARGET opens the native aura container; Damage Meter and beta reporter unchanged. R1 visual/hook failure and R2 delivery failure remain recorded. Details: `docs/memory/patches/P0196_R4_TARGET_AURA_NATIVE_CONFIG.md` and `docs/memory/evidence/P0196_R4_TARGET_AURA_RUNTIME_EVIDENCE.md`. No R4 runtime PASS yet.
+
+
 P0168 R0 failed in the shadow checker before tracked writes: the new contract demanded a non-existent `visualSnapshot =` assignment while generated source correctly used `local visualSnapshot, visualError =`. R1 corrects the self-mismatch and removes the unneeded `QUEST_ITEM_UPDATE` restore trigger, because Blizzard processes that event without leaving an ordinary quest offer. The prior failed delivery is preserved as negative evidence.
 
 The user correctly identified that the previous closure counted D/C suppression as if Phase H itself had finished hiding the UI. P0165 suppressed only Accept/Decline. P0168 now targets the remainder of *supported ordinary quest-offer* presentation, not an unsupported quest state. This is candidate work; no runtime PASS until manually observed. Main/override/special actions, pet, party, minimap, persistent XP, full tracker, nameplates, class-resource, unsupported auras, and reward/continue/complete/gossip remain source/capability gated per D-023/D-031/D-044. No blanket frame hider is authorized. The existing P0164 matrix remains a blocker inventory, not a completed-removal claim.
 
 # Active Investigations
+
+## P0196 R1 native aura takeover — FAIL; R2 prewrite FAIL; R3 correction OPEN (2026-10-11)
+
+P0196 R3 is the next **OPEN / RUNTIME UNTESTED** checkpoint after R1 visual/target-hook runtime FAIL and R2 pre-write memory-health FAIL. The original crafted `PlayerHelpfulAuras` art and old StatusAuras/native harmful sizing are restored; new native 18px helpful icons and override takeover removed. Pet secure replacement candidate retained. Stock BUFFS is manually accessible beyond four authored Logres slots. Target contextual aura suppression is DEFERRED because the R1 OnShow hook failed. Damage Meter and Issue Reporter untouched. See `docs/memory/patches/P0196_R2_BUFF_PRESENTATION_CORRECTION.md` and `docs/memory/evidence/P0196_R2_REGRESSION_EVIDENCE.md`. P0196 R1 and R2 were NOT pushed. R2 passed whitening/own contract and earlier repository checks, then `check_memory_health.py` rejected CURRENT_HANDOFF.md because it omitted CURRENT.md; no tracked R2 writes occurred. See `docs/memory/patches/P0196_R3_PREWRITE_MEMORY_REPAIR.md`.
+
+
+## P0196 R1 — stock pet/buff/target-aura removal candidate (2026-10-11)
+
+OPEN / RUNTIME UNTESTED. P0195 user visual composition PASS with native duplicate exceptions. User explicitly rejects assistant's P0196 R0 docs-only assertion that PetFrame should remain the intended UI; R0 not pushed. Logres pet name/percentage-health and ten secure pet buttons exist but pet actions were manual probe-only, right-click/menu replacement missing, and editing/bindings still need on-demand stock. HelpfulAuras previously limited to four HELPFUL|PLAYER; StatusAuras target helpful priority is partial, native HARMFUL is bounded. P0196 R1 creates source-gated full native helpful groups (24 icon limit) and standalone safe stock folds, pet secure interaction, pet auto-arm, PET/BUFFS/TARGET dock restore. Blizzard Damage Meter and beta Issue Reporter remain untouched. Target icon source in screenshot could include nameplate content; only contextual TargetFrame Auras explicitly targeted. Native secret/protected and combat rollback checks mandatory. See `../patches/P0196_R1_NATIVE_PET_AURA_GATE.md` and `../evidence/P0196_R1_NATIVE_PET_AURA_EVIDENCE.md`.
 
 ## H.2 P0194 R3 runtime panel map verified / P0195 unified placement (2026-10-11)
 

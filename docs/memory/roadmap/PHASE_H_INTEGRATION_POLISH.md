@@ -1,6 +1,20 @@
 # Phase H — Integration and Polish
 
+## P0196 R4 — source-configured native target aura fold
+
+P0196 R4 is an **UNPUSHED RUNTIME CANDIDATE** addressing the R3 verified visual residual: the small Blizzard contextual target aura icon remains despite correct Logres player/target buffs. R3 `0.0.106-dev` loadCount 250 native-surfaces reported targetAuras:stock; Logres helpful and secure harmful lanes remain. Forever 1.60.1.70338 TargetFrameMixin:ConfigureAuraContainer source supports native 0/0 aura limits and restores, without the R1 forbidden OnShow hook. Existing pet/player buff replacement is untouched. TARGET opens the native aura container; Damage Meter and beta reporter unchanged. R1 visual/hook failure and R2 delivery failure remain recorded. Details: `docs/memory/patches/P0196_R4_TARGET_AURA_NATIVE_CONFIG.md` and `docs/memory/evidence/P0196_R4_TARGET_AURA_RUNTIME_EVIDENCE.md`. No R4 runtime PASS yet.
+
+
+## P0196 R3 — restore previous Logres buff visual
+
+P0196 R3 is the next **OPEN / RUNTIME UNTESTED** checkpoint after R1 visual/target-hook runtime FAIL and R2 pre-write memory-health FAIL. The original crafted `PlayerHelpfulAuras` art and old StatusAuras/native harmful sizing are restored; new native 18px helpful icons and override takeover removed. Pet secure replacement candidate retained. Stock BUFFS is manually accessible beyond four authored Logres slots. Target contextual aura suppression is DEFERRED because the R1 OnShow hook failed. Damage Meter and Issue Reporter untouched. See `docs/memory/patches/P0196_R2_BUFF_PRESENTATION_CORRECTION.md` and `docs/memory/evidence/P0196_R2_REGRESSION_EVIDENCE.md`. P0196 R1 and R2 were NOT pushed. R2 passed whitening/own contract and earlier repository checks, then `check_memory_health.py` rejected CURRENT_HANDOFF.md because it omitted CURRENT.md; no tracked R2 writes occurred. See `docs/memory/patches/P0196_R3_PREWRITE_MEMORY_REPAIR.md`.
+
+
 Status: ACTIVE — H.1 observed ordinary auto Main ACCEPTED at P0189; special/combat environmental deferrals retained; H.2 authored whole-screen geometry ACTIVE, H.3 later
+
+## P0196 R1 — capability-gated removal of stock pet and aura duplicates
+
+P0195 v4 composition is user-accepted in ordinary screenshot after verified `9097f43`, but stock pet portrait/actions and player/target aura icons remain visible. User explicitly rejects retaining Blizzard PetFrame and PetActionBar as the normal final UI and keeping stock player/target aura duplicates. The P0196 R0 documentation-only recommendation was NOT pushed. P0196 R1 implements secure Logres pet row targeting/context menu, pet auto-arm, native complete HELPFUL containers, four per-source fold/restore gates and three dock access buttons. Native controls must return if any secure or restricted replacement path fails. Keep Damage Meter and beta Issue Reporter unchanged; restore Blizzard on Immersion OFF. More than 24 helpful / 20 harmful icons, Edit Mode and special combat source coverage remain to prove; do not infer from static checks. See `../patches/P0196_R1_NATIVE_PET_AURA_GATE.md`.
 
 ## P0195 — unified H.2 geometry candidate
 

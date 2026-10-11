@@ -592,6 +592,13 @@ Probe.OnInitialize = function(self)
             if self.pendingConfigure then
                 self:ConfigureSecureButtons()
             end
+            if not InCombatLockdown() then
+                if Logres:GetPreference("immersionEnabled") == true then
+                    if not self.armed then self:Arm() end
+                elseif self.armed then
+                    self:HideProbe()
+                end
+            end
             return
         end
 
@@ -599,8 +606,17 @@ Probe.OnInitialize = function(self)
             return
         end
 
-        if self.armed then
-            self:RefreshPresentation()
+        if Logres:GetPreference("immersionEnabled") ~= true then
+            if self.armed and not InCombatLockdown() then
+                self:HideProbe()
+            end
+        elseif self.armed then
+            local present = self:RefreshPresentation()
+            if not present and not InCombatLockdown() then
+                self:HideProbe()
+            end
+        elseif not InCombatLockdown() then
+            self:Arm()
         end
         self:CaptureFollowup(event)
     end)
@@ -616,12 +632,25 @@ Probe.OnEnable = function(self)
     end
     self.eventFrame:RegisterUnitEvent("UNIT_PET", "player")
     self.eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+    self.eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 
     self:OwnCleanup(function()
         self.eventFrame:UnregisterAllEvents()
     end)
 
     self:ConfigureSecureButtons()
+    self:SubscribePreferences(function(preferences)
+        if InCombatLockdown() then return end
+        if preferences.immersionEnabled == true then
+            if not self.armed then self:Arm() end
+        elseif self.armed then
+            self:HideProbe()
+        end
+    end)
+    if Logres:GetPreference("immersionEnabled") == true
+        and not InCombatLockdown() then
+        self:Arm()
+    end
 end
 
 Probe.OnDisable = function(self)
