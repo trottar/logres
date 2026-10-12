@@ -120,6 +120,7 @@ local percentageBarStyle =
     (Logres.Theme and Logres.Theme.percentageBar) or {}
 local percentageBarAssets = percentageBarStyle.assets or {}
 local percentageBarColors = percentageBarStyle.colors or {}
+local hudTypography = (Logres.Theme and Logres.Theme.hudTypography) or {}
 
 local castCueStyle =
     (Logres.Theme and Logres.Theme.castCue) or {}
@@ -441,7 +442,7 @@ local function createPercentageBar(parent, name, variant, initialColor)
         textColor[3],
         textColor[4]
     )
-    percentText:SetShadowColor(0, 0, 0, 0.90)
+    percentText:SetShadowColor(0, 0, 0, 0.98)
     percentText:SetShadowOffset(1, -1)
     percentText:ClearText()
 
@@ -787,8 +788,12 @@ function HUD:OnInitialize()
         "GameFontNormal"
     )
     targetNameText:SetPoint("TOP", targetFrame, "TOP", 0, 0)
-    targetNameText:SetTextColor(0.88, 0.83, 0.74, 0.95)
-    targetNameText:SetShadowColor(0, 0, 0, 0.85)
+    local enemyNameColor = hudTypography.targetName or { 0.97, 0.91, 0.80, 1.00 }
+    targetNameText:SetTextColor(
+        enemyNameColor[1], enemyNameColor[2],
+        enemyNameColor[3], enemyNameColor[4]
+    )
+    targetNameText:SetShadowColor(0, 0, 0, 0.96)
     targetNameText:SetShadowOffset(1, -1)
     targetNameText:SetJustifyH("CENTER")
     targetNameText:SetWidth(190)
@@ -848,8 +853,12 @@ function HUD:OnInitialize()
         nameText:SetPoint("LEFT", rowFrame, "LEFT", 0, 0)
         nameText:SetWidth(80)
         nameText:SetJustifyH("LEFT")
-        nameText:SetTextColor(0.78, 0.75, 0.69, 0.92)
-        nameText:SetShadowColor(0, 0, 0, 0.80)
+        local allyNameColor = hudTypography.allyName or { 0.89, 0.84, 0.74, 1.00 }
+        nameText:SetTextColor(
+            allyNameColor[1], allyNameColor[2],
+            allyNameColor[3], allyNameColor[4]
+        )
+        nameText:SetShadowColor(0, 0, 0, 0.94)
         nameText:SetShadowOffset(1, -1)
 
         local healthBar = createPercentageBar(

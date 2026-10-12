@@ -17,9 +17,9 @@ theme.action = {
         horizontalPadding = 4,
         rightInset = 1,
         topInset = 1,
-        borderColor = { 0.46, 0.34, 0.18, 0.98 },
+        borderColor = { 0.56, 0.40, 0.21, 0.99 },
         fillColor = { 0.00, 0.00, 0.00, 0.98 },
-        textColor = { 0.96, 0.92, 0.82, 1.00 },
+        textColor = { 0.99, 0.95, 0.86, 1.00 },
     },
 
     assets = {
@@ -31,6 +31,30 @@ theme.action = {
     },
 }
 
+
+-- H.3: same approved action geometry; stronger metadata separation.
+theme.nativeHarmfulAuras = {
+    iconSize = 25,
+    gap = 3,
+    maxIcons = 5,
+    iconInset = 2,
+    frameColor = { 0.96, 0.73, 0.59, 0.98 },
+    assets = { frame = MEDIA_ROOT .. "Aura\\aura_frame_passive.tga" },
+}
+
+theme.hudTypography = {
+    targetName = { 0.97, 0.91, 0.80, 1.00 },
+    allyName = { 0.89, 0.84, 0.74, 1.00 },
+}
+
+theme.nativeAccessDock = {
+    background = { 0.035, 0.030, 0.024, 0.76 },
+    ruleColor = { 0.42, 0.31, 0.18, 0.82 },
+    stockRule = { 0.70, 0.49, 0.22, 0.96 },
+    label = { 0.78, 0.72, 0.62, 0.96 },
+    stockLabel = { 0.96, 0.85, 0.63, 1.00 },
+    hover = { 0.66, 0.47, 0.22, 0.18 },
+}
 
 theme.percentageBar = {
     normal = {
@@ -53,8 +77,8 @@ theme.percentageBar = {
     },
 
     trackColor = { 0.012, 0.010, 0.008, 0.94 },
-    borderColor = { 0.45, 0.32, 0.15, 0.96 },
-    textColor = { 0.94, 0.90, 0.80, 1.00 },
+    borderColor = { 0.56, 0.40, 0.20, 0.98 },
+    textColor = { 0.99, 0.95, 0.85, 1.00 },
 
     colors = {
         mana = { 0.16, 0.42, 0.86, 1.00 },

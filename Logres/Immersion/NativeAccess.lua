@@ -97,6 +97,13 @@ local NativeAccess = Logres:RegisterModule("NativeAccess", {
         dock:EnableMouse(false)
         Logres.Layout.Bind(dock, "nativeAccess", "TOPRIGHT", "TOPRIGHT")
         self.dock = dock
+        local dockStyle = (Logres.Theme and Logres.Theme.nativeAccessDock) or {}
+        local dockBackground = dockStyle.background or { 0.035, 0.030, 0.024, 0.76 }
+        local dockRule = dockStyle.ruleColor or { 0.42, 0.31, 0.18, 0.82 }
+        local stockRule = dockStyle.stockRule or { 0.70, 0.49, 0.22, 0.96 }
+        local dockLabel = dockStyle.label or { 0.78, 0.72, 0.62, 0.96 }
+        local stockLabel = dockStyle.stockLabel or { 0.96, 0.85, 0.63, 1.00 }
+        local dockHover = dockStyle.hover or { 0.66, 0.47, 0.22, 0.18 }
 
         local labels = { "STOCK", "MAP", "QUESTS", "XP", "MENU", "CAST" }
         local widths = { 56, 48, 66, 42, 60, 52 }
@@ -110,10 +117,33 @@ local NativeAccess = Logres:RegisterModule("NativeAccess", {
             button:SetPoint("TOPLEFT", dock, "TOPLEFT", x, 0)
             local background = button:CreateTexture(nil, "BACKGROUND")
             background:SetAllPoints(button)
-            background:SetColorTexture(0.08, 0.07, 0.065, 0.83)
+            background:SetColorTexture(
+                dockBackground[1], dockBackground[2],
+                dockBackground[3], dockBackground[4]
+            )
+            local ruleColor = index == 1 and stockRule or dockRule
+            local rule = button:CreateTexture(nil, "BORDER")
+            rule:SetPoint("BOTTOMLEFT", button, "BOTTOMLEFT", 2, 1)
+            rule:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 1)
+            rule:SetHeight(1)
+            rule:SetColorTexture(
+                ruleColor[1], ruleColor[2], ruleColor[3], ruleColor[4]
+            )
+            local hover = button:CreateTexture(nil, "HIGHLIGHT")
+            hover:SetAllPoints(button)
+            hover:SetColorTexture(
+                dockHover[1], dockHover[2], dockHover[3], dockHover[4]
+            )
+            button:SetHighlightTexture(hover)
             local text = button:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
             text:SetAllPoints(button)
             text:SetText(labels[index])
+            local labelColor = index == 1 and stockLabel or dockLabel
+            text:SetTextColor(
+                labelColor[1], labelColor[2], labelColor[3], labelColor[4]
+            )
+            text:SetShadowColor(0, 0, 0, 0.98)
+            text:SetShadowOffset(1, -1)
             button:RegisterForClicks("LeftButtonUp")
             button:SetScript("OnClick", function()
                 self:Toggle(key)

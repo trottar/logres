@@ -5,14 +5,25 @@ local _, Logres = ...
 local Native = {}
 Logres.NativeDebuffs = Native
 
-local WIDTH, ICON, GAP, MAX = 98, 18, 2, 5
+local harmfulStyle = (Logres.Theme and Logres.Theme.nativeHarmfulAuras) or {}
+local ICON = harmfulStyle.iconSize or 25
+local GAP = harmfulStyle.gap or 3
+local MAX = harmfulStyle.maxIcons or 5
+local INSET = harmfulStyle.iconInset or 2
+local FRAME_COLOR = harmfulStyle.frameColor or { 0.94, 0.65, 0.50, 0.98 }
 
 local function createContainer(unit, key, point, relativePoint, dx, dy)
     local frame = CreateFrame(
         "AuraContainer", nil, UIParent, "CustomAuraContainerTemplate"
     )
     frame:Hide()
-    frame:SetSize(WIDTH, ICON)
+    -- Target uses a compact 2-column native layout; player is 5 across.
+    -- Native AuraContainer owns aura membership/texture updates and packing.
+    local columns = unit == "target" and 2 or 5
+    local width = columns * ICON + (columns - 1) * GAP
+    local height = math.ceil(MAX / columns) * ICON
+        + (math.ceil(MAX / columns) - 1) * GAP
+    frame:SetSize(width, height)
     frame:SetFrameStrata("HIGH")
     frame:EnableMouse(false)
     Logres.Layout.Bind(frame, key, "CENTER", "CENTER")
@@ -27,15 +38,21 @@ local function createContainer(unit, key, point, relativePoint, dx, dy)
         initializeFrame = function(button)
             button:SetSize(ICON, ICON)
             local icon = button:CreateTexture(nil, "ARTWORK")
-            icon:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2)
-            icon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 2)
+            icon:SetPoint("TOPLEFT", button, "TOPLEFT", INSET, -INSET)
+            icon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -INSET, INSET)
             -- The native AuraButton sets the texture, even when the aura is
             -- restricted. No aura/icon value crosses into addon Lua.
             button:SetIcon(icon)
             local border = button:CreateTexture(nil, "OVERLAY")
             border:SetAllPoints(button)
-            border:SetTexture("Interface\\Buttons\\UI-Quickslot2")
-            border:SetVertexColor(0.77, 0.31, 0.35, 1)
+            border:SetTexture(
+                (harmfulStyle.assets and harmfulStyle.assets.frame)
+                    or "Interface\\Buttons\\UI-Quickslot2"
+            )
+            border:SetVertexColor(
+                FRAME_COLOR[1], FRAME_COLOR[2],
+                FRAME_COLOR[3], FRAME_COLOR[4]
+            )
         end,
     })
     frame:SetUnit(unit)

@@ -41,8 +41,14 @@ for token in ('Logres.Layout.Bind(root, anchorKey, "CENTER", "CENTER")',
               'local anchorKey = unit == "player" and "playerHarmful"',
               'slot:SetPoint("TOPLEFT", root, "TOPLEFT"'):
     if token not in S:error.append('aura lane '+token)
+# Keep the Phase H.2 semantic anchor requirements while checking the
+# Phase H.3 bounded native-aura geometry, not an obsolete pixel literal.
 for token in ('"player", "playerHarmful"','"target", "targetHarmful"',
-              'local WIDTH, ICON, GAP, MAX = 98, 18, 2, 5'):
+              'Logres.Layout.Bind(frame, key, "CENTER", "CENTER")',
+              'local columns = unit == "target" and 2 or 5',
+              'local width = columns * ICON + (columns - 1) * GAP',
+              'math.ceil(MAX / columns)',
+              'frame:SetSize(width, height)'):
     if token not in N:error.append('native harmful '+token)
 if 'targetFrame:SetSize(198, 54)' not in H or 'targetNameText:SetWidth(190)' not in H:
     error.append('target frame width/label')
