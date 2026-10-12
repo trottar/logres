@@ -7,21 +7,21 @@ project: logres
 # Current State
 
 ## Active Objective
-**Phase H integration remains active; P0197 is pushed and its ordinary no-duplicate pet-bar observation is accepted, while the earlier intermittent reappearance remains OPEN / INTERMITTENT / UNREPRODUCED.** P0196 R4 target buffs/debuffs and H.2 v4 screen composition remain user-accepted for observed ordinary presentation. H.3 polish remains separate.
+**Phase H.3 visual-fidelity review remains OPEN; P0200 R1 is pushed and its observed normal-session diagnostics passed.** P0196 R4 accepted target aura behavior and H.2 v4 ordinary composition remain established within their tested scope. Intermittent duplicate stock PetActionBar and ObjectiveTracker flash remain OPEN / INTERMITTENT / UNREPRODUCED; no new suppression is authorized.
 
 ## Current Work Item
-P0199 R1 is **PUSHED and verified** at GitHub `main` `7064ea881585af69f37cec621dbd1ac1eb490641`. The approved 12-sheet H.3 audit is durable and docs-only. **P0200 R1 is the next coordinated, UNTESTED H.3 runtime visual candidate**: native harmful aura frames/fit, percentage and name readability, and action/native-access presentation hierarchy. Exact plan: `docs/memory/patches/P0200_H3_VISUAL_IMPLEMENTATION.md`. Preserve D-045 v4 positions and the user-accepted player helpful art.
+P0200 R1 `0.0.109-dev` is **PUSHED on GitHub `main` `9776cf936224f772be581d2378bcbc91403c71dc`**. P0201 is a DOCS-ONLY acceptance of P0200's bounded diagnostic results from user `LOGRES_DIAGNOSTICS_LATEST.lua` loadCount 256. Its canonical record is `docs/memory/evidence/P0201_P0200_H3_RUNTIME_EVIDENCE.md`. H.3 *visual/interaction* acceptance is not yet established: no new full-screen screenshot or explicit visual assessment was submitted. No code/art/position changes in P0201.
 
 ## Verified State
-- P0200 R0 prewrite SHADOW FAIL: P0195 H.2 checker pinned the prior 18px harmful-aura declaration; no tracked source was written. R1 updates that checker to validate the revised grid and retains all H.2 placement gates.
-- P0199 R1 verified on GitHub `main` at `7064ea88`; no runtime changes from `0.0.108-dev` and **no H.3 runtime PASS**.
-- GitHub `main` P0197 at `0a20eef1de3b77fa26d03d6b1c1ccfd23cde0a7b`, `0.0.108-dev`. Uploaded loadCount 253: `petbar-reshow: AUDIT (onShow=4 combatDeferred=0 immediateRefolds=4 recovered=0 awaiting=false lastReconcile=PET_BAR_UPDATE)` after normal Immersion OFF/ON and diagnostic cycles. All four observed ordinary OnShow events refolded immediately; **combat deferral and recovery were not tested**.
-- Phase H Native Access Check passed: desired=true, four new native surfaces folded, pet interaction ready, pending=false, error=nil. Two Phase 0 `checkall` runs completed with no reported failures in their tested scope. Latest Layout Check: 19 anchors / 34 binds / 0 failures. User reports the redundant Blizzard pet bar did not appear during this session.
-- Previous P0196 R4 screenshot captured intermittent duplicate native PetActionBar. Trigger remains unknown. This is **not** evidence that P0197 solved all ways it may reappear, nor proof of in-combat behavior. Manual PET secure clicks, pet ability/autocast, special vehicles/combat and complete aura populations are not demonstrated by this upload. Historic negative evidence and deferrals stay open. The Phase 0 stock ownership inventory remains a policy classification, not a visibility observation.
-- Earlier P0196 R1 aura art/unsupported hook failure, P0196 R2 prewrite error, and intermittent ObjectiveTracker flash remain recorded.
+- Latest `0.0.109-dev` Phase 0 Run All **completed** without reported Lua/protected/secret errors in the tested scope. Latest Layout Check: **19 anchors / 29 binds / 0 failures**; H.2 v4 placement APPLIED, **13/13** addon proxy regions measured. Earlier standalone Layout Check at loadCount 256 was 19/26/0.
+- Phase H Status Aura Preview ON: 2 player and 4 target illustrative effects, native secure HARMFUL intentionally inactive. Preview OFF and Status Aura Check: PASS, native secure HARMFUL `ready=true active=true`. Real player harmful ordinary reads empty; target absent. Multi-icon native rendering and frame fit remain **DEFERRED**, not visually accepted.
+- Native Access Check PASS with five folded domains, zero failures. Four candidate native surface folds, pet interaction ready, no pending/errors. Main secure normal candidate applied and routed, activations=4/restores=3/error=nil. UI Ownership 35 total: 17 PASS / 18 STOCK / 0 FAIL. STOCK is policy classification, not proof of native visibility.
+- Latest `petbar-reshow` counters **onShow=0**, no combat-deferral/recovery exercised; the previous P0197 session observed four immediate refolds. The duplicate pet bar is still intermittent/unreproduced, not closed. Native control clicks, manual PET/BUFFS/TARGET fallback, combat/special modes, and an uncropped H.3 screen comparison are unobserved in the new upload.
+- Historical P0200 R0 obsolete H.2 checker shadow FAIL happened before tracked writes; P0200 R1 pushed its correction. Earlier P0196 failures and ObjectiveTracker flash remain historical negative evidence.
+- P0201 R0 docs-only delivery PREWRITE FAIL: generated `docs/ROADMAP.md` pinned Git blob SHA was 39 hex characters, so the guarded applier rejected it before tracked writes; R1 corrects to the verified 40-character blob. This is a packaging error, not a runtime result.
 
 ## Next Action
-Apply the guarded P0200 R1 patch to the exact `7064ea88` baseline. Deploy into `_classic_beta_` AddOns; use Phase H H.2 Map, Layout, Status Aura and Native Access checks plus Phase 0 Run All/UI Ownership, native PET/BUFFS/TARGET restoration, Immersion OFF/ON and a full-screen screenshot. Natural multiple harmful auras are requested when available, otherwise **DEFERRED**. Record observed PASS/FAIL/deferrals before advancing; P0197 duplicate pet bar remains OPEN / INTERMITTENT / UNREPRODUCED.
+Record P0201 diagnostic acceptance without modifying runtime, then visually review **one uncropped, ordinary-screen screenshot** of deployed P0200 (`H.2 Map` overlay OFF). Compare approved harmful aura sheet-04 frame/2-column fit, percentage/name typography, action and dock hierarchy, and existing player buffs against D-039, maintaining D-045 v4 positions. When naturally available inspect populated harmful auras; missing source remains DEFERRED. Test native on-demand controls/Immersion OFF-ON if practicable. Correct only an observed defect; no blind art rewrite, forced gameplay or polling.
 
 ## Success Criteria
 No redundant stock PetActionBar observed in supported ordinary Immersion ON, with functional native PET access and secure Logres pet controls; safe return to stock for unsupported modes. H.3 polish improves readability/layout while respecting source, interaction and state rules. Unobserved combat/special modes remain deferred, not PASS.
@@ -31,6 +31,8 @@ No exact player HP, conventional health bar, enemy exact level/class/difficulty,
 
 ## Relevant References
 
+- `docs/memory/patches/P0201_RECORD_P0200_RUNTIME.md`
+- `docs/memory/evidence/P0201_P0200_H3_RUNTIME_EVIDENCE.md`
 - `docs/memory/patches/P0200_H3_VISUAL_IMPLEMENTATION.md`
 - `tools/check_h3_visual_fidelity_contract.py`
 

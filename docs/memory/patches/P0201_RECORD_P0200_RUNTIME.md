@@ -1,0 +1,15 @@
+# P0201 — Record P0200 R1 bounded runtime result
+
+Date: 2026-10-11. Baseline: verified GitHub `main` `9776cf936224f772be581d2378bcbc91403c71dc`, `0.0.109-dev`. **DOCS ONLY**, no Lua/TGA/TOC, no runtime version change, no WoW redeployment.
+
+The user pushed P0200 R1 and supplied `LOGRES_DIAGNOSTICS_LATEST.lua` (loadCount 256). Canonical bounded evidence: `docs/memory/evidence/P0201_P0200_H3_RUNTIME_EVIDENCE.md`. P0200's 19/29/0 Layout Check, 13/13 v4 measurement, status preview ON/OFF, native ready/active restoration, Native Access Check, complete Phase 0 Run All, normal Main candidate and 35-row ownership check are accepted **for the actual diagnostic scope**. No current-run Lua/taint/protected error is reported.
+
+H.3 final visual acceptance is **OPEN** because this submission did not include an ordinary screenshot or an explicit visual-fidelity assessment. Native restricted harmful membership, populated multi-aura fit, bright/dark-world typography, dock legibility, secure/native click and Immersion OFF/ON visual restoration were not independently demonstrated by the supplied file; these are deferred, not failures or PASS. Historical P0200 R0 checker prewrite FAIL, P0197 pet reappearance, ObjectiveTracker flash and special/combat environmental deferrals remain recorded.
+
+**Next:** one coordinated visual review of the implemented P0200 screen without changing D-045 v4 geometry or previously approved player buffs. Record specific deficiencies, if any, and only then prepare a targeted H.3 correction; otherwise accept observed visual scope and advance according to Phase H. Do not request fresh DynamicCam profile, contrived harmful effects or travel solely for proof.
+
+## P0201 R0 delivery failure and R1 correction (2026-10-11)
+
+**R0 PREWRITE FAIL — no tracked changes.** User verified the R0 ZIP SHA-256 `0e853792488a205c69d399facc73ad7a67b46c4e98b136936acd9057a75eb937` and ran `P0201_APPLY.py` on the verified P0200 `9776cf9` baseline. The applier halted at `invalid expected git blob SHA for docs/ROADMAP.md` before preparing or writing tracked files. The generated PINNED value `9287609a3ab7123f34fd869a02a97f6fc5c05c9` contained **39** hexadecimal characters. The authoritative GitHub `main` blob is `9287609a3ab7123f34fd869a02a97f6fc5c05c9c` (**40** characters). The user `git status --short` after failure showed only unrelated and patch-extraction untracked files; no tracked modifications. This is an assistant artifact-generation/delivery validation failure, not a WoW runtime failure.
+
+**R1 repair:** correct this single pin to the verified full blob hash; retain the `9776cf936224f772be581d2378bcbc91403c71dc` baseline and unchanged P0200 runtime evidence; record R0 negative evidence in memory, index and manifest. All pinned SHA strings are checked for exactly 40 hexadecimal characters and match GitHub `main`. R1 still performs complete prewrite shadow `check_*.py` validation and postwrite diff/memory checks. **R1 runtime scope remains DOCS ONLY; no redeploy.**

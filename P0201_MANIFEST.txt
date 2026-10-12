@@ -1,0 +1,18 @@
+P0201 R1 docs-only delivery manifest
+baseline_commit: 9776cf936224f772be581d2378bcbc91403c71dc
+new_head_runtime: 0.0.109-dev
+scope: documentation only
+delivery_history: R0 invalid 39-character docs/ROADMAP.md pin prewrite FAIL; R1 corrected
+full_prewrite_shadow_checker_suite: PASS
+postwrite_git_diff_check: PASS
+postwrite_memory_checker: PASS
+files:
+  3331c43795f0e0eac10edfe0c4fa1e01cde59f30c86db02cb36f7909a39b6b37  docs/ROADMAP.md
+  0aaedb5cf960cabf40041e12d99e6d9853e00bca2282b1736c07f11cabaecbb4  docs/memory/CURRENT.md
+  649d875582b50b6e8091536b034b87060935cb7fc81896882cc76e98f217c5af  docs/memory/evidence/P0201_P0200_H3_RUNTIME_EVIDENCE.md
+  4c1078ca962a96ef46bbac266bdd975ca7a146fc4ff2b7fb28834948e41a317a  docs/memory/handoffs/CURRENT_HANDOFF.md
+  de4d2caa4ad1e320d7cafeceb301b46f7d03a5f4fe646880c456b5d56c58d016  docs/memory/investigations/ACTIVE.md
+  862ad9b875d5ec9e95c0019455e44f5cb326aa7d2f74254fdc3db6943c1a1428  docs/memory/patches/P0201_RECORD_P0200_RUNTIME.md
+  86089207a7c27f82876d82c23e45b59380f8587af4a28267a23a86b75d213737  docs/memory/patches/PATCH_INDEX.md
+  97fe92a2604b93324c083831996787efa6bfe7114ba34ee32048f3ce51b88327  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+  728ef9cd0b89cdff298da8f53c4a7b92c9349691ffdf44443570eb28e411b8e4  docs/memory/roadmap/STATUS.md
