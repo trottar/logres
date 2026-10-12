@@ -1,0 +1,15 @@
+P0204 — P0197 combat deferred recovery evidence
+Expected HEAD: 5c28c2dfd28667926c30499f99c53097a1ba0e57
+Scope: DOCS ONLY / NO WOW REDEPLOY
+P0204 accepts P0197 post-combat deferred recovery within observed loadCount 260: onShow=2, combatDeferred=1, immediateRefolds=1, recovered 0->1, awaiting true->false; combat duplicate remains OPEN/REPRODUCED. No runtime mutations.
+
+Written document SHA-256:
+8f731bf650486a03e7239222be77106dacaff0c77a456854e839a664afdd22d1  docs/ROADMAP.md
+1011560c0c33cf2269bd6a1f943c86798cb1b6818beb6c748d7faf10be8fecf2  docs/memory/CURRENT.md
+5e0c8bec8c1fd56f344fa6add90d02245b9d1abdb76abaf76e3fafdbcffbef76  docs/memory/evidence/P0204_P0197_COMBAT_RECOVERY_2026-10-11.md
+4d3098216c079ad171ea17945decb95aa66151930d991d4cae481452a488ee32  docs/memory/handoffs/CURRENT_HANDOFF.md
+ddcaed420435238ab4170c33a5a0de4285d2e7015fc2b1b326d63239563bf723  docs/memory/investigations/ACTIVE.md
+aea2a5bd756ac40136a4669bc217279e5f2ca8fbd6fc0674997546e5351efefd  docs/memory/patches/P0204_ACCEPT_P0197_COMBAT_EVIDENCE.md
+b29a8a2a38b9e639f089b43e9db677ec47252d5153b120c7bee2b595dbcd70a8  docs/memory/patches/PATCH_INDEX.md
+c5919fef0a6b8b549dc7d8fd3a29a427f988290a94d8efb46a0a0a56ec833b34  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+0c6617df13d0487dcf4445f1d3d1c17cdc73ea64ab209dd2a37ca5334713fa7c  docs/memory/roadmap/STATUS.md
