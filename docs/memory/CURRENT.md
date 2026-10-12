@@ -7,20 +7,20 @@ project: logres
 # Current State
 
 ## Active Objective
-**Phase H.3 whole-screen visual fidelity remains OPEN; P0200 R1 source is pushed and P0201 diagnostics are accepted in their tested scope.** One P0202 ordinary screenshot has now been visually reviewed: no blocking overlap apparent, but faint compass labels on bright sky and heavy empty action-slot chrome are grounded presentation concerns. P0197 duplicate stock PetActionBar and ObjectiveTracker flash remain OPEN / INTERMITTENT / UNREPRODUCED.
+**Phase H integration: newly reproduced Blizzard PetActionBar combat reappearance is the priority defect.** P0200 `0.0.109-dev` normal-session diagnostic checks passed in their measured scope; the current user combat screenshot and explicit report identify a second, smaller Blizzard pet button row overlapping Logres pet controls when combat begins. P0197 symptom is **OPEN / REPRODUCED IN COMBAT**, not unreproduced. A separate NPC dialogue screenshot shows world/name-label text visibly occluding the parchment; owner unknown. H.3 compass brightness/action empty-chrome refinements remain secondary.
 
 ## Current Work Item
-P0201 R1 is **PUSHED and verified** at GitHub `main` `826ff576567036a4e5d5c5a7c3c13dc1a299d0ca` (docs-only bounded P0200 `0.0.109-dev` evidence). **P0202 is a DOCS-ONLY screenshot visual review candidate**, not a runtime fix or full visual-fidelity PASS. Canonical new record: `docs/memory/evidence/P0202_H3_SCREENSHOT_VISUAL_EVIDENCE.md` (user image 1907x1192, 16:10; original file remains in conversation). Preserve D-045 v4 positions and approved player helpful artwork.
+P0202 docs-only ordinary screenshot review is **PUSHED and verified** at GitHub `main` `3aa21829f0b25b8069bac07089766d3ded7d44e9`. P0203 is **DOCS-ONLY new screenshot/explicit-user-observation evidence**, recording P0197 combat recurrence and NPC dialogue occlusion, with target aura visual attribution unresolved. Canonical record: `docs/memory/evidence/P0203_COMBAT_PET_DIALOGUE_EVIDENCE.md`. Runtime still `0.0.109-dev`; no proposed source change until focused in-combat native surface counters are captured.
 
 ## Verified State
-- P0200 R1 `0.0.109-dev` Phase 0 Run All completed; Layout Check 19 anchors / 29 binds / 0 failures, H.2 13/13 measured; Status Aura Preview ON/OFF and native ready/active restoration passed; native access check PASS; Main normal candidate active; UI Ownership 17 PASS / 18 STOCK / 0 FAIL within those diagnostic scopes. Source: P0201 canonical evidence.
-- The P0202 screenshot visibly shows active quest and native dock **separated without obvious overlap**, top-center compass, readable slim percentage/name bars, one retained authored player helpful frame, and lower action/pet controls. No obvious clipped action button or duplicate stock PetActionBar is visible in this single frame.
-- **Concerns, not functional FAIL:** compass text/ticks faint against a bright sky; empty bronze action frames dominate lower-left density. At 16:10, screenshot does not grant pixel-perfect D-045 16:9 placement acceptance.
-- **DEFERRED:** actual populated harmful icons/two-column fit, native/aura tooltips, button clicks, combat/special modes and Immersion OFF/ON visual restoration. P0197 pet reappearance and ObjectiveTracker flash remain OPEN / INTERMITTENT / UNREPRODUCED; do not implement polling or broad hooks.
-- Historical negative results (P0201 R0 truncated SHA; P0200 R0 checker failure; earlier P0196 issues) remain in P0201/P0200 and investigations. P0202 adds no Lua, TGA or version change.
+- **NEW reproduced negative observation:** one user combat screenshot shows a smaller row overlapping Logres pet controls; user explicitly confirms it is the Blizzard PetActionBar and says it returns **in combat**. This supersedes earlier UNREPRODUCED classification but does not establish exact native `OnShow` trigger. P0197 guarded hook defers Hide under combat lockdown; post-combat recovery logic cannot prevent combat overlap. **OPEN / REPRODUCED IN COMBAT.**
+- **NEW visible NPC narrative defect:** `Ironband's Excavation` parchment title/body/objective and page 1/2 show, but green `Jern Hornhelm` overhead label crosses body and objective text, reducing readability; rendering owner and causality remain UNATTRIBUTED.
+- **NEW target status population seen:** several small target effect icons adjacent to `Forest Lurker` target indicator in combat. Owner (`NativeDebuffs` vs ordinary/status lane) and native 2-column fit NOT established by still image. Pet secure interaction, native tooltip and special/combat protected behavior remain unproven.
+- P0201 loadCount 256: Phase 0 Run All completed; Layout Check 19/29/0, H.2 13/13 measured; aura preview ON/OFF native ready/active restored; Native Access Check PASS; ownership 17 PASS / 18 STOCK / 0 FAIL for observed diagnostics. The P0202 ordinary screenshot showed no duplicate; both original bounded observations stay recorded.
+- Previous P0197 ordinary loadCount 253 had four immediate OnShow refolds and no combat deferrals; P0201 loadCount 256 had zero OnShow events. Neither sampled the newly reported combat recurrence. The previously intermittent ObjectiveTracker flash remains OPEN. Preserve P0200/P0201 delivery failures and earlier negatives in historical records.
 
 ## Next Action
-Apply/commit/push this docs-only P0202 observation checkpoint with no WoW redeploy. For any further H.3 polish, first narrow a safe contrast/empty-frame styling hypothesis grounded in the screenshot, respecting existing source/secure/native accessibility and D-045 positions; no automatic feature suppression or speculative layout rewrite. Naturally populated harmful aura art remains environmentally DEFERRED. Whole-screen and cross-state visual acceptance stay OPEN pending appropriate evidence.
+During naturally occurring combat **with the stock pet row visible**, run Phase H **Native Access Check** (`/logres nativeuicheck`) and record the addon-owned `petbar-reshow` audit counters. Without reloading, run the same action directly after combat and note whether stock disappears. If not possible in combat, capture immediately after and label timing. This establishes whether `OnShow`/`combatDeferred` are implicated and whether `recovered` is exercised before any implementation patch. Independently scope the green NPC world-label-over-quest occlusion and target status icon ownership; do not alter protected Blizzard surfaces, native auras, D-045 geometry or approved player-helpful artwork from a screenshot alone.
 
 ## Success Criteria
 No redundant stock PetActionBar observed in supported ordinary Immersion ON, with functional native PET access and secure Logres pet controls; safe return to stock for unsupported modes. H.3 polish improves readability/layout while respecting source, interaction and state rules. Unobserved combat/special modes remain deferred, not PASS.
@@ -30,6 +30,8 @@ No exact player HP, conventional health bar, enemy exact level/class/difficulty,
 
 ## Relevant References
 
+- `docs/memory/patches/P0203_REPRODUCED_COMBAT_PET_BAR_AND_DIALOGUE.md`
+- `docs/memory/evidence/P0203_COMBAT_PET_DIALOGUE_EVIDENCE.md`
 - `docs/memory/patches/P0202_H3_SCREENSHOT_VISUAL_REVIEW.md`
 - `docs/memory/evidence/P0202_H3_SCREENSHOT_VISUAL_EVIDENCE.md`
 - `docs/memory/patches/P0201_RECORD_P0200_RUNTIME.md`
