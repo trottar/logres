@@ -1,0 +1,9 @@
+# P0202 — H.3 screenshot visual review checkpoint
+
+Date: 2026-10-11. Based on verified `main` `826ff576567036a4e5d5c5a7c3c13dc1a299d0ca` (P0201 R1). **DOCS-ONLY review**; runtime version stays `0.0.109-dev`, no Lua/TGA/TOC edit, no WoW redeploy. Canonical screenshot-observation record: `docs/memory/evidence/P0202_H3_SCREENSHOT_VISUAL_EVIDENCE.md`. Original image remains in the user conversation (1907x1192, 16:10), not included in the patch ZIP or repository.
+
+The still shows top-center compass, upper-right parchment quest, deliberately separate native access dock, lower-left action/pet clusters, lower-center resource bar, single retained framed helpful aura above right utility, and sparse pet/target percentage bars. No obvious quest-dock overlap, clipped action, or second Blizzard pet bar in this one frame. The calm target/resource presentation and authored helpful icon remain visibly intact.
+
+**Visual concerns**: compass ticks/letters faint against pale sky; many empty bronzed button frames compete with occupied actions in the lower-left. These are explicit presentation-polish candidates rather than gameplay failures or justification for changing secure hitboxes, action routing, source-owned states, native fallbacks, or D-045 geometry. The screenshot is 16:10, while D-045 reference is 16:9, so no pixel-perfect placement PASS is claimed.
+
+**DEFERRED**: naturally populated multiple harmful auras, native restricted frame fit and two-column target wrapping, all hover/tooltips/clicks, full 12-sheet state fidelity, combat/special mode, Immersion OFF/ON. P0197 duplicate PetActionBar and ObjectiveTracker flash continue OPEN/INTERMITTENT/UNREPRODUCED. Next only a narrowly scoped contrast/empty-frame styling hypothesis if the user wants further H.3 polish; otherwise await naturally available aura visual evidence. No runtime-code update in P0202.

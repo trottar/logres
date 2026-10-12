@@ -1,0 +1,22 @@
+# P0202 — P0200 H.3 ordinary-screen visual review
+
+Date: 2026-10-11. Source: user-uploaded uncropped WoW screenshot in conversation following verified P0201 R1 GitHub `main` `826ff576567036a4e5d5c5a7c3c13dc1a299d0ca`. Screenshot measured **1907x1192 pixels, approximately 16:10**. It is conversation evidence; the raw PNG is **not** copied into the repository. Runtime remains `0.0.109-dev`; no new SavedVariables or runtime check was submitted with the screenshot.
+
+## Direct visual observations (screenshot only)
+
+- The composition shows the restrained top-center directional compass/ticks, upper-right Logres parchment Active Quest showing "Find Bingles" / "Ready to return", and the six-label STOCK/MAP/QUESTS/XP/MENU/CAST native dock with PET/BUFFS/TARGET beneath. Quest panel and dock do not visibly overlap in this state. Beta Issue Reporter and a third-party DPS meter are unrelated presentation, not evidence of a Logres defect.
+- Left/lower action clusters present native spell icons, 42px-family bronze art and legible hotkey plates. A separate five-by-two pet action grid is visible above them. Numerous vacant gilded button slots create significant lower-left visual weight; this is an **observed hierarchy/readability concern**, not proof of a functional defect. Do not remove slots, disable clicks, hide secure controls or mutate action ownership in response.
+- A single authored player HELPFUL icon is visible above the right utility cluster; the existing player-buff art shows no obvious new loss/regression. The player resource bottom-center has a blue percent bar; pet/group and target indicators show readable `100%` text and narrow green/red tracks, without exact player HP or enemy level.
+- Compass letter/tick treatment is visually faint against the pale pink sky. This is a **bounded contrast-polish candidate**, not proof of a missing bearing, wrong source, or renderer failure. No extra compass tracking markers are justified.
+- No obvious clipped action button, quest/native-dock collision, or duplicate separate Blizzard PetActionBar is apparent in this still. This does **not** close the intermittent PetActionBar OnShow issue, prove hit regions, or validate an Immersion OFF/ON cycle.
+- The target's live harmful-aura group and player's live harmful-aura group are not populated in this frame. Therefore **P0200's new 25px native harmful aura art, target two-column wrapping, count/duration/native icon states, and click/tooltips remain DEFERRED**, not PASS. No stock-aura suppression is authorized.
+
+## Comparison / bounds
+
+D-039 sheet 01 calls for thematic meaning with restrained action controls; sheets 02/06 require sparse readable percent/name text; sheet 04 calls for a dominant, minimally framed real aura icon; sheet 10 prefers a one-focus quest panel; sheet 12 uses quiet compass lanes with meaningful glyphs. This screenshot supports *visible presence and no obvious collision* of those systems in one ordinary state. It does not establish one-to-one fidelity to twelve design sheets. The D-045 v4 rectangle map was approved for a 16:9 reference canvas; this 16:10 screenshot must **not** be used as pixel-perfect proof of envelope compliance or justification for moving any anchors.
+
+The lower-screen density and compass-on-bright-sky contrast are potential **visual refinements** based on direct visible evidence. Action occupancy/source may be restricted; any future reduced empty-slot chrome must derive from permitted addon-owned states and must preserve click areas, feedback, editing affordances and fail-open stock paths. Do not implement blind constant changes, gameplay-driven secret inspection, or periodic repainting. No visual defect severe enough to justify source changes without a narrowed implementation plan is established here.
+
+## Status and next gate
+
+**Observed visual scope: REVIEWED, NO BLOCKING COLLISION SEEN. Full H.3 acceptance: OPEN.** Preserve P0200 `0.0.109-dev`, H.2 v4 geometry, supported native dock/PET fallbacks, player helpful artwork, and all historic negative results. Next implementation decision, if desired: separately evaluate compass contrast and safe action empty-state visual hierarchy, *without* redefining source or secure ownership. Real multiple harmful effects remain environmentally DEFERRED until naturally available. Existing P0197 duplicate pet-bar and ObjectiveTracker flash remain OPEN / INTERMITTENT / UNREPRODUCED.
