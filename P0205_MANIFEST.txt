@@ -1,0 +1,15 @@
+P0205 — exact 70338 source/API audit; DOCS ONLY
+Expected pushed main: 566bb8b569b1fd53f869ac051ab62cbd9fa380a2
+No WoW deployment required.
+P0197 postcombat PASS observed; in-combat duplicate OPEN/REPRODUCED.
+
+SHA-256 of written docs:
+3535478603547535c6b5bfbc61a7536e0a242218f18273b2347972891d04b1b0  docs/ROADMAP.md
+8da7db4babf8cf16c3d2501a9941d9ad6d458a1c62b245c94f943fe52e76e4f0  docs/memory/CURRENT.md
+98b896760e27cae42864be8cd5e46e452659e9f3d799c7c4a2744d96e5b0be5f  docs/memory/evidence/P0205_FOREVER_PET_COMBAT_SOURCE_AUDIT.md
+6f02185c13225f990dee1cd9287e380a7c14445e61fc3d4647528ea72907f99c  docs/memory/handoffs/CURRENT_HANDOFF.md
+5c6450140dbe86dab91588292707995478a38ad7a5e1ad9e3b8c2f124abac95d  docs/memory/investigations/ACTIVE.md
+cc018ff0976b9d9d096e0eb92fe16d3cfdce0756434b15ba9615135a1e840955  docs/memory/patches/P0205_PET_COMBAT_SOURCE_AUDIT.md
+22dbe5ff3ae54ff4b5bbfaffc30151bc5b6b8157eebcf76bb0175c59af930b46  docs/memory/patches/PATCH_INDEX.md
+b88c3322c5ff590c46bf0fea9597f8d2a147b16a2914a19e7ec7be7dc1f0645f  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+2c295bee3a1ca26dce2130b89aaea207472c0b37011014a5db6c9339ff9912d9  docs/memory/roadmap/STATUS.md

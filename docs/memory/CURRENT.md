@@ -7,19 +7,19 @@ project: logres
 # Current State
 
 ## Active Objective
-**Phase H: the Blizzard PetActionBar combat reappearance remains OPEN / REPRODUCED IN COMBAT.** P0204 accepts observed P0197 **post-combat deferred recovery** only; neither the in-combat duplicate nor protected visibility ownership is solved. NPC green name text crossing the Logres quest parchment remains observed with source owner unconfirmed. H.3 compass and empty-slot contrast are lower priority; ObjectiveTracker flash remains OPEN / INTERMITTENT.
+**Phase H: PetActionBar combat duplication remains OPEN / REPRODUCED.** P0204's post-combat recovery PASS is bounded to one observed cycle. P0205 traced the exact Forever 1.60.1.70338 Blizzard PetActionBar, XML Edit Mode root and secure state-driver source: a safe production combat-time ownership handoff is **NOT YET PROVEN**. NPC world-label dialogue overlap, ObjectiveTracker flash and H.3 contrast remain separate open items.
 
 ## Current Work Item
-P0203 evidence checkpoint **PUSHED and verified** at GitHub `main` `5c28c2dfd28667926c30499f99c53097a1ba0e57`. P0204 is a **DOCS-ONLY bounded acceptance** of the new `0.0.109-dev` loadCount 260 diagnostic trace. Canonical record: `docs/memory/evidence/P0204_P0197_COMBAT_RECOVERY_2026-10-11.md`. The diagnostic pair directly exercises the pending combat callback and P0197 post-combat recovery; no further reproduction is needed before a focused, source-backed combat-safe control presentation capability audit. No code, artwork or D-045 coordinate changes in P0204.
+P0204 is **PUSHED and verified** at GitHub `main` `566bb8b569b1fd53f869ac051ab62cbd9fa380a2`, documents only. P0205 is the **DOCS-ONLY exact-build source/API capability audit** at `Gethe/wow-ui-source@943764493e6b16d63ded3ab304150d1f05e58b57`, recorded in `docs/memory/evidence/P0205_FOREVER_PET_COMBAT_SOURCE_AUDIT.md`. Runtime stays `0.0.109-dev`. Neither new parent gating nor direct state-driver takeover is enabled/accepted by static reasoning.
 
 ## Verified State
-- **P0197 in-combat duplicate remains FAIL / OPEN / REPRODUCED:** user-identified stock Blizzard PetActionBar overlaps Logres controls during combat (P0203 screenshot). New `0.0.109-dev` loadCount 260 `/logres nativeuicheck` logged `onShow=2 combatDeferred=1 immediateRefolds=1 recovered=0 awaiting=true` and `native-surfaces pending=true`; follow-up `/logres checkall` logged the same onShow/deferral/immediate counters but `recovered=1 awaiting=false`, native pending=false and no errors. **Recovery PASS within one exercised cycle; combat presentation FAIL.** The diagnostic label `lastReconcile=PLAYER_TARGET_CHANGED` is not proof of the precise Blizzard show event.
-- Later Phase 0 Run All complete; Layout 19 anchors / 29 binds / 0 failures, v4 13/13 measured; UI Ownership 17 PASS / 18 STOCK / 0 FAIL; no reported Lua/taint/protected error in this tested scope. STOCK is policy not native visibility proof.
-- NPC `Jern Hornhelm` green world/NPC overhead label overlaps `Ironband's Excavation` quest dialogue text; owner still UNATTRIBUTED. Combat target-status icons visible but native/ordinary source and 2-column packing unproven.
-- P0200 H.3 player-helpful artwork, v4 anchors, quest and native dock remain unchanged. Earlier P0197 ordinary refolds, P0200/P0201 prewrite delivery failures, intermittent ObjectiveTracker flash and special-mode/native click deferrals retain their original records.
+- Exact Forever build 70338 Blizzard PetActionBar source explicitly calls `self:Show()` on supported pet-related events. XML root is `parent=UIParent`, inherits `EditModeActionBarTemplate`, and contains ten secure pet controls. SecureStateDriver can make secure visibility transitions, but its presence does not establish safe coexistence with Blizzard's native Show, Edit Mode reparenting or all fallback modes. Source analysis only.
+- P0204 loadCount 260: Blizzard PetActionBar combat overlap **FAIL / REPRODUCED**; `onShow=2 combatDeferred=1 immediateRefolds=1`, then `recovered=0→1 awaiting=true→false` proves one post-combat recovery PASS. No native visibility read was performed.
+- **REJECTED** insecure combat-time hide/reassertion. **DEFERRED** unqualified visibility driver takeover and hidden-ancestor reparent because restoration and secure/stock control coverage are not runtime-established. See the canonical P0205 audit for precise source citations and candidate criteria.
+- Prior P0200 `0.0.109-dev` normal Run All scope PASS (Layout 19/29/0; UI Ownership 17/18/0); harmful native 2-column attribution, NPC overhead text over quest, ObjectiveTracker flash, pet special modes/interaction and H.3 full acceptance remain open/deferred. No runtime/art/coordinate edits in P0205.
 
 ## Next Action
-Conduct one narrow **source/API capability audit** for a secure, combat-safe presentation ownership transition for native Blizzard PetActionBar and Logres pet actions. The goal is no overlapping dual pet-control rows in supported combat, while ensuring controls/fallback remain usable. Do not attempt protected Hide/Show during combat, infer native visibility from stored snapshots, add hooks/polling/reassertion, or move D-045 geometry. If no proven safe path exists, document an explicit limitation and defer source modification. NPC label/quest occlusion and aura ownership remain separate investigations; no artificial gameplay to re-prove the pet combat failure.
+Prepare one **explicitly opt-in, default-OFF, reversible runtime candidate** for secure combat pet presentation ownership. Favor a capability-gated native/Logres visibility handoff that preserves functional stock controls on every unsupported path, arms/restores strictly out of combat, and never reads protected Blizzard presentation to decide behavior. Test native PET manual access, actual combat transition, Edit Mode and Immersion OFF/ON before production enablement; record failures. Do **not** register a blanket stock visibility driver, reparent Edit Mode roots unconditionally, add polling/hooks or mutate protected controls during combat on source reasoning alone. No further contrived combat reproduction is required to establish P0197's failure.
 
 ## Success Criteria
 No redundant stock PetActionBar observed in supported ordinary Immersion ON, with functional native PET access and secure Logres pet controls; safe return to stock for unsupported modes. H.3 polish improves readability/layout while respecting source, interaction and state rules. Unobserved combat/special modes remain deferred, not PASS.
@@ -29,6 +29,8 @@ No exact player HP, conventional health bar, enemy exact level/class/difficulty,
 
 ## Relevant References
 
+- `docs/memory/patches/P0205_PET_COMBAT_SOURCE_AUDIT.md`
+- `docs/memory/evidence/P0205_FOREVER_PET_COMBAT_SOURCE_AUDIT.md`
 - `docs/memory/patches/P0204_ACCEPT_P0197_COMBAT_EVIDENCE.md`
 - `docs/memory/evidence/P0204_P0197_COMBAT_RECOVERY_2026-10-11.md`
 - `docs/memory/patches/P0203_REPRODUCED_COMBAT_PET_BAR_AND_DIALOGUE.md`
