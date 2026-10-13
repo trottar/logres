@@ -4430,6 +4430,17 @@ local function runNativeAccessCheck()
         tostring(surfaces.petActionDeferredRefold),
         tostring(surfaces.petActionLastContext)
     ))
+    -- P0206: addon-owned trial counters; no native Blizzard visibility reads.
+    local candidate = Logres:GetModule("PetCombatCandidate")
+    local trial = candidate:GetDebugStatus()
+    emit(string.format(
+        "Logres petcombat: QUARANTINED (requested=%s armed=%s pending=%s activations=%s restores=%s failures=%s rejected=%s reason=%s error=%s event=%s)",
+        tostring(trial.requested), tostring(trial.armed),
+        tostring(trial.pending), tostring(trial.activations),
+        tostring(trial.restores), tostring(trial.failures),
+        tostring(trial.rejections), tostring(trial.lastReason), tostring(trial.lastError),
+        tostring(trial.lastEvent)
+    ))
 end
 
 function Logres:RunUIOwnershipCheck()
@@ -4634,6 +4645,7 @@ local function printHelp()
     emit("  /logres worldtargetprobe")
     emit("  /logres navigationsourceprobe")
     emit("  /logres classpetspecialprobe")
+    emit("  /logres petcombat [on|off|check]  (P0206 DEFAULT OFF trial)")
     emit("  /logres petactionexecprobe [arm|check|hide]")
     emit("  /logres statusauracheck")
     emit("  /logres statusaurapreview [on|off]")
@@ -4800,6 +4812,19 @@ local function handleCommand(message)
     end
 
     if command == "nativeuicheck" then
+        runNativeAccessCheck()
+        return
+    end
+
+    if command == "petcombat" then
+        local trial = Logres:GetModule("PetCombatCandidate")
+        if argument == "on" or argument == "off" then
+            local ok, reason = trial:Request(argument == "on")
+            emit("Logres petcombat trial: " .. (ok and "requested" or "rejected")
+                .. " (" .. tostring(reason) .. ")")
+        elseif argument ~= "check" then
+            emit("Logres petcombat trial: use on, off, or check")
+        end
         runNativeAccessCheck()
         return
     end
@@ -5372,6 +5397,24 @@ Logres:RegisterDevPanelAction(
     "nativeAccessCheck",
     "Native Access Check",
     "nativeuicheck",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "petCombatTrialOn",
+    "Pet Combat Trial ON (BLOCKED)",
+    "petcombat on",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "petCombatTrialOff",
+    "Pet Combat Trial OFF",
+    "petcombat off",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "petCombatTrialCheck",
+    "Pet Combat Trial Check",
+    "petcombat check",
     "H"
 )
 Logres:RegisterDevPanelAction(

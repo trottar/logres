@@ -59,6 +59,15 @@ function Native:PreparePetInteraction()
 end
 
 function Native:Ready(key)
+    -- P0206 R6: native pet control is stock-owned while its replacement
+    -- lacks a proven combat-safe handoff and guaranteed restoration.
+    -- Do not fold the stock PetActionBar. Leave Blizzard events,
+    -- interactions and protected frame ownership untouched.
+    if key == "petActions" then return false end
+    -- P0208: the Logres HUD ally row does not replace native pet unit
+    -- health, resource, auras or all secure unit interaction. Native
+    -- PetFrame is stock-owned in both Immersion modes.
+    if key == "petFrame" then return false end
     if key == "petFrame" then
         local hud = secureReadiness("HUD")
         return hud and hud.allyRowsByUnit and hud.allyRowsByUnit.pet
@@ -295,6 +304,13 @@ function Native:Reconcile(reason)
 end
 
 function Native:Toggle(domain)
+    if domain == "pet" then
+        -- Explicit stock access: never toggle pet suppression. Reconcile
+        -- can restore a prior addon snapshot only out of combat.
+        self.manual.pet = nil
+        self:Reconcile("pet-stock-access")
+        return true
+    end
     if domain ~= "pet" and domain ~= "playerBuffs"
         and domain ~= "targetAuras" then return false end
     self.manual[domain] = not self.manual[domain]
@@ -305,7 +321,11 @@ end
 function Native:UpdateButtons()
     if not self.buttons then return end
     for key, button in pairs(self.buttons) do
-        button:SetText(LABELS[key] .. (self.manual[key] and " OPEN" or ""))
+        if key == "pet" then
+            button:SetText("PET STOCK")
+        else
+            button:SetText(LABELS[key] .. (self.manual[key] and " OPEN" or ""))
+        end
     end
 end
 
@@ -318,6 +338,10 @@ function Native:GetDebugStatus()
         details[#details + 1] = key .. ":"
             .. (active and "folded" or (self:ManualOpen(key) and "open" or "stock"))
     end
+    -- Snapshot ownership only: Blizzard native visibility and secure
+    -- clickability are NOT inspected or certified by this diagnostic.
+    details[#details + 1] = "petPolicy=stock/stock"
+    details[#details + 1] = "petVisual=UNVERIFIED"
     return {
         desired = self.desired,
         nativeActive = self.nativeActive,
