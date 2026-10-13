@@ -1,34 +1,45 @@
 ---
 memory_schema: 1
-as_of: 2026-10-11
+as_of: 2026-10-13
 project: logres
 ---
 
 # Current State
 
 ## Active Objective
-**Phase H: PetActionBar combat duplication remains OPEN / REPRODUCED.** P0204's post-combat recovery PASS is bounded to one observed cycle. P0205 traced the exact Forever 1.60.1.70338 Blizzard PetActionBar, XML Edit Mode root and secure state-driver source: a safe production combat-time ownership handoff is **NOT YET PROVEN**. NPC world-label dialogue overlap, ObjectiveTracker flash and H.3 contrast remain separate open items.
+**Phase H: full PetFrame/PetActionBar ownership and restoration remains OPEN / INTERMITTENT.** P0206 R6 `0.0.112-dev` released `petActions` from Logres folding but `petFrame` remains folded; stock visibility after Immersion OFF is not reliable by user report. P0206 R2 protected-function error and R0/R3/R4 packaging failures remain negative results. P0197 combat duplication remains REPRODUCED. See P0207 full lifecycle audit; other H.3, quest and aura findings remain open.
 
 ## Current Work Item
-P0204 is **PUSHED and verified** at GitHub `main` `566bb8b569b1fd53f869ac051ab62cbd9fa380a2`, documents only. P0205 is the **DOCS-ONLY exact-build source/API capability audit** at `Gethe/wow-ui-source@943764493e6b16d63ded3ab304150d1f05e58b57`, recorded in `docs/memory/evidence/P0205_FOREVER_PET_COMBAT_SOURCE_AUDIT.md`. Runtime stays `0.0.109-dev`. Neither new parent gating nor direct state-driver takeover is enabled/accepted by static reasoning.
+P0205 is last verified **PUSHED** GitHub main `79a8e2308a37135b61db8ad8a0433cae5ec8b4bd`. P0206 R6 is an **UNCOMMITTED local runtime candidate**, not an accepted fix. P0207 is **DOCS-ONLY**, exact Forever 70338 PetFrame/PetActionBar + Edit Mode/Logres source and user `0.0.112-dev` loadCount 265 audit. Next runtime work: stop folding **PetFrame** while also retaining R6 PetActionBar stock fail-open, then test both separately. No combat-safe replacement suppressor authorized.
 
 ## Verified State
-- Exact Forever build 70338 Blizzard PetActionBar source explicitly calls `self:Show()` on supported pet-related events. XML root is `parent=UIParent`, inherits `EditModeActionBarTemplate`, and contains ten secure pet controls. SecureStateDriver can make secure visibility transitions, but its presence does not establish safe coexistence with Blizzard's native Show, Edit Mode reparenting or all fallback modes. Source analysis only.
-- P0204 loadCount 260: Blizzard PetActionBar combat overlap **FAIL / REPRODUCED**; `onShow=2 combatDeferred=1 immediateRefolds=1`, then `recovered=0→1 awaiting=true→false` proves one post-combat recovery PASS. No native visibility read was performed.
-- **REJECTED** insecure combat-time hide/reassertion. **DEFERRED** unqualified visibility driver takeover and hidden-ancestor reparent because restoration and secure/stock control coverage are not runtime-established. See the canonical P0205 audit for precise source citations and candidate criteria.
-- Prior P0200 `0.0.109-dev` normal Run All scope PASS (Layout 19/29/0; UI Ownership 17/18/0); harmful native 2-column attribution, NPC overhead text over quest, ObjectiveTracker flash, pet special modes/interaction and H.3 full acceptance remain open/deferred. No runtime/art/coordinate edits in P0205.
+- Latest uploaded loadCount 265: native surfaces `petFrame:folded petActions:stock`, candidate `QUARANTINED`, `armed=false`; `uiownershipcheck` marks both pet domains STOCK with `observed=not inspected`. A snapshot/owner label is **not** actual stock visibility proof; user reports intermittent missing native controls after Immersion OFF and transient Edit Mode/PET restoration. No OFF-state native check was captured. **FAIL/OPEN**, not PASS.
+- Exact Forever XML/source: `PetFrame` is a secure child of `PlayerFrame`, with independent `UpdateShownState()` conditions (visible pet, `PetUsesPetFrame`, vehicle, Edit Mode). `PetActionBar` is Edit Mode-owned `UIParent` root with 10 secure buttons and pet-event Show/Hide. Edit Mode may temporarily force native appearance; cause of reported transitions is unverified.
+- Native:Fold saves opaque `IsShown` token; Restore passes it to SetShown unchanged. This can restore historical visibility instead of native current policy. Do **not** inspect protected presentation to prove it. `PlayerFrameReplacement` suppresses player content containers, **not whole PlayerFrame parent**; no attribution of PetFrame absence to alpha by itself.
+- P0206 R0 15-action panel overflow; R1 slash-only panel design rejected; R2 protected error and restoration failure; R3 checker runtime pin; R4 missing payload; R5 still-folded pet actions and failed stock access; R6 PetFrame still folded and intermittent absence. Preserve failures exactly. Full matrix: `docs/memory/evidence/P0207_PET_UI_FULL_LIFECYCLE_AUDIT.md`.
 
 ## Next Action
-Prepare one **explicitly opt-in, default-OFF, reversible runtime candidate** for secure combat pet presentation ownership. Favor a capability-gated native/Logres visibility handoff that preserves functional stock controls on every unsupported path, arms/restores strictly out of combat, and never reads protected Blizzard presentation to decide behavior. Test native PET manual access, actual combat transition, Edit Mode and Immersion OFF/ON before production enablement; record failures. Do **not** register a blanket stock visibility driver, reparent Edit Mode roots unconditionally, add polling/hooks or mutate protected controls during combat on source reasoning alone. No further contrived combat reproduction is required to establish P0197's failure.
+Build one narrow **capability-gated fail-open runtime checkpoint**: keep native PetActionBar stock-owned and **release native PetFrame** because the HUD pet row/secure target overlay does not replace all its information and interaction. Restore existing snapshots only out of combat, and verify from a clean `/reload`. Keep all 18 Phase H panel actions. Independently validate portrait/health/menu and pet abilities/binds/autocast/drag through Immersion OFF/ON, PET dock and Edit Mode, plus incidental combat. Native visibility is **user-visual unverified** unless actually observed; no secret/protected visibility inspection, direct combat mutation, polling, blanket hooks or further hidden-parent trial.
 
 ## Success Criteria
-No redundant stock PetActionBar observed in supported ordinary Immersion ON, with functional native PET access and secure Logres pet controls; safe return to stock for unsupported modes. H.3 polish improves readability/layout while respecting source, interaction and state rules. Unobserved combat/special modes remain deferred, not PASS.
+With pet available, **both** native PetFrame and PetActionBar are independently visible/clickable with Immersion OFF and remain accessible in any unsupported Immersion ON state; no Lua/taint/protected-action errors and PET/Edit Mode restoration works. A diagnostics policy PASS alone is insufficient. P0197 duplicate remains OPEN until a later distinct combat-safe handoff is proved. Unreproduced special cases remain DEFERRED.
 
 ## Do Not Reopen Without New Evidence
 No exact player HP, conventional health bar, enemy exact level/class/difficulty, secret inspection, unqualified Blizzard surface removal, broad hooks, polling or combat-unsafe mutation. PvP is a modifier, not Immersion OFF. Preserve party/class/pet/special/native/aura fallbacks until deliberately replaced.
 
 ## Relevant References
 
+- `docs/memory/evidence/P0207_PET_UI_FULL_LIFECYCLE_AUDIT.md`
+- `docs/memory/patches/P0207_PET_UI_FULL_LIFECYCLE_AUDIT.md`
+
+- `docs/memory/patches/P0206_R6_STOCK_PET_FAIL_OPEN.md`
+- `docs/memory/evidence/P0206_R5_STOCK_PET_RESTORE_FAILURE.md`
+- `docs/memory/patches/P0206_R5_PAYLOAD_DEPENDENCY_REPAIR.md`
+- `docs/memory/patches/P0206_R4_CHECKER_POLICY_REPAIR.md`
+- `docs/memory/patches/P0206_R3_CORRECTIVE_QUARANTINE.md`
+- `docs/memory/evidence/P0206_R2_RUNTIME_FAILURE.md`
+- `docs/memory/patches/P0206_PET_COMBAT_CANDIDATE.md`
+- `docs/memory/evidence/P0206_RUNTIME_CANDIDATE_EVIDENCE.md`
 - `docs/memory/patches/P0205_PET_COMBAT_SOURCE_AUDIT.md`
 - `docs/memory/evidence/P0205_FOREVER_PET_COMBAT_SOURCE_AUDIT.md`
 - `docs/memory/patches/P0204_ACCEPT_P0197_COMBAT_EVIDENCE.md`
