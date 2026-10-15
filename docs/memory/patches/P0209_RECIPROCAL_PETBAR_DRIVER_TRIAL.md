@@ -1,0 +1,19 @@
+# P0209 — Opt-in reciprocal PetActionBar secure visibility trial
+
+**R0 PREWRITE FAIL — MEMORY HEALTH (2026-10-13).** User output after 52 shadow checker passes: `check_memory_health.py` rejected generated CURRENT lacking required `## Verified State` and handoff lacking `CURRENT.md`. The one-time applier stopped before writing tracked files. R1 repairs exact document invariants and adds a schema gate before shadow checks. Neither R0 nor R1 implies a WoW runtime PASS. Preserve this failure.
+
+Baseline: P0208 verified pushed `f6b9a3a58bfc9081043455038df33b706c6e9e6f`. Runtime version `0.0.114-dev`. **RUNTIME-CODE CANDIDATE / DEFAULT OFF / UNVALIDATED**.
+
+Adds isolated `PetBarVisibilityTrial.lua` which uses paired `RegisterStateDriver` state-visibility conditions for Blizzard's native PetActionBar and the existing Logres pet-action cluster: `[combat] show; hide` and `[combat] hide; show`. This aims to remove out-of-combat duplication and preserve one secure pet interaction path in combat, without P0206's failed hidden ancestor. No combat-time addon protected mutation: only secure engine may change visibility. Out-of-combat OFF/PET STOCK/Immersion OFF requests release native first, with `show` state to clear the engine's `statehidden` before unregister; combat OFF requests defer. No direct native Show/Hide, SetParent, static snapshot inspection, polling or new Blizzard Show hooks. PetFrame stays Blizzard-owned and visible. Readiness requires addon-owned pet probe state, and all 18 Phase H actions remain with existing three trial buttons relabeled to Pet Bar Driver ON/OFF/Check. P0206 quarantined module and diagnostic remain separately present.
+
+**Risk / unproved:** RegisterStateDriver against Blizzard Edit Mode-owned PetActionBar, event-triggered re-show races, native owner restore, Edit Mode while armed, and secure action behavior have no in-client proof. Feature is default OFF after every `/reload`, opt-in test only. Do not mark production PASS from static validation. See `docs/memory/evidence/P0209_RECIPROCAL_PETBAR_DRIVER_CANDIDATE.md`. Preserve P0206/P0208 failures and P0197 combat duplication as OPEN until observed. Next: phase-H panel opt-in test of native out-of-combat suppression, stock release/Immersion OFF, ordinary combat handoff, BugCatcher, and no invisible native click regions.
+
+## P0209 R1 negative result — LUA UPVALUE LIMIT / PREWRITE FAIL
+
+User's extracted P0209 R1 applier passed `check_memory_health.py` and 86 other checkers, then stopped before tracked writes at `check_ui_ownership_audit_contract.py`: `ERROR: handleCommand would capture 61 locals; Forever limit is 60`. P0208 baseline already captured 60. R1 added `local function runPetBarDriverCheck()` and invoked it within `handleCommand`, creating one more upvalue. R1's restricted fixture did not run this repository checker. R2 makes the diagnostic `Logres:RunPetBarDriverCheck()` (no added captured local) and preflights the actual checker calculation before all shadow checkers. **R1: FAILED / PREWRITE / NO RUNTIME TEST**; this is not a user/environment issue. Preserve P0209 R0 invalid memory-schema failure separately. The secure visibility hypothesis remains unverified in WoW.
+
+## R2 failed combat continuity / R3 ownership correction
+
+P0209 R0 memory-health PREWRITE FAIL; R1 61/60 Lua upvalue PREWRITE FAIL; R2 applied and ran in WoW (`0.0.114-dev`, loadCount 269) but **RUNTIME FAIL for intended combat behavior**: pressing trial ON removed the Blizzard pet bar out of combat, then the `[combat] show; hide` native / `[combat] hide; show` Logres state drivers removed Logres pet actions and showed Blizzard's bar during combat. This was the authored reciprocal policy and contrary to user intent. No push. P0208 `f6b9a3a` remains the verified HEAD. P0197 combat duplicate remains OPEN. See `docs/memory/evidence/P0209_R3_NATIVE_REUSE_EVIDENCE.md`.
+
+R3 separate checkpoint in `P0209_R3_NATIVE_REUSE.md`.

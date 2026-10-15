@@ -323,6 +323,13 @@ function Probe:ApplyLayout()
 end
 
 function Probe:Arm()
+    -- P0209 R3: native stock buttons are now the only interactive pet bar.
+    -- Protect against event-driven Probe re-arming after native acquisition.
+    local nativeReuse = Logres:GetModule("PetBarVisibilityTrial")
+    if nativeReuse:IsAcquired() then
+        self.lastArmReason = "native-pet-bar-reuse-owned"
+        return false, self.lastArmReason
+    end
     if InCombatLockdown() then
         self.lastArmReason = "combat-lockdown"
         return false, self.lastArmReason

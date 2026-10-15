@@ -4443,6 +4443,20 @@ local function runNativeAccessCheck()
     ))
 end
 
+-- P0209 addon-owned driver status only; Blizzard frame presentation is
+-- deliberately not read or reported as a PASS.
+function Logres:RunPetBarDriverCheck()
+    local trial = Logres:GetModule("PetBarVisibilityTrial"):GetDebugStatus()
+    emit(string.format(
+        "Logres petbardriver: TRIAL (requested=%s armed=%s pending=%s nativeDriver=%s logresDriver=%s activations=%s restores=%s failures=%s mode=%s visual=%s reason=%s event=%s error=%s)",
+        tostring(trial.requested), tostring(trial.armed), tostring(trial.pending),
+        tostring(trial.stockDriver), tostring(trial.logresDriver),
+        tostring(trial.activations), tostring(trial.restores),
+        tostring(trial.failures), tostring(trial.mode), tostring(trial.visual),
+        tostring(trial.reason), tostring(trial.event), tostring(trial.error)
+    ))
+end
+
 function Logres:RunUIOwnershipCheck()
     local report = Logres.UIOwnershipAudit.Capture()
     local flags = report.flags
@@ -4826,6 +4840,19 @@ local function handleCommand(message)
             emit("Logres petcombat trial: use on, off, or check")
         end
         runNativeAccessCheck()
+        return
+    end
+
+    if command == "petbardriver" then
+        local trial = Logres:GetModule("PetBarVisibilityTrial")
+        if argument == "on" or argument == "off" then
+            local ok, reason = trial:Request(argument == "on")
+            emit("Logres petbardriver: " .. (ok and "requested" or "rejected")
+                .. " (" .. tostring(reason) .. ")")
+        elseif argument ~= "check" then
+            emit("Logres petbardriver: use on, off, or check")
+        end
+        Logres:RunPetBarDriverCheck()
         return
     end
 
@@ -5401,20 +5428,20 @@ Logres:RegisterDevPanelAction(
 )
 Logres:RegisterDevPanelAction(
     "petCombatTrialOn",
-    "Pet Combat Trial ON (BLOCKED)",
-    "petcombat on",
+    "Native Pet Bar ON (TEST)",
+    "petbardriver on",
     "H"
 )
 Logres:RegisterDevPanelAction(
     "petCombatTrialOff",
-    "Pet Combat Trial OFF",
-    "petcombat off",
+    "Native Pet Bar OFF",
+    "petbardriver off",
     "H"
 )
 Logres:RegisterDevPanelAction(
     "petCombatTrialCheck",
-    "Pet Combat Trial Check",
-    "petcombat check",
+    "Native Pet Bar Check",
+    "petbardriver check",
     "H"
 )
 Logres:RegisterDevPanelAction(

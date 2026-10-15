@@ -26,9 +26,9 @@ for bad in ('petCombatCandidate()', 'candidate:Disarm(', 'candidate:Reconcile(')
     if bad in N:errors.append('old unsafe native hook remains: '+bad)
 for name,frag in {
  'quarantine diagnostics':'Logres petcombat: QUARANTINED',
- 'ON retained in Phase H':'"Pet Combat Trial ON (BLOCKED)"',
- 'OFF retained in Phase H':'"Pet Combat Trial OFF"',
- 'check retained in Phase H':'"Pet Combat Trial Check"',
+ 'ON retained in Phase H':'"Native Pet Bar ON (TEST)"',
+ 'OFF retained in Phase H':'"Native Pet Bar OFF"',
+ 'check retained in Phase H':'"Native Pet Bar Check"',
  'command retained':'command == "petcombat"',
  'rejections reported':'tostring(trial.rejections)',
 }.items():

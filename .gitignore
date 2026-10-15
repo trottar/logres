@@ -27,3 +27,11 @@ build/
 .env
 .env.*
 local/
+
+# P0210: local patch extraction and Windows download metadata only
+/P[0-9][0-9][0-9][0-9]*_APPLY.py
+/P[0-9][0-9][0-9][0-9]*_README.txt
+/P[0-9][0-9][0-9][0-9]*_PAYLOAD/
+*.zip:Zone.Identifier
+/LOGRES_DIAGNOSTICS_LATEST.lua
+/LOGRES_SCREEN_MAP_V4.json

@@ -1,0 +1,13 @@
+# P0209 R6 — Retain Logres pet controls during native-anchor diagnostic
+
+Date 2026-10-14. Status: PREPARED / LOCAL / UNVERIFIED / NOT PUSHED.
+
+Replaces the unsafe R5 immediate Logres probe suppression with a fail-open native-bar anchor visibility stage. Leaves the user-visible, working secure Logres pet actions active and unfenced throughout the trial; the native PetActionBar is moved only out of combat and may retain its independent Blizzard visibility policy. `armed=true` records only anchor acquisition, not presentation or click success. All existing Phase H 18 actions, PetFrame native ownership, full stock restoration token, and old P0206 quarantine remain intact.
+
+R5 R1 actual user result (0.0.117-dev loadCount 274): ON `requested=true armed=true activations=1`, OFF `restores=1`, repeated ON/OFF `activations=2 restores=2`, yet **Logres pet action surface disappeared on ON and returned on OFF**. Native presence at the relocated location was not visually confirmed. Therefore R5 R1 **RUNTIME FAIL (native visual handoff)**, NOT accepted. Earlier R0/R1 static, R2 combat swap, R3/R4 Edit Mode, R5 original prewrite and P0206/P0197 negative evidence remain OPEN. The independent Blizzard PetActionBar show/hide policy makes root SetPoint success insufficient to assert UI replacement. See `../evidence/P0209_R6_NATIVE_ANCHOR_VISIBILITY_ISOLATION.md`.
+
+Apply requires exact P0209 R5 R1 manifest digests and pushed P0208 HEAD. All repository static checkers and `git diff --check` must pass before tracked writes. Runtime test is geometry/visibility only; no commit/push until a native button bar has been visibly demonstrated and secure actions/restoration are proven.
+
+## R6 actual result and R7 bounded next gate
+
+P0209 R7 LOCAL / MANUAL TWO-STEP NATIVE HANDOFF (2026-10-14): R6 0.0.118-dev loadCount 275 user-confirmed ON/OFF staging/restoration **PASS** (activations=1 restores=1 failures=0), with both native and Logres pet buttons retained in the ON visual. Interaction, combat, Edit Mode and native ownership still UNVERIFIED. R7 default-OFF candidate: first ON reproduces R6 staging without suppression; second ON (only outside combat, after explicit human visual inspection) calls existing addon-owned `PetActionExecutionProbe:HideProbe`; it never hides Blizzard buttons or invents a second action executor. OFF restores stock anchor and re-arms Logres. Repeat R5 visual disappearance is an explicit FAIL, not acceptance. Historical P0209 R0/R1 prewrite, R2 combat swap, R3/R4 activation, R5 visual and original R5 prewrite, and P0206/P0197 problems remain recorded. No commit/push. Evidence: `docs/memory/evidence/P0209_R7_TWO_STEP_HANDOFF_EVIDENCE.md`.

@@ -2,7 +2,7 @@
 ## Title: Logres
 ## Notes: Immersive, world-first interface for World of Warcraft Forever.
 ## Author: trottar
-## Version: 0.0.113-dev
+## Version: 0.0.120-dev
 ## SavedVariables: LogresDB, LogresDiagnosticsDB
 
 Core\Bootstrap.lua
@@ -35,6 +35,7 @@ Immersion\Controller.lua
 Immersion\NativeAccess.lua
 Immersion\NativeSurfaceReplacement.lua
 Immersion\PetCombatCandidate.lua
+Immersion\PetBarVisibilityTrial.lua
 Navigation\Compass.lua
 Navigation\NavigationSourceProbe.lua
 Quest\ContextVisual.lua

@@ -1,0 +1,13 @@
+P0210 — local working-tree hygiene and R8 partial runtime evidence
+HEAD: f6b9a3a58bfc9081043455038df33b706c6e9e6f
+INPUT: P0209 R8 manifest verified before write
+RUNTIME: P0209 R8 initial reload and OFF/ON visibility user-confirmed; other checks unverified
+CHANGES: docs and .gitignore only; no generated-file removal or Git stage
+2ddc66844f851da7f3d570a37412403cf0c3e7ba9de6ff95a543f6c6fe358cc7  .gitignore
+d7e21a9c5c3217a1d46e7c183cfb203782567a2d507ade6a8b20f6080a084fd4  docs/memory/CURRENT.md
+1c5c5b52bf8ac4dc5eb0be2f3a081e6d4be3812b71ad47e7ba91415a36e99d41  docs/memory/evidence/P0210_WORKTREE_RECONCILIATION.md
+f4039f78d3807a408d486d9c87005513f16c9dc7e956dbebb55ac9dfc6d892ce  docs/memory/handoffs/CURRENT_HANDOFF.md
+d1aefcec13d832d850f5c8a49f5ce8a7f13556dbae2f2a9147a8cbe80523c507  docs/memory/investigations/ACTIVE.md
+0f78e27c5235476a713a690604ed9948bbf5bb0e47a6d06525b3e24b018e1ab5  docs/memory/patches/P0210_WORKTREE_RECONCILIATION.md
+4ba78ac298885dd281b52e6bce036267f144fafb5b6655f27643065f63d694b3  docs/memory/patches/PATCH_INDEX.md
+03babba49e3bbbe47c20f1730479cf513029c6457802bc15e563bb6173d3ff38  docs/memory/roadmap/STATUS.md

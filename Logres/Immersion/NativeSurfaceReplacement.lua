@@ -308,6 +308,9 @@ function Native:Toggle(domain)
         -- Explicit stock access: never toggle pet suppression. Reconcile
         -- can restore a prior addon snapshot only out of combat.
         self.manual.pet = nil
+        -- P0209: native access disarms the opt-in visibility driver first.
+        local trial = Logres:GetModule("PetBarVisibilityTrial")
+        if not trial:ToggleNativeAccess() then return false end
         self:Reconcile("pet-stock-access")
         return true
     end
