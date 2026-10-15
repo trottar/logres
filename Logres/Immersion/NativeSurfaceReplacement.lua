@@ -55,6 +55,12 @@ function Native:PreparePetInteraction()
         return false
     end
     self.petInteraction = button
+    -- P0211: complete the one-time secure pet-unit dependency handoff.
+    -- Only notify after the addon-owned interaction is configured.
+    local trial = Logres:GetModule("PetBarVisibilityTrial")
+    if trial:IsEnabled() then
+        trial:Reconcile("pet-unit-interaction-ready")
+    end
     return true
 end
 

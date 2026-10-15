@@ -130,6 +130,7 @@ function Trial:Arm()
     self.activations = self.activations + 1
     self.lastError = nil
     self.lastReason = "secure-blizzard-pet-surfaces-suppressed-unverified"
+    if not self.firstArmEvent then self.firstArmEvent = self.lastEvent end
     return true
 end
 
@@ -191,6 +192,11 @@ end
 
 function Trial:Reconcile(reason)
     self.lastEvent = reason
+    -- Track addon-owned, event-driven dependency wakeups only.
+    if reason == "pet-probe-armed" or reason == "pet-unit-interaction-ready" then
+        self.readinessWakeups = self.readinessWakeups + 1
+        self.lastReadinessWake = reason
+    end
     local want = Logres:GetPreference("immersionEnabled") == true
         and not self.manualOpen and not self.editModeSuspended
     if InCombatLockdown() then
@@ -251,6 +257,11 @@ function Trial:GetDebugStatus()
         mode = "immersive-stock-pet-suppression-logres-active",
         manualOpen = self.manualOpen,
         editModeGate = self.lastEditModeGate,
+        firstArmEvent = self.firstArmEvent,
+        startupWorldArmed = self.startupWorldArmed,
+        startupWorldReason = self.startupWorldReason,
+        readinessWakeups = self.readinessWakeups,
+        lastReadinessWake = self.lastReadinessWake,
     }
 end
 
@@ -268,11 +279,21 @@ function Trial:OnInitialize()
     self.lastEvent = "initialize"
     self.lastError = nil
     self.lastEditModeGate = "not-checked"
+    self.firstArmEvent = nil
+    self.startupWorldArmed = nil
+    self.startupWorldReason = "not-observed"
+    self.readinessWakeups = 0
+    self.lastReadinessWake = "none"
     self.eventFrame = CreateFrame("Frame")
     self.eventFrame:SetScript("OnEvent", function(_, event, unit)
         if event == "UNIT_PET" and unit ~= "player" then return end
         if not self:IsEnabled() and not self.pending then return end
         self:Reconcile(event)
+        if event == "PLAYER_ENTERING_WORLD" and self.startupWorldArmed == nil then
+            -- No Blizzard visibility/protected-frame inspection.
+            self.startupWorldArmed = self.armed and "yes" or "no"
+            self.startupWorldReason = self.lastReason
+        end
     end)
 end
 

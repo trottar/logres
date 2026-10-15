@@ -4455,6 +4455,12 @@ function Logres:RunPetBarDriverCheck()
         tostring(trial.failures), tostring(trial.mode), tostring(trial.visual),
         tostring(trial.reason), tostring(trial.event), tostring(trial.error)
     ))
+    emit(string.format(
+        "Logres petbardriver startup: worldArmed=%s worldReason=%s firstArmEvent=%s readinessWakeups=%s lastWake=%s editModeGate=%s (addon-owned status, NOT native visibility)",
+        tostring(trial.startupWorldArmed), tostring(trial.startupWorldReason),
+        tostring(trial.firstArmEvent), tostring(trial.readinessWakeups),
+        tostring(trial.lastReadinessWake), tostring(trial.editModeGate)
+    ))
 end
 
 function Logres:RunUIOwnershipCheck()

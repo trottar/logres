@@ -381,6 +381,13 @@ function Probe:Arm()
     self.armed = true
     self.lastArmReason = "armed"
     self.cluster:Show()
+    -- P0211: signal the *actual* secure-probe readiness transition.
+    -- Event delivery order at initial login need not match module order;
+    -- do not poll or touch Blizzard presentation to recover readiness.
+    local trial = Logres:GetModule("PetBarVisibilityTrial")
+    if trial:IsEnabled() then
+        trial:Reconcile("pet-probe-armed")
+    end
     return true, self.lastArmReason
 end
 
