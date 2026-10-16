@@ -454,11 +454,11 @@ end
 
 function ActiveQuest:AmbientPhrase(snapshot)
     if snapshot.ready == true then
-        return "Ready to return."
+        return "READY TO TURN IN"
     end
 
     if snapshot.complete == true then
-        return "The task is complete."
+        return "QUEST COMPLETE"
     end
 
     local anyFinished = false
@@ -561,10 +561,11 @@ end
 function ActiveQuest:Render(snapshot, reason)
     local progress =
         Logres:GetModule("QuestObjectiveProgress")
-    local titleColor = colorValue("title")
     local completeVisual =
         snapshot.ready == true
         or snapshot.complete == true
+    local titleColor =
+        completeVisual and colorValue("complete") or colorValue("title")
     local ambientColor =
         completeVisual
         and colorValue("complete")
@@ -604,6 +605,31 @@ function ActiveQuest:Render(snapshot, reason)
         glyphColor[3],
         glyphColor[4]
     )
+
+    -- Header-only sheet-10 heraldic completion treatment. Quest state is
+    -- already known from the existing safe snapshot; no new source reads.
+    if completeVisual then
+        local dividerColor = colorValue("completionDivider")
+        self.divider:SetVertexColor(
+            dividerColor[1], dividerColor[2],
+            dividerColor[3], dividerColor[4]
+        )
+        self.completionRule:SetColorTexture(
+            dividerColor[1], dividerColor[2],
+            dividerColor[3], dividerColor[4]
+        )
+        self.completionRule:Show()
+        local sealColor = colorValue("completionSeal")
+        self.completionSeal:SetVertexColor(
+            sealColor[1], sealColor[2],
+            sealColor[3], sealColor[4]
+        )
+        self.completionSeal:Show()
+    else
+        self.divider:SetVertexColor(1, 1, 1, 1)
+        self.completionRule:Hide()
+        self.completionSeal:Hide()
+    end
 
     self.displayRows = {}
 
@@ -975,12 +1001,29 @@ function ActiveQuest:OnInitialize()
             or "Interface\\Buttons\\WHITE8x8"
     )
 
+    local completionRule = root:CreateTexture(nil, "OVERLAY")
+    completionRule:SetPoint("TOPLEFT", root, "TOPLEFT", 16, -79)
+    completionRule:SetPoint("TOPRIGHT", root, "TOPRIGHT", -16, -79)
+    completionRule:SetHeight(2)
+    completionRule:Hide()
+
+    local completionSeal = root:CreateTexture(nil, "OVERLAY")
+    completionSeal:SetSize(20, 20)
+    completionSeal:SetPoint("TOPRIGHT", root, "TOPRIGHT", -18, -56)
+    completionSeal:SetTexture(
+        activeAssets.glyph
+            or "Interface\\Buttons\\WHITE8x8"
+    )
+    completionSeal:Hide()
+
     self.root = root
     self.panel = panel
     self.glyph = glyph
     self.title = title
     self.ambient = ambient
     self.divider = divider
+    self.completionRule = completionRule
+    self.completionSeal = completionSeal
     self.rows = {}
 
     local rowHeight = styleValue("rowHeight")

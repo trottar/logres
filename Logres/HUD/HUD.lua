@@ -767,7 +767,7 @@ function HUD:OnInitialize()
     local resourceBar = createPercentageBar(
         root,
         "LogresHUDResourceBar",
-        "normal",
+        "resource",
         percentageBarColors.alternate or DEFAULT_RESOURCE_COLOR
     )
     resourceBar:SetPoint("CENTER", root, "CENTER", 0, -118)

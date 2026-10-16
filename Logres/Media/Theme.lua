@@ -57,6 +57,16 @@ theme.nativeAccessDock = {
 }
 
 theme.percentageBar = {
+    -- Sheet 02: slightly longer player resource, without altering target/quest fit.
+    resource = {
+        trackWidth = 210,
+        trackHeight = 12,
+        frameHeight = 20,
+        textWidth = 38,
+        textGap = 8,
+        diamondSize = 12,
+        font = "GameFontNormal",
+    },
     normal = {
         trackWidth = 142,
         trackHeight = 12,
@@ -278,7 +288,9 @@ theme.activeQuest = {
         title = { 0.94, 0.84, 0.62, 1.00 },
         ambient = { 0.70, 0.64, 0.51, 0.94 },
         objective = { 0.82, 0.76, 0.64, 0.96 },
-        complete = { 0.94, 0.72, 0.32, 1.00 },
+        complete = { 1.00, 0.85, 0.40, 1.00 },
+        completionDivider = { 1.00, 0.82, 0.38, 1.00 },
+        completionSeal = { 1.00, 0.88, 0.51, 1.00 },
         progress = { 0.63, 0.45, 0.16, 1.00 },
         progressComplete = { 0.82, 0.64, 0.24, 1.00 },
         hover = { 0.86, 0.72, 0.44, 0.10 },

@@ -133,11 +133,6 @@ function ActionButton.CreateCluster(
     cluster:SetFrameStrata("MEDIUM")
     cluster:SetAlpha(alpha or 1)
 
-    local backdrop = cluster:CreateTexture(nil, "BACKGROUND")
-    backdrop:SetPoint("TOPLEFT", cluster, "TOPLEFT", -7, 7)
-    backdrop:SetPoint("BOTTOMRIGHT", cluster, "BOTTOMRIGHT", 7, -7)
-    backdrop:SetColorTexture(0.025, 0.022, 0.018, 0.78)
-
     return cluster
 end
 
