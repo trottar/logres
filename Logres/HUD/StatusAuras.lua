@@ -10,6 +10,9 @@ local MAX_SCAN = 6
 local MAX_ICONS = 5
 local ICON_SIZE = 25
 local GAP = 3
+local statusStyle = (Logres.Theme and Logres.Theme.statusAura) or {}
+local statusAssets = statusStyle.assets or {}
+local urgentRailColor = statusStyle.urgentRailColor or { 0.97, 0.65, 0.35, 0.95 }
 
 local FILTERS = {
     player = {
@@ -226,19 +229,44 @@ local function createLane(unit, point, relativePoint, offsetX, offsetY, laneName
         local border = slot:CreateTexture(nil, "OVERLAY")
         border:SetAllPoints(slot)
         border:SetTexture(
-            (Logres.Theme and Logres.Theme.playerHelpfulAuras
+            statusAssets.frame
+            or (Logres.Theme and Logres.Theme.playerHelpfulAuras
             and Logres.Theme.playerHelpfulAuras.assets
             and Logres.Theme.playerHelpfulAuras.assets.frame)
             or "Interface\\Buttons\\UI-Quickslot2"
         )
+        -- Only addon-owned ordinary status presentations are decorated here.
+        local urgentRail = slot:CreateTexture(nil, "OVERLAY")
+        urgentRail:SetPoint("TOPLEFT", slot, "TOPLEFT", 2, -2)
+        urgentRail:SetSize(
+            statusStyle.urgentRailWidth or 11,
+            statusStyle.urgentRailHeight or 2
+        )
+        urgentRail:SetColorTexture(
+            urgentRailColor[1], urgentRailColor[2],
+            urgentRailColor[3], urgentRailColor[4]
+        )
+        urgentRail:Hide()
+        local countPlate = slot:CreateTexture(nil, "OVERLAY")
+        countPlate:SetSize(
+            statusStyle.countWidth or 18,
+            statusStyle.countHeight or 12
+        )
+        countPlate:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", 1, -1)
+        countPlate:SetTexture(statusAssets.countPlate)
+        countPlate:Hide()
         local marker = slot:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
         marker:SetPoint("TOPLEFT", slot, "TOPLEFT", 0, 2)
         local count = slot:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-        count:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", 2, -2)
+        count:SetAllPoints(countPlate)
+        count:SetJustifyH("CENTER")
+        count:SetJustifyV("MIDDLE")
+        count:SetShadowColor(0, 0, 0, 0.98)
         count:SetShadowOffset(1, -1)
         local item = {
             frame = slot, icon = icon, border = border,
-            marker = marker, count = count, unit = unit,
+            marker = marker, count = count, countPlate = countPlate,
+            urgentRail = urgentRail, unit = unit,
         }
         slot:SetScript("OnEnter", function(current)
             if type(item.index) ~= "number"
@@ -287,12 +315,15 @@ local function renderLane(lane, rows, shown)
             item.icon:SetTexture(aura.icon)
             local color = COLORS[aura.kind] or COLORS.harmful
             item.border:SetVertexColor(color[1], color[2], color[3], color[4])
+            item.urgentRail:SetShown(aura.kind == "urgent")
             item.marker:SetText(aura.kind == "urgent" and "!"
                 or aura.kind == "helpful" and "+" or "-")
             if aura.applications and aura.applications > 1 then
                 item.count:SetFormattedText("%.0f", aura.applications)
+                item.countPlate:Show()
             else
                 item.count:ClearText()
+                item.countPlate:Hide()
             end
             item.frame:Show()
         else
@@ -300,6 +331,8 @@ local function renderLane(lane, rows, shown)
             item.filter = nil
             item.icon:SetTexture(nil)
             item.count:ClearText()
+            item.countPlate:Hide()
+            item.urgentRail:Hide()
             item.frame:Hide()
         end
     end

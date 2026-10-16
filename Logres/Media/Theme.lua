@@ -33,6 +33,19 @@ theme.action = {
 
 
 -- H.3: same approved action geometry; stronger metadata separation.
+theme.statusAura = {
+    -- Sheet 04: restrained urgency and reserved lower-right native stack metadata.
+    countWidth = 18,
+    countHeight = 12,
+    urgentRailWidth = 11,
+    urgentRailHeight = 2,
+    urgentRailColor = { 0.97, 0.65, 0.35, 0.95 },
+    assets = {
+        frame = MEDIA_ROOT .. "Aura\\aura_frame_passive.tga",
+        countPlate = MEDIA_ROOT .. "Aura\\aura_count_plate.tga",
+    },
+}
+
 theme.nativeHarmfulAuras = {
     iconSize = 25,
     gap = 3,
