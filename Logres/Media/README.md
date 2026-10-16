@@ -221,3 +221,7 @@ Canonical art reference:
 Blizzard player aura presentation remains visible and complete. P0137 does not
 claim player harmful/urgent, target, private, or group aura ownership and does
 not authorize stock suppression.
+
+## P0214 — approved sheet-03 action production refresh
+
+The five shared 64x64 RGBA TGA action textures are a direct visual-family derivative of the approved sheet-03 reference state study, with an intentionally transparent game-icon center. Shared action UI continues to use the same Theme paths, 42px secure buttons, 5px spacing, and fixed approved v4 bar anchors. Production asset hashes are checked by `tools/check_action_visual_contract.py` and `tools/check_h3_approved_action_derivative_contract.py`. The canonical approved reference PNG is unchanged. This is not a claim that gameplay feedback or visual rendering has been accepted yet.

@@ -8,7 +8,7 @@ BUTTON = ROOT / "Logres" / "Actions" / "Button.lua"
 TOC = ROOT / "Logres" / "Logres.toc"
 ACTION_DIR = ROOT / "Logres" / "Media" / "Action"
 
-EXPECTED = {'action_hover.tga': 'e82fa599975ae30e7d903fe291d12735adac37ab084d89d2da6b28f6b1c63467', 'action_pressed.tga': 'a22ab9563733c8d238274150973e407569ca997b5778ef7506d15ce8a55d14c9', 'action_flash.tga': '02dcff00105ea42df4505bdbed154ce4b6933cca1db7557bbdec2f071a50b779', 'action_frame.tga': '2378b8a9785f48de8159977768e2c306ffd4cfdf4d6a4994a04f6394c2de1289', 'action_checked.tga': 'fe619646cb543062344d9f78935a1456f773e61a1c7ebaa1a68e3d97537377c7'}
+EXPECTED = {'action_hover.tga': '138e5618d562bc844939059148fc5f474a7895ab65bd10864e1176f82274b5b5', 'action_pressed.tga': 'ba5e9beb0d1a9aa3e583e8f6beb35ebfe1fd208a23d31350a736a06cbe54e929', 'action_flash.tga': 'd46219de5bd4014af6d734cf4baad943e9765d99af5446fef0fb9fc499e43cb3', 'action_frame.tga': 'c6bdf768435e6e4adc2a50302f727676b1d3042866359adb34039f961dd32f55', 'action_checked.tga': '0bfc4a317cc5a1ab344808f8f219d16706ef2d631f1e0a96671bc7974d82e88a'}
 
 errors = []
 

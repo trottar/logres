@@ -1,0 +1,5 @@
+# P0214 — Approved action sheet-03 derivative, asset-only visual-family translation
+
+Prepared after verified P0213 `18dee5f`. Changes the five shared 64x64 RGBA TGA files `Logres/Media/Action/action_{frame,hover,pressed,checked,flash}.tga` to visually follow exact D-039 sheet 03, with original spell icon unchanged, plus asset hash/checker updates, version `0.0.123-dev`, and linked repository memory/evidence. No secure/normal Lua logic, action counts, v4 bar coordinates, native UI policy, or pet driver edits. Original approved reference PNG unchanged. WSL applier baseline guards and runs every repository `tools/check_*.py` on a shadow copy, then `git diff --check`; no commits or pushes.
+
+**Acceptance:** in-client visual comparison + developer panel C Action Check / Feedback Test, H H.2 Map / Layout Check and 0 Run All. If art rendering or usability regresses, do not commit; preserve FAIL. Future scaling and limited placement is allowed only with actual screenshot/geometry evidence. Art appearance and protected clicks remain UNVERIFIED until tested.
