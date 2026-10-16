@@ -409,6 +409,10 @@ function Native:OnInitialize()
     end)
     local dock = _G.LogresNativeAccessDock
     if dock then
+        local dockStyle = (Logres.Theme and Logres.Theme.nativeAccessDock) or {}
+        local dockAssets = dockStyle.assets or {}
+        local dockText = dockStyle.fallbackText or { 0.96, 0.86, 0.66, 1.00 }
+        local dockHover = dockStyle.fallbackHover or { 0.68, 0.47, 0.20, 0.25 }
         self.buttons = {}
         local row = CreateFrame("Frame", nil, UIParent)
         row:SetSize(342, 23)
@@ -422,9 +426,33 @@ function Native:OnInitialize()
             {"targetAuras", 232}}
         for _, spec in ipairs(groups) do
             local key, x = spec[1], spec[2]
-            local button = CreateFrame("Button", nil, row, "UIPanelButtonTemplate")
+            -- Native stock fallback remains an ordinary addon-owned button;
+            -- no template-red chrome, unit/aura read, or protected operation.
+            local button = CreateFrame("Button", nil, row)
             button:SetSize(110, 23)
             button:SetPoint("TOPLEFT", row, "TOPLEFT", x, 0)
+            local base = button:CreateTexture(nil, "BACKGROUND")
+            base:SetAllPoints(button)
+            base:SetColorTexture(0.035, 0.029, 0.020, 0.74)
+            local bronze = button:CreateTexture(nil, "BORDER")
+            bronze:SetAllPoints(button)
+            bronze:SetTexture(dockAssets.fallback)
+            local hover = button:CreateTexture(nil, "HIGHLIGHT")
+            hover:SetAllPoints(button)
+            hover:SetColorTexture(
+                dockHover[1], dockHover[2], dockHover[3], dockHover[4]
+            )
+            button:SetHighlightTexture(hover)
+            local pressed = button:CreateTexture(nil, "ARTWORK")
+            pressed:SetAllPoints(button)
+            pressed:SetColorTexture(0.62, 0.40, 0.14, 0.22)
+            button:SetPushedTexture(pressed)
+            local text = button:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+            text:SetAllPoints(button)
+            text:SetTextColor(dockText[1], dockText[2], dockText[3], dockText[4])
+            text:SetShadowColor(0, 0, 0, 0.95)
+            text:SetShadowOffset(1, -1)
+            button:SetFontString(text)
             button:SetText(LABELS[key])
             button:RegisterForClicks("LeftButtonUp")
             button:SetScript("OnClick", function() self:Toggle(key) end)

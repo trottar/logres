@@ -98,6 +98,7 @@ local NativeAccess = Logres:RegisterModule("NativeAccess", {
         Logres.Layout.Bind(dock, "nativeAccess", "TOPRIGHT", "TOPRIGHT")
         self.dock = dock
         local dockStyle = (Logres.Theme and Logres.Theme.nativeAccessDock) or {}
+        local dockAssets = dockStyle.assets or {}
         local dockBackground = dockStyle.background or { 0.035, 0.030, 0.024, 0.76 }
         local dockRule = dockStyle.ruleColor or { 0.42, 0.31, 0.18, 0.82 }
         local stockRule = dockStyle.stockRule or { 0.70, 0.49, 0.22, 0.96 }
@@ -121,6 +122,12 @@ local NativeAccess = Logres:RegisterModule("NativeAccess", {
                 dockBackground[1], dockBackground[2],
                 dockBackground[3], dockBackground[4]
             )
+            -- P0217: authored bronze-only presentation; the existing procedural
+            -- base and native-access click/fallback remain if art cannot load.
+            local bronze = button:CreateTexture(nil, "BORDER")
+            bronze:SetAllPoints(button)
+            bronze:SetTexture(dockAssets.tab)
+            bronze:SetAlpha(index == 1 and 1.00 or 0.84)
             local ruleColor = index == 1 and stockRule or dockRule
             local rule = button:CreateTexture(nil, "BORDER")
             rule:SetPoint("BOTTOMLEFT", button, "BOTTOMLEFT", 2, 1)

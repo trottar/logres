@@ -805,6 +805,15 @@ function HUD:OnInitialize()
         percentageBarColors.targetHealth or DEFAULT_TARGET_COLOR
     )
     targetHealthBar:SetPoint("TOP", targetNameText, "BOTTOM", 0, -4)
+    -- Approved sheet-06 sparse name/bar identity; no source read or level icon.
+    local targetAccentColor = hudTypography.targetAccent or { 0.70, 0.47, 0.22, 0.74 }
+    local targetAccent = targetFrame:CreateTexture(nil, "ARTWORK")
+    targetAccent:SetPoint("TOP", targetHealthBar, "BOTTOM", 0, -5)
+    targetAccent:SetSize(46, 1)
+    targetAccent:SetColorTexture(
+        targetAccentColor[1], targetAccentColor[2],
+        targetAccentColor[3], targetAccentColor[4]
+    )
 
     self.targetFrame = targetFrame
     self.targetNameText = targetNameText
@@ -854,12 +863,24 @@ function HUD:OnInitialize()
         nameText:SetWidth(80)
         nameText:SetJustifyH("LEFT")
         local allyNameColor = hudTypography.allyName or { 0.89, 0.84, 0.74, 1.00 }
+        local nameColor = unit == "pet"
+            and (hudTypography.petName or allyNameColor) or allyNameColor
         nameText:SetTextColor(
-            allyNameColor[1], allyNameColor[2],
-            allyNameColor[3], allyNameColor[4]
+            nameColor[1], nameColor[2],
+            nameColor[3], nameColor[4]
         )
         nameText:SetShadowColor(0, 0, 0, 0.94)
         nameText:SetShadowOffset(1, -1)
+        local rowAccentColor = unit == "pet"
+            and (hudTypography.petAccent or { 0.73, 0.51, 0.27, 0.82 })
+            or (hudTypography.allyAccent or { 0.46, 0.34, 0.20, 0.65 })
+        local rowAccent = rowFrame:CreateTexture(nil, "ARTWORK")
+        rowAccent:SetPoint("BOTTOMLEFT", rowFrame, "BOTTOMLEFT", 0, 2)
+        rowAccent:SetSize(52, 1)
+        rowAccent:SetColorTexture(
+            rowAccentColor[1], rowAccentColor[2],
+            rowAccentColor[3], rowAccentColor[4]
+        )
 
         local healthBar = createPercentageBar(
             rowFrame,

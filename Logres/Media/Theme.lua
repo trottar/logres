@@ -45,6 +45,10 @@ theme.nativeHarmfulAuras = {
 theme.hudTypography = {
     targetName = { 0.97, 0.91, 0.80, 1.00 },
     allyName = { 0.89, 0.84, 0.74, 1.00 },
+    petName = { 0.98, 0.89, 0.69, 1.00 },
+    targetAccent = { 0.70, 0.47, 0.22, 0.74 },
+    allyAccent = { 0.46, 0.34, 0.20, 0.65 },
+    petAccent = { 0.73, 0.51, 0.27, 0.82 },
 }
 
 theme.nativeAccessDock = {
@@ -54,6 +58,12 @@ theme.nativeAccessDock = {
     label = { 0.78, 0.72, 0.62, 0.96 },
     stockLabel = { 0.96, 0.85, 0.63, 1.00 },
     hover = { 0.66, 0.47, 0.22, 0.18 },
+    fallbackText = { 0.96, 0.86, 0.66, 1.00 },
+    fallbackHover = { 0.68, 0.47, 0.20, 0.25 },
+    assets = {
+        tab = MEDIA_ROOT .. "Dock\\dock_tab.tga",
+        fallback = MEDIA_ROOT .. "Dock\\dock_fallback.tga",
+    },
 }
 
 theme.percentageBar = {
