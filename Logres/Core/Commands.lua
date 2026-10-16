@@ -4891,6 +4891,22 @@ local function handleCommand(message)
         return
     end
 
+    if command == "compassartpreview" then
+        if argument ~= "on" and argument ~= "off" then
+            emit("Logres compass art: choose on or off")
+            return
+        end
+        local compass = Logres:GetModule("Compass")
+        if not compass or type(compass.SetArtworkPreview) ~= "function" then
+            emit("Logres compass art: UNAVAILABLE")
+            return
+        end
+        local ok, reason = compass:SetArtworkPreview(argument == "on")
+        emit("Logres compass art: " .. (ok and "PASS" or "DEFERRED")
+            .. " (" .. tostring(reason) .. "; visual preview only)")
+        return
+    end
+
     if command == "waypointprobe" then
         runWaypointProbe()
         return
@@ -5292,6 +5308,18 @@ Logres:RegisterDevPanelAction(
     "compassCheck",
     "Compass Check",
     "compasscheck",
+    "E"
+)
+Logres:RegisterDevPanelAction(
+    "compassArtOn",
+    "Compass Art ON",
+    "compassartpreview on",
+    "E"
+)
+Logres:RegisterDevPanelAction(
+    "compassArtOff",
+    "Compass Art OFF",
+    "compassartpreview off",
     "E"
 )
 Logres:RegisterDevPanelAction(

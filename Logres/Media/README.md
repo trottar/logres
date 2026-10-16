@@ -241,3 +241,7 @@ Two additive RGBA TGA assets in `Dock/`: `dock_tab.tga` (96x34) and `dock_fallba
 ## P0218 compact status/aura state presentation
 
 `StatusAuras` continues to use Blizzard-native aura icons, its approved passive frame, and the source/tooltip gates already in place. For ordinary addon-owned visible auras, P0218 reuses the existing `Aura/aura_count_plate.tga` behind valid stack-count text and a narrow Theme-colored urgent-only top rule. The primary visual authority is sheet 04: actual icon dominant, restrained urgency, lower-right stacks without invented duration/sweep. `NativeDebuffs.lua` stays Blizzard-native secure and unchanged; `PlayerHelpfulAuras.lua` retains its accepted original treatment. This is not a claim of populated harmful live-state proof.
+
+## P0219 compass approved secondary role assets
+
+The three new TGA files in `Compass/` are direct small-scale redraws of approved sheet-12 roles: quest pennon (10x18 px runtime art), neutral bronze/bone local POI seal (9x9), and muted-amber tracking facet (4x5). `Theme.compass` defines asset paths and role sizes; production `Compass.lua` creates noninteractable textures that are **hidden except during explicit developer-panel art preview**. They are not sourced from or claiming real quest/POI/tracking detections. Heading/manual waypoint artwork, bearing source, stock minimap and v4 anchors are unchanged.

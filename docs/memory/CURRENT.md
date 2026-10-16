@@ -7,31 +7,33 @@ project: logres
 # Current State
 
 ## Active Objective
-Phase H.3 implementation of the twelve approved visual sheets under `docs/design/approved/`, within frozen D-039 and v4 D-045 layout. GitHub `main` P0217 `b841afa39ca15edfad12ac8f675efcb80acd0df6` verified. User confirms P0217 dock and sparse unit presentation function and look as expected; P0214–P0217 observed visual work is accepted within tested scope, with optional final refinement deferred.
+Phase H.3: finish actual compass visual and source capabilities against the accepted D-037/D-038/D-039 compass direction. The user explicitly corrected the premature classification of sheet 12 as mostly done. P0218 is verified on GitHub `main` at `157e09c`; in-game `0.0.127-dev` loadCount 288 panel status/preview/Run All passed the tested state; harmful live population remains deferred. P0219's focus is the compass, not NPC quest controls.
 
 ## Current Work Item
-**P0218** `0.0.127-dev` presentation-only H.3 sheet-04 compact StatusAuras candidate. Reuse the existing approved aura count-plate TGA behind true stack counts, and show a thin warm rail only for already classified urgent visible addon-owned status icons. Preserve native WoW icons, established icon bounds/ordering, existing status source/read/tooltip safety, the secure NativeDebuffs renderer, Blizzard aura fallback, and original player-helpful presentation. No new source, gameplay decision, suppression, v4 geometry or polling.
+**P0219 candidate (`0.0.128-dev`):** produce the missing quest pennon / POI roundel / tracking pip textures from approved sheet 12, register the three separate lane-role dimensions in Theme, and expose a clearly marked developer-panel compass **art preview**. Preview glyph positions are illustrative **only** and never feed real compass bearings. Retain heading and manual waypoint exact-source pipeline unchanged; preserve Blizzard minimap and all other fallbacks. The three roles remain unavailable in ordinary live display until a supported source proves individual world positions.
 
 ## Verified State
-- GitHub main `b841afa` P0217 verified. `0.0.126-dev` loadCount 287 latest ordinary world Run All completes, 13/13 v4 measured, native access/action/stock/restoration PASS and 17 ownership PASS/18 intentionally STOCK/0 FAIL; user confirms P0217 tested appearance and interaction. No obvious new regression in that scope.
-- Native harmful renderer remains active, but real populated harmful-icon membership and multi-effect display remain environmentally unverified. Latest source has target helpful positive evidence; do not conflate this with harmful coverage. Old combat-time and pet failure evidence remains preserved.
-- P0218 has no WoW proof until user performs panel previews and tests. This is a controlled visual translation, not completion of the whole UI.
+- GitHub `main` `157e09c` P0218 verified; P0218 has no observed failure in uploaded 0.0.127-dev load count 288 panel preview/test, though naturally populated harmful aura remains unverified. Historical failures/deferrals preserved.
+- Existing Compass module renders a heading tape + fixed center gnomon + manual user-waypoint diamond. P0213 only improved cardinal/intercardinal label contrast. Missing approved role art: quest, POI, tracking, plus multi-role production lanes, center-focus identity, name fade and collision logic.
+- P0142/P0143 navigation source evidence: tracking-selection metadata supports multi-select but does not yield detected entity positions. Quest destination and current-map AreaPOI positioned outputs were not observed in the tested environment. `NavigationSourceProbe.lua` is an existing read-only source probe; do not fake data, patch in polling, or suppress native minimap.
+- P0219 remains WoW UNVERIFIED until user performs the developer-panel test. Art preview is not runtime proof of navigation source capability.
 
 ## Next Action
-Apply guarded P0218 atop exact verified P0217 HEAD, run all repository static checkers against the prepared shadow, deploy, `/reload`. Developer panel Phase D Status Aura Preview ON/OFF and Status Aura Check, Phase H Native Access Check and Layout Check, Phase 0 Run All. Compare passive, harmful, urgent and 2+ stack plate legibility; ensure preview OFF restores live/stock presentation, and check for errors. If there is no naturally populated harmful unit, record DEFERRED instead of PASS. Do not force or inspect restricted aura sources.
+Apply P0219 guarded applier, deploy, `/reload`. Developer panel Phase E Compass Art Preview ON then OFF + Compass Check; Phase H Navigation Source Probe and H.2 Map / Layout Check; Phase 0 Run All. Visually compare the quest, POI and tracking glyphs/lanes to sheet 12. Check preview OFF leaves only true heading/manual glyphs, no orphan markers, and no errors. Capture read-only navigation probe result and determine the next capability-gated producer slice from actual available outputs.
 
 ## Success Criteria
-- Status visual stack count has a restrained readable approved plate only when an ordinary count greater than one is supplied; no misleading permanent plate.
-- Urgent icon distinction is visually legible through existing frame tint/marker and a narrow warm rule without obscuring native icon or changing classification.
-- All action/pet/native fallback behavior preserved, no new LUA/taint/secret errors in tested ordinary world; source-restricted live harmful states deferred.
+- Three distinct approved navigation glyph assets exist at Theme-owned production paths and use approximate 10x18, 9x9, and 4x5 actual-UI role sizes in a **development-only** preview.
+- The production compass still shows only real source-backed markers; preview OFF, Immersion OFF and module disable remove all preview artifacts. Existing heading/manual controls and stock minimap are unmodified.
+- No newly invented bearings, names, POI services, tracking instances, or magic data; no Lua/taint/secret regressions in tested context. Source capability remains explicitly deferred where not observed.
 
 ## Do Not Reopen Without New Evidence
-No changes to approved action/quest/resource/navigational placement, secure pet driver, native stock controls, PlayerHelpfulAuras look, native harmful member transport, aura source/priority decisions, tooltip protected gates, or exact health/level policy. No assumptions that static checks or preview prove all restricted live states.
+Accepted P0214–P0218 presentation, protected pet driver, action routing, native Blizzard minimap/POI/quest controls, player HP/target information policy, earlier failed and environmental tests, and D-045 v4 anchors. Real navigation roles are not authorized by a visual mock or an unpopulated source probe.
 
 ## Relevant References
-- `docs/memory/evidence/P0218_H3_AURA_STATE_PLATES.md`
-- `docs/memory/patches/P0218_H3_AURA_STATE_PLATES.md`
-- `docs/design/approved/04_status_aura_icon_primitive.png`
+- `docs/design/approved/12_compass_glyph_and_state_sheet.png`
+- `docs/memory/decisions/D-037_NAVIGATION_MARKER_ROLES_AND_MINIMAP_DIRECTION.md`
+- `docs/memory/decisions/D-038_COMPASS_VISUAL_FOCUS_AND_DEPTH_CONTRACT.md`
 - `docs/memory/decisions/D-039_APPROVED_VISUAL_BASELINE.md`
-- `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`
-- `docs/memory/evidence/P0217_H3_NATIVE_DOCK_TARGET_ALLY_ART.md`
+- `docs/memory/evidence/P0219_COMPASS_SHEET12_AND_CAPABILITY_GAP.md`
+- `docs/memory/patches/P0219_COMPASS_SHEET12_AND_CAPABILITY_GAP.md`
+- `docs/memory/evidence/P0144_P0143_NAVIGATION_RUNTIME_PASS_WITH_DEFERRALS_2026-10-05.md`

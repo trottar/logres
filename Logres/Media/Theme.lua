@@ -366,6 +366,9 @@ theme.compass = {
         },
     },
 
+    questDestination = { width = 10, height = 18, alpha = 0.96 },
+    localPOI = { width = 9, height = 9, alpha = 0.90 },
+    tracking = { width = 4, height = 5, alpha = 0.86 },
     manualWaypoint = {
         width = 12,
         height = 20,
@@ -395,6 +398,9 @@ theme.compass = {
         cardinalTick = MEDIA_ROOT .. "Compass\\compass_tick_cardinal.tga",
         intercardinalTick = MEDIA_ROOT .. "Compass\\compass_tick_intercardinal.tga",
         manualWaypoint = MEDIA_ROOT .. "Compass\\compass_manual_waypoint.tga",
+        questDestination = MEDIA_ROOT .. "Compass\\compass_quest_destination.tga",
+        localPOI = MEDIA_ROOT .. "Compass\\compass_local_poi.tga",
+        tracking = MEDIA_ROOT .. "Compass\\compass_tracking.tga",
     },
 }
 

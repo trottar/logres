@@ -14,6 +14,9 @@ local tickStyle = compassStyle.ticks or {}
 local cardinalTickStyle = tickStyle.cardinal or {}
 local intercardinalTickStyle = tickStyle.intercardinal or {}
 local manualWaypointStyle = compassStyle.manualWaypoint or {}
+local questStyle = compassStyle.questDestination or {}
+local poiStyle = compassStyle.localPOI or {}
+local trackingStyle = compassStyle.tracking or {}
 
 local UPDATE_INTERVAL = 0.05
 local WAYPOINT_UPDATE_INTERVAL = 0.15
@@ -265,6 +268,8 @@ local Compass = Logres:RegisterModule("Compass", {
         self.lastWaypointReason = "initialize"
         self.lastWaypointError = nil
 
+        self.artworkPreview = false
+        self.artworkPreviewShown = false
         self.updateActive = false
         self.elapsed = 0
         self.lastReason = "initialize"
@@ -298,6 +303,31 @@ local Compass = Logres:RegisterModule("Compass", {
         self.baseline = baseline
         self.centerMarker = center
         self.waypointMarker = waypointMarker
+        -- These three addon-owned glyphs have no live source. The developer
+        -- preview demonstrates sheet-12 lane/scale fidelity without inventing
+        -- quest/POI/tracking world positions or changing the real compass.
+        self.artworkPreviewMarkers = {}
+        local roles = {
+            { "questDestination", compassAssets.questDestination, questStyle, "BOTTOM", 67, TAPE_Y },
+            { "localPOI", compassAssets.localPOI, poiStyle, "CENTER", -75, TAPE_Y },
+            { "tracking", compassAssets.tracking, trackingStyle, "TOP", 113, TAPE_Y },
+        }
+        for index = 1, #roles do
+            local role = roles[index]
+            local glyph = frame:CreateTexture(nil, "OVERLAY")
+            glyph:SetTexture(role[2])
+            glyph:SetSize(role[3].width or 9, role[3].height or 9)
+            glyph:SetPoint(role[4], frame, "CENTER", role[5], role[6])
+            glyph:SetAlpha(role[3].alpha or 0.90)
+            glyph:Hide()
+            self.artworkPreviewMarkers[role[1]] = glyph
+        end
+        local previewCaption = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+        previewCaption:SetPoint("TOP", frame, "BOTTOM", 0, -2)
+        previewCaption:SetText("COMPASS ART PREVIEW · NOT LIVE NAVIGATION")
+        previewCaption:SetTextColor(0.84, 0.73, 0.56, 0.90)
+        previewCaption:Hide()
+        self.artworkPreviewCaption = previewCaption
         self.directionWidgets = {}
 
         for index = 1, #DIRECTIONS do
@@ -400,10 +430,31 @@ local Compass = Logres:RegisterModule("Compass", {
         self.moduleEnabled = false
         self.policyEligible = false
         self:SetUpdateActive(false)
+        self.artworkPreview = false
         self:ClearWaypointPresentation("module-disabled")
         self:ClearPresentation("module-disabled")
     end,
 })
+
+function Compass:UpdateArtworkPreview()
+    local shown = self.artworkPreview == true
+        and self.policyEligible == true
+        and self.presentationActive == true
+    if self.artworkPreviewShown == shown then
+        return
+    end
+    self.artworkPreviewShown = shown
+    for _, glyph in pairs(self.artworkPreviewMarkers) do
+        glyph:SetShown(shown)
+    end
+    self.artworkPreviewCaption:SetShown(shown)
+end
+
+function Compass:SetArtworkPreview(enabled)
+    self.artworkPreview = enabled == true
+    self:UpdateArtworkPreview()
+    return true, self.artworkPreview and "preview-on" or "preview-off"
+end
 
 function Compass:SetUpdateActive(enabled)
     enabled = enabled and true or false
@@ -475,6 +526,7 @@ function Compass:ClearPresentation(reason, errorText)
     self.lastReason = reason or "unavailable"
     self.lastError = errorText
     self:SetWaypointMarkerShown(false)
+    self:UpdateArtworkPreview()
     self.frame:Hide()
 end
 
@@ -949,6 +1001,7 @@ function Compass:RefreshHeading(reason)
 
     self:UpdateWaypointMarker()
     self.frame:Show()
+    self:UpdateArtworkPreview()
     return true
 end
 
@@ -1016,6 +1069,8 @@ function Compass:GetDebugStatus()
         rootReady = self.frame ~= nil,
         rootShown = self.frame ~= nil and self.frame:IsShown() or false,
         directionCount = #self.directionWidgets,
+        artworkPreview = self.artworkPreview == true,
+        artworkPreviewShown = self.artworkPreviewShown == true,
 
         immersionEnabled = self.immersionEnabled == true,
         context = self.context,
