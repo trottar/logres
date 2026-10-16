@@ -1,7 +1,7 @@
-# Current Handoff — P0223 focused quest distance-depth
+# Current Handoff — P0224 QuestieDB source audit
 
 Authority: `docs/memory/CURRENT.md`.
 
-GitHub P0222 `b1fa844` verified. The 0.0.131-dev loadCount 295 runtime source probe on map 1432 returned 3 accepted positioned quests (IDs 237, 255, 2039), with user-confirmed quest compass glyphs and a correct contextual name. Other POI/tracking source families remain empty. P0222 accepted as first non-waypoint positive evidence, NOT as complete compass navigation.
+P0223 is pushed and verified at `27505f1`. User confirms only the focused quest marker, correct bearing/name, and distance scaling; leave the slight close-range-size refinement for later. Other live role providers still yield zero local AreaPOI, vignette and available quest-line rows.
 
-P0223 candidate keeps only the super-tracked accepted quest glyph (237 in that capture) and sizes it with the proven manual-waypoint depth curve; no new position source, timers, protected UI, or minimap suppression. Developer panel reports focus ID/quest size and band. Apply/validate in WoW and report real focus/scaling evidence; empty POI/tracking sources remain OPEN. Runtime-code patch requires deploy and `/reload`.
+P0224 is **DOCS ONLY**: QuestieDB's published `QuestDB.startedBy` and `NpcDB.spawns` offer quest-start/NPC spawn candidates, not reliable live quest availability, full service categories, or engine tracking detections. AreaID→UiMapID mapping, percent normalization, client compatibility and provider performance must be proven. QuestieDB is not installed or made a dependency by Logres. Next: one positive/negative public-API+Forever map bridge experiment, then only a guarded optional runtime provider if validated. No WoW redeploy for P0224.

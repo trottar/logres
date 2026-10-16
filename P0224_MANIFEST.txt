@@ -1,0 +1,13 @@
+P0224 — QuestieDB external compass source audit (DOCS ONLY)
+Baseline: 27505f1e4ffb3057bef7277ab3c6c249589114b1
+No WoW redeploy; runtime untouched.
+Prepared shadow checkers: PASS
+File: docs/ROADMAP.md
+File: docs/memory/CURRENT.md
+File: docs/memory/evidence/P0224_QUESTIEDB_NAVIGATION_PROVIDER_AUDIT.md
+File: docs/memory/handoffs/CURRENT_HANDOFF.md
+File: docs/memory/investigations/ACTIVE.md
+File: docs/memory/patches/P0224_QUESTIEDB_NAVIGATION_PROVIDER_AUDIT.md
+File: docs/memory/patches/PATCH_INDEX.md
+File: docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+File: docs/memory/roadmap/STATUS.md
