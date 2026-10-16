@@ -225,3 +225,7 @@ not authorize stock suppression.
 ## P0214 — approved sheet-03 action production refresh
 
 The five shared 64x64 RGBA TGA action textures are a direct visual-family derivative of the approved sheet-03 reference state study, with an intentionally transparent game-icon center. Shared action UI continues to use the same Theme paths, 42px secure buttons, 5px spacing, and fixed approved v4 bar anchors. Production asset hashes are checked by `tools/check_action_visual_contract.py` and `tools/check_h3_approved_action_derivative_contract.py`. The canonical approved reference PNG is unchanged. This is not a claim that gameplay feedback or visual rendering has been accepted yet.
+
+## P0215 visual fidelity refinements — shared resource and one-focus quest
+
+P0215 replaces only the shared sheet-02 resource-status fill and diamond texture and sheet-10 Active Quest parchment, divider and focus glyph with derived small uncompressed BGRA TGA media at their original dimensions. The source references under `docs/design/approved/` are unchanged. Bar fill remains neutral because existing native `StatusBar:SetStatusBarColor` owns mana/rage/energy/focus/target/ally palette; no duplicate label pixels are baked into textures. The Active Quest parchment likewise contains no printed quest titles, objective names or progress values. Runtime `Theme.lua` paths, shared resource/compact bar geometry, percent-value transport, text placement and quest source/control policy remain unchanged. Live fit remains visually unverified until tested in WoW.

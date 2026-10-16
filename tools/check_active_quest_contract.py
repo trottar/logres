@@ -16,9 +16,9 @@ PREFERENCES = ADDON / "Core" / "Preferences.lua"
 errors = []
 
 required_assets = {
-    ADDON / "Media" / "Quest" / "active_quest_panel.tga": "580f6cf9f8540c92726d24ae461f2181f43dfd6148ced6811ecd0e1b3c3ee6e1",
-    ADDON / "Media" / "Quest" / "active_quest_divider.tga": "a0942cde4eca94a7ca1e9b813cfb2f63a2afbaf474dab38e613feb8729aec05a",
-    ADDON / "Media" / "Quest" / "active_quest_glyph.tga": "1e018c150977fdc41e170ecc10f922650a833b723ab29ebc8a68cc46f82a7073",
+    ADDON / "Media" / "Quest" / "active_quest_panel.tga": "f414180c2bd354c1c879761b7c51cf91dd6210e6aea6acf086a910666c209bdc",
+    ADDON / "Media" / "Quest" / "active_quest_divider.tga": "c2f44face9c4c0fada6c50d29f4d98f94435005d8bf0f7dd519fc92ec710d9f1",
+    ADDON / "Media" / "Quest" / "active_quest_glyph.tga": "a01e82dde4ae8c176d0a7ade3ffa5af487bbdcb8918187d3ba01e05e88d48637",
 }
 
 for path, expected in required_assets.items():

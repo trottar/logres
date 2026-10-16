@@ -10,9 +10,9 @@ THEME = ROOT / "Logres" / "Media" / "Theme.lua"
 TOC = ROOT / "Logres" / "Logres.toc"
 ASSETS = {
     ROOT / "Logres" / "Media" / "Bar" / "percentage_diamond.tga":
-        "375ce1f4ae723bdaca1d4ae9d3c6688729fa3d66e77d0e62fd2d1d29937ad62d",
+        "b26efb9bd3ba1633d2f625ffb2bf9123bf3686fe91898cf26ff87799d507f49c",
     ROOT / "Logres" / "Media" / "Bar" / "percentage_fill.tga":
-        "5a54e8d8962debecae6fd116cbebc7bb8dc08b4eed63a750aea157b0f4cedee0",
+        "b7298d4e34a1ceb4a7dcb81308de4b8eff11bc24ffb6ff6a57c146380dfed8b4",
 }
 
 errors = []

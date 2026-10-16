@@ -1,0 +1,9 @@
+# P0215 — Resource percentage and Active Quest media families
+
+Prepared on verified `main` `1ae594813cdb5f34181bcccfe2bb76ba0c65cc38` (P0214). Runtime version `0.0.124-dev`, pending in-client proof. Asset-only production change to five existing TGA files derived from approved sheets 02 and 10; updates the two canonical asset-hash contracts plus one dedicated family checker, README, evidence, and relevant memory. No new gameplay Lua, geometry, protected/secret data or stock fallback changes.
+
+Guarded one-time applier requires exact pushed P0214 baseline, checks all patch-owned blob hashes before writing, tests the exact prepared post-transform shadow tree against every `tools/check_*.py` static checker and prewrite diff hygiene, writes the candidate and manifest transactionally, runs `git diff --check`, and never commits/pushes. Static results are not WoW visual acceptance. If an unexpected modified baseline exists, stop without changing it. Approved PNGs are left unchanged. P0214 runtime user observation is accepted in bounded scope; P0215 remains visually unverified until developer-panel/screenshot feedback.
+
+## R0 shadow memory-health failure / R1 delivery repair
+
+**R0 PREWRITE FAIL:** user ran R0 against P0214, and its full shadow suite rejected candidate CURRENT.md because `## Success Criteria`, `## Do Not Reopen Without New Evidence`, and `## Relevant References` were missing. This was an assistant-generated documentation-contract defect. Output reported no tracked changes; only untracked preview PNGs remained. The art was not deployed/tested. **R1** restores the seven mandatory headings, records this failure durably, and adds an explicit prepared-CURRENT preflight before the full shadow suite. TGA media is unchanged. No runtime behavior change beyond original P0215 candidate.
