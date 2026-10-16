@@ -254,3 +254,7 @@ Accepted semantic bands for the manual waypoint are:
 The calibration remains restrained and is still a depth cue rather than a distance
 meter. Runtime acceptance now requires cross-band diagnostics plus explicit user
 visual confirmation that the marker changes size perceptibly.
+
+## P0220 — Unaccepted quest-awareness focus policy
+
+A nearby available unaccepted quest shares the **local POI** lane and proximity/weight rules, not the above-tape accepted quest destination lane. The quiet local POI glyph can receive the quest name in the contextual center-focus readout **only if** ordinary client data safely provides an actual quest title and verified position. Comparable distance still beats alignment per the existing focus rule. Multiple quest POIs remain exact-bearing and obey existing vertical/within-role collision priority. P0220 proposes a source-backed live rendering candidate; only in-game evidence can confirm any quest-line positions are available on Forever.

@@ -270,6 +270,9 @@ local Compass = Logres:RegisterModule("Compass", {
 
         self.artworkPreview = false
         self.artworkPreviewShown = false
+        self.availableQuestPoiShown = 0
+        self.availableQuestPoiCandidates = 0
+        self.availableQuestPoiReason = "initialize"
         self.updateActive = false
         self.elapsed = 0
         self.lastReason = "initialize"
@@ -328,6 +331,26 @@ local Compass = Logres:RegisterModule("Compass", {
         previewCaption:SetTextColor(0.84, 0.73, 0.56, 0.90)
         previewCaption:Hide()
         self.artworkPreviewCaption = previewCaption
+        -- P0220: live, source-backed *local POI* glyphs; no new controls or
+        -- use of the Blizzard map canvas or its protected pin presentation.
+        self.availableQuestPoiMarkers = {}
+        for index = 1, 8 do
+            local glyph = frame:CreateTexture(nil, "OVERLAY")
+            glyph:SetTexture(compassAssets.localPOI)
+            glyph:SetSize(poiStyle.width or 9, poiStyle.height or 9)
+            glyph:SetAlpha(poiStyle.alpha or 0.90)
+            glyph:Hide()
+            self.availableQuestPoiMarkers[index] = glyph
+        end
+        local poiFocus = frame:CreateFontString(
+            nil, "OVERLAY", "GameFontHighlightSmall"
+        )
+        poiFocus:SetPoint("TOP", frame, "CENTER", 0, -15)
+        poiFocus:SetTextColor(0.94, 0.86, 0.69, 0.95)
+        poiFocus:SetShadowColor(0.01, 0.01, 0.01, 0.95)
+        poiFocus:SetShadowOffset(1, -1)
+        poiFocus:Hide()
+        self.availableQuestPoiFocus = poiFocus
         self.directionWidgets = {}
 
         for index = 1, #DIRECTIONS do
@@ -450,6 +473,152 @@ function Compass:UpdateArtworkPreview()
     self.artworkPreviewCaption:SetShown(shown)
 end
 
+-- Source and eligibility are handled by NavigationSourceProbe. Compass
+-- consumes only ordinary, addon-owned snapshots; a heading/POI marker is
+-- never reconstructed from Blizzard secret/protected view-state objects.
+function Compass:ClearAvailableQuestPOIs(reason)
+    self.availableQuestPoiShown = 0
+    self.availableQuestPoiCandidates = 0
+    self.availableQuestPoiReason = reason or "source-unavailable"
+    for index = 1, #self.availableQuestPoiMarkers do
+        self.availableQuestPoiMarkers[index]:Hide()
+    end
+    self.availableQuestPoiFocus:Hide()
+end
+
+function Compass:RefreshAvailableQuestPOIs(reason)
+    self:ClearAvailableQuestPOIs("source-unavailable")
+    if not self.policyEligible or not self.presentationActive
+        or type(self.headingDegrees) ~= "number"
+        or self.artworkPreview == true
+    then
+        return
+    end
+
+    local source = Logres:GetModule("NavigationSourceProbe")
+    if not source or source.moduleEnabled ~= true
+        or type(source.currentMapID) ~= "number"
+        or type(source.mapWidth) ~= "number"
+        or type(source.mapHeight) ~= "number"
+        or source.mapWidth <= 0 or source.mapHeight <= 0
+        or type(source.availableQuestRows) ~= "table"
+    then
+        self.availableQuestPoiReason = "source-not-ready"
+        return
+    end
+    if not C_Map or type(C_Map.GetBestMapForUnit) ~= "function"
+        or type(C_Map.GetPlayerMapPosition) ~= "function"
+        or not C_Minimap
+        or type(C_Minimap.GetViewRadius) ~= "function"
+    then
+        self.availableQuestPoiReason = "map-api-unavailable"
+        return
+    end
+
+    local okMap, mapID = pcall(C_Map.GetBestMapForUnit, "player")
+    if not okMap or isSecret(mapID) or type(mapID) ~= "number"
+        or mapID ~= source.currentMapID
+    then
+        self.availableQuestPoiReason = "map-mismatch-or-secret"
+        return
+    end
+    local okPlayer, position = pcall(
+        C_Map.GetPlayerMapPosition, mapID, "player"
+    )
+    if not okPlayer then
+        self.availableQuestPoiReason = "player-position-call-failed"
+        return
+    end
+    local px, py, vectorError = readVectorXY(position)
+    if vectorError then
+        self.availableQuestPoiReason = vectorError
+        return
+    end
+    local okRadius, radius = pcall(C_Minimap.GetViewRadius)
+    if not okRadius or isSecret(radius)
+        or type(radius) ~= "number" or radius <= 0
+    then
+        self.availableQuestPoiReason = "local-radius-unavailable"
+        return
+    end
+
+    local candidates = {}
+    for index = 1, #source.availableQuestRows do
+        local row = source.availableQuestRows[index]
+        if row.eligible == true
+            and type(row.x) == "number" and type(row.y) == "number"
+            and type(row.questID) == "number"
+        then
+            local dx = (row.x - px) * source.mapWidth
+            local dy = (row.y - py) * source.mapHeight
+            local distance = math.sqrt(dx * dx + dy * dy)
+            if distance <= radius and distance > 0 then
+                local bearing = (math.deg(math.atan2(dx, -dy)) + 360) % 360
+                local relative = normalizeRelativeDegrees(
+                    bearing - self.headingDegrees
+                )
+                local magnitude = math.abs(relative)
+                if magnitude <= VISIBLE_HALF_ANGLE then
+                    candidates[#candidates + 1] = {
+                        questID = row.questID,
+                        name = row.name,
+                        distance = distance,
+                        relative = relative,
+                        magnitude = magnitude,
+                        x = relative * PIXELS_PER_DEGREE,
+                    }
+                end
+            end
+        end
+    end
+    table.sort(candidates, function(a, b)
+        if a.distance == b.distance then
+            return a.questID < b.questID
+        end
+        return a.distance < b.distance
+    end)
+
+    self.availableQuestPoiCandidates = #candidates
+    self.availableQuestPoiReason = "ordinary-positioned-candidates"
+    local used = {}
+    local closestFocus = nil
+    local focusDegrees = 8
+    for index = 1, math.min(#candidates, #self.availableQuestPoiMarkers) do
+        local candidate = candidates[index]
+        -- Exact-bearing x remains untouched; coincident glyphs use y lanes.
+        local lane = 0
+        for placed = 1, #used do
+            if math.abs(candidate.x - used[placed].x) < 10 then
+                lane = math.max(lane, used[placed].lane + 1)
+            end
+        end
+        lane = math.min(lane, 2)
+        used[#used + 1] = { x = candidate.x, lane = lane }
+
+        local glyph = self.availableQuestPoiMarkers[index]
+        glyph:ClearAllPoints()
+        glyph:SetPoint("CENTER", self.frame, "CENTER", candidate.x,
+            TAPE_Y + lane * 9)
+        glyph:SetAlpha((poiStyle.alpha or 0.90)
+            * edgeFadeForMagnitude(candidate.magnitude))
+        glyph:Show()
+        self.availableQuestPoiShown = self.availableQuestPoiShown + 1
+        if candidate.magnitude <= focusDegrees
+            and type(candidate.name) == "string"
+            and (closestFocus == nil
+                or candidate.distance < closestFocus.distance)
+        then
+            closestFocus = candidate
+        end
+    end
+    if closestFocus then
+        local fade = 1 - closestFocus.magnitude / focusDegrees
+        self.availableQuestPoiFocus:SetText(closestFocus.name)
+        self.availableQuestPoiFocus:SetAlpha(fade * fade)
+        self.availableQuestPoiFocus:Show()
+    end
+end
+
 function Compass:SetArtworkPreview(enabled)
     self.artworkPreview = enabled == true
     self:UpdateArtworkPreview()
@@ -526,6 +695,7 @@ function Compass:ClearPresentation(reason, errorText)
     self.lastReason = reason or "unavailable"
     self.lastError = errorText
     self:SetWaypointMarkerShown(false)
+    self:ClearAvailableQuestPOIs("presentation-unavailable")
     self:UpdateArtworkPreview()
     self.frame:Hide()
 end
@@ -1041,6 +1211,7 @@ function Compass:ReconcilePolicy(reason)
     self:SetUpdateActive(true)
     self:RefreshHeading(reason or "policy")
     self:RefreshWaypointBearing(reason or "policy")
+    self:RefreshAvailableQuestPOIs(reason or "policy")
 end
 
 function Compass:OnUpdate(elapsed)
@@ -1060,6 +1231,7 @@ function Compass:OnUpdate(elapsed)
         self.waypointElapsed =
             self.waypointElapsed % WAYPOINT_UPDATE_INTERVAL
         self:RefreshWaypointBearing("onupdate")
+        self:RefreshAvailableQuestPOIs("onupdate")
     end
 end
 
@@ -1071,6 +1243,9 @@ function Compass:GetDebugStatus()
         directionCount = #self.directionWidgets,
         artworkPreview = self.artworkPreview == true,
         artworkPreviewShown = self.artworkPreviewShown == true,
+        availableQuestPoiShown = self.availableQuestPoiShown,
+        availableQuestPoiCandidates = self.availableQuestPoiCandidates,
+        availableQuestPoiReason = self.availableQuestPoiReason,
 
         immersionEnabled = self.immersionEnabled == true,
         context = self.context,

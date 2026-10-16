@@ -7,33 +7,31 @@ project: logres
 # Current State
 
 ## Active Objective
-Phase H.3: finish actual compass visual and source capabilities against the accepted D-037/D-038/D-039 compass direction. The user explicitly corrected the premature classification of sheet 12 as mostly done. P0218 is verified on GitHub `main` at `157e09c`; in-game `0.0.127-dev` loadCount 288 panel status/preview/Run All passed the tested state; harmful live population remains deferred. P0219's focus is the compass, not NPC quest controls.
+Phase H.3 approved compass sheet-12 runtime and capability completion. GitHub `main` P0219 `63a7557` verified. User adds **nearby available but unaccepted quests** to the local POI semantic role, not the accepted/current quest's major-destination lane. Approved artwork, D-037/D-038 true-bearing geometry, and stock-minimap fail-open remain authoritative.
 
 ## Current Work Item
-**P0219 candidate (`0.0.128-dev`):** produce the missing quest pennon / POI roundel / tracking pip textures from approved sheet 12, register the three separate lane-role dimensions in Theme, and expose a clearly marked developer-panel compass **art preview**. Preview glyph positions are illustrative **only** and never feed real compass bearings. Retain heading and manual waypoint exact-source pipeline unchanged; preserve Blizzard minimap and all other fallbacks. The three roles remain unavailable in ordinary live display until a supported source proves individual world positions.
+**P0220 candidate (`0.0.129-dev`):** add an optional, bounded available-quest-line source adapter and capability-gated live compass POI rendering to `NavigationSourceProbe.lua` using `C_QuestLine.GetAvailableQuestLines(currentMapID)` and capability-checked `C_QuestLog.IsOnQuest` / `IsQuestFlaggedCompleted`. Record ordinary quest/map positions, accepted/completed/hidden exclusions and actual local-view-radius candidate counts. Compass consumes only ordinary, eligible and same-map source rows, updates player-relative bearings on its existing throttled update, and hides markers outside the live radius. Live behavior remains an unverified candidate. Quest-line rows are only a candidate subset; they cannot be assumed to enumerate every available quest or precise NPC location.
 
 ## Verified State
-- GitHub `main` `157e09c` P0218 verified; P0218 has no observed failure in uploaded 0.0.127-dev load count 288 panel preview/test, though naturally populated harmful aura remains unverified. Historical failures/deferrals preserved.
-- Existing Compass module renders a heading tape + fixed center gnomon + manual user-waypoint diamond. P0213 only improved cardinal/intercardinal label contrast. Missing approved role art: quest, POI, tracking, plus multi-role production lanes, center-focus identity, name fade and collision logic.
-- P0142/P0143 navigation source evidence: tracking-selection metadata supports multi-select but does not yield detected entity positions. Quest destination and current-map AreaPOI positioned outputs were not observed in the tested environment. `NavigationSourceProbe.lua` is an existing read-only source probe; do not fake data, patch in polling, or suppress native minimap.
-- P0219 remains WoW UNVERIFIED until user performs the developer-panel test. Art preview is not runtime proof of navigation source capability.
+- P0219 pushed `63a7557`, `0.0.128-dev` loadCount 290: developer-panel Compass Art ON/OFF and Compass Check PASS; approved quest/POI/tracking glyph previews do not prove real navigation. Navigation Source Probe PASS with 23 tracking types (4 active), player map 1432 and usable local radius 133.33 yards; zero positioned AreaPOIs and no quest/navigation waypoint in that sample. No source failures or secret skips. Layout and normal check suite completed in the tested out-of-combat world.
+- Forever 1.60.1 API documentation exposes `C_QuestLine.GetAvailableQuestLines(uiMapID)` returning QuestLineInfo map x/y, questID and questName. `C_QuestLog.IsOnQuest` and `IsQuestFlaggedCompleted` expose acceptance/completion filters. This is API source evidence only; its actual quest-line population, completeness, distance validity and secret behavior remain unverified in the user's client.
+- D-037/D-038/D-039 still govern distinct major quest destinations, POI lane, tracking lane, center focus and source gates. Tracking-result locations remain source-blocked. No stock minimap suppression is authorized.
 
 ## Next Action
-Apply P0219 guarded applier, deploy, `/reload`. Developer panel Phase E Compass Art Preview ON then OFF + Compass Check; Phase H Navigation Source Probe and H.2 Map / Layout Check; Phase 0 Run All. Visually compare the quest, POI and tracking glyphs/lanes to sheet 12. Check preview OFF leaves only true heading/manual glyphs, no orphan markers, and no errors. Capture read-only navigation probe result and determine the next capability-gated producer slice from actual available outputs.
+Apply guarded P0220, deploy, `/reload`. In the developer panel use Phase H **Navigation Source Probe** in an ordinary world area where quest-giver markers naturally exist, then Phase E **Compass Check** and **Compass Art ON/OFF**, Phase H Layout Check, Phase 0 Run All. Inspect the `availableQuestLines=` summary and `availableQuestLine[]` rows. If only empty results occur or the API is unavailable/secret, record DEFERRED, not PASS. Do not travel solely to manufacture a case. Compare naturally visible stock quest offers with live POI glyph bearings and the reported eligible rows; absence of source data is a deferral.
 
 ## Success Criteria
-- Three distinct approved navigation glyph assets exist at Theme-owned production paths and use approximate 10x18, 9x9, and 4x5 actual-UI role sizes in a **development-only** preview.
-- The production compass still shows only real source-backed markers; preview OFF, Immersion OFF and module disable remove all preview artifacts. Existing heading/manual controls and stock minimap are unmodified.
-- No newly invented bearings, names, POI services, tracking instances, or magic data; no Lua/taint/secret regressions in tested context. Source capability remains explicitly deferred where not observed.
+- Unaccepted available quests are classified as local POI subtypes, with nearby-only radius and same-map positioning required, distinct from already accepted quest destinations. No quest punctuation or false bearings.
+- New source probe is read-only, bounded to 24 rows, secret-safe, preserves previous navigation probes and never treats missing optional APIs as overall probe failure. Ordinary accepted/completed/hidden or off-radius candidates are excluded from the eligible subset.
+- Live local POI glyphs may render only for ordinary confirmed eligible quest-line positions; no new minimap, quest controls, pet driver, action paths or screen-map geometry mutation. Full static checker suite, diff hygiene and checked in-game actions show no regression within tested scope; unobserved data remain DEFERRED.
 
 ## Do Not Reopen Without New Evidence
-Accepted P0214–P0218 presentation, protected pet driver, action routing, native Blizzard minimap/POI/quest controls, player HP/target information policy, earlier failed and environmental tests, and D-045 v4 anchors. Real navigation roles are not authorized by a visual mock or an unpopulated source probe.
+Do not infer all available quest givers from quest-line pins, treat map-level positions as NPC coordinates without runtime verification, branch on secret values, add polling or broad hooks, hide the stock minimap, or reopen P0214–P0219 accepted presentation and pet/action behavior.
 
 ## Relevant References
-- `docs/design/approved/12_compass_glyph_and_state_sheet.png`
+- `docs/memory/evidence/P0220_COMPASS_AVAILABLE_QUEST_POI_SOURCE.md`
+- `docs/memory/patches/P0220_COMPASS_AVAILABLE_QUEST_POI_SOURCE.md`
 - `docs/memory/decisions/D-037_NAVIGATION_MARKER_ROLES_AND_MINIMAP_DIRECTION.md`
 - `docs/memory/decisions/D-038_COMPASS_VISUAL_FOCUS_AND_DEPTH_CONTRACT.md`
-- `docs/memory/decisions/D-039_APPROVED_VISUAL_BASELINE.md`
+- `docs/design/approved/12_compass_glyph_and_state_sheet.png`
 - `docs/memory/evidence/P0219_COMPASS_SHEET12_AND_CAPABILITY_GAP.md`
-- `docs/memory/patches/P0219_COMPASS_SHEET12_AND_CAPABILITY_GAP.md`
-- `docs/memory/evidence/P0144_P0143_NAVIGATION_RUNTIME_PASS_WITH_DEFERRALS_2026-10-05.md`

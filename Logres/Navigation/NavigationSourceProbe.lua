@@ -2,6 +2,7 @@ local _, Logres = ...
 
 local MAX_TRACKING_TYPES = 48
 local MAX_AREA_POIS = 24
+local MAX_AVAILABLE_QUEST_LINES = 24
 local ERROR_TEXT_LIMIT = 96
 
 local Probe = Logres:RegisterModule("NavigationSourceProbe", {
@@ -13,6 +14,7 @@ local EVENTS = {
     "AREA_POIS_UPDATED",
     "SUPER_TRACKING_CHANGED",
     "SUPER_TRACKING_PATH_UPDATED",
+    "QUESTLINE_UPDATE",
     "QUEST_LOG_UPDATE",
     "PLAYER_MAP_CHANGED",
     "PLAYER_ENTERING_WORLD",
@@ -222,6 +224,13 @@ local function apiPresence()
             C_QuestLog
             and type(C_QuestLog.GetNextWaypointForMap) == "function"
             or false,
+        -- Optional P0220 source; excluded from the established requiredAPIReady gate.
+        availableQuestLines = C_QuestLine
+            and type(C_QuestLine.GetAvailableQuestLines) == "function" or false,
+        questOnQuest = C_QuestLog
+            and type(C_QuestLog.IsOnQuest) == "function" or false,
+        questCompleted = C_QuestLog
+            and type(C_QuestLog.IsQuestFlaggedCompleted) == "function" or false,
     }
 end
 
@@ -272,6 +281,14 @@ function Probe:ResetCaptureState(reason)
     self.areaPoiWithinRadius = 0
     self.areaPoiTruncated = false
     self.areaPoiRows = {}
+
+    self.availableQuestAPIAvailable = false
+    self.availableQuestReason = "not-sampled"
+    self.availableQuestScanned = 0
+    self.availableQuestPositioned = 0
+    self.availableQuestNearby = 0
+    self.availableQuestCapReached = false
+    self.availableQuestRows = {}
 
     self.superTrackingAnything = nil
     self.superTrackingQuest = nil
@@ -590,6 +607,119 @@ function Probe:ReadAreaPOIs()
     self.areaPoiTruncated = true
 end
 
+-- Optional read-only capability probe. Quest-line positions are NOT assumed
+-- to cover every quest giver; Compass only renders qualified source-backed rows.
+function Probe:ReadAvailableQuestLines()
+    local api = apiPresence()
+    self.availableQuestAPIAvailable =
+        api.availableQuestLines and api.questOnQuest and api.questCompleted
+
+    if not self.availableQuestAPIAvailable then
+        self.availableQuestReason = "optional-api-unavailable"
+        return
+    end
+    if type(self.currentMapID) ~= "number" then
+        self.availableQuestReason = "current-map-unavailable"
+        return
+    end
+
+    -- No RequestQuestLinesForMap call, no polling and no source mutations.
+    local ok, rawList = pcall(
+        C_QuestLine.GetAvailableQuestLines, self.currentMapID
+    )
+    if not ok then
+        self.availableQuestReason = "quest-lines-call-unavailable"
+        return
+    end
+    local lines, state = ordinaryField(
+        self, rawList, "table", "availableQuestLines"
+    )
+    if state ~= "ordinary" then
+        self.availableQuestReason = "quest-lines-" .. state
+        return
+    end
+    self.availableQuestReason = "ordinary-list"
+
+    for index = 1, MAX_AVAILABLE_QUEST_LINES do
+        local rawRow = lines[index]
+        if isSecret(rawRow) then
+            self.secretSkipCount = self.secretSkipCount + 1
+            self.lastSecret = "availableQuestLine"
+        elseif rawRow == nil then
+            return
+        elseif type(rawRow) ~= "table" then
+            self.availableQuestReason = "invalid-row"
+            return
+        else
+            self.availableQuestScanned = self.availableQuestScanned + 1
+            local readOK, questID, questName, x, y, hidden, inProgress =
+                pcall(function()
+                    return rawRow.questID, rawRow.questName,
+                        rawRow.x, rawRow.y,
+                        rawRow.isHidden, rawRow.inProgress
+                end)
+            if not readOK then
+                self.availableQuestReason = "row-field-unavailable"
+            else
+                local row = { index = index }
+                row.questID = ordinaryField(self, questID, "number", "availableQuest.questID")
+                row.name = ordinaryField(self, questName, "string", "availableQuest.questName")
+                row.x = ordinaryField(self, x, "number", "availableQuest.x")
+                row.y = ordinaryField(self, y, "number", "availableQuest.y")
+                row.hidden = ordinaryField(self, hidden, "boolean", "availableQuest.isHidden")
+                row.inProgress = ordinaryField(
+                    self, inProgress, "boolean", "availableQuest.inProgress"
+                )
+
+                -- Check known quest-log state instead of assuming every map
+                -- quest-line pin represents an unaccepted quest.
+                if type(row.questID) == "number" and row.questID > 0 then
+                    local onOK, rawOnQuest = pcall(C_QuestLog.IsOnQuest, row.questID)
+                    if onOK then
+                        row.onQuest = ordinaryField(
+                            self, rawOnQuest, "boolean", "availableQuest.onQuest"
+                        )
+                    end
+                    local completeOK, rawCompleted = pcall(
+                        C_QuestLog.IsQuestFlaggedCompleted, row.questID
+                    )
+                    if completeOK then
+                        row.completed = ordinaryField(
+                            self, rawCompleted, "boolean", "availableQuest.completed"
+                        )
+                    end
+                end
+
+                if type(row.x) == "number"
+                    and type(row.y) == "number"
+                    and row.x == row.x and row.y == row.y
+                    and row.x >= 0 and row.x <= 1
+                    and row.y >= 0 and row.y <= 1
+                then
+                    row.distanceYards = self:DistanceYards(row.x, row.y)
+                    if type(row.distanceYards) == "number" then
+                        self.availableQuestPositioned =
+                            self.availableQuestPositioned + 1
+                    end
+                end
+                -- Requires ordinary explicit eligibility and real local radius.
+                row.eligible = row.onQuest == false and row.completed == false
+                    and row.hidden == false and row.inProgress ~= true
+                row.withinViewRadius = row.eligible
+                    and type(row.distanceYards) == "number"
+                    and type(self.viewRadius) == "number"
+                    and self.viewRadius > 0
+                    and row.distanceYards <= self.viewRadius or false
+                if row.withinViewRadius then
+                    self.availableQuestNearby = self.availableQuestNearby + 1
+                end
+                self.availableQuestRows[#self.availableQuestRows + 1] = row
+            end
+        end
+    end
+    self.availableQuestCapReached = true
+end
+
 function Probe:ReadSuperTracking()
     local okAnything, anything = call(
         self,
@@ -776,6 +906,7 @@ function Probe:Capture(reason)
     self:ReadMap()
     self:ReadTracking()
     self:ReadAreaPOIs()
+    self:ReadAvailableQuestLines()
     self:ReadSuperTracking()
     self:ReadNavigation()
 
@@ -812,6 +943,15 @@ function Probe:GetDiagnosticLines()
             tostring(self.areaPoiOrdinary),
             tostring(self.areaPoiWithinRadius),
             boolText(self.areaPoiTruncated)
+        ),
+        string.format(
+            "availableQuestLines=api:%s reason:%s scanned:%s positioned:%s nearbyUnaccepted:%s capReached:%s",
+            boolText(self.availableQuestAPIAvailable),
+            tostring(self.availableQuestReason),
+            tostring(self.availableQuestScanned),
+            tostring(self.availableQuestPositioned),
+            tostring(self.availableQuestNearby),
+            boolText(self.availableQuestCapReached)
         ),
         string.format(
             "super=anything:%s quest:%s userWaypoint:%s questID:%s navigation:%s navDistance:%s questWaypoint:%s/%s questDistance:%s/%s",
@@ -860,6 +1000,19 @@ function Probe:GetDiagnosticLines()
             numberText(row.x),
             numberText(row.y),
             numberText(row.distanceYards),
+            boolText(row.withinViewRadius)
+        )
+    end
+
+    for index = 1, #self.availableQuestRows do
+        local row = self.availableQuestRows[index]
+        lines[#lines + 1] = string.format(
+            "availableQuestLine[%s] quest=%s name=%s pos=%s,%s onQuest=%s completed=%s hidden=%s inProgress=%s eligible=%s distance=%s nearby=%s",
+            tostring(row.index), tostring(row.questID or "-"),
+            tostring(row.name or "-"), numberText(row.x), numberText(row.y),
+            boolText(row.onQuest), boolText(row.completed),
+            boolText(row.hidden), boolText(row.inProgress),
+            boolText(row.eligible), numberText(row.distanceYards),
             boolText(row.withinViewRadius)
         )
     end
@@ -933,6 +1086,13 @@ function Probe:GetDebugStatus()
         areaPoiOrdinary = self.areaPoiOrdinary,
         areaPoiWithinRadius = self.areaPoiWithinRadius,
         areaPoiTruncated = self.areaPoiTruncated,
+
+        availableQuestAPIAvailable = self.availableQuestAPIAvailable,
+        availableQuestReason = self.availableQuestReason,
+        availableQuestScanned = self.availableQuestScanned,
+        availableQuestPositioned = self.availableQuestPositioned,
+        availableQuestNearby = self.availableQuestNearby,
+        availableQuestCapReached = self.availableQuestCapReached,
 
         superTrackingAnything = self.superTrackingAnything,
         superTrackingQuest = self.superTrackingQuest,

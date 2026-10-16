@@ -192,3 +192,7 @@ D-043 refines this decision without changing its world-first intent:
 - the Blizzard minimap remains the completeness fallback.
 
 P0143 is the next read-only runtime proof for only the surviving candidates.
+
+## P0220 — Available unaccepted quests are a local POI subtype
+
+User-approved extension of the **local POI** role: a genuinely nearby available quest that the player has **not accepted** may appear as a quiet POI marker on the tape. It is **not** an accepted quest destination and does not use the above-tape quest pennon/major-destination lane. Same real-bearing requirement, within the proven local minimap awareness radius, source-provided optional identity, one marker per positioned offer subject to D-038 collision rules. No invented quest-giver coordinates, persistent `!` labels or assumed exhaustive quest coverage. `C_QuestLine.GetAvailableQuestLines(uiMapID)` is only a candidate source for some available **quest lines**, not guaranteed for all individual offers; eligibility filtering and real runtime location validation are required before live glyphs. Blizzard minimap remains the fallback.
