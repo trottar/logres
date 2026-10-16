@@ -7,35 +7,34 @@ project: logres
 # Current State
 
 ## Active Objective
-**Phase H integration and polish.** P0211 `0.0.121-dev` addresses the P0209 R8 startup pet-visibility defect using addon-owned event-driven readiness notification. The user has now confirmed Blizzard PetFrame and PetActionBar are absent on Immersion-ON `/reload`, return with Immersion OFF, disappear on ON, and remain absent through observed combat. This **closes the observed pet-duplication/initial-reload presentation defect for those tested paths**, not untested secure-click/autocast/taint scenarios. P0211's GitHub commit was **not independently verified** when this checkpoint was authored: latest remote `main` returned `4076d25` (P0210). The local patch must verify the applied P0211 source and repo ancestry; a successful WoW test alone does not establish a Git push.
+**Phase H.3 approved art/interaction polish.** P0211/P0212 are remotely verified in GitHub main at `018ea0a` on 2026-10-15. The observed pet-visibility duplication defect is closed for user-tested reload, Immersion OFF/ON, and combat presentation. No additional pet suppression experiment is authorized absent new evidence. H.3 retains D-039 art, D-045 v4 geometry, and all protected/stock fallbacks.
 
 ## Current Work Item
-**P0212 docs-only evidence acceptance and development method correction.** Preserve P0211 runtime source without further pet visibility edits; correctly record the latest user and diagnostics evidence; stop repeating pet frame suppression experiments in the absence of a new defect. Default validation path is the **in-game developer panel**, where matching actions exist. Before inventing secure-action-bar or native pet/visibility mechanics, compare established, current Bartender4 and Dominos implementations with the exact target Blizzard/Forever API and build. Use their designs as references, never assume cross-version compatibility or add either as a dependency.
+**P0213 H.3 compass bright-background legibility candidate (`0.0.122-dev`, runtime UNTESTED).** P0202 real-client screenshot observed faint compass letters/ticks against pale sky. This scoped change brightens only label colors and adds Theme-driven dark text shadows to existing direction FontStrings. Tick assets/positions, bearings, fade, marker/data sources, frame geometry, action/pet controls, native access and secret-safe calculations are unchanged. No work on unproven action empty-state occupancy until a safe specific source/visual need is established.
 
 ## Verified State
-- Last independently verified remote `main` before P0212 creation: P0210 `4076d2502a02613a8767815d4911b0311e11e1bf`; P0211 push not yet verified.
-- User test: Immersion-ON reload lacks Blizzard PetFrame/PetActionBar; OFF restores stock visually; ON re-suppresses; combat keeps stock copies absent; no additional issue seen in tested scope.
-- Latest `LOGRES_DIAGNOSTICS_LATEST.lua`: `0.0.121-dev` loadCount 279, `immersionEnabled=true`; final pet trial `requested=true armed=true pending=false nativeDriver=true activations=6 restores=5 failures=0`; startup trace `worldArmed=no`, `worldReason=logres-secure-pet-actions-unavailable`, `firstArmEvent=pet-probe-armed`, `readinessWakeups=6`, `editModeGate=manager-initial-idle`. The first-world snapshot was **not yet armed**, but the specific readiness-edge handoff armed it afterward. No native visibility value was read.
-- Prior user testing confirmed stock pet frames appear in Edit Mode. Fresh P0211 Edit Mode exit, PET STOCK clicks, secure pet-action activation/autocast, taint and protected-action checks are not independently proven in this latest report; classify as UNVERIFIED/DEFERRED, not PASS.
-- Historical P0197/P0206/P0209 failures stay in earlier evidence and investigations; closure is bounded to now-observed duplicate/reload presentation, not erasure of failures.
+- GitHub main verified on 2026-10-15: `018ea0aefd93ffb266e6333e5301a3ce8e443e22`, P0212 including P0211 runtime and evidence. P0211 is durable.
+- Pet user visual PASS in bounded scope: Immersion-ON reload no Blizzard PetFrame/PetActionBar, OFF restores, ON hides, observed combat no duplicates. `0.0.121-dev` loadCount 279 showed driver armed/pending false/failures zero, startup first arm triggered by pet-probe-armed. Pet secure clicks/autocast, PET STOCK interaction, Edit Mode exit and BugCatcher remain UNVERIFIED.
+- P0202 screenshot visually observed faint top-center compass against bright sky, supporting a narrow readability candidate, not a proven fix. P0200 H.3 native harmful aura art already exists; naturally populated multi-aura fit remains environmentally DEFERRED.
+- Historical P0197/P0206/P0209 prewrite, protected and combat defects remain preserved in evidence. Current pet visibility should not be modified without a new reproduced failure.
 
 ## Next Action
-Proceed to **H.3 authored visual/interaction integration**, using existing approved D-039/H.2 v4 design and current real client screen. Begin with a bounded native/action/pet UI consistency review and approved art fidelity, not another blanket Blizzard suppression scheme. For future secure action-bar work, study Bartender4 and Dominos first, then inspect exact Blizzard Forever source and run focused in-game developer-panel checks. If a fresh pet issue occurs, preserve its diagnostic and narrow reproduction before modifying the working driver. Verify the actual P0211/P0212 pushed GitHub commit before considering either durable.
+Apply P0213 against exact P0212 HEAD. Full prewrite static checker suite and optional Lua syntax gate must pass. Deploy to WoW and use **developer panel Phase E → Compass Check** and **Phase H → H.2 Map → Layout Check / Overlay OFF/ON**, plus **Phase 0 → Run All**; visually compare legibility over light and dark world backgrounds. Record screenshot and diagnostics. Confirm no layout, pet, source or marker regression; classify unobserved manual waypoint/depth states DEFERRED. This is not a visual PASS until user confirms.
 
 ## Success Criteria
-Approved world-first design, single intentional pet/action presentation in supported normal/combat states, required secure controls and native fallbacks accessible, no regressed Edit Mode behavior or orphan click regions, and scoped panel/runtime evidence for any newly claimed behavior. Unobserved special modes, pet clicks/autocast and taint remain unverified until explicitly tested.
+Readable compass direction labels over both bright and dark backgrounds, preserved quiet navigation hierarchy, unchanged v4 map/layout and secure interaction/fallback surfaces, no Lua/taint/protected errors, and no invented marker source or player exact HP. Panel results and user visual observation establish scope; static PASS alone does not.
 
 ## Do Not Reopen Without New Evidence
-Do not reintroduce hidden-parent native pet reparenting, protected-frame manual Hide/Show, polling/timer/OnUpdate reassertion, combat-time protected mutation or native secret-value inspection. Do not remove stock fallback without a proven replacement. Preserve D-039 approved art, H.2 v4 geometry, the complete Phase H developer panel, intentionally absent exact player HP, stock party/target auras and special-action fallbacks.
+No pet visibility driver change, protected manual Hide/Show, native hidden-parent/reparent, combat-time protected mutation, polling, source/secret inspection, or removal of Blizzard fallbacks. Preserve all D-039 visuals beyond the compass label polish, D-045 geometry, H.3 authored helpful aura art, exact player HP omission and intentionally sparse target data. Bartender4/Dominos are reference implementations for future protected/action-bar work, not dependencies. Developer panel remains default validation.
 
 ## Relevant References
+- `docs/memory/evidence/P0213_H3_COMPASS_CONTRAST_EVIDENCE.md`
+- `docs/memory/patches/P0213_H3_COMPASS_CONTRAST.md`
 - `docs/memory/evidence/P0212_PET_ACCEPTANCE_AND_WORKFLOW.md`
-- `docs/memory/patches/P0212_PET_ACCEPTANCE_AND_WORKFLOW.md`
 - `docs/memory/evidence/P0211_PET_STARTUP_RECONCILIATION.md`
-- `docs/memory/evidence/P0209_R8_IMMERSIVE_PET_OWNERSHIP_EVIDENCE.md`
-- `docs/memory/evidence/P0210_WORKTREE_RECONCILIATION.md`
-- `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`
+- `docs/memory/evidence/P0202_H3_SCREENSHOT_VISUAL_EVIDENCE.md`
 - `docs/design/H3_APPROVED_ART_RUNTIME_FIDELITY.md`
 - `docs/memory/decisions/D-039_APPROVED_VISUAL_BASELINE.md`
+- `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`
 - `docs/memory/investigations/ACTIVE.md`
 - `docs/ROADMAP.md`

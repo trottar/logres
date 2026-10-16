@@ -1,0 +1,27 @@
+P0213 H.3 Compass Contrast Manifest
+
+Baseline: 018ea0aefd93ffb266e6333e5301a3ce8e443e22
+Runtime: 0.0.122-dev
+Work: bounded compass direction text contrast and shadow; no other Lua semantics
+Full static suite: 92 checks PASS
+Lua syntax: UNAVAILABLE / DEFERRED
+Prewrite diff --check PASS
+Postwrite git diff --check PASS
+WoW runtime / visual / protected checks: PENDING USER TEST
+No commit or push performed
+
+Updated files:
+  Logres/Core/Bootstrap.lua  sha256=bb05ada155c70e178964a231ab858a287538514ab2492a2d1d93a6201d415b45
+  Logres/Logres.toc  sha256=31d1581115705297384008057ab83d70eefe2f6b295a506090a3baa4be3c94a5
+  Logres/Media/Theme.lua  sha256=57790f0e443d4c2fdda9d0c2a656d07fccb69651aa729073258392e800a3afeb
+  Logres/Navigation/Compass.lua  sha256=c315334557e3a45ca22f2b04903234a4d4cbfd70803485b5bf372066a00de09d
+  docs/ROADMAP.md  sha256=fc0ac3b1e4cf813c31ac9fcf4689769c78740e2fd4f919e53447551cebbcae8d
+  docs/memory/CURRENT.md  sha256=abdfecabf8970109487fbc962e95c9c94b34a5261a37a3b0349ed2d4f67c7ee9
+  docs/memory/evidence/P0213_H3_COMPASS_CONTRAST_EVIDENCE.md  sha256=a8e0846fe3a03ba61e932e6850854ec8752c7843026faff3d44f38d1924fa907
+  docs/memory/handoffs/CURRENT_HANDOFF.md  sha256=72c4c04696f6e582be556516c7cc8f4006898cb344205cfd80ea0637e3bf25b9
+  docs/memory/investigations/ACTIVE.md  sha256=6aef3c4657fb85c0d9531d1da6bff5e0de2d36c3b17b97d8ca710372f94aedf5
+  docs/memory/patches/P0213_H3_COMPASS_CONTRAST.md  sha256=5468a20fec8a82295c02c6bf2a011918172357324c55686c96d1fec5d720df28
+  docs/memory/patches/PATCH_INDEX.md  sha256=763f4e723c0f49308dd7338f131077ea03d1574fea34721b8fa27c3ffcc3e05a
+  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md  sha256=21ec9b6656f6c89298a19c4247170bda1bd8fb6ef6809a224fef480396009aa6
+  docs/memory/roadmap/STATUS.md  sha256=dc57457032d6e02c9ca7b036186e7f81c8c45555d7f94cb85c4075ae2a16b2a2
+  tools/check_h3_compass_contrast_contract.py  sha256=7a66a5679bfed1909356bf80791def7ae561a0cfdedec8c7def5ab251f839691

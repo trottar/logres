@@ -4,6 +4,10 @@ local compassStyle =
     (Logres.Theme and Logres.Theme.compass) or {}
 local compassAssets = compassStyle.assets or {}
 local compassLabels = compassStyle.labels or {}
+local labelContrast = compassStyle.labelContrast or {}
+local cardinalShadow = labelContrast.cardinalShadow or { 0.02, 0.02, 0.02, 0.95 }
+local intercardinalShadow = labelContrast.intercardinalShadow or { 0.02, 0.02, 0.02, 0.91 }
+local labelShadowOffset = labelContrast.shadowOffset or { 1, -1 }
 local baselineStyle = compassStyle.baseline or {}
 local centerStyle = compassStyle.center or {}
 local tickStyle = compassStyle.ticks or {}
@@ -60,9 +64,9 @@ local MANUAL_RENDER_SCALE_MAX =
     manualWaypointStyle.renderScaleMax or 1.28
 
 local CARDINAL_LABEL_COLOR =
-    compassLabels.cardinal or { 0.94, 0.84, 0.62, 0.96 }
+    labelContrast.cardinal or compassLabels.cardinal or { 0.94, 0.84, 0.62, 0.96 }
 local INTERCARDINAL_LABEL_COLOR =
-    compassLabels.intercardinal or { 0.72, 0.68, 0.60, 0.82 }
+    labelContrast.intercardinal or compassLabels.intercardinal or { 0.72, 0.68, 0.60, 0.82 }
 
 local DIRECTIONS = {
     { label = "N", degrees = 0, cardinal = true },
@@ -334,6 +338,17 @@ local Compass = Logres:RegisterModule("Compass", {
                 labelColor[2],
                 labelColor[3],
                 labelColor[4]
+            )
+            -- Shadow changes glyph legibility only; tick bearings, placement,
+            -- fade math and screen-space geometry remain untouched.
+            local shadowColor =
+                definition.cardinal and cardinalShadow or intercardinalShadow
+            label:SetShadowColor(
+                shadowColor[1], shadowColor[2],
+                shadowColor[3], shadowColor[4]
+            )
+            label:SetShadowOffset(
+                labelShadowOffset[1], labelShadowOffset[2]
             )
 
             self.directionWidgets[index] = {

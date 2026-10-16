@@ -300,6 +300,15 @@ theme.compass = {
     visibleHalfAngle = 100,
     edgeFadeStart = 78,
 
+    -- H.3: readable direction labels against bright sky; no geometry change.
+    labelContrast = {
+        cardinal = { 0.99, 0.95, 0.84, 1.00 },
+        intercardinal = { 0.88, 0.83, 0.74, 0.96 },
+        cardinalShadow = { 0.02, 0.02, 0.02, 0.95 },
+        intercardinalShadow = { 0.02, 0.02, 0.02, 0.91 },
+        shadowOffset = { 1, -1 },
+    },
+
     baseline = {
         height = 8,
     },
