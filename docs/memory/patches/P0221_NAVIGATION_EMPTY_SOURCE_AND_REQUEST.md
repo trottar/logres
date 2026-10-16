@@ -1,0 +1,5 @@
+# P0221 — One-shot quest-line source request after P0220 empty result
+
+Verified baseline P0220 `09175bc`; P0220 live quest POIs failed to appear in WoW (0.0.129-dev loadCount 291): existing source returned zero ordinary quest-line and AreaPOI rows, although minimap tracking flags were active. This is retained as negative runtime evidence.
+
+P0221 adds a one-time map-keyed `C_QuestLine.RequestQuestLinesForMap` attempt when GetAvailableQuestLines returns an ordinary empty list; it uses pre-validated map input, optional API capability gate and `pcall`. Existing `QUESTLINE_UPDATE` probe event and developer-panel manual capture provide refreshes; no ticker/repeated request. Existing renderer, waypoint, protected state and Blizzard fallback unchanged. A new checker replaces the P0220 unconditional prohibition with a source-gated one-shot contract. Runtime not yet verified. If list still empty, do not keep retrying: investigate alternative accessible position provider and record negative evidence.

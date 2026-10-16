@@ -1,0 +1,20 @@
+P0222 compass source integration
+Baseline main: 09175bcfd177678384bf4a464ec2b23a9b88fd2f
+P0221 unpushed runtime: 0.0.130-dev loadCount 293; no live non-waypoint markers
+Shadow checkers: 101 PASS
+Files:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Logres.toc
+Logres/Navigation/Compass.lua
+Logres/Navigation/NavigationSourceProbe.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/evidence/P0222_COMPASS_NATIVE_MAP_PROVIDERS.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/patches/P0222_COMPASS_NATIVE_MAP_PROVIDERS.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0222_native_map_marker_contract.py

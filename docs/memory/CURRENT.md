@@ -7,31 +7,31 @@ project: logres
 # Current State
 
 ## Active Objective
-Phase H.3 approved compass sheet-12 runtime and capability completion. GitHub `main` P0219 `63a7557` verified. User adds **nearby available but unaccepted quests** to the local POI semantic role, not the accepted/current quest's major-destination lane. Approved artwork, D-037/D-038 true-bearing geometry, and stock-minimap fail-open remain authoritative.
+Phase H.3 compass functionality, not artwork previews. P0220 verified on GitHub main `09175bc`. P0221 `0.0.130-dev` locally applied (uncommitted): live trial failed to produce non-waypoint markers. User requires real available quest starts, accepted quest destinations, nearby POIs and tracking detections. Manual user waypoint is proven geometry/reference; native minimap must remain available until genuinely replaced.
 
 ## Current Work Item
-**P0220 candidate (`0.0.129-dev`):** add an optional, bounded available-quest-line source adapter and capability-gated live compass POI rendering to `NavigationSourceProbe.lua` using `C_QuestLine.GetAvailableQuestLines(currentMapID)` and capability-checked `C_QuestLog.IsOnQuest` / `IsQuestFlaggedCompleted`. Record ordinary quest/map positions, accepted/completed/hidden exclusions and actual local-view-radius candidate counts. Compass consumes only ordinary, eligible and same-map source rows, updates player-relative bearings on its existing throttled update, and hides markers outside the live radius. Live behavior remains an unverified candidate. Quest-line rows are only a candidate subset; they cannot be assumed to enumerate every available quest or precise NPC location.
+**P0222 candidate (`0.0.131-dev`)** combines optional public position feeds: `C_QuestLog.GetQuestsOnMap` for started vs already-accepted quest markers, existing AreaPOI positions, and `C_VignetteInfo` positioned minimap vignettes, with P0220/P0221 quest-line fallback retained. It reuses exact-bearing waypoint projection with role-specific lanes, local range restrictions and map/eligibility/secret gates. No invented blips, protected presentation reads, periodic scans or Blizzard suppression. Runtime NOT yet verified.
 
 ## Verified State
-- P0219 pushed `63a7557`, `0.0.128-dev` loadCount 290: developer-panel Compass Art ON/OFF and Compass Check PASS; approved quest/POI/tracking glyph previews do not prove real navigation. Navigation Source Probe PASS with 23 tracking types (4 active), player map 1432 and usable local radius 133.33 yards; zero positioned AreaPOIs and no quest/navigation waypoint in that sample. No source failures or secret skips. Layout and normal check suite completed in the tested out-of-combat world.
-- Forever 1.60.1 API documentation exposes `C_QuestLine.GetAvailableQuestLines(uiMapID)` returning QuestLineInfo map x/y, questID and questName. `C_QuestLog.IsOnQuest` and `IsQuestFlaggedCompleted` expose acceptance/completion filters. This is API source evidence only; its actual quest-line population, completeness, distance validity and secret behavior remain unverified in the user's client.
-- D-037/D-038/D-039 still govern distinct major quest destinations, POI lane, tracking lane, center focus and source gates. Tracking-result locations remain source-blocked. No stock minimap suppression is authorized.
+- P0220 pushed `09175bc`. P0221 latest in-game `0.0.130-dev` loadCount 293: map 1432, view radius 133.33y, quest lines 0 despite single successful request + QUESTLINE_UPDATE, AreaPOI 0, tracking filters active 4 but no per-object coordinates. User screenshot: native available `!` visible, compass still no other markers. P0221 FAILS live marker objective; generic Compass Check PASS covers heading/manual only.
+- Forever API docs declare QuestPOIMapInfo with `questID`, `x`, `y`, `mapID`, `isQuestStart`, plus vignette APIs with onMinimap and position. These sources have not been proven populated in this specific client. Separate unavailable/secret/zero source results rather than asserting native minimap parity.
+- P0219 sheet-12 glyph assets are available; existing accurate manual-waypoint bearing projection is the foundation. General tracking category selection does NOT enumerate individual herb/ore detections.
 
 ## Next Action
-Apply guarded P0220, deploy, `/reload`. In the developer panel use Phase H **Navigation Source Probe** in an ordinary world area where quest-giver markers naturally exist, then Phase E **Compass Check** and **Compass Art ON/OFF**, Phase H Layout Check, Phase 0 Run All. Inspect the `availableQuestLines=` summary and `availableQuestLine[]` rows. If only empty results occur or the API is unavailable/secret, record DEFERRED, not PASS. Do not travel solely to manufacture a case. Compare naturally visible stock quest offers with live POI glyph bearings and the reported eligible rows; absence of source data is a deferral.
+On locally applied P0221 worktree, apply P0222 guarded ZIP (do not commit P0221 separately), deploy, `/reload`, run Phase H Navigation Source Probe, Phase E Compass Check, Phase H Layout Check, Phase 0 Run All. Compare source rows and real marker bearings near naturally visible map objects. If providers remain empty, preserve OPEN source limitation, investigate safe map/Questie-compatible database alternatives; do not claim success from a generic check.
 
 ## Success Criteria
-- Unaccepted available quests are classified as local POI subtypes, with nearby-only radius and same-map positioning required, distinct from already accepted quest destinations. No quest punctuation or false bearings.
-- New source probe is read-only, bounded to 24 rows, secret-safe, preserves previous navigation probes and never treats missing optional APIs as overall probe failure. Ordinary accepted/completed/hidden or off-radius candidates are excluded from the eligible subset.
-- Live local POI glyphs may render only for ordinary confirmed eligible quest-line positions; no new minimap, quest controls, pet driver, action paths or screen-map geometry mutation. Full static checker suite, diff hygiene and checked in-game actions show no regression within tested scope; unobserved data remain DEFERRED.
+- Native map quest starts become quiet local POIs only when ordinary unaccepted/not-completed; accepted non-start quest map entries use major quest lane. Other local POIs/vignettes are within true minimap radius. Role-specific glyphs retain exact bearings and vertical-only collision resolution.
+- Observability: each provider reports scanned/eligible/nearby counts; compass reports actual non-waypoint marker count, role and candidate counts separately. Visual PASS only after positive positioned marker and correct in-game bearing.
+- No source secret comparisons or protected surface reads, no polling or minimap suppression. Existing runtime checkers and diff hygiene pass; all untested scenarios remain DEFERRED/OPEN.
 
 ## Do Not Reopen Without New Evidence
-Do not infer all available quest givers from quest-line pins, treat map-level positions as NPC coordinates without runtime verification, branch on secret values, add polling or broad hooks, hide the stock minimap, or reopen P0214–P0219 accepted presentation and pet/action behavior.
+Do not rework accepted pet/action/UI visuals, pretend tracking filters are detected coordinates, assert a nonexistent quest line request success from 0 rows, add native pin scraping/hooking or polling, or remove stock minimap fallback.
 
 ## Relevant References
+- `docs/memory/evidence/P0222_COMPASS_NATIVE_MAP_PROVIDERS.md`
+- `docs/memory/evidence/P0221_NAVIGATION_EMPTY_SOURCE_AND_REQUEST.md`
 - `docs/memory/evidence/P0220_COMPASS_AVAILABLE_QUEST_POI_SOURCE.md`
-- `docs/memory/patches/P0220_COMPASS_AVAILABLE_QUEST_POI_SOURCE.md`
 - `docs/memory/decisions/D-037_NAVIGATION_MARKER_ROLES_AND_MINIMAP_DIRECTION.md`
 - `docs/memory/decisions/D-038_COMPASS_VISUAL_FOCUS_AND_DEPTH_CONTRACT.md`
 - `docs/design/approved/12_compass_glyph_and_state_sheet.png`
-- `docs/memory/evidence/P0219_COMPASS_SHEET12_AND_CAPABILITY_GAP.md`

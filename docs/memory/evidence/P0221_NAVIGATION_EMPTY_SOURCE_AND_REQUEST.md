@@ -1,0 +1,15 @@
+# P0221 — Empty available quest-line source; single request test
+
+Baseline: P0220 pushed to GitHub main `09175bcfd177678384bf4a464ec2b23a9b88fd2f`; WoW Forever 1.60.1, 0.0.129-dev, loadCount 291.
+
+## Observed regression / negative evidence
+The user reports no production compass POI/quest/tracking markers except user waypoints. The latest developer-panel Navigation Source Probe for current map 1432 reports ordinary player map geometry and minimap radius 133.33 yards, four selected tracking filters, **zero** AreaPOI rows, and `availableQuestLines=api:true reason:ordinary-list scanned:0 positioned:0 nearbyUnaccepted:0 capReached:false`. No source failures or secret skips. `compasscheck: PASS` tests heading/manual implementation only; it is **not** marker coverage PASS. This is OPEN / SOURCE EMPTY / LIVE MARKER NOT ACCEPTED, not a visually successful P0220. Don't demand travel to produce a fabricated case.
+
+## Narrow new hypothesis
+The P0220 adapter called only `C_QuestLine.GetAvailableQuestLines(uiMapID)`. Blizzard's generated Forever QuestLineInfo API also declares `C_QuestLine.RequestQuestLinesForMap(uiMapID)` as an explicit, ordinary map-ID request. It is plausible that the available quest-line list was not populated because no request occurred. This is a hypothesis: an empty result may also reflect absent content/quest-line-only scope. The minimap tracking filter itself contains **no object coordinates** and must not be translated into invented markers.
+
+## P0221 mechanics / guardrails
+When an ordinary current-map quest-line list is empty, issue at most one protected-by-pcall explicit request for that map in the current module session. Keep request identity and status across probe captures so `QUESTLINE_UPDATE` or manual developer-panel capture can read newly populated rows. No timer, no periodic requesting, no hooks, no protected Blizzard frame inspection, no secret-value branching and no stock minimap suppression. Existing eligibility, radius, true bearings and eight-glyph rendering policy remain unchanged. Report request-API availability, request count/map/status and observed post-request list counts. Optional request failure remains separately reported; it must not turn the existing native-navigation checks into a false PASS.
+
+## Runtime acceptance criterion
+After guarded apply, deploy and `/reload`, use developer panel Phase H Navigation Source Probe; Phase E Compass Check; Phase H Layout Check; Phase 0 Run All. In an ordinary world context inspect request outcome and quest rows. The request should run once for an empty current-map list, never repeat on subsequent same-map captures, and should not throw Lua, taint or secret errors. Positive positioned eligible rows + visible bearings are required for a live-marker PASS. An unchanged empty list is a new **NEGATIVE** result requiring a different data source (e.g., documented quest-map source or an explicitly supported database/provider); not more timers, blanket hooks, polling or fake glyphs. Generic tracking results and AreaPOIs remain blocked by their own absent positions; do not declare full compass complete.

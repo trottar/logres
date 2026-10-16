@@ -273,6 +273,10 @@ local Compass = Logres:RegisterModule("Compass", {
         self.availableQuestPoiShown = 0
         self.availableQuestPoiCandidates = 0
         self.availableQuestPoiReason = "initialize"
+        self.questDestinationShown = 0
+        self.questDestinationCandidates = 0
+        self.trackingShown = 0
+        self.trackingCandidates = 0
         self.updateActive = false
         self.elapsed = 0
         self.lastReason = "initialize"
@@ -351,6 +355,24 @@ local Compass = Logres:RegisterModule("Compass", {
         poiFocus:SetShadowOffset(1, -1)
         poiFocus:Hide()
         self.availableQuestPoiFocus = poiFocus
+        self.questDestinationMarkers = {}
+        for index=1,4 do
+            local glyph=frame:CreateTexture(nil,"OVERLAY")
+            glyph:SetTexture(compassAssets.questDestination)
+            glyph:SetSize(questStyle.width or 14,questStyle.height or 22)
+            glyph:SetAlpha(questStyle.alpha or 0.95)
+            glyph:Hide()
+            self.questDestinationMarkers[index]=glyph
+        end
+        self.trackingMarkers = {}
+        for index=1,4 do
+            local glyph=frame:CreateTexture(nil,"OVERLAY")
+            glyph:SetTexture(compassAssets.tracking)
+            glyph:SetSize(trackingStyle.width or 8,trackingStyle.height or 8)
+            glyph:SetAlpha(trackingStyle.alpha or 0.86)
+            glyph:Hide()
+            self.trackingMarkers[index]=glyph
+        end
         self.directionWidgets = {}
 
         for index = 1, #DIRECTIONS do
@@ -480,8 +502,12 @@ function Compass:ClearAvailableQuestPOIs(reason)
     self.availableQuestPoiShown = 0
     self.availableQuestPoiCandidates = 0
     self.availableQuestPoiReason = reason or "source-unavailable"
-    for index = 1, #self.availableQuestPoiMarkers do
-        self.availableQuestPoiMarkers[index]:Hide()
+    self.questDestinationShown = 0
+    self.questDestinationCandidates = 0
+    self.trackingShown = 0
+    self.trackingCandidates = 0
+    for _, pool in ipairs({self.availableQuestPoiMarkers,self.questDestinationMarkers,self.trackingMarkers}) do
+        for index=1,#pool do pool[index]:Hide() end
     end
     self.availableQuestPoiFocus:Hide()
 end
@@ -490,11 +516,7 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     self:ClearAvailableQuestPOIs("source-unavailable")
     if not self.policyEligible or not self.presentationActive
         or type(self.headingDegrees) ~= "number"
-        or self.artworkPreview == true
-    then
-        return
-    end
-
+        or self.artworkPreview == true then return end
     local source = Logres:GetModule("NavigationSourceProbe")
     if not source or source.moduleEnabled ~= true
         or type(source.currentMapID) ~= "number"
@@ -502,119 +524,125 @@ function Compass:RefreshAvailableQuestPOIs(reason)
         or type(source.mapHeight) ~= "number"
         or source.mapWidth <= 0 or source.mapHeight <= 0
         or type(source.availableQuestRows) ~= "table"
-    then
-        self.availableQuestPoiReason = "source-not-ready"
-        return
-    end
+    then self.availableQuestPoiReason = "source-not-ready"; return end
     if not C_Map or type(C_Map.GetBestMapForUnit) ~= "function"
         or type(C_Map.GetPlayerMapPosition) ~= "function"
-        or not C_Minimap
-        or type(C_Minimap.GetViewRadius) ~= "function"
-    then
-        self.availableQuestPoiReason = "map-api-unavailable"
-        return
+        or not C_Minimap or type(C_Minimap.GetViewRadius) ~= "function"
+    then self.availableQuestPoiReason = "map-api-unavailable"; return end
+    local okMap,mapID=pcall(C_Map.GetBestMapForUnit,"player")
+    if not okMap or isSecret(mapID) or type(mapID)~="number"
+        or mapID~=source.currentMapID
+    then self.availableQuestPoiReason="map-mismatch-or-secret"; return end
+    local okPlayer,position=pcall(C_Map.GetPlayerMapPosition,mapID,"player")
+    if not okPlayer then self.availableQuestPoiReason="player-position-call-failed"; return end
+    local px,py,vectorError=readVectorXY(position)
+    if vectorError then self.availableQuestPoiReason=vectorError; return end
+    local okRadius,radius=pcall(C_Minimap.GetViewRadius)
+    if not okRadius or isSecret(radius) or type(radius)~="number" or radius<=0
+    then self.availableQuestPoiReason="local-radius-unavailable"; return end
+    local localPOIs,majorQuests,tracked={},{},{}
+    local seenQuest={}
+    local function add(row,role,key)
+        if type(row)~="table" or type(row.x)~="number" or type(row.y)~="number"
+            or row.x<0 or row.x>1 or row.y<0 or row.y>1 then return end
+        local dx=(row.x-px)*source.mapWidth
+        local dy=(row.y-py)*source.mapHeight
+        local distance=math.sqrt(dx*dx+dy*dy)
+        local cap=role=="quest" and radius*8 or radius
+        if distance<=0 or distance>cap then return end
+        local bearing=(math.deg(math.atan2(dx,-dy))+360)%360
+        local relative=normalizeRelativeDegrees(bearing-self.headingDegrees)
+        local magnitude=math.abs(relative)
+        if magnitude>VISIBLE_HALF_ANGLE then return end
+        local candidate={distance=distance,relative=relative,magnitude=magnitude,
+            x=relative*PIXELS_PER_DEGREE,name=row.name,sortKey=tostring(key)}
+        if role=="quest" then majorQuests[#majorQuests+1]=candidate
+        elseif role=="tracking" then tracked[#tracked+1]=candidate
+        else localPOIs[#localPOIs+1]=candidate end
     end
-
-    local okMap, mapID = pcall(C_Map.GetBestMapForUnit, "player")
-    if not okMap or isSecret(mapID) or type(mapID) ~= "number"
-        or mapID ~= source.currentMapID
-    then
-        self.availableQuestPoiReason = "map-mismatch-or-secret"
-        return
+    -- QuestPOIMapInfo.isQuestStart is authoritative only with ordinary
+    -- accepted/completed state already validated by NavigationSourceProbe.
+    if type(source.questMapRows)=="table" then
+        for index=1,#source.questMapRows do
+            local row=source.questMapRows[index]
+            if row.role=="poi" or row.role=="quest" then
+                seenQuest[row.questID]=true
+                add(row,row.role,"map"..tostring(row.questID))
+            end
+        end
     end
-    local okPlayer, position = pcall(
-        C_Map.GetPlayerMapPosition, mapID, "player"
-    )
-    if not okPlayer then
-        self.availableQuestPoiReason = "player-position-call-failed"
-        return
+    -- Earlier quest-line feed remains a fallback, deduped by quest ID.
+    for index=1,#source.availableQuestRows do
+        local row=source.availableQuestRows[index]
+        if row.eligible==true and type(row.questID)=="number"
+            and not seenQuest[row.questID] then
+            seenQuest[row.questID]=true
+            add(row,"poi","line"..tostring(row.questID))
+        end
     end
-    local px, py, vectorError = readVectorXY(position)
-    if vectorError then
-        self.availableQuestPoiReason = vectorError
-        return
+    if type(source.areaPoiRows)=="table" then
+        for index=1,#source.areaPoiRows do
+            local row=source.areaPoiRows[index]
+            add(row,"poi","area"..tostring(row.id or index))
+        end
     end
-    local okRadius, radius = pcall(C_Minimap.GetViewRadius)
-    if not okRadius or isSecret(radius)
-        or type(radius) ~= "number" or radius <= 0
-    then
-        self.availableQuestPoiReason = "local-radius-unavailable"
-        return
+    if type(source.vignetteRows)=="table" then
+        for index=1,#source.vignetteRows do
+            local row=source.vignetteRows[index]
+            add(row,row.role=="tracking" and "tracking" or "poi","vignette"..tostring(index))
+        end
     end
-
-    local candidates = {}
-    for index = 1, #source.availableQuestRows do
-        local row = source.availableQuestRows[index]
-        if row.eligible == true
-            and type(row.x) == "number" and type(row.y) == "number"
-            and type(row.questID) == "number"
-        then
-            local dx = (row.x - px) * source.mapWidth
-            local dy = (row.y - py) * source.mapHeight
-            local distance = math.sqrt(dx * dx + dy * dy)
-            if distance <= radius and distance > 0 then
-                local bearing = (math.deg(math.atan2(dx, -dy)) + 360) % 360
-                local relative = normalizeRelativeDegrees(
-                    bearing - self.headingDegrees
-                )
-                local magnitude = math.abs(relative)
-                if magnitude <= VISIBLE_HALF_ANGLE then
-                    candidates[#candidates + 1] = {
-                        questID = row.questID,
-                        name = row.name,
-                        distance = distance,
-                        relative = relative,
-                        magnitude = magnitude,
-                        x = relative * PIXELS_PER_DEGREE,
-                    }
+    local function nearestFirst(a,b)
+        if a.distance==b.distance then return a.sortKey < b.sortKey end
+        return a.distance < b.distance
+    end
+    table.sort(localPOIs,nearestFirst)
+    table.sort(majorQuests,nearestFirst)
+    table.sort(tracked,nearestFirst)
+    self.availableQuestPoiCandidates=#localPOIs
+    self.questDestinationCandidates=#majorQuests
+    self.trackingCandidates=#tracked
+    self.availableQuestPoiReason="ordinary-positioned-candidates"
+    local closestFocus=nil
+    local focusDegrees=8
+    local function paint(items,pool,roleStyle,role)
+        local used={}
+        for index=1,math.min(#items,#pool) do
+            local candidate=items[index]
+            local lane=0
+            for j=1,#used do
+                if math.abs(candidate.x-used[j].x)<10 then
+                    lane=math.max(lane,used[j].lane+1)
                 end
             end
-        end
-    end
-    table.sort(candidates, function(a, b)
-        if a.distance == b.distance then
-            return a.questID < b.questID
-        end
-        return a.distance < b.distance
-    end)
-
-    self.availableQuestPoiCandidates = #candidates
-    self.availableQuestPoiReason = "ordinary-positioned-candidates"
-    local used = {}
-    local closestFocus = nil
-    local focusDegrees = 8
-    for index = 1, math.min(#candidates, #self.availableQuestPoiMarkers) do
-        local candidate = candidates[index]
-        -- Exact-bearing x remains untouched; coincident glyphs use y lanes.
-        local lane = 0
-        for placed = 1, #used do
-            if math.abs(candidate.x - used[placed].x) < 10 then
-                lane = math.max(lane, used[placed].lane + 1)
+            lane=math.min(lane,2)
+            used[#used+1]={x=candidate.x,lane=lane}
+            -- Exact horizontal bearing is never displaced for collision control.
+            local y = TAPE_Y + lane * 9
+            if role=="quest" then y=TAPE_Y+16+lane*9
+            elseif role=="tracking" then y=TAPE_Y-12-lane*9 end
+            local glyph=pool[index]
+            glyph:ClearAllPoints()
+            glyph:SetPoint("CENTER",self.frame,"CENTER",candidate.x,y)
+            glyph:SetAlpha((roleStyle.alpha or 0.90)
+                * edgeFadeForMagnitude(candidate.magnitude))
+            glyph:Show()
+            if role=="quest" then self.questDestinationShown=self.questDestinationShown+1
+            elseif role=="tracking" then self.trackingShown=self.trackingShown+1
+            else self.availableQuestPoiShown=self.availableQuestPoiShown+1 end
+            if candidate.magnitude<=focusDegrees and type(candidate.name)=="string"
+                and (not closestFocus or candidate.distance<closestFocus.distance) then
+                closestFocus=candidate
             end
         end
-        lane = math.min(lane, 2)
-        used[#used + 1] = { x = candidate.x, lane = lane }
-
-        local glyph = self.availableQuestPoiMarkers[index]
-        glyph:ClearAllPoints()
-        glyph:SetPoint("CENTER", self.frame, "CENTER", candidate.x,
-            TAPE_Y + lane * 9)
-        glyph:SetAlpha((poiStyle.alpha or 0.90)
-            * edgeFadeForMagnitude(candidate.magnitude))
-        glyph:Show()
-        self.availableQuestPoiShown = self.availableQuestPoiShown + 1
-        if candidate.magnitude <= focusDegrees
-            and type(candidate.name) == "string"
-            and (closestFocus == nil
-                or candidate.distance < closestFocus.distance)
-        then
-            closestFocus = candidate
-        end
     end
+    paint(majorQuests,self.questDestinationMarkers,questStyle,"quest")
+    paint(localPOIs,self.availableQuestPoiMarkers,poiStyle,"poi")
+    paint(tracked,self.trackingMarkers,trackingStyle,"tracking")
     if closestFocus then
-        local fade = 1 - closestFocus.magnitude / focusDegrees
+        local fade=1-closestFocus.magnitude/focusDegrees
         self.availableQuestPoiFocus:SetText(closestFocus.name)
-        self.availableQuestPoiFocus:SetAlpha(fade * fade)
+        self.availableQuestPoiFocus:SetAlpha(fade*fade)
         self.availableQuestPoiFocus:Show()
     end
 end
@@ -1246,6 +1274,10 @@ function Compass:GetDebugStatus()
         availableQuestPoiShown = self.availableQuestPoiShown,
         availableQuestPoiCandidates = self.availableQuestPoiCandidates,
         availableQuestPoiReason = self.availableQuestPoiReason,
+        questDestinationShown = self.questDestinationShown,
+        questDestinationCandidates = self.questDestinationCandidates,
+        trackingShown = self.trackingShown,
+        trackingCandidates = self.trackingCandidates,
 
         immersionEnabled = self.immersionEnabled == true,
         context = self.context,

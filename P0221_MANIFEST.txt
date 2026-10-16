@@ -1,0 +1,18 @@
+P0221 — source-empty quest-line request
+Baseline: 09175bcfd177678384bf4a464ec2b23a9b88fd2f
+Static checks: 100 PASS
+Files:
+Logres/Core/Bootstrap.lua
+Logres/Logres.toc
+Logres/Navigation/NavigationSourceProbe.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/evidence/P0221_NAVIGATION_EMPTY_SOURCE_AND_REQUEST.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/patches/P0221_NAVIGATION_EMPTY_SOURCE_AND_REQUEST.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0220_available_quest_poi_contract.py
+tools/check_p0221_navigation_request_contract.py

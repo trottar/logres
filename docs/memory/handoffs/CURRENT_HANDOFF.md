@@ -1,7 +1,9 @@
-# Current Handoff — P0220 available unaccepted quest POI candidate
+# Current Handoff — P0222 functional compass candidate
 
-Authority: `docs/memory/CURRENT.md`. Verified P0219 `63a7557` on GitHub `main`; 0.0.128-dev loadCount 290 Compass Art ON/OFF, Compass Check and existing Navigation Source Probe passed the tested state. The source probe returned map 1432, radius 133.33 yards, zero AreaPOIs and no quest waypoint; it had not inspected available quest-line starts.
+Authority: `docs/memory/CURRENT.md`.
 
-User-approved new semantic scope: nearby available **unaccepted** quest starts are **local POIs**, not already accepted quest destinations. P0220 (candidate 0.0.129-dev) optionally reads at most 24 `C_QuestLine.GetAvailableQuestLines` records, excludes accepted/completed/hidden states with ordinary secret-gated checks, and feeds the existing compass a bounded eight-glyph POI rendering candidate at exact bearings within the live minimap radius. A source-provided name can appear only on center alignment. No forged coordinates, tracking-result enumeration, stock minimap suppression, protected UI or new periodic polling. The client API may not enumerate all minimap quest pins; this is NOT proof of complete minimap parity.
+GitHub main P0220 `09175bc`. Local unpushed P0221 0.0.130-dev loadCount 293: user still saw only waypoint markers, with zero quest-line/AreaPOI positions after one request/event. Negative runtime evidence preserved; do not call that PASS.
 
-After guarded apply/deploy `/reload`: developer panel Phase H Navigation Source Probe, Phase E Compass Check and Compass Art ON/OFF, Phase H Layout Check, then Phase 0 Run All. If naturally near available unaccepted quests, compare real POI marks to native map; otherwise absence/empty/secret conditions are environmental deferrals, not PASS. Preserve earlier evidence, stock fallback and protected/secret-value policy.
+P0222 uses new optional native quest-map/vignette position feeds plus existing AreaPOI/quest-line fallback and existing waypoint-bearing projection. It separates real quest destinations, local POIs and typed vignette detections. No protected pin reads, source mutation, constant retry, fake position, or stock minimap removal. Some treasure vignettes may provide tracking glyphs; generic selected resource filters are NOT positions.
+
+Apply in same uncommitted P0221 worktree; panel Phase H Navigation Source Probe, Phase E Compass Check, Phase H Layout Check and Phase 0 Run All after deploying/reload. Require a visually confirmed non-waypoint marker for capability PASS; empty source is OPEN/DEFERRED. No WoW redeploy is needed for memory-only edits, but this checkpoint changes runtime Lua and DOES require deploy.

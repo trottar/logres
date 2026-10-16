@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""P0220: source-gated, source-backed unaccepted quest live local POI candidate."""
+"""P0220: source-gated unaccepted quest POI; P0221 permits one keyed request."""
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
@@ -28,7 +28,6 @@ for frag in [
 ]:
     if frag not in probe: errors.append('probe missing '+frag)
 for frag in [
-    'C_QuestLine.RequestQuestLinesForMap',
     'C_Map.SetUserWaypoint', 'C_QuestLog.AcceptQuest',
     'C_Timer.', 'RegisterStateDriver(',
     'SetScript("OnUpdate"',

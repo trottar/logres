@@ -2211,6 +2211,16 @@ local function runCompassCheck()
         tostring(debugStatus.lastReason),
         tostring(debugStatus.lastError)
     ))
+    emit(string.format(
+        "Logres compass markers: quest=%s/%s poi=%s/%s tracking=%s/%s source=%s (non-waypoint live evidence; zero markers is NOT marker PASS)",
+        tostring(debugStatus.questDestinationShown or 0),
+        tostring(debugStatus.questDestinationCandidates or 0),
+        tostring(debugStatus.availableQuestPoiShown or 0),
+        tostring(debugStatus.availableQuestPoiCandidates or 0),
+        tostring(debugStatus.trackingShown or 0),
+        tostring(debugStatus.trackingCandidates or 0),
+        tostring(debugStatus.availableQuestPoiReason or "unknown")
+    ))
 end
 
 local CONTEXT_POLICY_ALPHA = {

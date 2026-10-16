@@ -3,6 +3,8 @@ local _, Logres = ...
 local MAX_TRACKING_TYPES = 48
 local MAX_AREA_POIS = 24
 local MAX_AVAILABLE_QUEST_LINES = 24
+local MAX_QUEST_MAP_ROWS = 32
+local MAX_VIGNETTES = 24
 local ERROR_TEXT_LIMIT = 96
 
 local Probe = Logres:RegisterModule("NavigationSourceProbe", {
@@ -16,6 +18,8 @@ local EVENTS = {
     "SUPER_TRACKING_PATH_UPDATED",
     "QUESTLINE_UPDATE",
     "QUEST_LOG_UPDATE",
+    "VIGNETTES_UPDATED",
+    "VIGNETTE_MINIMAP_UPDATED",
     "PLAYER_MAP_CHANGED",
     "PLAYER_ENTERING_WORLD",
 }
@@ -227,6 +231,16 @@ local function apiPresence()
         -- Optional P0220 source; excluded from the established requiredAPIReady gate.
         availableQuestLines = C_QuestLine
             and type(C_QuestLine.GetAvailableQuestLines) == "function" or false,
+        questLineRequest = C_QuestLine
+            and type(C_QuestLine.RequestQuestLinesForMap) == "function" or false,
+        questMapPOIs = C_QuestLog
+            and type(C_QuestLog.GetQuestsOnMap) == "function" or false,
+        vignetteList = C_VignetteInfo
+            and type(C_VignetteInfo.GetVignettes) == "function" or false,
+        vignetteInfo = C_VignetteInfo
+            and type(C_VignetteInfo.GetVignetteInfo) == "function" or false,
+        vignettePosition = C_VignetteInfo
+            and type(C_VignetteInfo.GetVignettePosition) == "function" or false,
         questOnQuest = C_QuestLog
             and type(C_QuestLog.IsOnQuest) == "function" or false,
         questCompleted = C_QuestLog
@@ -289,6 +303,15 @@ function Probe:ResetCaptureState(reason)
     self.availableQuestNearby = 0
     self.availableQuestCapReached = false
     self.availableQuestRows = {}
+    self.questMapRows = {}
+    self.questMapScanned = 0
+    self.questMapNearby = 0
+    self.questMapAccepted = 0
+    self.questMapStatus = "not-read"
+    self.vignetteRows = {}
+    self.vignetteScanned = 0
+    self.vignetteNearby = 0
+    self.vignetteStatus = "not-read"
 
     self.superTrackingAnything = nil
     self.superTrackingQuest = nil
@@ -607,6 +630,33 @@ function Probe:ReadAreaPOIs()
     self.areaPoiTruncated = true
 end
 
+-- One explicit source request after an ordinary empty quest-line list.
+-- The current map is already ordinary-field validated by ReadMap. This is
+-- NOT a recurring refresh, source scrape or request to move the native UI.
+function Probe:RequestAvailableQuestLinesForCurrentMap()
+    if self.questLineRequestMapID == self.currentMapID then
+        return
+    end
+    if type(self.currentMapID) ~= "number" then
+        return
+    end
+    local api = apiPresence()
+    if not api.questLineRequest then
+        self.questLineRequestStatus = "api-unavailable"
+        return
+    end
+    self.questLineRequestMapID = self.currentMapID
+    self.questLineRequestAttemptCount = self.questLineRequestAttemptCount + 1
+    local ok, errorText = pcall(C_QuestLine.RequestQuestLinesForMap, self.currentMapID)
+    if ok then
+        self.questLineRequestStatus = "requested-awaiting-source"
+        self.questLineRequestError = nil
+    else
+        self.questLineRequestStatus = "request-call-failed"
+        self.questLineRequestError = safeErrorText(errorText)
+    end
+end
+
 -- Optional read-only capability probe. Quest-line positions are NOT assumed
 -- to cover every quest giver; Compass only renders qualified source-backed rows.
 function Probe:ReadAvailableQuestLines()
@@ -623,7 +673,7 @@ function Probe:ReadAvailableQuestLines()
         return
     end
 
-    -- No RequestQuestLinesForMap call, no polling and no source mutations.
+    -- Observe a list; only request once if the ordinary list is empty.
     local ok, rawList = pcall(
         C_QuestLine.GetAvailableQuestLines, self.currentMapID
     )
@@ -646,6 +696,9 @@ function Probe:ReadAvailableQuestLines()
             self.secretSkipCount = self.secretSkipCount + 1
             self.lastSecret = "availableQuestLine"
         elseif rawRow == nil then
+            if index == 1 then
+                self:RequestAvailableQuestLinesForCurrentMap()
+            end
             return
         elseif type(rawRow) ~= "table" then
             self.availableQuestReason = "invalid-row"
@@ -899,6 +952,140 @@ function Probe:ReadNavigation()
     end
 end
 
+-- Public quest map rows have a quest-start bit and positioned map coordinates.
+-- Do not confuse the quest-start role with an accepted/current quest destination.
+function Probe:ReadQuestMapPOIs()
+    if type(self.currentMapID) ~= "number" or not C_QuestLog
+        or type(C_QuestLog.GetQuestsOnMap) ~= "function" then
+        self.questMapStatus = "optional-api-unavailable"
+        return
+    end
+    local ok, raw = pcall(C_QuestLog.GetQuestsOnMap, self.currentMapID)
+    if not ok then self.questMapStatus = "call-failed"; return end
+    local rows, state = ordinaryField(self, raw, "table", "questMap.list")
+    if state ~= "ordinary" then
+        self.questMapStatus = "list-" .. state
+        return
+    end
+    self.questMapStatus = "ordinary-list"
+    for index=1,MAX_QUEST_MAP_ROWS do
+        local rawRow = rows[index]
+        if isSecret(rawRow) then
+            self.secretSkipCount = self.secretSkipCount + 1
+            self.lastSecret = "questMap.row"
+        elseif rawRow == nil then
+            return
+        elseif type(rawRow) == "table" then
+            self.questMapScanned = self.questMapScanned + 1
+            local questID = ordinaryField(self, rawRow.questID, "number", "questMap.id")
+            local mapID = ordinaryField(self, rawRow.mapID, "number", "questMap.map")
+            local x = ordinaryField(self, rawRow.x, "number", "questMap.x")
+            local y = ordinaryField(self, rawRow.y, "number", "questMap.y")
+            local start = ordinaryField(self, rawRow.isQuestStart, "boolean", "questMap.isQuestStart")
+            if questID and mapID == self.currentMapID and x and y
+                and x>=0 and x<=1 and y>=0 and y<=1 and start ~= nil
+            then
+                local onQuest = nil
+                local completed = nil
+                if C_QuestLog.IsOnQuest and C_QuestLog.IsQuestFlaggedCompleted then
+                    local okOn, valueOn = pcall(C_QuestLog.IsOnQuest, questID)
+                    local okDone, valueDone = pcall(C_QuestLog.IsQuestFlaggedCompleted, questID)
+                    onQuest = okOn and ordinaryField(self, valueOn, "boolean", "questMap.onQuest") or nil
+                    completed = okDone and ordinaryField(self, valueDone, "boolean", "questMap.completed") or nil
+                end
+                local role = nil
+                if start == true and onQuest == false and completed == false then
+                    role = "poi"
+                elseif start == false and onQuest == true then
+                    role = "quest"
+                end
+                if role then
+                    local row = { questID=questID, x=x, y=y, role=role }
+                    row.distanceYards = self:DistanceYards(x,y)
+                    local maxRadius = role == "quest" and 8 or 1
+                    if type(row.distanceYards) == "number"
+                        and type(self.viewRadius) == "number" and self.viewRadius > 0
+                        and row.distanceYards <= self.viewRadius * maxRadius
+                    then
+                        self.questMapNearby = self.questMapNearby + 1
+                        row.nearby = true
+                    end
+                    if role == "quest" then self.questMapAccepted = self.questMapAccepted + 1 end
+                    if C_QuestLog.GetTitleForQuestID
+                        and type(C_QuestLog.GetTitleForQuestID) == "function" then
+                        local okName, name = pcall(C_QuestLog.GetTitleForQuestID, questID)
+                        if okName then
+                            row.name = ordinaryField(self,name,"string","questMap.name")
+                        end
+                    end
+                    self.questMapRows[#self.questMapRows+1] = row
+                end
+            end
+        end
+    end
+    self.questMapStatus = "row-cap-reached"
+end
+
+-- Vignette coordinates are distinct from minimap tracking flags.
+-- Only ordinary, currently minimap-visible and living vignettes are eligible.
+function Probe:ReadVignettes()
+    if not C_VignetteInfo or type(C_VignetteInfo.GetVignettes) ~= "function"
+        or type(C_VignetteInfo.GetVignetteInfo) ~= "function"
+        or type(C_VignetteInfo.GetVignettePosition) ~= "function"
+        or type(self.currentMapID) ~= "number"
+    then self.vignetteStatus="optional-api-unavailable"; return end
+    local ok, raw = pcall(C_VignetteInfo.GetVignettes)
+    if not ok then self.vignetteStatus="call-failed"; return end
+    local ids,state = ordinaryField(self,raw,"table","vignette.list")
+    if state~="ordinary" then self.vignetteStatus="list-"..state; return end
+    self.vignetteStatus="ordinary-list"
+    for index=1,MAX_VIGNETTES do
+        local rawID = ids[index]
+        if isSecret(rawID) then
+            self.secretSkipCount = self.secretSkipCount + 1
+            self.lastSecret = "vignette.guid"
+        elseif rawID == nil then return
+        elseif type(rawID) == "string" then
+            self.vignetteScanned = self.vignetteScanned + 1
+            local okInfo, rawInfo = pcall(C_VignetteInfo.GetVignetteInfo, rawID)
+            if okInfo then
+                local info,infoState=ordinaryField(self,rawInfo,"table","vignette.info")
+                if infoState=="ordinary" then
+                    local onMinimap = ordinaryField(self,info.onMinimap,"boolean","vignette.onMinimap")
+                    local isDead = ordinaryField(self,info.isDead,"boolean","vignette.dead")
+                    if onMinimap==true and isDead==false then
+                        local okPos,position=pcall(C_VignetteInfo.GetVignettePosition,rawID,self.currentMapID)
+                        if okPos then
+                            local x,y=readVector(self,"vignette.position",position)
+                            if x and y and x>=0 and x<=1 and y>=0 and y<=1 then
+                                local row={ id=index, x=x,y=y, role="poi" }
+                                row.name = ordinaryField(self,info.name,"string","vignette.name")
+                                local kind = ordinaryField(self,info.type,"number","vignette.type")
+                                -- Only a known native treasure classification uses tracking glyphs.
+                                if kind and Enum and Enum.VignetteType
+                                    and type(Enum.VignetteType.Treasure)=="number"
+                                    and kind==Enum.VignetteType.Treasure then
+                                    row.role="tracking"
+                                end
+                                row.distanceYards=self:DistanceYards(x,y)
+                                if type(row.distanceYards)=="number"
+                                    and type(self.viewRadius)=="number"
+                                    and self.viewRadius>0
+                                    and row.distanceYards<=self.viewRadius then
+                                    row.nearby=true
+                                    self.vignetteNearby=self.vignetteNearby+1
+                                end
+                                self.vignetteRows[#self.vignetteRows+1]=row
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    self.vignetteStatus="row-cap-reached"
+end
+
 function Probe:Capture(reason)
     self.captureCount = self.captureCount + 1
     self:ResetCaptureState(reason)
@@ -906,6 +1093,8 @@ function Probe:Capture(reason)
     self:ReadMap()
     self:ReadTracking()
     self:ReadAreaPOIs()
+    self:ReadQuestMapPOIs()
+    self:ReadVignettes()
     self:ReadAvailableQuestLines()
     self:ReadSuperTracking()
     self:ReadNavigation()
@@ -945,6 +1134,13 @@ function Probe:GetDiagnosticLines()
             boolText(self.areaPoiTruncated)
         ),
         string.format(
+            "questMap=scanned:%s rolesAccepted:%s near:%s status:%s vignettes=scanned:%s near:%s status:%s",
+            tostring(self.questMapScanned), tostring(self.questMapAccepted),
+            tostring(self.questMapNearby), tostring(self.questMapStatus),
+            tostring(self.vignetteScanned), tostring(self.vignetteNearby),
+            tostring(self.vignetteStatus)
+        ),
+        string.format(
             "availableQuestLines=api:%s reason:%s scanned:%s positioned:%s nearbyUnaccepted:%s capReached:%s",
             boolText(self.availableQuestAPIAvailable),
             tostring(self.availableQuestReason),
@@ -952,6 +1148,15 @@ function Probe:GetDiagnosticLines()
             tostring(self.availableQuestPositioned),
             tostring(self.availableQuestNearby),
             boolText(self.availableQuestCapReached)
+        ),
+        string.format(
+            "questLineRequest=api:%s attempts:%s map:%s status:%s eventCount:%s error:%s",
+            boolText(apiPresence().questLineRequest),
+            tostring(self.questLineRequestAttemptCount),
+            tostring(self.questLineRequestMapID or "-"),
+            tostring(self.questLineRequestStatus),
+            tostring(self.eventCounts.QUESTLINE_UPDATE or 0),
+            tostring(self.questLineRequestError or "-")
         ),
         string.format(
             "super=anything:%s quest:%s userWaypoint:%s questID:%s navigation:%s navDistance:%s questWaypoint:%s/%s questDistance:%s/%s",
@@ -1004,6 +1209,22 @@ function Probe:GetDiagnosticLines()
         )
     end
 
+    for index=1,#self.questMapRows do
+        local row=self.questMapRows[index]
+        lines[#lines+1]=string.format(
+            "questMap[%s] quest=%s role=%s name=%s pos=%s,%s distance=%s near=%s",
+            tostring(index),tostring(row.questID),tostring(row.role),
+            tostring(row.name or "-"),numberText(row.x),numberText(row.y),
+            numberText(row.distanceYards),boolText(row.nearby))
+    end
+    for index=1,#self.vignetteRows do
+        local row=self.vignetteRows[index]
+        lines[#lines+1]=string.format(
+            "vignette[%s] role=%s name=%s pos=%s,%s distance=%s near=%s",
+            tostring(index),tostring(row.role),tostring(row.name or "-"),
+            numberText(row.x),numberText(row.y),numberText(row.distanceYards),
+            boolText(row.nearby))
+    end
     for index = 1, #self.availableQuestRows do
         local row = self.availableQuestRows[index]
         lines[#lines + 1] = string.format(
@@ -1093,6 +1314,18 @@ function Probe:GetDebugStatus()
         availableQuestPositioned = self.availableQuestPositioned,
         availableQuestNearby = self.availableQuestNearby,
         availableQuestCapReached = self.availableQuestCapReached,
+        questMapScanned = self.questMapScanned,
+        questMapAccepted = self.questMapAccepted,
+        questMapNearby = self.questMapNearby,
+        questMapStatus = self.questMapStatus,
+        vignetteScanned = self.vignetteScanned,
+        vignetteNearby = self.vignetteNearby,
+        vignetteStatus = self.vignetteStatus,
+        questLineRequestAvailable = api.questLineRequest,
+        questLineRequestAttemptCount = self.questLineRequestAttemptCount,
+        questLineRequestMapID = self.questLineRequestMapID,
+        questLineRequestStatus = self.questLineRequestStatus,
+        questLineRequestError = self.questLineRequestError,
 
         superTrackingAnything = self.superTrackingAnything,
         superTrackingQuest = self.superTrackingQuest,
@@ -1115,6 +1348,10 @@ function Probe:OnInitialize()
     self.moduleEnabled = false
     self.captureCount = 0
     self.manualCount = 0
+    self.questLineRequestMapID = nil
+    self.questLineRequestAttemptCount = 0
+    self.questLineRequestStatus = "not-requested"
+    self.questLineRequestError = nil
     self.eventCounts = {}
     self.eventRegistration = {}
     self:ResetCaptureState("initialize")
