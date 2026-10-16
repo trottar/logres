@@ -504,6 +504,10 @@ function Compass:ClearAvailableQuestPOIs(reason)
     self.availableQuestPoiReason = reason or "source-unavailable"
     self.questDestinationShown = 0
     self.questDestinationCandidates = 0
+    self.focusedQuestID = nil
+    self.focusedQuestDistanceYards = nil
+    self.focusedQuestRenderScale = nil
+    self.focusedQuestDepthBand = nil
     self.trackingShown = 0
     self.trackingCandidates = 0
     for _, pool in ipairs({self.availableQuestPoiMarkers,self.questDestinationMarkers,self.trackingMarkers}) do
@@ -541,6 +545,13 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     if not okRadius or isSecret(radius) or type(radius)~="number" or radius<=0
     then self.availableQuestPoiReason="local-radius-unavailable"; return end
     local localPOIs,majorQuests,tracked={},{},{}
+    -- SourceProbe sampled a non-secret, ordinary super-track ID. A missing
+    -- focus is not permission to silently choose the nearest other quest.
+    local focusedQuestID = source.superTrackedQuestID
+    if type(focusedQuestID) ~= "number" or focusedQuestID <= 0 then
+        focusedQuestID = nil
+    end
+    self.focusedQuestID = focusedQuestID
     local seenQuest={}
     local function add(row,role,key)
         if type(row)~="table" or type(row.x)~="number" or type(row.y)~="number"
@@ -565,7 +576,10 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     if type(source.questMapRows)=="table" then
         for index=1,#source.questMapRows do
             local row=source.questMapRows[index]
-            if row.role=="poi" or row.role=="quest" then
+            if row.role=="poi" or (
+                row.role=="quest" and row.questID==focusedQuestID
+                and focusedQuestID ~= nil
+            ) then
                 seenQuest[row.questID]=true
                 add(row,row.role,"map"..tostring(row.questID))
             end
@@ -624,6 +638,17 @@ function Compass:RefreshAvailableQuestPOIs(reason)
             local glyph=pool[index]
             glyph:ClearAllPoints()
             glyph:SetPoint("CENTER",self.frame,"CENTER",candidate.x,y)
+            if role=="quest" then
+                -- The same proven radius-normalized depth curve as the
+                -- manual waypoint; size only, never shift the true bearing.
+                local scale, band = manualWaypointDepthScaleForDistance(candidate.distance, radius)
+                scale = clamp(scale, MANUAL_RENDER_SCALE_MIN, MANUAL_RENDER_SCALE_MAX)
+                glyph:SetSize((roleStyle.width or 10)*scale,
+                    (roleStyle.height or 18)*scale)
+                self.focusedQuestDistanceYards = candidate.distance
+                self.focusedQuestRenderScale = scale
+                self.focusedQuestDepthBand = band
+            end
             glyph:SetAlpha((roleStyle.alpha or 0.90)
                 * edgeFadeForMagnitude(candidate.magnitude))
             glyph:Show()
@@ -1276,6 +1301,10 @@ function Compass:GetDebugStatus()
         availableQuestPoiReason = self.availableQuestPoiReason,
         questDestinationShown = self.questDestinationShown,
         questDestinationCandidates = self.questDestinationCandidates,
+        focusedQuestID = self.focusedQuestID,
+        focusedQuestDistanceYards = self.focusedQuestDistanceYards,
+        focusedQuestRenderScale = self.focusedQuestRenderScale,
+        focusedQuestDepthBand = self.focusedQuestDepthBand,
         trackingShown = self.trackingShown,
         trackingCandidates = self.trackingCandidates,
 

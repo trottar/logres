@@ -1,0 +1,20 @@
+P0223 — focused accepted quest, waypoint-depth glyph scale
+Baseline GitHub main: b1fa8442c532c506c5527bfc7ecc0684104dd6d0
+In-game evidence: 0.0.131-dev loadCount 295 questMap 3 accepted; focused=237; POI/tracking empty
+Candidate: 0.0.132-dev; WoW runtime NOT YET VERIFIED
+Shadow checkers: 102 PASS
+Changed/new files:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Logres.toc
+Logres/Navigation/Compass.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/evidence/P0223_COMPASS_FOCUS_DEPTH_RUNTIME.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/patches/P0223_COMPASS_FOCUS_DEPTH_RUNTIME.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0223_compass_focus_depth_contract.py

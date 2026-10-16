@@ -2221,6 +2221,13 @@ local function runCompassCheck()
         tostring(debugStatus.trackingCandidates or 0),
         tostring(debugStatus.availableQuestPoiReason or "unknown")
     ))
+    emit(string.format(
+        "Logres compass focused quest: focusedQuestID=%s distanceYards=%s scale=%s depthBand=%s (only the chosen quest may render; 0 shown is deferred, not marker PASS)",
+        tostring(debugStatus.focusedQuestID or "-"),
+        tostring(debugStatus.focusedQuestDistanceYards or "-"),
+        tostring(debugStatus.focusedQuestRenderScale or "-"),
+        tostring(debugStatus.focusedQuestDepthBand or "-")
+    ))
 end
 
 local CONTEXT_POLICY_ALPHA = {

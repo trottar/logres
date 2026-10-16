@@ -1,0 +1,5 @@
+# P0223 — Focused quest and distance-dependent major marker scale
+
+After P0222 `b1fa844` was pushed, WoW Forever 0.0.131-dev loadCount 295 returned three accepted quest-map entries and visually demonstrated working real major quest bearings and the contextual quest name. Two narrow defects remain: all accepted quests show simultaneously, and quest glyph dimensions are fixed independent of distance. P0223 filters the **rendered** major quest list to `NavigationSourceProbe.superTrackedQuestID` only, while preserving complete position-source diagnostics. It also reuses the proven manual-waypoint distance/depth interpolation (0.70–1.20 scale) solely on the quest destination glyph, without changing bearings, ranges, protected sources or the manual waypoint. The developer panel now exposes focusedQuestID, quest scale and depth band.
+
+Available quest starts, ordinary POIs and tracking detections remain separately modeled and **unverified** because their native feeds returned zero rows in this sample. Retain native minimap fallback. Runtime trial required; no other secure/visual subsystem is changed.

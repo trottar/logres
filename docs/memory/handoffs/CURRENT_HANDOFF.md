@@ -1,9 +1,7 @@
-# Current Handoff — P0222 functional compass candidate
+# Current Handoff — P0223 focused quest distance-depth
 
 Authority: `docs/memory/CURRENT.md`.
 
-GitHub main P0220 `09175bc`. Local unpushed P0221 0.0.130-dev loadCount 293: user still saw only waypoint markers, with zero quest-line/AreaPOI positions after one request/event. Negative runtime evidence preserved; do not call that PASS.
+GitHub P0222 `b1fa844` verified. The 0.0.131-dev loadCount 295 runtime source probe on map 1432 returned 3 accepted positioned quests (IDs 237, 255, 2039), with user-confirmed quest compass glyphs and a correct contextual name. Other POI/tracking source families remain empty. P0222 accepted as first non-waypoint positive evidence, NOT as complete compass navigation.
 
-P0222 uses new optional native quest-map/vignette position feeds plus existing AreaPOI/quest-line fallback and existing waypoint-bearing projection. It separates real quest destinations, local POIs and typed vignette detections. No protected pin reads, source mutation, constant retry, fake position, or stock minimap removal. Some treasure vignettes may provide tracking glyphs; generic selected resource filters are NOT positions.
-
-Apply in same uncommitted P0221 worktree; panel Phase H Navigation Source Probe, Phase E Compass Check, Phase H Layout Check and Phase 0 Run All after deploying/reload. Require a visually confirmed non-waypoint marker for capability PASS; empty source is OPEN/DEFERRED. No WoW redeploy is needed for memory-only edits, but this checkpoint changes runtime Lua and DOES require deploy.
+P0223 candidate keeps only the super-tracked accepted quest glyph (237 in that capture) and sizes it with the proven manual-waypoint depth curve; no new position source, timers, protected UI, or minimap suppression. Developer panel reports focus ID/quest size and band. Apply/validate in WoW and report real focus/scaling evidence; empty POI/tracking sources remain OPEN. Runtime-code patch requires deploy and `/reload`.
