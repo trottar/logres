@@ -10,7 +10,7 @@ project: logres
 Phase H.3: make Logres's own compass the usable dynamic nearby-navigation surface. The native minimap is HIDDEN during normal immersion and is NOT a visible fallback for missing Logres markers. P0223 accepted focused-quest/waypoint bearings remain preserved. Additional nearby quest-giver, services, and live tracking POI coverage is still OPEN.
 
 ## Current Work Item
-**P0233 — unassisted compass startup and one confirmed physical quest-giver destination.** P0232 pushed to GitHub `main` at `ca639c9`. The user's 0.0.137-dev loadCount 307 after normal reload records `compasscheck` *before any QuestieDB Location Probe in that load*: `provider=ready candidates=4 shown=2`. The user saw usable POI glyphs and followed one directly to a quest giver. This is startup/source/renderer PASS in the observed local context and one user-observed location match, NOT proof of eligibility, all-map coverage or all tracking/service POIs. P0230 load 305 failure and P0231 load 306 manual-retry dependency remain preserved in evidence; no speculative radius adjustment from perceived marker density. Canonical proof: `docs/memory/evidence/P0233_UNASSISTED_COMPASS_AND_PHYSICAL_QUEST_GIVER_PROOF.md`.
+**P0234 — audited POI type coverage and priority, now prepare P0235 implementation.** P0233 docs-only push `27e9e36` verified. Source evidence confirms native-positioned POI/vignettes and focused quest direction are already distinguished from QuestieDB's 50-yard *possible* quest-giver candidates, with native-first POI pool ordering. Native tracking filter names/states do not provide live blip positions. QuestieDB v1.0.6 publishes historical NPC service flags and spawn coordinates; its provider NPC flag enum is guaranteed only by `RequireContract(4)`, not the existing v1 consumer gate. Source audit: `docs/memory/evidence/P0234_NEARBY_POI_SOURCE_AND_PRIORITY_AUDIT.md`. No runtime/presentation changes in P0234.
 
 ## Verified State
 - **P0233 runtime evidence (load 307):** `compasscheck` without preceding `questiedbprobe` in this load reports `provider=ready candidates=4 shown=2`. User-followed glyph reached a real quest giver; one physical path validated. Exact NPC identity, eligibility, broad map coverage, and all service/tracking markers not established. See P0233 evidence.
@@ -26,17 +26,18 @@ Phase H.3: make Logres's own compass the usable dynamic nearby-navigation surfac
 - QuestieDB remains optional for Logres as a whole; third-party data may miss hidden, patch-specific and phased quests. Redistribution/license unresolved; do not bundle it or claim CurseForge-managed dependency.
 
 ## Next Action
-P0233 is a **docs-only acceptance checkpoint**. Next H.3 item: narrow review of nearby POI type coverage, existing renderer prioritization and the distinction between live-positioned native data, QuestieDB possible historical quest-giver coordinates, and unsupported live tracking blips. Preserve the working automatic startup, 50-yard database filter, hidden-minimap immersion policy, and P0223 quest/waypoint bearings. Do not force further gameplay for this already observed proof. Before future runtime changes, choose the next missing capability from evidence and prepare a bounded patch with its own validation.
+P0234 is a docs-only capability audit. Next H.3 runtime item: **P0235 capability-gated historical service candidates (flight master, innkeeper, repair)** using loaded QuestieDB v4 NPC flag enum plus ordinary canonical-zone spawn data. Add in the already bounded finite index, without a second full scan, and make service candidates lower priority than live native sources, focused quest and existing quest-giver candidates. Display *possible*, never claim live services, and do not use the hidden Blizzard minimap as visible fallback. Preserve 50-yard radius, optional dependency, original quest marker and P0223 waypoint. Runtime proof remains necessary; if contract 4 is not loaded, services must fail open without breaking P0233.
 
 ## Success Criteria
-- **Observed PASS (load 307):** nearby source was ready without a manual panel retry; two addon-owned glyphs were reported; the user visually followed one to a quest-giver NPC. This is local evidence, not universal coverage.
-- **Retained OPEN:** repeatability through map transitions, all-zone data coverage, quest eligibility, service/harvest/tracking POIs, identity-level matching and visual density preferences.
-- Retain prior P0230 negative runtime evidence and P0231 manual-retry qualification; no unsupported conversion, broad polling, fabricated available-quest label, or reliance on the hidden minimap.
+- **P0234 source audit PASS:** identify independent native POI/quest/vignette feeds, existing native-before-historical glyph priority, and exact upstream v1.0.6 `NpcDB.npcFlags`, `Enum.npcFlags`, `RequireContract(4)` support. No new service rendering is claimed.
+- **P0235 runtime OPEN:** gate provider flags and use the same finite zone index/canonical projection; report separate service counts and real visible glyph state, without reducing prior quest-giver markers and bearings. Capture missing-provider/v4-disabled state without crash or secret access.
+- **Preserve P0233 proof:** unassisted startup and one physical quest-giver route PASS in the tested map; map transitions/eligibility/broader coverage remain OPEN. No speculative radius adjustment.
 
 ## Do Not Reopen Without New Evidence
 Do not infer addon installation from one guessed filesystem path or the presence/absence of a Lua global alone. No hard QuestieDB dependency, package bundling, unknown CurseForge project ID, global quest ID scans on updates, guessed quest availability, invented coordinates or native pin scraping. Do not hide the Blizzard minimap, alter user-accepted waypoint/focused-quest bearings, or treat missing locations as PASS. Baked flavor must not be guessed from a Source-only indicator. Keep negative and deferred evidence explicit.
 
 ## Relevant References
+- `docs/memory/evidence/P0234_NEARBY_POI_SOURCE_AND_PRIORITY_AUDIT.md`
 - `docs/memory/evidence/P0231_DYNAMIC_MAP_BRIDGE_FAILURE.md`
 - `docs/memory/evidence/P0230_DYNAMIC_NEARBY_QUEST_CANDIDATES.md`
 - `docs/memory/evidence/P0229_QUESTIEDB_DIAGNOSTIC_HANDOFF_FAILURE.md`

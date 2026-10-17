@@ -1,0 +1,3 @@
+# P0234 — POI source audit and next gated service implementation
+
+Docs-only checkpoint on P0233 `27e9e36`. Confirms current code's native-first glyph ordering and no public live tracking-result positions. Adds upstream QuestieDB v1.0.6 contract-4 evidence for historical NPC service flags and planned P0235 flight master/innkeeper/repair candidates. No WoW behavior changes, no claim of live service availability, no radius or prioritization changes. Preserve negative P0230 and positive P0233 results. Next runtime code change must be separately gated, checked and tested in-game. No redeploy required for P0234.
