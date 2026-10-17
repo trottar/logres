@@ -2,7 +2,8 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
-| P0242 | 2026-10-17 | PREPARED / RUNTIME UNVERIFIED | Additive quest-completion narrative from real ordinary state; Blizzard rewards and claim retained. |
+| P0243 | 2026-10-17 | PREPARED / RUNTIME UNVERIFIED | Add bounded read-only completion reward summary, preserve stock claim and choice. |
+| P0242 | 2026-10-17 | INSTALLED / PUSHED (18b0fa0); PARTIAL / NARRATIVE ONLY | Load 315 registered; Logres quest shown, no Logres Complete/rewards; completion prose not independently checked post-event (P0243 evidence). |
 | P0241 | 2026-10-17 | INSTALLED / PUSHED (ee1cbd3); REGISTRATION PASS / PROGRESS DEFERRED | Load 313 questdialoguecheck PASS; zero natural progress; QUEST_COMPLETE read-only event observed (P0242 evidence). |
 | P0240 | 2026-10-17 | INSTALLED / PUSHED (048cd77); DOCS-ONLY | Quest lifecycle source gate: progress, completion, gossip runtime conditions still deferred. |
 | P0239 | 2026-10-17 | INSTALLED / PUSHED (22ba7ab); DOCS-ONLY | P0238 settings UI runtime acceptance; next quest lifecycle source delta audit. |

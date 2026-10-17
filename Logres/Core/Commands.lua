@@ -2913,6 +2913,11 @@ local function runQuestDialogueCheck()
         tostring(debugStatus.lastCompletionReason),
         tostring(debugStatus.lastCompletionSecret)
     ))
+    emit(string.format(
+        "Logres questdialogue rewards: CANDIDATE (source=%s itemIdentified=%s stock=retained claim=Blizzard)",
+        tostring(debugStatus.lastCompletionRewardReason),
+        tostring(debugStatus.lastCompletionRewardIdentified)
+    ))
 end
 
 local function runQuestDialoguePreview()

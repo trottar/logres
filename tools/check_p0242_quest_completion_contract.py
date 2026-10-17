@@ -15,9 +15,18 @@ for frag in ('function Dialogue:ReadCompletion()', 'function Dialogue:HandleQues
              'readQuestID()', 'readString("completion-title", GetTitleText)',
              'readString("completion-text", GetRewardText)', 'if body == "" then',
              'self:ClearActiveDetail("QUEST_COMPLETE")', 'self:PresentText(',
-             'completion.title, completion.body, "", "QUEST_COMPLETE",',
              'false, false, false', 'self.completionActive = true'):
     need(s,frag)
+# P0243 extends the narrative argument with a source-gated read-only footer.
+# Keep the P0242 legacy narrative-only path valid and explicitly gate the new
+# form on a bounded reward-source helper and the same stock-preserving flags.
+original='completion.title, completion.body, "", "QUEST_COMPLETE",'
+rewarded='completion.title, completion.body, rewardSummary, "QUEST_COMPLETE",'
+if original not in s:
+    for frag in ('function Dialogue:ReadCompletionRewardSummary()',
+                 'self:ReadCompletionRewardSummary()', rewarded,
+                 'false, false, false'):
+        need(s,frag)
 for frag in ('self.completionActive = false',
              'if self.progressActive or self.completionActive then',
              'self:HandleQuestComplete()', 'self.lastCompletionSecret',

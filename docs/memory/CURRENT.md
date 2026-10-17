@@ -7,12 +7,11 @@ project: logres
 # Current State
 
 ## Active Objective
-Phase H — continue source-safe NPC quest presentation while retaining accepted P0236 POIs and P0238 settings. P0241 progressed to verified runtime load/registration, but progress display is still unobserved. A natural quest-completion event now supports a narrow additive completion-text candidate; Blizzard reward and lifecycle controls remain authoritative.
-
+Phase H — resolve observed quest-completion presentation gaps without hiding/claiming Blizzard rewards or Complete action. P0242 prose is a partial capability: show source-safe reward metadata as an additive Logres summary, preserve native Complete/Claim and player selection, and separately validate any mutation ownership.
 ## Current Work Item
-**P0242 — additive quest-completion narrative candidate (RUNTIME UNVERIFIED).** GitHub main P0241 `ee1cbd3` verified. The `0.0.141-dev` loadCount 313 probe naturally observed QUEST_COMPLETE for quest 237 with readable completion prose, but incomplete reward item name/link; no QUEST_PROGRESS was observed. Add read-only reward narrative using existing QuestDialogue paging, with stock completion/reward UI untouched. No new mutations, reward reconstruction or polling. Evidence `docs/memory/evidence/P0242_QUEST_COMPLETION_NARRATIVE.md`.
-
+**P0243 R1 — bounded additive quest-reward summary candidate (RUNTIME UNVERIFIED).** Verified main P0242 `18b0fa0`; load 315 user's visible Logres quest has no Complete/rewards; probe sees natural QUEST_COMPLETE quest 237, Lesser Healing Potion x3 and 1050 XP, while P0242 completion renderer has no post-event diagnostic. Add one safe reward summary in existing QuestDialogue footer for a single ordinary guaranteed item + XP, or say review Blizzard for other/unavailable cases. Do not add claim or selection. Evidence `docs/memory/evidence/P0243_QUEST_REWARD_VISIBILITY_AND_STOCK_FALLBACK.md`.
 ## Verified State
+- **P0243 CANDIDATE:** P0242 pushed `18b0fa0`, load 315 registered; user reports quest panel without Complete/rewards; natural quest 237 probe has ordinary guaranteed item and XP, but no post-event QuestDialogue check. Reward readout candidate only; R0 prewrite checker FAIL (empty footer expected), R1 corrected checker and full-suite prewrite gate; runtime UNVERIFIED.
 - **P0242 CANDIDATE:** P0241 pushed `ee1cbd3`; load 313 questdialoguecheck PASS, natural QUEST_COMPLETE quest 237 observed but reward name/link incomplete; progress events zero. Additive completion text only; runtime appearance UNVERIFIED.
 - **P0241 CANDIDATE:** Verified pushed P0240 `048cd77`; additive event-driven quest progress read/paging only; runtime UNVERIFIED until natural state; Blizzard Continue/claim/gossip stock. P0241 evidence.
 - **P0240 SOURCE AUDIT:** P0239 `22ba7ab` verified. Existing event-owned read probe covers progress/complete but no naturally observed runtime state; Continue, final reward claim and quest gossip mutation remain gated. Details in P0240 evidence.
@@ -34,15 +33,14 @@ Phase H — continue source-safe NPC quest presentation while retaining accepted
 - QuestieDB remains optional for Logres as a whole; third-party data may miss hidden, patch-specific and phased quests. Redistribution/license unresolved; do not bundle it or claim CurseForge-managed dependency.
 
 ## Next Action
-Deploy P0242 and `/reload`; `/logres panel` -> **F — Quest Experience -> Quest Dialogue Check**, then Phase 0 **Run All**. Verify both progress and completion registration diagnostics; only claim a narrative display PASS if a natural corresponding event is seen and its Blizzard controls remain usable. When naturally available, H — Integration and Polish -> **Quest Interaction Probe** can preserve read-only event context. Do not force quest travel. Keep Continue, Complete, final reward claim, choice, and gossip mutation Blizzard-owned until separate evidence; defer final visual refinement with other polish.
-
+Deploy P0243, `/reload`, `/logres panel` → F — Quest Experience → Quest Dialogue Check, then Phase 0 → Run All. A natural completion should show Logres reward summary and the usable native Blizzard Complete/Claim controls; if absent or obscured record a FAIL, not PASS. The new diagnostic shows `Logres questdialogue rewards` reason and item identity when the completion event was observed. With no natural state, mark DEFERRED. Claim mutation, reward choice UI and quest-related gossip are distinct future capability gates. Preserve other accepted UI and do not require contrived travel.
 ## Success Criteria
-P0242 source must accept only ordinary positive quest ID, nonempty title and `GetRewardText()` on QUEST_COMPLETE; show complete source prose through existing paging with no Logres action buttons, and hide on finished/closed/world transitions or Immersion OFF. Existing offer Accept/Decline, P0241 progress, and stock reward selection must not regress. Runtime completion presentation remains UNVERIFIED until naturally seen. Preserve observed incomplete reward row and all untested action/gossip paths as OPEN.
-
+Static source/contract suite PASS plus player-observed reward summary for a naturally completing quest, with stock Blizzard reward/Complete controls demonstrably usable, and no Lua, secret, taint or protected errors. No action buttons or GetQuestReward call from Logres. Missing/secret/ambiguous items must display native-review fallback, not fabricated data. Do not declare the full quest completion flow done until explicit player-initiated action ownership is proven separately.
 ## Do Not Reopen Without New Evidence
 Do not infer addon installation from one guessed filesystem path or the presence/absence of a Lua global alone. No hard QuestieDB dependency, package bundling, unknown CurseForge project ID, global quest ID scans on updates, guessed quest availability, invented coordinates or native pin scraping. Do not hide the Blizzard minimap, alter user-accepted waypoint/focused-quest bearings, or treat missing locations as PASS. Baked flavor must not be guessed from a Source-only indicator. Keep negative and deferred evidence explicit.
 
 ## Relevant References
+- `docs/memory/evidence/P0243_QUEST_REWARD_VISIBILITY_AND_STOCK_FALLBACK.md`
 - `docs/memory/evidence/P0242_QUEST_COMPLETION_NARRATIVE.md`
 - `docs/memory/evidence/P0241_ADDITIVE_QUEST_PROGRESS.md`
 - `docs/memory/evidence/P0240_QUEST_LIFECYCLE_CAPABILITY_AUDIT.md`

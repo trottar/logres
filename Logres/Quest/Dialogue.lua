@@ -723,6 +723,67 @@ function Dialogue:ReadCompletion()
     return { questID = questID, title = title, body = body }, nil, false
 end
 
+-- P0243: bounded ordinary reward labels only. Never infer a missing item or choice.
+local function ordinaryRewardNumber(label, fn)
+    if type(fn) ~= "function" then
+        return nil, label .. "-api-unavailable"
+    end
+    local ok, value = pcall(fn)
+    if not ok then return nil, label .. "-read-failed" end
+    if isSecret(value) then return nil, label .. "-secret" end
+    if type(value) ~= "number" or value ~= value or value == math.huge
+        or value < 0 or value > 100000000
+    then
+        return nil, label .. "-invalid"
+    end
+    return math.floor(value), nil
+end
+
+function Dialogue:ReadCompletionRewardSummary()
+    -- A small, supplemental summary; no choice selection or claim actions.
+    local xp, xpReason = ordinaryRewardNumber("reward-xp", GetRewardXP)
+    local choices, choiceReason = ordinaryRewardNumber("reward-choices", GetNumQuestChoices)
+    local rewards, countReason = ordinaryRewardNumber("reward-count", GetNumQuestRewards)
+    local itemText = nil
+    local reason = "complete-reward-source"
+
+    if choices == nil or rewards == nil then
+        reason = choiceReason or countReason or "reward-source-unavailable"
+    elseif choices > 0 then
+        reason = "choice-uses-blizzard"
+    elseif rewards == 1 then
+        if type(GetQuestItemInfo) == "function" then
+            local ok, name, _, quantity = pcall(GetQuestItemInfo, "reward", 1)
+            if ok and not isSecret(name) and not isSecret(quantity)
+                and type(name) == "string" and name ~= ""
+                and type(quantity) == "number" and quantity == quantity
+                and quantity >= 1 and quantity <= 9999
+            then
+                itemText = name .. " x" .. tostring(math.floor(quantity))
+                reason = "guaranteed-item-ordinary"
+            else
+                reason = "guaranteed-item-unavailable"
+            end
+        else
+            reason = "item-api-unavailable"
+        end
+    elseif rewards > 1 then
+        reason = "multiple-rewards-use-blizzard"
+    elseif rewards == 0 then
+        reason = "xp-only-or-no-items"
+    end
+
+    local label = itemText or "Review rewards in Blizzard quest window"
+    if xp ~= nil and xp > 0 then
+        -- Two brief rows within the already-owned 50px narrative footer.
+        label = label .. " | " .. tostring(xp) .. " XP"
+    elseif xpReason then
+        reason = reason .. "/" .. xpReason
+    end
+    return label .. "\nComplete using Blizzard quest controls", reason,
+        itemText ~= nil
+end
+
 function Dialogue:HandleQuestComplete()
     self.completeEventCount = self.completeEventCount + 1
     self:ClearActiveDetail("QUEST_COMPLETE")
@@ -746,8 +807,12 @@ function Dialogue:HandleQuestComplete()
         return
     end
 
+    local rewardSummary, rewardReason, rewardIdentified =
+        self:ReadCompletionRewardSummary()
+    self.lastCompletionRewardReason = rewardReason
+    self.lastCompletionRewardIdentified = rewardIdentified == true
     local shown, state = self:PresentText(
-        completion.title, completion.body, "", "QUEST_COMPLETE",
+        completion.title, completion.body, rewardSummary, "QUEST_COMPLETE",
         false, false, false
     )
     if shown and state == "shown" then
@@ -906,6 +971,11 @@ function Dialogue:PresentText(
     self.titleText:SetText(title)
 
     if objective ~= "" then
+        if reason == "QUEST_COMPLETE" then
+            self.objectiveHeader:SetText("REWARDS")
+        else
+            self.objectiveHeader:SetText("OBJECTIVE")
+        end
         self.objectiveHeader:Show()
         self.objectiveText:SetText(objective)
         self.objectiveText:Show()
@@ -1095,6 +1165,8 @@ function Dialogue:GetDebugStatus()
         completionShownCount = self.completionShownCount,
         completionSkippedCount = self.completionSkippedCount,
         completionActive = self.completionActive == true,
+        lastCompletionRewardReason = self.lastCompletionRewardReason,
+        lastCompletionRewardIdentified = self.lastCompletionRewardIdentified == true,
         lastCompletionReason = self.lastCompletionReason,
         lastCompletionSecret = self.lastCompletionSecret == true,
         progressActive = self.progressActive == true,
@@ -1196,6 +1268,8 @@ function Dialogue:OnInitialize()
     self.completionSkippedCount = 0
     self.completionActive = false
     self.lastCompletionReason = "not-observed"
+    self.lastCompletionRewardReason = "not-observed"
+    self.lastCompletionRewardIdentified = false
     self.lastCompletionSecret = false
     self.progressActive = false
     self.lastProgressReason = "not-observed"
