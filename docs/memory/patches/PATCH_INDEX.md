@@ -2,7 +2,8 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
-| P0238 | 2026-10-17 | PREPARED / RUNTIME UNVERIFIED | First limited player settings surface: Immersion and Active Quest persisted toggles. |
+| P0239 | 2026-10-17 | PREPARED / DOCS-ONLY | Record P0238 settings UI bounded runtime PASS; next Phase H quest-lifecycle source audit. |
+| P0238 | 2026-10-17 | INSTALLED / RUNTIME ACCEPTED (0eb1976) | First player settings panel; load 312 user-observed PASS, preferencecheck PASS; detailed UI toggles not independently logged (P0239 evidence). |
 | P0237 | 2026-10-17 | INSTALLED / PUSHED (bb1f772); DOCS-ONLY | P0236 runtime acceptance and preserved R0 manifest EOF failure; compass polish deferred. |
 | P0001 | 2026-09-30 | INSTALLED / PUSHED | Initial repository-native memory bootstrap (`353c5b0`) |
 | P0002 | 2026-09-30 | INSTALLED / PUSHED | I-001 source audit + runtime probe (`48a7d28`) |
