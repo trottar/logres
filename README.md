@@ -2,9 +2,13 @@
 
 **Project Logres** is an immersive, world-first interface addon for World of Warcraft Forever.
 
-The project has completed **Phase 0 — Foundation** and is now in **Phase A — Core State Engine**. The real addon runtime exists, but product HUD features are intentionally not implemented yet.
+Logres is under active Phase H integration and polish development. Working HUD and navigation components exist, but third-party navigation data and broad POI completeness remain experimental, and no public release is approved yet.
 
 Design decisions, technical findings, failures, rejected approaches, evidence, and active development state are maintained as repository-native durable memory under `docs/memory/`.
+
+## External data and installation
+
+QuestieDB (`Questie/QuestieDB`) is currently an **optional** external navigation-data integration: Logres continues to work without it, but proposed future database-backed quest-giver or service-location markers would need a separately installed compatible QuestieDB. The existing P0226 integration is only a diagnostic and **does not yet add database compass icons**. See [`docs/DEPENDENCIES.md`](docs/DEPENDENCIES.md) for the correct Forever download, checksum, installation/update steps, missing-provider fallback, and CurseForge redistribution policy. Do not substitute the distinct `LibQuestDB` addon.
 
 ## Development environment
 
@@ -42,4 +46,4 @@ Then in game:
 /logres immersion
 ```
 
-The Phase 0.3 skeleton currently provides lifecycle, SavedVariables, and basic state observation only.
+For the current project checkpoint, consult `docs/memory/CURRENT.md`; historical diagnostics above are examples, not a complete list of current development commands.
