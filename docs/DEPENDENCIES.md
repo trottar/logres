@@ -63,3 +63,7 @@ Priority: native Blizzard live positions when genuinely exposed, then QuestieDB 
 4. **Documentation and QA:** maintain a supported-provider version table, install/update/rollback steps, missing-provider state, source limitations, and a real positive/negative runtime acceptance test on the intended Forever client. Dependency availability alone does not prove the compass gains POIs.
 
 This file is a dependency policy and install guide, not a claim that unaccepted-quest or service POIs currently work.
+
+## P0235 optional historical service-role coverage
+
+The **optional** QuestieDB v1.0.6 v4 contract adds historical `NpcDB.npcFlags` and provider-flavor `LibQuestieDB.Enum.npcFlags` role masks. Flight masters, innkeepers and repair NPCs qualify from their service role even when they have **never** started a quest; NPCs with both roles receive one service marker instead of duplicate/mislabeled quest-giver markers. Quest-only markers retain the existing v1 compatible source if v4 is unavailable. These are database **possible locations** within 50 yards, not real-time service interaction or live Blizzard tracking blips. The initial service implementation remains WoW runtime UNVERIFIED until separately tested. No mandatory dependency, packaging, distribution, or licensing changes.

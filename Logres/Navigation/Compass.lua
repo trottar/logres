@@ -17,6 +17,12 @@ local manualWaypointStyle = compassStyle.manualWaypoint or {}
 local questStyle = compassStyle.questDestination or {}
 local poiStyle = compassStyle.localPOI or {}
 local trackingStyle = compassStyle.tracking or {}
+-- These are only possible historical service sites, not live tracking blips.
+local SERVICE_MARKER_STYLE = {
+    flight = { name = "Possible flight master: ", r = 0.52, g = 0.79, b = 0.98 },
+    inn = { name = "Possible innkeeper: ", r = 0.97, g = 0.75, b = 0.44 },
+    repair = { name = "Possible repair: ", r = 0.70, g = 0.83, b = 0.71 },
+}
 
 local UPDATE_INTERVAL = 0.05
 local WAYPOINT_UPDATE_INTERVAL = 0.15
@@ -277,6 +283,9 @@ local Compass = Logres:RegisterModule("Compass", {
         self.questDestinationCandidates = 0
         self.trackingShown = 0
         self.trackingCandidates = 0
+        self.dbServiceCandidateShown = 0
+        self.dbServiceCandidateCount = 0
+        self.dbServiceStatus = "not-started"
         self.updateActive = false
         self.elapsed = 0
         self.lastReason = "initialize"
@@ -355,6 +364,17 @@ local Compass = Logres:RegisterModule("Compass", {
         poiFocus:SetShadowOffset(1, -1)
         poiFocus:Hide()
         self.availableQuestPoiFocus = poiFocus
+        -- Independent finite service pool: flight masters qualify even if an
+        -- NPC has NEVER offered a quest and the quest POI pool is full.
+        self.serviceMarkers = {}
+        for index = 1, 4 do
+            local glyph = frame:CreateTexture(nil, "OVERLAY")
+            glyph:SetTexture(compassAssets.localPOI)
+            glyph:SetSize(poiStyle.width or 9, poiStyle.height or 9)
+            glyph:SetAlpha((poiStyle.alpha or 0.90) * 0.65)
+            glyph:Hide()
+            self.serviceMarkers[index] = glyph
+        end
         self.questDestinationMarkers = {}
         for index=1,4 do
             local glyph=frame:CreateTexture(nil,"OVERLAY")
@@ -505,6 +525,9 @@ function Compass:ClearAvailableQuestPOIs(reason)
     self.dbNearbyStatus = "unavailable"
     self.dbNearbyCount = 0
     self.dbCandidateShown = 0
+    self.dbServiceStatus = "unavailable"
+    self.dbServiceCandidateCount = 0
+    self.dbServiceCandidateShown = 0
     self.questDestinationShown = 0
     self.questDestinationCandidates = 0
     self.focusedQuestID = nil
@@ -513,7 +536,7 @@ function Compass:ClearAvailableQuestPOIs(reason)
     self.focusedQuestDepthBand = nil
     self.trackingShown = 0
     self.trackingCandidates = 0
-    for _, pool in ipairs({self.availableQuestPoiMarkers,self.questDestinationMarkers,self.trackingMarkers}) do
+    for _, pool in ipairs({self.availableQuestPoiMarkers,self.questDestinationMarkers,self.trackingMarkers,self.serviceMarkers}) do
         for index=1,#pool do pool[index]:Hide() end
     end
     self.availableQuestPoiFocus:Hide()
@@ -550,6 +573,7 @@ function Compass:RefreshAvailableQuestPOIs(reason)
             and value>0 then radius=value end
     end
     local localPOIs,majorQuests,tracked={},{},{}
+    local services={}
     -- SourceProbe sampled a non-secret, ordinary super-track ID. A missing
     -- focus is not permission to silently choose the nearest other quest.
     local focusedQuestID = source.superTrackedQuestID
@@ -580,12 +604,17 @@ function Compass:RefreshAvailableQuestPOIs(reason)
         local relative=normalizeRelativeDegrees(bearing-self.headingDegrees)
         local magnitude=math.abs(relative)
         if magnitude>VISIBLE_HALF_ANGLE then return end
+        local serviceStyle = role=="service" and SERVICE_MARKER_STYLE[row.serviceKind] or nil
+        if role=="service" and not serviceStyle then return end
         local candidate={distance=distance,relative=relative,magnitude=magnitude,
             x=relative*PIXELS_PER_DEGREE,
-            name=row.potential == true and ("Possible quest giver: " .. tostring(row.name)) or row.name,
-            potential=row.potential == true, sortKey=tostring(key)}
+            name=serviceStyle and (serviceStyle.name .. tostring(row.name))
+                or (row.potential == true and ("Possible quest giver: " .. tostring(row.name)) or row.name),
+            potential=row.potential == true, sortKey=tostring(key),
+            serviceKind=role=="service" and row.serviceKind or nil}
         if role=="quest" then majorQuests[#majorQuests+1]=candidate
         elseif role=="tracking" then tracked[#tracked+1]=candidate
+        elseif role=="service" then services[#services+1]=candidate
         else localPOIs[#localPOIs+1]=candidate end
     end
     -- QuestPOIMapInfo.isQuestStart is authoritative only with ordinary
@@ -627,8 +656,17 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     -- historical QuestieDB candidate in the finite eight-glyph pool.
     local db = Logres:GetModule("QuestieDBNearby")
     if db and db.moduleEnabled == true and type(db.GetNearbyRows) == "function" then
-        local dbRows, dbStatus = db:GetNearbyRows(mapID,px,py,source.mapWidth,source.mapHeight)
+        local dbRows, dbStatus, serviceRows = db:GetNearbyRows(mapID,px,py,source.mapWidth,source.mapHeight)
         self.dbNearbyStatus = dbStatus
+        self.dbServiceStatus = db.serviceStatus or "unavailable"
+        if type(serviceRows) == "table" then
+            for index=1,#serviceRows do
+                local row=serviceRows[index]
+                if type(row)=="table" and type(row.npcID)=="number" then
+                    add(row,"service","service"..tostring(row.npcID))
+                end
+            end
+        end
         if type(dbRows) == "table" then
             self.dbNearbyCount = #dbRows
             for index=1,#dbRows do
@@ -648,6 +686,8 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     table.sort(localPOIs,nearestFirst)
     table.sort(majorQuests,nearestFirst)
     table.sort(tracked,nearestFirst)
+    -- Service rows retain bounded provider order: flight, inn, repair.
+    self.dbServiceCandidateCount = #services
     self.availableQuestPoiCandidates=#localPOIs
     self.questDestinationCandidates=#majorQuests
     self.trackingCandidates=#tracked
@@ -669,7 +709,8 @@ function Compass:RefreshAvailableQuestPOIs(reason)
             -- Exact horizontal bearing is never displaced for collision control.
             local y = TAPE_Y + lane * 9
             if role=="quest" then y=TAPE_Y+16+lane*9
-            elseif role=="tracking" then y=TAPE_Y-12-lane*9 end
+            elseif role=="tracking" then y=TAPE_Y-12-lane*9
+            elseif role=="service" then y=TAPE_Y+5+lane*9 end
             local glyph=pool[index]
             glyph:ClearAllPoints()
             glyph:SetPoint("CENTER",self.frame,"CENTER",candidate.x,y)
@@ -684,12 +725,17 @@ function Compass:RefreshAvailableQuestPOIs(reason)
                 self.focusedQuestRenderScale = scale
                 self.focusedQuestDepthBand = band
             end
+            if role=="service" then
+                local style = SERVICE_MARKER_STYLE[candidate.serviceKind]
+                glyph:SetVertexColor(style.r, style.g, style.b, 1)
+            end
             glyph:SetAlpha((roleStyle.alpha or 0.90)
                 * edgeFadeForMagnitude(candidate.magnitude)
                 * (candidate.potential and 0.55 or 1))
             glyph:Show()
             if role=="quest" then self.questDestinationShown=self.questDestinationShown+1
             elseif role=="tracking" then self.trackingShown=self.trackingShown+1
+            elseif role=="service" then self.dbServiceCandidateShown=self.dbServiceCandidateShown+1
             else
                 self.availableQuestPoiShown=self.availableQuestPoiShown+1
                 if candidate.potential then self.dbCandidateShown=self.dbCandidateShown+1 end
@@ -702,6 +748,7 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     end
     paint(majorQuests,self.questDestinationMarkers,questStyle,"quest")
     paint(localPOIs,self.availableQuestPoiMarkers,poiStyle,"poi")
+    paint(services,self.serviceMarkers,poiStyle,"service")
     paint(tracked,self.trackingMarkers,trackingStyle,"tracking")
     if closestFocus then
         local fade=1-closestFocus.magnitude/focusDegrees
@@ -1341,6 +1388,9 @@ function Compass:GetDebugStatus()
         dbNearbyStatus = self.dbNearbyStatus,
         dbNearbyCount = self.dbNearbyCount,
         dbCandidateShown = self.dbCandidateShown,
+        dbServiceStatus = self.dbServiceStatus,
+        dbServiceCandidateCount = self.dbServiceCandidateCount,
+        dbServiceCandidateShown = self.dbServiceCandidateShown,
         questDestinationShown = self.questDestinationShown,
         questDestinationCandidates = self.questDestinationCandidates,
         focusedQuestID = self.focusedQuestID,

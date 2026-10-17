@@ -1,0 +1,3 @@
+# P0235 — Quest-independent historical service markers
+
+P0234 (`e10c79a`) baseline. User-identified coverage bug: P0230 only indexed NPCs with `questStarts`, so flight masters with quests appeared as possible quest givers and service-only flight masters/innkeepers were omitted. P0235 adds optional contract-4 NPC role classification **independent of quest history** in the existing finite index. Dual-role NPC receives one service representation. Four independent capped service POI glyphs; historical, 50-yard, fail-open. No new scans, timer polling, or native blip scraping. P0233 quest map/waypoint behavior preserved. Runtime UNVERIFIED until user in-game evidence. No Git operations by the applier.

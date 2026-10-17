@@ -2154,6 +2154,12 @@ local function runCompassCheck()
         tostring(debugStatus.dbNearbyCount or 0),
         tostring(debugStatus.dbCandidateShown or 0)
     ))
+    emit(string.format(
+        "Logres compass services: provider=%s candidates=%s shown=%s (historical service roles; quest-independent; not live blips)",
+        tostring(debugStatus.dbServiceStatus or "-"),
+        tostring(debugStatus.dbServiceCandidateCount or 0),
+        tostring(debugStatus.dbServiceCandidateShown or 0)
+    ))
     if passed then
         emit(string.format(
             "Logres compasscheck: PASS (immersion=%s context=%s policy=%s facing=%s update=%s active=%s heading=%s waypointAPI=%s event=%s waypoint=%s bearing=%s relative=%s marker=%s distanceAPI=%s distance=%s yards=%s radiusAPI=%s radiusAvailable=%s radius=%s ratio=%s band=%s depth=%s renderScale=%s distanceReason=%s depthReason=%s waypointReason=%s reason=%s)",
@@ -3107,6 +3113,14 @@ function Logres:RunQuestieDBLocationProbe()
             tostring(snapshot.mappingEntries or 0),
             tostring(snapshot.resolutionFailure or "-"),
             tostring(snapshot.lastTrigger or "-")
+        ))
+        emit(string.format(
+            "Logres questiedbservices: capability=%s enabled=%s cached=%s flight=%s inn=%s repair=%s nearby=%s truncated=%s",
+            tostring(snapshot.serviceStatus or "-"),
+            tostring(snapshot.serviceEnabled), tostring(snapshot.serviceCached),
+            tostring(snapshot.serviceFlightCached), tostring(snapshot.serviceInnCached),
+            tostring(snapshot.serviceRepairCached), tostring(snapshot.serviceNearby),
+            tostring(snapshot.serviceTruncated)
         ))
     end
 end

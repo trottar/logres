@@ -9,6 +9,18 @@ local MAX_SPAWNS_PER_NPC = 32
 local MAX_CACHED_SPAWNS = 1024
 local MAX_NEARBY = 8
 local MAX_MAP_PARENT_DEPTH = 12
+-- Service roles are source flags, NOT dependent on any historical quest.
+-- One category per NPC, in preferred order; no fixed numeric bit values.
+local SERVICE_ROLES = {
+    { kind = "flight", flag = "FLIGHT_MASTER" },
+    { kind = "inn", flag = "INNKEEPER" },
+    { kind = "repair", flag = "REPAIR" },
+}
+local SERVICE_PRIORITY = { flight = 1, inn = 2, repair = 3 }
+local MAX_SERVICE_SPAWNS_PER_NPC = 16
+local MAX_SERVICE_SPAWNS_PER_CATEGORY = 96
+local MAX_NEARBY_SERVICES = 4
+local MAX_NEARBY_PER_SERVICE_KIND = 2
 
 local function ordinary(value, kind)
     if type(issecretvalue) ~= "function" then return nil end
@@ -102,6 +114,10 @@ function Nearby:Unavailable(reason)
     self:StopIndex()
     self.complete = false
     self.rows = {}
+    self.serviceRows = {}
+    self.serviceEnabled = false
+    self.serviceStatus = reason
+    self.serviceNearby = 0
     self.mapID = nil
     self.areaID = nil
     self.areaMapping = nil
@@ -159,6 +175,31 @@ function Nearby:StartIndex(reason)
     if self.mapID == map and self.areaID == area
         and (self.complete or self.scanning) then return end
     self:StopIndex()
+    -- Contract 1 preserves the proven quest-giver feed. Contract 4 only
+    -- authorizes the additional NPC role flags and active-flavor enum.
+    self.serviceEnabled = false
+    self.serviceStatus = "contract4-unavailable"
+    self.serviceRoleMasks = {}
+    if type(npc.npcFlags) == "function" and read(lib.RequireContract, 4) == true then
+        local enums = ordinary(lib.Enum, "table")
+        local roles = enums and ordinary(enums.npcFlags, "table")
+        if roles then
+            for _, role in ipairs(SERVICE_ROLES) do
+                local mask = number(roles[role.flag])
+                if mask and mask > 0 and mask == math.floor(mask)
+                    and mask < 2147483648 then
+                    -- A single bit is required to avoid ambiguous category tests.
+                    local check = mask
+                    while check > 1 and check % 2 == 0 do check = check / 2 end
+                    if check == 1 then self.serviceRoleMasks[role.kind] = mask end
+                end
+            end
+            self.serviceEnabled = next(self.serviceRoleMasks) ~= nil
+            self.serviceStatus = self.serviceEnabled and "indexing" or "service-masks-unavailable"
+        else
+            self.serviceStatus = "service-enum-unavailable"
+        end
+    end
     local ids = ordinary(read(npc.GetAllIds), "table")
     if not ids then self.state = "npc-id-list-unavailable"; return end
     self.npc = npc
@@ -170,6 +211,10 @@ function Nearby:StartIndex(reason)
     self.questNPCs = 0
     self.truncated = false
     self.rows = {}
+    self.serviceRows = {}
+    self.serviceCategoryCached = { flight = 0, inn = 0, repair = 0 }
+    self.serviceTruncated = false
+    self.serviceNearby = 0
     self.mapID = map
     self.areaID = area
     self.areaMapping = mapping
@@ -190,8 +235,27 @@ function Nearby:ScanChunk()
         if id and id > 0 and number(read(npc.zoneID, id)) == self.areaID then
             self.zoneNPCs = self.zoneNPCs + 1
             local quests = ordinary(read(npc.questStarts, id), "table")
-            if quests and number(quests[1]) then
-                self.questNPCs = self.questNPCs + 1
+            local startQuestID = quests and number(quests[1])
+            if startQuestID then self.questNPCs = self.questNPCs + 1 end
+
+            -- A service is a service regardless of the NPC's quest history.
+            -- Only the optional v4 capability uses npcFlags; v1 quest indexing
+            -- continues unchanged if that contract or enum is unavailable.
+            local serviceKind
+            if self.serviceEnabled then
+                local bits = number(read(npc.npcFlags, id))
+                if bits and bits >= 0 and bits == math.floor(bits) then
+                    for _, role in ipairs(SERVICE_ROLES) do
+                        local mask = self.serviceRoleMasks[role.kind]
+                        if mask and bits % (mask * 2) >= mask then
+                            serviceKind = role.kind
+                            break -- one preferred service category per NPC
+                        end
+                    end
+                end
+            end
+
+            if startQuestID or serviceKind then
                 local spawns = ordinary(read(npc.spawns, id), "table")
                 local here = spawns and ordinary(spawns[self.areaID], "table")
                 if here then
@@ -201,19 +265,39 @@ function Nearby:ScanChunk()
                         if not row then break end
                         local x, y = number(row[1]), number(row[2])
                         if x and y and x >= 0 and x <= 100 and y >= 0 and y <= 100 then
-                            if #self.rows < MAX_CACHED_SPAWNS then
-                                self.rows[#self.rows + 1] = {
-                                    x = x / 100, y = y / 100,
-                                    npcID = id, name = name,
-                                    questID = number(quests[1]), potential = true,
-                                }
-                            else
-                                self.truncated = true
+                            -- Dual-role NPCs appear as their service type,
+                            -- never as duplicate possible quest-giver glyphs.
+                            if startQuestID and not serviceKind then
+                                if #self.rows < MAX_CACHED_SPAWNS then
+                                    self.rows[#self.rows + 1] = {
+                                        x = x / 100, y = y / 100,
+                                        npcID = id, name = name,
+                                        questID = startQuestID, potential = true,
+                                    }
+                                else
+                                    self.truncated = true
+                                end
+                            end
+                            if serviceKind and j <= MAX_SERVICE_SPAWNS_PER_NPC then
+                                local count = self.serviceCategoryCached[serviceKind]
+                                if count < MAX_SERVICE_SPAWNS_PER_CATEGORY then
+                                    self.serviceRows[#self.serviceRows + 1] = {
+                                        x = x / 100, y = y / 100,
+                                        npcID = id, name = name,
+                                        serviceKind = serviceKind, potential = true,
+                                    }
+                                    self.serviceCategoryCached[serviceKind] = count + 1
+                                else
+                                    self.serviceTruncated = true
+                                end
+                            elseif serviceKind and j > MAX_SERVICE_SPAWNS_PER_NPC then
+                                self.serviceTruncated = true
                             end
                         end
                     end
                     if ordinary(here[MAX_SPAWNS_PER_NPC + 1], "table") then
-                        self.truncated = true
+                        if startQuestID and not serviceKind then self.truncated = true end
+                        if serviceKind then self.serviceTruncated = true end
                     end
                 end
             end
@@ -223,7 +307,10 @@ function Nearby:ScanChunk()
     if self.scanIndex <= self.idCount then return end
     self.complete = true
     self.state = self.truncated and "ready-partial" or "ready"
-    self:StopIndex() -- finite build, no periodic reassertion or background scan.
+    if self.serviceEnabled then
+        self.serviceStatus = self.serviceTruncated and "ready-partial" or "ready"
+    end
+    self:StopIndex() -- finite build; no extra provider scan or periodic polling.
 end
 
 local function readVector(value)
@@ -241,6 +328,7 @@ local function readVector(value)
 end
 
 function Nearby:GetNearbyRows(map, px, py, width, height)
+    self.serviceNearby = 0
     if not self.complete or not self.mapID then return {}, self.state end
     -- A map transition invalidates old-zone presentation immediately, even
     -- before the registered map event has built the next zone's index.
@@ -292,7 +380,44 @@ function Nearby:GetNearbyRows(map, px, py, width, height)
             if #unique >= MAX_NEARBY then break end
         end
     end
-    return unique, self.state
+    local serviceHits = {}
+    if self.serviceEnabled then
+        for i = 1, #self.serviceRows do
+            local item = self.serviceRows[i]
+            local dx = (item.x - px) * width
+            local dy = (item.y - py) * height
+            local dist = math.sqrt(dx * dx + dy * dy)
+            if dist <= LOCAL_RADIUS_YARDS then
+                serviceHits[#serviceHits + 1] = {
+                    dxYards = dx, dyYards = dy, name = item.name,
+                    npcID = item.npcID, serviceKind = item.serviceKind,
+                    distanceYards = dist, potential = true,
+                }
+            end
+        end
+    end
+    self.serviceNearby = #serviceHits
+    -- Flight masters retain first choice among services in the capped pool.
+    -- This ordering does not change native POI or accepted quest lanes.
+    table.sort(serviceHits, function(a, b)
+        local first = SERVICE_PRIORITY[a.serviceKind] or 99
+        local second = SERVICE_PRIORITY[b.serviceKind] or 99
+        if first ~= second then return first < second end
+        if a.distanceYards == b.distanceYards then return a.npcID < b.npcID end
+        return a.distanceYards < b.distanceYards
+    end)
+    local services, seenService, perKind = {}, {}, {}
+    for i = 1, #serviceHits do
+        local row = serviceHits[i]
+        local count = perKind[row.serviceKind] or 0
+        if not seenService[row.npcID] and count < MAX_NEARBY_PER_SERVICE_KIND then
+            seenService[row.npcID] = true
+            perKind[row.serviceKind] = count + 1
+            services[#services + 1] = row
+            if #services >= MAX_NEARBY_SERVICES then break end
+        end
+    end
+    return unique, self.state, services
 end
 
 function Nearby:GetDebugStatus()
@@ -307,6 +432,14 @@ function Nearby:GetDebugStatus()
         questNPCs = self.questNPCs or 0, spawns = #self.rows,
         nearby = self.nearbyCount or 0, truncated = self.truncated == true,
         radius = LOCAL_RADIUS_YARDS,
+        serviceEnabled = self.serviceEnabled == true,
+        serviceStatus = self.serviceStatus or "not-started",
+        serviceCached = #(self.serviceRows or {}),
+        serviceNearby = self.serviceNearby or 0,
+        serviceFlightCached = self.serviceCategoryCached and self.serviceCategoryCached.flight or 0,
+        serviceInnCached = self.serviceCategoryCached and self.serviceCategoryCached.inn or 0,
+        serviceRepairCached = self.serviceCategoryCached and self.serviceCategoryCached.repair or 0,
+        serviceTruncated = self.serviceTruncated == true,
         coverage = "provider-canonical-zone-primary-NPCs-only",
     }
 end
@@ -315,6 +448,10 @@ function Nearby:OnInitialize()
     self.moduleEnabled = false
     self.rows = {}
     self.state = "not-started"
+    self.serviceRows = {}
+    self.serviceStatus = "not-started"
+    self.serviceEnabled = false
+    self.serviceNearby = 0
     self.frame = CreateFrame("Frame")
     self.frame:RegisterEvent("PLAYER_ENTERING_WORLD")
     self.frame:RegisterEvent("PLAYER_MAP_CHANGED")
@@ -334,5 +471,9 @@ function Nearby:OnDisable()
     self:StopIndex()
     self.complete = false
     self.rows = {}
+    self.serviceRows = {}
+    self.serviceEnabled = false
+    self.serviceNearby = 0
+    self.serviceStatus = "disabled"
     self.state = "disabled"
 end

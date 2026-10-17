@@ -235,3 +235,4 @@ This index is initially maintained manually. If patch volume grows, replace manu
 | P0232 | 2026-10-17 | INSTALLED / PUSHED (ca639c9); DOCS-ONLY | Verify P0231 0.0.137-dev nearby candidate scan + 2 glyphs; automatic startup remains OPEN |
 | P0233 | 2026-10-17 | INSTALLED / PUSHED (27e9e36); DOCS-ONLY / UNASSISTED STARTUP PASS | Record load 307 provider ready before manual retry, two addon-owned glyphs and one user-observed physical quest-giver route; preserve remaining coverage limits. |
 | P0234 | 2026-10-17 | PREPARED / DOCS-ONLY / UPSTREAM API AUDIT | Native-first glyph priority, QuestieDB v4 NPC service role masks and bounded possible service implementation plan; no runtime changes. |
+| P0235 | 2026-10-17 | PREPARED / RUNTIME UNVERIFIED | Fix quest-only gate for flight master, innkeeper, repair; separate v4 service glyphs, one marker per dual-role NPC; preserve quest v1 and hidden minimap. |
