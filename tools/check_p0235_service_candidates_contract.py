@@ -14,7 +14,7 @@ def has(s,words,context):
         if w not in s: errors.append(f'{context}: missing {w}')
 has(n,('LOCAL_RADIUS_YARDS = 50','IDS_PER_FRAME = 96',
     'MAX_SERVICE_SPAWNS_PER_NPC = 16','MAX_SERVICE_SPAWNS_PER_CATEGORY = 96',
-    'MAX_NEARBY_SERVICES = 4','MAX_NEARBY_PER_SERVICE_KIND = 2',
+    'MAX_NEARBY_SERVICES = 32','MAX_NEARBY_PER_SERVICE_KIND = 2',
     'read(lib.RequireContract, 1)','read(lib.RequireContract, 4)',
     'ordinary(lib.Enum, "table")','ordinary(enums.npcFlags, "table")',
     'read(npc.npcFlags, id)', 'read(npc.spawns, id)',

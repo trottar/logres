@@ -15,11 +15,27 @@ local SERVICE_ROLES = {
     { kind = "flight", flag = "FLIGHT_MASTER" },
     { kind = "inn", flag = "INNKEEPER" },
     { kind = "repair", flag = "REPAIR" },
+    -- Discovery mode: enable every supported *service* enum role, even when
+    -- Blizzard minimap tracking for that type is off. No generic gossip pins.
+    { kind = "vendor", flag = "VENDOR" },
+    { kind = "trainer", flag = "TRAINER" },
+    { kind = "banker", flag = "BANKER" },
+    { kind = "auction", flag = "AUCTIONEER" },
+    { kind = "stable", flag = "STABLEMASTER" },
+    { kind = "battle", flag = "BATTLEMASTER" },
+    { kind = "healer", flag = "SPIRIT_HEALER" },
+    { kind = "guide", flag = "SPIRIT_GUIDE" },
+    { kind = "tabard", flag = "TABARD_DESIGNER" },
+    { kind = "petition", flag = "PETITIONER" },
+    { kind = "barber", flag = "BARBER" },
+    { kind = "reforge", flag = "ARCANE_REFORGER" },
+    { kind = "transmog", flag = "TRANSMOGRIFIER" },
 }
-local SERVICE_PRIORITY = { flight = 1, inn = 2, repair = 3 }
+local SERVICE_PRIORITY = {}
+for index, role in ipairs(SERVICE_ROLES) do SERVICE_PRIORITY[role.kind] = index end
 local MAX_SERVICE_SPAWNS_PER_NPC = 16
 local MAX_SERVICE_SPAWNS_PER_CATEGORY = 96
-local MAX_NEARBY_SERVICES = 4
+local MAX_NEARBY_SERVICES = 32
 local MAX_NEARBY_PER_SERVICE_KIND = 2
 
 local function ordinary(value, kind)
@@ -118,6 +134,7 @@ function Nearby:Unavailable(reason)
     self.serviceEnabled = false
     self.serviceStatus = reason
     self.serviceNearby = 0
+    self.serviceNearbyKinds = 0
     self.mapID = nil
     self.areaID = nil
     self.areaMapping = nil
@@ -212,9 +229,11 @@ function Nearby:StartIndex(reason)
     self.truncated = false
     self.rows = {}
     self.serviceRows = {}
-    self.serviceCategoryCached = { flight = 0, inn = 0, repair = 0 }
+    self.serviceCategoryCached = {}
+    for _, role in ipairs(SERVICE_ROLES) do self.serviceCategoryCached[role.kind] = 0 end
     self.serviceTruncated = false
     self.serviceNearby = 0
+    self.serviceNearbyKinds = 0
     self.mapID = map
     self.areaID = area
     self.areaMapping = mapping
@@ -329,6 +348,7 @@ end
 
 function Nearby:GetNearbyRows(map, px, py, width, height)
     self.serviceNearby = 0
+    self.serviceNearbyKinds = 0
     if not self.complete or not self.mapID then return {}, self.state end
     -- A map transition invalidates old-zone presentation immediately, even
     -- before the registered map event has built the next zone's index.
@@ -397,6 +417,11 @@ function Nearby:GetNearbyRows(map, px, py, width, height)
         end
     end
     self.serviceNearby = #serviceHits
+    local kinds = {}
+    for _, hit in ipairs(serviceHits) do kinds[hit.serviceKind] = true end
+    local count = 0
+    for _ in pairs(kinds) do count = count + 1 end
+    self.serviceNearbyKinds = count
     -- Flight masters retain first choice among services in the capped pool.
     -- This ordering does not change native POI or accepted quest lanes.
     table.sort(serviceHits, function(a, b)
@@ -436,6 +461,12 @@ function Nearby:GetDebugStatus()
         serviceStatus = self.serviceStatus or "not-started",
         serviceCached = #(self.serviceRows or {}),
         serviceNearby = self.serviceNearby or 0,
+        serviceNearbyKinds = self.serviceNearbyKinds or 0,
+        serviceRoleCount = (function()
+            local count = 0
+            for _ in pairs(self.serviceRoleMasks or {}) do count = count + 1 end
+            return count
+        end)(),
         serviceFlightCached = self.serviceCategoryCached and self.serviceCategoryCached.flight or 0,
         serviceInnCached = self.serviceCategoryCached and self.serviceCategoryCached.inn or 0,
         serviceRepairCached = self.serviceCategoryCached and self.serviceCategoryCached.repair or 0,

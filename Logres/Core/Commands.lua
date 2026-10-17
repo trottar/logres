@@ -2160,6 +2160,12 @@ local function runCompassCheck()
         tostring(debugStatus.dbServiceCandidateCount or 0),
         tostring(debugStatus.dbServiceCandidateShown or 0)
     ))
+    emit(string.format(
+        "Logres compass POI proximity: sized=%s scaleMin=%s scaleMax=%s (local POIs only; bearings unchanged)",
+        tostring(debugStatus.poiSizeShown or 0),
+        tostring(debugStatus.poiSizeMin or "-"),
+        tostring(debugStatus.poiSizeMax or "-")
+    ))
     if passed then
         emit(string.format(
             "Logres compasscheck: PASS (immersion=%s context=%s policy=%s facing=%s update=%s active=%s heading=%s waypointAPI=%s event=%s waypoint=%s bearing=%s relative=%s marker=%s distanceAPI=%s distance=%s yards=%s radiusAPI=%s radiusAvailable=%s radius=%s ratio=%s band=%s depth=%s renderScale=%s distanceReason=%s depthReason=%s waypointReason=%s reason=%s)",
@@ -3121,6 +3127,11 @@ function Logres:RunQuestieDBLocationProbe()
             tostring(snapshot.serviceFlightCached), tostring(snapshot.serviceInnCached),
             tostring(snapshot.serviceRepairCached), tostring(snapshot.serviceNearby),
             tostring(snapshot.serviceTruncated)
+        ))
+        emit(string.format(
+            "Logres questiedbservicecoverage: supportedKinds=%s nearbyKinds=%s (all provider service roles; no minimap-filter dependency)",
+            tostring(snapshot.serviceRoleCount or 0),
+            tostring(snapshot.serviceNearbyKinds or 0)
         ))
     end
 end

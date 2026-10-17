@@ -67,3 +67,7 @@ This file is a dependency policy and install guide, not a claim that unaccepted-
 ## P0235 optional historical service-role coverage
 
 The **optional** QuestieDB v1.0.6 v4 contract adds historical `NpcDB.npcFlags` and provider-flavor `LibQuestieDB.Enum.npcFlags` role masks. Flight masters, innkeepers and repair NPCs qualify from their service role even when they have **never** started a quest; NPCs with both roles receive one service marker instead of duplicate/mislabeled quest-giver markers. Quest-only markers retain the existing v1 compatible source if v4 is unavailable. These are database **possible locations** within 50 yards, not real-time service interaction or live Blizzard tracking blips. The initial service implementation remains WoW runtime UNVERIFIED until separately tested. No mandatory dependency, packaging, distribution, or licensing changes.
+
+## P0236 discovery coverage (2026-10-17)
+
+QuestieDB remains optional. When loaded `RequireContract(4)` and the provider NPC flag enum are available, Logres prepares historical possible service-site positions for every supported named service role, independent of minimap tracking toggles. This never proves a living NPC or currently offered quest; unsupported herbalism/mining blips are not inferred. Initial test covers all supported roles with a finite 32-glyph compass pool inside 50 yards; category user filters are future work after visual verification.

@@ -22,7 +22,27 @@ local SERVICE_MARKER_STYLE = {
     flight = { name = "Possible flight master: ", r = 0.52, g = 0.79, b = 0.98 },
     inn = { name = "Possible innkeeper: ", r = 0.97, g = 0.75, b = 0.44 },
     repair = { name = "Possible repair: ", r = 0.70, g = 0.83, b = 0.71 },
+    vendor = { name = "Possible vendor: ", r = 0.84, g = 0.80, b = 0.60 },
+    trainer = { name = "Possible trainer: ", r = 0.72, g = 0.68, b = 0.96 },
+    banker = { name = "Possible banker: ", r = 0.94, g = 0.84, b = 0.43 },
+    auction = { name = "Possible auctioneer: ", r = 0.96, g = 0.69, b = 0.63 },
+    stable = { name = "Possible stable master: ", r = 0.64, g = 0.87, b = 0.66 },
+    battle = { name = "Possible battlemaster: ", r = 0.93, g = 0.58, b = 0.59 },
+    healer = { name = "Possible spirit healer: ", r = 0.70, g = 0.92, b = 0.91 },
+    guide = { name = "Possible spirit guide: ", r = 0.56, g = 0.85, b = 0.93 },
+    tabard = { name = "Possible tabard designer: ", r = 0.88, g = 0.66, b = 0.87 },
+    petition = { name = "Possible petitioner: ", r = 0.75, g = 0.79, b = 0.64 },
+    barber = { name = "Possible barber: ", r = 0.92, g = 0.65, b = 0.85 },
+    reforge = { name = "Possible reforger: ", r = 0.66, g = 0.75, b = 0.95 },
+    transmog = { name = "Possible transmogrifier: ", r = 0.73, g = 0.64, b = 0.97 },
 }
+
+-- Local POI size conveys distance, unlike the separate long-range quest lane.
+-- Never move a glyph's bearing for depth or inspect Blizzard presentation.
+local function nearbySizeScale(distance, cap)
+    if type(distance) ~= "number" or type(cap) ~= "number" or cap <= 0 then return 1 end
+    return math.max(0.74, math.min(1.30, 1.30 - (distance / cap) * 0.56))
+end
 
 local UPDATE_INTERVAL = 0.05
 local WAYPOINT_UPDATE_INTERVAL = 0.15
@@ -286,6 +306,9 @@ local Compass = Logres:RegisterModule("Compass", {
         self.dbServiceCandidateShown = 0
         self.dbServiceCandidateCount = 0
         self.dbServiceStatus = "not-started"
+        self.poiSizeShown = 0
+        self.poiSizeMin = nil
+        self.poiSizeMax = nil
         self.updateActive = false
         self.elapsed = 0
         self.lastReason = "initialize"
@@ -367,7 +390,7 @@ local Compass = Logres:RegisterModule("Compass", {
         -- Independent finite service pool: flight masters qualify even if an
         -- NPC has NEVER offered a quest and the quest POI pool is full.
         self.serviceMarkers = {}
-        for index = 1, 4 do
+        for index = 1, 32 do
             local glyph = frame:CreateTexture(nil, "OVERLAY")
             glyph:SetTexture(compassAssets.localPOI)
             glyph:SetSize(poiStyle.width or 9, poiStyle.height or 9)
@@ -528,6 +551,9 @@ function Compass:ClearAvailableQuestPOIs(reason)
     self.dbServiceStatus = "unavailable"
     self.dbServiceCandidateCount = 0
     self.dbServiceCandidateShown = 0
+    self.poiSizeShown = 0
+    self.poiSizeMin = nil
+    self.poiSizeMax = nil
     self.questDestinationShown = 0
     self.questDestinationCandidates = 0
     self.focusedQuestID = nil
@@ -724,6 +750,15 @@ function Compass:RefreshAvailableQuestPOIs(reason)
                 self.focusedQuestDistanceYards = candidate.distance
                 self.focusedQuestRenderScale = scale
                 self.focusedQuestDepthBand = band
+            end
+            if role~="quest" then
+                local cap = candidate.potential and 50 or radius
+                local scale = nearbySizeScale(candidate.distance, cap)
+                glyph:SetSize((roleStyle.width or 9)*scale,
+                    (roleStyle.height or 9)*scale)
+                self.poiSizeShown = self.poiSizeShown + 1
+                self.poiSizeMin = math.min(self.poiSizeMin or scale, scale)
+                self.poiSizeMax = math.max(self.poiSizeMax or scale, scale)
             end
             if role=="service" then
                 local style = SERVICE_MARKER_STYLE[candidate.serviceKind]
@@ -1391,6 +1426,9 @@ function Compass:GetDebugStatus()
         dbServiceStatus = self.dbServiceStatus,
         dbServiceCandidateCount = self.dbServiceCandidateCount,
         dbServiceCandidateShown = self.dbServiceCandidateShown,
+        poiSizeShown = self.poiSizeShown,
+        poiSizeMin = self.poiSizeMin,
+        poiSizeMax = self.poiSizeMax,
         questDestinationShown = self.questDestinationShown,
         questDestinationCandidates = self.questDestinationCandidates,
         focusedQuestID = self.focusedQuestID,
