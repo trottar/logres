@@ -3060,6 +3060,23 @@ local function runWorldTargetProbe()
     end
 end
 
+function Logres:RunQuestieDBLocationProbe()
+    local module = Logres:GetModule("QuestieDBLocationProbe")
+    local status = module:CaptureManual()
+    local positive = status.positive == "observed-offer-npc-and-nearby-spawn-match"
+    local negative = status.negative == "accepted-quest-excluded"
+    local verdict = positive and negative and "POSITIVE-SAMPLE" or "DEFERRED"
+    emit(string.format(
+        "Logres questiedbprobe: %s (provider=%s contract=%s flavor=%s map=%s gossip=%s npc=%s quest=%s positive=%s matchedNPC=%s nearestYards=%s negative=%s)",
+        verdict, tostring(status.provider), tostring(status.contract),
+        tostring(status.flavor or "-"), tostring(status.mapStatus),
+        tostring(status.gossipStatus), tostring(status.gossipNPCID or "-"),
+        tostring(status.gossipSample or "-"), tostring(status.positive),
+        tostring(status.matchedNPC or "-"),
+        tostring(status.nearestYards or "-"), tostring(status.negative)
+    ))
+end
+
 local function runNavigationSourceProbe()
     local status =
         Logres:GetModuleStatus("NavigationSourceProbe")
@@ -4680,6 +4697,7 @@ local function printHelp()
     emit("  /logres questinteractionprobe")
     emit("  /logres aurastatusprobe")
     emit("  /logres worldtargetprobe")
+    emit("  /logres questiedbprobe")
     emit("  /logres navigationsourceprobe")
     emit("  /logres classpetspecialprobe")
     emit("  /logres petcombat [on|off|check]  (P0206 DEFAULT OFF trial)")
@@ -5038,6 +5056,11 @@ local function handleCommand(message)
 
     if command == "worldtargetprobe" then
         runWorldTargetProbe()
+        return
+    end
+
+    if command == "questiedbprobe" then
+        Logres:RunQuestieDBLocationProbe()
         return
     end
 
@@ -5530,6 +5553,12 @@ Logres:RegisterDevPanelAction(
     "World Target Probe",
     "worldtargetprobe",
     "H"
+)
+Logres:RegisterDevPanelAction(
+    "questieDBLocationProbe",
+    "QuestieDB Location Probe",
+    "questiedbprobe",
+    "E"
 )
 Logres:RegisterDevPanelAction(
     "navigationSourceProbe",

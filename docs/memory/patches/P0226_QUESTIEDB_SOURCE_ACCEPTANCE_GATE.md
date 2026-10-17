@@ -1,0 +1,9 @@
+# P0226 — Optional QuestieDB Forever source acceptance probe
+
+Baseline GitHub P0224 `d4a39d1d88b9e1a3111b801eb2f19c30f87b1709` plus local P0225 `0.0.133-dev` worktree/manifest, not assumed pushed. Bump to `0.0.134-dev`. Adds read-only `Logres/Navigation/QuestieDBLocationProbe.lua` and Phase E panel/slash action. No hard `## Dependencies` and no third-party data bundled. Preserves native compass renderer and Blizzard minimap. P0225 local runtime failure and possible QuestieDB hidden-quest omissions are recorded in same checkpoint.
+
+Apply aborts if baseline is not exact, P0225 manifest is missing/mismatched, source anchors differ, or complete shadow repository checker suite fails. Git commits/pushes never performed. Runtime effect: explicit gossip and manually invoked database compatibility check only; result may be DEFERRED and does not count as functional POI coverage. Test on the user's current map and record both positive and negative outcomes; do not force travel.
+
+R1 corrective packaging: initial P0226 static shadow apply failed the repository version-policy checker because the new feature checker contained a hard-coded runtime version. The R1 checker compares current TOC and Bootstrap versions instead; the original error wrote no P0226 tracked files, and no runtime code changed in R1. Full shadow suite/user runtime evidence remains pending.
+
+R2 corrective packaging: R1 progressed beyond the version-policy checker, then the complete shadow suite rejected its added local runner as the 61st captured local in the Forever `handleCommand` closure. The new command runner is a `Logres:` namespace method; command dispatch references that method without increasing the handler's local-upvalue set. Both failures are preserved in evidence. R2 leaves the database probe implementation and the accepted compass renderer unchanged.

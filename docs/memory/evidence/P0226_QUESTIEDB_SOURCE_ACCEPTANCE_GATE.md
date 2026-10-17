@@ -1,0 +1,23 @@
+# P0226 — QuestieDB source acceptance gate and hidden quest coverage policy
+
+Date 2026-10-16. **Prepared runtime probe; user validation PENDING. Not POI capability PASS.**
+
+## Directly observed P0225 negative result
+The user reported zero new compass POIs after deploying P0225. Uploaded `LOGRES_DIAGNOSTICS_LATEST.lua` in this conversation reports `Logres 0.0.133-dev`, loadCount 299, map 1432 and `nativeFeeds=force:ordinary-list/0 task:ordinary-list/0 hub:ordinary-list/0 nearbyOffers:0 nearbyHubs:0`; quest map accepted=3, AreaPOI=0, vignette=0, available quest-line=0, secretSkips=0 and failures=0. P0225 is applied locally, not pushed, as of this source check. Native compass POIs remain OPEN / FAIL in that environment.
+
+## QuestieDB source and coverage
+The user explicitly selected QuestieDB to improve coverage, accepting external data updates. Official QuestieDB v1.0.6 release (`https://github.com/Questie/QuestieDB/releases/tag/v1.0.6`) includes `QuestieDB-Forever.zip` (standalone data addon), published 2026-10-12, supported public API contracts 1–4 and Forever base data refreshed from October 10. Database docs (`https://github.com/Questie/QuestieDB/blob/master/docs/api.md`) document `QuestDB.startedBy(questID)` and `NpcDB.spawns(npcID)` with AreaID-keyed percentage positions; official Forever support maps `UiMapID 1432` to `AreaID 38`. This does NOT expose Blizzard's current character-specific available-quest list or detected resource/service minimap blips. QuestieDB can miss new patch content, hidden quests, server-specific changes, dynamic availability and phasing; known quest start is not proof of active quest offer. Missing DB rows cannot be interpreted as no quest. Stock Blizzard minimap and native API feed remain on.
+
+## P0226 runtime experiment
+Optional `QuestieDBLocationProbe` module at startup performs no data scan or marker presentation. Phase E `QuestieDB Location Probe` explicitly calls `LibQuestieDB.RequireContract(1)`, checks `ModeIndicator.GetStatus().expansion == "Forever"`, captures one recent native gossip-offered quest ID and corresponding ordinary NPC GUID, and compares bounded `QuestDB.startedBy`/`NpcDB.spawns` records for audited Loch Modan 1432→38 and current radius. A currently accepted super-tracked quest is excluded as negative. If QuestieDB absent, flavor not proven, ordinary gossip unavailable, no map match or bad coordinate, output is DEFERRED. No Lua secret inspection, native pin access, uncontrolled GetAllIds, edits to current quest renderer or third-party vendoring.
+
+## P0226 initial static apply failure and R1 repair
+The first P0226 archive was applied against the expected local P0225 state but **aborted during shadow checks**, before tracked P0226 writes, because `tools/check_checker_version_policy.py` rejected an exact runtime-version literal in the newly added P0226 feature checker. The user supplied the failed applier output and `git status --short`, showing only P0225 changes. P0226 R1 replaces the two literal version assertions with a dynamic equality check between `Logres/Logres.toc` and `Logres/Core/Bootstrap.lua`. This fixes the specific static policy violation without changing the runtime Lua. Local checker fixtures passed matched current version, matched future version, and mismatch rejection; complete shadow checks must still pass during user application. P0226 runtime remains UNVERIFIED.
+
+## Status / next gate
+- P0223 accepted focused quest and waypoint bearings PASS for previously user-observed environments; sizing tuning deferred.
+- P0225 additional native available quest, task and hub coverage FAIL / ordinary-empty in reported environment.
+- P0226 optional QuestieDB compatibility / positive-negative check RUNTIME UNVERIFIED. A future bounded map provider remains OPEN, even if this probe returns positive. Generic live ore/herb/service blips still require a separate source.
+
+## P0226 R1 static apply failure and R2 repair
+The user applied R1 after the runtime-version check fix. The candidate still failed the complete shadow checker suite at `check_ui_ownership_audit_contract.py`: `handleCommand would capture 61 locals; Forever limit is 60`. No tracked P0226 file was written; the Git status remained the locally applied P0225 state. R2 registers `Logres:RunQuestieDBLocationProbe()` as a namespace method instead of adding a new top-level Lua `local function`, so the existing slash handler captures the already-present `Logres` upvalue rather than a 61st local. The P0226 checker requires the namespace call and rejects reintroducing a local runner. R2 changes no QuestieDB provider algorithms or compass output. Runtime remains UNVERIFIED; P0225 native feeds remain FAIL/ordinary-empty.

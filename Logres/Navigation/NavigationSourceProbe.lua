@@ -303,6 +303,14 @@ function Probe:ResetCaptureState(reason)
     self.availableQuestNearby = 0
     self.availableQuestCapReached = false
     self.availableQuestRows = {}
+    self.nativeForceStatus = "not-read"
+    self.nativeTaskStatus = "not-read"
+    self.nativeHubStatus = "not-read"
+    self.nativeForceScanned = 0
+    self.nativeTaskScanned = 0
+    self.nativeHubScanned = 0
+    self.nativeOfferNearby = 0
+    self.nativeHubNearby = 0
     self.questMapRows = {}
     self.questMapScanned = 0
     self.questMapNearby = 0
@@ -1086,6 +1094,180 @@ function Probe:ReadVignettes()
     self.vignetteStatus="row-cap-reached"
 end
 
+-- P0225: public, current-map position feeds also used by Blizzard map providers.
+-- This does not enumerate the engine's minimap tracking blips.
+local MAX_NATIVE_OFFER_ROWS = 24
+local MAX_NATIVE_QUEST_HUBS = 16
+
+function Probe:ReadNativeOfferFeeds()
+    if type(self.currentMapID) ~= "number" or self.currentMapID <= 0 then
+        self.nativeOfferStatus = "map-unavailable"
+        return
+    end
+    local mapID = self.currentMapID
+    local seen = {}
+    for index = 1, #self.availableQuestRows do
+        local questID = self.availableQuestRows[index].questID
+        if type(questID) == "number" then seen[questID] = true end
+    end
+    for index = 1, #self.questMapRows do
+        local questID = self.questMapRows[index].questID
+        if type(questID) == "number" then seen[questID] = true end
+    end
+
+    local function candidate(questID, x, y, name, source, hidden, inProgress)
+        if isSecret(questID) or isSecret(x) or isSecret(y) or isSecret(name)
+            or isSecret(hidden) or isSecret(inProgress) then return end
+        if type(questID) ~= "number"
+            or questID <= 0 or seen[questID] then return end
+        if type(x) ~= "number" or type(y) ~= "number"
+            or x ~= x or y ~= y
+            or x < 0 or x > 1 or y < 0 or y > 1 then return end
+        if hidden ~= false or inProgress ~= false then return end
+        if not C_QuestLog or type(C_QuestLog.IsOnQuest) ~= "function"
+            or type(C_QuestLog.IsQuestFlaggedCompleted) ~= "function" then return end
+        local okOn, rawOn = pcall(C_QuestLog.IsOnQuest, questID)
+        local okDone, rawDone = pcall(C_QuestLog.IsQuestFlaggedCompleted, questID)
+        if not okOn or not okDone or isSecret(rawOn) or isSecret(rawDone)
+            or rawOn ~= false or rawDone ~= false then return end
+        local distance = self:DistanceYards(x, y)
+        if type(distance) ~= "number" or distance ~= distance
+            or type(self.viewRadius) ~= "number" or self.viewRadius <= 0
+            or distance > self.viewRadius then return end
+        seen[questID] = true
+        local row = {
+            questID = questID, x = x, y = y,
+            eligible = true, onQuest = false, completed = false,
+            hidden = false, inProgress = false, withinViewRadius = true,
+            distanceYards = distance, source = source,
+        }
+        if type(name) == "string" then row.name = name end
+        self.availableQuestRows[#self.availableQuestRows + 1] = row
+        self.nativeOfferNearby = self.nativeOfferNearby + 1
+    end
+
+    self.nativeForceStatus = "api-unavailable"
+    if C_QuestLine and type(C_QuestLine.GetForceVisibleQuests) == "function"
+        and type(C_QuestLine.GetQuestLineInfo) == "function" then
+        local ok, rawIDs = pcall(C_QuestLine.GetForceVisibleQuests, mapID)
+        if ok and not isSecret(rawIDs) and type(rawIDs) == "table" then
+            self.nativeForceStatus = "ordinary-list"
+            for index = 1, MAX_NATIVE_OFFER_ROWS do
+                local questID = rawIDs[index]
+                if isSecret(questID) then
+                    self.secretSkipCount = self.secretSkipCount + 1
+                    self.lastSecret = "forceVisible.questID"
+                elseif questID == nil then break
+                elseif type(questID) == "number" then
+                    self.nativeForceScanned = self.nativeForceScanned + 1
+                    local okInfo, info = pcall(C_QuestLine.GetQuestLineInfo, questID, mapID)
+                    if okInfo and not isSecret(info) and type(info) == "table" then
+                        local okFields, x, y, title, hidden, active, startMapID, start =
+                            pcall(function()
+                                return info.x, info.y, info.questName, info.isHidden,
+                                    info.inProgress, info.startMapID, info.isQuestStart
+                            end)
+                        if okFields and not isSecret(startMapID)
+                            and (startMapID == nil or startMapID == mapID)
+                            and not isSecret(start) and start == true
+                            and not isSecret(hidden) and not isSecret(active) then
+                            candidate(questID, x, y, title, "force-visible", hidden, active)
+                        end
+                    end
+                end
+            end
+        else
+            self.nativeForceStatus = "empty-or-restricted"
+        end
+    end
+
+    self.nativeTaskStatus = "api-unavailable"
+    if C_TaskQuest and type(C_TaskQuest.GetQuestsOnMap) == "function" then
+        local ok, rawRows = pcall(C_TaskQuest.GetQuestsOnMap, mapID)
+        if ok and not isSecret(rawRows) and type(rawRows) == "table" then
+            self.nativeTaskStatus = "ordinary-list"
+            for index = 1, MAX_NATIVE_OFFER_ROWS do
+                local info = rawRows[index]
+                if isSecret(info) then
+                    self.secretSkipCount = self.secretSkipCount + 1
+                    self.lastSecret = "taskQuest.row"
+                elseif info == nil then break
+                elseif type(info) == "table" then
+                    local okFields, questID, x, y, start, sourceMap =
+                        pcall(function()
+                            return info.questID, info.x, info.y,
+                                info.isQuestStart, info.mapID
+                        end)
+                    if okFields and not isSecret(start) and start == true
+                        and not isSecret(sourceMap) and sourceMap == mapID then
+                        self.nativeTaskScanned = self.nativeTaskScanned + 1
+                        local title
+                        if C_QuestLog and type(C_QuestLog.GetTitleForQuestID) == "function"
+                            and not isSecret(questID) and type(questID) == "number" then
+                            local titleOK, value = pcall(C_QuestLog.GetTitleForQuestID, questID)
+                            if titleOK and not isSecret(value) then title = value end
+                        end
+                        candidate(questID, x, y, title, "task-start", false, false)
+                    end
+                end
+            end
+        else
+            self.nativeTaskStatus = "empty-or-restricted"
+        end
+    end
+
+    self.nativeHubStatus = "api-unavailable"
+    if C_AreaPoiInfo and type(C_AreaPoiInfo.GetQuestHubsForMap) == "function"
+        and type(C_AreaPoiInfo.GetAreaPOIInfo) == "function" then
+        local ok, rawIDs = pcall(C_AreaPoiInfo.GetQuestHubsForMap, mapID)
+        if ok and not isSecret(rawIDs) and type(rawIDs) == "table" then
+            self.nativeHubStatus = "ordinary-list"
+            local hubSeen = {}
+            for index = 1, #self.areaPoiRows do
+                local id = self.areaPoiRows[index].id
+                if type(id) == "number" then hubSeen[id] = true end
+            end
+            for index = 1, MAX_NATIVE_QUEST_HUBS do
+                local id = rawIDs[index]
+                if isSecret(id) then
+                    self.secretSkipCount = self.secretSkipCount + 1
+                    self.lastSecret = "questHub.id"
+                elseif id == nil then break
+                elseif type(id) == "number" and not hubSeen[id] then
+                    self.nativeHubScanned = self.nativeHubScanned + 1
+                    local okInfo, info = pcall(C_AreaPoiInfo.GetAreaPOIInfo, mapID, id)
+                    if okInfo and not isSecret(info) and type(info) == "table" then
+                        local okFields, position, name = pcall(function()
+                            return info.position, info.name
+                        end)
+                        if okFields and not isSecret(name) then
+                            local x, y, state = readVector(self, "questHub.position", position)
+                            if state == "ordinary" and x >= 0 and x <= 1
+                                and y >= 0 and y <= 1 then
+                                local distance = self:DistanceYards(x, y)
+                                if type(distance) == "number" and distance == distance
+                                    and type(self.viewRadius) == "number"
+                                    and self.viewRadius > 0
+                                    and distance <= self.viewRadius then
+                                    hubSeen[id] = true
+                                    self.areaPoiRows[#self.areaPoiRows + 1] = {
+                                        id = id, name = type(name) == "string" and name or nil,
+                                        x = x, y = y, distanceYards = distance,
+                                        withinViewRadius = true, source = "quest-hub",
+                                    }
+                                    self.nativeHubNearby = self.nativeHubNearby + 1
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        else
+            self.nativeHubStatus = "empty-or-restricted"
+        end
+    end
+end
+
 function Probe:Capture(reason)
     self.captureCount = self.captureCount + 1
     self:ResetCaptureState(reason)
@@ -1096,6 +1278,7 @@ function Probe:Capture(reason)
     self:ReadQuestMapPOIs()
     self:ReadVignettes()
     self:ReadAvailableQuestLines()
+    self:ReadNativeOfferFeeds()
     self:ReadSuperTracking()
     self:ReadNavigation()
 
@@ -1159,6 +1342,13 @@ function Probe:GetDiagnosticLines()
             tostring(self.questLineRequestError or "-")
         ),
         string.format(
+            "nativeFeeds=force:%s/%s task:%s/%s hub:%s/%s nearbyOffers:%s nearbyHubs:%s",
+            tostring(self.nativeForceStatus), tostring(self.nativeForceScanned),
+            tostring(self.nativeTaskStatus), tostring(self.nativeTaskScanned),
+            tostring(self.nativeHubStatus), tostring(self.nativeHubScanned),
+            tostring(self.nativeOfferNearby), tostring(self.nativeHubNearby)
+        ),
+        string.format(
             "super=anything:%s quest:%s userWaypoint:%s questID:%s navigation:%s navDistance:%s questWaypoint:%s/%s questDistance:%s/%s",
             boolText(self.superTrackingAnything),
             boolText(self.superTrackingQuest),
@@ -1198,9 +1388,10 @@ function Probe:GetDiagnosticLines()
     for index = 1, #self.areaPoiRows do
         local row = self.areaPoiRows[index]
         lines[#lines + 1] = string.format(
-            "areaPOI[%s] id=%s name=%s pos=%s,%s distance=%s withinRadius=%s",
+            "areaPOI[%s] id=%s source=%s name=%s pos=%s,%s distance=%s withinRadius=%s",
             tostring(index),
             tostring(row.id),
+            tostring(row.source or "area"),
             tostring(row.name or "-"),
             numberText(row.x),
             numberText(row.y),
@@ -1228,8 +1419,8 @@ function Probe:GetDiagnosticLines()
     for index = 1, #self.availableQuestRows do
         local row = self.availableQuestRows[index]
         lines[#lines + 1] = string.format(
-            "availableQuestLine[%s] quest=%s name=%s pos=%s,%s onQuest=%s completed=%s hidden=%s inProgress=%s eligible=%s distance=%s nearby=%s",
-            tostring(row.index), tostring(row.questID or "-"),
+            "availableQuestLine[%s] source=%s quest=%s name=%s pos=%s,%s onQuest=%s completed=%s hidden=%s inProgress=%s eligible=%s distance=%s nearby=%s",
+            tostring(row.index), tostring(row.source or "quest-line"), tostring(row.questID or "-"),
             tostring(row.name or "-"), numberText(row.x), numberText(row.y),
             boolText(row.onQuest), boolText(row.completed),
             boolText(row.hidden), boolText(row.inProgress),
@@ -1321,6 +1512,14 @@ function Probe:GetDebugStatus()
         vignetteScanned = self.vignetteScanned,
         vignetteNearby = self.vignetteNearby,
         vignetteStatus = self.vignetteStatus,
+        nativeForceStatus = self.nativeForceStatus,
+        nativeTaskStatus = self.nativeTaskStatus,
+        nativeHubStatus = self.nativeHubStatus,
+        nativeForceScanned = self.nativeForceScanned,
+        nativeTaskScanned = self.nativeTaskScanned,
+        nativeHubScanned = self.nativeHubScanned,
+        nativeOfferNearby = self.nativeOfferNearby,
+        nativeHubNearby = self.nativeHubNearby,
         questLineRequestAvailable = api.questLineRequest,
         questLineRequestAttemptCount = self.questLineRequestAttemptCount,
         questLineRequestMapID = self.questLineRequestMapID,
