@@ -2,6 +2,7 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
+| P0237 | 2026-10-17 | PREPARED / RUNTIME EVIDENCE | P0236 in-game pass; unified compass refinement deferred (`e6179b8` baseline) |
 | P0001 | 2026-09-30 | INSTALLED / PUSHED | Initial repository-native memory bootstrap (`353c5b0`) |
 | P0002 | 2026-09-30 | INSTALLED / PUSHED | I-001 source audit + runtime probe (`48a7d28`) |
 | P0003 | 2026-09-30 | INSTALLED / PUSHED | First Forever runtime evidence + Lua compatibility fix (`ad3a660`) |
@@ -236,4 +237,4 @@ This index is initially maintained manually. If patch volume grows, replace manu
 | P0233 | 2026-10-17 | INSTALLED / PUSHED (27e9e36); DOCS-ONLY / UNASSISTED STARTUP PASS | Record load 307 provider ready before manual retry, two addon-owned glyphs and one user-observed physical quest-giver route; preserve remaining coverage limits. |
 | P0234 | 2026-10-17 | PREPARED / DOCS-ONLY / UPSTREAM API AUDIT | Native-first glyph priority, QuestieDB v4 NPC service role masks and bounded possible service implementation plan; no runtime changes. |
 | P0235 | 2026-10-17 | PREPARED / RUNTIME UNVERIFIED | Fix quest-only gate for flight master, innkeeper, repair; separate v4 service glyphs, one marker per dual-role NPC; preserve quest v1 and hidden minimap. |
-| P0236 | 2026-10-17 | PREPARED / RUNTIME UNVERIFIED | Enable provider-supported historical service categories regardless of minimap filters; local POI distance sizing; later category filters. |
+| P0236 | 2026-10-17 | INSTALLED / RUNTIME PASS | Verified pushed `e6179b8`; load 311 nearby services and proximity scaling passed; historical quest relevance and final styling OPEN (see P0237 evidence). |
