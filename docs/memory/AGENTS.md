@@ -202,6 +202,10 @@ or conflict-marker errors must fail before tracked writes. Normalize generated
 text to one intentional terminal newline unless the baseline contract explicitly
 requires otherwise.
 
+## WoW validation panel handoff
+
+Before asking the user to run a WoW diagnostic, inspect currently registered developer-panel actions. If the action exists, supply the exact way to open the panel, phase/tab and button label; slash commands are optional fallbacks, never the only provided path. Explicitly state whether the probe is read-only, whether a visible UI change is expected, the exact fields to examine, and how diagnostics are exported. Avoid repeating a test when nothing relevant changed. Do not confuse a failed check at one guessed addon directory with proof that an addon visible in WoW is missing, and do not confuse a missing Lua global in a stale session with permanent installation state. Record assistant diagnostic/patch failures in durable evidence.
+
 ## Commands
 
 Commands given to the user must be:

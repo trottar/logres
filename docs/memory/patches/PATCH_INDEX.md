@@ -227,4 +227,6 @@ This index is initially maintained manually. If patch volume grows, replace manu
 | P0224 | 2026-10-16 | INSTALLED / PUSHED (`d4a39d1`) | QuestieDB source feasibility audit; no runtime dependency. |
 | P0225 | 2026-10-16 | INSTALLED / PUSHED WITH P0226 (`45bbd0e`); LIVE POIs NOT PROVEN | Native force/task/hub feeds returned ordinary-empty in live test; no visible POI markers. |
 | P0226 | 2026-10-16 | INSTALLED / PUSHED (`45bbd0e`); QUESTIEDB DEFERRED | Optional read-only database source compatibility probe; 0.0.134-dev reports provider not installed and no gossip positive proof; no markers expected. |
-| P0227 | 2026-10-16 | PREPARED DOCS-ONLY — RUNTIME UNCHANGED | Document exact QuestieDB Forever installation, optional-dependency status, hidden-quest coverage limitations and CurseForge/license/public packaging gates. |
+| P0227 | 2026-10-16 | INSTALLED / PUSHED (`7c6850b`); DOCS-ONLY | Document exact QuestieDB Forever installation, optional-dependency status, hidden-quest coverage limitations and CurseForge/license/public packaging gates. |
+| P0228 | 2026-10-17 | PREPARED RUNTIME CORRECTION — WoW UNVERIFIED | QuestieDB optional load ordering, standalone provider state, and Baked X-Flavor verification; no new compass markers. |
+| P0229 | 2026-10-17 | PREPARED DOCS-ONLY — NO WOW REDEPLOY | Record QuestieDB installed-state misdiagnosis, stale/no-op probe, missing Phase E panel handoff, P0228 R0 failed pre-write hygiene, and panel-first instruction rule. |
