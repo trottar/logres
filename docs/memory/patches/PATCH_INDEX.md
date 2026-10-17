@@ -230,3 +230,4 @@ This index is initially maintained manually. If patch volume grows, replace manu
 | P0227 | 2026-10-16 | INSTALLED / PUSHED (`7c6850b`); DOCS-ONLY | Document exact QuestieDB Forever installation, optional-dependency status, hidden-quest coverage limitations and CurseForge/license/public packaging gates. |
 | P0228 | 2026-10-17 | PREPARED RUNTIME CORRECTION — WoW UNVERIFIED | QuestieDB optional load ordering, standalone provider state, and Baked X-Flavor verification; no new compass markers. |
 | P0229 | 2026-10-17 | PREPARED DOCS-ONLY — NO WOW REDEPLOY | Record QuestieDB installed-state misdiagnosis, stale/no-op probe, missing Phase E panel handoff, P0228 R0 failed pre-write hygiene, and panel-first instruction rule. |
+| P0230 | 2026-10-17 | PREPARED / WOW UNVERIFIED | Dynamic QuestieDB canonical-map 50-yard possible-quest-giver source; abandon Loch Modan-only proposal, native-first fail-open, no live blip claim. |

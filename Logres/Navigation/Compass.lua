@@ -502,6 +502,9 @@ function Compass:ClearAvailableQuestPOIs(reason)
     self.availableQuestPoiShown = 0
     self.availableQuestPoiCandidates = 0
     self.availableQuestPoiReason = reason or "source-unavailable"
+    self.dbNearbyStatus = "unavailable"
+    self.dbNearbyCount = 0
+    self.dbCandidateShown = 0
     self.questDestinationShown = 0
     self.questDestinationCandidates = 0
     self.focusedQuestID = nil
@@ -531,7 +534,6 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     then self.availableQuestPoiReason = "source-not-ready"; return end
     if not C_Map or type(C_Map.GetBestMapForUnit) ~= "function"
         or type(C_Map.GetPlayerMapPosition) ~= "function"
-        or not C_Minimap or type(C_Minimap.GetViewRadius) ~= "function"
     then self.availableQuestPoiReason = "map-api-unavailable"; return end
     local okMap,mapID=pcall(C_Map.GetBestMapForUnit,"player")
     if not okMap or isSecret(mapID) or type(mapID)~="number"
@@ -541,9 +543,12 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     if not okPlayer then self.availableQuestPoiReason="player-position-call-failed"; return end
     local px,py,vectorError=readVectorXY(position)
     if vectorError then self.availableQuestPoiReason=vectorError; return end
-    local okRadius,radius=pcall(C_Minimap.GetViewRadius)
-    if not okRadius or isSecret(radius) or type(radius)~="number" or radius<=0
-    then self.availableQuestPoiReason="local-radius-unavailable"; return end
+    local radius
+    if C_Minimap and type(C_Minimap.GetViewRadius)=="function" then
+        local okRadius, value=pcall(C_Minimap.GetViewRadius)
+        if okRadius and not isSecret(value) and type(value)=="number"
+            and value>0 then radius=value end
+    end
     local localPOIs,majorQuests,tracked={},{},{}
     -- SourceProbe sampled a non-secret, ordinary super-track ID. A missing
     -- focus is not permission to silently choose the nearest other quest.
@@ -554,19 +559,31 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     self.focusedQuestID = focusedQuestID
     local seenQuest={}
     local function add(row,role,key)
-        if type(row)~="table" or type(row.x)~="number" or type(row.y)~="number"
-            or row.x<0 or row.x>1 or row.y<0 or row.y>1 then return end
-        local dx=(row.x-px)*source.mapWidth
-        local dy=(row.y-py)*source.mapHeight
+        if type(row)~="table" then return end
+        local dx,dy
+        if row.potential == true then
+            -- Provider canonical-map positions have already been compared to
+            -- the player in that same canonical map's world-yard frame.
+            if type(row.dxYards)~="number" or type(row.dyYards)~="number" then return end
+            dx,dy=row.dxYards,row.dyYards
+        else
+            if type(row.x)~="number" or type(row.y)~="number"
+                or row.x<0 or row.x>1 or row.y<0 or row.y>1 then return end
+            dx=(row.x-px)*source.mapWidth
+            dy=(row.y-py)*source.mapHeight
+        end
         local distance=math.sqrt(dx*dx+dy*dy)
-        local cap=role=="quest" and radius*8 or radius
-        if distance<=0 or distance>cap then return end
+        local cap=row.potential == true and 50
+            or (radius and (role=="quest" and radius*8 or radius))
+        if not cap or distance<=0 or distance>cap then return end
         local bearing=(math.deg(math.atan2(dx,-dy))+360)%360
         local relative=normalizeRelativeDegrees(bearing-self.headingDegrees)
         local magnitude=math.abs(relative)
         if magnitude>VISIBLE_HALF_ANGLE then return end
         local candidate={distance=distance,relative=relative,magnitude=magnitude,
-            x=relative*PIXELS_PER_DEGREE,name=row.name,sortKey=tostring(key)}
+            x=relative*PIXELS_PER_DEGREE,
+            name=row.potential == true and ("Possible quest giver: " .. tostring(row.name)) or row.name,
+            potential=row.potential == true, sortKey=tostring(key)}
         if role=="quest" then majorQuests[#majorQuests+1]=candidate
         elseif role=="tracking" then tracked[#tracked+1]=candidate
         else localPOIs[#localPOIs+1]=candidate end
@@ -606,7 +623,25 @@ function Compass:RefreshAvailableQuestPOIs(reason)
             add(row,row.role=="tracking" and "tracking" or "poi","vignette"..tostring(index))
         end
     end
+    -- Existing native positioned points always take precedence over a
+    -- historical QuestieDB candidate in the finite eight-glyph pool.
+    local db = Logres:GetModule("QuestieDBNearby")
+    if db and db.moduleEnabled == true and type(db.GetNearbyRows) == "function" then
+        local dbRows, dbStatus = db:GetNearbyRows(mapID,px,py,source.mapWidth,source.mapHeight)
+        self.dbNearbyStatus = dbStatus
+        if type(dbRows) == "table" then
+            self.dbNearbyCount = #dbRows
+            for index=1,#dbRows do
+                local row=dbRows[index]
+                if type(row) == "table" and type(row.npcID)=="number"
+                    and not seenQuest[row.questID] then
+                    add(row,"poi","db"..tostring(row.npcID))
+                end
+            end
+        end
+    end
     local function nearestFirst(a,b)
+        if a.potential ~= b.potential then return b.potential == true end
         if a.distance==b.distance then return a.sortKey < b.sortKey end
         return a.distance < b.distance
     end
@@ -650,11 +685,15 @@ function Compass:RefreshAvailableQuestPOIs(reason)
                 self.focusedQuestDepthBand = band
             end
             glyph:SetAlpha((roleStyle.alpha or 0.90)
-                * edgeFadeForMagnitude(candidate.magnitude))
+                * edgeFadeForMagnitude(candidate.magnitude)
+                * (candidate.potential and 0.55 or 1))
             glyph:Show()
             if role=="quest" then self.questDestinationShown=self.questDestinationShown+1
             elseif role=="tracking" then self.trackingShown=self.trackingShown+1
-            else self.availableQuestPoiShown=self.availableQuestPoiShown+1 end
+            else
+                self.availableQuestPoiShown=self.availableQuestPoiShown+1
+                if candidate.potential then self.dbCandidateShown=self.dbCandidateShown+1 end
+            end
             if candidate.magnitude<=focusDegrees and type(candidate.name)=="string"
                 and (not closestFocus or candidate.distance<closestFocus.distance) then
                 closestFocus=candidate
@@ -1299,6 +1338,9 @@ function Compass:GetDebugStatus()
         availableQuestPoiShown = self.availableQuestPoiShown,
         availableQuestPoiCandidates = self.availableQuestPoiCandidates,
         availableQuestPoiReason = self.availableQuestPoiReason,
+        dbNearbyStatus = self.dbNearbyStatus,
+        dbNearbyCount = self.dbNearbyCount,
+        dbCandidateShown = self.dbCandidateShown,
         questDestinationShown = self.questDestinationShown,
         questDestinationCandidates = self.questDestinationCandidates,
         focusedQuestID = self.focusedQuestID,

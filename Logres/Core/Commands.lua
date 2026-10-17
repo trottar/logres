@@ -2148,6 +2148,12 @@ local function runCompassCheck()
     local waypointDepthText = numberText(debugStatus.waypointDepthScale, "%.3f")
     local waypointRenderText = numberText(debugStatus.waypointRenderScale, "%.3f")
 
+    emit(string.format(
+        "Logres compass nearby: provider=%s candidates=%s shown=%s (database-only = possible historical NPC spawn; native source priority)",
+        tostring(debugStatus.dbNearbyStatus or "-"),
+        tostring(debugStatus.dbNearbyCount or 0),
+        tostring(debugStatus.dbCandidateShown or 0)
+    ))
     if passed then
         emit(string.format(
             "Logres compasscheck: PASS (immersion=%s context=%s policy=%s facing=%s update=%s active=%s heading=%s waypointAPI=%s event=%s waypoint=%s bearing=%s relative=%s marker=%s distanceAPI=%s distance=%s yards=%s radiusAPI=%s radiusAvailable=%s radius=%s ratio=%s band=%s depth=%s renderScale=%s distanceReason=%s depthReason=%s waypointReason=%s reason=%s)",
@@ -3067,14 +3073,31 @@ function Logres:RunQuestieDBLocationProbe()
     local negative = status.negative == "accepted-quest-excluded"
     local verdict = positive and negative and "POSITIVE-SAMPLE" or "DEFERRED"
     emit(string.format(
-        "Logres questiedbprobe: %s (provider=%s contract=%s flavor=%s map=%s gossip=%s npc=%s quest=%s positive=%s matchedNPC=%s nearestYards=%s negative=%s)",
-        verdict, tostring(status.provider), tostring(status.contract),
+        "Logres questiedbprobe: %s (provider=%s registered=%s loaded=%s tocFlavor=%s tocMode=%s tocVersion=%s contract=%s mode=%s flavor=%s map=%s gossip=%s npc=%s quest=%s positive=%s matchedNPC=%s nearestYards=%s negative=%s)",
+        verdict, tostring(status.provider), tostring(status.addonRegistered),
+        tostring(status.addonLoaded), tostring(status.addonFlavor or "-"),
+        tostring(status.addonMode or "-"), tostring(status.addonVersion or "-"),
+        tostring(status.contract), tostring(status.mode or "-"),
         tostring(status.flavor or "-"), tostring(status.mapStatus),
         tostring(status.gossipStatus), tostring(status.gossipNPCID or "-"),
         tostring(status.gossipSample or "-"), tostring(status.positive),
         tostring(status.matchedNPC or "-"),
         tostring(status.nearestYards or "-"), tostring(status.negative)
     ))
+    -- Reuse the existing Phase E button; do not introduce a slash-only probe.
+    local nearby = Logres:GetModule("QuestieDBNearby")
+    if nearby then
+        local snapshot = nearby:GetDebugStatus()
+        emit(string.format(
+            "Logres questiedbnearby: index=%s map=%s area=%s scanned=%s ids=%s zoneNPCs=%s questNPCs=%s spawns=%s nearby=%s radius=%s truncated=%s coverage=%s",
+            tostring(snapshot.state), tostring(snapshot.map or "-"),
+            tostring(snapshot.area or "-"), tostring(snapshot.scanned),
+            tostring(snapshot.ids), tostring(snapshot.zoneNPCs),
+            tostring(snapshot.questNPCs), tostring(snapshot.spawns),
+            tostring(snapshot.nearby), tostring(snapshot.radius),
+            tostring(snapshot.truncated), tostring(snapshot.coverage)
+        ))
+    end
 end
 
 local function runNavigationSourceProbe()

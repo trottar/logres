@@ -105,6 +105,31 @@ local function acceptedQuestNegative(nav)
     return "not-established"
 end
 
+-- Other QuestieDB consumers (Questie, PlateSmith) inspect the provider's public
+-- global directly. Separate TOC load state and packaged metadata from that global;
+-- addon registration is not proof that its Lua initialization succeeded.
+local function readAddonValue(fn, ...)
+    if type(fn) ~= "function" then return nil end
+    local ok, value = pcall(fn, ...)
+    return ok and ordinary(value) or nil
+end
+
+local function addonFacts(probe)
+    local api = _G.C_AddOns
+    local infoFn = api and api.GetAddOnInfo or _G.GetAddOnInfo
+    local loadedFn = api and api.IsAddOnLoaded or _G.IsAddOnLoaded
+    local metadataFn = api and api.GetAddOnMetadata or _G.GetAddOnMetadata
+    local info = readAddonValue(infoFn, "QuestieDB")
+    probe.addonRegistered = type(infoFn) ~= "function" and "unknown"
+        or info ~= nil and "yes" or "no"
+    local loaded = readAddonValue(loadedFn, "QuestieDB")
+    probe.addonLoaded = type(loadedFn) ~= "function" and "unknown"
+        or loaded == true and "yes" or loaded == false and "no" or "unknown"
+    probe.addonFlavor = readAddonValue(metadataFn, "QuestieDB", "X-Flavor")
+    probe.addonMode = readAddonValue(metadataFn, "QuestieDB", "X-Mode")
+    probe.addonVersion = readAddonValue(metadataFn, "QuestieDB", "Version")
+end
+
 function Probe:CaptureManual()
     self.manualCount = self.manualCount + 1
     self.provider = "not-installed"
@@ -115,30 +140,17 @@ function Probe:CaptureManual()
     self.mapStatus = "unknown"
     self.contract = "not-checked"
     self.flavor = nil
+    self.mode = nil
+    addonFacts(self)
     local db = ordinary(_G.LibQuestieDB, "table")
-    self.provider = db and "installed-unverified" or "not-installed"
+    self.provider = db and "library-present-unverified" or "api-unavailable"
     self.gossipSample = self.gossipIDs[1]
 
     local nav = Logres:GetModule("NavigationSourceProbe")
     nav:CaptureManual()
     self.negative = acceptedQuestNegative(nav)
-    local uiMap = ordinaryNumber(nav.currentMapID)
-    local playerX = ordinaryNumber(nav.playerX)
-    local playerY = ordinaryNumber(nav.playerY)
-    local width = ordinaryNumber(nav.mapWidth)
-    local height = ordinaryNumber(nav.mapHeight)
-    local radius = ordinaryNumber(nav.viewRadius)
-    if uiMap ~= LOCH_MODAN_UI_MAP or self.gossipMapID ~= uiMap then
-        self.mapStatus = "unvalidated-map-or-stale-gossip"
-        return self:GetDebugStatus()
-    end
-    if not playerX or not playerY or not width or not height or not radius
-        or width <= 0 or height <= 0 or radius <= 0 then
-        self.mapStatus = "ordinary-geometry-unavailable"
-        return self:GetDebugStatus()
-    end
-    self.mapStatus = "1432-to-38-audited"
-
+    -- Provider readiness is independent of location or gossip; never call a
+    -- Source-only expansion field proof for a packaged Baked database.
     if not db then
         return self:GetDebugStatus()
     end
@@ -161,13 +173,18 @@ function Probe:CaptureManual()
     end
     local modeOK, rawMode = pcall(indicator.GetStatus)
     local status = modeOK and ordinary(rawMode, "table") or nil
-    local expansion = status and ordinary(status.expansion, "string") or nil
-    if not expansion or expansion:lower() ~= "forever" then
+    self.mode = status and ordinary(status.mode, "string") or nil
+    local sourceExpansion = status and ordinary(status.expansion, "string") or nil
+    if self.mode == "baked" then
+        -- generate.lua emits X-Flavor; read/baked.lua selects by this metadata.
+        self.flavor = ordinary(self.addonFlavor, "string")
+    elseif self.mode == "source" then
+        self.flavor = sourceExpansion
+    end
+    if not self.flavor or self.flavor:lower() ~= "forever" then
         self.provider = "forever-flavor-unverified"
-        self.flavor = expansion
         return self:GetDebugStatus()
     end
-    self.flavor = expansion
     local quest = ordinary(_G.QuestDB, "table")
     local npc = ordinary(_G.NpcDB, "table")
     if not quest or not npc or type(quest.startedBy) ~= "function"
@@ -175,6 +192,23 @@ function Probe:CaptureManual()
         self.provider = "public-readers-unavailable"
         return self:GetDebugStatus()
     end
+    local uiMap = ordinaryNumber(nav.currentMapID)
+    local playerX = ordinaryNumber(nav.playerX)
+    local playerY = ordinaryNumber(nav.playerY)
+    local width = ordinaryNumber(nav.mapWidth)
+    local height = ordinaryNumber(nav.mapHeight)
+    local radius = ordinaryNumber(nav.viewRadius)
+    if uiMap ~= LOCH_MODAN_UI_MAP or self.gossipMapID ~= uiMap then
+        self.mapStatus = "unvalidated-map-or-stale-gossip"
+        return self:GetDebugStatus()
+    end
+    if not playerX or not playerY or not width or not height or not radius
+        or width <= 0 or height <= 0 or radius <= 0 then
+        self.mapStatus = "ordinary-geometry-unavailable"
+        return self:GetDebugStatus()
+    end
+    self.mapStatus = "1432-to-38-audited"
+
     if not self.gossipSample or not self.gossipNPCID then
         self.positive = "gossip-or-npc-identity-unavailable"
         return self:GetDebugStatus()
@@ -235,7 +269,13 @@ function Probe:GetDebugStatus()
         gossipMapID = self.gossipMapID,
         manualCount = self.manualCount,
         provider = self.provider,
+        addonRegistered = self.addonRegistered,
+        addonLoaded = self.addonLoaded,
+        addonFlavor = self.addonFlavor,
+        addonMode = self.addonMode,
+        addonVersion = self.addonVersion,
         contract = self.contract,
+        mode = self.mode,
         flavor = self.flavor,
         mapStatus = self.mapStatus,
         positive = self.positive,
