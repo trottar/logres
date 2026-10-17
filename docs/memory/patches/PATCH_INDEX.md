@@ -2,7 +2,8 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
-| P0243 | 2026-10-17 | PREPARED / RUNTIME UNVERIFIED | Add bounded read-only completion reward summary, preserve stock claim and choice. |
+| P0244 | 2026-10-17 | PREPARED / RUNTIME UNVERIFIED | Guarded quest-log payout copper read; preserve native final claim and choices. |
+| P0243 | 2026-10-17 | INSTALLED / PUSHED (e8455bc); VISUAL PASS LIMITED | Quest 237 completion prose, item x3 and XP match Blizzard; native Complete Quest visible. Cash 7 silver missing; P0244 evidence. |
 | P0242 | 2026-10-17 | INSTALLED / PUSHED (18b0fa0); PARTIAL / NARRATIVE ONLY | Load 315 registered; Logres quest shown, no Logres Complete/rewards; completion prose not independently checked post-event (P0243 evidence). |
 | P0241 | 2026-10-17 | INSTALLED / PUSHED (ee1cbd3); REGISTRATION PASS / PROGRESS DEFERRED | Load 313 questdialoguecheck PASS; zero natural progress; QUEST_COMPLETE read-only event observed (P0242 evidence). |
 | P0240 | 2026-10-17 | INSTALLED / PUSHED (048cd77); DOCS-ONLY | Quest lifecycle source gate: progress, completion, gossip runtime conditions still deferred. |

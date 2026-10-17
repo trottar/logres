@@ -724,11 +724,11 @@ function Dialogue:ReadCompletion()
 end
 
 -- P0243: bounded ordinary reward labels only. Never infer a missing item or choice.
-local function ordinaryRewardNumber(label, fn)
+local function ordinaryRewardNumber(label, fn, ...)
     if type(fn) ~= "function" then
         return nil, label .. "-api-unavailable"
     end
-    local ok, value = pcall(fn)
+    local ok, value = pcall(fn, ...)
     if not ok then return nil, label .. "-read-failed" end
     if isSecret(value) then return nil, label .. "-secret" end
     if type(value) ~= "number" or value ~= value or value == math.huge
@@ -744,6 +744,11 @@ function Dialogue:ReadCompletionRewardSummary()
     local xp, xpReason = ordinaryRewardNumber("reward-xp", GetRewardXP)
     local choices, choiceReason = ordinaryRewardNumber("reward-choices", GetNumQuestChoices)
     local rewards, countReason = ordinaryRewardNumber("reward-count", GetNumQuestRewards)
+    -- P0244: quest-log money is keyed to the already-validated NPC quest ID.
+    -- Missing/unavailable/secret source is not interpreted as zero payout.
+    local money, moneyReason = ordinaryRewardNumber(
+        "reward-money", GetQuestLogRewardMoney, self.lastQuestID
+    )
     local itemText = nil
     local reason = "complete-reward-source"
 
@@ -780,8 +785,20 @@ function Dialogue:ReadCompletionRewardSummary()
     elseif xpReason then
         reason = reason .. "/" .. xpReason
     end
+    if money ~= nil and money > 0 then
+        -- Currency in copper: 10000 = gold, 100 = silver.
+        -- Only an ordinary, finite, guarded number reaches this arithmetic.
+        local gold = math.floor(money / 10000)
+        local silver = math.floor((money % 10000) / 100)
+        local copper = money % 100
+        local amounts = {}
+        if gold > 0 then amounts[#amounts + 1] = tostring(gold) .. "g" end
+        if silver > 0 then amounts[#amounts + 1] = tostring(silver) .. "s" end
+        if copper > 0 then amounts[#amounts + 1] = tostring(copper) .. "c" end
+        label = label .. " | " .. table.concat(amounts, " ")
+    end
     return label .. "\nComplete using Blizzard quest controls", reason,
-        itemText ~= nil
+        itemText ~= nil, money, moneyReason or (money ~= nil and "ordinary" or "unknown")
 end
 
 function Dialogue:HandleQuestComplete()
@@ -807,10 +824,12 @@ function Dialogue:HandleQuestComplete()
         return
     end
 
-    local rewardSummary, rewardReason, rewardIdentified =
-        self:ReadCompletionRewardSummary()
+    local rewardSummary, rewardReason, rewardIdentified,
+        rewardMoney, rewardMoneyReason = self:ReadCompletionRewardSummary()
     self.lastCompletionRewardReason = rewardReason
     self.lastCompletionRewardIdentified = rewardIdentified == true
+    self.lastCompletionRewardMoney = rewardMoney
+    self.lastCompletionRewardMoneyReason = rewardMoneyReason
     local shown, state = self:PresentText(
         completion.title, completion.body, rewardSummary, "QUEST_COMPLETE",
         false, false, false
@@ -1167,6 +1186,8 @@ function Dialogue:GetDebugStatus()
         completionActive = self.completionActive == true,
         lastCompletionRewardReason = self.lastCompletionRewardReason,
         lastCompletionRewardIdentified = self.lastCompletionRewardIdentified == true,
+        lastCompletionRewardMoney = self.lastCompletionRewardMoney,
+        lastCompletionRewardMoneyReason = self.lastCompletionRewardMoneyReason,
         lastCompletionReason = self.lastCompletionReason,
         lastCompletionSecret = self.lastCompletionSecret == true,
         progressActive = self.progressActive == true,
@@ -1269,6 +1290,8 @@ function Dialogue:OnInitialize()
     self.completionActive = false
     self.lastCompletionReason = "not-observed"
     self.lastCompletionRewardReason = "not-observed"
+    self.lastCompletionRewardMoney = nil
+    self.lastCompletionRewardMoneyReason = "not-observed"
     self.lastCompletionRewardIdentified = false
     self.lastCompletionSecret = false
     self.progressActive = false
