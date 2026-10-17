@@ -2,7 +2,8 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
-| P0237 | 2026-10-17 | PREPARED / RUNTIME EVIDENCE | P0236 in-game pass; unified compass refinement deferred (`e6179b8` baseline) |
+| P0238 | 2026-10-17 | PREPARED / RUNTIME UNVERIFIED | First limited player settings surface: Immersion and Active Quest persisted toggles. |
+| P0237 | 2026-10-17 | INSTALLED / PUSHED (bb1f772); DOCS-ONLY | P0236 runtime acceptance and preserved R0 manifest EOF failure; compass polish deferred. |
 | P0001 | 2026-09-30 | INSTALLED / PUSHED | Initial repository-native memory bootstrap (`353c5b0`) |
 | P0002 | 2026-09-30 | INSTALLED / PUSHED | I-001 source audit + runtime probe (`48a7d28`) |
 | P0003 | 2026-09-30 | INSTALLED / PUSHED | First Forever runtime evidence + Lua compatibility fix (`ad3a660`) |

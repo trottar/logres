@@ -4712,6 +4712,7 @@ end
 local function printHelp()
     emit("Logres development commands:")
     emit("  /logres panel")
+    emit("  /logres settings")
     emit("  /logres checkall")
     emit("  /logres status")
     emit("  /logres statecheck")
@@ -4792,6 +4793,13 @@ local function handleCommand(message)
             Logres:ToggleDevPanel()
         else
             emit("Logres: development panel is not available yet.")
+        end
+        return
+    end
+
+    if command == "settings" then
+        if not Logres:ToggleSettingsPanel() then
+            emit("Logres: settings panel is not available yet.")
         end
         return
     end
@@ -5690,6 +5698,12 @@ Logres:RegisterDevPanelAction(
     "TEST Decline Current Quest",
     "questofferdeclineprobe",
     "F"
+)
+Logres:RegisterDevPanelAction(
+    "settingsUI",
+    "Settings UI",
+    "settings",
+    "D"
 )
 Logres:RegisterDevPanelAction(
     "immersionOn",
