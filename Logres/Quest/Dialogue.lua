@@ -527,6 +527,7 @@ function Dialogue:HidePresentation(reason)
     self.presentationGeneration =
         self.presentationGeneration + 1
     self.presentationShown = false
+    self.progressActive = false
     self.pages = {}
     self.currentPage = 0
 
@@ -621,6 +622,75 @@ function Dialogue:ReadDetail()
         body = body,
         objective = objective,
     }, nil, false
+end
+
+-- P0241: show only actual ordinary quest-progress text; Blizzard owns Continue.
+function Dialogue:ReadProgress()
+    if type(GetQuestID) ~= "function"
+        or type(GetTitleText) ~= "function"
+        or type(GetProgressText) ~= "function"
+    then
+        return nil, "progress-api-unavailable", false
+    end
+
+    local questID, idError, idSecret = readQuestID()
+    if idError then return nil, idError, idSecret end
+    if questID == nil or questID <= 0
+        or questID ~= questID or questID == math.huge
+    then
+        return nil, "progress-id-unavailable", false
+    end
+
+    local title, titleError, titleSecret = readString("progress-title", GetTitleText)
+    if titleError then return nil, titleError, titleSecret end
+    if title == "" then return nil, "progress-title-empty", false end
+
+    local body, bodyError, bodySecret = readString("progress-text", GetProgressText)
+    if bodyError then return nil, bodyError, bodySecret end
+    if body == "" then return nil, "progress-text-empty", false end
+
+    return { questID = questID, title = title, body = body }, nil, false
+end
+
+function Dialogue:HandleQuestProgress()
+    self.progressEventCount = self.progressEventCount + 1
+    -- Drop previous offer identity/actions before inspecting another lifecycle stage.
+    self:ClearActiveDetail("QUEST_PROGRESS")
+    local progress, reason, secret = self:ReadProgress()
+    if not progress then
+        self.progressSkippedCount = self.progressSkippedCount + 1
+        self.lastProgressReason = reason or "progress-unavailable"
+        self.lastProgressSecret = secret == true
+        return
+    end
+
+    self.lastQuestID = progress.questID
+    self.lastHadBody = true
+    self.lastHadObjective = false
+    self.lastReason = "QUEST_PROGRESS"
+    self.lastSecret = false
+    self.lastError = nil
+
+    if not self.immersionEnabled then
+        self.suppressedCount = self.suppressedCount + 1
+        self.lastProgressReason = "immersion-off"
+        return
+    end
+
+    local shown, state = self:PresentText(
+        progress.title, progress.body, "", "QUEST_PROGRESS",
+        false, false, false
+    )
+    if shown and state == "shown" then
+        self.progressActive = true
+        self.progressShownCount = self.progressShownCount + 1
+        self.presentationCount = self.presentationCount + 1
+        self.lastProgressReason = "shown"
+    else
+        self.progressSkippedCount = self.progressSkippedCount + 1
+        self.lastProgressReason = state or "presentation-unavailable"
+    end
+    self.lastProgressSecret = false
 end
 
 function Dialogue:UpdatePageControls()
@@ -753,6 +823,7 @@ function Dialogue:PresentText(
         self.presentationGeneration
 
     self.pages = buildPages(body)
+    self.progressActive = false
     self.currentPage = 1
     self.offerActionsEnabled =
         showOfferActions == true
@@ -944,6 +1015,16 @@ function Dialogue:GetDebugStatus()
             self.eventRegistration.QUEST_FINISHED == true,
         worldRegistered =
             self.eventRegistration.PLAYER_ENTERING_WORLD == true,
+        progressRegistered = self.eventRegistration.QUEST_PROGRESS == true,
+        completeRegistered = self.eventRegistration.QUEST_COMPLETE == true,
+        gossipClosedRegistered = self.eventRegistration.GOSSIP_CLOSED == true,
+        progressEventCount = self.progressEventCount,
+        progressShownCount = self.progressShownCount,
+        progressSkippedCount = self.progressSkippedCount,
+        completeEventCount = self.completeEventCount,
+        progressActive = self.progressActive == true,
+        lastProgressReason = self.lastProgressReason,
+        lastProgressSecret = self.lastProgressSecret == true,
 
         detailEventCount =
             self.detailEventCount,
@@ -1032,6 +1113,13 @@ function Dialogue:OnInitialize()
         and type(C_Timer.After) == "function"
 
     self.detailEventCount = 0
+    self.progressEventCount = 0
+    self.progressShownCount = 0
+    self.progressSkippedCount = 0
+    self.completeEventCount = 0
+    self.progressActive = false
+    self.lastProgressReason = "not-observed"
+    self.lastProgressSecret = false
     self.acceptedEventCount = 0
     self.finishedEventCount = 0
     self.worldEventCount = 0
@@ -1439,6 +1527,9 @@ function Dialogue:OnInitialize()
     local eventFrame = CreateFrame("Frame")
     local events = {
         "QUEST_DETAIL",
+        "QUEST_PROGRESS",
+        "QUEST_COMPLETE",
+        "GOSSIP_CLOSED",
         "QUEST_ACCEPTED",
         "QUEST_FINISHED",
         "PLAYER_ENTERING_WORLD",
@@ -1467,6 +1558,24 @@ function Dialogue:OnInitialize()
 
             if event == "QUEST_DETAIL" then
                 self:HandleQuestDetail()
+                return
+            end
+
+            if event == "QUEST_PROGRESS" then
+                self:HandleQuestProgress()
+                return
+            end
+
+            if event == "QUEST_COMPLETE" then
+                self.completeEventCount = self.completeEventCount + 1
+                self:ClearActiveDetail("QUEST_COMPLETE")
+                return
+            end
+
+            if event == "GOSSIP_CLOSED" then
+                if self.progressActive then
+                    self:ClearActiveDetail("GOSSIP_CLOSED")
+                end
                 return
             end
 

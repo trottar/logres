@@ -2,7 +2,8 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
-| P0240 | 2026-10-17 | PREPARED / DOCS-ONLY / SOURCE AUDIT | Reconcile prior quest lifecycle API source proof with current read-only probe and unobserved progress/reward/gossip runtime gates. |
+| P0241 | 2026-10-17 | PREPARED / RUNTIME UNVERIFIED | Additive ordinary quest-progress narrative; Blizzard Continue/claim/gossip preserved, no polling. |
+| P0240 | 2026-10-17 | INSTALLED / PUSHED (048cd77); DOCS-ONLY | Quest lifecycle source gate: progress, completion, gossip runtime conditions still deferred. |
 | P0239 | 2026-10-17 | INSTALLED / PUSHED (22ba7ab); DOCS-ONLY | P0238 settings UI runtime acceptance; next quest lifecycle source delta audit. |
 | P0238 | 2026-10-17 | INSTALLED / RUNTIME ACCEPTED (0eb1976) | First player settings panel; load 312 user-observed PASS, preferencecheck PASS; detailed UI toggles not independently logged (P0239 evidence). |
 | P0237 | 2026-10-17 | INSTALLED / PUSHED (bb1f772); DOCS-ONLY | P0236 runtime acceptance and preserved R0 manifest EOF failure; compass polish deferred. |

@@ -1,0 +1,3 @@
+# P0241 — Additive quest-progress narrative candidate
+
+P0240 `048cd77` verified before implementation. QuestDialogue uses its existing event frame to read safe ordinary quest progress identity/title/text, paginates full text through its accepted renderer, and leaves Blizzard Continue, reward, and gossip controls available. It drops stale content on completion and gossip close, and never stores progress for Immersion restoration. No mutation, polling, new database preference, compass or settings changes. Version `0.0.141-dev`. Static checks are required, natural Forever runtime progress proof is still DEFERRED; never infer PASS from an absent event. See `docs/memory/evidence/P0241_ADDITIVE_QUEST_PROGRESS.md`.

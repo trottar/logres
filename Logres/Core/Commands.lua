@@ -2850,6 +2850,9 @@ local function runQuestDialogueCheck()
         and debugStatus.timerAvailable == true
         and debugStatus.apiAvailable == true
         and debugStatus.questDetailRegistered == true
+        and debugStatus.progressRegistered == true
+        and debugStatus.completeRegistered == true
+        and debugStatus.gossipClosedRegistered == true
         and debugStatus.questAcceptedRegistered == true
         and debugStatus.questFinishedRegistered == true
         and debugStatus.worldRegistered == true
@@ -2884,6 +2887,20 @@ local function runQuestDialogueCheck()
         tostring(debugStatus.lastReason),
         tostring(debugStatus.lastPresentationReason),
         tostring(debugStatus.lastError)
+    ))
+    emit(string.format(
+        "Logres questdialogue progress: %s (registered=%s/%s/%s events=%s shown=%s skipped=%s complete=%s active=%s source=%s secret=%s stock=retained actions=none)",
+        debugStatus.progressRegistered and "CANDIDATE" or "FAIL",
+        tostring(debugStatus.progressRegistered),
+        tostring(debugStatus.completeRegistered),
+        tostring(debugStatus.gossipClosedRegistered),
+        tostring(debugStatus.progressEventCount),
+        tostring(debugStatus.progressShownCount),
+        tostring(debugStatus.progressSkippedCount),
+        tostring(debugStatus.completeEventCount),
+        tostring(debugStatus.progressActive),
+        tostring(debugStatus.lastProgressReason),
+        tostring(debugStatus.lastProgressSecret)
     ))
 end
 

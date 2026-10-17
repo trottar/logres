@@ -7,12 +7,13 @@ project: logres
 # Current State
 
 ## Active Objective
-Phase H — source-safe integration of remaining NPC quest interaction, preserving accepted UI baselines. P0236 compass/POIs and P0238 two-setting access are runtime-accepted in their tested scope. Native minimap remains hidden during ordinary immersion with deliberate access. D-035 eventual quest ownership requires separate runtime gates for progress, completion/reward, and quest-related gossip.
+Phase H — incrementally complete source-safe NPC quest interaction without disturbing accepted P0236 compass/POI or P0238 settings. P0240 source audit is durable; P0241 prepares additive, event-driven progress narrative only while Blizzard Continue, completion/reward and quest gossip remain the usable controls.
 
 ## Current Work Item
-**P0240 — quest lifecycle source/capability delta audit (DOCS ONLY).** Verified pushed P0239 `22ba7ab`. Read current `Quest/InteractionProbe.lua`, `Dialogue.lua`, `OfferActionProbe.lua`, offer stock suppression, D-031/D-035, and historical P0128/P0129/P0131 evidence. The read-only probe already owns `QUEST_PROGRESS`/`QUEST_COMPLETE` capture, but those events were not naturally observed; current UI renders only quest offers and mutation is intentionally limited to Accept/Decline. Next narrow slice P0241 is optional additive progress reading/presentation, gated on ordinary current quest source and with Blizzard Continue accessible; no new action, reward claim or gossip mutation. See `docs/memory/evidence/P0240_QUEST_LIFECYCLE_CAPABILITY_AUDIT.md`.
+**P0241 — additive quest-progress narrative candidate (RUNTIME UNVERIFIED).** GitHub main P0240 `048cd77` verified. Extend QuestDialogue's existing event frame for `QUEST_PROGRESS` read-only ordinary ID/title/text and bounded paging; clear progress on `QUEST_COMPLETE` and gossip close; no new action, polling, or Blizzard suppression. Existing QuestInteractionProbe already owns read-only natural-state diagnostics. No positive progress sample is yet known. Evidence `docs/memory/evidence/P0241_ADDITIVE_QUEST_PROGRESS.md`.
 
 ## Verified State
+- **P0241 CANDIDATE:** Verified pushed P0240 `048cd77`; additive event-driven quest progress read/paging only; runtime UNVERIFIED until natural state; Blizzard Continue/claim/gossip stock. P0241 evidence.
 - **P0240 SOURCE AUDIT:** P0239 `22ba7ab` verified. Existing event-owned read probe covers progress/complete but no naturally observed runtime state; Continue, final reward claim and quest gossip mutation remain gated. Details in P0240 evidence.
 - **P0238 Settings UI RUNTIME ACCEPTED (2026-10-17):** pushed `0eb1976`; uploaded `0.0.140-dev` load 312 reports `/logres settings`, `preferencecheck` PASS (revision=8 callbacks=2), saved Immersion/Active Quest ON, and user-observed no UI issues. Per-button transitions and full error log not captured. See P0239 evidence.
 - **P0237 R1 pushed and verified:** GitHub main `bb1f772` records the accepted P0236 POI result and the P0237 R0 prewrite manifest failure. P0238 settings access remains pending in-client validation.
@@ -32,15 +33,16 @@ Phase H — source-safe integration of remaining NPC quest interaction, preservi
 - QuestieDB remains optional for Logres as a whole; third-party data may miss hidden, patch-specific and phased quests. Redistribution/license unresolved; do not bundle it or claim CurseForge-managed dependency.
 
 ## Next Action
-P0241: inspect the existing quest read-only event snapshots and implement the smallest **additive, fail-open** quest-progress read/presentation slice consistent with accepted paging, without assuming currently available quest-progress data. Preserve stock Continue, Complete, reward choices, and gossip. Prefer the existing developer panel H — Quest Interaction Probe for natural-state evidence, with no travel requirement or synthetic PASS; a preview is visual-only. Do not touch accepted compass/settings or reopen unified style polish here.
+Deploy P0241 and `/reload`, then `/logres panel` -> **F — Quest Experience -> Quest Dialogue Check** and Phase 0 **Run All**. Verify the new progress line reports registered sources, zero errors and `not-observed` until a natural `QUEST_PROGRESS`. If encountered organically, verify Logres source text and Blizzard Continue together, then **H — Quest Interaction Probe** for read-only event evidence. Confirm ordinary offer UI and Immersion OFF/ON remain usable. No contrived travel to force progress; an absent event is DEFERRED, never PASS. Next broader lifecycle work remains gated by natural progress/completion evidence.
 
 ## Success Criteria
-P0240 must record observed source boundaries, API semantics and negative/absent runtime evidence, not introduce production code. P0129 progress/complete and active-gossip event absence remain environmental deferrals; the existing probe reads a maximum four item/list rows and does not prove final reward completeness. P0241 may only show valid ordinary data in additive presentation while Blizzard retains controls. Separate player-initiated, identity-bound probes and error/taint/fail-open proof are necessary before any Continue, reward claim or gossip action, and before stock suppression. Docs-only P0240 needs `git diff --check` and memory-health PASS; no WoW redeploy.
+P0241 must load and pass relevant/full static contracts, present only positive ordinary `GetQuestID`/title/`GetProgressText()` after a real progress event, retain exact paging and stock Continue, clear stale content safely, and introduce no new mutation or suppression. Absence of a natural progress event leaves runtime appearance UNVERIFIED. Existing P0129 progress/complete deferrals, P0236 POI historical-quest limits and all Blizzard reward/gossip fallback contracts remain open.
 
 ## Do Not Reopen Without New Evidence
 Do not infer addon installation from one guessed filesystem path or the presence/absence of a Lua global alone. No hard QuestieDB dependency, package bundling, unknown CurseForge project ID, global quest ID scans on updates, guessed quest availability, invented coordinates or native pin scraping. Do not hide the Blizzard minimap, alter user-accepted waypoint/focused-quest bearings, or treat missing locations as PASS. Baked flavor must not be guessed from a Source-only indicator. Keep negative and deferred evidence explicit.
 
 ## Relevant References
+- `docs/memory/evidence/P0241_ADDITIVE_QUEST_PROGRESS.md`
 - `docs/memory/evidence/P0240_QUEST_LIFECYCLE_CAPABILITY_AUDIT.md`
 - `docs/memory/evidence/P0128_NPC_QUEST_INTERACTION_SOURCE_AUDIT_2026-10-05.md`
 - `docs/memory/evidence/P0129_NPC_QUEST_INTERACTION_RUNTIME_READ_PASS_2026-10-05.md`
