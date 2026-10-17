@@ -232,4 +232,5 @@ This index is initially maintained manually. If patch volume grows, replace manu
 | P0229 | 2026-10-17 | INSTALLED / PUSHED (d010f64); DOCS-ONLY | Record QuestieDB installed-state misdiagnosis, stale/no-op probe, missing Phase E panel handoff, P0228 R0 failed pre-write hygiene, and panel-first instruction rule. |
 | P0230 | 2026-10-17 | INSTALLED / PUSHED (92de16d); INITIAL MAP FAIL, LATER SOURCE PASS AFTER PANEL RETRY | Dynamic QuestieDB canonical-map 50-yard possible-quest-giver source; abandon Loch Modan-only proposal, native-first fail-open, no live blip claim. |
 | P0231 | 2026-10-17 | INSTALLED / PUSHED (968675a); LIVE SOURCE / RENDER STATE PASS AFTER PANEL RETRY | P0230 failure recorded; bounded canonical map ancestry and provider-count diagnostics; no invented AreaIDs or hidden minimap fallback. |
-| P0232 | 2026-10-17 | PREPARED / DOCS-ONLY / RUNTIME EVIDENCE RECORDED | Verify P0231 0.0.137-dev nearby candidate scan + 2 glyphs; automatic startup remains OPEN |
+| P0232 | 2026-10-17 | INSTALLED / PUSHED (ca639c9); DOCS-ONLY | Verify P0231 0.0.137-dev nearby candidate scan + 2 glyphs; automatic startup remains OPEN |
+| P0233 | 2026-10-17 | PREPARED / DOCS-ONLY / UNASSISTED STARTUP PASS | Record load 307 provider ready before manual retry, two addon-owned glyphs and one user-observed physical quest-giver route; preserve remaining coverage limits. |
