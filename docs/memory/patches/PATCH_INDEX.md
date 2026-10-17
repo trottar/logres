@@ -2,7 +2,8 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
-| P0239 | 2026-10-17 | PREPARED / DOCS-ONLY | Record P0238 settings UI bounded runtime PASS; next Phase H quest-lifecycle source audit. |
+| P0240 | 2026-10-17 | PREPARED / DOCS-ONLY / SOURCE AUDIT | Reconcile prior quest lifecycle API source proof with current read-only probe and unobserved progress/reward/gossip runtime gates. |
+| P0239 | 2026-10-17 | INSTALLED / PUSHED (22ba7ab); DOCS-ONLY | P0238 settings UI runtime acceptance; next quest lifecycle source delta audit. |
 | P0238 | 2026-10-17 | INSTALLED / RUNTIME ACCEPTED (0eb1976) | First player settings panel; load 312 user-observed PASS, preferencecheck PASS; detailed UI toggles not independently logged (P0239 evidence). |
 | P0237 | 2026-10-17 | INSTALLED / PUSHED (bb1f772); DOCS-ONLY | P0236 runtime acceptance and preserved R0 manifest EOF failure; compass polish deferred. |
 | P0001 | 2026-09-30 | INSTALLED / PUSHED | Initial repository-native memory bootstrap (`353c5b0`) |
