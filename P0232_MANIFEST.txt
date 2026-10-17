@@ -1,0 +1,18 @@
+P0232 / docs-only
+Baseline main: 968675ac6a10aa7f4f7512975ec8204c964893d2
+Current local HEAD unchanged (no commit, no push).
+Updated files:
+ - docs/memory/CURRENT.md
+ - docs/memory/handoffs/CURRENT_HANDOFF.md
+ - docs/memory/investigations/ACTIVE.md
+ - docs/memory/roadmap/STATUS.md
+ - docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+ - docs/ROADMAP.md
+ - docs/memory/patches/PATCH_INDEX.md
+ - docs/memory/evidence/P0232_P0231_RUNTIME_NEARBY_EVIDENCE.md
+ - docs/memory/patches/P0232_P0231_RUNTIME_CHECKPOINT.md
+Evidence: 0.0.137-dev loadCount 306, 13,392 indexed, 5 nearby spawn positions, candidates=4 shown=2 AFTER panel retry.
+Autonomous startup: OPEN/UNVERIFIED. P0230 failure retained.
+Checks: tools/check_p0228_questiedb_optional_contract.py, tools/check_p0230_dynamic_nearby_contract.py, tools/check_p0231_questiedb_map_trace_contract.py
+git diff --check: PASS
+WoW redeploy: NOT required

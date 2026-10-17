@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-10-16
+as_of: 2026-10-17
 project: logres
 ---
 
@@ -10,9 +10,10 @@ project: logres
 Phase H.3: make Logres's own compass the usable dynamic nearby-navigation surface. The native minimap is HIDDEN during normal immersion and is NOT a visible fallback for missing Logres markers. P0223 accepted focused-quest/waypoint bearings remain preserved. Additional nearby quest-giver, services, and live tracking POI coverage is still OPEN.
 
 ## Current Work Item
-P0231 — isolate the in-game dynamic map/QuestieDB AreaID bridge failure from the user's first P0230 WoW run. GitHub main P0230 `92de16d` verified. User 0.0.136-dev `loadCount=305` QuestieDB panel output shows provider contract-compatible but `questiedbnearby index=map-not-in-provider-zone-table map=- area=- scanned=0 ids=0 spawns=0 nearby=0`; Compass Check `candidates=0 shown=0`. This is a **navigation feature FAIL**, not a geographic zero-match. P0230 cleared the original map id on failure, obscuring cause. P0231 adds bounded map/parent tracing (12 levels), retains observed leaf map, records provider mapping count and stop reason, and retries once on existing Phase E panel action. No guessed AreaID or fabricated markers.
+**P0232 evidence checkpoint after P0231 pushed and live markers measured.** GitHub main P0231 `968675a` verified. On Logres 0.0.137-dev loadCount 306 the existing Phase E provider probe (which also requests a one-shot retry) reached `index=ready` for map 1432 -> area 38, scanned 13,392 IDs, cached 38 spawns, found 5 within 50 yards; Compass Check returned `provider=ready candidates=4 shown=2`. This is real in-game *addon-owned* source/presentation state, not visually inspected NPC identity. A direct canonical provider mapping resolved. **The P0230 loadCount 305 zero-scan map failure is retained.** The P0231 success was obtained after `trigger=panel-map-diagnostic`, so unassisted first-login/zone-transition readiness remains OPEN and must not be inferred.
 
 ## Verified State
+- **P0231 new runtime proof (0.0.137-dev loadCount 306):** QuestieDB 1.0.6 loaded Forever baked contract-compatible; nearby `index=ready map=1432 area=38 scanned=13392 ids=13392 zoneNPCs=153 questNPCs=30 spawns=38 nearby=5 radius=50 truncated=false`; canonical map trace `requested=1432 chain=1432 entries=54 failure=- trigger=panel-map-diagnostic`; Compass Check `provider=ready candidates=4 shown=2`. This establishes in-game indexing and addon-owned marker show state **after manual panel retry**. Autonomous startup, general map coverage, visual accuracy and eligible quest offers remain unverified. Evidence: `docs/memory/evidence/P0232_P0231_RUNTIME_NEARBY_EVIDENCE.md`.
 - **P0230 FAIL, new 0.0.136-dev runtime evidence**: loadCount 305, QuestieDB v1.0.6 compatible, near index `map-not-in-provider-zone-table`, `map=- area=- scanned=0 ids=0`, compass `candidates=0 shown=0`. Native compasscheck PASS checks heading/waypoint policy, not nearby glyphs. A missing map mapping aborts index before positions are read; no evidence of zero nearby NPCs. No new Lua error is recorded by these panel lines, but a full WoW Lua/taint log was not provided. See P0231 evidence.
 - **P0228 runtime provider PASS, newly observed**: uploaded 0.0.135-dev diagnostics loadCount 304 show QuestieDB registered=yes loaded=yes tocVersion=1.0.6 tocFlavor=Forever tocMode=baked contract=1 mode=baked provider=contract-compatible in two panel runs. Quest location/gossip remains DEFERRED; no compass glyph results were part of P0228.
 - **P0230 scope corrections**: discarded hardcoded Loch Modan-only suggestion; use dynamic current-zone mapping and 50-yard candidate radius. The user reports the Blizzard minimap is HIDDEN during normal immersion: it must NOT be used as the visible fallback to justify missing compass features. Database-only spawns never establish quest availability.
@@ -24,7 +25,7 @@ P0231 — isolate the in-game dynamic map/QuestieDB AreaID bridge failure from t
 - QuestieDB remains optional for Logres as a whole; third-party data may miss hidden, patch-specific and phased quests. Redistribution/license unresolved; do not bundle it or claim CurseForge-managed dependency.
 
 ## Next Action
-Apply P0231 on verified P0230 main, deploy, `/reload`, `/logres panel` → **E — Compass and Navigation** → **QuestieDB Location Probe** once, then **Compass Check**. Read `questiedbmap requested/chain/entries/failure/trigger` and `questiedbnearby index/map/area/scanned`. If a real canonical area is resolved, allow the 96-ID/frame one-time index to finish; otherwise use the actual map ancestry to make the narrow next correction. Do not repeat probes without changing source/context. No forced travel, no claim that hidden minimap covers missing POIs.
+On a fresh normal `/reload`, open `/logres panel` → **E — Compass and Navigation** and click **Compass Check first**, before QuestieDB Location Probe. The former reads current source state without manually calling `StartIndex`: if provider `ready` and addon-owned candidate/shown counts are present, autonomous startup is observed; otherwise capture its exact state and investigate the event timing without periodic polling or guessed area IDs. Then, only if needed, click **QuestieDB Location Probe** once to distinguish one-shot panel recovery. Export diagnostics. Do not require travel or a gossip interaction. P0230 prior failure remains recorded; do not advance to universal map/visual accuracy PASS from one area.
 
 ## Success Criteria
 - P0231 records the raw ordinary current map ID and bounded ancestry for P0230 map-resolution failures; full provider mapping count and stop reason remain observable after Unavailable() clears the active area.
