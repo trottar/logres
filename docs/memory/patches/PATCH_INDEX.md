@@ -231,3 +231,4 @@ This index is initially maintained manually. If patch volume grows, replace manu
 | P0228 | 2026-10-17 | PREPARED RUNTIME CORRECTION — WoW UNVERIFIED | QuestieDB optional load ordering, standalone provider state, and Baked X-Flavor verification; no new compass markers. |
 | P0229 | 2026-10-17 | PREPARED DOCS-ONLY — NO WOW REDEPLOY | Record QuestieDB installed-state misdiagnosis, stale/no-op probe, missing Phase E panel handoff, P0228 R0 failed pre-write hygiene, and panel-first instruction rule. |
 | P0230 | 2026-10-17 | PREPARED / WOW UNVERIFIED | Dynamic QuestieDB canonical-map 50-yard possible-quest-giver source; abandon Loch Modan-only proposal, native-first fail-open, no live blip claim. |
+| P0231 | 2026-10-17 | PREPARED / MAP BRIDGE DIAGNOSTIC UNVERIFIED | P0230 failure recorded; bounded canonical map ancestry and provider-count diagnostics; no invented AreaIDs or hidden minimap fallback. |

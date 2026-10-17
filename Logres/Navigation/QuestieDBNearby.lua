@@ -8,7 +8,7 @@ local IDS_PER_FRAME = 96
 local MAX_SPAWNS_PER_NPC = 32
 local MAX_CACHED_SPAWNS = 1024
 local MAX_NEARBY = 8
-local MAX_MAP_PARENT_DEPTH = 5
+local MAX_MAP_PARENT_DEPTH = 12
 
 local function ordinary(value, kind)
     if type(issecretvalue) ~= "function" then return nil end
@@ -52,24 +52,43 @@ local function readAreaMap(lib)
             count = count + 1
         end
     end
-    return count >= 40 and result or nil
+    return count >= 40 and result or nil, count
 end
 
+-- Retain ordinary map ancestry for diagnosis. The provider's supported
+-- canonical mappings remain the *only* authority for accepting an AreaID.
+-- Never guess an AreaID from continent/floor similarity or native pin state.
 local function getCurrentZone(mapping)
     local mapApi = _G.C_Map
     if not mapApi or type(mapApi.GetBestMapForUnit) ~= "function" then
-        return nil, nil, "map-api-unavailable"
+        return nil, nil, "map-api-unavailable", nil, "api-unavailable"
     end
     local current = number(read(mapApi.GetBestMapForUnit, "player"))
-    if not current then return nil, nil, "current-map-unavailable" end
+    if not current then
+        return nil, nil, "current-map-unavailable", nil, "current-unavailable"
+    end
+    local leaf, chain, seen = current, {}, {}
+    local stop = "depth-limit"
     for _ = 1, MAX_MAP_PARENT_DEPTH do
-        if mapping[current] then return current, mapping[current], nil end
+        chain[#chain + 1] = tostring(current) -- already ordinary number
+        if mapping[current] then
+            return current, mapping[current], nil, leaf,
+                table.concat(chain, ">")
+        end
+        if seen[current] then stop = "cycle"; break end
+        seen[current] = true
         local info = ordinary(read(mapApi.GetMapInfo, current), "table")
-        local parent = info and number(info.parentMapID)
-        if not parent or parent == current then break end
+        if not info then stop = "map-info-unavailable"; break end
+        local parent = number(info.parentMapID)
+        if not parent or parent <= 0 then
+            stop = "no-parent"
+            break
+        end
+        if parent == current then stop = "self-parent"; break end
         current = parent
     end
-    return nil, nil, "map-not-in-provider-zone-table"
+    return nil, nil, "map-not-in-provider-zone-table", leaf,
+        table.concat(chain, ">") .. ":" .. stop
 end
 
 function Nearby:StopIndex()
@@ -91,6 +110,11 @@ end
 
 function Nearby:StartIndex(reason)
     if not self.moduleEnabled then return end
+    self.lastTrigger = reason
+    self.requestedMap = nil
+    self.mapTrace = nil
+    self.mappingEntries = 0
+    self.resolutionFailure = nil
     local lib = ordinary(_G.LibQuestieDB, "table")
     local npc = ordinary(_G.NpcDB, "table")
     if not lib or not npc or type(lib.RequireContract) ~= "function"
@@ -118,12 +142,16 @@ function Nearby:StartIndex(reason)
         self:Unavailable("npc-reader-unavailable")
         return
     end
-    local mapping = readAreaMap(lib)
+    local mapping, count = readAreaMap(lib)
+    self.mappingEntries = count or 0
     if not mapping then
         self:Unavailable("provider-map-table-unavailable")
         return
     end
-    local map, area, failure = getCurrentZone(mapping)
+    local map, area, failure, leaf, chain = getCurrentZone(mapping)
+    self.requestedMap = leaf
+    self.mapTrace = chain
+    self.resolutionFailure = failure
     if not map then
         self:Unavailable(failure)
         return
@@ -270,6 +298,10 @@ end
 function Nearby:GetDebugStatus()
     return {
         state = self.state, map = self.mapID, area = self.areaID,
+        requestedMap = self.requestedMap, mapTrace = self.mapTrace,
+        mappingEntries = self.mappingEntries,
+        resolutionFailure = self.resolutionFailure,
+        lastTrigger = self.lastTrigger,
         complete = self.complete == true, scanned = self.scanned or 0,
         ids = self.idCount or 0, zoneNPCs = self.zoneNPCs or 0,
         questNPCs = self.questNPCs or 0, spawns = #self.rows,
@@ -286,6 +318,7 @@ function Nearby:OnInitialize()
     self.frame = CreateFrame("Frame")
     self.frame:RegisterEvent("PLAYER_ENTERING_WORLD")
     self.frame:RegisterEvent("PLAYER_MAP_CHANGED")
+    self.frame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
     self.frame:SetScript("OnEvent", function(_, event)
         if self.moduleEnabled then self:StartIndex(event) end
     end)

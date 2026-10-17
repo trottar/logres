@@ -3087,6 +3087,9 @@ function Logres:RunQuestieDBLocationProbe()
     -- Reuse the existing Phase E button; do not introduce a slash-only probe.
     local nearby = Logres:GetModule("QuestieDBNearby")
     if nearby then
+        -- A panel request deliberately retries the map bridge; unchanged
+        -- auto-failure is not silently interpreted as no nearby NPCs.
+        nearby:StartIndex("panel-map-diagnostic")
         local snapshot = nearby:GetDebugStatus()
         emit(string.format(
             "Logres questiedbnearby: index=%s map=%s area=%s scanned=%s ids=%s zoneNPCs=%s questNPCs=%s spawns=%s nearby=%s radius=%s truncated=%s coverage=%s",
@@ -3096,6 +3099,14 @@ function Logres:RunQuestieDBLocationProbe()
             tostring(snapshot.questNPCs), tostring(snapshot.spawns),
             tostring(snapshot.nearby), tostring(snapshot.radius),
             tostring(snapshot.truncated), tostring(snapshot.coverage)
+        ))
+        emit(string.format(
+            "Logres questiedbmap: requested=%s chain=%s entries=%s failure=%s trigger=%s",
+            tostring(snapshot.requestedMap or "-"),
+            tostring(snapshot.mapTrace or "-"),
+            tostring(snapshot.mappingEntries or 0),
+            tostring(snapshot.resolutionFailure or "-"),
+            tostring(snapshot.lastTrigger or "-")
         ))
     end
 end
