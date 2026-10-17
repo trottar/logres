@@ -528,6 +528,7 @@ function Dialogue:HidePresentation(reason)
         self.presentationGeneration + 1
     self.presentationShown = false
     self.progressActive = false
+    self.completionActive = false
     self.pages = {}
     self.currentPage = 0
 
@@ -693,6 +694,74 @@ function Dialogue:HandleQuestProgress()
     self.lastProgressSecret = false
 end
 
+-- P0242: narrative only for a naturally observed completion context.
+-- Reward identity/choice/claim remain entirely Blizzard-owned.
+function Dialogue:ReadCompletion()
+    if type(GetQuestID) ~= "function"
+        or type(GetTitleText) ~= "function"
+        or type(GetRewardText) ~= "function"
+    then
+        return nil, "completion-api-unavailable", false
+    end
+
+    local questID, idError, idSecret = readQuestID()
+    if idError then return nil, idError, idSecret end
+    if questID == nil or questID <= 0
+        or questID ~= questID or questID == math.huge
+    then
+        return nil, "completion-id-unavailable", false
+    end
+
+    local title, titleError, titleSecret = readString("completion-title", GetTitleText)
+    if titleError then return nil, titleError, titleSecret end
+    if title == "" then return nil, "completion-title-empty", false end
+
+    local body, bodyError, bodySecret = readString("completion-text", GetRewardText)
+    if bodyError then return nil, bodyError, bodySecret end
+    if body == "" then return nil, "completion-text-empty", false end
+
+    return { questID = questID, title = title, body = body }, nil, false
+end
+
+function Dialogue:HandleQuestComplete()
+    self.completeEventCount = self.completeEventCount + 1
+    self:ClearActiveDetail("QUEST_COMPLETE")
+    local completion, reason, secret = self:ReadCompletion()
+    if not completion then
+        self.completionSkippedCount = self.completionSkippedCount + 1
+        self.lastCompletionReason = reason or "completion-unavailable"
+        self.lastCompletionSecret = secret == true
+        return
+    end
+
+    self.lastQuestID = completion.questID
+    self.lastHadBody = true
+    self.lastHadObjective = false
+    self.lastReason = "QUEST_COMPLETE"
+    self.lastSecret = false
+    self.lastError = nil
+    if not self.immersionEnabled then
+        self.suppressedCount = self.suppressedCount + 1
+        self.lastCompletionReason = "immersion-off"
+        return
+    end
+
+    local shown, state = self:PresentText(
+        completion.title, completion.body, "", "QUEST_COMPLETE",
+        false, false, false
+    )
+    if shown and state == "shown" then
+        self.completionActive = true
+        self.completionShownCount = self.completionShownCount + 1
+        self.presentationCount = self.presentationCount + 1
+        self.lastCompletionReason = "shown"
+    else
+        self.completionSkippedCount = self.completionSkippedCount + 1
+        self.lastCompletionReason = state or "presentation-unavailable"
+    end
+    self.lastCompletionSecret = false
+end
+
 function Dialogue:UpdatePageControls()
     local pageCount = #self.pages
     local current = self.currentPage
@@ -824,6 +893,7 @@ function Dialogue:PresentText(
 
     self.pages = buildPages(body)
     self.progressActive = false
+    self.completionActive = false
     self.currentPage = 1
     self.offerActionsEnabled =
         showOfferActions == true
@@ -1022,6 +1092,11 @@ function Dialogue:GetDebugStatus()
         progressShownCount = self.progressShownCount,
         progressSkippedCount = self.progressSkippedCount,
         completeEventCount = self.completeEventCount,
+        completionShownCount = self.completionShownCount,
+        completionSkippedCount = self.completionSkippedCount,
+        completionActive = self.completionActive == true,
+        lastCompletionReason = self.lastCompletionReason,
+        lastCompletionSecret = self.lastCompletionSecret == true,
         progressActive = self.progressActive == true,
         lastProgressReason = self.lastProgressReason,
         lastProgressSecret = self.lastProgressSecret == true,
@@ -1117,6 +1192,11 @@ function Dialogue:OnInitialize()
     self.progressShownCount = 0
     self.progressSkippedCount = 0
     self.completeEventCount = 0
+    self.completionShownCount = 0
+    self.completionSkippedCount = 0
+    self.completionActive = false
+    self.lastCompletionReason = "not-observed"
+    self.lastCompletionSecret = false
     self.progressActive = false
     self.lastProgressReason = "not-observed"
     self.lastProgressSecret = false
@@ -1567,13 +1647,12 @@ function Dialogue:OnInitialize()
             end
 
             if event == "QUEST_COMPLETE" then
-                self.completeEventCount = self.completeEventCount + 1
-                self:ClearActiveDetail("QUEST_COMPLETE")
+                self:HandleQuestComplete()
                 return
             end
 
             if event == "GOSSIP_CLOSED" then
-                if self.progressActive then
+                if self.progressActive or self.completionActive then
                     self:ClearActiveDetail("GOSSIP_CLOSED")
                 end
                 return

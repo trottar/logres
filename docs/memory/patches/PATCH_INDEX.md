@@ -2,7 +2,8 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
-| P0241 | 2026-10-17 | PREPARED / RUNTIME UNVERIFIED | Additive ordinary quest-progress narrative; Blizzard Continue/claim/gossip preserved, no polling. |
+| P0242 | 2026-10-17 | PREPARED / RUNTIME UNVERIFIED | Additive quest-completion narrative from real ordinary state; Blizzard rewards and claim retained. |
+| P0241 | 2026-10-17 | INSTALLED / PUSHED (ee1cbd3); REGISTRATION PASS / PROGRESS DEFERRED | Load 313 questdialoguecheck PASS; zero natural progress; QUEST_COMPLETE read-only event observed (P0242 evidence). |
 | P0240 | 2026-10-17 | INSTALLED / PUSHED (048cd77); DOCS-ONLY | Quest lifecycle source gate: progress, completion, gossip runtime conditions still deferred. |
 | P0239 | 2026-10-17 | INSTALLED / PUSHED (22ba7ab); DOCS-ONLY | P0238 settings UI runtime acceptance; next quest lifecycle source delta audit. |
 | P0238 | 2026-10-17 | INSTALLED / RUNTIME ACCEPTED (0eb1976) | First player settings panel; load 312 user-observed PASS, preferencecheck PASS; detailed UI toggles not independently logged (P0239 evidence). |

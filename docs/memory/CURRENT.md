@@ -7,12 +7,13 @@ project: logres
 # Current State
 
 ## Active Objective
-Phase H — incrementally complete source-safe NPC quest interaction without disturbing accepted P0236 compass/POI or P0238 settings. P0240 source audit is durable; P0241 prepares additive, event-driven progress narrative only while Blizzard Continue, completion/reward and quest gossip remain the usable controls.
+Phase H — continue source-safe NPC quest presentation while retaining accepted P0236 POIs and P0238 settings. P0241 progressed to verified runtime load/registration, but progress display is still unobserved. A natural quest-completion event now supports a narrow additive completion-text candidate; Blizzard reward and lifecycle controls remain authoritative.
 
 ## Current Work Item
-**P0241 — additive quest-progress narrative candidate (RUNTIME UNVERIFIED).** GitHub main P0240 `048cd77` verified. Extend QuestDialogue's existing event frame for `QUEST_PROGRESS` read-only ordinary ID/title/text and bounded paging; clear progress on `QUEST_COMPLETE` and gossip close; no new action, polling, or Blizzard suppression. Existing QuestInteractionProbe already owns read-only natural-state diagnostics. No positive progress sample is yet known. Evidence `docs/memory/evidence/P0241_ADDITIVE_QUEST_PROGRESS.md`.
+**P0242 — additive quest-completion narrative candidate (RUNTIME UNVERIFIED).** GitHub main P0241 `ee1cbd3` verified. The `0.0.141-dev` loadCount 313 probe naturally observed QUEST_COMPLETE for quest 237 with readable completion prose, but incomplete reward item name/link; no QUEST_PROGRESS was observed. Add read-only reward narrative using existing QuestDialogue paging, with stock completion/reward UI untouched. No new mutations, reward reconstruction or polling. Evidence `docs/memory/evidence/P0242_QUEST_COMPLETION_NARRATIVE.md`.
 
 ## Verified State
+- **P0242 CANDIDATE:** P0241 pushed `ee1cbd3`; load 313 questdialoguecheck PASS, natural QUEST_COMPLETE quest 237 observed but reward name/link incomplete; progress events zero. Additive completion text only; runtime appearance UNVERIFIED.
 - **P0241 CANDIDATE:** Verified pushed P0240 `048cd77`; additive event-driven quest progress read/paging only; runtime UNVERIFIED until natural state; Blizzard Continue/claim/gossip stock. P0241 evidence.
 - **P0240 SOURCE AUDIT:** P0239 `22ba7ab` verified. Existing event-owned read probe covers progress/complete but no naturally observed runtime state; Continue, final reward claim and quest gossip mutation remain gated. Details in P0240 evidence.
 - **P0238 Settings UI RUNTIME ACCEPTED (2026-10-17):** pushed `0eb1976`; uploaded `0.0.140-dev` load 312 reports `/logres settings`, `preferencecheck` PASS (revision=8 callbacks=2), saved Immersion/Active Quest ON, and user-observed no UI issues. Per-button transitions and full error log not captured. See P0239 evidence.
@@ -33,15 +34,16 @@ Phase H — incrementally complete source-safe NPC quest interaction without dis
 - QuestieDB remains optional for Logres as a whole; third-party data may miss hidden, patch-specific and phased quests. Redistribution/license unresolved; do not bundle it or claim CurseForge-managed dependency.
 
 ## Next Action
-Deploy P0241 and `/reload`, then `/logres panel` -> **F — Quest Experience -> Quest Dialogue Check** and Phase 0 **Run All**. Verify the new progress line reports registered sources, zero errors and `not-observed` until a natural `QUEST_PROGRESS`. If encountered organically, verify Logres source text and Blizzard Continue together, then **H — Quest Interaction Probe** for read-only event evidence. Confirm ordinary offer UI and Immersion OFF/ON remain usable. No contrived travel to force progress; an absent event is DEFERRED, never PASS. Next broader lifecycle work remains gated by natural progress/completion evidence.
+Deploy P0242 and `/reload`; `/logres panel` -> **F — Quest Experience -> Quest Dialogue Check**, then Phase 0 **Run All**. Verify both progress and completion registration diagnostics; only claim a narrative display PASS if a natural corresponding event is seen and its Blizzard controls remain usable. When naturally available, H — Integration and Polish -> **Quest Interaction Probe** can preserve read-only event context. Do not force quest travel. Keep Continue, Complete, final reward claim, choice, and gossip mutation Blizzard-owned until separate evidence; defer final visual refinement with other polish.
 
 ## Success Criteria
-P0241 must load and pass relevant/full static contracts, present only positive ordinary `GetQuestID`/title/`GetProgressText()` after a real progress event, retain exact paging and stock Continue, clear stale content safely, and introduce no new mutation or suppression. Absence of a natural progress event leaves runtime appearance UNVERIFIED. Existing P0129 progress/complete deferrals, P0236 POI historical-quest limits and all Blizzard reward/gossip fallback contracts remain open.
+P0242 source must accept only ordinary positive quest ID, nonempty title and `GetRewardText()` on QUEST_COMPLETE; show complete source prose through existing paging with no Logres action buttons, and hide on finished/closed/world transitions or Immersion OFF. Existing offer Accept/Decline, P0241 progress, and stock reward selection must not regress. Runtime completion presentation remains UNVERIFIED until naturally seen. Preserve observed incomplete reward row and all untested action/gossip paths as OPEN.
 
 ## Do Not Reopen Without New Evidence
 Do not infer addon installation from one guessed filesystem path or the presence/absence of a Lua global alone. No hard QuestieDB dependency, package bundling, unknown CurseForge project ID, global quest ID scans on updates, guessed quest availability, invented coordinates or native pin scraping. Do not hide the Blizzard minimap, alter user-accepted waypoint/focused-quest bearings, or treat missing locations as PASS. Baked flavor must not be guessed from a Source-only indicator. Keep negative and deferred evidence explicit.
 
 ## Relevant References
+- `docs/memory/evidence/P0242_QUEST_COMPLETION_NARRATIVE.md`
 - `docs/memory/evidence/P0241_ADDITIVE_QUEST_PROGRESS.md`
 - `docs/memory/evidence/P0240_QUEST_LIFECYCLE_CAPABILITY_AUDIT.md`
 - `docs/memory/evidence/P0128_NPC_QUEST_INTERACTION_SOURCE_AUDIT_2026-10-05.md`

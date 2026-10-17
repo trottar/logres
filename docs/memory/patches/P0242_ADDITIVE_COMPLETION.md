@@ -1,0 +1,3 @@
+# P0242 — Additive completion narrative candidate
+
+Verified P0241 `ee1cbd3`; load 313 `0.0.141-dev` confirms the dialogue check and naturally captured read-only QUEST_COMPLETE for quest 237, but no QUEST_PROGRESS. P0242 uses existing QuestDialogue's accepted paging for ordinary completion title/reward prose only; no reward list/selection/claim, gossip mutation, timers, or new stock suppression. The reward item name/link were incomplete in the observed probe, an explicit limit. Blizzard completion controls stay fully available. P0242 targeted version `0.0.142-dev`. New runtime presentation **UNVERIFIED** until a natural completion event. Details in `docs/memory/evidence/P0242_QUEST_COMPLETION_NARRATIVE.md`.

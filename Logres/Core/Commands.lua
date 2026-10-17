@@ -2902,6 +2902,17 @@ local function runQuestDialogueCheck()
         tostring(debugStatus.lastProgressReason),
         tostring(debugStatus.lastProgressSecret)
     ))
+    emit(string.format(
+        "Logres questdialogue completion: %s (registered=%s events=%s shown=%s skipped=%s active=%s source=%s secret=%s stock=retained rewards=Blizzard actions=none)",
+        debugStatus.completeRegistered and "CANDIDATE" or "FAIL",
+        tostring(debugStatus.completeRegistered),
+        tostring(debugStatus.completeEventCount),
+        tostring(debugStatus.completionShownCount),
+        tostring(debugStatus.completionSkippedCount),
+        tostring(debugStatus.completionActive),
+        tostring(debugStatus.lastCompletionReason),
+        tostring(debugStatus.lastCompletionSecret)
+    ))
 end
 
 local function runQuestDialoguePreview()
