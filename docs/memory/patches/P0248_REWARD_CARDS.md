@@ -40,3 +40,7 @@ instead, matching the existing UI ownership audit's namespace-method precedent.
 The slash dispatch uses the method, and the existing full-suite guard remains
 unchanged. Pre-write full shadow validation and runtime visual acceptance remain
 mandatory; do not infer PASS from this source correction alone.
+
+## P0248 R2 runtime failure — observed in load 326; repaired by P0249
+
+Verified pushed main `cfd67be`, addon `0.0.148-dev`. Both synthetic previews (`questrewardpreview single`, `questrewardpreview multi`) threw `Dialogue.lua:1258: attempt to call a nil value`. Reward visual diagnostic recorded zero cards; `Quest Dialogue Check: PASS` does not certify the previews. Source diagnosis: `Visual.New()` returned a plain table without `Visual` method inheritance; `PresentText` called its nil `Reset` method. P0249 repairs that constructor, but its own runtime acceptance is pending. Preserve this FAIL alongside the earlier R0/R1 prewrite failures. See `docs/memory/evidence/P0249_REWARD_VISUAL_INSTANCE_FAILURE.md`.

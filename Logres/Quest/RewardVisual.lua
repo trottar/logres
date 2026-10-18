@@ -13,7 +13,10 @@ local GOLD = { 0.77, 0.60, 0.32, 0.95 }
 local WHITE = "Interface\\Buttons\\WHITE8x8"
 
 function Visual.New(root, objectiveText)
-    local self = { root = root, objectiveText = objectiveText, slots = {} }
+    local self = setmetatable(
+        { root = root, objectiveText = objectiveText, slots = {} },
+        { __index = Visual }
+    )
     for i = 1, MAX_CARDS do
         local slot = CreateFrame("Frame", nil, root)
         slot:SetSize(SLOT_WIDTH, SLOT_HEIGHT)
