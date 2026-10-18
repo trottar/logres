@@ -2,7 +2,8 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
-| P0255 | 2026-10-18 | PREPARED / RUNTIME UNVERIFIED | Final-page completion reward/action visibility, in-panel Accept/Decline; native claim flash OPEN and untouched. |
+| P0256 | 2026-10-18 | PREPARED / RUNTIME UNVERIFIED | Central 28-control paginated preview tab, universal UI preview coverage audit, NPC dialogue first; no gameplay mutation. |
+| P0255 | 2026-10-18 | PUSHED (fc74e14) / RUNTIME UNVERIFIED | Final-page completion reward/action visibility, in-panel Accept/Decline; native claim flash OPEN and untouched. |
 | P0254 | 2026-10-18 | PUSHED (2a7bc5d) / VISUAL PASS (SCOPED) | In-game Complete Quest inside narrative visually accepted; actual claim and choice interactions deferred. |
 | P0253 | 2026-10-18 | PUSHED (3c0a017) / VISUAL FAIL | Original Accept button reused, but action still appears outside panel because the shared root remains anchored below the narrative. |
 | P0252 | 2026-10-18 | PUSHED (34274dc) / VISUAL FAIL | Duplicate guidance removed, but separate Complete Quest button remained visually detached; shared original Accept planned in P0253. |

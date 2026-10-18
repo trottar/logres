@@ -10,7 +10,7 @@ PANEL = ROOT / "Logres" / "Dev" / "Panel.lua"
 TOC = ROOT / "Logres" / "Logres.toc"
 
 errors = []
-PHASES = set("0ABCDEFGH")
+PHASES = set("0ABCDEFGHP")
 MAX_ACTIONS_PER_PHASE = 18
 EXPECTED_PHASES = {
     "runall": "0",
@@ -20,20 +20,20 @@ EXPECTED_PHASES = {
     "state": "A",
     "sensor": "A",
     "hud": "B",
-    "healthPreview100": "B",
-    "healthPreview80": "B",
-    "healthPreview70": "B",
-    "healthPreview60": "B",
-    "healthPreview50": "B",
-    "healthPreview40": "B",
-    "healthPreview30": "B",
-    "healthPreview20": "B",
-    "healthPreview15": "B",
-    "healthPreview5": "B",
-    "healthPreview0": "B",
-    "healthPreviewLive": "B",
+    "healthPreview100": "P",
+    "healthPreview80": "P",
+    "healthPreview70": "P",
+    "healthPreview60": "P",
+    "healthPreview50": "P",
+    "healthPreview40": "P",
+    "healthPreview30": "P",
+    "healthPreview20": "P",
+    "healthPreview15": "P",
+    "healthPreview5": "P",
+    "healthPreview0": "P",
+    "healthPreviewLive": "P",
     "action": "C",
-    "actionFeedback": "C",
+    "actionFeedback": "P",
     "actionKeysOn": "C",
     "actionKeysOff": "C",
     "secondaryKeysOn": "C",
@@ -55,17 +55,19 @@ EXPECTED_PHASES = {
     "waypointProbe": "E",
     "questProbe": "F",
     "xpCheck": "F",
-    "xpPreview": "F",
+    "xpPreview": "P",
     "objectiveProgressCheck": "F",
-    "objectiveProgressPreview": "F",
+    "objectiveProgressPreview": "P",
     "questDialogueCheck": "F",
-    "questDialoguePreview": "F",
+    "questDialoguePreview": "P",
+    "hudPreviewOn": "P",
+    "hudPreviewOff": "P",
     "layoutCheck": "H",
     "questInteractionProbe": "H",
     "auraStatusProbe": "H",
     "statusAuraCheck": "H",
-    "statusAuraPreviewOn": "H",
-    "statusAuraPreviewOff": "H",
+    "statusAuraPreviewOn": "P",
+    "statusAuraPreviewOff": "P",
     "worldTargetProbe": "H",
     "navigationSourceProbe": "H",
     "classPetSpecialProbe": "H",
@@ -73,7 +75,7 @@ EXPECTED_PHASES = {
     "petActionExecCheck": "C",
     "petActionExecHide": "C",
     "playerHelpfulAuraCheck": "H",
-    "playerHelpfulAuraPreview": "H",
+    "playerHelpfulAuraPreview": "P",
     "questOfferControlsCheck": "H",
     "questOfferAcceptProbe": "F",
     "questOfferDeclineProbe": "F",
@@ -114,7 +116,7 @@ if COMMANDS.is_file():
 
     pattern = re.compile(
         r'Logres:RegisterDevPanelAction\(\s*'
-        r'"([^"]+)"\s*,\s*"([^"]+)"\s*,\s*"([^"]+)"\s*,\s*"([0A-H])"\s*\)',
+        r'"([^"]+)"\s*,\s*"([^"]+)"\s*,\s*"([^"]+)"\s*,\s*"([0A-HP])"\s*\)',
         re.S,
     )
     registrations = pattern.findall(source)
@@ -143,7 +145,7 @@ if COMMANDS.is_file():
             )
 
     for phase, count in sorted(counts.items()):
-        if count > MAX_ACTIONS_PER_PHASE:
+        if phase != "P" and count > MAX_ACTIONS_PER_PHASE:
             errors.append(
                 f"phase {phase} has {count} actions; max is {MAX_ACTIONS_PER_PHASE}"
             )

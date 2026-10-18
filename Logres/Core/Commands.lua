@@ -25,6 +25,7 @@ local VALID_DEV_PANEL_PHASES = {
     F = true,
     G = true,
     H = true,
+    P = true,
 }
 
 function Logres:RegisterDevPanelAction(id, label, command, phase)
@@ -41,7 +42,7 @@ function Logres:RegisterDevPanelAction(id, label, command, phase)
     end
 
     if type(phase) ~= "string" or not VALID_DEV_PANEL_PHASES[phase] then
-        error("Logres:RegisterDevPanelAction requires roadmap phase 0/A/B/C/D/E/F/G/H")
+        error("Logres:RegisterDevPanelAction requires panel tab 0/A/B/C/D/E/F/G/H/P")
     end
 
     if devPanelActionsByID[id] then
@@ -5375,7 +5376,7 @@ Logres:RegisterDevPanelAction(
     "actionFeedback",
     "Feedback Test",
     "actionfeedback",
-    "C"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "actionKeysOn",
@@ -5501,13 +5502,13 @@ Logres:RegisterDevPanelAction(
     "compassArtOn",
     "Compass Art ON",
     "compassartpreview on",
-    "E"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "compassArtOff",
     "Compass Art OFF",
     "compassartpreview off",
-    "E"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "waypointProbe",
@@ -5573,7 +5574,7 @@ Logres:RegisterDevPanelAction(
     "xpPreview",
     "XP Preview",
     "xppreview",
-    "F"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "objectiveProgressCheck",
@@ -5585,7 +5586,7 @@ Logres:RegisterDevPanelAction(
     "objectiveProgressPreview",
     "Objective Progress Preview",
     "objectiveprogresspreview",
-    "F"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "activeQuestCheck",
@@ -5597,19 +5598,19 @@ Logres:RegisterDevPanelAction(
     "activeQuestPreviewNormal",
     "Active Quest Preview",
     "activequestpreview normal",
-    "F"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "activeQuestPreviewComplete",
     "Active Quest Complete",
     "activequestpreview complete",
-    "F"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "activeQuestLive",
     "Active Quest Live",
     "activequestpreview live",
-    "F"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "activeQuestOn",
@@ -5633,19 +5634,19 @@ Logres:RegisterDevPanelAction(
     "questDialoguePreview",
     "Quest Dialogue Preview",
     "questdialoguepreview",
-    "F"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "questRewardPreviewSingle",
     "Reward Preview: Single",
     "questrewardpreview single",
-    "F"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "questRewardPreviewMulti",
     "Reward Preview: Multiple",
     "questrewardpreview multi",
-    "F"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "layoutCheck",
@@ -5687,13 +5688,13 @@ Logres:RegisterDevPanelAction(
     "statusAuraPreviewOn",
     "Status Aura Preview ON",
     "statusaurapreview on",
-    "H"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "statusAuraPreviewOff",
     "Status Aura Preview OFF",
     "statusaurapreview off",
-    "H"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "questInteractionProbe",
@@ -5765,7 +5766,7 @@ Logres:RegisterDevPanelAction(
     "playerHelpfulAuraPreview",
     "Player Helpful Aura Preview",
     "helpfulaurapreview",
-    "H"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "questOfferControlsCheck",
@@ -5813,73 +5814,85 @@ Logres:RegisterDevPanelAction(
     "healthPreview100",
     "Health 100%",
     "healthpreview 100",
-    "B"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "healthPreview80",
     "Health 80%",
     "healthpreview 80",
-    "B"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "healthPreview70",
     "Health 70%",
     "healthpreview 70",
-    "B"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "healthPreview60",
     "Health 60%",
     "healthpreview 60",
-    "B"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "healthPreview50",
     "Health 50%",
     "healthpreview 50",
-    "B"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "healthPreview40",
     "Health 40%",
     "healthpreview 40",
-    "B"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "healthPreview30",
     "Health 30%",
     "healthpreview 30",
-    "B"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "healthPreview20",
     "Health 20%",
     "healthpreview 20",
-    "B"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "healthPreview15",
     "Health 15%",
     "healthpreview 15",
-    "B"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "healthPreview5",
     "Health 5%",
     "healthpreview 5",
-    "B"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "healthPreview0",
     "Health 0%",
     "healthpreview 0",
-    "B"
+    "P"
 )
 Logres:RegisterDevPanelAction(
     "healthPreviewLive",
     "Health Live",
     "healthpreview off",
-    "B"
+    "P"
+)
+Logres:RegisterDevPanelAction(
+    "hudPreviewOn",
+    "HUD Preview ON",
+    "hudpreview on",
+    "P"
+)
+Logres:RegisterDevPanelAction(
+    "hudPreviewOff",
+    "HUD Preview OFF",
+    "hudpreview off",
+    "P"
 )
 
 SLASH_LOGRES1 = "/logres"

@@ -17,3 +17,7 @@ Date: 2026-10-18. Remote `main` verified `2a7bc5d` P0254. User screenshot in ver
 ## Acceptance boundary
 
 Static checks remain unverified until the applier passes all repository checkers. In-client validation is required for page 1/2 suppression, 2/2 final reward/action visibility, back navigation, real Accept/Decline inside the panel, no overlap, and Immersion OFF/ON fail-open restoration. **Do not claim claim-handler execution, removal of Blizzard flash, or multi-reward interaction PASS.**
+
+## P0255 push and subsequent preview-first scope change
+
+GitHub `main` `fc74e14` verifies P0255 pushed. User reports Accept/Decline not visually aligned with the panel, but the most recent screenshot carries runtime `0.0.154-dev` whereas P0255 source is `0.0.155-dev`; exact P0255 layout behavior in WoW remains **UNVERIFIED**, not a proven new regression from that screenshot. User prioritizes preview-first NPC dialogue and universal developer previews for every UI element. P0256 is infrastructure for that workflow, not an implicit acceptance of the P0255 style. The post-claim Blizzard frame flash remains OPEN with native restore-before-handler intentionally preserved. Additional 20-minute gameplay bugs are acknowledged but unspecified (OPEN / DETAILS PENDING).

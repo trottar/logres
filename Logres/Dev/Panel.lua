@@ -2,7 +2,7 @@ local _, Logres = ...
 
 local PANEL_WIDTH = 620
 local PANEL_HEIGHT = 590
-local TAB_WIDTH = 56
+local TAB_WIDTH = 52
 local TAB_HEIGHT = 24
 local TAB_GAP = 4
 local BUTTON_WIDTH = 180
@@ -11,6 +11,7 @@ local BUTTON_GAP_X = 8
 local BUTTON_GAP_Y = 6
 local BUTTON_COLUMNS = 3
 local MAX_ACTIONS_PER_PHASE = BUTTON_COLUMNS * 6
+local PREVIEW_PAGE_SIZE = MAX_ACTIONS_PER_PHASE
 local DEFAULT_PHASE = "G"
 
 local MAX_DIAGNOSTIC_RUNS = 100
@@ -26,6 +27,7 @@ local PHASES = {
     { id = "F", title = "Phase F — Quest Experience" },
     { id = "G", title = "Phase G — Cinematic Camera" },
     { id = "H", title = "Phase H — Integration and Polish" },
+    { id = "P", title = "Previews — All UI Areas" },
 }
 
 local PHASE_BY_ID = {}
@@ -236,6 +238,8 @@ local Panel = Logres:RegisterModule("DevPanel", {
         self.phaseTabs = {}
         self.actionButtons = {}
         self.activePhase = DEFAULT_PHASE
+        self.previewPage = 1
+        self:CreatePreviewPager(frame)
 
         self:CreatePhaseTabs()
         self:SetActivePhase(DEFAULT_PHASE)
@@ -299,6 +303,47 @@ function Panel:RunCommand(command)
     end)
 end
 
+-- The preview collection intentionally lives in a single tab, but more than
+-- 18 visual states require paging instead of offscreen, unreachable buttons.
+function Panel:CreatePreviewPager(frame)
+    self.previewPrevious = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+    self.previewPrevious:SetSize(66, 22)
+    self.previewPrevious:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -176, -94)
+    self.previewPrevious:SetText("Previous")
+    self.previewPrevious:SetScript("OnClick", function()
+        self.previewPage = math.max(1, self.previewPage - 1)
+        self:RefreshActionButtons()
+    end)
+    self.previewNext = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+    self.previewNext:SetSize(66, 22)
+    self.previewNext:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -20, -94)
+    self.previewNext:SetText("Next")
+    self.previewNext:SetScript("OnClick", function()
+        self.previewPage = self.previewPage + 1
+        self:RefreshActionButtons()
+    end)
+    self.previewPageLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    self.previewPageLabel:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -93, -98)
+    self.previewPageLabel:SetWidth(74)
+    self.previewPageLabel:SetJustifyH("CENTER")
+    self.previewPrevious:Hide()
+    self.previewNext:Hide()
+    self.previewPageLabel:Hide()
+end
+
+function Panel:UpdatePreviewPager(total)
+    local show = self.activePhase == "P"
+    self.previewPrevious:SetShown(show)
+    self.previewNext:SetShown(show)
+    self.previewPageLabel:SetShown(show)
+    if not show then return end
+    local pages = math.max(1, math.ceil(total / PREVIEW_PAGE_SIZE))
+    self.previewPage = math.max(1, math.min(self.previewPage, pages))
+    self.previewPageLabel:SetText(tostring(self.previewPage) .. " / " .. tostring(pages))
+    self.previewPrevious:SetEnabled(self.previewPage > 1)
+    self.previewNext:SetEnabled(self.previewPage < pages)
+end
+
 function Panel:CreatePhaseTabs()
     for index = 1, #PHASES do
         local definition = PHASES[index]
@@ -341,6 +386,9 @@ function Panel:SetActivePhase(phase)
     if self.h2MapMode and phase ~= "H" then
         self:SetH2MapMode(false)
     end
+    if phase == "P" and self.activePhase ~= "P" then
+        self.previewPage = 1
+    end
     self.activePhase = phase
     self.h2MapButton:SetShown(phase == "H")
     self.phaseTitle:SetText(PHASE_BY_ID[phase].title)
@@ -351,7 +399,6 @@ end
 function Panel:RefreshActionButtons()
     local actions = Logres:GetDevPanelActions()
     local visible = {}
-
     for index = 1, #actions do
         local action = actions[index]
         if action.phase == self.activePhase then
@@ -364,41 +411,62 @@ function Panel:RefreshActionButtons()
         self.actionButtons[index] = nil
     end
 
-    if #visible == 0 then
-        self.emptyLabel:Show()
+    if self.activePhase == "P" then
+        -- Stable alphabetical order keeps previews searchable across pages.
+        table.sort(visible, function(a, b) return a.label < b.label end)
+        self:UpdatePreviewPager(#visible)
     else
-        self.emptyLabel:Hide()
+        self:UpdatePreviewPager(0)
+        if #visible > MAX_ACTIONS_PER_PHASE then
+            self:AddResult(string.format(
+                "Panel phase %s has %s actions; static contract allows %s.",
+                tostring(self.activePhase), tostring(#visible),
+                tostring(MAX_ACTIONS_PER_PHASE)
+            ))
+        end
     end
 
-    if #visible > MAX_ACTIONS_PER_PHASE then
-        self:AddResult(string.format(
-            "Panel phase %s has %s actions; static contract allows %s.",
-            tostring(self.activePhase),
-            tostring(#visible),
-            tostring(MAX_ACTIONS_PER_PHASE)
-        ))
+    self.emptyLabel:SetShown(#visible == 0)
+    if #visible == 0 then return end
+    local first = 1
+    local last = #visible
+    if self.activePhase == "P" then
+        local first = (self.previewPage - 1) * PREVIEW_PAGE_SIZE + 1
+        local last = math.min(#visible, first + PREVIEW_PAGE_SIZE - 1)
+        -- Keep both indices scoped to the same page, never draw beyond row 6.
+        for index = first, last do
+            local action = visible[index]
+            local button = CreateFrame("Button", nil, self.buttonHost, "UIPanelButtonTemplate")
+            local zeroIndex = index - first
+            local column = zeroIndex % BUTTON_COLUMNS
+            local row = math.floor(zeroIndex / BUTTON_COLUMNS)
+            button:SetSize(BUTTON_WIDTH, BUTTON_HEIGHT)
+            button:SetPoint("TOPLEFT", self.buttonHost, "TOPLEFT",
+                column * (BUTTON_WIDTH + BUTTON_GAP_X),
+                -(row * (BUTTON_HEIGHT + BUTTON_GAP_Y)))
+            button:SetText(action.label)
+            button:SetScript("OnClick", function()
+                self:RunCommand(action.command)
+            end)
+            self.actionButtons[#self.actionButtons + 1] = button
+        end
+        return
     end
-
-    for index = 1, #visible do
+    for index = first, last do
         local action = visible[index]
         local button = CreateFrame("Button", nil, self.buttonHost, "UIPanelButtonTemplate")
         local zeroIndex = index - 1
         local column = zeroIndex % BUTTON_COLUMNS
         local row = math.floor(zeroIndex / BUTTON_COLUMNS)
-
         button:SetSize(BUTTON_WIDTH, BUTTON_HEIGHT)
-        button:SetPoint(
-            "TOPLEFT",
-            self.buttonHost,
-            "TOPLEFT",
+        button:SetPoint("TOPLEFT", self.buttonHost, "TOPLEFT",
             column * (BUTTON_WIDTH + BUTTON_GAP_X),
-            -(row * (BUTTON_HEIGHT + BUTTON_GAP_Y))
-        )
+            -(row * (BUTTON_HEIGHT + BUTTON_GAP_Y)))
         button:SetText(action.label)
         button:SetScript("OnClick", function()
             self:RunCommand(action.command)
         end)
-        self.actionButtons[index] = button
+        self.actionButtons[#self.actionButtons + 1] = button
     end
 end
 
