@@ -308,7 +308,7 @@ local function createOfferButton(
     button.kind = kind
 
     local normalColor =
-        kind == "accept"
+        (kind == "accept" or kind == "complete")
         and offerColor("accept")
         or offerColor("decline")
 
@@ -343,7 +343,11 @@ local function createOfferButton(
     end)
 
     button:SetScript("OnClick", function()
-        owner:HandleOfferAction(kind)
+        if kind == "complete" then
+            owner:HandleCompletionAction()
+        else
+            owner:HandleOfferAction(kind)
+        end
     end)
 
     return button
@@ -519,7 +523,17 @@ function Dialogue:HandleOfferAction(kind)
     return false, reason
 end
 
+function Dialogue:HandleCompletionAction()
+    if not self.completionControl then
+        return false, "control-unavailable"
+    end
+    return self.completionControl:Click()
+end
+
 function Dialogue:HidePresentation(reason)
+    if self.completionControl then
+        self.completionControl:Restore(reason or "hide-presentation")
+    end
     self:RequestStockOfferSuppression(
         false,
         reason or "hide-presentation"
@@ -570,6 +584,11 @@ end
 
 function Dialogue:ClearActiveDetail(reason)
     self.activeDetail = nil
+    -- Keep only the immediately observed ordinary completion across a
+    -- preference toggle. Every actual lifecycle exit invalidates it.
+    if reason ~= "QUEST_COMPLETE" then
+        self.activeCompletion = nil
+    end
     self:HidePresentation(reason)
 end
 
@@ -985,16 +1004,26 @@ function Dialogue:ReadCompletionRewardSummary()
 end
 
 function Dialogue:HandleQuestComplete()
-    self.completeEventCount = self.completeEventCount + 1
+    -- A preference restore may re-render, but is NOT a new QUEST_COMPLETE.
+    if not self.restoringCompletion then
+        self.completeEventCount = self.completeEventCount + 1
+    end
     self:ClearActiveDetail("QUEST_COMPLETE")
     local completion, reason, secret = self:ReadCompletion()
     if not completion then
+        self.activeCompletion = nil
         self.completionSkippedCount = self.completionSkippedCount + 1
         self.lastCompletionReason = reason or "completion-unavailable"
         self.lastCompletionSecret = secret == true
         return
     end
 
+    -- ReadCompletion validated every field as ordinary before we cache an
+    -- identity token. Never retain a secret-capable native value.
+    self.activeCompletion = {
+        questID = completion.questID,
+        title = completion.title,
+    }
     self.lastQuestID = completion.questID
     self.lastHadBody = true
     self.lastHadObjective = false
@@ -1026,6 +1055,19 @@ function Dialogue:HandleQuestComplete()
             self.rewardVisual:Present(self.completionRewardCards, rewardFooter)
         end
         self.completionRewardFooter = rewardFooter
+        if self.completionControl then
+            local applied = self.completionControl:Activate()
+            if applied then
+                local ownedFooter = rewardFooter:gsub(
+                    "Complete using Blizzard quest controls",
+                    "Complete Quest below"
+                )
+                self.completionRewardFooter = ownedFooter
+                if self.rewardVisual and #self.completionRewardCards > 0 then
+                    self.rewardVisual:Present(self.completionRewardCards, ownedFooter)
+                end
+            end
+        end
         local pending = self.pendingCompletionItem
         local fallback = "Review rewards in Blizzard quest window"
         if pending and type(rewardSummary) == "string"
@@ -1250,6 +1292,9 @@ function Dialogue:PresentText(
         return false, "timer-unavailable"
     end
 
+    if self.completionControl then
+        self.completionControl:Restore("new-presentation")
+    end
     self.presentationGeneration =
         self.presentationGeneration + 1
     local generation =
@@ -1364,6 +1409,51 @@ function Dialogue:HandleQuestDetail()
     )
 end
 
+-- P0251 R3: a preference toggle does not emit QUEST_COMPLETE again.
+-- Resume only when the same native reward screen and ordinary quest identity
+-- are still active; otherwise leave Blizzard visible and discard the token.
+function Dialogue:RestoreCompletionAfterImmersion()
+    local active = self.activeCompletion
+    if not active then return false, "no-completion-token" end
+    if type(issecretvalue) ~= "function" then
+        self.activeCompletion = nil
+        return false, "secret-gate-unavailable"
+    end
+    for index = 1, 2 do
+        local frame
+        if index == 1 then
+            frame = _G.QuestFrame
+        else
+            frame = _G.QuestFrameRewardPanel
+        end
+        if not frame or type(frame.IsShown) ~= "function" then
+            self.activeCompletion = nil
+            return false, "native-frame-unavailable"
+        end
+        local shownOK, isShown = pcall(frame.IsShown, frame)
+        if not shownOK or isSecret(isShown) or isShown ~= true then
+            self.activeCompletion = nil
+            return false, "native-reward-not-shown"
+        end
+    end
+    local current = self:ReadCompletion()
+    if not current or current.questID ~= active.questID
+        or current.title ~= active.title
+    then
+        self.activeCompletion = nil
+        return false, "completion-identity-changed"
+    end
+    self.restoringCompletion = true
+    local renderOK = pcall(self.HandleQuestComplete, self)
+    self.restoringCompletion = false
+    if not renderOK then
+        -- Restore stock before withdrawing a partially prepared replacement.
+        self:ClearActiveDetail("completion-restore-failed")
+        return false, "completion-restore-failed"
+    end
+    return self.completionActive == true, self.lastCompletionReason
+end
+
 function Dialogue:ApplyPreferences(preferences)
     local wasImmersionEnabled =
         self.immersionEnabled == true
@@ -1395,6 +1485,8 @@ function Dialogue:ApplyPreferences(preferences)
             true,
             false
         )
+    elseif not wasImmersionEnabled and self.activeCompletion ~= nil then
+        self:RestoreCompletionAfterImmersion()
     end
 end
 
@@ -1503,6 +1595,8 @@ function Dialogue:GetDebugStatus()
         completionActive = self.completionActive == true,
         completionRewardCards = #self.completionRewardCards,
         completionRewardOverflow = self.completionRewardOverflow == true,
+        completionControl = self.completionControl and
+            self.completionControl:GetDebugStatus() or nil,
         itemInfoRegistered = self.eventRegistration.GET_ITEM_INFO_RECEIVED == true,
         itemDataRegistered = self.eventRegistration.ITEM_DATA_LOAD_RESULT == true,
         completionItemPending = self.pendingCompletionItem ~= nil,
@@ -1615,6 +1709,8 @@ function Dialogue:OnInitialize()
     self.completionShownCount = 0
     self.completionSkippedCount = 0
     self.completionActive = false
+    self.activeCompletion = nil
+    self.restoringCompletion = false
     self.completionRewardCards = {}
     self.completionRewardOverflow = false
     self.completionRewardFooter = nil
@@ -2017,6 +2113,34 @@ function Dialogue:OnInitialize()
     )
     offerActionFeedback:Hide()
 
+    -- P0251: visually matched completion button below the reward panel.
+    -- It remains hidden unless stock input has been safely suppressed.
+    self.completionActionRoot = CreateFrame("Frame", nil, root)
+    self.completionActionRoot:SetSize(
+        offerStyleValue("width"), offerStyleValue("height")
+    )
+    self.completionActionRoot:SetPoint(
+        "TOP", root, "BOTTOM", 0, offerStyleValue("y")
+    )
+    self.completionActionRoot:EnableMouse(false)
+    -- Keep the same font/rule button style as offer controls, but promote
+    -- its layer so the underline is not obscured below the reward panel.
+    self.completionActionRoot:SetFrameLevel(root:GetFrameLevel() + 5)
+    self.completionActionRoot:Hide()
+    local completionButton = createOfferButton(
+        self, self.completionActionRoot, "complete", "Complete Quest"
+    )
+    completionButton:SetPoint(
+        "CENTER", self.completionActionRoot, "CENTER", 0, 9
+    )
+    completionButton:SetFrameLevel(
+        self.completionActionRoot:GetFrameLevel() + 1
+    )
+    self.completionButton = completionButton
+    self.completionControl = Logres.QuestCompletionControl.New(
+        self, self.completionActionRoot
+    )
+
     self.root = root
     self.panel = panel
     self.titleText = titleText
@@ -2098,6 +2222,8 @@ function Dialogue:OnInitialize()
 
             if event == "GOSSIP_CLOSED" then
                 if self.progressActive or self.completionActive then
+                    self:ClearActiveDetail("GOSSIP_CLOSED")
+                elseif self.activeCompletion ~= nil then
                     self:ClearActiveDetail("GOSSIP_CLOSED")
                 end
                 return

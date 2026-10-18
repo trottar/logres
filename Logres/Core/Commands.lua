@@ -2936,6 +2936,17 @@ local function runQuestDialogueCheck()
         tostring(debugStatus.completionRewardCards),
         tostring(debugStatus.completionRewardOverflow)
     ))
+    local completion = debugStatus.completionControl
+    if completion then
+        emit(string.format(
+            "Logres questdialogue completioncontrol: CANDIDATE (applied=%s shown=%s snapshot=%s reason=%s clicks=%s claimCalls=%s result=%s stock=%s)",
+            tostring(completion.applied), tostring(completion.shown),
+            tostring(completion.snapshot), tostring(completion.lastReason),
+            tostring(completion.clickCount), tostring(completion.claimCalls),
+            tostring(completion.lastResult),
+            completion.applied and "suppressed-with-snapshot" or "retained"
+        ))
+    end
 end
 
 function Logres:RunQuestRewardPreview(argument)
