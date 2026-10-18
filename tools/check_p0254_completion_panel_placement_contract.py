@@ -32,8 +32,16 @@ if d.count('offerStyleValue("y") + 64')!=1:
     e.append('completion positioning must be a single, gated site')
 start=d.find('if applied then\n                -- The existing Accept button')
 end=d.find('self.acceptButton.label:SetText("Complete Quest")',start)
-if start<0 or end<start or 'self.offerActionRoot:SetPoint(' not in d[start:end]:
-    e.append('panel-internal position must occur only after guarded stock suppression')
+if start<0 or end<start or 'self:PositionCompletionActionVisual()' not in d[start:end]:
+    e.append('shared panel-internal position must be invoked only after guarded stock suppression')
+# The original geometry still exists at exactly one source site; the same
+# helper is invoked once by guarded production and once by inert preview.
+if d.count('function Dialogue:PositionCompletionActionVisual()') != 1 or d.count('self:PositionCompletionActionVisual()') != 2:
+    e.append('single shared completion positioning helper required for live and preview')
+helper_start=d.find('function Dialogue:PositionCompletionActionVisual()')
+helper_end=d.find('function Dialogue:HandleQuestComplete()',helper_start)
+if helper_start<0 or helper_end<helper_start or 'self.offerActionRoot:SetPoint(' not in d[helper_start:helper_end]:
+    e.append('completion helper must anchor actual shared action root')
 start=d.find('if shouldShow then\n        -- P0255: the very same Accept/Decline action pair')
 end=d.find('self.acceptButton.label:SetText("Accept")',start)
 if start<0 or end<start or 'self.offerActionRoot:SetPoint(' not in d[start:end]:

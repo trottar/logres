@@ -343,6 +343,12 @@ local function createOfferButton(
     end)
 
     button:SetScript("OnClick", function()
+        -- Visual samples never dispatch to real quest offer or claim handlers,
+        -- even when this exact button is reused for live completion.
+        if owner.offerActionPreview then
+            owner:HandleOfferAction(kind)
+            return
+        end
         -- The original Accept button also serves guarded completion.
         -- This is the exact same visual and input object, not a clone.
         if kind == "accept" and owner.completionActive
@@ -1042,6 +1048,16 @@ function Dialogue:ReadCompletionRewardSummary()
         itemText ~= nil, money, moneyReason or (money ~= nil and "ordinary" or "unknown"), rewardFooter
 end
 
+-- P0257 R1: one component geometry for guarded live and inert preview.
+-- Caller determines ownership; the helper touches Logres-owned frames only.
+function Dialogue:PositionCompletionActionVisual()
+    self.offerActionRoot:ClearAllPoints()
+    self.offerActionRoot:SetPoint(
+        "TOP", self.root, "BOTTOM", 0,
+        offerStyleValue("y") + 64
+    )
+end
+
 function Dialogue:HandleQuestComplete()
     -- A preference restore may re-render, but is NOT a new QUEST_COMPLETE.
     if not self.restoringCompletion then
@@ -1077,6 +1093,11 @@ function Dialogue:HandleQuestComplete()
 
     local rewardSummary, rewardReason, rewardIdentified,
         rewardMoney, rewardMoneyReason, rewardFooter = self:ReadCompletionRewardSummary()
+    -- P0257: production's guarded reader and preview fixture produce the
+    -- same plain reward presentation model for the same view renderer.
+    local rewardModel = Logres.QuestRewardModel.FromLive(
+        self.completionRewardCards, rewardFooter
+    )
     self.lastCompletionRewardReason = rewardReason
     self.lastCompletionRewardIdentified = rewardIdentified == true
     self.lastCompletionRewardMoney = rewardMoney
@@ -1092,10 +1113,10 @@ function Dialogue:HandleQuestComplete()
         self.presentationCount = self.presentationCount + 1
         self.lastCompletionReason = "shown"
         self:UpdatePageControls()
-        if self.rewardVisual and #self.completionRewardCards > 0 then
+        if self.rewardVisual and #rewardModel.cards > 0 then
             self.rewardVisual:Present(self.completionRewardCards, rewardFooter)
         end
-        self.completionRewardFooter = rewardFooter
+        self.completionRewardFooter = rewardModel.footer
         if self.completionControl then
             -- Hide the two offer actions before attempting native suppression.
             -- Only a supported, captured completion may show the shared Accept.
@@ -1111,11 +1132,7 @@ function Dialogue:HandleQuestComplete()
                 if #self.completionRewardCards == 0 then
                     self.root:SetHeight(391)
                 end
-                self.offerActionRoot:ClearAllPoints()
-                self.offerActionRoot:SetPoint(
-                    "TOP", self.root, "BOTTOM", 0,
-                    offerStyleValue("y") + 64
-                )
+                self:PositionCompletionActionVisual()
                 self.acceptButton.label:SetText("Complete Quest")
                 self.acceptButton:ClearAllPoints()
                 self.acceptButton:SetPoint(
@@ -1646,38 +1663,47 @@ function Dialogue:ShowPreview()
     )
 end
 
+-- P0257: one data contract and ONE production renderer. The synthetic
+-- fixture has no quest identity and never obtains native reward control.
 function Dialogue:ShowRewardPreview(mode)
     if not self.moduleEnabled then return false, "module-disabled" end
     if not self.immersionEnabled then return false, "immersion-off" end
     if self.completionActive then return false, "active-completion" end
-    local cards
-    if mode == "multi" then
-        cards = {
-            {kind="reward", name="Sample supply crate", quantity=2,
-                icon="Interface\\Icons\\INV_Box_01"},
-            {kind="choice", name="Sample travel cloak", quantity=1,
-                icon="Interface\\Icons\\INV_Misc_Cape_11"},
-            {kind="choice", name="Sample leather gloves", quantity=1,
-                icon="Interface\\Icons\\INV_Gauntlets_05"},
-            {kind="choice", name="Sample healing potion", quantity=3,
-                icon="Interface\\Icons\\INV_Potion_51"},
-        }
-    else
-        cards = {
-            {kind="reward", name="Sample healing potion", quantity=3,
-                icon="Interface\\Icons\\INV_Potion_51"},
-        }
+    local model, errorReason = Logres.QuestRewardModel.Preview(mode)
+    if not model then return false, errorReason end
+
+    -- The same normalization used by guarded live reward reads supplies the
+    -- optional correct potion icon when item cache metadata is present.
+    for index = 1, #model.cards do
+        local card = model.cards[index]
+        if card.itemID then
+            local normalized = completionRewardCard(
+                card.kind, card.name, nil, card.quantity, card.itemID
+            )
+            if normalized and normalized.icon then
+                card.icon = normalized.icon
+            end
+        end
     end
     local ok, state = self:PresentText(
-        "Reward layout preview",
-        "A visual sample. These items are not an actual quest reward.",
-        "Preview only", "reward-preview", true, false, true
+        model.title, model.body, "Preview only", "reward-preview",
+        true, false, true
     )
     if ok and state == "shown" and self.rewardVisual then
-        local footer = mode == "multi"
-            and "1050 XP | 7s\nChoose and complete in Blizzard quest window"
-            or "1050 XP | 7s\nComplete using Blizzard quest controls"
-        self.rewardVisual:Present(cards, footer)
+        self.rewardVisual:Present(model.cards, model.footer)
+        if model.action == "preview-complete" then
+            -- IDENTICAL button object and completion geometry as production,
+            -- but the click is intercepted by offerActionPreview above.
+            self:PositionCompletionActionVisual()
+            self.acceptButton.label:SetText("Complete Quest")
+            self.acceptButton:ClearAllPoints()
+            self.acceptButton:SetPoint(
+                "CENTER", self.offerActionRoot, "CENTER", 0, 9
+            )
+            self.declineButton:Hide()
+            self.acceptButton:Show()
+            self.offerActionRoot:Show()
+        end
     end
     return ok, state
 end
