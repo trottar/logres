@@ -456,6 +456,12 @@ function Dialogue:UpdateOfferControls()
         or (stockApplied and finalPage)
 
     if shouldShow then
+        -- Only completion moves the shared root. Restore the exact original
+        -- offer anchor for normal Accept/Decline quest interactions.
+        self.offerActionRoot:ClearAllPoints()
+        self.offerActionRoot:SetPoint(
+            "TOP", self.root, "BOTTOM", 0, offerStyleValue("y")
+        )
         -- Restore the original Accept position/label whenever an offer owns
         -- this frame; the existing factory supplies all visual styling.
         self.acceptButton.label:SetText("Accept")
@@ -1072,6 +1078,7 @@ function Dialogue:HandleQuestComplete()
         self.completionShownCount = self.completionShownCount + 1
         self.presentationCount = self.presentationCount + 1
         self.lastCompletionReason = "shown"
+        self:UpdatePageControls()
         if self.rewardVisual and #self.completionRewardCards > 0 then
             self.rewardVisual:Present(self.completionRewardCards, rewardFooter)
         end
@@ -1083,6 +1090,19 @@ function Dialogue:HandleQuestComplete()
             self.declineButton:Hide()
             local applied = self.completionControl:Activate()
             if applied then
+                -- The existing Accept button was correct all along; the
+                -- shared action root was BELOW the opaque panel. Move that
+                -- same button inside the lower panel, as in the approved art.
+                -- The no-item completion also needs enough panel height to
+                -- keep its footer and the internal action from overlapping.
+                if #self.completionRewardCards == 0 then
+                    self.root:SetHeight(391)
+                end
+                self.offerActionRoot:ClearAllPoints()
+                self.offerActionRoot:SetPoint(
+                    "TOP", self.root, "BOTTOM", 0,
+                    offerStyleValue("y") + 64
+                )
                 self.acceptButton.label:SetText("Complete Quest")
                 self.acceptButton:ClearAllPoints()
                 self.acceptButton:SetPoint(
@@ -1203,6 +1223,18 @@ function Dialogue:HandleCompletionItemData(eventItemID, success)
 end
 
 function Dialogue:UpdatePageControls()
+    -- P0254: the guarded completion action sits inside the panel; retain
+    -- paging at the lower right instead of covering the centered button.
+    self.pageIndicator:ClearAllPoints()
+    if self.completionActive then
+        self.pageIndicator:SetPoint(
+            "BOTTOMRIGHT", self.root, "BOTTOMRIGHT", -115, 17
+        )
+    else
+        self.pageIndicator:SetPoint(
+            "BOTTOM", self.root, "BOTTOM", 0, 17
+        )
+    end
     local pageCount = #self.pages
     local current = self.currentPage
 

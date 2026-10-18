@@ -1,3 +1,7 @@
+## P0254 — shared Complete Quest action outside the narrative panel (2026-10-18)
+
+Verified pushed P0253 `3c0a017`, but user reports **visual still unchanged; P0253 VISUAL FAIL**. Source root geometry puts the shared Accept button ~26px below the reward panel over terrain. P0254 moves that same button within the narrative only after successful guarded stock suppression, shifts completion page controls to lower right, restores original offer position, and reserves panel height for zero-card rewards. No new visual asset, claim routing or native mutation. **RUNTIME UNVERIFIED**. Preserve quest 237; no claims. Evidence `docs/memory/evidence/P0254_COMPLETION_PANEL_ALIGNMENT.md`.
+
 ## P0253 — original Accept frame reuse; P0252 visual failure (2026-10-18)
 
 Verified pushed P0252 `34274dc`: screenshot of reserved quest 237 confirms its dynamic reward card and XP/7 silver, duplicate instruction removed, but single Complete Quest action remains visually detached. **P0252 visual FAIL**, despite successful static changes. P0253 removes the separately created completion frame/button and reuses the actual Accept object and offer root, with guarded completion routing, exact same art and original offer restoration. Native claim logic and multi-choice fallback unchanged; final claim remains DEFERRED and quest 237 must not be completed. **P0253 runtime UNVERIFIED** pending offer/complete visual and OFF/ON validation. Evidence: `docs/memory/evidence/P0253_ACCEPT_CONTROL_REUSE.md`.

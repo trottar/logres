@@ -1,0 +1,3 @@
+# P0254 — Place the shared Complete Quest action within the narrative panel
+
+Baseline: `main` `3c0a01762b669aca9140a92201890dd318057607` (P0253). This repair is an action-anchor and completion-pagination layout change only: move shared action inside the panel after guarded activation, restore original anchor on offers, and keep page controls out of the action area. Preserve native stock fallback, claim routing, event lifecycle, and quest 237. Static checker verifies the old below-panel and corrected inside-panel geometry without asserting runtime acceptance. Full checker suite runs transactionally in the user's repository before tracked writes; WoW runtime/visual acceptance UNVERIFIED. Evidence: `docs/memory/evidence/P0254_COMPLETION_PANEL_ALIGNMENT.md`.
