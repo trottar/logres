@@ -2931,6 +2931,20 @@ local function runQuestDialogueCheck()
         tostring(debugStatus.lastCompletionItemCacheState),
         tostring(debugStatus.lastCompletionItemGate)
     ))
+    emit(string.format(
+        "Logres questdialogue rewardvisual: CANDIDATE (cards=%s overflow=%s stock=retained)",
+        tostring(debugStatus.completionRewardCards),
+        tostring(debugStatus.completionRewardOverflow)
+    ))
+end
+
+function Logres:RunQuestRewardPreview(argument)
+    local dialogue = Logres:GetModule("QuestDialogue")
+    local ok, state = dialogue:ShowRewardPreview(argument)
+    emit(string.format(
+        "Logres questrewardpreview: %s (mode=%s state=%s)",
+        ok and "PASS" or "FAIL", tostring(argument), tostring(state)
+    ))
 end
 
 local function runQuestDialoguePreview()
@@ -5142,6 +5156,15 @@ local function handleCommand(message)
         return
     end
 
+    if command == "questrewardpreview" then
+        if argument == "single" or argument == "multi" then
+            Logres:RunQuestRewardPreview(argument)
+        else
+            emit("Usage: /logres questrewardpreview [single|multi]")
+        end
+        return
+    end
+
     if command == "questdialoguepreview" then
         runQuestDialoguePreview()
         return
@@ -5599,6 +5622,18 @@ Logres:RegisterDevPanelAction(
     "questDialoguePreview",
     "Quest Dialogue Preview",
     "questdialoguepreview",
+    "F"
+)
+Logres:RegisterDevPanelAction(
+    "questRewardPreviewSingle",
+    "Reward Preview: Single",
+    "questrewardpreview single",
+    "F"
+)
+Logres:RegisterDevPanelAction(
+    "questRewardPreviewMulti",
+    "Reward Preview: Multiple",
+    "questrewardpreview multi",
     "F"
 )
 Logres:RegisterDevPanelAction(

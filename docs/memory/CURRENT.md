@@ -7,10 +7,13 @@ project: logres
 # Current State
 
 ## Active Objective
-Identify the exact ordinary quest-completion item source gate preventing the already-registered P0246 item-data request, without changing quest interaction ownership or adding polling.
+Render dynamic quest-completion rewards as Logres-styled item portrait cards, including bounded multiple guaranteed and selectable items, while preserving Blizzard selection and claim controls.
+
 ## Current Work Item
-**P0247 — read-only reward source-gate diagnostic (RUNTIME UNVERIFIED).** Verified pushed P0246 `9eb711f`, load321, completion event=1 and shown=1; native item x3 visible but Logres fallback persists. P0246 `requests=0 signals=0 resolved=0 pending=false state=not-observed`; not an item-data event failure. Record the exact source check stopping item-data requests before any repair. Evidence `docs/memory/evidence/P0247_REWARD_SOURCE_GATE_DIAGNOSTIC.md`.
+**P0248 R2 — dynamic quest reward portrait cards (RUNTIME UNVERIFIED).** Verified pushed P0247 `0f2d605`; new user screenshot and loadCount 324 show natural quest 237 ordinary `Lesser Healing Potion x3`, 1050 XP, 7s, `gate=name-ordinary`, zero cache requests because the ordinary item name was already available. P0248 is visual-only: source-derived portrait/icon/name/count, up to six read-only cards across two columns, `CHOICE` labels and a summary footer; Phase F synthetic single/multi previews. Keep native Complete Quest and selection. Original R0 anchor ambiguity and R1 61/60 local-budget violations failed prewrite; R2 corrects the handler to a namespace method and awaits checks. Earlier missing name remains INTERMITTENT/OPEN; multi reward runtime proof DEFERRED.
+
 ## Verified State
+- **P0247 ordinary source P0248 baseline PASS (scoped):** main `0f2d605`, 0.0.147-dev/load324 screenshot and diagnostics show quest237 item x3 / XP1050 / 7s; `gate=name-ordinary` and `requests=0` is expected for the available name. Earlier missing reward name remains INTERMITTENT OPEN; P0248 portrait UI runtime UNVERIFIED.
 - **P0246 PUSHED; ITEM STILL MISSING / REQUESTS ZERO:** GitHub `9eb711f`; 0.0.146-dev load321 natural QUEST_COMPLETE=1 shown=1, `guaranteed-item-unavailable`; P0246 registered both item events, but `requests=0 signals=0 resolved=0 pending=false`. XP1050/7s and native Complete Quest work. Source gate remains UNKNOWN; P0247 diagnostic RUNTIME UNVERIFIED.
 - **P0245 R1 PUSHED / ITEM VISUAL STILL FAILING:** GitHub main `1bf3423`; screenshot shows native Lesser Healing Potion x3 while Logres keeps item-review fallback, with 1050 XP/7s and Blizzard Complete Quest intact. Latest 0.0.145-dev load319 checkall complete; dialogue counters collected pre-interaction so one-shot cache outcome not established. P0246 event-driven recovery RUNTIME UNVERIFIED.
 - **P0244 SCOPED MONEY RUNTIME PASS; ITEM OPEN / INTERMITTENT:** main `1ce1de1`; user screenshot shows 7s, 1050 XP, native Complete Quest, but Logres item-review fallback while stock shows Lesser Healing Potion x3. Load318 probe captures itemID858/count3 with empty name/link and zero mutations; P0245 one-shot cache candidate remains UNVERIFIED.
@@ -37,13 +40,16 @@ Identify the exact ordinary quest-completion item source gate preventing the alr
 - QuestieDB remains optional for Logres as a whole; third-party data may miss hidden, patch-specific and phased quests. Redistribution/license unresolved; do not bundle it or claim CurseForge-managed dependency.
 
 ## Next Action
-Apply P0247, deploy, `/reload`; on the same naturally available quest completion run `/logres panel` -> F — Quest Experience -> Quest Dialogue Check **while talking to the NPC**, and capture the `questdialogue itemcache ... gate=` line plus reward, requests, signals and screenshot. Do not mark resolved or advance to claim controls until the source gate is identified and reward identity is proven. Stock Complete Quest remains available.
+After applying and pushing P0248, deploy to WoW, `/reload`, `/logres panel` → **F — Quest Experience → Reward Preview: Single** then **Reward Preview: Multiple**; check portraits, quantities, CHOICE labels and XP/7s footer, no clipped layout; Phase F Quest Dialogue Check (`rewardvisual cards/overflow`) then Phase 0 Run All. Export diagnostics with `python3 tools/export_panel_diagnostics.py` after `/reload` and screenshot. Natural quest reward validation when available; do not demand a new multi-item quest.
+
 ## Success Criteria
-The post-QUEST_COMPLETE diagnostic reports a specific ordinary/secret-safe reason for an unattempted name lookup or pending request; the user can distinguish missing name, quantity, ID, API support or cache. Keep the existing exact XP, 7s, narrative and native Complete Quest interaction. No extra quest API reads, polling, automatic claim, protected inspection or Blizzard suppression. P0247 is instrumentation only; full static checker suite and in-client validation required.
+Static suite and in-client preview clean with no Lua/taint/protected/secret errors. No fixed quest item mappings. Dynamic guaranteed and selectable items use ordinary guarded `GetQuestItemInfo` icon, name, count; if missing/secret/overflow, retain fail-open Blizzard rewards. The two-column reward cards do not overlap prose/paging, and Blizzard claim and choice controls remain actionable. Multiple-item natural source parity remains DEFERRED if no relevant quest; no claim of completion until observed.
+
 ## Do Not Reopen Without New Evidence
 Do not infer addon installation from one guessed filesystem path or the presence/absence of a Lua global alone. No hard QuestieDB dependency, package bundling, unknown CurseForge project ID, global quest ID scans on updates, guessed quest availability, invented coordinates or native pin scraping. Do not hide the Blizzard minimap, alter user-accepted waypoint/focused-quest bearings, or treat missing locations as PASS. Baked flavor must not be guessed from a Source-only indicator. Keep negative and deferred evidence explicit.
 
 ## Relevant References
+- `docs/memory/evidence/P0248_REWARD_CARD_PRESENTATION.md`
 - `docs/memory/evidence/P0247_REWARD_SOURCE_GATE_DIAGNOSTIC.md`
 - `docs/memory/evidence/P0246_QUEST_ITEM_EVENT_CACHE_RESULT.md`
 - `docs/memory/evidence/P0245_QUEST_REWARD_ITEM_NAME_CACHE.md`

@@ -1,6 +1,7 @@
 local _, Logres = ...
 
 local PREVIEW_SECONDS = 30.0
+local MAX_REWARD_CARDS = 6
 local PAGE_CHAR_LIMIT = 420
 
 local Dialogue = Logres:RegisterModule("QuestDialogue", {
@@ -530,6 +531,10 @@ function Dialogue:HidePresentation(reason)
     self.progressActive = false
     self.completionActive = false
     self.pendingCompletionItem = nil
+    self.completionRewardCards = {}
+    self.completionRewardOverflow = false
+    self.completionRewardFooter = nil
+    if self.rewardVisual then self.rewardVisual:Reset() end
     self.pages = {}
     self.currentPage = 0
 
@@ -740,6 +745,56 @@ local function ordinaryRewardNumber(label, fn, ...)
     return math.floor(value), nil
 end
 
+-- Cards are ordinary, read-only source results; never retain secret-capable
+-- name, count, texture, or item ID in the visual model.
+local function completionRewardCard(kind, name, icon, quantity, itemID)
+    if isSecret(name) or isSecret(quantity) then return nil end
+    if type(name) ~= "string" or name == ""
+        or type(quantity) ~= "number" or quantity ~= quantity
+        or quantity < 1 or quantity > 9999
+    then return nil end
+    local displayIcon = nil
+    if not isSecret(icon) and type(icon) == "number" and icon == icon
+        and icon > 0 and icon < 1000000000
+    then
+        displayIcon = icon
+    elseif not isSecret(icon) and type(icon) == "string"
+        and icon ~= "" and #icon < 256 then
+        displayIcon = icon
+    elseif not isSecret(itemID) and type(itemID) == "number"
+        and itemID == itemID
+        and itemID > 0 and itemID < 10000000
+        and type(GetItemIcon) == "function"
+    then
+        local ok, cachedIcon = pcall(GetItemIcon, itemID)
+        if ok and not isSecret(cachedIcon) then
+            if type(cachedIcon) == "number" and cachedIcon > 0
+                and cachedIcon < 1000000000
+            then
+                displayIcon = cachedIcon
+            elseif type(cachedIcon) == "string" and cachedIcon ~= ""
+                and #cachedIcon < 256
+            then
+                displayIcon = cachedIcon
+            end
+        end
+    end
+    return {
+        kind = kind,
+        name = name,
+        quantity = math.floor(quantity),
+        icon = displayIcon,
+    }
+end
+
+local function readCompletionRewardCard(kind, index)
+    if type(GetQuestItemInfo) ~= "function" then return nil end
+    local ok, name, icon, quantity, _, _, itemID =
+        pcall(GetQuestItemInfo, kind, index)
+    if not ok then return nil end
+    return completionRewardCard(kind, name, icon, quantity, itemID)
+end
+
 function Dialogue:ReadCompletionRewardSummary()
     -- A small, supplemental summary; no choice selection or claim actions.
     local xp, xpReason = ordinaryRewardNumber("reward-xp", GetRewardXP)
@@ -752,6 +807,9 @@ function Dialogue:ReadCompletionRewardSummary()
     )
     local itemText = nil
     local reason = "complete-reward-source"
+    self.completionRewardCards = {}
+    self.completionRewardOverflow = false
+    local footerMetrics = {}
     -- Only the active, identified single-item completion may wait for cache.
     self.pendingCompletionItem = nil
     -- P0247: observe the earliest blocked read gate; never inspect secrets.
@@ -765,7 +823,7 @@ function Dialogue:ReadCompletionRewardSummary()
     elseif rewards == 1 then
         self.lastCompletionItemGate = "item-api-unavailable"
         if type(GetQuestItemInfo) == "function" then
-            local ok, name, _, quantity, _, _, itemID =
+            local ok, name, texture, quantity, _, _, itemID =
                 pcall(GetQuestItemInfo, "reward", 1)
             -- Read-only source gate telemetry, including the no-request path.
             -- Examine no field until its secret-capable status is checked.
@@ -822,6 +880,7 @@ function Dialogue:ReadCompletionRewardSummary()
                         self.pendingCompletionItem = {
                             itemID = itemID,
                             quantity = math.floor(quantity),
+                            icon = (not isSecret(texture)) and texture or nil,
                         }
                     end
                     local cacheOK, cacheName = pcall(GetItemInfo, itemID)
@@ -844,6 +903,10 @@ function Dialogue:ReadCompletionRewardSummary()
                 if type(resolvedName) == "string" and resolvedName ~= "" then
                     self.pendingCompletionItem = nil
                     itemText = resolvedName .. " x" .. tostring(math.floor(quantity))
+                    local card = completionRewardCard(
+                        "reward", resolvedName, texture, quantity, itemID
+                    )
+                    if card then self.completionRewardCards[1] = card end
                     reason = nameSource == "item-cache"
                         and "guaranteed-item-cache"
                         or "guaranteed-item-ordinary"
@@ -864,10 +927,32 @@ function Dialogue:ReadCompletionRewardSummary()
         self.lastCompletionItemGate = "no-guaranteed-items"
     end
 
+    -- Multiple guaranteed/choice sources share the same bounded card layout.
+    -- These are not clickable; the Blizzard quest panel retains selection/claim.
+    if rewards ~= nil and choices ~= nil
+        and (rewards > 1 or choices > 0)
+    then
+        self.completionRewardCards = {}
+        local cards = self.completionRewardCards
+        local reads = 0
+        for i = 1, math.min(rewards, MAX_REWARD_CARDS) do
+            reads = reads + 1
+            local card = readCompletionRewardCard("reward", i)
+            if card then cards[#cards + 1] = card end
+        end
+        for i = 1, math.min(choices, MAX_REWARD_CARDS - reads) do
+            reads = reads + 1
+            local card = readCompletionRewardCard("choice", i)
+            if card then cards[#cards + 1] = card end
+        end
+        self.completionRewardOverflow = rewards + choices > MAX_REWARD_CARDS
+    end
+
     local label = itemText or "Review rewards in Blizzard quest window"
     if xp ~= nil and xp > 0 then
         -- Two brief rows within the already-owned 50px narrative footer.
         label = label .. " | " .. tostring(xp) .. " XP"
+        footerMetrics[#footerMetrics + 1] = tostring(xp) .. " XP"
     elseif xpReason then
         reason = reason .. "/" .. xpReason
     end
@@ -882,9 +967,21 @@ function Dialogue:ReadCompletionRewardSummary()
         if silver > 0 then amounts[#amounts + 1] = tostring(silver) .. "s" end
         if copper > 0 then amounts[#amounts + 1] = tostring(copper) .. "c" end
         label = label .. " | " .. table.concat(amounts, " ")
+        footerMetrics[#footerMetrics + 1] = table.concat(amounts, " ")
+    end
+    local rewardFooter = #footerMetrics > 0
+        and table.concat(footerMetrics, " | ")
+        or "Review rewards in Blizzard quest window"
+    if self.completionRewardOverflow then
+        rewardFooter = rewardFooter .. " | More rewards in Blizzard window"
+    end
+    if choices ~= nil and choices > 0 then
+        rewardFooter = rewardFooter .. "\nChoose and complete in Blizzard quest window"
+    else
+        rewardFooter = rewardFooter .. "\nComplete using Blizzard quest controls"
     end
     return label .. "\nComplete using Blizzard quest controls", reason,
-        itemText ~= nil, money, moneyReason or (money ~= nil and "ordinary" or "unknown")
+        itemText ~= nil, money, moneyReason or (money ~= nil and "ordinary" or "unknown"), rewardFooter
 end
 
 function Dialogue:HandleQuestComplete()
@@ -911,7 +1008,7 @@ function Dialogue:HandleQuestComplete()
     end
 
     local rewardSummary, rewardReason, rewardIdentified,
-        rewardMoney, rewardMoneyReason = self:ReadCompletionRewardSummary()
+        rewardMoney, rewardMoneyReason, rewardFooter = self:ReadCompletionRewardSummary()
     self.lastCompletionRewardReason = rewardReason
     self.lastCompletionRewardIdentified = rewardIdentified == true
     self.lastCompletionRewardMoney = rewardMoney
@@ -925,6 +1022,10 @@ function Dialogue:HandleQuestComplete()
         self.completionShownCount = self.completionShownCount + 1
         self.presentationCount = self.presentationCount + 1
         self.lastCompletionReason = "shown"
+        if self.rewardVisual and #self.completionRewardCards > 0 then
+            self.rewardVisual:Present(self.completionRewardCards, rewardFooter)
+        end
+        self.completionRewardFooter = rewardFooter
         local pending = self.pendingCompletionItem
         local fallback = "Review rewards in Blizzard quest window"
         if pending and type(rewardSummary) == "string"
@@ -1006,6 +1107,17 @@ function Dialogue:HandleCompletionItemData(eventItemID, success)
         self.objectiveText:SetText(
             name .. " x" .. tostring(pending.quantity) .. pending.suffix
         )
+        -- Convert the text fallback into the identical portrait row if
+        -- metadata eventually arrives for this still-active completion.
+        local card = completionRewardCard(
+            "reward", name, pending.icon, pending.quantity, pending.itemID
+        )
+        if card and self.rewardVisual then
+            self.completionRewardCards = { card }
+            self.rewardVisual:Present(
+                self.completionRewardCards, self.completionRewardFooter
+            )
+        end
         self.completionItemResolvedCount = self.completionItemResolvedCount + 1
         self.lastCompletionRewardReason = "guaranteed-item-event"
         self.lastCompletionRewardIdentified = true
@@ -1143,6 +1255,7 @@ function Dialogue:PresentText(
     local generation =
         self.presentationGeneration
 
+    if self.rewardVisual then self.rewardVisual:Reset() end
     self.pages = buildPages(body)
     self.progressActive = false
     self.completionActive = false
@@ -1158,7 +1271,7 @@ function Dialogue:PresentText(
     self.titleText:SetText(title)
 
     if objective ~= "" then
-        if reason == "QUEST_COMPLETE" then
+        if reason == "QUEST_COMPLETE" or reason == "reward-preview" then
             self.objectiveHeader:SetText("REWARDS")
         else
             self.objectiveHeader:SetText("OBJECTIVE")
@@ -1310,6 +1423,42 @@ function Dialogue:ShowPreview()
     )
 end
 
+function Dialogue:ShowRewardPreview(mode)
+    if not self.moduleEnabled then return false, "module-disabled" end
+    if not self.immersionEnabled then return false, "immersion-off" end
+    if self.completionActive then return false, "active-completion" end
+    local cards
+    if mode == "multi" then
+        cards = {
+            {kind="reward", name="Sample supply crate", quantity=2,
+                icon="Interface\\Icons\\INV_Box_01"},
+            {kind="choice", name="Sample travel cloak", quantity=1,
+                icon="Interface\\Icons\\INV_Misc_Cape_11"},
+            {kind="choice", name="Sample leather gloves", quantity=1,
+                icon="Interface\\Icons\\INV_Gauntlets_05"},
+            {kind="choice", name="Sample healing potion", quantity=3,
+                icon="Interface\\Icons\\INV_Potion_51"},
+        }
+    else
+        cards = {
+            {kind="reward", name="Sample healing potion", quantity=3,
+                icon="Interface\\Icons\\INV_Potion_51"},
+        }
+    end
+    local ok, state = self:PresentText(
+        "Reward layout preview",
+        "A visual sample. These items are not an actual quest reward.",
+        "Preview only", "reward-preview", true, false, true
+    )
+    if ok and state == "shown" and self.rewardVisual then
+        local footer = mode == "multi"
+            and "1050 XP | 7s\nChoose and complete in Blizzard quest window"
+            or "1050 XP | 7s\nComplete using Blizzard quest controls"
+        self.rewardVisual:Present(cards, footer)
+    end
+    return ok, state
+end
+
 function Dialogue:GetDebugStatus()
     return {
         moduleEnabled =
@@ -1352,6 +1501,8 @@ function Dialogue:GetDebugStatus()
         completionShownCount = self.completionShownCount,
         completionSkippedCount = self.completionSkippedCount,
         completionActive = self.completionActive == true,
+        completionRewardCards = #self.completionRewardCards,
+        completionRewardOverflow = self.completionRewardOverflow == true,
         itemInfoRegistered = self.eventRegistration.GET_ITEM_INFO_RECEIVED == true,
         itemDataRegistered = self.eventRegistration.ITEM_DATA_LOAD_RESULT == true,
         completionItemPending = self.pendingCompletionItem ~= nil,
@@ -1464,6 +1615,9 @@ function Dialogue:OnInitialize()
     self.completionShownCount = 0
     self.completionSkippedCount = 0
     self.completionActive = false
+    self.completionRewardCards = {}
+    self.completionRewardOverflow = false
+    self.completionRewardFooter = nil
     self.pendingCompletionItem = nil
     self.completionItemSignals = 0
     self.completionItemResolvedCount = 0
@@ -1683,6 +1837,9 @@ function Dialogue:OnInitialize()
         objectiveText,
         colorValue("objective")
     )
+
+    -- Installed after the objective text so every state can reset its anchors.
+    self.rewardVisual = Logres.QuestRewardVisual.New(root, objectiveText)
 
     local pageIndicator =
         root:CreateFontString(

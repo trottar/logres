@@ -2,6 +2,7 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
+| P0248 R2 | 2026-10-18 | PREPARED / RUNTIME UNVERIFIED | Read-only dynamic reward portraits with up to six guaranteed/choice item cards, previews, stock selection/claim intact. (R0 anchor ambiguity and R1 61/60 local audit FAIL; both prewrite, R2 unverified). |
 | P0247 | 2026-10-18 | PREPARED / RUNTIME UNVERIFIED | Read-only diagnostic for the source gate preventing P0246 item data request. |
 | P0246 | 2026-10-18 | INSTALLED / PUSHED (9eb711f); ITEM NOT RESOLVED, REQUESTS=0 | Item-data events registered but request path never entered; natural quest 237 still shows fallback. |
 | P0245 | 2026-10-17 | INSTALLED / PUSHED (1bf3423); ITEM STILL MISSING | Cache one-shot did not improve quest 237 item readout in screenshot; XP/7s and stock Complete Quest intact. |

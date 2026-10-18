@@ -1,0 +1,24 @@
+P0248 — dynamic quest reward portrait presentation
+Baseline: 0f2d605a102d7a6faea8a3e68b0686a8086ee556
+Release candidate: 0.0.148-dev
+PASS shadow full static checker suite: 118
+PASS postwrite full static checker suite: 118
+PASS git diff --check
+Runtime not yet validated; stock quest claim/choice remain retained.
+
+Patch-owned files (SHA-256):
+5aaaebb18f79033edede6a1447b06b3149c548f014cdb54c44695ae94aa5461e  Logres/Core/Bootstrap.lua
+390b1cc4516abec15e7e6c0ad11674b2f2f1a51085e2be51f1affd90ad83323d  Logres/Core/Commands.lua
+de3865667e2c78df8ec68c33467c69b3b9128ffa77876c75dfc8ae21c08028ed  Logres/Logres.toc
+c40088b9d2e5ddfd98d0f7046f02b3d6c7711b3b614602dfc46730d4ebf146f1  Logres/Quest/Dialogue.lua
+4330877d30c1fafb71b310e07e5517be26a76a35634a6a3091a2cb6bcfa05915  Logres/Quest/RewardVisual.lua
+ed9f1c05ee1a0291bcba3f2e6b1e09246023bff451f2fc9777c48c8e90dacd92  docs/ROADMAP.md
+89003396df71d22f14cb766666f82391c000ba0e6220a83cde955b711821d44d  docs/memory/CURRENT.md
+0e269d2e9e0247362e12f45b32924969dd7f31c3585e5a8a84f04dc9d8283120  docs/memory/evidence/P0248_REWARD_CARD_PRESENTATION.md
+92843a4df55a001359d40b80dd6fc1f5c0cb8c6d16f3bc72e5fc0bbe1d4788d1  docs/memory/handoffs/CURRENT_HANDOFF.md
+63251138478ab5e471c654e40b5a18d215b9ecffd3ccfe041009f47eca441328  docs/memory/investigations/ACTIVE.md
+a0d70e49f7fd68164c1fe2ea4f6d8e420fe726fc35484dc253de7afbf7666064  docs/memory/patches/P0248_REWARD_CARDS.md
+980334044d7fbe66111504409a17ab555c4ddca882c86b4237bb872d55043bf1  docs/memory/patches/PATCH_INDEX.md
+241fbe79add5bdf756a446f26934b0ba816097779041ff1e75d30c11d2cd4819  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+3b9ae2f8b1ab037abbf10d6816ce00f16a148db797a6bb44b36cfaf6f268f974  docs/memory/roadmap/STATUS.md
+19821f6042ce6ef74a746e03e89d5ecf53ac970660f71a9b8e1d23d69fdfcb0e  tools/check_p0248_reward_visual_contract.py
