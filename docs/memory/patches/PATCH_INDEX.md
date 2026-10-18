@@ -2,7 +2,8 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
-| P0254 | 2026-10-18 | PREPARED / VISUAL UNVERIFIED | Move existing guarded Complete Quest/Accept control into narrative, relocate completion pager, preserve native claim. |
+| P0255 | 2026-10-18 | PREPARED / RUNTIME UNVERIFIED | Final-page completion reward/action visibility, in-panel Accept/Decline; native claim flash OPEN and untouched. |
+| P0254 | 2026-10-18 | PUSHED (2a7bc5d) / VISUAL PASS (SCOPED) | In-game Complete Quest inside narrative visually accepted; actual claim and choice interactions deferred. |
 | P0253 | 2026-10-18 | PUSHED (3c0a017) / VISUAL FAIL | Original Accept button reused, but action still appears outside panel because the shared root remains anchored below the narrative. |
 | P0252 | 2026-10-18 | PUSHED (34274dc) / VISUAL FAIL | Duplicate guidance removed, but separate Complete Quest button remained visually detached; shared original Accept planned in P0253. |
 | P0251 | 2026-10-18 | PUSHED (45d4654) / RESTORATION RUNTIME PASS (SCOPED) | R2 ON restoration failure corrected by R3; user reports no issues, load334 OFF/ON re-present and stock re-suppressed; claim still untested. |

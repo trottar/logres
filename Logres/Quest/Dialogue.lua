@@ -456,11 +456,13 @@ function Dialogue:UpdateOfferControls()
         or (stockApplied and finalPage)
 
     if shouldShow then
-        -- Only completion moves the shared root. Restore the exact original
-        -- offer anchor for normal Accept/Decline quest interactions.
+        -- P0255: the very same Accept/Decline action pair belongs within
+        -- the Logres narrative panel, not floating below its border.
+        self.root:SetHeight(391)
         self.offerActionRoot:ClearAllPoints()
         self.offerActionRoot:SetPoint(
-            "TOP", self.root, "BOTTOM", 0, offerStyleValue("y")
+            "TOP", self.root, "BOTTOM", 0,
+            offerStyleValue("y") + offerStyleValue("height") + 2
         )
         -- Restore the original Accept position/label whenever an offer owns
         -- this frame; the existing factory supplies all visual styling.
@@ -475,7 +477,16 @@ function Dialogue:UpdateOfferControls()
         self.declineButton:Show()
         self.offerActionRoot:Show()
     else
+        -- Retain the original, out-of-panel idle anchor for the next
+        -- presentation; no stock or secure input is changed here.
+        self.offerActionRoot:ClearAllPoints()
+        self.offerActionRoot:SetPoint(
+            "TOP", self.root, "BOTTOM", 0, offerStyleValue("y")
+        )
         self.offerActionRoot:Hide()
+        if not self.completionActive then
+            self.root:SetHeight(styleValue("height"))
+        end
     end
 end
 
@@ -575,6 +586,7 @@ function Dialogue:HidePresentation(reason)
     self.completionRewardCards = {}
     self.completionRewardOverflow = false
     self.completionRewardFooter = nil
+    self.completionRewardText = nil
     if self.rewardVisual then self.rewardVisual:Reset() end
     self.pages = {}
     self.currentPage = 0
@@ -1069,6 +1081,7 @@ function Dialogue:HandleQuestComplete()
     self.lastCompletionRewardIdentified = rewardIdentified == true
     self.lastCompletionRewardMoney = rewardMoney
     self.lastCompletionRewardMoneyReason = rewardMoneyReason
+    self.completionRewardText = rewardSummary
     local shown, state = self:PresentText(
         completion.title, completion.body, rewardSummary, "QUEST_COMPLETE",
         false, false, false
@@ -1122,6 +1135,9 @@ function Dialogue:HandleQuestComplete()
                 end
             end
         end
+        -- PresentText() starts on page one; refresh after stock ownership
+        -- and card/footers are known, then on every explicit page change.
+        self:UpdateCompletionPagePresentation()
         local pending = self.pendingCompletionItem
         local fallback = "Review rewards in Blizzard quest window"
         if pending and type(rewardSummary) == "string"
@@ -1213,6 +1229,7 @@ function Dialogue:HandleCompletionItemData(eventItemID, success)
             self.rewardVisual:Present(
                 self.completionRewardCards, self.completionRewardFooter
             )
+            self:UpdateCompletionPagePresentation()
         end
         self.completionItemResolvedCount = self.completionItemResolvedCount + 1
         self.lastCompletionRewardReason = "guaranteed-item-event"
@@ -1229,6 +1246,13 @@ function Dialogue:UpdatePageControls()
     if self.completionActive then
         self.pageIndicator:SetPoint(
             "BOTTOMRIGHT", self.root, "BOTTOMRIGHT", -115, 17
+        )
+    elseif self.offerActionsEnabled
+        and self.currentPage == #self.pages then
+        -- Offers have TWO in-panel buttons. Keep paging on a separate
+        -- rail above their right edges, never over either click region.
+        self.pageIndicator:SetPoint(
+            "BOTTOMRIGHT", self.root, "BOTTOMRIGHT", -115, 78
         )
     else
         self.pageIndicator:SetPoint(
@@ -1318,8 +1342,49 @@ function Dialogue:SetPage(index)
     )
     self:UpdatePageControls()
     self:UpdateOfferControls()
+    self:UpdateCompletionPagePresentation()
 
     return true, "page-shown"
+end
+
+-- P0255: rewards and the guarded claim action belong to the final
+-- narrative page. Only addon-owned textures/frames are changed here;
+-- the native stock suppression snapshot is never altered by paging.
+function Dialogue:UpdateCompletionPagePresentation()
+    if not self.completionActive or not self.presentationShown then
+        return
+    end
+    local finalPage = self.currentPage == #self.pages
+    self.objectiveHeader:SetShown(finalPage)
+    self.objectiveText:SetShown(finalPage)
+    if not finalPage then
+        if self.rewardVisual then
+            for i = 1, #self.rewardVisual.slots do
+                self.rewardVisual.slots[i]:Hide()
+            end
+        end
+        self.root:SetHeight(styleValue("height"))
+        if self.completionControl and self.completionControl.applied then
+            self.completionActionRoot:Hide()
+        end
+        return
+    end
+    if self.rewardVisual and #self.completionRewardCards > 0 then
+        self.rewardVisual:Present(
+            self.completionRewardCards, self.completionRewardFooter
+        )
+        self.objectiveText:Show()
+    else
+        self.objectiveText:SetText(
+            self.completionRewardText or self.completionRewardFooter or ""
+        )
+        if self.completionControl and self.completionControl.applied then
+            self.root:SetHeight(391)
+        end
+    end
+    if self.completionControl and self.completionControl.applied then
+        self.completionActionRoot:Show()
+    end
 end
 
 function Dialogue:PreviousPage()
@@ -1784,6 +1849,7 @@ function Dialogue:OnInitialize()
     self.completionRewardCards = {}
     self.completionRewardOverflow = false
     self.completionRewardFooter = nil
+    self.completionRewardText = nil
     self.pendingCompletionItem = nil
     self.completionItemSignals = 0
     self.completionItemResolvedCount = 0

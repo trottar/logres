@@ -13,3 +13,7 @@ P0254 keeps P0253's shared physical Accept button and `QuestCompletionControl.lu
 ## Test status
 
 Source geometry and checker invariants assessed statically; **full WoW visual acceptance UNVERIFIED**. Inspect quest 237 without clicking Complete Quest; verify same reward, panel-contained label/underline, pagination lower right, Immersion OFF/ON, and `clicks=0 claimCalls=0`. The original P0253 visual FAIL and P0251 R2 OFF/ON failure remain durable. Actual quest claim, selectable choices, and intermittent item-name cache branch remain DEFERRED/OPEN.
+
+## P0254 visual runtime acceptance (2026-10-18)
+
+Verified GitHub main `2a7bc5d`, user-provided `0.0.154-dev` screenshot and explicit “Much better!”: the exact Complete Quest/Accept instance is now visibly **inside** the dark narrative panel. **VISUAL PASS (placement only)**. This does not validate claim execution or final-page disclosure. P0255 addresses newly reported early rewards/action and in-panel offer-button parity; the sub-second native-frame flash remains **OPEN** with no handler changes. Preserve earlier P0252/P0253 visual failures and quest 237 for testing.

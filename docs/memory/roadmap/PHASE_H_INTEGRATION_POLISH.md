@@ -1,3 +1,7 @@
+## P0255 — final-page quest actions and in-panel Accept/Decline (2026-10-18)
+
+Verified pushed P0254 `2a7bc5d`, user screenshot of `0.0.154-dev` and “Much better!”: **Complete Quest inside panel VISUAL PASS (scoped)**, quest 237 preserved. Newly reported: completion rewards/action appear before narrative page 2/2; Accept/Decline remain below the panel. P0255 stages only addon-owned UI visibility and quest-offer layout corrections, without touching native claim logic. **RUNTIME UNVERIFIED**. The reported sub-second Blizzard reward-frame flash after Complete Quest is **OPEN**; code restores native frame before dispatching its handler as a safety invariant. Do not apply a timer/polling or conceal native controls without evidence and a safe replacement. See `docs/memory/evidence/P0255_FINAL_PAGE_AND_OFFER_ACTIONS.md`.
+
 ## P0254 — shared Complete Quest action outside the narrative panel (2026-10-18)
 
 Verified pushed P0253 `3c0a017`, but user reports **visual still unchanged; P0253 VISUAL FAIL**. Source root geometry puts the shared Accept button ~26px below the reward panel over terrain. P0254 moves that same button within the narrative only after successful guarded stock suppression, shifts completion page controls to lower right, restores original offer position, and reserves panel height for zero-card rewards. No new visual asset, claim routing or native mutation. **RUNTIME UNVERIFIED**. Preserve quest 237; no claims. Evidence `docs/memory/evidence/P0254_COMPLETION_PANEL_ALIGNMENT.md`.

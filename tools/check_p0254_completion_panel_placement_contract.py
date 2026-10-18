@@ -34,10 +34,10 @@ start=d.find('if applied then\n                -- The existing Accept button')
 end=d.find('self.acceptButton.label:SetText("Complete Quest")',start)
 if start<0 or end<start or 'self.offerActionRoot:SetPoint(' not in d[start:end]:
     e.append('panel-internal position must occur only after guarded stock suppression')
-start=d.find('if shouldShow then\n        -- Only completion moves the shared root')
+start=d.find('if shouldShow then\n        -- P0255: the very same Accept/Decline action pair')
 end=d.find('self.acceptButton.label:SetText("Accept")',start)
 if start<0 or end<start or 'self.offerActionRoot:SetPoint(' not in d[start:end]:
-    e.append('ordinary offer geometry must be explicitly restored')
+    e.append('ordinary offer panel ownership must be explicitly restored')
 page_start=d.find('function Dialogue:UpdatePageControls()')
 page_end=d.find('function Dialogue:SetPage(',page_start)
 if page_start<0 or page_end<page_start or d.find('self.pageIndicator:ClearAllPoints()',page_start,page_end)<0:
