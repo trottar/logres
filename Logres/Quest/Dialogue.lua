@@ -758,14 +758,40 @@ function Dialogue:ReadCompletionRewardSummary()
         reason = "choice-uses-blizzard"
     elseif rewards == 1 then
         if type(GetQuestItemInfo) == "function" then
-            local ok, name, _, quantity = pcall(GetQuestItemInfo, "reward", 1)
+            local ok, name, _, quantity, _, _, itemID =
+                pcall(GetQuestItemInfo, "reward", 1)
             if ok and not isSecret(name) and not isSecret(quantity)
-                and type(name) == "string" and name ~= ""
                 and type(quantity) == "number" and quantity == quantity
                 and quantity >= 1 and quantity <= 9999
             then
-                itemText = name .. " x" .. tostring(math.floor(quantity))
-                reason = "guaranteed-item-ordinary"
+                local resolvedName = name
+                local nameSource = "quest"
+                -- P0245: a quest reward can expose a stable ordinary item ID
+                -- while its immediate name/link are uncached. One read-only
+                -- cache lookup at QUEST_COMPLETE; no timers or retries.
+                if (type(resolvedName) ~= "string" or resolvedName == "")
+                    and not isSecret(itemID)
+                    and type(itemID) == "number" and itemID == itemID
+                    and itemID >= 1 and itemID <= 10000000
+                    and itemID == math.floor(itemID)
+                    and type(GetItemInfo) == "function"
+                then
+                    local cacheOK, cacheName = pcall(GetItemInfo, itemID)
+                    if cacheOK and not isSecret(cacheName)
+                        and type(cacheName) == "string" and cacheName ~= ""
+                    then
+                        resolvedName = cacheName
+                        nameSource = "item-cache"
+                    end
+                end
+                if type(resolvedName) == "string" and resolvedName ~= "" then
+                    itemText = resolvedName .. " x" .. tostring(math.floor(quantity))
+                    reason = nameSource == "item-cache"
+                        and "guaranteed-item-cache"
+                        or "guaranteed-item-ordinary"
+                else
+                    reason = "guaranteed-item-unavailable"
+                end
             else
                 reason = "guaranteed-item-unavailable"
             end
