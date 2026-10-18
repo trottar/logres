@@ -2,7 +2,8 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
-| P0251 | 2026-10-18 | R3 PREPARED / RUNTIME UNVERIFIED | R2 local: button/stock suppression and OFF restore observed; ON restore FAIL. R3 guarded completion re-presentation + control layering; quest 237 reserved, no claim. |
+| P0252 | 2026-10-18 | PREPARED / VISUAL RUNTIME UNVERIFIED | Match completion rule/gap to quest offer style and remove redundant owned instruction; claim unchanged. |
+| P0251 | 2026-10-18 | PUSHED (45d4654) / RESTORATION RUNTIME PASS (SCOPED) | R2 ON restoration failure corrected by R3; user reports no issues, load334 OFF/ON re-present and stock re-suppressed; claim still untested. |
 | P0250 | 2026-10-18 | DOCS-ONLY / PREPARED | Record pushed P0249 preview runtime PASS, keep natural quest and historical errors OPEN/DEFERRED. |
 | P0249 | 2026-10-18 | PUSHED (aaee288) / PREVIEW RUNTIME PASS (SCOPED) | Single and multiple synthetic reward previews rendered without nil-method errors; natural reward source/choice/claim still unverified. |
 | P0248 R2 | 2026-10-18 | PUSHED (cfd67be) / RUNTIME FAIL | Two preview commands error at Dialogue.lua:1258 (missing instance method); cards=0, stock retained. Earlier R0/R1 prewrite failures preserved. |

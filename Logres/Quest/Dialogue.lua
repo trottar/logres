@@ -1058,13 +1058,16 @@ function Dialogue:HandleQuestComplete()
         if self.completionControl then
             local applied = self.completionControl:Activate()
             if applied then
+                -- The actionable Logres button already communicates the
+                -- next step. Keep reward amounts, not a duplicate instruction.
                 local ownedFooter = rewardFooter:gsub(
-                    "Complete using Blizzard quest controls",
-                    "Complete Quest below"
+                    "\nComplete using Blizzard quest controls", ""
                 )
                 self.completionRewardFooter = ownedFooter
                 if self.rewardVisual and #self.completionRewardCards > 0 then
                     self.rewardVisual:Present(self.completionRewardCards, ownedFooter)
+                else
+                    self.objectiveText:SetText(ownedFooter)
                 end
             end
         end
@@ -2119,8 +2122,10 @@ function Dialogue:OnInitialize()
     self.completionActionRoot:SetSize(
         offerStyleValue("width"), offerStyleValue("height")
     )
+    -- Keep the single action visually attached to the reward panel rather
+    -- than a detached label far below it. Accept/Decline geometry is unchanged.
     self.completionActionRoot:SetPoint(
-        "TOP", root, "BOTTOM", 0, offerStyleValue("y")
+        "TOP", root, "BOTTOM", 0, offerStyleValue("y") + 10
     )
     self.completionActionRoot:EnableMouse(false)
     -- Keep the same font/rule button style as offer controls, but promote
@@ -2136,6 +2141,9 @@ function Dialogue:OnInitialize()
     completionButton:SetFrameLevel(
         self.completionActionRoot:GetFrameLevel() + 1
     )
+    -- Reuse the Accept/Decline texture, color and font unchanged. The
+    -- completion underline must not disappear behind panel artwork.
+    completionButton.rule:SetDrawLayer("OVERLAY", 1)
     self.completionButton = completionButton
     self.completionControl = Logres.QuestCompletionControl.New(
         self, self.completionActionRoot
