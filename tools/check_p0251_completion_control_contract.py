@@ -21,7 +21,7 @@ for name, text, parts in [
  ('Dialogue', d, ['function Dialogue:HandleCompletionAction()',
  'self.completionControl:Restore(reason or "hide-presentation")',
  'self.completionControl:Restore("new-presentation")',
- 'self.completionControl:Activate()','"complete", "Complete Quest"',
+ 'self.completionControl:Activate()', 'self.acceptButton.label:SetText("Complete Quest")',
  'Logres.QuestCompletionControl.New(', 'completionControl:GetDebugStatus()',
  'owner:HandleCompletionAction()']),
  ('Commands',cmd,['Logres questdialogue completioncontrol: CANDIDATE']),
@@ -70,7 +70,7 @@ for token in (
     'current.questID ~= active.questID',
     'current.title ~= active.title',
     'isSecret(isShown)',
-    'self.completionActionRoot:SetFrameLevel(root:GetFrameLevel() + 5)',
+    'self.completionActionRoot = offerActionRoot',
 ):
     if token not in d: issues.append('R3 restoration/visual invariant missing: ' + token)
 print('Logres P0251 quest completion/stock fallback contract')

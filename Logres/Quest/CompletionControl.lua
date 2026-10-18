@@ -178,7 +178,8 @@ end
 
 function Control:GetDebugStatus()
     return {
-        applied = self.applied, shown = self.actionRoot:IsShown(),
+        applied = self.applied,
+        shown = self.applied and self.actionRoot:IsShown() or false,
         snapshot = self.snapshot ~= nil, source = "native-handler",
         lastReason = self.lastReason, lastResult = self.lastResult,
         applyCount = self.applyCount, restoreCount = self.restoreCount,

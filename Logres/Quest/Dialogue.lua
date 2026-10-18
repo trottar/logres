@@ -343,7 +343,12 @@ local function createOfferButton(
     end)
 
     button:SetScript("OnClick", function()
-        if kind == "complete" then
+        -- The original Accept button also serves guarded completion.
+        -- This is the exact same visual and input object, not a clone.
+        if kind == "accept" and owner.completionActive
+            and owner.completionControl
+            and owner.completionControl.applied
+        then
             owner:HandleCompletionAction()
         else
             owner:HandleOfferAction(kind)
@@ -403,6 +408,11 @@ function Dialogue:RequestStockOfferSuppression(enabled, reason)
 end
 
 function Dialogue:UpdateOfferControls()
+    -- Completion owns this same action root while its native stock snapshot
+    -- is suppressed. Paging must never hide the guarded action.
+    if self.completionControl and self.completionControl.applied then
+        return
+    end
     local pageCount = #self.pages
     local finalPage =
         pageCount <= 1
@@ -446,6 +456,17 @@ function Dialogue:UpdateOfferControls()
         or (stockApplied and finalPage)
 
     if shouldShow then
+        -- Restore the original Accept position/label whenever an offer owns
+        -- this frame; the existing factory supplies all visual styling.
+        self.acceptButton.label:SetText("Accept")
+        self.acceptButton:ClearAllPoints()
+        self.acceptButton:SetPoint(
+            "CENTER", self.offerActionRoot, "CENTER",
+            -(offerStyleValue("buttonWidth") + offerStyleValue("buttonGap")) / 2,
+            9
+        )
+        self.acceptButton:Show()
+        self.declineButton:Show()
         self.offerActionRoot:Show()
     else
         self.offerActionRoot:Hide()
@@ -1056,8 +1077,18 @@ function Dialogue:HandleQuestComplete()
         end
         self.completionRewardFooter = rewardFooter
         if self.completionControl then
+            -- Hide the two offer actions before attempting native suppression.
+            -- Only a supported, captured completion may show the shared Accept.
+            self.acceptButton:Hide()
+            self.declineButton:Hide()
             local applied = self.completionControl:Activate()
             if applied then
+                self.acceptButton.label:SetText("Complete Quest")
+                self.acceptButton:ClearAllPoints()
+                self.acceptButton:SetPoint(
+                    "CENTER", self.offerActionRoot, "CENTER", 0, 9
+                )
+                self.acceptButton:Show()
                 -- The actionable Logres button already communicates the
                 -- next step. Keep reward amounts, not a duplicate instruction.
                 local ownedFooter = rewardFooter:gsub(
@@ -1648,6 +1679,10 @@ function Dialogue:GetDebugStatus()
         offerControlsShown =
             self.offerActionRoot ~= nil
             and self.offerActionRoot:IsVisible()
+            and self.acceptButton ~= nil
+            and self.acceptButton:IsVisible()
+            and self.declineButton ~= nil
+            and self.declineButton:IsVisible()
             or false,
         offerActionsEnabled =
             self.offerActionsEnabled == true,
@@ -2116,35 +2151,10 @@ function Dialogue:OnInitialize()
     )
     offerActionFeedback:Hide()
 
-    -- P0251: visually matched completion button below the reward panel.
-    -- It remains hidden unless stock input has been safely suppressed.
-    self.completionActionRoot = CreateFrame("Frame", nil, root)
-    self.completionActionRoot:SetSize(
-        offerStyleValue("width"), offerStyleValue("height")
-    )
-    -- Keep the single action visually attached to the reward panel rather
-    -- than a detached label far below it. Accept/Decline geometry is unchanged.
-    self.completionActionRoot:SetPoint(
-        "TOP", root, "BOTTOM", 0, offerStyleValue("y") + 10
-    )
-    self.completionActionRoot:EnableMouse(false)
-    -- Keep the same font/rule button style as offer controls, but promote
-    -- its layer so the underline is not obscured below the reward panel.
-    self.completionActionRoot:SetFrameLevel(root:GetFrameLevel() + 5)
-    self.completionActionRoot:Hide()
-    local completionButton = createOfferButton(
-        self, self.completionActionRoot, "complete", "Complete Quest"
-    )
-    completionButton:SetPoint(
-        "CENTER", self.completionActionRoot, "CENTER", 0, 9
-    )
-    completionButton:SetFrameLevel(
-        self.completionActionRoot:GetFrameLevel() + 1
-    )
-    -- Reuse the Accept/Decline texture, color and font unchanged. The
-    -- completion underline must not disappear behind panel artwork.
-    completionButton.rule:SetDrawLayer("OVERLAY", 1)
-    self.completionButton = completionButton
+    -- P0253: the same physical Accept button/root handles supported quest
+    -- completion. There is no second frame, rule, label, or art treatment.
+    self.completionActionRoot = offerActionRoot
+    self.completionButton = acceptButton
     self.completionControl = Logres.QuestCompletionControl.New(
         self, self.completionActionRoot
     )

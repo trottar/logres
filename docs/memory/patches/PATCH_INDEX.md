@@ -2,7 +2,8 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
-| P0252 | 2026-10-18 | PREPARED / VISUAL RUNTIME UNVERIFIED | Match completion rule/gap to quest offer style and remove redundant owned instruction; claim unchanged. |
+| P0253 | 2026-10-18 | PREPARED / RUNTIME UNVERIFIED | Reuse the actual Accept frame/button for guarded Complete Quest rather than an independent clone; retain claim/stock fallback. |
+| P0252 | 2026-10-18 | PUSHED (34274dc) / VISUAL FAIL | Duplicate guidance removed, but separate Complete Quest button remained visually detached; shared original Accept planned in P0253. |
 | P0251 | 2026-10-18 | PUSHED (45d4654) / RESTORATION RUNTIME PASS (SCOPED) | R2 ON restoration failure corrected by R3; user reports no issues, load334 OFF/ON re-present and stock re-suppressed; claim still untested. |
 | P0250 | 2026-10-18 | DOCS-ONLY / PREPARED | Record pushed P0249 preview runtime PASS, keep natural quest and historical errors OPEN/DEFERRED. |
 | P0249 | 2026-10-18 | PUSHED (aaee288) / PREVIEW RUNTIME PASS (SCOPED) | Single and multiple synthetic reward previews rendered without nil-method errors; natural reward source/choice/claim still unverified. |
