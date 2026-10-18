@@ -7,10 +7,11 @@ project: logres
 # Current State
 
 ## Active Objective
-Recover ordinary quest-completion item names after delayed item-data availability without taking Blizzard completion or reward-control ownership.
+Identify the exact ordinary quest-completion item source gate preventing the already-registered P0246 item-data request, without changing quest interaction ownership or adding polling.
 ## Current Work Item
-**P0246 — bounded event-driven completion item resolution (RUNTIME UNVERIFIED).** GitHub main P0245 `1bf3423` verified; user screenshot shows no improvement: fallback instead of Lesser Healing Potion x3 while XP/7s and stock Complete Quest work. Use the existing ordinary reward ID, one guarded data request and item-result events bound to the active quest/presentation generation; no polling, no claim mutation. Evidence `docs/memory/evidence/P0246_QUEST_ITEM_EVENT_CACHE_RESULT.md`.
+**P0247 — read-only reward source-gate diagnostic (RUNTIME UNVERIFIED).** Verified pushed P0246 `9eb711f`, load321, completion event=1 and shown=1; native item x3 visible but Logres fallback persists. P0246 `requests=0 signals=0 resolved=0 pending=false state=not-observed`; not an item-data event failure. Record the exact source check stopping item-data requests before any repair. Evidence `docs/memory/evidence/P0247_REWARD_SOURCE_GATE_DIAGNOSTIC.md`.
 ## Verified State
+- **P0246 PUSHED; ITEM STILL MISSING / REQUESTS ZERO:** GitHub `9eb711f`; 0.0.146-dev load321 natural QUEST_COMPLETE=1 shown=1, `guaranteed-item-unavailable`; P0246 registered both item events, but `requests=0 signals=0 resolved=0 pending=false`. XP1050/7s and native Complete Quest work. Source gate remains UNKNOWN; P0247 diagnostic RUNTIME UNVERIFIED.
 - **P0245 R1 PUSHED / ITEM VISUAL STILL FAILING:** GitHub main `1bf3423`; screenshot shows native Lesser Healing Potion x3 while Logres keeps item-review fallback, with 1050 XP/7s and Blizzard Complete Quest intact. Latest 0.0.145-dev load319 checkall complete; dialogue counters collected pre-interaction so one-shot cache outcome not established. P0246 event-driven recovery RUNTIME UNVERIFIED.
 - **P0244 SCOPED MONEY RUNTIME PASS; ITEM OPEN / INTERMITTENT:** main `1ce1de1`; user screenshot shows 7s, 1050 XP, native Complete Quest, but Logres item-review fallback while stock shows Lesser Healing Potion x3. Load318 probe captures itemID858/count3 with empty name/link and zero mutations; P0245 one-shot cache candidate remains UNVERIFIED.
 - **P0243 RUNTIME VISUAL ACCEPTED (SCOPED):** pushed `e8455bc`, screenshot confirms quest 237 Logres prose, item x3, XP 1050 and usable Blizzard Complete Quest. Missing **7 silver** in Logres; P0244 adds money candidate. Latest 0.0.143-dev load316 checkall PASS; completion dialogue counters sampled before event.
@@ -36,13 +37,14 @@ Recover ordinary quest-completion item names after delayed item-data availabilit
 - QuestieDB remains optional for Logres as a whole; third-party data may miss hidden, patch-specific and phased quests. Redistribution/license unresolved; do not bundle it or claim CurseForge-managed dependency.
 
 ## Next Action
-Apply P0246, deploy, `/reload`; `/logres panel` -> F — Quest Experience -> Quest Dialogue Check, then Phase 0 -> Run All. On naturally available completion, check post-event `questdialogue itemcache` registrations, requests, signals, resolved state and visual name/quantity versus native rewards. No artificial gameplay. If cache remains empty, capture exact state and preserve fallback. Claim, choices, and gossip remain stock-owned.
+Apply P0247, deploy, `/reload`; on the same naturally available quest completion run `/logres panel` -> F — Quest Experience -> Quest Dialogue Check **while talking to the NPC**, and capture the `questdialogue itemcache ... gate=` line plus reward, requests, signals and screenshot. Do not mark resolved or advance to claim controls until the source gate is identified and reward identity is proven. Stock Complete Quest remains available.
 ## Success Criteria
-Existing P0244 XP, cash, narrative and visible stock Complete Quest remain unchanged. Only an ordinary name for the matching active quest/reward may replace Logres fallback after event; none of the source results may be secret/invalid. Missing API/event yields safe native-review fallback; no timers, polling, automatic claim/selection, protected-state access, or UI suppression. Full checker suite plus in-game checks are required, and item resolution is DEFERRED without a natural populated event.
+The post-QUEST_COMPLETE diagnostic reports a specific ordinary/secret-safe reason for an unattempted name lookup or pending request; the user can distinguish missing name, quantity, ID, API support or cache. Keep the existing exact XP, 7s, narrative and native Complete Quest interaction. No extra quest API reads, polling, automatic claim, protected inspection or Blizzard suppression. P0247 is instrumentation only; full static checker suite and in-client validation required.
 ## Do Not Reopen Without New Evidence
 Do not infer addon installation from one guessed filesystem path or the presence/absence of a Lua global alone. No hard QuestieDB dependency, package bundling, unknown CurseForge project ID, global quest ID scans on updates, guessed quest availability, invented coordinates or native pin scraping. Do not hide the Blizzard minimap, alter user-accepted waypoint/focused-quest bearings, or treat missing locations as PASS. Baked flavor must not be guessed from a Source-only indicator. Keep negative and deferred evidence explicit.
 
 ## Relevant References
+- `docs/memory/evidence/P0247_REWARD_SOURCE_GATE_DIAGNOSTIC.md`
 - `docs/memory/evidence/P0246_QUEST_ITEM_EVENT_CACHE_RESULT.md`
 - `docs/memory/evidence/P0245_QUEST_REWARD_ITEM_NAME_CACHE.md`
 - `docs/memory/evidence/P0244_QUEST_MONEY_AND_COMPLETION_VISUAL_ACCEPTANCE.md`

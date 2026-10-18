@@ -2,7 +2,8 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
-| P0246 | 2026-10-18 | PREPARED / RUNTIME UNVERIFIED | Event-owned, quest/generation-gated reward-name update on item data arrival; stock claim remains. |
+| P0247 | 2026-10-18 | PREPARED / RUNTIME UNVERIFIED | Read-only diagnostic for the source gate preventing P0246 item data request. |
+| P0246 | 2026-10-18 | INSTALLED / PUSHED (9eb711f); ITEM NOT RESOLVED, REQUESTS=0 | Item-data events registered but request path never entered; natural quest 237 still shows fallback. |
 | P0245 | 2026-10-17 | INSTALLED / PUSHED (1bf3423); ITEM STILL MISSING | Cache one-shot did not improve quest 237 item readout in screenshot; XP/7s and stock Complete Quest intact. |
 | P0244 | 2026-10-17 | INSTALLED / PUSHED (1ce1de1); MONEY VISUAL PASS, ITEM INTERMITTENT | Quest 237 7s and 1050 XP match stock with native Complete Quest visible; Logres item name fallback despite stock potion x3. |
 | P0243 | 2026-10-17 | INSTALLED / PUSHED (e8455bc); VISUAL PASS LIMITED | Quest 237 completion prose, item x3 and XP match Blizzard; native Complete Quest visible. Cash 7 silver missing; P0244 evidence. |

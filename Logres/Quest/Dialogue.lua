@@ -754,15 +754,50 @@ function Dialogue:ReadCompletionRewardSummary()
     local reason = "complete-reward-source"
     -- Only the active, identified single-item completion may wait for cache.
     self.pendingCompletionItem = nil
+    -- P0247: observe the earliest blocked read gate; never inspect secrets.
+    self.lastCompletionItemGate = "reward-source-unavailable"
 
     if choices == nil or rewards == nil then
         reason = choiceReason or countReason or "reward-source-unavailable"
     elseif choices > 0 then
         reason = "choice-uses-blizzard"
+        self.lastCompletionItemGate = "choice-reward"
     elseif rewards == 1 then
+        self.lastCompletionItemGate = "item-api-unavailable"
         if type(GetQuestItemInfo) == "function" then
             local ok, name, _, quantity, _, _, itemID =
                 pcall(GetQuestItemInfo, "reward", 1)
+            -- Read-only source gate telemetry, including the no-request path.
+            -- Examine no field until its secret-capable status is checked.
+            self.lastCompletionItemGate = "item-call-failed"
+            if ok then
+                if isSecret(name) then
+                    self.lastCompletionItemGate = "name-secret"
+                elseif isSecret(quantity) then
+                    self.lastCompletionItemGate = "quantity-secret"
+                elseif type(quantity) ~= "number" or quantity ~= quantity
+                    or quantity < 1 or quantity > 9999
+                then
+                    self.lastCompletionItemGate = "quantity-invalid"
+                elseif type(name) == "string" and name ~= "" then
+                    self.lastCompletionItemGate = "name-ordinary"
+                elseif isSecret(itemID) then
+                    self.lastCompletionItemGate = "item-id-secret"
+                elseif type(itemID) ~= "number" or itemID ~= itemID
+                    or itemID < 1 or itemID > 10000000
+                    or itemID ~= math.floor(itemID)
+                then
+                    self.lastCompletionItemGate = "item-id-invalid"
+                elseif type(GetItemInfo) ~= "function" then
+                    self.lastCompletionItemGate = "cache-api-unavailable"
+                elseif self.eventRegistration.GET_ITEM_INFO_RECEIVED ~= true
+                    and self.eventRegistration.ITEM_DATA_LOAD_RESULT ~= true
+                then
+                    self.lastCompletionItemGate = "cache-events-unavailable"
+                else
+                    self.lastCompletionItemGate = "cache-eligible"
+                end
+            end
             if ok and not isSecret(name) and not isSecret(quantity)
                 and type(quantity) == "number" and quantity == quantity
                 and quantity >= 1 and quantity <= 9999
@@ -790,6 +825,15 @@ function Dialogue:ReadCompletionRewardSummary()
                         }
                     end
                     local cacheOK, cacheName = pcall(GetItemInfo, itemID)
+                    if not cacheOK then
+                        self.lastCompletionItemGate = "cache-call-failed"
+                    elseif isSecret(cacheName) then
+                        self.lastCompletionItemGate = "cache-name-secret"
+                    elseif type(cacheName) ~= "string" or cacheName == "" then
+                        self.lastCompletionItemGate = "cache-empty"
+                    else
+                        self.lastCompletionItemGate = "cache-name-ready"
+                    end
                     if cacheOK and not isSecret(cacheName)
                         and type(cacheName) == "string" and cacheName ~= ""
                     then
@@ -814,8 +858,10 @@ function Dialogue:ReadCompletionRewardSummary()
         end
     elseif rewards > 1 then
         reason = "multiple-rewards-use-blizzard"
+        self.lastCompletionItemGate = "multiple-items"
     elseif rewards == 0 then
         reason = "xp-only-or-no-items"
+        self.lastCompletionItemGate = "no-guaranteed-items"
     end
 
     local label = itemText or "Review rewards in Blizzard quest window"
@@ -1313,6 +1359,7 @@ function Dialogue:GetDebugStatus()
         completionItemResolvedCount = self.completionItemResolvedCount,
         completionItemRequests = self.completionItemRequests,
         lastCompletionItemCacheState = self.lastCompletionItemCacheState,
+        lastCompletionItemGate = self.lastCompletionItemGate,
         lastCompletionRewardReason = self.lastCompletionRewardReason,
         lastCompletionRewardIdentified = self.lastCompletionRewardIdentified == true,
         lastCompletionRewardMoney = self.lastCompletionRewardMoney,
@@ -1422,6 +1469,7 @@ function Dialogue:OnInitialize()
     self.completionItemResolvedCount = 0
     self.completionItemRequests = 0
     self.lastCompletionItemCacheState = "not-observed"
+    self.lastCompletionItemGate = "not-observed"
     self.lastCompletionReason = "not-observed"
     self.lastCompletionRewardReason = "not-observed"
     self.lastCompletionRewardMoney = nil

@@ -1,0 +1,3 @@
+# P0247 — Completion item-name gate diagnostic
+
+Date: 2026-10-18. P0246 pushed `9eb711f`, reproduced missing item name; post-event diagnostic confirms `requests=0` rather than event failure. Adds read-only `lastCompletionItemGate` with secret-safe source checks and developer-panel output. No additional API calls or control changes, no item resolution claim. Bumps synchronized version to 0.0.147-dev. Records negative outcome and next needed proof in CURRENT, handoff, ACTIVE, STATUS, Phase H, roadmap, index. Full static checker suite and git diff hygiene run on guarded user-side shadow tree before writing; runtime validation required. See `docs/memory/evidence/P0247_REWARD_SOURCE_GATE_DIAGNOSTIC.md`.
