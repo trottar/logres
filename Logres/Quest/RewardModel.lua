@@ -43,8 +43,10 @@ function Model.Preview(mode)
             { kind = "choice", name = "Sample healing potion", quantity = 3,
               icon = "Interface\\Icons\\INV_Potion_51" },
         }
-        footer = "1050 XP | 7s\nChoose and complete in Blizzard quest window"
-        action = "stock-choice" -- no mock claim or choice action
+        -- Same Complete Quest visual as Single. CHOICE cards remain
+        -- display-only until the separate guarded selection path exists.
+        footer = "1050 XP | 7s"
+        action = "preview-complete" -- synthetic click is always inert
     else
         return nil, "unknown-preview-mode"
     end

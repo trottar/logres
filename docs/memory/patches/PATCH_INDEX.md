@@ -2,7 +2,8 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
-| P0257 | 2026-10-18 | PREPARED / RUNTIME UNVERIFIED | D-046 preview-first pipeline; shared reward model and in-panel inert Single preview, stock-choice fallback unchanged. |
+| P0258 | 2026-10-18 | PREPARED / RUNTIME UNVERIFIED | Multi reward preview uses the same in-panel Complete Quest visual and amount-only footer as Single; choice cards remain inert, live native fallback untouched. |
+| P0257 | 2026-10-18 | PUSHED (94635d3) / PARTIAL PREVIEW VISUAL ACCEPTANCE | D-046 preview-first pipeline; shared reward model and in-panel inert Single preview, stock-choice fallback unchanged. |
 | P0256 | 2026-10-18 | PUSHED (23307aa) / GALLERY VISUAL PASS (SCOPED) | Central 28-control paginated preview tab, universal UI preview coverage audit, NPC dialogue first; no gameplay mutation. |
 | P0255 | 2026-10-18 | PUSHED (fc74e14) / RUNTIME UNVERIFIED | Final-page completion reward/action visibility, in-panel Accept/Decline; native claim flash OPEN and untouched. |
 | P0254 | 2026-10-18 | PUSHED (2a7bc5d) / VISUAL PASS (SCOPED) | In-game Complete Quest inside narrative visually accepted; actual claim and choice interactions deferred. |

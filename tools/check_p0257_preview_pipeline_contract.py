@@ -14,7 +14,7 @@ for phrase in (
     'function Model.FromLive(cards, footer)',
     'function Model.Preview(mode)',
     'previewOnly = false', 'previewOnly = true',
-    'action = "preview-complete"', 'action = "stock-choice"',
+    'action = "preview-complete"',
     'return nil, "unknown-preview-mode"',
 ):
     if phrase not in m:errors.append('missing model contract '+phrase)
