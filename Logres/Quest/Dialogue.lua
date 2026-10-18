@@ -529,6 +529,7 @@ function Dialogue:HidePresentation(reason)
     self.presentationShown = false
     self.progressActive = false
     self.completionActive = false
+    self.pendingCompletionItem = nil
     self.pages = {}
     self.currentPage = 0
 
@@ -751,6 +752,8 @@ function Dialogue:ReadCompletionRewardSummary()
     )
     local itemText = nil
     local reason = "complete-reward-source"
+    -- Only the active, identified single-item completion may wait for cache.
+    self.pendingCompletionItem = nil
 
     if choices == nil or rewards == nil then
         reason = choiceReason or countReason or "reward-source-unavailable"
@@ -776,6 +779,16 @@ function Dialogue:ReadCompletionRewardSummary()
                     and itemID == math.floor(itemID)
                     and type(GetItemInfo) == "function"
                 then
+                    -- Capture only an ordinary ID and quantity; never retain
+                    -- a secret-capable source value across event boundaries.
+                    if self.eventRegistration.GET_ITEM_INFO_RECEIVED == true
+                        or self.eventRegistration.ITEM_DATA_LOAD_RESULT == true
+                    then
+                        self.pendingCompletionItem = {
+                            itemID = itemID,
+                            quantity = math.floor(quantity),
+                        }
+                    end
                     local cacheOK, cacheName = pcall(GetItemInfo, itemID)
                     if cacheOK and not isSecret(cacheName)
                         and type(cacheName) == "string" and cacheName ~= ""
@@ -785,6 +798,7 @@ function Dialogue:ReadCompletionRewardSummary()
                     end
                 end
                 if type(resolvedName) == "string" and resolvedName ~= "" then
+                    self.pendingCompletionItem = nil
                     itemText = resolvedName .. " x" .. tostring(math.floor(quantity))
                     reason = nameSource == "item-cache"
                         and "guaranteed-item-cache"
@@ -865,11 +879,93 @@ function Dialogue:HandleQuestComplete()
         self.completionShownCount = self.completionShownCount + 1
         self.presentationCount = self.presentationCount + 1
         self.lastCompletionReason = "shown"
+        local pending = self.pendingCompletionItem
+        local fallback = "Review rewards in Blizzard quest window"
+        if pending and type(rewardSummary) == "string"
+            and rewardSummary:sub(1, #fallback) == fallback
+        then
+            -- The suffix contains only authored text, guarded XP and money.
+            pending.suffix = rewardSummary:sub(#fallback + 1)
+            pending.generation = self.presentationGeneration
+            pending.questID = completion.questID
+            self.lastCompletionItemCacheState = "awaiting-data"
+            -- One request, only for the active ordinary reward. The client
+            -- sends ITEM_DATA_LOAD_RESULT; GetItemInfo may independently
+            -- send GET_ITEM_INFO_RECEIVED. No timer or polling is installed.
+            if type(C_Item) == "table"
+                and type(C_Item.RequestLoadItemDataByID) == "function"
+            then
+                self.completionItemRequests = self.completionItemRequests + 1
+                local requestOK = pcall(
+                    C_Item.RequestLoadItemDataByID, pending.itemID
+                )
+                if not requestOK then
+                    self.lastCompletionItemCacheState = "request-failed"
+                end
+            end
+        else
+            self.pendingCompletionItem = nil
+        end
     else
+        self.pendingCompletionItem = nil
         self.completionSkippedCount = self.completionSkippedCount + 1
         self.lastCompletionReason = state or "presentation-unavailable"
     end
     self.lastCompletionSecret = false
+end
+
+function Dialogue:HandleCompletionItemData(eventItemID, success)
+    local pending = self.pendingCompletionItem
+    if not pending then return end
+    self.completionItemSignals = self.completionItemSignals + 1
+
+    -- Both event payload values are treated as secret-capable. Never compare
+    -- or stringify one until its non-secret status is established.
+    if isSecret(eventItemID) or isSecret(success) then
+        self.lastCompletionItemCacheState = "event-secret"
+        self.pendingCompletionItem = nil
+        return
+    end
+    if type(eventItemID) ~= "number" or eventItemID ~= pending.itemID then
+        return
+    end
+    if success == false then
+        self.lastCompletionItemCacheState = "event-failed"
+        self.pendingCompletionItem = nil
+        return
+    end
+    if not self.moduleEnabled or not self.immersionEnabled
+        or not self.completionActive or not self.presentationShown
+        or self.presentationGeneration ~= pending.generation
+        or self.lastQuestID ~= pending.questID
+    then
+        self.lastCompletionItemCacheState = "stale-completion"
+        self.pendingCompletionItem = nil
+        return
+    end
+
+    -- Resolve only ordinary item text for the same active completion.
+    local ok, name = pcall(GetItemInfo, pending.itemID)
+    if not ok or isSecret(name) then
+        self.lastCompletionItemCacheState = "event-read-unavailable"
+        self.pendingCompletionItem = nil
+        return
+    end
+    if type(name) ~= "string" or name == "" then
+        self.lastCompletionItemCacheState = "event-name-unavailable"
+        self.pendingCompletionItem = nil
+        return
+    end
+    if self.objectiveText and type(pending.suffix) == "string" then
+        self.objectiveText:SetText(
+            name .. " x" .. tostring(pending.quantity) .. pending.suffix
+        )
+        self.completionItemResolvedCount = self.completionItemResolvedCount + 1
+        self.lastCompletionRewardReason = "guaranteed-item-event"
+        self.lastCompletionRewardIdentified = true
+        self.lastCompletionItemCacheState = "resolved"
+    end
+    self.pendingCompletionItem = nil
 end
 
 function Dialogue:UpdatePageControls()
@@ -1210,6 +1306,13 @@ function Dialogue:GetDebugStatus()
         completionShownCount = self.completionShownCount,
         completionSkippedCount = self.completionSkippedCount,
         completionActive = self.completionActive == true,
+        itemInfoRegistered = self.eventRegistration.GET_ITEM_INFO_RECEIVED == true,
+        itemDataRegistered = self.eventRegistration.ITEM_DATA_LOAD_RESULT == true,
+        completionItemPending = self.pendingCompletionItem ~= nil,
+        completionItemSignals = self.completionItemSignals,
+        completionItemResolvedCount = self.completionItemResolvedCount,
+        completionItemRequests = self.completionItemRequests,
+        lastCompletionItemCacheState = self.lastCompletionItemCacheState,
         lastCompletionRewardReason = self.lastCompletionRewardReason,
         lastCompletionRewardIdentified = self.lastCompletionRewardIdentified == true,
         lastCompletionRewardMoney = self.lastCompletionRewardMoney,
@@ -1314,6 +1417,11 @@ function Dialogue:OnInitialize()
     self.completionShownCount = 0
     self.completionSkippedCount = 0
     self.completionActive = false
+    self.pendingCompletionItem = nil
+    self.completionItemSignals = 0
+    self.completionItemResolvedCount = 0
+    self.completionItemRequests = 0
+    self.lastCompletionItemCacheState = "not-observed"
     self.lastCompletionReason = "not-observed"
     self.lastCompletionRewardReason = "not-observed"
     self.lastCompletionRewardMoney = nil
@@ -1732,6 +1840,8 @@ function Dialogue:OnInitialize()
         "QUEST_DETAIL",
         "QUEST_PROGRESS",
         "QUEST_COMPLETE",
+        "GET_ITEM_INFO_RECEIVED",
+        "ITEM_DATA_LOAD_RESULT",
         "GOSSIP_CLOSED",
         "QUEST_ACCEPTED",
         "QUEST_FINISHED",
@@ -1754,7 +1864,7 @@ function Dialogue:OnInitialize()
 
     eventFrame:SetScript(
         "OnEvent",
-        function(_, event)
+        function(_, event, ...)
             if not self.moduleEnabled then
                 return
             end
@@ -1771,6 +1881,13 @@ function Dialogue:OnInitialize()
 
             if event == "QUEST_COMPLETE" then
                 self:HandleQuestComplete()
+                return
+            end
+
+            if event == "GET_ITEM_INFO_RECEIVED"
+                or event == "ITEM_DATA_LOAD_RESULT"
+            then
+                self:HandleCompletionItemData(select(1, ...), select(2, ...))
                 return
             end
 

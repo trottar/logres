@@ -2920,6 +2920,16 @@ local function runQuestDialogueCheck()
         tostring(debugStatus.lastCompletionRewardMoney),
         tostring(debugStatus.lastCompletionRewardMoneyReason)
     ))
+    emit(string.format(
+        "Logres questdialogue itemcache: CANDIDATE (eventRegistered=%s/%s pending=%s signals=%s resolved=%s requests=%s state=%s stock=retained)",
+        tostring(debugStatus.itemInfoRegistered),
+        tostring(debugStatus.itemDataRegistered),
+        tostring(debugStatus.completionItemPending),
+        tostring(debugStatus.completionItemSignals),
+        tostring(debugStatus.completionItemResolvedCount),
+        tostring(debugStatus.completionItemRequests),
+        tostring(debugStatus.lastCompletionItemCacheState)
+    ))
 end
 
 local function runQuestDialoguePreview()

@@ -1,16 +1,17 @@
 ---
 memory_schema: 1
-as_of: 2026-10-17
+as_of: 2026-10-18
 project: logres
 ---
 
 # Current State
 
 ## Active Objective
-Phase H — recover quest reward identity when the native reward API intermittently lacks an ordinary name, without fabricating items or claiming Blizzard's final quest action.
+Recover ordinary quest-completion item names after delayed item-data availability without taking Blizzard completion or reward-control ownership.
 ## Current Work Item
-**P0245 — bounded quest-item name cache fallback (RUNTIME UNVERIFIED).** Verified pushed P0244 `1ce1de1`, visual money PASS for quest 237 (7s, 1050 XP), but item name absent from Logres although native reward is Lesser Healing Potion x3. Probe reveals itemID=858 / quantity 3 with name empty and link nil; similar prior captures show intermittent availability. Try one guarded `GetItemInfo(itemID)` read only if the ordinary name is absent, keep stock-review fallback, all Blizzard quest controls, and existing cash/XP display. Evidence `docs/memory/evidence/P0245_QUEST_REWARD_ITEM_NAME_CACHE.md`.
+**P0246 — bounded event-driven completion item resolution (RUNTIME UNVERIFIED).** GitHub main P0245 `1bf3423` verified; user screenshot shows no improvement: fallback instead of Lesser Healing Potion x3 while XP/7s and stock Complete Quest work. Use the existing ordinary reward ID, one guarded data request and item-result events bound to the active quest/presentation generation; no polling, no claim mutation. Evidence `docs/memory/evidence/P0246_QUEST_ITEM_EVENT_CACHE_RESULT.md`.
 ## Verified State
+- **P0245 R1 PUSHED / ITEM VISUAL STILL FAILING:** GitHub main `1bf3423`; screenshot shows native Lesser Healing Potion x3 while Logres keeps item-review fallback, with 1050 XP/7s and Blizzard Complete Quest intact. Latest 0.0.145-dev load319 checkall complete; dialogue counters collected pre-interaction so one-shot cache outcome not established. P0246 event-driven recovery RUNTIME UNVERIFIED.
 - **P0244 SCOPED MONEY RUNTIME PASS; ITEM OPEN / INTERMITTENT:** main `1ce1de1`; user screenshot shows 7s, 1050 XP, native Complete Quest, but Logres item-review fallback while stock shows Lesser Healing Potion x3. Load318 probe captures itemID858/count3 with empty name/link and zero mutations; P0245 one-shot cache candidate remains UNVERIFIED.
 - **P0243 RUNTIME VISUAL ACCEPTED (SCOPED):** pushed `e8455bc`, screenshot confirms quest 237 Logres prose, item x3, XP 1050 and usable Blizzard Complete Quest. Missing **7 silver** in Logres; P0244 adds money candidate. Latest 0.0.143-dev load316 checkall PASS; completion dialogue counters sampled before event.
 - **P0243 CANDIDATE:** P0242 pushed `18b0fa0`, load 315 registered; user reports quest panel without Complete/rewards; natural quest 237 probe has ordinary guaranteed item and XP, but no post-event QuestDialogue check. Reward readout candidate only; R0 prewrite checker FAIL (empty footer expected), R1 corrected checker and full-suite prewrite gate; runtime UNVERIFIED.
@@ -35,13 +36,14 @@ Phase H — recover quest reward identity when the native reward API intermitten
 - QuestieDB remains optional for Logres as a whole; third-party data may miss hidden, patch-specific and phased quests. Redistribution/license unresolved; do not bundle it or claim CurseForge-managed dependency.
 
 ## Next Action
-Apply P0245, deploy and `/reload`; `/logres panel` → **F — Quest Experience → Quest Dialogue Check**, then **Phase 0 → Run All**. On a natural QUEST_COMPLETE, verify item name/quantity if available, XP and cash, and usable native Complete Quest. Record cache source reason `guaranteed-item-cache` only if actually observed. If metadata is still unavailable, fallback stays usable and the cache attempt is a negative result, not PASS. No travel solely to manufacture the quest. After this gate, audit user-clicked Complete/Claim separately; no new reward choice or gossip ownership.
+Apply P0246, deploy, `/reload`; `/logres panel` -> F — Quest Experience -> Quest Dialogue Check, then Phase 0 -> Run All. On naturally available completion, check post-event `questdialogue itemcache` registrations, requests, signals, resolved state and visual name/quantity versus native rewards. No artificial gameplay. If cache remains empty, capture exact state and preserve fallback. Claim, choices, and gossip remain stock-owned.
 ## Success Criteria
-Complete static suite PASS and no demonstrated regression to money, XP, narrative paging, or Blizzard Complete Quest. A naturally observed ordinary single-reward completion may use a nonsecret `GetItemInfo` name for a nonsecret bounded quest itemID, otherwise retains explicit stock-review fallback. No polling, mutation, secret-value inspection, unproven native suppression, or automatic quest completion. Cache fallback visual status is DEFERRED until observed.
+Existing P0244 XP, cash, narrative and visible stock Complete Quest remain unchanged. Only an ordinary name for the matching active quest/reward may replace Logres fallback after event; none of the source results may be secret/invalid. Missing API/event yields safe native-review fallback; no timers, polling, automatic claim/selection, protected-state access, or UI suppression. Full checker suite plus in-game checks are required, and item resolution is DEFERRED without a natural populated event.
 ## Do Not Reopen Without New Evidence
 Do not infer addon installation from one guessed filesystem path or the presence/absence of a Lua global alone. No hard QuestieDB dependency, package bundling, unknown CurseForge project ID, global quest ID scans on updates, guessed quest availability, invented coordinates or native pin scraping. Do not hide the Blizzard minimap, alter user-accepted waypoint/focused-quest bearings, or treat missing locations as PASS. Baked flavor must not be guessed from a Source-only indicator. Keep negative and deferred evidence explicit.
 
 ## Relevant References
+- `docs/memory/evidence/P0246_QUEST_ITEM_EVENT_CACHE_RESULT.md`
 - `docs/memory/evidence/P0245_QUEST_REWARD_ITEM_NAME_CACHE.md`
 - `docs/memory/evidence/P0244_QUEST_MONEY_AND_COMPLETION_VISUAL_ACCEPTANCE.md`
 - `docs/memory/evidence/P0243_QUEST_REWARD_VISIBILITY_AND_STOCK_FALLBACK.md`
