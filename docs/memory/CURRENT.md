@@ -10,9 +10,9 @@ project: logres
 Render dynamic quest-completion rewards as Logres-styled item portrait cards, including bounded multiple guaranteed and selectable items, while preserving Blizzard selection and claim controls.
 
 ## Current Work Item
-**P0249 — quest reward visual constructor repair (RUNTIME UNVERIFIED).** Verified main P0248 `cfd67be` and user-exported `0.0.148-dev`, loadCount 326: both synthetic quest reward previews FAILED with `Dialogue.lua:1258: attempt to call a nil value`, and the rewardvisual diagnostic showed zero cards. Source cause: `RewardVisual.New` returned a plain table unable to resolve `Visual:Reset` / `Visual:Present`. P0249 gives the instance a `{ __index = Visual }` metatable, adds a contract checker and preserves the recorded failures. P0248 is runtime **FAIL**, not accepted; P0249 still requires both in-client previews. Earlier missing-name issue remains INTERMITTENT/OPEN; live multiple rewards DEFERRED.
-
+**P0250 — document P0249 preview runtime acceptance (DOCS ONLY).** Verified pushed P0249 `aaee288`, `0.0.149-dev` load328 with Phase F single/multi reward previews both PASS and visually rendered; Quest Dialogue Check PASS in its limited scope. P0249 method-dispatch regression resolved for synthetic previews. The original P0248 runtime error remains a recorded failure; real guaranteed/choice reward and Blizzard claim interactions not observed in this checkpoint, and intermittent missing name remains OPEN. Await natural quest evidence or separately requested visual refinement; no gameplay travel requirement.
 ## Verified State
+- **P0249 PUSHED / PREVIEW RUNTIME PASS (SCOPED):** main `aaee288`, 0.0.149-dev load328 single and multi previews both PASS with item portraits, quantities and CHOICE labels; `questdialoguecheck` PASS (preview context). Natural quest/stock interaction parity DEFERRED. See `docs/memory/evidence/P0250_REWARD_PREVIEW_RUNTIME_ACCEPTANCE.md`.
 - **P0248 PUSHED / RUNTIME FAIL:** main `cfd67be`, `0.0.148-dev` load326: two reward preview commands each errored at `Dialogue.lua:1258` (nil method); no visual cards validated. P0249 constructor-method repair pending validation. See `docs/memory/evidence/P0249_REWARD_VISUAL_INSTANCE_FAILURE.md`.
 - **P0247 ordinary source P0248 baseline PASS (scoped):** main `0f2d605`, 0.0.147-dev/load324 screenshot and diagnostics show quest237 item x3 / XP1050 / 7s; `gate=name-ordinary` and `requests=0` is expected for the available name. Earlier missing reward name remains INTERMITTENT OPEN; P0248 portrait UI runtime UNVERIFIED.
 - **P0246 PUSHED; ITEM STILL MISSING / REQUESTS ZERO:** GitHub `9eb711f`; 0.0.146-dev load321 natural QUEST_COMPLETE=1 shown=1, `guaranteed-item-unavailable`; P0246 registered both item events, but `requests=0 signals=0 resolved=0 pending=false`. XP1050/7s and native Complete Quest work. Source gate remains UNKNOWN; P0247 diagnostic RUNTIME UNVERIFIED.
@@ -41,8 +41,7 @@ Render dynamic quest-completion rewards as Logres-styled item portrait cards, in
 - QuestieDB remains optional for Logres as a whole; third-party data may miss hidden, patch-specific and phased quests. Redistribution/license unresolved; do not bundle it or claim CurseForge-managed dependency.
 
 ## Next Action
-After applying and pushing P0248, deploy to WoW, `/reload`, `/logres panel` → **F — Quest Experience → Reward Preview: Single** then **Reward Preview: Multiple**; check portraits, quantities, CHOICE labels and XP/7s footer, no clipped layout; Phase F Quest Dialogue Check (`rewardvisual cards/overflow`) then Phase 0 Run All. Export diagnostics with `python3 tools/export_panel_diagnostics.py` after `/reload` and screenshot. Natural quest reward validation when available; do not demand a new multi-item quest.
-
+P0249 is accepted only for synthetic preview rendering. Complete this P0250 docs-only checkpoint, then observe the next naturally available quest turn-in for real portrait/icon/count/XP/money parity and stock claim/choice behavior. Do not demand contrived gameplay. An unobstructed screenshot may help future polish, but the diagnostics-panel overlap is not by itself a clipping defect; do not change geometry speculatively. Preserve the earlier intermittent name issue OPEN and live multi-choice proof DEFERRED.
 ## Success Criteria
 Static suite and in-client preview clean with no Lua/taint/protected/secret errors. No fixed quest item mappings. Dynamic guaranteed and selectable items use ordinary guarded `GetQuestItemInfo` icon, name, count; if missing/secret/overflow, retain fail-open Blizzard rewards. The two-column reward cards do not overlap prose/paging, and Blizzard claim and choice controls remain actionable. Multiple-item natural source parity remains DEFERRED if no relevant quest; no claim of completion until observed.
 
@@ -50,6 +49,7 @@ Static suite and in-client preview clean with no Lua/taint/protected/secret erro
 Do not infer addon installation from one guessed filesystem path or the presence/absence of a Lua global alone. No hard QuestieDB dependency, package bundling, unknown CurseForge project ID, global quest ID scans on updates, guessed quest availability, invented coordinates or native pin scraping. Do not hide the Blizzard minimap, alter user-accepted waypoint/focused-quest bearings, or treat missing locations as PASS. Baked flavor must not be guessed from a Source-only indicator. Keep negative and deferred evidence explicit.
 
 ## Relevant References
+- `docs/memory/evidence/P0250_REWARD_PREVIEW_RUNTIME_ACCEPTANCE.md`
 - `docs/memory/evidence/P0249_REWARD_VISUAL_INSTANCE_FAILURE.md`
 - `docs/memory/evidence/P0248_REWARD_CARD_PRESENTATION.md`
 - `docs/memory/evidence/P0247_REWARD_SOURCE_GATE_DIAGNOSTIC.md`

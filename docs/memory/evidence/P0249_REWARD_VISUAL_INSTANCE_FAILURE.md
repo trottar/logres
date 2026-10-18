@@ -16,3 +16,7 @@ P0248's `RewardVisual.New(root, objectiveText)` returned a new plain table conta
 ## P0249 corrective policy
 
 Change only the constructor to use `setmetatable(instance, { __index = Visual })`, retaining all existing fields. Add a P0249 checker guarding instance lookup and a standalone Lua-stub method-dispatch test in patch preparation. Do not modify quest sources, protected Blizzard UI, selection/claim behavior, or add polling. The next natural quest completion may test the real portrait path, but no forced travel is required. Runtime acceptance remains pending until both synthetic previews succeed in client. Previously unresolved missing-name branch and untested live multi-choice stay OPEN.
+
+## P0250 follow-up runtime observation
+
+P0249 `aaee288` was deployed; user-provided `0.0.149-dev`, load328 diagnostics show both `/logres questrewardpreview single` and `multi` PASS and two screenshots show the actual rendered item cards. This closes **P0249 synthetic preview method-dispatch validation**, not natural guaranteed or selectable quest reward parity. The original P0248 runtime error remains documented above; see `docs/memory/evidence/P0250_REWARD_PREVIEW_RUNTIME_ACCEPTANCE.md`.

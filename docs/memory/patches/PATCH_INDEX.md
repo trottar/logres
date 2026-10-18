@@ -2,7 +2,8 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
-| P0249 | 2026-10-18 | PREPARED / RUNTIME UNVERIFIED | Correct RewardVisual.New instance method inheritance, add regression guard, record P0248 runtime failure. |
+| P0250 | 2026-10-18 | DOCS-ONLY / PREPARED | Record pushed P0249 preview runtime PASS, keep natural quest and historical errors OPEN/DEFERRED. |
+| P0249 | 2026-10-18 | PUSHED (aaee288) / PREVIEW RUNTIME PASS (SCOPED) | Single and multiple synthetic reward previews rendered without nil-method errors; natural reward source/choice/claim still unverified. |
 | P0248 R2 | 2026-10-18 | PUSHED (cfd67be) / RUNTIME FAIL | Two preview commands error at Dialogue.lua:1258 (missing instance method); cards=0, stock retained. Earlier R0/R1 prewrite failures preserved. |
 | P0247 | 2026-10-18 | PREPARED / RUNTIME UNVERIFIED | Read-only diagnostic for the source gate preventing P0246 item data request. |
 | P0246 | 2026-10-18 | INSTALLED / PUSHED (9eb711f); ITEM NOT RESOLVED, REQUESTS=0 | Item-data events registered but request path never entered; natural quest 237 still shows fallback. |
