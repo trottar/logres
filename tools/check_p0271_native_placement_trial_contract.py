@@ -22,7 +22,7 @@ for s in ('Logres.NPCNativeServicePlacementTrial = Trial','function Trial.Toggle
  'set(frame, "CENTER", UIParent, "CENTER", 0, 0)',
  'Trial.Restore("native-hide")','PLAYER_REGEN_ENABLED',
  'function Trial.GetAudit()', 'nativeTransactions = 0',
- 'styling = "unchanged"','scope = "opt-in-merchant-trainer-only"'):
+ 'styling = "unchanged"','scope = "opt-in-gossip-merchant-trainer-only"'):
  need(s in p,'placement missing '+s)
 for f in ('BuyMerchantItem(', 'RepairAllItems(', 'SellCursorItem(',
  'TakeTaxiNode(', 'BuyTrainerService(', 'GetMerchantItemInfo(',

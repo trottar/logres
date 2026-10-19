@@ -5245,7 +5245,7 @@ local function handleCommand(message)
             or reason == "move-failed-restoration-pending"
             or reason == "move-rejected-restored")
         emit(string.format(
-            "Logres native placement: %s (result=%s active=%s starts=%s restores=%s autoRestores=%s pending=%s failures=%s styling=%s scope=%s nativeTransactions=%s autoEnabled=%s autoStarts=%s autoDeferred=%s autoLast=%s)",
+            "Logres native placement: %s (result=%s active=%s starts=%s restores=%s autoRestores=%s pending=%s failures=%s styling=%s scope=%s nativeTransactions=%s autoEnabled=%s autoStarts=%s autoDeferred=%s autoLast=%s gossipStarts=%s gossipRestores=%s)",
             ok and "PASS" or (failed and "FAIL" or "DEFERRED"), tostring(reason),
             tostring(report.active), tostring(report.starts),
             tostring(report.restores), tostring(report.autoRestores),
@@ -5253,7 +5253,8 @@ local function handleCommand(message)
             tostring(report.styling), tostring(report.scope),
             tostring(report.nativeTransactions), tostring(report.autoEnabled),
             tostring(report.autoStarts), tostring(report.autoDeferred),
-            tostring(report.autoLast)
+            tostring(report.autoLast),
+            tostring(report.gossipStarts), tostring(report.gossipRestores)
         ))
         return
     end

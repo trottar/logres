@@ -1,4 +1,4 @@
--- P0271/P0272: manually reversible native placement plus OPT-IN automatic handoff.
+-- P0271-P0273: guarded native service placement, opt-in gossip continuity.
 -- D-047: Blizzard owns native controls, transaction logic and camera.
 -- This is NOT an automatic skin/ownership/suppression/transaction layer.
 local _, Logres = ...
@@ -6,6 +6,7 @@ local Trial = {}
 Logres.NPCNativeServicePlacementTrial = Trial
 
 local CANDIDATES = {
+    [3] = { key = "gossip", name = "GossipFrame" },
     [5] = { key = "merchant", name = "MerchantFrame" },
     [7] = { key = "trainer", name = "ClassTrainerFrame" },
 }
@@ -13,6 +14,7 @@ local active
 local hooks = {}
 local restorePending = false
 local starts, restores, failures, autoRestores = 0, 0, 0, 0
+local gossipStarts, gossipRestores = 0, 0
 local lastResult = "not-attempted"
 local retryFrame
 local autoEnabled = false
@@ -97,6 +99,7 @@ function Trial.Restore(reason)
         return finish("restoration-failed-stock-still-accessible", true)
     end
     if reason == "native-hide" then autoRestores = autoRestores + 1 end
+    if active.key == "gossip" then gossipRestores = gossipRestores + 1 end
     active = nil
     restorePending = false
     if retryFrame then retryFrame:UnregisterEvent("PLAYER_REGEN_ENABLED") end
@@ -148,8 +151,8 @@ function Trial.Toggle()
         if not hooked then return finish("native-hide-hook-rejected", false) end
         hooks[candidate.key] = true
     end
-    -- Full native frame + every native child/input stays intact. Only whole-
-    -- frame anchors move, on an explicit developer TEST action, out of combat.
+    -- Full stock frame and all Blizzard controls stay intact. One guarded
+    -- whole-frame anchor change per explicit test or opted-in NPC lifecycle.
     local moved = pcall(function()
         clear(frame)
         set(frame, "CENTER", UIParent, "CENTER", 0, 0)
@@ -165,11 +168,12 @@ function Trial.Toggle()
     end
     active = { frame = frame, anchors = points, key = candidate.key }
     starts = starts + 1
+    if candidate.key == "gossip" then gossipStarts = gossipStarts + 1 end
     lastResult = "trial-centered-" .. candidate.key
     return true, lastResult
 end
 
--- P0272: automatic layout is deliberately OFF until an explicit user TEST
+-- P0272/P0273: automatic layout is deliberately OFF until an explicit user TEST
 -- action. This reuses Trial.Toggle's complete capture, native safety gates and
 -- native OnHide restoration. Frame data/children and transactions stay Blizzard.
 local function ensureAutoOnShow(candidate)
@@ -232,7 +236,7 @@ function Trial.SetAuto(enabled)
     if autoEnabled then return true, "auto-already-on" end
     if not unlocked() then return false, "combat-arm-deferred" end
     autoEnabled = true
-    -- Hook existing ordinary native frames now, including an idle merchant.
+    -- Hook existing ordinary stock frames, including gossip, when available.
     -- Late-loaded frames are hooked only if a real state transition observes
     -- them, never via polling or periodic presentation reassertion.
     for _, candidate in pairs(CANDIDATES) do
@@ -259,7 +263,8 @@ function Trial.GetAudit()
         starts = starts, restores = restores, failures = failures,
         autoRestores = autoRestores, pending = restorePending,
         result = lastResult, nativeTransactions = 0,
-        styling = "unchanged", scope = "opt-in-merchant-trainer-only",
+        styling = "unchanged", scope = "opt-in-gossip-merchant-trainer-only",
+        gossipStarts = gossipStarts, gossipRestores = gossipRestores,
         autoEnabled = autoEnabled, autoStarts = autoStarts,
         autoDeferred = autoDeferred, autoLast = autoLast }
 end

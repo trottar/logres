@@ -2,7 +2,8 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
-| P0272 | 2026-10-19 | PREPARED / RUNTIME UNVERIFIED | Opt-in automatic native merchant/trainer placement, existing guarded restoration and event-only OnShow/state; H toggle reused; flight/bank/auction/camera untouched. |
+| P0273 | 2026-10-19 | PREPARED / CLIENT UNVERIFIED | Opt-in native gossip placement matches merchant/trainer center, restores on close/OFF; recovers missing P0272 checker/records, does not fabricate P0272 manifest or WSL static PASS. |
+| P0272 | 2026-10-19 | SOURCE PUSHED c5ef384 (MISLABELED P0271) / SCOPED CLIENT PASS; WSL GATE UNVERIFIED | User 0.0.170-dev AUTO tests: starts=2 restores=2 failures=0; screenshot reveals left gossip → centered trainer discontinuity. Original checker/records absent on main, reconstructed by P0273; original P0272 manifest absent, not fabricated. |
 | P0271 | 2026-10-19 | PREPARED / RUNTIME UNVERIFIED | Explicit reversible merchant/trainer native center TEST + close/regen restoration; TaxiFrame read-only alias; D-047 stock transactions/camera retained. |
 | P0270 | 2026-10-19 | PREPARED / RUNTIME UNVERIFIED | D-047 guarded native stock frame metadata audit across eight services; no native styling, position or transactions; on-demand H panel. |
 | P0269 | 2026-10-19 | PREPARED / RUNTIME UNVERIFIED | Restore D-047: retire speculative service catalog/confirm previews, preserve native transaction ownership; add read-only native-service policy and H check; styling/placement deferred to safe proof. |
