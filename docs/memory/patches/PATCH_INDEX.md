@@ -2,7 +2,8 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
-| P0262 | 2026-10-18 | R1 PREPARED / RUNTIME UNVERIFIED | Shared narrative pagination with source-aware P0255 layout checker; R0 static mismatch recorded; camera/native actions frozen. |
+| P0263 | 2026-10-18 | PREPARED / RUNTIME UNVERIFIED | N3 shared Accept/Decline/Complete art, hover and press view; original Dialogue click routing, source, camera and native restoration frozen. |
+| P0262 | 2026-10-18 | PUSHED (36d43f6) / SCOPED VISUAL PASS | Shared narrative pagination, five previews and pager arrows visually accepted; preview-only controls; R0 static failure preserved; live claims deferred. |
 | P0261 | 2026-10-18 | PUSHED (b439d4f) / SCOPED PREVIEW VISUAL PASS | N1 shared source-independent narrative/decision model, live offer + long/short/generic previews in same original renderer; no camera/action changes. |
 | P0260 | 2026-10-18 | PUSHED (1251434) / SOURCE AUDIT | Code-level modularity map + all 54 provisional NPC variants, camera-frozen regression policy and N1-N6 extraction sequence; no runtime changes. |
 | P0259 | 2026-10-18 | PUSHED (669ec77) / DOCS-ONLY | D-047 modularity-first all-NPC program, DynamicCam/NPC-session continuity, selective native/hybrid/full integration and deferred bank/auction feasibility. |

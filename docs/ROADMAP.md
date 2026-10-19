@@ -1,3 +1,7 @@
+## P0263 N3 — shared decision-button visual extraction (2026-10-18)
+
+GitHub `main` `36d43f6` verified P0262 pushed. User confirms long/short/generic narrative and Single/Multiple reward preview appearances, bidirectional page navigation and final-page action placement all expected. `0.0.160-dev` Quest Dialogue/Offer Controls/Run All exports PASS, with action click `preview-only` and no production probe call. **P0262 SCOPED VISUAL PASS**, not live quest claiming or all gameplay/camera contexts. P0263 relocates the ORIGINAL two shared Accept/Decline/Complete visual factory and cosmetic color/hover/press callbacks into `UI/DecisionVisual.lua`, with no new UI elements. `Dialogue.lua` continues to own all `OnClick` and action routing plus existing page geometry. No camera/native controllers/QuestieDB changed. N3 candidate needs full static and P-tab visual checks; generic option action fixtures and N4 integration remain pending. P0262 R0 static-checker failure remains historical. Evidence: `docs/memory/evidence/P0263_N3_DECISION_VISUAL_EXTRACTION.md`.
+
 ## P0262 N2 — shared narrative pagination view extraction (2026-10-18)
 
 **R0 STATIC FAIL / NO TRACKED WRITE:** the P0255 quest action checker still required `-115,78` and `-115,17` page-indicator positions inside Dialogue.lua after they were moved verbatim into the shared painter. R1 follows both positions and ownership gates into the actual renderer; other P0255 action and stock safety checks retained.
