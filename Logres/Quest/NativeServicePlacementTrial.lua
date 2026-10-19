@@ -1,4 +1,4 @@
--- P0271-P0273: guarded native service placement, opt-in gossip continuity.
+-- P0271-P0274: guarded native placement + addon-owned merchant/trainer ornament; gossip stock fallback.
 -- D-047: Blizzard owns native controls, transaction logic and camera.
 -- This is NOT an automatic skin/ownership/suppression/transaction layer.
 local _, Logres = ...
@@ -83,6 +83,10 @@ local function setAnchors(frame, points)
 end
 
 function Trial.Restore(reason)
+    -- Remove all addon decoration first, even if native geometry must defer.
+    if Logres.NPCNativeServiceAccent then
+        pcall(function() Logres.NPCNativeServiceAccent.Hide() end)
+    end
     if not active then
         restorePending = false
         if retryFrame then retryFrame:UnregisterEvent("PLAYER_REGEN_ENABLED") end
@@ -167,6 +171,10 @@ function Trial.Toggle()
         return finish("move-rejected-restored", true)
     end
     active = { frame = frame, anchors = points, key = candidate.key }
+    -- Fail open: artwork errors cannot revoke native service placement or input.
+    if Logres.NPCNativeServiceAccent then
+        pcall(function() Logres.NPCNativeServiceAccent.Show(frame, candidate.key) end)
+    end
     starts = starts + 1
     if candidate.key == "gossip" then gossipStarts = gossipStarts + 1 end
     lastResult = "trial-centered-" .. candidate.key
@@ -259,7 +267,8 @@ Logres:SubscribeState(function(state)
 end)
 
 function Trial.GetAudit()
-    return { active = active and active.key or "none",
+    return { accent = Logres.NPCNativeServiceAccent.GetAudit(),
+        active = active and active.key or "none",
         starts = starts, restores = restores, failures = failures,
         autoRestores = autoRestores, pending = restorePending,
         result = lastResult, nativeTransactions = 0,

@@ -36,7 +36,7 @@ need('"TaxiFrame"' in a and '"FlightMapFrame"' in a,
  'flight candidate aliases retained')
 need('function Probe.Read()' in a and 'placementAuthorization = "none"' in a,
  'metadata probe still does not authorize mutation')
-need('Quest\\NativeServiceCapabilities.lua\nQuest\\NativeServicePlacementTrial.lua\nQuest\\NativeServicePolicy.lua' in t,
+need('Quest\\NativeServiceCapabilities.lua\nQuest\\NativeServiceAccent.lua\nQuest\\NativeServicePlacementTrial.lua\nQuest\\NativeServicePolicy.lua' in t,
  'native capability and trial TOC ordering')
 need('if command == "nativeserviceplacement" then' in c,
  'command routed')

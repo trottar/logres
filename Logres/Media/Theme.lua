@@ -236,6 +236,13 @@ theme.healthTunnel = {
 }
 
 
+theme.nativeServiceAccent = {
+    -- Additive ornament for stock merchant/trainer placement only.
+    -- Gossip will use native fallback until the guarded live Logres dialogue adapter.
+    rule = { 0.67, 0.47, 0.23, 0.90 },
+    seal = { 0.90, 0.71, 0.38, 0.96 },
+}
+
 theme.questDialogue = {
     width = 640,
     height = 320,
