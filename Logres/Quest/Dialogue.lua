@@ -1554,7 +1554,14 @@ function Dialogue:ShowOptionPreview(mode)
     if not self.immersionEnabled then return false, "immersion-off" end
     if self.completionActive then return false, "active-completion" end
     if not self.optionSession then return false, "option-session-unavailable" end
-    local model, reason = Logres.NPCOptionModel.Preview(mode)
+    local model, reason
+    if mode == "merchant" or mode == "trainer" or mode == "flight"
+        or mode == "unavailable"
+    then
+        model, reason = Logres.NPCServiceCatalogModel.Preview(mode)
+    else
+        model, reason = Logres.NPCOptionModel.Preview(mode)
+    end
     if not model then return false, reason end
     self.previewCount = self.previewCount + 1
     return self.optionSession:Start(mode, model)
@@ -1816,7 +1823,7 @@ function Dialogue:OnInitialize()
     -- protected stock restoration paths intact; no additional quest action.
     local goodbyeButton = CreateFrame("Button", nil, root)
     goodbyeButton:SetSize(78, 24)
-    goodbyeButton:SetPoint("TOPRIGHT", root, "TOPRIGHT", -21, -12)
+    goodbyeButton:SetPoint("TOPRIGHT", root, "TOPRIGHT", -45, -12)
     goodbyeButton:RegisterForClicks("LeftButtonUp")
     local goodbyeText = goodbyeButton:CreateFontString(
         nil, "OVERLAY", "GameFontHighlightSmall"

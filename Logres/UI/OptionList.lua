@@ -90,7 +90,7 @@ function Visual.New(root)
     -- Do not anchor Back to NAV_TOP: that overlaps the narrative 1 / N rail.
     self.back:ClearAllPoints()
     self.back:SetSize(78, 24)
-    self.back:SetPoint("TOPLEFT", frame, "TOPLEFT", 21, -12)
+    self.back:SetPoint("TOPLEFT", frame, "TOPLEFT", 45, -12)
     local backRule = self.back:CreateTexture(nil, "ARTWORK")
     backRule:SetTexture(GOLD)
     backRule:SetHeight(1)

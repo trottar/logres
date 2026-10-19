@@ -2961,6 +2961,12 @@ local function runQuestDialogueCheck()
             tostring(options.lastResult)
         ))
     end
+    if options and options.family then
+        emit(string.format(
+            "Logres questdialogue npcservice: AUDIT (family=%s previewConfirms=%s nativeActions=0)",
+            tostring(options.family), tostring(options.previewConfirmCount)
+        ))
+    end
     local completion = debugStatus.completionControl
     if completion then
         emit(string.format(
@@ -4867,7 +4873,7 @@ local function printHelp()
     emit("  /logres questdialoguecheck")
     emit("  /logres questdialoguepreview")
     emit("  /logres npcgoodbye  (close current Logres NPC panel)")
-    emit("  /logres npcoptionpreview [branching|services|overflow|locked]")
+    emit("  /logres npcoptionpreview [branching|services|overflow|locked|merchant|trainer|flight|unavailable]")
     emit("  /logres questoffercontrolscheck")
     emit("  /logres questofferstocksuppressioncheck")
     emit("  /logres questinteractionprobe")
@@ -5232,10 +5238,12 @@ local function handleCommand(message)
     if command == "npcoptionpreview" then
         if argument == "branching" or argument == "services"
             or argument == "overflow" or argument == "locked"
+            or argument == "merchant" or argument == "trainer"
+            or argument == "flight" or argument == "unavailable"
         then
             Logres:RunNPCOptionPreview(argument)
         else
-            emit("Usage: /logres npcoptionpreview [branching|services|overflow|locked]")
+            emit("Usage: /logres npcoptionpreview [branching|services|overflow|locked|merchant|trainer|flight|unavailable]")
         end
         return
     end
@@ -5755,6 +5763,18 @@ Logres:RegisterDevPanelAction(
     "NPC Choices: Locked",
     "npcoptionpreview locked",
     "P"
+)
+Logres:RegisterDevPanelAction(
+    "npcCatalogMerchant", "NPC Catalog: Merchant", "npcoptionpreview merchant", "P"
+)
+Logres:RegisterDevPanelAction(
+    "npcCatalogTrainer", "NPC Catalog: Trainer", "npcoptionpreview trainer", "P"
+)
+Logres:RegisterDevPanelAction(
+    "npcCatalogFlight", "NPC Catalog: Flight Routes", "npcoptionpreview flight", "P"
+)
+Logres:RegisterDevPanelAction(
+    "npcCatalogUnavailable", "NPC Catalog: Unavailable", "npcoptionpreview unavailable", "P"
 )
 Logres:RegisterDevPanelAction(
     "layoutCheck",

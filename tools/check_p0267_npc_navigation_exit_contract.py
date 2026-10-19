@@ -16,7 +16,7 @@ def req(cond,msg):
 for fragment in (
  'self.back:ClearAllPoints()',
  'self.back:SetSize(78, 24)',
- 'self.back:SetPoint("TOPLEFT", frame, "TOPLEFT", 21, -12)',
+ 'self.back:SetPoint("TOPLEFT", frame, "TOPLEFT", 45, -12)',
  'self.back:SetShown(self.canBack == true)',
  'self.back:SetScript("OnEnter", function()',
  'self.back:SetScript("OnLeave", function()',
@@ -29,15 +29,15 @@ for fragment in (
  'local PANEL_HEIGHT = 467',
  'slot:SetPoint("TOPLEFT", frame, "TOPLEFT",',
 ):req(fragment in V,'view required '+fragment)
-req(V.count('self.back:SetPoint("TOPLEFT", frame, "TOPLEFT", 21, -12)')==1,
+req(V.count('self.back:SetPoint("TOPLEFT", frame, "TOPLEFT", 45, -12)')==1,
     'exactly one header Back anchor')
 # The former bottom-center Back sat on top of the NarrativePages central 1 / N
 # indicator. The new Back and Goodbye are mutually non-overlapping, each at
 # its own header edge (640px-wide panel, both 78px-wide, 21px inset).
-width=640;size=78;inset=21
+width=640;size=78;inset=45
 req((inset+size) < (width-size-inset), 'header buttons collide')
 req('goodbyeButton:SetSize(78, 24)' in D and
-    'goodbyeButton:SetPoint("TOPRIGHT", root, "TOPRIGHT", -21, -12)' in D,
+    'goodbyeButton:SetPoint("TOPRIGHT", root, "TOPRIGHT", -45, -12)' in D,
     'universal Goodbye remains at matching right-header anchor')
 req('Logres.NPCNarrativePages.Paint(' in D and
     'function Dialogue:UpdatePageControls()' in D,
