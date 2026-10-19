@@ -8,6 +8,7 @@ function Session.New(dialogue, visual)
     return setmetatable({ dialogue = dialogue, visual = visual,
         active = false, mode = nil, nodeKey = nil, optionPage = 1,
         history = {}, clicks = 0, branches = 0, backCount = 0,
+        rootReturns = 0, goodbyes = 0,
         pageMoves = 0, blocked = 0, lastResult = "inactive" },
         { __index = Session })
 end
@@ -91,10 +92,33 @@ end
 function Session:Back()
     if not self:Gate() or #self.history == 0 then return false end
     local parent = table.remove(self.history)
+    local previousNode, previousPage = self.nodeKey, self.optionPage
     self.nodeKey, self.optionPage = parent.node, parent.page
+    local ok = self:Render()
+    if not ok then
+        self.nodeKey, self.optionPage = previousNode, previousPage
+        self.history[#self.history + 1] = parent
+        self.lastResult = "back-render-failed"
+        return false
+    end
     self.backCount = self.backCount + 1
-    self:Render()
+    if self.nodeKey == self.model.start then
+        self.rootReturns = self.rootReturns + 1
+    end
+    self.lastResult = self.nodeKey == self.model.start and "root-restored" or "back-shown"
     return true
+end
+
+function Session:Goodbye()
+    if not self:Gate() then
+        self.blocked = self.blocked + 1
+        return false, "inactive-option-preview"
+    end
+    self.goodbyes = self.goodbyes + 1
+    -- Dialogue:HidePresentation restores native quest/offer ownership first.
+    self.dialogue:HidePresentation("goodbye")
+    self.lastResult = "goodbye"
+    return true, "closed"
 end
 
 function Session:MovePage(delta)
@@ -119,7 +143,9 @@ function Session:Debug()
     return { active = self.active, mode = self.mode,
         node = self.nodeKey, optionPage = self.optionPage,
         depth = #self.history, clicks = self.clicks, branches = self.branches,
-        backs = self.backCount, pageMoves = self.pageMoves,
+        backs = self.backCount, rootReturns = self.rootReturns,
+        goodbyes = self.goodbyes, backVisible = self.visual.back:IsShown(),
+        pageMoves = self.pageMoves,
         blocked = self.blocked, lastResult = self.lastResult,
         nativeActions = 0 }
 end

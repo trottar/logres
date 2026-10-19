@@ -5,6 +5,16 @@ local Visual = {}
 Logres.NPCOptionList = Visual
 local GOLD = "Interface\\Buttons\\WHITE8x8"
 local PAGE_SIZE = 6
+local ROW_TOP = 233
+local ROW_PITCH = 43
+local SLOT_HEIGHT = 34
+local PAGER_TOP = 391
+local NAV_TOP = 423
+local PANEL_HEIGHT = 467
+-- Last row ends at 353; pager at 391; nav ends at 451.
+assert(ROW_TOP + 2 * ROW_PITCH + SLOT_HEIGHT + 24 <= PAGER_TOP)
+assert(PAGER_TOP + 24 <= NAV_TOP)
+assert(NAV_TOP + 28 + 12 <= PANEL_HEIGHT)
 
 function Visual.New(root)
     local self = setmetatable({ root = root, slots = {}, currentOptions = {},
@@ -18,7 +28,7 @@ function Visual.New(root)
         local slot = CreateFrame("Button", nil, frame)
         slot:SetSize(266, 34)
         slot:SetPoint("TOPLEFT", frame, "TOPLEFT",
-            46 + ((i - 1) % 2) * 278, -233 - math.floor((i - 1) / 2) * 43)
+            46 + ((i - 1) % 2) * 278, -ROW_TOP - math.floor((i - 1) / 2) * ROW_PITCH)
         slot:RegisterForClicks("LeftButtonUp")
         local wash = slot:CreateTexture(nil, "BACKGROUND")
         wash:SetAllPoints(slot)
@@ -53,7 +63,7 @@ function Visual.New(root)
     local function navigation(label, x, callback)
         local button = CreateFrame("Button", nil, frame)
         button:SetSize(125, 28)
-        button:SetPoint("TOP", frame, "TOP", x, -373)
+        button:SetPoint("TOP", frame, "TOP", x, -NAV_TOP)
         button:RegisterForClicks("LeftButtonUp")
         local text = button:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
         text:SetAllPoints(button)
@@ -75,7 +85,7 @@ function Visual.New(root)
         return self.onBack and self.onBack()
     end)
     local pager = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-    pager:SetPoint("TOP", frame, "TOP", 0, -351)
+    pager:SetPoint("TOP", frame, "TOP", 0, -PAGER_TOP)
     pager:SetTextColor(0.72, 0.61, 0.42, 1)
     pager:Hide()
     self.pager = pager
@@ -97,9 +107,11 @@ end
 function Visual:Clear()
     self.active = false
     self.onChoose, self.onBack, self.onPage = nil, nil, nil
+    self.canBack, self.totalPages = false, 1
     self.currentOptions = {}
     for i = 1, PAGE_SIZE do
         self.slots[i].optionEnabled = false
+        self.slots[i].optionVisible = false
         self.slots[i]:EnableMouse(false)
         self.slots[i]:Hide()
     end
@@ -115,13 +127,16 @@ function Visual:Present(options, page, canBack, callbacks)
     self.active = true
     self.currentOptions = options
     self.page = page
+    self.canBack = canBack == true
     self.onChoose, self.onBack, self.onPage = callbacks.choose, callbacks.back, callbacks.page
     local total = math.max(1, math.ceil(#options / PAGE_SIZE))
+    self.totalPages = total
     if page < 1 or page > total then self:Clear(); return false end
     local offset = (page - 1) * PAGE_SIZE
     for i = 1, PAGE_SIZE do
         local option = options[offset + i]
         local slot = self.slots[i]
+        slot.optionVisible = option ~= nil
         if option then
             slot.optionIndex = offset + i
             slot.optionEnabled = option.enabled ~= false
@@ -147,6 +162,20 @@ function Visual:Present(options, page, canBack, callbacks)
 end
 
 function Visual:SetPageVisible(show)
-    if self.active then self.frame:SetShown(show == true) end
+    if not self.active then return end
+    local showChoices = show == true
+    for i = 1, PAGE_SIZE do
+        local slot = self.slots[i]
+        local visible = showChoices and slot.optionVisible == true
+        slot:SetShown(visible)
+        slot:EnableMouse(visible and slot.optionEnabled == true)
+    end
+    self.pager:SetShown(showChoices and self.totalPages > 1)
+    self.previous:SetShown(showChoices and self.page > 1)
+    self.next:SetShown(showChoices and self.page < self.totalPages)
+    -- Back is a navigation escape, not an NPC option. It stays visible
+    -- during long narratives; the option list itself waits for final page.
+    self.back:SetShown(self.canBack == true)
+    self.frame:Show()
 end
 return Visual

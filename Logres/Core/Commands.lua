@@ -2945,6 +2945,10 @@ local function runQuestDialogueCheck()
         tostring(debugStatus.rewardPreviewSelected),
         tostring(debugStatus.rewardPreviewChoiceState)
     ))
+    emit(string.format(
+        "Logres questdialogue goodbye: AUDIT (clicks=%s)",
+        tostring(debugStatus.goodbyeClicks)
+    ))
     local options = debugStatus.optionSession
     if options then
         emit(string.format(
@@ -4862,6 +4866,7 @@ local function printHelp()
     emit("  /logres activequest [on|off|toggle]")
     emit("  /logres questdialoguecheck")
     emit("  /logres questdialoguepreview")
+    emit("  /logres npcgoodbye  (close current Logres NPC panel)")
     emit("  /logres npcoptionpreview [branching|services|overflow|locked]")
     emit("  /logres questoffercontrolscheck")
     emit("  /logres questofferstocksuppressioncheck")
@@ -5213,6 +5218,14 @@ local function handleCommand(message)
         else
             emit("Usage: /logres questrewardpreview [single|multi]")
         end
+        return
+    end
+
+    if command == "npcgoodbye" then
+        local dialogue = Logres:GetModule("QuestDialogue")
+        local ok, reason = dialogue:Goodbye()
+        emit(string.format("Logres npcgoodbye: %s (state=%s)",
+            ok and "PASS" or "FAIL", tostring(reason)))
         return
     end
 

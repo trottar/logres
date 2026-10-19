@@ -459,6 +459,20 @@ function Dialogue:HidePresentation(reason)
     end
 end
 
+-- P0266: the same Goodbye action is visible on every narrative/reward/NPC
+-- option presentation. It always hands control back to native stock first.
+function Dialogue:Goodbye()
+    if not self.moduleEnabled or not self.presentationShown then
+        return false, "no-presentation"
+    end
+    self.goodbyeClicks = self.goodbyeClicks + 1
+    if self.optionSession and self.optionSession.active then
+        return self.optionSession:Goodbye()
+    end
+    self:HidePresentation("goodbye")
+    return true, "closed"
+end
+
 function Dialogue:ClearFailure(
     reason,
     errorText,
@@ -1589,6 +1603,7 @@ function Dialogue:GetDebugStatus()
         completionSkippedCount = self.completionSkippedCount,
         completionActive = self.completionActive == true,
         optionSession = self.optionSession and self.optionSession:Debug(),
+        goodbyeClicks = self.goodbyeClicks,
         completionRewardCards = #self.completionRewardCards,
         completionRewardOverflow = self.completionRewardOverflow == true,
         rewardPreviewChoiceCount = self.rewardPreviewChoiceCount,
@@ -1715,6 +1730,7 @@ function Dialogue:OnInitialize()
     self.completionActive = false
     self.rewardPreviewChoiceCount = 0
     self.rewardPreviewChoiceClicks = 0
+    self.goodbyeClicks = 0
     self.rewardPreviewSelected = nil
     self.rewardPreviewChoiceState = "not-observed"
     self.activeCompletion = nil
@@ -1795,6 +1811,35 @@ function Dialogue:OnInitialize()
     root:SetFrameStrata("HIGH")
     root:EnableMouse(false)
     root:Hide()
+
+    -- Independent upper-corner dismissal. Keep original Accept/Decline and
+    -- protected stock restoration paths intact; no additional quest action.
+    local goodbyeButton = CreateFrame("Button", nil, root)
+    goodbyeButton:SetSize(78, 24)
+    goodbyeButton:SetPoint("TOPRIGHT", root, "TOPRIGHT", -21, -12)
+    goodbyeButton:RegisterForClicks("LeftButtonUp")
+    local goodbyeText = goodbyeButton:CreateFontString(
+        nil, "OVERLAY", "GameFontHighlightSmall"
+    )
+    goodbyeText:SetAllPoints(goodbyeButton)
+    goodbyeText:SetText("Goodbye")
+    goodbyeText:SetTextColor(0.97, 0.78, 0.44, 1)
+    local goodbyeLine = goodbyeButton:CreateTexture(nil, "ARTWORK")
+    goodbyeLine:SetTexture("Interface\\Buttons\\WHITE8x8")
+    goodbyeLine:SetHeight(1)
+    goodbyeLine:SetPoint("BOTTOMLEFT", goodbyeButton, "BOTTOMLEFT", 5, 0)
+    goodbyeLine:SetPoint("BOTTOMRIGHT", goodbyeButton, "BOTTOMRIGHT", -5, 0)
+    goodbyeLine:SetVertexColor(0.77, 0.60, 0.32, 0.72)
+    goodbyeButton:SetScript("OnEnter", function()
+        goodbyeText:SetTextColor(1.00, 0.87, 0.56, 1)
+    end)
+    goodbyeButton:SetScript("OnLeave", function()
+        goodbyeText:SetTextColor(0.97, 0.78, 0.44, 1)
+    end)
+    goodbyeButton:SetScript("OnClick", function()
+        self:Goodbye()
+    end)
+    self.goodbyeButton = goodbyeButton
 
     local panel =
         root:CreateTexture(
