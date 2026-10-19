@@ -1508,6 +1508,18 @@ function Dialogue:PresentText(
     return true, "shown"
 end
 
+function Dialogue:PresentNarrativeModel(model)
+    return self:PresentText(
+        model.title,
+        model.body,
+        model.objective,
+        model.reason,
+        model.autoHide,
+        model.action == "offer",
+        model.previewOnly
+    )
+end
+
 function Dialogue:HandleQuestDetail()
     self.detailEventCount =
         self.detailEventCount + 1
@@ -1546,15 +1558,11 @@ function Dialogue:HandleQuestDetail()
     self.presentationCount =
         self.presentationCount + 1
 
-    self:PresentText(
-        detail.title,
-        detail.body,
-        detail.objective,
-        "QUEST_DETAIL",
-        false,
-        true,
-        false
+    local model = Logres.NPCNarrativeModel.FromLive(
+        detail.title, detail.body, detail.objective,
+        "QUEST_DETAIL", "offer"
     )
+    self:PresentNarrativeModel(model)
 end
 
 -- P0251 R3: a preference toggle does not emit QUEST_COMPLETE again.
@@ -1638,29 +1646,27 @@ function Dialogue:ApplyPreferences(preferences)
     end
 end
 
-function Dialogue:ShowPreview()
+-- P0261 N1: existing long sample, new short and generic NPC samples use
+-- the identical production view. All preview action dispatch stays inert.
+function Dialogue:ShowNarrativePreview(mode)
     if not self.moduleEnabled then
         return false, "module-disabled"
     end
-
     if not self.immersionEnabled then
         self:HidePresentation("immersion-off")
-        return true,
-            "suppressed-immersion-off"
+        return true, "suppressed-immersion-off"
     end
+    if self.completionActive then
+        return false, "active-completion"
+    end
+    local model, reason = Logres.NPCNarrativeModel.Preview(mode)
+    if not model then return false, reason end
+    self.previewCount = self.previewCount + 1
+    return self:PresentNarrativeModel(model)
+end
 
-    self.previewCount =
-        self.previewCount + 1
-
-    return self:PresentText(
-        "The Lost Standard",
-        "The road from the old watchtower has grown quiet. Travelers who once crossed the ridge at dusk now turn back before the first milestone. A patrol found signs of a struggle near the ruined wall, but no one returned with the standard that marked the northern post.\n\nThe captain asks that you follow the broken road, search the stones beyond the ridge, and recover what remains of the watch. If the raiders still hold the pass, drive them out before returning to town.\n\nThere may be more to the silence than simple banditry. Keep your eyes on the valley as you climb.",
-        "Recover the lost standard beyond the northern ridge and return it to the captain.",
-        "preview",
-        true,
-        true,
-        true
-    )
+function Dialogue:ShowPreview()
+    return self:ShowNarrativePreview("long")
 end
 
 -- P0257: one data contract and ONE production renderer. The synthetic

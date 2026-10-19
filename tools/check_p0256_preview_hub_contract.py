@@ -14,7 +14,8 @@ actions = pattern.findall(C)
 required = {
     'actionFeedback','compassArtOn','compassArtOff','xpPreview',
     'objectiveProgressPreview','activeQuestPreviewNormal','activeQuestPreviewComplete',
-    'activeQuestLive','questDialoguePreview','questRewardPreviewSingle',
+    'activeQuestLive','questDialoguePreview','questNarrativePreviewShort',
+    'questNarrativePreviewGeneric','questRewardPreviewSingle',
     'questRewardPreviewMulti','statusAuraPreviewOn','statusAuraPreviewOff',
     'playerHelpfulAuraPreview','hudPreviewOn','hudPreviewOff',
     'healthPreview100','healthPreview80','healthPreview70','healthPreview60',
@@ -26,7 +27,7 @@ if len(found) != len(actions): errors.append('duplicate visual or diagnostic reg
 for id_ in sorted(required):
     value = found.get(id_)
     if not value or value[2] != 'P': errors.append(f'{id_}: must be registered in Previews tab')
-if len(required) != 28: errors.append('unexpected baseline visual preview inventory')
+if len(required) != 30: errors.append('unexpected baseline visual preview inventory')
 if set(id_ for id_,label,cmd,phase in actions if phase=='P') != required:
     errors.append('P gallery has missing or unreviewed additional actions')
 for id_,label,command,phase in actions:
@@ -37,7 +38,7 @@ for id_,label,command,phase in actions:
         'mainreplace on','mainreplace off','stockreplace on','stockreplace off',
         'bindings on','bindings off','petbardriver on','petbardriver off')):
         errors.append('gameplay-changing operation placed among visual previews: '+id_)
-if len(actions) != 96: errors.append('unexpected total action registrations: '+str(len(actions)))
+if len(actions) != 98: errors.append('unexpected total action registrations: '+str(len(actions)))
 for token in (
     '{ id = "P", title = "Previews — All UI Areas" }',
     'local TAB_WIDTH = 52',

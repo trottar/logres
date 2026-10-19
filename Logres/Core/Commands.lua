@@ -2972,6 +2972,15 @@ local function runQuestDialoguePreview()
     ))
 end
 
+function Logres:RunQuestNarrativePreview(mode)
+    local dialogue = Logres:GetModule("QuestDialogue")
+    local ok, state = dialogue:ShowNarrativePreview(mode)
+    emit(string.format(
+        "Logres questnarrativepreview: %s (mode=%s state=%s)",
+        ok and "PASS" or "FAIL", tostring(mode), tostring(state)
+    ))
+end
+
 local function runQuestInteractionProbe()
     local status =
         Logres:GetModuleStatus("QuestInteractionProbe")
@@ -5177,6 +5186,15 @@ local function handleCommand(message)
         return
     end
 
+    if command == "questnarrativepreview" then
+        if argument == "short" or argument == "generic" then
+            Logres:RunQuestNarrativePreview(argument)
+        else
+            emit("Usage: /logres questnarrativepreview [short|generic]")
+        end
+        return
+    end
+
     if command == "questdialoguepreview" then
         runQuestDialoguePreview()
         return
@@ -5634,6 +5652,18 @@ Logres:RegisterDevPanelAction(
     "questDialoguePreview",
     "Quest Dialogue Preview",
     "questdialoguepreview",
+    "P"
+)
+Logres:RegisterDevPanelAction(
+    "questNarrativePreviewShort",
+    "NPC Narrative: Short",
+    "questnarrativepreview short",
+    "P"
+)
+Logres:RegisterDevPanelAction(
+    "questNarrativePreviewGeneric",
+    "NPC Dialogue: Generic",
+    "questnarrativepreview generic",
     "P"
 )
 Logres:RegisterDevPanelAction(

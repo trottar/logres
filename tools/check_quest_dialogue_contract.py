@@ -95,7 +95,8 @@ for fragment in (
     "bodyText:SetWordWrap(true)",
     "objectiveText:SetWordWrap(true)",
     "C_Timer.After(PREVIEW_SECONDS, function()",
-    '"QUEST_DETAIL",\n        false',
+    "Logres.NPCNarrativeModel.FromLive(",
+    "self:PresentNarrativeModel(model)",
 ):
     if fragment not in dialogue:
         errors.append(

@@ -60,6 +60,8 @@ EXPECTED_PHASES = {
     "objectiveProgressPreview": "P",
     "questDialogueCheck": "F",
     "questDialoguePreview": "P",
+    "questNarrativePreviewShort": "P",
+    "questNarrativePreviewGeneric": "P",
     "hudPreviewOn": "P",
     "hudPreviewOff": "P",
     "layoutCheck": "H",
