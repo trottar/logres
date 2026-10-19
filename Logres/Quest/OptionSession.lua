@@ -72,7 +72,18 @@ function Session:Choose(index)
     local choice = node and node.options and node.options[index]
     if type(index) ~= "number" or index ~= math.floor(index)
         or not choice or choice.enabled == false
-        or type(choice.nextNode) ~= "string"
+    then
+        self.blocked = self.blocked + 1
+        self.lastResult = "blocked-choice"
+        return false, "blocked-choice"
+    end
+    -- Authored farewell is one action: invoke the SAME safe universal exit,
+    -- not an empty intermediary narrative requiring a second Goodbye click.
+    if choice.action == "goodbye" then
+        self.clicks = self.clicks + 1
+        return self.dialogue:Goodbye()
+    end
+    if type(choice.nextNode) ~= "string"
         or not self.model.nodes[choice.nextNode]
     then
         self.blocked = self.blocked + 1

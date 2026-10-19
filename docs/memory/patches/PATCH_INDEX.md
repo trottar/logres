@@ -2,6 +2,7 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
+| P0267 | 2026-10-19 | PREPARED / CLIENT UNVERIFIED | Combined NPC header Back/Goodbye alignment and one-step Farewell/Leave exit, grounded in P0266 screenshot and diagnostics. |
 | P0266 | 2026-10-19 | PREPARED / CLIENT UNVERIFIED | Combined fixes for option pager/row overlap, branch Back/navigation, and universal Goodbye; P0265 screenshot runtime FAIL preserved. |
 | P0265 | 2026-10-19 | PREPARED / RUNTIME UNVERIFIED | Combined branching NPC options, Back, 7 service previews, 11-entry overflow, locked states, diagnostics; all synthetic/no native mutations. |
 | P0264 | 2026-10-19 | PUSHED (6b3ed96) / SCOPED FUNCTIONAL PASS | User accepted preview reward selection, highlighting and reset; 8 selection clicks and Quest checks PASS; R0 and R1 static delivery failures preserved in evidence; native claim remains stock. |

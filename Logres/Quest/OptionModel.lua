@@ -4,9 +4,9 @@ local _, Logres = ...
 local Model = {}
 Logres.NPCOptionModel = Model
 
-local function entry(label, nextNode, enabled, reason)
+local function entry(label, nextNode, enabled, reason, action)
     return { label = label, nextNode = nextNode,
-        enabled = enabled ~= false, reason = reason }
+        enabled = enabled ~= false, reason = reason, action = action }
 end
 
 local detailed = "Beyond the northern ridge, a narrow pass follows the old stone road. "
@@ -28,7 +28,7 @@ local function branching()
                     entry("Which road leads north?", "directions"),
                     entry("What services are nearby?", "services"),
                     entry("A guarded passage", "locked", false, "Requires a permit"),
-                    entry("Farewell", "farewell"),
+                    entry("Farewell", nil, true, nil, "goodbye"),
                 } },
             history = { title = "The Old Watch", body = detailed,
                 options = { entry("Where should I travel?", "directions") } },
@@ -41,7 +41,6 @@ local function branching()
             inn = { title = "The Inn",
                 body = "Ask the innkeeper directly to set a home location; this sample does not bind you.",
                 options = {} },
-            farewell = { title = "Safe Travels", body = "May the road be kind to you.", options = {} },
         },
     }
 end
@@ -99,10 +98,9 @@ local function locked()
                     entry("Enter the fortress", "fortress", false, "Requires a permit"),
                     entry("Cross the ferry", "ferry", false, "Requires a fare"),
                     entry("Ask about the local road", "road"),
-                    entry("Leave the watch", "end"),
+                    entry("Leave the watch", nil, true, nil, "goodbye"),
                 } },
             road = { title = "Local Road", body = "The main road is open to all travelers.", options = {} },
-            ["end"] = { title = "Watch Post", body = "Travel safely.", options = {} },
         },
     }
 end
