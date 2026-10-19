@@ -2945,6 +2945,18 @@ local function runQuestDialogueCheck()
         tostring(debugStatus.rewardPreviewSelected),
         tostring(debugStatus.rewardPreviewChoiceState)
     ))
+    local options = debugStatus.optionSession
+    if options then
+        emit(string.format(
+            "Logres questdialogue npcoptions: AUDIT (active=%s mode=%s node=%s page=%s depth=%s clicks=%s branches=%s backs=%s pageMoves=%s blocked=%s result=%s nativeActions=0)",
+            tostring(options.active), tostring(options.mode),
+            tostring(options.node), tostring(options.optionPage),
+            tostring(options.depth), tostring(options.clicks),
+            tostring(options.branches), tostring(options.backs),
+            tostring(options.pageMoves), tostring(options.blocked),
+            tostring(options.lastResult)
+        ))
+    end
     local completion = debugStatus.completionControl
     if completion then
         emit(string.format(
@@ -2963,6 +2975,15 @@ function Logres:RunQuestRewardPreview(argument)
     local ok, state = dialogue:ShowRewardPreview(argument)
     emit(string.format(
         "Logres questrewardpreview: %s (mode=%s state=%s)",
+        ok and "PASS" or "FAIL", tostring(argument), tostring(state)
+    ))
+end
+
+function Logres:RunNPCOptionPreview(argument)
+    local dialogue = Logres:GetModule("QuestDialogue")
+    local ok, state = dialogue:ShowOptionPreview(argument)
+    emit(string.format(
+        "Logres npcoptionpreview: %s (mode=%s state=%s)",
         ok and "PASS" or "FAIL", tostring(argument), tostring(state)
     ))
 end
@@ -4841,6 +4862,7 @@ local function printHelp()
     emit("  /logres activequest [on|off|toggle]")
     emit("  /logres questdialoguecheck")
     emit("  /logres questdialoguepreview")
+    emit("  /logres npcoptionpreview [branching|services|overflow|locked]")
     emit("  /logres questoffercontrolscheck")
     emit("  /logres questofferstocksuppressioncheck")
     emit("  /logres questinteractionprobe")
@@ -5190,6 +5212,17 @@ local function handleCommand(message)
             Logres:RunQuestRewardPreview(argument)
         else
             emit("Usage: /logres questrewardpreview [single|multi]")
+        end
+        return
+    end
+
+    if command == "npcoptionpreview" then
+        if argument == "branching" or argument == "services"
+            or argument == "overflow" or argument == "locked"
+        then
+            Logres:RunNPCOptionPreview(argument)
+        else
+            emit("Usage: /logres npcoptionpreview [branching|services|overflow|locked]")
         end
         return
     end
@@ -5684,6 +5717,30 @@ Logres:RegisterDevPanelAction(
     "questRewardPreviewMulti",
     "Reward Preview: Multiple",
     "questrewardpreview multi",
+    "P"
+)
+Logres:RegisterDevPanelAction(
+    "npcOptionBranching",
+    "NPC Choices: Branching",
+    "npcoptionpreview branching",
+    "P"
+)
+Logres:RegisterDevPanelAction(
+    "npcOptionServices",
+    "NPC Choices: Services",
+    "npcoptionpreview services",
+    "P"
+)
+Logres:RegisterDevPanelAction(
+    "npcOptionOverflow",
+    "NPC Choices: Overflow",
+    "npcoptionpreview overflow",
+    "P"
+)
+Logres:RegisterDevPanelAction(
+    "npcOptionLocked",
+    "NPC Choices: Locked",
+    "npcoptionpreview locked",
     "P"
 )
 Logres:RegisterDevPanelAction(

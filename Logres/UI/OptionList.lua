@@ -1,0 +1,152 @@
+-- P0265: source-independent visual option list shared by future NPC models.
+-- The view sends only authored ordinals to a separately gated controller.
+local _, Logres = ...
+local Visual = {}
+Logres.NPCOptionList = Visual
+local GOLD = "Interface\\Buttons\\WHITE8x8"
+local PAGE_SIZE = 6
+
+function Visual.New(root)
+    local self = setmetatable({ root = root, slots = {}, currentOptions = {},
+        page = 1, active = false }, { __index = Visual })
+    local frame = CreateFrame("Frame", nil, root)
+    frame:SetAllPoints(root)
+    frame:EnableMouse(false)
+    frame:Hide()
+    self.frame = frame
+    for i = 1, PAGE_SIZE do
+        local slot = CreateFrame("Button", nil, frame)
+        slot:SetSize(266, 34)
+        slot:SetPoint("TOPLEFT", frame, "TOPLEFT",
+            46 + ((i - 1) % 2) * 278, -233 - math.floor((i - 1) / 2) * 43)
+        slot:RegisterForClicks("LeftButtonUp")
+        local wash = slot:CreateTexture(nil, "BACKGROUND")
+        wash:SetAllPoints(slot)
+        wash:SetTexture(GOLD)
+        local line = slot:CreateTexture(nil, "BORDER")
+        line:SetTexture(GOLD)
+        line:SetHeight(1)
+        line:SetPoint("BOTTOMLEFT", slot, "BOTTOMLEFT", 0, 0)
+        line:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", 0, 0)
+        local label = slot:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+        label:SetPoint("LEFT", slot, "LEFT", 10, 0)
+        label:SetSize(246, 28)
+        label:SetJustifyH("LEFT")
+        label:SetWordWrap(true)
+        slot.label, slot.wash, slot.line = label, wash, line
+        slot:SetScript("OnEnter", function(button)
+            if button.optionEnabled then
+                button.wash:SetVertexColor(0.26, 0.19, 0.09, 0.93)
+            end
+        end)
+        slot:SetScript("OnLeave", function(button)
+            self:Paint(button)
+        end)
+        slot:SetScript("OnClick", function(button)
+            if self.active and button.optionEnabled and self.onChoose then
+                self.onChoose(button.optionIndex)
+            end
+        end)
+        slot:Hide()
+        self.slots[i] = slot
+    end
+    local function navigation(label, x, callback)
+        local button = CreateFrame("Button", nil, frame)
+        button:SetSize(125, 28)
+        button:SetPoint("TOP", frame, "TOP", x, -373)
+        button:RegisterForClicks("LeftButtonUp")
+        local text = button:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+        text:SetAllPoints(button)
+        text:SetText(label)
+        text:SetTextColor(0.96, 0.78, 0.43, 1)
+        button:SetScript("OnClick", function()
+            if self.active and callback() then return end
+        end)
+        button:Hide()
+        return button
+    end
+    self.previous = navigation("< Previous", -170, function()
+        return self.onPage and self.onPage(-1)
+    end)
+    self.next = navigation("Next >", 170, function()
+        return self.onPage and self.onPage(1)
+    end)
+    self.back = navigation("< Back", 0, function()
+        return self.onBack and self.onBack()
+    end)
+    local pager = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    pager:SetPoint("TOP", frame, "TOP", 0, -351)
+    pager:SetTextColor(0.72, 0.61, 0.42, 1)
+    pager:Hide()
+    self.pager = pager
+    return self
+end
+
+function Visual:Paint(button)
+    if button.optionEnabled then
+        button.wash:SetVertexColor(0.12, 0.10, 0.075, 0.80)
+        button.line:SetVertexColor(0.77, 0.60, 0.32, 0.75)
+        button.label:SetTextColor(0.94, 0.82, 0.60, 1)
+    else
+        button.wash:SetVertexColor(0.09, 0.09, 0.09, 0.65)
+        button.line:SetVertexColor(0.28, 0.26, 0.23, 0.6)
+        button.label:SetTextColor(0.57, 0.54, 0.49, 1)
+    end
+end
+
+function Visual:Clear()
+    self.active = false
+    self.onChoose, self.onBack, self.onPage = nil, nil, nil
+    self.currentOptions = {}
+    for i = 1, PAGE_SIZE do
+        self.slots[i].optionEnabled = false
+        self.slots[i]:EnableMouse(false)
+        self.slots[i]:Hide()
+    end
+    self.previous:Hide()
+    self.next:Hide()
+    self.back:Hide()
+    self.pager:Hide()
+    self.frame:Hide()
+end
+
+function Visual:Present(options, page, canBack, callbacks)
+    self:Clear()
+    self.active = true
+    self.currentOptions = options
+    self.page = page
+    self.onChoose, self.onBack, self.onPage = callbacks.choose, callbacks.back, callbacks.page
+    local total = math.max(1, math.ceil(#options / PAGE_SIZE))
+    if page < 1 or page > total then self:Clear(); return false end
+    local offset = (page - 1) * PAGE_SIZE
+    for i = 1, PAGE_SIZE do
+        local option = options[offset + i]
+        local slot = self.slots[i]
+        if option then
+            slot.optionIndex = offset + i
+            slot.optionEnabled = option.enabled ~= false
+            local label = option.label
+            if not slot.optionEnabled then
+                label = label .. " [LOCKED]\n" .. (option.reason or "Unavailable")
+            end
+            slot.label:SetText(label)
+            slot:EnableMouse(slot.optionEnabled)
+            self:Paint(slot)
+            slot:Show()
+        end
+    end
+    if total > 1 then
+        self.pager:SetFormattedText("Options %d / %d", page, total)
+        self.pager:Show()
+        if page > 1 then self.previous:Show() end
+        if page < total then self.next:Show() end
+    end
+    if canBack then self.back:Show() end
+    self.frame:Show()
+    return true
+end
+
+function Visual:SetPageVisible(show)
+    if self.active then self.frame:SetShown(show == true) end
+end
+return Visual

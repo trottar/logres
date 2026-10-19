@@ -2,7 +2,8 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
-| P0264 | 2026-10-18 | PREPARED / RUNTIME UNVERIFIED | One functional N4 preview patch: clickable exclusive reward choices, visual highlight/reset, completion feedback and diagnostics; live/stock/camera unchanged. |
+| P0265 | 2026-10-19 | PREPARED / RUNTIME UNVERIFIED | Combined branching NPC options, Back, 7 service previews, 11-entry overflow, locked states, diagnostics; all synthetic/no native mutations. |
+| P0264 | 2026-10-19 | PUSHED (6b3ed96) / SCOPED FUNCTIONAL PASS | User accepted preview reward selection, highlighting and reset; 8 selection clicks and Quest checks PASS; R0 and R1 static delivery failures preserved in evidence; native claim remains stock. |
 | P0263 | 2026-10-18 | PUSHED (373c82b) / PREVIEW DIAGNOSTIC PASS; NO NEW PLAYER FUNCTION | Shared original decision button artwork/cosmetics, no new UI behaviors; user reported insufficient progression; N4 choice cards still inert. |
 | P0262 | 2026-10-18 | PUSHED (36d43f6) / SCOPED VISUAL PASS | Shared narrative pagination, five previews and pager arrows visually accepted; preview-only controls; R0 static failure preserved; live claims deferred. |
 | P0261 | 2026-10-18 | PUSHED (b439d4f) / SCOPED PREVIEW VISUAL PASS | N1 shared source-independent narrative/decision model, live offer + long/short/generic previews in same original renderer; no camera/action changes. |

@@ -438,6 +438,7 @@ function Dialogue:HidePresentation(reason)
     self.rewardPreviewSelected = nil
     self.rewardPreviewChoiceCount = 0
     self.rewardPreviewChoiceState = "inactive"
+    if self.optionSession then self.optionSession:Reset() end
     self.pages = {}
     self.currentPage = 0
 
@@ -1131,6 +1132,9 @@ function Dialogue:SetPage(index)
     self:UpdatePageControls()
     self:UpdateOfferControls()
     self:UpdateCompletionPagePresentation()
+    if self.optionSession then
+        self.optionSession:OnNarrativePageChanged()
+    end
 
     return true, "page-shown"
 end
@@ -1223,6 +1227,13 @@ function Dialogue:PresentText(
     self.rewardPreviewSelected = nil
     self.rewardPreviewChoiceCount = 0
     self.rewardPreviewChoiceState = "inactive"
+    if self.optionSession then
+        if reason == "npc-options-preview" then
+            self.optionView:Clear()
+        else
+            self.optionSession:Reset()
+        end
+    end
     self.pages = buildPages(body)
     self.progressActive = false
     self.completionActive = false
@@ -1522,6 +1533,19 @@ function Dialogue:ShowRewardPreview(mode)
     return ok, state
 end
 
+-- P0265: four substantial interactive NPC option scenarios through one
+-- shared narrative/view/controller pipeline; synthetic inputs NEVER call gossip.
+function Dialogue:ShowOptionPreview(mode)
+    if not self.moduleEnabled then return false, "module-disabled" end
+    if not self.immersionEnabled then return false, "immersion-off" end
+    if self.completionActive then return false, "active-completion" end
+    if not self.optionSession then return false, "option-session-unavailable" end
+    local model, reason = Logres.NPCOptionModel.Preview(mode)
+    if not model then return false, reason end
+    self.previewCount = self.previewCount + 1
+    return self.optionSession:Start(mode, model)
+end
+
 function Dialogue:GetDebugStatus()
     return {
         moduleEnabled =
@@ -1564,6 +1588,7 @@ function Dialogue:GetDebugStatus()
         completionShownCount = self.completionShownCount,
         completionSkippedCount = self.completionSkippedCount,
         completionActive = self.completionActive == true,
+        optionSession = self.optionSession and self.optionSession:Debug(),
         completionRewardCards = #self.completionRewardCards,
         completionRewardOverflow = self.completionRewardOverflow == true,
         rewardPreviewChoiceCount = self.rewardPreviewChoiceCount,
@@ -1920,6 +1945,8 @@ function Dialogue:OnInitialize()
 
     -- Installed after the objective text so every state can reset its anchors.
     self.rewardVisual = Logres.QuestRewardVisual.New(root, objectiveText)
+    self.optionView = Logres.NPCOptionList.New(root)
+    self.optionSession = Logres.NPCOptionSession.New(self, self.optionView)
 
     local pageIndicator =
         root:CreateFontString(
