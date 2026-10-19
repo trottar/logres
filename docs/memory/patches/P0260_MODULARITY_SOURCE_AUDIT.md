@@ -1,0 +1,9 @@
+# P0260 — modularity source audit / complete NPC inventory
+
+Date: 2026-10-18. Exact expected pushed baseline: `669ec77da4a2bc9c880e878425cbf784aa33b05a` (P0259). **Docs-only.** Source review covers the tracked 56 addon Lua files by domain, with targeted deep inspection of the quest, camera, state, immersion, UI registry, HUD/action and navigation boundaries, plus 54 NPC candidate variants. This is not a claim every NPC feature exists in Forever or that a live action works.
+
+**Findings:** Reuse exists but is feature-local; `Quest/Dialogue.lua` still owns data, panel, pagination and actions; RewardModel/RewardVisual is a real shared path; camera context is detected through native frames separately from State's numeric interaction type; Camera WorldCombat explicitly relinquishes when DynamicCam is loaded. No unified NPC session, service catalog or cross-service controller. Refer to `docs/memory/evidence/P0260_MODULARITY_SOURCE_AUDIT.md` and `docs/memory/evidence/P0260_ALL_NPC_INTERACTION_ATLAS.md`.
+
+**Narrow next slice:** propose small narrative + decision *model interface and deterministic preview fixtures* before moving live handlers; source-level audit and D-046 fixtures do not authorize gameplay mutation. Do not change stock suppression, quest claim, **any camera code/behavior**, or service windows. The user explicitly froze camera as a working baseline; no camera dependency or coordinator change is authorized. Preserve native frame flash, missing previews, incomplete live choices and unrelated gameplay bug backlog as OPEN.
+
+**Patch workflow:** check exact git main commit and blob hashes; build source-memory candidate in-memory, full `tools/check_*.py` shadow suite, git diff --check, post-write full suite, manifest, rollback on any post-write failure. No runtime files or checker frozen versions changed. No WoW redeploy or reload required. Git commit/push remains user-owned.

@@ -2,7 +2,8 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
-| P0259 | 2026-10-18 | PREPARED / DOCS-ONLY | D-047 modularity-first all-NPC program, DynamicCam/NPC-session continuity, selective native/hybrid/full integration and deferred bank/auction feasibility. |
+| P0260 | 2026-10-18 | DOCS PREPARED / SOURCE AUDIT | Code-level modularity map + all 54 provisional NPC variants, camera-frozen regression policy and N1-N6 extraction sequence; no runtime changes. |
+| P0259 | 2026-10-18 | PUSHED (669ec77) / DOCS-ONLY | D-047 modularity-first all-NPC program, DynamicCam/NPC-session continuity, selective native/hybrid/full integration and deferred bank/auction feasibility. |
 | P0258 | 2026-10-18 | PUSHED (edec5eb) / PREVIEW VISUAL ACCEPTANCE (SCOPED) | Multi reward preview uses the same in-panel Complete Quest visual and amount-only footer as Single; choice cards remain inert, live native fallback untouched. |
 | P0257 | 2026-10-18 | PUSHED (94635d3) / PARTIAL PREVIEW VISUAL ACCEPTANCE | D-046 preview-first pipeline; shared reward model and in-panel inert Single preview, stock-choice fallback unchanged. |
 | P0256 | 2026-10-18 | PUSHED (23307aa) / GALLERY VISUAL PASS (SCOPED) | Central 28-control paginated preview tab, universal UI preview coverage audit, NPC dialogue first; no gameplay mutation. |

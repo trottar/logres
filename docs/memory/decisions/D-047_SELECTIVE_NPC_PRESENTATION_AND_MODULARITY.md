@@ -30,3 +30,7 @@ Common visual modules should support text/pages, action buttons, option lists, r
 ## Release and evidence gates
 
 No current bank/auction implementation promise: both are **DEFERRED PENDING POST-MODULARITY ASSESSMENT**, not excluded. The same applies to any unsupported service. The known Blizzard-frame flash during native quest claim stays OPEN; do not hide it with a timer, polling or unsafe restoration changes. Quest 237 remains reserved; live selectable reward claims remain unverified. The user-reported 20-minute session bugs remain **OPEN / DETAILS PENDING**, not resolved by this architecture decision.
+
+## P0260 — existing camera is a frozen working baseline
+
+The user explicitly confirmed that existing camera behavior works and **must not be broken**. The P0260 audit and subsequent UI component extractions are not authorizations to edit `Logres/Camera/*.lua`, change zoom/framing/transition timing or profiles, introduce camera dependencies on new NPC modules, change DynamicCam coexistence, or modify camera-related event registration. Source mapping is read-only. A later camera change would require separate explicit approval, a narrow diagnostic, and regression evidence. NPC presentation components must work alongside the current camera behavior as-is.
