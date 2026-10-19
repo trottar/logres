@@ -51,7 +51,7 @@ a={x[0]:x for x in pattern.findall(c)}
 for key,cmd in [('questNarrativePreviewShort','questnarrativepreview short'),
                 ('questNarrativePreviewGeneric','questnarrativepreview generic')]:
     need(key in a and a[key][2]==cmd and a[key][3]=='P',key+' must be on P tab')
-need('len(required) != 34' in p and 'len(actions) != 103' in p,
+need('len(required) != 34' in p and 'len(actions) != 104' in p,
      'P-tab inventory contract must reflect two additional real previews')
 need('Quest\\NarrativeModel.lua\nQuest\\RewardModel.lua' in t,'model must load before existing quest dialogue')
 need('Quest\\RewardModel.lua\nQuest\\RewardVisual.lua\nQuest\\Dialogue.lua' in t,'preserve reward model/view/dialogue load order')

@@ -5221,6 +5221,30 @@ local function handleCommand(message)
         return
     end
 
+    if command == "nativeframeaudit" then
+        -- Read-only native metadata, explicitly requested in the developer panel.
+        -- Do not use this to move/skin stock frames or infer service identity.
+        local report = Logres.NPCNativeServiceCapabilities.Read()
+        emit(string.format(
+            "Logres nativeframeaudit: AUDIT (source=%s request=%s interacting=%s type=%s present=%s missing=%s deferred=%s identity=%s placement=%s styling=%s nativeMutations=%s)",
+            tostring(report.source), tostring(report.request),
+            tostring(report.interacting), tostring(report.interactionType),
+            tostring(report.present), tostring(report.missing),
+            tostring(report.deferred), tostring(report.serviceIdentity),
+            tostring(report.placementAuthorization),
+            tostring(report.stylingAuthorization), tostring(report.mutationCalls)
+        ))
+        for index = 1, #report.rows do
+            local item = report.rows[index]
+            emit(string.format(
+                "Logres nativeframeaudit %s: frame=%s loaded=%s protected=%s GetPoint=%s SetPoint=%s (methods only; no mutation)",
+                item.key, item.name, item.loaded, item.protected,
+                item.pointRead, item.pointWrite
+            ))
+        end
+        return
+    end
+
     if command == "nativeservicepolicycheck" then
         local audit = Logres.NPCNativeServicePolicy.GetAudit()
         emit(string.format(
@@ -5768,6 +5792,12 @@ Logres:RegisterDevPanelAction(
     "NPC Choices: Locked",
     "npcoptionpreview locked",
     "P"
+)
+Logres:RegisterDevPanelAction(
+    "nativeServiceFrameAudit",
+    "Native Service Frame Audit",
+    "nativeframeaudit",
+    "H"
 )
 Logres:RegisterDevPanelAction(
     "nativeServicePolicyCheck",
