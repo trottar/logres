@@ -7,6 +7,7 @@ d=(r/'Logres/Quest/Dialogue.lua').read_text(encoding='utf-8')
 c=(r/'Logres/Quest/CompletionControl.lua').read_text(encoding='utf-8')
 b=(r/'Logres/Core/Bootstrap.lua').read_text(encoding='utf-8')
 t=(r/'Logres/Logres.toc').read_text(encoding='utf-8')
+p=(r/'Logres/UI/NarrativePages.lua').read_text(encoding='utf-8')
 e=[]
 for token in (
     'self.completionActionRoot = offerActionRoot',
@@ -15,9 +16,6 @@ for token in (
     'self.acceptButton.label:SetText("Accept")',
     'if self.completionControl and self.completionControl.applied then',
     'self:UpdatePageControls()',
-    'self.pageIndicator:ClearAllPoints()',
-    '"BOTTOMRIGHT", self.root, "BOTTOMRIGHT", -115, 17',
-    '"BOTTOM", self.root, "BOTTOM", 0, 17',
     'self.offerActionRoot:ClearAllPoints()',
     '"TOP", self.root, "BOTTOM", 0, offerStyleValue("y")',
     'offerStyleValue("y") + 64',
@@ -48,8 +46,14 @@ if start<0 or end<start or 'self.offerActionRoot:SetPoint(' not in d[start:end]:
     e.append('ordinary offer panel ownership must be explicitly restored')
 page_start=d.find('function Dialogue:UpdatePageControls()')
 page_end=d.find('function Dialogue:SetPage(',page_start)
-if page_start<0 or page_end<page_start or d.find('self.pageIndicator:ClearAllPoints()',page_start,page_end)<0:
-    e.append('completion page navigation anchor missing')
+if page_start<0 or page_end<page_start or 'Logres.NPCNarrativePages.Paint(' not in d[page_start:page_end]:
+    e.append('completion page navigation is not delegated to the actual shared rail')
+for fragment in (
+    'self.pageIndicator:ClearAllPoints()',
+    '"BOTTOMRIGHT", self.root, "BOTTOMRIGHT", -115, 17',
+    '"BOTTOM", self.root, "BOTTOM", 0, 17',
+):
+    if fragment not in p:e.append('completion pagination geometry missing from view: '+fragment)
 if 'self:Restore("claim-invoked")' not in c or 'pcall(_G.QuestRewardCompleteButton_OnClick)' not in c:
     e.append('stock must restore before native claim; no mutation allowed')
 if 'Complete Quest below' in d:e.append('duplicate owned footer instruction')

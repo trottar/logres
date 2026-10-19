@@ -12,6 +12,7 @@ COMMANDS = ADDON / "Core" / "Commands.lua"
 TOC = ADDON / "Logres.toc"
 BOOTSTRAP = ADDON / "Core" / "Bootstrap.lua"
 THEME = ADDON / "Media" / "Theme.lua"
+PAGES = ADDON / "UI" / "NarrativePages.lua"
 
 errors = []
 
@@ -56,6 +57,7 @@ bootstrap = (
     else ""
 )
 theme = THEME.read_text(encoding="utf-8") if THEME.is_file() else ""
+pages = PAGES.read_text(encoding="utf-8") if PAGES.is_file() else ""
 
 for fragment in (
     'Logres:RegisterModule("QuestDialogue"',
@@ -91,7 +93,7 @@ for fragment in (
     '"OnClick"',
     "self:PreviousPage()",
     "self:NextPage()",
-    "self.pageIndicator:SetFormattedText(",
+    "Logres.NPCNarrativePages.Paint(",
     "bodyText:SetWordWrap(true)",
     "objectiveText:SetWordWrap(true)",
     "C_Timer.After(PREVIEW_SECONDS, function()",
@@ -102,6 +104,16 @@ for fragment in (
         errors.append(
             f"Dialogue.lua missing P0130 contract fragment: {fragment}"
         )
+
+for fragment in (
+    "function Pages.Build(text, limit)",
+    "function Pages.Paint(self, activeColor, inactiveColor)",
+    "function Pages.ShowBody(self, index)",
+    "self.pageIndicator:SetFormattedText(",
+    '"BOTTOMRIGHT", self.root, "BOTTOMRIGHT", -115, 17',
+):
+    if fragment not in pages:
+        errors.append("NarrativePages.lua missing P0130 visual contract: " + fragment)
 
 apply_start = dialogue.find(
     "function Dialogue:ApplyPreferences(preferences)"

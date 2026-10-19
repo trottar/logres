@@ -7,6 +7,7 @@ d=(root/'Logres/Quest/Dialogue.lua').read_text(encoding='utf-8')
 c=(root/'Logres/Quest/CompletionControl.lua').read_text(encoding='utf-8')
 t=(root/'Logres/Logres.toc').read_text(encoding='utf-8')
 b=(root/'Logres/Core/Bootstrap.lua').read_text(encoding='utf-8')
+p=(root/'Logres/UI/NarrativePages.lua').read_text(encoding='utf-8')
 issues=[]
 for fragment in (
  'function Dialogue:UpdateCompletionPagePresentation()',
@@ -20,14 +21,26 @@ for fragment in (
  'self:UpdateCompletionPagePresentation()',
  'self.completionRewardText = rewardSummary',
  'offerStyleValue("y") + offerStyleValue("height") + 2',
- '"BOTTOMRIGHT", self.root, "BOTTOMRIGHT", -115, 78',
- '"BOTTOMRIGHT", self.root, "BOTTOMRIGHT", -115, 17',
  'offerStyleValue("y") + 64',
  'self.completionControl:Activate()',
  'self.completionButton = acceptButton',
  'owner:HandleCompletionAction()',
 ):
  if fragment not in d:issues.append('missing invariant: '+fragment)
+# The historical coordinates must still exist at exactly one real shared
+# painter, with the same owner-state gating; moving them must not drop them.
+paint=p.split('function Pages.Paint(self, activeColor, inactiveColor)',1)[-1].split('function Pages.ShowBody(self, index)',1)[0]
+for fragment in (
+    'self.pageIndicator:ClearAllPoints()',
+    'if self.completionActive then',
+    'elseif self.offerActionsEnabled',
+    'and self.currentPage == #self.pages then',
+    '"BOTTOMRIGHT", self.root, "BOTTOMRIGHT", -115, 78',
+    '"BOTTOMRIGHT", self.root, "BOTTOMRIGHT", -115, 17',
+):
+    if fragment not in paint:issues.append('missing shared pager invariant: '+fragment)
+if 'Logres.NPCNarrativePages.Paint(' not in d.split('function Dialogue:UpdatePageControls()',1)[-1].split('function Dialogue:SetPage(',1)[0]:
+    issues.append('quest page update must call actual shared rail painter')
 setpage=d.split('function Dialogue:SetPage(',1)[1].split('function Dialogue:PreviousPage(',1)[0]
 if 'self:UpdateCompletionPagePresentation()' not in setpage:
  issues.append('paging must update rewards and completion control')
