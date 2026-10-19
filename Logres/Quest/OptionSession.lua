@@ -8,7 +8,7 @@ function Session.New(dialogue, visual)
     return setmetatable({ dialogue = dialogue, visual = visual,
         active = false, mode = nil, nodeKey = nil, optionPage = 1,
         history = {}, clicks = 0, branches = 0, backCount = 0,
-        rootReturns = 0, goodbyes = 0, previewConfirmCount = 0,
+        rootReturns = 0, goodbyes = 0,
         pageMoves = 0, blocked = 0, lastResult = "inactive" },
         { __index = Session })
 end
@@ -90,16 +90,6 @@ function Session:Choose(index)
         self.lastResult = "blocked-choice"
         return false, "blocked-choice"
     end
-    -- Confirmation is synthetic-only, and available only to authored
-    -- catalog fixtures. Never route it to a native service/quest action.
-    local previewConfirm = choice.action == "preview-confirm"
-    if previewConfirm and (not self.model.family
-        or self.model.previewOnly ~= true)
-    then
-        self.blocked = self.blocked + 1
-        self.lastResult = "confirmation-not-preview"
-        return false, "confirmation-not-preview"
-    end
     if #self.history >= 12 then return false, "history-limit" end
     self.clicks = self.clicks + 1
     self.branches = self.branches + 1
@@ -108,11 +98,6 @@ function Session:Choose(index)
     self.optionPage = 1
     local ok = self:Render()
     if not ok then return false, "render-failed" end
-    if previewConfirm then
-        self.previewConfirmCount = self.previewConfirmCount + 1
-        self.lastResult = "preview-confirmed"
-        return true, "preview-confirmed"
-    end
     return true, "branch-shown"
 end
 
@@ -172,8 +157,6 @@ function Session:Debug()
         depth = #self.history, clicks = self.clicks, branches = self.branches,
         backs = self.backCount, rootReturns = self.rootReturns,
         goodbyes = self.goodbyes, backVisible = self.visual.back:IsShown(),
-        family = self.model and self.model.family,
-        previewConfirmCount = self.previewConfirmCount,
         pageMoves = self.pageMoves,
         blocked = self.blocked, lastResult = self.lastResult,
         nativeActions = 0 }
