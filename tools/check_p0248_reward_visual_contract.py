@@ -50,7 +50,7 @@ for token in ('"questrewardpreview single"','"questrewardpreview multi"',
 if 'Quest\\RewardVisual.lua\nQuest\\Dialogue.lua' not in t:
     e.append('reward visual must load before dialogue')
 for forbidden in ('GetQuestReward(', 'CompleteQuest(', 'HideUIPanel(',
-    'C_GossipInfo.Select', 'SetScript("OnClick"', 'SetScript("OnUpdate"',
+    'C_GossipInfo.Select', 'SetScript("OnUpdate"',
     'RegisterStateDriver', 'SecureActionButtonTemplate'):
     if forbidden in v:e.append('reward visual must be noninteractive: '+forbidden)
 s=d[d.find('local function completionRewardCard('):d.find('function Dialogue:UpdatePageControls()')]
@@ -67,6 +67,8 @@ if len(tv)!=1 or len(bv)!=1 or tv[0]!=bv[0]:
     e.append('Bootstrap/TOC version mismatch')
 print('Logres P0248 dynamic read-only quest reward cards')
 print('================================================')
+if v.count('slot:SetScript("OnClick", function(button)') != 1 or 'slot:EnableMouse(interactive)' not in v or 'self.previewChoiceHandler and button.choiceIndex' not in v:
+    e.append('interactive card must be preview-gated with owner callback')
 if e:
     for x in e:print('ERROR:', x)
     raise SystemExit(1)

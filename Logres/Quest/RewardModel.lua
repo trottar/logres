@@ -14,6 +14,7 @@ function Model.FromLive(cards, footer)
         footer = footer,
         action = "native-gated", -- policy remains CompletionControl/Blizzard
         previewOnly = false,
+        selectablePreviewChoices = false,
     }
 end
 
@@ -43,8 +44,8 @@ function Model.Preview(mode)
             { kind = "choice", name = "Sample healing potion", quantity = 3,
               icon = "Interface\\Icons\\INV_Potion_51" },
         }
-        -- Same Complete Quest visual as Single. CHOICE cards remain
-        -- display-only until the separate guarded selection path exists.
+        -- Same Complete Quest visual, now with synthetic CHOICE selection.
+        -- Live reward choice selection and claim remain Blizzard-owned.
         footer = "1050 XP | 7s"
         action = "preview-complete" -- synthetic click is always inert
     else
@@ -55,6 +56,7 @@ function Model.Preview(mode)
         footer = footer,
         action = action,
         previewOnly = true,
+        selectablePreviewChoices = mode == "multi",
         title = "Reward layout preview",
         body = "Visual sample only. This is not an actual quest reward.",
     }

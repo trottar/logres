@@ -2937,6 +2937,14 @@ local function runQuestDialogueCheck()
         tostring(debugStatus.completionRewardCards),
         tostring(debugStatus.completionRewardOverflow)
     ))
+    emit(string.format(
+        "Logres questdialogue previewchoices: %s (choices=%s clicks=%s selected=%s state=%s nativeActions=none)",
+        "AUDIT",
+        tostring(debugStatus.rewardPreviewChoiceCount),
+        tostring(debugStatus.rewardPreviewChoiceClicks),
+        tostring(debugStatus.rewardPreviewSelected),
+        tostring(debugStatus.rewardPreviewChoiceState)
+    ))
     local completion = debugStatus.completionControl
     if completion then
         emit(string.format(

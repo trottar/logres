@@ -21,10 +21,12 @@ for part in ('self.rewardVisual = Logres.QuestRewardVisual.New(root, objectiveTe
              'self.rewardVisual:Present('):
     if part not in d: e.append('integration missing: '+part)
 if v.count('setmetatable(') != 1: e.append('constructor should have one explicit metatable assignment')
-for forbidden in ('GetQuestReward(', 'CompleteQuest(', 'SetScript("OnClick"', 'SetScript("OnUpdate"'):
+for forbidden in ('GetQuestReward(', 'CompleteQuest(', 'SetScript("OnUpdate"'):
     if forbidden in v:e.append('protected or polling operation in visual: '+forbidden)
 print('Logres P0249 quest reward visual instance dispatch contract')
 print('==========================================================')
+if v.count('slot:SetScript("OnClick", function(button)') != 1 or 'slot:EnableMouse(interactive)' not in v or 'self.previewChoiceHandler and button.choiceIndex' not in v:
+    e.append('interactive card must be preview-gated with owner callback')
 if e:
     for issue in e:print('ERROR:',issue)
     raise SystemExit(1)

@@ -2,7 +2,8 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
-| P0263 | 2026-10-18 | PREPARED / RUNTIME UNVERIFIED | N3 shared Accept/Decline/Complete art, hover and press view; original Dialogue click routing, source, camera and native restoration frozen. |
+| P0264 | 2026-10-18 | PREPARED / RUNTIME UNVERIFIED | One functional N4 preview patch: clickable exclusive reward choices, visual highlight/reset, completion feedback and diagnostics; live/stock/camera unchanged. |
+| P0263 | 2026-10-18 | PUSHED (373c82b) / PREVIEW DIAGNOSTIC PASS; NO NEW PLAYER FUNCTION | Shared original decision button artwork/cosmetics, no new UI behaviors; user reported insufficient progression; N4 choice cards still inert. |
 | P0262 | 2026-10-18 | PUSHED (36d43f6) / SCOPED VISUAL PASS | Shared narrative pagination, five previews and pager arrows visually accepted; preview-only controls; R0 static failure preserved; live claims deferred. |
 | P0261 | 2026-10-18 | PUSHED (b439d4f) / SCOPED PREVIEW VISUAL PASS | N1 shared source-independent narrative/decision model, live offer + long/short/generic previews in same original renderer; no camera/action changes. |
 | P0260 | 2026-10-18 | PUSHED (1251434) / SOURCE AUDIT | Code-level modularity map + all 54 provisional NPC variants, camera-frozen regression policy and N1-N6 extraction sequence; no runtime changes. |

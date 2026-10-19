@@ -337,9 +337,18 @@ function Dialogue:HandleOfferAction(kind)
         self.lastOfferActionResult =
             "preview-only"
         self.lastOfferActionError = nil
-        self:SetOfferActionFeedback(
-            "Preview only"
-        )
+        local message = "Preview only"
+        if self.lastPresentationReason == "reward-preview"
+            and self.rewardPreviewChoiceCount > 0
+        then
+            if self.rewardPreviewSelected then
+                message = "Choice " .. self.rewardPreviewSelected
+                    .. " selected (preview only)"
+            else
+                message = "Select a reward first (preview only)"
+            end
+        end
+        self:SetOfferActionFeedback(message)
         return true, "preview-only"
     end
 
@@ -426,6 +435,9 @@ function Dialogue:HidePresentation(reason)
     self.completionRewardFooter = nil
     self.completionRewardText = nil
     if self.rewardVisual then self.rewardVisual:Reset() end
+    self.rewardPreviewSelected = nil
+    self.rewardPreviewChoiceCount = 0
+    self.rewardPreviewChoiceState = "inactive"
     self.pages = {}
     self.currentPage = 0
 
@@ -1208,6 +1220,9 @@ function Dialogue:PresentText(
         self.presentationGeneration
 
     if self.rewardVisual then self.rewardVisual:Reset() end
+    self.rewardPreviewSelected = nil
+    self.rewardPreviewChoiceCount = 0
+    self.rewardPreviewChoiceState = "inactive"
     self.pages = buildPages(body)
     self.progressActive = false
     self.completionActive = false
@@ -1428,6 +1443,31 @@ function Dialogue:ShowPreview()
     return self:ShowNarrativePreview("long")
 end
 
+-- Only authored preview ordinals reach this handler. Gameplay/stock reward
+-- claiming remains deliberately outside the view and this controller.
+function Dialogue:ChooseRewardPreview(index)
+    if not self.moduleEnabled or not self.immersionEnabled
+        or not self.presentationShown or not self.offerActionPreview
+        or self.lastPresentationReason ~= "reward-preview"
+        or self.completionActive or not self.rewardVisual
+    then
+        self.rewardPreviewChoiceState = "blocked-stale-preview"
+        return false, "not-active-reward-preview"
+    end
+    local ok, reason = self.rewardVisual:SelectPreviewChoice(index)
+    if not ok then
+        self.rewardPreviewChoiceState = reason
+        return false, reason
+    end
+    self.rewardPreviewSelected = index
+    self.rewardPreviewChoiceClicks = self.rewardPreviewChoiceClicks + 1
+    self.rewardPreviewChoiceState = "selected"
+    self:SetOfferActionFeedback(
+        "Choice " .. index .. " selected (preview only)"
+    )
+    return true, reason
+end
+
 -- P0257: one data contract and ONE production renderer. The synthetic
 -- fixture has no quest identity and never obtains native reward control.
 function Dialogue:ShowRewardPreview(mode)
@@ -1456,6 +1496,15 @@ function Dialogue:ShowRewardPreview(mode)
     )
     if ok and state == "shown" and self.rewardVisual then
         self.rewardVisual:Present(model.cards, model.footer)
+        if model.selectablePreviewChoices then
+            self.rewardPreviewChoiceCount = self.rewardVisual.choiceCount
+            self.rewardPreviewChoiceState = "awaiting-choice"
+            self.rewardVisual:SetPreviewChoiceHandler(function(index)
+                self:ChooseRewardPreview(index)
+            end)
+        else
+            self.rewardPreviewChoiceState = "no-choices"
+        end
         if model.action == "preview-complete" then
             -- IDENTICAL button object and completion geometry as production,
             -- but the click is intercepted by offerActionPreview above.
@@ -1517,6 +1566,10 @@ function Dialogue:GetDebugStatus()
         completionActive = self.completionActive == true,
         completionRewardCards = #self.completionRewardCards,
         completionRewardOverflow = self.completionRewardOverflow == true,
+        rewardPreviewChoiceCount = self.rewardPreviewChoiceCount,
+        rewardPreviewChoiceClicks = self.rewardPreviewChoiceClicks,
+        rewardPreviewSelected = self.rewardPreviewSelected,
+        rewardPreviewChoiceState = self.rewardPreviewChoiceState,
         completionControl = self.completionControl and
             self.completionControl:GetDebugStatus() or nil,
         itemInfoRegistered = self.eventRegistration.GET_ITEM_INFO_RECEIVED == true,
@@ -1635,6 +1688,10 @@ function Dialogue:OnInitialize()
     self.completionShownCount = 0
     self.completionSkippedCount = 0
     self.completionActive = false
+    self.rewardPreviewChoiceCount = 0
+    self.rewardPreviewChoiceClicks = 0
+    self.rewardPreviewSelected = nil
+    self.rewardPreviewChoiceState = "not-observed"
     self.activeCompletion = nil
     self.restoringCompletion = false
     self.completionRewardCards = {}
