@@ -2,6 +2,7 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
+| P0271 | 2026-10-19 | PREPARED / RUNTIME UNVERIFIED | Explicit reversible merchant/trainer native center TEST + close/regen restoration; TaxiFrame read-only alias; D-047 stock transactions/camera retained. |
 | P0270 | 2026-10-19 | PREPARED / RUNTIME UNVERIFIED | D-047 guarded native stock frame metadata audit across eight services; no native styling, position or transactions; on-demand H panel. |
 | P0269 | 2026-10-19 | PREPARED / RUNTIME UNVERIFIED | Restore D-047: retire speculative service catalog/confirm previews, preserve native transaction ownership; add read-only native-service policy and H check; styling/placement deferred to safe proof. |
 | P0268 | 2026-10-19 | PREPARED / CLIENT UNVERIFIED | One shared service catalogue with merchant, trainer, flight, unavailable fixtures; quote/requirement/confirmation interactions; P/F diagnostics; matched decorative-header clearance. |

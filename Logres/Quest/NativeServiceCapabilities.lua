@@ -12,6 +12,7 @@ local FRAMES = {
     { key = "merchant-repairs-sell", name = "MerchantFrame" },
     { key = "trainer", name = "ClassTrainerFrame" },
     { key = "flight", name = "FlightMapFrame" },
+    { key = "flight-taxi", name = "TaxiFrame" },
     { key = "bank", name = "BankFrame" },
     { key = "auction", name = "AuctionHouseFrame" },
     { key = "stable", name = "PetStableFrame" },
