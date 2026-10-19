@@ -1,4 +1,4 @@
--- P0271: EXPLICIT, reversible native merchant/trainer placement trial only.
+-- P0271/P0272: manually reversible native placement plus OPT-IN automatic handoff.
 -- D-047: Blizzard owns native controls, transaction logic and camera.
 -- This is NOT an automatic skin/ownership/suppression/transaction layer.
 local _, Logres = ...
@@ -15,6 +15,10 @@ local restorePending = false
 local starts, restores, failures, autoRestores = 0, 0, 0, 0
 local lastResult = "not-attempted"
 local retryFrame
+local autoEnabled = false
+local autoHooks = {}
+local autoStarts, autoDeferred = 0, 0
+local autoLast = "not-armed"
 
 local function ordinary(v)
     if type(issecretvalue) ~= "function" then return false end
@@ -165,11 +169,98 @@ function Trial.Toggle()
     return true, lastResult
 end
 
+-- P0272: automatic layout is deliberately OFF until an explicit user TEST
+-- action. This reuses Trial.Toggle's complete capture, native safety gates and
+-- native OnHide restoration. Frame data/children and transactions stay Blizzard.
+local function ensureAutoOnShow(candidate)
+    if autoHooks[candidate.key] then return true end
+    if not unlocked() then return false end
+    local okFrame, frame = pcall(function() return _G[candidate.name] end)
+    if not okFrame or not ordinary(frame) or frame == nil then return false end
+    local protect = safeMethod(frame, "IsProtected")
+    local hook = safeMethod(frame, "HookScript")
+    if not protect or not hook then return false end
+    local ok, protected = pcall(protect, frame)
+    if not ok or not ordinary(protected) or protected ~= false then return false end
+    local hooked = pcall(hook, frame, "OnShow", function()
+        if autoEnabled then Trial.AutoReconcile("native-show") end
+    end)
+    if hooked then autoHooks[candidate.key] = true end
+    return hooked
+end
+
+function Trial.AutoReconcile(reason)
+    if not autoEnabled then return false, "auto-off" end
+    local state = Logres:GetState() -- addon-owned interaction, not Blizzard visibility.
+    local candidate = state and state.interacting == true
+        and CANDIDATES[state.interactionType] or nil
+    if active and (not candidate or active.key ~= candidate.key) then
+        local restored, why = Trial.Restore("interaction-ended")
+        if not restored then
+            autoLast = why
+            return false, why
+        end
+    end
+    if not candidate then
+        autoLast = "awaiting-supported-service"
+        return false, autoLast
+    end
+    -- Hook a known native frame at most once. A lazy-load/early SHOW that
+    -- cannot safely be observed is DEFERRED; never poll or force a re-show.
+    ensureAutoOnShow(candidate)
+    if active or restorePending then
+        autoLast = "already-centered-or-restoring"
+        return true, autoLast
+    end
+    local ok, why = Trial.Toggle()
+    if ok then
+        autoStarts = autoStarts + 1
+    else
+        autoDeferred = autoDeferred + 1
+    end
+    autoLast = why
+    return ok, why
+end
+
+function Trial.SetAuto(enabled)
+    if enabled ~= true then
+        autoEnabled = false
+        local ok, why = Trial.Restore("auto-disabled")
+        autoLast = ok and "auto-off-stock-restored" or why
+        return ok, autoLast
+    end
+    if autoEnabled then return true, "auto-already-on" end
+    if not unlocked() then return false, "combat-arm-deferred" end
+    autoEnabled = true
+    -- Hook existing ordinary native frames now, including an idle merchant.
+    -- Late-loaded frames are hooked only if a real state transition observes
+    -- them, never via polling or periodic presentation reassertion.
+    for _, candidate in pairs(CANDIDATES) do
+        ensureAutoOnShow(candidate)
+    end
+    local ok, why = Trial.AutoReconcile("explicit-arm")
+    return true, ok and "auto-on-centered" or "auto-on-" .. why
+end
+
+function Trial.ToggleAuto()
+    return Trial.SetAuto(not autoEnabled)
+end
+
+-- The state engine publishes actual interaction transitions; no new native
+-- transaction hook, timer, frame-loop or camera handler is introduced.
+Logres:SubscribeState(function(state)
+    if autoEnabled then
+        Trial.AutoReconcile("addon-state-transition")
+    end
+end)
+
 function Trial.GetAudit()
     return { active = active and active.key or "none",
         starts = starts, restores = restores, failures = failures,
         autoRestores = autoRestores, pending = restorePending,
         result = lastResult, nativeTransactions = 0,
-        styling = "unchanged", scope = "manual-merchant-trainer-only" }
+        styling = "unchanged", scope = "opt-in-merchant-trainer-only",
+        autoEnabled = autoEnabled, autoStarts = autoStarts,
+        autoDeferred = autoDeferred, autoLast = autoLast }
 end
 return Trial

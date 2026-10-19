@@ -5225,13 +5225,19 @@ local function handleCommand(message)
         local trial = Logres.NPCNativeServicePlacementTrial
         local ok, reason
         if argument == "" or argument == "toggle" then
-            ok, reason = trial.Toggle()
+            ok, reason = trial.Toggle() -- existing manual fallback
         elseif argument == "off" then
             ok, reason = trial.Restore("manual-restore")
-        elseif argument == "check" then
+        elseif argument == "auto" or argument == "auto toggle" then
+            ok, reason = trial.ToggleAuto()
+        elseif argument == "auto on" then
+            ok, reason = trial.SetAuto(true)
+        elseif argument == "auto off" then
+            ok, reason = trial.SetAuto(false)
+        elseif argument == "auto check" or argument == "check" then
             ok, reason = true, "read-only-status"
         else
-            emit("Usage: /logres nativeserviceplacement [toggle|off|check]")
+            emit("Usage: /logres nativeserviceplacement [toggle|off|check|auto on|auto off|auto toggle|auto check]")
             return
         end
         local report = trial.GetAudit()
@@ -5239,13 +5245,15 @@ local function handleCommand(message)
             or reason == "move-failed-restoration-pending"
             or reason == "move-rejected-restored")
         emit(string.format(
-            "Logres native placement: %s (result=%s active=%s starts=%s restores=%s autoRestores=%s pending=%s failures=%s styling=%s scope=%s nativeTransactions=%s)",
+            "Logres native placement: %s (result=%s active=%s starts=%s restores=%s autoRestores=%s pending=%s failures=%s styling=%s scope=%s nativeTransactions=%s autoEnabled=%s autoStarts=%s autoDeferred=%s autoLast=%s)",
             ok and "PASS" or (failed and "FAIL" or "DEFERRED"), tostring(reason),
             tostring(report.active), tostring(report.starts),
             tostring(report.restores), tostring(report.autoRestores),
             tostring(report.pending), tostring(report.failures),
             tostring(report.styling), tostring(report.scope),
-            tostring(report.nativeTransactions)
+            tostring(report.nativeTransactions), tostring(report.autoEnabled),
+            tostring(report.autoStarts), tostring(report.autoDeferred),
+            tostring(report.autoLast)
         ))
         return
     end
@@ -5824,8 +5832,8 @@ Logres:RegisterDevPanelAction(
 )
 Logres:RegisterDevPanelAction(
     "nativeServicePlacementTrial",
-    "Native Service Center / Restore (TEST)",
-    "nativeserviceplacement toggle",
+    "Native Auto Position (TEST)",
+    "nativeserviceplacement auto toggle",
     "H"
 )
 Logres:RegisterDevPanelAction(

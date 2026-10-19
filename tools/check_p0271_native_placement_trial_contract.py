@@ -22,12 +22,12 @@ for s in ('Logres.NPCNativeServicePlacementTrial = Trial','function Trial.Toggle
  'set(frame, "CENTER", UIParent, "CENTER", 0, 0)',
  'Trial.Restore("native-hide")','PLAYER_REGEN_ENABLED',
  'function Trial.GetAudit()', 'nativeTransactions = 0',
- 'styling = "unchanged"','scope = "manual-merchant-trainer-only"'):
+ 'styling = "unchanged"','scope = "opt-in-merchant-trainer-only"'):
  need(s in p,'placement missing '+s)
 for f in ('BuyMerchantItem(', 'RepairAllItems(', 'SellCursorItem(',
  'TakeTaxiNode(', 'BuyTrainerService(', 'GetMerchantItemInfo(',
  'C_GossipInfo.', 'C_Timer.', 'DynamicCam', 'SetParent(', 'SetAlpha(',
- 'EnableMouse(', 'UnregisterAllEvents(', 'OnUpdate', 'OnShow'):
+ 'EnableMouse(', 'UnregisterAllEvents(', 'OnUpdate'):
  need(f not in p,'prohibited in placement '+f)
 need('frame:GetPoint(' not in p and 'frame:IsShown()' not in p,
  'native getters must use guarded method calls only')
@@ -41,8 +41,8 @@ need('Quest\\NativeServiceCapabilities.lua\nQuest\\NativeServicePlacementTrial.l
 need('if command == "nativeserviceplacement" then' in c,
  'command routed')
 need('"nativeServicePlacementTrial"' in c and
- '"Native Service Center / Restore (TEST)"' in c,
- 'H action exists')
+ '"Native Auto Position (TEST)"' in c,
+ 'H action exists (reused for opt-in auto)')
 need('Quest\\ServiceCatalogModel.lua' not in t and
  not (R/'Logres/Quest/ServiceCatalogModel.lua').exists(),
  'do not revive custom service catalog')
