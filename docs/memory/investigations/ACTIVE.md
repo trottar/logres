@@ -1,3 +1,7 @@
+## P0277 — shared panel art with separate Quest/Trainer parameters (2026-10-20)
+
+Verified P0276 R4 pushed `b01cecf`; user's screenshots show two incompatible placements and independent painters despite the same texture asset. The prior assistant representation that sharing assets meant D-046 component parity was INCORRECT. New `UI/PanelSurface.lua` provides configurable stretch/nine-slice background and divider; quest and trainer each load their own geometry/input file; Logres Theme remains common visual vocabulary. Preserves accepted Quest position and stock native trainer controls/transactions, and does not claim native skin runtime success. Full WSL/WoW validation remains UNVERIFIED. See `docs/memory/evidence/P0277_PARAMETERIZED_PANEL_SURFACE.md`.
+
 ## P0276 R4 — R3 memory health PREWRITE failure (2026-10-20)
 
 R3 shadow suite executed 144 checks and reported only 1 failure: `check_memory_health.py` rejected a generated handoff lacking `CURRENT.md` (checker 55/144). R3 wrote no tracked files. R4 fixes the exact handoff contract, adds a candidate preflight guard and preserves R0 byte-exact baseline reconciliation. R1/R2/R3 failures remain OPEN historical evidence; new WSL static and WoW runtime/visual checks remain UNVERIFIED. See `docs/memory/evidence/P0276_R4_MEMORY_HEALTH_FAILURE.md`.

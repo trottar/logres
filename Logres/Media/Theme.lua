@@ -246,21 +246,6 @@ theme.nativeServiceAccent = {
 }
 
 theme.questDialogue = {
-    width = 640,
-    height = 320,
-    x = 0,
-    y = -110,
-    titleWidth = 560,
-    bodyWidth = 548,
-    bodyHeight = 134,
-    objectiveWidth = 548,
-    objectiveHeight = 50,
-    titleFont = "GameFontHighlightLarge",
-    bodyFont = "GameFontHighlight",
-    objectiveHeaderFont = "GameFontNormalSmall",
-    objectiveFont = "GameFontNormal",
-    pageFont = "GameFontHighlightSmall",
-
     colors = {
         title = { 0.94, 0.83, 0.60, 1.00 },
         body = { 0.92, 0.89, 0.81, 0.97 },
@@ -276,6 +261,11 @@ theme.questDialogue = {
         divider = MEDIA_ROOT .. "Quest\\quest_narrative_divider.tga",
         pageChevron = MEDIA_ROOT .. "Quest\\quest_page_chevron.tga",
     },
+}
+
+theme.panelSurface = {
+    assets = theme.questDialogue.assets,
+    colors = theme.questDialogue.colors,
 }
 
 theme.questOfferControls = {

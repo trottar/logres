@@ -40,7 +40,7 @@ CONSUMERS = {
         'Logres.Layout.Bind(root, "activeQuest", "TOPRIGHT", "TOPRIGHT")',
     ),
     ADDON / "Quest" / "Dialogue.lua": (
-        'Logres.Layout.Bind(root, "questDialogue", "TOP", "TOP")',
+        'Logres.Layout.Bind(root, panelConfig.placement.key,',
     ),
     ADDON / "HUD" / "PlayerHelpfulAuras.lua": (
         'Logres.Layout.Bind(root, "passiveStatus", "LEFT", "CENTER")',

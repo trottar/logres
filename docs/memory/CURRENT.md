@@ -7,10 +7,10 @@ project: logres
 # Current State
 
 ## Active Objective
-Prove a unified Logres native-backed trainer design without replacing Blizzard trainer data, filters or purchases. D-046/D-047 apply; the accepted camera and DynamicCam source remains frozen. The working quest renderer supplies the style reference, not an oversized wrapper.
+Enforce D-046 with one parameterized Logres panel-renderer and independent Quest/Trainer input files. Visual identity is shared; sizing/placement are component-owned. Native trainer controls, purchases and camera remain Blizzard/previously-approved owned.
 
 ## Current Work Item
-**P0276 R4 — GUARDED TRAINER SKIN + MEMORY HEALTH REPAIR, PREPARED / WoW UNVERIFIED.** Verified pushed `main` `75e8024` P0275. The 640×540 additive native-service shell visually FAILED. P0276 R0 was diagnostic-only and omitted dedicated tests; its exact local candidate may be present despite the earlier reported missing-ZIP attempt. R1 correctly refused a dirty baseline, but did not offer a safe upgrade. R2 resolves that refusal through exact byte-for-byte R0 matching and supersedes R1 with H Trainer Skin ON (TEST), H Trainer Skin OFF, P Trainer Skin Art Preview using the same quest-art painter as live, H pagination, and the extended read-only existing Native Service Frame Audit. Only opt-in trainer root decoration transparency, never purchase/training controls, is changed. Camera frozen.
+**P0277 — PARAMETERIZED PANEL SURFACE EXTRACTION, PREPARED / WoW UNVERIFIED.** Verified baseline is pushed P0276 R4 `b01cecf`. User screenshots show Trainer Art Preview centered/lower and visibly offset from approved Quest UI. Root cause: independent painter and hardcoded trainer preview center even though assets match. Extract shared `UI/PanelSurface.lua`, independent `QuestPanelConfig.lua` and `TrainerPanelConfig.lua`, and preserve accepted quest stretch styling and native trainer safety. See P0277 evidence.
 
 ## Verified State
 - **R3 PREWRITE FAIL:** assistant-built CURRENT_HANDOFF.md lacked `CURRENT.md`; checker 55/144 failed. All 144 prewrite checks ran, no tracked files were written. R4 corrects this; WSL and WoW remain unverified.
@@ -21,15 +21,16 @@ Prove a unified Logres native-backed trainer design without replacing Blizzard t
 - P0273 verified positioning and restoration remain untouched, with the previous original P0272 WSL proof limitation preserved.
 
 ## Next Action
-Apply R4 guarded archive against pushed P0275 (clean or exact R0 local candidate) `75e8024` after static PREWRITE suite and all postwrite contracts; inspect WoW P Art Preview and H ON / OFF at a naturally available trainer with panel closed. H Native Service Frame Audit reports client-control/texture inventory; H Native NPC Services Check and 0 Run All regression. Test native filter, list selection, Train button availability (do not purchase) and stock restoration close/OFF. FAIL/taint/restoration error stops this milestone. If skin trial is DEFERRED because client root lacks safe BACKGROUND/BORDER regions, retain stock and use the read-only inventory to design next gated test. Landscape reflow still separate.
+Run guarded P0277 patch full candidate PREWRITE/POSTWRITE static suites, check manifest, commit/push by user, verify remote main. Deploy to WoW. Compare P Quest Dialogue Preview with Trainer Skin Art Preview (panel closed), then open a natural trainer and run H Trainer Skin ON/OFF, H Native Service Frame Audit and 0 Run All. Native trainer skin remains UNVERIFIED/DEFERRED until actually tested; no landscape reflow authorized.
 
 ## Success Criteria
-H ON and OFF actually exercise a reversible visual trial; P preview independently draws the same quest-art renderer; absent native candidate/protected/combat defers with untouched stock; H paging exposes all 20 actions. No disappearance of stock controls and no changes to other NPC services, camera/DynamicCam or quests. WoW visual quality and runtime safety remain UNVERIFIED.
+One shared art painter supports Quest stretch and Trainer nine-slice from separate editable inputs, without duplicating theme assets, geometry constants in view code, or changing Quest appearance. Trainer preview may adjust independently; native controls/transaction and opaque alpha restoration remain protected. Historical negative evidence retained; runtime confirmation required.
 
 ## Do Not Reopen Without New Evidence
 Do not infer addon installation from one guessed filesystem path or the presence/absence of a Lua global alone. No hard QuestieDB dependency, package bundling, unknown CurseForge project ID, global quest ID scans on updates, guessed quest availability, invented coordinates or native pin scraping. Do not hide the Blizzard minimap, alter user-accepted waypoint/focused-quest bearings, or treat missing locations as PASS. Baked flavor must not be guessed from a Source-only indicator. Keep negative and deferred evidence explicit.
 
 ## Relevant References
+- `docs/memory/evidence/P0277_PARAMETERIZED_PANEL_SURFACE.md`
 - `docs/memory/evidence/P0276_NATIVE_TRAINER_FEASIBILITY.md`
 - `docs/memory/evidence/P0275_NATIVE_QUEST_ART_SHELL.md`
 - `docs/memory/evidence/P0274_NATIVE_SERVICE_ACCENT.md`

@@ -2,7 +2,7 @@
 ## Title: Logres
 ## Notes: Immersive, world-first interface for World of Warcraft Forever.
 ## Author: trottar
-## Version: 0.0.174-dev
+## Version: 0.0.175-dev
 ## SavedVariables: LogresDB, LogresDiagnosticsDB
 ## OptionalDeps: QuestieDB
 
@@ -12,7 +12,10 @@ Core\Preferences.lua
 Core\State.lua
 Core\Modules.lua
 Media\Theme.lua
+Quest\QuestPanelConfig.lua
+Quest\TrainerPanelConfig.lua
 Integration\Layout.lua
+UI\PanelSurface.lua
 HUD\HUD.lua
 HUD\AuraStatusProbe.lua
 HUD\PlayerHelpfulAuras.lua

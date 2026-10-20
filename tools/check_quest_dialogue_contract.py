@@ -12,6 +12,7 @@ COMMANDS = ADDON / "Core" / "Commands.lua"
 TOC = ADDON / "Logres.toc"
 BOOTSTRAP = ADDON / "Core" / "Bootstrap.lua"
 THEME = ADDON / "Media" / "Theme.lua"
+CONFIG = ADDON / "Quest" / "QuestPanelConfig.lua"
 PAGES = ADDON / "UI" / "NarrativePages.lua"
 
 errors = []
@@ -57,6 +58,7 @@ bootstrap = (
     else ""
 )
 theme = THEME.read_text(encoding="utf-8") if THEME.is_file() else ""
+config = CONFIG.read_text(encoding="utf-8") if CONFIG.is_file() else ""
 pages = PAGES.read_text(encoding="utf-8") if PAGES.is_file() else ""
 
 for fragment in (
@@ -197,13 +199,16 @@ for fragment in (
     'panel = MEDIA_ROOT .. "Quest\\\\quest_narrative_panel.tga"',
     'divider = MEDIA_ROOT .. "Quest\\\\quest_narrative_divider.tga"',
     'pageChevron = MEDIA_ROOT .. "Quest\\\\quest_page_chevron.tga"',
-    "bodyHeight = 134",
-    "objectiveHeight = 50",
 ):
     if fragment not in theme:
         errors.append(
             f"Theme.lua missing quest narrative token/path: {fragment}"
         )
+
+for fragment in ("bodyHeight = 134", "objectiveHeight = 50",
+                 "width = 640", "height = 320", "Logres.PanelConfigs.quest = quest"):
+    if fragment not in config:
+        errors.append("QuestPanelConfig missing migrated quest parameter: " + fragment)
 
 for fragment in (
     "local function runQuestDialogueCheck()",

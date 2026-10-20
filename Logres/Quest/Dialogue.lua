@@ -9,7 +9,8 @@ local Dialogue = Logres:RegisterModule("QuestDialogue", {
 })
 
 local theme = Logres.Theme or {}
-local dialogueStyle = theme.questDialogue or {}
+local panelConfig = Logres.PanelConfigs.quest
+local dialogueStyle = panelConfig.presentation
 local dialogueAssets = dialogueStyle.assets or {}
 local dialogueColors = dialogueStyle.colors or {}
 
@@ -17,51 +18,11 @@ local offerStyle = theme.questOfferControls or {}
 local offerAssets = offerStyle.assets or {}
 local offerColors = offerStyle.colors or {}
 
-local DEFAULT_STYLE = {
-    width = 640,
-    height = 320,
-    x = 0,
-    y = -110,
-    titleWidth = 560,
-    bodyWidth = 548,
-    bodyHeight = 134,
-    objectiveWidth = 548,
-    objectiveHeight = 50,
-    titleFont = "GameFontHighlightLarge",
-    bodyFont = "GameFontHighlight",
-    objectiveHeaderFont = "GameFontNormalSmall",
-    objectiveFont = "GameFontNormal",
-    pageFont = "GameFontHighlightSmall",
-}
-
-local DEFAULT_COLORS = {
-    title = { 0.94, 0.83, 0.60, 1.00 },
-    body = { 0.92, 0.89, 0.81, 0.97 },
-    objectiveHeader = { 0.66, 0.50, 0.28, 0.95 },
-    objective = { 0.84, 0.76, 0.60, 0.97 },
-    page = { 0.64, 0.56, 0.43, 0.90 },
-    pageActive = { 0.92, 0.78, 0.48, 1.00 },
-    pageInactive = { 0.34, 0.30, 0.24, 0.55 },
-}
-
-local DEFAULT_OFFER_STYLE = {
-    width = 410,
-    height = 62,
-    y = -4,
-    buttonWidth = 150,
-    buttonHeight = 38,
-    buttonGap = 42,
-    font = "GameFontHighlightLarge",
-    feedbackFont = "GameFontHighlightSmall",
-}
-
-local DEFAULT_OFFER_COLORS = {
-    decline = { 0.86, 0.82, 0.73, 0.96 },
-    accept = { 0.96, 0.72, 0.24, 1.00 },
-    hover = { 1.00, 0.86, 0.48, 1.00 },
-    pressed = { 0.78, 0.55, 0.18, 1.00 },
-    feedback = { 0.72, 0.64, 0.50, 0.92 },
-}
+-- Production style values come from editable parameter / theme files.
+local DEFAULT_STYLE = panelConfig.presentation
+local DEFAULT_COLORS = Logres.Theme.panelSurface.colors
+local DEFAULT_OFFER_STYLE = theme.questOfferControls
+local DEFAULT_OFFER_COLORS = theme.questOfferControls.colors
 
 local function styleValue(name)
     local value = dialogueStyle[name]
@@ -1801,13 +1762,14 @@ function Dialogue:OnInitialize()
         styleValue("height")
     )
     root:SetPoint(
-        "TOP",
+        panelConfig.placement.point,
         UIParent,
-        "TOP",
-        styleValue("x"),
-        styleValue("y")
+        panelConfig.placement.relativePoint,
+        panelConfig.placement.x,
+        panelConfig.placement.y
     )
-    Logres.Layout.Bind(root, "questDialogue", "TOP", "TOP")
+    Logres.Layout.Bind(root, panelConfig.placement.key,
+        panelConfig.placement.point, panelConfig.placement.relativePoint)
     root:SetFrameStrata("HIGH")
     root:EnableMouse(false)
     root:Hide()
@@ -1841,16 +1803,9 @@ function Dialogue:OnInitialize()
     end)
     self.goodbyeButton = goodbyeButton
 
-    local panel =
-        root:CreateTexture(
-            nil,
-            "BACKGROUND"
-        )
-    panel:SetAllPoints(root)
-    panel:SetTexture(
-        dialogueAssets.panel
-        or "Interface\\Buttons\\WHITE8x8"
-    )
+    -- Shared panel renderer: identical art/geometry to previous accepted Quest.
+    Logres.PanelSurface.Paint(root, panelConfig.surface,
+        styleValue("width"), styleValue("height"))
 
     local titleText = root:CreateFontString(
         "LogresQuestDialogueTitle",
@@ -1880,27 +1835,6 @@ function Dialogue:OnInitialize()
     setFontColor(
         titleText,
         colorValue("title")
-    )
-
-    local divider =
-        root:CreateTexture(
-            nil,
-            "ARTWORK"
-        )
-    divider:SetSize(
-        styleValue("width") - 72,
-        18
-    )
-    divider:SetPoint(
-        "TOP",
-        root,
-        "TOP",
-        0,
-        -48
-    )
-    divider:SetTexture(
-        dialogueAssets.divider
-        or "Interface\\Buttons\\WHITE8x8"
     )
 
     local bodyText = root:CreateFontString(

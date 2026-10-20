@@ -40,48 +40,18 @@ local function unlocked()
 end
 
 local function hidePaint(pieces)
-    for i = 1, #pieces do
-        pcall(function() pieces[i]:Hide() end)
-    end
+    Logres.PanelSurface.Hide(pieces)
 end
 
--- The SAME painter is used by synthetic P preview and the guarded live trial.
--- No buttons, input fields, mock currencies or training actions are created.
-local function paint(owner, width, height)
-    local theme = Logres.Theme and Logres.Theme.questDialogue
-    local assets = theme and theme.assets
-    if not assets or type(assets.panel) ~= "string"
-        or type(assets.divider) ~= "string" then return nil end
-    local pieces = {}
-    local ok = pcall(function()
-        local cut = 40
-        local ww = {cut, width - 2 * cut, cut}
-        local hh = {cut, height - 2 * cut, cut}
-        local xx = {0, cut, width - cut}
-        local yy = {0, cut, height - cut}
-        local uu = {0, cut / theme.width, 1 - cut / theme.width, 1}
-        local vv = {0, cut / theme.height, 1 - cut / theme.height, 1}
-        for row = 1, 3 do
-            for col = 1, 3 do
-                local tex = owner:CreateTexture(nil, "BACKGROUND", nil, -7)
-                pieces[#pieces + 1] = tex
-                assetPieces[tex] = true -- do not mistake addon art for stock regions
-                tex:Hide()
-                tex:SetTexture(assets.panel)
-                tex:SetSize(ww[col], hh[row])
-                tex:SetPoint("TOPLEFT", owner, "TOPLEFT", xx[col], -yy[row])
-                tex:SetTexCoord(uu[col], uu[col+1], vv[row], vv[row+1])
-            end
+-- P/live share one trainer configuration and the exact common panel painter.
+local trainerConfig = Logres.PanelConfigs.trainer
+local function createPaint(owner, width, height)
+    local pieces = Logres.PanelSurface.Paint(owner, trainerConfig.surface, width, height)
+    if pieces then
+        for index = 1, #pieces do
+            assetPieces[pieces[index]] = true
         end
-        local divider = owner:CreateTexture(nil, "BACKGROUND", nil, -6)
-        pieces[#pieces + 1] = divider
-        assetPieces[divider] = true
-        divider:Hide()
-        divider:SetTexture(assets.divider)
-        divider:SetSize(width - 72, 18)
-        divider:SetPoint("TOP", owner, "TOP", 0, -52)
-    end)
-    if not ok then hidePaint(pieces); return nil end
+    end
     return pieces
 end
 
@@ -192,7 +162,7 @@ function Skin.Enable()
     end
     local decorations, why = stockDecorations(frame)
     if not decorations then return false, why end
-    local pieces = paint(frame, width, height)
+    local pieces = createPaint(frame, width, height)
     if not pieces then return fail("quest-art-painter-unavailable") end
     if not hooked then
         local hook = method(frame, "HookScript")
@@ -230,24 +200,26 @@ function Skin.Preview()
         return true, "synthetic-preview-hidden"
     end
     if not preview then
+        local visual = trainerConfig.preview
         local ok, root = pcall(function()
             local surface = CreateFrame("Frame", nil, UIParent)
-            surface:SetSize(560, 430)
-            surface:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-            surface:SetFrameStrata("DIALOG")
-            surface:EnableMouse(false)
+            surface:SetSize(visual.width, visual.height)
+            surface:SetPoint(visual.point, UIParent, visual.relativePoint, visual.x, visual.y)
+            surface:SetFrameStrata(visual.strata)
+            surface:EnableMouse(visual.mouse)
             surface:Hide()
-            local painted = paint(surface, 560, 430)
+            local painted = createPaint(surface, visual.width, visual.height)
             if not painted then error("preview-painter-failed") end
-            for i = 1, #painted do painted[i]:Show() end
-            local title = surface:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
-            title:SetPoint("TOP", surface, "TOP", 0, -20)
-            title:SetText("TRAINER / PANEL ART")
-            title:SetTextColor(0.94, 0.83, 0.60, 1)
-            local note = surface:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-            note:SetPoint("CENTER", surface, "CENTER", 0, 0)
-            note:SetText("Visual fixture only — native trainer controls remain Blizzard-owned")
-            note:SetTextColor(0.92, 0.89, 0.81, 0.97)
+            local title = surface:CreateFontString(nil, "OVERLAY", visual.titleFont)
+            title:SetPoint("TOP", surface, "TOP", visual.titleX, visual.titleY)
+            title:SetText(visual.title)
+            local tc = visual.titleColor
+            title:SetTextColor(tc[1], tc[2], tc[3], tc[4])
+            local note = surface:CreateFontString(nil, "OVERLAY", visual.noteFont)
+            note:SetPoint("CENTER", surface, "CENTER", visual.noteX, visual.noteY)
+            note:SetText(visual.note)
+            local nc = visual.noteColor
+            note:SetTextColor(nc[1], nc[2], nc[3], nc[4])
             return surface
         end)
         if not ok or not root then return fail("preview-construction-failed") end

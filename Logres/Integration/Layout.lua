@@ -20,10 +20,10 @@ local ANCHOR_SPECS = {
     },
     questDialogue = {
         name = "LogresLayoutQuestDialogue",
-        point = "TOP",
-        relativePoint = "TOP",
-        x = 0,
-        y = -110,
+        point = Logres.PanelConfigs.quest.placement.point,
+        relativePoint = Logres.PanelConfigs.quest.placement.relativePoint,
+        x = Logres.PanelConfigs.quest.placement.x,
+        y = Logres.PanelConfigs.quest.placement.y,
     },
     contextObjective = {
         name = "LogresLayoutContextObjective",

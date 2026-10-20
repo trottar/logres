@@ -16,9 +16,12 @@ def need(c, why):
 for token in (
  'Logres.NPCNativeTrainerSkin = Skin', 'function Skin.Enable()',
  'function Skin.Disable(reason)', 'function Skin.Preview()',
- 'function Skin.GetAudit()', 'local function paint(owner, width, height)',
- 'local painted = paint(surface, 560, 430)',
- 'local pieces = paint(frame, width, height)',
+ 'function Skin.GetAudit()',
+ 'local trainerConfig = Logres.PanelConfigs.trainer',
+ 'local function createPaint(owner, width, height)',
+ 'Logres.PanelSurface.Paint(owner, trainerConfig.surface, width, height)',
+ 'local painted = createPaint(surface, visual.width, visual.height)',
+ 'local pieces = createPaint(frame, width, height)',
  'local decorations, why = stockDecorations(frame)',
  'state.interactionType ~= 7', 'if not unlocked() then',
  'read(frame, "IsProtected")', 'read(frame, "IsShown")',
@@ -32,11 +35,7 @@ for token in (
  'active = {frame=frame, decorations=decorations, paint=pieces, pending=false}',
  'local restored = Skin.Disable("activation-rolled-back")',
  'nativeTransactions=0, geometryWrites=0',
- 'CreateTexture(nil, "BACKGROUND", nil, -7)',
- 'CreateTexture(nil, "BACKGROUND", nil, -6)',
- 'theme.assets' if False else 'Logres.Theme and Logres.Theme.questDialogue',
- 'tex:SetTexture(assets.panel)', 'divider:SetTexture(assets.divider)',
- 'surface:EnableMouse(false)', 'Blizzard-owned',
+ 'surface:EnableMouse(visual.mouse)', 'trainerConfig.preview',
 ): need(token in s, 'skin prerequisite: ' + token)
 for bad in (
  'BuyTrainerService(', 'BuyMerchantItem(', 'RepairAllItems(',
