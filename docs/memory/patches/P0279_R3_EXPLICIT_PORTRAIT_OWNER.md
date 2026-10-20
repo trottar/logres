@@ -1,0 +1,3 @@
+# P0279 R3 — explicit portrait overlay owner mapping
+
+Baseline `90198c5` (P0279 R2), prepared 2026-10-20. Runtime R2 diagnosed `trainer.portrait` native parent `outside-size-gate`, twice with trainer open. Candidate: optional indexed `overlayOwnerPath = ClassTrainerFrame`, used ONLY on this one size-gate failure and only after independently passing the existing native-frame eligibility checks. Portrait texture bounds remain the target, addon-owned outline parent is the mapped Frame. Stock ownership and gameplay unchanged. Exact negative evidence, runtime limitations and deferred global overlap documented in `docs/memory/evidence/P0279_R3_EXPLICIT_PORTRAIT_OWNER.md`. Full WSL checker suite and WoW acceptance pending. Never advance from static results alone.

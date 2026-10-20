@@ -193,6 +193,24 @@ function Inspector.Highlight(id)
     local region, reason = resolve(entry)
     if not region then return false, reason end
     local owner, ownerReason = verifiedOverlayOwner(region)
+    local explicitOwner = false
+    -- P0279 R3: only a native parent that FAILED THE SIZE GATE may use
+    -- an explicitly mapped, independently eligible service-root Frame.
+    -- Native Texture bounds remain checked by verifiedOverlayOwner(), and
+    -- the addon-owned overlay remains anchored to the original Texture.
+    -- This is not a generic large-frame size exemption or hierarchy walk.
+    if not owner and ownerReason == "native-owner-outside-size-gate"
+        and type(entry.overlayOwnerPath) == "string" then
+        local mappedOwner = resolve({nativePath = entry.overlayOwnerPath})
+        if mappedOwner and eligible(mappedOwner) then
+            local mappedKind, knownKind = plain(mappedOwner, "GetObjectType")
+            if knownKind and type(mappedKind) == "string"
+                and mappedKind ~= "Texture" and mappedKind ~= "FontString" then
+                owner = mappedOwner
+                explicitOwner = true
+            end
+        end
+    end
     if not owner then return false, ownerReason end
     local frame = getOverlay()
     local anchored = pcall(function()
@@ -210,7 +228,7 @@ function Inspector.Highlight(id)
         return false, "overlay-anchor-deferred"
     end
     current = id
-    return true, "highlight-visible"
+    return true, explicitOwner and "highlight-visible-mapped-owner" or "highlight-visible"
 end
 
 function Inspector.Active()

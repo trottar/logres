@@ -55,3 +55,11 @@ Logres HUD overlap with Blizzard windows is a global presentation ownership/stra
 ## P0279 R1 runtime reconciliation (2026-10-20)
 
 On P0279 `0.0.177-dev`, the user's in-client M export recorded nine successful trainer native highlights and nine deferred attempts after opening the trainer; four additional pre-open attempts were deferred because the trainer root was unavailable. `trainer.portrait` resolved a visible native Texture but the inspector attempted `Frame:SetParent(Texture)`, causing `overlay-anchor-deferred`. R1 changes **only addon-owned overlay parenting**: it anchors to the visible Texture/FontString but parents to an eligible native Frame owner. Source inspection of Blizzard TrainerUI and ElvUI indicates revised **candidate paths** `ClassTrainerFrameTitleText` and `ClassTrainerFrameSkillStepButton.icon` for title/detail icon; their Forever client availability is **not verified**. The R1 panel reports HIGHLIGHTED, UNMAPPED, and DEFERRED with reason in diagnostics. Recycled rows remain DEFERRED; no native controls or actions are changed.
+
+## P0279 R3 owner mapping (2026-10-20)
+
+**Observed:** P0279 R2 (`0.0.179-dev`) selected the native `ClassTrainerFramePortrait` while trainer was open, and the native Texture's immediate Frame parent was rejected by `native-owner-outside-size-gate` on two consecutive tests. The parent dimensions were not recorded. **Never infer that the parent is `UIParent`, or that it is safe to exempt oversized Frame parents wholesale.**
+
+**Explicit inspector-only owner association:** `trainer.portrait` uses `overlayOwnerPath = "ClassTrainerFrame"` only if its immediate parent failed the size gate. That service root was already proven highlightable in P0279 Forever testing and must independently satisfy the unchanged `eligible()` protection, visibility and bounded-frame gate. The native Texture remains the visual anchor; `ClassTrainerFrame` owns only Logres's mouse-inert overlay lifecycle. No Blizzard parent, texture, or layout is changed. Future services may index their own tested owners, but none are added by this checkpoint.
+
+R3 runtime highlight placement and restoration remain **UNVERIFIED** until an open-trainer M portrait selection and close/Hide test. Recycled rows and synthetic design-only controls remain DEFERRED/UNMAPPED.

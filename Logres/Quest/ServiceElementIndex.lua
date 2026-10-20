@@ -3,10 +3,11 @@
 -- No behavior, native method calls or coordinates live in this input file.
 local _, Logres = ...
 local rows = {}
-local function add(id, service, role, label, nativePath, evidence)
+local function add(id, service, role, label, nativePath, evidence, overlayOwnerPath)
     rows[#rows + 1] = {
         id = id, service = service, role = role, label = label,
         nativePath = nativePath, evidence = evidence,
+        overlayOwnerPath = overlayOwnerPath,
         state = nativePath and "SOURCE_CANDIDATE" or "UNMAPPED",
     }
 end
@@ -14,7 +15,7 @@ end
 -- ElvUI Forever/Blizzard named references are candidates until in-client verified.
 add("trainer.frame",       "trainer", "surface",     "Panel / border",       "ClassTrainerFrame",                   "ElvUI Forever")
 add("trainer.title",       "trainer", "title",       "Trainer title",        "ClassTrainerFrameTitleText",           "Blizzard TrainerUI named candidate; client verify")
-add("trainer.portrait",    "trainer", "portrait",    "Portrait",             "ClassTrainerFramePortrait",           "ElvUI Forever")
+add("trainer.portrait",    "trainer", "portrait",    "Portrait",             "ClassTrainerFramePortrait",           "ElvUI Forever", "ClassTrainerFrame")
 add("trainer.subtitle",    "trainer", "subtitle",    "Trainer profession",   nil,                                   "design-only")
 add("trainer.search",      "trainer", "search",      "Search field",         nil,                                   "design-only")
 add("trainer.categories",  "trainer", "category",    "Left category filter", nil,                                   "design-only")
