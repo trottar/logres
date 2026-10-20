@@ -7,7 +7,7 @@
 | ID | Service | Logres role | Intended element | Blizzard candidate | Evidence | State |
 |---|---|---|---|---|---|---|
 | `trainer.frame` | trainer | `surface` | Panel / border | ClassTrainerFrame | ElvUI Forever | SOURCE_CANDIDATE |
-| `trainer.title` | trainer | `title` | Trainer title | ClassTrainerNameText | Aurora Classic; client verify | SOURCE_CANDIDATE |
+| `trainer.title` | trainer | `title` | Trainer title | ClassTrainerFrameTitleText | Blizzard TrainerUI named candidate; client verify | SOURCE_CANDIDATE |
 | `trainer.portrait` | trainer | `portrait` | Portrait | ClassTrainerFramePortrait | ElvUI Forever | SOURCE_CANDIDATE |
 | `trainer.subtitle` | trainer | `subtitle` | Trainer profession | — | design-only | UNMAPPED |
 | `trainer.search` | trainer | `search` | Search field | — | design-only | UNMAPPED |
@@ -18,7 +18,7 @@
 | `trainer.row` | trainer | `row` | Visible skill row | ClassTrainerFrame.ScrollBox.* | ElvUI Forever; row identity TBD | SOURCE_CANDIDATE |
 | `trainer.selection` | trainer | `selection` | Selected skill | ClassTrainerFrameSkillStepButton | ElvUI Forever | SOURCE_CANDIDATE |
 | `trainer.status` | trainer | `status` | Training rank bar | ClassTrainerStatusBar | ElvUI Forever | SOURCE_CANDIDATE |
-| `trainer.detailIcon` | trainer | `detail.icon` | Selected skill icon | ClassTrainerSkillIcon | ElvUI Forever | SOURCE_CANDIDATE |
+| `trainer.detailIcon` | trainer | `detail.icon` | Selected skill icon | ClassTrainerFrameSkillStepButton.icon | ElvUI Forever skill-step icon; client verify | SOURCE_CANDIDATE |
 | `trainer.reagents` | trainer | `reagents` | Reagent display | — | design-only | UNMAPPED |
 | `trainer.price` | trainer | `price` | Money / cost | ClassTrainerFrame.money | ElvUI Forever | SOURCE_CANDIDATE |
 | `trainer.train` | trainer | `action.train` | Train button | ClassTrainerTrainButton | ElvUI Forever | SOURCE_CANDIDATE |
@@ -51,3 +51,7 @@
 ## Deferred global issue
 
 Logres HUD overlap with Blizzard windows is a global presentation ownership/strata refinement, not a special trainer hack.
+
+## P0279 R1 runtime reconciliation (2026-10-20)
+
+On P0279 `0.0.177-dev`, the user's in-client M export recorded nine successful trainer native highlights and nine deferred attempts after opening the trainer; four additional pre-open attempts were deferred because the trainer root was unavailable. `trainer.portrait` resolved a visible native Texture but the inspector attempted `Frame:SetParent(Texture)`, causing `overlay-anchor-deferred`. R1 changes **only addon-owned overlay parenting**: it anchors to the visible Texture/FontString but parents to an eligible native Frame owner. Source inspection of Blizzard TrainerUI and ElvUI indicates revised **candidate paths** `ClassTrainerFrameTitleText` and `ClassTrainerFrameSkillStepButton.icon` for title/detail icon; their Forever client availability is **not verified**. The R1 panel reports HIGHLIGHTED, UNMAPPED, and DEFERRED with reason in diagnostics. Recycled rows remain DEFERRED; no native controls or actions are changed.

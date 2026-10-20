@@ -13,7 +13,7 @@ end
 -- Desired layout: user-approved landscape trainer composition.
 -- ElvUI Forever/Blizzard named references are candidates until in-client verified.
 add("trainer.frame",       "trainer", "surface",     "Panel / border",       "ClassTrainerFrame",                   "ElvUI Forever")
-add("trainer.title",       "trainer", "title",       "Trainer title",        "ClassTrainerNameText",                "Aurora Classic; client verify")
+add("trainer.title",       "trainer", "title",       "Trainer title",        "ClassTrainerFrameTitleText",           "Blizzard TrainerUI named candidate; client verify")
 add("trainer.portrait",    "trainer", "portrait",    "Portrait",             "ClassTrainerFramePortrait",           "ElvUI Forever")
 add("trainer.subtitle",    "trainer", "subtitle",    "Trainer profession",   nil,                                   "design-only")
 add("trainer.search",      "trainer", "search",      "Search field",         nil,                                   "design-only")
@@ -24,7 +24,7 @@ add("trainer.scrollbar",   "trainer", "scrollbar",   "Skill scrollbar",      "Cl
 add("trainer.row",         "trainer", "row",         "Visible skill row",    "ClassTrainerFrame.ScrollBox.*",        "ElvUI Forever; row identity TBD")
 add("trainer.selection",   "trainer", "selection",   "Selected skill",       "ClassTrainerFrameSkillStepButton",    "ElvUI Forever")
 add("trainer.status",      "trainer", "status",      "Training rank bar",    "ClassTrainerStatusBar",               "ElvUI Forever")
-add("trainer.detailIcon",  "trainer", "detail.icon", "Selected skill icon",  "ClassTrainerSkillIcon",               "ElvUI Forever")
+add("trainer.detailIcon",  "trainer", "detail.icon", "Selected skill icon",  "ClassTrainerFrameSkillStepButton.icon", "ElvUI Forever skill-step icon; client verify")
 add("trainer.reagents",    "trainer", "reagents",    "Reagent display",      nil,                                   "design-only")
 add("trainer.price",       "trainer", "price",       "Money / cost",         "ClassTrainerFrame.money",              "ElvUI Forever")
 add("trainer.train",       "trainer", "action.train","Train button",         "ClassTrainerTrainButton",            "ElvUI Forever")

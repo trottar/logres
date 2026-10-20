@@ -31,7 +31,9 @@ for token in ('Logres.MappingInspector = Inspector','function Inspector.Entries(
               'native-region-unverified-or-protected',
               'dynamic-row-identity-unverified','overlay-anchor-deferred',
               'frame:EnableMouse(false)','frame:SetFrameStrata(Index.overlay.strata)',
-              'frame:SetParent(region)','frame:SetAllPoints(region)'):
+              'frame:SetParent(owner)','frame:SetAllPoints(region)',
+              'verifiedOverlayOwner(region)','plain(region, "GetObjectType")',
+              'plain(region, "GetParent")', 'kind ~= "Texture" and kind ~= "FontString"'):
     need(token in M,'inspector safety/capability missing '+token)
 for forbidden in ('BuyTrainerService(', 'BuyMerchantItem(', 'TakeTaxiNode(',
                   'RepairAllItems(', 'C_GossipInfo.', 'SetScript("OnUpdate"',

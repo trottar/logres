@@ -39,6 +39,44 @@ local function eligible(region)
        and width > 2 and height > 2 and width < 1800 and height < 1800
 end
 
+-- A native Texture/FontString is a Region, not a legal parent for a Frame.
+-- Anchor to that Region, but parent only to its verified Frame owner so native
+-- close automatically hides the mouse-inert highlight without any native write.
+local function verifiedOverlayOwner(region)
+    if not ordinary(region) or region == nil then
+        return nil, "native-region-unverified-or-protected"
+    end
+    local kind, knownKind = plain(region, "GetObjectType")
+    if not knownKind or type(kind) ~= "string" then
+        return nil, "native-kind-unavailable"
+    end
+    if kind ~= "Texture" and kind ~= "FontString" then
+        if not eligible(region) then
+            return nil, "native-region-unverified-or-protected"
+        end
+        return region
+    end
+    -- For non-Frame regions, native protection is governed by their owner.
+    -- A readable IsProtected on the region itself must not report true.
+    local protected, hasProtection = plain(region, "IsProtected")
+    if hasProtection and protected ~= false then
+        return nil, "native-region-unverified-or-protected"
+    end
+    local shown, hasShown = plain(region, "IsShown")
+    local width, hasWidth = plain(region, "GetWidth")
+    local height, hasHeight = plain(region, "GetHeight")
+    if not hasShown or shown ~= true or not hasWidth or not hasHeight
+        or type(width) ~= "number" or type(height) ~= "number"
+        or width <= 2 or height <= 2 or width >= 1800 or height >= 1800 then
+        return nil, "native-region-unverified-or-protected"
+    end
+    local owner, hasOwner = plain(region, "GetParent")
+    if not hasOwner or not ordinary(owner) or owner == nil or not eligible(owner) then
+        return nil, "native-owner-unverified-or-protected"
+    end
+    return owner
+end
+
 local function resolve(entry)
     if type(entry.nativePath) ~= "string" then return nil, "UNMAPPED" end
     local parts = {}
@@ -117,12 +155,14 @@ function Inspector.Highlight(id)
     end
     local region, reason = resolve(entry)
     if not region then return false, reason end
-    if not eligible(region) then return false, "native-region-unverified-or-protected" end
+    local owner, ownerReason = verifiedOverlayOwner(region)
+    if not owner then return false, ownerReason end
     local frame = getOverlay()
     local anchored = pcall(function()
-        -- Parent our mouse-inert outline to the visible native owner. Native
-        -- window close automatically hides the outline; no native hook/write.
-        frame:SetParent(region)
+        -- Native owners (Frame/Button) can parent addon art. A Texture or
+        -- FontString is used as an ANCHOR only, never as a Frame parent.
+        -- Native close hides the outline; no native hook or write.
+        frame:SetParent(owner)
         frame:ClearAllPoints()
         frame:SetAllPoints(region)
         frame:SetFrameStrata(Index.overlay.strata)

@@ -7,12 +7,14 @@ project: logres
 # Current State
 
 ## Active Objective
-Catalogue every desired Logres native-service component against source-backed Blizzard candidate controls before further reskinning. Provide indexed on-demand M tab verification. Preserve D-046 fixture/live parity, D-047 Blizzard interaction and transactions; defer global cross-UI overlap to system refinement.
+Complete source-backed mapping verification and correct its runtime failures without native UI mutation. Preserve indexed service roles, D-046 fixture parity, D-047 Blizzard-owned controls and transactions. Keep global Logres/native overlap in future shared refinement.
 
 ## Current Work Item
-**P0279 — SERVICE ELEMENT MAPPING INDEX / M VERIFICATION TAB, PREPARED; WoW UNVERIFIED.** Verified pushed P0278 R1 `41826a9`. Latest user screenshot demonstrates native Enchanting rows partially adopt Logres styling, but a coherent landscape screen remains a desired mockup, **NOT IMPLEMENTED**. Before further skin experiments, introduce declarative `ServiceElementIndex.lua` mapping each Logres design role to source-backed native paths or explicit UNMAPPED, and `MappingInspector.lua` highlighting only eligible native regions with mouse-inert addon-owned overlay. Dedicated M developer tab pages all indexed services and writes PASS/DEFERRED evidence; Hide clears overlay only. Source precedents: ElvUI Forever Trainer/merchant/taxi, Aurora Classic for cross-version contrast. See P0279 evidence and durable index.
+**P0279 R1 — M MAPPING RUNTIME RECONCILIATION / PREPARED; WoW UNVERIFIED.** P0279 pushed `7660395`. In-client M results establish nine trainer highlights; a few returned DEFERRED. Portrait failed because overlay parenting targeted a native Texture; title and detail-icon global candidates were unavailable; dynamic row deliberately deferred, five design-only slots unmapped. R1 repairs addon overlay owner choice, upgrades source-backed title/detail-icon candidate paths, and logs HIGHLIGHTED/UNMAPPED/DEFERRED with reasons. No live skinning or landscape reflow; no native writes. See R1 evidence.
 
 ## Verified State
+- **P0279 pushed `7660395` / WoW scoped evidence:** 9 trainer highlights drew overlays; title and detail-icon root paths unavailable; portrait anchoring failed, five design-only roles UNMAPPED and dynamic row DEFERRED. Early four `native-root-unavailable` events occurred before trainer load. User reports most outlines looked correct but cannot identify the few missing; log provides exact technical deferrals. Explicit Hide and automatic close restoration not independently recorded. See R1 evidence.
+- **R1 fixes:** guarded addon-owned portrait/FontString owner-vs-anchor distinction; source-backed alternative title/detail-icon candidates (client unverified); M logs exact statuses without changing any native interaction controls.
 - **P0278 R1 pushed `41826a9` / user visual evidence:** new trainer scroll area is closer to Logres visual language; **PARTIAL / not accepted final**. User reports other tests working; no claim of landscape reflow or fully verified native control mapping. Approved landscape Enchanting screenshot is a DESIGN TARGET, not deployed runtime.
 - **P0279 mapping scope:** Trainer, merchant, flight and additional gossip/bank/auction/stable/tabard service roots indexed with SOURCE_CANDIDATE vs UNMAPPED provenance. Unverified dynamic ScrollBox row identity deferred. No Blizzard-native hiding permitted in read-only M inspector. Full WSL and WoW testing PENDING.
 - **P0278 R0 PREWRITE FAIL (user WSL):** historical P0276 checker asserted direct TOC adjacency and rejected new TrainerMotif inserted between audit and skin (checker 109/146); no tracked writes. R1 migrates the assertion to enforce audit-before-skin order, while new P0278 checker enforces motif placement. Full WSL rerun and WoW acceptance PENDING. See `docs/memory/evidence/P0278_R1_PREWRITE_ORDER_FAILURE.md`.
@@ -24,15 +26,17 @@ Catalogue every desired Logres native-service component against source-backed Bl
 - P0273 verified positioning and restoration remain untouched, with the previous original P0272 WSL proof limitation preserved.
 
 ## Next Action
-Execute guarded P0279 full pre/post static suite and manifest; after user commits/pushes, verify remote. Runtime: deploy then `/reload`, `/logres` M tab, select trainer root, list, filter, Train and UNMAPPED search, inspect highlighted bounds and PASS/DEFERRED; Hide Highlight must clear only addon art. Optionally inspect merchant/taxi only where naturally available. Preserve screenshots and diagnostics before moving to P0280 shared style components/native adapters. No redeploy for future mapping-doc-only extensions.
+Run guarded P0279 R1 shadow 148-checker PREWRITE and POSTWRITE gates and manifest; user commit/push, verify remote `main`. Deploy runtime files, `/reload` and when naturally at a trainer use `/logres` -> M to verify only previously deferred `trainer.portrait`, `trainer.title`, `trainer.detailIcon`, then `Hide Highlight` and close trainer. Inspect matching outline, HIGHLIGHTED/DEFERRED and Lua/taint errors. No need to repeat nine successful probes or contrive gameplay/travel. Record negatives and then proceed to separately scoped P0280 component styling only on verified native mappings.
 
 ## Success Criteria
-One indexed declarative source of truth for service design roles, native candidates, evidence states, and unmapped controls; M tester paginates without changing 108 existing actions. Highlight reads only ordinary unprotected shown objects out of combat, never mutates Blizzard gameplay/control/transaction state, and OFF clears overlay. Preview/live style parity and future native skinning stay separate gated work. Historical P0274/P0275 visual failures and P0276/R0 static failures retained.
+All indexed roles and existing actions preserved. Non-frame Texture/FontString can be highlighted using verified ordinary unprotected Frame owner while anchoring to its own bounds; none of the native frame, protected interactions, state, geometry or transactions change. M reports HIGHLIGHTED/UNMAPPED/DEFERRED reasons; all unverified source candidate paths and recycling remain explicitly open until Forever client proof. User-visible restoration and genuine bounds are not inferred from static checks.
 
 ## Do Not Reopen Without New Evidence
 Do not infer addon installation from one guessed filesystem path or the presence/absence of a Lua global alone. No hard QuestieDB dependency, package bundling, unknown CurseForge project ID, global quest ID scans on updates, guessed quest availability, invented coordinates or native pin scraping. Do not hide the Blizzard minimap, alter user-accepted waypoint/focused-quest bearings, or treat missing locations as PASS. Baked flavor must not be guessed from a Source-only indicator. Keep negative and deferred evidence explicit.
 
 ## Relevant References
+- `docs/memory/evidence/P0279_R1_MAPPING_RUNTIME_RECONCILIATION.md`
+- `docs/memory/patches/P0279_R1_MAPPING_RUNTIME_RECONCILIATION.md`
 - `docs/memory/evidence/P0279_SERVICE_MAPPING_INDEX_AND_INSPECTOR.md`
 - `docs/ui/SERVICE_ELEMENT_MAPPING_INDEX.md`
 - `docs/memory/evidence/P0278_R1_PREWRITE_ORDER_FAILURE.md`

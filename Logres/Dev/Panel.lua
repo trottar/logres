@@ -421,8 +421,9 @@ function Panel:RunMappingSelection(entry)
         .. " role=" .. entry.role .. " | source=" .. entry.evidence
         .. " | " .. entry.state .. " | path=" .. (entry.nativePath or "UNMAPPED"), run)
     local ok, why = Logres.MappingInspector.Highlight(entry.id)
-    self:AddResult("Logres mapping highlight: " .. (ok and "PASS" or "DEFERRED")
-        .. " (" .. tostring(why) .. ")", run)
+    local result = ok and "HIGHLIGHTED" or (why == "UNMAPPED" and "UNMAPPED" or "DEFERRED")
+    self:AddResult("Logres mapping highlight: " .. result
+        .. " (reason=" .. tostring(why) .. ")", run)
 end
 
 function Panel:RefreshMappingButtons()
