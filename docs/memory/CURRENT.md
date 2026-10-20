@@ -7,12 +7,14 @@ project: logres
 # Current State
 
 ## Active Objective
-Complete source-backed mapping verification and correct its runtime failures without native UI mutation. Preserve indexed service roles, D-046 fixture parity, D-047 Blizzard-owned controls and transactions. Keep global Logres/native overlap in future shared refinement.
+Use verified indexed Blizzard ownership to build a genuinely shared, preview-first trainer visual system toward the approved landscape Logres design; preserve native control/transaction ownership and negative runtime evidence. Keep global Logres/native overlap a separate refinement.
 
 ## Current Work Item
-**P0279 R3 R1 — PORTRAIT OWNER / CHECKER REPAIR, PREPARED; WoW UNVERIFIED.** R2 is pushed `90198c5` and `0.0.179-dev` M runtime has isolated the open-trainer portrait DEFERRED to `native-owner-outside-size-gate` twice; native owner kind, protection and visibility did not trigger failure, but its exact size/identity were not logged. R3 maps this single native Texture to the already highlighted `ClassTrainerFrame` as an optional addon-overlay parent, preserving all original guard requirements. No native reparent, no global size exemption, no live trainer restyle. See R3 evidence.
+**P0280 — SHARED TRAINER COMPONENT RENDERER / PREPARED, WoW UNVERIFIED.** Verified pushed P0279 R3 R1 `30e6af3`; latest in-client diagnostic and user report prove portrait M highlight success, while trainer-close automatic highlight restoration remains unmeasured. P0280 first tranche styles four verified trainer controls (filter, selection, rank/status, Train) with one recipe-driven renderer invoked by BOTH inert P fixture and H live adapter. Does NOT imply accepted full landscape layout, native text/interaction replacement or complete service mapping. See P0280 evidence.
 
 ## Verified State
+- **P0279 R3 R1 pushed `30e6af3` / scoped user WoW PASS:** `trainer.portrait` HIGHLIGHTED with `highlight-visible-mapped-owner`; user confirms visible outline works. Auto-hide on trainer close is not explicitly measured. P0279 R3 R0 checker PREWRITE failure remains preserved.
+- **P0280 prepared:** one shared component painter and model shape for P fixture/H native filter, selected skill, status bar, Train. Source-backed native mappings are client-highlighted, but new styling and P/H parity remain UNVERIFIED in WoW. Fail-open and rollback are required; no native action or geometry mutation.
 - **P0279 R3 R0 PREWRITE FAIL (user WSL):** 1/150 `check_checker_version_policy.py` refused a literal historical `0.0.179-dev` in the new R3 checker (27/150). PREWRITE stopped before tracked writes; no R3 code committed, deployed or tested. R3 R1 retains the same runtime candidate and corrects only this contract; see R3 R1 failure evidence.
 - **P0279 R2 pushed `90198c5` / new `0.0.179-dev` in-client evidence:** The portrait selection first returned expected pre-open `native-root-unavailable`; two open-trainer selections returned DEFERRED `native-owner-outside-size-gate`. This is the EXACT observed gate. The parent identity and size are not recorded and must not be guessed. Title, icon and Hide Highlight previously PASS from `0.0.178-dev`.
 - **P0279 R3 R1 prepared:** Add `overlayOwnerPath = ClassTrainerFrame` to `trainer.portrait` only. In the inspector, use an alternate owner ONLY on the observed size-gate refusal, after independent ordinary/unprotected/visible/bounded Frame eligibility. Texture remains anchor; addon overlay is the only reparented object. Native frame-close and portrait visual fit still need WoW proof.
@@ -31,15 +33,17 @@ Complete source-backed mapping verification and correct its runtime failures wit
 - P0273 verified positioning and restoration remain untouched, with the previous original P0272 WSL proof limitation preserved.
 
 ## Next Action
-Apply guarded P0279 R3 R1 from verified main `90198c5`: full 150-checker PREWRITE and POSTWRITE static suite, diff --check and manifest. User commits/pushes; verify remote main. Deploy runtime files, `/reload`, then when naturally at open trainer choose M -> Trainer: Portrait once; expect HIGHLIGHTED (highlight-visible-mapped-owner) if verified service root is available and ordinary. Confirm outline matches the portrait and auto-hides when closing trainer, then Hide Highlight. Export diagnostic and screenshot only if visible; no travel or repeat unrelated tests. If deferred or error, preserve failure before any future repair. Global HUD overlap and landscape styling remain deferred.
+Run guarded P0280 full 151-checker PREWRITE and POSTWRITE suites; inspect manifest and git diff --check, commit/push and verify remote main. Deploy runtime, `/reload`. First P → Trainer Skin Art Preview: four native-like, inert components should share theme paints with the live adapter. Then with a naturally open trainer use H → Trainer Skin ON (TEST): compare filter, selection, rank bar, Train; ensure stock text, input and status remain functional and visible. Run H → Trainer Skin OFF, check stock restoration, and close trainer while ON if convenient; export diagnostics. If paint masks native labels or controls, record VISUAL FAIL, do not advance. No forced travel or transactions. Keep unmapped features and landscape reflow deferred.
 
 ## Success Criteria
-Unchanged protection, visibility, combat, secret-value, bounding-box and native owner refusal checks; no wholesale oversized owner exemption. The optional `overlayOwnerPath` exists ONLY for portrait, with `ClassTrainerFrame` subject to independent eligible() and non-Texture/FontString kind before using as parent of addon-only highlight. Target Texture remains the anchor. No stock behavior, styling, transactions or geometry mutations. Actual on-screen fit and lifecycle restoration remain OPEN until proven in WoW.
+Same renderer and recipe for P fixtures and eligible H native controls; no live text, price, skill, transaction, status value, position, native texture or protected setter edited. Native components guarded ordinary/unprotected/shown/bounded and combat-free, independent partial/deferred counters. H OFF/close hides addon artifacts and restores the previously captured native root alpha tokens. User sees coherent decoration on 4 components without loss of Blizzard interaction; full landscape implementation and row recycling remain separate. WoW PASS requires real evidence.
 
 ## Do Not Reopen Without New Evidence
 Do not infer addon installation from one guessed filesystem path or the presence/absence of a Lua global alone. No hard QuestieDB dependency, package bundling, unknown CurseForge project ID, global quest ID scans on updates, guessed quest availability, invented coordinates or native pin scraping. Do not hide the Blizzard minimap, alter user-accepted waypoint/focused-quest bearings, or treat missing locations as PASS. Baked flavor must not be guessed from a Source-only indicator. Keep negative and deferred evidence explicit.
 
 ## Relevant References
+- `docs/memory/evidence/P0280_SHARED_TRAINER_COMPONENT_TRANCHE.md`
+- `docs/memory/patches/P0280_SHARED_TRAINER_COMPONENT_TRANCHE.md`
 - `docs/memory/evidence/P0279_R3_R1_PREWRITE_VERSION_POLICY_FAILURE.md`
 - `docs/memory/patches/P0279_R3_R1_VERSION_POLICY_REPAIR.md`
 - `docs/memory/evidence/P0279_R3_EXPLICIT_PORTRAIT_OWNER.md`

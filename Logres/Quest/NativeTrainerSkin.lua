@@ -109,6 +109,7 @@ end
 
 function Skin.Disable(reason)
     -- Always hide addon-owned ScrollBox ornament before native alpha restoration.
+    Logres.NPCTrainerComponents.Disable()
     Logres.NPCTrainerMotif.Disable()
     if not active then last = "stock"; return true, last end
     hidePaint(active.paint)
@@ -199,6 +200,9 @@ function Skin.Enable()
         last = "motif-deferred-" .. motifReason
         return false, last
     end
+    -- Supplement the verified motif with style on available mapped controls.
+    -- Missing controls remain native and are reported as partial, not patched around.
+    Logres.NPCTrainerComponents.Enable(frame)
     trials = trials + 1
     last = "native-scroll-motif-active"
     return true, last
@@ -233,6 +237,9 @@ function Skin.Preview()
             if not Logres.NPCTrainerMotif.Preview(surface) then
                 error("trainer-motif-preview-failed")
             end
+            if not Logres.NPCTrainerComponents.Preview(surface) then
+                error("trainer-component-preview-failed")
+            end
             return surface
         end)
         if not ok or not root then return fail("preview-construction-failed") end
@@ -247,6 +254,7 @@ function Skin.GetAudit()
         nativeDecorations=active and #active.decorations or 0,
         trials=trials, restores=restores, failures=failures,
         preview=preview and preview:IsShown() or false,
+        components=Logres.NPCTrainerComponents.GetAudit(),
         result=last, nativeTransactions=0, geometryWrites=0}
 end
 return Skin

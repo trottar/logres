@@ -271,6 +271,11 @@ theme.panelSurface = {
         rowWash = { 0.29, 0.20, 0.10, 0.76 },
         goldLine = { 0.92, 0.72, 0.34, 0.92 },
         scrollRule = { 0.79, 0.59, 0.26, 0.94 },
+        controlFill = { 0.23, 0.15, 0.08, 0.82 },
+        controlRule = { 0.72, 0.51, 0.24, 0.86 },
+        selectionFill = { 0.35, 0.24, 0.11, 0.84 },
+        statusFill = { 0.16, 0.11, 0.07, 0.86 },
+        trainFill = { 0.30, 0.20, 0.09, 0.95 },
     },
 }
 

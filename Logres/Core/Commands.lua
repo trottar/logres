@@ -5335,13 +5335,15 @@ local function handleCommand(message)
         end
         local report = skin.GetAudit()
         emit(string.format(
-            "Logres native trainer skin: %s (result=%s active=%s pending=%s nativeRootDecorations=%s trials=%s restores=%s failures=%s preview=%s geometryWrites=%s transactions=%s)",
+            "Logres native trainer skin: %s (result=%s active=%s pending=%s nativeRootDecorations=%s trials=%s restores=%s failures=%s preview=%s geometryWrites=%s transactions=%s components=%s/%s componentResult=%s)",
             ok and "PASS" or (report.pending and "FAIL" or "DEFERRED"),
             tostring(reason), tostring(report.active), tostring(report.pending),
             tostring(report.nativeDecorations), tostring(report.trials),
             tostring(report.restores), tostring(report.failures),
             tostring(report.preview), tostring(report.geometryWrites),
-            tostring(report.nativeTransactions)
+            tostring(report.nativeTransactions),
+            tostring(report.components.styled), tostring(report.components.deferred),
+            tostring(report.components.result)
         ))
         return
     end

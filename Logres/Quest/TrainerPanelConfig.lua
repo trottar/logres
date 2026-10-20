@@ -13,7 +13,7 @@ local trainer = {
         note = "Visual fixture only — native trainer controls remain Blizzard-owned",
         titleFont = "GameFontHighlightLarge",
         noteFont = "GameFontHighlight",
-        titleX = 0, titleY = -20, noteX = 0, noteY = 0,
+        titleX = 0, titleY = -20, noteX = 0, noteY = -59,
         titleColor = art.colors.title, noteColor = art.colors.body,
     },
     motif = {
@@ -30,6 +30,32 @@ local trainer = {
         rowInset = 1, rowTopInset = 0, rowBottomInset = 0,
         rowRuleHeight = 1, rowRuleY = 0,
         preview = { width = 440, height = 32, x = 0, rows = {-264, -307} },
+    },
+    -- P0280: own fixtures and native source mappings use these SAME paint recipes.
+    -- Preview geometry is addon-owned; no Blizzard button geometry is set.
+    components = {
+        solidTexture = "Interface\\Buttons\\WHITE8x8",
+        ids = {"trainer.filter", "trainer.selection", "trainer.status", "trainer.train"},
+        styles = {
+            ["trainer.filter"] = {fill=art.motifs.controlFill, rule=art.motifs.controlRule,
+                inset=1, fillSublevel=-2, ruleSublevel=-5, ruleHeight=2, ruleY=0},
+            ["trainer.selection"] = {fill=art.motifs.selectionFill, rule=art.motifs.goldLine,
+                inset=1, fillSublevel=-2, ruleSublevel=-5, ruleHeight=2, ruleY=0},
+            ["trainer.status"] = {fill=art.motifs.statusFill, rule=art.motifs.scrollRule,
+                inset=1, fillSublevel=-2, ruleSublevel=-5, ruleHeight=1, ruleY=0},
+            ["trainer.train"] = {fill=art.motifs.trainFill, rule=art.motifs.goldLine,
+                inset=1, fillSublevel=-2, ruleSublevel=-5, ruleHeight=2, ruleY=0},
+        },
+        preview = {
+            ["trainer.filter"] = {width=198,height=26,x=-112,y=-115,
+                label="Available  /  All Skills",font="GameFontHighlightSmall",textColor=art.colors.body},
+            ["trainer.selection"] = {width=440,height=50,x=0,y=-200,
+                label="Enchant Chest - Minor Absorption",font="GameFontHighlight",textColor=art.colors.title},
+            ["trainer.status"] = {width=246,height=24,x=-92,y=-369,
+                label="Enchanting  |  41 / 75",font="GameFontHighlightSmall",textColor=art.colors.body},
+            ["trainer.train"] = {width=104,height=30,x=165,y=-367,
+                label="TRAIN",font="GameFontHighlight",textColor=art.colors.title},
+        },
     },
     surface = {
         background = {
