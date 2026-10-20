@@ -4,7 +4,7 @@ local PANEL_WIDTH = 620
 local PANEL_HEIGHT = 590
 local TAB_WIDTH = 52
 local TAB_HEIGHT = 24
-local TAB_GAP = 4
+local TAB_GAP = 0
 local BUTTON_WIDTH = 180
 local BUTTON_HEIGHT = 24
 local BUTTON_GAP_X = 8
@@ -28,6 +28,7 @@ local PHASES = {
     { id = "G", title = "Phase G — Cinematic Camera" },
     { id = "H", title = "Phase H — Integration and Polish" },
     { id = "P", title = "Previews — All UI Areas" },
+    { id = "M", title = "UI Mapping — Element Index" },
 }
 
 local PHASE_BY_ID = {}
@@ -240,6 +241,18 @@ local Panel = Logres:RegisterModule("DevPanel", {
         self.activePhase = DEFAULT_PHASE
         self.previewPage = 1
         self:CreatePreviewPager(frame)
+        -- M tab owns no Blizzard control; only an independent highlight overlay.
+        self.mappingHideButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+        self.mappingHideButton:SetSize(120, 22)
+        self.mappingHideButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -264, -96)
+        self.mappingHideButton:SetText("Hide Highlight")
+        self.mappingHideButton:SetScript("OnClick", function()
+            local ok, reason = Logres.MappingInspector.Hide()
+            local run = self:BeginDiagnosticRun("mapping hide")
+            self:AddResult("Logres mapping highlight: " .. (ok and "PASS" or "DEFERRED")
+                .. " (" .. tostring(reason) .. ")", run)
+        end)
+        self.mappingHideButton:Hide()
 
         self:CreatePhaseTabs()
         self:SetActivePhase(DEFAULT_PHASE)
@@ -333,6 +346,7 @@ end
 
 function Panel:UpdatePreviewPager(total)
     local show = self.activePhase == "P" or self.activePhase == "H"
+    show = show or self.activePhase == "M"
     self.previewPrevious:SetShown(show)
     self.previewNext:SetShown(show)
     self.previewPageLabel:SetShown(show)
@@ -389,11 +403,46 @@ function Panel:SetActivePhase(phase)
     if (phase == "P" or phase == "H") and self.activePhase ~= phase then
         self.previewPage = 1
     end
+    if phase == "M" and self.activePhase ~= "M" then
+        self.previewPage = 1
+    end
     self.activePhase = phase
     self.h2MapButton:SetShown(phase == "H")
+    self.mappingHideButton:SetShown(phase == "M")
     self.phaseTitle:SetText(PHASE_BY_ID[phase].title)
     self:RefreshPhaseTabs()
     self:RefreshActionButtons()
+end
+
+-- P0279 M tab: independently paginated, read-only verification overlay.
+function Panel:RunMappingSelection(entry)
+    local run = self:BeginDiagnosticRun("mapping " .. entry.id)
+    self:AddResult("Logres mapping: " .. entry.id .. " | service=" .. entry.service
+        .. " role=" .. entry.role .. " | source=" .. entry.evidence
+        .. " | " .. entry.state .. " | path=" .. (entry.nativePath or "UNMAPPED"), run)
+    local ok, why = Logres.MappingInspector.Highlight(entry.id)
+    self:AddResult("Logres mapping highlight: " .. (ok and "PASS" or "DEFERRED")
+        .. " (" .. tostring(why) .. ")", run)
+end
+
+function Panel:RefreshMappingButtons()
+    local entries = Logres.MappingInspector.Entries()
+    self:UpdatePreviewPager(#entries)
+    self.emptyLabel:SetShown(#entries == 0)
+    local first = (self.previewPage - 1) * PREVIEW_PAGE_SIZE + 1
+    local last = math.min(#entries, first + PREVIEW_PAGE_SIZE - 1)
+    for index = first, last do
+        local entry = entries[index]
+        local button = CreateFrame("Button", nil, self.buttonHost, "UIPanelButtonTemplate")
+        local offset = index - first
+        button:SetSize(BUTTON_WIDTH, BUTTON_HEIGHT)
+        button:SetPoint("TOPLEFT", self.buttonHost, "TOPLEFT",
+            (offset % BUTTON_COLUMNS) * (BUTTON_WIDTH + BUTTON_GAP_X),
+            -math.floor(offset / BUTTON_COLUMNS) * (BUTTON_HEIGHT + BUTTON_GAP_Y))
+        button:SetText(entry.service .. ": " .. entry.label)
+        button:SetScript("OnClick", function() self:RunMappingSelection(entry) end)
+        self.actionButtons[#self.actionButtons + 1] = button
+    end
 end
 
 function Panel:RefreshActionButtons()
@@ -411,6 +460,10 @@ function Panel:RefreshActionButtons()
         self.actionButtons[index] = nil
     end
 
+    if self.activePhase == "M" then
+        self:RefreshMappingButtons()
+        return
+    end
     if self.activePhase == "P" then
         -- Stable alphabetical order keeps previews searchable across pages.
         table.sort(visible, function(a, b) return a.label < b.label end)

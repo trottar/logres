@@ -1,18 +1,20 @@
 ---
 memory_schema: 1
-as_of: 2026-10-19
+as_of: 2026-10-20
 project: logres
 ---
 
 # Current State
 
 ## Active Objective
-Prove a visually unified, independently configurable Logres trainer using evidence from ElvUI Forever/Aurora while preserving Blizzard training controls, D-046 fixture parity, and D-047 native ownership. Camera frozen.
+Catalogue every desired Logres native-service component against source-backed Blizzard candidate controls before further reskinning. Provide indexed on-demand M tab verification. Preserve D-046 fixture/live parity, D-047 Blizzard interaction and transactions; defer global cross-UI overlap to system refinement.
 
 ## Current Work Item
-**P0278 — FOREVER TRAINER SCROLLBOX/ROW MOTIF, PREPARED / WoW UNVERIFIED.** Verified pushed main P0277 `f042f311`. User live trainer screenshot shows the previous alpha/root quest panel approach merely blackens the Blizzard trainer; **VISUAL FAIL**. ElvUI Forever source identifies `.ScrollBox`, `ForEachFrame` rows, category/row painting and separate inset handling, whereas Aurora Classic uses incompatible fixed `ClassTrainerSkillN` rows. P0278 adds original addon-owned parchment/gold surface and row accents using shared `Theme.panelSurface` and independent `TrainerPanelConfig`. Existing H ON/OFF and P preview provide tests. Native protected controls/transactions untouched; no dynamic update hook or landscape reshaping.
+**P0279 — SERVICE ELEMENT MAPPING INDEX / M VERIFICATION TAB, PREPARED; WoW UNVERIFIED.** Verified pushed P0278 R1 `41826a9`. Latest user screenshot demonstrates native Enchanting rows partially adopt Logres styling, but a coherent landscape screen remains a desired mockup, **NOT IMPLEMENTED**. Before further skin experiments, introduce declarative `ServiceElementIndex.lua` mapping each Logres design role to source-backed native paths or explicit UNMAPPED, and `MappingInspector.lua` highlighting only eligible native regions with mouse-inert addon-owned overlay. Dedicated M developer tab pages all indexed services and writes PASS/DEFERRED evidence; Hide clears overlay only. Source precedents: ElvUI Forever Trainer/merchant/taxi, Aurora Classic for cross-version contrast. See P0279 evidence and durable index.
 
 ## Verified State
+- **P0278 R1 pushed `41826a9` / user visual evidence:** new trainer scroll area is closer to Logres visual language; **PARTIAL / not accepted final**. User reports other tests working; no claim of landscape reflow or fully verified native control mapping. Approved landscape Enchanting screenshot is a DESIGN TARGET, not deployed runtime.
+- **P0279 mapping scope:** Trainer, merchant, flight and additional gossip/bank/auction/stable/tabard service roots indexed with SOURCE_CANDIDATE vs UNMAPPED provenance. Unverified dynamic ScrollBox row identity deferred. No Blizzard-native hiding permitted in read-only M inspector. Full WSL and WoW testing PENDING.
 - **P0278 R0 PREWRITE FAIL (user WSL):** historical P0276 checker asserted direct TOC adjacency and rejected new TrainerMotif inserted between audit and skin (checker 109/146); no tracked writes. R1 migrates the assertion to enforce audit-before-skin order, while new P0278 checker enforces motif placement. Full WSL rerun and WoW acceptance PENDING. See `docs/memory/evidence/P0278_R1_PREWRITE_ORDER_FAILURE.md`.
 - **R3 PREWRITE FAIL:** assistant-built CURRENT_HANDOFF.md lacked `CURRENT.md`; checker 55/144 failed. All 144 prewrite checks ran, no tracked files were written. R4 corrects this; WSL and WoW remain unverified.
 - **R2 PREWRITE FAIL:** checker 109/144 still required a stale secret-unsafe token although the candidate Lua was fixed. R2 made NO tracked writes. R3 reconciles checker/source, but WSL/WoW unverified.
@@ -22,15 +24,17 @@ Prove a visually unified, independently configurable Logres trainer using eviden
 - P0273 verified positioning and restoration remain untouched, with the previous original P0272 WSL proof limitation preserved.
 
 ## Next Action
-Execute full PREWRITE/POSTWRITE 146-checker WSL gate, manifest and diff check; user commits/pushes and remote is verified. Deploy to WoW then P Trainer Skin Art Preview, P Quest Dialogue Preview, with native trainer open H Trainer Skin ON (TEST)/OFF. ON must report `native-scroll-motif-active`; any DEFERRED leaves stock. Confirm actual visual row/scroll appearance, text/icon/filter/Train availability, close/stock restoration and rows after scrolling. Run H Native Service Frame Audit only if needed, then 0 Run All. Report screenshots and diagnostics; no acceptance without in-game evidence.
+Execute guarded P0279 full pre/post static suite and manifest; after user commits/pushes, verify remote. Runtime: deploy then `/reload`, `/logres` M tab, select trainer root, list, filter, Train and UNMAPPED search, inspect highlighted bounds and PASS/DEFERRED; Hide Highlight must clear only addon art. Optionally inspect merchant/taxi only where naturally available. Preserve screenshots and diagnostics before moving to P0280 shared style components/native adapters. No redeploy for future mapping-doc-only extensions.
 
 ## Success Criteria
-P/live row motifs share one original painter and trainer-specific parameters; the Quest UI remains unchanged. Live ON applies safe decorative ScrollBox/rows, OFF/close restores original native appearance; no native mutations from motif, no invisible click regions, no taint/secret errors or buying. Source finding is NOT Forever runtime proof; failures/deferrals and historic visual failures remain explicit.
+One indexed declarative source of truth for service design roles, native candidates, evidence states, and unmapped controls; M tester paginates without changing 108 existing actions. Highlight reads only ordinary unprotected shown objects out of combat, never mutates Blizzard gameplay/control/transaction state, and OFF clears overlay. Preview/live style parity and future native skinning stay separate gated work. Historical P0274/P0275 visual failures and P0276/R0 static failures retained.
 
 ## Do Not Reopen Without New Evidence
 Do not infer addon installation from one guessed filesystem path or the presence/absence of a Lua global alone. No hard QuestieDB dependency, package bundling, unknown CurseForge project ID, global quest ID scans on updates, guessed quest availability, invented coordinates or native pin scraping. Do not hide the Blizzard minimap, alter user-accepted waypoint/focused-quest bearings, or treat missing locations as PASS. Baked flavor must not be guessed from a Source-only indicator. Keep negative and deferred evidence explicit.
 
 ## Relevant References
+- `docs/memory/evidence/P0279_SERVICE_MAPPING_INDEX_AND_INSPECTOR.md`
+- `docs/ui/SERVICE_ELEMENT_MAPPING_INDEX.md`
 - `docs/memory/evidence/P0278_R1_PREWRITE_ORDER_FAILURE.md`
 - `docs/memory/evidence/P0278_FOREVER_TRAINER_MOTIF.md`
 - `docs/memory/evidence/P0277_PARAMETERIZED_PANEL_SURFACE.md`
