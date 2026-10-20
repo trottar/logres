@@ -266,6 +266,12 @@ theme.questDialogue = {
 theme.panelSurface = {
     assets = theme.questDialogue.assets,
     colors = theme.questDialogue.colors,
+    -- Shared Logres palette, independently composed by each consumer.
+    motifs = {
+        rowWash = { 0.29, 0.20, 0.10, 0.76 },
+        goldLine = { 0.92, 0.72, 0.34, 0.92 },
+        scrollRule = { 0.79, 0.59, 0.26, 0.94 },
+    },
 }
 
 theme.questOfferControls = {

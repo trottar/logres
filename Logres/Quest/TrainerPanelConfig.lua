@@ -16,6 +16,21 @@ local trainer = {
         titleX = 0, titleY = -20, noteX = 0, noteY = 0,
         titleColor = art.colors.title, noteColor = art.colors.body,
     },
+    motif = {
+        solidTexture = "Interface\\Buttons\\WHITE8x8",
+        panelTexture = art.assets.panel,
+        rowWash = art.motifs.rowWash,
+        rowRule = art.motifs.goldLine,
+        scrollRule = art.motifs.scrollRule,
+        scrollAlpha = 0.95,
+        scrollSublevel = -8, scrollRuleSublevel = -7,
+        scrollInset = 1, scrollTopInset = 1, scrollBottomInset = 1,
+        scrollRuleHeight = 2,
+        rowWashSublevel = -1, rowRuleSublevel = 0,
+        rowInset = 1, rowTopInset = 0, rowBottomInset = 0,
+        rowRuleHeight = 1, rowRuleY = 0,
+        preview = { width = 440, height = 32, x = 0, rows = {-264, -307} },
+    },
     surface = {
         background = {
             mode = "nine-slice", texture = art.assets.panel,

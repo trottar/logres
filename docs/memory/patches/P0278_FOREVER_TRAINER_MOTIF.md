@@ -1,0 +1,3 @@
+# P0278 — Forever trainer ScrollBox/row visual motif (source-guided)
+
+Baseline main `f042f311ba01e9b498c9abb2e0295d60e3e3a3b6`. Stage PREPARED / runtime UNVERIFIED. Independent code influenced by ElvUI Forever ScrollBox and Aurora Classic alternate hierarchy; not copying source/art. Adds additive original `TrainerMotif.lua`, palette parameters and trainer-specific motif inputs. Uses existing P preview / H ON/OFF. Native controls/transactions remain untouched, no scroll hook. Full static shadow/postwrite gate required. See `docs/memory/evidence/P0278_FOREVER_TRAINER_MOTIF.md` for NEGATIVE P0277 screenshot and runtime test instructions.

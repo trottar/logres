@@ -108,6 +108,8 @@ local function fail(why)
 end
 
 function Skin.Disable(reason)
+    -- Always hide addon-owned ScrollBox ornament before native alpha restoration.
+    Logres.NPCTrainerMotif.Disable()
     if not active then last = "stock"; return true, last end
     hidePaint(active.paint)
     if not unlocked() then
@@ -189,8 +191,16 @@ function Skin.Enable()
             return fail("quest-art-show-failed")
         end
     end
+    -- Require real Forever ScrollBox/row proof; no partial black-only skin.
+    local motifOK, motifReason = Logres.NPCTrainerMotif.Enable(frame)
+    if not motifOK then
+        local restored = Skin.Disable("motif-deferred")
+        if not restored then return fail("motif-and-stock-restore-failed") end
+        last = "motif-deferred-" .. motifReason
+        return false, last
+    end
     trials = trials + 1
-    last = "native-root-skin-active"
+    last = "native-scroll-motif-active"
     return true, last
 end
 
@@ -220,6 +230,9 @@ function Skin.Preview()
             note:SetText(visual.note)
             local nc = visual.noteColor
             note:SetTextColor(nc[1], nc[2], nc[3], nc[4])
+            if not Logres.NPCTrainerMotif.Preview(surface) then
+                error("trainer-motif-preview-failed")
+            end
             return surface
         end)
         if not ok or not root then return fail("preview-construction-failed") end

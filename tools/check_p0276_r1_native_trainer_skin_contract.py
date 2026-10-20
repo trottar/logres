@@ -45,7 +45,10 @@ for bad in (
  'frame:Hide(', 'frame:EnableMouse(', 'frame:SetParent(',
  'DynamicCam', 'GetQuestReward(', 'AcceptQuest(',
 ): need(bad not in s, 'unsafe trainer gameplay or geometry API: '+bad)
-need('Quest\\NativeTrainerRegionAudit.lua\nQuest\\NativeTrainerSkin.lua\n' in t,
+need('Quest\\NativeTrainerRegionAudit.lua' in t and
+     'Quest\\NativeTrainerSkin.lua' in t and
+     t.index('Quest\\NativeTrainerRegionAudit.lua') <
+     t.index('Quest\\NativeTrainerSkin.lua'),
      'trainer module ordering')
 need('mode = "retired"' in read('Logres/Quest/NativeServiceAccent.lua'),
      'never reinstate failed decorative wrapper')

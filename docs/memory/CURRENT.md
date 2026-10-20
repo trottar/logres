@@ -7,12 +7,13 @@ project: logres
 # Current State
 
 ## Active Objective
-Enforce D-046 with one parameterized Logres panel-renderer and independent Quest/Trainer input files. Visual identity is shared; sizing/placement are component-owned. Native trainer controls, purchases and camera remain Blizzard/previously-approved owned.
+Prove a visually unified, independently configurable Logres trainer using evidence from ElvUI Forever/Aurora while preserving Blizzard training controls, D-046 fixture parity, and D-047 native ownership. Camera frozen.
 
 ## Current Work Item
-**P0277 — PARAMETERIZED PANEL SURFACE EXTRACTION, PREPARED / WoW UNVERIFIED.** Verified baseline is pushed P0276 R4 `b01cecf`. User screenshots show Trainer Art Preview centered/lower and visibly offset from approved Quest UI. Root cause: independent painter and hardcoded trainer preview center even though assets match. Extract shared `UI/PanelSurface.lua`, independent `QuestPanelConfig.lua` and `TrainerPanelConfig.lua`, and preserve accepted quest stretch styling and native trainer safety. See P0277 evidence.
+**P0278 — FOREVER TRAINER SCROLLBOX/ROW MOTIF, PREPARED / WoW UNVERIFIED.** Verified pushed main P0277 `f042f311`. User live trainer screenshot shows the previous alpha/root quest panel approach merely blackens the Blizzard trainer; **VISUAL FAIL**. ElvUI Forever source identifies `.ScrollBox`, `ForEachFrame` rows, category/row painting and separate inset handling, whereas Aurora Classic uses incompatible fixed `ClassTrainerSkillN` rows. P0278 adds original addon-owned parchment/gold surface and row accents using shared `Theme.panelSurface` and independent `TrainerPanelConfig`. Existing H ON/OFF and P preview provide tests. Native protected controls/transactions untouched; no dynamic update hook or landscape reshaping.
 
 ## Verified State
+- **P0278 R0 PREWRITE FAIL (user WSL):** historical P0276 checker asserted direct TOC adjacency and rejected new TrainerMotif inserted between audit and skin (checker 109/146); no tracked writes. R1 migrates the assertion to enforce audit-before-skin order, while new P0278 checker enforces motif placement. Full WSL rerun and WoW acceptance PENDING. See `docs/memory/evidence/P0278_R1_PREWRITE_ORDER_FAILURE.md`.
 - **R3 PREWRITE FAIL:** assistant-built CURRENT_HANDOFF.md lacked `CURRENT.md`; checker 55/144 failed. All 144 prewrite checks ran, no tracked files were written. R4 corrects this; WSL and WoW remain unverified.
 - **R2 PREWRITE FAIL:** checker 109/144 still required a stale secret-unsafe token although the candidate Lua was fixed. R2 made NO tracked writes. R3 reconciles checker/source, but WSL/WoW unverified.
 - **P0275 pushed `75e8024`: VISUAL FAIL** (large empty shell, native frame unchanged inside). **P0274 visually rejected** despite additive counters. Both rejected wrappers retired; preserve evidence.
@@ -21,15 +22,17 @@ Enforce D-046 with one parameterized Logres panel-renderer and independent Quest
 - P0273 verified positioning and restoration remain untouched, with the previous original P0272 WSL proof limitation preserved.
 
 ## Next Action
-Run guarded P0277 patch full candidate PREWRITE/POSTWRITE static suites, check manifest, commit/push by user, verify remote main. Deploy to WoW. Compare P Quest Dialogue Preview with Trainer Skin Art Preview (panel closed), then open a natural trainer and run H Trainer Skin ON/OFF, H Native Service Frame Audit and 0 Run All. Native trainer skin remains UNVERIFIED/DEFERRED until actually tested; no landscape reflow authorized.
+Execute full PREWRITE/POSTWRITE 146-checker WSL gate, manifest and diff check; user commits/pushes and remote is verified. Deploy to WoW then P Trainer Skin Art Preview, P Quest Dialogue Preview, with native trainer open H Trainer Skin ON (TEST)/OFF. ON must report `native-scroll-motif-active`; any DEFERRED leaves stock. Confirm actual visual row/scroll appearance, text/icon/filter/Train availability, close/stock restoration and rows after scrolling. Run H Native Service Frame Audit only if needed, then 0 Run All. Report screenshots and diagnostics; no acceptance without in-game evidence.
 
 ## Success Criteria
-One shared art painter supports Quest stretch and Trainer nine-slice from separate editable inputs, without duplicating theme assets, geometry constants in view code, or changing Quest appearance. Trainer preview may adjust independently; native controls/transaction and opaque alpha restoration remain protected. Historical negative evidence retained; runtime confirmation required.
+P/live row motifs share one original painter and trainer-specific parameters; the Quest UI remains unchanged. Live ON applies safe decorative ScrollBox/rows, OFF/close restores original native appearance; no native mutations from motif, no invisible click regions, no taint/secret errors or buying. Source finding is NOT Forever runtime proof; failures/deferrals and historic visual failures remain explicit.
 
 ## Do Not Reopen Without New Evidence
 Do not infer addon installation from one guessed filesystem path or the presence/absence of a Lua global alone. No hard QuestieDB dependency, package bundling, unknown CurseForge project ID, global quest ID scans on updates, guessed quest availability, invented coordinates or native pin scraping. Do not hide the Blizzard minimap, alter user-accepted waypoint/focused-quest bearings, or treat missing locations as PASS. Baked flavor must not be guessed from a Source-only indicator. Keep negative and deferred evidence explicit.
 
 ## Relevant References
+- `docs/memory/evidence/P0278_R1_PREWRITE_ORDER_FAILURE.md`
+- `docs/memory/evidence/P0278_FOREVER_TRAINER_MOTIF.md`
 - `docs/memory/evidence/P0277_PARAMETERIZED_PANEL_SURFACE.md`
 - `docs/memory/evidence/P0276_NATIVE_TRAINER_FEASIBILITY.md`
 - `docs/memory/evidence/P0275_NATIVE_QUEST_ART_SHELL.md`
