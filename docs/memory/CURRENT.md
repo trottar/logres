@@ -1,34 +1,36 @@
 ---
 memory_schema: 1
-as_of: 2026-10-18
+as_of: 2026-10-19
 project: logres
 ---
 
 # Current State
 
 ## Active Objective
-Modularize proven Logres UI incrementally with D-046 fixture/model/view parity before all-NPC expansion. **Do not alter accepted camera or DynamicCam behavior.** Preserve existing quests, native controls, restoration and rendering during extraction; defer bank/auction feasibility until after reuse is proven.
+Prove a unified Logres native-backed trainer design without replacing Blizzard trainer data, filters or purchases. D-046/D-047 apply; the accepted camera and DynamicCam source remains frozen. The working quest renderer supplies the style reference, not an oversized wrapper.
 
 ## Current Work Item
-**P0275 — QUEST-ART NATIVE MERCHANT/TRAINER SHELL (PREPARED / WoW UNVERIFIED).** Verified P0274 pushed `ac3f199`; user `0.0.172-dev` screenshot shows P0274 ornament is visually indistinguishable from stock. Saved diagnostics later show `accentShows=3`, `accentHides=2`, `accentFailures=0`, so activation happened; cosmetic effectiveness FAILED/INSUFFICIENT despite successful counters. User approved the existing Logres quest renderer as the exact visual reference and accepted **Stage 1**: draw real quest-panel art around Blizzard-owned merchant/trainer before attempting any native child reshaping. P0275 replaces tiny P0274 art with a 640x540 nine-slice quest-panel and divider behind native service windows during existing opt-in positioning only; Blizzard opaque interior, controls and transactions are retained. NEXT if runtime verified: separately audit native child layout/texture feasibility for closer quest-style visual fidelity. Live gossip adapter remains separate; no camera, bank, auction or flight edits.
+**P0276 R4 — GUARDED TRAINER SKIN + MEMORY HEALTH REPAIR, PREPARED / WoW UNVERIFIED.** Verified pushed `main` `75e8024` P0275. The 640×540 additive native-service shell visually FAILED. P0276 R0 was diagnostic-only and omitted dedicated tests; its exact local candidate may be present despite the earlier reported missing-ZIP attempt. R1 correctly refused a dirty baseline, but did not offer a safe upgrade. R2 resolves that refusal through exact byte-for-byte R0 matching and supersedes R1 with H Trainer Skin ON (TEST), H Trainer Skin OFF, P Trainer Skin Art Preview using the same quest-art painter as live, H pagination, and the extended read-only existing Native Service Frame Audit. Only opt-in trainer root decoration transparency, never purchase/training controls, is changed. Camera frozen.
 
 ## Verified State
-- **P0274 PUSHED / VISUAL INSUFFICIENCY (2026-10-19):** `ac3f199`, 0.0.172-dev client shows original Blizzard trainer despite tiny gold accent. Later actual activation logs `accentShows=3`, hides=2, failures=0; therefore not a rendering failure but *not* visually accepted. Preserve the rejected 105x2 gold line/6x6 seal as a negative design result.
-- **QUEST RENDERER SOURCE:** `Theme.questDialogue` uses `Quest/quest_narrative_panel.tga`, `quest_narrative_divider.tga`, a 640x320 base, cream title/body text and fine gold details; accepted quest screenshot confirms this is the design target. Native merchant/trainer opaque backing remains stock until future proven safe changes; Stage 1 will not fake full mockup fidelity.
-- **P0273 PUSHED / SCOPED CLIENT PASS:** `591ed52`; gossip→trainer placement and restoration start/restore=3/3, gossip=2/2, failures=0; original P0272 WSL full-suite proof remains unknown.
-- **D-047 NATIVE OWNERSHIP:** Blizzard retains quantities, merchant sales/repairs, trainer filters/learning, taxi, bank/auction; stage 1 draws behind stock and changes no native child/control/transaction.
-- **OTHER OPEN/DEFERRED:** live reward claims, completion flash, secret/protected issues, broader NPC action ownership, live gossip adapter and Stage 2 native texture/child feasibility.
+- **R3 PREWRITE FAIL:** assistant-built CURRENT_HANDOFF.md lacked `CURRENT.md`; checker 55/144 failed. All 144 prewrite checks ran, no tracked files were written. R4 corrects this; WSL and WoW remain unverified.
+- **R2 PREWRITE FAIL:** checker 109/144 still required a stale secret-unsafe token although the candidate Lua was fixed. R2 made NO tracked writes. R3 reconciles checker/source, but WSL/WoW unverified.
+- **P0275 pushed `75e8024`: VISUAL FAIL** (large empty shell, native frame unchanged inside). **P0274 visually rejected** despite additive counters. Both rejected wrappers retired; preserve evidence.
+- D-046 P visual fixture uses EXACT same nine-slice painter as native trial, no synthetic purchases. D-047 retains native skill lists, Train/Train All, filters, money, and all transactions.
+- P0276 R1 adds a reversible root texture alpha snapshot and no native SetPoint/SetSize, native child action mutations or camera edits. This is NOT accepted reskin fidelity or landscape reflow until WoW proves it.
+- P0273 verified positioning and restoration remain untouched, with the previous original P0272 WSL proof limitation preserved.
 
 ## Next Action
-Apply P0275 from pushed P0274 `ac3f199` via guarded WSL applier (142 shadow PREWRITE + 142 postwrite checkers and `git diff --check`), commit/push. Deploy. In WoW H `Native Auto Position (TEST)` ON, open a naturally available merchant/trainer with panel closed; confirm visible widened **original quest-art** shell surrounding native window without obstructing Blizzard controls. Test close, reopen, H OFF restore and shell hidden; H Native NPC Services Check and 0 Run All. Save screenshot and diagnostics. A shell audit count without a perceptible visual difference is **not** a visual PASS. On any native taint, blocked control or failed restoration: stop. Do not implement fake search, filters, native texture removal or camera changes.
+Apply R4 guarded archive against pushed P0275 (clean or exact R0 local candidate) `75e8024` after static PREWRITE suite and all postwrite contracts; inspect WoW P Art Preview and H ON / OFF at a naturally available trainer with panel closed. H Native Service Frame Audit reports client-control/texture inventory; H Native NPC Services Check and 0 Run All regression. Test native filter, list selection, Train button availability (do not purchase) and stock restoration close/OFF. FAIL/taint/restoration error stops this milestone. If skin trial is DEFERRED because client root lacks safe BACKGROUND/BORDER regions, retain stock and use the read-only inventory to design next gated test. Landscape reflow still separate.
 
 ## Success Criteria
-Quest-derived addon-owned BACKGROUND shell shows around Blizzard merchant/trainer only during opt-in placement, using 9 slices of the **actual quest panel art**, separate existing divider and a small category caption. The native window and its opaque contents remain stock, accessible and untouched; a visual resemblance limited by the native center is explicitly documented. Auto OFF/close hides all addon art before restoring native anchors. Existing H toggle and 105/18/34 panel inventory unchanged, no live transaction/access changes, no camera or other service edits. WoW proof REQUIRED; no invented UI feature or mockup-equivalence claims.
+H ON and OFF actually exercise a reversible visual trial; P preview independently draws the same quest-art renderer; absent native candidate/protected/combat defers with untouched stock; H paging exposes all 20 actions. No disappearance of stock controls and no changes to other NPC services, camera/DynamicCam or quests. WoW visual quality and runtime safety remain UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
 Do not infer addon installation from one guessed filesystem path or the presence/absence of a Lua global alone. No hard QuestieDB dependency, package bundling, unknown CurseForge project ID, global quest ID scans on updates, guessed quest availability, invented coordinates or native pin scraping. Do not hide the Blizzard minimap, alter user-accepted waypoint/focused-quest bearings, or treat missing locations as PASS. Baked flavor must not be guessed from a Source-only indicator. Keep negative and deferred evidence explicit.
 
 ## Relevant References
+- `docs/memory/evidence/P0276_NATIVE_TRAINER_FEASIBILITY.md`
 - `docs/memory/evidence/P0275_NATIVE_QUEST_ART_SHELL.md`
 - `docs/memory/evidence/P0274_NATIVE_SERVICE_ACCENT.md`
 - `docs/memory/evidence/P0273_NATIVE_GOSSIP_CONTINUITY.md`

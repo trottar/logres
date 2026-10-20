@@ -1,0 +1,3 @@
+# P0276 R2 — guarded local candidate reconciliation
+
+P0276 R2 resolves a local-baseline guard mismatch: the R1 applier was designed only for clean P0275 even when an exact R0 local candidate may already be present. The observed R1 attempt refused on 13 tracked changes before making any writes. R2 also corrects the native texture creation call signature and guards a secret-capable region before nil comparison. R2 independently reconstructs R0 from pinned P0275 and permits upgrade only when every previous patch-owned file matches exactly, with no staged/unrelated tracked changes. WoW visual and runtime acceptance remain PENDING.

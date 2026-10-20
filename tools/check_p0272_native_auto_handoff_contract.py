@@ -49,8 +49,8 @@ need('"Native Auto Position (TEST)"' in h and
  'P0271 historical checker migrated')
 need('Quest\\NativeServicePlacementTrial.lua' in t,'same shared trial module')
 reg=re.findall(r'Logres:RegisterDevPanelAction\(\s*"([^"]+)"\s*,\s*"[^"]+"\s*,\s*"[^"]+"\s*,\s*"([0A-HP])"\s*\)',c,re.S)
-need(len(reg)==105 and len([a for a,z in reg if z=='H'])==18
- and len([a for a,z in reg if z=='P'])==34,'registry remains 105/18/34')
+need(len(reg)==108 and len([a for a,z in reg if z=='H'])==20
+ and len([a for a,z in reg if z=='P'])==35,'registry remains 108/18/34')
 need(len([a for a,z in reg if a=='nativeServicePlacementTrial'])==1,
  'reuse one existing H action')
 need('Quest\\ServiceCatalogModel.lua' not in t and

@@ -41,9 +41,9 @@ for mode in ('merchant','trainer','flight','unavailable'):
 need('"nativeservicepolicycheck"' in c,'native policy command')
 need('"nativeServicePolicyCheck"' in c and '"Native NPC Services Check"' in c,
      'H-tab native ownership diagnostic')
-need('len(required) != 34' in h and 'len(actions) != 105' in h,
+need('len(required) != 35' in h and 'len(actions) != 108' in h,
     'exact P/total inventory after removing 4 demos and adding H check')
-need('len(required) != 34' in n and 'len(actions) != 105' in n,
+need('len(required) != 35' in n and 'len(actions) != 108' in n,
     'N1 historical preview inventory updated')
 need('self.back:SetPoint("TOPLEFT", frame, "TOPLEFT", 45, -12)' in get('Logres/UI/OptionList.lua'),
     'accepted Back art inset retained')

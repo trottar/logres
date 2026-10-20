@@ -154,7 +154,7 @@ local Panel = Logres:RegisterModule("DevPanel", {
         -- fifteen existing Phase H actions or requiring a slash-only workflow.
         local h2MapButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
         h2MapButton:SetSize(100, 22)
-        h2MapButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -22, -96)
+        h2MapButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -264, -96)
         h2MapButton:SetText("H.2 Map")
         h2MapButton:SetScript("OnClick", function()
             self:SetH2MapMode(not self.h2MapMode)
@@ -332,7 +332,7 @@ function Panel:CreatePreviewPager(frame)
 end
 
 function Panel:UpdatePreviewPager(total)
-    local show = self.activePhase == "P"
+    local show = self.activePhase == "P" or self.activePhase == "H"
     self.previewPrevious:SetShown(show)
     self.previewNext:SetShown(show)
     self.previewPageLabel:SetShown(show)
@@ -386,7 +386,7 @@ function Panel:SetActivePhase(phase)
     if self.h2MapMode and phase ~= "H" then
         self:SetH2MapMode(false)
     end
-    if phase == "P" and self.activePhase ~= "P" then
+    if (phase == "P" or phase == "H") and self.activePhase ~= phase then
         self.previewPage = 1
     end
     self.activePhase = phase
@@ -414,6 +414,24 @@ function Panel:RefreshActionButtons()
     if self.activePhase == "P" then
         -- Stable alphabetical order keeps previews searchable across pages.
         table.sort(visible, function(a, b) return a.label < b.label end)
+    end
+    if self.activePhase == "H" then
+        -- Explicit live trainer ON/OFF must remain visible on the first H page.
+        -- Keep the rest of H in its original registration order.
+        local leading, remainder = {}, {}
+        for i = 1, #visible do
+            local item = visible[i]
+            if item.id == "nativeTrainerSkinOn" or item.id == "nativeTrainerSkinOff" then
+                leading[#leading + 1] = item
+            else
+                remainder[#remainder + 1] = item
+            end
+        end
+        visible = {}
+        for i = 1, #leading do visible[#visible + 1] = leading[i] end
+        for i = 1, #remainder do visible[#visible + 1] = remainder[i] end
+    end
+    if self.activePhase == "P" or self.activePhase == "H" then
         self:UpdatePreviewPager(#visible)
     else
         self:UpdatePreviewPager(0)
@@ -430,7 +448,7 @@ function Panel:RefreshActionButtons()
     if #visible == 0 then return end
     local first = 1
     local last = #visible
-    if self.activePhase == "P" then
+    if self.activePhase == "P" or self.activePhase == "H" then
         local first = (self.previewPage - 1) * PREVIEW_PAGE_SIZE + 1
         local last = math.min(#visible, first + PREVIEW_PAGE_SIZE - 1)
         -- Keep both indices scoped to the same page, never draw beyond row 6.

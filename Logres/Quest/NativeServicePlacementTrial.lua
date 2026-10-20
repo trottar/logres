@@ -83,6 +83,10 @@ local function setAnchors(frame, points)
 end
 
 function Trial.Restore(reason)
+    -- Restore temporary native trainer decoration before native positioning.
+    if Logres.NPCNativeTrainerSkin then
+        pcall(function() Logres.NPCNativeTrainerSkin.Disable("placement-restore") end)
+    end
     -- Remove all addon decoration first, even if native geometry must defer.
     if Logres.NPCNativeServiceAccent then
         pcall(function() Logres.NPCNativeServiceAccent.Hide() end)

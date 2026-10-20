@@ -5282,6 +5282,74 @@ local function handleCommand(message)
                 item.pointRead, item.pointWrite
             ))
         end
+        -- P0276: targeted, read-only Forever trainer region/control inventory.
+        -- Only the existing developer-panel H action invokes this. All returned
+        -- fields are plain addon-created audit values, never secret tokens.
+        local trainer = Logres.NPCNativeTrainerRegionAudit.Read()
+        emit(string.format(
+            "Logres native trainer feasibility: %s (request=%s children=%s directRegions=%s sampleMax=%s controls=%s sampled=%s nativeMutations=%s geometryWrites=%s transactions=%s)",
+            tostring(trainer.status), tostring(trainer.request),
+            tostring(trainer.children or "unknown"),
+            tostring(trainer.frameRegions or "unknown"),
+            tostring(trainer.maxRegions), tostring(#trainer.controls),
+            tostring(#trainer.regions), tostring(trainer.nativeMutations),
+            tostring(trainer.geometryWrites), tostring(trainer.transactionCalls)
+        ))
+        for index = 1, #trainer.controls do
+            local item = trainer.controls[index]
+            emit(string.format(
+                "Logres trainer control: %s state=%s type=%s size=%sx%s points=%s regions=%s protected=%s shown=%s mouse=%s setPoint=%s setAlpha=%s setTexture=%s",
+                item.name, item.status, tostring(item.kind or "?"),
+                tostring(item.width or "?"), tostring(item.height or "?"),
+                tostring(item.points or "?"), tostring(item.regions or "?"),
+                tostring(item.protected or "?"), tostring(item.shown or "?"),
+                tostring(item.mouse or "?"), tostring(item.setPoint or "?"),
+                tostring(item.setAlpha or "?"), tostring(item.setTexture or "?")
+            ))
+        end
+        for index = 1, #trainer.regions do
+            local item = trainer.regions[index]
+            emit(string.format(
+                "Logres trainer region: %s type=%s layer=%s texture=%s alpha=%s shown=%s setAlpha=%s setTexture=%s",
+                tostring(item.index), tostring(item.kind),
+                tostring(item.layer or "unknown"), tostring(item.texture),
+                tostring(item.alpha or "?"), tostring(item.shown),
+                tostring(item.setAlpha), tostring(item.setTexture)
+            ))
+        end
+        return
+    end
+
+    if command == "nativetrainerskin" then
+        local skin = Logres.NPCNativeTrainerSkin
+        local ok, reason
+        if argument == "on" then
+            ok, reason = skin.Enable()
+        elseif argument == "off" then
+            ok, reason = skin.Disable("explicit-off")
+        elseif argument == "check" then
+            ok, reason = true, "read-only-status"
+        else
+            emit("Usage: /logres nativetrainerskin [on|off|check]")
+            return
+        end
+        local report = skin.GetAudit()
+        emit(string.format(
+            "Logres native trainer skin: %s (result=%s active=%s pending=%s nativeRootDecorations=%s trials=%s restores=%s failures=%s preview=%s geometryWrites=%s transactions=%s)",
+            ok and "PASS" or (report.pending and "FAIL" or "DEFERRED"),
+            tostring(reason), tostring(report.active), tostring(report.pending),
+            tostring(report.nativeDecorations), tostring(report.trials),
+            tostring(report.restores), tostring(report.failures),
+            tostring(report.preview), tostring(report.geometryWrites),
+            tostring(report.nativeTransactions)
+        ))
+        return
+    end
+
+    if command == "nativetrainerpreview" then
+        local ok, reason = Logres.NPCNativeTrainerSkin.Preview()
+        emit(string.format("Logres trainer art preview: %s (%s; synthetic visual only, no native trainer writes)",
+            ok and "PASS" or "DEFERRED", tostring(reason)))
         return
     end
 
@@ -5831,6 +5899,24 @@ Logres:RegisterDevPanelAction(
     "npcOptionLocked",
     "NPC Choices: Locked",
     "npcoptionpreview locked",
+    "P"
+)
+Logres:RegisterDevPanelAction(
+    "nativeTrainerSkinOn",
+    "Trainer Skin ON (TEST)",
+    "nativetrainerskin on",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "nativeTrainerSkinOff",
+    "Trainer Skin OFF",
+    "nativetrainerskin off",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "nativeTrainerSkinPreview",
+    "Trainer Skin Art Preview",
+    "nativetrainerpreview",
     "P"
 )
 Logres:RegisterDevPanelAction(

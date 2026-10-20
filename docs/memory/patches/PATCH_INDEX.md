@@ -276,3 +276,9 @@ This index is initially maintained manually. If patch volume grows, replace manu
 | P0234 | 2026-10-17 | PREPARED / DOCS-ONLY / UPSTREAM API AUDIT | Native-first glyph priority, QuestieDB v4 NPC service role masks and bounded possible service implementation plan; no runtime changes. |
 | P0235 | 2026-10-17 | PREPARED / RUNTIME UNVERIFIED | Fix quest-only gate for flight master, innkeeper, repair; separate v4 service glyphs, one marker per dual-role NPC; preserve quest v1 and hidden minimap. |
 | P0236 | 2026-10-17 | INSTALLED / RUNTIME PASS | Verified pushed `e6179b8`; load 311 nearby services and proximity scaling passed; historical quest relevance and final styling OPEN (see P0237 evidence). |
+| P0275 | 2026-10-19 | PUSHED (`75e8024`), VISUAL FAIL | 640x540 quest-art wrapper produced a disjoint empty surround; see P0276 evidence. |
+| P0276 | 2026-10-19 | PREPARED / WSL & WoW UNVERIFIED | Disable failed overlay; reuse H native frame audit for secret-safe bounded trainer inventory; preserve stock UI and restoration. |
+| P0276 R1 | 2026-10-20 | PREPARED / WoW UNVERIFIED | Correct diagnostic-only R0; H ON/OFF native trainer skin trial, P same-painter preview, H pagination, native audit, guarded reversible root decoration alpha and no transactions. |
+| P0276 R2 | 2026-10-20 | PREPARED / WoW UNVERIFIED | R1 refusal on dirty P0275 worktree: support exact prior R0 candidate only, preserve unrelated files; same R1 opt-in trainer skin/panel tests; full WSL and WoW gates pending. |
+| P0276 R3 | 2026-10-20 | PREPARED / WSL & WoW UNVERIFIED | R2 prewrite failed checker 109/144 on contradictory stale secret-order assertion; fixed source/checker parity and aggregate failure reports. R1/R2 assistant failures preserved. |
+| P0276 R4 | 2026-10-20 | PREPARED / WSL & WoW UNVERIFIED | R3 PREWRITE 1/144 checker failure: CURRENT_HANDOFF.md lacked CURRENT.md; repair generated reference + preflight, no runtime changes, preserve failures. |

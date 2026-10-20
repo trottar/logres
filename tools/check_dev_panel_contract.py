@@ -147,7 +147,7 @@ if COMMANDS.is_file():
             )
 
     for phase, count in sorted(counts.items()):
-        if phase != "P" and count > MAX_ACTIONS_PER_PHASE:
+        if phase not in ("P", "H") and count > MAX_ACTIONS_PER_PHASE:
             errors.append(
                 f"phase {phase} has {count} actions; max is {MAX_ACTIONS_PER_PHASE}"
             )
