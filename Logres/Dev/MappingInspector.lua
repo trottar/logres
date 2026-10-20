@@ -39,6 +39,39 @@ local function eligible(region)
        and width > 2 and height > 2 and width < 1800 and height < 1800
 end
 
+-- P0279 R2: explain a FAILED existing owner eligibility test only.
+-- Every metadata read uses the same guarded plain() method as eligible().
+-- Return static reason codes only; no Blizzard metadata values are formatted.
+-- This does not relax eligibility or walk/scrape the native parent hierarchy.
+local function ownerGateFailure(owner)
+    if not ordinary(owner) or owner == nil then
+        return "native-owner-reference-unavailable"
+    end
+    local kind, hasKind = plain(owner, "GetObjectType")
+    if not hasKind or type(kind) ~= "string" then
+        return "native-owner-kind-unavailable"
+    end
+    if kind == "Texture" or kind == "FontString" then
+        return "native-owner-not-frame"
+    end
+    local protected, hasProtected = plain(owner, "IsProtected")
+    if not hasProtected then return "native-owner-protection-unavailable" end
+    if protected ~= false then return "native-owner-protected" end
+    local shown, hasShown = plain(owner, "IsShown")
+    if not hasShown then return "native-owner-visibility-unavailable" end
+    if shown ~= true then return "native-owner-not-shown" end
+    local width, hasWidth = plain(owner, "GetWidth")
+    local height, hasHeight = plain(owner, "GetHeight")
+    if not hasWidth or not hasHeight
+        or type(width) ~= "number" or type(height) ~= "number" then
+        return "native-owner-dimensions-unavailable"
+    end
+    if width <= 2 or height <= 2 or width >= 1800 or height >= 1800 then
+        return "native-owner-outside-size-gate"
+    end
+    return "native-owner-unverified-or-protected"
+end
+
 -- A native Texture/FontString is a Region, not a legal parent for a Frame.
 -- Anchor to that Region, but parent only to its verified Frame owner so native
 -- close automatically hides the mouse-inert highlight without any native write.
@@ -71,9 +104,13 @@ local function verifiedOverlayOwner(region)
         return nil, "native-region-unverified-or-protected"
     end
     local owner, hasOwner = plain(region, "GetParent")
-    if not hasOwner or not ordinary(owner) or owner == nil or not eligible(owner) then
-        return nil, "native-owner-unverified-or-protected"
+    if not hasOwner then return nil, "native-owner-parent-unavailable" end
+    if not ordinary(owner) or owner == nil then
+        return nil, "native-owner-reference-unavailable"
     end
+    -- Keep R1's eligibility decision exactly intact. Only report WHY a
+    -- pre-existing refusal happened, with a one-shot scoped metadata read.
+    if not eligible(owner) then return nil, ownerGateFailure(owner) end
     return owner
 end
 
