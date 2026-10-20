@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""P0274: merchant/trainer addon-owned noninteractive accent; D-047 stock controls."""
+"""P0274 archival contract, migrated for P0275 quest-art shell; D-047 stock controls."""
 from pathlib import Path
 import re
 R=Path(__file__).resolve().parents[1]
@@ -18,11 +18,11 @@ for token in ('Logres.NPCNativeServiceAccent = Accent',
  'function Accent.Show(frame, key)','function Accent.Hide()',
  'function Accent.GetAudit()', 'key ~= "merchant" and key ~= "trainer"',
  'CreateFrame("Frame", nil, UIParent)','surface:EnableMouse(false)',
- 'root:SetPoint("TOPLEFT", frame, "TOPLEFT", 15, -54)',
+ 'root:SetPoint("CENTER", frame, "CENTER", 0, 0)',
  'surface:Hide()','root:Hide()','root:ClearAllPoints()',
  'pcall(issecretvalue, frame)','nativeMutations = 0',
  'ownership = "addon-art-only"','mouse = false',
- 'mode = visible and "additive" or "stock"'):
+ 'mode = visible and "quest-shell" or "stock"'):
  need(token in a, 'missing noninteractive additive art invariant: '+token)
 for forbidden in ('frame:SetPoint(', 'frame:ClearAllPoints(', 'frame:Hide(',
  'frame:Show(', 'frame:SetAlpha(', 'frame:SetParent(', 'frame:EnableMouse(',

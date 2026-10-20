@@ -2,7 +2,7 @@
 ## Title: Logres
 ## Notes: Immersive, world-first interface for World of Warcraft Forever.
 ## Author: trottar
-## Version: 0.0.172-dev
+## Version: 0.0.173-dev
 ## SavedVariables: LogresDB, LogresDiagnosticsDB
 ## OptionalDeps: QuestieDB
 

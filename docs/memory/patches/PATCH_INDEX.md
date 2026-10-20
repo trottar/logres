@@ -2,7 +2,8 @@
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
-| P0274 | 2026-10-19 | PREPARED / CLIENT UNVERIFIED | Additive mouse-disabled merchant/trainer accent tied to existing opt-in native placement, gossip stock fallback; P0273 live PASS documented. |
+| P0275 | 2026-10-19 | PREPARED / CLIENT UNVERIFIED | Quest-art nine-slice shell behind native merchant/trainer; P0274 visually insufficient despite activation. Stock opaque controls and fallback unchanged. |
+| P0274 | 2026-10-19 | PUSHED ac3f199 / VISUAL INSUFFICIENT | Tiny accent activated in 0.0.172-dev (3 shows, no failures), but user screenshot looks stock; preserve negative visual outcome. Superseded by P0275 quest-art shell trial. |
 | P0273 | 2026-10-19 | PUSHED (591ed52) / SCOPED CLIENT PASS | Native gossip→trainer center continuity accepted, starts/restores 3/3 gossip 2/2 failures=0; controls native. P0272 archival reconstruction remains honest; original WSL static gate unknown. |
 | P0272 | 2026-10-19 | SOURCE PUSHED c5ef384 (MISLABELED P0271) / SCOPED CLIENT PASS; WSL GATE UNVERIFIED | User 0.0.170-dev AUTO tests: starts=2 restores=2 failures=0; screenshot reveals left gossip → centered trainer discontinuity. Original checker/records absent on main, reconstructed by P0273; original P0272 manifest absent, not fabricated. |
 | P0271 | 2026-10-19 | PREPARED / RUNTIME UNVERIFIED | Explicit reversible merchant/trainer native center TEST + close/regen restoration; TaxiFrame read-only alias; D-047 stock transactions/camera retained. |

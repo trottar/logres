@@ -1,11 +1,11 @@
--- P0274: addon-owned additive accent for native merchant/trainer windows only.
--- D-047: NEVER replace Blizzard controls, set their textures, mutate inputs or transact.
--- Gossip remains native stock fallback pending guarded live Logres dialogue adapter.
+-- P0275: quest-art backdrop for opt-in native merchant/trainer placement.
+-- D-047: standalone addon-owned art BEHIND native frames, not a native replacement.
+-- The Blizzard window remains intact, including its opaque background and controls.
 local _, Logres = ...
 local Accent = {}
 Logres.NPCNativeServiceAccent = Accent
 
-local root
+local root, categoryLabel
 local visible = false
 local shows, hides, failures = 0, 0, 0
 local lastResult = "not-shown"
@@ -13,33 +13,65 @@ local lastResult = "not-shown"
 local function construct()
     if root then return true end
     local style = Logres.Theme and Logres.Theme.nativeServiceAccent
-    if type(style) ~= "table" then
+    local questStyle = Logres.Theme and Logres.Theme.questDialogue
+    local assets = questStyle and questStyle.assets
+    if type(style) ~= "table" or type(assets) ~= "table"
+        or type(assets.panel) ~= "string"
+        or type(assets.divider) ~= "string"
+    then
         failures = failures + 1
-        lastResult = "accent-theme-unavailable"
+        lastResult = "quest-art-theme-unavailable"
         return false
     end
-    local ok, created = pcall(function()
-        -- Addon-owned UIParent child. Never parent/reparent into a Blizzard frame.
+
+    local ok, created, label = pcall(function()
+        -- Deliberately BACKGROUND strata: never cover the native window/input.
         local surface = CreateFrame("Frame", nil, UIParent)
-        surface:SetSize(116, 8)
+        surface:SetSize(style.width, style.height)
+        surface:SetFrameStrata("BACKGROUND")
+        surface:SetFrameLevel(0)
         surface:EnableMouse(false)
-        local rule = surface:CreateTexture(nil, "ARTWORK")
-        rule:SetSize(105, 2)
-        rule:SetPoint("TOPLEFT", surface, "TOPLEFT", 0, -3)
-        rule:SetColorTexture(unpack(style.rule))
-        local seal = surface:CreateTexture(nil, "ARTWORK")
-        seal:SetSize(6, 6)
-        seal:SetPoint("LEFT", rule, "RIGHT", 2, 0)
-        seal:SetColorTexture(unpack(style.seal))
+        -- Fail closed on any partial art-construction error: no stray visible shell.
         surface:Hide()
-        return surface
+
+        -- Nine slices of the EXACT quest panel art. Retains original corner
+        -- geometry when extending the wide quest silhouette around a taller
+        -- Blizzard merchant/trainer frame. All regions belong to the addon.
+        local cut = style.corner
+        local x = { 0, cut, style.width - cut }
+        local y = { 0, cut, style.height - cut }
+        local w = { cut, style.width - 2 * cut, cut }
+        local h = { cut, style.height - 2 * cut, cut }
+        local u = { 0, cut / questStyle.width,
+            1 - cut / questStyle.width, 1 }
+        local v = { 0, cut / questStyle.height,
+            1 - cut / questStyle.height, 1 }
+        for row = 1, 3 do
+            for col = 1, 3 do
+                local piece = surface:CreateTexture(nil, "BACKGROUND")
+                piece:SetTexture(assets.panel)
+                piece:SetSize(w[col], h[row])
+                piece:SetPoint("TOPLEFT", surface, "TOPLEFT", x[col], -y[row])
+                piece:SetTexCoord(u[col], u[col+1], v[row], v[row+1])
+            end
+        end
+        local divider = surface:CreateTexture(nil, "ARTWORK")
+        divider:SetTexture(assets.divider)
+        divider:SetSize(style.width - 72, 18)
+        divider:SetPoint("TOP", surface, "TOP", 0, -48)
+
+        local text = surface:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+        text:SetPoint("TOP", surface, "TOP", 0, -16)
+        text:SetTextColor(unpack(style.label))
+        surface:Hide()
+        return surface, text
     end)
-    if not ok then
+    if not ok or not created or not label then
         failures = failures + 1
-        lastResult = "accent-create-deferred"
+        lastResult = "quest-art-create-deferred"
         return false
     end
-    root = created
+    root, categoryLabel = created, label
     return true
 end
 
@@ -55,7 +87,7 @@ function Accent.Hide()
 end
 
 function Accent.Show(frame, key)
-    -- No reason to style temporary native gossip: future D-046 live renderer owns it.
+    -- Gossip is NOT restyled; a separate guarded Logres live renderer is planned.
     if key ~= "merchant" and key ~= "trainer" then
         Accent.Hide()
         return false, "native-gossip-stock"
@@ -75,24 +107,25 @@ function Accent.Show(frame, key)
     local ok = pcall(function()
         if visible then root:Hide() end
         root:ClearAllPoints()
-        -- Anchors only an addon-owned, mouse-disabled decorative surface.
-        root:SetPoint("TOPLEFT", frame, "TOPLEFT", 15, -54)
+        -- Only addon-owned geometry; native frame and its child layout untouched.
+        root:SetPoint("CENTER", frame, "CENTER", 0, 0)
+        categoryLabel:SetText(key == "trainer" and "TRAINER" or "MERCHANT")
         root:Show()
     end)
     if not ok then
         Accent.Hide()
         failures = failures + 1
-        lastResult = "accent-anchor-rejected"
+        lastResult = "quest-art-anchor-rejected"
         return false, lastResult
     end
     visible = true
     shows = shows + 1
-    lastResult = "shown-" .. key
+    lastResult = "quest-shell-" .. key
     return true, lastResult
 end
 
 function Accent.GetAudit()
-    return { mode = visible and "additive" or "stock",
+    return { mode = visible and "quest-shell" or "stock",
         shows = shows, hides = hides, failures = failures,
         lastResult = lastResult, nativeMutations = 0,
         ownership = "addon-art-only", mouse = false }
