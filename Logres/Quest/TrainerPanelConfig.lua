@@ -6,8 +6,8 @@ Logres.PanelConfigs = Logres.PanelConfigs or {}
 
 local trainer = {
     preview = {
-        width = 560, height = 430,
-        point = "TOP", relativePoint = "TOP", x = 0, y = -110,
+        width = 896, height = 712,
+        point = "TOP", relativePoint = "TOP", x = 0, y = -86,
         strata = "DIALOG", mouse = false,
         title = "TRAINER / PANEL ART",
         note = "Visual fixture only — native trainer controls remain Blizzard-owned",
@@ -15,6 +15,32 @@ local trainer = {
         noteFont = "GameFontHighlight",
         titleX = 0, titleY = -20, noteX = 0, noteY = -59,
         titleColor = art.colors.title, noteColor = art.colors.body,
+    },
+    -- Approved landscape screenshot: ONE complete UI, not isolated sample paint.
+    -- Only addon-owned preview geometry; live Blizzard child positions NEVER change.
+    landscape = {
+        width = 896, height = 712, maxRows = 7,
+        palette = {
+            pane = {0.055, 0.038, 0.022, 0.83},
+            rail = {0.24, 0.17, 0.08, 0.92},
+            gold = art.motifs.goldLine,
+            goldText = art.colors.title,
+            body = art.colors.body,
+            muted = {0.61, 0.55, 0.45, 0.94},
+            active = {0.33, 0.22, 0.10, 0.92},
+            selected = {0.28, 0.18, 0.075, 0.47},
+            iconBorder = {0.63, 0.45, 0.23, 0.90},
+        },
+        geometry = {
+            left = {x=32, y=102, w=222, h=392},
+            search = {x=38, y=115, w=210, h=29},
+            categories = {x=38, y=166, w=210, height=31, pitch=35},
+            status = {x=40, y=463, w=205, h=19},
+            list = {x=273, y=102, w=591, h=392, top=6, pitch=52, rowHeight=52},
+            detail = {x=33, y=529, w=531, h=140},
+            reagents = {x=574, y=529, w=253},
+            train = {x=732, y=642, w=120, h=31},
+        },
     },
     motif = {
         solidTexture = "Interface\\Buttons\\WHITE8x8",

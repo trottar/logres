@@ -60,6 +60,11 @@ local function paintRow(owner, recipe)
     return pieces
 end
 
+-- Reuses the exact proven motif painter, but ONLY for an addon-owned fixture row.
+function Motif.PaintFixtureRow(owner)
+    return paintRow(owner, Logres.PanelConfigs.trainer.motif)
+end
+
 local function paintScroll(scroll, recipe)
     local pieces = {}
     local ok = pcall(function()

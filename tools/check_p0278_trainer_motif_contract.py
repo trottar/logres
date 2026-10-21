@@ -38,13 +38,13 @@ for forbidden in ('GetTrainerServiceInfo(', 'BuyTrainerService(',
 for x in ('Logres.NPCTrainerMotif.Disable()',
           'Logres.NPCTrainerMotif.Enable(frame)',
           'Skin.Disable("motif-deferred")',
-          'Logres.NPCTrainerMotif.Preview(surface)',
+          'Logres.NPCTrainerLandscape.Preview(surface)',
           'native-scroll-motif-active',
           'local pieces = createPaint(frame, width, height)',
           'pcall(item.set, item.region, item.token)'):
     need(x in s,'skin must connect safe motif and native rollback '+x)
 need('Quest\\TrainerPanelConfig.lua' in toc and
-     'Quest\\TrainerMotif.lua\nQuest\\NativeTrainerSkin.lua' in toc,
+     'Quest\\TrainerMotif.lua\nQuest\\TrainerLandscape.lua\nQuest\\NativeTrainerSkin.lua' in toc,
      'TOC motif load order')
 for x in ('motif = {','rowRuleHeight', 'scrollAlpha',
           'art.motifs.rowWash', 'art.motifs.goldLine',

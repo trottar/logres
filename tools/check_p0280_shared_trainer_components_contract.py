@@ -40,18 +40,17 @@ for token in ('controlFill', 'controlRule', 'selectionFill',
     need(token in t,'palette not shared '+token)
 for token in ('Logres.NPCTrainerComponents.Disable()',
               'Logres.NPCTrainerComponents.Enable(frame)',
-              'Logres.NPCTrainerComponents.Preview(surface)',
+              'Logres.NPCTrainerLandscape.Preview(surface)',
               'components=Logres.NPCTrainerComponents.GetAudit()',
               'local pieces = createPaint(frame, width, height)',
               'Logres.NPCTrainerMotif.Enable(frame)',
-              'Logres.NPCTrainerMotif.Preview(surface)',
               'pcall(item.set, item.region, item.token)'):
     need(token in n,'skin integration or stock restore lost '+token)
 for token in ('components=%s/%s', 'componentResult=%s',
               'tostring(report.components.styled)',
               'tostring(report.components.deferred)'):
     need(token in cmd,'component diagnostics missing '+token)
-for token in ('Quest\\TrainerComponents.lua\nQuest\\TrainerMotif.lua\nQuest\\NativeTrainerSkin.lua',):
+for token in ('Quest\\TrainerComponents.lua\nQuest\\TrainerMotif.lua\nQuest\\TrainerLandscape.lua\nQuest\\NativeTrainerSkin.lua',):
     need(token in toc,'module load order '+token)
 for id in ('trainer.filter','trainer.selection','trainer.status','trainer.train'):
     need('"'+id+'"' in i,'missing verified mapping '+id)

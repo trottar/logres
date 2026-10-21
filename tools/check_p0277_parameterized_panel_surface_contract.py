@@ -30,7 +30,7 @@ for token in ('local style = Logres.Theme.questDialogue',
     need(token in q,'quest configuration missing '+token)
 for token in ('Logres.PanelConfigs.trainer = trainer',
               'local art = Logres.Theme.panelSurface',
-              'width = 560, height = 430',
+              'width = 896, height = 712',
               'mode = "nine-slice"', 'corner = 40',
               'referenceWidth = 640, referenceHeight = 320',
               'point = "TOP", relativePoint = "TOP"',

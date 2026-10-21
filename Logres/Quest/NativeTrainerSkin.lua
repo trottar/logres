@@ -224,22 +224,10 @@ function Skin.Preview()
             surface:Hide()
             local painted = createPaint(surface, visual.width, visual.height)
             if not painted then error("preview-painter-failed") end
-            local title = surface:CreateFontString(nil, "OVERLAY", visual.titleFont)
-            title:SetPoint("TOP", surface, "TOP", visual.titleX, visual.titleY)
-            title:SetText(visual.title)
-            local tc = visual.titleColor
-            title:SetTextColor(tc[1], tc[2], tc[3], tc[4])
-            local note = surface:CreateFontString(nil, "OVERLAY", visual.noteFont)
-            note:SetPoint("CENTER", surface, "CENTER", visual.noteX, visual.noteY)
-            note:SetText(visual.note)
-            local nc = visual.noteColor
-            note:SetTextColor(nc[1], nc[2], nc[3], nc[4])
-            if not Logres.NPCTrainerMotif.Preview(surface) then
-                error("trainer-motif-preview-failed")
-            end
-            if not Logres.NPCTrainerComponents.Preview(surface) then
-                error("trainer-component-preview-failed")
-            end
+            -- P0281: P shows the entire declared landscape composition.
+            -- Native H path above is unchanged and remains strictly Blizzard-owned.
+            local landscapeOK = Logres.NPCTrainerLandscape.Preview(surface)
+            if not landscapeOK then error("trainer-landscape-preview-failed") end
             return surface
         end)
         if not ok or not root then return fail("preview-construction-failed") end
