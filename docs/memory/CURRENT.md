@@ -7,12 +7,15 @@ project: logres
 # Current State
 
 ## Active Objective
-Record P0285 native service-shape failure as an OPEN negative result; distinguish ordinary returned type/shape safely before attempting to bind live trainer data. The portrait-free P0284 preview remains visually accepted. Blizzard trainer controls, transactions and full stock fallback remain authoritative.
+Preserve P0286 numeric trainer service-shape evidence, observe actual bounded numeric category and expansion values, and defer their semantic interpretation until in-client proof. The P0284 portrait-free preview stays visually accepted; Blizzard remains authoritative for training and stock fallback.
 
 ## Current Work Item
-**P0286 — NATIVE TRAINER SERVICE SHAPE DIAGNOSTIC / PREPARED, WSL AND WOW UNVERIFIED.** Verified pushed P0285 main `bbc9045`. User in-game `0.0.186-dev` H Native Service Frame Audit reports open trainer, source `total=1`, `selected=1`, `walletCopper=12058`, all API presence checks and zero mutations/purchases; however row index 1 is `unexpected-service-shape`. This is an exact P0285 source-model failure; the returned type layout is unknown. P0286 adds ordinary-gated type observations and changes summary to DEFERRED when rows do not validate. No live adapter, controller or visual/stock modifications.
+**P0287 — NUMERIC TRAINER SERVICE CATEGORY / PREPARED, WSL AND WOW UNVERIFIED.** Verified pushed main P0286 `cb8b756`. User Forever 1.60.1 H audit on Logres `0.0.187-dev`: open trainer, service count 1, selected 1, wallet 12058 copper, row name `Enchant Chest - Minor Absorption`; types name=string, subText=string, category=number, expanded=number. P0285 Classic string-only classifier rejected numeric value, P0286 revealed type but not value. P0287 records bounded ordinary raw numeric values and optional read-only cost/icon, without guessing category semantics; rows remain `numeric-category-unclassified` and whole sample DEFERRED. No native action, visual or geometry changes.
 
 ## Verified State
+- **P0286 pushed `cb8b756` / WoW SOURCE SHAPE PARTIAL, SEMANTIC CATEGORY DEFERRED:** `0.0.187-dev` H read `total=1`, `selected=1`, `walletCopper=12058`; name `Enchant Chest - Minor Absorption`; tuple types `string/string/number/number`. Native writes, purchases and geometry = 0. The prior string-category gate was inappropriate for this observed client, but actual numeric category value and its meaning are not known. The earlier formatted `category=unavailable` was a fallback label, NOT client evidence of unavailability.
+- **P0287 R0 PREWRITE FAIL / R1 prepared:** user verified ZIP SHA-256 and the pinned P0286 baseline. PREWRITE ran 158 checkers; one `check_checker_version_policy.py` failure: P0287's new feature checker froze an exact historical development runtime version inside its evidence assertion. No tracked files were written and no WoW runtime results exist. R1 changes the checker expectation to a version-independent client identifier and adds an explicit bundled-checker version gate; the runtime probe is unchanged. R1 WSL and WoW UNVERIFIED; see P0287 evidence.
+- **P0287 source probe prepared / NOT run in WoW:** bounded raw numeric category and expansion observation; safe cost/icon read only, no category/eligibility inference or live-adapter authorization. See evidence.
 - **P0285 pushed `bbc9045` / user WoW READ-ONLY SOURCE PARTIAL, ROW SHAPE FAIL:** Native trainer open and source APIs present; total=1, selected=1, wallet=12058 copper, sampled row 1 `unexpected-service-shape`. No row name/category/cost/icon accepted. Source is not yet suitable to populate the shared landscape model. Zero transactions/mutations/geometry writes observed. **OPEN**, not a trainer API compatibility verdict.
 - **P0286 prepared / not run in WoW:** one-shot safe scalar type/classification probe for rejected ordinary tuple fields; no reading secret-capable values or guessed table fields; P/H interactions unchanged.
 - **P0284 pushed `c773a94` / WoW P-preview VISUAL PASS (scope-limited):** User screenshot and "Looks good" confirm filter/categorize, funds, disabled Train All and prior row material; deferred aesthetic refinement acknowledged. Does not prove data adapter, native fallback or transaction safety.
@@ -44,15 +47,17 @@ Record P0285 native service-shape failure as an OPEN negative result; distinguis
 - P0273 verified positioning and restoration remain untouched, with the previous original P0272 WSL proof limitation preserved.
 
 ## Next Action
-Apply the exact-baseline P0286 guarded ZIP on pushed P0285 `bbc9045`, requiring full PREWRITE and POSTWRITE static suites and `git diff --check`, then user commit/push and verify main. Deploy, `/reload`, visit an ordinary trainer when available and use `/logres panel` → H → **Native Service Frame Audit**. Export diagnostics; report `Logres trainer service source` and `Logres trainer service shape` (type signatures, bounded ordinary category). No purchase, Train All, filter mutation or native H skin activation. If the returned types remain unavailable/secret, preserve DEFERRED and investigate a narrower supported source.
+Apply the P0287 guarded ZIP on exact verified P0286 `cb8b756` baseline; require full PREWRITE and POSTWRITE checks and `git diff --check`. After the user commits/pushes and main is verified, deploy runtime; at an ordinary open trainer run H → Native Service Frame Audit. Export diagnostics and record `rawNumericCategory`, `rawExpansion`, cost/icon, with `service-row-shape-deferred` expected until numeric meaning is corroborated. Do not train, alter filtering or turn on H trainer skin for this source-only probe.
 
 ## Success Criteria
-The negative P0285 row shape is preserved. An ordinary, nonsecret but rejected source row reports its position, the four returned Lua type classifications and an optional sanitized category string; secret/call failures remain deferred with no type inspection. Any rejected row makes the whole source status `service-row-shape-deferred`. The approved preview, stock Blizzard trainer behavior, transaction path and geometry remain unchanged. Static PASS is not live integration acceptance.
+One-shot ordinary numeric service category is captured as a bounded raw integer, with independently gated name/subtitle/cost/icon and no guessed availability. Prior rejected table/unknown schema remains DEFERRED; unknown numeric rows leave whole sample DEFERRED. User in-client evidence, not static checks, is needed to establish category semantics and authorize a live adapter; stock controls and portrait-free preview unchanged.
 
 ## Do Not Reopen Without New Evidence
 Do not infer addon installation from one guessed filesystem path or the presence/absence of a Lua global alone. No hard QuestieDB dependency, package bundling, unknown CurseForge project ID, global quest ID scans on updates, guessed quest availability, invented coordinates or native pin scraping. Do not hide the Blizzard minimap, alter user-accepted waypoint/focused-quest bearings, or treat missing locations as PASS. Baked flavor must not be guessed from a Source-only indicator. Keep negative and deferred evidence explicit.
 
 ## Relevant References
+- `docs/memory/evidence/P0287_TRAINER_NUMERIC_CATEGORY.md`
+- `docs/memory/patches/P0287_NUMERIC_CATEGORY_PROBE.md`
 - `docs/memory/evidence/P0286_TRAINER_SERVICE_SHAPE_DEFERRAL.md`
 - `docs/memory/patches/P0286_TRAINER_SERVICE_SHAPE_DIAGNOSTIC.md`
 - `docs/memory/evidence/P0285_NATIVE_TRAINER_SOURCE_FEASIBILITY.md`

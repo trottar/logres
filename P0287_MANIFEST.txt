@@ -1,0 +1,20 @@
+P0287 guarded patch manifest
+Baseline cb8b7567f843a4250d92f19ec74d62291f23a0c3
+Created 2026-10-21T19:10:37.798963+00:00
+Validation: PREWRITE PASS; POSTWRITE PASS; git diff --check PASS
+WoW runtime shape: UNVERIFIED
+
+bf8d81f4e554df0954845436d4105c8b7a0dbf62  Logres/Core/Bootstrap.lua
+f9ddead37543743e9fa31756fdad6afdf7bbc60a  Logres/Core/Commands.lua
+1aa80eaf052235cc51dede5ebaee6189e56961f4  Logres/Logres.toc
+d02fabb1c70f030d57cbf3aa0d6b2eab819094c6  Logres/Quest/NativeTrainerServiceProbe.lua
+79118c6bf1f41fafd0aba3b06d7a0dc4d897db01  docs/ROADMAP.md
+2454cf1ee3e2345b889464c01793fb7b1127d4a7  docs/memory/CURRENT.md
+6e02abacaff1cb0a834b4f99fe59022d1717a450  docs/memory/evidence/P0287_TRAINER_NUMERIC_CATEGORY.md
+83ad0212a4d461e93eba1d3c64cc1d04c5c391f2  docs/memory/handoffs/CURRENT_HANDOFF.md
+84ebd5f08e9b7c48ea518c07e4c19ff8e675d6b7  docs/memory/investigations/ACTIVE.md
+c5a9b4a004675485b3aa03d1a861f2f144e87032  docs/memory/patches/P0287_NUMERIC_CATEGORY_PROBE.md
+c905a446d812163fb627874514f72d91af2e298b  docs/memory/patches/PATCH_INDEX.md
+f31ea82367d2a35bf9710db43701dcfb75dd03a9  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+2a1452254bc55423ac2514bbebf28684fa496b8e  docs/memory/roadmap/STATUS.md
+7f9fc8700103f28c9a022a3342f69b57cab3da7a  tools/check_p0287_numeric_trainer_category_contract.py

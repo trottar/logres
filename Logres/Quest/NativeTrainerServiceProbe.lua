@@ -59,7 +59,10 @@ local function snapshotRow(infoFn, costFn, iconFn, index)
     local label = safeText(name, 100)
     local categoryKnown = category == "header" or category == "available"
         or category == "used" or category == "unavailable"
-    if not label or not categoryKnown then
+    -- Forever 1.60.1 returned a numeric category; capture as raw data only.
+    -- No semantic enum value has been independently verified yet.
+    local numericCategory = cappedInteger(category, 255)
+    if not label or (not categoryKnown and not numericCategory) then
         -- We may inspect types only after the ordinary() gate above passes.
         -- Do not dereference an unexpected table-valued source or guess schema.
         return {index=index, state="unexpected-service-shape", name=label,
@@ -67,8 +70,13 @@ local function snapshotRow(infoFn, costFn, iconFn, index)
                 categoryType=type(category), expandedType=type(expanded),
                 categoryValue=safeText(category, 32) or "unavailable"}}
     end
-    local entry = {index=index, state="source-observed", name=label,
-        subText=safeText(subText, 65) or "", category=category,
+    local entry = {index=index,
+        state=numericCategory and "numeric-category-unclassified" or "source-observed",
+        name=label, subText=safeText(subText, 65) or "",
+        category=numericCategory and "numeric-unclassified" or category,
+        -- Numeric fields are addon-owned copies of individually ordinary values.
+        rawNumericCategory=numericCategory and category or nil,
+        rawExpansion=cappedInteger(expanded, 255) and expanded or nil,
         -- Header expansion is NOT interpreted as an action authorization.
         expansionKnown=expanded == nil or type(expanded) == "boolean"
             or type(expanded) == "number", cost="unavailable", icon="unavailable"}

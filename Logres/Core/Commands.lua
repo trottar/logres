@@ -5334,10 +5334,12 @@ local function handleCommand(message)
         for index = 1, #service.sample do
             local item = service.sample[index]
             emit(string.format(
-                "Logres trainer service row: id=%s state=%s category=%s name=%s subText=%s costCopper=%s icon=%s",
+                "Logres trainer service row: id=%s state=%s category=%s name=%s subText=%s costCopper=%s icon=%s rawNumericCategory=%s rawExpansion=%s",
                 tostring(item.index), tostring(item.state), tostring(item.category or "unavailable"),
                 tostring(item.name or "unavailable"), tostring(item.subText or ""),
-                tostring(item.cost or "unavailable"), tostring(item.icon or "unavailable")))
+                tostring(item.cost or "unavailable"), tostring(item.icon or "unavailable"),
+                tostring(item.rawNumericCategory or "unavailable"),
+                tostring(item.rawExpansion or "unavailable")))
             -- Only addon-owned bounded strings/types produced AFTER the secret gate.
             if item.shape then
                 local shape = item.shape
