@@ -1,0 +1,20 @@
+P0288 guarded patch manifest
+Baseline e80d2e83170a6913a02db5c2c8fb31844fff77fa
+Created 2026-10-21T23:36:41.877048+00:00
+Validation: PREWRITE PASS; POSTWRITE PASS; git diff --check PASS
+WoW read-only live trial: UNVERIFIED
+
+ab0cca93cc426353b9aacf4ea2bd734a6c26438d  Logres/Core/Bootstrap.lua
+e849bf0c662395b3fee362f46df3278d944cc4e0  Logres/Core/Commands.lua
+3515d0d2572d5365cf4e614d8b84ae128782912c  Logres/Logres.toc
+c41b9e3e05184015cc18671be0f3aeb951ee35ec  Logres/Quest/TrainerLiveTrial.lua
+89ffb47a3e8b01b8b3e772ee8f3c314d81f35ea7  docs/ROADMAP.md
+a4b811c115efd49e97f597137b60b78a65b23bcd  docs/memory/CURRENT.md
+221a2baf81abbf3fce99322d4383a758992b91c8  docs/memory/evidence/P0288_TRAINER_LIVE_READONLY_TRIAL.md
+68d3ccb53f500b5186ba6e3945191fedc2c99a63  docs/memory/handoffs/CURRENT_HANDOFF.md
+cc4b22b7d679c174e54b0a52bad8b12a9e8b7310  docs/memory/investigations/ACTIVE.md
+6d5197e03fc51338ea543302073f588a4f121fe8  docs/memory/patches/P0288_TRAINER_LIVE_TRIAL.md
+b8049743ac8c5b4095bb24e350398ccba59f9a4d  docs/memory/patches/PATCH_INDEX.md
+1bef0bad640f3c5e0e797e4fba65561a4ad9d6ed  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+128684a97a1a65305cdb5dd21a8c20a23e64d8a3  docs/memory/roadmap/STATUS.md
+66ad84fc0f944c74c3b6b87b06cc7c1ecb954f2f  tools/check_p0288_trainer_live_trial_contract.py

@@ -1,0 +1,7 @@
+# P0288 — One-shot trainer live-data presentation trial
+
+Prepared against pushed P0287 R1 `e80d2e8` on 2026-10-21. Uses native source values already safely copied by P0287's guarded probe. `TrainerLiveTrial.lua` maps those values into the P0284-accepted `Landscape.Build` model and calls the same `Landscape.Render`, with generic icons and unclassified availability clearly labeled. A separate `/logres nativetrainerlive on|off` command invokes it; no H/native transaction path is altered. The display is addon-owned, mouse-inert, hides on close/combat/world entry, and uses unchanged PanelSurface art.
+
+Observed predecessor limitations: P0285 rejected numeric service type, P0286 established number field types, P0287 R0 checker pinned an old runtime version and failed WSL PREWRITE, and the last user diagnostic predates P0287 in-game execution. Preserve those failures. P0288 deliberately does not assume categories mean trainable or that a one-row sample is comprehensive. Native Blizzard filtering, selection, cost actions and Train/Train All remain the operative controls. Static/WoW PASS claims are DEFERRED until observed. No outside addon source copied.
+
+Next: apply guarded ZIP on exactly P0287 R1; run full static suite; user owns commit/push. Deploy, `/reload`, open trainer, `/logres nativetrainerlive on`, visually assess live label, funds and read-only status; close trainer for teardown and use `/logres nativetrainerlive off` when needed. Do **not** rerun the generic H source audit merely to prove the same API fields.

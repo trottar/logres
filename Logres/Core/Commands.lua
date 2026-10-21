@@ -5381,6 +5381,20 @@ local function handleCommand(message)
         return
     end
 
+    -- P0288: explicitly requested addon-owned LIVE read-only trainer snapshot.
+    -- No Blizzard trainer control is rerouted, hidden or activated here.
+    if command == "nativetrainerlive" then
+        local ok, reason = Logres.NPCTrainerLiveTrial.Toggle(argument)
+        local audit = Logres.NPCTrainerLiveTrial.GetAudit()
+        emit(string.format(
+            "Logres trainer live: %s (result=%s shown=%s displays=%s deferrals=%s purchases=%s filterWrites=%s selectionWrites=%s nativeGeometryWrites=%s stock=Blizzard)",
+            ok and "PASS" or "DEFERRED", tostring(reason), tostring(audit.shown),
+            tostring(audit.displays), tostring(audit.deferrals), tostring(audit.purchases),
+            tostring(audit.filterWrites), tostring(audit.selectionWrites),
+            tostring(audit.nativeGeometryWrites)))
+        return
+    end
+
     if command == "nativetrainerpreview" then
         local ok, reason = Logres.NPCNativeTrainerSkin.Preview()
         emit(string.format("Logres trainer art preview: %s (%s; synthetic visual only, no native trainer writes)",

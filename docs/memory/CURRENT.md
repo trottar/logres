@@ -7,12 +7,14 @@ project: logres
 # Current State
 
 ## Active Objective
-Preserve P0286 numeric trainer service-shape evidence, observe actual bounded numeric category and expansion values, and defer their semantic interpretation until in-client proof. The P0284 portrait-free preview stays visually accepted; Blizzard remains authoritative for training and stock fallback.
+Transition from repeated single-field H audits to an explicit, bounded, read-only live trainer snapshot flowing through the P0284-accepted landscape renderer. Preserve numeric category unknowns, source deferrals, stock Blizzard training controls and the portrait-free visual baseline.
 
 ## Current Work Item
-**P0287 — NUMERIC TRAINER SERVICE CATEGORY / PREPARED, WSL AND WOW UNVERIFIED.** Verified pushed main P0286 `cb8b756`. User Forever 1.60.1 H audit on Logres `0.0.187-dev`: open trainer, service count 1, selected 1, wallet 12058 copper, row name `Enchant Chest - Minor Absorption`; types name=string, subText=string, category=number, expanded=number. P0285 Classic string-only classifier rejected numeric value, P0286 revealed type but not value. P0287 records bounded ordinary raw numeric values and optional read-only cost/icon, without guessing category semantics; rows remain `numeric-category-unclassified` and whole sample DEFERRED. No native action, visual or geometry changes.
+**P0288 — TRAINER LIVE READ-ONLY SHARED-RENDERER TRIAL / PREPARED, WSL AND WOW UNVERIFIED.** Verified pushed main P0287 R1 `e80d2e8`. The last user-supplied runtime export is P0286 (`0.0.187-dev`), and does NOT demonstrate any P0287 numeric raw value. P0288 adds a separate guarded `TrainerLiveTrial.FromSnapshot` bridge from the existing source probe into the same `NPCTrainerLandscape.Build/Render` as the accepted P fixture, with the same nine-slice art, a new explicit `/logres nativetrainerlive on|off` test, and addon-only teardown on context exit/combat. Numeric availability remains UNCLASSIFIED, icon identities generic, native training/filters/selection kept stock. A trial screenshot or a specific DEFERRED reason is next, not another generic audit.
 
 ## Verified State
+- **P0287 R1 pushed `e80d2e8` / runtime UNVERIFIED:** the prior assistant repeatedly requested one-field source audits. Latest user diagnostic is still P0286, so numeric raw category meaning is NOT established. P0288 avoids another standalone audit by putting safe source names, indices, optional costs, selected index and wallet into a noninteractive shared-renderer trial. No stock suppression or purchases.
+- **P0288 source implementation PREPARED:** same approved 896×712 landscape and PanelSurface used for inert P fixture and guarded live model. All unknown category availability clearly labeled; Train and Train All remain disabled in Logres. One explicit runtime visual test is required, and negative results must be recorded.
 - **P0286 pushed `cb8b756` / WoW SOURCE SHAPE PARTIAL, SEMANTIC CATEGORY DEFERRED:** `0.0.187-dev` H read `total=1`, `selected=1`, `walletCopper=12058`; name `Enchant Chest - Minor Absorption`; tuple types `string/string/number/number`. Native writes, purchases and geometry = 0. The prior string-category gate was inappropriate for this observed client, but actual numeric category value and its meaning are not known. The earlier formatted `category=unavailable` was a fallback label, NOT client evidence of unavailability.
 - **P0287 R0 PREWRITE FAIL / R1 prepared:** user verified ZIP SHA-256 and the pinned P0286 baseline. PREWRITE ran 158 checkers; one `check_checker_version_policy.py` failure: P0287's new feature checker froze an exact historical development runtime version inside its evidence assertion. No tracked files were written and no WoW runtime results exist. R1 changes the checker expectation to a version-independent client identifier and adds an explicit bundled-checker version gate; the runtime probe is unchanged. R1 WSL and WoW UNVERIFIED; see P0287 evidence.
 - **P0287 source probe prepared / NOT run in WoW:** bounded raw numeric category and expansion observation; safe cost/icon read only, no category/eligibility inference or live-adapter authorization. See evidence.
@@ -47,15 +49,17 @@ Preserve P0286 numeric trainer service-shape evidence, observe actual bounded nu
 - P0273 verified positioning and restoration remain untouched, with the previous original P0272 WSL proof limitation preserved.
 
 ## Next Action
-Apply the P0287 guarded ZIP on exact verified P0286 `cb8b756` baseline; require full PREWRITE and POSTWRITE checks and `git diff --check`. After the user commits/pushes and main is verified, deploy runtime; at an ordinary open trainer run H → Native Service Frame Audit. Export diagnostics and record `rawNumericCategory`, `rawExpansion`, cost/icon, with `service-row-shape-deferred` expected until numeric meaning is corroborated. Do not train, alter filtering or turn on H trainer skin for this source-only probe.
+Apply guarded P0288 ZIP on exact pushed P0287 R1 baseline, run full PREWRITE and POSTWRITE checkers and `git diff --check`, user commits/pushes and remote verification. Deploy. With trainer open run `/logres nativetrainerlive on` once and inspect live names, costs/funds and the mouse-inert presentation; close trainer to verify addon panel hides. No repeat H general audit or forced training purchase. On DEFERRED, use the returned specific reason and preserve stock UI.
 
 ## Success Criteria
-One-shot ordinary numeric service category is captured as a bounded raw integer, with independently gated name/subtitle/cost/icon and no guessed availability. Prior rejected table/unknown schema remains DEFERRED; unknown numeric rows leave whole sample DEFERRED. User in-client evidence, not static checks, is needed to establish category semantics and authorize a live adapter; stock controls and portrait-free preview unchanged.
+Read-only native spell names and available source values appear in the same Logres landscape renderer as the accepted fixture, without guessing numeric category semantics, intercepting mouse input or modifying Blizzard trainer controls. Trial hides on trainer exit/combat; stock transaction pathway stays available. Native full replacement, icon/category mapping, row interaction, filtering and Train All remain DEFERRED until separately capability-gated and WoW-verified.
 
 ## Do Not Reopen Without New Evidence
 Do not infer addon installation from one guessed filesystem path or the presence/absence of a Lua global alone. No hard QuestieDB dependency, package bundling, unknown CurseForge project ID, global quest ID scans on updates, guessed quest availability, invented coordinates or native pin scraping. Do not hide the Blizzard minimap, alter user-accepted waypoint/focused-quest bearings, or treat missing locations as PASS. Baked flavor must not be guessed from a Source-only indicator. Keep negative and deferred evidence explicit.
 
 ## Relevant References
+- `docs/memory/evidence/P0288_TRAINER_LIVE_READONLY_TRIAL.md`
+- `docs/memory/patches/P0288_TRAINER_LIVE_TRIAL.md`
 - `docs/memory/evidence/P0287_TRAINER_NUMERIC_CATEGORY.md`
 - `docs/memory/patches/P0287_NUMERIC_CATEGORY_PROBE.md`
 - `docs/memory/evidence/P0286_TRAINER_SERVICE_SHAPE_DEFERRAL.md`
