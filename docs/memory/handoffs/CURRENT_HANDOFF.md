@@ -1,9 +1,9 @@
-# Current Handoff — P0283 trainer row selection emphasis
+# Current Handoff — P0284 trainer utility preview
 
-Authority: `docs/memory/CURRENT.md`, D-046/D-047, and `docs/memory/evidence/P0283_TRAINER_SELECTION_EMPHASIS.md`.
+Authority: `docs/memory/CURRENT.md`, D-046/D-047 and `docs/memory/evidence/P0284_TRAINER_UTILITY_PREVIEW.md`.
 
-Verified pushed `main` P0282 `39acd57`. User's WoW P screenshot is **VISUAL NEAR-PASS with one row emphasis FAIL**: landscape geometry, parchment continuity and sidebar legibility are close to the approved reference. But ordinary spell entries are yellowish like the selected spell. Source confirms both a gold title applied to all non-disabled rows and the same gold wash/rule passed to every P row. Earlier P0280/P0281 failures remain recorded.
+Verified pushed `main` P0283 `b6d818b`. User screenshot and "Looks good" establish P-only selected-vs-ordinary row color and full parchment composition **VISUAL PASS** within the one tested fixture; portrait-free styling is deliberate. The missing filter, currency and Train All utility are still OPEN. P0281 R0/R1 failures and earlier P0282 color FAIL remain preserved in their original evidence.
 
-P0283 PREPARED, WSL/WoW UNVERIFIED. P-only row states (`normal`, `selected`, `disabled`) supply different color pairs to the existing row motif painter. Only `selected` gets a gold title and bright selection treatment; ordinary names are ivory, disabled are muted. Native H still calls the original motif recipe without fixture colors. Geometry, existing item fixtures, Blizzard state, Quest UI and camera unchanged. All source/checker alterations must pass the complete PREWRITE/POSTWRITE suite. No native trainer visit is needed to inspect the P fixture.
+P0284 is PREPARED / WSL AND WOW UNVERIFIED: synthetic Filters and Categorize, denominated Funds, and disabled Train All within the same `Landscape.Fixture/Build/Render` model and mouse-inert 896x712 P composition. Existing P0283 selected row and parchment styling untouched; shared preview-only component painter adds one Train All decoration. No live data/Blizzard transaction adapter or native H mutation. A multi-reagent fixture footer overflow state remains DEFERRED.
 
-After user applies, commits, pushes, and deploys: `/reload` → `/logres panel` → P — Previews → Trainer Skin Art Preview, inspect row coloring, screenshot, toggle preview OFF. No H test unless separate live capability work is undertaken.
+After full shadow PREWRITE/POSTWRITE PASS, user commits/pushes and remote verifies; deploy, `/reload`, developer panel **P — Previews → Trainer Skin Art Preview**, inspect utility alignment, readable text, and unchanged row hierarchy, toggle preview OFF, screenshot. Do not require a trainer NPC or H test merely to validate synthetic utility presentation.

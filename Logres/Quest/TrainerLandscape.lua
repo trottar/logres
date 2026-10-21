@@ -61,6 +61,10 @@ function Landscape.Fixture()
         title = "Thonys Pillarstone",
         subtitle = "Journeyman Enchanter",
         search = "Search...",
+        -- Synthetic utility fixture: no Blizzard filter or money API consulted.
+        filters = {label="Filters", mode="Categorize", categorized=true},
+        funds = {label="Funds", gold="1", silver="20", copper="58"},
+        trainAll = {label="Train All (1, 1s)", enabled=false},
         categories = {"All", "Weapon", "Chest", "Bracer", "Glove", "Boots", "Other"},
         activeCategory = 1,
         profession = "Enchanting (40)",
@@ -90,6 +94,18 @@ function Landscape.Build(model)
     if type(model) ~= "table" or not boundedString(model.title, 90)
         or not boundedString(model.subtitle, 90)
         or not boundedString(model.search, 70)
+        or type(model.filters) ~= "table"
+        or not boundedString(model.filters.label, 30)
+        or not boundedString(model.filters.mode, 30)
+        or type(model.filters.categorized) ~= "boolean"
+        or type(model.funds) ~= "table"
+        or not boundedString(model.funds.label, 30)
+        or not boundedString(model.funds.gold, 10)
+        or not boundedString(model.funds.silver, 10)
+        or not boundedString(model.funds.copper, 10)
+        or type(model.trainAll) ~= "table"
+        or not boundedString(model.trainAll.label, 40)
+        or type(model.trainAll.enabled) ~= "boolean"
         or not boundedString(model.profession, 70)
         or type(model.categories) ~= "table" or #model.categories < 1
         or #model.categories > 9 or type(model.rows) ~= "table"
@@ -148,8 +164,25 @@ function Landscape.Render(owner, model)
         -- Left-hand search and full vertical category selection.
         local filter = frame(owner, g.search.x, g.search.y, g.search.w, g.search.h)
         created[#created + 1] = filter
-        text(filter, view.search, 14, 2, g.search.w - 28, 24,
+        -- Search, filter and category mode are inert fixture illustrations.
+        -- Native Blizzard filter controls remain untouched in H mode.
+        text(filter, view.search, 14, 2, g.search.w - 108, 24,
             "GameFontHighlightSmall", p.muted)
+        rect(owner, g.filters.x, g.filters.y, g.filters.w, g.filters.h,
+            p.sidebarWash)
+        local filterBadge = frame(owner, g.filters.x, g.filters.y,
+            g.filters.w, g.filters.h)
+        created[#created + 1] = filterBadge
+        text(owner, view.filters.label, g.filters.x + 8, g.filters.y + 1,
+            g.filters.w - 24, 22, "GameFontHighlightSmall", p.body)
+        text(owner, "v", g.filters.x + g.filters.w - 16, g.filters.y + 1,
+            12, 22, "GameFontHighlightSmall", p.goldText, "CENTER")
+        rect(owner, g.filterMode.x, g.filterMode.y, 10, 10, p.sidebarRule)
+        if view.filters.categorized then
+            rect(owner, g.filterMode.x + 2, g.filterMode.y + 2, 6, 6, p.gold)
+        end
+        text(owner, view.filters.mode, g.filterMode.x + 15,
+            g.filterMode.y - 3, 145, 17, "GameFontHighlightSmall", p.muted)
         for i = 1, #view.categories do
             local y = g.categories.y + (i - 1) * g.categories.pitch
             if i == view.activeCategory then
@@ -221,6 +254,21 @@ function Landscape.Render(owner, model)
                 g.reagents.w - 51, 37, "GameFontHighlightSmall", p.body)
             created[#created + 1] = reagent
         end
+        -- Money values and cost/count are authored demo data, never live funds.
+        text(owner, view.funds.label, g.funds.x, g.funds.y,
+            49, 19, "GameFontHighlightSmall", p.muted)
+        text(owner, view.funds.gold .. "g", g.funds.x + 50, g.funds.y,
+            40, 19, "GameFontNormalSmall", p.goldText)
+        text(owner, view.funds.silver .. "s", g.funds.x + 95, g.funds.y,
+            41, 19, "GameFontNormalSmall", p.coinSilver)
+        text(owner, view.funds.copper .. "c", g.funds.x + 144, g.funds.y,
+            41, 19, "GameFontNormalSmall", p.coinCopper)
+        local trainAll = frame(owner, g.trainAll.x, g.trainAll.y,
+            g.trainAll.w, g.trainAll.h)
+        created[#created + 1] = trainAll
+        text(trainAll, view.trainAll.label, 0, 0,
+            g.trainAll.w, g.trainAll.h, "GameFontHighlightSmall",
+            view.trainAll.enabled and p.goldText or p.muted, "CENTER")
         local train = frame(owner, g.train.x, g.train.y, g.train.w, g.train.h)
         created[#created + 1] = train
         text(train, view.trainLabel, 0, 0, g.train.w, g.train.h,
@@ -235,8 +283,9 @@ function Landscape.Render(owner, model)
             {id="trainer.selection", target=selected},
             {id="trainer.status", target=status},
             {id="trainer.train", target=train},
+            {id="trainer.trainAll", target=trainAll},
         }})
-        if not decorated or decorated.styled ~= 4 then
+        if not decorated or decorated.styled ~= 5 then
             error("trainer-landscape-component-paint-failed")
         end
     end)

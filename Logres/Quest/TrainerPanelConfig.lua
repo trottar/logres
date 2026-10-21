@@ -35,6 +35,8 @@ local trainer = {
             active = {0.37, 0.26, 0.14, 0.49},
             selected = {0.41, 0.29, 0.16, 0.15},
             iconBorder = {0.63, 0.45, 0.23, 0.90},
+            coinSilver = {0.78, 0.78, 0.73, 0.98},
+            coinCopper = {0.75, 0.50, 0.30, 0.98},
         },
         -- Only the synthetic P composition opts into these lighter recipes.
         -- The shared Components.Render implementation is unchanged for native H.
@@ -51,15 +53,23 @@ local trainer = {
             ["trainer.train"] = {fill={0.31,0.24,0.17,0.35},
                 rule={0.73,0.56,0.35,0.64}, inset=1,
                 fillSublevel=-2,ruleSublevel=-5,ruleHeight=1,ruleY=0},
+            -- Preview-only: no native train-all control is mapped/claimed.
+            ["trainer.trainAll"] = {fill={0.31,0.24,0.17,0.35},
+                rule={0.73,0.56,0.35,0.64}, inset=1,
+                fillSublevel=-2,ruleSublevel=-5,ruleHeight=1,ruleY=0},
         },
         geometry = {
             left = {x=32, y=102, w=222, h=392},
             search = {x=38, y=115, w=210, h=29},
+            filters = {x=166, y=117, w=78, h=24},
+            filterMode = {x=40, y=148},
             categories = {x=38, y=166, w=210, height=31, pitch=35},
             status = {x=40, y=463, w=205, h=19},
             list = {x=273, y=102, w=591, h=392, top=6, pitch=52, rowHeight=52},
             detail = {x=33, y=529, w=531, h=140},
             reagents = {x=574, y=529, w=253},
+            funds = {x=575, y=614},
+            trainAll = {x=574, y=642, w=150, h=31},
             train = {x=732, y=642, w=120, h=31},
         },
     },

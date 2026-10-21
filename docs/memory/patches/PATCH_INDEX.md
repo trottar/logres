@@ -1,3 +1,7 @@
+## P0284 — trainer preview filters, funds and Train All (2026-10-21)
+
+Verified pushed P0283 `b6d818b`; user screenshot and “Looks good” support **P-only VISUAL PASS** for selected vs ordinary spell hierarchy, warm parchment and no-portrait Logres design. Remaining native utility analogues — filter option, money display and Train All cost/count — are **OPEN / NOT PRESENT IN P**. P0284 **PREPARED, WSL+WOW UNVERIFIED** extends the existing pure fixture/model/renderer with synthetic Filters/Categorize, denominated Funds and a disabled Train All button. The five P component decorations use fixture-only recipes; native H continues its four mapped controls and Blizzard-owned transactions unchanged. Screen validation is required; no fabricated real funds or verified native Train All route. Single-fixture reagent-row overflow and true live adapter remain DEFERRED. See `docs/memory/evidence/P0284_TRAINER_UTILITY_PREVIEW.md`.
+
 ## P0283 — P trainer row color-state correction (2026-10-21)
 
 Verified pushed P0282 `39acd57`; user screenshot: **VISUAL NEAR-PASS / ROW EMPHASIS FAIL**. Warm parchment layout, categories and integrated details now look very close to the approved reference, but all spells appear yellowish. Source establishes both indiscriminate `p.goldText` for every enabled name and default gold row motif for every P row. P0283 **PREPARED / WSL+WOW UNVERIFIED** adds explicit preview-only `normal`, `selected`, `disabled` wash/rule palettes and uses the SAME `paintRow` painter with optional fixture colors. Only selected row gets bright gold title/highlight; ordinary text ivory and wash neutral; disabled remains muted. Native H calls `paintRow(row, recipe)` without overrides; no Blizzard transaction, source, frame or geometry change. P visual screenshot proof still required. See `docs/memory/evidence/P0283_TRAINER_SELECTION_EMPHASIS.md`.
@@ -48,6 +52,7 @@ Verified P0276 R4 pushed `b01cecf`; user's screenshots show two incompatible pla
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
+| P0284 | 2026-10-21 | PREPARED / WSL+WOW UNVERIFIED | P-only Filters/Categorize, denominated Funds and disabled Train All; native transaction ownership unchanged. |
 | P0283 | 2026-10-21 | PREPARED / WSL+WOW UNVERIFIED | P-only selected vs ordinary vs disabled trainer row text and gold motif; native H unchanged. |
 | P0282 | 2026-10-21 | PREPARED / WSL+WOW UNVERIFIED | P-only low-alpha parchment material and overlay-order repair after user-confirmed P0281 dark-block VISUAL FAIL; H/native unchanged. |
 | P0281 R2 | 2026-10-20 | PREPARED / WSL+WOW UNVERIFIED | Repair R1 false-positive fixture mouse contract via constructor-local check, preserve all native H and preview behavior. |
