@@ -1,0 +1,5 @@
+# P0286 — Native trainer row schema diagnostic
+
+Baseline: verified pushed P0285 `bbc9045`. The on-demand P0285 audit obtained total=1, selected=1, walletCopper=12058 but refused row 1 as `unexpected-service-shape`. The underlying types were not logged. This is an OPEN Forever runtime negative result, not permission to guess the row schema or suppress native UI.
+
+This patch preserves the same native service probe, and only enriches safe diagnostic output after all four return fields pass the ordinary-value gate. It distinguishes an unexpected ordinary schema from an unavailable/secret call and marks row failure as `service-row-shape-deferred`. The H panel's `Native Service Frame Audit` remains the only trigger. No Blizzard geometry, training transaction, selection or filter write, hooks, polling, quest or camera changes. Keep the approved P preview and stock trainer fallback. Next gate is one new client H diagnostic export identifying exact returned types. Full static checks and in-game behavior are UNVERIFIED pending WSL and WoW.

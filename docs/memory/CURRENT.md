@@ -7,12 +7,14 @@ project: logres
 # Current State
 
 ## Active Objective
-Accept P0284 visual preview fidelity within its tested scope and verify source-level native trainer service behavior before any live landscape adapter. Preserve portrait-free Logres design, Blizzard training transactions, camera and stock fallbacks.
+Record P0285 native service-shape failure as an OPEN negative result; distinguish ordinary returned type/shape safely before attempting to bind live trainer data. The portrait-free P0284 preview remains visually accepted. Blizzard trainer controls, transactions and full stock fallback remain authoritative.
 
 ## Current Work Item
-**P0285 — NATIVE TRAINER SOURCE FEASIBILITY / PREPARED, WSL AND WOW UNVERIFIED.** Verified pushed `main` P0284 `c773a94`; new client screenshot and user "Looks good" establish P-only VISUAL PASS for current fixture with further polish deferred. P0285 extends the existing H Native Service Frame Audit with bounded, secret-gated read-only trainer service count, first 12 service indices/types/names/cost/icon presence, selected index, wallet and API presence. Sources from ElvUI Forever, Aurora Classic, Class Trainer Plus and Skinner were investigated, not copied. No live adapter, native layout, polling, hooks, selection, filter writes or purchases.
+**P0286 — NATIVE TRAINER SERVICE SHAPE DIAGNOSTIC / PREPARED, WSL AND WOW UNVERIFIED.** Verified pushed P0285 main `bbc9045`. User in-game `0.0.186-dev` H Native Service Frame Audit reports open trainer, source `total=1`, `selected=1`, `walletCopper=12058`, all API presence checks and zero mutations/purchases; however row index 1 is `unexpected-service-shape`. This is an exact P0285 source-model failure; the returned type layout is unknown. P0286 adds ordinary-gated type observations and changes summary to DEFERRED when rows do not validate. No live adapter, controller or visual/stock modifications.
 
 ## Verified State
+- **P0285 pushed `bbc9045` / user WoW READ-ONLY SOURCE PARTIAL, ROW SHAPE FAIL:** Native trainer open and source APIs present; total=1, selected=1, wallet=12058 copper, sampled row 1 `unexpected-service-shape`. No row name/category/cost/icon accepted. Source is not yet suitable to populate the shared landscape model. Zero transactions/mutations/geometry writes observed. **OPEN**, not a trainer API compatibility verdict.
+- **P0286 prepared / not run in WoW:** one-shot safe scalar type/classification probe for rejected ordinary tuple fields; no reading secret-capable values or guessed table fields; P/H interactions unchanged.
 - **P0284 pushed `c773a94` / WoW P-preview VISUAL PASS (scope-limited):** User screenshot and "Looks good" confirm filter/categorize, funds, disabled Train All and prior row material; deferred aesthetic refinement acknowledged. Does not prove data adapter, native fallback or transaction safety.
 - **P0285 external source findings:** ElvUI Forever provides ScrollBox/ForEachFrame and native money/filter/selection references; Aurora Classic uses a different fixed-row layout; Class Trainer Plus preserves service IDs under search/filters and implements independent Train All. Logres M mapping is of native visual controls, not a filtered source model. Service indices change with filters and API values may be unavailable/secret on client. P0285 probes source information only, and all live work is DEFERRED pending in-client evidence.
 - **P0283 pushed `b6d818b` / P-only user visual PASS within tested composition:** user screenshot shows gold selected spell, ordinary ivory names, muted disabled row and coherent parchment. User says "Looks good" and explicitly rejects a portrait. Remaining filter, money and Train All presentation is OPEN, not a native UI capability PASS. P0284 is an untested preview-only candidate.
@@ -42,15 +44,17 @@ Accept P0284 visual preview fidelity within its tested scope and verify source-l
 - P0273 verified positioning and restoration remain untouched, with the previous original P0272 WSL proof limitation preserved.
 
 ## Next Action
-Apply guarded P0285 from verified `c773a94`; require all static checks PREWRITE and POSTWRITE plus diff hygiene. User commits/pushes, verify `main`, then deploy and `/reload`. At an ordinary open trainer, developer panel **H — Native Service Frame Audit** (read-only) must report `Logres trainer service source` and bounded rows. Export diagnostics and report any secret/call deferrals. Do not run H Trainer Skin ON, perform purchases or alter filters to manufacture proof. Native model mapping and reversible presentation adaptation follow only after evidence.
+Apply the exact-baseline P0286 guarded ZIP on pushed P0285 `bbc9045`, requiring full PREWRITE and POSTWRITE static suites and `git diff --check`, then user commit/push and verify main. Deploy, `/reload`, visit an ordinary trainer when available and use `/logres panel` → H → **Native Service Frame Audit**. Export diagnostics; report `Logres trainer service source` and `Logres trainer service shape` (type signatures, bounded ordinary category). No purchase, Train All, filter mutation or native H skin activation. If the returned types remain unavailable/secret, preserve DEFERRED and investigate a narrower supported source.
 
 ## Success Criteria
-A bounded, on-demand and secret-safe source read of an already-open, unprotected trainer demonstrates which ordinary native service fields and indices Forever exposes. The mapped Blizzard UI, filters, native selection and purchase controls remain untouched. Empty/unavailable/protected/secret state is DEFERRED, never silently PASS. The approved P fixture remains unchanged; native layout and complete interaction replacement are not claimed.
+The negative P0285 row shape is preserved. An ordinary, nonsecret but rejected source row reports its position, the four returned Lua type classifications and an optional sanitized category string; secret/call failures remain deferred with no type inspection. Any rejected row makes the whole source status `service-row-shape-deferred`. The approved preview, stock Blizzard trainer behavior, transaction path and geometry remain unchanged. Static PASS is not live integration acceptance.
 
 ## Do Not Reopen Without New Evidence
 Do not infer addon installation from one guessed filesystem path or the presence/absence of a Lua global alone. No hard QuestieDB dependency, package bundling, unknown CurseForge project ID, global quest ID scans on updates, guessed quest availability, invented coordinates or native pin scraping. Do not hide the Blizzard minimap, alter user-accepted waypoint/focused-quest bearings, or treat missing locations as PASS. Baked flavor must not be guessed from a Source-only indicator. Keep negative and deferred evidence explicit.
 
 ## Relevant References
+- `docs/memory/evidence/P0286_TRAINER_SERVICE_SHAPE_DEFERRAL.md`
+- `docs/memory/patches/P0286_TRAINER_SERVICE_SHAPE_DIAGNOSTIC.md`
 - `docs/memory/evidence/P0285_NATIVE_TRAINER_SOURCE_FEASIBILITY.md`
 - `docs/memory/patches/P0285_NATIVE_TRAINER_SOURCE_PROBE.md`
 - `docs/memory/evidence/P0284_TRAINER_UTILITY_PREVIEW.md`

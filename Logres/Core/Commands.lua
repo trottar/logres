@@ -5338,6 +5338,15 @@ local function handleCommand(message)
                 tostring(item.index), tostring(item.state), tostring(item.category or "unavailable"),
                 tostring(item.name or "unavailable"), tostring(item.subText or ""),
                 tostring(item.cost or "unavailable"), tostring(item.icon or "unavailable")))
+            -- Only addon-owned bounded strings/types produced AFTER the secret gate.
+            if item.shape then
+                local shape = item.shape
+                emit(string.format(
+                    "Logres trainer service shape: id=%s nameType=%s subTextType=%s categoryType=%s expandedType=%s categoryValue=%s",
+                    tostring(item.index), tostring(shape.nameType), tostring(shape.subTextType),
+                    tostring(shape.categoryType), tostring(shape.expandedType),
+                    tostring(shape.categoryValue)))
+            end
         end
         return
     end

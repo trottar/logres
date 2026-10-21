@@ -60,7 +60,12 @@ local function snapshotRow(infoFn, costFn, iconFn, index)
     local categoryKnown = category == "header" or category == "available"
         or category == "used" or category == "unavailable"
     if not label or not categoryKnown then
-        return {index=index, state="unexpected-service-shape"}
+        -- We may inspect types only after the ordinary() gate above passes.
+        -- Do not dereference an unexpected table-valued source or guess schema.
+        return {index=index, state="unexpected-service-shape", name=label,
+            shape={nameType=type(name), subTextType=type(subText),
+                categoryType=type(category), expandedType=type(expanded),
+                categoryValue=safeText(category, 32) or "unavailable"}}
     end
     local entry = {index=index, state="source-observed", name=label,
         subText=safeText(subText, 65) or "", category=category,
@@ -124,10 +129,15 @@ function Probe.Read()
         and selection <= total then report.selected=selection end
     local wallet, moneyKnown = scalar(api("GetMoney"))
     if moneyKnown and cappedInteger(wallet, 100000000000) then report.wallet=wallet end
+    local bad = 0
     for index=1, math.min(total, MAX_SAMPLE) do
-        report.sample[#report.sample + 1] = snapshotRow(infoFn, costFn, iconFn, index)
+        local row = snapshotRow(infoFn, costFn, iconFn, index)
+        report.sample[#report.sample + 1] = row
+        if row.state ~= "source-observed" then bad = bad + 1 end
     end
+    report.invalidRows=bad
     report.status="read-only-service-sample"
+    if bad > 0 then report.status="service-row-shape-deferred" end
     return report
 end
 

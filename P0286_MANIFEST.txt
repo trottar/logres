@@ -1,0 +1,20 @@
+P0286 guarded patch manifest
+Baseline bbc9045355b44f45835ba32904e9b56d9e618d10
+Created 2026-10-21T16:28:42.081836+00:00
+Validation: PREWRITE PASS; POSTWRITE PASS; git diff --check PASS
+WoW runtime shape: UNVERIFIED
+
+c7e62b1a55bc0e13f23e4e2f2fc1449c782796a6  Logres/Core/Bootstrap.lua
+742a58a0d81032dbaed20ea02769ee672537c420  Logres/Core/Commands.lua
+c3e557143a26fb864c4dfb42e3d4713482d5f356  Logres/Logres.toc
+4d41f778f978288195ab572bf25c335b64727f58  Logres/Quest/NativeTrainerServiceProbe.lua
+e776c7adc3652cc048802a836c6375044e17f6ad  docs/ROADMAP.md
+61133c8f92f3b4fa162dd54b0408142e21c4e7e3  docs/memory/CURRENT.md
+638456f356634dfe541e43076eb7f00a8f322b33  docs/memory/evidence/P0286_TRAINER_SERVICE_SHAPE_DEFERRAL.md
+60f84a0de1874276b76d419b3743b1c8a4514ee1  docs/memory/handoffs/CURRENT_HANDOFF.md
+a5ca4705c060e70deb44a72120965ece0592bcb2  docs/memory/investigations/ACTIVE.md
+1128cc08c61eefd114a3ed2575f27df63ae07888  docs/memory/patches/P0286_TRAINER_SERVICE_SHAPE_DIAGNOSTIC.md
+65fe0cf64785fdbf191581928d6a2df578665912  docs/memory/patches/PATCH_INDEX.md
+dd69f5d45ce81abfb95097c05f36a1232b5cb3c4  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+724ccd4ca32f9ab3e006a22a7e469102ee2ca1fc  docs/memory/roadmap/STATUS.md
+c66200b340296bf20e0c02e4bdf1740588699d6d  tools/check_p0286_trainer_shape_diagnostic_contract.py
