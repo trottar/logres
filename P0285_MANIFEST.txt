@@ -1,0 +1,20 @@
+P0285 guarded patch manifest
+Baseline c773a942d18d84c919841063a84bc6ff94ece567
+Created 2026-10-21T16:01:11.296931+00:00
+Static validation: PREWRITE PASS; POSTWRITE PASS; git diff --check PASS
+WoW client native-source probe: UNVERIFIED
+
+ebdcf49bbc41ee9d99f4a55d02f07c44d5992b4b  Logres/Core/Bootstrap.lua
+1393bfad1bd090f8e42dcaea70271dce6ee7a859  Logres/Core/Commands.lua
+7bc37a446da52296f857c5589676c736a21ab9b7  Logres/Logres.toc
+83a1886c06ce6f76a1d3e8c25f4c52498e198aef  Logres/Quest/NativeTrainerServiceProbe.lua
+86466628beb8410411784a94c47ea6ca685ca577  docs/ROADMAP.md
+33988898aed715513f1bc40627010b027acc1784  docs/memory/CURRENT.md
+7f6cd7cd92f2fd7fd22f61f8685ea9ba8afbbb24  docs/memory/evidence/P0285_NATIVE_TRAINER_SOURCE_FEASIBILITY.md
+d70efed663688d0a1431ab5a548aca889d0f2f05  docs/memory/handoffs/CURRENT_HANDOFF.md
+ad4898445fcac25a879de76beba8d284186e2e5b  docs/memory/investigations/ACTIVE.md
+c0c6203492771ca9bba698509b7f852dc94c5076  docs/memory/patches/P0285_NATIVE_TRAINER_SOURCE_PROBE.md
+8a7c484aee067879e91d6a2b27536c4cc444e8b7  docs/memory/patches/PATCH_INDEX.md
+d097e7e6b61f780b34f05ca651fcffd0eea93450  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+6877ab1f3a545659aa7e8d3e99bb480bc80dde78  docs/memory/roadmap/STATUS.md
+3ec2730c88716d916be16cf3ab1a0bf0a70b2ad3  tools/check_p0285_trainer_service_source_contract.py

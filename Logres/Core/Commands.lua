@@ -5317,6 +5317,28 @@ local function handleCommand(message)
                 tostring(item.setAlpha), tostring(item.setTexture)
             ))
         end
+        -- P0285: one-shot read-only native *service-source* sample. Does not
+        -- alter the existing visual mapping/region audit or Blizzard controls.
+        local service = Logres.NPCNativeTrainerServiceProbe.Read()
+        local apis = service.api or {}
+        emit(string.format(
+            "Logres trainer service source: %s (total=%s selected=%s walletCopper=%s sampled=%s/%s countAPI=%s infoAPI=%s costAPI=%s iconAPI=%s filterRead=%s filterWritePresent=%s selectionWritePresent=%s purchasePresent=%s mutations=%s purchases=%s geometryWrites=%s)",
+            tostring(service.status), tostring(service.total), tostring(service.selected),
+            tostring(service.wallet), tostring(#service.sample), tostring(service.sampleLimit),
+            tostring(apis.count or "unknown"), tostring(apis.info or "unknown"),
+            tostring(apis.cost or "unknown"), tostring(apis.icon or "unknown"),
+            tostring(apis.filterRead or "unknown"), tostring(apis.filterWrite or "unknown"),
+            tostring(apis.selectionWrite or "unknown"), tostring(apis.purchase or "unknown"),
+            tostring(service.mutationCalls), tostring(service.trainerPurchases),
+            tostring(service.geometryWrites)))
+        for index = 1, #service.sample do
+            local item = service.sample[index]
+            emit(string.format(
+                "Logres trainer service row: id=%s state=%s category=%s name=%s subText=%s costCopper=%s icon=%s",
+                tostring(item.index), tostring(item.state), tostring(item.category or "unavailable"),
+                tostring(item.name or "unavailable"), tostring(item.subText or ""),
+                tostring(item.cost or "unavailable"), tostring(item.icon or "unavailable")))
+        end
         return
     end
 
