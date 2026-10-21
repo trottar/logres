@@ -88,6 +88,11 @@ function Components.Render(model)
     for i = 1, #model.elements do
         local item = model.elements[i]
         local recipe = config.styles[item.id]
+        -- Explicit fixture-only variant for the approved landscape material.
+        -- Native H always uses the original four recipes, unchanged.
+        if model.fixture == true and type(model.styles) == "table" then
+            recipe = model.styles[item.id] or recipe
+        end
         if not recipe or not supported(item.target, model.fixture == true) then
             result.deferred = result.deferred + 1
         else

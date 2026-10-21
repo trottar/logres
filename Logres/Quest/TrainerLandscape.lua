@@ -131,12 +131,13 @@ function Landscape.Render(owner, model)
     local p, g = config.palette, config.geometry
     local created = {}
     local ok = pcall(function()
-        local body = frame(owner, g.left.x, g.left.y, g.left.w, g.left.h)
-        created[#created + 1] = body
-        rect(body, 0, 0, g.left.w, g.left.h, p.pane)
-        local main = frame(owner, g.list.x, g.list.y, g.list.w, g.list.h)
-        created[#created + 1] = main
-        rect(main, 0, 0, g.list.w, g.list.h, p.pane)
+        -- Paint *on the panel owner*: large child frames previously sat above
+        -- parent-owned category text and formed opaque-looking black blocks.
+        -- Washes are subtle artwork layered over the shared parchment texture.
+        rect(owner, g.left.x, g.left.y, g.left.w, g.left.h, p.sidebarWash)
+        rect(owner, g.list.x, g.list.y, g.list.w, g.list.h, p.catalogueWash)
+        rect(owner, g.left.x + g.left.w + 7, g.left.y + 8,
+            1, g.left.h - 16, p.sidebarRule)
 
         text(owner, view.title, 120, 19, config.width - 240, 28,
             "GameFontHighlightLarge", theme.colors.title, "CENTER")
@@ -188,6 +189,7 @@ function Landscape.Render(owner, model)
 
         -- Continuous lower detail section, spanning list and sidebar.
         rect(owner, 30, g.detail.y - 12, config.width - 60, 1, p.gold)
+        rect(owner, g.detail.x, g.detail.y, g.detail.w, g.detail.h, p.detailWash)
         local selected = frame(owner, g.detail.x, g.detail.y, g.detail.w, g.detail.h)
         created[#created + 1] = selected
         icon(selected, view.selected.icon, 5, 7, 53)
@@ -205,7 +207,9 @@ function Landscape.Render(owner, model)
             local item = view.reagents[i]
             local y = g.reagents.y + 39 + (i - 1) * 52
             local reagent = icon(owner, item.icon, g.reagents.x, y, 42)
-            text(owner, item.count, g.reagents.x + 1, y + 27, 40, 14,
+            -- The quantity is owned by the icon frame so it stays above
+            -- the icon artwork rather than disappearing beneath that child.
+            text(reagent, item.count, 0, 27, 42, 14,
                 "GameFontHighlightSmall", p.body, "CENTER")
             text(owner, item.name, g.reagents.x + 51, y + 3,
                 g.reagents.w - 51, 37, "GameFontHighlightSmall", p.body)
@@ -219,7 +223,8 @@ function Landscape.Render(owner, model)
             config.width - 68, 17, "GameFontHighlightSmall", p.muted, "CENTER")
 
         -- Shared P0280 control painter, now attached to actual composition slots.
-        local decorated = Logres.NPCTrainerComponents.Render({fixture=true, elements={
+        local decorated = Logres.NPCTrainerComponents.Render({
+            fixture=true, styles=config.previewComponents, elements={
             {id="trainer.filter", target=filter},
             {id="trainer.selection", target=selected},
             {id="trainer.status", target=status},

@@ -21,15 +21,36 @@ local trainer = {
     landscape = {
         width = 896, height = 712, maxRows = 7,
         palette = {
-            pane = {0.055, 0.038, 0.022, 0.83},
-            rail = {0.24, 0.17, 0.08, 0.92},
+            -- Preserve the existing textured PanelSurface underneath.
+            -- Translucent *warm* tonal washes; no opaque black subpanels.
+            sidebarWash = {0.36, 0.25, 0.13, 0.12},
+            catalogueWash = {0.36, 0.25, 0.13, 0.09},
+            detailWash = {0.34, 0.23, 0.12, 0.07},
+            sidebarRule = {0.73, 0.51, 0.26, 0.44},
+            rail = {0.35, 0.24, 0.12, 0.40},
             gold = art.motifs.goldLine,
             goldText = art.colors.title,
             body = art.colors.body,
-            muted = {0.61, 0.55, 0.45, 0.94},
-            active = {0.33, 0.22, 0.10, 0.92},
-            selected = {0.28, 0.18, 0.075, 0.47},
+            muted = {0.76, 0.69, 0.57, 0.96},
+            active = {0.37, 0.26, 0.14, 0.49},
+            selected = {0.41, 0.29, 0.16, 0.15},
             iconBorder = {0.63, 0.45, 0.23, 0.90},
+        },
+        -- Only the synthetic P composition opts into these lighter recipes.
+        -- The shared Components.Render implementation is unchanged for native H.
+        previewComponents = {
+            ["trainer.filter"] = {fill={0.39,0.27,0.14,0.23},
+                rule={0.65,0.45,0.23,0.56}, inset=1,
+                fillSublevel=-2,ruleSublevel=-5,ruleHeight=1,ruleY=0},
+            ["trainer.selection"] = {fill={0.36,0.24,0.12,0.065},
+                rule={0.72,0.52,0.29,0.30}, inset=1,
+                fillSublevel=-2,ruleSublevel=-5,ruleHeight=1,ruleY=0},
+            ["trainer.status"] = {fill={0.31,0.23,0.13,0.18},
+                rule={0.62,0.46,0.23,0.48}, inset=1,
+                fillSublevel=-2,ruleSublevel=-5,ruleHeight=1,ruleY=0},
+            ["trainer.train"] = {fill={0.31,0.24,0.17,0.35},
+                rule={0.73,0.56,0.35,0.64}, inset=1,
+                fillSublevel=-2,ruleSublevel=-5,ruleHeight=1,ruleY=0},
         },
         geometry = {
             left = {x=32, y=102, w=222, h=392},
