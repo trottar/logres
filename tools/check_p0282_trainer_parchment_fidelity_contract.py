@@ -21,7 +21,7 @@ for token in (
     'text(reagent, item.count',
     'fixture=true, styles=config.previewComponents',
     'Logres.NPCTrainerComponents.Render(',
-    'Logres.NPCTrainerMotif.PaintFixtureRow(row)',
+    'Logres.NPCTrainerMotif.PaintFixtureRow(row, rowState)',
     'function Landscape.LiveCapability()',
     'native-reflow-and-transaction-fallback-unverified',
 ):

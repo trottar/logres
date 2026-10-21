@@ -171,12 +171,18 @@ function Landscape.Render(owner, model)
             local y = g.list.y + g.list.top + (i - 1) * g.list.pitch
             local row = frame(owner, g.list.x + 8, y, g.list.w - 29, g.list.rowHeight)
             created[#created + 1] = row
-            if not Logres.NPCTrainerMotif.PaintFixtureRow(row) then
+            local rowState = datum.disabled and "disabled"
+                or (datum.selected and "selected" or "normal")
+            if not Logres.NPCTrainerMotif.PaintFixtureRow(row, rowState) then
                 error("trainer-landscape-row-paint-failed")
             end
-            if datum.selected then rect(row, 0, 0, g.list.w - 29, g.list.rowHeight - 1, p.selected) end
+            if rowState == "selected" then
+                rect(row, 0, 0, g.list.w - 29, g.list.rowHeight - 1, p.selected)
+            end
             icon(row, datum.icon, 7, 5, 40)
-            local nameColor = datum.disabled and p.muted or p.goldText
+            local nameColor = p.body
+            if rowState == "selected" then nameColor = p.goldText
+            elseif rowState == "disabled" then nameColor = p.muted end
             text(row, datum.name, 58, 5, g.list.w - 179, 22,
                 "GameFontNormal", nameColor)
             text(row, datum.requirement, 58, 28, g.list.w - 179, 15,

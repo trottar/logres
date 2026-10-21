@@ -14,7 +14,7 @@ def need(ok,why):
     if not ok: err.append(why)
 for x in ('Logres.NPCTrainerMotif = Motif','function Motif.Enable(trainer)',
           'function Motif.Disable()', 'function Motif.Preview(owner)',
-          'function Motif.GetAudit()', 'local function paintRow(owner, recipe)',
+          'function Motif.GetAudit()', 'local function paintRow(owner, recipe, fixtureColors)',
           'local function paintScroll(scroll, recipe)',
           'trainer.ScrollBox', '"ForEachFrame"',
           'if not ordinary(row) or row == nil or not unprotected(row) then return end',

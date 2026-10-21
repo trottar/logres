@@ -76,6 +76,13 @@ local trainer = {
         rowWashSublevel = -1, rowRuleSublevel = 0,
         rowInset = 1, rowTopInset = 0, rowBottomInset = 0,
         rowRuleHeight = 1, rowRuleY = 0,
+        -- Preview-only category states. Ordinary skills inherit parchment;
+        -- gold illumination belongs only to an explicitly selected row.
+        previewStates = {
+            normal = {wash={0.18,0.14,0.09,0.07}, rule={0.46,0.36,0.24,0.19}},
+            selected = {wash={0.42,0.27,0.11,0.42}, rule={0.91,0.69,0.30,0.86}},
+            disabled = {wash={0.16,0.13,0.11,0.10}, rule={0.36,0.31,0.25,0.15}},
+        },
         preview = { width = 440, height = 32, x = 0, rows = {-264, -307} },
     },
     -- P0280: own fixtures and native source mappings use these SAME paint recipes.

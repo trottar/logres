@@ -25,7 +25,7 @@ for token in ('Logres.NPCTrainerLandscape = Landscape',
               'view.search', 'view.trainLabel',
               'g.search.', 'g.categories.', 'g.list.', 'g.detail.',
               'g.reagents.', 'g.train.',
-              'Logres.NPCTrainerMotif.PaintFixtureRow(row)',
+              'Logres.NPCTrainerMotif.PaintFixtureRow(row, rowState)',
               'fixture=true, styles=config.previewComponents, elements={',
               '{id="trainer.filter", target=filter}',
               '{id="trainer.selection", target=selected}',
@@ -46,8 +46,8 @@ for token in ('landscape = {', 'width = 896, height = 712, maxRows = 7',
               'list = {x=273', 'detail = {x=33', 'reagents = {x=574',
               'train = {x=732', 'art.motifs.goldLine'):
     need(token in c,'landscape geometry/color missing '+token)
-for token in ('function Motif.PaintFixtureRow(owner)',
-              'return paintRow(owner, Logres.PanelConfigs.trainer.motif)'):
+for token in ('function Motif.PaintFixtureRow(owner, state)',
+              'return paintRow(owner, recipe, colors)'):
     need(token in m,'production row painter not reused by P '+token)
 for token in ('function Components.Render(model)', 'painted(item.target, recipe)',
               'function Components.Enable(trainer)'):

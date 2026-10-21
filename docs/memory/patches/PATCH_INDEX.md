@@ -1,3 +1,7 @@
+## P0283 — P trainer row color-state correction (2026-10-21)
+
+Verified pushed P0282 `39acd57`; user screenshot: **VISUAL NEAR-PASS / ROW EMPHASIS FAIL**. Warm parchment layout, categories and integrated details now look very close to the approved reference, but all spells appear yellowish. Source establishes both indiscriminate `p.goldText` for every enabled name and default gold row motif for every P row. P0283 **PREPARED / WSL+WOW UNVERIFIED** adds explicit preview-only `normal`, `selected`, `disabled` wash/rule palettes and uses the SAME `paintRow` painter with optional fixture colors. Only selected row gets bright gold title/highlight; ordinary text ivory and wash neutral; disabled remains muted. Native H calls `paintRow(row, recipe)` without overrides; no Blizzard transaction, source, frame or geometry change. P visual screenshot proof still required. See `docs/memory/evidence/P0283_TRAINER_SELECTION_EMPHASIS.md`.
+
 ## P0282 — P parchment visual-fidelity correction (2026-10-21)
 
 Verified pushed P0281 R2 `6b0501f`; user screenshot confirms the 896x712 landscape composition draws but reports **VISUAL FIDELITY FAIL**. Two full-size near-black child surfaces cover the sidebar and catalogue and can visually suppress parent-owned category labels, while P0280 selection fill creates an oversized bright brown slab. An earlier assistant recommendation to increase panel opacity was **incorrect and expressly withdrawn**; the user identifies the DARK BLOCKS as the defect. P0282 **PREPARED / WSL+WOW UNVERIFIED** replaces intrusive child washes with low-opacity warm owner artwork, keeps the shared parchment asset and geometry, adds a narrowly fixture-only recipe parameter to the existing component renderer (H native path unchanged), and fixes reagent quantity visual order. Visual acceptance requires a new P screenshot. Blizzard controls, training transactions, camera, Quest visuals and H geometry remain unchanged. Evidence: `docs/memory/evidence/P0282_TRAINER_PARCHMENT_VISUAL_FAILURE.md`.
@@ -44,6 +48,7 @@ Verified P0276 R4 pushed `b01cecf`; user's screenshots show two incompatible pla
 
 | ID | Date | Result | Description |
 | --- | --- | --- | --- |
+| P0283 | 2026-10-21 | PREPARED / WSL+WOW UNVERIFIED | P-only selected vs ordinary vs disabled trainer row text and gold motif; native H unchanged. |
 | P0282 | 2026-10-21 | PREPARED / WSL+WOW UNVERIFIED | P-only low-alpha parchment material and overlay-order repair after user-confirmed P0281 dark-block VISUAL FAIL; H/native unchanged. |
 | P0281 R2 | 2026-10-20 | PREPARED / WSL+WOW UNVERIFIED | Repair R1 false-positive fixture mouse contract via constructor-local check, preserve all native H and preview behavior. |
 | P0281 R1 | 2026-10-20 | PREWRITE FAILURE / NO TRACKED WRITES | 151/152 checkers passed; new contract asserted `frame:EnableMouse(false)` but source uses local `f`. Source/contract mismatch. |

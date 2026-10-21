@@ -34,14 +34,14 @@ local function hidePieces(pieces)
 end
 
 -- The same row motif is used by native ScrollBox rows and inert P fixtures.
-local function paintRow(owner, recipe)
+local function paintRow(owner, recipe, fixtureColors)
     local pieces = {}
     local ok = pcall(function()
         local wash = owner:CreateTexture(nil, "BACKGROUND", nil, recipe.rowWashSublevel)
         pieces[#pieces + 1] = wash
         wash:Hide()
         wash:SetTexture(recipe.solidTexture)
-        local c = recipe.rowWash
+        local c = fixtureColors and fixtureColors.wash or recipe.rowWash
         wash:SetVertexColor(c[1], c[2], c[3], c[4])
         wash:SetPoint("TOPLEFT", owner, "TOPLEFT", recipe.rowInset, -recipe.rowTopInset)
         wash:SetPoint("BOTTOMRIGHT", owner, "BOTTOMRIGHT", -recipe.rowInset, recipe.rowBottomInset)
@@ -49,7 +49,7 @@ local function paintRow(owner, recipe)
         pieces[#pieces + 1] = rule
         rule:Hide()
         rule:SetTexture(recipe.solidTexture)
-        local gold = recipe.rowRule
+        local gold = fixtureColors and fixtureColors.rule or recipe.rowRule
         rule:SetVertexColor(gold[1], gold[2], gold[3], gold[4])
         rule:SetHeight(recipe.rowRuleHeight)
         rule:SetPoint("BOTTOMLEFT", owner, "BOTTOMLEFT", recipe.rowInset, recipe.rowRuleY)
@@ -60,9 +60,13 @@ local function paintRow(owner, recipe)
     return pieces
 end
 
--- Reuses the exact proven motif painter, but ONLY for an addon-owned fixture row.
-function Motif.PaintFixtureRow(owner)
-    return paintRow(owner, Logres.PanelConfigs.trainer.motif)
+-- The same painter consumes one of three explicit preview-only state colors.
+-- The native ScrollBox caller still supplies no override and retains its recipe.
+function Motif.PaintFixtureRow(owner, state)
+    local recipe = Logres.PanelConfigs.trainer.motif
+    local colors = recipe.previewStates and recipe.previewStates[state]
+    if not colors then return nil end
+    return paintRow(owner, recipe, colors)
 end
 
 local function paintScroll(scroll, recipe)
