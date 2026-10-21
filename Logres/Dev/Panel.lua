@@ -470,12 +470,13 @@ function Panel:RefreshActionButtons()
         table.sort(visible, function(a, b) return a.label < b.label end)
     end
     if self.activePhase == "H" then
-        -- Explicit live trainer ON/OFF must remain visible on the first H page.
+        -- Both live read-only and native skin ON/OFF remain on the first H page.
         -- Keep the rest of H in its original registration order.
         local leading, remainder = {}, {}
         for i = 1, #visible do
             local item = visible[i]
-            if item.id == "nativeTrainerSkinOn" or item.id == "nativeTrainerSkinOff" then
+            if item.id == "nativeTrainerLiveOn" or item.id == "nativeTrainerLiveOff"
+                or item.id == "nativeTrainerSkinOn" or item.id == "nativeTrainerSkinOff" then
                 leading[#leading + 1] = item
             else
                 remainder[#remainder + 1] = item

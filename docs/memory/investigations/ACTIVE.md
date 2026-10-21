@@ -1,3 +1,16 @@
+## P0289 R1 — repair P0289 R0 PREWRITE historical action counts (2026-10-21)
+
+R0 verified archive and baseline but PREWRITE **FAIL: 6 of 160** linked static
+checkers froze total 108 / H20, whereas the developer-panel H actions are now
+110 / H22 / P35. No tracked writes; R1 candidate migrates nine checker
+files in the full checker dependency graph to enforce minimum former inventory
+while retaining exact 35 P previews. Native read-only trial unchanged.
+WSL/WoW validation DEFERRED pending user apply. See P0289 evidence.
+
+## P0289 — P0288 live trainer trial missing from H developer panel (2026-10-21)
+
+Verified pushed P0288 `2e4b509`. **ASSISTANT IMPLEMENTATION/HANDOFF FAIL:** its read-only shared-landscape trial had slash `nativetrainerlive on|off` only; no `RegisterDevPanelAction` in existing H developer panel despite required in-panel validation. User explicitly flagged this. P0289 PREPARED / WSL AND WOW UNVERIFIED registers Live Trainer ON (TEST) and OFF in H and prioritizes these alongside existing H trainer skin actions on first page. No runtime source, renderer, native layout, stock transaction, selection or filter change. In WoW validate through H panel rather than another generic audit. See `docs/memory/evidence/P0289_TRAINER_LIVE_PANEL_ROUTING.md`.
+
 ## P0288 — read-only native trainer snapshot in shared landscape renderer (2026-10-21)
 
 Verified pushed P0287 R1 `e80d2e8`, but latest user WoW diagnostic still P0286: known name/selection/wallet and numeric category type, **numeric semantic meaning still DEFERRED**. The repeated P0285–P0287 one-field audits did not deliver a usable trainer UI and P0287 R0 PREWRITE failed version-policy checker (no tracked writes). P0288 **PREPARED / WSL AND WOW UNVERIFIED** implements the bounded read-only source-to-model adapter using the same P0284 accepted 896×712 `NPCTrainerLandscape.Build/Render` and `PanelSurface.Paint`. `/logres nativetrainerlive on|off` is an explicit no-purchase visual trial. It displays live spell names, native indices, safely known costs, selected index and funds; category trainability stays unclassified, icons generic and Train/Train All disabled. Stock controls remain visible/functional; no native layouts, selection, filters, purchases, hooks or polling are changed; addon-owned panel hides on context exit/combat/world entry. See `docs/memory/evidence/P0288_TRAINER_LIVE_READONLY_TRIAL.md` and D-046/D-047.

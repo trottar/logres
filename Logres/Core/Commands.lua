@@ -5950,6 +5950,20 @@ Logres:RegisterDevPanelAction(
     "npcoptionpreview locked",
     "P"
 )
+-- P0289: every active H trainer trial is available from the developer panel.
+-- P0288's existing command handler is unchanged; no new gameplay routes.
+Logres:RegisterDevPanelAction(
+    "nativeTrainerLiveOn",
+    "Live Trainer ON (TEST)",
+    "nativetrainerlive on",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "nativeTrainerLiveOff",
+    "Live Trainer OFF",
+    "nativetrainerlive off",
+    "H"
+)
 Logres:RegisterDevPanelAction(
     "nativeTrainerSkinOn",
     "Trainer Skin ON (TEST)",

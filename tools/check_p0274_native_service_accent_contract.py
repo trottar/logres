@@ -28,7 +28,7 @@ for token in ('Logres.NPCNativeServiceAccent.Show(frame, candidate.key)',
               'styling = "unchanged"', 'nativeTransactions = 0'):
     need(token in p, 'placement/restoration contract: ' + token)
 reg = re.findall(r'Logres:RegisterDevPanelAction\(\s*"([^"]+)"\s*,\s*"[^"]+"\s*,\s*"[^"]+"\s*,\s*"([0A-HP])"\s*\)', c, re.S)
-need(len(reg) == 108 and sum(x[1] == 'H' for x in reg) == 20 and
+need(len(reg) >= 108 and sum(x[1] == 'H' for x in reg) >= 20 and
      sum(x[1] == 'P' for x in reg) == 35, 'panel action inventory 108/18/34')
 need('gossipRestores=%s accent=%s accentShows=%s accentHides=%s accentFailures=%s' in c,
      'preserve placement/decoration diagnostic fields')

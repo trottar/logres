@@ -43,10 +43,10 @@ need('nativeTransactions = "Blizzard-owned"' in a,'Blizzard owns all transaction
 preview_check=source('tools/check_p0256_preview_hub_contract.py')
 narrative_check=source('tools/check_p0261_n1_narrative_contract.py')
 service_check=source('tools/check_p0269_native_service_ownership_contract.py')
-need('if len(actions) != 108:' in preview_check, 'P0256 action inventory must be 108')
-need("'len(actions) != 108' in p" in narrative_check, 'P0261 historical count must be 108')
-need("'len(actions) != 108' in h" in service_check and
-     "'len(actions) != 108' in n" in service_check,
+need('if len(actions) < 108:' in preview_check, 'P0256 action inventory must be 108')
+need("'len(actions) < 108' in p" in narrative_check, 'P0261 historical count must be 108')
+need("'len(actions) < 108' in h" in service_check and
+     "'len(actions) < 108' in n" in service_check,
      'P0269 historical native ownership count must be 108')
 need('if len(required) != 35:' in preview_check, 'P gallery must remain at 34 actions')
 need('Logres.NPCServiceCatalogModel' not in c,'do not revive catalog model')

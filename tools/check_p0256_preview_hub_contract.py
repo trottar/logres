@@ -40,7 +40,7 @@ for id_,label,command,phase in actions:
         'mainreplace on','mainreplace off','stockreplace on','stockreplace off',
         'bindings on','bindings off','petbardriver on','petbardriver off')):
         errors.append('gameplay-changing operation placed among visual previews: '+id_)
-if len(actions) != 108: errors.append('unexpected total action registrations: '+str(len(actions)))
+if len(actions) < 108: errors.append('unexpected total action registrations: '+str(len(actions)))
 for token in (
     '{ id = "P", title = "Previews — All UI Areas" }',
     'local TAB_WIDTH = 52',

@@ -7,12 +7,15 @@ project: logres
 # Current State
 
 ## Active Objective
-Transition from repeated single-field H audits to an explicit, bounded, read-only live trainer snapshot flowing through the P0284-accepted landscape renderer. Preserve numeric category unknowns, source deferrals, stock Blizzard training controls and the portrait-free visual baseline.
+Correct the P0288 assistant-generated slash-only live trainer trial workflow by exposing both live trial ON/OFF actions in the H developer panel. Keep P0288 rendering/data boundaries unchanged, existing visual acceptance and Blizzard-owned training intact.
 
 ## Current Work Item
-**P0288 — TRAINER LIVE READ-ONLY SHARED-RENDERER TRIAL / PREPARED, WSL AND WOW UNVERIFIED.** Verified pushed main P0287 R1 `e80d2e8`. The last user-supplied runtime export is P0286 (`0.0.187-dev`), and does NOT demonstrate any P0287 numeric raw value. P0288 adds a separate guarded `TrainerLiveTrial.FromSnapshot` bridge from the existing source probe into the same `NPCTrainerLandscape.Build/Render` as the accepted P fixture, with the same nine-slice art, a new explicit `/logres nativetrainerlive on|off` test, and addon-only teardown on context exit/combat. Numeric availability remains UNCLASSIFIED, icon identities generic, native training/filters/selection kept stock. A trial screenshot or a specific DEFERRED reason is next, not another generic audit.
+**P0289 R1 — TRAINER LIVE TRIAL DEV PANEL ROUTING AND HISTORICAL CHECKER MIGRATION / PREPARED, WSL AND WOW UNVERIFIED.** Verified pushed P0288 main `2e4b509`. P0288 introduced `/logres nativetrainerlive on|off` but failed to register the corresponding developer-panel actions. User reported the omission. P0289 adds two H actions, prioritizes them on H page one alongside existing native Trainer Skin ON/OFF, and records the workflow failure. No change to P0288 source probe, shared renderer, unknown numeric categories, Blizzard controls, gameplay, or native geometry. Full static and WoW result PENDING.
 
 ## Verified State
+- **P0289 R0 PREWRITE FAIL (user WSL):** 160 checks, six historical panel-action inventory contracts refused the new 110/22/35 registry. P0289 R0 made no tracked writes. R1 migrates the linked historical 108/20 floors without weakening the 35-item P gallery and records the negative result. PREWRITE/POSTWRITE/WoW PENDING.
+- **P0288 pushed `2e4b509` / developer panel coverage FAIL:** GitHub main verified. Its live source trial is callable only through slash commands, contrary to established H panel workflow. This is an assistant implementation and validation handoff failure; no new in-game runtime proof was supplied. P0289 supplies first-page H ON/OFF registrations without changing the read-only renderer. See P0289 evidence.
+- **P0289 prepared / WSL+WoW UNVERIFIED:** add H Live Trainer ON (TEST) and Live Trainer OFF to existing paginated dev panel, preserve H native skin actions and existing transaction-free P0288 adapter. No general audit needed for validation.
 - **P0287 R1 pushed `e80d2e8` / runtime UNVERIFIED:** the prior assistant repeatedly requested one-field source audits. Latest user diagnostic is still P0286, so numeric raw category meaning is NOT established. P0288 avoids another standalone audit by putting safe source names, indices, optional costs, selected index and wallet into a noninteractive shared-renderer trial. No stock suppression or purchases.
 - **P0288 source implementation PREPARED:** same approved 896×712 landscape and PanelSurface used for inert P fixture and guarded live model. All unknown category availability clearly labeled; Train and Train All remain disabled in Logres. One explicit runtime visual test is required, and negative results must be recorded.
 - **P0286 pushed `cb8b756` / WoW SOURCE SHAPE PARTIAL, SEMANTIC CATEGORY DEFERRED:** `0.0.187-dev` H read `total=1`, `selected=1`, `walletCopper=12058`; name `Enchant Chest - Minor Absorption`; tuple types `string/string/number/number`. Native writes, purchases and geometry = 0. The prior string-category gate was inappropriate for this observed client, but actual numeric category value and its meaning are not known. The earlier formatted `category=unavailable` was a fallback label, NOT client evidence of unavailability.
@@ -49,15 +52,17 @@ Transition from repeated single-field H audits to an explicit, bounded, read-onl
 - P0273 verified positioning and restoration remain untouched, with the previous original P0272 WSL proof limitation preserved.
 
 ## Next Action
-Apply guarded P0288 ZIP on exact pushed P0287 R1 baseline, run full PREWRITE and POSTWRITE checkers and `git diff --check`, user commits/pushes and remote verification. Deploy. With trainer open run `/logres nativetrainerlive on` once and inspect live names, costs/funds and the mouse-inert presentation; close trainer to verify addon panel hides. No repeat H general audit or forced training purchase. On DEFERRED, use the returned specific reason and preserve stock UI.
+Apply P0289 guarded ZIP against verified pushed P0288 `2e4b509`, require full PREWRITE and POSTWRITE checker PASS, diff hygiene and manifest; then user commits and pushes. Verify main before deployment. Deploy to WoW, `/reload`; with trainer open use `/logres panel` → H → Live Trainer ON (TEST) and Live Trainer OFF. Screenshot/result suffices; do not ask for another general frame/source audit.
 
 ## Success Criteria
-Read-only native spell names and available source values appear in the same Logres landscape renderer as the accepted fixture, without guessing numeric category semantics, intercepting mouse input or modifying Blizzard trainer controls. Trial hides on trainer exit/combat; stock transaction pathway stays available. Native full replacement, icon/category mapping, row interaction, filtering and Train All remain DEFERRED until separately capability-gated and WoW-verified.
+Both P0288 live trial actions appear on first H panel page, function through existing panel command runner and record results without manual slash commands. Shared P0284 landscape and native Blizzard transaction/filter/selection ownership remain unchanged. Live trial screen, click-through and cleanup are WoW UNVERIFIED until observed; never promote numeric categories into trainable status without evidence.
 
 ## Do Not Reopen Without New Evidence
 Do not infer addon installation from one guessed filesystem path or the presence/absence of a Lua global alone. No hard QuestieDB dependency, package bundling, unknown CurseForge project ID, global quest ID scans on updates, guessed quest availability, invented coordinates or native pin scraping. Do not hide the Blizzard minimap, alter user-accepted waypoint/focused-quest bearings, or treat missing locations as PASS. Baked flavor must not be guessed from a Source-only indicator. Keep negative and deferred evidence explicit.
 
 ## Relevant References
+- `docs/memory/evidence/P0289_TRAINER_LIVE_PANEL_ROUTING.md`
+- `docs/memory/patches/P0289_TRAINER_LIVE_PANEL.md`
 - `docs/memory/evidence/P0288_TRAINER_LIVE_READONLY_TRIAL.md`
 - `docs/memory/patches/P0288_TRAINER_LIVE_TRIAL.md`
 - `docs/memory/evidence/P0287_TRAINER_NUMERIC_CATEGORY.md`

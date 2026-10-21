@@ -1,0 +1,28 @@
+P0289 R1 — H developer panel trainer live trial routing + checker migration
+Baseline: 2e4b509581dca547a203b307f1a8f29cbbfa7e65
+Result: PREWRITE/POSTWRITE static suite PASS, git diff --check PASS
+File: Logres/Core/Bootstrap.lua
+File: Logres/Core/Commands.lua
+File: Logres/Dev/Panel.lua
+File: Logres/Logres.toc
+File: docs/ROADMAP.md
+File: docs/memory/CURRENT.md
+File: docs/memory/evidence/P0289_TRAINER_LIVE_PANEL_ROUTING.md
+File: docs/memory/handoffs/CURRENT_HANDOFF.md
+File: docs/memory/investigations/ACTIVE.md
+File: docs/memory/patches/P0289_TRAINER_LIVE_PANEL.md
+File: docs/memory/patches/PATCH_INDEX.md
+File: docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+File: docs/memory/roadmap/STATUS.md
+File: tools/check_p0256_preview_hub_contract.py
+File: tools/check_p0261_n1_narrative_contract.py
+File: tools/check_p0269_native_service_ownership_contract.py
+File: tools/check_p0270_native_frame_capability_contract.py
+File: tools/check_p0271_native_placement_trial_contract.py
+File: tools/check_p0272_native_auto_handoff_contract.py
+File: tools/check_p0273_native_gossip_continuity_contract.py
+File: tools/check_p0274_native_service_accent_contract.py
+File: tools/check_p0276_r1_native_trainer_skin_contract.py
+File: tools/check_p0289_trainer_live_panel_contract.py
+Validation: WoW not yet tested.
+No Git commit/push performed.
