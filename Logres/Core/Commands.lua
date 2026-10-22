@@ -5413,6 +5413,13 @@ local function handleCommand(message)
         return
     end
 
+    if command == "nativetraineremptypreview" then
+        local ok, reason = Logres.NPCNativeTrainerSkin.EmptyPreview()
+        emit(string.format("Logres trainer empty preview: %s (%s; synthetic only, no native actions)",
+            ok and "PASS" or "DEFERRED", tostring(reason)))
+        return
+    end
+
     if command == "nativetrainerpreview" then
         local ok, reason = Logres.NPCNativeTrainerSkin.Preview()
         emit(string.format("Logres trainer art preview: %s (%s; synthetic visual only, no native trainer writes)",
@@ -5998,6 +6005,12 @@ Logres:RegisterDevPanelAction(
     "nativeTrainerSkinPreview",
     "Trainer Skin Art Preview",
     "nativetrainerpreview",
+    "P"
+)
+Logres:RegisterDevPanelAction(
+    "nativeTrainerEmptyPreview",
+    "Trainer Empty Preview",
+    "nativetraineremptypreview",
     "P"
 )
 Logres:RegisterDevPanelAction(

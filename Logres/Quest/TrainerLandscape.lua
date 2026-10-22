@@ -392,6 +392,35 @@ function Landscape.UpdateLiveRows(controls, view)
     return true
 end
 
+-- P0310: deterministic, inert zero-service fixture using production rendering.
+function Landscape.EmptyFixture()
+    local view = Landscape.Fixture()
+    local empty = Logres.NPCServiceEmptyState.Build({
+        name="No trainer services listed",
+        note="Blizzard has not supplied any training services",
+        detail="This is synthetic preview data. No native trainer, profession ownership, learning offer or purchase is implied.",
+        icon="Interface\\Icons\\INV_Misc_QuestionMark",
+    })
+    if not empty then return nil end
+    view.title = "Example Trainer"
+    view.subtitle = "EMPTY SOURCE  /  VISUAL FIXTURE"
+    view.categories = {"Trainer services"}
+    view.filters.mode = "All sampled"
+    view.profession = "0 native services | Blizzard available"
+    view.rows = {empty.row}
+    view.selected = empty.selected
+    view.reagents = {}
+    view.trainAll = {label="Train All unavailable", enabled=false}
+    view.trainLabel = "Stock Train"
+    view.trainEnabled = false
+    view.footnote = "EMPTY FIXTURE ONLY  /  NO TRAINER ACTIONS"
+    return view
+end
+
+function Landscape.EmptyPreview(owner)
+    return Landscape.Render(owner, Landscape.EmptyFixture())
+end
+
 function Landscape.Preview(owner)
     return Landscape.Render(owner, Landscape.Fixture())
 end

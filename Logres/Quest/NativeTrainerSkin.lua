@@ -8,6 +8,7 @@ local Skin = {}
 Logres.NPCNativeTrainerSkin = Skin
 
 local active, preview, hooked, retry
+local emptyPreview
 local trials, restores, failures = 0, 0, 0
 local last = "stock"
 local assetPieces = {}
@@ -209,6 +210,7 @@ function Skin.Enable()
 end
 
 function Skin.Preview()
+    if emptyPreview and emptyPreview:IsShown() then emptyPreview:Hide() end
     if preview and preview:IsShown() then
         preview:Hide()
         return true, "synthetic-preview-hidden"
@@ -235,6 +237,38 @@ function Skin.Preview()
     end
     preview:Show()
     return true, "synthetic-preview-visible"
+end
+
+-- P0310: separate P preview: same size/surface/renderer, never native gameplay.
+function Skin.EmptyPreview()
+    if emptyPreview and emptyPreview:IsShown() then
+        emptyPreview:Hide()
+        return true, "synthetic-empty-preview-hidden"
+    end
+    if not emptyPreview then
+        local visual = trainerConfig.preview
+        local ok, root = pcall(function()
+            local surface = CreateFrame("Frame", nil, UIParent)
+            surface:SetSize(visual.width, visual.height)
+            surface:SetPoint(visual.point, UIParent, visual.relativePoint,
+                visual.x, visual.y)
+            surface:SetFrameStrata(visual.strata)
+            surface:EnableMouse(false)
+            surface:Hide()
+            if not createPaint(surface, visual.width, visual.height) then
+                error("empty-preview-surface-failed")
+            end
+            if not Logres.NPCTrainerLandscape.EmptyPreview(surface) then
+                error("empty-preview-landscape-failed")
+            end
+            return surface
+        end)
+        if not ok or not root then return fail("empty-preview-construction-failed") end
+        emptyPreview = root
+    end
+    if preview and preview:IsShown() then preview:Hide() end
+    emptyPreview:Show()
+    return true, "synthetic-empty-preview-visible"
 end
 
 function Skin.GetAudit()

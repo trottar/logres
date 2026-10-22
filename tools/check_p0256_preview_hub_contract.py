@@ -30,6 +30,7 @@ for id_ in sorted(required):
     value = found.get(id_)
     if not value or value[2] != 'P': errors.append(f'{id_}: must be registered in Previews tab')
 if len(required) != 35: errors.append('unexpected baseline visual preview inventory')
+required.add('nativeTrainerEmptyPreview')  # P0310 reviewed inert visual preview
 if set(id_ for id_,label,cmd,phase in actions if phase=='P') != required:
     errors.append('P gallery has missing or unreviewed additional actions')
 for id_,label,command,phase in actions:

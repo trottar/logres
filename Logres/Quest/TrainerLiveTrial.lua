@@ -182,6 +182,44 @@ function Trial.FromSnapshot(report)
     return model, visibleWithheld > 0 and "native-snapshot-mapped-partial" or "native-snapshot-mapped"
 end
 
+-- P0310: zero native services is a presentation state, never a purchase.
+-- Only an independently observed profession family may use this model.
+function Trial.FromEmptySnapshot(report)
+    if type(report) ~= "table" or type(report.sample) ~= "table"
+        or report.status ~= "read-only-service-sample"
+        or report.total ~= 0 or #report.sample ~= 0 then
+        return nil, "empty-source-unavailable"
+    end
+    local empty = Logres.NPCServiceEmptyState.Build({
+        name="No trainer services listed",
+        note="Blizzard has not supplied any training services",
+        detail="This trainer currently reports no listed skills. That does not establish whether you already know this profession or can learn it here. The Blizzard trainer remains available.",
+        icon=placeholder,
+    })
+    if not empty then return nil, "empty-model-invalid" end
+    local g, s, c = coin(report.wallet)
+    local model = {
+        title=bounded(report.trainerName, 90) and report.trainerName or "Trainer services",
+        subtitle="LIVE SOURCE  /  NO LISTED SERVICES",
+        search="Search skills...",
+        filters={label="Filters", mode="All sampled", categorized=false},
+        funds={label="Funds", gold=g, silver=s, copper=c},
+        trainAll={label="Train All unavailable", enabled=false},
+        categories={"Trainer services"}, activeCategory=1,
+        profession="0 native services | Blizzard available",
+        catalog=empty.catalog, rows={empty.row}, emptyService=empty,
+        localBrowse=true,
+        nativeSession={total=0, trainerName=report.trainerName, profession=true},
+        selected=empty.selected, reagents={}, trainLabel="Stock Train",
+        trainEnabled=false,
+        footnote="NO LISTED SERVICES  /  BLIZZARD FALLBACK",
+    }
+    if not Logres.NPCTrainerLandscape.Build(model) then
+        return nil, "empty-landscape-model-rejected"
+    end
+    return model, "profession-empty-native-source"
+end
+
 function Trial.Disable(why)
     -- Native Blizzard source/transaction root must be restored BEFORE Logres
     -- drops interaction. If combat blocks this, keep Logres onscreen and
@@ -258,7 +296,8 @@ local function refreshBrowse()
     if not rows then return false end
     browse.offset = first
     if #rows == 0 then
-        rows[1] = {name="No matching sampled skills",
+        rows[1] = model.emptyService and model.emptyService.row or
+            {name="No matching sampled skills",
             requirement="Clear search or try All sampled",
             price="", icon=placeholder, selected=false, disabled=true}
     end
@@ -276,9 +315,13 @@ local function refreshBrowse()
     model.trainEnabled = trainable and model.nativeSession.profession ~= nil
     model.trainLabel = trainable and "Train selected (TEST)" or "Stock Train"
     model.filters.mode = browse.availableOnly and "Available only" or "All sampled"
-    model.profession = "Sampled " .. tostring(#model.catalog) .. " | "
-        .. tostring(#matching) .. " match | " .. tostring(#matching == 0 and 0 or browse.offset)
-        .. "-" .. tostring(finish)
+    if model.emptyService then
+        model.profession = "0 native services | Blizzard available"
+    else
+        model.profession = "Sampled " .. tostring(#model.catalog) .. " | "
+            .. tostring(#matching) .. " match | " .. tostring(#matching == 0 and 0 or browse.offset)
+            .. "-" .. tostring(finish)
+    end
     if not Logres.NPCTrainerLandscape.UpdateLiveRows(browse.controls, model) then
         return false
     end
@@ -642,6 +685,10 @@ function Trial.Toggle(mode)
     -- Probe.Read enforces trainer-open, ordinary native root, and out-of-combat.
     local report = Logres.NPCNativeTrainerServiceProbe.Read()
     local model, why = Trial.FromSnapshot(report)
+    if not model and why == "source-sample-size-deferred"
+        and trainerFamily() == true then
+        model, why = Trial.FromEmptySnapshot(report)
+    end
     if not model then
         deferrals = deferrals + 1
         last = why
@@ -701,7 +748,7 @@ function Trial.Toggle(mode)
     last = why == "native-snapshot-mapped-partial" and "live-partial-visible" or "live-read-only-visible"
     -- Only after the fully usable Logres view is shown may the whole native
     -- nonprotected trainer be parked. If anything defers, keep stock visible.
-    if Logres.NPCServiceNativeParking then
+    if not model.emptyService and Logres.NPCServiceNativeParking then
         local ok, parked, parkWhy = pcall(Logres.NPCServiceNativeParking.Park, "trainer")
         if not ok or parked ~= true then
             last = "live-stock-visible-parking-deferred"

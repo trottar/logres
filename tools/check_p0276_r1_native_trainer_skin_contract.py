@@ -65,7 +65,7 @@ for fragment in ('if command == "nativetrainerskin" then',
 rg = re.compile(r'Logres:RegisterDevPanelAction\(\s*"([^"]+)"\s*,\s*"([^"]+)"\s*,\s*"([^"]+)"\s*,\s*"([0A-HP])"\s*\)', re.S)
 acts = rg.findall(c)
 need(len(acts) >= 108 and sum(z[3]=='H' for z in acts)>=20 and
-     sum(z[3]=='P' for z in acts)==35, 'action inventory must be total108/H20/P35')
+     sum(z[3]=='P' for z in acts)==36, 'action inventory must be total108/H20/P35')
 need(len({z[0] for z in acts})==len(acts), 'no duplicate action IDs')
 for name, phase, cmd in (
  ('nativeTrainerSkinOn','H','nativetrainerskin on'),
