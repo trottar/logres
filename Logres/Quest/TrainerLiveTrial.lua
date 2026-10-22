@@ -181,6 +181,13 @@ function Trial.FromSnapshot(report)
 end
 
 function Trial.Disable(why)
+    -- A deliberate exit or completed request dismisses auto presentation for
+    -- this specific NPC visit. Stock stays fully usable.
+    if Logres.NPCServiceSession and (why == "goodbye" or why == "trial-hidden"
+        or why == "native-purchase-requested-unconfirmed"
+        or why == "bulk-training-requested-unconfirmed") then
+        Logres.NPCServiceSession.Dismiss("trainer")
+    end
     if browse and browse.searchEdit then browse.searchEdit:ClearFocus() end
     browse = nil
     if active then active:Hide(); active = nil end
