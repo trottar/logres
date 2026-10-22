@@ -7,6 +7,7 @@ Logres.NPCServiceSession = Session
 
 local services, hooked, dismissed = {}, {}, {}
 local current, attempts, opens, deferrals, nativeHooks = nil, 0, 0, 0, 0
+local readySignals, lastReady = 0, "none"
 local last = "awaiting-native-service"
 
 local function ordinary(value)
@@ -152,6 +153,21 @@ Logres:RegisterEvent("ADDON_LOADED", function(_, name)
     end
 end)
 
+-- Source-specific readiness, not a timer or retry loop: state changes may
+-- precede lazy trainer frame loading and the original native OnShow hook.
+-- Both events still pass through Reconcile's interaction, combat and
+-- stock-source gates; Goodbye/OFF dismissal suppresses same-visit reopen.
+Logres:RegisterEvent("TRAINER_SHOW", function()
+    readySignals = readySignals + 1
+    lastReady = "TRAINER_SHOW"
+    Session.Reconcile("trainer-show")
+end)
+Logres:RegisterEvent("TRAINER_UPDATE", function()
+    readySignals = readySignals + 1
+    lastReady = "TRAINER_UPDATE"
+    Session.Reconcile("trainer-update")
+end)
+
 -- State.lua provides an already-normalized interaction type and lifecycle.
 -- No separate camera handling and no Blizzard source payload is inspected.
 Logres:SubscribeState(function()
@@ -161,7 +177,8 @@ end)
 function Session.GetAudit()
     return {current=current or "none", opens=opens, attempts=attempts,
         deferrals=deferrals, last=last,
-        nativeHooks=nativeHooks, nativePresentationWrites=0,
+        nativeHooks=nativeHooks, readinessSignals=readySignals,
+        lastReadinessEvent=lastReady, nativePresentationWrites=0,
         nativePresentation="unchanged-stock-visible"}
 end
 
