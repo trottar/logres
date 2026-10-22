@@ -296,6 +296,9 @@ local function attachBrowseControls(root, model, controls)
     local wheel = CreateFrame("Frame", nil, root)
     wheel:SetPoint("TOPLEFT", root, "TOPLEFT", geometry.list.x + 8, -(geometry.list.y + 7))
     wheel:SetSize(geometry.list.w - 45, geometry.list.h - 14)
+    -- Explicit input stack: inert row paint is below the wheel; the seven
+    -- clickable skill regions are children above it. Same owned list bounds.
+    wheel:SetFrameLevel(root:GetFrameLevel() + 4)
     wheel:EnableMouse(true)
     wheel:EnableMouseWheel(true)
     wheel:SetScript("OnMouseWheel", function(_, delta)
@@ -324,10 +327,14 @@ local function attachBrowseControls(root, model, controls)
     -- wheel input too, so the existing list scroll is not lost on hover.
     for i = 1, panel.landscape.maxRows do
         local position = i
-        local hit = CreateFrame("Frame", nil, root)
+        -- A wheel sibling can otherwise claim mouse focus before
+        -- transparent row hits. Parent each hit to the wheel and order it
+        -- explicitly above the wheel's own mouse surface.
+        local hit = CreateFrame("Frame", nil, wheel)
         hit:SetPoint("TOPLEFT", root, "TOPLEFT", geometry.list.x + 8,
             -(geometry.list.y + geometry.list.top + (i - 1) * geometry.list.pitch))
         hit:SetSize(geometry.list.w - 45, geometry.list.rowHeight)
+        hit:SetFrameLevel(wheel:GetFrameLevel() + 2)
         hit:EnableMouse(true)
         hit:EnableMouseWheel(true)
         hit:SetScript("OnMouseUp", function(_, button)

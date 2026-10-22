@@ -1,0 +1,5 @@
+# P0295 — explicit live trainer row input priority
+
+Prepared 2026-10-22 against verified P0294 main `43802394`. P0294 trial is partially functional: user confirms All/Available local filtering and wheel scrolling, but **row clicking fails in WoW**. Cause not yet established beyond concrete overlapping sibling mouse surfaces. P0295 nests row hit regions under the wheel and orders wheel/hits above the inert artwork using addon-owned frame levels; local catalogue serviceIndex selection, update bindings, teardown and inert synthetic preview remain unchanged. Native Blizzard selection/purchases/filtering, controls and visual geometry remain untouched. The `Visible services` category is a known inert placeholder, deferred separately, not fixed here.
+
+Static package prepared only; WSL and WoW outcomes unverified. See `docs/memory/evidence/P0295_TRAINER_ROW_HIT_PRIORITY.md` and `docs/memory/CURRENT.md`. Guarded applier performs pinned baseline and source checks, candidate/prewrite full static suite and whitespace, postwrite suite, git diff --check and manifest without committing or pushing. User owns the Git checkpoint.
