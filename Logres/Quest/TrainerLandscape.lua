@@ -40,13 +40,26 @@ local function frame(owner, x, y, w, h)
     return f
 end
 
-local function icon(owner, path, x, y, side)
+local function icon(owner, path, x, y, side, live)
     local f = frame(owner, x, y, side, side)
-    rect(f, 0, 0, side, side, config.palette.iconBorder)
+    -- Live icons can have partially transparent source art. A solid gold
+    -- square behind the texture then dominates the entire face. Keep the
+    -- synthetic P painter unchanged and only narrow the live gold border.
+    if live then
+        rect(f, 0, 0, side, side, config.palette.liveIconBacking)
+    else
+        rect(f, 0, 0, side, side, config.palette.iconBorder)
+    end
     local img = f:CreateTexture(nil, "ARTWORK")
     img:SetPoint("TOPLEFT", f, "TOPLEFT", 2, -2)
     img:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -2, 2)
     img:SetTexture(path)
+    if live then
+        rect(f, 0, 0, side, 1, config.palette.iconBorder)
+        rect(f, 0, side - 1, side, 1, config.palette.iconBorder)
+        rect(f, 0, 0, 1, side, config.palette.iconBorder)
+        rect(f, side - 1, 0, 1, side, config.palette.iconBorder)
+    end
     return f, img
 end
 
@@ -229,7 +242,7 @@ function Landscape.Render(owner, model)
                 selectionWash = rect(row, 0, 0, g.list.w - 29, g.list.rowHeight - 1, p.selected)
                 selectionWash:Hide()
             end
-            local _, image = icon(row, datum.icon, 7, 5, 40)
+            local _, image = icon(row, datum.icon, 7, 5, 40, view.localBrowse)
             local nameColor = p.body
             if rowState == "selected" then nameColor = p.goldText
             elseif rowState == "disabled" then nameColor = p.muted end
@@ -255,7 +268,7 @@ function Landscape.Render(owner, model)
         rect(owner, g.detail.x, g.detail.y, g.detail.w, g.detail.h, p.detailWash)
         local selected = frame(owner, g.detail.x, g.detail.y, g.detail.w, g.detail.h)
         created[#created + 1] = selected
-        local _, selectedImage = icon(selected, view.selected.icon, 5, 7, 53)
+        local _, selectedImage = icon(selected, view.selected.icon, 5, 7, 53, view.localBrowse)
         local selectedName = text(selected, view.selected.name, 70, 2, 458, 30,
             "GameFontNormalLarge", p.goldText)
         local selectedRequirement = text(selected, view.selected.requirement, 70, 32, 443, 24,

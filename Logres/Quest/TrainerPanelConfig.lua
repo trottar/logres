@@ -35,6 +35,9 @@ local trainer = {
             active = {0.37, 0.26, 0.14, 0.49},
             selected = {0.41, 0.29, 0.16, 0.15},
             iconBorder = {0.63, 0.45, 0.23, 0.90},
+            -- Dark, opaque live-only backing prevents a flat gold face when
+            -- a native spell texture is translucent or not yet available.
+            liveIconBacking = {0.06, 0.04, 0.025, 0.96},
             coinSilver = {0.78, 0.78, 0.73, 0.98},
             coinCopper = {0.75, 0.50, 0.30, 0.98},
         },
