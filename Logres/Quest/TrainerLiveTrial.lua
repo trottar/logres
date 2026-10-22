@@ -517,6 +517,25 @@ local function attachBrowseControls(root, model, controls)
             last = "native-purchase-deferred-" .. tostring(reason)
         end
     end)
+    -- One deliberate physical click. The owned UI is invalidated after
+    -- ANY issued bulk request, including partially completed batches.
+    local bulkHit = CreateFrame("Frame", nil, root)
+    bulkHit:SetPoint("TOPLEFT", root, "TOPLEFT", geometry.trainAll.x, -geometry.trainAll.y)
+    bulkHit:SetSize(geometry.trainAll.w, geometry.trainAll.h)
+    bulkHit:SetFrameLevel(wheel:GetFrameLevel() + 2)
+    bulkHit:EnableMouse(true)
+    bulkHit:SetScript("OnMouseUp", function(_, button)
+        if not ordinaryInput(button) or button ~= "LeftButton" or active ~= root
+            or not browse or not browse.model.trainAll.enabled or not browse.model.bulkQuote
+            or not Logres.NPCTrainerPurchaseTrial then return end
+        local issued, reason = Logres.NPCTrainerPurchaseTrial.AttemptAll(
+            browse.model.bulkQuote, browse.model.nativeSession)
+        if issued then
+            Trial.Disable("bulk-training-requested-unconfirmed")
+        else
+            last = "bulk-training-deferred-" .. tostring(reason)
+        end
+    end)
 end
 
 function Trial.Toggle(mode)
@@ -531,6 +550,19 @@ function Trial.Toggle(mode)
         deferrals = deferrals + 1
         last = why
         return false, why
+    end
+    -- P0301: quote the full live class-trainer list once, separately from
+    -- the 64-row display sample. Fail closed if any service is unreadable.
+    local quote = Logres.NPCTrainerPurchaseTrial.QuoteAll(report.total, report.trainerName)
+    if quote then
+        model.bulkQuote = quote
+        model.trainAll.enabled = quote.affordable
+        model.trainAll.label = "Train all (" .. tostring(#quote.offers) .. ", "
+            .. price(quote.total) .. ")"
+        if #model.trainAll.label > 40 then
+            model.trainAll = {label="Train All unavailable", enabled=false}
+            model.bulkQuote = nil
+        end
     end
     -- A fresh addon-owned panel prevents stale rows after native filter changes.
     -- It is mouse-inert; all Blizzard-native selection/training remains available.
@@ -576,7 +608,8 @@ function Trial.GetAudit()
     return {shown=active and active:IsShown() or false,
         displays=displays, deferrals=deferrals, last=last,
         purchases=0, filterWrites=0, selectionWrites=0, nativeGeometryWrites=0,
-        purchaseTrial=Logres.NPCTrainerPurchaseTrial.GetAudit()}
+        purchaseTrial=Logres.NPCTrainerPurchaseTrial.GetAudit(),
+        bulkTrial=Logres.NPCTrainerPurchaseTrial.GetBulkAudit()}
 end
 
 return Trial
