@@ -46,19 +46,20 @@ local function icon(owner, path, x, y, side, live)
     -- square behind the texture then dominates the entire face. Keep the
     -- synthetic P painter unchanged and only narrow the live gold border.
     if live then
-        rect(f, 0, 0, side, side, config.palette.liveIconBacking)
+        rect(f, 0, 0, side, side, config.palette.liveIconBacking):SetDrawLayer("BACKGROUND", -1)
     else
         rect(f, 0, 0, side, side, config.palette.iconBorder)
     end
     local img = f:CreateTexture(nil, "ARTWORK")
     img:SetPoint("TOPLEFT", f, "TOPLEFT", 2, -2)
     img:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -2, 2)
+    if live then img:SetDrawLayer("OVERLAY", 1) end
     img:SetTexture(path)
     if live then
-        rect(f, 0, 0, side, 1, config.palette.iconBorder)
-        rect(f, 0, side - 1, side, 1, config.palette.iconBorder)
-        rect(f, 0, 0, 1, side, config.palette.iconBorder)
-        rect(f, side - 1, 0, 1, side, config.palette.iconBorder)
+        rect(f, 0, 0, side, 1, config.palette.iconBorder):SetDrawLayer("OVERLAY", 2)
+        rect(f, 0, side - 1, side, 1, config.palette.iconBorder):SetDrawLayer("OVERLAY", 2)
+        rect(f, 0, 0, 1, side, config.palette.iconBorder):SetDrawLayer("OVERLAY", 2)
+        rect(f, side - 1, 0, 1, side, config.palette.iconBorder):SetDrawLayer("OVERLAY", 2)
     end
     return f, img
 end
