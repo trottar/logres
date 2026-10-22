@@ -41,6 +41,8 @@ local function frame(owner, x, y, w, h)
 end
 
 local function icon(owner, path, x, y, side, live)
+    -- Only synthetic empty-preview frames carry this addon-owned flag.
+    live = live or owner.logresEmptyFixtureIconFix == true
     local f = frame(owner, x, y, side, side)
     -- Live icons can have partially transparent source art. A solid gold
     -- square behind the texture then dominates the entire face. Keep the
@@ -161,6 +163,12 @@ function Landscape.Build(model)
     end
     if type(model.activeCategory) ~= "number" or model.activeCategory < 1
         or model.activeCategory > #model.categories then return nil end
+    if model.trainerFocus ~= nil then
+        local focus = model.trainerFocus
+        if type(focus) ~= "table" or not boundedString(focus.title, 60)
+            or not boundedString(focus.rank, 70)
+            or not boundedString(focus.detail, 70) then return nil end
+    end
     if model.professionContext ~= nil then
         local context = model.professionContext
         if type(context) ~= "table" or not boundedString(context.title, 32)
@@ -232,16 +240,30 @@ function Landscape.Render(owner, model)
             text(owner, view.categories[i], g.categories.x + 11, y,
                 g.categories.w - 20, g.categories.height, "GameFontHighlight", p.body)
         end
-        -- P0312: read-only character profession context under the service
-        -- category. Keep search, filter, scroll and all action hitboxes intact.
+        -- P0313: the current NPC and all owned professions are DISTINCT.
+        -- The former is source-backed trainer identity and requirements;
+        -- the latter is the complete character-wide list. Neither is a buy.
+        if view.trainerFocus then
+            local focus = view.trainerFocus
+            rect(owner, g.left.x + 10, 212, g.left.w - 20, 1, p.sidebarRule)
+            text(owner, "Current trainer", g.left.x + 11, 218,
+                g.left.w - 22, 18, "GameFontNormalSmall", p.goldText)
+            text(owner, focus.title, g.left.x + 11, 239,
+                g.left.w - 22, 18, "GameFontHighlightSmall", p.body)
+            text(owner, focus.rank, g.left.x + 11, 257,
+                g.left.w - 22, 18, "GameFontHighlightSmall", p.body)
+            text(owner, focus.detail, g.left.x + 11, 275,
+                g.left.w - 22, 18, "GameFontHighlightSmall", p.muted)
+        end
+        -- P0312: retain ALL owned character professions regardless of this NPC.
         if view.professionContext then
             local context = view.professionContext
-            rect(owner, g.left.x + 10, 269, g.left.w - 20, 1, p.sidebarRule)
-            text(owner, context.title, g.left.x + 11, 276,
-                g.left.w - 22, 20, "GameFontNormalSmall", p.goldText)
+            rect(owner, g.left.x + 10, 301, g.left.w - 20, 1, p.sidebarRule)
+            text(owner, context.title, g.left.x + 11, 306,
+                g.left.w - 22, 18, "GameFontNormalSmall", p.goldText)
             for i = 1, #context.lines do
                 text(owner, context.lines[i], g.left.x + 11,
-                    296 + (i - 1) * 22, g.left.w - 22, 20,
+                    326 + (i - 1) * 19, g.left.w - 22, 17,
                     "GameFontHighlightSmall", p.body)
             end
         end
@@ -278,6 +300,7 @@ function Landscape.Render(owner, model)
                     g.list.rowHeight - 1, p.hover)
                 hoverWash:Hide()
             end
+            if view.emptyFixtureIconFix then row.logresEmptyFixtureIconFix = true end
             local _, image = icon(row, datum.icon, 7, 5, 40, view.localBrowse)
             local nameColor = p.body
             if rowState == "selected" then nameColor = p.goldText
@@ -305,6 +328,7 @@ function Landscape.Render(owner, model)
         rect(owner, g.detail.x, g.detail.y, g.detail.w, g.detail.h, p.detailWash)
         local selected = frame(owner, g.detail.x, g.detail.y, g.detail.w, g.detail.h)
         created[#created + 1] = selected
+        if view.emptyFixtureIconFix then selected.logresEmptyFixtureIconFix = true end
         local _, selectedImage = icon(selected, view.selected.icon, 5, 7, 53, view.localBrowse)
         local selectedName = text(selected, view.selected.name, 70, 2, 458, 30,
             "GameFontNormalLarge", p.goldText)
@@ -431,6 +455,9 @@ function Landscape.EmptyFixture()
     view.categories = {"Trainer services"}
     view.filters.mode = "All sampled"
     view.profession = "0 native services | Blizzard available"
+    view.emptyFixtureIconFix = true
+    view.trainerFocus = {title="Fishing trainer",
+        rank="Journeyman 61/150", detail="No listed training services"}
     view.professionContext = {title="Your professions", lines={
         "Fishing 61/150 (Journeyman)", "Enchanting 41/75 (Apprentice)"}}
     view.rows = {empty.row}

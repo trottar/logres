@@ -704,6 +704,10 @@ function Trial.Toggle(mode)
     -- These read-only values never authorize training or profession acquisition.
     if model.nativeSession.profession == true then
         model.professionContext = Logres.NPCTrainerProfessionContext.Read()
+        -- P0313: native NPC discipline and full owned-profession list remain
+        -- separate. A missing identity never becomes a fabricated trainer.
+        model.trainerFocus = Logres.NPCTrainerProfessionContext.Focus(
+            model.professionContext, model.catalog)
     end
     -- P0311: a zero service list can be filter-scoped. This getter only
     -- reads ordinary native filter status; never changes the Blizzard list.
