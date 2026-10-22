@@ -1,0 +1,21 @@
+P0291 — Forever trainer six-field data fidelity
+Baseline: 61838ba412629c63e2f36ab25d5267bf69258d6e
+PREWRITE/POSTWRITE: full check suite PASS
+Git diff --check: PASS
+WoW: UNVERIFIED
+Commit/push: NOT PERFORMED
+File: Logres/Core/Bootstrap.lua
+File: Logres/Logres.toc
+File: Logres/Quest/NativeTrainerServiceProbe.lua
+File: Logres/Quest/TrainerLandscape.lua
+File: Logres/Quest/TrainerLiveTrial.lua
+File: docs/ROADMAP.md
+File: docs/memory/CURRENT.md
+File: docs/memory/evidence/P0291_FOREVER_TRAINER_DATA.md
+File: docs/memory/handoffs/CURRENT_HANDOFF.md
+File: docs/memory/investigations/ACTIVE.md
+File: docs/memory/patches/P0291_FOREVER_TRAINER_DATA.md
+File: docs/memory/patches/PATCH_INDEX.md
+File: docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+File: docs/memory/roadmap/STATUS.md
+File: tools/check_p0291_forever_trainer_data_contract.py

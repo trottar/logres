@@ -95,6 +95,55 @@ local function snapshotRow(infoFn, costFn, iconFn, index)
     return entry
 end
 
+-- P0291: Forever's actual six-field tuple differs from legacy Classic.
+-- Blizzard_TrainerUI/Mainline reads name, serviceType, texture, reqLevel,
+-- serviceSubText and category. Never treat texture/level as a service enum.
+-- All values below are inspected ONLY after independent ordinary() gates.
+local function snapshotForeverRow(infoFn, costFn, skillFn, descriptionFn, index)
+    local ok, name, serviceType, texture, reqLevel, subText, category = pcall(infoFn, index)
+    if not ok or not ordinary(serviceType) or not ordinary(texture)
+        or not ordinary(reqLevel) then return nil end
+    if type(serviceType) ~= "string" or type(texture) ~= "number"
+        or type(reqLevel) ~= "number" then return nil end
+    if serviceType ~= "available" and serviceType ~= "unavailable"
+        and serviceType ~= "used" and serviceType ~= "header" then return nil end
+    local row = {index=index, state="forever-service-observed",
+        cost="unavailable", icon="unavailable", serviceType=serviceType}
+    if ordinary(name) then row.name = safeText(name, 100) end
+    if ordinary(subText) then row.rank = safeText(subText, 35) end
+    if ordinary(category) then row.group = safeText(category, 50) end
+    if cappedInteger(texture, 1000000000) and texture > 0 then
+        row.textureID = texture
+        row.icon = "present"
+    end
+    if cappedInteger(reqLevel, 120) and reqLevel > 1 then
+        row.requiredLevel = reqLevel
+    end
+    -- Each optional source is independent: an absent cost/rank/description
+    -- never invalidates a safe name, icon or level.
+    if serviceType ~= "header" then
+        local copper, knownCost = scalar(costFn, index)
+        if knownCost and cappedInteger(copper, 100000000000) then
+            row.cost = copper
+        end
+        if skillFn then
+            local skillOK, skill, rank, hasRequirement = pcall(skillFn, index)
+            if skillOK and ordinary(skill) and ordinary(rank)
+                and ordinary(hasRequirement) then
+                local skillName = safeText(skill, 42)
+                if skillName then
+                    local rankNumber = cappedInteger(rank, 1000) and rank or nil
+                    row.skillRequirement = skillName
+                    row.skillRank = rankNumber
+                end
+            end
+        end
+        local description, knownDescription = scalar(descriptionFn, index)
+        if knownDescription then row.description = safeText(description, 260) end
+    end
+    return row
+end
+
 function Probe.Read()
     local report = {status="deferred", sampleLimit=MAX_SAMPLE, sample={},
         total="unknown", selected="unknown", wallet="unknown",
@@ -120,6 +169,8 @@ function Probe.Read()
     local infoFn = api("GetTrainerServiceInfo")
     local costFn = api("GetTrainerServiceCost")
     local iconFn = api("GetTrainerServiceIcon")
+    local skillFn = api("GetTrainerServiceSkillReq")
+    local descriptionFn = api("GetTrainerServiceDescription")
     report.api = {count=countFn and "present" or "absent",
         info=infoFn and "present" or "absent",
         cost=costFn and "present" or "absent",
@@ -143,7 +194,8 @@ function Probe.Read()
     if moneyKnown and cappedInteger(wallet, 100000000000) then report.wallet=wallet end
     local bad = 0
     for index=1, math.min(total, MAX_SAMPLE) do
-        local row = snapshotRow(infoFn, costFn, iconFn, index)
+        local row = snapshotForeverRow(infoFn, costFn, skillFn, descriptionFn, index)
+        if not row then row = snapshotRow(infoFn, costFn, iconFn, index) end
         report.sample[#report.sample + 1] = row
         if row.state ~= "source-observed" then bad = bad + 1 end
     end

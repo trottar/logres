@@ -54,6 +54,14 @@ local function boundedString(value, limit)
     return type(value) == "string" and #value <= limit
 end
 
+-- File IDs are accepted only inside the source-independent model.
+-- The native source independently secret-gates every copied value.
+local function validIcon(value)
+    return boundedString(value, 180)
+        or (type(value) == "number" and value > 0
+            and value <= 1000000000 and value == math.floor(value))
+end
+
 -- The model contains content only. Geometry and art live in TrainerPanelConfig.
 -- A future guarded live adapter can supply this same shape, but none exists yet.
 function Landscape.Fixture()
@@ -120,13 +128,14 @@ function Landscape.Build(model)
         local r = model.rows[i]
         if type(r) ~= "table" or not boundedString(r.name, 100)
             or not boundedString(r.requirement, 90)
-            or not boundedString(r.price, 30) or not boundedString(r.icon, 180) then
+            or not boundedString(r.price, 30) or not validIcon(r.icon) then
             return nil
         end
     end
-    for _, key in ipairs({"name", "requirement", "description", "icon"}) do
+    for _, key in ipairs({"name", "requirement", "description"}) do
         if not boundedString(model.selected[key], 300) then return nil end
     end
+    if not validIcon(model.selected.icon) then return nil end
     for i = 1, #model.reagents do
         local r = model.reagents[i]
         if type(r) ~= "table" or not boundedString(r.name, 80)

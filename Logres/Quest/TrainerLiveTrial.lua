@@ -36,7 +36,7 @@ local function price(value)
 end
 
 -- Pure conversion of *already secret-gated, addon-owned* probe results.
--- Numeric categories have NO inferred known/available/unavailable meaning.
+-- Forever six-field service types are descriptive only, never Train authorization.
 function Trial.FromSnapshot(report)
     if type(report) ~= "table" or type(report.sample) ~= "table"
         or (report.status ~= "service-row-shape-deferred"
@@ -62,7 +62,8 @@ function Trial.FromSnapshot(report)
         if native.state ~= "numeric-category-unclassified"
             and native.state ~= "source-observed"
             and native.state ~= "unexpected-service-shape"
-            and native.state ~= "deferred-secret-or-call" then
+            and native.state ~= "deferred-secret-or-call"
+            and native.state ~= "forever-service-observed" then
             return nil, "unrecognized-service-source-state"
         end
         if i <= panel.landscape.maxRows then
@@ -71,14 +72,42 @@ function Trial.FromSnapshot(report)
             local hasName = bounded(native.name, 100)
             local name = hasName and native.name
                 or ("Service " .. tostring(native.index) .. " (details withheld)")
+            if hasName and native.state == "forever-service-observed"
+                and bounded(native.rank, 35) then
+                local withRank = name .. " (" .. native.rank .. ")"
+                if #withRank <= 100 then name = withRank end
+            end
             local selectedRow = type(report.selected) == "number"
                 and native.index == report.selected
             local recognized = native.state == "numeric-category-unclassified"
                 or native.state == "source-observed"
+                or native.state == "forever-service-observed"
+            local requirement = "Availability not classified"
+            if native.state == "forever-service-observed" then
+                local parts = {}
+                if type(native.requiredLevel) == "number" then
+                    parts[#parts + 1] = "Level " .. tostring(native.requiredLevel)
+                end
+                if bounded(native.skillRequirement, 42) then
+                    local skill = native.skillRequirement
+                    if type(native.skillRank) == "number" then
+                        skill = skill .. " (" .. tostring(native.skillRank) .. ")"
+                    end
+                    parts[#parts + 1] = skill
+                end
+                local requirements = table.concat(parts, " / ")
+                if #requirements > 0 and #requirements <= 80 then
+                    requirement = "Requires: " .. requirements
+                end
+            end
+            local texture = native.state == "forever-service-observed"
+                and type(native.textureID) == "number" and native.textureID or placeholder
             local row = {serviceIndex=native.index, name=name,
                 requirement="Availability not classified",
                 price=recognized and price(native.cost) or "Cost unknown",
-                icon=placeholder, selected=selectedRow, disabled=false}
+                icon=texture, selected=selectedRow, disabled=false,
+                description=recognized and native.description or nil}
+            row.requirement = requirement
             rows[#rows + 1] = row
             if hasName then visibleNamed = visibleNamed + 1
             else visibleWithheld = visibleWithheld + 1 end
@@ -98,9 +127,10 @@ function Trial.FromSnapshot(report)
         profession="Source: " .. tostring(#report.sample) .. " sampled / " .. tostring(visibleNamed) .. " named",
         rows=rows,
         selected={name=selected and selected.name or "Selection outside view",
-            requirement="Availability not classified",
-            description="Live name, index, cost and funds only. Use Blizzard's trainer to select, filter or train.",
-            icon=placeholder},
+            requirement=selected and selected.requirement or "Availability not classified",
+            description=selected and bounded(selected.description, 260) and selected.description
+                or "Live training details are read-only. Use Blizzard's trainer to filter, select or train.",
+            icon=selected and selected.icon or placeholder},
         reagents={}, trainLabel="Stock Train", trainEnabled=false,
         footnote="LIVE READ-ONLY  /  TRAIN AND FILTER IN BLIZZARD WINDOW",
     }
