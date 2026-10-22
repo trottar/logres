@@ -248,6 +248,12 @@ function Landscape.Render(owner, model)
                 selectionWash = rect(row, 0, 0, g.list.w - 29, g.list.rowHeight - 1, p.selected)
                 selectionWash:Hide()
             end
+            local hoverWash
+            if view.localBrowse then
+                hoverWash = rect(row, 0, 0, g.list.w - 29,
+                    g.list.rowHeight - 1, p.hover)
+                hoverWash:Hide()
+            end
             local _, image = icon(row, datum.icon, 7, 5, 40, view.localBrowse)
             local nameColor = p.body
             if rowState == "selected" then nameColor = p.goldText
@@ -260,7 +266,8 @@ function Landscape.Render(owner, model)
                 "GameFontNormal", p.body, "RIGHT")
             if view.localBrowse then
                 liveControls.rows[i] = {frame=row, image=image, name=nameText,
-                    requirement=requirementText, price=priceText, selected=selectionWash}
+                    requirement=requirementText, price=priceText, selected=selectionWash,
+                    hover=hoverWash}
             end
         end
         rect(owner, g.list.x + g.list.w - 16, g.list.y + 8, 3, g.list.h - 18, p.rail)
@@ -313,9 +320,10 @@ function Landscape.Render(owner, model)
         local trainAll = frame(owner, g.trainAll.x, g.trainAll.y,
             g.trainAll.w, g.trainAll.h)
         created[#created + 1] = trainAll
-        text(trainAll, view.trainAll.label, 0, 0,
+        local trainAllText = text(trainAll, view.trainAll.label, 0, 0,
             g.trainAll.w, g.trainAll.h, "GameFontHighlightSmall",
             view.trainAll.enabled and p.goldText or p.muted, "CENTER")
+        if view.localBrowse then liveControls.trainAllText = trainAllText end
         local train = frame(owner, g.train.x, g.train.y, g.train.w, g.train.h)
         created[#created + 1] = train
         local trainText = text(train, view.trainLabel, 0, 0, g.train.w, g.train.h,
@@ -355,6 +363,7 @@ function Landscape.UpdateLiveRows(controls, view)
     for i = 1, #controls.rows do
         local slot = controls.rows[i]
         local datum = view.rows[i]
+        if slot.hover then slot.hover:Hide() end
         if datum then
             slot.image:SetTexture(datum.icon)
             slot.name:SetText(datum.name)

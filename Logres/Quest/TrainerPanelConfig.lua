@@ -34,6 +34,7 @@ local trainer = {
             muted = {0.76, 0.69, 0.57, 0.96},
             active = {0.37, 0.26, 0.14, 0.49},
             selected = {0.41, 0.29, 0.16, 0.15},
+            hover = {0.84, 0.61, 0.29, 0.18},
             iconBorder = {0.63, 0.45, 0.23, 0.90},
             -- Dark, opaque live-only backing prevents a flat gold face when
             -- a native spell texture is translucent or not yet available.

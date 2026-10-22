@@ -312,6 +312,38 @@ local function moveBrowse(delta)
     refreshBrowse()
 end
 
+-- P0302: cosmetic feedback only on owned hit regions. Quest uses brightened
+-- text/rule on hover; these transparent frames retain existing click routing.
+local function bindHover(region, owner, allowed, label)
+    local wash = region:CreateTexture(nil, "BACKGROUND")
+    wash:SetTexture("Interface\\Buttons\\WHITE8x8")
+    wash:SetAllPoints(region)
+    wash:SetVertexColor(0.73, 0.51, 0.24, 0.15)
+    wash:Hide()
+    local rule = region:CreateTexture(nil, "OVERLAY")
+    rule:SetTexture("Interface\\Buttons\\WHITE8x8")
+    rule:SetHeight(1)
+    rule:SetPoint("BOTTOMLEFT", region, "BOTTOMLEFT", 5, 2)
+    rule:SetPoint("BOTTOMRIGHT", region, "BOTTOMRIGHT", -5, 2)
+    rule:SetVertexColor(1.00, 0.84, 0.48, 0.96)
+    rule:Hide()
+    region:SetScript("OnEnter", function()
+        if active ~= owner or not browse or not allowed() then return end
+        wash:Show()
+        rule:Show()
+        if label then label:SetTextColor(1.00, 0.87, 0.56, 1) end
+    end)
+    region:SetScript("OnLeave", function()
+        wash:Hide()
+        rule:Hide()
+        if label then
+            local c = allowed() and panel.landscape.palette.goldText
+                or panel.landscape.palette.muted
+            label:SetTextColor(c[1], c[2], c[3], c[4])
+        end
+    end)
+end
+
 local function attachBrowseControls(root, model, controls)
     local geometry = panel.landscape.geometry
     local initiallySelected
@@ -395,6 +427,7 @@ local function attachBrowseControls(root, model, controls)
     filter:SetPoint("TOPLEFT", root, "TOPLEFT", geometry.filters.x, -geometry.filters.y)
     filter:SetSize(geometry.filters.w, geometry.filters.h)
     filter:EnableMouse(true)
+    bindHover(filter, root, function() return true end)
     filter:SetScript("OnMouseUp", function(_, button)
         if not ordinaryInput(button) or button ~= "LeftButton"
             or active ~= root or not browse then return end
@@ -423,6 +456,7 @@ local function attachBrowseControls(root, model, controls)
         control:SetPoint("TOPLEFT", root, "TOPLEFT", geometry.list.x + geometry.list.w - 28, -arrow.y)
         control:SetSize(22, 22)
         control:EnableMouse(true)
+        bindHover(control, root, function() return true end)
         control:SetScript("OnMouseUp", function(_, button)
             if ordinaryInput(button) and button == "LeftButton" and active == root then
                 moveBrowse(step)
@@ -478,6 +512,18 @@ local function attachBrowseControls(root, model, controls)
         hit:SetFrameLevel(wheel:GetFrameLevel() + 2)
         hit:EnableMouse(true)
         hit:EnableMouseWheel(true)
+        -- The reused painted row owns the wash; hit regions stay transparent.
+        hit:SetScript("OnEnter", function()
+            if active ~= root or not browse then return end
+            local datum = browse.model.rows[position]
+            local slot = browse.controls.rows[position]
+            if datum and not datum.disabled and datum.serviceIndex
+                and slot and slot.hover then slot.hover:Show() end
+        end)
+        hit:SetScript("OnLeave", function()
+            local slot = controls.rows[position]
+            if slot and slot.hover then slot.hover:Hide() end
+        end)
         hit:SetScript("OnMouseUp", function(_, button)
             if active == root and browse and ordinaryInput(button)
                 and button == "LeftButton" then selectLocalRow(position) end
@@ -496,6 +542,9 @@ local function attachBrowseControls(root, model, controls)
     trainHit:SetSize(geometry.train.w, geometry.train.h)
     trainHit:SetFrameLevel(wheel:GetFrameLevel() + 2)
     trainHit:EnableMouse(true)
+    bindHover(trainHit, root, function()
+        return browse and browse.model.trainEnabled == true
+    end, controls.trainText)
     trainHit:SetScript("OnMouseUp", function(_, button)
         if not ordinaryInput(button) or button ~= "LeftButton" or active ~= root
             or not browse or not browse.localChoiceConfirmed
@@ -524,6 +573,9 @@ local function attachBrowseControls(root, model, controls)
     bulkHit:SetSize(geometry.trainAll.w, geometry.trainAll.h)
     bulkHit:SetFrameLevel(wheel:GetFrameLevel() + 2)
     bulkHit:EnableMouse(true)
+    bindHover(bulkHit, root, function()
+        return browse and browse.model.trainAll.enabled == true
+    end, controls.trainAllText)
     bulkHit:SetScript("OnMouseUp", function(_, button)
         if not ordinaryInput(button) or button ~= "LeftButton" or active ~= root
             or not browse or not browse.model.trainAll.enabled or not browse.model.bulkQuote
