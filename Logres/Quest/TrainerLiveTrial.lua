@@ -453,13 +453,19 @@ local function attachBrowseControls(root, model, controls)
     end)
     goodbye:SetScript("OnMouseUp", function(_, button)
         if ordinaryInput(button) and button == "LeftButton" and active == root then
-            -- Native-close intent is class-only; stock is restored BEFORE
-            -- issuing any close request. If either gate fails, stock stays.
+            -- Family-specific close requests follow successful stock restoration.
+            -- Unknown trainer families dismiss only Logres and keep stock usable.
+            local family = browse and browse.model.nativeSession.profession
             local canClose = Logres.NPCTrainerCloseTrial
-                and Logres.NPCTrainerCloseTrial.CanClose()
+                and family == false and Logres.NPCTrainerCloseTrial.CanClose()
+            local canCloseProfession = family == true
+                and Logres.NPCTrainerProfessionCloseTrial
+                and Logres.NPCTrainerProfessionCloseTrial.CanClose()
             local dismissed = Trial.Disable("goodbye")
             if dismissed and canClose then
                 Logres.NPCTrainerCloseTrial.RequestClose()
+            elseif dismissed and canCloseProfession then
+                Logres.NPCTrainerProfessionCloseTrial.RequestClose()
             end
         end
     end)
@@ -696,6 +702,14 @@ function Trial.Toggle(mode)
     end
     -- P0309: capture ordinary trainer family before enabling training.
     model.nativeSession.profession = trainerFamily()
+    -- P0311: a zero service list can be filter-scoped. This getter only
+    -- reads ordinary native filter status; never changes the Blizzard list.
+    if model.emptyService and model.nativeSession.profession == true then
+        local filters = Logres.NPCTrainerFilterState.Read()
+        if filters.used == "off" then
+            model.selected.description = "Blizzard's Known filter is OFF, so previously learned ranks may be omitted from this list. No current services are listed; Blizzard remains available."
+        end
+    end
     -- P0301: quote the full live class-trainer list once, separately from
     -- the 64-row display sample. Fail closed if any service is unreadable.
     local quote = Logres.NPCTrainerPurchaseTrial.QuoteAll(report.total, report.trainerName)
@@ -766,7 +780,9 @@ function Trial.GetAudit()
         purchaseTrial=Logres.NPCTrainerPurchaseTrial.GetAudit(),
         bulkTrial=Logres.NPCTrainerPurchaseTrial.GetBulkAudit(),
         nativeParking=Logres.NPCServiceNativeParking.GetAudit(),
-        nativeClose=Logres.NPCTrainerCloseTrial.GetAudit()}
+        nativeClose=Logres.NPCTrainerCloseTrial.GetAudit(),
+        professionClose=Logres.NPCTrainerProfessionCloseTrial.GetAudit(),
+        filterState=Logres.NPCTrainerFilterState.GetAudit()}
 end
 
 return Trial
