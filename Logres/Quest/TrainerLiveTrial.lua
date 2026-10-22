@@ -164,7 +164,7 @@ function Trial.FromSnapshot(report)
                 or "Live training details are read-only. Use Blizzard's trainer to filter, select or train.",
             icon=selected and selected.icon or placeholder},
         reagents={}, trainLabel="Stock Train", trainEnabled=false,
-        footnote="LIVE READ-ONLY  /  TRAIN AND FILTER IN BLIZZARD WINDOW",
+        footnote="LIVE READ-ONLY  /  SELECT LOCALLY / TRAIN IN BLIZZARD",
     }
     if not Logres.NPCTrainerLandscape.Build(model) then
         return nil, "landscape-model-rejected"
@@ -201,6 +201,9 @@ local function refreshBrowse()
     local model = browse.model
     local matching = {}
     for _, row in ipairs(model.catalog) do
+        -- Selection belongs to a captured native service identity, not a
+        -- filtered or recycled display slot. Hidden selection remains local.
+        row.selected = row.serviceIndex == browse.selectedServiceIndex
         if not browse.availableOnly or row.sourceType == "available" then
             matching[#matching + 1] = row
         end
@@ -222,7 +225,45 @@ local function refreshBrowse()
     model.profession = "Sampled " .. tostring(#model.catalog) .. " | "
         .. tostring(#matching) .. " match | " .. tostring(#matching == 0 and 0 or browse.offset)
         .. "-" .. tostring(finish)
-    return Logres.NPCTrainerLandscape.UpdateLiveRows(browse.controls, model)
+    if not Logres.NPCTrainerLandscape.UpdateLiveRows(browse.controls, model) then
+        return false
+    end
+    -- Empty-state copy is not a skill; never leave an invisible hit region.
+    for i, hit in ipairs(browse.rowHits or {}) do
+        if rows[i] and not rows[i].disabled and rows[i].serviceIndex then
+            hit:Show()
+        else
+            hit:Hide()
+        end
+    end
+    return true
+end
+
+-- This controller never calls a Blizzard service selector. Slot index is
+-- resolved into a copied catalogue service identity at the moment of click.
+local function selectLocalRow(position)
+    if not browse or not active or not active:IsShown() then return end
+    local row = browse.model.rows[position]
+    if not row or row.disabled or type(row.serviceIndex) ~= "number" then return end
+    local chosen
+    for _, entry in ipairs(browse.model.catalog) do
+        if entry.serviceIndex == row.serviceIndex then
+            chosen = entry
+            break
+        end
+    end
+    if not chosen then return end
+    browse.selectedServiceIndex = chosen.serviceIndex
+    for _, entry in ipairs(browse.model.catalog) do
+        entry.selected = entry.serviceIndex == chosen.serviceIndex
+    end
+    browse.model.selected = {
+        name=chosen.name, requirement=chosen.requirement,
+        description=bounded(chosen.description, 260) and chosen.description
+            or "No additional description supplied by this trainer.",
+        icon=chosen.icon,
+    }
+    refreshBrowse()
 end
 
 local function moveBrowse(delta)
@@ -233,7 +274,12 @@ end
 
 local function attachBrowseControls(root, model, controls)
     local geometry = panel.landscape.geometry
-    browse = {model=model, controls=controls, offset=1, availableOnly=false}
+    local initiallySelected
+    for _, row in ipairs(model.catalog) do
+        if row.selected then initiallySelected = row.serviceIndex; break end
+    end
+    browse = {model=model, controls=controls, offset=1, availableOnly=false,
+        selectedServiceIndex=initiallySelected, rowHits={}}
     -- These children alone receive pointer input; the underlying approved
     -- landscape and all Blizzard controls remain without Logres actions.
     local filter = CreateFrame("Frame", nil, root)
@@ -274,6 +320,28 @@ local function attachBrowseControls(root, model, controls)
         label:SetAllPoints(control)
         label:SetText(arrow.glyph)
     end
+    -- Draw only over the seven named catalogue rows. Each region handles
+    -- wheel input too, so the existing list scroll is not lost on hover.
+    for i = 1, panel.landscape.maxRows do
+        local position = i
+        local hit = CreateFrame("Frame", nil, root)
+        hit:SetPoint("TOPLEFT", root, "TOPLEFT", geometry.list.x + 8,
+            -(geometry.list.y + geometry.list.top + (i - 1) * geometry.list.pitch))
+        hit:SetSize(geometry.list.w - 45, geometry.list.rowHeight)
+        hit:EnableMouse(true)
+        hit:EnableMouseWheel(true)
+        hit:SetScript("OnMouseUp", function(_, button)
+            if active == root and browse and ordinaryInput(button)
+                and button == "LeftButton" then selectLocalRow(position) end
+        end)
+        hit:SetScript("OnMouseWheel", function(_, delta)
+            if active == root and browse and ordinaryInput(delta)
+                and type(delta) == "number" and delta ~= 0 then
+                moveBrowse(delta > 0 and -1 or 1)
+            end
+        end)
+        browse.rowHits[i] = hit
+    end
 end
 
 function Trial.Toggle(mode)
@@ -312,9 +380,18 @@ function Trial.Toggle(mode)
     end
     if active then active:Hide() end
     active = owner
-    attachBrowseControls(owner, model, controls)
+    local attached = pcall(attachBrowseControls, owner, model, controls)
+    if not attached then
+        Trial.Disable("local-input-deferred")
+        deferrals = deferrals + 1
+        return false, last
+    end
     owner:Show()
-    refreshBrowse()
+    if not refreshBrowse() then
+        Trial.Disable("local-view-update-deferred")
+        deferrals = deferrals + 1
+        return false, last
+    end
     displays = displays + 1
     last = why == "native-snapshot-mapped-partial" and "live-partial-visible" or "live-read-only-visible"
     return true, last

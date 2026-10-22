@@ -252,13 +252,17 @@ function Landscape.Render(owner, model)
         rect(owner, g.detail.x, g.detail.y, g.detail.w, g.detail.h, p.detailWash)
         local selected = frame(owner, g.detail.x, g.detail.y, g.detail.w, g.detail.h)
         created[#created + 1] = selected
-        icon(selected, view.selected.icon, 5, 7, 53)
-        text(selected, view.selected.name, 70, 2, 458, 30,
+        local _, selectedImage = icon(selected, view.selected.icon, 5, 7, 53)
+        local selectedName = text(selected, view.selected.name, 70, 2, 458, 30,
             "GameFontNormalLarge", p.goldText)
-        text(selected, view.selected.requirement, 70, 32, 443, 24,
+        local selectedRequirement = text(selected, view.selected.requirement, 70, 32, 443, 24,
             "GameFontHighlightSmall", p.body)
-        text(selected, view.selected.description, 6, 73, 460, 63,
+        local selectedDescription = text(selected, view.selected.description, 6, 73, 460, 63,
             "GameFontHighlight", p.body)
+        if view.localBrowse then
+            liveControls.detail = {icon=selectedImage, name=selectedName,
+                requirement=selectedRequirement, description=selectedDescription}
+        end
 
         text(owner, "Reagents", g.reagents.x, g.reagents.y,
             g.reagents.w, 24, "GameFontNormal", p.goldText)
@@ -345,6 +349,11 @@ function Landscape.UpdateLiveRows(controls, view)
     end
     controls.filterMode:SetText(view.filters.mode)
     controls.statusText:SetText(view.profession)
+    if not controls.detail then return false end
+    controls.detail.icon:SetTexture(view.selected.icon)
+    controls.detail.name:SetText(view.selected.name)
+    controls.detail.requirement:SetText(view.selected.requirement)
+    controls.detail.description:SetText(view.selected.description)
     return true
 end
 

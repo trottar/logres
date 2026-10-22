@@ -7,28 +7,26 @@ project: logres
 # Current State
 
 ## Active Objective
-Add bounded, Logres-owned filtering and scrolling to the accepted read-only trainer landscape while keeping native trainer source filters, selection and transactions Blizzard-owned. The visual fixture remains accepted; no protected replacement is authorized.
+Implement Logres-owned local skill selection within the accepted live trainer landscape while preserving Blizzard selection, filters, transactions, and stock UI. Native replacement is not authorized.
 
 ## Current Work Item
-**P0293 — LOCAL TRAINER SAMPLE BROWSING / PREPARED; WSL AND WOW UNVERIFIED.** GitHub `main` verified at P0292 `a58cf78`. User screens with and without Blizzard's Unavailable filter show P0292 live name, identity, rank, icon, cost and status fidelity; two native-filter source cases are visually correct. P0292 does not provide Logres-controlled filtering or scroll past the initial seven rows. P0293 retains one guarded snapshot (up to 64 source entries), lets users locally toggle All sampled / Available only, and wheel/arrow-scroll a reusable seven-row window. The source set still reflects Blizzard's CURRENT native filter settings; Logres never changes those settings. No Logres selection or purchase interactions.
+**P0294 — LOCAL TRAINER SELECTION / PREPARED; WSL AND WOW UNVERIFIED.** GitHub main P0293 `5e50fd2` is verified pushed. User confirmed local filter operation, seven visible rows, native-selected detail correspondence and source fidelity. Scrolling beyond seven is NOT conclusively verified from screenshots. P0294 adds seven narrow live-only click regions, service-index-stable selection, and immediate in-place detail icon/name/requirements/description updates. Hidden filtered selections retain details; returning to a row restores its highlight. Shared P fixture stays inert.
 
 ## Verified State
-- **P0292 pushed `a58cf78` / user screenshots LIVE READ-ONLY PARTIAL PASS:** Briarthorn trainer name, ranks, costs, prerequisite abilities, statuses and description appear; native Unavailable filter ON/OFF yields different source counts. No screenshot establishes clicking native purchase through Logres, full trainer enumeration, or protected replacement.
-- **P0291 pushed `0afc236` / data PASS:** Forever six-tuple and bounded optional ability requirements supported. Earlier P0285–P0287 tuple assumptions were wrong; failure evidence is preserved.
-- **P0290 R0 and R1 implementation-package FAIL:** memory size and diff EOF errors respectively; R2 guarded prewrite whitespace. P0289 R0 linked registry checker FAIL; R1 corrected first-page H Live Trainer ON/OFF. Details are in archived evidence.
+- **P0293 pushed `5e50fd2` / USER RUNTIME PARTIAL PASS:** All sampled / Available only filters work; seven-row layout and source fidelity observed. Scrolling past row 7 lacks conclusive screenshot confirmation. Blizzard native selection/transactions remain authoritative.
+- **P0292 pushed `a58cf78` / user read-only partial PASS:** native identity, rank, abilities, availability labels and cost fidelity with native-filter-dependent source. P0291 Forever six-tuple corrected source interpretation.
+- P0290 R0/R1 and P0289 R0 patch failures remain preserved in historical evidence; no failure record is removed by this checkpoint.
 
 ## Next Action
-Apply P0293 guarded ZIP on exact pushed P0292 main. Require prewrite 164+ checks, postwrite checks and git diff --check. User commits/pushes, then verify remote. Deploy to WoW and `/reload`; at a trainer use `/logres panel` → H → Live Trainer ON (TEST). Mouse-wheel the Logres list, use its scroll rail arrows and toggle the small Filters control between All sampled and Available only. Compare against unchanged Blizzard window. Finish with Live Trainer OFF. No general audit or forced purchase.
+Apply guarded P0294 ZIP on exact clean P0293 main. Require complete PREWRITE/POSTWRITE checker suites, candidate whitespace, `git diff --check` and manifest. User commits/pushes and assistant verifies remote before advancing. Deploy and `/reload`; with a trainer open use `/logres panel` → H → Live Trainer ON (TEST). Click rows, observe detail and native selection independence; verify scroll, filters, hidden selection continuity, empty state, arrow movement and Live Trainer OFF. Preserve unverified runtime cases explicitly.
 
 ## Success Criteria
-The single source snapshot can display rows 8+ without remaking a panel and hide unavailable entries locally. Only Logres-owned narrow filter and list interaction regions receive mouse input; Blizzard's window/filter/Train/Train All remain unchanged and available. Parent trainer landscape remains noninteractive elsewhere and recovers on trainer close/combat/world change. Secret gating and identity/index mapping persist. Static checks are not runtime PASS.
+Logres row clicks select local catalogue identity and synchronously refresh row highlight/detail data, including after filter/scroll, without calling `SelectTrainerService` or native purchase/filter APIs. The stock trainer remains usable; disabled/no-match rows and teardown leave no interactive invisible regions. Selection click regions are restricted to sampled visible rows and inactive in P preview. Static checks alone do not certify WoW behavior.
 
 ## Do Not Reopen Without New Evidence
-Do not infer that Logres's All sampled can restore entries hidden by a Blizzard filter. Do not map row positions to native service indices, intercept protected training, replace native controls, poll, or suppress Blizzard stock UI. Preserve reported environmental/runtime failures and any observed taint.
+No guessed native category eligibility, protected transaction controls, portrait, polling or blanket stock suppression. P0294 does not make rows excluded by Blizzard's source filter available. No native selection synchronization or purchases; avoid secret-capable value inspection and unsourced runtime PASS.
 
 ## Relevant References
-- `docs/memory/handoffs/CURRENT_HANDOFF.md`
-- `docs/memory/evidence/P0293_TRAINER_LOCAL_BROWSE.md`, `docs/memory/patches/P0293_TRAINER_LOCAL_BROWSE.md`
-- `docs/memory/evidence/P0292_TRAINER_INFORMATION_COMPLETENESS.md`, `docs/memory/evidence/P0290_TRAINER_PARTIAL_SOURCE_RECOVERY.md`
-- `docs/memory/decisions/D-046_PREVIEW_FIRST_UI_PIPELINE.md`, `docs/memory/decisions/D-047_SELECTIVE_NPC_PRESENTATION_AND_MODULARITY.md`
-- `docs/memory/investigations/ACTIVE.md`, `docs/memory/roadmap/STATUS.md`, `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`, `docs/memory/patches/PATCH_INDEX.md`, `docs/ROADMAP.md`
+- `docs/memory/handoffs/CURRENT_HANDOFF.md`, `docs/memory/evidence/P0294_TRAINER_LOCAL_SELECTION.md`, `docs/memory/patches/P0294_TRAINER_LOCAL_SELECTION.md`
+- `docs/memory/evidence/P0293_TRAINER_LOCAL_BROWSE.md`, `docs/memory/decisions/D-046_PREVIEW_FIRST_UI_PIPELINE.md`, `docs/memory/decisions/D-047_SELECTIVE_NPC_PRESENTATION_AND_MODULARITY.md`
+- `docs/memory/investigations/ACTIVE.md`, `docs/memory/roadmap/STATUS.md`, `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`, `docs/ROADMAP.md`, `docs/memory/patches/PATCH_INDEX.md`
