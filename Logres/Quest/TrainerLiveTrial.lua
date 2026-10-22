@@ -323,6 +323,34 @@ local function attachBrowseControls(root, model, controls)
         localChoiceConfirmed=false}
     -- These children alone receive pointer input; the underlying approved
     -- landscape and all Blizzard controls remain without Logres actions.
+    -- P0300: match the Quest Goodbye header affordance, not native closing.
+    -- The owned live root and its children disappear through Trial.Disable.
+    local goodbye = CreateFrame("Frame", nil, root)
+    goodbye:SetSize(78, 24)
+    goodbye:SetPoint("TOPRIGHT", root, "TOPRIGHT", -45, -12)
+    goodbye:SetFrameLevel(root:GetFrameLevel() + 10)
+    goodbye:EnableMouse(true)
+    local goodbyeText = goodbye:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    goodbyeText:SetAllPoints(goodbye)
+    goodbyeText:SetText("Goodbye")
+    goodbyeText:SetTextColor(0.97, 0.78, 0.44, 1)
+    local goodbyeLine = goodbye:CreateTexture(nil, "ARTWORK")
+    goodbyeLine:SetTexture("Interface\\Buttons\\WHITE8x8")
+    goodbyeLine:SetHeight(1)
+    goodbyeLine:SetPoint("BOTTOMLEFT", goodbye, "BOTTOMLEFT", 5, 0)
+    goodbyeLine:SetPoint("BOTTOMRIGHT", goodbye, "BOTTOMRIGHT", -5, 0)
+    goodbyeLine:SetVertexColor(0.77, 0.60, 0.32, 0.72)
+    goodbye:SetScript("OnEnter", function()
+        if active == root then goodbyeText:SetTextColor(1.00, 0.87, 0.56, 1) end
+    end)
+    goodbye:SetScript("OnLeave", function()
+        goodbyeText:SetTextColor(0.97, 0.78, 0.44, 1)
+    end)
+    goodbye:SetScript("OnMouseUp", function(_, button)
+        if ordinaryInput(button) and button == "LeftButton" and active == root then
+            Trial.Disable("goodbye")
+        end
+    end)
     -- P0299: live-only keyboard field over the existing search art.
     -- Restricted to the left segment; never overlaps the owned Filters hitbox.
     local searchEdit = CreateFrame("EditBox", nil, root)

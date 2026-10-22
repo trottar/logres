@@ -7,28 +7,28 @@ project: logres
 # Current State
 
 ## Active Objective
-Complete the Logres live trainer's local catalogue navigation while keeping Blizzard's native bulk training and stock controls usable. Preserve visually accepted P0298 icons and guarded single-service purchase.
+Add an explicitly owned Goodbye exit to the P0299 live trainer landscape, matching the accepted Quest header navigation while preserving Blizzard's stock trainer and the proven local browsing/single-service interaction. Bulk Train All remains a separate gated feature.
 
 ## Current Work Item
-**P0299 — LIVE LOCAL TRAINER SEARCH / PREPARED; WSL AND WOW UNVERIFIED.** GitHub main P0298 `be13ce1` is verified pushed. User screenshot and report support **P0298 ICON RECOVERY VISUAL PASS** and working local selection, filter, scrolling and tested single-service training. User identifies search and Train All as remaining nonfunctional features. Search is currently a decorative `Search (stock)` label; `Visible services` is an inert category placeholder. P0299 adds a live-only mouse/keyboard EditBox with 48-character bounded, case-insensitive plain substring filtering of the **already captured** native service names, composed with the local Available filter and seven-row scroll. It relabels the inert sidebar `Sampled skills`, without pretending it is a selectable category. Hidden selected skill persists and restores when matching; training is disabled while that skill is excluded by the current local filters. Preview P remains inert.
+**P0300 — TRAINER GOODBYE / PREPARED; WSL AND WOW UNVERIFIED.** Verified GitHub main P0299 `b33bba2`. User screenshots show case-insensitive `curse`/`CURSE` local search across eight matching services and combined Available-only filtering to one; user reports all P0299 functions working. **SEARCH RUNTIME PASS within tested scope.** User requests a Goodbye control matching Quest. P0300 adds a 78×24 upper-right Logres-owned mouse region matching Quest's typography, gold underline and hover emphasis. The one-click action calls only `Trial.Disable("goodbye")`; it clears search focus, hides the entire Logres trial and removes child hit regions. It does not close, hide, reparent or click native Blizzard trainer frames. The root stays mouse-inert outside deliberate owned controls.
 
 ## Verified State
-- **P0298 pushed `be13ce1` / USER VISUAL PASS:** screenshot shows restored native texture art on live list and detail icons after P0297 layer regression. P0297 missing/black icon FAIL remains historical evidence.
-- **P0296 LIMITED SINGLE-SERVICE PURCHASE PASS:** user reports successful purchase and previous before/after Blizzard list and funds corroborate 6s spent. This does not authorize Train All.
-- Local selection, details, All/Available filtering, and wheel scrolling are user-confirmed. Slider thumb drag/track, every teardown path, and full training coverage are not independently established.
-- **OPEN:** native/Logres Train All safety and behavior unverified. Blizzard's own Train All remains available; Logres Train All stays disabled. Live `Visible services` was a noninteractive placeholder, not source categories.
+- **P0299 pushed `b33bba2` / USER SEARCH PASS:** screenshots corroborate plain substring search and filter composition; no-match/focus teardown not independently pictured. User says all otherwise works. Existing P0298 icon recovery, P0295 selection and filter, P0296 one verified user-reported single purchase remain bounded earlier evidence.
+- **GOODBYE OPEN:** Quest `Dialogue.lua` already provides a matching upper-right header button; live trainer lacks that affordance. Quest Goodbye dismisses the Logres presentation and restores usable native ownership; it is not authorization to invoke a native trainer-close API.
+- **Train All DEFERRED:** only a single-service transaction has runtime evidence. Blizzard owns its functional Train All button; do not loop `BuyTrainerService` or infer bulk safety.
+- Remaining validation limits: slider drag, every teardown path, all transaction variants, and long-session behavior are not conclusively evidenced.
 
 ## Next Action
-Apply P0299 ZIP against clean pinned P0298 `be13ce1`; full prewrite/postwrite `tools/check_*.py` suite, whitespace, memory and version policy, manifest and `git diff --check`. User commits/pushes; verify main. Deploy and `/reload`; at trainer use `/logres panel` → H — Integration and Polish → Live Trainer ON (TEST). Type case-insensitive fragments, combine search with Available only, test no-match, clear/escape/enter, wheel/slider, selected-details continuity and train-action suppression when filtered out. Test H OFF/trainer close with focus. Blizzard stock and Train All remain usable; no further purchase needed.
+Apply P0300 ZIP to exact clean P0299 `b33bba2` and require guarded complete prewrite/postwrite static suites, candidate whitespace check and manifest. User commits/pushes; verify remote main independently. Deploy and `/reload`; at Briarthorn open `/logres panel` → H — Integration and Polish → Live Trainer ON (TEST). Observe top-right Goodbye: hover highlight, single left-click hides Logres, leaves Blizzard trainer usable, and removes Logres search/skill/train hit regions. Reopen H live trial and verify search/filter/icons/details; OFF/trainer close unaffected. No purchases needed.
 
 ## Success Criteria
-One owned EditBox filters copied trainer spell names only, never touches native filters or service APIs, never changes native service identity, updates seven live rows synchronously, clamps slider offset and removes unused hit regions. Hidden selections recover when the filter is cleared. P fixture, icon art, one-service purchase guard and stock fallback unchanged. Static checks are not WoW PASS.
+Matching Quest header Goodbye art, click only within owned upper-right bounds, clean local panel/focus teardown; native trainer remains functional. Synthetic P fixture remains noninteractive. No native close, filter, selection, purchase, protected frame or camera changes. A successful static contract is not an in-game PASS.
 
 ## Do Not Reopen Without New Evidence
-No automated Train All or loop of `BuyTrainerService`, no native filter writes, polling, protected region changes, invented trainer category taxonomy or false claims about scroll/transaction completeness. Preserve P0294 click failure, P0295 rail failure, P0296 gold blocks and P0297 black icons.
+Do not replace Blizzard's Train All with a loop of single-service purchases, infer bulk-transaction safety from one successful purchase, or hide Blizzard's usable stock trainer. Do not reinterpret secret-capable values, add polling/protected mutations, or claim Goodbye runtime PASS before the in-game test. Preserve the recorded P0294/P0295/P0296/P0297 failures and any unverified teardown or slider behavior.
 
 ## Relevant References
-- `docs/memory/evidence/P0299_TRAINER_LOCAL_SEARCH.md`, `docs/memory/patches/P0299_TRAINER_LOCAL_SEARCH.md`
-- `docs/memory/evidence/P0298_TRAINER_ICON_DRAW_LAYERS.md`, `docs/memory/evidence/P0296_TRAINER_SCROLL_TRAIN_TEST.md`
+- `docs/memory/evidence/P0300_TRAINER_GOODBYE.md`, `docs/memory/patches/P0300_TRAINER_GOODBYE.md`
+- `docs/memory/evidence/P0299_TRAINER_LOCAL_SEARCH.md`, `docs/memory/evidence/P0298_TRAINER_ICON_DRAW_LAYERS.md`
 - `docs/memory/decisions/D-046_PREVIEW_FIRST_UI_PIPELINE.md`, `docs/memory/decisions/D-047_SELECTIVE_NPC_PRESENTATION_AND_MODULARITY.md`
 - `docs/memory/handoffs/CURRENT_HANDOFF.md`, `docs/memory/investigations/ACTIVE.md`, `docs/memory/roadmap/STATUS.md`, `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`, `docs/ROADMAP.md`, `docs/memory/patches/PATCH_INDEX.md`
