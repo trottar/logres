@@ -1,29 +1,13 @@
-# Current Handoff — P0289 live trainer H panel routing
+# Current Handoff — P0290 trainer live partial-source recovery
 
-Authority: `docs/memory/CURRENT.md`, D-046/D-047, and `docs/memory/evidence/P0289_TRAINER_LIVE_PANEL_ROUTING.md`.
+Authority: `docs/memory/CURRENT.md`, D-046/D-047 and `docs/memory/evidence/P0290_TRAINER_PARTIAL_SOURCE_RECOVERY.md`.
 
-GitHub P0288 `2e4b509` verified on main. **Negative:** P0288 registered `/logres nativetrainerlive on|off` commands but no developer-panel actions, despite the established H integration workflow. The user flagged this omission. No runtime screenshot/error for P0288 is yet verified. Prior P0285/86 numeric shape problem and P0287 R0 PREWRITE failure remain historical evidence.
+Verified GitHub main P0289 R1 `aee3f9d`. User WoW screenshot `0.0.190-dev` confirms H developer panel ON/OFF actions present (PASS), while repeated Live Trainer ON returns `unsafe-or-incomplete-service-row`, `shown=false`, `displays=0`, deferrals growing, and native purchases/filter/selection/geometry writes all zero (**LIVE SOURCE PRESENTATION FAIL**). No row-by-row state exported; never claim actual secret violation or specific native enum. P0284 synthetic landscape is previously accepted visually; live adapter remains unproven.
 
-P0289 PREPARED / WSL AND WOW UNVERIFIED: adds distinct H `Live Trainer ON (TEST)` and `Live Trainer OFF` action registrations in Core/Commands.lua and first-page priority in the paginated H panel. Existing H Trainer Skin ON/OFF remains registered, visible and separate. Handler, mouse-inert shared P0284 renderer, source probe, stock Blizzard trainer, and native transaction ownership are UNCHANGED. P0288 remains a read-only integration trial, not a purchase UI.
+P0290 R0 PREWRITE FAILED on 2026-10-21: ZIP and pinned baseline passed; 161 checkers ran, one failure in `check_memory_health.py` because the proposed CURRENT.md exceeded 20,000 bytes. No tracked changes were written. R1 compacts only CURRENT's active summary, with exact history preserved in evidence and roadmap; no trainer code behavior difference between R0 and R1.
 
-Next: apply guarded P0289 on exact P0288 baseline, full static suites, user push then verify main, deploy. With ordinary trainer open: `/logres panel` → H → Live Trainer ON (TEST), check resulting screen/stock click-through, then Live Trainer OFF and trainer-close recovery. Export only any reported errors/deferred reason; no generic service audit or forced purchase. WoW PASS is not yet established.
+P0290 R1 POSTWRITE FAILED on 2026-10-21: PREWRITE 161/161 PASS, POSTWRITE 161/161 PASS, but `git diff --check` flagged a new blank line at EOF in `docs/memory/CURRENT.md:38`. The guarded applier restored patch-owned tracked files upon this error. No WoW test or durable runtime claim follows. Cause: the section replacement helper appended two terminal newlines to the final CURRENT section, and PREWRITE did not validate diff whitespace. R2 corrects the final-section newline and runs prewrite `git diff --no-index --check` on every changed candidate, in addition to postwrite `git diff --check`.
 
-## P0289 R0 PREWRITE refusal — linked historical registry contracts
+P0290 R2 PREPARED / WSL and WoW UNVERIFIED: the probe preserves an independently ordinary service name when another tuple field is unavailable; the adapter accepts the probe's four declared source states and fills unavailable name/cost with explicit addon-owned placeholders instead of refusing the entire layout. Impossible indices and unsupported source statuses remain rejected. All source-session root/combat/secret gates, mouse-inert shared renderer, disabled Logres training and Blizzard-owned transactions stay intact. No generic audits or source polling.
 
-User WSL 2026-10-21: ZIP checksum OK; pinned P0288 baseline PASS; PREWRITE ran
-160 checkers, with 6 failures (`check_p0256_preview_hub_contract.py`,
-`check_p0271_native_placement_trial_contract.py`,
-`check_p0272_native_auto_handoff_contract.py`,
-`check_p0273_native_gossip_continuity_contract.py`,
-`check_p0274_native_service_accent_contract.py`, and
-`check_p0276_r1_native_trainer_skin_contract.py`). All six froze the former
-108 total / 20 H panel action counts; P0289 adds two legitimate H actions.
-PREWRITE REFUSED before ANY tracked file was changed. This is an assistant
-static-contract migration omission, NOT a WoW or user failure.
-
-P0289 R1 repairs the complete historical checker dependency graph, including
-P0261/P0269/P0270, with 108/20 as minima while retaining the exact accepted
-35-entry P gallery. The new P0289 checker verifies the precise H ON/OFF IDs,
-commands, first-page priority and absence of gameplay mutation. Full WSL
-PREWRITE, POSTWRITE and WoW checks are still UNVERIFIED. No native purchase,
-filter, selection, movement or renderer change was made.
+Next: apply guarded ZIP on P0289 R1, require full static suites, user push, verify main; deploy beta, `/reload`, interact with a trainer, `/logres panel` → H → **Live Trainer ON (TEST)**. Expect a named/partial inert landscape or an explicit source-level deferral; capture one screenshot/result. Then **Live Trainer OFF**. Do not require any training purchase, travel or general audit. Record negative or partial results before functional integration.

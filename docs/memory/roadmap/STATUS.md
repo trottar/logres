@@ -1,3 +1,15 @@
+## P0290 R2 — prewrite whitespace verification and EOF repair (2026-10-21)
+
+R1 user WSL: pinned P0289 R1 baseline PASS; PREWRITE **161/161 PASS**, POSTWRITE **161/161 PASS**, final `git diff --check` FAILED (`docs/memory/CURRENT.md:38: new blank line at EOF`). R1 applier entered its rollback handler; no commit/push or WoW proof. The cause was `section()` appending an extra terminal newline at final CURRENT heading and shadow PREWRITE omitting Git whitespace validation. R2 fixes terminal newline generation, adds a candidate EOF assertion and prewrite `git diff --no-index --check` for every modified or added file. Keeps all R0/R1 failure evidence and identical native trainer Lua correction. Static/WoW results R2 pending.
+
+## P0290 R1 — memory health limit repair (2026-10-21)
+
+P0290 R0 failed WSL PREWRITE: user SHA verification and exact P0289 R1 baseline PASS; check suite 161, 1 failure in `check_memory_health.py` (CURRENT.md over 20,000 bytes). Refused before tracked write. R1 replaces overlong CURRENT state/history with a concise current-action summary, preserves all historical evidence in this ledger, and adds an explicit 10 KB memory-size candidate gate. Runtime source correction unchanged; WSL and WoW outcomes pending.
+
+## P0290 — partial trainer source recovery after live-screen failure (2026-10-21)
+
+P0289 R1 verified pushed `aee3f9d`. User `0.0.190-dev` H panel screenshot confirms both Live Trainer actions, but the live trial repeatedly returns `unsafe-or-incomplete-service-row` with displays=0 and purchases/filter/selection/geometryWrites=0. **LIVE PRESENTATION FAIL / OPEN**, row-specific source cause unproven. P0290 PREPARED / WSL AND WOW UNVERIFIED changes only guarded source copying and read-only model admission: independently ordinary service names survive unrelated field deferral, and four known probe row states render safe placeholders rather than suppressing the entire UI. No guessed numeric eligibility, native writes, reflow, purchase or polling. Existing D-046 shared renderer and D-047 stock fallback preserved. See `docs/memory/evidence/P0290_TRAINER_PARTIAL_SOURCE_RECOVERY.md`.
+
 ## P0289 R1 — repair P0289 R0 PREWRITE historical action counts (2026-10-21)
 
 R0 verified archive and baseline but PREWRITE **FAIL: 6 of 160** linked static

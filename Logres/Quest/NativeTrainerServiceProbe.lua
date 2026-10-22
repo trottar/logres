@@ -54,7 +54,11 @@ local function snapshotRow(infoFn, costFn, iconFn, index)
     local ok, name, subText, category, expanded = pcall(infoFn, index)
     if not ok or not ordinary(name) or not ordinary(subText)
         or not ordinary(category) or not ordinary(expanded) then
-        return {index=index, state="deferred-secret-or-call"}
+        -- An unrelated secret field must not discard an independently ordinary
+        -- service name. Never inspect, compare, format or copy restricted fields.
+        local safeName = nil
+        if ok and ordinary(name) then safeName = safeText(name, 100) end
+        return {index=index, state="deferred-secret-or-call", name=safeName}
     end
     local label = safeText(name, 100)
     local categoryKnown = category == "header" or category == "available"

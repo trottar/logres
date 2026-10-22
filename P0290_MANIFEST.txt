@@ -1,0 +1,20 @@
+P0290 R2 — Trainer partial-source recovery, newline/whitespace correction
+Baseline: aee3f9dba0be575bf35789904b1e17a85993caa6
+PREWRITE/POSTWRITE: static checker suite PASS
+Git diff --check: PASS
+WoW runtime: UNVERIFIED
+Git commit/push: NOT PERFORMED
+File: Logres/Core/Bootstrap.lua
+File: Logres/Logres.toc
+File: Logres/Quest/NativeTrainerServiceProbe.lua
+File: Logres/Quest/TrainerLiveTrial.lua
+File: docs/ROADMAP.md
+File: docs/memory/CURRENT.md
+File: docs/memory/evidence/P0290_TRAINER_PARTIAL_SOURCE_RECOVERY.md
+File: docs/memory/handoffs/CURRENT_HANDOFF.md
+File: docs/memory/investigations/ACTIVE.md
+File: docs/memory/patches/P0290_TRAINER_PARTIAL_SOURCE_RECOVERY.md
+File: docs/memory/patches/PATCH_INDEX.md
+File: docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+File: docs/memory/roadmap/STATUS.md
+File: tools/check_p0290_trainer_partial_snapshot_contract.py
