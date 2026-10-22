@@ -90,6 +90,8 @@ function Landscape.Fixture()
         categories = {"All", "Weapon", "Chest", "Bracer", "Glove", "Boots", "Other"},
         activeCategory = 1,
         profession = "Enchanting (40)",
+        professionContext = {title="Your professions", lines={
+            "Enchanting 40/75 (Apprentice)", "Fishing 61/150 (Journeyman)"}},
         rows = {
             {name="Enchant Chest - Minor Absorption", requirement="Requires: Enchanting (40)", price="1s", icon="Interface\\Icons\\Spell_Holy_GreaterHeal", selected=true},
             {name="Enchant Bracer - Minor Stamina", requirement="Requires: Enchanting (15)", price="50c", icon="Interface\\Icons\\INV_Misc_Rune_01"},
@@ -159,6 +161,15 @@ function Landscape.Build(model)
     end
     if type(model.activeCategory) ~= "number" or model.activeCategory < 1
         or model.activeCategory > #model.categories then return nil end
+    if model.professionContext ~= nil then
+        local context = model.professionContext
+        if type(context) ~= "table" or not boundedString(context.title, 32)
+            or type(context.lines) ~= "table" or #context.lines < 1
+            or #context.lines > 6 then return nil end
+        for i = 1, #context.lines do
+            if not boundedString(context.lines[i], 54) then return nil end
+        end
+    end
     return model
 end
 
@@ -220,6 +231,19 @@ function Landscape.Render(owner, model)
             end
             text(owner, view.categories[i], g.categories.x + 11, y,
                 g.categories.w - 20, g.categories.height, "GameFontHighlight", p.body)
+        end
+        -- P0312: read-only character profession context under the service
+        -- category. Keep search, filter, scroll and all action hitboxes intact.
+        if view.professionContext then
+            local context = view.professionContext
+            rect(owner, g.left.x + 10, 269, g.left.w - 20, 1, p.sidebarRule)
+            text(owner, context.title, g.left.x + 11, 276,
+                g.left.w - 22, 20, "GameFontNormalSmall", p.goldText)
+            for i = 1, #context.lines do
+                text(owner, context.lines[i], g.left.x + 11,
+                    296 + (i - 1) * 22, g.left.w - 22, 20,
+                    "GameFontHighlightSmall", p.body)
+            end
         end
         liveControls.statusText = text(owner, view.profession, g.left.x + 11, g.status.y - 17,
             g.left.w - 22, 17, "GameFontHighlightSmall", p.muted)
@@ -407,6 +431,8 @@ function Landscape.EmptyFixture()
     view.categories = {"Trainer services"}
     view.filters.mode = "All sampled"
     view.profession = "0 native services | Blizzard available"
+    view.professionContext = {title="Your professions", lines={
+        "Fishing 61/150 (Journeyman)", "Enchanting 41/75 (Apprentice)"}}
     view.rows = {empty.row}
     view.selected = empty.selected
     view.reagents = {}

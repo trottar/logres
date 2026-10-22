@@ -7,27 +7,27 @@ project: logres
 # Current State
 
 ## Active Objective
-Finalize the consistent Logres trainer experience with recoverable Blizzard native fallback and modular service-specific transactions/lifecycle. Then implement NPC gossip, merchants and flight masters, in that order.
+Finalize consistent Logres trainer presentation with source-backed profession context and recoverable Blizzard native fallback. Then implement gossip, merchants and flight masters.
 
 ## Current Work Item
-**P0311 — profession Goodbye and read-only native filter context / PREPARED; WSL STATIC and WoW UNVERIFIED.** GitHub main P0310 `cb1a83f` verified. User supplied screenshots showing P0310 synthetic P empty preview and live Grimnur Fishing empty state, with Logres parchment, disabled row and usable Blizzard: **visual and auto-entry PASS**. P0311 adds separate profession-only guarded `CloseTrainer` after successful Logres dismissal/restoration, and a read-only, ordinary source-filter observation for empty sessions. No profession native parking or new action ownership is authorized.
+**P0312 — profession skill context / empty-source event recovery and P0311 regression repair; PREPARED, WSL and WoW UNVERIFIED.** Verified P0311 GitHub main `8987489`. New user screenshot shows native Enchanting with five services while Logres incorrectly displays the zero-source state: **OPEN RUNTIME FAIL**. P0311 profession Goodbye closing both panels is user-rejected while stock remains required. P0312 restores profession Logres-only Goodbye, retains class native-close Goodbye, and adds a guarded copied player-professions section below search and categories. On a native TRAINER_UPDATE with Logres empty, a once-per-event guarded service reread may rebuild the existing trainer panel if real services become available; not proven effective until WoW test.
 
 ## Verified State
-- P0310 user-screenshot PASS: panel-integrated inert Trainer Empty Preview and live zero-source Fishing Logres shell. Native Blizzard remains visible. No transaction tested.
-- P0309 Enchanting single service trained and learned through Logres USER PASS; class trainer operation user PASS. P0308 class Logres-only visibility and true native-close Goodbye PASS. Earlier class Train All and single training are scoped PASS; class purchase specifically while native frame parked remains UNVERIFIED.
-- Fishing at Grimnur returned type 7, ordinary profession yes, total services 0. Native Blizzard frame nevertheless shows **Journeyman Fishing — Already known**. Therefore zero source rows do not prove unknown or fully learned professions. Other unowned profession cases remain UNTESTED.
+- P0310 P — Previews → Trainer Empty Preview and live Grimnur Fishing empty Logres panel user screenshot PASS for shared visual geometry, with Blizzard fallback. Fishing Blizzard showed Journeyman rank, absent from Logres model; no general skill ownership inference from service count.
+- P0309 Enchanting one-skill purchase USER PASS, class single and bulk purchase previously tested. P0308 class native parking and native-close Goodbye user PASS. P0311 new Enchanting zero-service presentation despite Blizzard five services is FAIL; native profession Goodbye close rejected, not accepted final policy.
+- Runtime profession skill-line API results and P0312 recovery are UNVERIFIED. Unknown/unowned profession detection and profession native-window removal remain DEFERRED.
 
 ## Next Action
-Apply guarded P0311 on exact clean P0310 main. Require full 182-checker PREWRITE/POSTWRITE, `git diff --check`, manifest, user commit/push and independent main verification. Deploy and `/reload`. At a profession trainer with normal Logres open, click Goodbye; BOTH Logres and Blizzard should close, then reopen on next interaction. Confirm no native popup/taint/errors. In source-empty Fishing, filter hint appears only when ordinary Known filter is OFF; otherwise neutral text remains. Verify class Goodbye unaffected. No further purchase needed.
+Apply guarded P0312 on exact clean P0311 commit, require 183/183 PREWRITE/POSTWRITE suite PASS and diff/manifest. User commits/pushes; verify main. Deploy and `/reload`. Check P — Previews → Trainer Empty Preview for synthetic context. Open Enchanting and confirm Logres services reappear instead of stale zero rows; if not, use H — Trainer Family Check at the same session to capture actual native service count. At Fishing verify skill/rank context where ordinary profession APIs return it and native fallback stays available. Confirm profession Goodbye closes Logres only, class Goodbye closes native. No purchase needed.
 
 ## Success Criteria
-Separate ordinary profession-family/native frame/combat/API gates; at most one CloseTrainer request on explicit Goodbye AFTER the restoration-first `Trial.Disable` succeeds. Native Blizzard stock remains visible before Goodbye for professions, including empty sources. Source-filter reads never mutate Blizzard filters or imply a specific owned rank. Inert P fixture and exact live renderer/layout retained. No new panel action or hidden native click regions.
+One consistent approved parchment renderer for empty and nonempty source; source-backed known profession name, level, skill cap and derived tier label in left sidebar when ordinary. Never fabricate a Learn Profession offer. No polling, forced native filter writes, protected/secret inspection, native profession parking or new transactions. P0311 regression preserved as evidence. No new preview action needed; existing P empty fixture renders the new shared context component.
 
 ## Do Not Reopen Without New Evidence
-Do not equate native `services=0` with profession ownership or lack thereof, infer a Learn Profession action, read protected/secret presentation values, or hide native profession information until equivalent source-backed coverage and restoration are proven. Do not generalize one Enchanting purchase to all professions. Keep prior historical patch/checker/runtime failures intact.
+A native zero service count is not proof a profession is already learned or unknown. Do not suppress Blizzard profession UI until adequate source coverage and separately validated native transactions exist. Do not enforce the user-rejected P0311 profession native-close behavior. Keep past failures and their corrective checkpoints discoverable.
 
 ## Relevant References
-- `docs/memory/evidence/P0311_PROFESSION_CLOSE_FILTER_CONTEXT.md`, `docs/memory/patches/P0311_PROFESSION_CLOSE_FILTER_CONTEXT.md`
-- `docs/memory/evidence/P0310_TRAINER_EMPTY_CATALOGUE.md`, `docs/memory/evidence/P0309_PROFESSION_SINGLE_TRANSACTION.md`
+- `docs/memory/evidence/P0312_PROFESSION_CONTEXT_RECOVERY.md`, `docs/memory/patches/P0312_PROFESSION_CONTEXT_RECOVERY.md`
+- `docs/memory/evidence/P0311_PROFESSION_CLOSE_FILTER_CONTEXT.md`, `docs/memory/evidence/P0310_TRAINER_EMPTY_CATALOGUE.md`
 - `docs/memory/decisions/D-046_PREVIEW_FIRST_UI_PIPELINE.md`, `docs/memory/decisions/D-047_SELECTIVE_NPC_PRESENTATION_AND_MODULARITY.md`
 - `docs/memory/handoffs/CURRENT_HANDOFF.md`, `docs/memory/investigations/ACTIVE.md`, `docs/memory/roadmap/STATUS.md`, `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`, `docs/ROADMAP.md`, `docs/memory/patches/PATCH_INDEX.md`

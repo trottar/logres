@@ -2,7 +2,7 @@
 ## Title: Logres
 ## Notes: Immersive, world-first interface for World of Warcraft Forever.
 ## Author: trottar
-## Version: 0.0.212-dev
+## Version: 0.0.213-dev
 ## SavedVariables: LogresDB, LogresDiagnosticsDB
 ## OptionalDeps: QuestieDB
 
@@ -94,3 +94,4 @@ Quest\TrainerProfessionPurchaseTrial.lua
 UI\NPCServiceEmptyState.lua
 Quest\TrainerProfessionCloseTrial.lua
 Quest\TrainerFilterState.lua
+Quest\TrainerProfessionContext.lua

@@ -455,17 +455,15 @@ local function attachBrowseControls(root, model, controls)
         if ordinaryInput(button) and button == "LeftButton" and active == root then
             -- Family-specific close requests follow successful stock restoration.
             -- Unknown trainer families dismiss only Logres and keep stock usable.
+            -- P0312: native Goodbye stays class-only. Profession stock is
+            -- still an essential information/transaction fallback: dismiss
+            -- Logres but do not close Blizzard's profession window.
             local family = browse and browse.model.nativeSession.profession
             local canClose = Logres.NPCTrainerCloseTrial
                 and family == false and Logres.NPCTrainerCloseTrial.CanClose()
-            local canCloseProfession = family == true
-                and Logres.NPCTrainerProfessionCloseTrial
-                and Logres.NPCTrainerProfessionCloseTrial.CanClose()
             local dismissed = Trial.Disable("goodbye")
             if dismissed and canClose then
                 Logres.NPCTrainerCloseTrial.RequestClose()
-            elseif dismissed and canCloseProfession then
-                Logres.NPCTrainerProfessionCloseTrial.RequestClose()
             end
         end
     end)
@@ -702,6 +700,11 @@ function Trial.Toggle(mode)
     end
     -- P0309: capture ordinary trainer family before enabling training.
     model.nativeSession.profession = trainerFamily()
+    -- P0312: owned profession progress is independent of native service rows.
+    -- These read-only values never authorize training or profession acquisition.
+    if model.nativeSession.profession == true then
+        model.professionContext = Logres.NPCTrainerProfessionContext.Read()
+    end
     -- P0311: a zero service list can be filter-scoped. This getter only
     -- reads ordinary native filter status; never changes the Blizzard list.
     if model.emptyService and model.nativeSession.profession == true then
@@ -773,6 +776,25 @@ function Trial.Toggle(mode)
     return true, last
 end
 
+-- P0312: an early trainer source may report zero before a native update.
+-- Reconcile only on a real TRAINER_SHOW/TRAINER_UPDATE signal; no polling.
+-- Never replace a valid catalogue or resurrect a deliberately dismissed visit.
+function Trial.RefreshEmptyFromSource()
+    if not active or not active:IsShown() or not browse
+        or not browse.model.emptyService then return false, "not-empty-live" end
+    local report = Logres.NPCNativeTrainerServiceProbe.Read()
+    if type(report) ~= "table" or type(report.total) ~= "number"
+        or report.total < 1 then return false, "source-still-empty-or-unreadable" end
+    -- Require a complete ordinary replacement model BEFORE tearing down
+    -- the readable empty-state view. Stock stays visible for professions.
+    local replacement = Trial.FromSnapshot(report)
+    if not replacement then return false, "new-source-not-ready" end
+    if not Trial.Disable("trainer-source-refreshed") then
+        return false, "stock-restoration-deferred"
+    end
+    return Trial.Toggle("on")
+end
+
 function Trial.GetAudit()
     return {shown=active and active:IsShown() or false,
         displays=displays, deferrals=deferrals, last=last,
@@ -782,7 +804,8 @@ function Trial.GetAudit()
         nativeParking=Logres.NPCServiceNativeParking.GetAudit(),
         nativeClose=Logres.NPCTrainerCloseTrial.GetAudit(),
         professionClose=Logres.NPCTrainerProfessionCloseTrial.GetAudit(),
-        filterState=Logres.NPCTrainerFilterState.GetAudit()}
+        filterState=Logres.NPCTrainerFilterState.GetAudit(),
+        professionContext=Logres.NPCTrainerProfessionContext.GetAudit()}
 end
 
 return Trial

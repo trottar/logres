@@ -161,11 +161,17 @@ Logres:RegisterEvent("TRAINER_SHOW", function()
     readySignals = readySignals + 1
     lastReady = "TRAINER_SHOW"
     Session.Reconcile("trainer-show")
+    if Logres.NPCTrainerLiveTrial then
+        Logres.NPCTrainerLiveTrial.RefreshEmptyFromSource()
+    end
 end)
 Logres:RegisterEvent("TRAINER_UPDATE", function()
     readySignals = readySignals + 1
     lastReady = "TRAINER_UPDATE"
     Session.Reconcile("trainer-update")
+    if Logres.NPCTrainerLiveTrial then
+        Logres.NPCTrainerLiveTrial.RefreshEmptyFromSource()
+    end
 end)
 
 -- State.lua provides an already-normalized interaction type and lifecycle.

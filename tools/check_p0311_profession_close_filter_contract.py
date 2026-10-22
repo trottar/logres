@@ -41,20 +41,20 @@ for bad in ('SetTrainerServiceTypeFilter(', 'SelectTrainerService(',
     need(bad not in f,'filter status must not mutate native UI: '+bad)
 for x in ('local canClose = Logres.NPCTrainerCloseTrial',
           'Logres.NPCTrainerCloseTrial.CanClose()',
-          'local canCloseProfession =',
-          'Logres.NPCTrainerProfessionCloseTrial.CanClose()',
           'local dismissed = Trial.Disable("goodbye")',
           'if dismissed and canClose then',
           'Logres.NPCTrainerCloseTrial.RequestClose()',
-          'Logres.NPCTrainerProfessionCloseTrial.RequestClose()',
           'local filters = Logres.NPCTrainerFilterState.Read()',
           'filters.used == "off"',
           'model.emptyService and model.nativeSession.profession == true',
           'professionClose=Logres.NPCTrainerProfessionCloseTrial.GetAudit()',
           'filterState=Logres.NPCTrainerFilterState.GetAudit()'):
     need(x in v,'existing trainer UI/source/close integration missing: '+x)
-need(v.index('local dismissed = Trial.Disable("goodbye")') < v.index('Logres.NPCTrainerProfessionCloseTrial.RequestClose()'),
-     'profession native close must follow stock restore-first Trial.Disable')
+# P0312 supersession: user rejected native close while profession stock is still required.
+need('NPCTrainerProfessionCloseTrial.RequestClose()' not in v,
+     'P0312: native profession close must be inactive pending full replacement')
+need('P0312' in read('docs/memory/evidence/P0312_PROFESSION_CONTEXT_RECOVERY.md'),
+     'P0311 native-close regression and reversal not preserved')
 need('scalar(api("IsTradeskillTrainer")) ~= false' in old,
      'class native-close gate must stay class-only')
 need('profession-or-unknown-stock-retained' in park,
