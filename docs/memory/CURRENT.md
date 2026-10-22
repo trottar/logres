@@ -7,27 +7,29 @@ project: logres
 # Current State
 
 ## Active Objective
-Finish Logres trainer interaction polish and native UI integration without undoing working source-backed browsing or the available Blizzard fallback.
+Finish the tested Logres class-trainer replacement safely while extracting service-neutral NPC primitives. After trainer completion, implement native gossip first, merchant second, flight master third, all using the approved Logres trainer visual vocabulary.
 
 ## Current Work Item
-**P0302 — TRAINER OWNED INTERACTION HOVER / PREPARED; WSL AND WOW UNVERIFIED.** GitHub `main` P0301 `07bc028` verified. User screenshot shows Logres's **Train all (4, 39s)** agrees with Blizzard's **Train all (4, 39s)**, but does not show a bulk purchase. User requests hover feedback matching Quest Accept/Decline, whose shared `NPCDecisionVisual` brightens its label/rule on pointer entry. P0302 adds live-only gold hover wash/rule on local filter, scroll arrows and eligible Train selected/Train All controls, and a row-owned wash on selectable skills. Ineligible Train buttons remain visually inert. No native transaction change or stock frame manipulation.
+**P0303 R1 — NPC catalogue extraction / PREPARED; WSL and WoW UNVERIFIED.** Verified GitHub `main` is P0302 `05f8afc`. User reports P0302 hover PASS and successful real Train All purchase of every offered spell: **scoped P0301 bulk-transaction runtime PASS** (user report). P0303 extracts addon-owned filtering, bounded windowing and stable identity lookup into a neutral module. No new visual or native frame changes.
 
 ## Verified State
-- P0301 was pushed `07bc028`; **USER QUOTE VISUAL PASS** for four available skills at 39s. Actual multi-skill request, funds change and native learned-state remain **UNVERIFIED**.
-- P0300 Goodbye, P0299 search/filter, P0298 icons and P0295 selection were user-confirmed in prior WoW reports. P0296 had one user-confirmed successful single-skill purchase.
-- The P0301 trainer still runs an explicit H live trial with Blizzard's trainer beside it; final stock replacement remains **OPEN**. Not every scroll-slider gesture or lifecycle permutation has separate proof.
+- P0303 R0 stopped before tracked writes: 2/174 PREWRITE checkers failed (trainer TOC adjacency and evidence UNVERIFIED marker). R1 fixes both; no static or WoW PASS inferred.
+- Trainer search, filter, seven-row scrolling, local selection/details, spell art, single purchase, Train All, hover and Goodbye were user-confirmed within tested scopes.
+- The earlier P0301 screenshot verified the quote against Blizzard (four skills, 39s); latest user independently confirms actual Train All acquisition. No complete transaction audit or all edge cases is inferred.
+- Blizzard's trainer window currently remains visible alongside the explicitly activated H live trial; default opening/suppression and safe stock recovery remain OPEN.
+- D-046 fixture/model/shared-renderer/guarded-source/interaction and D-047 selective NPC integration rules remain authoritative. Accepted visual design is the existing portrait-free landscape, not new mockups.
 
 ## Next Action
-Apply guarded P0302 archive on exact clean P0301 `07bc028`; require full static suites PREWRITE and POSTWRITE, whitespace, memory, version and manifest PASS. User commits/pushes; independently verify remote. Deploy and `/reload`, normal class trainer → `/logres panel` → H — Integration and Polish → Live Trainer ON (TEST). Hover rows/filter/arrows and Train selected/Train All; verify enabled states glow and disabled states do not. Test click/scroll/search/Goodbye, stock fallback. Do not purchase solely to validate hover. Resume native presentation replacement assessment after this cosmetic checkpoint; require separate gate for stock restoration.
+Apply guarded P0303 to exact clean P0302 main. Require full prewrite/postwrite `tools/check_*.py`, version, memory, EOF and `git diff --check` PASS, then user commit/push and remote verification. Deploy/reload and verify no regression in trainer search, All/Available, row/slider browsing, selected details, hover, Goodbye and native stock. After PASS implement automatic trainer presentation and capability-gated native stock suppression/restoration, retaining stock fallback. Then proceed to gossip, merchant, flight master.
 
 ## Success Criteria
-Mouse feedback is visually obvious, consistent with Quest gold text/rule vocabulary and bounded to Logres-owned interactive hit regions. Hover is removed when the pointer leaves, a row is recycled, a local filter changes or the panel closes. Synthetic P preview, native probe, quote and transaction logic, icons, prices, category data and Blizzard frame ownership remain unchanged.
+`NPCServiceCatalogue.Filter/Window/Find` are source-neutral and used by trainer without new native reads; service indices remain independent of visible offsets. P fixture, seven-row visuals, click regions, search, costs, purchases, combat deferrals and Blizzard stock behavior unchanged. Runtime PASS is required for graduation, not just static checks.
 
 ## Do Not Reopen Without New Evidence
-Do not assert Train All transaction PASS from matching prices. Do not hide stock Blizzard surfaces until restoration and secure control are verified. Do not add mouse polling, native frame hooks or unrequested actions. Preserve P0294–P0297 negative evidence and the distinction between static checks and live runtime.
+Do not redesign approved trainer art, introduce portraits, hide Blizzard's trainer while dependent native data/transaction capabilities are unproved, invent flight routes, or copy speculative generic NPC UI. Preserve recorded negative evidence and unverified lifecycle/slider cases; no polling/unsafe protected or secret-value inspection.
 
 ## Relevant References
-- `docs/memory/evidence/P0302_TRAINER_HOVER_FEEDBACK.md`, `docs/memory/patches/P0302_TRAINER_HOVER_FEEDBACK.md`
-- `docs/memory/evidence/P0301_TRAINER_BULK_TRANSACTION.md`, `docs/memory/evidence/P0300_TRAINER_GOODBYE.md`
+- `docs/memory/evidence/P0303_NPC_SERVICE_CATALOGUE.md`, `docs/memory/patches/P0303_NPC_SERVICE_CATALOGUE.md`
+- `docs/memory/evidence/P0302_TRAINER_HOVER_FEEDBACK.md`, `docs/memory/evidence/P0301_TRAINER_BULK_TRANSACTION.md`
 - `docs/memory/decisions/D-046_PREVIEW_FIRST_UI_PIPELINE.md`, `docs/memory/decisions/D-047_SELECTIVE_NPC_PRESENTATION_AND_MODULARITY.md`
 - `docs/memory/handoffs/CURRENT_HANDOFF.md`, `docs/memory/investigations/ACTIVE.md`, `docs/memory/roadmap/STATUS.md`, `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`, `docs/ROADMAP.md`, `docs/memory/patches/PATCH_INDEX.md`

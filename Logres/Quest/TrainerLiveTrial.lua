@@ -208,24 +208,22 @@ end
 local function refreshBrowse()
     if not browse or not active or not active:IsShown() then return false end
     local model = browse.model
-    local matching = {}
-    for _, row in ipairs(model.catalog) do
+    -- Shared catalogue operations work exclusively on copied addon-owned rows.
+    -- Trainer-specific search/type requirements remain explicit in this adapter.
+    local matching = Logres.NPCServiceCatalogue.Filter(model.catalog, function(row)
         -- Selection belongs to a captured native service identity, not a
         -- filtered or recycled display slot. Hidden selection remains local.
         row.selected = row.serviceIndex == browse.selectedServiceIndex
-        if (not browse.availableOnly or row.sourceType == "available")
+        return (not browse.availableOnly or row.sourceType == "available")
             and (browse.searchQuery == "" or
-                string.find(row.name:lower(), browse.searchQuery, 1, true)) then
-            matching[#matching + 1] = row
-        end
-    end
+                string.find(row.name:lower(), browse.searchQuery, 1, true))
+    end)
+    if not matching then return false end
     local width = panel.landscape.maxRows
-    local lastStart = math.max(1, #matching - width + 1)
-    browse.offset = math.max(1, math.min(browse.offset, lastStart))
-    local rows = {}
-    for i = browse.offset, math.min(#matching, browse.offset + width - 1) do
-        rows[#rows + 1] = matching[i]
-    end
+    local rows, first, lastStart, finish =
+        Logres.NPCServiceCatalogue.Window(matching, browse.offset, width)
+    if not rows then return false end
+    browse.offset = first
     if #rows == 0 then
         rows[1] = {name="No matching sampled skills",
             requirement="Clear search or try All sampled",
@@ -245,7 +243,6 @@ local function refreshBrowse()
     model.trainEnabled = trainable
     model.trainLabel = trainable and "Train selected (TEST)" or "Stock Train"
     model.filters.mode = browse.availableOnly and "Available only" or "All sampled"
-    local finish = #matching == 0 and 0 or math.min(#matching, browse.offset + width - 1)
     model.profession = "Sampled " .. tostring(#model.catalog) .. " | "
         .. tostring(#matching) .. " match | " .. tostring(#matching == 0 and 0 or browse.offset)
         .. "-" .. tostring(finish)
@@ -549,13 +546,11 @@ local function attachBrowseControls(root, model, controls)
         if not ordinaryInput(button) or button ~= "LeftButton" or active ~= root
             or not browse or not browse.localChoiceConfirmed
             or not browse.model.trainEnabled then return end
-        local chosen
-        for _, entry in ipairs(browse.model.catalog) do
-            if entry.serviceIndex == browse.selectedServiceIndex then
-                chosen = entry
-                break
-            end
-        end
+        -- Visible slot numbers are not native service indices. Always locate
+        -- the selected source record before handing it to the purchase guard.
+        local chosen = Logres.NPCServiceCatalogue.Find(
+            browse.model.catalog, browse.selectedServiceIndex,
+            function(entry) return entry.serviceIndex end)
         if not chosen or not Logres.NPCTrainerPurchaseTrial then return end
         local accepted, reason = Logres.NPCTrainerPurchaseTrial.Attempt(
             chosen, browse.model.nativeSession)
