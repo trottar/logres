@@ -2,7 +2,7 @@
 ## Title: Logres
 ## Notes: Immersive, world-first interface for World of Warcraft Forever.
 ## Author: trottar
-## Version: 0.0.207-dev
+## Version: 0.0.208-dev
 ## SavedVariables: LogresDB, LogresDiagnosticsDB
 ## OptionalDeps: QuestieDB
 
@@ -88,3 +88,4 @@ Settings\Panel.lua
 Core\Lifecycle.lua
 UI\NPCServiceSession.lua
 UI\NPCServiceNativeParking.lua
+Quest\NPCTrainerFamilyProbe.lua

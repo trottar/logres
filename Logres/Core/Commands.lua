@@ -5261,6 +5261,24 @@ local function handleCommand(message)
         return
     end
 
+    if command == "trainerfamilycheck" then
+        -- P0307: one explicit READ-ONLY NPC family compatibility check.
+        -- The result holds only separately ordinary source fields.
+        local report = Logres.NPCTrainerFamilyProbe.Read()
+        emit(string.format(
+            "Logres trainer family: %s (type=%s interacting=%s root=%s shown=%s protected=%s profession=%s services=%s first=%s kind=%s rank=%s source=%s live=%s session=%s ready=%s transactions=%s nativeWrites=%s)",
+            tostring(report.status), tostring(report.interactionType),
+            tostring(report.interacting), tostring(report.nativeRoot),
+            tostring(report.nativeShown), tostring(report.nativeProtected),
+            tostring(report.professionTrainer), tostring(report.serviceCount),
+            tostring(report.service1), tostring(report.service1Type),
+            tostring(report.service1Rank), tostring(report.source),
+            tostring(report.live), tostring(report.session),
+            tostring(report.ready or "unknown"),
+            tostring(report.transactions), tostring(report.nativeWrites)))
+        return
+    end
+
     if command == "nativeframeaudit" then
         -- Read-only native metadata, explicitly requested in the developer panel.
         -- Do not use this to move/skin stock frames or infer service identity.
@@ -5998,6 +6016,12 @@ Logres:RegisterDevPanelAction(
     "nativeServicePolicyCheck",
     "Native NPC Services Check",
     "nativeservicepolicycheck",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "trainerFamilyCheck",
+    "Trainer Family Check (READ-ONLY)",
+    "trainerfamilycheck",
     "H"
 )
 Logres:RegisterDevPanelAction(
