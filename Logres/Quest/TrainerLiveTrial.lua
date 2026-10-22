@@ -181,6 +181,18 @@ function Trial.FromSnapshot(report)
 end
 
 function Trial.Disable(why)
+    -- Native Blizzard source/transaction root must be restored BEFORE Logres
+    -- drops interaction. If combat blocks this, keep Logres onscreen and
+    -- allow one PLAYER_REGEN_ENABLED retry; never strand invisible stock input.
+    if Logres.NPCServiceNativeParking then
+        local ok, restored = pcall(Logres.NPCServiceNativeParking.Restore,
+            "trial-exit-" .. tostring(why or "hidden"))
+        if not ok or restored ~= true then
+            Logres.NPCServiceNativeParking.DeferExit()
+            last = "stock-restore-pending"
+            return false, last
+        end
+    end
     -- A deliberate exit or completed request dismisses auto presentation for
     -- this specific NPC visit. Stock stays fully usable.
     if Logres.NPCServiceSession and (why == "goodbye" or why == "trial-hidden"
@@ -655,6 +667,16 @@ function Trial.Toggle(mode)
     end
     displays = displays + 1
     last = why == "native-snapshot-mapped-partial" and "live-partial-visible" or "live-read-only-visible"
+    -- Only after the fully usable Logres view is shown may the whole native
+    -- nonprotected trainer be parked. If anything defers, keep stock visible.
+    if Logres.NPCServiceNativeParking then
+        local ok, parked, parkWhy = pcall(Logres.NPCServiceNativeParking.Park, "trainer")
+        if not ok or parked ~= true then
+            last = "live-stock-visible-parking-deferred"
+        else
+            last = "live-native-parking-requested"
+        end
+    end
     return true, last
 end
 
@@ -663,7 +685,8 @@ function Trial.GetAudit()
         displays=displays, deferrals=deferrals, last=last,
         purchases=0, filterWrites=0, selectionWrites=0, nativeGeometryWrites=0,
         purchaseTrial=Logres.NPCTrainerPurchaseTrial.GetAudit(),
-        bulkTrial=Logres.NPCTrainerPurchaseTrial.GetBulkAudit()}
+        bulkTrial=Logres.NPCTrainerPurchaseTrial.GetBulkAudit(),
+        nativeParking=Logres.NPCServiceNativeParking.GetAudit()}
 end
 
 return Trial

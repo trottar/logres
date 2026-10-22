@@ -7,28 +7,27 @@ project: logres
 # Current State
 
 ## Active Objective
-Finish default trainer presentation with a verified event-driven NPC session, then establish safe Blizzard presentation restoration. Preserve the accepted portrait-free trainer and shared NPC foundations. After trainer: native gossip, merchant, flight master.
+Complete the verified Logres trainer as the default NPC service with recoverable native presentation. After trainer finalization: gossip, merchants, flight masters, preserving the approved portrait-free parchment visuals.
 
 ## Current Work Item
-**P0305 — TRAINER READINESS EVENT REPAIR / PREPARED; WSL AND WOW UNVERIFIED.** GitHub main P0304 `a493b9f` verified pushed. User reports automatic Logres opening FAIL when interacting with a trainer normally; manual H Live Trainer ON still works. P0304 session attempted opening during normalized interaction changes and native OnShow, but a lazy native trainer may not yet exist/be shown when the first callback runs, and native frame creation may miss initial OnShow hooking. P0305 adds source-scoped TRAINER_SHOW and TRAINER_UPDATE readiness reconciliation plus a bounded audit. Hypothesis remains UNVERIFIED until a normal in-game interaction succeeds.
+**P0306 — guarded whole-root trainer parking, PREPARED; WSL and WoW runtime UNVERIFIED.** Verified GitHub P0305 `c6ee091` pushed; user screenshot and report confirm P0305 automatic trainer opening, search/filter and working Logres controls, with duplicate Blizzard ClassTrainerFrame still visible. P0306 adds an authorized trainer-only use of a service-neutral native presentation parking module: after fully rendering Logres, capture stock frame anchors only as opaque restoration tokens, move the whole nonprotected shown root outside the screen, keep Blizzard APIs/IsShown available, and restore BEFORE Logres dismissal. This is an experimental client capability, not runtime PASS.
 
 ## Verified State
-- P0303 at `4f7f9b5` was pushed and user-confirmed no regression in search/filter/selection/scroll/hover/Goodbye or previously tested transactions.
-- P0304 `a493b9f` is pushed but **AUTO OPEN RUNTIME FAIL**: user reports no Logres panel on ordinary trainer interaction. H manual activation remains working; no screenshot or audit of readiness events yet. Do not call P0304 automatic entry PASS.
-- Previously confirmed user runtime scope: single and Train All purchases, icons, selection, local filtering, search, scroll and hover. Do not require new purchases to test an entry fix.
-- Blizzard ClassTrainerFrame must remain shown for the current native service and purchase guards. P0305 performs no native hiding, alpha mutation, protected setter, camera or transaction change.
+- P0305 default-on Logres at class trainer, search, filters and browse USER RUNTIME PASS. Blizzard window remains visible alongside it. P0304 first auto-opening failure is retained in evidence; P0305 fixed it.
+- Earlier one selected purchase, full Train All purchase, icons, selection, slider/wheel, search, filter, hover, Goodbye and shared P0303 catalogue were user-confirmed within tested scopes. Do not infer all session variants or purchase eligibility from those tests.
+- P0306 makes NO changes to Blizzard data/transaction APIs, class trainer purchase guards, camera, trainer visual geometry or synthetic P preview. Stock fallback remains mandatory.
 
 ## Next Action
-Apply P0305 guarded ZIP on exact clean P0304 `a493b9f`, requiring full shadow PREWRITE/POSTWRITE checker suites, version/memory/whitespace validation and manifest. User commits/pushes, then verify remote main. Deploy and `/reload`, visit a trainer normally **without H ON**. Logres should open once alongside stock. Check Goodbye suppresses re-entry for the visit, and close/reopen trainer starts a fresh session; H ON/OFF must still work. If auto entry still fails, gather `Logres.NPCServiceSession.GetAudit()` through existing diagnostics and mark runtime FAIL rather than adding speculative polling.
+Apply guarded P0306 on exact clean P0305 `c6ee091`; full PREWRITE and POSTWRITE static checker suites, whitespace, memory/version gates and manifest PASS. User commits/pushes; verify GitHub `main`. Deploy, `/reload`, open class trainer without H panel: confirm ONLY Logres is onscreen but native ClassTrainerFrame remains shown offscreen; search/filter/scroll work. Click Goodbye: stock Blizzard trainer should be restored before Logres disappears (intentional recovery test). Close stock trainer and reopen: Logres should auto-open and native park again. Use H OFF/ON; check natural combat or native close if practical. No purchase required. Any taint/secret/Lua failure or inaccessible stock is FAIL; preserve exact evidence and repair before production finalization.
 
 ## Success Criteria
-P0305 bridges the verified Forever TRAINER_SHOW/TRAINER_UPDATE readiness events to the existing service-neutral session without timers or broad frame hooks. Trainer is auto-opened at most once when native is actually ready; unmatched/unsupported state leaves stock UI fully usable. Per-visit dismissal, combat and stock fallback unchanged. UI visuals, P fixture, source snapshots and purchases unchanged.
+Whole nonprotected native root (not alpha-zero children) moves offscreen after successful Logres rendering; its native IsShown and purchase eligibility guard remain intact. Restore exact captured anchors without inspecting individual tokens BEFORE hiding Logres; postpone teardown if combat blocks restoration, retry only on PLAYER_REGEN_ENABLED. If capability is absent or frame conflicts, leave stock usable and Logres visible. No polling, repeated suppression hooks, native parenting or new camera code.
 
 ## Do Not Reopen Without New Evidence
-Do not suppress Blizzard stock root before proving safe recovery and continued native service access. Do not count a static pass as runtime success or replace missed signals with C_Timer, OnUpdate or blanket OnShow reassertion. Preserve P0304 runtime failure and earlier R0 static failures; do not fabricate a specific client event order from the reported symptom alone.
+Never declare P0306 parking working from source alone. Never claim native purchase success while parked until actually observed (prior purchases were with stock visible). Do not hide a protected frame, inspect secret anchor tokens, use alpha-zero invisible click regions, or drop Logres if native restore fails. Avoid unrelated UI redesign or general NPC service activation. Record failures and environmental deferrals.
 
 ## Relevant References
-- `docs/memory/evidence/P0305_TRAINER_READY_EVENT_REPAIR.md`, `docs/memory/patches/P0305_TRAINER_READY_EVENT_REPAIR.md`
-- `docs/memory/evidence/P0304_NPC_SESSION_AUTO_TRAINER.md`, `docs/memory/evidence/P0303_NPC_SERVICE_CATALOGUE.md`
+- `docs/memory/evidence/P0306_TRAINER_NATIVE_PARKING.md`, `docs/memory/patches/P0306_TRAINER_NATIVE_PARKING.md`
+- `docs/memory/evidence/P0305_TRAINER_READY_EVENT_REPAIR.md`, `docs/memory/evidence/P0303_NPC_SERVICE_CATALOGUE.md`
 - `docs/memory/decisions/D-046_PREVIEW_FIRST_UI_PIPELINE.md`, `docs/memory/decisions/D-047_SELECTIVE_NPC_PRESENTATION_AND_MODULARITY.md`
 - `docs/memory/handoffs/CURRENT_HANDOFF.md`, `docs/memory/investigations/ACTIVE.md`, `docs/memory/roadmap/STATUS.md`, `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`, `docs/ROADMAP.md`, `docs/memory/patches/PATCH_INDEX.md`
