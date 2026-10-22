@@ -7,27 +7,26 @@ project: logres
 # Current State
 
 ## Active Objective
-Restore Logres-owned local skill clicking in the accepted live trainer landscape, with catalogue-identity detail updates, native Blizzard transaction ownership and fail-open fallback. No native trainer replacement is authorized.
+Test one expressly user-initiated, guarded Logres trainer purchase without removing Blizzard fallback; repair the live catalogue's inert scrollbar and preserve proven local selection.
 
 ## Current Work Item
-**P0295 — LIVE ROW INPUT PRIORITY REPAIR / PREPARED; WSL AND WOW UNVERIFIED.** Verified GitHub `main` P0294 `43802394`. User screenshots show **P0294 RUNTIME PARTIAL PASS / SELECTION FAIL**: filters toggle between 64 sampled and 5 available; list scrolling works; clicking Logres spell rows does not select. P0294 added separate row hit frames without establishing priority over the existing full-list mousewheel frame. The overlapping input layer is a source-supported hypothesis, not yet proven as the sole runtime cause. P0295 makes the row hit regions children of that wheel surface, with explicit addon-owned frame levels above the wheel and rendered rows. No data model or transaction API changes.
+**P0296 — LIVE SCROLLBAR AND SINGLE-SKILL TRAIN TEST / PREPARED; WSL AND WOW UNVERIFIED.** GitHub `main` P0295 `7b1a459` verified. User screenshot and report establish local spell clicks, selected detail updates, local filtering and wheel scrolling PASS. **SCROLLBAR FAIL:** P0295 scroll thumb is static artwork, does not track offset, and cannot be dragged or clicked. P0296 replaces only the LIVE thumb with an addon-owned vertical Slider synchronized with the existing bounded offset; P fixture keeps its inert thumb. Separately, an explicit Train selected (TEST) hit region invokes an isolated capability-gated one-service controller, not native Train All. It checks live Forever six-field identity, cost, remaining funds, trainer identity/session, combat/protection and snapshot service count at click time. Native buyer may still reject the action; no successful purchase is assumed without in-game evidence.
 
 ## Verified State
-- **P0294 pushed `43802394` / USER RUNTIME SELECTION FAIL:** Local All sampled / Available only filtering PASS; scrolling PASS by user report; row clicks FAIL. No claim of purchase, native interaction, or lifecycle replacement. Existing native selection still determines the initial detail pane.
-- **P0293 pushed `5e50fd2` / USER RUNTIME PARTIAL PASS:** 64-row snapshot, native source fidelity, seven visible rows and local filtering. Native filters limit the source before Logres samples it.
-- **Sidebar category gap OPEN:** `Visible services` is a noninteractive placeholder in the live adapter. True source-backed grouping is not implemented; synthetic P categories remain visual fixtures.
+- **P0295 pushed `7b1a459` / USER RUNTIME LOCAL SELECTION PASS:** screenshot shows Curse of Recklessness clicked with matching icon, requirements and description; wheel scrolling and filters work. No verified native purchase, Train All, or native UI replacement.
+- **P0295 native-like scrollbar OPEN / FAIL:** gold thumb was painter-only, not attached to scroll offset or hit region. Older rail arrows remain separate and must be retested.
+- **Sidebar `Visible services` remains OPEN:** inert live placeholder, not source-backed categorical navigation.
 
 ## Next Action
-Apply guarded P0295 ZIP against exact clean P0294 `43802394`; require full PREWRITE and POSTWRITE static suite, memory and version-policy checks, candidate whitespace check, manifest and `git diff --check`. User pushes; independently verify new main. Deploy and `/reload`; use `/logres panel` → H — Integration and Polish → Live Trainer ON (TEST). Click at least three different rows, check immediate selected highlight and detail text/icon, wheel on rows, arrows, filter transitions, OFF and trainer close. Blizzard's trainer selected skill and transactions must stay unchanged. No forced purchases/combat.
+Apply guarded P0296 archive to clean exact P0295 main, run complete prewrite/postwrite static checks, whitespace and manifest gates. User pushes; verify remote. Deploy and `/reload`; open trainer, H panel → Live Trainer ON (TEST). Verify live gold thumb movement with wheel, track click/drag, arrow movement, local filter/clamp and preserved row clicking. Click an eligible affordable Logres skill, then click **Train selected (TEST)** once only if intentionally willing to spend its displayed gold. Verify Blizzard actually learned the specific skill, spent correct funds and remains usable; absence of error alone is NOT purchase proof. OFF/close restores inert regions. Native Train All is out of scope.
 
 ## Success Criteria
-Addon-owned row regions receive clicks ahead of the list-wheel surface while retaining wheel input, using native service identity rather than row offset. Hidden-filtered selection persists and restores highlight. Zero native selection/filter/purchase writes; no interactive hit regions after OFF or native context exit. Synthetic P remains inert. Static PASS is not runtime PASS.
+Offset and slider value are synchronized without OnUpdate/polling; synthetic preview remains inert. Explicit purchase requests are single service, native-index-stable and abort on changed source/secret/visibility/combat/funds/eligibility; never use cached status alone or automatically reattempt. Blizzard stock training remains accessible even on a blocked or failed Logres request. Actual purchase is pending runtime proof.
 
 ## Do Not Reopen Without New Evidence
-Do not fix input with polling, blanket Blizzard suppression, protected frame mutation, native service selection or invented purchases. Do not mistake the `Visible services` placeholder for genuine categorization. Preserve the failure in P0295 evidence and verify in WoW before advancing.
+No automatic Train All, stock suppression, native frame reparenting, polling or inferred eligibility from numeric category. No false claims of transaction success from `pcall`; source-dependent service indices must be rechecked. Preserve unresolved category sidebar and lifecycle deferrals.
 
 ## Relevant References
-- `docs/memory/evidence/P0295_TRAINER_ROW_HIT_PRIORITY.md`, `docs/memory/patches/P0295_TRAINER_ROW_HIT_PRIORITY.md`
-- `docs/memory/evidence/P0294_TRAINER_LOCAL_SELECTION.md`, `docs/memory/evidence/P0293_TRAINER_LOCAL_BROWSE.md`
-- `docs/memory/decisions/D-046_PREVIEW_FIRST_UI_PIPELINE.md`, `docs/memory/decisions/D-047_SELECTIVE_NPC_PRESENTATION_AND_MODULARITY.md`
+- `docs/memory/evidence/P0296_TRAINER_SCROLL_TRAIN_TEST.md`, `docs/memory/patches/P0296_TRAINER_SCROLL_TRAIN_TEST.md`
+- `docs/memory/evidence/P0295_TRAINER_ROW_HIT_PRIORITY.md`, D-046/D-047
 - `docs/memory/handoffs/CURRENT_HANDOFF.md`, `docs/memory/investigations/ACTIVE.md`, `docs/memory/roadmap/STATUS.md`, `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`, `docs/ROADMAP.md`, `docs/memory/patches/PATCH_INDEX.md`

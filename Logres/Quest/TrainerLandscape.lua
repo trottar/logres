@@ -245,7 +245,10 @@ function Landscape.Render(owner, model)
             end
         end
         rect(owner, g.list.x + g.list.w - 16, g.list.y + 8, 3, g.list.h - 18, p.rail)
-        rect(owner, g.list.x + g.list.w - 18, g.list.y + 14, 7, 93, p.gold)
+        if not view.localBrowse then
+            -- P fixture retains static decorative thumb; LIVE uses owned Slider.
+            rect(owner, g.list.x + g.list.w - 18, g.list.y + 14, 7, 93, p.gold)
+        end
 
         -- Continuous lower detail section, spanning list and sidebar.
         rect(owner, 30, g.detail.y - 12, config.width - 60, 1, p.gold)
@@ -296,8 +299,9 @@ function Landscape.Render(owner, model)
             view.trainAll.enabled and p.goldText or p.muted, "CENTER")
         local train = frame(owner, g.train.x, g.train.y, g.train.w, g.train.h)
         created[#created + 1] = train
-        text(train, view.trainLabel, 0, 0, g.train.w, g.train.h,
+        local trainText = text(train, view.trainLabel, 0, 0, g.train.w, g.train.h,
             "GameFontHighlight", view.trainEnabled and p.goldText or p.muted, "CENTER")
+        if view.localBrowse then liveControls.trainText = trainText end
         text(owner, view.footnote, 34, config.height - 29,
             config.width - 68, 17, "GameFontHighlightSmall", p.muted, "CENTER")
 
@@ -349,6 +353,9 @@ function Landscape.UpdateLiveRows(controls, view)
     end
     controls.filterMode:SetText(view.filters.mode)
     controls.statusText:SetText(view.profession)
+    if not controls.trainText then return false end
+    controls.trainText:SetText(view.trainLabel)
+    controls.trainText:SetTextColor(unpack(view.trainEnabled and p.goldText or p.muted))
     if not controls.detail then return false end
     controls.detail.icon:SetTexture(view.selected.icon)
     controls.detail.name:SetText(view.selected.name)

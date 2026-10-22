@@ -132,7 +132,14 @@ function Trial.FromSnapshot(report)
                 price=recognized and price(native.cost) or "Cost unknown",
                 icon=texture, selected=selectedRow, disabled=false,
                 sourceType=native.state == "forever-service-observed" and native.serviceType or nil,
-                description=recognized and native.description or nil}
+                description=recognized and native.description or nil,
+                -- These already secret-gated source copies are only used for
+                -- click-time live verification, never cached authorization.
+                sourceName=hasName and native.name or nil,
+                sourceRank=type(native.rank) == "string" and native.rank or "",
+                sourceTextureID=native.textureID,
+                sourceRequiredLevel=native.requiredLevel,
+                costCopper=type(native.cost) == "number" and native.cost or nil}
             row.requirement = requirement
             rows[#rows + 1] = row
             if hasName then visibleNamed = visibleNamed + 1
@@ -158,6 +165,7 @@ function Trial.FromSnapshot(report)
         categories={"Visible services"}, activeCategory=1,
         profession="Sampled: " .. tostring(#catalog) .. " | showing 1-" .. tostring(#rows),
         rows=rows, catalog=catalog, localBrowse=true,
+        nativeSession={total=report.total, trainerName=report.trainerName},
         selected={name=selected and selected.name or "Selection outside view",
             requirement=selected and selected.requirement or "Availability not classified",
             description=selected and bounded(selected.description, 260) and selected.description
@@ -220,6 +228,18 @@ local function refreshBrowse()
             price="", icon=placeholder, selected=false, disabled=true}
     end
     model.rows = rows
+    local trainable = false
+    if browse.localChoiceConfirmed then
+        for _, entry in ipairs(model.catalog) do
+            if entry.serviceIndex == browse.selectedServiceIndex
+                and entry.sourceType == "available" then
+                trainable = true
+                break
+            end
+        end
+    end
+    model.trainEnabled = trainable
+    model.trainLabel = trainable and "Train selected (TEST)" or "Stock Train"
     model.filters.mode = browse.availableOnly and "Available only" or "All sampled"
     local finish = #matching == 0 and 0 or math.min(#matching, browse.offset + width - 1)
     model.profession = "Sampled " .. tostring(#model.catalog) .. " | "
@@ -227,6 +247,21 @@ local function refreshBrowse()
         .. "-" .. tostring(finish)
     if not Logres.NPCTrainerLandscape.UpdateLiveRows(browse.controls, model) then
         return false
+    end
+    -- Keep the live thumb synchronized with wheel, arrows, filtering and drag.
+    if browse.scrollSlider then
+        browse.syncSlider = true
+        browse.scrollSlider:SetMinMaxValues(1, lastStart)
+        browse.scrollSlider:SetValue(browse.offset)
+        if lastStart > 1 then
+            local railLength = panel.landscape.geometry.list.h - 72
+            local thumbHeight = math.max(18, math.floor(railLength * width / #matching))
+            browse.scrollThumb:SetSize(8, math.min(railLength, thumbHeight))
+            browse.scrollSlider:Show()
+        else
+            browse.scrollSlider:Hide()
+        end
+        browse.syncSlider = false
     end
     -- Empty-state copy is not a skill; never leave an invisible hit region.
     for i, hit in ipairs(browse.rowHits or {}) do
@@ -254,6 +289,7 @@ local function selectLocalRow(position)
     end
     if not chosen then return end
     browse.selectedServiceIndex = chosen.serviceIndex
+    browse.localChoiceConfirmed = true
     for _, entry in ipairs(browse.model.catalog) do
         entry.selected = entry.serviceIndex == chosen.serviceIndex
     end
@@ -279,7 +315,8 @@ local function attachBrowseControls(root, model, controls)
         if row.selected then initiallySelected = row.serviceIndex; break end
     end
     browse = {model=model, controls=controls, offset=1, availableOnly=false,
-        selectedServiceIndex=initiallySelected, rowHits={}}
+        selectedServiceIndex=initiallySelected, rowHits={},
+        localChoiceConfirmed=false}
     -- These children alone receive pointer input; the underlying approved
     -- landscape and all Blizzard controls remain without Logres actions.
     local filter = CreateFrame("Frame", nil, root)
@@ -323,6 +360,38 @@ local function attachBrowseControls(root, model, controls)
         label:SetAllPoints(control)
         label:SetText(arrow.glyph)
     end
+    -- P0296: actual LIVE slider. The accepted synthetic preview still
+    -- paints an inert gold thumb; the source controller owns drag and track.
+    local rail = CreateFrame("Slider", nil, root)
+    rail:SetPoint("TOPLEFT", root, "TOPLEFT", geometry.list.x + geometry.list.w - 26,
+        -(geometry.list.y + 36))
+    rail:SetSize(20, geometry.list.h - 72)
+    rail:SetOrientation("VERTICAL")
+    rail:SetFrameLevel(wheel:GetFrameLevel() + 4)
+    rail:SetMinMaxValues(1, 1)
+    rail:SetValueStep(1)
+    rail:SetThumbTexture("Interface\Buttons\WHITE8x8")
+    local thumb = rail:GetThumbTexture()
+    thumb:SetVertexColor(0.82, 0.59, 0.25, 0.95)
+    thumb:SetSize(8, 24)
+    rail:SetScript("OnValueChanged", function(_, value)
+        if not browse or browse.syncSlider or active ~= root
+            or not ordinaryInput(value) or type(value) ~= "number" then return end
+        local newOffset = math.floor(value + 0.5)
+        if newOffset ~= browse.offset then
+            browse.offset = newOffset
+            refreshBrowse()
+        end
+    end)
+    rail:EnableMouseWheel(true)
+    rail:SetScript("OnMouseWheel", function(_, delta)
+        if active == root and browse and ordinaryInput(delta)
+            and type(delta) == "number" and delta ~= 0 then
+            moveBrowse(delta > 0 and -1 or 1)
+        end
+    end)
+    browse.scrollSlider = rail
+    browse.scrollThumb = thumb
     -- Draw only over the seven named catalogue rows. Each region handles
     -- wheel input too, so the existing list scroll is not lost on hover.
     for i = 1, panel.landscape.maxRows do
@@ -349,6 +418,33 @@ local function attachBrowseControls(root, model, controls)
         end)
         browse.rowHits[i] = hit
     end
+    -- A deliberate physical click: never train on local row selection itself.
+    local trainHit = CreateFrame("Frame", nil, root)
+    trainHit:SetPoint("TOPLEFT", root, "TOPLEFT", geometry.train.x, -geometry.train.y)
+    trainHit:SetSize(geometry.train.w, geometry.train.h)
+    trainHit:SetFrameLevel(wheel:GetFrameLevel() + 2)
+    trainHit:EnableMouse(true)
+    trainHit:SetScript("OnMouseUp", function(_, button)
+        if not ordinaryInput(button) or button ~= "LeftButton" or active ~= root
+            or not browse or not browse.localChoiceConfirmed
+            or not browse.model.trainEnabled then return end
+        local chosen
+        for _, entry in ipairs(browse.model.catalog) do
+            if entry.serviceIndex == browse.selectedServiceIndex then
+                chosen = entry
+                break
+            end
+        end
+        if not chosen or not Logres.NPCTrainerPurchaseTrial then return end
+        local accepted, reason = Logres.NPCTrainerPurchaseTrial.Attempt(
+            chosen, browse.model.nativeSession)
+        if accepted then
+            -- Stock remains accessible; this sample is stale after a buy request.
+            Trial.Disable("native-purchase-requested-unconfirmed")
+        else
+            last = "native-purchase-deferred-" .. tostring(reason)
+        end
+    end)
 end
 
 function Trial.Toggle(mode)
@@ -407,7 +503,8 @@ end
 function Trial.GetAudit()
     return {shown=active and active:IsShown() or false,
         displays=displays, deferrals=deferrals, last=last,
-        purchases=0, filterWrites=0, selectionWrites=0, nativeGeometryWrites=0}
+        purchases=0, filterWrites=0, selectionWrites=0, nativeGeometryWrites=0,
+        purchaseTrial=Logres.NPCTrainerPurchaseTrial.GetAudit()}
 end
 
 return Trial
