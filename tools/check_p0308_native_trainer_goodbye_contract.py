@@ -44,7 +44,7 @@ need('Logres.NPCServiceNativeParking.Restore,' in v and 'if not ok or restored ~
 for x in ('local okProfession, family = pcall(function() return _G.IsTradeskillTrainer end)',
           'if not okProfession or not ordinary(family)',
           'local okFamily, profession = pcall(family)',
-          'if not okFamily or not ordinary(profession) or profession ~= false then',
+          'if not okFamily or not ordinary(profession)',
           'profession-or-unknown-stock-retained',
           'trainer-family-api-unavailable-stock-retained'):
     need(x in park, 'profession native transaction fallback gate missing: '+x)

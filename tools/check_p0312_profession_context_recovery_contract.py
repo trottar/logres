@@ -29,8 +29,9 @@ for token in ('model.professionContext = Logres.NPCTrainerProfessionContext.Read
               'Logres.NPCTrainerCloseTrial.RequestClose()',
               'Logres.NPCTrainerProfessionPurchaseTrial.Attempt('):
     need(token in v,'live trainer integration: '+token)
-need('NPCTrainerProfessionCloseTrial.RequestClose()' not in v,
-     'profession Goodbye must remain Logres-only pending complete replacement')
+need('NPCTrainerProfessionCloseTrial.RequestClose()' in v
+     and 'browse.stockParked == true' in v,
+     'P0314 parked-only profession native close; unparked remains stock-owned')
 need('if dismissed and canClose then' in v,'class native Goodbye must still work')
 need('Logres.NPCTrainerLiveTrial.RefreshEmptyFromSource()' in s and
      'Logres:RegisterEvent("TRAINER_UPDATE"' in s,

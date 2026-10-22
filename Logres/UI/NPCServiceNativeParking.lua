@@ -134,6 +134,21 @@ local function placementConflict()
     return false
 end
 
+-- P0314: one-shot native profession capability. It cannot be left armed
+-- after an exception, and only the caller's installed Blizzard UI fallback
+-- authorizes parking; all native safety checks still run inside Park.
+local professionPermit = false
+function Parking.ParkProfession(key)
+    if key ~= "trainer" or parked then
+        return defer("profession-park-not-ready")
+    end
+    professionPermit = true
+    local called, accepted, reason = pcall(Parking.Park, key)
+    professionPermit = false
+    if not called then return defer("profession-park-call-rejected") end
+    return accepted, reason
+end
+
 function Parking.Park(key)
     attempts = attempts + 1
     local spec = permitted[key]
@@ -158,7 +173,13 @@ function Parking.Park(key)
         return defer("trainer-family-api-unavailable-stock-retained")
     end
     local okFamily, profession = pcall(family)
-    if not okFamily or not ordinary(profession) or profession ~= false then
+    if not okFamily or not ordinary(profession)
+        or type(profession) ~= "boolean" then
+        return defer("profession-or-unknown-stock-retained")
+    end
+    -- Class trainers use the original unarmed route. Profession trainers
+    -- require a single armed call after Logres has attached Blizzard UI.
+    if profession == true and not professionPermit then
         return defer("profession-or-unknown-stock-retained")
     end
     if placementConflict() then return defer("native-placement-conflict") end

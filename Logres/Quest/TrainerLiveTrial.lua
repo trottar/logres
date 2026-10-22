@@ -461,9 +461,17 @@ local function attachBrowseControls(root, model, controls)
             local family = browse and browse.model.nativeSession.profession
             local canClose = Logres.NPCTrainerCloseTrial
                 and family == false and Logres.NPCTrainerCloseTrial.CanClose()
+            -- A profession native-close request is safe only if its stock
+            -- frame was parked behind an explicit, usable restoration route.
+            local canCloseProfession = family == true and browse
+                and browse.stockParked == true
+                and Logres.NPCTrainerProfessionCloseTrial
+                and Logres.NPCTrainerProfessionCloseTrial.CanClose()
             local dismissed = Trial.Disable("goodbye")
             if dismissed and canClose then
                 Logres.NPCTrainerCloseTrial.RequestClose()
+            elseif dismissed and canCloseProfession then
+                Logres.NPCTrainerProfessionCloseTrial.RequestClose()
             end
         end
     end)
@@ -668,6 +676,13 @@ local function attachBrowseControls(root, model, controls)
         return browse and browse.model.trainAll.enabled == true
     end, controls.trainAllText)
     bulkHit:SetScript("OnMouseUp", function(_, button)
+        -- Profession Train All does not exist. This SAME visible slot gives
+        -- the player immediate native fallback even for an empty catalogue.
+        if ordinaryInput(button) and button == "LeftButton" and active == root
+            and browse and browse.model.professionStockFallback == true then
+            Trial.Disable("trial-hidden")
+            return
+        end
         if not ordinaryInput(button) or button ~= "LeftButton" or active ~= root
             or not browse or not browse.model.trainAll.enabled or not browse.model.bulkQuote
             or not Logres.NPCTrainerPurchaseTrial then return end
@@ -730,6 +745,13 @@ function Trial.Toggle(mode)
             model.bulkQuote = nil
         end
     end
+    -- P0314: profession class Train All is NEVER called. Reuse its visible
+    -- lower-right slot for permanent, click-driven native stock recovery.
+    -- The click calls Disable, which restores opaque anchors BEFORE hiding.
+    if model.nativeSession.profession == true then
+        model.professionStockFallback = true
+        model.trainAll = {label="Blizzard UI", enabled=true}
+    end
     -- A fresh addon-owned panel prevents stale rows after native filter changes.
     -- It is mouse-inert; all Blizzard-native selection/training remains available.
     local ok, owner, controls = pcall(function()
@@ -770,11 +792,29 @@ function Trial.Toggle(mode)
     -- Only after the fully usable Logres view is shown may the whole native
     -- nonprotected trainer be parked. If anything defers, keep stock visible.
     if not model.emptyService and Logres.NPCServiceNativeParking then
-        local ok, parked, parkWhy = pcall(Logres.NPCServiceNativeParking.Park, "trainer")
+        local ok, parked, parkWhy
+        if model.professionStockFallback then
+            ok, parked, parkWhy = pcall(Logres.NPCServiceNativeParking.ParkProfession, "trainer")
+        else
+            ok, parked, parkWhy = pcall(Logres.NPCServiceNativeParking.Park, "trainer")
+        end
         if not ok or parked ~= true then
             last = "live-stock-visible-parking-deferred"
         else
+            browse.stockParked = true
             last = "live-native-parking-requested"
+        end
+    end
+    -- Empty profession sessions still need a coherent single Logres window.
+    -- The Blizzard UI action is visible before any attempt to park stock.
+    if model.emptyService and model.professionStockFallback
+        and Logres.NPCServiceNativeParking then
+        local ok, parked = pcall(Logres.NPCServiceNativeParking.ParkProfession, "trainer")
+        if ok and parked == true then
+            browse.stockParked = true
+            last = "empty-profession-native-parked"
+        else
+            last = "empty-profession-stock-visible-fallback"
         end
     end
     return true, last

@@ -50,9 +50,11 @@ for x in ('local canClose = Logres.NPCTrainerCloseTrial',
           'professionClose=Logres.NPCTrainerProfessionCloseTrial.GetAudit()',
           'filterState=Logres.NPCTrainerFilterState.GetAudit()'):
     need(x in v,'existing trainer UI/source/close integration missing: '+x)
-# P0312 supersession: user rejected native close while profession stock is still required.
-need('NPCTrainerProfessionCloseTrial.RequestClose()' not in v,
-     'P0312: native profession close must be inactive pending full replacement')
+# P0314 supersession of P0312 blanket ban: native close is allowed ONLY
+# after the verified parked-session restoration path; stock-only stays open.
+need('NPCTrainerProfessionCloseTrial.RequestClose()' in v
+     and 'browse.stockParked == true' in v,
+     'P0314 profession close must be gated by successful reversible parking')
 need('P0312' in read('docs/memory/evidence/P0312_PROFESSION_CONTEXT_RECOVERY.md'),
      'P0311 native-close regression and reversal not preserved')
 need('scalar(api("IsTradeskillTrainer")) ~= false' in old,

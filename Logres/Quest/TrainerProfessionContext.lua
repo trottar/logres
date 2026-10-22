@@ -182,7 +182,7 @@ function Context.Focus(context, catalog)
         end
     end
     local detail = nextTier and ("Next: " .. nextTier .. " at " .. tostring(threshold))
-        or (#catalog == 0 and "No listed training services" or "See offered training")
+        or (#catalog == 0 and "No additional lessons shown" or "Review lessons on the right")
     return {title=name .. " trainer", rank=rank, detail=detail}
 end
 

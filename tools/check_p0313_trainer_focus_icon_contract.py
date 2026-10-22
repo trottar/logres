@@ -19,7 +19,7 @@ for x in ('function Context.Read()', 'function Context.Focus(context, catalog)',
           'sourceSkillRequirement', 'GetTrainerGreetingText',
           'C_TooltipInfo', 'GetUnit', 'ordinary(payload)',
           'ordinary(lines)', 'ordinary(label)', 'wholeWord',
-          'Owned rank not verified', 'No listed training services'):
+          'Owned rank not verified', 'No additional lessons shown'):
     need(x in a, 'profession source / focus missing '+x)
 for bad in ('BuyTrainerService(', 'CloseTrainer(', 'SetTrainerServiceTypeFilter(',
             'SelectTrainerService(', 'SetPoint(', 'OnUpdate', 'C_Timer.'):
@@ -29,7 +29,8 @@ for x in ('trainerFocus = {', 'model.trainerFocus = Logres.NPCTrainerProfessionC
           'function Trial.RefreshEmptyFromSource()',
           'Logres.NPCTrainerCloseTrial.RequestClose()'):
     need(x in l or x in v,'shared view/live integration missing '+x)
-need('NPCTrainerProfessionCloseTrial.RequestClose()' not in v,'profession Goodbye must stay Logres-only')
+need('NPCTrainerProfessionCloseTrial.RequestClose()' in v and 'browse.stockParked == true' in v,
+     'P0314 profession close only after successful reversible native parking')
 for x in ('view.trainerFocus', 'view.professionContext', 'Your professions',
           'Current trainer', 'view.emptyFixtureIconFix',
           'live = live or owner.logresEmptyFixtureIconFix == true',
