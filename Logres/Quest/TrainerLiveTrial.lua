@@ -158,11 +158,11 @@ function Trial.FromSnapshot(report)
     local model = {
         title=bounded(report.trainerName, 90) and report.trainerName or "Trainer services",
         subtitle="LIVE SOURCE  /  BLIZZARD TRANSACTIONS",
-        search="Search (stock)",
+        search="Search spells...",
         filters={label="Filters", mode="All sampled", categorized=false},
         funds={label="Funds", gold=g, silver=s, copper=c},
         trainAll={label="Train All unavailable", enabled=false},
-        categories={"Visible services"}, activeCategory=1,
+        categories={"Sampled skills"}, activeCategory=1,
         profession="Sampled: " .. tostring(#catalog) .. " | showing 1-" .. tostring(#rows),
         rows=rows, catalog=catalog, localBrowse=true,
         nativeSession={total=report.total, trainerName=report.trainerName},
@@ -181,6 +181,7 @@ function Trial.FromSnapshot(report)
 end
 
 function Trial.Disable(why)
+    if browse and browse.searchEdit then browse.searchEdit:ClearFocus() end
     browse = nil
     if active then active:Hide(); active = nil end
     last = why or "trial-hidden"
@@ -212,7 +213,9 @@ local function refreshBrowse()
         -- Selection belongs to a captured native service identity, not a
         -- filtered or recycled display slot. Hidden selection remains local.
         row.selected = row.serviceIndex == browse.selectedServiceIndex
-        if not browse.availableOnly or row.sourceType == "available" then
+        if (not browse.availableOnly or row.sourceType == "available")
+            and (browse.searchQuery == "" or
+                string.find(row.name:lower(), browse.searchQuery, 1, true)) then
             matching[#matching + 1] = row
         end
     end
@@ -224,13 +227,14 @@ local function refreshBrowse()
         rows[#rows + 1] = matching[i]
     end
     if #rows == 0 then
-        rows[1] = {name="No matching sampled services", requirement="Try All sampled",
+        rows[1] = {name="No matching sampled skills",
+            requirement="Clear search or try All sampled",
             price="", icon=placeholder, selected=false, disabled=true}
     end
     model.rows = rows
     local trainable = false
     if browse.localChoiceConfirmed then
-        for _, entry in ipairs(model.catalog) do
+        for _, entry in ipairs(matching) do
             if entry.serviceIndex == browse.selectedServiceIndex
                 and entry.sourceType == "available" then
                 trainable = true
@@ -315,10 +319,50 @@ local function attachBrowseControls(root, model, controls)
         if row.selected then initiallySelected = row.serviceIndex; break end
     end
     browse = {model=model, controls=controls, offset=1, availableOnly=false,
-        selectedServiceIndex=initiallySelected, rowHits={},
+        selectedServiceIndex=initiallySelected, rowHits={}, searchQuery="",
         localChoiceConfirmed=false}
     -- These children alone receive pointer input; the underlying approved
     -- landscape and all Blizzard controls remain without Logres actions.
+    -- P0299: live-only keyboard field over the existing search art.
+    -- Restricted to the left segment; never overlaps the owned Filters hitbox.
+    local searchEdit = CreateFrame("EditBox", nil, root)
+    searchEdit:SetPoint("TOPLEFT", root, "TOPLEFT",
+        geometry.search.x + 11, -(geometry.search.y + 3))
+    searchEdit:SetSize(geometry.filters.x - geometry.search.x - 18,
+        geometry.search.h - 6)
+    searchEdit:EnableMouse(true)
+    searchEdit:SetFrameLevel(root:GetFrameLevel() + 8)
+    searchEdit:SetFontObject("GameFontHighlightSmall")
+    searchEdit:SetTextColor(0.94, 0.84, 0.68, 1)
+    searchEdit:SetAutoFocus(false)
+    searchEdit:SetMaxLetters(48)
+    searchEdit:SetText("")
+    searchEdit:SetScript("OnTextChanged", function(self)
+        if not browse or active ~= root then return end
+        local ok, value = pcall(function() return self:GetText() end)
+        if not ok or not ordinaryInput(value) or type(value) ~= "string"
+            or #value > 48 then return end
+        browse.controls.searchHint:SetText("")
+        local query = string.lower(value)
+        if query == browse.searchQuery then return end
+        browse.searchQuery = query
+        browse.offset = 1
+        refreshBrowse()
+    end)
+    searchEdit:SetScript("OnEditFocusGained", function()
+        if browse and active == root then browse.controls.searchHint:SetText("") end
+    end)
+    searchEdit:SetScript("OnEditFocusLost", function(self)
+        if not browse or active ~= root then return end
+        local ok, value = pcall(function() return self:GetText() end)
+        if ok and ordinaryInput(value) and type(value) == "string"
+            and #value == 0 then
+            browse.controls.searchHint:SetText("Search spells...")
+        end
+    end)
+    searchEdit:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
+    searchEdit:SetScript("OnEnterPressed", function(self) self:ClearFocus() end)
+    browse.searchEdit = searchEdit
     local filter = CreateFrame("Frame", nil, root)
     filter:SetPoint("TOPLEFT", root, "TOPLEFT", geometry.filters.x, -geometry.filters.y)
     filter:SetSize(geometry.filters.w, geometry.filters.h)

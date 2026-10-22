@@ -190,8 +190,13 @@ function Landscape.Render(owner, model)
         created[#created + 1] = filter
         -- Search, filter and category mode are inert fixture illustrations.
         -- Native Blizzard filter controls remain untouched in H mode.
-        text(filter, view.search, 14, 2, g.search.w - 108, 24,
-            "GameFontHighlightSmall", p.muted)
+        if view.localBrowse then
+            liveControls.searchHint = text(filter, view.search, 14, 2,
+                g.search.w - 108, 24, "GameFontHighlightSmall", p.muted)
+        else
+            text(filter, view.search, 14, 2, g.search.w - 108, 24,
+                "GameFontHighlightSmall", p.muted)
+        end
         rect(owner, g.filters.x, g.filters.y, g.filters.w, g.filters.h,
             p.sidebarWash)
         local filterBadge = frame(owner, g.filters.x, g.filters.y,
