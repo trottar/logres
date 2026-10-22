@@ -396,7 +396,14 @@ local function attachBrowseControls(root, model, controls)
     end)
     goodbye:SetScript("OnMouseUp", function(_, button)
         if ordinaryInput(button) and button == "LeftButton" and active == root then
-            Trial.Disable("goodbye")
+            -- Native-close intent is class-only; stock is restored BEFORE
+            -- issuing any close request. If either gate fails, stock stays.
+            local canClose = Logres.NPCTrainerCloseTrial
+                and Logres.NPCTrainerCloseTrial.CanClose()
+            local dismissed = Trial.Disable("goodbye")
+            if dismissed and canClose then
+                Logres.NPCTrainerCloseTrial.RequestClose()
+            end
         end
     end)
     -- P0299: live-only keyboard field over the existing search art.
@@ -686,7 +693,8 @@ function Trial.GetAudit()
         purchases=0, filterWrites=0, selectionWrites=0, nativeGeometryWrites=0,
         purchaseTrial=Logres.NPCTrainerPurchaseTrial.GetAudit(),
         bulkTrial=Logres.NPCTrainerPurchaseTrial.GetBulkAudit(),
-        nativeParking=Logres.NPCServiceNativeParking.GetAudit()}
+        nativeParking=Logres.NPCServiceNativeParking.GetAudit(),
+        nativeClose=Logres.NPCTrainerCloseTrial.GetAudit()}
 end
 
 return Trial

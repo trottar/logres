@@ -1,0 +1,25 @@
+# P0308 — class-trainer native Goodbye closure after parking restoration
+
+Date 2026-10-22. Verified GitHub main P0307 `dad4c97f71496cdd374bb542e8999ab4087cd8e3`, client diagnostic build `1.60.1`, Logres `0.0.208-dev`. **PREPARED / FULL WSL STATIC AND WOW UNVERIFIED** until user applies, deploys and tests. Native CloseTrainer in Forever is a capability candidate from WoW API; actual request behavior in this client not yet proven.
+
+## Observed P0306 recovery result (PASS within test scope)
+
+User: "Blizz frame reappears when hitting goodbye with class trainer". This is P0306 by design: whole nonprotected native trainer frame is parked offscreen while Logres is shown; `TrainerLiveTrial.Disable("goodbye")` invokes Parking.Restore first, returning Blizzard to its exact original anchors before dropping Logres. The user now independently confirms the visual restoration. **P0306 NATIVE RESTORE VISUAL PASS**, not a gameplay close. No claim that a purchase was tested while native root parked; earlier class single/bulk purchase PASS used native stock onscreen.
+
+## Observed P0307 read-only family diagnostic (PASS source-read; profession adapter DEFERRED)
+
+Uploaded `LOGRES_DIAGNOSTICS_LATEST.lua` contains latest `trainerfamilycheck` run: `native-service-list-empty (type=7 interacting=true root=present shown=yes protected=no profession=yes services=0 first=unavailable kind=unknown rank=unknown source=not-read live=not-shown session=open-deferred-trainer ready=TRAINER_UPDATE transactions=0 nativeWrites=0)`. This establishes the *observed* Fishing Trainer session returned no native services; it does **not** prove why or whether other profession trainers do so. **OPEN / SOURCE EMPTY**, no generic class adapter substitution, purchase permission or native parking of profession stock.
+
+## Additional profession-trainer screenshots and newly identified safety gap
+
+The user subsequently supplied **enchanting trainer Thonys Pillarstone** and **cooking trainer** screenshots showing the same Logres parchment and service-list renderer with normal read-only profession service rows. **VISUAL PASS for shared model/render reuse** in these examples, not proof of usable Logres profession transactions. This contrasts with the fishing trainer's observed `services=0` case, so profession support is *source dependent*, not universally absent. The profession screenshots show Logres presenting **Stock Train** / **Train All unavailable** while the native trainer was parked offscreen; without visible stock controls, available profession learning may be blocked even when source rows are readable. This is an **OPEN native-fallback defect in P0306/P0307** uncovered by cross-family runtime testing, distinct from successful class trainer interactions.
+
+P0308 adds an explicit source-family gate to `NPCServiceNativeParking.Park`: guarded, ordinary `IsTradeskillTrainer() == false` is mandatory for native parking; `true`, missing, restricted or unclassified means *leave Blizzard on-screen*. Profession trainers can still use the accepted Logres read-only renderer alongside stock, but stock transaction buttons stay visible. No automatic profession buy, Train All, source fabrication or generic closing is authorized. The class trainer park path remains unchanged when the family check is `false`. Profession-specific replacement and single-window appearance remain **DEFERRED** until separate validated transaction controls exist.
+
+## P0308 narrow behavior
+
+Implement `NPCTrainerCloseTrial` only for supported class trainer session: normalized type 7 and interacting; `InCombatLockdown()==false`; `IsTradeskillTrainer()==false`; ordinary nonprotected and shown `ClassTrainerFrame`; ordinary `CloseTrainer` function. On an intentional Goodbye left-click, preflight before native restoration, call existing `Trial.Disable("goodbye")`; it must restore exact opaque native anchors or defer without closing. After success, invoke one guarded `CloseTrainer()` via `pcall` and record only **request sent, completion unconfirmed**. If no capability or exception, the already restored Blizzard window remains usable. Do not add close actions to generic `NPCServiceSession`, do not inspect secret values, do not hide native without usable replacement, do not alter camera. Retain historical `.toc` adjacency, P fixture, search/filter, purchases and hover.
+
+## Runtime acceptance
+
+After WSL full static PASS and user push verification, deploy/reload and speak to a *class* trainer. Logres should open automatically with native trainer parked. Click Goodbye once; expect Logres to dismiss and the native interaction to close with no Blizzard trainer left visible. If the native close request is rejected, Blizzard should instead appear as fallback: record FAIL/DEFERRED, not PASS. Reopen class trainer and verify Logres automatic entry; use H Live Trainer ON/OFF only if needed. No purchase required. Profession Fishing Trainer remains stock-owned until a supported source is established. Native purchase while parked is separate UNVERIFIED gate.

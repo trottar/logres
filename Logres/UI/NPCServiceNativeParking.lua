@@ -148,6 +148,19 @@ function Parking.Park(key)
         or state.interactionType ~= spec.interactionType then
         return defer("not-in-native-service-session")
     end
+    -- P0308: shared painting is not purchase authorization. For profession
+    -- trainers Logres may render a read-only view, but the stock
+    -- transaction window MUST remain on-screen until the specialized
+    -- training adapter has been proven. Never park an unknown family.
+    local okProfession, family = pcall(function() return _G.IsTradeskillTrainer end)
+    if not okProfession or not ordinary(family)
+        or type(family) ~= "function" then
+        return defer("trainer-family-api-unavailable-stock-retained")
+    end
+    local okFamily, profession = pcall(family)
+    if not okFamily or not ordinary(profession) or profession ~= false then
+        return defer("profession-or-unknown-stock-retained")
+    end
     if placementConflict() then return defer("native-placement-conflict") end
     local okRoot, root = pcall(function() return _G[spec.native] end)
     if not okRoot or not ordinary(root) or root == nil
