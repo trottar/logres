@@ -66,6 +66,11 @@ function Trial.Attempt(row, snapshot)
     if scalar(api("InCombatLockdown")) ~= false then
         return deny("combat-or-secret-deferred")
     end
+    -- P0309: the class single-service controller must never handle a
+    -- profession or unknown-family purchase. Its own adapter owns that.
+    if scalar(api("IsTradeskillTrainer")) ~= false then
+        return deny("profession-or-unknown-class-purchase-deferred")
+    end
     local okRoot, root = pcall(function() return _G.ClassTrainerFrame end)
     if not okRoot or not ordinary(root) or root == nil then
         return deny("native-trainer-unavailable")

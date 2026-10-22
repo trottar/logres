@@ -139,6 +139,8 @@ function Trial.FromSnapshot(report)
                 sourceRank=type(native.rank) == "string" and native.rank or "",
                 sourceTextureID=native.textureID,
                 sourceRequiredLevel=native.requiredLevel,
+                sourceSkillRequirement=bounded(native.skillRequirement, 42) and native.skillRequirement or nil,
+                sourceSkillRank=type(native.skillRank) == "number" and native.skillRank or nil,
                 costCopper=type(native.cost) == "number" and native.cost or nil}
             row.requirement = requirement
             rows[#rows + 1] = row
@@ -221,6 +223,18 @@ local function ordinaryInput(value)
     return ok and secret == false
 end
 
+-- P0309: this session family is an ordinary copied scalar, not an
+-- interpretation of a visible row. Unknown family cannot purchase.
+local function trainerFamily()
+    local ok, fn = pcall(function() return _G.IsTradeskillTrainer end)
+    if not ok or not ordinaryInput(fn) or type(fn) ~= "function" then return nil end
+    local called, family = pcall(fn)
+    if not called or not ordinaryInput(family) or type(family) ~= "boolean" then
+        return nil
+    end
+    return family
+end
+
 -- Reuse seven addon-owned row widgets; the snapshot is never reread by
 -- mouse events. All/Available are LOCAL display filters only, and cannot
 -- restore rows omitted by Blizzard's current native filter configuration.
@@ -259,7 +273,7 @@ local function refreshBrowse()
             end
         end
     end
-    model.trainEnabled = trainable
+    model.trainEnabled = trainable and model.nativeSession.profession ~= nil
     model.trainLabel = trainable and "Train selected (TEST)" or "Stock Train"
     model.filters.mode = browse.availableOnly and "Available only" or "All sampled"
     model.profession = "Sampled " .. tostring(#model.catalog) .. " | "
@@ -578,8 +592,17 @@ local function attachBrowseControls(root, model, controls)
             browse.model.catalog, browse.selectedServiceIndex,
             function(entry) return entry.serviceIndex end)
         if not chosen or not Logres.NPCTrainerPurchaseTrial then return end
-        local accepted, reason = Logres.NPCTrainerPurchaseTrial.Attempt(
-            chosen, browse.model.nativeSession)
+        local accepted, reason
+        if browse.model.nativeSession.profession == true then
+            if not Logres.NPCTrainerProfessionPurchaseTrial then return end
+            accepted, reason = Logres.NPCTrainerProfessionPurchaseTrial.Attempt(
+                chosen, browse.model.nativeSession)
+        elseif browse.model.nativeSession.profession == false then
+            accepted, reason = Logres.NPCTrainerPurchaseTrial.Attempt(
+                chosen, browse.model.nativeSession)
+        else
+            return
+        end
         if accepted then
             -- Stock remains accessible; this sample is stale after a buy request.
             Trial.Disable("native-purchase-requested-unconfirmed")
@@ -624,6 +647,8 @@ function Trial.Toggle(mode)
         last = why
         return false, why
     end
+    -- P0309: capture ordinary trainer family before enabling training.
+    model.nativeSession.profession = trainerFamily()
     -- P0301: quote the full live class-trainer list once, separately from
     -- the 64-row display sample. Fail closed if any service is unreadable.
     local quote = Logres.NPCTrainerPurchaseTrial.QuoteAll(report.total, report.trainerName)
