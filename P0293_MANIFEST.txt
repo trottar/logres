@@ -1,0 +1,22 @@
+P0293 — Local sampled trainer filter and scrolling
+Baseline: a58cf781e1c689afd97af5c74d84b9135350a33d
+PREWRITE/POSTWRITE: full check suite PASS
+Prewrite whitespace / git diff --check: PASS
+WoW: UNVERIFIED
+Git commit/push: NOT PERFORMED
+File: Logres/Core/Bootstrap.lua
+File: Logres/Logres.toc
+File: Logres/Quest/NativeTrainerServiceProbe.lua
+File: Logres/Quest/TrainerLandscape.lua
+File: Logres/Quest/TrainerLiveTrial.lua
+File: docs/ROADMAP.md
+File: docs/memory/CURRENT.md
+File: docs/memory/evidence/P0293_TRAINER_LOCAL_BROWSE.md
+File: docs/memory/handoffs/CURRENT_HANDOFF.md
+File: docs/memory/investigations/ACTIVE.md
+File: docs/memory/patches/P0293_TRAINER_LOCAL_BROWSE.md
+File: docs/memory/patches/PATCH_INDEX.md
+File: docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+File: docs/memory/roadmap/STATUS.md
+File: tools/check_p0285_trainer_service_source_contract.py
+File: tools/check_p0293_trainer_local_browse_contract.py

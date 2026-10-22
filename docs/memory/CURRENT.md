@@ -7,28 +7,28 @@ project: logres
 # Current State
 
 ## Active Objective
-Complete live, read-only trainer information in the accepted portrait-free landscape while Blizzard retains trainer filtering, selection, purchase actions and stock fallback. No visual refinements or native replacement at this checkpoint.
+Add bounded, Logres-owned filtering and scrolling to the accepted read-only trainer landscape while keeping native trainer source filters, selection and transactions Blizzard-owned. The visual fixture remains accepted; no protected replacement is authorized.
 
 ## Current Work Item
-**P0292 — TRAINER IDENTITY, ABILITY PREREQUISITES AND SOURCE STATUS / PREPARED; WSL AND WOW UNVERIFIED.** GitHub `main` verified at P0291 `0afc236`. User WoW screenshots of `0.0.192-dev` show five Druid skills with real icons, ranks, Level requirements, costs and selected spell description in Logres's live landscape; H panel reports `live-read-only-visible`, `displays=3`, `deferrals=0` and zero reported native purchase/filter/selection/geometry writes. Missing relative to Blizzard: `Wrath (Rank 2)` ability prerequisite `Wrath (Rank 1)`, trainer name `Mardant Strongoak`, and readable source-backed availability status. P0292 adds only bounded independent source reads and model labels, with no trainer transaction authorization.
+**P0293 — LOCAL TRAINER SAMPLE BROWSING / PREPARED; WSL AND WOW UNVERIFIED.** GitHub `main` verified at P0292 `a58cf78`. User screens with and without Blizzard's Unavailable filter show P0292 live name, identity, rank, icon, cost and status fidelity; two native-filter source cases are visually correct. P0292 does not provide Logres-controlled filtering or scroll past the initial seven rows. P0293 retains one guarded snapshot (up to 64 source entries), lets users locally toggle All sampled / Available only, and wheel/arrow-scroll a reusable seven-row window. The source set still reflects Blizzard's CURRENT native filter settings; Logres never changes those settings. No Logres selection or purchase interactions.
 
 ## Verified State
-- **P0291 pushed `0afc236` / WoW LIVE READ-ONLY INFORMATION PASS (tested fields):** five real service names and ranks, spell icon imagery, level requirements, costs and selected description appear; H panel PASS for ON/OFF. Missing Wrath prerequisite and trainer identity remain OPEN; no claim of full native replacement or purchase safety.
-- **P0290 R2 pushed `61838ba` / partial source PASS:** five named live services rendered. P0290 R0 memory-health PREWRITE failure and R1 Git EOF whitespace failure remain recorded; R2 corrected packaging. P0285–P0289 misread the Forever tuple and omitted H panel registration; negative evidence remains in historical records.
-- **Blizzard Forever source:** its native trainer enumerates ability prerequisites through `GetTrainerServiceNumAbilityReq(index)` / `GetTrainerServiceAbilityReq(index, slot)`, uses `UnitName("npc")` as ordinary trainer heading (pet trainer has separate native logic), and derives status from string service types (`available`, `unavailable`, `used`, `header`). This evidence authorizes descriptive labels only, never Logres training interaction.
+- **P0292 pushed `a58cf78` / user screenshots LIVE READ-ONLY PARTIAL PASS:** Briarthorn trainer name, ranks, costs, prerequisite abilities, statuses and description appear; native Unavailable filter ON/OFF yields different source counts. No screenshot establishes clicking native purchase through Logres, full trainer enumeration, or protected replacement.
+- **P0291 pushed `0afc236` / data PASS:** Forever six-tuple and bounded optional ability requirements supported. Earlier P0285–P0287 tuple assumptions were wrong; failure evidence is preserved.
+- **P0290 R0 and R1 implementation-package FAIL:** memory size and diff EOF errors respectively; R2 guarded prewrite whitespace. P0289 R0 linked registry checker FAIL; R1 corrected first-page H Live Trainer ON/OFF. Details are in archived evidence.
 
 ## Next Action
-Apply P0292 guarded ZIP on verified P0291, require PREWRITE/POSTWRITE full checker suite, prewrite whitespace gate, `git diff --check` and manifest. User commits and pushes, then verify `main`. Deploy to beta and `/reload`; with ordinary Druid trainer open use `/logres panel` → H → Live Trainer ON (TEST); compare heading, `Wrath (Rank 2)` prerequisite and source status against stock. Use Live Trainer OFF. No general audit or training purchase.
+Apply P0293 guarded ZIP on exact pushed P0292 main. Require prewrite 164+ checks, postwrite checks and git diff --check. User commits/pushes, then verify remote. Deploy to WoW and `/reload`; at a trainer use `/logres panel` → H → Live Trainer ON (TEST). Mouse-wheel the Logres list, use its scroll rail arrows and toggle the small Filters control between All sampled and Available only. Compare against unchanged Blizzard window. Finish with Live Trainer OFF. No general audit or forced purchase.
 
 ## Success Criteria
-Trainer heading and ability prerequisites display only when individually secret-safe and bounded; service status is sourced from a recognized native string, not inferred trainability. No new clickable Logres controls, native mutation, polling or suppression. The accepted P and live landscape composition remains unchanged. Runtime UNVERIFIED until user screenshot/panel results.
+The single source snapshot can display rows 8+ without remaking a panel and hide unavailable entries locally. Only Logres-owned narrow filter and list interaction regions receive mouse input; Blizzard's window/filter/Train/Train All remain unchanged and available. Parent trainer landscape remains noninteractive elsewhere and recovers on trainer close/combat/world change. Secret gating and identity/index mapping persist. Static checks are not runtime PASS.
 
 ## Do Not Reopen Without New Evidence
-Keep native service indices separate from filtered row order, Blizzard-owned selection/Train/Train All, protected-state restoration and stock fallback. Never inspect secret-capable values. Do not reopen unrelated compass, camera, pet, navigation or quest work.
+Do not infer that Logres's All sampled can restore entries hidden by a Blizzard filter. Do not map row positions to native service indices, intercept protected training, replace native controls, poll, or suppress Blizzard stock UI. Preserve reported environmental/runtime failures and any observed taint.
 
 ## Relevant References
 - `docs/memory/handoffs/CURRENT_HANDOFF.md`
-- `docs/memory/evidence/P0292_TRAINER_INFORMATION_COMPLETENESS.md`, `docs/memory/patches/P0292_TRAINER_INFORMATION_COMPLETENESS.md`
-- `docs/memory/evidence/P0291_FOREVER_TRAINER_DATA.md`, `docs/memory/evidence/P0290_TRAINER_PARTIAL_SOURCE_RECOVERY.md`
+- `docs/memory/evidence/P0293_TRAINER_LOCAL_BROWSE.md`, `docs/memory/patches/P0293_TRAINER_LOCAL_BROWSE.md`
+- `docs/memory/evidence/P0292_TRAINER_INFORMATION_COMPLETENESS.md`, `docs/memory/evidence/P0290_TRAINER_PARTIAL_SOURCE_RECOVERY.md`
 - `docs/memory/decisions/D-046_PREVIEW_FIRST_UI_PIPELINE.md`, `docs/memory/decisions/D-047_SELECTIVE_NPC_PRESENTATION_AND_MODULARITY.md`
 - `docs/memory/investigations/ACTIVE.md`, `docs/memory/roadmap/STATUS.md`, `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`, `docs/memory/patches/PATCH_INDEX.md`, `docs/ROADMAP.md`

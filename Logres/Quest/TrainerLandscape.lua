@@ -47,7 +47,7 @@ local function icon(owner, path, x, y, side)
     img:SetPoint("TOPLEFT", f, "TOPLEFT", 2, -2)
     img:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -2, 2)
     img:SetTexture(path)
-    return f
+    return f, img
 end
 
 local function boundedString(value, limit)
@@ -155,6 +155,7 @@ function Landscape.Render(owner, model)
     if not view or not owner then return false, "invalid-landscape-model" end
     local p, g = config.palette, config.geometry
     local created = {}
+    local liveControls = {rows={}}
     local ok = pcall(function()
         -- Paint *on the panel owner*: large child frames previously sat above
         -- parent-owned category text and formed opaque-looking black blocks.
@@ -190,7 +191,7 @@ function Landscape.Render(owner, model)
         if view.filters.categorized then
             rect(owner, g.filterMode.x + 2, g.filterMode.y + 2, 6, 6, p.gold)
         end
-        text(owner, view.filters.mode, g.filterMode.x + 15,
+        liveControls.filterMode = text(owner, view.filters.mode, g.filterMode.x + 15,
             g.filterMode.y - 3, 145, 17, "GameFontHighlightSmall", p.muted)
         for i = 1, #view.categories do
             local y = g.categories.y + (i - 1) * g.categories.pitch
@@ -201,7 +202,7 @@ function Landscape.Render(owner, model)
             text(owner, view.categories[i], g.categories.x + 11, y,
                 g.categories.w - 20, g.categories.height, "GameFontHighlight", p.body)
         end
-        text(owner, view.profession, g.left.x + 11, g.status.y - 17,
+        liveControls.statusText = text(owner, view.profession, g.left.x + 11, g.status.y - 17,
             g.left.w - 22, 17, "GameFontHighlightSmall", p.muted)
         local status = frame(owner, g.status.x, g.status.y, g.status.w, g.status.h)
         created[#created + 1] = status
@@ -215,22 +216,33 @@ function Landscape.Render(owner, model)
             created[#created + 1] = row
             local rowState = datum.disabled and "disabled"
                 or (datum.selected and "selected" or "normal")
+            -- Local-browse row paint is initially neutral. Reusable selection
+            -- wash and font colors update in place; P fixture states unchanged.
+            if view.localBrowse then rowState = "normal" end
             if not Logres.NPCTrainerMotif.PaintFixtureRow(row, rowState) then
                 error("trainer-landscape-row-paint-failed")
             end
+            local selectionWash
             if rowState == "selected" then
-                rect(row, 0, 0, g.list.w - 29, g.list.rowHeight - 1, p.selected)
+                selectionWash = rect(row, 0, 0, g.list.w - 29, g.list.rowHeight - 1, p.selected)
+            elseif view.localBrowse then
+                selectionWash = rect(row, 0, 0, g.list.w - 29, g.list.rowHeight - 1, p.selected)
+                selectionWash:Hide()
             end
-            icon(row, datum.icon, 7, 5, 40)
+            local _, image = icon(row, datum.icon, 7, 5, 40)
             local nameColor = p.body
             if rowState == "selected" then nameColor = p.goldText
             elseif rowState == "disabled" then nameColor = p.muted end
-            text(row, datum.name, 58, 5, g.list.w - 179, 22,
+            local nameText = text(row, datum.name, 58, 5, g.list.w - 179, 22,
                 "GameFontNormal", nameColor)
-            text(row, datum.requirement, 58, 28, g.list.w - 179, 15,
+            local requirementText = text(row, datum.requirement, 58, 28, g.list.w - 179, 15,
                 "GameFontHighlightSmall", datum.disabled and p.muted or p.body)
-            text(row, datum.price, g.list.w - 126, 9, 87, 28,
+            local priceText = text(row, datum.price, g.list.w - 126, 9, 87, 28,
                 "GameFontNormal", p.body, "RIGHT")
+            if view.localBrowse then
+                liveControls.rows[i] = {frame=row, image=image, name=nameText,
+                    requirement=requirementText, price=priceText, selected=selectionWash}
+            end
         end
         rect(owner, g.list.x + g.list.w - 16, g.list.y + 8, 3, g.list.h - 18, p.rail)
         rect(owner, g.list.x + g.list.w - 18, g.list.y + 14, 7, 93, p.gold)
@@ -302,7 +314,38 @@ function Landscape.Render(owner, model)
         for i = 1, #created do pcall(function() created[i]:Hide() end) end
         return false, "landscape-construction-deferred"
     end
-    return true, "landscape-fixture-rendered"
+    return true, "landscape-fixture-rendered", liveControls
+end
+
+-- Change ONLY addon-owned row regions from a previously captured source.
+-- No native data read, native UI write, frame recreation, or polling.
+function Landscape.UpdateLiveRows(controls, view)
+    if not view or not view.localBrowse or not Landscape.Build(view)
+        or type(controls) ~= "table" or type(controls.rows) ~= "table" then
+        return false
+    end
+    local p = config.palette
+    for i = 1, #controls.rows do
+        local slot = controls.rows[i]
+        local datum = view.rows[i]
+        if datum then
+            slot.image:SetTexture(datum.icon)
+            slot.name:SetText(datum.name)
+            slot.requirement:SetText(datum.requirement)
+            slot.price:SetText(datum.price)
+            slot.name:SetTextColor(unpack(datum.selected and p.goldText
+                or (datum.disabled and p.muted or p.body)))
+            if slot.selected then
+                if datum.selected then slot.selected:Show() else slot.selected:Hide() end
+            end
+            slot.frame:Show()
+        else
+            slot.frame:Hide()
+        end
+    end
+    controls.filterMode:SetText(view.filters.mode)
+    controls.statusText:SetText(view.profession)
+    return true
 end
 
 function Landscape.Preview(owner)

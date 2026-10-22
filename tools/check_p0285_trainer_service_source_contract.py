@@ -13,7 +13,7 @@ errors=[]
 def need(ok,reason):
     if not ok:errors.append(reason)
 for token in ('function Probe.Read()', 'Logres.NPCNativeTrainerServiceProbe = Probe',
-    'function Probe.Read()', 'MAX_SAMPLE = 12', 'MAX_SERVICES = 384',
+    'function Probe.Read()', 'MAX_SAMPLE = 64', 'MAX_SERVICES = 384',
     'return ok and secret == false', 'local function ordinary(value)',
     'local function snapshotRow(infoFn, costFn, iconFn, index)',
     'local state = Logres:GetState()', 'state.interactionType ~= 7',

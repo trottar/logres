@@ -4,7 +4,7 @@ local _, Logres = ...
 local Probe = {}
 Logres.NPCNativeTrainerServiceProbe = Probe
 
-local MAX_SAMPLE = 12
+local MAX_SAMPLE = 64
 local MAX_SERVICES = 384
 local function ordinary(value)
     if type(issecretvalue) ~= "function" then return false end

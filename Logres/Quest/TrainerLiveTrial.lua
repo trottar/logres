@@ -8,6 +8,7 @@ local visual = Logres.PanelConfigs.trainer.preview
 local panel = Logres.PanelConfigs.trainer
 local placeholder = "Interface\\Icons\\INV_Misc_QuestionMark"
 local active
+local browse
 local displays, deferrals = 0, 0
 local last = "not-attempted"
 
@@ -43,7 +44,7 @@ function Trial.FromSnapshot(report)
             and report.status ~= "read-only-service-sample") then
         return nil, "source-unavailable"
     end
-    if #report.sample < 1 or #report.sample > 12 then
+    if #report.sample < 1 or #report.sample > 64 then
         return nil, "source-sample-size-deferred"
     end
     local rows, first, selected = {}, nil, nil
@@ -66,7 +67,7 @@ function Trial.FromSnapshot(report)
             and native.state ~= "forever-service-observed" then
             return nil, "unrecognized-service-source-state"
         end
-        if i <= panel.landscape.maxRows then
+        if i <= 64 then
             -- The probe returns native.name only after its ordinary() gate;
             -- a missing name becomes addon-owned explanatory placeholder text.
             local hasName = bounded(native.name, 100)
@@ -130,6 +131,7 @@ function Trial.FromSnapshot(report)
                 requirement="Availability not classified",
                 price=recognized and price(native.cost) or "Cost unknown",
                 icon=texture, selected=selectedRow, disabled=false,
+                sourceType=native.state == "forever-service-observed" and native.serviceType or nil,
                 description=recognized and native.description or nil}
             row.requirement = requirement
             rows[#rows + 1] = row
@@ -140,17 +142,22 @@ function Trial.FromSnapshot(report)
         end
     end
     if not first then return nil, "no-readable-services" end
+    local catalog = rows
+    rows = {}
+    for i = 1, math.min(#catalog, panel.landscape.maxRows) do
+        rows[i] = catalog[i]
+    end
     local g, s, c = coin(report.wallet)
     local model = {
         title=bounded(report.trainerName, 90) and report.trainerName or "Trainer services",
         subtitle="LIVE SOURCE  /  BLIZZARD TRANSACTIONS",
         search="Search (stock)",
-        filters={label="Filters", mode="Stock controls", categorized=false},
+        filters={label="Filters", mode="All sampled", categorized=false},
         funds={label="Funds", gold=g, silver=s, copper=c},
         trainAll={label="Train All unavailable", enabled=false},
         categories={"Visible services"}, activeCategory=1,
-        profession="Source: " .. tostring(#report.sample) .. " sampled / " .. tostring(visibleNamed) .. " named",
-        rows=rows,
+        profession="Sampled: " .. tostring(#catalog) .. " | showing 1-" .. tostring(#rows),
+        rows=rows, catalog=catalog, localBrowse=true,
         selected={name=selected and selected.name or "Selection outside view",
             requirement=selected and selected.requirement or "Availability not classified",
             description=selected and bounded(selected.description, 260) and selected.description
@@ -166,6 +173,7 @@ function Trial.FromSnapshot(report)
 end
 
 function Trial.Disable(why)
+    browse = nil
     if active then active:Hide(); active = nil end
     last = why or "trial-hidden"
     return true, last
@@ -178,6 +186,95 @@ watcher:RegisterEvent("PLAYER_ENTERING_WORLD")
 watcher:SetScript("OnEvent", function()
     if active then Trial.Disable("native-context-ended") end
 end)
+
+local function ordinaryInput(value)
+    if type(issecretvalue) ~= "function" then return false end
+    local ok, secret = pcall(issecretvalue, value)
+    return ok and secret == false
+end
+
+-- Reuse seven addon-owned row widgets; the snapshot is never reread by
+-- mouse events. All/Available are LOCAL display filters only, and cannot
+-- restore rows omitted by Blizzard's current native filter configuration.
+local function refreshBrowse()
+    if not browse or not active or not active:IsShown() then return false end
+    local model = browse.model
+    local matching = {}
+    for _, row in ipairs(model.catalog) do
+        if not browse.availableOnly or row.sourceType == "available" then
+            matching[#matching + 1] = row
+        end
+    end
+    local width = panel.landscape.maxRows
+    local lastStart = math.max(1, #matching - width + 1)
+    browse.offset = math.max(1, math.min(browse.offset, lastStart))
+    local rows = {}
+    for i = browse.offset, math.min(#matching, browse.offset + width - 1) do
+        rows[#rows + 1] = matching[i]
+    end
+    if #rows == 0 then
+        rows[1] = {name="No matching sampled services", requirement="Try All sampled",
+            price="", icon=placeholder, selected=false, disabled=true}
+    end
+    model.rows = rows
+    model.filters.mode = browse.availableOnly and "Available only" or "All sampled"
+    local finish = #matching == 0 and 0 or math.min(#matching, browse.offset + width - 1)
+    model.profession = "Sampled " .. tostring(#model.catalog) .. " | "
+        .. tostring(#matching) .. " match | " .. tostring(#matching == 0 and 0 or browse.offset)
+        .. "-" .. tostring(finish)
+    return Logres.NPCTrainerLandscape.UpdateLiveRows(browse.controls, model)
+end
+
+local function moveBrowse(delta)
+    if not browse or type(delta) ~= "number" then return end
+    browse.offset = browse.offset + delta
+    refreshBrowse()
+end
+
+local function attachBrowseControls(root, model, controls)
+    local geometry = panel.landscape.geometry
+    browse = {model=model, controls=controls, offset=1, availableOnly=false}
+    -- These children alone receive pointer input; the underlying approved
+    -- landscape and all Blizzard controls remain without Logres actions.
+    local filter = CreateFrame("Frame", nil, root)
+    filter:SetPoint("TOPLEFT", root, "TOPLEFT", geometry.filters.x, -geometry.filters.y)
+    filter:SetSize(geometry.filters.w, geometry.filters.h)
+    filter:EnableMouse(true)
+    filter:SetScript("OnMouseUp", function(_, button)
+        if not ordinaryInput(button) or button ~= "LeftButton"
+            or active ~= root or not browse then return end
+        browse.availableOnly = not browse.availableOnly
+        browse.offset = 1
+        refreshBrowse()
+    end)
+    local wheel = CreateFrame("Frame", nil, root)
+    wheel:SetPoint("TOPLEFT", root, "TOPLEFT", geometry.list.x + 8, -(geometry.list.y + 7))
+    wheel:SetSize(geometry.list.w - 45, geometry.list.h - 14)
+    wheel:EnableMouse(true)
+    wheel:EnableMouseWheel(true)
+    wheel:SetScript("OnMouseWheel", function(_, delta)
+        if active == root and browse and ordinaryInput(delta)
+            and type(delta) == "number" and delta ~= 0 then
+            moveBrowse(delta > 0 and -1 or 1)
+        end
+    end)
+    for _, arrow in ipairs({{glyph="^", y=geometry.list.y + 7, step=-7},
+                             {glyph="v", y=geometry.list.y + geometry.list.h - 29, step=7}}) do
+        local step = arrow.step
+        local control = CreateFrame("Frame", nil, root)
+        control:SetPoint("TOPLEFT", root, "TOPLEFT", geometry.list.x + geometry.list.w - 28, -arrow.y)
+        control:SetSize(22, 22)
+        control:EnableMouse(true)
+        control:SetScript("OnMouseUp", function(_, button)
+            if ordinaryInput(button) and button == "LeftButton" and active == root then
+                moveBrowse(step)
+            end
+        end)
+        local label = control:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        label:SetAllPoints(control)
+        label:SetText(arrow.glyph)
+    end
+end
 
 function Trial.Toggle(mode)
     if mode == "off" or (mode == nil and active and active:IsShown()) then
@@ -194,7 +291,7 @@ function Trial.Toggle(mode)
     end
     -- A fresh addon-owned panel prevents stale rows after native filter changes.
     -- It is mouse-inert; all Blizzard-native selection/training remains available.
-    local ok, owner = pcall(function()
+    local ok, owner, controls = pcall(function()
         local root = CreateFrame("Frame", nil, UIParent)
         root:SetSize(visual.width, visual.height)
         root:SetPoint(visual.point, UIParent, visual.relativePoint, visual.x, visual.y)
@@ -204,9 +301,9 @@ function Trial.Toggle(mode)
         if not Logres.PanelSurface.Paint(root, panel.surface, visual.width, visual.height) then
             error("live-panel-art-unavailable")
         end
-        local rendered = Logres.NPCTrainerLandscape.Render(root, model)
+        local rendered, _, controls = Logres.NPCTrainerLandscape.Render(root, model)
         if not rendered then error("live-landscape-render-deferred") end
-        return root
+        return root, controls
     end)
     if not ok or not owner then
         deferrals = deferrals + 1
@@ -215,7 +312,9 @@ function Trial.Toggle(mode)
     end
     if active then active:Hide() end
     active = owner
+    attachBrowseControls(owner, model, controls)
     owner:Show()
+    refreshBrowse()
     displays = displays + 1
     last = why == "native-snapshot-mapped-partial" and "live-partial-visible" or "live-read-only-visible"
     return true, last
