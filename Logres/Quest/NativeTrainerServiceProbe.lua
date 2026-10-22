@@ -138,6 +138,24 @@ local function snapshotForeverRow(infoFn, costFn, skillFn, descriptionFn, index)
                 end
             end
         end
+        -- P0292: Forever stock trainer uses a bounded per-service list of
+        -- prerequisite abilities. Read each field only if individually ordinary;
+        -- hasAbility is never treated as authority to activate Train.
+        local abilityCount, countKnown = scalar(api("GetTrainerServiceNumAbilityReq"), index)
+        local abilityFn = api("GetTrainerServiceAbilityReq")
+        if countKnown and cappedInteger(abilityCount, 4) and abilityFn then
+            local abilities = {}
+            for slot = 1, abilityCount do
+                local got, abilityName, hasAbility = pcall(abilityFn, index, slot)
+                if got and ordinary(abilityName) and ordinary(hasAbility) then
+                    local safeAbility = safeText(abilityName, 42)
+                    if safeAbility and #safeAbility > 0 then
+                        abilities[#abilities + 1] = safeAbility
+                    end
+                end
+            end
+            if #abilities > 0 then row.abilityRequirements = abilities end
+        end
         local description, knownDescription = scalar(descriptionFn, index)
         if knownDescription then row.description = safeText(description, 260) end
     end
@@ -190,6 +208,13 @@ function Probe.Read()
     local selection, selectionKnown = scalar(api("GetTrainerSelectionIndex"))
     if selectionKnown and cappedInteger(selection, MAX_SERVICES)
         and selection <= total then report.selected=selection end
+    -- The NPC trainer title is optional and independent of any service row.
+    -- Stock pet-trainer identity has a separate path; do not infer from it.
+    local trainerName, nameKnown = scalar(api("UnitName"), "npc")
+    if nameKnown then
+        local safeName = safeText(trainerName, 90)
+        if safeName and #safeName > 0 then report.trainerName = safeName end
+    end
     local wallet, moneyKnown = scalar(api("GetMoney"))
     if moneyKnown and cappedInteger(wallet, 100000000000) then report.wallet=wallet end
     local bad = 0

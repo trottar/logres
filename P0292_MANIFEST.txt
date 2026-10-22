@@ -1,0 +1,20 @@
+P0292 — Trainer live identity, ability prerequisites and source status
+Baseline: 0afc23619aedb569a90471a7b3f66b0c8b4a75fb
+PREWRITE/POSTWRITE: full check suite PASS
+Prewrite whitespace / git diff --check: PASS
+WoW: UNVERIFIED
+Git commit/push: NOT PERFORMED
+File: Logres/Core/Bootstrap.lua
+File: Logres/Logres.toc
+File: Logres/Quest/NativeTrainerServiceProbe.lua
+File: Logres/Quest/TrainerLiveTrial.lua
+File: docs/ROADMAP.md
+File: docs/memory/CURRENT.md
+File: docs/memory/evidence/P0292_TRAINER_INFORMATION_COMPLETENESS.md
+File: docs/memory/handoffs/CURRENT_HANDOFF.md
+File: docs/memory/investigations/ACTIVE.md
+File: docs/memory/patches/P0292_TRAINER_INFORMATION_COMPLETENESS.md
+File: docs/memory/patches/PATCH_INDEX.md
+File: docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+File: docs/memory/roadmap/STATUS.md
+File: tools/check_p0292_trainer_information_contract.py

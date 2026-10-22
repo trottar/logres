@@ -95,9 +95,33 @@ function Trial.FromSnapshot(report)
                     end
                     parts[#parts + 1] = skill
                 end
+                -- Genuine ability prerequisites (e.g. Wrath Rank 1) are
+                -- independent from skill-rank and level requirements.
+                if type(native.abilityRequirements) == "table" then
+                    for slot = 1, math.min(#native.abilityRequirements, 4) do
+                        local ability = native.abilityRequirements[slot]
+                        if bounded(ability, 42) then
+                            parts[#parts + 1] = ability
+                        end
+                    end
+                end
                 local requirements = table.concat(parts, " / ")
-                if #requirements > 0 and #requirements <= 80 then
+                if #requirements > 0 and #requirements <= 66 then
                     requirement = "Requires: " .. requirements
+                end
+                -- Source service-type strings describe Blizzard presentation;
+                -- they never authorize buying, filtering or selecting.
+                local label = nil
+                if native.serviceType == "available" then label = "Available"
+                elseif native.serviceType == "unavailable" then label = "Unavailable"
+                elseif native.serviceType == "used" then label = "Known" end
+                if label then
+                    local combined = label
+                    if requirement ~= "Availability not classified" then
+                        combined = label .. " | " .. requirement
+                    end
+                    if #combined <= 90 then requirement = combined
+                    else requirement = label end
                 end
             end
             local texture = native.state == "forever-service-observed"
@@ -118,7 +142,8 @@ function Trial.FromSnapshot(report)
     if not first then return nil, "no-readable-services" end
     local g, s, c = coin(report.wallet)
     local model = {
-        title="Trainer services", subtitle="LIVE SOURCE  /  BLIZZARD TRANSACTIONS",
+        title=bounded(report.trainerName, 90) and report.trainerName or "Trainer services",
+        subtitle="LIVE SOURCE  /  BLIZZARD TRANSACTIONS",
         search="Search (stock)",
         filters={label="Filters", mode="Stock controls", categorized=false},
         funds={label="Funds", gold=g, silver=s, copper=c},
