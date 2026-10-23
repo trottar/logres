@@ -22,3 +22,7 @@ Use already installed P — NPC Choices: Branching / Services / Overflow / Locke
 ## P0314 R0 PREWRITE artifact failure (2026-10-22)
 
 R0 archive SHA-256 verified, baseline clean and pinned P0313 main checked. R0 stopped at `P0314_APPEND.md EOF` before candidate static checks or tracked writes. This was an assistant artifact-packaging failure, not a WoW runtime failure. R1 normalizes only the extracted append payload terminal newline and reruns the original guarded P0314 applier and its complete prewrite/postwrite checks. No runtime behavior is considered PASS from this correction.
+
+## Subsequent user report and verified push (2026-10-22)
+
+GitHub main `f40a8e0` contains P0314. User reports latest pushed checkpoint a success with no noticed issues. Record **user-reported runtime PASS within observed interactions**, while class/individual profession variants and native restoration under combat or subsequent purchase were not separately enumerated. Preserve the originally PREPARED evidence and P0314 R0 prewrite failure as history; do not overwrite them or infer complete runtime coverage.

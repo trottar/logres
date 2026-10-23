@@ -4871,6 +4871,7 @@ local function printHelp()
     emit("  /logres questoffercontrolscheck")
     emit("  /logres questofferstocksuppressioncheck")
     emit("  /logres questinteractionprobe")
+    emit("  /logres gossipsourcecheck  (READ-ONLY)")
     emit("  /logres aurastatusprobe")
     emit("  /logres worldtargetprobe")
     emit("  /logres questiedbprobe")
@@ -5258,6 +5259,19 @@ local function handleCommand(message)
             tostring(report.accent.mode), tostring(report.accent.shows),
             tostring(report.accent.hides), tostring(report.accent.failures)
         ))
+        return
+    end
+
+    if command == "gossipsourcecheck" then
+        -- P0315: explicit, read-only sample, NEVER a native gossip choice.
+        local model, report = Logres.NPCGossipSource.Sample()
+        emit(string.format(
+            "Logres gossip source: %s (npc=%s type=%s options=%s quests=%s text=%s modelReady=%s nativeActions=%s nativeWrites=%s)",
+            tostring(report.status), tostring(report.npc),
+            tostring(report.interactionType), tostring(report.optionCount),
+            tostring(report.questCount), tostring(report.bodySource),
+            tostring(model ~= nil), tostring(report.nativeActions),
+            tostring(report.nativeWrites)))
         return
     end
 
@@ -6035,6 +6049,12 @@ Logres:RegisterDevPanelAction(
     "trainerFamilyCheck",
     "Trainer Family Check (READ-ONLY)",
     "trainerfamilycheck",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "gossipSourceCheck",
+    "Gossip Source Check (READ-ONLY)",
+    "gossipsourcecheck",
     "H"
 )
 Logres:RegisterDevPanelAction(

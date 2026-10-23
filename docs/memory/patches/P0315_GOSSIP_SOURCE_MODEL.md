@@ -1,0 +1,3 @@
+# P0315 — one-shot live gossip source -> inert option model
+
+Baseline: pushed main P0314 `f40a8e0`. Candidate runtime version `0.0.216-dev`. New `Quest/NPCGossipSource.lua` reads bounded/ordinary `C_GossipInfo` text, option and quest counts on explicit H-panel request only. It produces `NPCOptionModel.FromValidated` only for complete, nonquest gossip and keeps **every** option disabled, preventing native selection. Invalid, secret, truncated, mixed-quest or unsupported sources retain untouched Blizzard presentation. New H button and static contract; 36 P previews remain unchanged. Trainer, camera, native frames and quest selection untouched. Full WSL static and WoW **UNVERIFIED** until tested.
