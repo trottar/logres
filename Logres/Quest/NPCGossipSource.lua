@@ -1,4 +1,4 @@
--- P0315: one-shot, read-only native gossip -> existing NPC option-model envelope.
+-- P0316: universal one-shot gossip source (including mixed quests and pre-service dialogue).
 -- No live presentation, selection, native frame writes, timers, or events.
 local _, Logres = ...
 local Source = {}
@@ -58,7 +58,7 @@ local function readList(name)
     return result
 end
 
-local function audit(status, interactionType, options, quests, title, bodySource)
+local function audit(status, interactionType, options, quests, title, bodySource, kind)
     last = {
         status = status,
         interactionType = interactionType,
@@ -66,6 +66,7 @@ local function audit(status, interactionType, options, quests, title, bodySource
         questCount = quests or 0,
         npc = title or "unknown",
         bodySource = bodySource or "none",
+        gossipKind = kind or "unknown",
         nativeActions = 0,
         nativeWrites = 0,
         modelReady = status == "model-ready",
@@ -114,25 +115,30 @@ function Source.Sample()
         if textOK then body = plainText(value) end
         if body then bodySource = "C_GossipInfo.GetText" end
     end
+    -- Gossip can precede a trainer, merchant or inn service and can coexist
+    -- with native quest entries. Count those separately; do NOT reject the
+    -- entire NPC on account of the quest list. No quest action is copied.
+    local kind = "empty-gossip"
     if totalQuests > 0 then
-        return nil, audit("mixed-quest-gossip-stock-retained", interaction,
-            #options, totalQuests, name, bodySource)
+        kind = #options > 0 and "mixed-quest-gossip" or "quest-only-gossip"
+    elseif #options > 0 then
+        kind = "gossip-only"
     end
     if body == nil then
         return nil, audit("gossip-text-unavailable", interaction,
-            #options, totalQuests, name, bodySource)
+            #options, totalQuests, name, bodySource, kind)
     end
     local choices = {}
     for index = 1, #options do
         local option = options[index]
         if not ordinary(option) then
-            return nil, audit("option-secret", interaction, #options, 0, name, bodySource)
+            return nil, audit("option-secret", interaction, #options, totalQuests, name, bodySource, kind)
         end
         local label = plainText(member(option, "name"))
         local identity = member(option, "gossipOptionID")
         if not label or label == "" or not ordinary(identity)
             or type(identity) ~= "number" then
-            return nil, audit("option-unvalidated", interaction, #options, 0, name, bodySource)
+            return nil, audit("option-unvalidated", interaction, #options, totalQuests, name, bodySource, kind)
         end
         -- The source ordinal/identity is audit-only. No native click can be
         -- produced by the option preview controller or by this adapter.
@@ -145,7 +151,11 @@ function Source.Sample()
     local model = Logres.NPCOptionModel.FromValidated(name, "gossip", {
         gossip = { title = name, body = body, options = choices },
     })
-    audit("model-ready", interaction, #choices, 0, name, bodySource)
+    -- Native quest services remain Quest-owned. This count-only context is
+    -- a bounded native-source observation, never an invented quest option.
+    model.questSummary = { available = #available, active = #active }
+    model.gossipKind = kind
+    audit("model-ready", interaction, #choices, totalQuests, name, bodySource, kind)
     return model, last
 end
 

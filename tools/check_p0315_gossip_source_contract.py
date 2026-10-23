@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""P0315: guarded read-only live gossip into the existing option model."""
+"""P0315 (migrated by P0316): read-only universal gossip into the established model."""
 from pathlib import Path
 import re
 ROOT = Path(__file__).resolve().parents[1]
@@ -21,11 +21,14 @@ for token in ('Logres.NPCGossipSource = Source', 'function Source.Sample()',
               'readList("GetAvailableQuests")', 'readList("GetActiveQuests")',
               'method(C_GossipInfo, "GetText")', 'state.interacting ~= true',
               'pcall(UnitExists, "npc")', 'pcall(UnitName, "npc")',
-              '"mixed-quest-gossip-stock-retained"',
+              '"mixed-quest-gossip"', '"quest-only-gossip"',
+              '"gossip-only"', 'model.questSummary =',
               '"gossip-text-unavailable"', '"option-unvalidated"',
               'enabled = false', 'Logres.NPCOptionModel.FromValidated(',
               'nativeActions = 0', 'nativeWrites = 0'):
     need(token in source, 'source gate/model missing: '+token)
+need('if totalQuests > 0 then\n        return nil' not in source,
+     'mixed quest gossip must not be rejected at the family boundary')
 for forbidden in ('C_GossipInfo.Select', 'SelectGossipOption(', 'AcceptQuest(',
                   'CompleteQuest(', 'GetQuestReward(', 'CloseGossip(',
                   'SetPoint(', 'HideUIPanel(', 'SetAlpha(', 'C_Timer.',

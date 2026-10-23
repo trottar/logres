@@ -7,28 +7,28 @@ project: logres
 # Current State
 
 ## Active Objective
-Advance guarded live NPC gossip presentation through the accepted preview-first shared option model and renderer, after successful P0314 profession trainer single-window feedback.
+Advance universal NPC gossip stages using the existing preview-first Quest narrative/option renderer, safely handing off to separately owned NPC services.
 
 ## Current Work Item
-**P0315 — one-shot read-only live gossip source-to-inert-option-model adapter; PREPARED / full WSL static and WoW UNVERIFIED.** Verified pushed GitHub main P0314 `f40a8e0`. User reports the latest pushed profession trainer patch successful with no noticed issues; individual restoration and postpurchase edge cases have not been independently enumerated. P0315 collects only ordinary, bounded C_GossipInfo text/options/quest counts during an explicit H-panel action. Complete nonquest gossip can enter the existing NPCOptionModel.FromValidated envelope, with every option disabled and without live presentation or native click.
+**P0316 — forward correction of P0315 read-only gossip source coverage; PREPARED / full WSL static and WoW UNVERIFIED.** Verified pushed P0315 main `878235b`. The previously supplied P0315 R1 applier was pinned to already-superseded P0314 and rejected with `unexpected commit baseline; no writes`. P0315 itself is pushed and must not be rewritten. P0316 replaces its erroneous mixed-quest blanket source rejection with a bounded stage-aware data model: gossip-only, mixed quest/gossip, quest-only and empty, for any NPC with a supported current gossip stage (guards, trainer preludes, service NPCs). Native options remain inert, quest rows count-only, Blizzard remains available.
 
 ## Verified State
-- P0314 is pushed to main `f40a8e0`; the user reports successful runtime behavior with no noticed issues. This is a scoped positive report, not a claim of complete profession-purchase/restoration/combat test coverage.
-- P0313 class/profession services, the complete owned-professions sidebar, and current-trainer focus were user accepted; previously observed Enchanting purchase and class Goodbye remain historical evidence.
-- Existing P — NPC Choices Branching / Services / Overflow / Locked previews and Quest narrative renderer are accepted; native gossip source-to-model behavior remains UNVERIFIED.
-- P0311 Enchanting zero-service and premature profession-close FAIL, P0313 R0 checker failures and P0314 R0 artifact EOF failure remain preserved in historical evidence.
+- GitHub main P0315 pushed `878235b`; predecessor P0314 `f40a8e0` was user-reported successful within observed interactions. Individual profession postpurchase/lockdown restoration cases are not separately proved.
+- P0315 universal-scope defect identified in committed source and checker: quest presence caused `mixed-quest-gossip-stock-retained` regardless of ordinary gossip options. **DESIGN FAIL**, not a demonstrated WoW runtime error.
+- P0315 R1 archive SHA-256 was verified by the user but baseline refused before writes after P0315 was already pushed. **ARTIFACT BASELINE FAIL / NO TRACKED WRITES**.
+- P — NPC Choices Branching, Services, Overflow and Locked fixtures, source-independent option model/rendering, and class/profession trainer implementations remain the working architectural baseline. Earlier P0311/P0313/P0314 failures remain recorded.
 
 ## Next Action
-Apply P0315 against exact clean pushed P0314 main; require **186/186** prewrite and postwrite static checkers, `git diff --check`, manifest, then user push and verify. Deploy via `tools/deploy_logres.sh` and `/reload`. During ordinary NPC gossip, open `/logres panel` > H — Integration and Polish > **Gossip Source Check (READ-ONLY)**, inspect status/options/quests/text/modelReady, export diagnostics. An NPC with quest entries should defer mixed-source model conversion. No visible gossip change or native action is expected. After runtime evidence, gate a separate read-only shared-renderer presentation checkpoint.
+Run P0316 applier only on exact clean P0315 `878235b`: demand **187/187** static checkers PREWRITE/POSTWRITE, manifest and `git diff --check`. User commits/pushes; verify new `main`. Deploy and `/reload`, then sample naturally encountered guard, pre-service trainer, and mixed quest/gossip when available using **H — Gossip Source Check (READ-ONLY)**. Check status/kind/options/quests/text/modelReady, nativeActions/nativeWrites both zero, and export diagnostics. No live replacement or native selections are expected. Afterwards design separately gated shared-renderer read-only presentation.
 
 ## Success Criteria
-A bounded source-to-model adapter produces only independently ordinary nonquest NPC gossip with known text and source-backed labels. Mixed quest paths, missing/secret/invalid/truncated sources fail open to Blizzard. No live choice, quest claim, trainer mutation, native frame changes, timer, polling or camera change. Existing 36 P actions and trainer functionality remain unchanged.
+Any supported gossip stage can yield a validated inert source model independent of future NPC service identity; quest entries remain counted, not copied as selectable gossip. Missing, invalid, truncated or secret source fails open to Blizzard. No native action, stock suppression, protected UI mutation, polling, timer or camera change. P previews, trained service flows and quest 237 unchanged.
 
 ## Do Not Reopen Without New Evidence
-Do not suppress Blizzard gossip or enable live selections from a data-model/static PASS. Do not infer that absent option/quest APIs are empty lists, do not synthesize NPC dialogue or quest actions, and do not use secret/protected Blizzard presentation values. Quest 237 remains reserved. P0314 postpurchase/recovery edge cases stay UNVERIFIED outside user-tested scope.
+Do not narrow gossip by NPC service family or require quest absence to consider readable gossip. Do not conflate source sampling with production UI capability. Do not infer missing APIs are empty, invent quest options, enable live selection or hide Blizzard controls. Preserve failed applier evidence and prior negative results; no speculative client guarantees.
 
 ## Relevant References
-- `docs/memory/evidence/P0315_GOSSIP_SOURCE_MODEL.md`, `docs/memory/patches/P0315_GOSSIP_SOURCE_MODEL.md`
-- `docs/memory/evidence/P0314_PROFESSION_SINGLE_WINDOW.md`, `docs/memory/evidence/P0311_PROFESSION_CLOSE_FILTER_CONTEXT.md`
+- `docs/memory/evidence/P0316_UNIVERSAL_GOSSIP_SCOPE.md`, `docs/memory/patches/P0316_UNIVERSAL_GOSSIP_SCOPE.md`
+- `docs/memory/evidence/P0315_GOSSIP_SOURCE_MODEL.md`, `docs/memory/evidence/P0314_PROFESSION_SINGLE_WINDOW.md`
 - `docs/memory/decisions/D-046_PREVIEW_FIRST_UI_PIPELINE.md`, `docs/memory/decisions/D-047_SELECTIVE_NPC_PRESENTATION_AND_MODULARITY.md`
 - `docs/memory/handoffs/CURRENT_HANDOFF.md`, `docs/memory/investigations/ACTIVE.md`, `docs/memory/roadmap/STATUS.md`, `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`, `docs/ROADMAP.md`
