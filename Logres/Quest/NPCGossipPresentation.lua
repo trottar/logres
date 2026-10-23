@@ -14,6 +14,11 @@ local function dialogue()
 end
 
 local function hide(reason)
+    local restored = Logres.NPCGossipStockParking.RequestExit(reason or "gossip-closed")
+    if not restored then
+        last = "stock-restoration-pending"
+        return false
+    end
     pending = false
     local d = dialogue()
     if d.optionSession and d.optionSession.liveReadOnly == true then
@@ -22,6 +27,7 @@ local function hide(reason)
     end
     active = false
     last = reason or "closed"
+    return true
 end
 
 function Live.TryShow(reason)
@@ -63,6 +69,9 @@ function Live.TryShow(reason)
     end
     active = true
     opens = opens + 1
+    -- Native UI is parked only after the complete Logres presentation exists;
+    -- partial/unknown controls leave Blizzard visible and usable.
+    Logres.NPCGossipStockParking.TryPark(model)
     last = "live-additive-read-only-" .. (reason or "gossip")
     return true, last
 end
@@ -83,6 +92,24 @@ function Live.GetAudit()
         nativeActions = actions.attempts, questActions = quest.attempts,
         questBlocked = quest.blocked, nativeWrites = 0, stock = "retained",
     }
+end
+
+-- Unpark BEFORE Blizzard services or quest details are requested.
+function Live.BeforeNativeChoice()
+    return Logres.NPCGossipStockParking.RequestExit("native-choice-handoff")
+end
+
+function Live.OnStockRestored()
+    hide("deferred-stock-restored")
+end
+
+-- Goodbye closes native gossip when the guarded API supports it; on failure,
+-- native anchors are restored and its stock Goodbye remains accessible.
+function Live.Goodbye()
+    local closed, reason = Logres.NPCGossipStockParking.CloseGossip()
+    if Logres.NPCGossipStockParking.IsParked() then return false, reason end
+    hide("gossip-goodbye")
+    return true, closed and "native-gossip-closed" or "native-stock-restored"
 end
 
 -- User-selected native branches dismiss only the Logres overlay.

@@ -89,6 +89,8 @@ function Quest.Activate(model, index)
             return deny("quest-or-gossip-row-changed")
         end
     end
+    local restored = Logres.NPCGossipPresentation.BeforeNativeChoice()
+    if not restored then return deny("native-quest-restore-deferred") end
     attempts = attempts + 1
     local ok = pcall(fn, chosen.questID)
     if not ok then return deny("native-quest-open-failed") end

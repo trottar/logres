@@ -5262,6 +5262,18 @@ local function handleCommand(message)
         return
     end
 
+    if command == "gossipstockstatus" or command == "gossipstocktoggle" then
+        local report = command == "gossipstocktoggle"
+            and Logres.NPCGossipStockParking.Toggle()
+            or Logres.NPCGossipStockParking.GetAudit()
+        emit(string.format(
+            "Logres gossip stock: %s (enabled=%s parked=%s pending=%s attempts=%s parks=%s restores=%s deferrals=%s failures=%s)",
+            tostring(report.last), tostring(report.enabled), tostring(report.parked),
+            tostring(report.pending), tostring(report.attempts), tostring(report.parks),
+            tostring(report.restores), tostring(report.deferrals), tostring(report.failures)))
+        return
+    end
+
     if command == "gossiplivestatus" or command == "gossiplivetoggle" then
         local report = command == "gossiplivetoggle"
             and Logres.NPCGossipPresentation.Toggle()
@@ -6069,6 +6081,18 @@ Logres:RegisterDevPanelAction(
     "gossipSourceCheck",
     "Gossip Source Check (READ-ONLY)",
     "gossipsourcecheck",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "gossipStockStatus",
+    "Gossip Stock Status (READ-ONLY)",
+    "gossipstockstatus",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "gossipStockToggle",
+    "Gossip Stock Toggle",
+    "gossipstocktoggle",
     "H"
 )
 Logres:RegisterDevPanelAction(

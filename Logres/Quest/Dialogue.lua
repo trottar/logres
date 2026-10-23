@@ -377,6 +377,15 @@ function Dialogue:HandleCompletionAction()
 end
 
 function Dialogue:HidePresentation(reason)
+    -- Other dialogue/immersion callbacks can independently dismiss the view.
+    -- Do not leave its SHOWN native source stranded offscreen on those exits.
+    if self.optionSession and self.optionSession.liveReadOnly == true
+        and Logres.NPCGossipStockParking
+        and Logres.NPCGossipStockParking.IsParked() then
+        local restored = Logres.NPCGossipStockParking.RequestExit(
+            reason or "dialogue-hidden")
+        if not restored then return false, "stock-restoration-pending" end
+    end
     if self.completionControl then
         self.completionControl:Restore(reason or "hide-presentation")
     end

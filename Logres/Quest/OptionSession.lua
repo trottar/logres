@@ -194,6 +194,11 @@ function Session:Goodbye()
         self.blocked = self.blocked + 1
         return false, "inactive-option-preview"
     end
+    if self.liveReadOnly then
+        local ok, reason = Logres.NPCGossipPresentation.Goodbye()
+        if ok then self.goodbyes = self.goodbyes + 1 end
+        return ok, reason
+    end
     self.goodbyes = self.goodbyes + 1
     -- Dialogue:HidePresentation restores native quest/offer ownership first.
     self.dialogue:HidePresentation("goodbye")
