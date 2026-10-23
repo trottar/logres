@@ -45,13 +45,19 @@ function Session:Render()
     if not ok or state ~= "shown" then return false end
     d.root:SetHeight(467)
     local choices = node.options or {}
-    self.visual:Present(choices, self.optionPage, #self.history > 0, {
-        choose = function(index) self:Choose(index) end,
-        back = function() return self:Back() end,
-        page = function(delta) return self:MovePage(delta) end,
-    }, self.liveReadOnly)
-    if self.liveReadOnly then
-        self.visual:SetLiveSelectable(Logres.NPCGossipChoice.CanSelect())
+    if #choices == 0 then
+        -- A text-only/quest-only gossip stage needs only narrative art.
+        -- No empty options grid or invented clickable quest control.
+        self.visual:Clear()
+    else
+        self.visual:Present(choices, self.optionPage, #self.history > 0, {
+            choose = function(index) self:Choose(index) end,
+            back = function() return self:Back() end,
+            page = function(delta) return self:MovePage(delta) end,
+        }, self.liveReadOnly)
+        if self.liveReadOnly then
+            self.visual:SetLiveSelectable(Logres.NPCGossipChoice.CanSelect())
+        end
     end
     d:UpdatePageControls()
     self:OnNarrativePageChanged()
@@ -76,8 +82,12 @@ function Session:StartReadOnly(model)
     if not model or model.previewOnly ~= false or not model.nodes
         or not model.nodes[model.start] then return false, "invalid-live-gossip-model" end
     local node = model.nodes[model.start]
-    if type(node.options) ~= "table" or #node.options == 0 then
-        return false, "no-live-gossip-options"
+    if type(node.options) ~= "table" then
+        return false, "live-gossip-options-invalid"
+    end
+    -- No choices is valid when this NPC has actual, validated narrative text.
+    if #node.options == 0 and (type(node.body) ~= "string" or node.body == "") then
+        return false, "empty-live-gossip-stage"
     end
     for index = 1, #node.options do
         local option = node.options[index]

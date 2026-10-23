@@ -42,9 +42,17 @@ function Live.TryShow(reason)
     end
     lastKind = model.gossipKind
     local node = model.nodes and model.nodes[model.start]
-    -- Quest-only cases continue to use the existing Quest/Blizzard surfaces.
-    if not node or not node.options or #node.options == 0 then
-        last = "no-gossip-choices-stock-or-quest-owned"
+    -- A gossip stage is a narrative, not necessarily a menu. Quest-only
+    -- and direction-response text share the accepted narrative renderer;
+    -- Blizzard retains all quest/service controls (no invented choices).
+    if not node or type(node.options) ~= "table" then
+        last = "gossip-model-node-unavailable"
+        return false, last
+    end
+    local hasChoices = #node.options > 0
+    local hasBody = type(node.body) == "string" and node.body ~= ""
+    if not hasChoices and not hasBody then
+        last = "no-displayable-gossip-stage"
         return false, last
     end
     local ok, state = d:ShowReadOnlyGossip(model)

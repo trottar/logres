@@ -7,27 +7,27 @@ project: logres
 # Current State
 
 ## Active Objective
-Complete usable NPC gossip interaction using the accepted Quest narrative and shared option renderer, without sacrificing safe Blizzard fallback or service transitions.
+Complete stage-aware, usable NPC dialogue through the accepted shared Quest narrative and NPC option renderer, while retaining functional Blizzard quest/service fallback.
 
 ## Current Work Item
-**P0318 — implement real native gossip option clicks through a separately gated controller; PREPARED / static+WoW UNVERIFIED.** GitHub pushed main P0317 `f56c2cd` verified. User-uploaded diagnostics from runtime `0.0.218-dev` load 415 confirm P0317 deployed but contain only the earlier quest-only Gerrig Bonegrip source check, not a live-choice display/selection test. P0317 offers automatic additive source-backed dialogue, but intentionally inert choices; the user explicitly directed completing implementation instead of more read-only probes. P0318 connects real user clicks to `C_GossipInfo.SelectOption` after ordinary source, client capability, combat and fresh full-menu identity gates. Stock gossip remains available.
+**P0319 — text-only and quest-only NPC gossip stages through the existing renderer; PREPARED, WSL static and WoW UNVERIFIED.** Verified pushed main P0318 `de325e6`. The user's screenshots and `0.0.219-dev` diagnostics show Grimnur Stonebrand (fishing) options=1, quest=0 and live Logres presentation, plus the Ironforge Guard first menu with paginated Logres options. Subsequent guard directions text (after selecting a destination) is Blizzard-only; Gerrig Bonegrip quest-only greeting is Blizzard-only (source options=0 quests=1); Eldrun Stormbreaker shaman trainer greeting is Blizzard-only. Those are real negative presentation observations, not reasons to demand more screenshots. No proof yet of direct Logres native choice dispatch.
 
 ## Verified State
-- P0317 pushed `f56c2cd`, runtime `0.0.218-dev` confirmed present by uploaded diagnostics. No claim of live gossip visual success or actual native click acceptance.
-- P0316 `ae770b4` quest-only model source PASS on Gerrig Bonegrip (options=0, quests=1, no writes); prior P0315 design and P0315/P0317 R0/R1 applier failures remain preserved in evidence.
-- P branching/services/overflow/locked previews are accepted; existing quest, profession, camera and native fallback architecture remains authoritative.
+- GitHub P0318 main `de325e6` verified pushed, runtime `0.0.219-dev` in user diagnostics load 416/417; Gerrig source `model-ready` options=0 quests=1; Grimnur source `model-ready` options=1 quests=0.
+- P0318 native choice controller is present, but no recorded H click-action result proving native execution. Guard first-stage multi-page options visually render. Guard follow-up text fails to render in Logres. Shaman trainer introductory text likewise stock-only. Exact follow-up GOSSIP_SHOW delivery is unverified.
+- P previews are accepted; P0315/P0317/P0318 assistant artifact failures and all recorded runtime deferrals remain part of repo evidence. Quest 237 reserved.
 
 ## Next Action
-Apply P0318 on exact clean pushed P0317 `f56c2cd`, run **189/189 PREWRITE+POSTWRITE** static contracts, `git diff --check`, manifest. User commits and pushes; verify main. Deploy to beta and `/reload`; use H — Gossip Live Status (READ-ONLY) while naturally selecting an ordinary gossip option in Logres. Confirm native branch/service works and Blizzard controls remain functional. Any error is FAIL; if unavailable before beta closure October 23 10:00 PDT, record runtime DEFERRED for November 4. After actual safe click evidence, separately gate single-window stock parking/restoration.
+Apply P0319 from clean exact pushed P0318 main `de325e6`, run **190/190 PREWRITE and POSTWRITE** static contracts and `git diff --check`, generate manifest, then user commit and push/verify main. Deploy via `tools/deploy_logres.sh`, `/reload`; recheck naturally accessible Ironforge Guard direction response, text-only shaman trainer, Gerrig quest-only greeting; validate Blizzard quests, services, safe close and no Lua/taint/protection failures. Use H — Gossip Live Status (READ-ONLY) for evidence, not redundant Gossip Source Check. If follow-up stays Blizzard-only, investigate authoritative event delivery separately; do not add polling without evidence. Beta deferrals go to November 4.
 
 ## Success Criteria
-One direct Logres click on a source-confirmed available choice revalidates the entire live NPC option menu, calls the documented native option-ID API once, and yields normal native dialogue/service transition. Unknown/locked/secret/unavailable cases retain Blizzard control; no addon-owned quest acceptance, transaction, camera change, stock hide, timer or polling. Quest 237 remains reserved.
+A validated nonempty source narrative renders through the SAME Logres narrative window regardless of whether gossip choices are present. Real options still use existing paginated Logres controller; quest entries remain native and unmodified, absent options create no fake actions. Text-only follow-up transitions display when authoritative gossip event arrives. All failures fail-open to working Blizzard. No polling, timer, protected/secret-value misuse, native-frame suppression, native quest click, transaction, or camera change.
 
 ## Do Not Reopen Without New Evidence
-No further repeated gossip source sampling as an implementation prerequisite; no automatic native selections or speculative polling. Do not conflate P0317 deployment with actual live-choice behavior. Never suppress usable Blizzard choices before safe replacement. Preserve all historical assistant patch failures and runtime deferrals.
+Do not implement exceptions for NPC names/families, assume all service NPCs have gossip options, demand repetitive screenshots, or claim full single-window replacement. Native choices and stock fallback stay usable; no removal of Blizzard quest controls before safe replacement. Preserve the user's observed missing stages and any unverified event pathways.
 
 ## Relevant References
-- `docs/memory/evidence/P0318_GOSSIP_NATIVE_CHOICES.md`, `docs/memory/patches/P0318_GOSSIP_NATIVE_CHOICES.md`
-- `docs/memory/evidence/P0317_LIVE_GOSSIP_PRESENTATION.md`, `docs/memory/evidence/P0316_UNIVERSAL_GOSSIP_SCOPE.md`
+- `docs/memory/evidence/P0319_UNIVERSAL_GOSSIP_STAGES.md`, `docs/memory/patches/P0319_UNIVERSAL_GOSSIP_STAGES.md`
+- `docs/memory/evidence/P0318_GOSSIP_NATIVE_CHOICES.md`, `docs/memory/evidence/P0317_LIVE_GOSSIP_PRESENTATION.md`
 - `docs/memory/decisions/D-046_PREVIEW_FIRST_UI_PIPELINE.md`, `docs/memory/decisions/D-047_SELECTIVE_NPC_PRESENTATION_AND_MODULARITY.md`
 - `docs/memory/handoffs/CURRENT_HANDOFF.md`, `docs/memory/investigations/ACTIVE.md`, `docs/memory/roadmap/STATUS.md`, `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`, `docs/ROADMAP.md`
