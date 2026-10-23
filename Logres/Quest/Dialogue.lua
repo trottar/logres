@@ -1203,7 +1203,8 @@ function Dialogue:PresentText(
     self.rewardPreviewChoiceCount = 0
     self.rewardPreviewChoiceState = "inactive"
     if self.optionSession then
-        if reason == "npc-options-preview" then
+        if reason == "npc-options-preview"
+            or reason == "npc-options-read-only" then
             self.optionView:Clear()
         else
             self.optionSession:Reset()
@@ -1519,6 +1520,22 @@ function Dialogue:ShowOptionPreview(mode)
     if not model then return false, reason end
     self.previewCount = self.previewCount + 1
     return self.optionSession:Start(mode, model)
+end
+
+-- P0317: use the already accepted NPC options/narrative visual for real
+-- ordinary gossip source. Native choices remain Blizzard-owned.
+function Dialogue:ShowReadOnlyGossip(model)
+    if not self.moduleEnabled then return false, "module-disabled" end
+    if not self.immersionEnabled then return false, "immersion-off" end
+    if self.completionActive or self.progressActive or self.activeDetail then
+        return false, "quest-in-progress"
+    end
+    if self.presentationShown
+        and self.lastPresentationReason ~= "npc-options-read-only" then
+        return false, "another-presentation-active"
+    end
+    if not self.optionSession then return false, "option-session-unavailable" end
+    return self.optionSession:StartReadOnly(model)
 end
 
 function Dialogue:GetDebugStatus()

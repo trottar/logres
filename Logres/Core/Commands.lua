@@ -5262,6 +5262,19 @@ local function handleCommand(message)
         return
     end
 
+    if command == "gossiplivestatus" or command == "gossiplivetoggle" then
+        local report = command == "gossiplivetoggle"
+            and Logres.NPCGossipPresentation.Toggle()
+            or Logres.NPCGossipPresentation.GetAudit()
+        emit(string.format(
+            "Logres gossip live: %s (enabled=%s pending=%s active=%s opens=%s deferrals=%s closes=%s kind=%s stock=%s nativeActions=%s nativeWrites=%s)",
+            tostring(report.last), tostring(report.enabled), tostring(report.pending),
+            tostring(report.active), tostring(report.opens), tostring(report.deferrals),
+            tostring(report.closes), tostring(report.kind), tostring(report.stock),
+            tostring(report.nativeActions), tostring(report.nativeWrites)))
+        return
+    end
+
     if command == "gossipsourcecheck" then
         -- P0315: explicit, read-only sample, NEVER a native gossip choice.
         local model, report = Logres.NPCGossipSource.Sample()
@@ -6055,6 +6068,18 @@ Logres:RegisterDevPanelAction(
     "gossipSourceCheck",
     "Gossip Source Check (READ-ONLY)",
     "gossipsourcecheck",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "gossipLiveStatus",
+    "Gossip Live Status (READ-ONLY)",
+    "gossiplivestatus",
+    "H"
+)
+Logres:RegisterDevPanelAction(
+    "gossipLiveToggle",
+    "Gossip Live Toggle",
+    "gossiplivetoggle",
     "H"
 )
 Logres:RegisterDevPanelAction(

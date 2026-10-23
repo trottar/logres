@@ -15,6 +15,7 @@ end
 
 function Session:Reset()
     self.active = false
+    self.liveReadOnly = false
     self.model, self.nodeKey = nil, nil
     self.mode, self.optionPage = nil, 1
     self.history = {}
@@ -25,8 +26,10 @@ end
 function Session:Gate()
     local d = self.dialogue
     return self.active and d.moduleEnabled and d.immersionEnabled
-        and d.presentationShown and d.offerActionPreview
-        and d.lastPresentationReason == "npc-options-preview"
+        and d.presentationShown
+        and ((self.liveReadOnly and d.lastPresentationReason == "npc-options-read-only")
+            or (not self.liveReadOnly and d.offerActionPreview
+                and d.lastPresentationReason == "npc-options-preview"))
         and not d.completionActive
 end
 
@@ -34,9 +37,11 @@ function Session:Render()
     local node = self.model and self.model.nodes[self.nodeKey]
     if not node then self.lastResult = "missing-node"; return false end
     local d = self.dialogue
+    local presentationReason = self.liveReadOnly
+        and "npc-options-read-only" or "npc-options-preview"
     local ok, state = d:PresentText(
         node.title or self.model.title, node.body or "", "",
-        "npc-options-preview", false, false, true)
+        presentationReason, false, false, not self.liveReadOnly)
     if not ok or state ~= "shown" then return false end
     d.root:SetHeight(467)
     local choices = node.options or {}
@@ -44,7 +49,7 @@ function Session:Render()
         choose = function(index) self:Choose(index) end,
         back = function() return self:Back() end,
         page = function(delta) return self:MovePage(delta) end,
-    })
+    }, self.liveReadOnly)
     d:UpdatePageControls()
     self:OnNarrativePageChanged()
     self.lastResult = "shown"
@@ -63,7 +68,36 @@ function Session:Start(mode, model)
     return true, "shown"
 end
 
+-- P0317: same view as P previews, but live source rows cannot be clicked.
+function Session:StartReadOnly(model)
+    if not model or model.previewOnly ~= false or not model.nodes
+        or not model.nodes[model.start] then return false, "invalid-live-gossip-model" end
+    local node = model.nodes[model.start]
+    if type(node.options) ~= "table" or #node.options == 0 then
+        return false, "no-live-gossip-options"
+    end
+    for index = 1, #node.options do
+        local option = node.options[index]
+        if type(option) ~= "table" or option.enabled ~= false then
+            return false, "live-option-not-inert"
+        end
+    end
+    self:Reset()
+    self.model = model
+    self.mode = "live-read-only"
+    self.nodeKey = model.start
+    self.liveReadOnly = true
+    self.active = true
+    if not self:Render() then self:Reset(); return false, "render-failed" end
+    return true, "shown"
+end
+
 function Session:Choose(index)
+    -- The live adapter is strictly presentation-only, regardless of source IDs.
+    if self.liveReadOnly then
+        self.blocked = self.blocked + 1
+        return false, "live-choice-stock-owned"
+    end
     if not self:Gate() then
         self.blocked = self.blocked + 1
         return false, "inactive-option-preview"
@@ -152,7 +186,7 @@ function Session:OnNarrativePageChanged()
 end
 
 function Session:Debug()
-    return { active = self.active, mode = self.mode,
+    return { active = self.active, mode = self.mode, liveReadOnly = self.liveReadOnly,
         node = self.nodeKey, optionPage = self.optionPage,
         depth = #self.history, clicks = self.clicks, branches = self.branches,
         backs = self.backCount, rootReturns = self.rootReturns,

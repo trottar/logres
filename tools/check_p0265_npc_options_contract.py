@@ -22,7 +22,7 @@ for x in ('Logres.NPCOptionModel = Model','function Model.Preview(mode)',
  need(x in M,'model: '+x)
 for x in ('Logres.NPCOptionList = Visual','function Visual.New(root)',
           'local PAGE_SIZE = 6','function Visual:Clear()',
-          'function Visual:Present(options, page, canBack, callbacks)',
+          'function Visual:Present(options, page, canBack, callbacks, displayOnly)',
           'function Visual:SetPageVisible(show)',
           'slot:SetScript("OnClick", function(button)',
           'if self.active and button.optionEnabled and self.onChoose then',

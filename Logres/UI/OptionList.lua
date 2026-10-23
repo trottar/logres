@@ -112,7 +112,7 @@ function Visual.New(root)
 end
 
 function Visual:Paint(button)
-    if button.optionEnabled then
+    if button.optionEnabled or self.displayOnly then
         button.wash:SetVertexColor(0.12, 0.10, 0.075, 0.80)
         button.line:SetVertexColor(0.77, 0.60, 0.32, 0.75)
         button.label:SetTextColor(0.94, 0.82, 0.60, 1)
@@ -141,10 +141,11 @@ function Visual:Clear()
     self.frame:Hide()
 end
 
-function Visual:Present(options, page, canBack, callbacks)
+function Visual:Present(options, page, canBack, callbacks, displayOnly)
     self:Clear()
     self.active = true
     self.currentOptions = options
+    self.displayOnly = displayOnly == true
     self.page = page
     self.canBack = canBack == true
     self.onChoose, self.onBack, self.onPage = callbacks.choose, callbacks.back, callbacks.page
@@ -160,7 +161,7 @@ function Visual:Present(options, page, canBack, callbacks)
             slot.optionIndex = offset + i
             slot.optionEnabled = option.enabled ~= false
             local label = option.label
-            if not slot.optionEnabled then
+            if not slot.optionEnabled and not self.displayOnly then
                 label = label .. " [LOCKED]\n" .. (option.reason or "Unavailable")
             end
             slot.label:SetText(label)
