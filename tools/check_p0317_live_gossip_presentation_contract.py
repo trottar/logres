@@ -17,7 +17,7 @@ def need(test, msg):
 for token in ['Logres.NPCGossipPresentation = Live', 'Logres.NPCGossipSource.Sample()',
               'd:ShowReadOnlyGossip(model)', '"GOSSIP_SHOW"', '"GOSSIP_CLOSED"',
               '"PLAYER_INTERACTION_MANAGER_FRAME_SHOW"', '"QUEST_DETAIL"',
-              '"npc-options-read-only"', 'nativeActions = 0', 'nativeWrites = 0',
+              '"npc-options-read-only"', 'nativeActions = actions.attempts', 'nativeWrites = 0',
               'stock = "retained"', 'function Live.Toggle()', 'function Live.GetAudit()']:
     need(token in live or token in dialogue, 'missing live guard: '+token)
 for token in ['function Session:StartReadOnly(model)', 'model.previewOnly ~= false',

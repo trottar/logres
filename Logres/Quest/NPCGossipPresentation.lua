@@ -60,6 +60,8 @@ function Live.TryShow(reason)
 end
 
 function Live.GetAudit()
+    local actions = Logres.NPCGossipChoice and Logres.NPCGossipChoice.GetAudit()
+        or { attempts = 0 }
     local d = dialogue()
     return {
         enabled = enabled, pending = pending,
@@ -68,8 +70,13 @@ function Live.GetAudit()
             and d.presentationShown == true,
         opens = opens, deferrals = deferrals, closes = closes,
         last = last, kind = lastKind,
-        nativeActions = 0, nativeWrites = 0, stock = "retained",
+        nativeActions = actions.attempts, nativeWrites = 0, stock = "retained",
     }
+end
+
+-- User-selected native branches dismiss only the Logres overlay.
+function Live.OnNativeChoice()
+    hide("native-gossip-choice-issued")
 end
 
 function Live.Toggle()

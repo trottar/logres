@@ -1,0 +1,3 @@
+# P0318 — guarded native gossip choice routing
+
+Baseline: pushed P0317 `f56c2cd`, runtime `0.0.218-dev`. Candidate runtime `0.0.219-dev`. Implement actual user-click gossip selection via a dedicated, capability-gated `NPCGossipChoice` controller revalidating the current C_GossipInfo stage before one `SelectOption(gossipOptionID)` call. Reuse P0317 shared Quest narrative/option renderer; P previews remain inert. Blizzard gossip retained, native service/quest/camera untouched. 189 static contracts and WoW **UNVERIFIED** until run. Preserve beta-window and recent assistant static-applier failures in evidence. Next: push and in-game H panel testing of native choice and stock fallback, then separately gate one-window restoration.

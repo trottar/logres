@@ -136,6 +136,7 @@ function Source.Sample()
         end
         local label = plainText(member(option, "name"))
         local identity = member(option, "gossipOptionID")
+        local status = member(option, "status")
         if not label or label == "" or not ordinary(identity)
             or type(identity) ~= "number" then
             return nil, audit("option-unvalidated", interaction, #options, totalQuests, name, bodySource, kind)
@@ -145,7 +146,7 @@ function Source.Sample()
         choices[index] = {
             label = label, nextNode = nil, enabled = false,
             reason = "Blizzard gossip interaction retained",
-            gossipOptionID = identity,
+            gossipOptionID = identity, gossipStatus = status,
         }
     end
     local model = Logres.NPCOptionModel.FromValidated(name, "gossip", {

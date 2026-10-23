@@ -50,6 +50,9 @@ function Session:Render()
         back = function() return self:Back() end,
         page = function(delta) return self:MovePage(delta) end,
     }, self.liveReadOnly)
+    if self.liveReadOnly then
+        self.visual:SetLiveSelectable(Logres.NPCGossipChoice.CanSelect())
+    end
     d:UpdatePageControls()
     self:OnNarrativePageChanged()
     self.lastResult = "shown"
@@ -93,10 +96,21 @@ function Session:StartReadOnly(model)
 end
 
 function Session:Choose(index)
-    -- The live adapter is strictly presentation-only, regardless of source IDs.
+    -- Live gameplay dispatch belongs to a separate, source-revalidating
+    -- controller; previews retain their original inert native boundary.
     if self.liveReadOnly then
-        self.blocked = self.blocked + 1
-        return false, "live-choice-stock-owned"
+        if not self:Gate() then
+            self.blocked = self.blocked + 1
+            return false, "inactive-live-option"
+        end
+        local ok, reason = Logres.NPCGossipChoice.Activate(self.model, index)
+        if ok then
+            self.clicks = self.clicks + 1
+        else
+            self.blocked = self.blocked + 1
+        end
+        self.lastResult = reason
+        return ok, reason
     end
     if not self:Gate() then
         self.blocked = self.blocked + 1

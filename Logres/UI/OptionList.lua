@@ -181,6 +181,20 @@ function Visual:Present(options, page, canBack, callbacks, displayOnly)
     return true
 end
 
+-- P0318: live-native clickability is separate from authored preview enabled.
+-- The view never selects gameplay actions itself; the session delegates.
+function Visual:SetLiveSelectable(enabled)
+    self.liveSelectable = enabled == true and self.displayOnly == true
+    for i = 1, PAGE_SIZE do
+        local slot = self.slots[i]
+        local option = self.currentOptions[slot.optionIndex]
+        slot.optionEnabled = self.liveSelectable and slot.optionVisible == true
+            and type(option) == "table" and option.gossipStatus == 0
+        slot:EnableMouse(slot.optionEnabled)
+        if slot.optionVisible then self:Paint(slot) end
+    end
+end
+
 function Visual:SetPageVisible(show)
     if not self.active then return end
     local showChoices = show == true
