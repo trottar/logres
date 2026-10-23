@@ -195,6 +195,23 @@ function Visual:SetLiveSelectable(enabled)
     end
 end
 
+-- Quest links use a separately gated native selector; they are never
+-- enabled merely because a gossip option or preview row is clickable.
+function Visual:SetQuestSelectable(available, active)
+    self.questAvailable = available == true and self.displayOnly == true
+    self.questActive = active == true and self.displayOnly == true
+    for i = 1, PAGE_SIZE do
+        local slot = self.slots[i]
+        local option = self.currentOptions[slot.optionIndex]
+        if slot.optionVisible and type(option) == "table" and option.questKind then
+            slot.optionEnabled = (option.questKind == "available" and self.questAvailable)
+                or (option.questKind == "active" and self.questActive)
+            slot:EnableMouse(slot.optionEnabled)
+            self:Paint(slot)
+        end
+    end
+end
+
 function Visual:SetPageVisible(show)
     if not self.active then return end
     local showChoices = show == true

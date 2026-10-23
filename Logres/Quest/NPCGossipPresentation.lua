@@ -70,6 +70,8 @@ end
 function Live.GetAudit()
     local actions = Logres.NPCGossipChoice and Logres.NPCGossipChoice.GetAudit()
         or { attempts = 0 }
+    local quest = Logres.NPCGossipQuestChoice and Logres.NPCGossipQuestChoice.GetAudit()
+        or { attempts = 0, blocked = 0 }
     local d = dialogue()
     return {
         enabled = enabled, pending = pending,
@@ -78,7 +80,8 @@ function Live.GetAudit()
             and d.presentationShown == true,
         opens = opens, deferrals = deferrals, closes = closes,
         last = last, kind = lastKind,
-        nativeActions = actions.attempts, nativeWrites = 0, stock = "retained",
+        nativeActions = actions.attempts, questActions = quest.attempts,
+        questBlocked = quest.blocked, nativeWrites = 0, stock = "retained",
     }
 end
 

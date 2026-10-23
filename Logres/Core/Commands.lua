@@ -5267,11 +5267,12 @@ local function handleCommand(message)
             and Logres.NPCGossipPresentation.Toggle()
             or Logres.NPCGossipPresentation.GetAudit()
         emit(string.format(
-            "Logres gossip live: %s (enabled=%s pending=%s active=%s opens=%s deferrals=%s closes=%s kind=%s stock=%s nativeActions=%s nativeWrites=%s)",
+            "Logres gossip live: %s (enabled=%s pending=%s active=%s opens=%s deferrals=%s closes=%s kind=%s stock=%s nativeActions=%s questActions=%s questBlocked=%s nativeWrites=%s)",
             tostring(report.last), tostring(report.enabled), tostring(report.pending),
             tostring(report.active), tostring(report.opens), tostring(report.deferrals),
             tostring(report.closes), tostring(report.kind), tostring(report.stock),
-            tostring(report.nativeActions), tostring(report.nativeWrites)))
+            tostring(report.nativeActions), tostring(report.questActions),
+            tostring(report.questBlocked), tostring(report.nativeWrites)))
         return
     end
 

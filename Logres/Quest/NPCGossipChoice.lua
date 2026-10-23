@@ -84,7 +84,8 @@ function Choice.Activate(model, index)
         local a, b = options[i], newOptions[i]
         if type(a) ~= "table" or type(b) ~= "table"
             or a.gossipOptionID ~= b.gossipOptionID
-            or a.label ~= b.label or a.gossipStatus ~= b.gossipStatus then
+            or a.label ~= b.label or a.gossipStatus ~= b.gossipStatus
+            or a.questID ~= b.questID or a.questKind ~= b.questKind then
             return deny("gossip-row-changed")
         end
     end

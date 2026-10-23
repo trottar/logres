@@ -57,6 +57,9 @@ function Session:Render()
         }, self.liveReadOnly)
         if self.liveReadOnly then
             self.visual:SetLiveSelectable(Logres.NPCGossipChoice.CanSelect())
+            self.visual:SetQuestSelectable(
+                Logres.NPCGossipQuestChoice.CanSelect("available"),
+                Logres.NPCGossipQuestChoice.CanSelect("active"))
         end
     end
     d:UpdatePageControls()
@@ -113,7 +116,14 @@ function Session:Choose(index)
             self.blocked = self.blocked + 1
             return false, "inactive-live-option"
         end
-        local ok, reason = Logres.NPCGossipChoice.Activate(self.model, index)
+        local node = self.model.nodes[self.nodeKey]
+        local option = node and node.options and node.options[index]
+        local ok, reason
+        if type(option) == "table" and option.questKind then
+            ok, reason = Logres.NPCGossipQuestChoice.Activate(self.model, index)
+        else
+            ok, reason = Logres.NPCGossipChoice.Activate(self.model, index)
+        end
         if ok then
             self.clicks = self.clicks + 1
         else

@@ -74,6 +74,26 @@ local function audit(status, interactionType, options, quests, title, bodySource
     return last
 end
 
+-- Validate individual quest rows before presenting links. No native quest action
+-- is taken by this source, and a partially validated menu fails open.
+local function appendQuestChoices(rows, kind, into)
+    for index = 1, #rows do
+        local row = rows[index]
+        if not ordinary(row) then return false end
+        local label = plainText(member(row, "title"))
+        local identity = member(row, "questID")
+        if not label or label == "" or not ordinary(identity)
+            or type(identity) ~= "number" or identity < 1
+            or identity ~= math.floor(identity) then return false end
+        into[#into + 1] = {
+            label = (kind == "available" and "Quest: " or "Quest in progress: ") .. label,
+            enabled = false, reason = "Blizzard quest controls retained",
+            questKind = kind, questID = identity,
+        }
+    end
+    return true
+end
+
 function Source.Sample()
     -- The developer explicitly requests this sample while talking to an NPC.
     -- State is addon-owned; no Blizzard visual frame state is inspected.
@@ -149,8 +169,17 @@ function Source.Sample()
             gossipOptionID = identity, gossipStatus = status,
         }
     end
+    -- Keep the original gossip option count distinct from quest counts for
+    -- diagnostics; only the combined presentation model contains quest links.
+    local displayChoices = {}
+    for index = 1, #choices do displayChoices[index] = choices[index] end
+    if not appendQuestChoices(available, "available", displayChoices)
+        or not appendQuestChoices(active, "active", displayChoices) then
+        return nil, audit("quest-row-unvalidated", interaction,
+            #choices, totalQuests, name, bodySource, kind)
+    end
     local model = Logres.NPCOptionModel.FromValidated(name, "gossip", {
-        gossip = { title = name, body = body, options = choices },
+        gossip = { title = name, body = body, options = displayChoices },
     })
     -- Native quest services remain Quest-owned. This count-only context is
     -- a bounded native-source observation, never an invented quest option.
