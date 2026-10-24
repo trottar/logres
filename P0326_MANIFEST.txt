@@ -1,0 +1,20 @@
+P0326 merchant/flight read-only native source audit
+Baseline verified GitHub main: c596fe24462d1cabd6c8027f46f713ba0d10da8f
+DOCS/STATIC ONLY — no addon-loaded code or native service mutation
+Static PREWRITE + POSTWRITE PASS 197/197
+Merchant/flight source and native handoff only; no new runtime claims
+WoW deployment NOT REQUIRED
+P0321 gossip parking remains WoW UNVERIFIED
+
+dbdce15e8168275c36bdddab05f3ec3785139db6c8eb0ab45045563b3e5bd5ec  docs/ROADMAP.md
+3598f37c0357bce7214f8d37eda27fdc0ccb3086755041acdc36da00f41f72e9  docs/memory/CURRENT.md
+7a61f96fdc6fc17129e130ac07b7c11b932ac25b055ba977a929aee64b3f4cfb  docs/memory/architecture/P0326_MERCHANT_FLIGHT_AUDIT.md
+01134e52462790bb5634627deb07e5abf18dda98654c0d98ac22999dfedb3039  docs/memory/evidence/P0326_MERCHANT_FLIGHT_AUDIT.md
+9391f40e02dd1ff7bfbab2d65318cd794d3222c792a20b9013fa48cd32f149aa  docs/memory/handoffs/CURRENT_HANDOFF.md
+2285c73b14710e4b5cf547b49eda5f1453dbc2d6a4b31f961f24a814d00367f5  docs/memory/investigations/ACTIVE.md
+177e99c64e32b7e54d0dbb2e8577c34aab85ef3f577320bec9eaecd7d2d8dadf  docs/memory/patches/P0326_MERCHANT_FLIGHT_AUDIT.md
+e456acae268c0ea649fc73b41a2f59c406fe27a08034234ea579dc1ed0a5bdec  docs/memory/patches/PATCH_INDEX.md
+7823ef084cf7346f029b89e55f4a35b1f2b51b62d921170f2bb58e3739b71aff  docs/memory/roadmap/LAUNCH_READINESS.md
+7426df5db9671b82664b93ecfdf54fcb1c790e751c5a91c93466c17c14951c59  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+d69df5c683b0fff8b0798c5dc19edcedbf70ae0e8d2b882d08b57b7f2a99e752  docs/memory/roadmap/STATUS.md
+66daca7aaaf1fda98d13952cfe1d78913b7b586a6b25d25394bf009112210549  tools/check_p0326_merchant_flight_audit_contract.py
