@@ -24,6 +24,26 @@
 | L-018 | UI / CORE | Final settings/accessibility and full-density visual polish: **FEATURE GAP / no release acceptance yet** | `docs/memory/architecture/VISUAL_IMPLEMENTATION_STATUS.md`; D-046 | Preview-first work; do not move accepted live geometry without Forever evidence |
 | L-019 | RELEASE | Project Logres root license/public redistribution terms **UNRESOLVED / distribution blocker**; LibCamera notice exists, QuestieDB cannot be bundled without authorization | `Logres/Camera/LIBCAMERA_NOTICE.txt`; `docs/DEPENDENCIES.md`; P0328 stage audit | Owner approves and documents project license/third-party credits before public alpha; internal test ZIP only |
 
+## P0329 — gameplay regression reports (2026-10-24; user reported, not resolved)
+
+These 13 items reflect user observations and requested functionality, not independently reproduced client conditions. **OPEN / REPORTED** means no new proof of cause or correction; P0329 implements only the first diagnostic capture capability, not any visual fix. See `docs/memory/evidence/P0329_GAMEPLAY_SNAPSHOT.md` for source leads and limitations.
+
+| ID | Domain | Observation / request | Priority and narrow acceptance gate |
+| --- | --- | --- | --- |
+| L-020 | CORE / DIAG | Gameplay-accessible diagnostic capture for later isolation | **P0329 PREPARED / runtime UNVERIFIED.** One-shot `0 — Gameplay Snapshot` or `/logres gameplaycapture`; check saved export after reload. No polling or secret inspection. |
+| L-021 | ACT / PET | Pet bar does not display hotkeys such as `C-2` | **OPEN / REPORTED.** Verify actual binding vocabulary, protected pet slot routing, visible Logres-owned key label without action rebinding. |
+| L-022 | NPC / QUEST | Focused quest panel has a superficial visual artifact | **OPEN / REPORTED.** Screenshot exact artifact and shared renderer state; fix presentation only after targeted visual reproduction. |
+| L-023 | STATUS | Missing PvP symbol for player and target | **FEATURE GAP / REPORTED.** Source-proven player/target PvP state, modifier policy, indicator preview and combat-safe integration; no full Immersion OFF. |
+| L-024 | ACT / PET | Active pet ability outline is visually incorrect | **OPEN / REPORTED.** Verify checked/active vs autocast native distinction, preview and highlight layer; leave secure pet action untouched. |
+| L-025 | UI / CORE | Gameplay HUD/action elements overlap map or other menus | **HIGH / REPORTED.** Screenshot map and at least one second menu, inspect addon-owned strata and root ownership; menus must visually cover gameplay, preserve secure clicks and native controls. |
+| L-026 | STATUS | Zero HP on death triggers maximum tunnel, impeding corpse navigation | **HIGH / REPORTED.** Dead and ghost transitions, reload while dead, living 0–5% visual regression; bypass/cap tunnel during dead/ghost without examining secret health values. |
+| L-027 | NPC / XP | Blizzard XP or quest-task pop-ups remain alongside Logres | **OPEN / REPORTED.** Identify exact native UI source and replacement coverage; do not hide unreplaced information. |
+| L-028 | STATUS | Target debuffs intermittently duplicated or missing | **HIGH / REPORTED.** Correlate screenshot and status-aura debug counters for harmful/helpful, native container presence, secret skips, aura identity; avoid broad deduplication or secret inspection. |
+| L-029 | ACT / STATUS | Action key label draws over health tunnel | **OPEN / REPORTED.** Identify labels vs action roots; enforce deliberate vignette ordering without swallowing action interaction. |
+| L-030 | NAV | Compass includes quest givers for stale or future, not available quests | **OPEN / REPORTED.** Distinguish optional QuestieDB *potential* spawn data from verified current quest eligibility; fail open rather than invent quest offering status. |
+| L-031 | NAV | Focused compass POI/quest/marker lacks live approximate yards | **FEATURE GAP / REPORTED.** Reuse already validated map-yard data where present; update with movement and return unavailable when position or map basis unknown. |
+| L-032 | NAV | Compass POI glyphs vertically stack/fan instead of remaining on one line | **OPEN / REPORTED.** Deterministic overflow/same-bearing preview and live screenshot; keep all glyphs on one baseline without icon collision. |
+
 ## Triage and closure rules
 
 For each next change record: observed symptom and exact reproduction if known; expected behavior; authoritative evidence; subsystem/domain; frequency; severity; native fallback; narrow hypothesis; static/preview and actual in-client test results; patch/commit; OPEN / FIXED FOR TESTED SCOPE / DEFERRED / UNREPRODUCED / BLOCKED classification. Preserve failures when a later patch succeeds. A feature gap is not silently upgraded to bug or PASS.

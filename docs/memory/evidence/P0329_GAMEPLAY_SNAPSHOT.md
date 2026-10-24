@@ -1,0 +1,36 @@
+# P0329 — one-shot gameplay snapshot and new regression intake
+
+**Baseline:** verified remote `main` P0328 `ff46fd8035428cd7ea9297e7ddf03631da2ea767`. **Evidence classification:** source-level design only; gameplay runtime, Lua loading, SavedVariables export and every user-reported symptom remain **UNVERIFIED**, not PASS. Historical beta context indicates possible client-access deferral until November 4; actual availability must be checked rather than asserted.
+
+## Narrow source question
+
+Can an issue-time snapshot be captured during gameplay without opening or interacting with the developer panel, polling, reading secret-capable player health/auras, or moving Blizzard/protected frames? The already shipped `Logres/Dev/Panel.lua` has bounded `BeginDiagnosticRun` (100 runs, 120 lines), `LogresDiagnosticsDB` SavedVariables and the exact `/logres panel` interface. `Commands.lua` routes `/logres` commands via `RunDevCommand`, while Phase 0 still has room for a button. Add a single read-only command and use the existing store on the slash path; panel runs already save automatically.
+
+## Source observations explaining triage
+
+- `HUD/HUD.lua` five layered vignette bands use `UnitHealthPercent('player', true, band.curve)` forwarded directly to the native texture setter. The zero-health curves nearly maximize obstruction; this plausibly explains L-026, but ghost/release handling is **not yet traced or fixed**. Never branch on the health percentage in Lua.
+- `Actions/Button.lua` feedback is drawn in HIGH, HUD root is HIGH, Compass and action clusters are MEDIUM, and the panel is DIALOG. L-025 and L-029 require actual menu/viewport overlap evidence before a change to frame strata; no blanket ownership/reassertion is safe.
+- `StatusAuras.lua` reports duplicate-unknown and secret-skip counters; `HUD/NativeDebuffs.lua` also hosts native aura containers. L-028 needs a simultaneous symptom-time snapshot and screenshots of both lanes, not speculative global deduplication or secret inspection.
+- `Compass.lua` has focused quest distance already in a cached source-derived metric and historical QuestieDB potential quest-giver sites. That does not prove quest eligibility or generalized dynamic focused destination yardage. L-030/031/032 are separate provenance/layout questions.
+- `PetActionPresentation:GetDebugStatus()` refreshes binding and presentation state, so it must **NOT** be called by a read-only capture. P0329 records only its module enablement and cached dispatch result; deeper explicit P petstate/diagnostics remain separate actions.
+
+## Capture contract
+
+`/logres gameplaycapture` saves one run to the existing bounded diagnostic DB **even with the panel closed**, emitting a scoped state (cached state and preferences, ownership/debug summaries from initialized HUD/Compass/StatusAuras, static pet presentation metadata) and no direct native-frame or unit-health reads. The `0 — Gameplay Snapshot` developer button uses normal `Panel:RunCommand` which already saves. No `OnUpdate`, timer, combat mutation, frame parking, CVar, camera, action execution, game transaction, or new SavedVariables field. Capture is addon-owned observation, not proof of client visuals; screenshots and context remain necessary.
+
+## Gates and limitations
+
+P0329's applier requires exact clean P0328, nine verified baseline Git blobs, a prewrite candidate shadow including the full **200-checker** suite, postwrite full suite, diff hygiene and manifest. New checker is source-only and avoids hardcoding exact versions. **All WSL checks and in-game behavior UNVERIFIED until the user runs them.** No runtime failure has been reproduced by this patch. P0321 remains runtime DEFERRED, L-019 distribution license unresolved, camera D-047 frozen, and Quest 237 reserved. If slash capture errors, export its text, classify FAIL, and do not proceed to suppress or move native UI.
+
+## P0329 R0 prewrite failure and R1 correction (2026-10-24)
+
+User verified R0 ZIP SHA and ran the applier on the exact clean P0328 main. The nine baseline Git blobs and candidate whitespace passed, but the PREWRITE shadow suite **FAILED at checker 155/200**, `check_p0318_native_gossip_choices_contract.py`: `ERROR: current progress not updated`. The historical contract requires literal `P0317` and `P0318` in `docs/memory/CURRENT.md`; later continuity checkers require exact `P0317` through `P0327`. The R0 replacement CURRENT abbreviated the gossip milestone range as `P0317–P0320`, which does not supply individual literal IDs. The failure occurred **before tracked writes**: P0329 R0 APPLY FAIL, no source patch applied, no WoW runtime result.
+
+R1 retains the historical literal milestone references as a compact source-history continuity statement in CURRENT, preserves exact baseline and runtime scope, and strengthens the P0329 checker to protect these tokens. The complete 200-checker PREWRITE/POSTWRITE suite must run on the user WSL tree; until then the corrected artifact is **UNVERIFIED**, not PASS. Do not mistake R0 failure for a WoW defect. No camera, source adapter, secure action or native UI mutation is authorized by this correction.
+## P0329 R1 prewrite failure and R2 correction (2026-10-24)
+
+User verified R1 ZIP SHA and ran its guarded applier against the same exact clean pushed P0328 `ff46fd8`. Baseline nine committed blobs and candidate whitespace passed, with **PREWRITE checker 155/200 P0318 now passing**, but checker **163/200** `check_p0326_merchant_flight_audit_contract.py` failed: `handoff authority or version missing`. The R1-rewritten `CURRENT_HANDOFF.md` contained `CURRENT.md` but omitted the literal `P0326` required by the historical merchant/flight audit checker. Review also found that the next P0327 fixture contract requires literal `P0327` in the handoff; it would have failed if execution reached 164/200. R1 **PREWRITE APPLY FAIL**, no tracked writes; user did not modify repo or test WoW. This is a second assistant artifact-generation failure, not a new runtime bug.
+
+**R2 correction:** retain explicit P0326 and P0327 handoff references and augment the new P0329 checker to enforce all five relevant handoff markers (`CURRENT.md`, `P0326`, `P0327`, `P0328`, `P0329`) plus individual P0317–P0329 CURRENT milestones. Do not weaken the historical checks. The ZIP/applier validates candidate hygiene and all 200 shadow tests before any tracked write and 200 again after; user WSL results remain **UNVERIFIED** until executed. Future agent lesson: check both CURRENT *and* CURRENT_HANDOFF historical-marker predicates when revising memory and test the prepared candidate, not only an isolated new checker. No gameplay claim is changed.
+
+**Author-side prepackage finding:** the P0178 `check_ui_ownership_audit_contract.py` checker establishes that the existing `handleCommand` already captures 60 local upvalues. The R0/R1 candidate's `local function runGameplayCapture()` would add a 61st and fail checker 196/200. R2 instead uses `function Logres:RunGameplayCapture()` and namespace dispatch, preserving 60 without changing the game command interface. The P0329 static checker now enforces this boundary as well. This issue was found by source analysis before R2 was delivered, not by in-game execution.

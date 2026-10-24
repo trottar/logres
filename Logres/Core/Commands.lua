@@ -138,6 +138,102 @@ local function printStatus()
     ))
 end
 
+
+function Logres:RunGameplayCapture()
+    -- User-invoked one-shot observation only. Do not refresh live unit state,
+    -- inspect secret-capable health/auras or query protected Blizzard frames.
+    local state = Logres:GetState()
+    local preferences = Logres:GetPreferences()
+    emit(string.format(
+        "Logres gameplaycapture: version=%s read-only, one-shot; no native frame/secret unit inspection",
+        tostring(Logres.VERSION)
+    ))
+    emit(string.format(
+        "Logres gameplaycapture state: revision=%s context=%s combat=%s playerPvP=%s instance=%s interaction=%s/%s changedBy=%s",
+        tostring(state.revision), tostring(state.context),
+        boolText(state.combat), boolText(state.pvpFlagged),
+        tostring(state.instanceType), boolText(state.interacting),
+        tostring(state.interactionType), tostring(state.changedBy)
+    ))
+    emit(string.format(
+        "Logres gameplaycapture preferences: immersion=%s activeQuest=%s revision=%s",
+        boolText(preferences.immersionEnabled),
+        boolText(preferences.activeQuestEnabled),
+        tostring(preferences.revision)
+    ))
+
+    -- GetDebugStatus is only called for already-initialized addon-owned
+    -- summary producers. Do not initialize modules or invoke pet presentation's
+    -- state-refreshing GetDebugStatus as part of a read-only capture.
+    local function readCaptureStatus(name, ready)
+        local module = Logres:GetModule(name)
+        if not module or not module:IsEnabled()
+            or type(module.GetDebugStatus) ~= "function" or not ready(module)
+        then
+            emit("Logres gameplaycapture " .. name .. ": deferred/not initialized")
+            return nil
+        end
+        local ok, status = pcall(module.GetDebugStatus, module)
+        if not ok or type(status) ~= "table" then
+            emit("Logres gameplaycapture " .. name .. ": unavailable (diagnostic failed)")
+            return nil
+        end
+        return status
+    end
+
+    local hud = readCaptureStatus("HUD", function(module)
+        return module.root ~= nil and module.healthBands ~= nil
+    end)
+    if hud then
+        emit(string.format(
+            "Logres gameplaycapture HUD: rootShown=%s preview=%s previewPercent=%s bands=%s targetReady=%s",
+            boolText(hud.rootShown), boolText(hud.previewEnabled),
+            tostring(hud.previewPercent or "none"), tostring(hud.bandCount),
+            boolText(hud.targetFrameReady)
+        ))
+    end
+
+    local compass = readCaptureStatus("Compass", function(module)
+        return module.frame ~= nil and module.directionWidgets ~= nil
+    end)
+    if compass then
+        emit(string.format(
+            "Logres gameplaycapture Compass: shown=%s nearby=%s dbShown=%s services=%s focusedQuestID=%s focusedYards=%s questDest=%s tracking=%s",
+            boolText(compass.rootShown),
+            tostring(compass.availableQuestPoiShown),
+            tostring(compass.dbCandidateShown),
+            tostring(compass.dbServiceCandidateShown),
+            tostring(compass.focusedQuestID or "none"),
+            tostring(compass.focusedQuestDistanceYards or "unavailable"),
+            tostring(compass.questDestinationShown),
+            tostring(compass.trackingShown)
+        ))
+    end
+
+    local aura = readCaptureStatus("StatusAuras", function(module)
+        return module.last ~= nil and module.lanes ~= nil
+    end)
+    if aura then
+        emit(string.format(
+            "Logres gameplaycapture Auras: targetHarmful=%s targetHelpful=%s secretSkips=%s failures=%s duplicatesUnknown=%s refreshes=%s",
+            tostring(aura.targetHarmfulVisible),
+            tostring(aura.targetHelpfulVisible),
+            tostring(aura.targetSecret), tostring(aura.failures),
+            tostring(aura.duplicatesUnknown), tostring(aura.refreshes)
+        ))
+    end
+
+    local pet = Logres:GetModule("PetActionPresentation")
+    if pet then
+        emit(string.format(
+            "Logres gameplaycapture Pet: enabled=%s cachedDefaultArmResult=%s (no pet state refresh)",
+            boolText(pet:IsEnabled()),
+            tostring(pet.defaultArmLastResult or "none")
+        ))
+    end
+    emit("Logres gameplaycapture: snapshot only; attach symptom screenshot/context. Saved runs flush on /reload or logout.")
+end
+
 local function printPreferences()
     local preferences = Logres:GetPreferences()
 
@@ -4826,6 +4922,7 @@ end
 local function printHelp()
     emit("Logres development commands:")
     emit("  /logres panel")
+    emit("  /logres gameplaycapture  (one-shot SAVED diagnostic; READ-ONLY)")
     emit("  /logres settings")
     emit("  /logres checkall")
     emit("  /logres status")
@@ -4928,6 +5025,11 @@ local function handleCommand(message)
 
     if command == "uiownershipcheck" then
         Logres:RunUIOwnershipCheck()
+        return
+    end
+
+    if command == "gameplaycapture" then
+        Logres:RunGameplayCapture()
         return
     end
 
@@ -5630,6 +5732,25 @@ local function handleCommand(message)
 end
 
 function Logres:RunDevCommand(message, output)
+    -- Slash path saves an issue-time snapshot without constructing the panel
+    -- or touching gameplay frames, including in combat. Panel action calls
+    -- already supply an output callback and save their own bounded run.
+    if output == nil and type(message) == "string"
+        and message:lower():match("^%s*gameplaycapture%s*$")
+    then
+        local panel = self:GetModule("DevPanel")
+        if panel and type(panel.BeginDiagnosticRun) == "function" then
+            local run = panel:BeginDiagnosticRun("gameplaycapture")
+            output = function(line)
+                print(line)
+                local lines = run.lines
+                lines[#lines + 1] = line
+                while #lines > 120 do
+                    table.remove(lines, 1)
+                end
+            end
+        end
+    end
     local previousOutput = activeOutput
     activeOutput = output
 
@@ -5649,6 +5770,12 @@ function Logres:RunDevCommand(message, output)
     return true
 end
 
+Logres:RegisterDevPanelAction(
+    "gameplaySnapshot",
+    "Gameplay Snapshot",
+    "gameplaycapture",
+    "0"
+)
 Logres:RegisterDevPanelAction(
     "runall",
     "Run All",
