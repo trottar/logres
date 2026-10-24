@@ -1,34 +1,34 @@
 ---
 memory_schema: 1
-as_of: 2026-10-23
+as_of: 2026-10-24
 project: logres
 ---
 
 # Current State
 
 ## Active Objective
-Prepare a **reliable public-alpha-quality Forever Logres** and later quality-gated 1.0 around the D-048 five independently selectable systems: NAV, ACT, NPC, STATUS, CAM. Protect all previously accepted runtime behavior and stock fallback. November 4 is a proposed **runtime re-entry opportunity**, not runtime PASS or a confirmed public-launch date.
+Prepare public-alpha-quality WoW Forever Logres and quality-gated 1.0 with D-048 five independently selectable NAV/ACT/NPC/STATUS/CAM domains, safe native fallback, and preserved accepted runtime functionality. November 4 is a proposed client-test opportunity, not runtime PASS.
 
 ## Current Work Item
-**P0323 — repository-wide READ-ONLY source modularity/ownership audit, DOCS + STATIC CONTRACT ONLY / PREPARED.** Verified pushed P0322 `272130eb9e80c3c51ebe5da08598453cdfc56a88` on `main`; D-048 and launch/issue records are durable. Audited all **94 Lua entries** from `Logres/Logres.toc` in `docs/memory/architecture/P0323_MODULE_OWNERSHIP_AUDIT.md`. Next after P0323 verification: P0324 isolated five-domain pure policy fixtures and 32 requested-state combinations; **no production five-toggle wiring** until separate native restoration proof.
+**P0324 — isolated pure five-domain policy specification and regression fixtures; PREPARED / WSL static and WoW UNVERIFIED.** Verified pushed P0323 `386a7ef` on GitHub main. Its 94-loaded-file ownership audit is durable. P0324 adds no addon-loaded code, no player-facing switches and no SavedVariables migration: only a standalone Python policy evaluator, its 32-combination test contract and canonical records. Next: apply under exact clean P0323 and verify full 195 PREWRITE+POSTWRITE checks, commit/push, then proceed to separately scoped policy/migration design and service preparation.
 
 ## Verified State
-- P0322 pushed `272130e`: D-048 five systems, alpha/1.0 internal release gates, consolidated `ISSUE_REGISTER.md` and new static contract durable. P0322 R0 checker-version failure preserved in evidence, R1 pushed; this does not imply WoW runtime verification.
-- P0317–P0320 have positive user-observed scope for NPC dialogues/options/quest titles. P0321 single-window gossip parking is committed as `9a180c8` but **WoW UNVERIFIED / DEFERRED until November 4**. Merchant and flight-master remain the primary untested NPC service regimes and fully native transaction owners.
-- Current `immersionEnabled` and `activeQuestEnabled` are the only persisted player choices in `Core/Preferences.lua`; schema 3 in `Core/Database.lua`. Immersion currently drives action stock replacement, player/target suppression and Quiet Mode; compass follows it. Five independent live switches do **NOT** yet exist.
-- P0323 maps loaded Lua into the five domains/shared infrastructure, distinguishes pure presentation seams from native/protected surfaces, and identifies monolithic orchestration without claiming any runtime refactor. Camera is frozen D-047; quest 237 reserved; all issue-register failures/deferrals retained.
+- P0323 pushed `386a7ef` and inventories all 94 Lua TOC entries into the five domains or SHARED. Cross-domain Immersion coupling is documented, not yet removed.
+- P0322 accepted D-048, launch gates and issue register; P0322 R0 checker-version PREWRITE failure preserved. P0317/P0318/P0319/P0320 retain positive user evidence for observed gossip and quest-link interactions. P0321 pushed `9a180c8` but gossip parking/restoration remains **WoW UNVERIFIED / DEFERRED until November 4**.
+- The production `Core/Preferences.lua` still defines `immersionEnabled` and `activeQuestEnabled`, with schema 3 in `Core/Database.lua`; `Immersion/Controller.lua` still coordinates actions, player/target suppression and Quiet Mode, and compass follows Immersion. Five independent live toggles **DO NOT EXIST**.
+- D-047 freezes camera/DynamicCam. Native merchant and flight transaction surfaces remain Blizzard-owned. Native quest handoff and Quest 237 remain preserved. Other open bugs and deferrals remain classified in `ISSUE_REGISTER.md`.
 
 ## Next Action
-Apply P0323 to exact clean pushed P0322 `272130e`; require 194/194 PREWRITE and POSTWRITE static checker suite, diff hygiene and manifest, then user commit/push and GitHub verify. **No WoW redeploy for docs-only.** Next P0324 may introduce **pure model/test fixtures only** for requested/effective/fallback/pending states and 32 domain configurations; don't change `Immersion/Controller.lua`, secure ACT/pet, gossip/trainer native parking, `Camera/*.lua` or saved preferences in an untested candidate. On November 4, first validate P0321 stock parking and restoration, then naturally available merchant/flight handoffs, followed by high-priority baseline regressions.
+Apply P0324 on clean exact pushed P0323 `386a7ef`, requiring full **195/195 PREWRITE and POSTWRITE** static checks, prewrite whitespace and `git diff --check`, generated manifest, user commit/push and GitHub verification. P0324 is source-independent and test-only: **no WoW redeploy**. After P0324, use deterministic policy behavior to prepare a migration decision and eventual guarded production Lua separately; no native suppression, secure ACT/pet, gossip/trainer parking, camera or global Immersion runtime changes before actual Forever restoration proof. November 4: P0321 Gossip Stock Status/Toggle, gossip/quest native handoff/restoration, merchant/flight native service access, then high-priority baseline checks.
 
 ## Success Criteria
-The new audit includes each of the **94 TOC Lua entries once**, accurate domain/shared mapping, known dependency/fallback ownership, ranked safe seams, and explicit no-runtime-change scope; preserves P0317 P0318 P0319 P0320 P0321 P0322 continuity, D-046/D-047/D-048 decisions and L-001–L-018 issue-register classifications. Future five-domain selectors must be independent, distinguish requested vs effective/native fallback, preserve SavedVariables migration, and prove safe stock restoration before runtime exposure.
+Precisely five named independent requested modes, **32** deterministic configurations, incomplete-source fallback, partial-native retention and deferred-restore semantics, four legacy immersion/Active Quest combinations preserved without migration or alias writes. All models are inert Python fixtures outside `Logres/Logres.toc`; requested/effective/fallback/pending are *simulated policy outputs*, never claims of Blizzard observation. The alpha/1.0 plan and all previous evidence remain intact.
 
 ## Do Not Reopen Without New Evidence
-Do not declare P0321 single-window PASS, rewrite working controllers, alter DynamicCam or camera, hide missing native quest/merchant/flight/party/target aura controls, expose exact player HP or exact enemy level, implement polling or generic protected hooks, or conflate source/static inspection with client evidence. No runtime Lua, TOC, version, deployment, media or settings schema changes in P0323.
+No live five-toggle implementation, schema bump, TOC/runtime version, camera or native frame change in this checkpoint. Do not conflate Python model PASS with Lua execution or safe Blizzard restoration. Do not alter proven player-health information disclosure, sparse target, stock minimap/party/auras/quest controls or protected pet/action ownership. No polling or blanket hooks. P0321 remains runtime UNVERIFIED until Forever proof.
 
 ## Relevant References
-- `docs/memory/architecture/P0323_MODULE_OWNERSHIP_AUDIT.md`, `docs/memory/evidence/P0323_MODULE_OWNERSHIP_AUDIT.md`, `docs/memory/patches/P0323_MODULE_OWNERSHIP_AUDIT.md`
-- `docs/memory/decisions/D-048_FIVE_INDEPENDENT_SYSTEMS.md`, `docs/memory/roadmap/LAUNCH_READINESS.md`, `docs/memory/investigations/ISSUE_REGISTER.md`
-- `docs/memory/decisions/D-046_PREVIEW_FIRST_UI_PIPELINE.md`, `docs/memory/decisions/D-047_SELECTIVE_NPC_PRESENTATION_AND_MODULARITY.md`
+- `docs/memory/architecture/P0324_POLICY_FIXTURE.md`, `docs/memory/evidence/P0324_FIVE_DOMAIN_POLICY.md`, `docs/memory/patches/P0324_FIVE_DOMAIN_POLICY.md`
+- `docs/memory/architecture/P0323_MODULE_OWNERSHIP_AUDIT.md`, `docs/memory/decisions/D-048_FIVE_INDEPENDENT_SYSTEMS.md`, `docs/memory/roadmap/LAUNCH_READINESS.md`, `docs/memory/investigations/ISSUE_REGISTER.md`
+- `docs/memory/decisions/D-046_PREVIEW_FIRST_UI_PIPELINE.md`, `docs/memory/decisions/D-047_SELECTIVE_NPC_PRESENTATION_AND_MODULARITY.md`, `docs/memory/evidence/P0321_GOSSIP_SINGLE_WINDOW.md`
 - `docs/memory/handoffs/CURRENT_HANDOFF.md`, `docs/memory/investigations/ACTIVE.md`, `docs/memory/roadmap/STATUS.md`, `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`, `docs/ROADMAP.md`

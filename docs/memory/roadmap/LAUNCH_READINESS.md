@@ -1,3 +1,7 @@
+## P0324 — inert five-domain policy specification (2026-10-24)
+
+P0323 audit is pushed at `386a7ef`; P0324 is test-only preparation of the D-048 five-domain selection model, **32** requested-mode combinations, capability/fallback and pending-restore fixtures and untouched legacy-save behavior. `tools/p0324_domain_policy.py` is **not addon-loaded**; no live preference migration or native ownership occurs. Next: separate migration and Lua-equivalence gates, bounded merchant/flight source assessment and November 4 P0321 client-validation priority. P0321 gossip parking remains **WoW UNVERIFIED**; release gates unchanged.
+
 ## P0323 modularity-audit checkpoint (2026-10-23)
 
 P0322 `272130e` is pushed and durable; P0323 is a docs/static-checker-only audit mapping **all 94 loaded Lua files** into five intended D-048 systems or shared infrastructure. Existing Immersion state coupling, two distinct native NPC parking ownership paths and high-risk secure/camera regions are recorded without refactoring. The next implementation candidate is a **pure** 32-combination requested/effective/fallback policy fixture, not live five-toggle controls. November 4 runtime verification remains necessary for P0321 gossip parking and merchant/flight native handoffs; alpha/1.0 quality gates are unchanged. Full static checks must pass before this audit can be committed. See `docs/memory/architecture/P0323_MODULE_OWNERSHIP_AUDIT.md`.
