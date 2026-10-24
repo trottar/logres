@@ -1,0 +1,37 @@
+# Logres — Consolidated open issue and functionality register
+
+**As of:** 2026-10-23. An indexed triage list, **not** a replacement for historical evidence, which remains authoritative. Status terms: OBSERVED FAIL (observed negative), OPEN / UNREPRODUCED (one-off), RUNTIME UNVERIFIED (implemented but not tested), DEFERRED (requires environment/capability), FEATURE GAP (not claimed implemented), ACCEPTED SCOPE (positive observation only). Release classifications are planning hypotheses until November 4 evidence.
+
+| ID | Domain | Issue/capability and observed status | Canonical evidence / source | Alpha impact / next safe action |
+| --- | --- | --- | --- | --- |
+| L-001 | NPC | **P0321** native gossip single-window parking/restore: pushed `9a180c8`, **RUNTIME UNVERIFIED / DEFERRED**, not a known runtime bug | `docs/memory/evidence/P0321_GOSSIP_SINGLE_WINDOW.md` | High validation gate: Gossip Stock Status/Toggle, guard branching, quest link/detail, Goodbye and restoration; fail open to stock |
+| L-002 | NPC | Blizzard frame flashes during native quest claim: **OPEN**; do not mask with timers | `docs/memory/decisions/D-047_SELECTIVE_NPC_PRESENTATION_AND_MODULARITY.md` | Track during natural claim; source/restore diagnosis before any mutation |
+| L-003 | NPC | Merchant presentation / source/transaction handoff: **FEATURE GAP / runtime untested** | D-047; P0321 record and native-service policy | Alpha acceptable with fully usable native vendor, buyback/repair; research model/preview without transactions |
+| L-004 | NPC | Flight-master session/handoff: **FEATURE GAP / runtime untested** | D-047; Phase G taxi deferred coverage | Preserve native flight map and travel, existing camera baseline; source audit and natural in-game check |
+| L-005 | NPC | Live quest reward choice/complete/progress branches: **PARTIAL / runtime UNVERIFIED in variants** | D-047; `docs/memory/architecture/VISUAL_IMPLEMENTATION_STATUS.md` | Native reward/complete controls retained; no automatic acceptance or claim; preserve Quest 237 |
+| L-006 | NPC | Longer-session anomalies reported by user: **OPEN / DETAILS PENDING** | D-047 release/evidence gates | Do not invent trigger; capture exact behavior at recurrence; no polling solution |
+| L-007 | STATUS | Stock TargetFrame intermittent reappearance once: **OPEN / UNREPRODUCED** | `docs/memory/investigations/D4_TARGETFRAME_REASSERTION_INTERMITTENT.md` | No speculative timer/hooks; record event, combat, context and preference transitions on recurrence |
+| L-008 | ACT / STATUS | Pet secure actions/autocast/Edit Mode/reload/context coverage incomplete; previous protected/restoration attempts failed historically | `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`, P0206/P0211 evidence | High regression priority; freeze accepted pet visibility, preserve native PET access; validate on client |
+| L-009 | ACT | Supported action bar routing versus future live layout/editing: **FEATURE GAP**, distinct capabilities | `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`, D-045 | Not alpha-blocker if supported bars work; no speculative secure edit ownership |
+| L-010 | NAV | Quest destination/AreaPOI and tracking-result locations incomplete: **CAPABILITY DEFERRED**, not invented bearings | `docs/memory/investigations/FUTURE_NAVIGATION_POI_TRACKING_CAPABILITY.md` | Keep minimap, only source-proven positions; fixture/previews and source audit permitted |
+| L-011 | STATUS | World-attached target anchor: **OPEN / source/runtime DEFERRED** | `docs/memory/investigations/FUTURE_WORLD_TARGET_PRESENTATION.md` | Preserve screen-space target; no protected nameplate mutation |
+| L-012 | STATUS | Target/player/party aura and cast edge-state coverage: **PARTIAL / DEFERRED** | `docs/memory/architecture/VISUAL_IMPLEMENTATION_STATUS.md` | Retain native aura/status/group surfaces; previews may cover deterministic states |
+| L-013 | CAM | Existing camera interaction accepted for observed scope; unobserved taxi/session/AFK and independent switch restoration **DEFERRED** | D-047 P0260; `docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md` | FROZEN runtime camera; no CVar/profile change without separate approval |
+| L-014 | CORE | Five independent user switches **NOT IMPLEMENTED**: global `immersionEnabled` currently couples action/frame/Quiet Mode and compass; only Active Quest separate | `Logres/Core/Preferences.lua`, `Logres/Immersion/Controller.lua`, `Logres/Settings/Panel.lua`; D-048 | High product requirement; first read-only map, mock policy/migration; runtime isolation only after Forever proof |
+| L-015 | RELEASE | P0321 `CURRENT.md` says PREPARED after pushed commit: **DOCS STALE** | `docs/memory/CURRENT.md` and verified main `9a180c8` | P0322 reconciles while preserving runtime UNVERIFIED status |
+| L-016 | RELEASE | Repeated P0321 ZIP failures (invalid blob literal and evidence blank-line EOF): **OBSERVED PATCH TOOL FAILURES**, fixed for delivered R3, historical failures retained | `docs/memory/evidence/P0321_GOSSIP_SINGLE_WINDOW.md` | Enforce 40-hex blob validation, exact candidate diff hygiene, shadow contracts and transactional rollback in future appliers |
+| L-017 | RELEASE / NAV | Optional QuestieDB and release dependency instructions: **DOCUMENTED integration; public packaging not approved** | `README.md`; `docs/DEPENDENCIES.md` | Validate fresh install, optional-provider absence, redistribution policy and feature claims before alpha |
+| L-018 | UI / CORE | Final settings/accessibility and full-density visual polish: **FEATURE GAP / no release acceptance yet** | `docs/memory/architecture/VISUAL_IMPLEMENTATION_STATUS.md`; D-046 | Preview-first work; do not move accepted live geometry without Forever evidence |
+
+## Triage and closure rules
+
+For each next change record: observed symptom and exact reproduction if known; expected behavior; authoritative evidence; subsystem/domain; frequency; severity; native fallback; narrow hypothesis; static/preview and actual in-client test results; patch/commit; OPEN / FIXED FOR TESTED SCOPE / DEFERRED / UNREPRODUCED / BLOCKED classification. Preserve failures when a later patch succeeds. A feature gap is not silently upgraded to bug or PASS.
+
+**Alpha blocker:** gameplay-critical secure/protected/Lua/taint error, unusable action or NPC controls, invisible native hit region, failed stock restoration, unrecoverable camera, non-functional install. **Not automatically a blocker:** missing nonessential compass data when minimap works; merchant/flight visual unification when native service works; unproven world-target anchor; minor polish. Assess real severity from evidence, not label alone.
+
+## November 4 first-run runtime queue
+
+1. Verify deployed P0321 version, H **Gossip Stock Status (READ-ONLY)** and **Gossip Stock Toggle**; test native frame restoration, gossip and quest detail/Goodbye.
+2. Test naturally available merchant buy/buyback/repair and flight-master service handoffs as native controls; preserve camera baseline. Do not perform unnecessary spending/travel for evidence.
+3. Run existing in-game Phase 0 and relevant H panels for accepted action, pet, STATUS, layout and camera scope; log any Lua/secret/protected errors as failures.
+4. Only after runtime validation plan live five-domain ownership changes; mock fixture PASS does not prove native restoration.
