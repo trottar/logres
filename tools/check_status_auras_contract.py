@@ -19,7 +19,7 @@ bootstrap=b.read_text(encoding='utf-8') if b.is_file() else ''
 for token in (
     'RegisterModule("StatusAuras"',
     '"HARMFUL|CROWD_CONTROL"', '"HARMFUL|RAID"',
-    '"HARMFUL|PLAYER"', '"HELPFUL|DISPELLABLE"',
+    '{ filter = "HARMFUL", kind = "harmful" }', '"HELPFUL|DISPELLABLE"',
     '"HELPFUL|IMPORTANT"', '"HELPFUL|BIG_DEFENSIVE"',
     'C_Secrets.ShouldUnitAuraIndexBeSecret',
     'C_UnitAuras.GetAuraDataByIndex',

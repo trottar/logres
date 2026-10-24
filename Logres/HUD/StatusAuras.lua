@@ -7,6 +7,7 @@ local StatusAuras = Logres:RegisterModule("StatusAuras", {
 })
 
 local MAX_SCAN = 6
+local TARGET_HARMFUL_SCAN = 16
 local MAX_ICONS = 5
 local ICON_SIZE = 25
 local GAP = 3
@@ -21,8 +22,6 @@ local FILTERS = {
         { filter = "HARMFUL", kind = "harmful" },
     },
     target = {
-        { filter = "HARMFUL|PLAYER", kind = "harmful" },
-        { filter = "HARMFUL|CROWD_CONTROL", kind = "urgent" },
         { filter = "HARMFUL", kind = "harmful" },
         { filter = "HELPFUL|DISPELLABLE", kind = "urgent" },
         { filter = "HELPFUL|BIG_DEFENSIVE", kind = "urgent" },
@@ -107,8 +106,15 @@ local function readAura(unit, index, filter, kind)
         instanceID = nil
     end
 
+    -- The whole aura can be ordinary while individual fields are secret.
+    local playerOrigin = aura.isFromPlayerOrPlayerPet
+    if isSecret(playerOrigin) or type(playerOrigin) ~= "boolean" then
+        playerOrigin = nil
+    end
+
     return {
         icon = icon,
+        fromPlayer = playerOrigin,
         applications = applications,
         stacksSecret = stacksSecret,
         instanceID = instanceID,
@@ -139,9 +145,12 @@ local function readUnit(unit)
         return result
     end
     local seen = {}
+    local targetHarmfulCandidates = {}
     for _, descriptor in ipairs(FILTERS[unit]) do
-        -- Never let target buffs consume the harmful/status action budget.
-        -- This category comes from our immutable source filter, not aura data.
+        -- A single canonical HARMFUL query avoids multiple copies of an
+        -- identity-unknown DoT across overlapping filtered index spaces.
+        local canonicalTargetHarmful = unit == "target"
+            and descriptor.filter == "HARMFUL"
         local bucket = result.rows
         if unit == "target" then
             if descriptor.filter:sub(1, 7) == "HARMFUL" then
@@ -150,8 +159,12 @@ local function readUnit(unit)
                 bucket = result.helpfulRows
             end
         end
-        for index = 1, MAX_SCAN do
-            if #bucket >= MAX_ICONS then
+        local scanLimit = canonicalTargetHarmful
+            and TARGET_HARMFUL_SCAN or MAX_SCAN
+        for index = 1, scanLimit do
+            -- Scan beyond five for the canonical target harmful source so
+            -- later ordinary player-origin DoTs can still be prioritized.
+            if not canonicalTargetHarmful and #bucket >= MAX_ICONS then
                 break
             end
             local aura, state = readAura(
@@ -174,13 +187,27 @@ local function readUnit(unit)
                     else
                         seen[aura.instanceID] = true
                     end
-                    bucket[#bucket + 1] = aura
+                    if canonicalTargetHarmful then
+                        targetHarmfulCandidates[#targetHarmfulCandidates + 1] = aura
+                    else
+                        bucket[#bucket + 1] = aura
+                    end
                 end
             end
         end
-        -- The other category must still be scanned if this one is full.
     end
     if unit == "target" then
+        -- Prefer only *ordinary* player-origin indicators. Unknown or secret
+        -- origin remains eligible in canonical order; do not guess identity.
+        for pass = 1, 2 do
+            for _, aura in ipairs(targetHarmfulCandidates) do
+                if #result.harmfulRows < MAX_ICONS
+                    and (aura.fromPlayer == true) == (pass == 1)
+                then
+                    result.harmfulRows[#result.harmfulRows + 1] = aura
+                end
+            end
+        end
         for _, aura in ipairs(result.harmfulRows) do
             result.rows[#result.rows + 1] = aura
         end
