@@ -544,7 +544,11 @@ function HUD:SetHealthPreviewPercent(previewPercent)
     self.previewPercent = previewPercent
 
     if self.root and self.root:IsShown() then
-        self:ApplyHealthPreviewPercent(previewPercent)
+        if self.deathTravelMode then
+            self:UpdateHealthVignette()
+        else
+            self:ApplyHealthPreviewPercent(previewPercent)
+        end
     end
 
     return true, "preview"
@@ -564,8 +568,59 @@ function HUD:SetPreviewEnabled(enabled)
     return self:SetHealthPreviewPercent(nil)
 end
 
+local function readOrdinaryDeathTravelState()
+    -- Death/ghost observations can be secret-capable. Inspect only a value
+    -- positively classified ordinary; unknown leaves our cached state alone.
+    if type(UnitIsDeadOrGhost) ~= "function"
+        or type(issecretvalue) ~= "function"
+    then
+        return nil
+    end
+    local ok, result = pcall(UnitIsDeadOrGhost, "player")
+    if not ok then
+        return nil
+    end
+    local tested, secret = pcall(issecretvalue, result)
+    if not tested or secret then
+        return nil
+    end
+    if type(result) ~= "boolean" then
+        return nil
+    end
+    return result
+end
+
+function HUD:RefreshDeathTravelState(event)
+    -- Known lifecycle events are ordinary control signals, not health values.
+    -- PLAYER_ALIVE can mean spirit release; only a safe observation can clear
+    -- the death override there. PLAYER_UNGHOST always completes corpse travel.
+    if event == "PLAYER_DEAD" then
+        self.deathTravelMode = true
+    elseif event == "PLAYER_UNGHOST" then
+        self.deathTravelMode = false
+    else
+        local ordinaryState = readOrdinaryDeathTravelState()
+        if ordinaryState ~= nil then
+            self.deathTravelMode = ordinaryState
+        end
+    end
+    self:UpdateHealthVignette()
+end
+
 function HUD:UpdateHealthVignette()
-    if not self.root or not self.root:IsShown() or self.previewEnabled then
+    if not self.root or not self.root:IsShown() then
+        return
+    end
+
+    -- Corpse travel is not a health percentage. Keep the world navigable
+    -- after death; never query secret-capable health while this mode is active.
+    if self.deathTravelMode then
+        for index = 1, #self.healthBands do
+            self.healthBands[index].texture:SetAlpha(0)
+        end
+        return
+    end
+    if self.previewEnabled then
         return
     end
 
@@ -683,7 +738,9 @@ function HUD:ApplyImmersionPreference(preferences)
     if preferences.immersionEnabled then
         self.root:Show()
 
-        if self.previewEnabled then
+        if self.deathTravelMode then
+            self:UpdateHealthVignette()
+        elseif self.previewEnabled then
             self:ApplyPreview()
         else
             self:UpdateHealthVignette()
@@ -706,6 +763,7 @@ function HUD:GetDebugStatus()
         immersionEnabled = preferences.immersionEnabled,
         previewEnabled = self.previewEnabled and true or false,
         previewPercent = self.previewPercent,
+        deathTravelMode = self.deathTravelMode and true or false,
         bandCount = self.healthBands and #self.healthBands or 0,
         textureCount = self.healthTextureCount or 0,
         curvesReady = self.curvesReady and true or false,
@@ -738,6 +796,7 @@ function HUD:OnInitialize()
     self.root = root
     self.previewEnabled = false
     self.previewPercent = nil
+    self.deathTravelMode = false
     self.healthBands = {}
     self.healthTextureCount = 0
 
@@ -905,11 +964,16 @@ function HUD:OnInitialize()
     end
 
     local healthEventFrame = CreateFrame("Frame")
-    healthEventFrame:SetScript("OnEvent", function(_, _, unit)
+    healthEventFrame:SetScript("OnEvent", function(_, event, unit)
+        if event == "PLAYER_DEAD" or event == "PLAYER_ALIVE"
+            or event == "PLAYER_UNGHOST" or event == "PLAYER_ENTERING_WORLD"
+        then
+            self:RefreshDeathTravelState(event)
+            return
+        end
         if unit and unit ~= "player" then
             return
         end
-
         self:UpdateHealthVignette()
     end)
 
@@ -991,6 +1055,10 @@ end
 function HUD:OnEnable()
     self.healthEventFrame:RegisterUnitEvent("UNIT_HEALTH", "player")
     self.healthEventFrame:RegisterUnitEvent("UNIT_MAXHEALTH", "player")
+    self.healthEventFrame:RegisterEvent("PLAYER_DEAD")
+    self.healthEventFrame:RegisterEvent("PLAYER_ALIVE")
+    self.healthEventFrame:RegisterEvent("PLAYER_UNGHOST")
+    self.healthEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 
     self.resourceEventFrame:RegisterUnitEvent(
         "UNIT_POWER_FREQUENT",
@@ -1048,6 +1116,7 @@ function HUD:OnEnable()
         self:ApplyImmersionPreference(current)
     end)
 
+    self:RefreshDeathTravelState("initial")
     self:ApplyImmersionPreference(Logres:GetPreferences())
 end
 

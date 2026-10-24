@@ -1,6 +1,6 @@
 # Logres — Consolidated open issue and functionality register
 
-**As of:** 2026-10-23. An indexed triage list, **not** a replacement for historical evidence, which remains authoritative. Status terms: OBSERVED FAIL (observed negative), OPEN / UNREPRODUCED (one-off), RUNTIME UNVERIFIED (implemented but not tested), DEFERRED (requires environment/capability), FEATURE GAP (not claimed implemented), ACCEPTED SCOPE (positive observation only). Release classifications are planning hypotheses until November 4 evidence.
+**As of:** 2026-10-24. An indexed triage list, **not** a replacement for historical evidence, which remains authoritative. Status terms: OBSERVED FAIL (observed negative), OPEN / UNREPRODUCED (one-off), RUNTIME UNVERIFIED (implemented but not tested), DEFERRED (requires environment/capability), FEATURE GAP (not claimed implemented), ACCEPTED SCOPE (positive observation only). Release classifications are planning hypotheses until November 4 evidence.
 
 | ID | Domain | Issue/capability and observed status | Canonical evidence / source | Alpha impact / next safe action |
 | --- | --- | --- | --- | --- |
@@ -30,13 +30,13 @@ These 13 items reflect user observations and requested functionality, not indepe
 
 | ID | Domain | Observation / request | Priority and narrow acceptance gate |
 | --- | --- | --- | --- |
-| L-020 | CORE / DIAG | Gameplay-accessible diagnostic capture for later isolation | **P0329 PREPARED / runtime UNVERIFIED.** One-shot `0 — Gameplay Snapshot` or `/logres gameplaycapture`; check saved export after reload. No polling or secret inspection. |
+| L-020 | CORE / DIAG | Gameplay-accessible diagnostic capture for later isolation | **P0329 PUSHED / runtime UNVERIFIED.** One-shot `0 — Gameplay Snapshot` or `/logres gameplaycapture`; check saved export after reload. No polling or secret inspection. |
 | L-021 | ACT / PET | Pet bar does not display hotkeys such as `C-2` | **OPEN / REPORTED.** Verify actual binding vocabulary, protected pet slot routing, visible Logres-owned key label without action rebinding. |
 | L-022 | NPC / QUEST | Focused quest panel has a superficial visual artifact | **OPEN / REPORTED.** Screenshot exact artifact and shared renderer state; fix presentation only after targeted visual reproduction. |
 | L-023 | STATUS | Missing PvP symbol for player and target | **FEATURE GAP / REPORTED.** Source-proven player/target PvP state, modifier policy, indicator preview and combat-safe integration; no full Immersion OFF. |
 | L-024 | ACT / PET | Active pet ability outline is visually incorrect | **OPEN / REPORTED.** Verify checked/active vs autocast native distinction, preview and highlight layer; leave secure pet action untouched. |
 | L-025 | UI / CORE | Gameplay HUD/action elements overlap map or other menus | **HIGH / REPORTED.** Screenshot map and at least one second menu, inspect addon-owned strata and root ownership; menus must visually cover gameplay, preserve secure clicks and native controls. |
-| L-026 | STATUS | Zero HP on death triggers maximum tunnel, impeding corpse navigation | **HIGH / REPORTED.** Dead and ghost transitions, reload while dead, living 0–5% visual regression; bypass/cap tunnel during dead/ghost without examining secret health values. |
+| L-026 | STATUS | Zero HP on death triggers maximum tunnel, impeding corpse navigation | **P0330 PREPARED / runtime UNVERIFIED.** Event-driven corpse-travel clear mask until ordinary resurrection; guard initial dead/ghost state against secrets, verify alive/death/ghost/reload and preview once client is available. Do not change living 0–5% curve. |
 | L-027 | NPC / XP | Blizzard XP or quest-task pop-ups remain alongside Logres | **OPEN / REPORTED.** Identify exact native UI source and replacement coverage; do not hide unreplaced information. |
 | L-028 | STATUS | Target debuffs intermittently duplicated or missing | **HIGH / REPORTED.** Correlate screenshot and status-aura debug counters for harmful/helpful, native container presence, secret skips, aura identity; avoid broad deduplication or secret inspection. |
 | L-029 | ACT / STATUS | Action key label draws over health tunnel | **OPEN / REPORTED.** Identify labels vs action roots; enforce deliberate vignette ordering without swallowing action interaction. |

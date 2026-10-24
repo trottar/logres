@@ -186,10 +186,10 @@ function Logres:RunGameplayCapture()
     end)
     if hud then
         emit(string.format(
-            "Logres gameplaycapture HUD: rootShown=%s preview=%s previewPercent=%s bands=%s targetReady=%s",
+            "Logres gameplaycapture HUD: rootShown=%s preview=%s previewPercent=%s bands=%s targetReady=%s deathTravel=%s",
             boolText(hud.rootShown), boolText(hud.previewEnabled),
             tostring(hud.previewPercent or "none"), tostring(hud.bandCount),
-            boolText(hud.targetFrameReady)
+            boolText(hud.targetFrameReady), boolText(hud.deathTravelMode)
         ))
     end
 
