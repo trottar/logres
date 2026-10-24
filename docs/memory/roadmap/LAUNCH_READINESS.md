@@ -1,3 +1,7 @@
+## P0325 — staged save-migration proposal, no runtime wiring (2026-10-24)
+
+Verified pushed P0324 `bc56185`; P0325 keeps schema-3 saves and all five live system behaviors untouched while testing a pure, staged optional domain migration proposal. Unknown CAM ownership is not inferred from legacy Immersion. Four existing preference combinations and 32 explicit five-domain draft choices are covered offline; client restoration and saved-variable upgrade remain UNVERIFIED. Next: read-only merchant/flight service handoff audit and November 4 native gossip restoration. No WoW redeploy for this docs/tools checkpoint. See `docs/memory/architecture/P0325_MIGRATION_DRY_RUN.md`.
+
 ## P0324 — inert five-domain policy specification (2026-10-24)
 
 P0323 audit is pushed at `386a7ef`; P0324 is test-only preparation of the D-048 five-domain selection model, **32** requested-mode combinations, capability/fallback and pending-restore fixtures and untouched legacy-save behavior. `tools/p0324_domain_policy.py` is **not addon-loaded**; no live preference migration or native ownership occurs. Next: separate migration and Lua-equivalence gates, bounded merchant/flight source assessment and November 4 P0321 client-validation priority. P0321 gossip parking remains **WoW UNVERIFIED**; release gates unchanged.
