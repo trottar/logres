@@ -22,6 +22,7 @@
 | L-016 | RELEASE | Repeated P0321 ZIP failures (invalid blob literal and evidence blank-line EOF): **OBSERVED PATCH TOOL FAILURES**, fixed for delivered R3, historical failures retained | `docs/memory/evidence/P0321_GOSSIP_SINGLE_WINDOW.md` | Enforce 40-hex blob validation, exact candidate diff hygiene, shadow contracts and transactional rollback in future appliers |
 | L-017 | RELEASE / NAV | Optional QuestieDB and release dependency instructions: **DOCUMENTED integration; public packaging not approved** | `README.md`; `docs/DEPENDENCIES.md` | Validate fresh install, optional-provider absence, redistribution policy and feature claims before alpha |
 | L-018 | UI / CORE | Final settings/accessibility and full-density visual polish: **FEATURE GAP / no release acceptance yet** | `docs/memory/architecture/VISUAL_IMPLEMENTATION_STATUS.md`; D-046 | Preview-first work; do not move accepted live geometry without Forever evidence |
+| L-019 | RELEASE | Project Logres root license/public redistribution terms **UNRESOLVED / distribution blocker**; LibCamera notice exists, QuestieDB cannot be bundled without authorization | `Logres/Camera/LIBCAMERA_NOTICE.txt`; `docs/DEPENDENCIES.md`; P0328 stage audit | Owner approves and documents project license/third-party credits before public alpha; internal test ZIP only |
 
 ## Triage and closure rules
 
