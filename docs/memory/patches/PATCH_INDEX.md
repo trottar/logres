@@ -1,3 +1,7 @@
+## P0331 — game-only stratum separation and keybind/tunnel layering (2026-10-24)
+
+Verified pushed P0330 `1f48bbe` has 201 static checkers recorded and death/ghost tunnel source logic, but no client PASS. P0331 moves ten Logres-owned gameplay frame roots to BACKGROUND below ordinary native menu strata; HUD level 20 is deliberately above independent action feedback/keybind level 10. Existing HIGH intentional quest dialogue and native-access fallback dock remain unchanged. Action feedback historical contract migrates, new checker makes 202. L-025/L-029 now source corrections PREPARED / WoW UNVERIFIED; player action clicks, aura tooltip, WorldMapFrame and second native menu must be checked after November 4. Native suppression, camera and secure action routes untouched; L-028 target aura next independent offline fix. See `docs/memory/evidence/P0331_GAMEPLAY_LAYERS.md`.
+
 ## P0330 — L-026 corpse-navigation tunnel correction (2026-10-24)
 
 P0329 `126d165` is verified pushed, 200/200 PREWRITE+POSTWRITE reported in its committed manifest, WoW runtime UNVERIFIED. P0330 PREPARED introduces an event-driven dead/ghost display override in the HUD, guarded ordinary death observation for login/reload and PLAYER_ALIVE, cached gameplaycapture diagnostics and 201st regression checker. Preserve living D-036 native secret-safe health curve, no camera/native/protected changes. Static and WoW tests remain UNVERIFIED until WSL / November 4, respectively. See `docs/memory/patches/P0330_DEATH_TUNNEL.md` and evidence.

@@ -24,7 +24,7 @@ local function createContainer(unit, key, point, relativePoint, dx, dy)
     local height = math.ceil(MAX / columns) * ICON
         + (math.ceil(MAX / columns) - 1) * GAP
     frame:SetSize(width, height)
-    frame:SetFrameStrata("HIGH")
+    frame:SetFrameStrata("BACKGROUND")
     frame:EnableMouse(false)
     Logres.Layout.Bind(frame, key, "CENTER", "CENTER")
 

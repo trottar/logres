@@ -318,7 +318,7 @@ local Compass = Logres:RegisterModule("Compass", {
         frame:SetSize(COMPASS_WIDTH, COMPASS_HEIGHT)
         frame:SetPoint("TOP", UIParent, "TOP", 0, -48)
         Logres.Layout.Bind(frame, "navigation", "TOP", "TOP")
-        frame:SetFrameStrata("MEDIUM")
+        frame:SetFrameStrata("BACKGROUND")
         frame:EnableMouse(false)
         frame:Hide()
 

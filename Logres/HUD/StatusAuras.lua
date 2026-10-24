@@ -205,7 +205,7 @@ local function createLane(unit, point, relativePoint, offsetX, offsetY, laneName
         columns * ICON_SIZE + (columns - 1) * GAP,
         rows * ICON_SIZE + (rows - 1) * GAP
     )
-    root:SetFrameStrata("HIGH")
+    root:SetFrameStrata("BACKGROUND")
     root:EnableMouse(false)
     root:Hide()
     local anchorKey = unit == "player" and "playerHarmful"

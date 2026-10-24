@@ -483,7 +483,7 @@ function HelpfulAuras:OnInitialize()
         styleValue("y")
     )
     Logres.Layout.Bind(root, "passiveStatus", "LEFT", "CENTER")
-    root:SetFrameStrata("HIGH")
+    root:SetFrameStrata("BACKGROUND")
     root:EnableMouse(false)
     root:Hide()
 

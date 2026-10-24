@@ -799,7 +799,7 @@ function Progress:OnInitialize()
         FALLBACK_Y
     )
     Logres.Layout.Bind(root, "contextObjective", "CENTER", "CENTER")
-    root:SetFrameStrata("HIGH")
+    root:SetFrameStrata("BACKGROUND")
     root:EnableMouse(false)
     root:Hide()
 

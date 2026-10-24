@@ -789,7 +789,8 @@ end
 function HUD:OnInitialize()
     local root = CreateFrame("Frame", "LogresHUDRoot", UIParent)
     root:SetAllPoints(UIParent)
-    root:SetFrameStrata("HIGH")
+    root:SetFrameStrata("BACKGROUND")
+    root:SetFrameLevel(20)
     root:EnableMouse(false)
     root:Hide()
 

@@ -130,7 +130,7 @@ function ActionButton.CreateCluster(
     local cluster = CreateFrame("Frame", name, UIParent)
     cluster:SetSize(width, height)
     cluster:SetPoint("CENTER", UIParent, "CENTER", x, y)
-    cluster:SetFrameStrata("MEDIUM")
+    cluster:SetFrameStrata("BACKGROUND")
     cluster:SetAlpha(alpha or 1)
 
     return cluster
@@ -233,7 +233,8 @@ function ActionButton.Create(
 -- It stays visually strong even when Secondary/Utility are subdued.
 local feedbackFrame = CreateFrame("Frame", nil, UIParent)
 feedbackFrame:SetAllPoints(button)
-feedbackFrame:SetFrameStrata("HIGH")
+feedbackFrame:SetFrameStrata("BACKGROUND")
+feedbackFrame:SetFrameLevel(10)
 feedbackFrame:EnableMouse(false)
 
 local pressedOverlay = feedbackFrame:CreateTexture(nil, "OVERLAY")

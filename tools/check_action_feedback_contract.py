@@ -15,7 +15,7 @@ if BUTTON.is_file():
     required = [
         'CreateFrame("Frame", nil, UIParent)',
         "feedbackFrame:SetAllPoints(button)",
-        'feedbackFrame:SetFrameStrata("HIGH")',
+        'feedbackFrame:SetFrameStrata("BACKGROUND")',
         "feedbackFrame:EnableMouse(false)",
         "pressedOverlay:Hide()",
         "activationFlash:SetAlpha(1)",
