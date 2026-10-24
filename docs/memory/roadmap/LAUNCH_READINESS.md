@@ -1,3 +1,7 @@
+## P0323 modularity-audit checkpoint (2026-10-23)
+
+P0322 `272130e` is pushed and durable; P0323 is a docs/static-checker-only audit mapping **all 94 loaded Lua files** into five intended D-048 systems or shared infrastructure. Existing Immersion state coupling, two distinct native NPC parking ownership paths and high-risk secure/camera regions are recorded without refactoring. The next implementation candidate is a **pure** 32-combination requested/effective/fallback policy fixture, not live five-toggle controls. November 4 runtime verification remains necessary for P0321 gossip parking and merchant/flight native handoffs; alpha/1.0 quality gates are unchanged. Full static checks must pass before this audit can be committed. See `docs/memory/architecture/P0323_MODULE_OWNERSHIP_AUDIT.md`.
+
 # Logres — Alpha-to-1.0 launch roadmap
 
 **Planning baseline:** 2026-10-23; `main` P0321 `9a180c878279d24e60cd819428fe6dad3a599fc8` verified pushed. This is an internal readiness plan, **not** a public release date or runtime acceptance. Forever launch date is not established by this repository plan. The next stated beta opportunity is **November 4, 2026**, subject to actual access. P0321 gossip parking is **WoW runtime UNVERIFIED / DEFERRED**, not PASS.
