@@ -11,9 +11,10 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Current Work Item
 
-**P0338 — L-031 focused compass yard label; PREPARED / WoW UNVERIFIED.** Verified pushed GitHub `main` P0337 R1 `cfdc07af9b082eca0051610711edf11190824bdd` (2026-10-25), version `0.0.231-dev`, P0337 manifest 208/208 PRE/POST static checks. This reconciles the P0337 PREPARED wording written before its verified push without implying runtime PASS. P0338 uses existing ordinary same-map candidate yards and separately validated manual waypoint yards in the focused compass label; unknown distances render unavailable. Preview and live share one formatter/text widget. Existing navigation refresh (0.15s), map/heading, one-baseline collision and native fallback preserved. P0338 R0 was refused at PREWRITE 8/209 with NO tracked writes (seven handoff-history contract failures and one preview checker-scope error); R1 repairs those packaging defects without relaxing runtime safety requirements. Static patch test and runtime remain pending at artifact preparation; client unavailable until November 4. No live D-048 switches, Camera change, source API, addon dependency, native suppression or protected state changes.
+**P0339 — November 4 gameplay regression matrix; PREPARED / DOCS + TOOLS ONLY / WoW UNVERIFIED.** GitHub `main` P0338 R1 `342cab97a8ad13478495f3247de155b50a5d4a05` verified pushed (2026-10-25), version `0.0.232-dev`, P0338 manifest 209/209 PREWRITE and POSTWRITE static checks. L-031 focused approximate yards is now source-implemented, not client-accepted. No P0330–P0338 deferred behavior becomes PASS from static checks. P0339 records exact existing panel commands and observation/deferred criteria for November 4, retaining P0321 GossipFrame restoration as the first in-client gate. L-022 still requires a screenshot, L-027 transient Blizzard popup `/fstack` evidence and L-019 licensing remain OPEN. No new runtime Lua, UI ownership, dependencies, version bump, saved-variable change, Camera/DynamicCam, or release authorization.
 
 ## Verified State
+- Verified GitHub `main` P0338 R1 `342cab97` pushed on 2026-10-25; `P0338_MANIFEST.txt` reports 209/209 PREWRITE and POSTWRITE static checks. P0338 R0 8/209 PREWRITE errors are preserved, while all P0330–P0338 client behavior remains UNVERIFIED pending November 4.
 - Verified GitHub `main` P0337 R1 `cfdc07af` pushed on 2026-10-25; its manifest reports 208/208 PREWRITE and POSTWRITE static checks; P0337 actual WoW quest-giver eligibility remains UNVERIFIED.
 - P0337 R0 PREWRITE REFUSED 1/208 at checker 174: stale checker expected `if add(...) then`, while the guarded expression correctly uses `if not seenQuest[...] and add(...) then`. R1 repairs the assertion only; no tracked writes occurred on R0.
 - Verified GitHub main P0336 `d535906` (2026-10-25) pushed; 207/207 PREWRITE/POSTWRITE manifest. L-032 visual/runtime UNVERIFIED.
@@ -33,7 +34,7 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Next Action
 
-Apply P0338 only to clean `main` P0337 `cfdc07af` with exact blob and anchor guards, full 209/209 PREWRITE shadow and POSTWRITE static suite, candidate diff hygiene, rollback and manifest. User commits/pushes; verify GitHub before advancing. November 4 first test P0321 native GossipFrame parking/restoration, then compass P0336/P0337/P0338 art and natural-distance behavior. L-027 native transient popup source OPEN; L-022 quest artifact screenshot gated.
+Apply the **docs/tools-only P0339** guarded ZIP against clean verified P0338 `342cab97`; run all **210** candidate PREWRITE shadow and POSTWRITE checkers, candidate diff hygiene and manifest. After user push, verify GitHub `main`. On contingent November 4 access, first run P0321 native GossipFrame safety/restoration actions from the existing runbook, then execute the P0330–P0338 source-verified action/observation matrix for only naturally available cases; record actual PASS/FAIL/DEFERRED and preserve errors. No in-game testing is requested while client is unavailable. L-022 screenshot, L-027 popup frame identity, and L-019 license remain unresolved.
 
 ## Success Criteria
 
@@ -43,6 +44,7 @@ A visible centered POI, quest, service or tracking glyph presents its *own* ordi
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/roadmap/NOV04_GAMEPLAY_REGRESSION_MATRIX.md` and `docs/memory/evidence/P0339_GAMEPLAY_RUNTIME_MATRIX.md` — exact P0330–P0338 developer-panel actions, per-issue acceptance/deferred criteria, and source diagnostic limitations.
 - `docs/memory/evidence/P0338_FOCUSED_COMPASS_YARDS.md` and `docs/memory/patches/P0338_FOCUSED_COMPASS_YARDS.md` — L-031 source, shared focus label and November 4 gates.
 - `docs/memory/evidence/P0337_QUEST_GIVER_ELIGIBILITY.md` and `docs/memory/patches/P0337_QUEST_GIVER_ELIGIBILITY.md` — L-030 historical source, corroboration rule, fallback and remaining limits.
 - `docs/memory/evidence/P0336_COMPASS_SINGLE_BASELINE.md` and `docs/memory/patches/P0336_COMPASS_SINGLE_BASELINE.md` — source defect, deterministic declutter tradeoff, visual acceptance gate.

@@ -2,6 +2,10 @@
 
 **Status:** PREPARED, WoW **UNVERIFIED / DEFERRED until November 4, 2026** (client access contingent). This runbook is a test plan, not PASS evidence, a launch announcement, or permission to modify secure/Blizzard surfaces. `docs/memory/CURRENT.md` and `docs/memory/investigations/ISSUE_REGISTER.md` remain authoritative.
 
+## P0330–P0338 issue-specific evidence
+
+After the P0321-first restoration/safety gate below, use the exact source-verified phase/command, expected visual/functional observation and DEFERRED criteria in [`NOV04_GAMEPLAY_REGRESSION_MATRIX.md`](NOV04_GAMEPLAY_REGRESSION_MATRIX.md). The matrix is **PREPARED / WoW UNVERIFIED**, not additional current runtime evidence. P0338 R1 has been verified pushed on `main` at `342cab97`; no P0330–P0338 in-client acceptance is implied.
+
 ## Preconditions and capture
 
 1. On an actual available Forever client, confirm the development addon loaded with matching version from `Logres/Logres.toc`; keep the user's known-good install/backup intact. The repo uses `_classic_beta_` in the deploy example; validate the actual target folder rather than guessing from a failed path.

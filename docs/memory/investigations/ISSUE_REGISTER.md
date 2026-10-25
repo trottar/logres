@@ -50,6 +50,8 @@ For each next change record: observed symptom and exact reproduction if known; e
 
 **Alpha blocker:** gameplay-critical secure/protected/Lua/taint error, unusable action or NPC controls, invisible native hit region, failed stock restoration, unrecoverable camera, non-functional install. **Not automatically a blocker:** missing nonessential compass data when minimap works; merchant/flight visual unification when native service works; unproven world-target anchor; minor polish. Assess real severity from evidence, not label alone.
 
+P0339 prepares a source-verified [November 4 P0330–P0338 gameplay regression matrix](../roadmap/NOV04_GAMEPLAY_REGRESSION_MATRIX.md), including issue-by-issue phase buttons, evidence fields and DEFERRED conditions. This does **not** close any runtime issue; P0321 remains the first test.
+
 ## November 4 first-run runtime queue
 
 1. Verify deployed P0321 version, H **Gossip Stock Status (READ-ONLY)** and **Gossip Stock Toggle**; test native frame restoration, gossip and quest detail/Goodbye.
