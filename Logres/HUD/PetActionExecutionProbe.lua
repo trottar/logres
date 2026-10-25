@@ -14,6 +14,7 @@ local PET_EVENTS = {
     "PET_BAR_UPDATE_COOLDOWN",
     "PET_BAR_UPDATE_USABLE",
     "PET_UI_UPDATE",
+    "UPDATE_BINDINGS",
 }
 
 local function hasSecretChecker()
@@ -96,6 +97,37 @@ function Probe:ResetAttempt()
     self.autocastStateChanged = false
 end
 
+local function safePetBindingLabel(slot)
+    if type(GetBindingKey) ~= "function" then
+        return nil
+    end
+    -- Blizzard pet bar bindings use BONUSACTIONBUTTON1 through 10.
+    -- Capture only the first key, as in the existing action-bar plate.
+    local ok, rawKey = pcall(GetBindingKey, "BONUSACTIONBUTTON" .. slot)
+    if not ok or isSecret(rawKey) then
+        return nil
+    end
+    if rawKey == nil then
+        return ""
+    end
+    if type(rawKey) ~= "string" then
+        return nil
+    end
+    return rawKey
+end
+
+function Probe:RefreshBindingLabels()
+    for slot = 1, MAX_PET_SLOTS do
+        local label = safePetBindingLabel(slot)
+        if label ~= nil then
+            ActionButton.SetHotkeyLabel(self.buttons[slot], label)
+        else
+            -- An invalid/secret binding never becomes a guessed label.
+            ActionButton.SetHotkeyLabel(self.buttons[slot], "")
+        end
+    end
+end
+
 function Probe:ConfigureSecureButtons()
     if InCombatLockdown() then
         self.pendingConfigure = true
@@ -115,6 +147,7 @@ function Probe:ConfigureSecureButtons()
     self.configured = true
     self.pendingConfigure = false
     self.lastSetupReason = "configured"
+    self:RefreshBindingLabels()
     return true, self.lastSetupReason
 end
 
@@ -602,6 +635,10 @@ Probe.OnInitialize = function(self)
 
     local eventFrame = CreateFrame("Frame")
     eventFrame:SetScript("OnEvent", function(_, event, unit)
+        if event == "UPDATE_BINDINGS" then
+            self:RefreshBindingLabels()
+            return
+        end
         if event == "PLAYER_REGEN_ENABLED" then
             if self.pendingConfigure then
                 self:ConfigureSecureButtons()

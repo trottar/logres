@@ -166,7 +166,9 @@ local function updateButton(button)
     local autoCastAllowed = ordinaryBoolean(rawAutoCastAllowed)
     local autoCastEnabled = ordinaryBoolean(rawAutoCastEnabled)
 
-    if isActive == nil or autoCastAllowed == nil or autoCastEnabled == nil then
+    -- Autocast can be restricted even when active state is ordinary.
+    -- Retain the active outline independently; hide only unknown autocast.
+    if isActive == nil then
         hidePetPresentation(button)
         return false
     end

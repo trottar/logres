@@ -70,7 +70,7 @@ for frag in (
     '"/petautocasttoggle " .. petName',
     'button.petAutocastMacroReady = macrotext ~= nil',
     'function ActionButton.UpdatePet(button, petSlot)',
-    'button:SetChecked(active == true)',
+    'button:SetChecked(active == true and not button.logresPetPresentationReady)',
     'button.petAutoCastAllowed = autoCastAllowed == true',
     '_G[rawTexture]',
     'checksRange == true and inRange == false',

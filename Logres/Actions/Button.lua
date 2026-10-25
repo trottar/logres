@@ -523,7 +523,9 @@ function ActionButton.UpdatePet(button, petSlot)
         active = rawIsActive
     end
     state.active = active
-    button:SetChecked(active == true)
+    -- PetActionPresentation owns the decorated active outline. Suppress
+    -- the overlapping generic checked art, but retain an undecorated fallback.
+    button:SetChecked(active == true and not button.logresPetPresentationReady)
 
     local autoCastAllowed
     local autoCastEnabled
