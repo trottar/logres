@@ -63,7 +63,7 @@ need("'if len(actions) < 108:' in preview_check" in x and
  'P0270 checker historical inventory')
 rg=re.compile(r'Logres:RegisterDevPanelAction\(\s*"([^"]+)"\s*,\s*"[^"]+"\s*,\s*"[^"]+"\s*,\s*"([0A-HP])"\s*\)',re.S)
 entries=rg.findall(c)
-need(len(entries)>=108 and len([i for i,phase in entries if phase=='P'])==36,
+need(len(entries)>=108 and len([i for i,phase in entries if phase=='P' and i not in ('pvpBadgePreviewOn','pvpBadgePreviewOff')])==36 and len([i for i,phase in entries if phase=='P'])==38,
  'exact registry 108/34')
 need(len([i for i,phase in entries if phase=='H'])>=20,'H <= 18 button limit')
 need(t.count('Quest\\NativeServicePlacementTrial.lua')==1,'TOC once')

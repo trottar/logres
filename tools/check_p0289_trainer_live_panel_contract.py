@@ -51,7 +51,7 @@ print('P0289 R1 H live trainer developer panel and migration contract')
 # while allowing H to grow through existing pagination with explicit actions.
 registry = re.findall(r'Logres:RegisterDevPanelAction\(\s*"([^"]+)"\s*,\s*"[^"]+"\s*,\s*"[^"]+"\s*,\s*"([0A-HP])"\s*\)', cmd, re.S)
 need(len(registry) >= 110 and sum(phase == 'H' for _, phase in registry) >= 22
-     and sum(phase == 'P' for _, phase in registry) == 36,
+     and sum(phase == 'P' for name, phase in registry if name not in ('pvpBadgePreviewOn','pvpBadgePreviewOff')) == 36 and sum(phase == 'P' for _, phase in registry) == 38,
      'R1 action inventory must contain two additional H controls and unchanged P gallery')
 need(len(registry) == len(set(id_ for id_, _ in registry)),
      'R1 action IDs must be unique')

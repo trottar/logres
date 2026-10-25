@@ -173,6 +173,76 @@ local RESOURCE_COLOR_KEYS = {
     PAIN = "alternate",
 }
 
+-- PvP flags are secret-capable on Forever. Only a positively proven
+-- ordinary boolean may govern the Logres-owned visual indicator.
+local function readOrdinaryPvPFlag(unit)
+    if type(UnitIsPVP) ~= "function" or type(issecretvalue) ~= "function" then
+        return nil
+    end
+    local ok, raw = pcall(UnitIsPVP, unit)
+    if not ok then
+        return nil
+    end
+    local checked, secret = pcall(issecretvalue, raw)
+    if not checked or secret ~= false then
+        return nil
+    end
+    if type(raw) ~= "boolean" then
+        return nil
+    end
+    return raw
+end
+
+-- Same compact renderer for deterministic preview and verified live flags.
+-- No faction inference, combat branches, Blizzard frame reads or controls.
+local function createPvPBadge(parent)
+    local badge = CreateFrame("Frame", nil, parent)
+    badge:SetSize(32, 16)
+    badge:EnableMouse(false)
+    local plate = badge:CreateTexture(nil, "BACKGROUND")
+    plate:SetAllPoints(badge)
+    plate:SetColorTexture(0.055, 0.043, 0.036, 0.88)
+    local rule = badge:CreateTexture(nil, "BORDER")
+    rule:SetPoint("BOTTOMLEFT", badge, "BOTTOMLEFT", 2, 1)
+    rule:SetPoint("BOTTOMRIGHT", badge, "BOTTOMRIGHT", -2, 1)
+    rule:SetHeight(1)
+    rule:SetColorTexture(0.82, 0.39, 0.21, 0.94)
+    local text = badge:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    text:SetAllPoints(badge)
+    text:SetJustifyH("CENTER")
+    text:SetText("PvP")
+    text:SetTextColor(1.00, 0.75, 0.52, 1.00)
+    badge:Hide()
+    return badge
+end
+
+function HUD:RefreshPvPIndicators()
+    if not self.playerPvPBadge or not self.targetPvPBadge then
+        return
+    end
+    if self.pvpPreviewEnabled then
+        -- Visual fixture uses the production badges, but no live PvP reads.
+        self.playerPvPBadge:Show()
+        self.targetPvPBadge:Show()
+        return
+    end
+    local playerFlag = readOrdinaryPvPFlag("player")
+    local targetFlag = readOrdinaryPvPFlag("target")
+    self.playerPvPObserved = playerFlag == nil and "unknown"
+        or playerFlag and "flagged" or "unflagged"
+    self.targetPvPObserved = targetFlag == nil and "unknown"
+        or targetFlag and "flagged" or "unflagged"
+    -- Unknown is not unflagged: hide only our additive badge, not stock UI.
+    self.playerPvPBadge:SetShown(playerFlag == true)
+    self.targetPvPBadge:SetShown(targetFlag == true)
+end
+
+function HUD:SetPvPPreview(enabled)
+    self.pvpPreviewEnabled = enabled == true
+    self:RefreshPvPIndicators()
+    return true
+end
+
 local function createCastCue(parent, name)
     local cue = CreateFrame("Frame", name, parent)
     cue:SetSize(DEFAULT_CAST_CUE_SIZE, DEFAULT_CAST_CUE_SIZE)
@@ -749,6 +819,7 @@ function HUD:ApplyImmersionPreference(preferences)
         self:UpdateResource()
         self:UpdateTarget()
         self:UpdateAllies()
+        self:RefreshPvPIndicators()
     else
         self.root:Hide()
     end
@@ -764,6 +835,11 @@ function HUD:GetDebugStatus()
         previewEnabled = self.previewEnabled and true or false,
         previewPercent = self.previewPercent,
         deathTravelMode = self.deathTravelMode and true or false,
+        pvpPreviewEnabled = self.pvpPreviewEnabled == true,
+        playerPvPObserved = self.playerPvPObserved,
+        targetPvPObserved = self.targetPvPObserved,
+        pvpIndicatorsReady = self.playerPvPBadge ~= nil
+            and self.targetPvPBadge ~= nil,
         bandCount = self.healthBands and #self.healthBands or 0,
         textureCount = self.healthTextureCount or 0,
         curvesReady = self.curvesReady and true or false,
@@ -799,6 +875,9 @@ function HUD:OnInitialize()
     self.previewPercent = nil
     self.deathTravelMode = false
     self.healthBands = {}
+    self.pvpPreviewEnabled = false
+    self.playerPvPObserved = "unknown"
+    self.targetPvPObserved = "unknown"
     self.healthTextureCount = 0
 
     for index = 1, #HEALTH_BANDS do
@@ -835,6 +914,10 @@ function HUD:OnInitialize()
 
     self.resourceBar = resourceBar
     self.resourceText = resourceBar.percentText
+
+    local playerPvPBadge = createPvPBadge(root)
+    playerPvPBadge:SetPoint("LEFT", resourceBar, "RIGHT", 8, 0)
+    self.playerPvPBadge = playerPvPBadge
 
     local targetFrame = CreateFrame("Frame", "LogresHUDTarget", root)
     targetFrame:SetSize(198, 54)
@@ -874,6 +957,10 @@ function HUD:OnInitialize()
         targetAccentColor[1], targetAccentColor[2],
         targetAccentColor[3], targetAccentColor[4]
     )
+
+    local targetPvPBadge = createPvPBadge(root)
+    targetPvPBadge:SetPoint("TOPLEFT", targetFrame, "TOPRIGHT", 4, -1)
+    self.targetPvPBadge = targetPvPBadge
 
     self.targetFrame = targetFrame
     self.targetNameText = targetNameText
@@ -1002,6 +1089,13 @@ function HUD:OnInitialize()
 
     self.targetEventFrame = targetEventFrame
 
+    local pvpEventFrame = CreateFrame("Frame")
+    pvpEventFrame:SetScript("OnEvent", function()
+        -- Ignore event payloads. Re-evaluate both ordinary booleans only.
+        self:RefreshPvPIndicators()
+    end)
+    self.pvpEventFrame = pvpEventFrame
+
     local playerCastEventFrame = CreateFrame("Frame")
     playerCastEventFrame:SetScript("OnEvent", function(_, event)
         -- The frame is unit-filtered for "player"; spellcast payload fields
@@ -1075,6 +1169,11 @@ function HUD:OnEnable()
     )
 
     self.targetEventFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
+    self.pvpEventFrame:RegisterEvent("PLAYER_FLAGS_CHANGED")
+    self.pvpEventFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
+    self.pvpEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+    self.pvpEventFrame:RegisterUnitEvent("UNIT_FACTION", "player", "target")
+    self.pvpEventFrame:RegisterUnitEvent("UNIT_FLAGS", "player", "target")
     self.targetEventFrame:RegisterUnitEvent("UNIT_HEALTH", "target")
     self.targetEventFrame:RegisterUnitEvent("UNIT_MAXHEALTH", "target")
     self.targetEventFrame:RegisterUnitEvent("UNIT_NAME_UPDATE", "target")
@@ -1103,6 +1202,7 @@ function HUD:OnEnable()
         self.healthEventFrame:UnregisterAllEvents()
         self.resourceEventFrame:UnregisterAllEvents()
         self.targetEventFrame:UnregisterAllEvents()
+        self.pvpEventFrame:UnregisterAllEvents()
         self.playerCastEventFrame:UnregisterAllEvents()
         self.targetCastEventFrame:UnregisterAllEvents()
 
@@ -1124,6 +1224,9 @@ end
 function HUD:OnDisable()
     self.previewEnabled = false
     self.previewPercent = nil
+    self.pvpPreviewEnabled = false
+    self.playerPvPBadge:Hide()
+    self.targetPvPBadge:Hide()
     hideCastCue(self.playerCastCue, true)
     hideCastCue(self.targetCastCue, true)
     self.targetFrame:Hide()

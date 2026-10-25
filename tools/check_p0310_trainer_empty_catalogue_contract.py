@@ -58,7 +58,7 @@ need('"nativeTrainerEmptyPreview"' in cmd and '"Trainer Empty Preview"' in cmd,
 need('"nativetraineremptypreview",\n    "P"' in cmd,
      'trainer empty preview must be registered under P')
 registry=re.findall(r'Logres:RegisterDevPanelAction\(\s*"([^"]+)"\s*,\s*"[^"]+"\s*,\s*"[^"]+"\s*,\s*"([0A-HP])"\s*\)',cmd,re.S)
-need(sum(phase=='P' for _,phase in registry)==36,
+need(sum(phase=='P' for name,phase in registry if name not in ('pvpBadgePreviewOn','pvpBadgePreviewOff'))==36 and sum(phase=='P' for _,phase in registry)==38,
      'P registry must have 35 previous entries and the approved 36th empty preview')
 need(any(key=='nativeTrainerSkinPreview' and phase=='P' for key,phase in registry),
      'existing P trainer preview entry must remain')

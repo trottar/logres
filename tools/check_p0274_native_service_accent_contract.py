@@ -29,7 +29,7 @@ for token in ('Logres.NPCNativeServiceAccent.Show(frame, candidate.key)',
     need(token in p, 'placement/restoration contract: ' + token)
 reg = re.findall(r'Logres:RegisterDevPanelAction\(\s*"([^"]+)"\s*,\s*"[^"]+"\s*,\s*"[^"]+"\s*,\s*"([0A-HP])"\s*\)', c, re.S)
 need(len(reg) >= 108 and sum(x[1] == 'H' for x in reg) >= 20 and
-     sum(x[1] == 'P' for x in reg) == 36, 'panel action inventory 108/18/34')
+     sum(x[1] == 'P' for x in reg if x[0] not in ('pvpBadgePreviewOn','pvpBadgePreviewOff')) == 36 and sum(x[1] == 'P' for x in reg) == 38, 'panel action inventory 108/18/34')
 need('gossipRestores=%s accent=%s accentShows=%s accentHides=%s accentFailures=%s' in c,
      'preserve placement/decoration diagnostic fields')
 need('Quest\\NativeServiceAccent.lua' in toc, 'load retired compatibility shim')

@@ -4982,6 +4982,7 @@ local function printHelp()
     emit("  /logres helpfulaurapreview [on|off]")
     emit("  /logres questofferacceptprobe")
     emit("  /logres questofferdeclineprobe")
+    emit("  /logres pvppreview [on|off]  (HUD visual fixture)")
     emit("  /logres hudpreview [on|off]")
     emit("  /logres healthpreview [100|80|70|60|50|40|30|20|15|5|0|off]")
     emit("  /logres immersion [on|off|toggle]")
@@ -5698,6 +5699,21 @@ local function handleCommand(message)
 
     if command == "healthpreview" then
         handleHealthPreview(argument)
+        return
+    end
+
+    if command == "pvppreview" then
+        if argument ~= "on" and argument ~= "off" then
+            emit("Usage: /logres pvppreview [on|off]")
+        else
+            local hud = Logres:GetModule("HUD")
+            if hud and hud:IsEnabled() then
+                hud:SetPvPPreview(argument == "on")
+                emit("Logres PvP indicator preview: " .. argument)
+            else
+                emit("Logres PvP indicator preview: HUD unavailable")
+            end
+        end
         return
     end
 
@@ -6478,6 +6494,19 @@ Logres:RegisterDevPanelAction(
     "hudPreviewOff",
     "HUD Preview OFF",
     "hudpreview off",
+    "P"
+)
+
+Logres:RegisterDevPanelAction(
+    "pvpBadgePreviewOn",
+    "PvP Badges ON",
+    "pvppreview on",
+    "P"
+)
+Logres:RegisterDevPanelAction(
+    "pvpBadgePreviewOff",
+    "PvP Badges OFF",
+    "pvppreview off",
     "P"
 )
 
