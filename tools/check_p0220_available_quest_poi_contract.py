@@ -35,7 +35,7 @@ for frag in [
     if frag in probe: errors.append('forbidden active/protected path '+frag)
 for frag in ['C_QuestLine.', 'C_QuestLog.', 'C_AreaPoiInfo.']:
     if frag in compass: errors.append('production compass source gate broken '+frag)
-for frag in ['function Compass:RefreshAvailableQuestPOIs(reason)', 'availableQuestPoiMarkers', 'availableQuestPoiFocus', 'source.availableQuestRows', 'source.currentMapID', 'C_Minimap.GetViewRadius', 'source.mapWidth', 'edgeFadeForMagnitude(candidate.magnitude)', 'TAPE_Y + lane * 9', 'availableQuestPoiShown = self.availableQuestPoiShown']:
+for frag in ['function Compass:RefreshAvailableQuestPOIs(reason)', 'availableQuestPoiMarkers', 'availableQuestPoiFocus', 'source.availableQuestRows', 'source.currentMapID', 'C_Minimap.GetViewRadius', 'source.mapWidth', 'edgeFadeForMagnitude(candidate.magnitude)', 'reserveMarkerBearing(candidate.x, markerWidth, occupied)', 'availableQuestPoiShown = self.availableQuestPoiShown']:
     if frag not in compass: errors.append('compass missing live source consumer '+frag)
 if 'available unaccepted' not in d037.lower() or 'local POI' not in d038:
     errors.append('approved decision refinement absent')

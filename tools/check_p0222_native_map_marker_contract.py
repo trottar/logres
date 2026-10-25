@@ -15,7 +15,7 @@ for a in ('function Probe:ReadQuestMapPOIs()', 'C_QuestLog.GetQuestsOnMap',
  if a not in P:errors.append('missing native position source: '+a)
 for a in ('self.questDestinationMarkers', 'self.trackingMarkers',
           'source.questMapRows', 'source.areaPoiRows', 'source.vignetteRows',
-          'source.availableQuestRows', 'TAPE_Y + lane * 9',
+          'source.availableQuestRows', 'reserveMarkerBearing(candidate.x, markerWidth, occupied)',
           'edgeFadeForMagnitude(candidate.magnitude)',
           'questDestinationShown = self.questDestinationShown',
           'trackingShown = self.trackingShown',

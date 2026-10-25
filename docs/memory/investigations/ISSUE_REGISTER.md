@@ -42,7 +42,7 @@ These 13 items reflect user observations and requested functionality, not indepe
 | L-029 | ACT / STATUS | Action key label draws over health tunnel | **P0331 PREPARED / runtime UNVERIFIED.** Independent UIParent keybind/feedback frame remains functional but is BELOW the HUD mask in BACKGROUND (feedback level 10 vs HUD 20); verify living critical visual and buttons in-client. |
 | L-030 | NAV | Compass includes quest givers for stale or future, not available quests | **OPEN / REPORTED.** Distinguish optional QuestieDB *potential* spawn data from verified current quest eligibility; fail open rather than invent quest offering status. |
 | L-031 | NAV | Focused compass POI/quest/marker lacks live approximate yards | **FEATURE GAP / REPORTED.** Reuse already validated map-yard data where present; update with movement and return unavailable when position or map basis unknown. |
-| L-032 | NAV | Compass POI glyphs vertically stack/fan instead of remaining on one line | **OPEN / REPORTED.** Deterministic overflow/same-bearing preview and live screenshot; keep all glyphs on one baseline without icon collision. |
+| L-032 | NAV | Compass POI glyphs vertically stack/fan instead of remaining on one line | **P0336 SOURCE-PREPARED / WoW UNVERIFIED.** One horizontal true-bearing tape for quest, POI, service and tracking; deterministic shared width-aware collision declutter including manual waypoint. Hidden secondary glyphs counted, not treated as absent data. Existing Compass Art preview exercises same geometry; verify natural overlap screenshot after November 4 before calling PASS. |
 
 ## Triage and closure rules
 

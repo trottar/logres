@@ -53,6 +53,20 @@ local TAPE_Y = compassStyle.tapeY or -4
 local VISIBLE_HALF_ANGLE = compassStyle.visibleHalfAngle or 100
 local EDGE_FADE_START = compassStyle.edgeFadeStart or 78
 local PIXELS_PER_DEGREE = TAPE_WIDTH / (VISIBLE_HALF_ANGLE * 2)
+local MARKER_GAP = 3
+
+-- True bearings stay fixed on the horizontal tape. One marker claims each
+-- occupied interval; other source rows remain available to stock navigation.
+local function reserveMarkerBearing(x, width, occupied)
+    for index = 1, #occupied do
+        local used = occupied[index]
+        if math.abs(x - used.x) < (width + used.width) / 2 + MARKER_GAP then
+            return false
+        end
+    end
+    occupied[#occupied + 1] = { x = x, width = width }
+    return true
+end
 
 local BASELINE_HEIGHT = baselineStyle.height or 8
 local CENTER_WIDTH = centerStyle.width or 8
@@ -307,6 +321,7 @@ local Compass = Logres:RegisterModule("Compass", {
         self.dbServiceCandidateCount = 0
         self.dbServiceStatus = "not-started"
         self.poiSizeShown = 0
+        self.poiCollisionHiddenCount = 0
         self.poiSizeMin = nil
         self.poiSizeMax = nil
         self.updateActive = false
@@ -342,15 +357,15 @@ local Compass = Logres:RegisterModule("Compass", {
         self.baseline = baseline
         self.centerMarker = center
         self.waypointMarker = waypointMarker
-        -- These three addon-owned glyphs have no live source. The developer
-        -- preview demonstrates sheet-12 lane/scale fidelity without inventing
-        -- quest/POI/tracking world positions or changing the real compass.
+        -- Three inert role glyphs: no invented world positions. The same
+        -- tape reservation helper places these and all live candidate roles.
         self.artworkPreviewMarkers = {}
         local roles = {
-            { "questDestination", compassAssets.questDestination, questStyle, "BOTTOM", 67, TAPE_Y },
+            { "questDestination", compassAssets.questDestination, questStyle, "CENTER", 67, TAPE_Y },
             { "localPOI", compassAssets.localPOI, poiStyle, "CENTER", -75, TAPE_Y },
-            { "tracking", compassAssets.tracking, trackingStyle, "TOP", 113, TAPE_Y },
+            { "tracking", compassAssets.tracking, trackingStyle, "CENTER", 113, TAPE_Y },
         }
+        self.artworkPreviewRoles = roles
         for index = 1, #roles do
             local role = roles[index]
             local glyph = frame:CreateTexture(nil, "OVERLAY")
@@ -532,8 +547,15 @@ function Compass:UpdateArtworkPreview()
         return
     end
     self.artworkPreviewShown = shown
-    for _, glyph in pairs(self.artworkPreviewMarkers) do
-        glyph:SetShown(shown)
+    local occupied = {}
+    for _, role in ipairs(self.artworkPreviewRoles) do
+        local glyph = self.artworkPreviewMarkers[role[1]]
+        local free = reserveMarkerBearing(role[5], role[3].width or 9, occupied)
+        if free then
+            glyph:ClearAllPoints()
+            glyph:SetPoint("CENTER", self.frame, "CENTER", role[5], TAPE_Y)
+        end
+        glyph:SetShown(shown and free)
     end
     self.artworkPreviewCaption:SetShown(shown)
 end
@@ -552,6 +574,7 @@ function Compass:ClearAvailableQuestPOIs(reason)
     self.dbServiceCandidateCount = 0
     self.dbServiceCandidateShown = 0
     self.poiSizeShown = 0
+    self.poiCollisionHiddenCount = 0
     self.poiSizeMin = nil
     self.poiSizeMax = nil
     self.questDestinationShown = 0
@@ -718,66 +741,70 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     self.questDestinationCandidates=#majorQuests
     self.trackingCandidates=#tracked
     self.availableQuestPoiReason="ordinary-positioned-candidates"
+    local occupied = {}
+    if self.waypointMarkerShown and type(self.waypointRelativeDegrees) == "number" then
+        local waypointWidth = MANUAL_WIDTH * (self.waypointRenderScale or 1)
+        reserveMarkerBearing(self.waypointRelativeDegrees * PIXELS_PER_DEGREE,
+            waypointWidth, occupied)
+    end
     local closestFocus=nil
     local focusDegrees=8
     local function paint(items,pool,roleStyle,role)
-        local used={}
-        for index=1,math.min(#items,#pool) do
-            local candidate=items[index]
-            local lane=0
-            for j=1,#used do
-                if math.abs(candidate.x-used[j].x)<10 then
-                    lane=math.max(lane,used[j].lane+1)
-                end
-            end
-            lane=math.min(lane,2)
-            used[#used+1]={x=candidate.x,lane=lane}
-            -- Exact horizontal bearing is never displaced for collision control.
-            local y = TAPE_Y + lane * 9
-            if role=="quest" then y=TAPE_Y+16+lane*9
-            elseif role=="tracking" then y=TAPE_Y-12-lane*9
-            elseif role=="service" then y=TAPE_Y+5+lane*9 end
-            local glyph=pool[index]
-            glyph:ClearAllPoints()
-            glyph:SetPoint("CENTER",self.frame,"CENTER",candidate.x,y)
-            if role=="quest" then
-                -- The same proven radius-normalized depth curve as the
-                -- manual waypoint; size only, never shift the true bearing.
-                local scale, band = manualWaypointDepthScaleForDistance(candidate.distance, radius)
+        local rendered = 0
+        for index = 1, #items do
+            if rendered >= #pool then break end
+            local candidate = items[index]
+            local scale, band
+            if role == "quest" then
+                -- Preserve the approved distance scaling and exact source bearing.
+                scale, band = manualWaypointDepthScaleForDistance(candidate.distance, radius)
                 scale = clamp(scale, MANUAL_RENDER_SCALE_MIN, MANUAL_RENDER_SCALE_MAX)
-                glyph:SetSize((roleStyle.width or 10)*scale,
-                    (roleStyle.height or 18)*scale)
-                self.focusedQuestDistanceYards = candidate.distance
-                self.focusedQuestRenderScale = scale
-                self.focusedQuestDepthBand = band
-            end
-            if role~="quest" then
-                local cap = candidate.potential and 50 or radius
-                local scale = nearbySizeScale(candidate.distance, cap)
-                glyph:SetSize((roleStyle.width or 9)*scale,
-                    (roleStyle.height or 9)*scale)
-                self.poiSizeShown = self.poiSizeShown + 1
-                self.poiSizeMin = math.min(self.poiSizeMin or scale, scale)
-                self.poiSizeMax = math.max(self.poiSizeMax or scale, scale)
-            end
-            if role=="service" then
-                local style = SERVICE_MARKER_STYLE[candidate.serviceKind]
-                glyph:SetVertexColor(style.r, style.g, style.b, 1)
-            end
-            glyph:SetAlpha((roleStyle.alpha or 0.90)
-                * edgeFadeForMagnitude(candidate.magnitude)
-                * (candidate.potential and 0.55 or 1))
-            glyph:Show()
-            if role=="quest" then self.questDestinationShown=self.questDestinationShown+1
-            elseif role=="tracking" then self.trackingShown=self.trackingShown+1
-            elseif role=="service" then self.dbServiceCandidateShown=self.dbServiceCandidateShown+1
             else
-                self.availableQuestPoiShown=self.availableQuestPoiShown+1
-                if candidate.potential then self.dbCandidateShown=self.dbCandidateShown+1 end
+                local cap = candidate.potential and 50 or radius
+                scale = nearbySizeScale(candidate.distance, cap)
             end
-            if candidate.magnitude<=focusDegrees and type(candidate.name)=="string"
-                and (not closestFocus or candidate.distance<closestFocus.distance) then
-                closestFocus=candidate
+            local markerWidth = (role == "quest" and (roleStyle.width or 10)
+                or (roleStyle.width or 9)) * scale
+            if not reserveMarkerBearing(candidate.x, markerWidth, occupied) then
+                -- Hidden for tape declutter, not absent from navigation source.
+                self.poiCollisionHiddenCount = self.poiCollisionHiddenCount + 1
+            else
+                rendered = rendered + 1
+                local glyph = pool[rendered]
+                glyph:ClearAllPoints()
+                glyph:SetPoint("CENTER", self.frame, "CENTER", candidate.x, TAPE_Y)
+                if role == "quest" then
+                    glyph:SetSize((roleStyle.width or 10)*scale,
+                        (roleStyle.height or 18)*scale)
+                    self.focusedQuestDistanceYards = candidate.distance
+                    self.focusedQuestRenderScale = scale
+                    self.focusedQuestDepthBand = band
+                else
+                    glyph:SetSize((roleStyle.width or 9)*scale,
+                        (roleStyle.height or 9)*scale)
+                    self.poiSizeShown = self.poiSizeShown + 1
+                    self.poiSizeMin = math.min(self.poiSizeMin or scale, scale)
+                    self.poiSizeMax = math.max(self.poiSizeMax or scale, scale)
+                end
+                if role == "service" then
+                    local style = SERVICE_MARKER_STYLE[candidate.serviceKind]
+                    glyph:SetVertexColor(style.r, style.g, style.b, 1)
+                end
+                glyph:SetAlpha((roleStyle.alpha or 0.90)
+                    * edgeFadeForMagnitude(candidate.magnitude)
+                    * (candidate.potential and 0.55 or 1))
+                glyph:Show()
+                if role=="quest" then self.questDestinationShown=self.questDestinationShown+1
+                elseif role=="tracking" then self.trackingShown=self.trackingShown+1
+                elseif role=="service" then self.dbServiceCandidateShown=self.dbServiceCandidateShown+1
+                else
+                    self.availableQuestPoiShown=self.availableQuestPoiShown+1
+                    if candidate.potential then self.dbCandidateShown=self.dbCandidateShown+1 end
+                end
+                if candidate.magnitude<=focusDegrees and type(candidate.name)=="string"
+                    and (not closestFocus or candidate.distance<closestFocus.distance) then
+                    closestFocus=candidate
+                end
             end
         end
     end
@@ -1427,6 +1454,7 @@ function Compass:GetDebugStatus()
         dbServiceCandidateCount = self.dbServiceCandidateCount,
         dbServiceCandidateShown = self.dbServiceCandidateShown,
         poiSizeShown = self.poiSizeShown,
+        poiCollisionHiddenCount = self.poiCollisionHiddenCount,
         poiSizeMin = self.poiSizeMin,
         poiSizeMax = self.poiSizeMax,
         questDestinationShown = self.questDestinationShown,
