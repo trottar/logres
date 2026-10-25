@@ -321,6 +321,7 @@ local Compass = Logres:RegisterModule("Compass", {
         self.dbServiceCandidateCount = 0
         self.dbServiceStatus = "not-started"
         self.poiSizeShown = 0
+        self.dbHistoricalQuestExcluded = 0
         self.poiCollisionHiddenCount = 0
         self.poiSizeMin = nil
         self.poiSizeMax = nil
@@ -574,6 +575,7 @@ function Compass:ClearAvailableQuestPOIs(reason)
     self.dbServiceCandidateCount = 0
     self.dbServiceCandidateShown = 0
     self.poiSizeShown = 0
+    self.dbHistoricalQuestExcluded = 0
     self.poiCollisionHiddenCount = 0
     self.poiSizeMin = nil
     self.poiSizeMax = nil
@@ -630,6 +632,26 @@ function Compass:RefreshAvailableQuestPOIs(reason)
         focusedQuestID = nil
     end
     self.focusedQuestID = focusedQuestID
+    -- QuestieDB records historical quest starts, never current NPC offers.
+    -- Only already-sanitized native current-map quest-start candidates may
+    -- corroborate an optional provider location. No native APIs are read here.
+    local nativeCurrentQuestOffers = {}
+    if type(source.questMapRows) == "table" then
+        for index = 1, #source.questMapRows do
+            local row = source.questMapRows[index]
+            if type(row) == "table" and row.role == "poi"
+                and type(row.questID) == "number" and row.questID > 0 then
+                nativeCurrentQuestOffers[row.questID] = true
+            end
+        end
+    end
+    for index = 1, #source.availableQuestRows do
+        local row = source.availableQuestRows[index]
+        if type(row) == "table" and row.eligible == true
+            and type(row.questID) == "number" and row.questID > 0 then
+            nativeCurrentQuestOffers[row.questID] = true
+        end
+    end
     local seenQuest={}
     local function add(row,role,key)
         if type(row)~="table" then return end
@@ -665,6 +687,7 @@ function Compass:RefreshAvailableQuestPOIs(reason)
         elseif role=="tracking" then tracked[#tracked+1]=candidate
         elseif role=="service" then services[#services+1]=candidate
         else localPOIs[#localPOIs+1]=candidate end
+        return true
     end
     -- QuestPOIMapInfo.isQuestStart is authoritative only with ordinary
     -- accepted/completed state already validated by NavigationSourceProbe.
@@ -675,8 +698,9 @@ function Compass:RefreshAvailableQuestPOIs(reason)
                 row.role=="quest" and row.questID==focusedQuestID
                 and focusedQuestID ~= nil
             ) then
-                seenQuest[row.questID]=true
-                add(row,row.role,"map"..tostring(row.questID))
+                if add(row,row.role,"map"..tostring(row.questID)) then
+                    seenQuest[row.questID]=true
+                end
             end
         end
     end
@@ -685,8 +709,9 @@ function Compass:RefreshAvailableQuestPOIs(reason)
         local row=source.availableQuestRows[index]
         if row.eligible==true and type(row.questID)=="number"
             and not seenQuest[row.questID] then
-            seenQuest[row.questID]=true
-            add(row,"poi","line"..tostring(row.questID))
+            if add(row,"poi","line"..tostring(row.questID)) then
+                seenQuest[row.questID]=true
+            end
         end
     end
     if type(source.areaPoiRows)=="table" then
@@ -720,9 +745,16 @@ function Compass:RefreshAvailableQuestPOIs(reason)
             self.dbNearbyCount = #dbRows
             for index=1,#dbRows do
                 local row=dbRows[index]
-                if type(row) == "table" and type(row.npcID)=="number"
-                    and not seenQuest[row.questID] then
-                    add(row,"poi","db"..tostring(row.npcID))
+                if type(row) == "table" and type(row.npcID)=="number" then
+                    if nativeCurrentQuestOffers[row.questID] == true then
+                        if not seenQuest[row.questID]
+                            and add(row,"poi","db"..tostring(row.npcID)) then
+                            seenQuest[row.questID]=true
+                        end
+                    else
+                        -- Historical candidate does not prove a current offer.
+                        self.dbHistoricalQuestExcluded = self.dbHistoricalQuestExcluded + 1
+                    end
                 end
             end
         end
@@ -1450,6 +1482,7 @@ function Compass:GetDebugStatus()
         dbNearbyStatus = self.dbNearbyStatus,
         dbNearbyCount = self.dbNearbyCount,
         dbCandidateShown = self.dbCandidateShown,
+        dbHistoricalQuestExcluded = self.dbHistoricalQuestExcluded,
         dbServiceStatus = self.dbServiceStatus,
         dbServiceCandidateCount = self.dbServiceCandidateCount,
         dbServiceCandidateShown = self.dbServiceCandidateShown,
