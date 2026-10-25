@@ -1,0 +1,25 @@
+# P0338 — L-031 focused compass approximate yards
+
+Status: SOURCE-PREPARED / WoW UNVERIFIED until November 4, 2026. P0337 R1 commit `cfdc07af9b082eca0051610711edf11190824bdd` verified on GitHub `main` on October 25; P0337 manifest reports 208/208 PREWRITE and POSTWRITE static checks. Repository memory's earlier P0337 PREPARED status predates that push and is reconciled by this patch. P0337 R0 checker failure remains preserved in prior evidence.
+
+## Narrow evidence and rationale
+
+`NavigationSourceProbe` already samples only ordinary native current-map snapshots and maps normalized `(x,y)` to world-size yards. `Compass:RefreshAvailableQuestPOIs` already computes `dx`, `dy`, and `distance` on the same selected map, rejects absent map size and mismatched map IDs, and regularly repaints true-bearing visible candidates. Current `availableQuestPoiFocus` displays only the selected candidate's name. The independent, already guarded `Compass:RefreshWaypointDistance` supplies manual user-waypoint yards only when its map matches the player's; however the waypoint has no focused label. These are presentation omissions, not evidence requiring new native APIs.
+
+## Source-prepared correction
+
+Keep `closestFocus` selection on the actually rendered, visible glyphs after the P0336 width-aware reservation. Show this candidate's own ordinary numeric distance as rounded, approximate `~N yd` next to its name. When a separately visible manual user waypoint lies closer to tape center than that candidate within the existing 8-degree focus cone, show `Waypoint` with the independently validated existing waypoint distance. If that distance is absent, secret, invalid or map-mismatched, show `distance unavailable`; never borrow the quest/POI distance. Clear the live focus state when source refresh fails. No new map math or fallback bearing. Keep existing glyph geometry, role pool sizes, priority, depth scaling, 0.15-second navigation update and stock map access.
+
+The P — Previews / Compass Art ON fixture invokes the exact same focused-label function and widget with inert `Quest destination · ~125 yd`. This is a presentation fixture, not evidence a quest or map position exists. The preview caption remains marked NOT LIVE NAVIGATION. No new panel button is registered.
+
+## Validation and limits
+
+New static checker uses six pure deterministic formatting fixtures (valid, fractional, zero, missing, NaN and infinity) and asserts source boundaries, ordinary-label guards, same-renderer preview, manual map-provenance distance, preserved sorting/collision/refresh, no new protected APIs and existing TOC inventory. Full 209/209 WSL PREWRITE shadow and POSTWRITE checkers plus `git diff --check` are required; failing applier restores patch-owned changes. No WoW runtime PASS can be recorded while the beta is closed. At client reopening, validate Compass Art preview, live centered quest/POI/service/tracking glyph name+yards, moving toward/away, deliberate waypoint focus, map-ID mismatch/unavailable waypoint distance, collisions, non-world context and Immersion OFF. Any screenshot disagreement remains OPEN until reproduced and diagnosed. P0321 native gossip restoration is first runtime priority.
+
+No source was available for an external live-client observation in this checkpoint. The known visualization limitation is that centered *hidden-by-collision* candidates have no label, by existing P0336 policy; the label must not imply such a glyph is displayed. A focused glyph beyond the active radius is likewise not positioned/presented; missing native map coverage does not prove absent content. L-019 licensing and L-027 popup identity remain open.
+
+## R0 packaging failure and R1 correction (2026-10-25)
+
+User WSL verified ZIP SHA-256 and applied `P0338_APPLY.py`; the PREWRITE shadow refused **8/209** checks, **201/209 passed** in that candidate scope, and **no tracked source was written**. Seven legacy checker failures were purely handoff continuity: P0329 required P0328, P0330–P0332 required P0330, P0333–P0334 required P0332, and P0335 required P0333. R0 compacted `CURRENT_HANDOFF.md` to a non-contiguous set of recent markers, violating preserved historical requirements. The eighth failure was the new P0338 checker itself: it expected the inert quest-role fixture declaration inside the `UpdateArtworkPreview` function even though that declaration is correctly owned by `OnInitialize`. No actual WoW client failure is implied.
+
+**R1:** Restore the complete P0317–P0338 handoff marker range, with compact authoritative pointers and no duplicate evidence summaries. Scope the quest-role fixture assertion to `OnInitialize`; retain the independent check that `UpdateArtworkPreview` uses the exact production `showFocusedMarkerLabel` and widget. Add candidate-level handoff/preview preflight to the guarded applier. The compass transformation, all other safety/collision/navigation contracts, existing 209-checker sweep, expected HEAD/SHAs, transactional rollback and version target remain unchanged. Treat R0 as CLOSED packaging failure only if R1 runs 209/209 PREWRITE and POSTWRITE; actual WoW behavior remains **UNVERIFIED**.

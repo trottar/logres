@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-10-24
+as_of: 2026-10-25
 project: logres
 ---
 
@@ -10,9 +10,11 @@ project: logres
 Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D-048 five-independent-domain 1.0. Preserve D-046 same-renderer preview-first, native Blizzard fallback, and frozen D-047 Camera/DynamicCam. November 4 is a contingent runtime opportunity, not a client PASS or release date.
 
 ## Current Work Item
-**P0337 — L-030 only native-corroborated possible quest givers; PREPARED / WoW UNVERIFIED.** Verified pushed GitHub `main` P0336 `d535906efe86d9502b595f884efd3118cc7da724` (2026-10-25), 207/207 PRE/POST static manifest; one-baseline compass visuals still client UNVERIFIED. Audit of `QuestieDBNearby` confirmed it provides NPCs with historical `questStarts`, not the current live quest-eligibility state. Compass previously displayed these as nearby possible quest givers regardless of prerequisites/completion. P0337 allows an optional provider quest-giver glyph only when its quest ID matches an ordinary native current-map quest-start candidate from existing `NavigationSourceProbe` rows (role `poi` or `eligible==true`); counts excluded historical rows. Native positioned sources take precedence, while native-confirmed offers without usable native coordinates can use provider fallback position. No new source API, native UI manipulation, provider indexing change, service removal, polling, camera, or settings mutation. Static contract count 208. WoW closed until November 4.
+
+**P0338 — L-031 focused compass yard label; PREPARED / WoW UNVERIFIED.** Verified pushed GitHub `main` P0337 R1 `cfdc07af9b082eca0051610711edf11190824bdd` (2026-10-25), version `0.0.231-dev`, P0337 manifest 208/208 PRE/POST static checks. This reconciles the P0337 PREPARED wording written before its verified push without implying runtime PASS. P0338 uses existing ordinary same-map candidate yards and separately validated manual waypoint yards in the focused compass label; unknown distances render unavailable. Preview and live share one formatter/text widget. Existing navigation refresh (0.15s), map/heading, one-baseline collision and native fallback preserved. P0338 R0 was refused at PREWRITE 8/209 with NO tracked writes (seven handoff-history contract failures and one preview checker-scope error); R1 repairs those packaging defects without relaxing runtime safety requirements. Static patch test and runtime remain pending at artifact preparation; client unavailable until November 4. No live D-048 switches, Camera change, source API, addon dependency, native suppression or protected state changes.
 
 ## Verified State
+- Verified GitHub `main` P0337 R1 `cfdc07af` pushed on 2026-10-25; its manifest reports 208/208 PREWRITE and POSTWRITE static checks; P0337 actual WoW quest-giver eligibility remains UNVERIFIED.
 - P0337 R0 PREWRITE REFUSED 1/208 at checker 174: stale checker expected `if add(...) then`, while the guarded expression correctly uses `if not seenQuest[...] and add(...) then`. R1 repairs the assertion only; no tracked writes occurred on R0.
 - Verified GitHub main P0336 `d535906` (2026-10-25) pushed; 207/207 PREWRITE/POSTWRITE manifest. L-032 visual/runtime UNVERIFIED.
 - Verified GitHub main P0335 `ffdbbca` (2026-10-25) pushed, manifest 206/206 PREWRITE/POSTWRITE; L-027 popup owner remains unidentified and WoW UNVERIFIED.
@@ -30,15 +32,18 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 - License/distribution gate L-019 remains unresolved; LibCamera notice retained, optional QuestieDB not bundled. Internal stage ZIP is not an approved release.
 
 ## Next Action
-Apply P0337 to exact clean pushed P0336 `d535906` with all 208 PREWRITE shadow/POSTWRITE static checkers, manifest, strict baseline blobs and diff hygiene. User commits/pushes and GitHub `main` verified before advancing to L-031 focused-marker yard distance. On November 4 prioritize P0321 gossip restoration, then visual preview and natural source observations for L-030/L-032; no invented quest eligibility. L-022 superficial quest artifact remains screenshot-gated and L-027 Blizzard transient popup identity OPEN. No WoW deployment while client closed.
+
+Apply P0338 only to clean `main` P0337 `cfdc07af` with exact blob and anchor guards, full 209/209 PREWRITE shadow and POSTWRITE static suite, candidate diff hygiene, rollback and manifest. User commits/pushes; verify GitHub before advancing. November 4 first test P0321 native GossipFrame parking/restoration, then compass P0336/P0337/P0338 art and natural-distance behavior. L-027 native transient popup source OPEN; L-022 quest artifact screenshot gated.
 
 ## Success Criteria
-No QuestieDB historical-only quest giver appears in the active Logres compass without matching, ordinary current native quest-start evidence. The historical data and missing-native-source cases do not imply the NPC cannot offer a quest; stock map and quest information remain available. Native quest and vignette markers, optional QuestieDB service markers, collision, heading, player waypoint, focused quest and native action flows are unchanged. Only an actually placed native row deduplicates provider fallback. Exclusion counter reports source uncertainty, not a count of unavailable quests. Source/static 208 PRE/POST checkers and six deterministic fixtures do not prove client correctness or NPC requirements; L-030 remains **WoW UNVERIFIED** pending natural in-game testing.
+
+A visible centered POI, quest, service or tracking glyph presents its *own* ordinary source-derived approximate yards alongside its name. An angularly closer visible user waypoint presents only its own validated same-map yards or `distance unavailable`. No borrowing of another marker's distance, guessed map scaling, change to collision/heading/quest selection, or additional navigation calls; inactive or unavailable focus hides text. Preview and live share the renderer. Static verification does not establish World of Warcraft visual/runtime behavior.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/evidence/P0338_FOCUSED_COMPASS_YARDS.md` and `docs/memory/patches/P0338_FOCUSED_COMPASS_YARDS.md` — L-031 source, shared focus label and November 4 gates.
 - `docs/memory/evidence/P0337_QUEST_GIVER_ELIGIBILITY.md` and `docs/memory/patches/P0337_QUEST_GIVER_ELIGIBILITY.md` — L-030 historical source, corroboration rule, fallback and remaining limits.
 - `docs/memory/evidence/P0336_COMPASS_SINGLE_BASELINE.md` and `docs/memory/patches/P0336_COMPASS_SINGLE_BASELINE.md` — source defect, deterministic declutter tradeoff, visual acceptance gate.
 - `docs/memory/evidence/P0335_NATIVE_POPUP_PROVENANCE.md` and `docs/memory/patches/P0335_NATIVE_POPUP_PROVENANCE.md` — L-027 unresolved native owner/source boundaries and one-shot capture.

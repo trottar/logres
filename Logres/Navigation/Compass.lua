@@ -131,6 +131,27 @@ local function isSecret(value)
     return ok and result or false
 end
 
+-- A focus label may format only already-sanitized, same-map yard values.
+-- An unknown map basis never becomes an estimated or fabricated number.
+local function ordinaryFocusedDistance(distance)
+    if isSecret(distance) then return nil end
+    if type(distance) ~= "number" or distance ~= distance
+        or distance < 0 or distance == math.huge then return nil end
+    return distance
+end
+
+-- Both the inert art fixture and live focused candidates use this renderer.
+local function showFocusedMarkerLabel(label, name, distance, magnitude)
+    local yards = ordinaryFocusedDistance(distance)
+    local text = yards and ("~" .. tostring(math.floor(yards + 0.5)) .. " yd")
+        or "distance unavailable"
+    label:SetText(name .. "  ·  " .. text)
+    local fade = 1 - math.min(8, math.abs(magnitude)) / 8
+    label:SetAlpha(fade * fade)
+    label:Show()
+    return yards
+end
+
 local function normalizeRelativeDegrees(value)
     return ((value + 180) % 360) - 180
 end
@@ -313,6 +334,9 @@ local Compass = Logres:RegisterModule("Compass", {
         self.availableQuestPoiShown = 0
         self.availableQuestPoiCandidates = 0
         self.availableQuestPoiReason = "initialize"
+        self.focusedMarkerKind = nil
+        self.focusedMarkerDistanceAvailable = false
+        self.focusedMarkerDistanceYards = nil
         self.questDestinationShown = 0
         self.questDestinationCandidates = 0
         self.trackingShown = 0
@@ -362,7 +386,7 @@ local Compass = Logres:RegisterModule("Compass", {
         -- tape reservation helper places these and all live candidate roles.
         self.artworkPreviewMarkers = {}
         local roles = {
-            { "questDestination", compassAssets.questDestination, questStyle, "CENTER", 67, TAPE_Y },
+            { "questDestination", compassAssets.questDestination, questStyle, "CENTER", 0, TAPE_Y },
             { "localPOI", compassAssets.localPOI, poiStyle, "CENTER", -75, TAPE_Y },
             { "tracking", compassAssets.tracking, trackingStyle, "CENTER", 113, TAPE_Y },
         }
@@ -559,6 +583,13 @@ function Compass:UpdateArtworkPreview()
         glyph:SetShown(shown and free)
     end
     self.artworkPreviewCaption:SetShown(shown)
+    if shown then
+        -- Synthetic yards on the same real text widget and formatting path.
+        showFocusedMarkerLabel(self.availableQuestPoiFocus,
+            "Quest destination", 125, 0)
+    else
+        self.availableQuestPoiFocus:Hide()
+    end
 end
 
 -- Source and eligibility are handled by NavigationSourceProbe. Compass
@@ -585,12 +616,17 @@ function Compass:ClearAvailableQuestPOIs(reason)
     self.focusedQuestDistanceYards = nil
     self.focusedQuestRenderScale = nil
     self.focusedQuestDepthBand = nil
+    self.focusedMarkerKind = nil
+    self.focusedMarkerDistanceAvailable = false
+    self.focusedMarkerDistanceYards = nil
     self.trackingShown = 0
     self.trackingCandidates = 0
     for _, pool in ipairs({self.availableQuestPoiMarkers,self.questDestinationMarkers,self.trackingMarkers,self.serviceMarkers}) do
         for index=1,#pool do pool[index]:Hide() end
     end
-    self.availableQuestPoiFocus:Hide()
+    if self.artworkPreview ~= true then
+        self.availableQuestPoiFocus:Hide()
+    end
 end
 
 function Compass:RefreshAvailableQuestPOIs(reason)
@@ -682,7 +718,7 @@ function Compass:RefreshAvailableQuestPOIs(reason)
             name=serviceStyle and (serviceStyle.name .. tostring(row.name))
                 or (row.potential == true and ("Possible quest giver: " .. tostring(row.name)) or row.name),
             potential=row.potential == true, sortKey=tostring(key),
-            serviceKind=role=="service" and row.serviceKind or nil}
+            kind=role, serviceKind=role=="service" and row.serviceKind or nil}
         if role=="quest" then majorQuests[#majorQuests+1]=candidate
         elseif role=="tracking" then tracked[#tracked+1]=candidate
         elseif role=="service" then services[#services+1]=candidate
@@ -844,11 +880,25 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     paint(localPOIs,self.availableQuestPoiMarkers,poiStyle,"poi")
     paint(services,self.serviceMarkers,poiStyle,"service")
     paint(tracked,self.trackingMarkers,trackingStyle,"tracking")
+    -- The explicitly visible user waypoint shares angular focus without
+    -- borrowing unrelated POI or quest distances. Its world-yard value is
+    -- already checked by RefreshWaypointDistance against the source map.
+    local manualRelative = self.waypointRelativeDegrees
+    if self.waypointMarkerShown and type(manualRelative) == "number"
+        and math.abs(manualRelative) <= focusDegrees
+        and (not closestFocus or math.abs(manualRelative) < closestFocus.magnitude) then
+        closestFocus = {
+            name = "Waypoint", kind = "waypoint",
+            magnitude = math.abs(manualRelative),
+            distance = self.waypointDistanceAvailable and self.waypointDistanceYards or nil,
+        }
+    end
     if closestFocus then
-        local fade=1-closestFocus.magnitude/focusDegrees
-        self.availableQuestPoiFocus:SetText(closestFocus.name)
-        self.availableQuestPoiFocus:SetAlpha(fade*fade)
-        self.availableQuestPoiFocus:Show()
+        local focusedYards = showFocusedMarkerLabel(self.availableQuestPoiFocus,
+            closestFocus.name, closestFocus.distance, closestFocus.magnitude)
+        self.focusedMarkerKind = closestFocus.kind
+        self.focusedMarkerDistanceAvailable = focusedYards ~= nil
+        self.focusedMarkerDistanceYards = focusedYards
     end
 end
 
@@ -1496,6 +1546,9 @@ function Compass:GetDebugStatus()
         focusedQuestDistanceYards = self.focusedQuestDistanceYards,
         focusedQuestRenderScale = self.focusedQuestRenderScale,
         focusedQuestDepthBand = self.focusedQuestDepthBand,
+        focusedMarkerKind = self.focusedMarkerKind,
+        focusedMarkerDistanceAvailable = self.focusedMarkerDistanceAvailable == true,
+        focusedMarkerDistanceYards = self.focusedMarkerDistanceYards,
         trackingShown = self.trackingShown,
         trackingCandidates = self.trackingCandidates,
 
