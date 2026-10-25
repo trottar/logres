@@ -1,0 +1,3 @@
+# P0335 — gameplay capture provenance for L-027
+
+Baseline: P0334 R3 pushed `1b7b1ff`, 2026-10-25. Patch scope is *diagnostic only*. It adds cached addon-owned NativeAccess fold/re-show counters and already-reported QuestXP/QuestObjectiveProgress pulse summaries to P0329's one-shot gameplay snapshot. Does not hide, suppress, inspect or reposition Blizzard notifications, interact with quests or alter SavedVariables, security, camera or D-048 policy. Failure classification: unowned Blizzard XP/quest pop-up remains OPEN, not fixed. Client **UNVERIFIED** until November 4. Full 206 static checker suite PREWRITE/POSTWRITE required; no pass claimed until WSL runs it. Canonical evidence: `docs/memory/evidence/P0335_NATIVE_POPUP_PROVENANCE.md`.

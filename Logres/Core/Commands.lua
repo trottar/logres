@@ -231,6 +231,46 @@ function Logres:RunGameplayCapture()
             tostring(pet.defaultArmLastResult or "none")
         ))
     end
+    -- L-027: compare ONLY previously sampled Logres-owned policy and pulse
+    -- states. No native Blizzard frame/secret/quest payload is inspected.
+    local native = readCaptureStatus("NativeAccess", function(module)
+        return module.dock ~= nil and module.snapshots ~= nil
+    end)
+    if native then
+        emit(string.format(
+            "Logres gameplaycapture NativeAccess: desired=%s domains=%s refolds=%s nativeShows=%s showRefolds=%s combatDeferred=%s pendingRefolds=%s failures=%s lastEvent=%s",
+            boolText(native.desired), tostring(native.domains),
+            tostring(native.refoldAttempts), tostring(native.nativeShows),
+            tostring(native.showRefolds), tostring(native.combatShowDeferrals),
+            tostring(native.pendingRefolds), tostring(native.failures),
+            tostring(native.lastEvent)
+        ))
+    end
+
+    local xp = readCaptureStatus("QuestXP", function(module)
+        return module.root ~= nil and module.eventFrame ~= nil
+    end)
+    if xp then
+        emit(string.format(
+            "Logres gameplaycapture QuestXP: pulseShown=%s pulses=%s suppressed=%s reason=%s errors=%s",
+            boolText(xp.pulseShown), tostring(xp.pulseCount),
+            tostring(xp.suppressedCount),
+            tostring(xp.lastPresentationReason), tostring(xp.lastError)
+        ))
+    end
+
+    local objective = readCaptureStatus("QuestObjectiveProgress", function(module)
+        return module.root ~= nil and module.eventFrame ~= nil
+    end)
+    if objective then
+        emit(string.format(
+            "Logres gameplaycapture QuestObjectiveProgress: pulseShown=%s pulses=%s changes=%s suppressed=%s reason=%s errors=%s",
+            boolText(objective.pulseShown), tostring(objective.pulseCount),
+            tostring(objective.meaningfulChangeCount),
+            tostring(objective.suppressedCount),
+            tostring(objective.lastPresentationReason), tostring(objective.lastError)
+        ))
+    end
     emit("Logres gameplaycapture: snapshot only; attach symptom screenshot/context. Saved runs flush on /reload or logout.")
 end
 
