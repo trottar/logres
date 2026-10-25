@@ -8,7 +8,9 @@ Design decisions, technical findings, failures, rejected approaches, evidence, a
 
 ## External data and installation
 
-QuestieDB (`Questie/QuestieDB`) is currently an **optional** external navigation-data integration: Logres continues to work without it, but proposed future database-backed quest-giver or service-location markers would need a separately installed compatible QuestieDB. The existing P0226 integration is only a diagnostic and **does not yet add database compass icons**. See [`docs/DEPENDENCIES.md`](docs/DEPENDENCIES.md) for the correct Forever download, checksum, installation/update steps, missing-provider fallback, and CurseForge redistribution policy. Do not substitute the distinct `LibQuestDB` addon.
+QuestieDB (`Questie/QuestieDB`) is an **optional** external navigation-data integration. Logres works without it, but when a compatible standalone QuestieDB is installed, Logres can use some historical nearby NPC/service coordinates in its compass. These database locations are *possible* sites, not evidence of current quest availability: P0337 requires corroborating current native quest-offer data before presenting a possible quest giver. Native/Blizzard map access remains available, and map/POI coverage is incomplete. See [`docs/DEPENDENCIES.md`](docs/DEPENDENCIES.md) for the verified-target Forever download, SHA-256, installation/update steps, optional-provider fallback, and redistribution restrictions. Do not substitute the separate `LibQuestDB` addon.
+
+**Internal alpha QA only:** `python3 tools/alpha_prefreeze_audit.py` runs a read-only source and internal staging inventory audit; `python3 tools/stage_alpha_candidate.py --check` runs the existing read-only staging preflight. Both are **INTERNAL** checks, not client installation acceptance. Public redistribution is **not approved** while project-root licensing (L-019), real-client safety and release gates remain unresolved.
 
 ## Development environment
 
