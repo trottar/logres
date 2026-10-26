@@ -1,0 +1,19 @@
+P0346 architecture health source inventory manifest
+baseline=626b22038d09e738bd3fa90684e3a95e36905d45
+version=UNCHANGED 0.0.236-dev
+validation=217/217 PREWRITE shadow and 217/217 POSTWRITE (STATIC ONLY); WoW UNVERIFIED
+scope=docs/tools only; 94 Lua, 120 actions, 38 P previews source inventory; no addon code or TOC change
+L-022/L-027/L-028 OPEN; L-019 public release BLOCKED
+github_writes=none
+81b37f96056420b32eb1de1939f8d431ebba90548c9d11e2819b586267ea42bb  docs/ROADMAP.md
+9c68ee5c94d53d135a289caa5575fd18d42bfb11144a218a89fef64ea2d44f47  docs/memory/CURRENT.md
+78152daacd55600bcbbebf047052edfbd9e34bf5c0fb67d2013fa18c424212d2  docs/memory/architecture/P0346_ARCHITECTURE_GAP_REGISTER.md
+91375d40fbdf8c6b2cc9a8919dd7fe350b086cae6ef032c6a364b1ef42237eec  docs/memory/evidence/P0346_ARCHITECTURE_HEALTH_AUDIT.md
+8e206bba91d80f63d559692bcc01947a8915f6dac07b1cb14666afd484c08c36  docs/memory/handoffs/CURRENT_HANDOFF.md
+ba80417f41453dbb0a90a9ad98f223705ba6c7e381de17d0f11072e73301e7f0  docs/memory/investigations/ACTIVE.md
+2492f70095b8fd8da42df846f36ca28a1ccd027200e52d41d3eff6bd9347db9c  docs/memory/patches/P0346_ARCHITECTURE_HEALTH_AUDIT.md
+cf2ab34cebf16766d466ecaad30f546dcea051d4eef828755748d1af19793901  docs/memory/patches/PATCH_INDEX.md
+820aab90a7542663e0d61cc02006e3a27c11803b65000080d08f318b02343e3d  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+cc0bb356d6033cb8256f28e7b9525a6d35ed4a55a5264cbb0294dae41ee0651d  docs/memory/roadmap/STATUS.md
+4698a03aeca510eb97bc5df25657fcda51e9d207443800dbb011242789865e5c  tools/architecture_health_audit.py
+1e5a56e2c1226d9d4462c9ac8fa38a2d4a8f693b98a226c86e9847ba1e011503  tools/check_p0346_architecture_health_contract.py
