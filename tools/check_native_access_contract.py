@@ -34,6 +34,8 @@ if module.is_file():
         if bad in code: errors.append('forbidden module token: '+bad)
 if layout.is_file() and 'nativeAccess = {' not in layout.read_text(encoding='utf-8'):
     errors.append('nativeAccess integration anchor absent')
+if layout.is_file() and '{ "LogresNativeAccessDock", "nativeAccess" },' not in layout.read_text(encoding='utf-8'):
+    errors.append('native dock H.2 layout role absent')
 if commands.is_file():
     code=commands.read_text(encoding='utf-8')
     for token in ('local function runNativeAccessCheck()',
@@ -41,8 +43,7 @@ if commands.is_file():
                   'runNativeAccessCheck()',
                   'if command == "nativeuicheck" then',
                   'if command == "nativeui" then',
-                  '"nativeAccessCheck",',
-                  '{ "LogresNativeAccessDock", "nativeAccess" },'):
+                  '"nativeAccessCheck",'):
         if token not in code: errors.append('missing command token: '+token)
 if toc.is_file():
     code=toc.read_text(encoding='utf-8')

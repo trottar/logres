@@ -54,8 +54,9 @@ if 'targetFrame:SetSize(198, 54)' not in H or 'targetNameText:SetWidth(190)' not
     error.append('target frame width/label')
 if 'targetCastCue:SetPoint("TOP", targetFrame, "BOTTOM", 0, -6)' not in H:
     error.append('target cast cue geometry')
-if 'status.anchorCount == #LAYOUT_EXPECTED + 3' not in C:error.append('anchor count')
-if 'Logres H2 v4 placement:' not in C:error.append('runtime placement diagnostic')
+if 'status.anchorCount == #LAYOUT_EXPECTED + 3' not in L:error.append('anchor count')
+if 'Logres H2 v4 placement:' not in L:error.append('runtime placement diagnostic')
+if 'Logres.Layout.RunDevLayoutCheck(emit)' not in C:error.append('command layout diagnostic route')
 if any(x in L for x in ('C_Timer.After','C_Timer.NewTicker','SetScript("OnUpdate"',
                          'BuffFrame:Hide','DebuffFrame:Hide')):error.append('unsafe layout forcing')
 print('Logres P0195 coordinated screen placement contract')

@@ -531,3 +531,103 @@ function Layout.GetH2ScreenMapPlan()
     end
     return result
 end
+
+-- P0353: original command-invoked read-only integration diagnostics.
+local LAYOUT_EXPECTED = {
+    { "LogresHUDResourceBar", "playerReaction" },
+    { "LogresHUDTarget", "targetFallback" },
+    { "LogresHUDAllies", "allies" },
+    { "LogresPrimaryActionCluster", "primaryActions" },
+    { "LogresSecondaryActionCluster", "secondaryActions" },
+    { "LogresUtilityActionCluster", "utilityActions" },
+    { "LogresBar4ActionCluster", "bar4Actions" },
+    { "LogresBar5ActionCluster", "bar5Actions" },
+    { "LogresCompassFrame", "navigation" },
+    { "LogresQuestXPPulse", "contextXP" },
+    { "LogresQuestObjectiveProgress", "contextObjective" },
+    { "LogresActiveQuest", "activeQuest" },
+    { "LogresQuestDialogue", "questDialogue" },
+    { "LogresPlayerHelpfulAuras", "passiveStatus" },
+    { "LogresPetActionExecutionProbeCluster", "classPet" },
+    { "LogresNativeAccessDock", "nativeAccess" },
+}
+
+function Layout.RunDevLayoutCheck(emit)
+    local status =
+        Logres.Layout
+        and Logres.Layout.GetDebugStatus
+        and Logres.Layout.GetDebugStatus()
+        or nil
+
+    if not status then
+        emit(
+            "Logres layoutcheck: FAIL "
+            .. "(layout status unavailable)"
+        )
+        return
+    end
+
+    local missing = 0
+    local mismatched = 0
+
+    for index = 1, #LAYOUT_EXPECTED do
+        local definition = LAYOUT_EXPECTED[index]
+        local frame = _G[definition[1]]
+        local expected = definition[2]
+
+        if not frame then
+            missing = missing + 1
+        elseif frame.logresLayoutAnchor ~= expected then
+            mismatched = mismatched + 1
+        end
+    end
+
+    local passed =
+        status.anchorCount == #LAYOUT_EXPECTED + 3
+        and status.bindFailureCount == 0
+        and missing == 0
+        and mismatched == 0
+
+    emit(string.format(
+        "Logres layoutcheck: %s (anchors=%s binds=%s failures=%s missing=%s mismatched=%s error=%s)",
+        passed and "PASS" or "FAIL",
+        tostring(status.anchorCount),
+        tostring(status.bindCount),
+        tostring(status.bindFailureCount),
+        tostring(missing),
+        tostring(mismatched),
+        tostring(status.lastBindError)
+    ))
+
+    local placement = Logres.Layout.GetH2PlacementStatus()
+    emit(string.format(
+        "Logres H2 v4 placement: %s (reason=%s anchors=%s)",
+        placement.active and "APPLIED" or "DEFERRED",
+        tostring(placement.reason), tostring(placement.anchors)
+    ))
+
+    -- P0192: geometry is diagnostic only. A successful source measurement is
+    -- NOT collision/visibility/secure-action validation or layout acceptance.
+    local h2 = Logres.Layout.GetH2ScreenMapAudit()
+    emit(string.format(
+        "Logres H2 v4 geometry AUDIT (measured=%s/%s missing=%s deferred=%s reason=%s; layout unchanged)",
+        tostring(h2.measured), tostring(h2.total),
+        tostring(h2.missing), tostring(h2.deferred), tostring(h2.reason)
+    ))
+    for index = 1, #h2.rows do
+        local row = h2.rows[index]
+        if row.state == "MEASURED" then
+            emit(string.format(
+                "Logres H2 %s %s actual=(%.1f,%.1f,%.1f,%.1f) planned=(%.1f,%.1f,%.1f,%.1f)",
+                row.id, row.state, row.x, row.y, row.w, row.h,
+                row.targetX, row.targetY, row.targetW, row.targetH
+            ))
+        else
+            emit(string.format(
+                "Logres H2 %s %s frame=%s planned=(%.1f,%.1f,%.1f,%.1f)",
+                row.id, row.state, row.frameName,
+                row.targetX, row.targetY, row.targetW, row.targetH
+            ))
+        end
+    end
+end

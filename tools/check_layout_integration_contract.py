@@ -84,6 +84,9 @@ if LAYOUT.is_file():
         "function Layout.Bind(",
         "frame.logresLayoutAnchor = key",
         "function Layout.GetDebugStatus()",
+        "function Layout.RunDevLayoutCheck(emit)",
+        'Logres.Layout.GetDebugStatus()',
+        '"Logres layoutcheck: %s (anchors=%s binds=%s failures=%s missing=%s mismatched=%s error=%s)"',
     ]
     for fragment in required:
         if fragment not in source:
@@ -151,8 +154,7 @@ if COMMANDS.is_file():
     source = COMMANDS.read_text(encoding="utf-8")
     required = [
         "local function runLayoutCheck()",
-        'Logres.Layout.GetDebugStatus()',
-        '"Logres layoutcheck: %s (anchors=%s binds=%s failures=%s missing=%s mismatched=%s error=%s)"',
+        "Logres.Layout.RunDevLayoutCheck(emit)",
         'if command == "layoutcheck" then',
         'emit("  /logres layoutcheck")',
     ]

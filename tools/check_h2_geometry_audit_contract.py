@@ -25,8 +25,10 @@ for required in ('function Layout.GetH2ScreenMapAudit()', 'ordinaryGeometryNumbe
     if required not in layout:
         errors.append('Missing geometry audit safety/contract: '+required)
 for required in ('local h2 = Logres.Layout.GetH2ScreenMapAudit()', 'Logres H2 v4 geometry AUDIT', 'layout unchanged', 'row.state == "MEASURED"'):
-    if required not in commands:
-        errors.append('Missing developer-panel output: '+required)
+    if required not in layout:
+        errors.append('Missing layout-owned developer-panel output: '+required)
+if 'Logres.Layout.RunDevLayoutCheck(emit)' not in commands:
+    errors.append('Missing Commands layout diagnostic forwarding')
 if 'SetPoint(' in layout.split('-- P0192: read-only Phase H.2 v4 geometry audit.',1)[1].split('function Layout.GetDebugStatus()',1)[0]:
     errors.append('Audit may not mutate anchors')
 print('P0192 read-only H.2 geometry audit contract')

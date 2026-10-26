@@ -1,0 +1,15 @@
+P0353 H.2 LAYOUT DIAGNOSTIC SEAM
+Source baseline: 61f0f49c2cf990168c1415dd2100a0f286627a91
+Patch: 0.0.241-dev -> 0.0.242-dev (TOC and Bootstrap)
+PREWRITE shadow: 224/224 STATIC PASS
+POSTWRITE: 224/224 STATIC PASS
+git diff --check: PASS
+Addon Lua load entries: 94
+Developer panel registrations: 120 (38 P previews)
+WoW runtime: UNVERIFIED / DEFERRED (client unavailable)
+Native P0321 GossipFrame restore: FIRST CONTINGENT CLIENT GATE
+L-022/L-027/L-028 OPEN; L-019 public release BLOCKED
+Tracked files affected: 15
+New checker/evidence files: 3
+P0353 R0 PREWRITE: REFUSED 1/224 at 57/224 check_native_access_contract.py; no tracked writes
+P0353 R1: migrated P0172 relocated dock role without changing native safety/command gates
