@@ -66,7 +66,10 @@ for safety in ('Quest 237', 'P0338', 'NOT EXECUTED', 'UNREPRODUCED',
         need(safety in CUR or safety in E, 'D-046 authority lost')
     else:
         need(safety in M, 'P0339 safety/evidence marker missing: '+safety)
-need('does **not** currently print' in M, 'P0338 new debug fields must not be advertised as panel fields')
+need('Logres compass focused marker:' in C and
+     'Logres gameplaycapture Compass focused marker:' in C and
+     'focusedMarkerKind' in M and 'P0341' in M,
+     'P0341 generic focus diagnostics must be reflected in both source paths and matrix')
 need('NOV04_GAMEPLAY_REGRESSION_MATRIX.md' in RUN, 'runbook must link matrix')
 need('NOV04_GAMEPLAY_REGRESSION_MATRIX.md' in CUR, 'CURRENT must link matrix')
 need('P0339' in H and 'CURRENT.md' in H, 'handoff authority/checkpoint lost')

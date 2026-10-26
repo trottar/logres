@@ -208,6 +208,12 @@ function Logres:RunGameplayCapture()
             tostring(compass.questDestinationShown),
             tostring(compass.trackingShown)
         ))
+        emit(string.format(
+            "Logres gameplaycapture Compass focused marker: kind=%s distanceAvailable=%s distanceYards=%s (cached Logres-owned focus; not native source proof)",
+            tostring(compass.focusedMarkerKind or "none"),
+            boolText(compass.focusedMarkerDistanceAvailable),
+            tostring(compass.focusedMarkerDistanceYards or "unavailable")
+        ))
     end
 
     local aura = readCaptureStatus("StatusAuras", function(module)
@@ -2382,6 +2388,12 @@ local function runCompassCheck()
         tostring(debugStatus.focusedQuestDistanceYards or "-"),
         tostring(debugStatus.focusedQuestRenderScale or "-"),
         tostring(debugStatus.focusedQuestDepthBand or "-")
+    ))
+    emit(string.format(
+        "Logres compass focused marker: kind=%s distanceAvailable=%s distanceYards=%s (cached Logres-owned focus; compare in-world glyph)",
+        tostring(debugStatus.focusedMarkerKind or "none"),
+        boolText(debugStatus.focusedMarkerDistanceAvailable),
+        tostring(debugStatus.focusedMarkerDistanceYards or "unavailable")
     ))
 end
 
