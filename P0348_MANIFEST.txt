@@ -1,0 +1,20 @@
+P0348 D-048 surface-specific ownership/restore matrix manifest
+baseline=b94beb4706005757497002927d80845d5355037f
+version=UNCHANGED 0.0.237-dev
+validation=219/219 PREWRITE shadow and 219/219 POSTWRITE (STATIC ONLY); WoW UNVERIFIED
+scope=docs+offline tools only; 19 surfaces; 32 masks; 10 Blizzard stock-required; 9 candidate gates
+no addon Lua/TOC, camera, native UI, preferences/schema, or panel actions changed
+P0321 runtime restoration UNVERIFIED; L-022/L-027/L-028 OPEN; L-019 public release BLOCKED
+github_writes=none
+62f8e026dcb453145cdf2a38f7fa73da26c0241dd888f9c2af518778161552b5  docs/ROADMAP.md
+ac848e164fe1bc36f104d5bd98f704d9e9744808d503fdbf65bc96cc4335bad3  docs/memory/CURRENT.md
+c2457a0ff11c866ab25daffdd97eeb914f49c1b8eb6d34991ca0933cee50a2bb  docs/memory/architecture/P0348_SURFACE_OWNERSHIP_MATRIX.md
+82869d9e9d11b289bacfd43dfbb35e9aaf757c4dc7621b784d7ec022427702ed  docs/memory/evidence/P0348_SURFACE_HANDOFF.md
+18b7625d36d9f73a37d8cf6ceb45763c6c512cdd3dbf3a3c49c2c9356a9e408b  docs/memory/handoffs/CURRENT_HANDOFF.md
+b1936ae03a4b254beb78eb0a5de735d8823220d38409354d4674e5fc89b2a9d6  docs/memory/investigations/ACTIVE.md
+ed093dac51656ba5e3e326cde38a44b8c22d68906fd1a4f9ff83b9c415f41743  docs/memory/patches/P0348_SURFACE_HANDOFF.md
+d0f7d821e086b58c900e7a866cc7da9c76194ec57fea4fbe801a61be09828065  docs/memory/patches/PATCH_INDEX.md
+d55bd0f1f58c71f29c4e3c40223ab42d5ed87d65863179590a38cc35d258d5f5  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+6a65c9283a4ff0dfab3d44790bda205aca738a304fa0bc95731383f96e83ba03  docs/memory/roadmap/STATUS.md
+dc02fa7c9db9b4857a6ffe69ade1d675816d59be6c454579b93fc44fb18e7d61  tools/check_p0348_surface_handoff_contract.py
+f21b2e09116c70900b02e25e4fa0a5b0d46e410af598efbc4d1bd793c6645b5e  tools/p0348_surface_handoff.py

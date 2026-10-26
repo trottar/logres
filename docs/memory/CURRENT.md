@@ -11,10 +11,11 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Current Work Item
 
-**P0347 — bounded State/Preferences listener lifecycle; SOURCE-PREPARED / WoW UNVERIFIED.** Verified pushed P0346 main `26370095bd092d076868cd3d2e5e6a74f6b845d3`, 217/217 PRE/POST STATIC, version `0.0.236-dev`; audit confirmed 94 loaded Lua and 120 panel actions. State and Preferences unsubscribe only flips active, retaining stale handler closures in long-lived arrays after module lifecycle changes. P0347 compacts tombstones outside dispatch, clears callbacks on release and preserves reentrant subscription order/errors. Version `0.0.237-dev`, checker #218; no new API, events, preference/schema migration, panel actions, source/secure/UI mutations, camera or polling. L-022/L-027/L-028 OPEN; L-019 release BLOCKED; P0321 first contingent November 4 native gossip safety gate.
+**P0348 — D-048 fine-grained surface handoff fixture; DOCS/TOOLS ONLY / WoW UNVERIFIED.** Verified pushed P0347 R1 main `b94beb4706005757497002927d80845d5355037f` (218/218 PRE/POST STATIC, version `0.0.237-dev`); prior R0 refusal preserved. P0324 models requested/effective by domain but cannot prove ownership of each Blizzard fallback surface. New offline P0348 19-surface/32-mask model gates candidate ownership on independent capability AND restoration/fallback attestations; always retains stock-required controls. No live D-048 selectors, saved migration, new Lua/TOC, Blizzard/UI, camera, polling, or panel actions. Checker #219. L-022/L-027/L-028 OPEN; L-019 public release BLOCKED. P0321 native gossip restoration first contingent client safety gate.
 
 ## Verified State
 
+- Verified pushed P0347 R1 `b94beb4706005757497002927d80845d5355037f` with manifest 218/218 PREWRITE/POSTWRITE STATIC; version `0.0.237-dev`, WoW UNVERIFIED. R0 historical P0346 ceiling refusal remains recorded.
 - P0347 R0 PREWRITE shadow REFUSED 1/218: P0346 historic exact 217-checker assertion rejected the new #218; no tracked writes. R1 migrates that assertion to a 217-checker floor, retains inventory checks and requires 218/218 static contracts.
 - Verified pushed P0346 `26370095bd092d076868cd3d2e5e6a74f6b845d3` with 217/217 PREWRITE and POSTWRITE STATIC PASS; source audit confirmed 94 Lua/120 actions/38 previews. WoW UNVERIFIED.
 - Verified pushed P0345 GitHub `main` `626b22038d09e738bd3fa90684e3a95e36905d45` (2026-10-25 EDT), manifest 216/216 PREWRITE and POSTWRITE STATIC, version `0.0.236-dev`; target debuff client behavior UNVERIFIED.
@@ -31,16 +32,17 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Next Action
 
-Apply exact-baseline guarded P0347, require 218/218 PREWRITE and POSTWRITE static PASS and manifest, then user commit/push and GitHub verification. Test the source-neutral subscription cleanup with repeated enable/disable, callback self-unsubscribe, callback errors and nested publication; no performance PASS inferred from static correctness. Continue D-048 requested/effective domain contract and narrow command seam investigation afterward; defer five operational selectors until independent native restoration gates exist. P0321 GossipFrame stock restoration FIRST when contingent November 4 client returns; L-022/L-027/L-028 runtime checks follow; L-019 release BLOCKED.
+Apply guarded P0348 offline per-surface ownership fixture against exact clean P0347 R1 main, require 219/219 PREWRITE shadow and POSTWRITE static checks, diff hygiene, manifest, user push and remote verification. Future D-048 live adapters require independent native fallback and restored-first proof; do not repurpose the current Immersion or CAM state. After the verified checkpoint, prioritize narrow command-diagnostic modularization or further bounded source fixes while runtime is unavailable. On contingent November 4 client access, P0321 GossipFrame stock restoration FIRST; L-022/L-027/L-028 still OPEN; L-019 licensing BLOCKED.
 
 ## Success Criteria
 
-Unsubscribe releases callback references and prevents unbounded tombstone accumulation without modifying active callback iteration. Original event/state snapshot and preference revision contracts, fixed 120 panel actions, 94 Lua load entries, schema 3, secure/native UI and camera remain intact. New #218 plus all historical 217 source checks PASS twice in WSL; WoW remains UNVERIFIED.
+Pure P0348 evaluator covers 19 named surfaces, all 32 D-048 request masks, independent candidate capability/fallback gates, 10 permanently stock-required Blizzard controls, and native-restore-deferred transitions. Preserve P0324/P0325 fixtures, schema 3, 94 loaded Lua, 120 actions/38 previews and D-047 Camera. 219 static checkers twice in WSL; no client PASS or live selector claim.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/architecture/P0348_SURFACE_OWNERSHIP_MATRIX.md`, `docs/memory/evidence/P0348_SURFACE_HANDOFF.md` and `docs/memory/patches/P0348_SURFACE_HANDOFF.md`
 - `docs/memory/evidence/P0347_SUBSCRIPTION_LIFECYCLE.md` and `docs/memory/patches/P0347_SUBSCRIPTION_LIFECYCLE.md`
 - `docs/memory/architecture/P0346_ARCHITECTURE_GAP_REGISTER.md`, `docs/memory/evidence/P0346_ARCHITECTURE_HEALTH_AUDIT.md` and `docs/memory/patches/P0346_ARCHITECTURE_HEALTH_AUDIT.md`
 - `docs/memory/evidence/P0345_AURA_ACTIVATION_PROVENANCE.md` and `docs/memory/patches/P0345_AURA_ACTIVATION_PROVENANCE.md`
