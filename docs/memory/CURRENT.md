@@ -11,10 +11,11 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Current Work Item
 
-**P0351 — preference diagnostic ownership seam; SOURCE PREPARED / WoW UNVERIFIED.** Verified pushed P0350 GitHub `main` `fd2d2676ffb41d509143b398b61b8474ecacf53d` (221/221 PRE/POST STATIC, `0.0.239-dev`). Move only the existing effectful preferencecheck body from Commands to preloaded Core/Preferences, leaving its wrapper, sink/formatter, Run All, slash and phase-0 panel routes intact. The test still toggles/restores immersionEnabled and notifies subscribers; not a passive probe. Candidate version `0.0.240-dev`, checker #222; 94 Lua, 120 actions/38 previews. No schema-3 change, live D-048 selector, native/secure inspection, camera or polling. P0321 first client gate; L-022/L-027/L-028 OPEN, L-019 public release BLOCKED.
+**P0352 — lifecycle diagnostic seam; SOURCE PREPARED, WoW UNVERIFIED.** Verified P0351 pushed main `e8b71bc59a04f3077925bb24f0d6850a71340841` (222/222 STATIC, `0.0.240-dev`). The effectful lifecyclecheck body moves to preloaded Core/Modules; Commands keeps probe registration, counters and wrapper, preserving registration order, output and panel/slash/Run All routes. Preference toggles/restoration remain. Version `0.0.241-dev`, checker #223, 94 Lua/120 actions/38 previews. No schema, D-048 live selector, native UI, camera, secret/protected read or polling changes. P0321 first client gate; L-022/L-027/L-028 OPEN, L-019 release BLOCKED.
 
 ## Verified State
 
+- Verified pushed P0351 `e8b71bc59a04f3077925bb24f0d6850a71340841`: 222/222 PRE/POST STATIC, `0.0.240-dev`; WoW UNVERIFIED.
 - Verified pushed P0350 `fd2d2676ffb41d509143b398b61b8474ecacf53d`: 221/221 PRE/POST STATIC, `0.0.239-dev`; WoW UNVERIFIED.
 - Verified pushed P0349 R1 `4e59c8f2f03daf30b630fb15e3e14d5f38cc8da6`: 220/220 PRE/POST STATIC, `0.0.238-dev`; R0 2/220 PREWRITE refusal remains recorded, WoW UNVERIFIED.
 - Verified pushed P0348 `4b7481d731d5f90e214b285bc7cce16ec826176f` with manifest 219/219 PREWRITE/POSTWRITE STATIC, version unchanged `0.0.237-dev`; D-048 surface ownership model remains OFFLINE ONLY.
@@ -35,16 +36,17 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Next Action
 
-Apply guarded exact-P0350-baseline P0351 only after 222/222 PREWRITE shadow and POSTWRITE STATIC contracts, diff hygiene and manifest; verify user commit/push remotely before advancing. No WoW client deployment now. P0321 GossipFrame restore FIRST contingent client gate; L-022/L-027/L-028 require client evidence, L-019 public release BLOCKED. D-048 selectors gated.
+Apply P0352 only with 223/223 PREWRITE/POSTWRITE STATIC, diff hygiene and manifest; verify subsequent user push. No client deployment. P0321 GossipFrame restore FIRST contingent gate; L-022/L-027/L-028 OPEN, L-019 license BLOCKED, D-048 selectors deferred.
 
 ## Success Criteria
 
-Original preferencecheck PASS/FAIL output, transient toggle/restore, subscription callback/revision assertions and Run All/slash/panel routing preserved; original Commands wrapper delegates to earlier-loaded Preferences. 94 Lua, 120 actions/38 previews, schema 3 and camera unchanged. Checker #222 and 221 historical checks PRE/POST STATIC; WoW UNVERIFIED.
+Preserve lifecyclecheck PASS/FAIL, four preference transitions, probe enable/disable and owned cleanup; Commands registration, wrapper, Run All and panel unchanged. 94 Lua, 120/38 actions/previews, schema 3 and camera unchanged. #223 STATIC, runtime UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/evidence/P0352_LIFECYCLE_SEAM.md` and `docs/memory/patches/P0352_LIFECYCLE_SEAM.md`
 - `docs/memory/evidence/P0351_PREFERENCE_SEAM.md` and `docs/memory/patches/P0351_PREFERENCE_SEAM.md`
 - `docs/memory/evidence/P0350_STATE_SENSOR_SEAM.md` and `docs/memory/patches/P0350_STATE_SENSOR_SEAM.md`
 - `docs/memory/evidence/P0349_NATIVE_AUDIT_SEAM.md` and `docs/memory/patches/P0349_NATIVE_AUDIT_SEAM.md`

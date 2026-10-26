@@ -1,0 +1,13 @@
+P0352 LIFECYCLE DIAGNOSTIC SEAM
+Source baseline: e8b71bc59a04f3077925bb24f0d6850a71340841
+Patch: 0.0.240-dev -> 0.0.241-dev (TOC and Bootstrap)
+PREWRITE shadow: 223/223 STATIC PASS
+POSTWRITE: 223/223 STATIC PASS
+git diff --check: PASS
+Addon Lua load entries: 94
+Developer panel registrations: 120 (38 P previews)
+WoW runtime: UNVERIFIED / DEFERRED (client unavailable)
+Native P0321 GossipFrame restore: FIRST CONTINGENT CLIENT GATE
+L-022/L-027/L-028 OPEN; L-019 public release BLOCKED
+Tracked files affected: 11
+New checker/evidence files: 3
