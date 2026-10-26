@@ -1,0 +1,7 @@
+# P0351 — Preference check ownership extraction
+
+**Verified source baseline:** P0350 main `fd2d2676ffb41d509143b398b61b8474ecacf53d`, 221/221 PREWRITE and POSTWRITE STATIC, version `0.0.239-dev`, WoW UNVERIFIED.
+
+One exact original body moves from `Core/Commands.lua` to already-loaded `Core/Preferences.lua` as `Logres:RunDevPreferenceCheck(emit, boolText)`; Commands retains original `runPreferenceCheck()` wrapper, PASS/FAIL strings via original sink, Run All, slash and panel actions. No callback sequence changes: the existing diagnostic intentionally toggles `immersionEnabled` and restores it, publishing two transitions. Do not invoke it automatically. Historical P0175 preference/status-aura regression contract and A.3 preference contract stay intact. P0349/P0350 ownership seams remain unchanged. Matched `0.0.240-dev` source version, new checker #222, 94 Lua and 120 actions (38 previews).
+
+The guarded applier assembles shadow candidate, checks exact baseline and clean tracked worktree, runs 222 PREWRITE and POSTWRITE contracts and whitespace hygiene, rolls back patch-owned bytes on failed POSTWRITE, and records a manifest. No new native frames, secure reads/writes, saved schema migration, camera, D-048 live selector, polling or event handlers. P0321 GossipFrame restoration remains first contingent in-client safety gate. L-022/L-027/L-028 OPEN; L-019 public release BLOCKED. Runtime remains UNVERIFIED. Historical R0 refusals are retained.

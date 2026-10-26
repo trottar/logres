@@ -1,3 +1,7 @@
+## P0351 — preference diagnostic ownership seam (2026-10-26)
+
+Verified pushed P0350 `fd2d2676ffb41d509143b398b61b8474ecacf53d` with 221/221 PREWRITE and POSTWRITE STATIC, version `0.0.239-dev`; client UNVERIFIED. Move only existing preferencecheck body into preloaded Core/Preferences; preserve original command wrapper/emit/boolText, no-op and two real preference toggles with restoration, Run All/slash and developer-panel routes. P0175 regression checker remains unchanged. Candidate version `0.0.240-dev`, checker #222, 94 Lua, 120 actions/38 previews. No schema 3 or D-048 live selector, native/protected UI, camera, new event or polling. P0321 first contingent client safety gate; L-022/L-027/L-028 OPEN, L-019 distribution BLOCKED. See `docs/memory/evidence/P0351_PREFERENCE_SEAM.md`.
+
 ## P0350 — state/sensor diagnostic seam (2026-10-26)
 
 Verified GitHub main P0349 R1 `4e59c8f2f03daf30b630fb15e3e14d5f38cc8da6`, 220/220 PREWRITE/POSTWRITE STATIC, `0.0.238-dev`, client UNVERIFIED. Extract original statecheck/sensorcheck bodies from Commands into preloaded Core/State; retain wrappers, output, temporary subscriber/no-op refresh behavior, Run All and phase-A panel routes. Matched candidate version `0.0.239-dev`, new checker #221, 94 Lua and 120 actions/38 previews unchanged. No native/secure frame access, camera, polling, preference migration or D-048 live switches. P0321 GossipFrame restore FIRST contingent client gate; L-022/L-027/L-028 OPEN, L-019 distribution BLOCKED; WoW UNVERIFIED. See `docs/memory/evidence/P0350_STATE_SENSOR_SEAM.md`.

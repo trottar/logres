@@ -11,10 +11,11 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Current Work Item
 
-**P0350 — state/sensor diagnostic seam; SOURCE PREPARED / WoW UNVERIFIED.** Verified GitHub `main` P0349 R1 `4e59c8f2f03daf30b630fb15e3e14d5f38cc8da6`, 220/220 PREWRITE/POSTWRITE STATIC, `0.0.238-dev`. The existing statecheck snapshot/no-op subscription and sensorcheck cached-state/API comparison bodies move unchanged to already-loaded Core/State. Commands keeps original wrappers, Run All/slash/phase-A panel routes and output. Candidate version `0.0.239-dev`, checker #221; 94 Lua, 120 actions/38 previews unchanged. The original statecheck still performs its no-op RefreshState and temporary subscription. No D-048 selector, schema-3 change, native UI, secret/protected inspection, camera or polling. P0321 first contingent client safety gate; L-022/L-027/L-028 OPEN, L-019 public release BLOCKED.
+**P0351 — preference diagnostic ownership seam; SOURCE PREPARED / WoW UNVERIFIED.** Verified pushed P0350 GitHub `main` `fd2d2676ffb41d509143b398b61b8474ecacf53d` (221/221 PRE/POST STATIC, `0.0.239-dev`). Move only the existing effectful preferencecheck body from Commands to preloaded Core/Preferences, leaving its wrapper, sink/formatter, Run All, slash and phase-0 panel routes intact. The test still toggles/restores immersionEnabled and notifies subscribers; not a passive probe. Candidate version `0.0.240-dev`, checker #222; 94 Lua, 120 actions/38 previews. No schema-3 change, live D-048 selector, native/secure inspection, camera or polling. P0321 first client gate; L-022/L-027/L-028 OPEN, L-019 public release BLOCKED.
 
 ## Verified State
 
+- Verified pushed P0350 `fd2d2676ffb41d509143b398b61b8474ecacf53d`: 221/221 PRE/POST STATIC, `0.0.239-dev`; WoW UNVERIFIED.
 - Verified pushed P0349 R1 `4e59c8f2f03daf30b630fb15e3e14d5f38cc8da6`: 220/220 PRE/POST STATIC, `0.0.238-dev`; R0 2/220 PREWRITE refusal remains recorded, WoW UNVERIFIED.
 - Verified pushed P0348 `4b7481d731d5f90e214b285bc7cce16ec826176f` with manifest 219/219 PREWRITE/POSTWRITE STATIC, version unchanged `0.0.237-dev`; D-048 surface ownership model remains OFFLINE ONLY.
 - Verified pushed P0347 R1 `b94beb4706005757497002927d80845d5355037f` with manifest 218/218 PREWRITE/POSTWRITE STATIC; version `0.0.237-dev`, WoW UNVERIFIED. R0 historical P0346 ceiling refusal remains recorded.
@@ -34,16 +35,17 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Next Action
 
-Apply guarded P0350 exact-P0349-baseline patch; require 221/221 PREWRITE shadow and POSTWRITE STATIC checks, whitespace hygiene and manifest. User owns commit/push; verify remote before advancing. No client deployment while unavailable. P0321 GossipFrame restoration FIRST on contingent November 4; L-022/L-027/L-028 require natural client evidence, L-019 release BLOCKED. D-048 live selectors gated.
+Apply guarded exact-P0350-baseline P0351 only after 222/222 PREWRITE shadow and POSTWRITE STATIC contracts, diff hygiene and manifest; verify user commit/push remotely before advancing. No WoW client deployment now. P0321 GossipFrame restore FIRST contingent client gate; L-022/L-027/L-028 require client evidence, L-019 public release BLOCKED. D-048 selectors gated.
 
 ## Success Criteria
 
-Both statecheck and sensorcheck original PASS/FAIL output and arguments preserved through original emit/boolText; same Commands wrappers, Run All, slash and panel routes. State defines both diagnostics before Commands loads. 94 Lua, 120 actions/38 previews, schema 3 and D-047 Camera unchanged. Checker #221 plus 220 historical checks PRE/POST STATIC; in-client behavior and performance UNVERIFIED.
+Original preferencecheck PASS/FAIL output, transient toggle/restore, subscription callback/revision assertions and Run All/slash/panel routing preserved; original Commands wrapper delegates to earlier-loaded Preferences. 94 Lua, 120 actions/38 previews, schema 3 and camera unchanged. Checker #222 and 221 historical checks PRE/POST STATIC; WoW UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/evidence/P0351_PREFERENCE_SEAM.md` and `docs/memory/patches/P0351_PREFERENCE_SEAM.md`
 - `docs/memory/evidence/P0350_STATE_SENSOR_SEAM.md` and `docs/memory/patches/P0350_STATE_SENSOR_SEAM.md`
 - `docs/memory/evidence/P0349_NATIVE_AUDIT_SEAM.md` and `docs/memory/patches/P0349_NATIVE_AUDIT_SEAM.md`
 - `docs/memory/architecture/P0348_SURFACE_OWNERSHIP_MATRIX.md`, `docs/memory/evidence/P0348_SURFACE_HANDOFF.md` and `docs/memory/patches/P0348_SURFACE_HANDOFF.md`

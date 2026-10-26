@@ -1,0 +1,13 @@
+P0351 PREFERENCE DIAGNOSTIC SEAM
+Source baseline: fd2d2676ffb41d509143b398b61b8474ecacf53d
+Patch: 0.0.239-dev -> 0.0.240-dev (TOC and Bootstrap)
+PREWRITE shadow: 222/222 STATIC PASS
+POSTWRITE: 222/222 STATIC PASS
+git diff --check: PASS
+Addon Lua load entries: 94
+Developer panel registrations: 120 (38 P previews)
+WoW runtime: UNVERIFIED / DEFERRED (client unavailable)
+Native P0321 GossipFrame restore: FIRST CONTINGENT CLIENT GATE
+L-022/L-027/L-028 OPEN; L-019 public release BLOCKED
+Tracked files affected: 11
+New checker/evidence files: 3

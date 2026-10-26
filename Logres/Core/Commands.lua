@@ -313,70 +313,7 @@ local function runSensorCheck()
 end
 
 local function runPreferenceCheck()
-    local original = Logres:GetPreferences()
-    local originalValue = original.immersionEnabled
-
-    original.immersionEnabled = not originalValue
-    local afterMutation = Logres:GetPreferences()
-    local snapshotIsolation = afterMutation.immersionEnabled == originalValue
-
-    local callbackCount = 0
-    local unsubscribe = Logres:SubscribePreferences(function()
-        callbackCount = callbackCount + 1
-    end)
-
-    local noopChanged = Logres:SetPreference(
-        "immersionEnabled",
-        originalValue,
-        "DEV_PREFERENCECHECK_NOOP"
-    )
-
-    local afterNoop = Logres:GetPreferences()
-    local noopStable =
-        noopChanged == false
-        and afterNoop.revision == afterMutation.revision
-        and callbackCount == 0
-
-    local changedAway = Logres:SetPreference(
-        "immersionEnabled",
-        not originalValue,
-        "DEV_PREFERENCECHECK_CHANGE"
-    )
-    local changedBack = Logres:SetPreference(
-        "immersionEnabled",
-        originalValue,
-        "DEV_PREFERENCECHECK_RESTORE"
-    )
-
-    unsubscribe()
-
-    local final = Logres:GetPreferences()
-
-    local changeSemantics =
-        changedAway == true
-        and changedBack == true
-        and callbackCount == 2
-        and final.immersionEnabled == originalValue
-        and final.revision == afterNoop.revision + 2
-
-    if snapshotIsolation and noopStable and changeSemantics then
-        emit(string.format(
-            "Logres preferencecheck: PASS (snapshot isolation=true, callbacks=2, revision=%s, immersionEnabled=%s)",
-            tostring(final.revision),
-            boolText(final.immersionEnabled)
-        ))
-        return
-    end
-
-    emit(string.format(
-        "Logres preferencecheck: FAIL (snapshotIsolation=%s noopStable=%s changeSemantics=%s callbacks=%s revision=%s immersionEnabled=%s)",
-        tostring(snapshotIsolation),
-        tostring(noopStable),
-        tostring(changeSemantics),
-        tostring(callbackCount),
-        tostring(final.revision),
-        boolText(final.immersionEnabled)
-    ))
+    Logres:RunDevPreferenceCheck(emit, boolText)
 end
 
 local function runLifecycleCheck()
