@@ -1,0 +1,24 @@
+P0347 bounded listener lifecycle manifest
+baseline=26370095bd092d076868cd3d2e5e6a74f6b845d3
+version=0.0.237-dev
+validation=218/218 PREWRITE shadow and 218/218 POSTWRITE (STATIC ONLY); WoW UNVERIFIED
+scope=State/Preferences private subscriber cleanup; P0346 count-floor migration; unchanged public API/94 Lua/120 actions/schema 3
+R0=PREWRITE REFUSED 1/218 P0346 historical ==217 count; no tracked writes
+R1=P0346 historical >=217 floor; all 218 static contracts required
+L-022/L-027/L-028 OPEN; L-019 release BLOCKED
+github_writes=none
+cec826b59085c798202e7c748e426540cbc813de1f6e190323fdd93b8b14d50e  Logres/Core/Bootstrap.lua
+7239b1dbda5c24b3e12aa163ea1e95c7bfca3c2b2591ef6678e6360a98ba2d2b  Logres/Core/Preferences.lua
+a7286332f6eecdeb6c31a85fb5afe21465b220de3233ba114ba0962d5a9218c5  Logres/Core/State.lua
+e55a38fe74d56fd0e2df383cd483932b3e0db304ce2a9c3c5ea92c427cbf0eb4  Logres/Logres.toc
+337d380df061c8f1c8c446dbdaa39d2d352b22285f20032791df908dc00d3194  docs/ROADMAP.md
+83e6611324ae5083fc34ba76a51bea09674ae529ad94c88dfd4ed7487f923435  docs/memory/CURRENT.md
+7e8949977797cdbfa9ac5a5ef1e9ce7cc1eed8de78f246ce0a89ccec4ceee284  docs/memory/evidence/P0347_SUBSCRIPTION_LIFECYCLE.md
+9a947472fa8da355c570817abff225a3d2c3919a02a6ab838ef177a1632cf7d8  docs/memory/handoffs/CURRENT_HANDOFF.md
+a259aca78ef53e602852619e38c72eeadb31f650d3f2697e34f9fe69fb2670ee  docs/memory/investigations/ACTIVE.md
+080eb47faed6440de4b9597e249df5579dc0a2aea4b1b8ac6802630d1ed46362  docs/memory/patches/P0347_SUBSCRIPTION_LIFECYCLE.md
+28487a0fbc19ade8adfc86b2462a5574f3fdba5ee2ffcb191bb04196b27cc844  docs/memory/patches/PATCH_INDEX.md
+d5e473ef9a60f24129891597e7567d76fc175c8a05339a9375653f0e10d5efc2  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+529abd9dad1cc8eb7a4ec28080ff3d1df59c38c96b63b249db0e221e43fbf84f  docs/memory/roadmap/STATUS.md
+cbf165db952497307c400839c5aa0a85a89fdb32cdd086db402c9b7986189698  tools/check_p0346_architecture_health_contract.py
+e1395ad13555a364840973c3bb31c6ca851bf23213e70f2d51a561282543d741  tools/check_p0347_subscription_lifecycle_contract.py

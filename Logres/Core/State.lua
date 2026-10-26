@@ -39,6 +39,24 @@ local TRACKED_FIELDS = {
 }
 
 local stateListeners = {}
+local stateDispatchDepth = 0
+local stateListenersDirty = false
+
+local function compactStateListeners()
+    if not stateListenersDirty then return end
+    local write = 1
+    for read = 1, #stateListeners do
+        local subscription = stateListeners[read]
+        if subscription.active then
+            stateListeners[write] = subscription
+            write = write + 1
+        end
+    end
+    for index = write, #stateListeners do
+        stateListeners[index] = nil
+    end
+    stateListenersDirty = false
+end
 
 local function copyState(source)
     return {
@@ -103,17 +121,27 @@ end
 local function publishStateChange(previous, changes, reason)
     local current = copyState(State)
 
-    for index = 1, #stateListeners do
-        local subscription = stateListeners[index]
+    stateDispatchDepth = stateDispatchDepth + 1
+    local ok, failure = pcall(function()
+        for index = 1, #stateListeners do
+            local subscription = stateListeners[index]
 
-        if subscription.active then
-            subscription.handler(
-                copyState(current),
-                previous and copyState(previous) or nil,
-                copyChanges(changes),
-                reason
-            )
+            if subscription.active then
+                subscription.handler(
+                    copyState(current),
+                    previous and copyState(previous) or nil,
+                    copyChanges(changes),
+                    reason
+                )
+            end
         end
+    end)
+    stateDispatchDepth = stateDispatchDepth - 1
+    if stateDispatchDepth == 0 then
+        compactStateListeners()
+    end
+    if not ok then
+        error(failure, 0)
     end
 end
 
@@ -134,7 +162,16 @@ function Logres:SubscribeState(handler)
     stateListeners[#stateListeners + 1] = subscription
 
     local function unsubscribe()
+        if not subscription.active then
+            return
+        end
         subscription.active = false
+        subscription.handler = nil
+        stateListenersDirty = true
+        -- Keep callback iteration stable; release tombstones afterward.
+        if stateDispatchDepth == 0 then
+            compactStateListeners()
+        end
     end
 
     return unsubscribe

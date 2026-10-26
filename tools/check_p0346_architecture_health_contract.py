@@ -62,8 +62,8 @@ for doc in (E,P,D):
          'durable evidence EOF hygiene')
 need('P0346' in read('docs/memory/architecture/P0346_ARCHITECTURE_GAP_REGISTER.md'),
      'architecture record unavailable')
-need(len([p for p in (ROOT/'tools').glob('check_*.py')])==217,
-     '217 expected total feature checkers')
+need(len([p for p in (ROOT/'tools').glob('check_*.py')])>=217,
+     'P0346 historical checker floor is 217')
 # No Lua, panel, TOC, or saved-variable edits occur in this docs/tools checkpoint.
 need('p0324_domain_policy.py' not in read('Logres/Logres.toc'),
      'future five-domain fixture must remain offline and inert')

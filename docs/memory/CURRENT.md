@@ -11,10 +11,12 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Current Work Item
 
-**P0346 — source architecture health and outstanding modularity gaps; DOCS/TOOLS ONLY, WoW UNVERIFIED.** Verified pushed GitHub `main` P0345 `626b22038d09e738bd3fa90684e3a95e36905d45` (216/216 PRE/POST STATIC), source version `0.0.236-dev`. Source inventory: 94/94 loaded Lua, 120 registered dev actions including 38 P previews; `Core/Commands.lua` ~241 KB. Existing P0323/P0324 D-048 ownership and 32-case pure policy models remain inert; five live domain selectors NOT implemented. P0346 adds a deterministic read-only architecture health tool, static checker #217, and prioritized gap register. Runtime behavior, addon/TOC/version, menus, native/secure UI, camera and settings unchanged. L-022 quest artifact, L-027 popup owner, L-028 debuffs remain OPEN; L-019 license BLOCKED. P0321 GossipFrame restoration is first contingent November 4 client test.
+**P0347 — bounded State/Preferences listener lifecycle; SOURCE-PREPARED / WoW UNVERIFIED.** Verified pushed P0346 main `26370095bd092d076868cd3d2e5e6a74f6b845d3`, 217/217 PRE/POST STATIC, version `0.0.236-dev`; audit confirmed 94 loaded Lua and 120 panel actions. State and Preferences unsubscribe only flips active, retaining stale handler closures in long-lived arrays after module lifecycle changes. P0347 compacts tombstones outside dispatch, clears callbacks on release and preserves reentrant subscription order/errors. Version `0.0.237-dev`, checker #218; no new API, events, preference/schema migration, panel actions, source/secure/UI mutations, camera or polling. L-022/L-027/L-028 OPEN; L-019 release BLOCKED; P0321 first contingent November 4 native gossip safety gate.
 
 ## Verified State
 
+- P0347 R0 PREWRITE shadow REFUSED 1/218: P0346 historic exact 217-checker assertion rejected the new #218; no tracked writes. R1 migrates that assertion to a 217-checker floor, retains inventory checks and requires 218/218 static contracts.
+- Verified pushed P0346 `26370095bd092d076868cd3d2e5e6a74f6b845d3` with 217/217 PREWRITE and POSTWRITE STATIC PASS; source audit confirmed 94 Lua/120 actions/38 previews. WoW UNVERIFIED.
 - Verified pushed P0345 GitHub `main` `626b22038d09e738bd3fa90684e3a95e36905d45` (2026-10-25 EDT), manifest 216/216 PREWRITE and POSTWRITE STATIC, version `0.0.236-dev`; target debuff client behavior UNVERIFIED.
 - Verified pushed P0344 main `e44f66ba0838045ad6d44f1afe3e4afdb4a473ec` (2026-10-25 EDT), 215/215 PRE/POST STATIC, docs/tools only; native popup owner L-027 unverified.
 - Verified pushed GitHub main P0343 R1 `ef4d96040fa15c0fc1a49766b1e0efcec6fe1cb1` on 2026-10-25 EDT; P0343 manifest 214/214 PREWRITE and POSTWRITE STATIC, WoW UNVERIFIED. Its R0 fixed-panel-inventory 8/214 PREWRITE failures caused no tracked writes; original L-022 artifact remains OPEN.
@@ -29,16 +31,17 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Next Action
 
-Apply exact baseline P0346 guarded docs/tools checkpoint, run 217/217 candidate PREWRITE shadow and POSTWRITE static contracts, and inspect read-only architecture audit report. After the user pushes, verify remote `main`. Next prioritized design work: D-048 per-domain requested/effective/native fallback transition plan and narrow command diagnostic seam with deliberate historical checker migration, not wholesale new selectors. Contingent November 4 client safety gate P0321 GossipFrame restoration FIRST, then real observations for L-022/L-027/L-028 and remaining game bugs. Do not assert source metrics equal FPS optimization. Public release L-019 BLOCKED.
+Apply exact-baseline guarded P0347, require 218/218 PREWRITE and POSTWRITE static PASS and manifest, then user commit/push and GitHub verification. Test the source-neutral subscription cleanup with repeated enable/disable, callback self-unsubscribe, callback errors and nested publication; no performance PASS inferred from static correctness. Continue D-048 requested/effective domain contract and narrow command seam investigation afterward; defer five operational selectors until independent native restoration gates exist. P0321 GossipFrame stock restoration FIRST when contingent November 4 client returns; L-022/L-027/L-028 runtime checks follow; L-019 release BLOCKED.
 
 ## Success Criteria
 
-Pure `tools/architecture_health_audit.py --strict` inventories 94 loaded Lua and source coverage, 120 developer-panel actions/38 previews, version parity, duplicate/orphan/missing source and module lookup risk without mutating gameplay. Static checker #217 exercises negative drift cases; 217/217 PREWRITE and POSTWRITE static checks required. Runtime source, camera, native/UI and saved settings unchanged; no WoW PASS. D-048 live domains remain future work.
+Unsubscribe releases callback references and prevents unbounded tombstone accumulation without modifying active callback iteration. Original event/state snapshot and preference revision contracts, fixed 120 panel actions, 94 Lua load entries, schema 3, secure/native UI and camera remain intact. New #218 plus all historical 217 source checks PASS twice in WSL; WoW remains UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/evidence/P0347_SUBSCRIPTION_LIFECYCLE.md` and `docs/memory/patches/P0347_SUBSCRIPTION_LIFECYCLE.md`
 - `docs/memory/architecture/P0346_ARCHITECTURE_GAP_REGISTER.md`, `docs/memory/evidence/P0346_ARCHITECTURE_HEALTH_AUDIT.md` and `docs/memory/patches/P0346_ARCHITECTURE_HEALTH_AUDIT.md`
 - `docs/memory/evidence/P0345_AURA_ACTIVATION_PROVENANCE.md` and `docs/memory/patches/P0345_AURA_ACTIVATION_PROVENANCE.md`
 - `docs/memory/evidence/P0344_FOREVER_POPUP_FAMILIES.md` and `docs/memory/patches/P0344_FOREVER_POPUP_FAMILIES.md` — first-party Forever popup mechanisms and unresolved client owner.

@@ -2,6 +2,24 @@ local _, Logres = ...
 
 local preferenceRevision = 0
 local preferenceListeners = {}
+local preferenceDispatchDepth = 0
+local preferenceListenersDirty = false
+
+local function compactPreferenceListeners()
+    if not preferenceListenersDirty then return end
+    local write = 1
+    for read = 1, #preferenceListeners do
+        local subscription = preferenceListeners[read]
+        if subscription.active then
+            preferenceListeners[write] = subscription
+            write = write + 1
+        end
+    end
+    for index = write, #preferenceListeners do
+        preferenceListeners[index] = nil
+    end
+    preferenceListenersDirty = false
+end
 
 local PREFERENCE_SPECS = {
     immersionEnabled = {
@@ -52,21 +70,31 @@ end
 local function publishPreferenceChange(previous, changes, reason)
     local current = copyPreferences()
 
-    for index = 1, #preferenceListeners do
-        local subscription = preferenceListeners[index]
+    preferenceDispatchDepth = preferenceDispatchDepth + 1
+    local ok, failure = pcall(function()
+        for index = 1, #preferenceListeners do
+            local subscription = preferenceListeners[index]
 
-        if subscription.active then
-            subscription.handler(
-                copyPreferences(),
-                {
-                    revision = previous.revision,
-                    immersionEnabled = previous.immersionEnabled,
-                    activeQuestEnabled = previous.activeQuestEnabled,
-                },
-                copyChanges(changes),
-                reason
-            )
+            if subscription.active then
+                subscription.handler(
+                    copyPreferences(),
+                    {
+                        revision = previous.revision,
+                        immersionEnabled = previous.immersionEnabled,
+                        activeQuestEnabled = previous.activeQuestEnabled,
+                    },
+                    copyChanges(changes),
+                    reason
+                )
+            end
         end
+    end)
+    preferenceDispatchDepth = preferenceDispatchDepth - 1
+    if preferenceDispatchDepth == 0 then
+        compactPreferenceListeners()
+    end
+    if not ok then
+        error(failure, 0)
     end
 
     return current
@@ -95,7 +123,16 @@ function Logres:SubscribePreferences(handler)
     preferenceListeners[#preferenceListeners + 1] = subscription
 
     local function unsubscribe()
+        if not subscription.active then
+            return
+        end
         subscription.active = false
+        subscription.handler = nil
+        preferenceListenersDirty = true
+        -- Keep callback iteration stable; release tombstones afterward.
+        if preferenceDispatchDepth == 0 then
+            compactPreferenceListeners()
+        end
     end
 
     return unsubscribe
