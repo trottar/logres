@@ -227,6 +227,12 @@ function Logres:RunGameplayCapture()
             tostring(aura.targetSecret), tostring(aura.failures),
             tostring(aura.duplicatesUnknown), tostring(aura.refreshes)
         ))
+        emit(string.format(
+            "Logres gameplaycapture Auras route: nativeReady=%s nativeActive=%s ordinaryFallbackShown=%s ordinaryFallbackRows=%s (cached Logres status; NOT native icon visibility proof)",
+            boolText(aura.nativeReady), boolText(aura.nativeActive),
+            boolText(aura.targetHarmfulShown),
+            tostring(aura.targetHarmfulVisible)
+        ))
     end
 
     local pet = Logres:GetModule("PetActionPresentation")

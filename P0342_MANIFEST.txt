@@ -1,0 +1,21 @@
+P0342 R2 L-028 cached target harmful presentation route manifest
+baseline=fb3b2658985e7f6d05f7730a3de6eb7b7dca6ad9
+version=0.0.234-dev
+delivery=P0342 R2; R0 PREWRITE 25/213 CURRENT >10000 bytes; R1 PREWRITE 1/213 L-031 continuity omitted (no tracked writes)
+validation=213/213 PREWRITE shadow and 213/213 POSTWRITE (STATIC ONLY); WoW UNVERIFIED until contingent Nov 4
+scope=read-only addon-owned diagnostic; no native visibility proof, aura selection or interaction change
+github_writes=none
+08deefb35820405284109b2626808cbf3951718347f4acad069f4e40fa17e1b2  Logres/Core/Bootstrap.lua
+be49687669c68c9effa4d040458934e653e7f1b4c49fb05fda1a34472da7f3ef  Logres/Core/Commands.lua
+90c9a11920c5ec7e5e413e7aef9d9ba1612451eb9799a2c443b1ae1bf7d01fdd  Logres/Logres.toc
+b1b51c1e1960a9ad5ff14a2e14efd4de62c472e71a3448243ac6b97e905cc39b  docs/ROADMAP.md
+8f634dbdc08414cb7666f77caee706c7e372b717904e0231feb7ff4b1c7ba162  docs/memory/CURRENT.md
+1a666a5245c09bd4cd7ec28b3916be3730d7408efab035c28057e3f68eef49a8  docs/memory/evidence/P0342_TARGET_AURA_ROUTE.md
+678557e496fd51cf0803bac2bcbbb286efe13a0a909d1f587899dbb77aeca141  docs/memory/handoffs/CURRENT_HANDOFF.md
+c1d35afa13374f1aa3a36f8dcec17589e164ab13e048660d557c73514053307f  docs/memory/investigations/ACTIVE.md
+d208a7879bce7262ee79a03b81206c763bde36a14849328cdd3d99be3a914def  docs/memory/patches/P0342_TARGET_AURA_ROUTE.md
+4bf6f0accff69be86bf7970048a358c6880900190e20e969e6ede57f5a0b3589  docs/memory/patches/PATCH_INDEX.md
+aa20b5418f5c2a735bed6ad0394991c27ab9bfb7bb3c45eed8e0cc2a5cb9cded  docs/memory/roadmap/NOV04_GAMEPLAY_REGRESSION_MATRIX.md
+5efc612e860293a2ce67a78648f13f29ca7f5c392a0ee9b184a21206a4453100  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+ff1ce66c431bde6d65efc17b3e6f2fba2ef990bc0c29ce9acddfc613a0036ba9  docs/memory/roadmap/STATUS.md
+946eccb674bcbc4a8d42a97aac5a7f599a7be9310fed57c1e824d251014fdfb4  tools/check_p0342_target_aura_route_contract.py
