@@ -305,84 +305,11 @@ local function printPreferences()
 end
 
 local function runStateCheck()
-    local before = Logres:GetState()
-    local expectedContext = before.context
-
-    before.context = "__consumer_mutation_test__"
-    local afterMutation = Logres:GetState()
-    local snapshotIsolation = afterMutation.context == expectedContext
-
-    local revisionBefore = afterMutation.revision
-    local callbackCount = 0
-
-    local unsubscribe = Logres:SubscribeState(function()
-        callbackCount = callbackCount + 1
-    end)
-
-    local changed = Logres:RefreshState("DEV_STATECHECK_NOOP")
-    unsubscribe()
-
-    local afterRefresh = Logres:GetState()
-
-    local noopStable =
-        changed == false
-        and afterRefresh.revision == revisionBefore
-        and callbackCount == 0
-
-    if snapshotIsolation and noopStable then
-        emit(string.format(
-            "Logres statecheck: PASS (snapshot isolation=true, no-op revision=%s, callbacks=0)",
-            tostring(afterRefresh.revision)
-        ))
-        return
-    end
-
-    emit(string.format(
-        "Logres statecheck: FAIL (snapshotIsolation=%s changed=%s revisionBefore=%s revisionAfter=%s callbacks=%s)",
-        tostring(snapshotIsolation),
-        tostring(changed),
-        tostring(revisionBefore),
-        tostring(afterRefresh.revision),
-        tostring(callbackCount)
-    ))
+    Logres:RunDevStateCheck(emit)
 end
 
 local function runSensorCheck()
-    local state = Logres:GetState()
-
-    local apiTaxi = UnitOnTaxi("player") and true or false
-    local apiMounted = IsMounted() and not apiTaxi
-    local apiResting = IsResting() and true or false
-
-    local mountedOK = state.mounted == (apiMounted and true or false)
-    local restingOK = state.resting == apiResting
-    local taxiOK = state.onTaxi == apiTaxi
-    local interactionShapeOK =
-        state.interacting == (state.interactionType ~= 0)
-
-    if mountedOK and restingOK and taxiOK and interactionShapeOK then
-        emit(string.format(
-            "Logres sensorcheck: PASS (mounted=%s resting=%s taxi=%s interact=%s/%s)",
-            boolText(state.mounted),
-            boolText(state.resting),
-            boolText(state.onTaxi),
-            boolText(state.interacting),
-            tostring(state.interactionType)
-        ))
-        return
-    end
-
-    emit(string.format(
-        "Logres sensorcheck: FAIL (mounted=%s/%s resting=%s/%s taxi=%s/%s interact=%s/%s)",
-        boolText(state.mounted),
-        boolText(apiMounted),
-        boolText(state.resting),
-        boolText(apiResting),
-        boolText(state.onTaxi),
-        boolText(apiTaxi),
-        boolText(state.interacting),
-        tostring(state.interactionType)
-    ))
+    Logres:RunDevSensorCheck(emit, boolText)
 end
 
 local function runPreferenceCheck()

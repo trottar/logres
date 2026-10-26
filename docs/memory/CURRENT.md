@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-10-25
+as_of: 2026-10-26
 project: logres
 ---
 
@@ -11,10 +11,11 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Current Work Item
 
-**P0349 — native UI ownership diagnostic seam; RUNTIME SOURCE PREPARED / WoW UNVERIFIED.** Verified pushed GitHub main P0348 `4b7481d731d5f90e214b285bc7cce16ec826176f` (219/219 PRE/POST STATIC), version `0.0.237-dev`. The ~70-line read-only `nativeuicheck` report belongs in already-loaded Core/UIOwnershipAudit; Commands retains original wrapper and same panel/slash/Run All output. New #220 checker; 94 Lua and 120 actions unchanged; version `0.0.238-dev`. R0 PREWRITE refused 2/220 missing two historical P0174 report-owner checker migrations (no tracked writes); R1 migrates only report-source assertions. No frame mutation, native visibility inspection, protected/secret read, D-048 selector, saved schema, camera or polling. P0321 first contingent runtime safety gate; L-022/L-027/L-028 OPEN, L-019 release BLOCKED.
+**P0350 — state/sensor diagnostic seam; SOURCE PREPARED / WoW UNVERIFIED.** Verified GitHub `main` P0349 R1 `4e59c8f2f03daf30b630fb15e3e14d5f38cc8da6`, 220/220 PREWRITE/POSTWRITE STATIC, `0.0.238-dev`. The existing statecheck snapshot/no-op subscription and sensorcheck cached-state/API comparison bodies move unchanged to already-loaded Core/State. Commands keeps original wrappers, Run All/slash/phase-A panel routes and output. Candidate version `0.0.239-dev`, checker #221; 94 Lua, 120 actions/38 previews unchanged. The original statecheck still performs its no-op RefreshState and temporary subscription. No D-048 selector, schema-3 change, native UI, secret/protected inspection, camera or polling. P0321 first contingent client safety gate; L-022/L-027/L-028 OPEN, L-019 public release BLOCKED.
 
 ## Verified State
 
+- Verified pushed P0349 R1 `4e59c8f2f03daf30b630fb15e3e14d5f38cc8da6`: 220/220 PRE/POST STATIC, `0.0.238-dev`; R0 2/220 PREWRITE refusal remains recorded, WoW UNVERIFIED.
 - Verified pushed P0348 `4b7481d731d5f90e214b285bc7cce16ec826176f` with manifest 219/219 PREWRITE/POSTWRITE STATIC, version unchanged `0.0.237-dev`; D-048 surface ownership model remains OFFLINE ONLY.
 - Verified pushed P0347 R1 `b94beb4706005757497002927d80845d5355037f` with manifest 218/218 PREWRITE/POSTWRITE STATIC; version `0.0.237-dev`, WoW UNVERIFIED. R0 historical P0346 ceiling refusal remains recorded.
 - P0347 R0 PREWRITE shadow REFUSED 1/218: P0346 historic exact 217-checker assertion rejected the new #218; no tracked writes. R1 migrates that assertion to a 217-checker floor, retains inventory checks and requires 218/218 static contracts.
@@ -33,16 +34,17 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Next Action
 
-Apply P0349 guarded exact-baseline patch; require 220/220 PREWRITE shadow and POSTWRITE source checks, diff hygiene and manifest; user commit/push then remote verification. The original native UI report moves unchanged to Core/UIOwnershipAudit, accessed through the same command wrapper. No test or WoW deployment while client inaccessible. Next: further narrow command extraction only after source ownership and historical contracts are verified; D-048 live selectors remain gated. On contingent November 4 access, P0321 GossipFrame restoration FIRST; natural L-022/L-027/L-028 checks later; L-019 licensing BLOCKED.
+Apply guarded P0350 exact-P0349-baseline patch; require 221/221 PREWRITE shadow and POSTWRITE STATIC checks, whitespace hygiene and manifest. User owns commit/push; verify remote before advancing. No client deployment while unavailable. P0321 GossipFrame restoration FIRST on contingent November 4; L-022/L-027/L-028 require natural client evidence, L-019 release BLOCKED. D-048 live selectors gated.
 
 ## Success Criteria
 
-Original 4 `nativeuicheck` output lines, classification, fields and ordering preserved byte-for-byte through the existing `emit` sink. Commands keeps wrapper, slash and Run All; ownership report defined in earlier-loaded Core/UIOwnershipAudit. 94 Lua, 120 actions/38 P previews, schema 3 and D-047 Camera unchanged. Source checker #220 and 219 historical checks PREWRITE/POSTWRITE STATIC; runtime UNVERIFIED, no claimed FPS win.
+Both statecheck and sensorcheck original PASS/FAIL output and arguments preserved through original emit/boolText; same Commands wrappers, Run All, slash and panel routes. State defines both diagnostics before Commands loads. 94 Lua, 120 actions/38 previews, schema 3 and D-047 Camera unchanged. Checker #221 plus 220 historical checks PRE/POST STATIC; in-client behavior and performance UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/evidence/P0350_STATE_SENSOR_SEAM.md` and `docs/memory/patches/P0350_STATE_SENSOR_SEAM.md`
 - `docs/memory/evidence/P0349_NATIVE_AUDIT_SEAM.md` and `docs/memory/patches/P0349_NATIVE_AUDIT_SEAM.md`
 - `docs/memory/architecture/P0348_SURFACE_OWNERSHIP_MATRIX.md`, `docs/memory/evidence/P0348_SURFACE_HANDOFF.md` and `docs/memory/patches/P0348_SURFACE_HANDOFF.md`
 - `docs/memory/evidence/P0347_SUBSCRIPTION_LIFECYCLE.md` and `docs/memory/patches/P0347_SUBSCRIPTION_LIFECYCLE.md`

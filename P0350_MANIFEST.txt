@@ -1,0 +1,13 @@
+P0350 STATE/SENSOR DIAGNOSTIC SEAM
+Source baseline: 4e59c8f2f03daf30b630fb15e3e14d5f38cc8da6
+Patch: 0.0.238-dev -> 0.0.239-dev (TOC and Bootstrap)
+PREWRITE shadow: 221/221 STATIC PASS
+POSTWRITE: 221/221 STATIC PASS
+git diff --check: PASS
+Addon Lua load entries: 94
+Developer panel registrations: 120 (38 P previews)
+WoW runtime: UNVERIFIED / DEFERRED (client unavailable)
+Native P0321 GossipFrame restore: FIRST CONTINGENT CLIENT GATE
+L-022/L-027/L-028 OPEN; L-019 public release BLOCKED
+Tracked files affected: 11
+New source/checker/evidence files: 3
