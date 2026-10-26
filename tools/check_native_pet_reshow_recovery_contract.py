@@ -15,7 +15,7 @@ need={
  'Diagnostic counters':'petActionCombatDeferrals = self.petActionCombatDeferrals',
 }
 errors=[k for k,v in need.items() if v not in native]
-if 'Logres petbar-reshow: AUDIT' not in commands:errors.append('Phase H Native Access diagnostic')
+if 'Logres petbar-reshow: AUDIT' not in (root/'Logres/Core/UIOwnershipAudit.lua').read_text():errors.append('Phase H Native Access diagnostic')
 if 'petActionDeferredRefold = false' not in native:errors.append('Recovery flag clear')
 if 'frame:IsShown()' in native or 'frame:GetAlpha()' in native:errors.append('Forbidden stock visibility inspection')
 if errors:

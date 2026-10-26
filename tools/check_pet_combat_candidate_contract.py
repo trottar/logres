@@ -7,6 +7,7 @@ P = (ROOT / "Logres/Immersion/PetCombatCandidate.lua").read_text()
 N = (ROOT / "Logres/Immersion/NativeSurfaceReplacement.lua").read_text()
 C = (ROOT / "Logres/Core/Commands.lua").read_text()
 D = (ROOT / "Logres/Dev/Panel.lua").read_text()
+A = (ROOT / "Logres/Core/UIOwnershipAudit.lua").read_text()
 B = (ROOT / "Logres/Core/Bootstrap.lua").read_text()
 T = (ROOT / "Logres/Logres.toc").read_text()
 errors = []
@@ -32,7 +33,8 @@ for name,frag in {
  'command retained':'command == "petcombat"',
  'rejections reported':'tostring(trial.rejections)',
 }.items():
-    if frag not in C:errors.append(name)
+    source = A if name in ("quarantine diagnostics", "rejections reported") else C
+    if frag not in source:errors.append(name)
 for frag in ('MAX_ACTIONS_PER_PHASE = BUTTON_COLUMNS * 6', 'buttonHost:SetHeight(180)',
  'resultsBackground:SetPoint("TOPLEFT", frame, "TOPLEFT", 18, -320)'):
     if frag not in D:errors.append('phase H grid capacity '+frag)

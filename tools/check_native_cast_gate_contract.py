@@ -6,6 +6,7 @@ import sys
 root=Path(__file__).resolve().parents[1]
 s=(root/'Logres/Immersion/NativeAccess.lua').read_text(encoding='utf-8')
 c=(root/'Logres/Core/Commands.lua').read_text(encoding='utf-8')
+a=(root/'Logres/Core/UIOwnershipAudit.lua').read_text(encoding='utf-8')
 errors=[]
 for token in (
     'local function setNativeCastGate(snapshot, suppress)',
@@ -29,7 +30,7 @@ for token in (
 for token in ('result.castGateArmed == result.castGateExpected',
               'result.castGateEscapes == 0', 'castGate=%s/%s',
               'gateEscapes=%s'):
-    if token not in c: errors.append('missing truthful diagnostic: '+token)
+    if token not in a: errors.append('missing truthful diagnostic: '+token)
 for bad in ('SetParent(', 'SetAlpha(0)', 'SetCVar(', 'RegisterStateDriver(',
             'C_Timer.', 'OnUpdate', 'GetAttribute("state-visibility")',
             'if item.castShowToken', 'if frame.showCastbar',

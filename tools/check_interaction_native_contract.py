@@ -7,6 +7,7 @@ button = (root / 'Logres/Actions/Button.lua').read_text()
 aura = (root / 'Logres/HUD/PlayerHelpfulAuras.lua').read_text()
 native = (root / 'Logres/Immersion/NativeAccess.lua').read_text()
 commands = (root / 'Logres/Core/Commands.lua').read_text()
+audit = (root / 'Logres/Core/UIOwnershipAudit.lua').read_text()
 errors = []
 for token in ('button:RegisterForDrag("LeftButton", "RightButton")',
               'button:SetScript("OnDragStart", onActionDragStart)',
@@ -27,7 +28,7 @@ for token in ('"casts"', '"PlayerCastingBarFrame"',
               'self.refoldAttempts', 'self.refoldFailures'):
     if token not in native: errors.append('native source missing: '+token)
 for token in ('expected and 5 or 0', 'refolds=%s', 'castStockOnDemand=true'):
-    if token not in commands: errors.append('native check missing: '+token)
+    if token not in audit: errors.append('native check missing: '+token)
 if 'MainActionBar:Hide()' in native or 'PetActionBar:Hide()' in native:
     errors.append('protected stock domain unexpectedly hidden')
 print('Logres P0174 interaction / native coherence contract')

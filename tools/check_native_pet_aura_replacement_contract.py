@@ -58,7 +58,7 @@ for t in ('self:Arm()', 'self.eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")'
     if t not in P:errors.append('pet action autostart missing: '+t)
 for t in (r'Immersion\NativeSurfaceReplacement.lua',):
     if t not in T:errors.append('TOC missing replacement module')
-if 'Logres native-surfaces:' not in C:errors.append('native-surface diagnostic missing')
+if 'Logres native-surfaces:' not in read('Logres/Core/UIOwnershipAudit.lua'):errors.append('native-surface diagnostic missing')
 for t in ('SetCVar(', 'C_Timer.', 'SetParent(', 'SetAlpha(0)',
           'GetAuraDataByIndex','GetAuraDataByAuraInstanceID','GetAuraDataBySlot',
           'UnitBuff(', 'UnitDebuff(', 'hooksecurefunc(', 'RegisterStateDriver(',

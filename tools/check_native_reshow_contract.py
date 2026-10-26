@@ -5,6 +5,7 @@ import sys
 root = Path(__file__).resolve().parents[1]
 s = (root/'Logres/Immersion/NativeAccess.lua').read_text(encoding='utf-8')
 c = (root/'Logres/Core/Commands.lua').read_text(encoding='utf-8')
+a = (root/'Logres/Core/UIOwnershipAudit.lua').read_text(encoding='utf-8')
 errors=[]
 for token in (
     'function NativeAccess:InstallRefoldHooks()',
@@ -28,7 +29,7 @@ for token in (
 ):
     if token not in s: errors.append(f'missing hook safeguard: {token}')
 for token in ('result.pendingRefolds == 0','nativeShows=%s/%s combatDeferred=%s pending=%s'):
-    if token not in c: errors.append(f'missing truthful diagnostics: {token}')
+    if token not in a: errors.append(f'missing truthful diagnostics: {token}')
 for forbidden in ('SetParent(', 'hooksecurefunc(', 'SetAlpha(0)', 'C_Timer.', 'OnUpdate', 'RegisterStateDriver('):
     if forbidden in s: errors.append(f'forbidden native mitigation: {forbidden}')
 print('P0174 R2 native source re-show contract')
