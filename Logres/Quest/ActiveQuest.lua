@@ -420,6 +420,12 @@ function ActiveQuest:BuildPreviewSnapshot(mode)
                 fulfilled = 0,
                 required = 4,
             },
+            {
+                -- Missing ordinary numeric progress exercises exactly the
+                -- production fallback line in this existing P-tab preview.
+                text = "Objective progress unavailable",
+                finished = false,
+            },
         },
         complete = false,
         ready = false,
