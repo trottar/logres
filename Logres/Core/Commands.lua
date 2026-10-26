@@ -233,6 +233,12 @@ function Logres:RunGameplayCapture()
             boolText(aura.targetHarmfulShown),
             tostring(aura.targetHarmfulVisible)
         ))
+        emit(string.format(
+            "Logres gameplaycapture Auras activation: nativeEnabledCached=%s routeNativeSelected=%s activationReason=%s (Logres-owned state; NOT native icon visibility proof)",
+            boolText(aura.nativeEnabledCached),
+            boolText(aura.nativeActive),
+            tostring(aura.nativeActivationReason or "unavailable")
+        ))
     end
 
     local pet = Logres:GetModule("PetActionPresentation")

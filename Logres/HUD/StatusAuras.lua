@@ -416,10 +416,11 @@ function StatusAuras:Refresh(reason, onlyUnit)
     -- exposing their payloads to addon Lua. Ordinary legacy rows are fallback.
     local useNative = false
     if self.nativeDebuffs then
-        local nativeOK = Logres.NativeDebuffs.SetActive(
+        local nativeOK, activationReason = Logres.NativeDebuffs.SetActive(
             self.nativeDebuffs, active and not self.preview
         )
         useNative = nativeOK and active and not self.preview
+        self.nativeActivationReason = activationReason
     end
     self.nativeActive = useNative
     for _, unit in ipairs({ "player", "target" }) do
@@ -501,6 +502,10 @@ function StatusAuras:GetDebugStatus()
         stockPreserved = true,
         nativeReady = self.nativeDebuffs ~= nil,
         nativeActive = self.nativeDebuffs ~= nil and self.nativeActive == true,
+        -- These are Logres-owned cached tokens, NOT native UI visibility.
+        nativeEnabledCached = self.nativeDebuffs ~= nil
+            and self.nativeDebuffs.active == true,
+        nativeActivationReason = self.nativeActivationReason,
         nativeReason = self.nativeReason,
         eventsReady = self.unitAuraRegistered == true
             and self.targetEventRegistered == true
@@ -534,6 +539,7 @@ function StatusAuras:OnInitialize()
     -- Stock Blizzard aura frames and normal helpful presentation are retained.
     self.nativeDebuffs, self.nativeReason = Logres.NativeDebuffs.Create()
     self.nativeActive = false
+    self.nativeActivationReason = self.nativeReason or "unavailable"
     local eventFrame = CreateFrame("Frame")
     self.unitAuraRegistered = pcall(
         eventFrame.RegisterUnitEvent, eventFrame, "UNIT_AURA", "player", "target"
