@@ -1,0 +1,7 @@
+# P0344 — L-027 native popup provenance family audit
+
+**Baseline:** verified pushed P0343 R1 `ef4d96040fa15c0fc1a49766b1e0efcec6fe1cb1`, addon version `0.0.235-dev`, 214/214 static PREWRITE/POSTWRITE manifest. **Scope:** DOCS + TOOLS ONLY. A first-party Forever UI source audit identifies interactive `AutoQuestPopUpBlockTemplate`/`OnMouseUp` native quest actions, a separate `ObjectiveTrackerRewardsToastTemplate` pool parented to `UIParent`, and the separate WorldQuest alert system. None is yet correlated with the user's symptom. Retail `ObjectiveTrackerTopBannerFrame` stays an unverified hypothesis.
+
+Update L-027 issue register, November 4 matrix, CURRENT, handoff, investigations/roadmaps and patch index, and add read-only `check_p0344_popup_ownership_contract.py`. Full **215/215** PREWRITE shadow and POSTWRITE static checks, diff hygiene, exact baseline Git blob guards, candidate source-contract check, rollback and manifest required; no WoW acceptance. No change to addon-loaded Lua, TOC version, Blizzard state, secure native interaction, rewards toast, P-tab inventory, camera, saved settings or packaging.
+
+**Disposition:** SOURCE OWNER FAMILY AUDIT PREPARED; the specific popup identity and safe replacement/restoration remain OPEN / WoW UNVERIFIED. P0321 gossip restoration is the first contingent November 4 client test. P0335 evidence remains authoritative for previous diagnostic-only checkpoint. Full external evidence in `docs/memory/evidence/P0344_FOREVER_POPUP_FAMILIES.md`.

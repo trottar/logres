@@ -1,0 +1,19 @@
+P0344 L-027 Forever popup source family audit manifest
+baseline=ef4d96040fa15c0fc1a49766b1e0efcec6fe1cb1
+version=UNCHANGED 0.0.235-dev
+validation=215/215 PREWRITE shadow and 215/215 POSTWRITE (STATIC ONLY); WoW UNVERIFIED
+scope=docs+tools only; native Quest OFFER/COMPLETE preserved; no source or TOC change
+L-027 user popup owner OPEN/UNCONFIRMED; L-019 release BLOCKED
+github_writes=none
+7b928591489d6202fd90c40dd0b0ac32167008e4ec7a10ff4bc480cd97b1f24c  docs/ROADMAP.md
+625f3ff84932f3b1eb5afd27b6088ced12359e67d1be2eb654c902c6337f826d  docs/memory/CURRENT.md
+490d9d9e0f0da4648d227c7a61cd09fe5ee0b98ac8a889475b1cf223327d190a  docs/memory/evidence/P0344_FOREVER_POPUP_FAMILIES.md
+8e2b9791ae3198c9f2936e6b44a0addd791935fffda196807e0f9b12388f6996  docs/memory/handoffs/CURRENT_HANDOFF.md
+2386d2a38f4fba0ce95ec493d2e1392b709fab3099ad88b67d4e4622cacdc375  docs/memory/investigations/ACTIVE.md
+e90bd103996d362a1b851523440030efdc57d7d63328aa64fa471fdac3d9e3ae  docs/memory/investigations/ISSUE_REGISTER.md
+c0d2c27dd21fc572de5d17a5406d351176b821f5282b3c6737fe0f79d7e2aca0  docs/memory/patches/P0344_FOREVER_POPUP_FAMILIES.md
+9bcb3f5d39952ca07bd95516410c6f1e8a32c8a8cae0bb095f5cb8b3c6f38950  docs/memory/patches/PATCH_INDEX.md
+c36adff19068e3b76e8580aaf1077cbdd003198c92d74dbeb4de51f4ec0115ad  docs/memory/roadmap/NOV04_GAMEPLAY_REGRESSION_MATRIX.md
+5517191548e690596fc638efa60595dfefaeaca892608bfc8d885996694e9b92  docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+d9b015aafa2ac7d072ef73525c62345be317ad771c38cb186a776226d238fb7e  docs/memory/roadmap/STATUS.md
+1d9abac9622c54bf56c517579b681faa445e8f1293c12de157a1daaab75a019e  tools/check_p0344_popup_ownership_contract.py
