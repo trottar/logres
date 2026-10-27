@@ -1,6 +1,6 @@
-# P0362 — Stock action diagnostic seam; CURRENT.md authoritative
+# P0363 — Quest-offer stock report; CURRENT.md authoritative
 
-Verified pushed P0361 R1 `c5aa34c12939aaedefaf9a9bf86ad0536ca88936` 232/232 PRE/POST STATIC, `0.0.250-dev`, WoW UNVERIFIED. Extract only read-only stockreplacecheck PASS/FAIL, extras and startup report to preloaded Actions/StockReplacement; Commands wrapper, Run All/slash/Phase C panel unchanged. Stock/P0170 checker locations migrate; native safeguards unchanged. Candidate `0.0.251-dev`, #233, Lua94/actions120/previews38; schema3/D-048/camera unchanged. P0321 FIRST contingent client gate; L-022/L-027/L-028 OPEN, L-019 BLOCKED, L-031 deferred. P0354 R0/R1/R2 check_memory_health.py, P0355 R0/R1, P0358 R0 and P0361 R0 handoff refusals retained; P0337 `cfdc07af` preserved. No WoW deployment or in-client validation in P0362.
+Verified pushed P0362 `ea4077d00c71e1b6720a3e9b7286ec108fcb9ad7` 233/233 STATIC; WoW UNVERIFIED. Move only read-only stock-offer report into Quest/OfferStockSuppression; Commands wrapper, two output lines, Run All/slash/panel unchanged. P0165 diagnostic-only assertion and P0362 count-floor migrate; native stock safeguards unchanged. Candidate `0.0.252-dev`, #234, Lua94/actions120/previews38, schema3/D-048/camera unchanged. P0321 FIRST contingent client gate; L-022/L-027/L-028 OPEN; L-019 BLOCKED; L-031 deferred. P0354 R0/R1/R2 check_memory_health.py, P0355 R0/R1, P0358 R0 and P0361 R0 handoff refusal retained; P0337 `cfdc07af` preserved. No WoW deployment or in-client validation.
 
 # P0361 — ImmersionController diagnostic owner; CURRENT.md authoritative
 

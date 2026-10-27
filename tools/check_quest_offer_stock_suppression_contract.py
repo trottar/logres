@@ -51,6 +51,9 @@ for fragment in (
     'function Suppression:RequestEnabled(enabled, reason)',
     'function Suppression:GetDebugStatus()',
     'self:Restore("module-disabled")',
+    'function Suppression:RunDevQuestOfferStockSuppressionCheck(emit)',
+    '"Logres questofferstocksuppressioncheck: %s',
+    '"Logres quest offer presentation: owned=%s',
 ):
     if fragment not in suppression:
         errors.append(f"OfferStockSuppression.lua missing P0165 fragment: {fragment}")
@@ -135,7 +138,7 @@ for fragment in (
 for fragment in (
     "local function runQuestOfferStockSuppressionCheck()",
     'Logres:GetModule("QuestOfferStockSuppression")',
-    '"Logres questofferstocksuppressioncheck: %s',
+    'Logres:GetModule("QuestOfferStockSuppression"):RunDevQuestOfferStockSuppressionCheck(emit)',
     'if command == "questofferstocksuppressioncheck" then',
     '"Quest Offer Stock Check"',
     '"questofferstocksuppressioncheck"',

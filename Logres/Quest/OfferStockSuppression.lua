@@ -673,3 +673,75 @@ function Suppression:OnDisable()
         )
     end
 end
+
+function Suppression:RunDevQuestOfferStockSuppressionCheck(emit)
+    local status =
+        Logres:GetModuleStatus("QuestOfferStockSuppression")
+    local suppression =
+        Logres:GetModule("QuestOfferStockSuppression")
+    local debugStatus =
+        suppression:GetDebugStatus()
+    local dialogue =
+        Logres:GetModule("QuestDialogue")
+    local dialogueDebug =
+        dialogue:GetDebugStatus()
+
+    local productionEligible =
+        dialogueDebug.presentationShown == true
+        and dialogueDebug.offerActionsEnabled == true
+        and dialogueDebug.offerActionPreview ~= true
+
+    local supportedOwnershipExpected =
+        productionEligible
+        and debugStatus.lastSupportReason == "supported"
+
+    local ownershipCoherent =
+        (debugStatus.appliedEnabled ~= true
+            and debugStatus.snapshotReady ~= true)
+        or (
+            debugStatus.appliedEnabled == true
+            and debugStatus.requestedEnabled == true
+            and debugStatus.snapshotReady == true
+        )
+
+    local passed =
+        status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and debugStatus.sourceCommit
+            == "15666a6e67938a1ab5caf041406464251db111ca"
+        and debugStatus.failureCount == 0
+        and debugStatus.lastError == nil
+        and ownershipCoherent
+        and (
+            not supportedOwnershipExpected
+            or debugStatus.appliedEnabled == true
+        )
+
+    emit(string.format(
+        "Logres questofferstocksuppressioncheck: %s (source=%s requested=%s applied=%s pending=%s snapshot=%s detailHooked=%s accept=%s decline=%s support=%s apply=%s restore=%s unsupported=%s secrets=%s failures=%s emergency=%s reason=%s error=%s)",
+        passed and "PASS" or "FAIL",
+        tostring(debugStatus.sourceCommit),
+        tostring(debugStatus.requestedEnabled),
+        tostring(debugStatus.appliedEnabled),
+        tostring(debugStatus.pending),
+        tostring(debugStatus.snapshotReady),
+        tostring(debugStatus.detailHooked),
+        tostring(debugStatus.acceptFound),
+        tostring(debugStatus.declineFound),
+        tostring(debugStatus.lastSupportReason),
+        tostring(debugStatus.applyCount),
+        tostring(debugStatus.restoreCount),
+        tostring(debugStatus.unsupportedCount),
+        tostring(debugStatus.secretBlockCount),
+        tostring(debugStatus.failureCount),
+        tostring(debugStatus.emergencyRestoreCount),
+        tostring(debugStatus.lastReason),
+        tostring(debugStatus.lastError)
+    ))
+    emit(string.format(
+        "Logres quest offer presentation: owned=%s capturedFrames=%s (QuestFrame remains shown; stock mouse subtree disabled only for supported ordinary offers)",
+        tostring(debugStatus.visualOwned),
+        tostring(debugStatus.visualFrameCount)
+    ))
+end

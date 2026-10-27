@@ -1,0 +1,15 @@
+P0363 QUEST OFFER STOCK SUPPRESSION READ-ONLY DIAGNOSTIC OWNERSHIP SEAM
+Source GitHub main: ea4077d00c71e1b6720a3e9b7286ec108fcb9ad7
+Candidate: 0.0.251-dev -> 0.0.252-dev (TOC and Bootstrap)
+PREWRITE shadow: 234/234 STATIC PASS
+POSTWRITE: 234/234 STATIC PASS
+git diff --check: PASS
+Addon Lua load entries: 94
+Developer panel registrations: 120 (38 previews)
+Saved-settings schema: 3, unchanged
+WoW runtime: UNVERIFIED / DEFERRED (client unavailable)
+P0321 GossipFrame stock restoration: FIRST contingent client safety gate
+L-022/L-027/L-028 OPEN; L-019 public release BLOCKED; L-031 deferred
+P0354 R0/R1/R2, P0355 R0/R1, P0358 R0, P0361 R0 refusals preserved
+Original two-line read-only quest offer report preserved except declaration
+Tracked source/memory/checkers modified: 13; new files: 3

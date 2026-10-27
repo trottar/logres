@@ -167,6 +167,6 @@ for p in ('docs/memory/evidence/P0362_STOCK_DIAGNOSTIC_SEAM.md',
 need('P0361 R0 handoff' in HAND and 'check_memory_health.py' in HAND and
      'P0358 R0' in HAND and 'cfdc07af' in HAND,
      'earlier refused packaging/historical evidence erased')
-need(len(list((ROOT / 'tools').glob('check_*.py'))) == 233,
+need(len(list((ROOT / 'tools').glob('check_*.py'))) >= 233,
      'expected 233 static checkers')
 print('P0362 stock diagnostic ownership: PASS (STATIC; WoW UNVERIFIED)')
