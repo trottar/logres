@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-10-26
+as_of: 2026-10-27
 project: logres
 ---
 
@@ -11,11 +11,11 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Current Work Item
 
-**P0360 — TargetFrame seam; WoW UNVERIFIED.** P0359 main `6ec4b5ac3db1626c7273b8a2590d4492679b0c0c` 230/230 STATIC. Read-only targetframecheck to TargetFrameReplacement; Commands routes kept. `0.0.249-dev`, #231, Lua94/actions120/previews38, schema3/D-048/camera unchanged. P0321 FIRST client gate; L-022/L-027/L-028 OPEN; L-019 BLOCKED.
+**P0361 — ImmersionController read-only diagnostic ownership; WoW UNVERIFIED.** Verified pushed P0360 main `8963fb1d5ffc32d71291292e9e1192e16b68cf3b` 231/231 STATIC. Move unchanged `runImmersionCheck` status report to preloaded Controller; Commands remains dispatcher. Candidate `0.0.250-dev`, #232, Lua94/actions120/previews38, schema3/D-048/camera unchanged. P0321 FIRST client gate; L-022/L-027/L-028 OPEN; L-019 BLOCKED.
 
 ## Verified State
 
-- P0359 `6ec4b5ac3db1626c7273b8a2590d4492679b0c0c` 230/230 STATIC; P0358 R1 229/229, P0357 228/228, P0356 227/227; prior refusals retained; WoW UNVERIFIED.
+- Verified pushed P0360 `8963fb1d5ffc32d71291292e9e1192e16b68cf3b` 231/231 PRE/POST STATIC; P0359 230/230, P0358 R1 229/229, P0357 228/228 and P0356 227/227. WoW UNVERIFIED; historical PREWRITE refusals retained.
 - Verified pushed P0352 `61f0f49c2cf990168c1415dd2100a0f286627a91`: 223/223 PREWRITE/POSTWRITE STATIC, `0.0.241-dev`; WoW UNVERIFIED.
 - Verified pushed P0351 `e8b71bc59a04f3077925bb24f0d6850a71340841`: 222/222 PRE/POST STATIC, `0.0.240-dev`; WoW UNVERIFIED.
 - Verified pushed P0350 `fd2d2676ffb41d509143b398b61b8474ecacf53d`: 221/221 PRE/POST STATIC, `0.0.239-dev`; WoW UNVERIFIED.
@@ -24,10 +24,10 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 - Verified pushed P0347 R1 `b94beb4706005757497002927d80845d5355037f` with manifest 218/218 PREWRITE/POSTWRITE STATIC; version `0.0.237-dev`, WoW UNVERIFIED. R0 historical P0346 ceiling refusal remains recorded.
 - P0347 R0 PREWRITE shadow REFUSED 1/218: P0346 historic exact 217-checker assertion rejected the new #218; no tracked writes. R1 migrates that assertion to a 217-checker floor, retains inventory checks and requires 218/218 static contracts.
 - Verified pushed P0346 `26370095bd092d076868cd3d2e5e6a74f6b845d3` with 217/217 PREWRITE and POSTWRITE STATIC PASS; source audit confirmed 94 Lua/120 actions/38 previews. WoW UNVERIFIED.
-- Verified pushed P0345 GitHub `main` `626b22038d09e738bd3fa90684e3a95e36905d45` (2026-10-25 EDT), manifest 216/216 PREWRITE and POSTWRITE STATIC, version `0.0.236-dev`; target debuff client behavior UNVERIFIED.
-- Verified pushed P0344 main `e44f66ba0838045ad6d44f1afe3e4afdb4a473ec` (2026-10-25 EDT), 215/215 PRE/POST STATIC, docs/tools only; native popup owner L-027 unverified.
-- Verified pushed GitHub main P0343 R1 `ef4d96040fa15c0fc1a49766b1e0efcec6fe1cb1` on 2026-10-25 EDT; P0343 manifest 214/214 PREWRITE and POSTWRITE STATIC, WoW UNVERIFIED. Its R0 fixed-panel-inventory 8/214 PREWRITE failures caused no tracked writes; original L-022 artifact remains OPEN.
-- Verified pushed GitHub main P0342 R2 `be3be5e80cf65cf1bf6d261b84b573f1f1effca2` with manifest 213/213 PREWRITE shadow and POSTWRITE static PASS. P0342 R0/R1 PREWRITE source-memory failures preserved in repository evidence; no tracked writes in rejected attempts. P0342 L-028 native/ordinary aura route capture is source-prepared, WoW UNVERIFIED.
+- P0345 main `626b22038d09e738bd3fa90684e3a95e36905d45`: 216/216 STATIC, target debuff client UNVERIFIED.
+- P0344 main `e44f66ba0838045ad6d44f1afe3e4afdb4a473ec`: 215/215 STATIC, native popup owner L-027 UNVERIFIED.
+- P0343 R1 `ef4d96040fa15c0fc1a49766b1e0efcec6fe1cb1` 214/214 STATIC; R0 REFUSED before writes, L-022 OPEN.
+- P0342 R2 `be3be5e80cf65cf1bf6d261b84b573f1f1effca2` 213/213 STATIC; R0/R1 PREWRITE REFUSED; L-028 OPEN.
 - Verified pushed GitHub main P0341 R1 `fb3b2658985e7f6d05f7730a3de6eb7b7dca6ad9` on 2026-10-25/26 UTC. P0341 manifest 212/212 PREWRITE/POSTWRITE static PASS; WoW UNVERIFIED. Its R0 historical-version checker failure caused zero tracked writes and is retained in evidence.
 - P0340 `27fb9eb` 211/211 static PASS; P0339 `8a5d3f86` 210/210 static PASS. Source-only internal packaging and November 4 matrix do not establish in-client behavior.
 - P0338 R1 `342cab97` 209/209; P0337 R1 `cfdc07af` 208/208. Historical PREWRITE failures, narrow remedies and deferred L-031 focused-yard/quest-giver validation remain in their evidence files.
@@ -38,16 +38,18 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Next Action
 
-P0360: 231/231 PRE/POST STATIC, diff/manifest, verify push. No WoW deployment. P0321 FIRST contingent client gate.
+P0361: require 232/232 PREWRITE/POSTWRITE STATIC and `git diff --check`; user verifies push. No WoW deployment required. P0321 FIRST contingent client gate.
 
 ## Success Criteria
 
-TargetFrame output, protected fallback and ToT/auras unchanged; Lua94, actions120/previews38, schema3. WoW UNVERIFIED.
+Immersion PASS/FAIL, combat-pending tolerance, four module-owned desired/requested/applied states, party/primary stock safeguards, Run All/slash/panel unchanged; Lua94, actions120/previews38, schema3. WoW UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/evidence/P0361_IMMERSION_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0361_IMMERSION_DIAGNOSTIC_SEAM.md`
+- `docs/memory/evidence/P0360_TARGET_FRAME_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0360_TARGET_FRAME_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0356_XP_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0356_XP_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0355_PRIMARY_OWNERSHIP_SEAM.md` and `docs/memory/patches/P0355_PRIMARY_OWNERSHIP_SEAM.md`
 - `docs/memory/evidence/P0354_HUD_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0354_HUD_DIAGNOSTIC_SEAM.md`

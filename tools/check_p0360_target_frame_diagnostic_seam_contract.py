@@ -161,6 +161,6 @@ need(all(x in HAND for x in ('P0354 R0','P0354 R1','P0354 R2',
                             'P0355 R0','P0355 R1','P0358 R0',
                             'check_memory_health.py')),
      'known refused-candidate evidence lost')
-need(len(list((ROOT/'tools').glob('check_*.py'))) == 231,
+need(len(list((ROOT/'tools').glob('check_*.py'))) >= 231,
      'expected 231 static checkers')
 print('P0360 D-026 TargetFrame diagnostic seam: PASS (STATIC; WoW UNVERIFIED)')

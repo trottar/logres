@@ -1,0 +1,16 @@
+P0361 D.2 IMMERSION CONTROLLER READ-ONLY DIAGNOSTIC OWNERSHIP SEAM
+Source GitHub main: 8963fb1d5ffc32d71291292e9e1192e16b68cf3b
+Candidate: 0.0.249-dev -> 0.0.250-dev (TOC and Bootstrap)
+PREWRITE shadow: 232/232 STATIC PASS
+POSTWRITE: 232/232 STATIC PASS
+git diff --check: PASS
+Addon Lua load entries: 94
+Developer panel registrations: 120 (38 previews)
+Saved-settings schema: 3, unchanged
+WoW runtime: UNVERIFIED / DEFERRED (client unavailable)
+P0321 GossipFrame stock restoration: FIRST contingent client safety gate
+L-022/L-027/L-028 OPEN; L-019 public release BLOCKED; L-031 deferred
+P0354 R0/R1/R2, P0355 R0/R1, P0358 R0 refusals retained
+P0361 R0 handoff corrected in R1 (static-only; no client validation requested)
+Tracked source/memory/checkers modified: 12; new files: 3
+Original read-only immersion report preserved byte-for-byte except declaration
