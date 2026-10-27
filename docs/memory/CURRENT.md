@@ -11,11 +11,11 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Current Work Item
 
-**P0355 R2 — P0173 seam; WoW UNVERIFIED.** P0354 R3 `4254d0a80f2f8ffd98a708836482a093bed06e62` 225/225 STATIC. R0/R1 prewrite REFUSED, no writes. Primary owns report; Commands routes intact; native stock retained. `0.0.244-dev`, #226, 94 Lua/120 actions/38 previews; schema3, D-048 and camera unchanged. P0321 FIRST client gate; L-022/L-027/L-028 OPEN, L-019 BLOCKED.
+**P0356 — XP diagnostic seam; WoW UNVERIFIED.** P0355 R2 `fac39a1e3960c7d9a238f76543027838647330ed` 226/226 STATIC. Move XP report to Quest/XP; Commands routes retained. `0.0.245-dev`, #227, Lua94/actions120/previews38; schema3/D-048/camera unchanged. P0321 FIRST client gate; L-022/L-027/L-028 OPEN, L-019 BLOCKED.
 
 ## Verified State
 
-- P0354 R3 `4254d0a80f2f8ffd98a708836482a093bed06e62`: 225/225 STATIC, `0.0.243-dev`; R0/R1/R2 refused before writes. P0353 R1 224/224; WoW UNVERIFIED.
+- P0355 R2 `fac39a1e3960c7d9a238f76543027838647330ed` 226/226 STATIC; P0354 R3 225/225, P0353 R1 224/224; R0/R1 refusals saved; WoW UNVERIFIED.
 - Verified pushed P0352 `61f0f49c2cf990168c1415dd2100a0f286627a91`: 223/223 PREWRITE/POSTWRITE STATIC, `0.0.241-dev`; WoW UNVERIFIED.
 - Verified pushed P0351 `e8b71bc59a04f3077925bb24f0d6850a71340841`: 222/222 PRE/POST STATIC, `0.0.240-dev`; WoW UNVERIFIED.
 - Verified pushed P0350 `fd2d2676ffb41d509143b398b61b8474ecacf53d`: 221/221 PRE/POST STATIC, `0.0.239-dev`; WoW UNVERIFIED.
@@ -38,16 +38,17 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Next Action
 
-P0355 requires 226/226 PRE/POST STATIC, diff and manifest; verify push. No client deployment. P0321 FIRST gate; L-022/L-027/L-028 OPEN, L-019 BLOCKED.
+P0356: 227/227 PRE/POST STATIC, diff, manifest, then verify push. No client deploy. P0321 FIRST gate; L-022/L-027/L-028 OPEN, L-019 BLOCKED.
 
 ## Success Criteria
 
-P0173 PASS/DEFERRED and Commands routes unchanged; 94 Lua, 120 actions/38 previews, schema 3 and camera preserved. #226 STATIC; WoW UNVERIFIED.
+Original XP report and routes retained; 94 Lua, 120 actions/38 previews; schema3/camera unchanged. #227 STATIC; WoW UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/evidence/P0356_XP_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0356_XP_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0355_PRIMARY_OWNERSHIP_SEAM.md` and `docs/memory/patches/P0355_PRIMARY_OWNERSHIP_SEAM.md`
 - `docs/memory/evidence/P0354_HUD_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0354_HUD_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0353_LAYOUT_SEAM.md` and `docs/memory/patches/P0353_LAYOUT_SEAM.md`

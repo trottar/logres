@@ -101,9 +101,8 @@ if COMMANDS.is_file():
 
     required = [
         "local function runXPCheck()",
+        "Logres:GetModule(\"QuestXP\"):RunDevXPCheck(emit)",
         "local function runXPPreview()",
-        'Logres:GetModuleStatus("QuestXP")',
-        'Logres:GetModule("QuestXP")',
         'if command == "xpcheck" then',
         'if command == "xppreview" then',
         '"XP Check"',
@@ -120,25 +119,33 @@ if COMMANDS.is_file():
             )
 
     start = source.find("local function runXPCheck()")
-    end = source.find(
-        "\nlocal function runXPPreview()",
-        start,
-    )
-
+    end = source.find("\nend\n", start)
     if start == -1 or end == -1:
-        errors.append("XP Check function could not be isolated")
+        errors.append("XP Check wrapper could not be isolated")
     else:
-        check_source = source[start:end]
-        for forbidden in (
-            "UnitXP(",
-            "UnitXPMax(",
-            "GetXPExhaustion(",
+        wrapper = source[start:end]
+        if 'Logres:GetModule("QuestXP"):RunDevXPCheck(emit)' not in wrapper:
+            errors.append("XP Check wrapper must delegate to QuestXP")
+
+# Original addon-owned-only status boundary is retained at the XP report owner.
+if XP.is_file():
+    xp_source = XP.read_text(encoding="utf-8")
+    start = xp_source.find("function XP:RunDevXPCheck(emit)")
+    end = xp_source.find("\nend\n", start)
+    if start == -1 or end == -1:
+        errors.append("XP report owner could not be isolated")
+    else:
+        check_source = xp_source[start:end]
+        for required in (
+            'Logres:GetModuleStatus("QuestXP")',
+            'Logres:GetModule("QuestXP")',
+            '"Logres xpcheck: "',
         ):
+            if required not in check_source:
+                errors.append("XP report lost original status source: " + required)
+        for forbidden in ("UnitXP(", "UnitXPMax(", "GetXPExhaustion("):
             if forbidden in check_source:
-                errors.append(
-                    "XP Check must consume addon-owned status only: "
-                    f"{forbidden}"
-                )
+                errors.append("XP report must consume addon-owned status only: " + forbidden)
 
 if TOC.is_file():
     source = TOC.read_text(encoding="utf-8")

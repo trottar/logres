@@ -124,6 +124,6 @@ need('P0354 R2' in read('docs/memory/evidence/P0354_HUD_DIAGNOSTIC_SEAM.md') and
      'P0353 R0' in read('docs/memory/evidence/P0353_LAYOUT_SEAM.md') and
      read('docs/memory/handoffs/P0353_FULL_HANDOFF_ARCHIVE.md').startswith('# P0353'),
      'negative results/archive erased')
-need(len(list((R/'tools').glob('check_*.py')))==226,
+need(len(list((R/'tools').glob('check_*.py')))>=226,
      'expected 226 static contracts')
 print('P0355 primary ownership diagnostic seam: PASS (STATIC; WoW UNVERIFIED)')

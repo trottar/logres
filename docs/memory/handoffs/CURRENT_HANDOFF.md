@@ -1,3 +1,7 @@
+# P0356 — F.3 XP diagnostic ownership; CURRENT.md is authoritative
+
+Verified pushed P0355 R2 `fac39a1e3960c7d9a238f76543027838647330ed`: 226/226 PREWRITE/POSTWRITE STATIC, `0.0.244-dev`. XP structural report moves to preloaded Quest/XP.lua; Commands preserves exact Run All, slash, Phase F developer panel. XP live sample policy untouched. Candidate `0.0.245-dev`, checker #227, Lua94/actions120/previews38; WoW UNVERIFIED. P0321 GossipFrame stock restoration FIRST client gate; L-022/L-027/L-028 OPEN, L-019 public release BLOCKED; L-031 deferred, D-046/047/048 unchanged.
+
 # P0355 — read-only primary stock ownership report; CURRENT.md authoritative
 
 Verified pushed P0354 R3 main `4254d0a80f2f8ffd98a708836482a093bed06e62`: 225/225 PREWRITE/POSTWRITE STATIC, version `0.0.243-dev`, WoW UNVERIFIED. Extract ONLY command-invoked P0173 primaryownershipcheck report into preloaded Actions/Primary.lua. Commands keeps local wrapper, Run All, slash and action panel; primary stock-action suppression remains UNAUTHORIZED, candidate-only and stock-preserved. P0173 original native gate remains unchanged. Candidate `0.0.244-dev`, #226, 94 Lua and 120 panel actions/38 previews, schema 3 unchanged. No native/protected mutation, secret inspection, polling, camera or D-048 live selector.
