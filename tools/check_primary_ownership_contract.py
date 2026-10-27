@@ -35,15 +35,22 @@ if primary.is_file():
                 errors.append("forbidden primary mutation: " + forbidden)
         if 'stockSuppressionAuthorized = false' not in gate:
             errors.append("gate must not authorize stock hiding")
+# P0355: keep command routing in Commands; relocated report belongs to Primary.
 if commands.is_file():
     text = commands.read_text(encoding="utf-8")
     for token in ('local function runPrimaryOwnershipCheck()',
-                  'primary:GetStockOwnershipGate()',
+                  'Logres:GetModule("PrimaryActions"):RunDevPrimaryOwnershipCheck(emit)',
                   'runPrimaryOwnershipCheck()',
-                  'if command == "primaryownershipcheck" then',
+                  'if command == "primaryownershipcheck" then'):
+        if token not in text:
+            errors.append("missing command diagnostic: " + token)
+if primary.is_file():
+    text = primary.read_text(encoding="utf-8")
+    for token in ('function Primary:RunDevPrimaryOwnershipCheck(emit)',
+                  'primary:GetStockOwnershipGate()',
                   'suppressAuthorized=false stockPreserved=true'):
         if token not in text:
-            errors.append("missing diagnostic: " + token)
+            errors.append("missing primary-owned report: " + token)
 if controller.is_file():
     text = controller.read_text(encoding="utf-8")
     if 'primaryActionRoutingOwned = false' not in text:

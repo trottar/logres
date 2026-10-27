@@ -1,0 +1,18 @@
+P0355 PRIMARY OWNERSHIP DIAGNOSTIC SEAM
+Source baseline: 4254d0a80f2f8ffd98a708836482a093bed06e62
+Patch: 0.0.243-dev -> 0.0.244-dev (TOC and Bootstrap)
+PREWRITE shadow: 226/226 STATIC PASS
+POSTWRITE: 226/226 STATIC PASS
+git diff --check: PASS
+Addon Lua load entries: 94
+Developer panel registrations: 120 (38 P previews)
+WoW runtime: UNVERIFIED / DEFERRED (client unavailable)
+Native P0321 GossipFrame restoration: FIRST CONTINGENT CLIENT GATE
+L-022/L-027/L-028 OPEN; L-019 public release BLOCKED
+Tracked files affected: 12
+New checker/evidence files: 3
+P0354 R0/R1/R2 refused before tracked writes; P0354 R3 225/225 STATIC remains preserved
+P0355 R0: REFUSED before shadow PREWRITE: handoff authority/refusals token mismatch; zero tracked writes
+P0355 R1: REFUSED 191/226 check_p0354_hud_diagnostic_seam_contract.py (check_memory_health.py missing from handoff); no tracked writes
+P0355 R2: historical checker exact handoff predicate preflight; refused evidence preserved
+P0355: original P0173 PASS/DEFERRED stock-preserved diagnostic body moved without changes

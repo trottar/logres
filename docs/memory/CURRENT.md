@@ -11,11 +11,11 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Current Work Item
 
-**P0354 R3 — HUD seam; WoW UNVERIFIED.** P0353 R1 `bac01ad18554157265e292fbf0c8982e3c3473d8` 224/224 STATIC. HUD report to HUD.lua; Commands routes kept. R0 SHA guard REFUSED; R1 version policy 27/225; R2 handoff 55/225 REFUSED; no tracked writes. R3 fixes. `0.0.243-dev`, #225, 94 Lua/120 actions/38 previews, schema3. No native/secret/camera/polling/D-048 change. P0321 client gate; L-022/L-027/L-028 OPEN, L-019 BLOCKED.
+**P0355 R2 — P0173 seam; WoW UNVERIFIED.** P0354 R3 `4254d0a80f2f8ffd98a708836482a093bed06e62` 225/225 STATIC. R0/R1 prewrite REFUSED, no writes. Primary owns report; Commands routes intact; native stock retained. `0.0.244-dev`, #226, 94 Lua/120 actions/38 previews; schema3, D-048 and camera unchanged. P0321 FIRST client gate; L-022/L-027/L-028 OPEN, L-019 BLOCKED.
 
 ## Verified State
 
-- P0353 R1 verified on main `bac01ad18554157265e292fbf0c8982e3c3473d8`: 224/224 STATIC, `0.0.242-dev`; R0 1/224 refusal recorded; WoW UNVERIFIED.
+- P0354 R3 `4254d0a80f2f8ffd98a708836482a093bed06e62`: 225/225 STATIC, `0.0.243-dev`; R0/R1/R2 refused before writes. P0353 R1 224/224; WoW UNVERIFIED.
 - Verified pushed P0352 `61f0f49c2cf990168c1415dd2100a0f286627a91`: 223/223 PREWRITE/POSTWRITE STATIC, `0.0.241-dev`; WoW UNVERIFIED.
 - Verified pushed P0351 `e8b71bc59a04f3077925bb24f0d6850a71340841`: 222/222 PRE/POST STATIC, `0.0.240-dev`; WoW UNVERIFIED.
 - Verified pushed P0350 `fd2d2676ffb41d509143b398b61b8474ecacf53d`: 221/221 PRE/POST STATIC, `0.0.239-dev`; WoW UNVERIFIED.
@@ -38,16 +38,17 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Next Action
 
-Apply P0354 only after 225/225 PRE/POST STATIC, diff hygiene and manifest before user commit/push. No WoW deployment. P0321 FIRST client gate; L-022/L-027/L-028 OPEN, L-019 release BLOCKED.
+P0355 requires 226/226 PRE/POST STATIC, diff and manifest; verify push. No client deployment. P0321 FIRST gate; L-022/L-027/L-028 OPEN, L-019 BLOCKED.
 
 ## Success Criteria
 
-HUD PASS/FAIL unchanged; original Run All/slash/panel route, addon-only debug status. Lua94, actions120/previews38, schema3 and camera unchanged. #225 static; runtime UNVERIFIED.
+P0173 PASS/DEFERRED and Commands routes unchanged; 94 Lua, 120 actions/38 previews, schema 3 and camera preserved. #226 STATIC; WoW UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/evidence/P0355_PRIMARY_OWNERSHIP_SEAM.md` and `docs/memory/patches/P0355_PRIMARY_OWNERSHIP_SEAM.md`
 - `docs/memory/evidence/P0354_HUD_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0354_HUD_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0353_LAYOUT_SEAM.md` and `docs/memory/patches/P0353_LAYOUT_SEAM.md`
 - `docs/memory/evidence/P0352_LIFECYCLE_SEAM.md` and `docs/memory/patches/P0352_LIFECYCLE_SEAM.md`
