@@ -11,19 +11,19 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Current Work Item
 
-**P0364 — Player Helpful Aura diagnostic ownership; WoW UNVERIFIED.** Verified pushed P0363 `921aeb7beae6e9e59df8a2413e3ffeab0576048c`, 234/234 STATIC. Move existing helpfulauracheck report to preloaded HUD/PlayerHelpfulAuras; Commands routes preserved. `0.0.253-dev`, #235, Lua94/actions120/previews38, schema3, D-048 and camera unchanged. P0321 FIRST client gate; L-022/L-027/L-028 OPEN, L-019 BLOCKED.
+**P0365 — AuraStatusProbe diagnostic ownership; WoW UNVERIFIED.** Verified pushed P0364 R1 main `c7d23cf671fbe44e6e5ed129c4d9dd1ea4a36cc1`, 235/235 STATIC. Move original manual aurastatusprobe report to preloaded HUD/AuraStatusProbe; Commands routes kept; checkall remains excluded. Candidate `0.0.254-dev`, #236, Lua94/actions120/previews38, schema3/D-048/camera unchanged. P0321 FIRST client gate; L-022/L-027/L-028 OPEN; L-019 BLOCKED.
 
 ## Verified State
 
-- Verified pushed P0363 `921aeb7beae6e9e59df8a2413e3ffeab0576048c` 234/234 PRE/POST STATIC; P0362 233/233, P0361 R1 232/232, P0360 231/231, P0359 230/230, P0358 R1 229/229, P0357 228/228 and P0356 227/227. WoW UNVERIFIED; historical refusals retained.
+- Verified pushed P0364 R1 `c7d23cf671fbe44e6e5ed129c4d9dd1ea4a36cc1` 235/235 PRE/POST STATIC; R0 PREWRITE 201/235 REFUSED, checker scope corrected; P0363 234/234, P0362 233/233, P0361 R1 232/232, P0360 231/231, P0359 230/230, P0358 R1 229/229, P0357 228/228 and P0356 227/227. WoW UNVERIFIED.
 - P0352 main `61f0f49c2cf990168c1415dd2100a0f286627a91` 223/223 STATIC, `0.0.241-dev`; WoW UNVERIFIED.
 - P0351 `e8b71bc59a04f3077925bb24f0d6850a71340841` 222/222 STATIC; WoW UNVERIFIED.
 - P0350 `fd2d2676ffb41d509143b398b61b8474ecacf53d` 221/221 STATIC; WoW UNVERIFIED.
 - P0349 R1 `4e59c8f2f03daf30b630fb15e3e14d5f38cc8da6` 220/220 STATIC; R0 PREWRITE REFUSED, WoW UNVERIFIED.
-- Verified pushed P0348 `4b7481d731d5f90e214b285bc7cce16ec826176f` with manifest 219/219 PREWRITE/POSTWRITE STATIC, version unchanged `0.0.237-dev`; D-048 surface ownership model remains OFFLINE ONLY.
-- Verified pushed P0347 R1 `b94beb4706005757497002927d80845d5355037f` with manifest 218/218 PREWRITE/POSTWRITE STATIC; version `0.0.237-dev`, WoW UNVERIFIED. R0 historical P0346 ceiling refusal remains recorded.
+- P0348 `4b7481d731d5f90e214b285bc7cce16ec826176f` 219/219 STATIC, `0.0.237-dev`; D-048 ownership model OFFLINE ONLY.
+- P0347 R1 `b94beb4706005757497002927d80845d5355037f` 218/218 STATIC; R0 PREWRITE REFUSED, WoW UNVERIFIED.
 - P0347 R0 PREWRITE shadow REFUSED 1/218: P0346 historic exact 217-checker assertion rejected the new #218; no tracked writes. R1 migrates that assertion to a 217-checker floor, retains inventory checks and requires 218/218 static contracts.
-- Verified pushed P0346 `26370095bd092d076868cd3d2e5e6a74f6b845d3` with 217/217 PREWRITE and POSTWRITE STATIC PASS; source audit confirmed 94 Lua/120 actions/38 previews. WoW UNVERIFIED.
+- P0346 `26370095bd092d076868cd3d2e5e6a74f6b845d3` 217/217 PRE/POST STATIC; WoW UNVERIFIED.
 - P0345 main `626b22038d09e738bd3fa90684e3a95e36905d45`: 216/216 STATIC, target debuff client UNVERIFIED.
 - P0344 main `e44f66ba0838045ad6d44f1afe3e4afdb4a473ec`: 215/215 STATIC, native popup owner L-027 UNVERIFIED.
 - P0343 R1 `ef4d96040fa15c0fc1a49766b1e0efcec6fe1cb1` 214/214 STATIC; R0 REFUSED before writes, L-022 OPEN.
@@ -38,16 +38,17 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Next Action
 
-P0364: require 235/235 PREWRITE/POSTWRITE STATIC, `git diff --check` and push verification. No WoW deployment. P0321 FIRST contingent client gate.
+P0365: require 236/236 PREWRITE/POSTWRITE STATIC and `git diff --check`, then user pushes. WoW remains DEFERRED; P0321 first contingent client gate.
 
 ## Success Criteria
 
-Original single helpful aura PASS/FAIL, existing refresh, events, secret-safe aura gates, native fallback, Run All/slash/panel/preview unchanged. Lua94, actions120/previews38, schema3. WoW UNVERIFIED.
+AuraStatusProbe manual capture and detailed PASS/FAIL output unchanged; secret-first sampling and native fallback intact; checkall excludes manual probe; slash/panel route unchanged. Lua94, actions120/previews38, schema3; WoW UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/evidence/P0365_AURA_STATUS_PROBE_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0365_AURA_STATUS_PROBE_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0364_PLAYER_HELPFUL_AURA_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0364_PLAYER_HELPFUL_AURA_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0363_QUEST_OFFER_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0363_QUEST_OFFER_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0362_STOCK_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0362_STOCK_DIAGNOSTIC_SEAM.md`

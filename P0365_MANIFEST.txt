@@ -1,0 +1,16 @@
+P0365 AURA STATUS PROBE MANUAL DIAGNOSTIC OWNERSHIP SEAM
+Source GitHub main: c7d23cf671fbe44e6e5ed129c4d9dd1ea4a36cc1
+Candidate: 0.0.253-dev -> 0.0.254-dev (TOC and Bootstrap)
+PREWRITE shadow: 236/236 STATIC PASS
+POSTWRITE: 236/236 STATIC PASS
+git diff --check: PASS
+Addon Lua load entries: 94
+Developer panel registrations: 120 (38 previews)
+Saved-settings schema: 3, unchanged
+WoW runtime: UNVERIFIED / DEFERRED (client unavailable)
+P0321 GossipFrame stock restoration: FIRST contingent client safety gate
+L-022/L-027/L-028 OPEN; L-019 public release BLOCKED; L-031 deferred
+P0354 R0/R1/R2, P0355 R0/R1, P0358 R0, P0361 R0, P0364 R0 negative evidence preserved
+P0365 R0 PREWRITE STATIC 202/236 REFUSED (generic shared-local false positive); R1 corrected
+Original manual capture and PASS/FAIL detail report preserved except method declaration
+Tracked source/memory/checkers modified: 13; new files: 3

@@ -1,6 +1,6 @@
-# P0364 — Player Helpful Aura diagnostic; CURRENT.md authoritative
+# P0365 — Aura status manual probe owner; CURRENT.md authoritative
 
-Verified pushed P0363 `921aeb7beae6e9e59df8a2413e3ffeab0576048c` 234/234 STATIC, `0.0.252-dev`; WoW UNVERIFIED. Move single helpful aura report to preloaded HUD/PlayerHelpfulAuras; Commands wrapper, refresh, Run All, slash/Phase H and Preview unchanged. P0137 report-location check and P0363 #234 checker floor migrate; native/secret guards retained. Candidate `0.0.253-dev`, #235, Lua94/actions120/previews38, schema3/D-048/camera unchanged. P0362 233/233; P0321 FIRST contingent client gate; L-022/L-027/L-028 OPEN; L-019 BLOCKED; L-031 deferred. P0354 R0/R1/R2 check_memory_health.py, P0355 R0/R1, P0358 R0 and P0361 R0 handoff refusals retained; P0337 `cfdc07af` preserved. No WoW deployment or in-client test.
+Verified pushed P0364 R1 `c7d23cf671fbe44e6e5ed129c4d9dd1ea4a36cc1` 235/235 PRE/POST STATIC; R0 201/235 REFUSED before writes. WoW UNVERIFIED. P0362/P0363 233/234 STATIC. Move only manual AuraStatusProbe diagnostic to HUD/AuraStatusProbe; Commands wrapper, slash/Phase H panel and non-checkall policy retained. P0136 checker migrates only report-location assertions; secret-first, native UI and event payload protections retained. Candidate `0.0.254-dev`, #236, Lua94/actions120/previews38, schema3/D-048/camera unchanged. P0321 FIRST contingent client gate; L-022/L-027/L-028 OPEN, L-019 BLOCKED, L-031 deferred. P0354 R0/R1/R2 check_memory_health.py, P0355 R0/R1, P0358 R0, P0361 R0 handoff preserved; P0337 `cfdc07af` retained. No WoW deployment.
 
 # P0361 — ImmersionController diagnostic owner; CURRENT.md authoritative
 

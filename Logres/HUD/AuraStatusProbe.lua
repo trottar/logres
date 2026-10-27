@@ -711,3 +711,57 @@ end
 function Probe:OnDisable()
     self.moduleEnabled = false
 end
+
+function Probe:RunDevAuraStatusProbe(emit)
+    local status =
+        Logres:GetModuleStatus("AuraStatusProbe")
+    local probe =
+        Logres:GetModule("AuraStatusProbe")
+    local capture = probe:CaptureManual()
+    local debugStatus = probe:GetDebugStatus()
+    local captureOK = type(capture) == "table"
+
+    local passed =
+        status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and captureOK
+        and debugStatus.unitAuraRegistered == true
+        and debugStatus.targetChangedRegistered == true
+        and debugStatus.enteringWorldRegistered == true
+        and debugStatus.secretCheckerAvailable == true
+        and debugStatus.predicateAvailable == true
+        and debugStatus.queryAvailable == true
+        and debugStatus.unitExistsAvailable == true
+        and debugStatus.failureCount == 0
+
+    emit(string.format(
+        "Logres aurastatusprobe: %s (capture=%s captures=%s manual=%s last=%s events=aura:%s target:%s world:%s api=secret:%s predicate:%s query:%s unitExists:%s ordinary=%s secretSkips=%s secretFields=%s failures=%s targetAvailable=%s)",
+        passed and "PASS" or "FAIL",
+        tostring(captureOK),
+        tostring(debugStatus.captureCount),
+        tostring(debugStatus.manualCount),
+        tostring(debugStatus.lastReason),
+        tostring(debugStatus.unitAuraEvents),
+        tostring(debugStatus.targetChangedEvents),
+        tostring(debugStatus.enteringWorldEvents),
+        tostring(debugStatus.secretCheckerAvailable),
+        tostring(debugStatus.predicateAvailable),
+        tostring(debugStatus.queryAvailable),
+        tostring(debugStatus.unitExistsAvailable),
+        tostring(debugStatus.ordinaryAuraCount),
+        tostring(debugStatus.secretSkipCount),
+        tostring(debugStatus.secretFieldCount),
+        tostring(debugStatus.failureCount),
+        tostring(debugStatus.targetAvailable)
+    ))
+
+    local lines = probe:GetDiagnosticLines()
+
+    for index = 1, #lines do
+        emit(
+            "Logres aurastatusprobe: "
+            .. tostring(lines[index])
+        )
+    end
+end

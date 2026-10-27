@@ -67,6 +67,11 @@ required_probe = (
     "function Probe:CaptureManual()",
     "function Probe:GetDiagnosticLines()",
     "function Probe:GetDebugStatus()",
+    "function Probe:RunDevAuraStatusProbe(emit)",
+    'Logres:GetModuleStatus("AuraStatusProbe")',
+    'Logres:GetModule("AuraStatusProbe")',
+    '"Logres aurastatusprobe: %s (capture=%s',
+    'local lines = probe:GetDiagnosticLines()',
     'eventFrame:SetScript("OnEvent", function(_, event)',
 )
 
@@ -212,8 +217,7 @@ if "..." in event_block:
 
 for fragment in (
     "local function runAuraStatusProbe()",
-    'Logres:GetModuleStatus("AuraStatusProbe")',
-    'Logres:GetModule("AuraStatusProbe")',
+    'Logres:GetModule("AuraStatusProbe"):RunDevAuraStatusProbe(emit)',
     'if command == "aurastatusprobe" then',
     'emit("  /logres aurastatusprobe")',
     '"auraStatusProbe"',
