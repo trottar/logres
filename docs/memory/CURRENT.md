@@ -11,11 +11,11 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Current Work Item
 
-**P0359 — PlayerFrame seam; WoW UNVERIFIED.** P0358 R1 `542ee03612bfcec299274dcecba5ed43b1302ad8` 229/229 STATIC. Read-only report moves to PlayerFrameReplacement; Commands routes kept. `0.0.248-dev`, #230, 94 Lua/120 actions/38 previews. No schema3/D-048/camera/native change. P0321 FIRST client gate; L-022/L-027/L-028 OPEN, L-019 BLOCKED.
+**P0360 — TargetFrame seam; WoW UNVERIFIED.** P0359 main `6ec4b5ac3db1626c7273b8a2590d4492679b0c0c` 230/230 STATIC. Read-only targetframecheck to TargetFrameReplacement; Commands routes kept. `0.0.249-dev`, #231, Lua94/actions120/previews38, schema3/D-048/camera unchanged. P0321 FIRST client gate; L-022/L-027/L-028 OPEN; L-019 BLOCKED.
 
 ## Verified State
 
-- P0358 R1 `542ee03612bfcec299274dcecba5ed43b1302ad8` 229/229 STATIC; P0357 228/228, P0356 227/227, P0355 226/226; P0358 R0 refused before writes; WoW UNVERIFIED.
+- P0359 `6ec4b5ac3db1626c7273b8a2590d4492679b0c0c` 230/230 STATIC; P0358 R1 229/229, P0357 228/228, P0356 227/227; prior refusals retained; WoW UNVERIFIED.
 - Verified pushed P0352 `61f0f49c2cf990168c1415dd2100a0f286627a91`: 223/223 PREWRITE/POSTWRITE STATIC, `0.0.241-dev`; WoW UNVERIFIED.
 - Verified pushed P0351 `e8b71bc59a04f3077925bb24f0d6850a71340841`: 222/222 PRE/POST STATIC, `0.0.240-dev`; WoW UNVERIFIED.
 - Verified pushed P0350 `fd2d2676ffb41d509143b398b61b8474ecacf53d`: 221/221 PRE/POST STATIC, `0.0.239-dev`; WoW UNVERIFIED.
@@ -38,11 +38,11 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Next Action
 
-P0359: 230/230 PRE/POST STATIC and manifest, verify push. No WoW deployment; P0321 FIRST client gate.
+P0360: 231/231 PRE/POST STATIC, diff/manifest, verify push. No WoW deployment. P0321 FIRST contingent client gate.
 
 ## Success Criteria
 
-D-026 PASS/FAIL, pending and child preservation unchanged; Lua94, actions120/previews38; WoW UNVERIFIED.
+TargetFrame output, protected fallback and ToT/auras unchanged; Lua94, actions120/previews38, schema3. WoW UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.

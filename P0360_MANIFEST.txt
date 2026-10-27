@@ -1,0 +1,14 @@
+P0360 D-026 TARGET FRAME DIAGNOSTIC OWNERSHIP SEAM
+Source baseline: 6ec4b5ac3db1626c7273b8a2590d4492679b0c0c
+Patch: 0.0.248-dev -> 0.0.249-dev (TOC and Bootstrap)
+PREWRITE shadow: 231/231 STATIC PASS
+POSTWRITE: 231/231 STATIC PASS
+git diff --check: PASS
+Addon Lua load entries: 94
+Developer panel registrations: 120 (38 P previews)
+WoW runtime: UNVERIFIED / DEFERRED (client unavailable)
+Native P0321 GossipFrame restoration: FIRST CONTINGENT CLIENT GATE
+L-022/L-027/L-028 OPEN; L-019 public release BLOCKED
+Tracked files affected: 13; new checker/evidence files: 3
+P0354 R0/R1/R2, P0355 R0/R1 and P0358 R0 refusals retained
+P0360: original TargetFrame read-only diagnostic preserved except declaration

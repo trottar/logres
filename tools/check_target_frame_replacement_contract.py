@@ -52,6 +52,7 @@ if TARGET.is_file():
         "interactionMouseOwnedByLogres =",
         "wholeTargetFrameSuppressedByLogres = false",
         "targetOfTargetSuppressedByLogres = false",
+        "function TargetFrameReplacement:RunDevTargetFrameCheck(emit, boolText)",
     ]
 
     for fragment in required:
@@ -134,12 +135,7 @@ if COMMANDS.is_file():
 
     required = [
         "local function runTargetFrameCheck()",
-        "debugStatus.stockPresentationSuppressed == true",
-        "debugStatus.stockMouseSuppressed == true",
-        "debugStatus.preservedCount == 4",
-        "debugStatus.suppressedContextCount == 9",
-        "debugStatus.contextualSuppressedCount == 9",
-        "debugStatus.interactionMouseOwnedByLogres == true",
+        'Logres:GetModule("TargetFrameReplacement"):RunDevTargetFrameCheck(emit, boolText)',
         "target.contextualSuppressedCount",
         "targetSuppressedExpected",
     ]
@@ -150,14 +146,26 @@ if COMMANDS.is_file():
                 f"Commands.lua missing target diagnostic: {fragment}"
             )
 
-    target_check = local_function_source(
-        source,
-        "local function runTargetFrameCheck()",
-    )
 
+if TARGET.is_file():
+    report_source = TARGET.read_text(encoding="utf-8")
+    target_check = local_function_source(
+        report_source,
+        "function TargetFrameReplacement:RunDevTargetFrameCheck(emit, boolText)",
+    )
     if target_check is None:
-        errors.append("runTargetFrameCheck could not be isolated")
+        errors.append("module-owned runTargetFrameCheck could not be isolated")
     else:
+        for marker in (
+            "debugStatus.stockPresentationSuppressed == true",
+            "debugStatus.stockMouseSuppressed == true",
+            "debugStatus.preservedCount == 4",
+            "debugStatus.suppressedContextCount == 9",
+            "debugStatus.contextualSuppressedCount == 9",
+            "debugStatus.interactionMouseOwnedByLogres == true",
+        ):
+            if marker not in target_check:
+                errors.append("module-owned TargetFrame report missing: " + marker)
         forbidden = [
             "debugStatus.containerAlpha",
             "debugStatus.contentMainAlpha",
@@ -172,7 +180,7 @@ if COMMANDS.is_file():
         for fragment in forbidden:
             if fragment in target_check:
                 errors.append(
-                    "Commands.lua target diagnostic still inspects "
+                    "TargetFrame diagnostic still inspects "
                     f"obsolete/protected state: {fragment}"
                 )
 

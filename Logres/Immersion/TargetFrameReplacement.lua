@@ -627,3 +627,137 @@ function TargetFrameReplacement:GetDebugStatus()
         partyFramesSuppressedByLogres = false,
     }
 end
+
+-- P0360: read-only D-026 TargetFrame structural diagnostic.
+function TargetFrameReplacement:RunDevTargetFrameCheck(emit, boolText)
+    local status =
+        Logres:GetModuleStatus("TargetFrameReplacement")
+    local replacement =
+        Logres:GetModule("TargetFrameReplacement")
+    local debugStatus =
+        replacement:GetDebugStatus()
+
+    local expected =
+        Logres:GetPreference("immersionEnabled") == true
+
+    local stateMatches =
+        debugStatus.requestedEnabled == expected
+        and (
+            debugStatus.appliedEnabled == expected
+            or (
+                debugStatus.pending
+                and InCombatLockdown()
+            )
+        )
+
+    local presentationMatches = true
+
+    if not debugStatus.pending and expected then
+        presentationMatches =
+            debugStatus.targetFrameFound == true
+            and debugStatus.containerFound == true
+            and debugStatus.contentMainFound == true
+            and debugStatus.contextualFound == true
+            and debugStatus.stockPresentationSuppressed == true
+            and debugStatus.stockMouseSuppressed == true
+            and debugStatus.preservedCount == 4
+            and debugStatus.suppressedContextCount == 9
+            and debugStatus.contextualSuppressedCount == 9
+            and debugStatus.interactionReady == true
+            and debugStatus.interactionConfigured == true
+            and debugStatus.unitWatchRegistered == true
+            and debugStatus.interactionMouseOwnedByLogres == true
+            and debugStatus.interactionUnit == "target"
+            and debugStatus.interactionLeftType == "target"
+            and debugStatus.interactionRightType == "togglemenu"
+            and debugStatus.snapshotReady == true
+    elseif not debugStatus.pending then
+        presentationMatches =
+            debugStatus.appliedEnabled == false
+            and debugStatus.snapshotReady == false
+            and debugStatus.unitWatchRegistered == false
+            and debugStatus.interactionMouseOwnedByLogres == false
+            and debugStatus.stockPresentationSuppressed == false
+            and debugStatus.stockMouseSuppressed == false
+            and debugStatus.contextualSuppressedCount == 0
+    end
+
+    local preservationSafe =
+        debugStatus.wholeTargetFrameSuppressedByLogres == false
+        and debugStatus.targetOfTargetSuppressedByLogres == false
+        and debugStatus.focusFrameSuppressedByLogres == false
+        and debugStatus.bossFramesSuppressedByLogres == false
+        and debugStatus.partyFramesSuppressedByLogres == false
+
+    local passed =
+        status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and stateMatches
+        and presentationMatches
+        and preservationSafe
+        and debugStatus.lastError == nil
+
+    if passed then
+        emit(string.format(
+            "Logres targetframecheck: PASS (expected=%s applied=%s pending=%s frame=%s container=%s main=%s contextual=%s stockPresentation=%s stockMouseSuppressed=%s contextualSuppressed=%s preserved=%s interactionReady=%s configured=%s watch=%s mouseOwned=%s unit=%s types=%s/%s wholeFrame=false tot=false focus=false boss=false party=false reason=%s)",
+            boolText(expected),
+            boolText(debugStatus.appliedEnabled),
+            boolText(debugStatus.pending),
+            boolText(debugStatus.targetFrameFound),
+            boolText(debugStatus.containerFound),
+            boolText(debugStatus.contentMainFound),
+            boolText(debugStatus.contextualFound),
+            boolText(debugStatus.stockPresentationSuppressed),
+            boolText(debugStatus.stockMouseSuppressed),
+            tostring(debugStatus.contextualSuppressedCount),
+            tostring(debugStatus.preservedCount),
+            boolText(debugStatus.interactionReady),
+            boolText(debugStatus.interactionConfigured),
+            boolText(debugStatus.unitWatchRegistered),
+            boolText(debugStatus.interactionMouseOwnedByLogres),
+            tostring(debugStatus.interactionUnit),
+            tostring(debugStatus.interactionLeftType),
+            tostring(debugStatus.interactionRightType),
+            tostring(debugStatus.lastReason)
+        ))
+        return
+    end
+
+    emit(string.format(
+        "Logres targetframecheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s expected=%s requested=%s applied=%s pending=%s stateMatches=%s presentationMatches=%s preservationSafe=%s frame=%s container=%s main=%s contextual=%s stockPresentation=%s stockMouseSuppressed=%s contextualSuppressed=%s preserved=%s interactionReady=%s configured=%s watch=%s mouseOwned=%s unit=%s types=%s/%s snapshot=%s wholeFrame=%s tot=%s focus=%s boss=%s party=%s reason=%s error=%s)",
+        tostring(status.initialized),
+        tostring(status.enabled),
+        tostring(debugStatus.moduleEnabled),
+        tostring(expected),
+        tostring(debugStatus.requestedEnabled),
+        tostring(debugStatus.appliedEnabled),
+        tostring(debugStatus.pending),
+        tostring(stateMatches),
+        tostring(presentationMatches),
+        tostring(preservationSafe),
+        tostring(debugStatus.targetFrameFound),
+        tostring(debugStatus.containerFound),
+        tostring(debugStatus.contentMainFound),
+        tostring(debugStatus.contextualFound),
+        tostring(debugStatus.stockPresentationSuppressed),
+        tostring(debugStatus.stockMouseSuppressed),
+        tostring(debugStatus.contextualSuppressedCount),
+        tostring(debugStatus.preservedCount),
+        tostring(debugStatus.interactionReady),
+        tostring(debugStatus.interactionConfigured),
+        tostring(debugStatus.unitWatchRegistered),
+        tostring(debugStatus.interactionMouseOwnedByLogres),
+        tostring(debugStatus.interactionUnit),
+        tostring(debugStatus.interactionLeftType),
+        tostring(debugStatus.interactionRightType),
+        tostring(debugStatus.snapshotReady),
+        tostring(debugStatus.wholeTargetFrameSuppressedByLogres),
+        tostring(debugStatus.targetOfTargetSuppressedByLogres),
+        tostring(debugStatus.focusFrameSuppressedByLogres),
+        tostring(debugStatus.bossFramesSuppressedByLogres),
+        tostring(debugStatus.partyFramesSuppressedByLogres),
+        tostring(debugStatus.lastReason),
+        tostring(debugStatus.lastError)
+    ))
+end

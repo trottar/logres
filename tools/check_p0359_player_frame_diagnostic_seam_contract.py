@@ -125,6 +125,6 @@ for path in ('docs/memory/evidence/P0359_PLAYER_FRAME_DIAGNOSTIC_SEAM.md',
 need(all(x in HAND for x in ('P0354 R0','P0354 R1','P0354 R2',
           'P0355 R0','P0355 R1','P0358 R0','check_memory_health.py')),
      'historical refused candidates erased')
-need(len(list((R/'tools').glob('check_*.py')))==230,
+need(len(list((R/'tools').glob('check_*.py')))>=230,
      'expected 230 static checkers')
 print('P0359 PlayerFrame diagnostic seam: PASS (STATIC; WoW UNVERIFIED)')
