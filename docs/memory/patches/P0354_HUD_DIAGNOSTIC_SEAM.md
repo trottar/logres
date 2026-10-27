@@ -1,0 +1,17 @@
+# P0354 — Extract HUD structural diagnostic
+
+Baseline: pushed P0353 R1 `bac01ad18554157265e292fbf0c8982e3c3473d8` (`0.0.242-dev`, 224/224 STATIC; client UNVERIFIED). Move existing read-only HUD `runHUDCheck` body to established `HUD/HUD.lua` as `HUD:RunDevHUDCheck(emit, boolText)` without changing logic. Retain Commands wrapper and Run All/slash/phase-B panel routes. Add checker #225, synchronized documentation, version `0.0.243-dev`. Preserve 94 Lua, 120 actions/38 previews, schema 3, camera, native and secret-safe safeguards. No new UI manipulation, event, timer or polling.
+
+Guarded one-time applier must verify exact main commit, 11 file blobs and clean tracked state, construct shadow candidate, run 225/225 PREWRITE STATIC before tracked writes, then 225/225 POSTWRITE STATIC and git diff --check with rollback on failure. Manifest only on success. WoW UNVERIFIED / DEFERRED. P0321 first contingent client gate; L-022/L-027/L-028 OPEN; L-019 root license/public release BLOCKED. Historical P0353 R0 PREWRITE refusal (1/224) remains preserved in P0353 evidence and handoff.
+
+## P0354 R0 refusal and R1 correction
+
+P0354 R0 **REFUSED before PREWRITE**: the applier shipped a 39-character expected Git blob SHA for `Logres/Core/Bootstrap.lua`, while the verified baseline blob is `38dc4f574b8fd40a929dd287b3ec2798732cf4b4`. The user-supplied terminal output confirms no tracked writes and no STATIC tests were reached. R1 corrects the 40-character guard and adds exact-SHA-format checking; HUD extraction, wrapper, checkers, versions, saved data and runtime boundaries are unchanged. The complete 225/225 PREWRITE/POSTWRITE STATIC suite remains an acceptance requirement. WoW UNVERIFIED; do not record R0 as a runtime failure.
+
+## P0354 R1 PREWRITE refusal and R2 repair
+
+R1 passed exact main/clean-tracked/11 Git-blob guards but **REFUSED 27/225 PREWRITE** in `tools/check_checker_version_policy.py`. Its new `check_p0354_hud_diagnostic_seam_contract.py` contained two hard-coded `0.0.243-dev` comparisons, violating the existing ban on durable checker version freezes. The result is a static packaging failure, **zero tracked writes**, not in-client failure. R2 uses dynamic TOC/Bootstrap version parity plus nonliteral development-version format, retains all output/safety checks, checks its own checker against the historical version policy before shadow validation, and requires 225/225 static checks PREWRITE/POSTWRITE. R0 truncated-SHA refusal and R1 static policy refusal remain in durable evidence. The original HUD extraction is unchanged; WoW UNVERIFIED.
+
+## P0354 R2 memory-health refusal and R3 repair
+
+R2 passed the exact main/11-blob guards and development-version checker-policy preflight, but **REFUSED 55/225 PREWRITE** at `tools/check_memory_health.py`: the accumulated `CURRENT_HANDOFF.md` exceeded its 15 KB hard cap. The verified pushed baseline was already 14,440 bytes. No tracked writes and no runtime observation occurred. R3 copies the complete P0353 handoff to the immutable-by-this-patch `docs/memory/handoffs/P0353_FULL_HANDOFF_ARCHIVE.md` and rewrites the active handoff as a bounded reference, while retaining P0317–P0353 milestone markers and all three P0354 refusal outcomes. It adds prewrite handoff and CURRENT size checks (8 KB and 9,800 bytes), archives the complete prior handoff, and preserves the same 225-checker gate. R0 SHA typo, R1 fixed-version checker, R2 handoff overflow remain negative repository knowledge; the HUD source change is unchanged and WoW UNVERIFIED.

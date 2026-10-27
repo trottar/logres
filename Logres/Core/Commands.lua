@@ -322,69 +322,7 @@ end
 
 
 local function runHUDCheck()
-    local status = Logres:GetModuleStatus("HUD")
-    local hud = Logres:GetModule("HUD")
-    local debugStatus = hud:GetDebugStatus()
-
-    local visibilityMatchesPreference =
-        debugStatus.rootShown == debugStatus.immersionEnabled
-
-    local passed =
-        status.initialized == true
-        and status.enabled == true
-        and debugStatus.moduleEnabled == true
-        and debugStatus.bandCount == 5
-        and debugStatus.textureCount == 5
-        and debugStatus.curvesReady == true
-        and debugStatus.resourceTextReady == true
-        and debugStatus.resourceCurveReady == true
-        and debugStatus.targetFrameReady == true
-        and debugStatus.targetNameTextReady == true
-        and debugStatus.targetHealthTextReady == true
-        and debugStatus.targetEventFrameReady == true
-        and debugStatus.playerCastCueReady == true
-        and debugStatus.targetCastCueReady == true
-        and debugStatus.playerCastEventFrameReady == true
-        and debugStatus.targetCastEventFrameReady == true
-        and debugStatus.allyRowCount == 5
-        and debugStatus.allyEventFrameCount == 5
-        and debugStatus.allyRosterEventFrameReady == true
-        and visibilityMatchesPreference
-
-    if passed then
-        emit(string.format(
-            "Logres hudcheck: PASS (bands=5 textures=5 tunnel=true curves=true resourceText=true resourceCurve=true target=true casts=true allies=5 immersion=%s visible=%s)",
-            boolText(debugStatus.immersionEnabled),
-            boolText(debugStatus.rootShown)
-        ))
-        return
-    end
-
-    emit(string.format(
-        "Logres hudcheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s bands=%s textures=%s curves=%s resourceText=%s resourceCurve=%s targetFrame=%s targetName=%s targetHealth=%s targetEvents=%s playerCast=%s targetCast=%s playerCastEvents=%s targetCastEvents=%s allyRows=%s allyEvents=%s allyRoster=%s immersion=%s visible=%s visibilityMatches=%s)",
-        tostring(status.initialized),
-        tostring(status.enabled),
-        tostring(debugStatus.moduleEnabled),
-        tostring(debugStatus.bandCount),
-        tostring(debugStatus.textureCount),
-        tostring(debugStatus.curvesReady),
-        tostring(debugStatus.resourceTextReady),
-        tostring(debugStatus.resourceCurveReady),
-        tostring(debugStatus.targetFrameReady),
-        tostring(debugStatus.targetNameTextReady),
-        tostring(debugStatus.targetHealthTextReady),
-        tostring(debugStatus.targetEventFrameReady),
-        tostring(debugStatus.playerCastCueReady),
-        tostring(debugStatus.targetCastCueReady),
-        tostring(debugStatus.playerCastEventFrameReady),
-        tostring(debugStatus.targetCastEventFrameReady),
-        tostring(debugStatus.allyRowCount),
-        tostring(debugStatus.allyEventFrameCount),
-        tostring(debugStatus.allyRosterEventFrameReady),
-        tostring(debugStatus.immersionEnabled),
-        tostring(debugStatus.rootShown),
-        tostring(visibilityMatchesPreference)
-    ))
+    Logres:GetModule("HUD"):RunDevHUDCheck(emit, boolText)
 end
 
 

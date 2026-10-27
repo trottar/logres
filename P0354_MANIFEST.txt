@@ -1,0 +1,18 @@
+P0354 HUD STRUCTURAL DIAGNOSTIC SEAM
+Source baseline: bac01ad18554157265e292fbf0c8982e3c3473d8
+Patch: 0.0.242-dev -> 0.0.243-dev (TOC and Bootstrap)
+PREWRITE shadow: 225/225 STATIC PASS
+POSTWRITE: 225/225 STATIC PASS
+git diff --check: PASS
+Addon Lua load entries: 94
+Developer panel registrations: 120 (38 P previews)
+WoW runtime: UNVERIFIED / DEFERRED (client unavailable)
+Native P0321 GossipFrame restore: FIRST CONTINGENT CLIENT GATE
+L-022/L-027/L-028 OPEN; L-019 public release BLOCKED
+Tracked files affected: 11
+New checker/evidence files: 4
+P0353 R0 PREWRITE: REFUSED 1/224 at 57/224 check_native_access_contract.py; historical negative evidence retained
+P0354 R0: REFUSED at Bootstrap blob hash guard before PREWRITE; expected truncated 39-hex SHA, actual 40-hex; no tracked writes
+P0354 R1: correct Bootstrap blob guard; REFUSED 27/225 PREWRITE at check_checker_version_policy.py (exact dev version pin); zero tracked writes
+P0354 R2: version policy fixed; REFUSED 55/225 PREWRITE at check_memory_health.py, handoff above 15 KB, no tracked writes
+P0354 R3: handoff < 8 KB, full original archived, dynamic version parity and 225-checker suite
