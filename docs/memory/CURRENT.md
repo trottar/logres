@@ -11,15 +11,15 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Current Work Item
 
-**P0363 — Quest-offer stock suppression diagnostic ownership; WoW UNVERIFIED.** Verified pushed P0362 main `ea4077d00c71e1b6720a3e9b7286ec108fcb9ad7` 233/233 STATIC. Extract the read-only questofferstocksuppressioncheck report to preloaded Quest/OfferStockSuppression; Commands routes kept. Candidate `0.0.252-dev`, #234, Lua94/actions120/previews38, schema3/D-048/camera unchanged. P0321 FIRST client gate; L-022/L-027/L-028 OPEN; L-019 BLOCKED.
+**P0364 — Player Helpful Aura diagnostic ownership; WoW UNVERIFIED.** Verified pushed P0363 `921aeb7beae6e9e59df8a2413e3ffeab0576048c`, 234/234 STATIC. Move existing helpfulauracheck report to preloaded HUD/PlayerHelpfulAuras; Commands routes preserved. `0.0.253-dev`, #235, Lua94/actions120/previews38, schema3, D-048 and camera unchanged. P0321 FIRST client gate; L-022/L-027/L-028 OPEN, L-019 BLOCKED.
 
 ## Verified State
 
-- Verified pushed P0362 `ea4077d00c71e1b6720a3e9b7286ec108fcb9ad7` 233/233 PRE/POST STATIC; P0361 R1 232/232, P0360 231/231, P0359 230/230, P0358 R1 229/229, P0357 228/228 and P0356 227/227. WoW UNVERIFIED; prior refusals retained.
+- Verified pushed P0363 `921aeb7beae6e9e59df8a2413e3ffeab0576048c` 234/234 PRE/POST STATIC; P0362 233/233, P0361 R1 232/232, P0360 231/231, P0359 230/230, P0358 R1 229/229, P0357 228/228 and P0356 227/227. WoW UNVERIFIED; historical refusals retained.
 - P0352 main `61f0f49c2cf990168c1415dd2100a0f286627a91` 223/223 STATIC, `0.0.241-dev`; WoW UNVERIFIED.
-- Verified pushed P0351 `e8b71bc59a04f3077925bb24f0d6850a71340841`: 222/222 PRE/POST STATIC, `0.0.240-dev`; WoW UNVERIFIED.
-- Verified pushed P0350 `fd2d2676ffb41d509143b398b61b8474ecacf53d`: 221/221 PRE/POST STATIC, `0.0.239-dev`; WoW UNVERIFIED.
-- Verified pushed P0349 R1 `4e59c8f2f03daf30b630fb15e3e14d5f38cc8da6`: 220/220 PRE/POST STATIC, `0.0.238-dev`; R0 2/220 PREWRITE refusal remains recorded, WoW UNVERIFIED.
+- P0351 `e8b71bc59a04f3077925bb24f0d6850a71340841` 222/222 STATIC; WoW UNVERIFIED.
+- P0350 `fd2d2676ffb41d509143b398b61b8474ecacf53d` 221/221 STATIC; WoW UNVERIFIED.
+- P0349 R1 `4e59c8f2f03daf30b630fb15e3e14d5f38cc8da6` 220/220 STATIC; R0 PREWRITE REFUSED, WoW UNVERIFIED.
 - Verified pushed P0348 `4b7481d731d5f90e214b285bc7cce16ec826176f` with manifest 219/219 PREWRITE/POSTWRITE STATIC, version unchanged `0.0.237-dev`; D-048 surface ownership model remains OFFLINE ONLY.
 - Verified pushed P0347 R1 `b94beb4706005757497002927d80845d5355037f` with manifest 218/218 PREWRITE/POSTWRITE STATIC; version `0.0.237-dev`, WoW UNVERIFIED. R0 historical P0346 ceiling refusal remains recorded.
 - P0347 R0 PREWRITE shadow REFUSED 1/218: P0346 historic exact 217-checker assertion rejected the new #218; no tracked writes. R1 migrates that assertion to a 217-checker floor, retains inventory checks and requires 218/218 static contracts.
@@ -38,16 +38,17 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Next Action
 
-P0363: require 234/234 PREWRITE/POSTWRITE STATIC and `git diff --check`; user verifies push. No WoW deployment. P0321 FIRST contingent client gate.
+P0364: require 235/235 PREWRITE/POSTWRITE STATIC, `git diff --check` and push verification. No WoW deployment. P0321 FIRST contingent client gate.
 
 ## Success Criteria
 
-Quest-offer PASS/FAIL and stock-ownership report, native restore/opaque-token guards and Run All/slash/panel unchanged; Lua94, actions120/previews38, schema3. WoW UNVERIFIED.
+Original single helpful aura PASS/FAIL, existing refresh, events, secret-safe aura gates, native fallback, Run All/slash/panel/preview unchanged. Lua94, actions120/previews38, schema3. WoW UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/evidence/P0364_PLAYER_HELPFUL_AURA_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0364_PLAYER_HELPFUL_AURA_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0363_QUEST_OFFER_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0363_QUEST_OFFER_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0362_STOCK_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0362_STOCK_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0361_IMMERSION_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0361_IMMERSION_DIAGNOSTIC_SEAM.md`

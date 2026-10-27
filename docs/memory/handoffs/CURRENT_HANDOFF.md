@@ -1,6 +1,6 @@
-# P0363 — Quest-offer stock report; CURRENT.md authoritative
+# P0364 — Player Helpful Aura diagnostic; CURRENT.md authoritative
 
-Verified pushed P0362 `ea4077d00c71e1b6720a3e9b7286ec108fcb9ad7` 233/233 STATIC; WoW UNVERIFIED. Move only read-only stock-offer report into Quest/OfferStockSuppression; Commands wrapper, two output lines, Run All/slash/panel unchanged. P0165 diagnostic-only assertion and P0362 count-floor migrate; native stock safeguards unchanged. Candidate `0.0.252-dev`, #234, Lua94/actions120/previews38, schema3/D-048/camera unchanged. P0321 FIRST contingent client gate; L-022/L-027/L-028 OPEN; L-019 BLOCKED; L-031 deferred. P0354 R0/R1/R2 check_memory_health.py, P0355 R0/R1, P0358 R0 and P0361 R0 handoff refusal retained; P0337 `cfdc07af` preserved. No WoW deployment or in-client validation.
+Verified pushed P0363 `921aeb7beae6e9e59df8a2413e3ffeab0576048c` 234/234 STATIC, `0.0.252-dev`; WoW UNVERIFIED. Move single helpful aura report to preloaded HUD/PlayerHelpfulAuras; Commands wrapper, refresh, Run All, slash/Phase H and Preview unchanged. P0137 report-location check and P0363 #234 checker floor migrate; native/secret guards retained. Candidate `0.0.253-dev`, #235, Lua94/actions120/previews38, schema3/D-048/camera unchanged. P0362 233/233; P0321 FIRST contingent client gate; L-022/L-027/L-028 OPEN; L-019 BLOCKED; L-031 deferred. P0354 R0/R1/R2 check_memory_health.py, P0355 R0/R1, P0358 R0 and P0361 R0 handoff refusals retained; P0337 `cfdc07af` preserved. No WoW deployment or in-client test.
 
 # P0361 — ImmersionController diagnostic owner; CURRENT.md authoritative
 

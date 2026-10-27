@@ -2659,60 +2659,7 @@ local function runStatusAuraPreview(argument)
 end
 
 local function runPlayerHelpfulAuraCheck()
-    local status =
-        Logres:GetModuleStatus("PlayerHelpfulAuras")
-    local module =
-        Logres:GetModule("PlayerHelpfulAuras")
-
-    local refreshOK, refreshReason =
-        module:Refresh("diagnostic-check")
-    local debugStatus = module:GetDebugStatus()
-
-    local expectedShown =
-        debugStatus.immersionEnabled == true
-        and debugStatus.visibleCount > 0
-
-    local visibilityCoherent =
-        debugStatus.rootShown == expectedShown
-        and debugStatus.presentationShown
-            == expectedShown
-
-    local passed =
-        status.initialized == true
-        and status.enabled == true
-        and debugStatus.moduleEnabled == true
-        and debugStatus.rootReady == true
-        and debugStatus.slotCount == 4
-        and debugStatus.unitAuraRegistered == true
-        and debugStatus.worldRegistered == true
-        and debugStatus.sourceAvailable == true
-        and refreshOK == true
-        and debugStatus.failureCount == 0
-        and visibilityCoherent
-
-    emit(string.format(
-        "Logres helpfulauracheck: %s (refresh=%s reason=%s root=%s expected=%s immersion=%s preview=%s slots=%s visible=%s shown=%s events=aura:%s world:%s source=%s filter=%s secretSkips=%s secretFields=%s failures=%s lastRefresh=%s presentation=%s error=%s)",
-        passed and "PASS" or "FAIL",
-        tostring(refreshOK),
-        tostring(refreshReason),
-        tostring(debugStatus.rootShown),
-        tostring(expectedShown),
-        tostring(debugStatus.immersionEnabled),
-        tostring(debugStatus.previewEnabled),
-        tostring(debugStatus.slotCount),
-        tostring(debugStatus.visibleCount),
-        tostring(debugStatus.presentationShown),
-        tostring(debugStatus.unitAuraEvents),
-        tostring(debugStatus.worldEvents),
-        tostring(debugStatus.sourceAvailable),
-        tostring(debugStatus.filter),
-        tostring(debugStatus.secretSkipCount),
-        tostring(debugStatus.secretFieldCount),
-        tostring(debugStatus.failureCount),
-        tostring(debugStatus.lastRefreshReason),
-        tostring(debugStatus.lastPresentationReason),
-        tostring(debugStatus.lastError)
-    ))
+    Logres:GetModule("PlayerHelpfulAuras"):RunDevHelpfulAuraCheck(emit)
 end
 
 local function runPlayerHelpfulAuraPreview(argument)

@@ -155,6 +155,6 @@ need(all(x in HAND for x in ('P0354 R0','P0354 R1','P0354 R2',
                             'P0355 R0','P0355 R1','P0358 R0',
                             'P0361 R0 handoff','check_memory_health.py')),
      'historic failed-candidate evidence lost')
-need(len(list((ROOT/'tools').glob('check_*.py'))) == 234,
+need(len(list((ROOT/'tools').glob('check_*.py'))) >= 234,
      'expected 234 static checkers')
 print('P0363 quest-offer stock diagnostic seam: PASS (STATIC; WoW UNVERIFIED)')

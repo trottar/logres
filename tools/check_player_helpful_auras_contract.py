@@ -61,6 +61,8 @@ for fragment in (
     "function HelpfulAuras:RenderSnapshot(snapshot, reason)",
     "function HelpfulAuras:SetPreviewEnabled(enabled)",
     "function HelpfulAuras:GetDebugStatus()",
+    "function HelpfulAuras:RunDevHelpfulAuraCheck(emit)",
+    '"Logres helpfulauracheck: %s',
     'eventFrame:SetScript("OnEvent", function(_, event)',
     "UNIT_AURA update payload arguments are deliberately discarded",
 ):
@@ -183,8 +185,8 @@ for fragment in (
 
 for fragment in (
     "local function runPlayerHelpfulAuraCheck()",
+    'Logres:GetModule("PlayerHelpfulAuras"):RunDevHelpfulAuraCheck(emit)',
     "local function runPlayerHelpfulAuraPreview(argument)",
-    '"Logres helpfulauracheck: %s',
     '"Logres helpfulaurapreview: %s',
     'if command == "helpfulauracheck" then',
     'if command == "helpfulaurapreview" then',
