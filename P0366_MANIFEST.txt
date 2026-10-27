@@ -1,0 +1,17 @@
+P0366 QUEST INTERACTION PROBE MANUAL DIAGNOSTIC OWNERSHIP SEAM
+Source GitHub main: 79e73cd0f5d8779f5bc5e7e373e18b8880847cd4
+Candidate: 0.0.254-dev -> 0.0.255-dev (TOC and Bootstrap)
+PREWRITE shadow: 237/237 STATIC PASS
+POSTWRITE: 237/237 STATIC PASS
+git diff --check: PASS
+Addon Lua load entries: 94
+Developer panel registrations: 120 (38 previews)
+Saved-settings schema: 3, unchanged
+WoW runtime: UNVERIFIED / DEFERRED (client unavailable)
+P0321 GossipFrame stock restoration: FIRST contingent client safety gate
+L-022/L-027/L-028 OPEN; L-019 public release BLOCKED; L-031 deferred
+P0354 R0/R1/R2, P0355 R0/R1, P0358 R0, P0361 R0, P0364 R0 and P0365 R0 negative evidence preserved
+P0365 R0 PREWRITE STATIC 202/236 REFUSED (generic shared-local checker false positive); R1 corrected
+P0366 R0 PREWRITE STATIC 27/237 REFUSED (exact checker version pin); R1 dynamic version-policy correction
+Original 51-line manual capture and PASS/FAIL detail report preserved except method declaration
+Tracked source/memory/checkers guarded: 13; new files: 3

@@ -11,15 +11,15 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Current Work Item
 
-**P0365 — AuraStatusProbe diagnostic ownership; WoW UNVERIFIED.** Verified pushed P0364 R1 main `c7d23cf671fbe44e6e5ed129c4d9dd1ea4a36cc1`, 235/235 STATIC. Move original manual aurastatusprobe report to preloaded HUD/AuraStatusProbe; Commands routes kept; checkall remains excluded. Candidate `0.0.254-dev`, #236, Lua94/actions120/previews38, schema3/D-048/camera unchanged. P0321 FIRST client gate; L-022/L-027/L-028 OPEN; L-019 BLOCKED.
+**P0366 — QuestInteractionProbe manual diagnostic; WoW UNVERIFIED.** Verified pushed P0365 R1 `79e73cd0f5d8779f5bc5e7e373e18b8880847cd4`, 236/236 STATIC; R0 202/236 REFUSED. Move manual questinteractionprobe to Quest/InteractionProbe; Commands routing and checkall exclusion unchanged. `0.0.255-dev`, #237, Lua94/actions120/previews38, schema3/D-048/camera unchanged. P0321 first gate; L-022/L-027/L-028 OPEN; L-019 BLOCKED.
 
 ## Verified State
 
-- Verified pushed P0364 R1 `c7d23cf671fbe44e6e5ed129c4d9dd1ea4a36cc1` 235/235 PRE/POST STATIC; R0 PREWRITE 201/235 REFUSED, checker scope corrected; P0363 234/234, P0362 233/233, P0361 R1 232/232, P0360 231/231, P0359 230/230, P0358 R1 229/229, P0357 228/228 and P0356 227/227. WoW UNVERIFIED.
-- P0352 main `61f0f49c2cf990168c1415dd2100a0f286627a91` 223/223 STATIC, `0.0.241-dev`; WoW UNVERIFIED.
+- Verified pushed P0365 R1 `79e73cd0f5d8779f5bc5e7e373e18b8880847cd4` 236/236 STATIC; R0 202/236 REFUSED; P0364 R1 235/235 (R0 201/235 REFUSED); P0363 234/234, P0362 233/233, P0361 R1 232/232, P0360 231/231, P0359 230/230, P0358 R1 229/229, P0357 228/228, P0356 227/227. WoW UNVERIFIED.
+- P0352 `61f0f49c2cf990168c1415dd2100a0f286627a91` 223/223 STATIC; WoW UNVERIFIED.
 - P0351 `e8b71bc59a04f3077925bb24f0d6850a71340841` 222/222 STATIC; WoW UNVERIFIED.
 - P0350 `fd2d2676ffb41d509143b398b61b8474ecacf53d` 221/221 STATIC; WoW UNVERIFIED.
-- P0349 R1 `4e59c8f2f03daf30b630fb15e3e14d5f38cc8da6` 220/220 STATIC; R0 PREWRITE REFUSED, WoW UNVERIFIED.
+- P0349 R1 `4e59c8f2f03daf30b630fb15e3e14d5f38cc8da6` 220/220 STATIC; R0 REFUSED, WoW UNVERIFIED.
 - P0348 `4b7481d731d5f90e214b285bc7cce16ec826176f` 219/219 STATIC, `0.0.237-dev`; D-048 ownership model OFFLINE ONLY.
 - P0347 R1 `b94beb4706005757497002927d80845d5355037f` 218/218 STATIC; R0 PREWRITE REFUSED, WoW UNVERIFIED.
 - P0347 R0 PREWRITE shadow REFUSED 1/218: P0346 historic exact 217-checker assertion rejected the new #218; no tracked writes. R1 migrates that assertion to a 217-checker floor, retains inventory checks and requires 218/218 static contracts.
@@ -38,16 +38,17 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Next Action
 
-P0365: require 236/236 PREWRITE/POSTWRITE STATIC and `git diff --check`, then user pushes. WoW remains DEFERRED; P0321 first contingent client gate.
+P0366: require 237/237 PRE/POST STATIC and `git diff --check`, then verify push. No WoW deployment. P0321 first client gate.
 
 ## Success Criteria
 
-AuraStatusProbe manual capture and detailed PASS/FAIL output unchanged; secret-first sampling and native fallback intact; checkall excludes manual probe; slash/panel route unchanged. Lua94, actions120/previews38, schema3; WoW UNVERIFIED.
+Manual capture and PASS/FAIL detail unchanged; no native quest actions or secret inspection; checkall excludes probe; slash/panel intact; Lua94, actions120/previews38, schema3. WoW UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/evidence/P0366_QUEST_INTERACTION_PROBE_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0366_QUEST_INTERACTION_PROBE_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0365_AURA_STATUS_PROBE_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0365_AURA_STATUS_PROBE_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0364_PLAYER_HELPFUL_AURA_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0364_PLAYER_HELPFUL_AURA_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0363_QUEST_OFFER_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0363_QUEST_OFFER_DIAGNOSTIC_SEAM.md`

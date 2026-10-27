@@ -82,6 +82,11 @@ for fragment in (
     'C_GossipInfo.SelectOptionByIndex',
     'self.mutationCallCount = 0',
     'function Probe:CaptureManual()',
+    'function Probe:RunDevQuestInteractionProbe(emit)',
+    'Logres:GetModuleStatus("QuestInteractionProbe")',
+    'Logres:GetModule("QuestInteractionProbe")',
+    '"Logres questinteractionprobe: %s (capture=%s',
+    'local lines = probe:GetDiagnosticLines()',
     'function Probe:GetDiagnosticLines()',
     'MAX_ROWS = 4',
 ):
@@ -181,8 +186,7 @@ for secret_fragment, later_fragment, label in (
 
 for fragment in (
     "local function runQuestInteractionProbe()",
-    'Logres:GetModuleStatus("QuestInteractionProbe")',
-    'Logres:GetModule("QuestInteractionProbe")',
+    'Logres:GetModule("QuestInteractionProbe"):RunDevQuestInteractionProbe(emit)',
     'if command == "questinteractionprobe" then',
     'emit("  /logres questinteractionprobe")',
     '"questInteractionProbe"',

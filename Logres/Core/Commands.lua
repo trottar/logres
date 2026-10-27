@@ -2080,54 +2080,7 @@ function Logres:RunQuestNarrativePreview(mode)
 end
 
 local function runQuestInteractionProbe()
-    local status =
-        Logres:GetModuleStatus("QuestInteractionProbe")
-    local probe =
-        Logres:GetModule("QuestInteractionProbe")
-
-    local captureOK, captureState =
-        probe:CaptureManual()
-    local debugStatus =
-        probe:GetDebugStatus()
-
-    local passed =
-        captureOK == true
-        and status.initialized == true
-        and status.enabled == true
-        and debugStatus.moduleEnabled == true
-        and debugStatus.eventFrameReady == true
-        and debugStatus.gossipShowRegistered == true
-        and debugStatus.gossipClosedRegistered == true
-        and debugStatus.questDetailRegistered == true
-        and debugStatus.questProgressRegistered == true
-        and debugStatus.questCompleteRegistered == true
-        and debugStatus.questFinishedRegistered == true
-        and debugStatus.mutationCallCount == 0
-
-    emit(string.format(
-        "Logres questinteractionprobe: %s (capture=%s state=%s captures=%s manual=%s lastEvent=%s lastCapture=%s observed=gossip:%s detail:%s progress:%s complete:%s invoked=%s)",
-        passed and "PASS" or "FAIL",
-        tostring(captureOK),
-        tostring(captureState),
-        tostring(debugStatus.captureCount),
-        tostring(debugStatus.manualCount),
-        tostring(debugStatus.lastEvent),
-        tostring(debugStatus.lastCaptureReason),
-        tostring(debugStatus.gossipObserved),
-        tostring(debugStatus.detailObserved),
-        tostring(debugStatus.progressObserved),
-        tostring(debugStatus.completeObserved),
-        tostring(debugStatus.mutationCallCount)
-    ))
-
-    local lines = probe:GetDiagnosticLines()
-
-    for index = 1, #lines do
-        emit(
-            "Logres questinteractionprobe: "
-            .. tostring(lines[index])
-        )
-    end
+    Logres:GetModule("QuestInteractionProbe"):RunDevQuestInteractionProbe(emit)
 end
 
 local function runAuraStatusProbe()
