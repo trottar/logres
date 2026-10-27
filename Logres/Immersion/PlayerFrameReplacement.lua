@@ -596,3 +596,124 @@ function PlayerFrameReplacement:GetDebugStatus()
         partyFramesSuppressedByLogres = false,
     }
 end
+
+-- P0359: read-only D-026 PlayerFrame structural diagnostic.
+function PlayerFrameReplacement:RunDevPlayerFrameCheck(emit, boolText)
+    local status =
+        Logres:GetModuleStatus("PlayerFrameReplacement")
+    local replacement =
+        Logres:GetModule("PlayerFrameReplacement")
+    local debugStatus =
+        replacement:GetDebugStatus()
+
+    local expected =
+        Logres:GetPreference("immersionEnabled") == true
+
+    local stateMatches =
+        debugStatus.requestedEnabled == expected
+        and (
+            debugStatus.appliedEnabled == expected
+            or (
+                debugStatus.pending
+                and InCombatLockdown()
+            )
+        )
+
+    local presentationMatches = true
+
+    if not debugStatus.pending and expected then
+        presentationMatches =
+            debugStatus.playerFrameFound == true
+            and debugStatus.containerFound == true
+            and debugStatus.contentMainFound == true
+            and debugStatus.containerAlpha == 0
+            and debugStatus.contentMainAlpha == 0
+            and debugStatus.playerFrameMouseEnabled == false
+            and debugStatus.interactionReady == true
+            and debugStatus.interactionConfigured == true
+            and debugStatus.interactionMouseOwnedByLogres == true
+            and debugStatus.interactionUnit == "player"
+            and debugStatus.interactionLeftType == "target"
+            and debugStatus.interactionRightType == "togglemenu"
+            and debugStatus.snapshotReady == true
+    elseif not debugStatus.pending then
+        presentationMatches =
+            debugStatus.appliedEnabled == false
+            and debugStatus.snapshotReady == false
+            and debugStatus.interactionMouseOwnedByLogres == false
+            and debugStatus.stockPresentationSuppressed == false
+            and debugStatus.stockMouseSuppressed == false
+    end
+
+    local preservationSafe =
+        debugStatus.wholePlayerFrameSuppressedByLogres == false
+        and debugStatus.directPlayerChildrenSuppressedByLogres == false
+        and debugStatus.targetFrameSuppressedByLogres == false
+        and debugStatus.partyFramesSuppressedByLogres == false
+
+    local passed =
+        status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and stateMatches
+        and presentationMatches
+        and preservationSafe
+        and debugStatus.lastError == nil
+
+    if passed then
+        emit(string.format(
+            "Logres playerframecheck: PASS (expected=%s applied=%s pending=%s frame=%s container=%s main=%s alpha=%s/%s stockMouse=%s interactionConfigured=%s mouseOwned=%s unit=%s types=%s/%s wholeFrame=false directChildren=false target=false party=false reason=%s)",
+            boolText(expected),
+            boolText(debugStatus.appliedEnabled),
+            boolText(debugStatus.pending),
+            boolText(debugStatus.playerFrameFound),
+            boolText(debugStatus.containerFound),
+            boolText(debugStatus.contentMainFound),
+            tostring(debugStatus.containerAlpha),
+            tostring(debugStatus.contentMainAlpha),
+            tostring(debugStatus.playerFrameMouseEnabled),
+            boolText(debugStatus.interactionConfigured),
+            boolText(debugStatus.interactionMouseOwnedByLogres),
+            tostring(debugStatus.interactionUnit),
+            tostring(debugStatus.interactionLeftType),
+            tostring(debugStatus.interactionRightType),
+            tostring(debugStatus.lastReason)
+        ))
+        return
+    end
+
+    emit(string.format(
+        "Logres playerframecheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s expected=%s requested=%s applied=%s pending=%s stateMatches=%s presentationMatches=%s preservationSafe=%s frame=%s container=%s main=%s alpha=%s/%s stockMouse=%s click=%s motion=%s interactionReady=%s configured=%s mouseOwned=%s unit=%s types=%s/%s snapshot=%s wholeFrame=%s directChildren=%s target=%s party=%s reason=%s error=%s)",
+        tostring(status.initialized),
+        tostring(status.enabled),
+        tostring(debugStatus.moduleEnabled),
+        tostring(expected),
+        tostring(debugStatus.requestedEnabled),
+        tostring(debugStatus.appliedEnabled),
+        tostring(debugStatus.pending),
+        tostring(stateMatches),
+        tostring(presentationMatches),
+        tostring(preservationSafe),
+        tostring(debugStatus.playerFrameFound),
+        tostring(debugStatus.containerFound),
+        tostring(debugStatus.contentMainFound),
+        tostring(debugStatus.containerAlpha),
+        tostring(debugStatus.contentMainAlpha),
+        tostring(debugStatus.playerFrameMouseEnabled),
+        tostring(debugStatus.playerFrameMouseClickEnabled),
+        tostring(debugStatus.playerFrameMouseMotionEnabled),
+        tostring(debugStatus.interactionReady),
+        tostring(debugStatus.interactionConfigured),
+        tostring(debugStatus.interactionMouseOwnedByLogres),
+        tostring(debugStatus.interactionUnit),
+        tostring(debugStatus.interactionLeftType),
+        tostring(debugStatus.interactionRightType),
+        tostring(debugStatus.snapshotReady),
+        tostring(debugStatus.wholePlayerFrameSuppressedByLogres),
+        tostring(debugStatus.directPlayerChildrenSuppressedByLogres),
+        tostring(debugStatus.targetFrameSuppressedByLogres),
+        tostring(debugStatus.partyFramesSuppressedByLogres),
+        tostring(debugStatus.lastReason),
+        tostring(debugStatus.lastError)
+    ))
+end

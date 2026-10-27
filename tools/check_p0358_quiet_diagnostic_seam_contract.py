@@ -107,6 +107,6 @@ for path in ('docs/memory/evidence/P0358_QUIET_DIAGNOSTIC_SEAM.md',
 need(all(x in H for x in ('P0354 R0','P0354 R1','P0354 R2',
                           'P0355 R0','P0355 R1','check_memory_health.py')),
      'refused-candidate history lost')
-need(len(list((R/'tools').glob('check_*.py')))==229,
+need(len(list((R/'tools').glob('check_*.py')))>=229,
      'expected 229 static checkers')
 print('P0358 Quiet Mode diagnostic seam: PASS (STATIC; WoW UNVERIFIED)')

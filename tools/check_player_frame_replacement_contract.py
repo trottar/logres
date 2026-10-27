@@ -37,6 +37,7 @@ if PLAYER.is_file():
         "function PlayerFrameReplacement:RequestEnabled(",
         "function PlayerFrameReplacement:GetRecoveryStatus()",
         "function PlayerFrameReplacement:GetDebugStatus()",
+        "function PlayerFrameReplacement:RunDevPlayerFrameCheck(emit, boolText)",
         "self.interactionConfigured",
         "self.interactionMouseOwnedByLogres",
         "self.stockPresentationSuppressed",
@@ -96,6 +97,7 @@ if COMMANDS.is_file():
 
     for fragment in (
         "local function runPlayerFrameCheck()",
+        'Logres:GetModule("PlayerFrameReplacement"):RunDevPlayerFrameCheck(emit, boolText)',
         'if command == "playerframecheck" then',
         '"Player Frame Check"',
         "runPlayerFrameCheck()",

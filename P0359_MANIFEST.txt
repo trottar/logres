@@ -1,0 +1,14 @@
+P0359 D-026 PLAYER FRAME DIAGNOSTIC OWNERSHIP SEAM
+Source baseline: 542ee03612bfcec299274dcecba5ed43b1302ad8
+Patch: 0.0.247-dev -> 0.0.248-dev (TOC and Bootstrap)
+PREWRITE shadow: 230/230 STATIC PASS
+POSTWRITE: 230/230 STATIC PASS
+git diff --check: PASS
+Addon Lua load entries: 94
+Developer panel registrations: 120 (38 P previews)
+WoW runtime: UNVERIFIED / DEFERRED (client unavailable)
+Native P0321 GossipFrame restoration: FIRST CONTINGENT CLIENT GATE
+L-022/L-027/L-028 OPEN; L-019 public release BLOCKED
+Tracked files affected: 13; new checker/evidence files: 3
+P0354 R0/R1/R2, P0355 R0/R1 and P0358 R0 refusals retained
+P0359: original D-026 diagnostic report preserved except declaration
