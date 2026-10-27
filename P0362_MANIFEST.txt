@@ -1,0 +1,15 @@
+P0362 STOCK ACTION REPLACEMENT READ-ONLY DIAGNOSTIC OWNERSHIP SEAM
+Source GitHub main: c5aa34c12939aaedefaf9a9bf86ad0536ca88936
+Candidate: 0.0.250-dev -> 0.0.251-dev (TOC and Bootstrap)
+PREWRITE shadow: 233/233 STATIC PASS
+POSTWRITE: 233/233 STATIC PASS
+git diff --check: PASS
+Addon Lua load entries: 94
+Developer panel registrations: 120 (38 previews)
+Saved-settings schema: 3, unchanged
+WoW runtime: UNVERIFIED / DEFERRED (client unavailable)
+P0321 GossipFrame stock restoration: FIRST contingent client safety gate
+L-022/L-027/L-028 OPEN; L-019 public release BLOCKED; L-031 deferred
+P0354 R0/R1/R2, P0355 R0/R1, P0358 R0, P0361 R0 refusals preserved
+Original stock replacement read-only diagnostic preserved except declaration
+Tracked source/memory/checkers modified: 13; new files: 3

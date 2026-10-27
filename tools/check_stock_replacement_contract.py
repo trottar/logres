@@ -45,6 +45,11 @@ if REPLACEMENT.is_file():
         "function StockReplacement:GetDebugStatus()",
         "mainActionBarSuppressed = false",
         "unsupportedBarsSuppressed = false",
+        "function StockReplacement:RunDevStockReplacementCheck(emit, boolText)",
+        "local lifecycleConsistent =",
+        "debugStatus.lastError == nil",
+        "debugStatus.snapshotReady == expectedEnabled",
+        "Logres stockreplacecheck startup: deferrals=%s retries=%s lastEvent=%s",
     ]
 
     for fragment in required:
@@ -83,10 +88,7 @@ if COMMANDS.is_file():
         'replacement owns this routing domain. Turn Stock Bars "',
         '"Replace OFF first."',
         "runStockReplacementCheck()",
-        "local lifecycleConsistent =",
-        "debugStatus.lastError == nil",
-        "debugStatus.snapshotReady == expectedEnabled",
-        "Logres stockreplacecheck startup: deferrals=%s retries=%s lastEvent=%s",
+        'Logres:GetModule("StockActionReplacement"):RunDevStockReplacementCheck(emit, boolText)',
     ]
 
     for fragment in required:

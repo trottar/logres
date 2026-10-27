@@ -510,3 +510,130 @@ function StockReplacement:GetDebugStatus()
         unsupportedBarsSuppressed = false,
     }
 end
+
+function StockReplacement:RunDevStockReplacementCheck(emit, boolText)
+    local status =
+        Logres:GetModuleStatus("StockActionReplacement")
+    local replacement =
+        Logres:GetModule("StockActionReplacement")
+    local debugStatus = replacement:GetDebugStatus()
+
+    local expectedEnabled =
+        Logres:GetPreference("immersionEnabled") == true
+    local lifecycleConsistent =
+        debugStatus.requestedEnabled == expectedEnabled
+        and debugStatus.appliedEnabled == expectedEnabled
+        and debugStatus.pending == false
+        and debugStatus.lastError == nil
+        and debugStatus.snapshotReady == expectedEnabled
+
+    local appliedConsistent = true
+
+    if debugStatus.appliedEnabled then
+        appliedConsistent =
+            debugStatus.snapshotReady == true
+            and debugStatus.secondaryAlpha == 0
+            and debugStatus.utilityAlpha == 0
+            and debugStatus.secondaryFrameMouseEnabled == false
+            and debugStatus.utilityFrameMouseEnabled == false
+            and debugStatus.secondaryButtonMouseEnabledCount == 0
+            and debugStatus.utilityButtonMouseEnabledCount == 0
+            and debugStatus.secondaryRoutingEnabled == true
+            and debugStatus.secondaryBindingsApplied == true
+            and debugStatus.utilityRoutingEnabled == true
+            and debugStatus.utilityBindingsApplied == true
+            and debugStatus.bar4Alpha == 0
+            and debugStatus.bar5Alpha == 0
+            and debugStatus.bar4FrameMouseEnabled == false
+            and debugStatus.bar5FrameMouseEnabled == false
+            and debugStatus.bar4ButtonMouseEnabledCount == 0
+            and debugStatus.bar5ButtonMouseEnabledCount == 0
+            and debugStatus.bar4RoutingEnabled == true
+            and debugStatus.bar4BindingsApplied == true
+            and debugStatus.bar5RoutingEnabled == true
+            and debugStatus.bar5BindingsApplied == true
+    end
+
+    local passed =
+        status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and debugStatus.secondaryFrameFound == true
+        and debugStatus.utilityFrameFound == true
+        and debugStatus.bar4FrameFound == true
+        and debugStatus.bar5FrameFound == true
+        and debugStatus.mainActionBarSuppressed == false
+        and debugStatus.unsupportedBarsSuppressed == false
+        and lifecycleConsistent
+        and appliedConsistent
+
+    if passed then
+        emit(string.format(
+            "Logres stockreplacecheck: PASS (expected=%s requested=%s applied=%s pending=%s bar2Alpha=%s bar2Mouse=%s/%s bar3Alpha=%s bar3Mouse=%s/%s secondaryRouting=%s/%s utilityRouting=%s/%s error=%s)",
+            boolText(expectedEnabled),
+            boolText(debugStatus.requestedEnabled),
+            boolText(debugStatus.appliedEnabled),
+            boolText(debugStatus.pending),
+            tostring(debugStatus.secondaryAlpha),
+            boolText(debugStatus.secondaryFrameMouseEnabled),
+            tostring(debugStatus.secondaryButtonMouseEnabledCount),
+            tostring(debugStatus.utilityAlpha),
+            boolText(debugStatus.utilityFrameMouseEnabled),
+            tostring(debugStatus.utilityButtonMouseEnabledCount),
+            boolText(debugStatus.secondaryRoutingEnabled),
+            boolText(debugStatus.secondaryBindingsApplied),
+            boolText(debugStatus.utilityRoutingEnabled),
+            boolText(debugStatus.utilityBindingsApplied),
+            tostring(debugStatus.lastError)
+        ))
+        emit(string.format(
+            "Logres stockreplacecheck extras: bar4 alpha=%s mouse=%s/%s route=%s/%s bar5 alpha=%s mouse=%s/%s route=%s/%s",
+            tostring(debugStatus.bar4Alpha),
+            boolText(debugStatus.bar4FrameMouseEnabled),
+            tostring(debugStatus.bar4ButtonMouseEnabledCount),
+            boolText(debugStatus.bar4RoutingEnabled),
+            boolText(debugStatus.bar4BindingsApplied),
+            tostring(debugStatus.bar5Alpha),
+            boolText(debugStatus.bar5FrameMouseEnabled),
+            tostring(debugStatus.bar5ButtonMouseEnabledCount),
+            boolText(debugStatus.bar5RoutingEnabled),
+            boolText(debugStatus.bar5BindingsApplied)
+        ))
+        emit(string.format(
+            "Logres stockreplacecheck startup: deferrals=%s retries=%s lastEvent=%s",
+            tostring(debugStatus.sourceDeferrals),
+            tostring(debugStatus.retryCount),
+            tostring(debugStatus.lastRetryEvent)
+        ))
+        return
+    end
+
+    emit(string.format(
+        "Logres stockreplacecheck: FAIL (initialized=%s enabled=%s expected=%s requested=%s applied=%s pending=%s frames=%s/%s alphas=%s/%s frameMouse=%s/%s buttonMouse=%s/%s routing=%s/%s/%s/%s error=%s)",
+        tostring(status.initialized),
+        tostring(status.enabled),
+        tostring(expectedEnabled),
+        tostring(debugStatus.requestedEnabled),
+        tostring(debugStatus.appliedEnabled),
+        tostring(debugStatus.pending),
+        tostring(debugStatus.secondaryFrameFound),
+        tostring(debugStatus.utilityFrameFound),
+        tostring(debugStatus.secondaryAlpha),
+        tostring(debugStatus.utilityAlpha),
+        tostring(debugStatus.secondaryFrameMouseEnabled),
+        tostring(debugStatus.utilityFrameMouseEnabled),
+        tostring(debugStatus.secondaryButtonMouseEnabledCount),
+        tostring(debugStatus.utilityButtonMouseEnabledCount),
+        tostring(debugStatus.secondaryRoutingEnabled),
+        tostring(debugStatus.secondaryBindingsApplied),
+        tostring(debugStatus.utilityRoutingEnabled),
+        tostring(debugStatus.utilityBindingsApplied),
+        tostring(debugStatus.lastError)
+    ))
+    emit(string.format(
+        "Logres stockreplacecheck startup: deferrals=%s retries=%s lastEvent=%s",
+        tostring(debugStatus.sourceDeferrals),
+        tostring(debugStatus.retryCount),
+        tostring(debugStatus.lastRetryEvent)
+    ))
+end

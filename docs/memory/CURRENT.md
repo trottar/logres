@@ -11,12 +11,12 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Current Work Item
 
-**P0361 — ImmersionController read-only diagnostic ownership; WoW UNVERIFIED.** Verified pushed P0360 main `8963fb1d5ffc32d71291292e9e1192e16b68cf3b` 231/231 STATIC. Move unchanged `runImmersionCheck` status report to preloaded Controller; Commands remains dispatcher. Candidate `0.0.250-dev`, #232, Lua94/actions120/previews38, schema3/D-048/camera unchanged. P0321 FIRST client gate; L-022/L-027/L-028 OPEN; L-019 BLOCKED.
+**P0362 — StockActionReplacement read-only diagnostic ownership; WoW UNVERIFIED.** Verified pushed P0361 R1 main `c5aa34c12939aaedefaf9a9bf86ad0536ca88936`, 232/232 STATIC. Extract stockreplacecheck report to preloaded Actions/StockReplacement; Commands routes unchanged. Candidate `0.0.251-dev`, #233, Lua94/actions120/previews38, schema3/D-048/camera unchanged. P0321 FIRST client gate; L-022/L-027/L-028 OPEN; L-019 BLOCKED.
 
 ## Verified State
 
-- Verified pushed P0360 `8963fb1d5ffc32d71291292e9e1192e16b68cf3b` 231/231 PRE/POST STATIC; P0359 230/230, P0358 R1 229/229, P0357 228/228 and P0356 227/227. WoW UNVERIFIED; historical PREWRITE refusals retained.
-- Verified pushed P0352 `61f0f49c2cf990168c1415dd2100a0f286627a91`: 223/223 PREWRITE/POSTWRITE STATIC, `0.0.241-dev`; WoW UNVERIFIED.
+- Verified pushed P0361 R1 `c5aa34c12939aaedefaf9a9bf86ad0536ca88936` 232/232 PRE/POST STATIC, P0360 231/231, P0359 230/230, P0358 R1 229/229, P0357 228/228 and P0356 227/227. WoW UNVERIFIED; earlier PREWRITE/handoff refusals retained.
+- P0352 main `61f0f49c2cf990168c1415dd2100a0f286627a91` 223/223 STATIC, `0.0.241-dev`; WoW UNVERIFIED.
 - Verified pushed P0351 `e8b71bc59a04f3077925bb24f0d6850a71340841`: 222/222 PRE/POST STATIC, `0.0.240-dev`; WoW UNVERIFIED.
 - Verified pushed P0350 `fd2d2676ffb41d509143b398b61b8474ecacf53d`: 221/221 PRE/POST STATIC, `0.0.239-dev`; WoW UNVERIFIED.
 - Verified pushed P0349 R1 `4e59c8f2f03daf30b630fb15e3e14d5f38cc8da6`: 220/220 PRE/POST STATIC, `0.0.238-dev`; R0 2/220 PREWRITE refusal remains recorded, WoW UNVERIFIED.
@@ -28,7 +28,7 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 - P0344 main `e44f66ba0838045ad6d44f1afe3e4afdb4a473ec`: 215/215 STATIC, native popup owner L-027 UNVERIFIED.
 - P0343 R1 `ef4d96040fa15c0fc1a49766b1e0efcec6fe1cb1` 214/214 STATIC; R0 REFUSED before writes, L-022 OPEN.
 - P0342 R2 `be3be5e80cf65cf1bf6d261b84b573f1f1effca2` 213/213 STATIC; R0/R1 PREWRITE REFUSED; L-028 OPEN.
-- Verified pushed GitHub main P0341 R1 `fb3b2658985e7f6d05f7730a3de6eb7b7dca6ad9` on 2026-10-25/26 UTC. P0341 manifest 212/212 PREWRITE/POSTWRITE static PASS; WoW UNVERIFIED. Its R0 historical-version checker failure caused zero tracked writes and is retained in evidence.
+- P0341 R1 `fb3b2658985e7f6d05f7730a3de6eb7b7dca6ad9` 212/212 STATIC; R0 historical-version checker REFUSED before writes; WoW UNVERIFIED.
 - P0340 `27fb9eb` 211/211 static PASS; P0339 `8a5d3f86` 210/210 static PASS. Source-only internal packaging and November 4 matrix do not establish in-client behavior.
 - P0338 R1 `342cab97` 209/209; P0337 R1 `cfdc07af` 208/208. Historical PREWRITE failures, narrow remedies and deferred L-031 focused-yard/quest-giver validation remain in their evidence files.
 - P0336 `d535906` 207/207; P0335 `ffdbbca` 206/206; P0334 R3 `1b7b1ff` 205/205; P0333 `68c0955` 204/204; P0332 `cbc2015` 203/203; P0331 `dce2355` 202/202; P0330 `1f48bbe` 201/201; P0329 `126d165` 200/200. All counts are pushed static manifests, not client PASS. P0332 targets only ordinary aura fallback; the native AuraContainer remains a separate owner.
@@ -38,16 +38,17 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Next Action
 
-P0361: require 232/232 PREWRITE/POSTWRITE STATIC and `git diff --check`; user verifies push. No WoW deployment required. P0321 FIRST contingent client gate.
+P0362: require 233/233 PREWRITE/POSTWRITE STATIC and `git diff --check`; user verifies push. No WoW deployment required. P0321 FIRST contingent client gate.
 
 ## Success Criteria
 
-Immersion PASS/FAIL, combat-pending tolerance, four module-owned desired/requested/applied states, party/primary stock safeguards, Run All/slash/panel unchanged; Lua94, actions120/previews38, schema3. WoW UNVERIFIED.
+Stock replace PASS/FAIL, Bar 2-5 protected ownership and stock fallback, recovery report, Run All/slash/panel unchanged; Lua94, actions120/previews38, schema3. WoW UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/evidence/P0362_STOCK_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0362_STOCK_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0361_IMMERSION_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0361_IMMERSION_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0360_TARGET_FRAME_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0360_TARGET_FRAME_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0356_XP_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0356_XP_DIAGNOSTIC_SEAM.md`

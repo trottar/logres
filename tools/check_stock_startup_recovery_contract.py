@@ -91,8 +91,9 @@ if SIDE.is_file():
 
 if COMMANDS.is_file():
     s=COMMANDS.read_text(encoding='utf-8')
-    check=scope(s,'local function runStockReplacementCheck()',
-                'local function handleStockReplacement(argument)','StockReplaceCheck')
+    check=scope(STOCK.read_text(encoding='utf-8'),
+                'function StockReplacement:RunDevStockReplacementCheck(emit, boolText)',
+                '\nend\n','StockReplaceCheck')
     for fragment in (
         'local expectedEnabled =',
         'Logres:GetPreference("immersionEnabled") == true',
