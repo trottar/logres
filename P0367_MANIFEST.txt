@@ -1,0 +1,15 @@
+P0367 WORLD TARGET PROBE MANUAL DIAGNOSTIC OWNERSHIP SEAM
+Source GitHub main: 02fee2101b1fd6aef0dd4fae60a94d5e822679ec
+Candidate: 0.0.255-dev -> 0.0.256-dev (TOC and Bootstrap)
+PREWRITE shadow: 238/238 STATIC PASS
+POSTWRITE: 238/238 STATIC PASS
+git diff --check: PASS
+Addon Lua load entries: 94
+Developer panel registrations: 120 (38 previews)
+Saved-settings schema: 3, unchanged
+WoW runtime: UNVERIFIED / DEFERRED (client unavailable)
+P0321 GossipFrame stock restoration: FIRST contingent client safety gate
+L-022/L-027/L-028 OPEN; L-019 public release BLOCKED; L-031 deferred
+P0364 R0 201/235, P0365 R0 202/236, P0366 R0 27/237 PREWRITE refusals preserved
+Original 73-line manual capture and PASS/FAIL detail report preserved except declaration
+Tracked guarded files: 13; new files: 3

@@ -56,6 +56,11 @@ required_probe = (
     "function Probe:CaptureManual()",
     "function Probe:GetDiagnosticLines()",
     "function Probe:GetDebugStatus()",
+    "function Probe:RunDevWorldTargetProbe(emit)",
+    'Logres:GetModuleStatus("WorldTargetProbe")',
+    'Logres:GetModule("WorldTargetProbe")',
+    '"Logres worldtargetprobe: %s (capture=%s',
+    'local lines = probe:GetDiagnosticLines()',
     'eventFrame:SetScript("OnEvent", function(_, event)',
 )
 
@@ -189,8 +194,7 @@ for api in (
 
 for fragment in (
     "local function runWorldTargetProbe()",
-    'Logres:GetModuleStatus("WorldTargetProbe")',
-    'Logres:GetModule("WorldTargetProbe")',
+    'Logres:GetModule("WorldTargetProbe"):RunDevWorldTargetProbe(emit)',
     'if command == "worldtargetprobe" then',
     'emit("  /logres worldtargetprobe")',
     '"worldTargetProbe"',

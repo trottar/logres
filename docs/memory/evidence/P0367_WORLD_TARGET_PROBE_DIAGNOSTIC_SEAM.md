@@ -1,0 +1,15 @@
+# P0367 — WorldTargetProbe manual diagnostic module owner
+
+## Verified baseline and narrow observation
+
+Verified pushed P0366 R1 GitHub `main` `02fee2101b1fd6aef0dd4fae60a94d5e822679ec`, with 237/237 PREWRITE and POSTWRITE STATIC in committed P0366 manifest; `0.0.255-dev`. P0366 R0 PREWRITE STATIC 27/237 REFUSED from forbidden hard-coded dev-version checker; P0365 R0 202/236 REFUSED and P0364 R0 201/235 REFUSED were over-broad checker false positives. Those failures remain evidence, not WoW results.
+
+`Core/Commands.lua` implements a 73-line `runWorldTargetProbe()` report that calls `WorldTargetProbe:CaptureManual()` once, then observes addon-owned diagnostic state for events, source capabilities, fallback, reaction and attachment. It emits the existing one-line PASS/FAIL and ordered detailed lines. The preloaded `HUD/WorldTargetProbe.lua` owns the capture and diagnostic sources, including `includeForbidden=false`, combat-safe SetPoint/clear test and secret-first scalar checks. Manual capture is not a no-op and the contextual probe must not enter checkall. This is not authorization to inspect secret-capable native frame state directly.
+
+## P0367 static-only extraction
+
+Move the original 73-line function body unchanged except declaration into `Probe:RunDevWorldTargetProbe(emit)` in preloaded HUD/WorldTargetProbe; keep exact Commands forwarding wrapper, `/logres worldtargetprobe`, Phase H developer-panel action and Run All exclusion. Do not change existing native nameplate anchor handling, combat checks, fallback, reaction categorization, UI mutation, protected secret handling, timers, hooks or event ownership. P0140 historical checker moves only report location assertions to the module and requires the forwarding wrapper, retaining ALL underlying native/secret/no-polling guards. P0366 static checker migrates its exact 237-checker ceiling to >=237, preserving R0 evidence; new checker #238 covers unique report markers, exact wrapper, capture once, routing, historical protections, memory budgets and version parity without an exact version literal. Candidate version `0.0.256-dev`, Lua94, panel actions120 (previews38), saved schema3; D-046 preview, D-047 frozen camera and D-048 offline-only five-domain model unchanged.
+
+## Validation and negative evidence
+
+One-time applier verifies exact pushed P0366 main HEAD/branch/clean tracked state, 13 complete Git blob guards, unique anchors, payload inventory, memory budgets, identical report body, no new Lua TOC entry, and version parity before tracked writes. A full candidate shadow must pass 238/238 PREWRITE static checker suite plus diff hygiene; after source write the applier requires 238/238 POSTWRITE suite and `git diff --check`, with rollback on postwrite errors. No WSL suite result is claimed before execution. Zero client/runtime validation requested: WoW UNVERIFIED / DEFERRED. P0321 GossipFrame restoration remains FIRST contingent client safety gate. L-022/L-027/L-028 OPEN; L-019 public distribution BLOCKED; L-031 compass validation DEFERRED. Do not erase prior P0354/P0355/P0358/P0361 refused handoffs or P0364/P0365/P0366 R0 failures.

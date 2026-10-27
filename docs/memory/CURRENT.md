@@ -11,20 +11,20 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Current Work Item
 
-**P0366 — QuestInteractionProbe manual diagnostic; WoW UNVERIFIED.** Verified pushed P0365 R1 `79e73cd0f5d8779f5bc5e7e373e18b8880847cd4`, 236/236 STATIC; R0 202/236 REFUSED. Move manual questinteractionprobe to Quest/InteractionProbe; Commands routing and checkall exclusion unchanged. `0.0.255-dev`, #237, Lua94/actions120/previews38, schema3/D-048/camera unchanged. P0321 first gate; L-022/L-027/L-028 OPEN; L-019 BLOCKED.
+**P0367 — WorldTargetProbe diagnostic owner; WoW UNVERIFIED.** Verified pushed P0366 R1 `02fee2101b1fd6aef0dd4fae60a94d5e822679ec`, 237/237 STATIC; R0 27/237 REFUSED. Move manual worldtargetprobe report into preloaded HUD/WorldTargetProbe; Commands routes/checkall exclusion unchanged. Candidate `0.0.256-dev`, #238, Lua94/actions120/previews38, schema3/D-048/camera unchanged. P0321 FIRST client gate; L-022/L-027/L-028 OPEN; L-019 BLOCKED.
 
 ## Verified State
 
-- Verified pushed P0365 R1 `79e73cd0f5d8779f5bc5e7e373e18b8880847cd4` 236/236 STATIC; R0 202/236 REFUSED; P0364 R1 235/235 (R0 201/235 REFUSED); P0363 234/234, P0362 233/233, P0361 R1 232/232, P0360 231/231, P0359 230/230, P0358 R1 229/229, P0357 228/228, P0356 227/227. WoW UNVERIFIED.
-- P0352 `61f0f49c2cf990168c1415dd2100a0f286627a91` 223/223 STATIC; WoW UNVERIFIED.
+- Verified pushed P0366 R1 `02fee2101b1fd6aef0dd4fae60a94d5e822679ec` 237/237 STATIC; R0 27/237 REFUSED; P0365 R1 236/236 (R0 202/236 REFUSED), P0364 R1 235/235 (R0 201/235 REFUSED); P0363 234/234, P0362 233/233, P0361 R1 232/232, P0360 231/231, P0359 230/230, P0358 R1 229/229, P0357 228/228, P0356 227/227. WoW UNVERIFIED.
+- P0352 `61f0f49c2cf990168c1415dd2100a0f286627a91` 223/223 STATIC, WoW UNVERIFIED.
 - P0351 `e8b71bc59a04f3077925bb24f0d6850a71340841` 222/222 STATIC; WoW UNVERIFIED.
 - P0350 `fd2d2676ffb41d509143b398b61b8474ecacf53d` 221/221 STATIC; WoW UNVERIFIED.
 - P0349 R1 `4e59c8f2f03daf30b630fb15e3e14d5f38cc8da6` 220/220 STATIC; R0 REFUSED, WoW UNVERIFIED.
-- P0348 `4b7481d731d5f90e214b285bc7cce16ec826176f` 219/219 STATIC, `0.0.237-dev`; D-048 ownership model OFFLINE ONLY.
+- P0348 `4b7481d731d5f90e214b285bc7cce16ec826176f` 219/219 STATIC; D-048 model OFFLINE ONLY.
 - P0347 R1 `b94beb4706005757497002927d80845d5355037f` 218/218 STATIC; R0 PREWRITE REFUSED, WoW UNVERIFIED.
-- P0347 R0 PREWRITE shadow REFUSED 1/218: P0346 historic exact 217-checker assertion rejected the new #218; no tracked writes. R1 migrates that assertion to a 217-checker floor, retains inventory checks and requires 218/218 static contracts.
+- P0347 R0 PREWRITE REFUSED 1/218: P0346 exact 217-checker ceiling; R1 floor corrected, no tracked writes. Negative result preserved.
 - P0346 `26370095bd092d076868cd3d2e5e6a74f6b845d3` 217/217 PRE/POST STATIC; WoW UNVERIFIED.
-- P0345 main `626b22038d09e738bd3fa90684e3a95e36905d45`: 216/216 STATIC, target debuff client UNVERIFIED.
+- P0345 `626b220` 216/216 STATIC; target aura client UNVERIFIED.
 - P0344 main `e44f66ba0838045ad6d44f1afe3e4afdb4a473ec`: 215/215 STATIC, native popup owner L-027 UNVERIFIED.
 - P0343 R1 `ef4d96040fa15c0fc1a49766b1e0efcec6fe1cb1` 214/214 STATIC; R0 REFUSED before writes, L-022 OPEN.
 - P0342 R2 `be3be5e80cf65cf1bf6d261b84b573f1f1effca2` 213/213 STATIC; R0/R1 PREWRITE REFUSED; L-028 OPEN.
@@ -38,16 +38,17 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Next Action
 
-P0366: require 237/237 PRE/POST STATIC and `git diff --check`, then verify push. No WoW deployment. P0321 first client gate.
+P0367: require 238/238 PRE/POST STATIC and `git diff --check`; verify push. No WoW deployment. P0321 FIRST client gate.
 
 ## Success Criteria
 
-Manual capture and PASS/FAIL detail unchanged; no native quest actions or secret inspection; checkall excludes probe; slash/panel intact; Lua94, actions120/previews38, schema3. WoW UNVERIFIED.
+Original manual world-target capture, PASS/FAIL and detailed output; no native/secret change; checkall excludes probe, slash/panel retained, Lua94/actions120/previews38, schema3. WoW UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/evidence/P0367_WORLD_TARGET_PROBE_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0367_WORLD_TARGET_PROBE_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0366_QUEST_INTERACTION_PROBE_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0366_QUEST_INTERACTION_PROBE_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0365_AURA_STATUS_PROBE_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0365_AURA_STATUS_PROBE_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0364_PLAYER_HELPFUL_AURA_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0364_PLAYER_HELPFUL_AURA_DIAGNOSTIC_SEAM.md`
