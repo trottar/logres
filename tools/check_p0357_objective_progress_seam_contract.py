@@ -116,6 +116,6 @@ for path in ('docs/memory/evidence/P0357_OBJECTIVE_PROGRESS_SEAM.md',
 need(all(x in H for x in ('P0354 R0','P0354 R1','P0354 R2',
                           'P0355 R0','P0355 R1','check_memory_health.py')),
      'historical refused candidates erased')
-need(len(list((R/'tools').glob('check_*.py')))==228,
+need(len(list((R/'tools').glob('check_*.py')))>=228,
      'expected 228 static checkers')
 print('P0357 F.6 objective progress diagnostic ownership: PASS (STATIC; WoW UNVERIFIED)')

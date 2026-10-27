@@ -632,3 +632,97 @@ function QuietMode:GetDebugStatus()
         lastError = self.lastError,
     }
 end
+
+-- P0358: command-invoked, read-only D.3 Quiet Mode status diagnostic.
+function QuietMode:RunDevQuietCheck(emit, boolText)
+    local status =
+        Logres:GetModuleStatus("QuietMode")
+    local quietMode =
+        Logres:GetModule("QuietMode")
+    local debugStatus =
+        quietMode:GetDebugStatus()
+
+    local preferences = Logres:GetPreferences()
+    local state = Logres:GetState()
+
+    local expected =
+        preferences.immersionEnabled == true
+        and state.context == "world"
+
+    local stateMatches =
+        debugStatus.requestedEnabled == expected
+        and debugStatus.appliedEnabled == expected
+
+    local presentationMatches = true
+
+    if expected then
+        presentationMatches =
+            debugStatus.chatFrameCount >= 1
+            and debugStatus.suppressedChatFrameCount
+                == debugStatus.chatFrameCount
+            and debugStatus.suppressedTabCount
+                == debugStatus.tabCount
+            and debugStatus.editBoxIgnoreCount
+                == debugStatus.editBoxCount
+            and debugStatus.regionSnapshotCount >= 1
+            and debugStatus.persistentShownMatches == true
+    else
+        presentationMatches =
+            debugStatus.regionSnapshotCount == 0
+            and debugStatus.editBoxSnapshotCount == 0
+    end
+
+    local passed =
+        status.initialized == true
+        and status.enabled == true
+        and debugStatus.moduleEnabled == true
+        and stateMatches
+        and presentationMatches
+        and debugStatus.savedConfigurationMutation == false
+        and debugStatus.lastError == nil
+
+    if passed then
+        emit(string.format(
+            "Logres quietcheck: PASS (expected=%s applied=%s frames=%s/%s tabs=%s/%s editBoxes=%s/%s snapshots=%s/%s aux=%s persistentShownMatches=%s savedMutation=false reason=%s)",
+            boolText(expected),
+            boolText(debugStatus.appliedEnabled),
+            tostring(debugStatus.suppressedChatFrameCount),
+            tostring(debugStatus.chatFrameCount),
+            tostring(debugStatus.suppressedTabCount),
+            tostring(debugStatus.tabCount),
+            tostring(debugStatus.editBoxIgnoreCount),
+            tostring(debugStatus.editBoxCount),
+            tostring(debugStatus.regionSnapshotCount),
+            tostring(debugStatus.editBoxSnapshotCount),
+            tostring(debugStatus.auxiliarySnapshotCount),
+            boolText(debugStatus.persistentShownMatches),
+            tostring(debugStatus.lastReason)
+        ))
+        return
+    end
+
+    emit(string.format(
+        "Logres quietcheck: FAIL (initialized=%s enabled=%s moduleEnabled=%s expected=%s requested=%s applied=%s stateMatches=%s presentationMatches=%s frames=%s/%s tabs=%s/%s editBoxes=%s/%s snapshots=%s/%s aux=%s persistentShownMatches=%s savedMutation=%s reason=%s error=%s)",
+        tostring(status.initialized),
+        tostring(status.enabled),
+        tostring(debugStatus.moduleEnabled),
+        tostring(expected),
+        tostring(debugStatus.requestedEnabled),
+        tostring(debugStatus.appliedEnabled),
+        tostring(stateMatches),
+        tostring(presentationMatches),
+        tostring(debugStatus.suppressedChatFrameCount),
+        tostring(debugStatus.chatFrameCount),
+        tostring(debugStatus.suppressedTabCount),
+        tostring(debugStatus.tabCount),
+        tostring(debugStatus.editBoxIgnoreCount),
+        tostring(debugStatus.editBoxCount),
+        tostring(debugStatus.regionSnapshotCount),
+        tostring(debugStatus.editBoxSnapshotCount),
+        tostring(debugStatus.auxiliarySnapshotCount),
+        tostring(debugStatus.persistentShownMatches),
+        tostring(debugStatus.savedConfigurationMutation),
+        tostring(debugStatus.lastReason),
+        tostring(debugStatus.lastError)
+    ))
+end

@@ -1,0 +1,15 @@
+P0358 D.3 QUIET MODE DIAGNOSTIC OWNERSHIP SEAM
+Source baseline: 36103d83c22f54a809bfffc1e28ab6fe9af2c12c
+Patch: 0.0.246-dev -> 0.0.247-dev (TOC and Bootstrap)
+PREWRITE shadow: 229/229 STATIC PASS
+POSTWRITE: 229/229 STATIC PASS
+git diff --check: PASS
+Addon Lua load entries: 94
+Developer panel registrations: 120 (38 P previews)
+WoW runtime: UNVERIFIED / DEFERRED (client unavailable)
+Native P0321 GossipFrame restoration: FIRST CONTINGENT CLIENT GATE
+L-022/L-027/L-028 OPEN; L-019 public release BLOCKED
+Tracked files affected: 13; new checker/evidence files: 3
+P0354 R0/R1/R2 and P0355 R0/R1 negative evidence preserved
+P0358 R0: REFUSED before PREWRITE (incorrect P0357 historical checker path); zero tracked writes
+P0358: read-only D.3 status report moved unchanged apart from signature

@@ -32,6 +32,7 @@ if QUIET.is_file():
         "function QuietMode:RequestEnabled(enabled, reason)",
         "function QuietMode:ScheduleReconcile(reason)",
         "function QuietMode:GetDebugStatus()",
+        "function QuietMode:RunDevQuietCheck(emit, boolText)",
         "savedConfigurationMutation = false",
         '"ChatFrameChannelButton"',
         '"TextToSpeechButton"',
@@ -78,6 +79,7 @@ if COMMANDS.is_file():
 
     for fragment in (
         "local function runQuietModeCheck()",
+        'Logres:GetModule("QuietMode"):RunDevQuietCheck(emit, boolText)',
         'if command == "quietcheck" then',
         '"Quiet Check"',
         "runQuietModeCheck()",
