@@ -1,3 +1,7 @@
+# P0357 — F.6 read-only objective-progress diagnostic; CURRENT.md authoritative
+
+Verified pushed P0356 `56afe0f9c99f522de8d1980994bf4b1dc2f21e1f`: 227/227 PREWRITE/POSTWRITE STATIC (`0.0.245-dev`), WoW UNVERIFIED. Original Objective Progress Check report is owned by preloaded Quest/Progress; Commands keeps exact wrapper, Run All, slash and Phase F panel. Candidate `0.0.246-dev`/#228, 94 Lua, 120 actions/38 previews; no schema3/D-048 selector, native stock/quest suppression, camera, new event, polling or secret-value access. P0321 GossipFrame restoration FIRST contingent client gate; L-022/L-027/L-028 OPEN, L-019 BLOCKED. P0354 R0/R1/R2 and P0355 R0/R1 refusals remain in full evidence.
+
 # P0356 — F.3 XP diagnostic ownership; CURRENT.md is authoritative
 
 Verified pushed P0355 R2 `fac39a1e3960c7d9a238f76543027838647330ed`: 226/226 PREWRITE/POSTWRITE STATIC, `0.0.244-dev`. XP structural report moves to preloaded Quest/XP.lua; Commands preserves exact Run All, slash, Phase F developer panel. XP live sample policy untouched. Candidate `0.0.245-dev`, checker #227, Lua94/actions120/previews38; WoW UNVERIFIED. P0321 GossipFrame stock restoration FIRST client gate; L-022/L-027/L-028 OPEN, L-019 public release BLOCKED; L-031 deferred, D-046/047/048 unchanged.

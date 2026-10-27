@@ -92,6 +92,6 @@ for p in ('docs/memory/evidence/P0356_XP_DIAGNOSTIC_SEAM.md',
          'record newline hygiene '+p)
 need('P0355 R1' in H and 'check_memory_health.py' in H and
      'P0354 R2' in H,'known historical refusal evidence lost')
-need(len(list((R/'tools').glob('check_*.py')))==227,
+need(len(list((R/'tools').glob('check_*.py')))>=227,
      'expected #227 static checker')
 print('P0356 F.3 XP diagnostic ownership seam: PASS (STATIC; WoW UNVERIFIED)')

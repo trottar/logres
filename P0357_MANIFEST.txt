@@ -1,0 +1,14 @@
+P0357 F.6 OBJECTIVE PROGRESS STRUCTURAL DIAGNOSTIC SEAM
+Source baseline: 56afe0f9c99f522de8d1980994bf4b1dc2f21e1f
+Patch: 0.0.245-dev -> 0.0.246-dev (TOC and Bootstrap)
+PREWRITE shadow: 228/228 STATIC PASS
+POSTWRITE: 228/228 STATIC PASS
+git diff --check: PASS
+Addon Lua load entries: 94
+Developer panel registrations: 120 (38 P previews)
+WoW runtime: UNVERIFIED / DEFERRED (client unavailable)
+Native P0321 GossipFrame restoration: FIRST CONTINGENT CLIENT GATE
+L-022/L-027/L-028 OPEN; L-019 public release BLOCKED
+Tracked files affected: 13; new checker/evidence files: 3
+P0354 R0/R1/R2 and P0355 R0/R1 refusals retained in historical evidence
+P0357: original F.6 read-only status report moved unchanged apart from signature

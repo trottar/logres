@@ -204,9 +204,8 @@ if COMMANDS.is_file():
 
     required = [
         "local function runObjectiveProgressCheck()",
+        'Logres:GetModule("QuestObjectiveProgress"):RunDevObjectiveProgressCheck(emit)',
         "local function runObjectiveProgressPreview()",
-        'Logres:GetModuleStatus("QuestObjectiveProgress")',
-        'Logres:GetModule("QuestObjectiveProgress")',
         'if command == "objectiveprogresscheck" then',
         'if command == "objectiveprogresspreview" then',
         '"Objective Progress Check"',
@@ -223,29 +222,36 @@ if COMMANDS.is_file():
             )
 
     start = source.find("local function runObjectiveProgressCheck()")
-    end = source.find(
-        "\nlocal function runObjectiveProgressPreview()",
-        start,
-    )
-
+    end = source.find("\nend\n", start)
     if start == -1 or end == -1:
-        errors.append(
-            "Objective Progress Check function could not be isolated"
-        )
+        errors.append("Objective Progress Check wrapper could not be isolated")
     else:
-        region = source[start:end]
+        wrapper = source[start:end]
+        if 'Logres:GetModule("QuestObjectiveProgress"):RunDevObjectiveProgressCheck(emit)' not in wrapper:
+            errors.append("Progress diagnostic wrapper must delegate to module")
 
-        for forbidden in (
-            "GetQuestObjectives(",
-            "GetSelectedQuest(",
-            "GetSuperTrackedQuestID(",
-            "ObjectiveTrackerFrame",
+# The same addon-owned-only status boundary follows the report to its owner.
+if PROGRESS.is_file():
+    progress_source = PROGRESS.read_text(encoding="utf-8")
+    start = progress_source.find("function Progress:RunDevObjectiveProgressCheck(emit)")
+    end = progress_source.find("\nend\n", start)
+    if start == -1 or end == -1:
+        errors.append("Objective Progress report could not be isolated")
+    else:
+        report = progress_source[start:end]
+        for required in (
+            'Logres:GetModuleStatus("QuestObjectiveProgress")',
+            'Logres:GetModule("QuestObjectiveProgress")',
+            '"Logres objectiveprogresscheck: ',
         ):
-            if forbidden in region:
-                errors.append(
-                    "Objective Progress Check must use addon-owned status only: "
-                    f"{forbidden}"
-                )
+            if required not in report:
+                errors.append("Progress report lost addon-owned status: " + required)
+        for forbidden in (
+            "GetQuestObjectives(", "GetSelectedQuest(",
+            "GetSuperTrackedQuestID(", "ObjectiveTrackerFrame",
+        ):
+            if forbidden in report:
+                errors.append("Progress report must use addon-owned status only: " + forbidden)
 
 if TOC.is_file():
     source = TOC.read_text(encoding="utf-8")
