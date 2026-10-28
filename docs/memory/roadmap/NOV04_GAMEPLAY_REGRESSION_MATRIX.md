@@ -6,7 +6,7 @@ Authority: `docs/memory/roadmap/NOV04_VALIDATION_RUNBOOK.md` (ordered high-risk 
 
 ## Mandatory ordering and safety
 
-1. Verify addon version **0.0.235-dev** (P0343 source candidate; verify pushed version before in-client use), deployed source identity and accessible stock controls. Development deployment is **not** part of this docs-only checkpoint.
+1. Verify the **actual installed** addon version against the **current verified main** candidate: `Logres/Logres.toc` and `Logres/Core/Bootstrap.lua` must agree with each other and the deployed addon. Record the exact pushed commit and version in the test evidence before interpreting results. Preserve accessible stock controls. Development deployment is **not** part of this docs-only checkpoint. **PUBLIC RELEASE NOT APPROVED** without the separate license, client-safety and release gates.
 2. Open `/logres panel`, select **H — Gossip Stock Status (READ-ONLY)** (`/logres gossipstockstatus`). Then, with an ordinary naturally available gossip context and no Lua/secret/taint error, use **H — Gossip Stock Toggle** (`/logres gossipstocktoggle`) to test the P0321 parked/restored native GossipFrame: close, Goodbye, quest-link handoff, immersion OFF and restoration. **Stop further native replacement trials on an actual failure.**
 3. Follow the existing runbook's merchant/flight **read-only** ownership checks and safe stock UI checks. Do not force purchases, flight travel, quest reward acceptance or Quest 237.
 4. Only after the P0321 safety gate, execute the P0330–P0338 tests that a natural game context supports. Preview tests exercise visuals but do not establish native-source truth or restoration.

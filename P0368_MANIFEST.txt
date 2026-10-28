@@ -1,0 +1,16 @@
+P0368 NOVEMBER 4 INTERNAL ALPHA SOURCE-VERSION AND RELEASE GATE
+Source GitHub main: 1f58cb641af0d04d35cf847d521faece7863a6b4
+Runtime version: unchanged (TOC and Bootstrap)
+PREWRITE shadow: 239/239 STATIC PASS
+POSTWRITE: 239/239 STATIC PASS
+git diff --check: PASS
+Addon Lua load entries: 94 (UNCHANGED)
+Developer panel registrations: 120 (38 previews), UNCHANGED
+Saved-settings schema: 3, unchanged
+P0321 GossipFrame restoration: FIRST contingent client gate
+November 4: contingent INTERNAL client validation, NOT automatic release
+L-019 public distribution BLOCKED; L-022/L-027/L-028 OPEN, L-031 DEFERRED
+WoW runtime: UNVERIFIED / DEFERRED; public release NOT APPROVED
+P0364 R0 201/235, P0365 R0 202/236, P0366 R0 27/237 refusals preserved
+P0368 R0 candidate-construction NameError CHECK undefined: REFUSED before writes
+Tracked guards: 10; new payloads: 3

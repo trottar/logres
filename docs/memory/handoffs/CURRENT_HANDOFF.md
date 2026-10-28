@@ -1,6 +1,6 @@
-# P0367 — World target manual probe; CURRENT.md authoritative
+# P0368 — November 4 internal alpha freeze gate; CURRENT.md authoritative
 
-Verified pushed P0366 R1 `02fee2101b1fd6aef0dd4fae60a94d5e822679ec` 237/237 STATIC; R0 27/237 REFUSED. WoW UNVERIFIED. P0362/P0363 233/234; P0364/P0365 235/236 STATIC (R0 201/235, 202/236 REFUSED). Move WorldTargetProbe report to HUD/WorldTargetProbe; Commands wrapper, slash/Phase H and manual-only non-checkall preserved. P0140 secret-first/combat-safe/native restrictions preserved. Candidate `0.0.256-dev`, #238, Lua94/actions120/previews38, schema3/D-048/camera unchanged. P0321 FIRST contingent client gate; L-022/L-027/L-028 OPEN, L-019 BLOCKED, L-031 deferred. P0354 R0/R1/R2 check_memory_health.py, P0355 R0/R1, P0358 R0, P0361 R0 handoff retained; P0337 `cfdc07af`. No WoW deployment.
+Verified pushed P0367 `1f58cb641af0d04d35cf847d521faece7863a6b4` 238/238 STATIC; WoW UNVERIFIED. P0366 237/237 (R0 27/237 REFUSED), P0365 236/236 (R0 202/236 REFUSED), P0364 235/235 (R0 201/235 REFUSED); P0362/P0363 233/234 STATIC. P0368 matrix actual deployed TOC/Bootstrap/main identity, Nov 4 P0321 FIRST client restoration gate, not a promised release. Docs/checker only; #239, Lua94/actions120/previews38/schema3 and D-048/camera unchanged; L-019 public distribution BLOCKED, L-022/L-027/L-028 OPEN, L-031 DEFERRED. P0354 R0/R1/R2 check_memory_health.py, P0355 R0/R1, P0358 R0, P0361 R0 handoff recorded; P0337 `cfdc07af` retained. No WoW deployment.
 
 # P0361 — ImmersionController diagnostic owner; CURRENT.md authoritative
 
