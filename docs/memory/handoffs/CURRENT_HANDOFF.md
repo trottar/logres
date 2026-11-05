@@ -1,6 +1,6 @@
-# P0373 — live trainer/quest handoff; CURRENT.md authoritative
+# Ledger first: docs/memory/investigations/ISSUE_LEDGER.md
 
-P0372 `39f404c` 242 STATIC, first live incident PASS. P0373 v0.0.260-dev, checker #243: trainer purchase FAIL; Trainer denial shows cause and restores native stock; guards intact. Quest popup L-002/L-005 FAIL: keep safe Blizzard fallback; record QUEST_COMPLETE ownership/fallback. L-001 FAIL, L-021 PASS, L-019 BLOCKED. RUNTIME UNVERIFIED; P0372 gameplay continues before P0373 deployment. P0372 R0–R3 and P0373 R0/R1 checker REFUSED; P0371 R0/R1 REFUSED; P0362 P0363 P0367 P0368 P0370; P0369 R0/R1, P0366 R0, P0365 R0, P0364 R0; P0337 `cfdc07af`; P0354 R0 P0354 R1 P0354 R2 check_memory_health.py; P0355 R0 P0355 R1, P0358 R0, P0361 R0 handoff. D-046/D-047/D-048 and L-022/L-027/L-028/L-031/L-033 OPEN/DEFERRED. No polling or native-secret inspection.
+P0372 `39f404c` 242 STATIC, first live incident PASS. P0373 v0.0.260-dev, checker #243: trainer purchase FAIL; Trainer denial shows cause and restores native stock; guards intact. Quest popup L-002/L-005 FAIL: keep safe Blizzard fallback; record QUEST_COMPLETE ownership/fallback. L-001 FAIL, L-021 PASS, L-019 BLOCKED. P0373 claim log live; reward unconfirmed; L-034 random GUI OPEN. P0372 R0–R3 and P0373 R0/R1 checker REFUSED; P0371 R0/R1 REFUSED; P0362 P0363 P0367 P0368 P0370; P0369 R0/R1, P0366 R0, P0365 R0, P0364 R0; P0337 `cfdc07af`; P0354 R0 P0354 R1 P0354 R2 check_memory_health.py; P0355 R0 P0355 R1, P0358 R0, P0361 R0 handoff. D-046/D-047/D-048 and L-022/L-027/L-028/L-031/L-033 OPEN/DEFERRED. No polling or native-secret inspection.
 
 # P0361 — ImmersionController diagnostic owner; CURRENT.md authoritative
 

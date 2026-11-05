@@ -1,0 +1,15 @@
+P0374 ISSUE LEDGER / RESOLUTION FIRST LOOKUP — DOCS ONLY
+Baseline GitHub P0373: 2a97a774564077a22e3fd640be63199c1387a7b7
+Runtime version unchanged; no WoW deploy required
+All L-001 through L-034 have current status, attempted/actual resolution, validation gate, evidence pointer
+L-034 spontaneous quest GUI OPEN; L-002/L-005 quest claim/fallback OPEN/PARTIAL
+L-033 trainer purchase OPEN; L-021 RESOLVED for observed no-pet scope only
+Negative P0373 R0/R1 patch history preserved
+AGENTS/CURRENT/HANDOFF/ISSUE_REGISTER issue-first routing
+Current and handoff baseline P/L/D identifier retention PASS
+PREWRITE 244/244 STATIC PASS
+POSTWRITE 244/244 STATIC PASS
+git diff --check PASS
+WoW unchanged; NO runtime test or new gameplay PASS claimed
+Modified tracked files: 5
+New tracked files (incl. checker): 4

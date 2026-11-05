@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-11-04
+as_of: 2026-11-05
 project: logres
 ---
 
@@ -11,7 +11,7 @@ Prepare evidence-gated Forever Logres alpha, then D-048 five-domain 1.0. Preserv
 
 ## Current Work Item
 
-**P0373** trainer fallback/quest trace. P0372 `39f404c` 242 STATIC, live PASS; P0371 retained. L-001/L-002/L-005/L-033 FAIL, L-021 PASS, L-019 BLOCKED. P0372 R0–R3 and P0373 R0/R1 REFUSED.
+**P0374:** bug ledger first. P0371/P0372 R0–R3; P0373 R0/R1 REFUSED. L-001/L-002/L-005/L-033/L-034 OPEN; L-021 PASS; L-019 BLOCKED.
 
 ## Verified State
 
@@ -38,16 +38,17 @@ Prepare evidence-gated Forever Logres alpha, then D-048 five-domain 1.0. Preserv
 
 ## Next Action
 
-P0373: 243 STATIC, push/verify, then natural trainer and quest outcome test. Native quest fallback retained.
+Consult issue ledger before bugs; record evidence, attempts, runtime outcome and resolution.
 
 ## Success Criteria
 
-Trace trainer denial and restore stock; record quest fallback. WoW UNVERIFIED.
+L-001–L-034 indexed; no closure without scoped verification. P0374 docs-only.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/investigations/ISSUE_LEDGER.md` (first bug lookup)
 - `docs/memory/evidence/P0373_TRAINER_COMPLETION_HANDOFF.md`
 - `docs/memory/evidence/P0372_PASSIVE_JOURNAL_BUG_MARKER.md`
 - `docs/memory/evidence/P0371_NPC_DIAGNOSTIC_BATCH.md` and `docs/memory/patches/P0371_NPC_DIAGNOSTIC_BATCH.md`

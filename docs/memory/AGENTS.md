@@ -74,6 +74,12 @@ Before modification:
 
 Avoid unrelated cleanup.
 
+## Mandatory issue-first triage
+
+`docs/memory/investigations/ISSUE_LEDGER.md` is the **mandatory first lookup** before analyzing, changing, deferring, or resolving any reported bug. Look up its stable L-ID; create a new ID before work if none matches. Record user-observed symptom, date/build, reproducibility, affected owner, source and live evidence, attempted fixes (including failures), fallback, and the exact resolution or OPEN reason.
+
+A patch, commit, successful static check, or absence of a repeated failure is never sufficient evidence to close a gameplay issue. Close only after recording scoped runtime PASS, fix and verified pushed commit, regression gate and untested variants. Reopen the same L-ID on recurrence and retain prior negative and positive outcomes. The historical `ISSUE_REGISTER.md` and individual evidence records remain the full audit trail. Update the ledger in the same checkpoint as every meaningful bug fix.
+
 ## Negative-result discipline
 
 Failures are project knowledge.
