@@ -96,6 +96,6 @@ for path,marker in (
 for token in ('P0354 R0','P0354 R1','P0354 R2','P0355 R0',
               'P0355 R1','P0358 R0','P0361 R0 handoff','check_memory_health.py'):
     need(token in H,'historical refused handoff lost '+token)
-need(len(list((ROOT/'tools').glob('check_*.py')))==239,
+need(len(list((ROOT/'tools').glob('check_*.py'))) >= 239,
      'expected 239 checker inventory')
 print('P0368 November 4 internal-alpha freeze gate: PASS (STATIC, WoW UNVERIFIED)')

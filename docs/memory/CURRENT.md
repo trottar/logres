@@ -11,11 +11,11 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Current Work Item
 
-**P0368 — Nov 4 internal alpha freeze gate; WoW UNVERIFIED.** Verified pushed P0367 `1f58cb641af0d04d35cf847d521faece7863a6b4`, 238/238 STATIC. Repair stale test-matrix build pin; dynamic deployed TOC/Bootstrap/main parity, P0321 FIRST client gate, release NO-GO while L-019 license unresolved. Docs/checker only, #239; Lua94/actions120/previews38, schema3/D-048/camera untouched. L-022/L-027/L-028 OPEN.
+**P0369 — live exporter recovery.** P0368 `a81e86ffa3a2cc093ef37f6af9c5d0c260a03546` 239/239 STATIC. Live `_forever_` 2026-11-04: P0321/L-001 gossip FAIL; quest clicks expose Blizzard UI (L-002/L-005) FAIL; no-pet labels L-021 FAIL. Exporter beta-only; stale Oct 23 output. Tool-only #240; Lua94/actions120/previews38, schema3/D-048/camera unchanged. L-019 BLOCKED; L-022/L-027/L-028 OPEN.
 
 ## Verified State
 
-- Verified pushed P0367 `1f58cb641af0d04d35cf847d521faece7863a6b4` 238/238 STATIC; P0366 R1 237/237 (R0 27/237 REFUSED), P0365 R1 236/236 (R0 202/236 REFUSED), P0364 R1 235/235 (R0 201/235 REFUSED); P0363 234/234, P0362 233/233, P0361 R1 232/232, P0360 231/231, P0359 230/230, P0358 R1 229/229, P0357 228/228, P0356 227/227. WoW UNVERIFIED.
+- P0368 239/239, P0367 238/238, P0366 R1 237/237 (R0 REFUSED), P0365 R1 236/236 (R0 REFUSED), P0364 R1 235/235 (R0 REFUSED); P0363 234/234, P0362 233/233, P0361 R1 232/232, P0360 231/231, P0359 230/230, P0358 R1 229/229, P0357 228/228, P0356 227/227 STATIC. Client FAIL above; exact refusal evidence retained in canonical records.
 - P0352 `61f0f49c2cf990168c1415dd2100a0f286627a91` 223/223 STATIC, WoW UNVERIFIED.
 - P0351 `e8b71bc59a04f3077925bb24f0d6850a71340841` 222/222 STATIC; WoW UNVERIFIED.
 - P0350 `fd2d2676ffb41d509143b398b61b8474ecacf53d` 221/221 STATIC; WoW UNVERIFIED.
@@ -38,16 +38,17 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Next Action
 
-P0368: run 239/239 PRE/POST STATIC, diff check, push verify. Nov 4 contingent P0321 runtime safety validation; public release NOT APPROVED. No WoW deployment.
+P0369: 240/240 STATIC; verify push. Read-only panel, `/reload`, export `_forever_`; investigate before mutating gameplay.
 
 ## Success Criteria
 
-Actual tested client/version identity required; no frozen matrix version; static staging is NOT client PASS. Preserve L-019, P0321 and open issues; Lua94/actions120/previews38/schema3 unchanged.
+Export live SavedVariables with source time; no beta/stale reuse. L-019 BLOCKED; runtime FAIL remains OPEN.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/evidence/P0369_LIVE_DIAGNOSTIC_EXPORT_RECOVERY.md` and `docs/memory/patches/P0369_LIVE_DIAGNOSTIC_EXPORT_RECOVERY.md`
 - `docs/memory/evidence/P0368_NOV04_FREEZE_GATE.md` and `docs/memory/patches/P0368_NOV04_FREEZE_GATE.md`
 - `docs/memory/evidence/P0367_WORLD_TARGET_PROBE_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0367_WORLD_TARGET_PROBE_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0366_QUEST_INTERACTION_PROBE_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0366_QUEST_INTERACTION_PROBE_DIAGNOSTIC_SEAM.md`

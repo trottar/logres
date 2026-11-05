@@ -2,6 +2,10 @@
 
 **Status:** PREPARED, WoW **UNVERIFIED / DEFERRED until November 4, 2026** (client access contingent). This runbook is a test plan, not PASS evidence, a launch announcement, or permission to modify secure/Blizzard surfaces. `docs/memory/CURRENT.md` and `docs/memory/investigations/ISSUE_REGISTER.md` remain authoritative.
 
+## P0369 — live `_forever_` re-entry and failure stop-gate (2026-11-04)
+
+The live client is now `_forever_/Interface/AddOns`, **not** `_classic_beta_`. A user-reported P0321 gossip FAIL and native quest-window/pet-label failures are OPEN; do not label the early live gate PASS. First collect read-only H Gossip Stock Status and applicable Phase 0 Gameplay Snapshot using the developer **panel**, then `/reload` and run `python3 tools/export_panel_diagnostics.py`; confirm exported `source=` resolves under `_forever_/WTF/Account` and `source_modified=` is from the actual live session. The exporter copies already-recorded `LogresDiagnosticsDB.runs` and does not execute 120 registered actions automatically. Do not perform H Gossip Stock Toggle or repeat quest selection as a mutation test until source diagnostics and stock fallback are reviewed. Preserve source, screenshot, issue classification and exact failed context. P0369 is external tooling only, no Lua deployment needed. L-019 public distribution BLOCKED.
+
 ## P0330–P0338 issue-specific evidence
 
 After the P0321-first restoration/safety gate below, use the exact source-verified phase/command, expected visual/functional observation and DEFERRED criteria in [`NOV04_GAMEPLAY_REGRESSION_MATRIX.md`](NOV04_GAMEPLAY_REGRESSION_MATRIX.md). The matrix is **PREPARED / WoW UNVERIFIED**, not additional current runtime evidence. P0338 R1 has been verified pushed on `main` at `342cab97`; no P0330–P0338 in-client acceptance is implied.

@@ -2,6 +2,10 @@
 
 **As of:** 2026-10-24. An indexed triage list, **not** a replacement for historical evidence, which remains authoritative. Status terms: OBSERVED FAIL (observed negative), OPEN / UNREPRODUCED (one-off), RUNTIME UNVERIFIED (implemented but not tested), DEFERRED (requires environment/capability), FEATURE GAP (not claimed implemented), ACCEPTED SCOPE (positive observation only). Release classifications are planning hypotheses until November 4 evidence.
 
+## P0369 — first live Forever evidence (2026-11-04)
+
+The live `_forever_` report changes L-001/P0321 gossip to **USER-REPORTED LIVE FAIL**. L-002/L-005 Logres quest-button clicks repeatedly show Blizzard quest UI (**USER-REPORTED LIVE FAIL**, source/intent unresolved). L-021 pet hotkey labels remain visible without active pet (**USER-REPORTED LIVE FAIL**). Do not mistake previously passed static checks for runtime acceptance. `tools/export_panel_diagnostics.py` was confirmed to query beta-only SavedVariables and failed to refresh the October 23 copy; P0369 repairs export only. Obtain panel read-only status and live SavedVariables after `/reload` before isolating native UI causes. These new outcomes supersede older “runtime unverified” descriptions for the reported test scope only; all other issue evidence is retained. Public release remains BLOCKED by L-019.
+
 | ID | Domain | Issue/capability and observed status | Canonical evidence / source | Alpha impact / next safe action |
 | --- | --- | --- | --- | --- |
 | L-001 | NPC | **P0321** native gossip single-window parking/restore: pushed `9a180c8`, **RUNTIME UNVERIFIED / DEFERRED**, not a known runtime bug | `docs/memory/evidence/P0321_GOSSIP_SINGLE_WINDOW.md` | High validation gate: Gossip Stock Status/Toggle, guard branching, quest link/detail, Goodbye and restoration; fail open to stock |

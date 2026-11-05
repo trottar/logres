@@ -1,0 +1,18 @@
+P0369 LIVE FOREVER DIAGNOSTIC EXPORT RECOVERY (R2)
+P0369 R0 CURRENT 9809 bytes REFUSED; R1 PREWRITE 206/240 REFUSED missing UNVERIFIED evidence marker
+Source GitHub main: a81e86ffa3a2cc093ef37f6af9c5d0c260a03546
+PREWRITE shadow: 240/240 STATIC PASS
+POSTWRITE: 240/240 STATIC PASS
+git diff --check: PASS
+Runtime version unchanged: 0.0.256-dev
+Lua entries: 94; developer actions: 120 (38 previews), unchanged
+Saved settings schema: 3, unchanged; no addon Lua deployment
+Exporter source: _forever_/WTF/Account/*/SavedVariables/Logres.lua
+Beta-only exporter fixed; October 23 copy was stale, not live evidence
+P0369 R0 candidate REFUSED prewrite: CURRENT 9809 bytes exceeds 9800-byte budget; zero tracked writes
+Live SavedVariables uploaded: 0.0.256-dev, client 1.60.1 build 70790; P0321 last native-close-issued; gossiplivetoggle disabled after two deferrals
+Live user reported: P0321 gossip FAIL, quest native-window FAIL, no-pet hotkey FAIL
+Gameplay bugs: OPEN, exact root cause not yet established
+L-019 public distribution BLOCKED; L-022/L-027/L-028 OPEN, L-031 DEFERRED
+Static checks do not imply runtime PASS; fresh diagnostics required
+Guarded tracked blobs: 12; payload paths: 4
