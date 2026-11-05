@@ -2,6 +2,10 @@
 
 **As of:** 2026-10-24. An indexed triage list, **not** a replacement for historical evidence, which remains authoritative. Status terms: OBSERVED FAIL (observed negative), OPEN / UNREPRODUCED (one-off), RUNTIME UNVERIFIED (implemented but not tested), DEFERRED (requires environment/capability), FEATURE GAP (not claimed implemented), ACCEPTED SCOPE (positive observation only). Release classifications are planning hypotheses until November 4 evidence.
 
+## P0370 — L-021 hotkey plate source correction (2026-11-04)
+
+P0369 R2 is verified pushed. Live no-pet label failure L-021 is **SOURCE PATCH PREPARED / CLIENT UNVERIFIED**: independently parented hotkey plates were painted with no pet even while the secure button cluster was hidden. P0370 gates only these addon-owned labels on ordinary available pet state; in-client no-pet/pet return, binding changes and combat retest remain required. P0321 gossip FAIL and L-002/L-005 native quest handoff FAIL are OPEN and unchanged; L-019 public release BLOCKED. Do not treat static checker PASS as gameplay acceptance.
+
 ## P0369 — first live Forever evidence (2026-11-04)
 
 The live `_forever_` report changes L-001/P0321 gossip to **USER-REPORTED LIVE FAIL**. L-002/L-005 Logres quest-button clicks repeatedly show Blizzard quest UI (**USER-REPORTED LIVE FAIL**, source/intent unresolved). L-021 pet hotkey labels remain visible without active pet (**USER-REPORTED LIVE FAIL**). Do not mistake previously passed static checks for runtime acceptance. `tools/export_panel_diagnostics.py` was confirmed to query beta-only SavedVariables and failed to refresh the October 23 copy; P0369 repairs export only. Obtain panel read-only status and live SavedVariables after `/reload` before isolating native UI causes. These new outcomes supersede older “runtime unverified” descriptions for the reported test scope only; all other issue evidence is retained. Public release remains BLOCKED by L-019.

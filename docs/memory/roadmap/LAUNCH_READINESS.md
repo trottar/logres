@@ -1,3 +1,7 @@
+## P0370 — live pet keybind visibility regression; source only (2026-11-04)
+
+P0369 R2 `272fe00c8c488cff100f4c41cd185beec6241d3b` pushed 240/240 STATIC. P0370 corrects addon-owned no-pet labels and preserves secure controls. Runtime result UNVERIFIED until `_forever_` reload; P0321 gossip and native quest-window failures are still live OPEN. Public release L-019 BLOCKED; no alpha GO implied.
+
 ## P0369 — Live client safety NO-GO and diagnostic recovery (2026-11-04)
 
 P0368 main `a81e86ffa3a2cc093ef37f6af9c5d0c260a03546`, 239/239 STATIC, internal ZIP preflight PASS; **no gameplay approval**. Live `_forever_` report: P0321/L-001 gossip FAIL, quest-native handoff L-002/L-005 FAIL, pet labels L-021 FAIL. Exporter beta-only defect prevents new SavedVariables access; P0369 repairs tool export only, preserves unchanged runtime candidate. Public release remains NOT APPROVED / L-019 BLOCKED; gameplay acceptance NO-GO pending narrow diagnosis, safe stock restoration and actual re-test. Read-only diagnostics first; no repeat unsafe replacement trials.

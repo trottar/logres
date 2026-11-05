@@ -1,0 +1,15 @@
+P0370 LIVE PET HOTKEY PLATE PRESENTATION GATE
+Source verified pushed P0369 R2 main: 272fe00c8c488cff100f4c41cd185beec6241d3b
+TOC/Bootstrap: 0.0.256-dev -> 0.0.257-dev
+PREWRITE shadow: 240/240 STATIC PASS
+POSTWRITE: 240/240 STATIC PASS
+git diff --check: PASS
+Lua entries: 94; developer actions: 120 (38 previews)
+Saved settings schema3; D-048 and D-047 camera unchanged
+P0370: addon-owned pet keybind plates gated by armed and ordinary pet availability
+No secure attributes, override binding, Blizzard frame, native fallback or pet click changes
+Client P0370: UNVERIFIED pending live _forever_ reload and retest
+P0321/L-001 gossip FAIL; L-002/L-005 native quest window FAIL remain OPEN
+P0369 R0/R1 failures and prior refusal evidence preserved
+L-019 public release BLOCKED; no alpha PASS from static suite
+Guarded baseline full Git blobs: 13; new evidence paths: 2

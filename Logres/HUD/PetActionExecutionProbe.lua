@@ -117,12 +117,23 @@ local function safePetBindingLabel(slot)
 end
 
 function Probe:RefreshBindingLabels()
+    -- Hotkey plates use an addon-owned feedback frame outside the secure
+    -- cluster; hiding pet buttons alone cannot hide those plates.
+    -- Only addon-owned, already secret-checked availability is inspected.
+    local showLabels = self.moduleEnabled == true
+        and self.armed == true
+        and self.petHasActionBar == true
+        and self.occupiedCount > 0
     for slot = 1, MAX_PET_SLOTS do
-        local label = safePetBindingLabel(slot)
-        if label ~= nil then
-            ActionButton.SetHotkeyLabel(self.buttons[slot], label)
+        if showLabels then
+            local label = safePetBindingLabel(slot)
+            if label ~= nil then
+                ActionButton.SetHotkeyLabel(self.buttons[slot], label)
+            else
+                -- An invalid/secret binding never becomes a guessed label.
+                ActionButton.SetHotkeyLabel(self.buttons[slot], "")
+            end
         else
-            -- An invalid/secret binding never becomes a guessed label.
             ActionButton.SetHotkeyLabel(self.buttons[slot], "")
         end
     end
@@ -233,6 +244,7 @@ function Probe:RefreshPresentation()
         end
     end
 
+    self:RefreshBindingLabels()
     return hasBar == true and self.occupiedCount > 0
 end
 
@@ -414,6 +426,7 @@ function Probe:Arm()
     self.armed = true
     self.lastArmReason = "armed"
     self.cluster:Show()
+    self:RefreshBindingLabels()
     -- P0211: signal the *actual* secure-probe readiness transition.
     -- Event delivery order at initial login need not match module order;
     -- do not poll or touch Blizzard presentation to recover readiness.
@@ -471,6 +484,7 @@ function Probe:HideProbe()
     self.cluster:Hide()
     self.armed = false
     self.pendingAttempt = false
+    self:RefreshBindingLabels()
     self.lastHideReason = "hidden"
     return true, self.lastHideReason
 end
@@ -711,4 +725,5 @@ Probe.OnDisable = function(self)
         self.cluster:Hide()
         self.armed = false
     end
+    self:RefreshBindingLabels()
 end

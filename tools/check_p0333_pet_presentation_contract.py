@@ -56,6 +56,34 @@ for forbidden in ('SetOverrideBinding','SetBinding(', 'SetAttribute(',
                   'CastPetAction(', 'TogglePetAutocast(', 'C_Timer.', 'OnUpdate'):
     need(forbidden not in label+refresh, 'pet label must not change secure actions: '+forbidden)
 
+# P0370 live fallback: independent feedback-frame plates must be gated on
+# addon-owned pet availability, not mere secure button configuration.
+for token in ('local showLabels = self.moduleEnabled == true',
+              'and self.armed == true', 'and self.petHasActionBar == true',
+              'and self.occupiedCount > 0',
+              'if showLabels then', 'ActionButton.SetHotkeyLabel(self.buttons[slot], "")'):
+    need(token in refresh, 'P0370 no-pet binding gate missing: '+token)
+need('self:RefreshBindingLabels()' in P[P.index('function Probe:RefreshPresentation()'):P.index('function Probe:AfterSecureClick(')],
+     'P0370 loss of pet must clear detached plates')
+need('self:RefreshBindingLabels()' in P[P.index('function Probe:Arm()'):P.index('function Probe:Check()')],
+     'P0370 arming must populate labels only after availability')
+need('self:RefreshBindingLabels()' in P[P.index('function Probe:HideProbe()'):P.index('function Probe:GetResultState()')],
+     'P0370 HideProbe must clear detached plates')
+need('self:RefreshBindingLabels()' in P[P.index('Probe.OnDisable = function(self)'):],
+     'P0370 module disable must clear detached plates')
+def labels_allowed(module_enabled, armed, has_bar, occupied):
+    return (module_enabled is True and armed is True and
+            has_bar is True and occupied > 0)
+for case, expected in (
+    ((True, False, True, 3),False),
+    ((True, True, False, 0),False),
+    ((True, True, None, 0),False),
+    ((False, True, True, 4),False),
+    ((True, True, True, 0),False),
+    ((True, True, True, 4),True),
+):
+    need(labels_allowed(*case)==expected,'P0370 no-pet policy fixture failed')
+
 # Pure policy fixtures, inputs already ordinary; no game/secret data modelled.
 def display(key,secret):
     if secret or key is None: return ''

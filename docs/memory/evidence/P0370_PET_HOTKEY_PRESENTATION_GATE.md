@@ -1,0 +1,15 @@
+# P0370 — Live no-pet hotkey-label leak correction
+
+## Verified pushed baseline and runtime evidence
+
+GitHub `main` P0369 R2 `272fe00c8c488cff100f4c41cd185beec6241d3b` is verified pushed, with 240/240 PREWRITE and POSTWRITE STATIC in its committed manifest. Live Forever 1.60.1/build 70790, Logres 0.0.256-dev, screenshot and user report on 2026-11-04 establish L-021 no-pet keybind labels visibly remaining on the screen; P0321/L-001 unusable gossip and L-002/L-005 native quest-window clicks are also observed live FAIL / root cause not fully established. No UI fix has earned a client PASS. L-019 public release remains BLOCKED.
+
+## Narrow source cause and correction
+
+`Logres/HUD/PetActionExecutionProbe.lua` unconditionally calls `ActionButton.SetHotkeyLabel` from `RefreshBindingLabels` after `ConfigureSecureButtons` and `UPDATE_BINDINGS`, before pet availability/arming is proven. `Logres/Actions/Button.lua` parents the visible hotkey plate to an independent feedback frame, anchored to the pet button; the protected cluster being hidden alone does not hide those separate labels. This matches the screenshot's isolated binding plates without pet buttons. It is a source-supported explanation for the reported failure, not yet a client-confirmed fix.
+
+P0370 gates only addon-owned hotkey plate text on `self.moduleEnabled`, `self.armed`, secret-validated addon-owned `petHasActionBar == true`, and `occupiedCount > 0`. `RefreshPresentation` clears plates as the pet disappears, successful Arm populates bindings, Hide and Disable clear them, and the existing UPDATE_BINDINGS path remains event-driven. No native Blizzard frame operations, button Show/Hide, secure attributes, bindings, combat-state mutation, polling, secret readback, or layout change. Original action controls and native pet fallback unchanged. Existing P0333 checker adds an explicit gated policy and lifecycle contract; 240-checker inventory unchanged. Version increments to 0.0.257-dev, TOC/Bootstrap matched; 94 Lua entries, 120 actions/38 previews, saved schema3, D-046/D-047/D-048 unchanged.
+
+## Validation boundary
+
+A one-time applier guards exact P0369 Git baseline and full blobs, constructs candidate before writes, checks memory size and owned-source contract, executes the amended pet checker **first** in PREWRITE shadow and then all 240 static checkers; POSTWRITE checker suite and `git diff --check` plus rollback on failure. Local isolated transform tests do not grant WSL full-suite PASS. WoW runtime **UNVERIFIED / NOT RETESTED** for P0370. After WSL PASS and push verification, deploy explicitly to live `_forever_/Interface/AddOns`; `/reload` and verify no-pet labels absent, pet present labels still show and are correct, pet loss clears them, binding changes update and combat preserves secure native fallback. No contrived pet acquisition required; unavailable test is DEFERRED. Gossip and quest UI remain OPEN and are not solved by this patch. Historical P0369 R0/R1, P0366 R0, P0365 R0, P0364 R0 refusals remain preserved in their canonical records.
