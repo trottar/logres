@@ -36,6 +36,7 @@ end
 local function deny(reason)
     deferrals = deferrals + 1
     last = reason
+    Logres:TraceEvent("trainer", "profession-deferred", {reason = reason})
     return false, reason
 end
 
@@ -115,10 +116,12 @@ function Trial.Attempt(row, snapshot)
     if not sent then
         failures = failures + 1
         last = "profession-purchase-call-failed-stock-visible"
+        Logres:TraceEvent("trainer", "profession-call-failed", {reason = last})
         return false, last
     end
     requests = requests + 1
     last = "profession-single-request-sent-unconfirmed"
+    Logres:TraceEvent("trainer", "profession-requested", {result = last})
     return true, last
 end
 

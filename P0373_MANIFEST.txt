@@ -1,0 +1,20 @@
+P0373 TRAINER EXPLICIT CLICK FAIL-OPEN / COMPLETION OWNERSHIP EVIDENCE
+Base main: 39f404c0a918a65f297ecd886e5c4f8b9cac53e4
+Version: 0.0.259-dev to 0.0.260-dev
+Source-verified trainer purchase deferral restores native stock after explicit user click
+Never relaxes purchase safety / does not automate training
+Quest completion source/presentation/stock-gate outcomes recorded without UI suppression policy changes
+Screenshot incident addon-owned snapshot: trainer / profession purchase / quest completion
+Baseline P/L/D memory IDs and negative patch history preserved
+P0373 R0 REFUSED PREWRITE: CURRENT.md lost P0371; tracked writes none
+P0373 R1 REFUSED PREWRITE 133/243: P0296 historical train guard literal removed; tracked writes none
+P0373 R2 restores P0296 guard in executable click path and checks dependency contracts before suite
+Follow-up P0372 live capture: 384 stored events, one dropped, quest 91741 event-confirmed
+PREWRITE 243/243 STATIC PASS
+POSTWRITE 243/243 STATIC PASS
+git diff --check PASS
+New checker tools/check_p0373_trainer_completion_handoff_contract.py
+WoW RUNTIME UNVERIFIED. Follow-up P0372 journal reviewed before this candidate.
+L-001 / L-002 / L-005 / L-033 OPEN; L-019 BLOCKED
+Tracked files modified: 16
+New files: 3

@@ -164,6 +164,8 @@ function Control:Click()
     then
         self:Restore("stale-claim")
         self.lastResult = reason or "not-applied"
+        Logres:TraceEvent("quest", "completion-click-deferred",
+            {reason = self.lastResult})
         return false, self.lastResult
     end
     -- Restore native alpha and EVERY captured mouse target before any claim.
@@ -173,6 +175,8 @@ function Control:Click()
     self.claimCalls = self.claimCalls + 1
     local ok = pcall(_G.QuestRewardCompleteButton_OnClick)
     self.lastResult = ok and "native-handler-invoked" or "native-handler-failed"
+    Logres:TraceEvent("quest", "completion-click-result",
+        {result = self.lastResult})
     return ok, self.lastResult
 end
 

@@ -237,6 +237,7 @@ function Trial.Disable(why)
     -- this specific NPC visit. Stock stays fully usable.
     if Logres.NPCServiceSession and (why == "goodbye" or why == "trial-hidden"
         or why == "native-purchase-requested-unconfirmed"
+        or why == "native-purchase-deferred"
         or why == "bulk-training-requested-unconfirmed") then
         Logres.NPCServiceSession.Dismiss("trainer")
     end
@@ -638,15 +639,29 @@ local function attachBrowseControls(root, model, controls)
         return browse and browse.model.trainEnabled == true
     end, controls.trainText)
     trainHit:SetScript("OnMouseUp", function(_, button)
-        if not ordinaryInput(button) or button ~= "LeftButton" or active ~= root
-            or not browse or not browse.localChoiceConfirmed
-            or not browse.model.trainEnabled then return end
+        if not ordinaryInput(button) or button ~= "LeftButton"
+            or active ~= root or not browse then return end
+        if not browse or not browse.localChoiceConfirmed
+            or not browse.model.trainEnabled then
+            Logres:TraceEvent("trainer", "train-not-ready",
+                {reason = "select-available-service"})
+            Logres:DevPrint("Select an available training row before Train.")
+            return
+        end
         -- Visible slot numbers are not native service indices. Always locate
         -- the selected source record before handing it to the purchase guard.
         local chosen = Logres.NPCServiceCatalogue.Find(
             browse.model.catalog, browse.selectedServiceIndex,
             function(entry) return entry.serviceIndex end)
-        if not chosen or not Logres.NPCTrainerPurchaseTrial then return end
+        if not chosen or not Logres.NPCTrainerPurchaseTrial then
+            Logres:TraceEvent("trainer", "train-not-ready",
+                {reason = "chosen-service-unavailable"})
+            return
+        end
+        Logres:TraceEvent("trainer", "train-click",
+            {kind = browse.model.nativeSession.profession == true
+                and "profession" or "class", result = "explicit-selection",
+                serviceIndex = chosen.serviceIndex})
         local accepted, reason
         if browse.model.nativeSession.profession == true then
             if not Logres.NPCTrainerProfessionPurchaseTrial then return end
@@ -660,9 +675,24 @@ local function attachBrowseControls(root, model, controls)
         end
         if accepted then
             -- Stock remains accessible; this sample is stale after a buy request.
+            Logres:TraceEvent("trainer", "train-requested",
+                {result = "native-call-returned-unconfirmed"})
             Trial.Disable("native-purchase-requested-unconfirmed")
         else
-            last = "native-purchase-deferred-" .. tostring(reason)
+            -- An explicit user click must never end at an inert Logres button.
+            -- Restore stock before dismissing Logres; failures remain fail-open.
+            Logres:TraceEvent("trainer", "train-deferred", {reason = reason})
+            local restored = Trial.Disable("native-purchase-deferred")
+            if restored then
+                last = "native-purchase-deferred-" .. tostring(reason)
+                Logres:DevPrint("Training deferred: " .. tostring(reason)
+                    .. ". Blizzard trainer controls restored.")
+            else
+                last = "native-purchase-restore-pending-" .. tostring(reason)
+            end
+            Logres:TraceEvent("trainer", "train-fallback",
+                {reason = reason, result = restored and "stock-restored"
+                    or "stock-restore-pending"})
         end
     end)
     -- One deliberate physical click. The owned UI is invalidated after

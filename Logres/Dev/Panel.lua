@@ -51,6 +51,7 @@ local JOURNAL_CONTEXT = 48
 local TRACE_FIELDS = {
     reason = true, result = true, kind = true, questID = true,
     source = true, phase = true, status = true, parked = true,
+    serviceIndex = true,
     applied = true, pending = true, incident = true, success = true,
 }
 
@@ -192,6 +193,23 @@ function Logres:CaptureBugIncident()
     end), {"requestedEnabled", "appliedEnabled", "pending", "snapshotReady",
         "visualOwned", "visualFrameCount", "applyCount", "restoreCount",
         "failureCount", "emergencyRestoreCount", "lastReason", "lastError"})
+    -- Only addon-owned, already collected controller counters and reasons.
+    incident.snapshot.trainer = pickTraceStatus(ownedTraceStatus(function()
+        return self.NPCTrainerLiveTrial.GetAudit()
+    end), {"shown", "displays", "deferrals", "last"})
+    incident.snapshot.professionPurchase = pickTraceStatus(ownedTraceStatus(function()
+        return self.NPCTrainerProfessionPurchaseTrial.GetAudit()
+    end), {"attempts", "requests", "deferrals", "failures", "last"})
+    incident.snapshot.questCompletion = pickTraceStatus(ownedTraceStatus(function()
+        local status = self:GetModule("QuestDialogue"):GetDebugStatus()
+        return status.completionControl
+    end), {"applied", "shown", "lastReason", "lastResult",
+        "applyCount", "restoreCount", "blockedCount",
+        "clickCount", "claimCalls"})
+    incident.snapshot.completionView = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("QuestDialogue"):GetDebugStatus()
+    end), {"completeEventCount", "completionShownCount",
+        "completionSkippedCount", "completionActive", "lastCompletionReason"})
     journal.incidents[#journal.incidents + 1] = incident
     if #journal.incidents > JOURNAL_INCIDENTS then table.remove(journal.incidents, 1) end
     -- Record the marker even if a prior screenshot is still in flight.

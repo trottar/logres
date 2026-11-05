@@ -888,6 +888,8 @@ function Dialogue:PositionCompletionActionVisual()
 end
 
 function Dialogue:HandleQuestComplete()
+    Logres:TraceEvent("quest", "completion-observed",
+        {source = self.restoringCompletion and "preference" or "native-event"})
     -- A preference restore may re-render, but is NOT a new QUEST_COMPLETE.
     if not self.restoringCompletion then
         self.completeEventCount = self.completeEventCount + 1
@@ -899,6 +901,8 @@ function Dialogue:HandleQuestComplete()
         self.completionSkippedCount = self.completionSkippedCount + 1
         self.lastCompletionReason = reason or "completion-unavailable"
         self.lastCompletionSecret = secret == true
+        Logres:TraceEvent("quest", "completion-unavailable",
+            {reason = reason or "source-unavailable"})
         return
     end
 
@@ -936,6 +940,8 @@ function Dialogue:HandleQuestComplete()
         completion.title, completion.body, rewardSummary, "QUEST_COMPLETE",
         false, false, false
     )
+    Logres:TraceEvent("quest", "completion-presentation",
+        {questID = completion.questID, result = shown and state or "not-shown"})
     if shown and state == "shown" then
         self.completionActive = true
         self.completionShownCount = self.completionShownCount + 1
@@ -951,7 +957,10 @@ function Dialogue:HandleQuestComplete()
             -- Only a supported, captured completion may show the shared Accept.
             self.acceptButton:Hide()
             self.declineButton:Hide()
-            local applied = self.completionControl:Activate()
+            local applied, controlReason = self.completionControl:Activate()
+            Logres:TraceEvent("quest",
+                applied and "completion-owned" or "completion-stock-fallback",
+                {questID = completion.questID, reason = controlReason})
             if applied then
                 -- The existing Accept button was correct all along; the
                 -- shared action root was BELOW the opaque panel. Move that
