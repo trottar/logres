@@ -103,6 +103,7 @@ function Suppression:RecordUnsupported(reason, secretObserved)
     self.lastSupportReason = reason
     self.lastReason = reason
     self.unsupportedCount = self.unsupportedCount + 1
+    Logres:TraceEvent("quest", "suppression-unsupported", {reason = reason})
 
     if secretObserved then
         self.secretBlockCount = self.secretBlockCount + 1
@@ -447,6 +448,7 @@ function Suppression:ApplySuppression(reason)
         self.failureCount = self.failureCount + 1
         self.lastReason = "capture-failed"
         self.lastError = snapshotError
+        Logres:TraceEvent("quest", "suppression-failed", {reason = "capture-failed"})
         return false, "capture-failed"
     end
 
@@ -472,6 +474,7 @@ function Suppression:ApplySuppression(reason)
         self.failureCount = self.failureCount + 1
         self.lastReason = "suppression-failed"
         self.lastError = tostring(suppressError)
+        Logres:TraceEvent("quest", "suppression-failed", {reason = "suppression-failed"})
         return false, "suppression-failed"
     end
 
@@ -481,6 +484,8 @@ function Suppression:ApplySuppression(reason)
     self.applyCount = self.applyCount + 1
     self.lastReason = reason or "applied"
     self.lastError = nil
+    Logres:TraceEvent("quest", "suppression-applied", {result = self.lastReason,
+        applied = true})
     return true, "applied"
 end
 
@@ -527,6 +532,8 @@ function Suppression:Restore(reason)
     self.restoreCount = self.restoreCount + 1
     self.lastReason = reason or "restored"
     self.lastError = nil
+    Logres:TraceEvent("quest", "suppression-restored", {
+        reason = self.lastReason, applied = false})
     return true, "restored"
 end
 

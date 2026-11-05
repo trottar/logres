@@ -1,6 +1,6 @@
-# P0371 — NPC incident batch; CURRENT.md authoritative
+# P0372 — passive incident journal; CURRENT.md authoritative
 
-P0370 main `f754f349aa54a3fd5c8d30f5247f07cb7d659c96`, 240/240 STATIC; no-pet labels PASS. P0369 240/240 STATIC; P0368 239/239; P0367 238/238; P0363 234/234; P0362 233/233; P0366 R0 27/237, P0365 R0 202/236, P0364 R0 201/235 REFUSED; preserved. P0371 saves read-only NPC/quest checks in `/logres npcbatch`; no native/secure mutation or polling. `0.0.258-dev`, checker #241, Lua94/actions120/previews38/schema3/D-048/camera unchanged; WoW UNVERIFIED. Live P0321/L-001 gossip FAIL and L-002/L-005 quest-window FAIL remain OPEN; L-021 no-pet case PASS. L-019 BLOCKED, L-022/L-027/L-028 OPEN, L-031 DEFERRED. Historical P0354 R0/R1/R2 check_memory_health.py, P0355 R0/R1, P0358 R0, P0361 R0; P0337 `cfdc07af` retained. Live redeploy.
+P0371 `d19273d` 241/241 STATIC; live npcbatch captured but lacks post-click causality. P0372 adds bounded automatic NPC/quest/state/preference events and Report Bug screenshot marker; SCREENSHOT_SUCCEEDED/FAILED outcomes. 0.0.259-dev, checker #242, Lua94/actions120/previews38/schema3/D-048/camera unchanged. WoW UNVERIFIED. L-001/L-002/L-005 live FAIL, L-021 no-pet PASS, L-019 BLOCKED, L-022/L-027/L-028 OPEN, L-031 DEFERRED. P0372 R0/R1/R2/R3 REFUSED; Prior P0371 R0 166/241, R1 199/241 REFUSED; P0362 P0363 P0367 P0368 P0370; P0369 R0/R1, P0366 R0, P0365 R0, P0364 R0 and P0337 `cfdc07af` preserved. No native/secret inspection, polling or uploads.
 
 # P0361 — ImmersionController diagnostic owner; CURRENT.md authoritative
 

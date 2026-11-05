@@ -43,6 +43,235 @@ local function ensureDiagnosticsDB()
     return LogresDiagnosticsDB
 end
 
+-- P0372: bounded incident journal. These are addon-owned transitions, not a
+-- Blizzard frame inspector or a combat/secret-value sampler.
+local JOURNAL_EVENTS = 384
+local JOURNAL_INCIDENTS = 12
+local JOURNAL_CONTEXT = 48
+local TRACE_FIELDS = {
+    reason = true, result = true, kind = true, questID = true,
+    source = true, phase = true, status = true, parked = true,
+    applied = true, pending = true, incident = true, success = true,
+}
+
+local function ordinaryTraceValue(value)
+    -- Any value may be secret-capable. Do not even compare against nil
+    -- before the protected classification has returned an ordinary boolean.
+    if type(issecretvalue) ~= "function" then return nil end
+    local ok, secret = pcall(issecretvalue, value)
+    if not ok or secret ~= false then return nil end
+    if value == nil then return nil end
+    local kind = type(value)
+    if kind == "boolean" then return value end
+    if kind == "number" then
+        if value == value and value ~= math.huge and value ~= -math.huge
+            and math.abs(value) <= 1000000000 then return value end
+        return nil
+    end
+    if kind == "string" and #value <= 72
+        and value:match("^[%w _%-%./:]+$") then return value end
+    return nil
+end
+
+local function ensureIncidentJournal()
+    local db = ensureDiagnosticsDB()
+    if type(db.journal) ~= "table" or db.journal.schema ~= 1 then
+        db.journal = { schema = 1, events = {}, incidents = {},
+            sequence = 0, session = 0, dropped = 0 }
+    end
+    local journal = db.journal
+    journal.events = type(journal.events) == "table" and journal.events or {}
+    journal.incidents = type(journal.incidents) == "table" and journal.incidents or {}
+    journal.sequence = type(journal.sequence) == "number" and journal.sequence or 0
+    journal.session = type(journal.session) == "number" and journal.session or 0
+    journal.dropped = type(journal.dropped) == "number" and journal.dropped or 0
+    while #journal.events > JOURNAL_EVENTS do
+        table.remove(journal.events, 1)
+        journal.dropped = journal.dropped + 1
+    end
+    while #journal.incidents > JOURNAL_INCIDENTS do
+        table.remove(journal.incidents, 1)
+    end
+    return journal
+end
+
+function Logres:TraceEvent(domain, action, details)
+    if not self.DEVELOPMENT then return nil end
+    domain, action = ordinaryTraceValue(domain), ordinaryTraceValue(action)
+    if type(domain) ~= "string" or type(action) ~= "string" then return nil end
+    local journal = ensureIncidentJournal()
+    journal.sequence = journal.sequence + 1
+    local entry = { sequence = journal.sequence, session = journal.session,
+        time = type(time) == "function" and time() or 0,
+        elapsed = type(GetTime) == "function" and math.floor(GetTime() * 1000) or 0,
+        domain = domain, action = action }
+    if type(details) == "table" then
+        local selected = {}
+        for key in pairs(TRACE_FIELDS) do
+            local value = ordinaryTraceValue(details[key])
+            if value ~= nil then selected[key] = value end
+        end
+        if next(selected) then entry.fields = selected end
+    end
+    journal.events[#journal.events + 1] = entry
+    if #journal.events > JOURNAL_EVENTS then
+        table.remove(journal.events, 1)
+        journal.dropped = journal.dropped + 1
+    end
+    return entry.sequence
+end
+
+local function pickTraceStatus(source, names)
+    if type(source) ~= "table" then return nil end
+    local copy = {}
+    for index = 1, #names do
+        local key = names[index]
+        local value = ordinaryTraceValue(source[key])
+        if value ~= nil then copy[key] = value end
+    end
+    return copy
+end
+
+local function ownedTraceStatus(getter)
+    local ok, result = pcall(getter)
+    if ok and type(result) == "table" then return result end
+    return nil
+end
+
+function Logres:CaptureBugIncident()
+    local journal = ensureIncidentJournal()
+    local alreadyPending = journal.pendingScreenshot ~= nil
+    local id = journal.sequence + 1
+    local incident = {
+        id = id, session = journal.session,
+        time = type(time) == "function" and time() or 0,
+        version = self.VERSION,
+        screenshot = alreadyPending and "previous-request-pending"
+            or (type(Screenshot) == "function" and "requested" or "unavailable"),
+        context = {}, snapshot = {},
+    }
+    local first = math.max(1, #journal.events - JOURNAL_CONTEXT + 1)
+    for index = first, #journal.events do
+        incident.context[#incident.context + 1] = journal.events[index]
+    end
+    incident.snapshot.state = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetState()
+    end), {"revision", "context", "combat", "pvpFlagged", "inInstance",
+        "instanceType", "mounted", "resting", "onTaxi", "interacting",
+        "interactionType", "changedBy"})
+    incident.snapshot.preferences = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetPreferences()
+    end), {"revision", "immersionEnabled", "activeQuestEnabled"})
+    incident.snapshot.gossip = pickTraceStatus(ownedTraceStatus(function()
+        return self.NPCGossipPresentation.GetAudit()
+    end), {"enabled", "pending", "active", "opens", "deferrals", "closes",
+        "last", "kind", "nativeActions", "questActions", "questBlocked"})
+    incident.snapshot.parking = pickTraceStatus(ownedTraceStatus(function()
+        return self.NPCGossipStockParking.GetAudit()
+    end), {"enabled", "parked", "pending", "attempts", "parks", "restores",
+        "deferrals", "failures", "last"})
+    -- All Logres modules expose lifecycle state; no native frame introspection.
+    incident.snapshot.modules = {}
+    local moduleRows = ownedTraceStatus(function()
+        return self:GetModuleSnapshot()
+    end)
+    if moduleRows then
+        for index = 1, #moduleRows do
+            incident.snapshot.modules[index] = pickTraceStatus(moduleRows[index],
+                {"name", "initialized", "enabled", "autoEnable", "cleanupCount"})
+        end
+    end
+    incident.snapshot.offer = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("QuestOfferActionProbe"):GetDebugStatus()
+    end), {"offerOpen", "currentQuestID", "actionAttemptCount", "blockedCount",
+        "successCount", "failureCount", "pendingKind", "pendingState",
+        "lastActionKind", "lastActionState", "lastActionCallOK",
+        "lastActionEvent", "lastActionQuestID", "lastBlockedReason"})
+    incident.snapshot.suppression = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("QuestOfferStockSuppression"):GetDebugStatus()
+    end), {"requestedEnabled", "appliedEnabled", "pending", "snapshotReady",
+        "visualOwned", "visualFrameCount", "applyCount", "restoreCount",
+        "failureCount", "emergencyRestoreCount", "lastReason", "lastError"})
+    journal.incidents[#journal.incidents + 1] = incident
+    if #journal.incidents > JOURNAL_INCIDENTS then table.remove(journal.incidents, 1) end
+    -- Record the marker even if a prior screenshot is still in flight.
+    -- A second click must not steal the pending screenshot's correlation ID.
+    if alreadyPending then
+        self:TraceEvent("incident", "screenshot-deferred", {incident = id,
+            result = "previous-request-pending"})
+        return false, "screenshot-pending"
+    end
+    journal.pendingScreenshot = incident.id
+    self:TraceEvent("incident", "button", {incident = id, result = incident.screenshot})
+    -- Screenshot is a native client operation; Lua cannot read the image or
+    -- choose its filename. Record BEFORE the possibly blocking API call.
+    if type(Screenshot) ~= "function" then
+        journal.pendingScreenshot = nil
+        return false, "screenshot-unavailable"
+    end
+    local ok = pcall(Screenshot)
+    if not ok then
+        incident.screenshot = "call-failed"
+        journal.pendingScreenshot = nil
+        self:TraceEvent("incident", "screenshot-call-failed", {incident = id})
+        return false, "screenshot-call-failed"
+    end
+    return true, "screenshot-requested"
+end
+
+Logres:RegisterEvent("SCREENSHOT_SUCCEEDED", function()
+    local journal = ensureIncidentJournal()
+    local id = journal.pendingScreenshot
+    if id == nil then return end
+    journal.pendingScreenshot = nil
+    for index = #journal.incidents, 1, -1 do
+        if journal.incidents[index].id == id then
+            journal.incidents[index].screenshot = "succeeded"
+            break
+        end
+    end
+    Logres:TraceEvent("incident", "screenshot-succeeded", {incident = id})
+end)
+Logres:RegisterEvent("SCREENSHOT_FAILED", function()
+    local journal = ensureIncidentJournal()
+    local id = journal.pendingScreenshot
+    if id == nil then return end
+    journal.pendingScreenshot = nil
+    for index = #journal.incidents, 1, -1 do
+        if journal.incidents[index].id == id then
+            journal.incidents[index].screenshot = "failed"
+            break
+        end
+    end
+    Logres:TraceEvent("incident", "screenshot-failed", {incident = id})
+end)
+Logres:RegisterEvent("PLAYER_LOGIN", function()
+    local journal = ensureIncidentJournal()
+    journal.session = journal.session + 1
+    -- A screenshot pending across reload is unknown, never a presumed success.
+    if journal.pendingScreenshot ~= nil then
+        for index = #journal.incidents, 1, -1 do
+            if journal.incidents[index].id == journal.pendingScreenshot then
+                journal.incidents[index].screenshot = "unconfirmed-after-reload"
+                break
+            end
+        end
+    end
+    journal.pendingScreenshot = nil
+    Logres:TraceEvent("session", "login", {source = Logres.VERSION})
+    Logres:SubscribeState(function(current, _, changes, reason)
+        for field in pairs(changes) do
+            -- Compact state deltas: no native secret-capable fields or unit data.
+            Logres:TraceEvent("state", field, {reason = reason, result = current[field]})
+        end
+    end)
+    Logres:SubscribePreferences(function(_, _, changes, reason)
+        for field in pairs(changes) do
+            Logres:TraceEvent("preference", field, {reason = reason})
+        end
+    end)
+end)
+
 local createH2PanelBox
 
 local Panel = Logres:RegisterModule("DevPanel", {
@@ -256,6 +485,20 @@ local Panel = Logres:RegisterModule("DevPanel", {
 
         self:CreatePhaseTabs()
         self:SetActivePhase(DEFAULT_PHASE)
+
+        -- P0372: explicit screenshot/incident marker during normal gameplay.
+        local bugButton = CreateFrame("Button", "LogresBugReportButton",
+            UIParent, "UIPanelButtonTemplate")
+        bugButton:SetSize(94, 22)
+        bugButton:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -20, -160)
+        bugButton:SetFrameStrata("LOW")
+        bugButton:SetText("Report Bug")
+        bugButton:SetScript("OnClick", function()
+            local _, result = Logres:CaptureBugIncident()
+            Logres:DevPrint("Incident recorded: " .. result
+                .. ". Screenshot image remains in the client Screenshots folder.")
+        end)
+        self.bugButton = bugButton
 
         if UISpecialFrames then
             UISpecialFrames[#UISpecialFrames + 1] = frame:GetName()

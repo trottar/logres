@@ -47,6 +47,7 @@ end
 local function defer(reason)
     deferrals = deferrals + 1
     last = reason
+    Logres:TraceEvent("gossip", "parking-deferred", {reason = reason})
     return false, reason
 end
 
@@ -97,6 +98,7 @@ function Parking.Restore(reason)
     retry:UnregisterEvent("PLAYER_REGEN_ENABLED")
     restores = restores + 1
     last = reason or "stock-anchors-restored"
+    Logres:TraceEvent("gossip", "restored", {reason = last})
     return true, last
 end
 
@@ -195,6 +197,7 @@ function Parking.TryPark(model)
     end
     parks = parks + 1
     last = "native-offscreen-requested-unverified"
+    Logres:TraceEvent("gossip", "parked", {result = last})
     return true, last
 end
 

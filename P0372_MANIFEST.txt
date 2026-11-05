@@ -1,0 +1,18 @@
+P0372 R4 PASSIVE INCIDENT JOURNAL + REPORT BUG SCREENSHOT MARKER
+Baseline pushed P0371: d19273d4fb0a8e9780173aef2a2339cbb1e4077c
+Candidate version 0.0.258-dev -> 0.0.259-dev
+R0 direct checker REFUSED before writes: patch record missing literal UNVERIFIED
+R1 PREWRITE 27/242 REFUSED: check_checker_version_policy.py (checker freezes version)
+R2 PREWRITE 199/242 REFUSED: historical P0362 handoff continuity lost
+R3 PREWRITE 206/242 REFUSED: missing L-021 in CURRENT; no tracked writes
+R4: original P/L/D identifier preservation in CURRENT/HANDOFF
+PREWRITE shadow: policy + direct checker + 242/242 STATIC PASS
+POSTWRITE: 242/242 STATIC PASS
+git diff --check: PASS
+Lua94, developer actions120, previews38, SavedVariables schema3 unchanged
+Continuous bounded addon-owned event history and manual screenshot marker
+No protected/native inspection, action routing, polling or screenshot upload
+L-001/L-002/L-005 OPEN LIVE FAIL, L-019 public release BLOCKED
+WoW runtime UNVERIFIED until explicit Forever deployment and screenshot/trace validation
+Changed tracked paths: 16
+New paths: 3

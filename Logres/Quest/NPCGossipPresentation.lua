@@ -27,6 +27,7 @@ local function hide(reason)
     end
     active = false
     last = reason or "closed"
+    Logres:TraceEvent("gossip", "hidden", {reason = last})
     return true
 end
 
@@ -71,8 +72,10 @@ function Live.TryShow(reason)
     opens = opens + 1
     -- Native UI is parked only after the complete Logres presentation exists;
     -- partial/unknown controls leave Blizzard visible and usable.
-    Logres.NPCGossipStockParking.TryPark(model)
+    local parked, parkingReason = Logres.NPCGossipStockParking.TryPark(model)
     last = "live-additive-read-only-" .. (reason or "gossip")
+    Logres:TraceEvent("gossip", "shown", {kind = lastKind,
+        parked = parked, result = parkingReason})
     return true, last
 end
 

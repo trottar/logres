@@ -163,6 +163,7 @@ function Probe:RecordBlocked(kind, reason, secretObserved)
     self.lastBlockedReason = reason
     self.lastSecret = secretObserved and true or false
     self.lastError = reason
+    Logres:TraceEvent("quest", "action-blocked", {kind = kind, reason = reason})
 end
 
 function Probe:CaptureOffer(reason)
@@ -202,6 +203,8 @@ function Probe:CaptureOffer(reason)
     }
     self.offerOpen = true
     self.lastError = nil
+    Logres:TraceEvent("quest", "offer-seen", {questID = offer.questID,
+        result = "captured"})
 
     return true, "captured"
 end
@@ -248,6 +251,8 @@ function Probe:ResolveAccepted(...)
     self.lastAction = action
     self.offerOpen = false
     self.currentOffer = nil
+    Logres:TraceEvent("quest", "accepted", {questID = action.questID,
+        result = action.state})
 end
 
 function Probe:ResolveFinished()
@@ -277,6 +282,8 @@ function Probe:ResolveFinished()
 
     self.offerOpen = false
     self.currentOffer = nil
+    Logres:TraceEvent("quest", "finished", {
+        result = action and action.state or "native-event"})
 end
 
 function Probe:ResolveWorldTransition()
@@ -297,6 +304,9 @@ function Probe:ResolveWorldTransition()
 
     self.offerOpen = false
     self.currentOffer = nil
+    Logres:TraceEvent("quest", "world-transition", {
+        questID = action and action.questID or nil,
+        result = action and action.state or "no-pending-action"})
 end
 
 function Probe:TriggerAction(kind, source)
@@ -437,6 +447,8 @@ function Probe:TriggerAction(kind, source)
     self.lastSecret = false
     self.lastError = nil
 
+    Logres:TraceEvent("quest", "action-call", {
+        questID = offer.questID, kind = kind, source = source})
     local callOK, callError
 
     if kind == "accept" then
@@ -463,6 +475,8 @@ function Probe:TriggerAction(kind, source)
         self.lastAction = action
         self.lastError = action.error
         self.failureCount = self.failureCount + 1
+        Logres:TraceEvent("quest", "action-failed", {
+            questID = offer.questID, kind = kind, reason = "call-failed"})
         return false, "call-failed"
     end
 
@@ -472,6 +486,8 @@ function Probe:TriggerAction(kind, source)
         action.state = "awaiting-event"
     end
 
+    Logres:TraceEvent("quest", "action-started", {
+        questID = offer.questID, kind = kind, source = source})
     return true, "started"
 end
 

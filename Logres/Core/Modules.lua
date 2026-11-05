@@ -133,6 +133,17 @@ function Logres:GetModuleStatus(name)
     }
 end
 
+function Logres:GetModuleSnapshot()
+    local rows = {}
+    for index = 1, #moduleOrder do
+        local module = moduleOrder[index]
+        rows[index] = {name = module.name, initialized = module._initialized,
+            enabled = module._enabled, autoEnable = module.autoEnable,
+            cleanupCount = #module._cleanups}
+    end
+    return rows
+end
+
 function Logres:InitializeModule(name)
     local module = requireModule(name)
 
@@ -145,6 +156,7 @@ function Logres:InitializeModule(name)
     end
 
     module._initialized = true
+    Logres:TraceEvent("module", "initialized", {source = name})
     return true
 end
 
@@ -168,6 +180,7 @@ function Logres:EnableModule(name)
     module._enabling = false
 
     if not ok then
+        Logres:TraceEvent("module", "enable-failed", {source = name})
         local cleanupError = runCleanups(module)
 
         if cleanupError then
@@ -183,6 +196,7 @@ function Logres:EnableModule(name)
     end
 
     module._enabled = true
+    Logres:TraceEvent("module", "enabled", {source = name})
     return true
 end
 
@@ -200,6 +214,7 @@ function Logres:DisableModule(name)
     end
 
     module._enabled = false
+    Logres:TraceEvent("module", "disabled", {source = name})
 
     local cleanupError = runCleanups(module)
 

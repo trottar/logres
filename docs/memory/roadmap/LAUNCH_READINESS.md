@@ -1,3 +1,7 @@
+## P0372 — passive incident recorder / screenshot marker (2026-11-04)
+
+P0371 main `d19273d` 241/241 STATIC; four live npcbatch captures expose the manual snapshot gap. P0372 adds bounded automatic addon-owned NPC/quest/state/preference transitions and one explicit Report Bug screenshot marker; no protected/native probing, timer, polling, telemetry upload or hidden clicks. Version 0.0.259-dev / checker #242, Lua94/actions120/previews38/schema3, D-046/047/048 unchanged. WSL 242/242 required; WoW UNVERIFIED. L-001/L-002/L-005 live FAIL, L-019 BLOCKED, full alpha diagnostic coverage remains OPEN. Evidence `docs/memory/evidence/P0372_PASSIVE_JOURNAL_BUG_MARKER.md`.
+
 ## P0371 — grouped NPC live failure diagnostics (2026-11-04)
 
 P0370 pushed `f754f349aa54a3fd5c8d30f5247f07cb7d659c96`, 240/240 STATIC; narrow no-pet label USER PASS. P0371 read-only saved NPC batch improves runtime evidence without approving an internal/public alpha or mutating protected/native surfaces. P0321 gossip and L-002/L-005 quest-window failure remain OPEN; L-019 redistribution license BLOCKED. Runtime P0371 UNVERIFIED.

@@ -11,7 +11,7 @@ Prepare evidence-gated Forever Logres alpha, then D-048 five-domain 1.0. Preserv
 
 ## Current Work Item
 
-**P0371 — read-only NPC batch.** P0370 `f754f349aa54a3fd5c8d30f5247f07cb7d659c96` 240/240 STATIC; no-pet L-021 user PASS. Live P0321/L-001 gossip FAIL; L-002/L-005 quest window FAIL. `0.0.258-dev`, #241, Lua94/actions120/previews38/schema3/D-048/camera unchanged; L-019 BLOCKED.
+**P0372 — passive journal and Report Bug marker.** P0371 `d19273d` 241/241 STATIC; R0–R3 PREWRITE REFUSED; live npcbatch lacked post-click causality. L-001/L-002/L-005 FAIL; L-021 PASS; L-019 BLOCKED.
 
 ## Verified State
 
@@ -38,16 +38,17 @@ Prepare evidence-gated Forever Logres alpha, then D-048 five-domain 1.0. Preserv
 
 ## Next Action
 
-P0371: verify 241/241 STATIC and push, deploy, capture `/logres npcbatch` at ordinary NPC, `/reload`, export fresh SavedVariables.
+P0372: run 242 STATIC checks, push/verify, deploy, click Report Bug in natural gameplay, export journal and screenshot.
 
 ## Success Criteria
 
-One saved bounded NPC incident; no native mutations. Gameplay bugs OPEN until retest.
+Bounded NPC/quest journal and screenshot outcome persist; client status UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/evidence/P0372_PASSIVE_JOURNAL_BUG_MARKER.md`
 - `docs/memory/evidence/P0371_NPC_DIAGNOSTIC_BATCH.md` and `docs/memory/patches/P0371_NPC_DIAGNOSTIC_BATCH.md`
 - `docs/memory/evidence/P0370_PET_HOTKEY_PRESENTATION_GATE.md` and `docs/memory/patches/P0370_PET_HOTKEY_PRESENTATION_GATE.md`
 - `docs/memory/evidence/P0369_LIVE_DIAGNOSTIC_EXPORT_RECOVERY.md` and `docs/memory/patches/P0369_LIVE_DIAGNOSTIC_EXPORT_RECOVERY.md`
