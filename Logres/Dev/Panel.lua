@@ -210,6 +210,12 @@ function Logres:CaptureBugIncident()
         return self:GetModule("QuestDialogue"):GetDebugStatus()
     end), {"completeEventCount", "completionShownCount",
         "completionSkippedCount", "completionActive", "lastCompletionReason"})
+    incident.snapshot.questPresentation = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("QuestDialogue"):GetDebugStatus()
+    end), {"rootShown", "presentationShown", "lastPresentationReason",
+        "rootShowCount", "rootHideCount", "lastQuestID",
+        "turninEventCount", "lastTurninQuestID",
+        "questTurnedInRegistered"})
     journal.incidents[#journal.incidents + 1] = incident
     if #journal.incidents > JOURNAL_INCIDENTS then table.remove(journal.incidents, 1) end
     -- Record the marker even if a prior screenshot is still in flight.

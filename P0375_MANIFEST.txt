@@ -1,0 +1,10 @@
+P0375 QUEST PRESENTATION / TURN-IN PROVENANCE
+Baseline verified main P0374 c3412305bae8c32e36184d2f23ed0e7eceb0bbfa
+Runtime 0.0.261-dev; no Blizzard presentation suppression or action changes
+L-002 OPEN, L-005 PARTIAL, L-034 OPEN; L-033 OPEN
+Addon-owned QuestDialogue root lifecycle and intent journal; Report Bug snapshot
+Optional secret-gated QUEST_TURNED_IN event identity; no assumed reward grant
+PREWRITE 245/245 STATIC PASS
+POSTWRITE 245/245 STATIC PASS
+git diff --check PASS
+WoW runtime UNVERIFIED

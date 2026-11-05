@@ -394,6 +394,7 @@ function Dialogue:HidePresentation(reason)
         reason or "hide-presentation"
     )
 
+    local wasPresented = self.presentationShown == true
     self.presentationGeneration =
         self.presentationGeneration + 1
     self.presentationShown = false
@@ -426,6 +427,10 @@ function Dialogue:HidePresentation(reason)
 
     if reason then
         self.lastPresentationReason = reason
+    end
+    if wasPresented then
+        Logres:TraceEvent("quest", "presentation-dismissed",
+            {reason = reason or "unclassified"})
     end
 end
 
@@ -1265,6 +1270,9 @@ function Dialogue:PresentText(
         reason or "presentation"
     self.lastPageCount = #self.pages
     self.lastCurrentPage = self.currentPage
+    Logres:TraceEvent("quest", "presentation-presented",
+        {reason = self.lastPresentationReason,
+         result = previewMode and "preview" or "live"})
     self:UpdateOfferControls()
 
     if autoHide then
@@ -1586,6 +1594,8 @@ function Dialogue:GetDebugStatus()
             self.eventRegistration.QUEST_ACCEPTED == true,
         questFinishedRegistered =
             self.eventRegistration.QUEST_FINISHED == true,
+        questTurnedInRegistered =
+            self.eventRegistration.QUEST_TURNED_IN == true,
         worldRegistered =
             self.eventRegistration.PLAYER_ENTERING_WORLD == true,
         progressRegistered = self.eventRegistration.QUEST_PROGRESS == true,
@@ -1598,6 +1608,8 @@ function Dialogue:GetDebugStatus()
         completionShownCount = self.completionShownCount,
         completionSkippedCount = self.completionSkippedCount,
         completionActive = self.completionActive == true,
+        turninEventCount = self.turninEventCount,
+        lastTurninQuestID = self.lastTurninQuestID,
         optionSession = self.optionSession and self.optionSession:Debug(),
         goodbyeClicks = self.goodbyeClicks,
         completionRewardCards = #self.completionRewardCards,
@@ -1647,6 +1659,9 @@ function Dialogue:GetDebugStatus()
             self.activeDetail ~= nil,
         presentationShown =
             self.presentationShown == true,
+        rootShown = self.root ~= nil and self.root:IsShown() or false,
+        rootShowCount = self.rootShowCount,
+        rootHideCount = self.rootHideCount,
 
         offerControlsReady =
             self.offerActionRoot ~= nil
@@ -1753,6 +1768,8 @@ function Dialogue:OnInitialize()
     self.acceptedEventCount = 0
     self.finishedEventCount = 0
     self.worldEventCount = 0
+    self.turninEventCount = 0
+    self.lastTurninQuestID = nil
 
     self.presentationCount = 0
     self.suppressedCount = 0
@@ -1760,6 +1777,8 @@ function Dialogue:OnInitialize()
     self.restoreCount = 0
     self.presentationGeneration = 0
     self.presentationShown = false
+    self.rootShowCount = 0
+    self.rootHideCount = 0
 
     self.offerActionsEnabled = false
     self.offerActionPreview = false
@@ -1808,6 +1827,19 @@ function Dialogue:OnInitialize()
     root:SetFrameStrata("HIGH")
     root:EnableMouse(false)
     root:Hide()
+    -- P0375: observe this addon-owned root; never hook Blizzard frames.
+    root:HookScript("OnShow", function()
+        self.rootShowCount = self.rootShowCount + 1
+        Logres:TraceEvent("quest", "root-onshow",
+            {reason = self.lastPresentationReason or "unclassified",
+             applied = self.presentationShown == true})
+    end)
+    root:HookScript("OnHide", function()
+        self.rootHideCount = self.rootHideCount + 1
+        Logres:TraceEvent("quest", "root-onhide",
+            {reason = self.lastPresentationReason or "unclassified",
+             applied = self.presentationShown == true})
+    end)
 
     -- Independent upper-corner dismissal. Keep original Accept/Decline and
     -- protected stock restoration paths intact; no additional quest action.
@@ -2179,6 +2211,7 @@ function Dialogue:OnInitialize()
         "GOSSIP_CLOSED",
         "QUEST_ACCEPTED",
         "QUEST_FINISHED",
+        "QUEST_TURNED_IN",
         "PLAYER_ENTERING_WORLD",
     }
 
@@ -2240,6 +2273,26 @@ function Dialogue:OnInitialize()
                 self:ClearActiveDetail(
                     "QUEST_ACCEPTED"
                 )
+                return
+            end
+
+            if event == "QUEST_TURNED_IN" then
+                -- Event payload may be secret: never examine until proven ordinary.
+                self.turninEventCount = self.turninEventCount + 1
+                local questID = select(1, ...)
+                local valid = false
+                if type(issecretvalue) == "function" then
+                    local ok, secret = pcall(issecretvalue, questID)
+                    valid = ok and secret == false
+                end
+                local ordinaryQuestID = nil
+                if valid and type(questID) == "number" and questID > 0 then
+                    ordinaryQuestID = questID
+                end
+                self.lastTurninQuestID = ordinaryQuestID
+                Logres:TraceEvent("quest", "turnin-event",
+                    {questID = ordinaryQuestID, source = "QUEST_TURNED_IN",
+                     result = ordinaryQuestID and "identified" or "opaque"})
                 return
             end
 

@@ -1,5 +1,9 @@
 # ISSUE LEDGER FIRST: `docs/memory/investigations/ISSUE_LEDGER.md`
 
+## P0375 — quest UI ownership and turn-in provenance (2026-11-05)
+
+Verified P0374 `c341230` / 244 STATIC. L-002 native Blizzard quest window at claim OPEN, L-005 reward/claim variants PARTIAL, L-034 unsolicited quest GUI OPEN. P0373 incident 764 (session 7) followed login with no quest/gossip journal events; actual visible window owner UNKNOWN, screenshot image not present in the Lua export. Earlier quests 7/91741/92124 recorded Logres completion-owned and native handler invocation but not reward receipt. P0375 introduces addon-owned `QuestDialogue` root OnShow/OnHide events, presentation intent/hide traces, Report Bug root snapshot and optional guarded `QUEST_TURNED_IN` identity observation. No native Blizzard frame inspection, suppression, quest action, polling, hidden click or reward claim changed. Static 245 PRE/POST required; Forever runtime UNVERIFIED; do not close L-002/L-005/L-034. Evidence `docs/memory/evidence/P0375_QUEST_PRESENTATION_PROVENANCE.md`.
+
 **Current status and resolution are maintained in the issue ledger.** This file preserves earlier dated triage tables and negative results; older status labels below are historical snapshots, not current issue closure. For each new bug, check the ledger L-ID first and then open the linked evidence.
 
 ## P0373 — trainer fail-open and completion diagnostic (2026-11-05)
