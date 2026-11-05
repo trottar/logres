@@ -1,0 +1,18 @@
+P0371 R2 NPC TOPIC-SPECIFIC SAVED INCIDENT BATCH
+Verified pushed main P0370: f754f349aa54a3fd5c8d30f5247f07cb7d659c96
+Candidate version: 0.0.257-dev -> 0.0.258-dev
+PREWRITE shadow: 241/241 STATIC PASS
+POSTWRITE: 241/241 STATIC PASS
+git diff --check: PASS
+Lua entries: 94; developer panel actions: 120; previews: 38
+Saved settings schema3 unchanged; D-048 and frozen camera unchanged
+Command: /logres npcbatch; eight existing read-only owner checks, one saved bounded run
+Existing gameplaycapture slash and panel behavior unchanged
+R0 PREWRITE refused 166/241 P0329 handleCommand upvalue budget; R1 method seam
+R1 PREWRITE refused 199/241 P0362 missing P0362 in handoff; R2 preserves P0362/P0363
+No quest transaction, gossip toggle, native frame move, secure state or polling
+L-021 no-pet label USER-OBSERVED PASS, other pet transitions not accepted
+P0321/L-001 gossip USER FAIL, L-002/L-005 native quest window USER FAIL
+WoW P0371 runtime UNVERIFIED until _forever_ deployment and one NPC incident capture
+L-019 public release BLOCKED; prior failure records preserved
+Guarded baseline paths: 12; new payload paths: 3

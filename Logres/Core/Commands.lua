@@ -3441,6 +3441,7 @@ local function printHelp()
     emit("Logres development commands:")
     emit("  /logres panel")
     emit("  /logres gameplaycapture  (one-shot SAVED diagnostic; READ-ONLY)")
+    emit("  /logres npcbatch  (one-shot saved read-only NPC incident)")
     emit("  /logres settings")
     emit("  /logres checkall")
     emit("  /logres status")
@@ -3508,6 +3509,51 @@ local function printHelp()
     emit("  /logres debug off")
 end
 
+function Logres:RunNPCDiagnosticBatch()
+    -- P0371 R1: use the current saved run's sink; nested RunDevCommand
+    -- temporarily swaps activeOutput and restores it after each subcheck.
+    -- Never call emit here while the nested sink is active: it would recurse.
+    local sourceOutput = activeOutput or print
+    local checks = {
+        "gameplaycapture",
+        "gossipstockstatus",
+        "gossiplivestatus",
+        "gossipsourcecheck",
+        "questdialoguecheck",
+        "questoffercontrolscheck",
+        "questofferstocksuppressioncheck",
+        "questinteractionprobe",
+    }
+    local MAX_NPC_BATCH_LINES = 110
+    local lines, dropped = 0, 0
+    local function boundedOutput(line)
+        if lines < MAX_NPC_BATCH_LINES then
+            lines = lines + 1
+            sourceOutput(line)
+        elseif dropped == 0 then
+            dropped = 1
+            sourceOutput("Logres npcbatch: TRUNCATED (110 lines; retain earlier owner evidence)")
+        else
+            dropped = dropped + 1
+        end
+    end
+    boundedOutput("Logres npcbatch: begin (read-only, no native actions)")
+    for index = 1, #checks do
+        local check = checks[index]
+        boundedOutput("Logres npcbatch: section " .. tostring(index) .. "/8 " .. check)
+        -- Existing command router is the sole owner of the subcheck route.
+        -- With output supplied it creates no extra SavedVariables run.
+        local invoked, succeeded, reason = pcall(self.RunDevCommand, self, check, boundedOutput)
+        if not invoked or not succeeded then
+            boundedOutput("Logres npcbatch: subcheck-error " .. check .. " " ..
+                tostring(invoked and reason or succeeded))
+        end
+    end
+    -- Reserve a terminal completion marker outside the bounded detail region.
+    sourceOutput("Logres npcbatch: end (individual results; no blanket PASS; dropped="
+        .. tostring(dropped) .. ")")
+end
+
 local function handleCommand(message)
     local command, argument =
         (message or ""):lower():match("^%s*(%S*)%s*(.-)%s*$")
@@ -3537,6 +3583,10 @@ local function handleCommand(message)
         return
     end
 
+    if command == "npcbatch" then
+        Logres:RunNPCDiagnosticBatch()
+        return
+    end
     if command == "checkall" then
         runAllChecks()
         return
@@ -4275,6 +4325,24 @@ function Logres:RunDevCommand(message, output)
         local panel = self:GetModule("DevPanel")
         if panel and type(panel.BeginDiagnosticRun) == "function" then
             local run = panel:BeginDiagnosticRun("gameplaycapture")
+            output = function(line)
+                print(line)
+                local lines = run.lines
+                lines[#lines + 1] = line
+                while #lines > 120 do
+                    table.remove(lines, 1)
+                end
+            end
+        end
+    end
+    -- P0371: unlike ordinary slash commands, NPC batch results are saved
+    -- as one bounded run, exactly as the existing gameplay snapshot is.
+    if output == nil and type(message) == "string"
+        and message:lower():match("^%s*npcbatch%s*$")
+    then
+        local panel = self:GetModule("DevPanel")
+        if panel and type(panel.BeginDiagnosticRun) == "function" then
+            local run = panel:BeginDiagnosticRun("npcbatch")
             output = function(line)
                 print(line)
                 local lines = run.lines

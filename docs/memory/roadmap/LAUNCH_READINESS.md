@@ -1,3 +1,7 @@
+## P0371 — grouped NPC live failure diagnostics (2026-11-04)
+
+P0370 pushed `f754f349aa54a3fd5c8d30f5247f07cb7d659c96`, 240/240 STATIC; narrow no-pet label USER PASS. P0371 read-only saved NPC batch improves runtime evidence without approving an internal/public alpha or mutating protected/native surfaces. P0321 gossip and L-002/L-005 quest-window failure remain OPEN; L-019 redistribution license BLOCKED. Runtime P0371 UNVERIFIED.
+
 ## P0370 — live pet keybind visibility regression; source only (2026-11-04)
 
 P0369 R2 `272fe00c8c488cff100f4c41cd185beec6241d3b` pushed 240/240 STATIC. P0370 corrects addon-owned no-pet labels and preserves secure controls. Runtime result UNVERIFIED until `_forever_` reload; P0321 gossip and native quest-window failures are still live OPEN. Public release L-019 BLOCKED; no alpha GO implied.

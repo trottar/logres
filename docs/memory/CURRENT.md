@@ -1,21 +1,21 @@
 ---
 memory_schema: 1
-as_of: 2026-10-27
+as_of: 2026-11-04
 project: logres
 ---
 
 # Current State
 
 ## Active Objective
-Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D-048 five-independent-domain 1.0. Preserve D-046 same-renderer preview-first, native Blizzard fallback, and frozen D-047 Camera/DynamicCam. November 4 is a contingent runtime opportunity, not a client PASS or release date.
+Prepare evidence-gated Forever Logres alpha, then D-048 five-domain 1.0. Preserve D-046 preview-first, native fallback, and frozen D-047 Camera/DynamicCam. November 4 runtime tests are contingent, not release approval.
 
 ## Current Work Item
 
-**P0370 — L-021 pet hotkey leak fix, live UNVERIFIED.** P0369 `272fe00c8c488cff100f4c41cd185beec6241d3b` 240/240 STATIC. No-pet labels FAIL in `_forever_`; independent feedback plates lacked pet gate. `0.0.257-dev`, 240 checkers. P0321/L-001 gossip and L-002/L-005 native quest UI FAIL/OPEN. L-019 BLOCKED; D-048/camera unchanged.
+**P0371 — read-only NPC batch.** P0370 `f754f349aa54a3fd5c8d30f5247f07cb7d659c96` 240/240 STATIC; no-pet L-021 user PASS. Live P0321/L-001 gossip FAIL; L-002/L-005 quest window FAIL. `0.0.258-dev`, #241, Lua94/actions120/previews38/schema3/D-048/camera unchanged; L-019 BLOCKED.
 
 ## Verified State
 
-- P0369 240/240; P0368 239/239; P0367 238/238; P0366 R1 237/237; P0365 R1 236/236; P0364 R1 235/235; P0363 234/234; P0362 233/233; P0361 R1 232/232; P0360 231/231; P0359 230/230; P0358 R1 229/229; P0357 228/228; P0356 227/227 STATIC. R0/R1 refusals preserved; live L-001/L-002/L-005/L-021 FAIL.
+- P0370 `f754f349aa54a3fd5c8d30f5247f07cb7d659c96` 240/240 STATIC; no-pet labels user PASS. P0369 240, P0368 239, P0367 238, P0366 R1 237, P0365 R1 236, P0364 R1 235, P0363 234, P0362 233, P0361 R1 232, P0360 231, P0359 230, P0358 R1 229, P0357 228, P0356 227 / same totals STATIC. Prior R0/R1 refusals preserved; L-001/L-002/L-005 FAIL.
 - P0352 `61f0f49c2cf990168c1415dd2100a0f286627a91` 223/223 STATIC, WoW UNVERIFIED.
 - P0351 `e8b71bc59a04f3077925bb24f0d6850a71340841` 222/222 STATIC; WoW UNVERIFIED.
 - P0350 `fd2d2676ffb41d509143b398b61b8474ecacf53d` 221/221 STATIC; WoW UNVERIFIED.
@@ -38,16 +38,17 @@ Prepare an evidence-gated public-alpha-quality WoW Forever Logres, followed by D
 
 ## Next Action
 
-P0370: 240/240 STATIC, push verify, live deploy; test no-pet labels and pet/binding recovery; gossip still FAIL.
+P0371: verify 241/241 STATIC and push, deploy, capture `/logres npcbatch` at ordinary NPC, `/reload`, export fresh SavedVariables.
 
 ## Success Criteria
 
-No labels without ordinary pet/armed state; secure stock intact; live result UNVERIFIED.
+One saved bounded NPC incident; no native mutations. Gameplay bugs OPEN until retest.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/evidence/P0371_NPC_DIAGNOSTIC_BATCH.md` and `docs/memory/patches/P0371_NPC_DIAGNOSTIC_BATCH.md`
 - `docs/memory/evidence/P0370_PET_HOTKEY_PRESENTATION_GATE.md` and `docs/memory/patches/P0370_PET_HOTKEY_PRESENTATION_GATE.md`
 - `docs/memory/evidence/P0369_LIVE_DIAGNOSTIC_EXPORT_RECOVERY.md` and `docs/memory/patches/P0369_LIVE_DIAGNOSTIC_EXPORT_RECOVERY.md`
 - `docs/memory/evidence/P0368_NOV04_FREEZE_GATE.md` and `docs/memory/patches/P0368_NOV04_FREEZE_GATE.md`

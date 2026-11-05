@@ -2,6 +2,10 @@
 
 **As of:** 2026-10-24. An indexed triage list, **not** a replacement for historical evidence, which remains authoritative. Status terms: OBSERVED FAIL (observed negative), OPEN / UNREPRODUCED (one-off), RUNTIME UNVERIFIED (implemented but not tested), DEFERRED (requires environment/capability), FEATURE GAP (not claimed implemented), ACCEPTED SCOPE (positive observation only). Release classifications are planning hypotheses until November 4 evidence.
 
+## P0371 — grouped NPC live failure evidence (2026-11-04)
+
+P0370 pushed and USER-OBSERVED PASS for no-pet labels only (L-021). P0371 prepares one saved, bounded read-only NPC incident batch instead of requiring 8 separate panel runs. P0321/L-001 gossip and L-002/L-005 quest native-window handoff remain USER-REPORTED LIVE FAIL; source cause UNVERIFIED. No quest transaction, stock hiding, native gossip mutation or polling is authorized. L-019 distribution BLOCKED; future single-batch runtime collection required.
+
 ## P0370 — L-021 hotkey plate source correction (2026-11-04)
 
 P0369 R2 is verified pushed. Live no-pet label failure L-021 is **SOURCE PATCH PREPARED / CLIENT UNVERIFIED**: independently parented hotkey plates were painted with no pet even while the secure button cluster was hidden. P0370 gates only these addon-owned labels on ordinary available pet state; in-client no-pet/pet return, binding changes and combat retest remain required. P0321 gossip FAIL and L-002/L-005 native quest handoff FAIL are OPEN and unchanged; L-019 public release BLOCKED. Do not treat static checker PASS as gameplay acceptance.
