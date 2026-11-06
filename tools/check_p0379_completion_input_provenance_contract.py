@@ -54,8 +54,15 @@ need(D.count('owner:RecordCompletionInput("dispatch")') == 1,
 need(D.index('owner:RecordCompletionInput("dispatch")') <
      D.index('owner:HandleCompletionAction()'),
      "click provenance must precede transaction")
+# P0381 explicitly supersedes progress presentation ownership while preserving
+# Blizzard ownership of the transition; P0241 still bans direct quest mutation.
 need('function Dialogue:HandleQuestProgress()' in D and
-     'Blizzard owns Continue' in D, "progress must remain stock-owned")
+     'Blizzard owns Continue on fallback' in D and
+     'function Dialogue:ProgressGate()' in D and
+     'self:RestoreProgressStock("progress-continue-click")' in D and
+     'local called = pcall(_G.QuestProgressCompleteButton_OnClick)' in D and
+     'pcall(CompleteQuest)' not in D,
+     "progress handoff must be gated, native-owned and restorable")
 for token in ('pcall(_G.QuestRewardCompleteButton_OnClick)',
               'self:Restore("claim-invoked")',
               'function Control:Gate()',

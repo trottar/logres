@@ -143,6 +143,11 @@ local function createOfferButton(
             owner:HandleOfferAction(kind)
             return
         end
+        -- Progress Continue is a separate native transition, never a reward claim.
+        if kind == "accept" and owner.progressActive and owner.progressOwned then
+            owner:HandleProgressContinue()
+            return
+        end
         -- The original Accept button also serves guarded completion.
         -- This is the exact same visual and input object, not a clone.
         if kind == "accept" and owner.completionActive
@@ -216,6 +221,7 @@ function Dialogue:UpdateOfferControls()
     if self.completionControl and self.completionControl.applied then
         return
     end
+    if self.progressOwned then return end
     if self.completionFallbackActive then return end
     local pageCount = #self.pages
     local finalPage =
@@ -422,6 +428,168 @@ function Dialogue:CompletionInputStatus()
     }
 end
 
+-- P0381: the quest progress stage is not the reward/claim stage.
+-- Native QuestFrame is captured and restored with the existing stock adapter.
+local function ordinaryProgress(value)
+    if type(issecretvalue) ~= "function" then return false end
+    local ok, secret = pcall(issecretvalue, value)
+    return ok and secret == false
+end
+
+local function nativeProgressFrame(name)
+    local ok, frame = pcall(function() return _G[name] end)
+    if not ok or not ordinaryProgress(frame) or not frame then return nil end
+    return frame
+end
+
+local function nativeProgressFlag(frame, name)
+    if not frame then return false end
+    local found, method = pcall(function() return frame[name] end)
+    if not found or not ordinaryProgress(method) or type(method) ~= "function" then
+        return false
+    end
+    local ok, value = pcall(method, frame)
+    return ok and ordinaryProgress(value) and value == true
+end
+
+function Dialogue:ProgressGate()
+    if not self.moduleEnabled or not self.immersionEnabled
+        or not self.progressActive or not self.presentationShown
+        or self.lastPresentationReason ~= "QUEST_PROGRESS"
+    then return false, "inactive-progress" end
+    if type(InCombatLockdown) ~= "function" or type(GetQuestID) ~= "function"
+        or type(IsQuestCompletable) ~= "function"
+        or not ordinaryProgress(_G.QuestProgressCompleteButton_OnClick)
+        or type(_G.QuestProgressCompleteButton_OnClick) ~= "function" then
+        return false, "progress-api-unavailable"
+    end
+    local combatOK, combat = pcall(InCombatLockdown)
+    if not combatOK or not ordinaryProgress(combat) or combat ~= false then
+        return false, "combat-or-secret"
+    end
+    local idOK, questID = pcall(GetQuestID)
+    if not idOK or not ordinaryProgress(questID) or type(questID) ~= "number"
+        or questID <= 0 or questID ~= self.lastQuestID then
+        return false, "progress-identity-changed"
+    end
+    local readyOK, ready = pcall(IsQuestCompletable)
+    if not readyOK or not ordinaryProgress(ready) or ready ~= true then
+        return false, "progress-not-completable"
+    end
+    if not nativeProgressFlag(nativeProgressFrame("QuestFrame"), "IsShown")
+        or not nativeProgressFlag(nativeProgressFrame("QuestFrameProgressPanel"), "IsShown")
+        or not nativeProgressFlag(nativeProgressFrame("QuestFrameCompleteButton"), "IsShown")
+        or not nativeProgressFlag(nativeProgressFrame("QuestFrameCompleteButton"), "IsEnabled")
+    then return false, "native-continue-not-usable" end
+    return true, "progress-supported"
+end
+
+function Dialogue:RestoreProgressStock(reason)
+    self.offerActionRoot:Hide()
+    if not self.progressOwned then return true, "stock-owned" end
+    local module, snapshot = self.progressStockModule, self.progressStockSnapshot
+    local ok = module and snapshot and pcall(
+        module.RestoreOfferPresentation, module, snapshot)
+    if not ok then
+        local emergencyOK, emergencyResult = module and snapshot and pcall(
+            module.EmergencyRestoreOfferPresentation, module, snapshot)
+        ok = emergencyOK and emergencyResult == true
+    end
+    if not ok then
+        Logres:TraceEvent("quest", "progress-restore-failed",
+            {reason = reason or "unknown"})
+        self:SetOfferActionFeedback("Native Continue unavailable. Try /reload.")
+        return false, "progress-stock-restoration-failed"
+    end
+    self.progressOwned = false
+    self.progressStockModule = nil
+    self.progressStockSnapshot = nil
+    Logres:TraceEvent("quest", "progress-restored",
+        {reason = reason or "stock-restored"})
+    return true, "restored"
+end
+
+function Dialogue:UpdateProgressPagePresentation()
+    if not self.progressOwned or not self.progressActive
+        or not self.presentationShown then return end
+    if self.currentPage ~= #self.pages then
+        self.root:SetHeight(styleValue("height"))
+        self.offerActionRoot:Hide()
+        return
+    end
+    self.root:SetHeight(391)
+    self.declineButton:Hide()
+    self.acceptButton.label:SetText("Continue")
+    self.acceptButton:Show()
+    self.offerActionRoot:Show()
+end
+
+function Dialogue:ActivateProgressContinue()
+    local eligible, reason = self:ProgressGate()
+    if not eligible then return false, reason end
+    local ok, module = pcall(Logres.GetModule, Logres, "QuestOfferStockSuppression")
+    if not ok or not module
+        or type(module.CaptureOfferPresentation) ~= "function"
+        or type(module.SuppressOfferPresentation) ~= "function"
+        or type(module.RestoreOfferPresentation) ~= "function"
+        or type(module.EmergencyRestoreOfferPresentation) ~= "function" then
+        return false, "native-restoration-unavailable"
+    end
+    local captureOK, snapshot = pcall(module.CaptureOfferPresentation, module)
+    if not captureOK or not snapshot or type(snapshot.mouseFrames) ~= "table" then
+        return false, "progress-stock-capture-failed"
+    end
+    -- Only proven nonprotected native children may be temporarily parked.
+    for index = 1, #snapshot.mouseFrames do
+        local frame = snapshot.mouseFrames[index].frame
+        if not ordinaryProgress(frame) then return false, "native-child-secret" end
+        local methodOK, check = pcall(function() return frame.IsProtected end)
+        if not methodOK or not ordinaryProgress(check) or type(check) ~= "function" then
+            return false, "native-protection-unavailable"
+        end
+        local protectOK, protected = pcall(check, frame)
+        if not protectOK or not ordinaryProgress(protected) or protected ~= false then
+            return false, "protected-or-unknown-child"
+        end
+    end
+    -- Capture succeeded, so a failed partial suppression can be rolled back.
+    self.progressStockModule, self.progressStockSnapshot = module, snapshot
+    self.progressOwned = true
+    if not pcall(module.SuppressOfferPresentation, module, snapshot) then
+        local restored = self:RestoreProgressStock("progress-suppress-rollback")
+        return false, restored and "progress-suppress-failed" or "progress-rollback-failed"
+    end
+    Dialogue.PositionCompletionActionVisual(self)
+    local level = readOwnedFrameValue(self.root, "GetFrameLevel")
+    if level then self.offerActionRoot:SetFrameLevel(level + 8) end
+    self.acceptButton:EnableMouse(true)
+    self.acceptButton:ClearAllPoints()
+    self.acceptButton:SetPoint("CENTER", self.offerActionRoot, "CENTER", 0, 9)
+    self:UpdateProgressPagePresentation()
+    Logres:TraceEvent("quest", "progress-owned", {questID = self.lastQuestID})
+    return true, "progress-owned"
+end
+
+function Dialogue:HandleProgressContinue()
+    local eligible, reason = self:ProgressGate()
+    if not self.progressOwned or not eligible then
+        if self:RestoreProgressStock("progress-guard-blocked") then
+            self:HidePresentation("progress-native-fallback")
+        end
+        return false, reason or "progress-not-owned"
+    end
+    if not self:RestoreProgressStock("progress-continue-click") then
+        return false, "stock-restoration-failed"
+    end
+    local hidden = self:HidePresentation("progress-continue-handoff")
+    if not hidden then return false, "presentation-restoration-pending" end
+    -- Blizzard owns the progress-to-reward transition, distinct from claim.
+    local called = pcall(_G.QuestProgressCompleteButton_OnClick)
+    Logres:TraceEvent("quest", "progress-continue-requested",
+        {result = called and "native-transition-invoked" or "native-call-failed"})
+    return called, called and "native-transition-invoked" or "native-call-failed"
+end
+
 function Dialogue:HandleCompletionAction()
     if not self.completionControl then
         return false, "control-unavailable"
@@ -480,6 +648,10 @@ function Dialogue:HandleCompletionFallback()
     return self:HidePresentation("completion-native-fallback")
 end
 function Dialogue:HidePresentation(reason)
+    -- Restore native progress mouse ownership before dismissing replacement.
+    if not self:RestoreProgressStock(reason or "progress-hidden") then
+        return false, "progress-restoration-pending"
+    end
     -- Other dialogue/immersion callbacks can independently dismiss the view.
     -- Do not leave its SHOWN native source stranded offscreen on those exits.
     if self.optionSession and self.optionSession.liveReadOnly == true
@@ -536,6 +708,7 @@ function Dialogue:HidePresentation(reason)
         Logres:TraceEvent("quest", "presentation-dismissed",
             {reason = reason or "unclassified"})
     end
+    return true, "hidden"
 end
 
 -- P0266: the same Goodbye action is visible on every narrative/reward/NPC
@@ -633,7 +806,7 @@ function Dialogue:ReadDetail()
     }, nil, false
 end
 
--- P0241: show only actual ordinary quest-progress text; Blizzard owns Continue.
+-- P0381: ordinary native progress only; Blizzard owns Continue on fallback.
 function Dialogue:ReadProgress()
     if type(GetQuestID) ~= "function"
         or type(GetTitleText) ~= "function"
@@ -692,9 +865,20 @@ function Dialogue:HandleQuestProgress()
     )
     if shown and state == "shown" then
         self.progressActive = true
-        self.progressShownCount = self.progressShownCount + 1
-        self.presentationCount = self.presentationCount + 1
-        self.lastProgressReason = "shown"
+        local owned, progressReason = self:ActivateProgressContinue()
+        if owned then
+            self.progressShownCount = self.progressShownCount + 1
+            self.presentationCount = self.presentationCount + 1
+            self.lastProgressReason = "logres-continue-owned"
+        else
+            -- Unsupported stages get only usable Blizzard progress controls.
+            if self:HidePresentation("progress-stock-owned") then
+                self.progressSkippedCount = self.progressSkippedCount + 1
+            end
+            self.lastProgressReason = progressReason or "stock-continue"
+            Logres:TraceEvent("quest", "progress-stock-fallback",
+                {reason = self.lastProgressReason})
+        end
     else
         self.progressSkippedCount = self.progressSkippedCount + 1
         self.lastProgressReason = state or "presentation-unavailable"
@@ -1110,6 +1294,11 @@ function Dialogue:HandleQuestComplete()
                     self.root:SetHeight(391)
                 end
                 self:PositionCompletionActionVisual()
+                -- Raise only this owned action over addon reward art/option siblings.
+                -- No Blizzard frame strata or protected state is changed.
+                local actionLevel = readOwnedFrameValue(self.root, "GetFrameLevel")
+                if actionLevel then self.offerActionRoot:SetFrameLevel(actionLevel + 8) end
+                self.acceptButton:EnableMouse(true)
                 self.acceptButton.label:SetText("Complete Quest")
                 self.acceptButton:ClearAllPoints()
                 self.acceptButton:SetPoint(
@@ -1271,6 +1460,7 @@ function Dialogue:SetPage(index)
     self:UpdatePageControls()
     self:UpdateOfferControls()
     self:UpdateCompletionPagePresentation()
+    self:UpdateProgressPagePresentation()
     if self.optionSession then
         self.optionSession:OnNarrativePageChanged()
     end
@@ -1914,6 +2104,9 @@ function Dialogue:OnInitialize()
     self.lastCompletionRewardIdentified = false
     self.lastCompletionSecret = false
     self.progressActive = false
+    self.progressOwned = false
+    self.progressStockModule = nil
+    self.progressStockSnapshot = nil
     self.lastProgressReason = "not-observed"
     self.lastProgressSecret = false
     self.acceptedEventCount = 0

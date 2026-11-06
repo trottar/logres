@@ -1,0 +1,9 @@
+P0381 — integrated Forever gameplay implementation
+Verified input HEAD: ed11249f4ae798a812c8964bd008dca0016820fe
+Runtime version: 0.0.265-dev
+PREWRITE: 251/251 STATIC PASS
+POSTWRITE: 251/251 STATIC PASS
+git diff --check: PASS
+WoW gameplay: UNVERIFIED; L-001/L-002/L-005 still OPEN/PARTIAL
+Changed: Logres/Quest/Dialogue.lua, tools/check_p0379_completion_input_provenance_contract.py, Logres/Quest/NPCGossipPresentation.lua, Logres/Logres.toc, Logres/Core/Bootstrap.lua, docs/memory/CURRENT.md, docs/memory/handoffs/CURRENT_HANDOFF.md, docs/memory/investigations/ISSUE_LEDGER.md, docs/memory/investigations/ACTIVE.md, docs/memory/roadmap/STATUS.md, docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md, docs/memory/patches/PATCH_INDEX.md, docs/ROADMAP.md, docs/memory/evidence/P0381_INTEGRATED_GAMEPLAY_IMPLEMENTATION.md, docs/memory/patches/P0381_INTEGRATED_GAMEPLAY_IMPLEMENTATION.md, tools/check_p0381_integrated_gameplay_contract.py
+Git commit/push performed by applier: NO

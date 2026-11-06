@@ -68,12 +68,23 @@ function Live.TryShow(reason)
         deferrals = deferrals + 1
         return false, state
     end
+    -- Native UI is parked only after the complete Logres presentation exists.
+    -- If parking is unsupported, do not leave TWO competing windows open.
+    -- Return ownership to the usable native gossip surface, not a blind hide.
+    local parked, parkingReason = Logres.NPCGossipStockParking.TryPark(model)
+    if not parked then
+        d:HidePresentation("gossip-native-owner")
+        pending = false  -- next intentional GOSSIP_SHOW re-arms; never poll
+        active = false
+        deferrals = deferrals + 1
+        last = "native-gossip-stock-owned"
+        Logres:TraceEvent("gossip", "stock-owned",
+            {reason = parkingReason or "parking-unsupported"})
+        return false, last
+    end
     active = true
     opens = opens + 1
-    -- Native UI is parked only after the complete Logres presentation exists;
-    -- partial/unknown controls leave Blizzard visible and usable.
-    local parked, parkingReason = Logres.NPCGossipStockParking.TryPark(model)
-    last = "live-additive-read-only-" .. (reason or "gossip")
+    last = "live-parked-read-only-" .. (reason or "gossip")
     Logres:TraceEvent("gossip", "shown", {kind = lastKind,
         parked = parked, result = parkingReason})
     return true, last
