@@ -11,7 +11,7 @@ Prepare evidence-gated Forever Logres alpha, then D-048 five-domain 1.0. Preserv
 
 ## Current Work Item
 
-**P0377** L-005 choice, L-035/L-038; P0376/P0375/P0374. P0371/P0372 R0–R3; P0373 R0/R1, P0377 R0-R3 REFUSED. L-001/L-002/L-005/L-027/L-033/L-034/L-036/L-037 OPEN; L-021 PASS; L-019 BLOCKED.
+**P0378** L-020 ZIP; P0377 L-005/L-035/L-038, P0376/P0375/P0374. P0371/P0372 R0–R3; P0373 R0/R1, P0377 R0-R3 REFUSED. L-001/L-002/L-005/L-027/L-033/L-034/L-036/L-037 OPEN; L-021 PASS; L-019 BLOCKED.
 
 ## Verified State
 
@@ -38,7 +38,7 @@ Prepare evidence-gated Forever Logres alpha, then D-048 five-domain 1.0. Preserv
 
 ## Next Action
 
-P0377: 247 STATIC; test rewards/fallback.
+P0378: 248 STATIC; upload ZIP.
 
 ## Success Criteria
 

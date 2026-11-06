@@ -1,0 +1,9 @@
+P0378 FOREVER DIAGNOSTICS + SCREENSHOT BUNDLE
+Baseline: c77b3c54b8293fed2300e08430ba046d46bce087
+WoW runtime version unchanged: 0.0.263-dev
+248/248 PREWRITE STATIC PASS
+248/248 POSTWRITE STATIC PASS
+git diff --check PASS
+L-002 OPEN; L-005 PARTIAL/FAIL; L-020 PARTIAL
+Live screenshot/incident correlation UNVERIFIED; no WoW redeploy
+No Git commit/push performed
