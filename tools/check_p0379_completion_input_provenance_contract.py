@@ -59,7 +59,7 @@ need(D.index('owner:RecordCompletionInput("dispatch")') <
 need('function Dialogue:HandleQuestProgress()' in D and
      'Blizzard owns Continue on fallback' in D and
      'function Dialogue:ProgressGate()' in D and
-     'self:RestoreProgressStock("progress-continue-click")' in D and
+     'self:RestoreProgressStock("progress-transition-timeout")' in D and
      'local called = pcall(_G.QuestProgressCompleteButton_OnClick)' in D and
      'pcall(CompleteQuest)' not in D,
      "progress handoff must be gated, native-owned and restorable")

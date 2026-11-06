@@ -285,6 +285,7 @@ function Dialogue:UpdateOfferControls()
         )
         self.acceptButton:Show()
         self.declineButton:Show()
+        self.offerActionRoot:EnableMouse(true)
         self.offerActionRoot:Show()
     else
         -- Retain the original, out-of-panel idle anchor for the next
@@ -294,6 +295,7 @@ function Dialogue:UpdateOfferControls()
             "TOP", self.root, "BOTTOM", 0, offerStyleValue("y")
         )
         self.offerActionRoot:Hide()
+        self.offerActionRoot:EnableMouse(false)
         if not self.completionActive then
             self.root:SetHeight(styleValue("height"))
         end
@@ -457,6 +459,11 @@ function Dialogue:ProgressGate()
         or not self.progressActive or not self.presentationShown
         or self.lastPresentationReason ~= "QUEST_PROGRESS"
     then return false, "inactive-progress" end
+    if not ordinaryProgress(C_Timer) or type(C_Timer) ~= "table"
+        or not ordinaryProgress(C_Timer.After)
+        or type(C_Timer.After) ~= "function" then
+        return false, "native-transition-fallback-unavailable"
+    end
     if type(InCombatLockdown) ~= "function" or type(GetQuestID) ~= "function"
         or type(IsQuestCompletable) ~= "function"
         or not ordinaryProgress(_G.QuestProgressCompleteButton_OnClick)
@@ -486,7 +493,10 @@ end
 
 function Dialogue:RestoreProgressStock(reason)
     self.offerActionRoot:Hide()
-    if not self.progressOwned then return true, "stock-owned" end
+    if not self.progressOwned then
+        self.progressContinuePending = false
+        return true, "stock-owned"
+    end
     local module, snapshot = self.progressStockModule, self.progressStockSnapshot
     local ok = module and snapshot and pcall(
         module.RestoreOfferPresentation, module, snapshot)
@@ -504,6 +514,7 @@ function Dialogue:RestoreProgressStock(reason)
     self.progressOwned = false
     self.progressStockModule = nil
     self.progressStockSnapshot = nil
+    self.progressContinuePending = false
     Logres:TraceEvent("quest", "progress-restored",
         {reason = reason or "stock-restored"})
     return true, "restored"
@@ -515,12 +526,14 @@ function Dialogue:UpdateProgressPagePresentation()
     if self.currentPage ~= #self.pages then
         self.root:SetHeight(styleValue("height"))
         self.offerActionRoot:Hide()
+        self.offerActionRoot:EnableMouse(false)
         return
     end
     self.root:SetHeight(391)
     self.declineButton:Hide()
     self.acceptButton.label:SetText("Continue")
     self.acceptButton:Show()
+    self.offerActionRoot:EnableMouse(true)
     self.offerActionRoot:Show()
 end
 
@@ -571,6 +584,9 @@ function Dialogue:ActivateProgressContinue()
 end
 
 function Dialogue:HandleProgressContinue()
+    if self.progressContinuePending then
+        return false, "transition-already-requested"
+    end
     local eligible, reason = self:ProgressGate()
     if not self.progressOwned or not eligible then
         if self:RestoreProgressStock("progress-guard-blocked") then
@@ -578,16 +594,46 @@ function Dialogue:HandleProgressContinue()
         end
         return false, reason or "progress-not-owned"
     end
-    if not self:RestoreProgressStock("progress-continue-click") then
-        return false, "stock-restoration-failed"
-    end
-    local hidden = self:HidePresentation("progress-continue-handoff")
-    if not hidden then return false, "presentation-restoration-pending" end
-    -- Blizzard owns the progress-to-reward transition, distinct from claim.
+    -- Keep the already captured, nonprotected stock subtree parked while
+    -- Blizzard's native handler advances the progress lifecycle. Removing the
+    -- Logres panel and restoring native alpha BEFORE the handler caused the
+    -- observed visible Blizzard pop during the transition.
+    self.progressContinuePending = true
+    self.progressContinueSerial = self.progressContinueSerial + 1
+    local serial = self.progressContinueSerial
+    self.offerActionRoot:Hide() -- prevent a second click in flight
     local called = pcall(_G.QuestProgressCompleteButton_OnClick)
+    if not called then
+        if self:RestoreProgressStock("progress-native-call-failed") then
+            self:HidePresentation("progress-native-call-failed")
+        end
+        Logres:TraceEvent("quest", "progress-continue-requested",
+            {result = "native-call-failed"})
+        return false, "native-call-failed"
+    end
+    -- QUEST_FINISHED or QUEST_COMPLETE restores the native snapshot on the
+    -- ordinary ClearActiveDetail path before releasing replacement input.
+    -- A single bounded fallback handles a native call without either event;
+    -- no OnUpdate or repeated polling, no permanent hidden stock controls.
+    local scheduled = pcall(C_Timer.After, 1.5, function()
+        if self.progressContinuePending and self.progressContinueSerial == serial
+            and self.progressOwned then
+            if self:RestoreProgressStock("progress-transition-timeout") then
+                self:HidePresentation("progress-transition-timeout")
+            end
+            Logres:TraceEvent("quest", "progress-transition-timeout",
+                {result = "stock-fallback-requested"})
+        end
+    end)
+    if not scheduled then
+        if self:RestoreProgressStock("progress-timer-unavailable") then
+            self:HidePresentation("progress-timer-unavailable")
+        end
+        return false, "native-transition-timeout-unavailable"
+    end
     Logres:TraceEvent("quest", "progress-continue-requested",
-        {result = called and "native-transition-invoked" or "native-call-failed"})
-    return called, called and "native-transition-invoked" or "native-call-failed"
+        {result = "native-transition-invoked"})
+    return true, "native-transition-invoked"
 end
 
 function Dialogue:HandleCompletionAction()
@@ -611,6 +657,7 @@ function Dialogue:ShowCompletionStockFallback(reason)
     if self.rewardVisual then self.rewardVisual:ClearLiveChoiceHandler() end
     Dialogue.PositionCompletionActionVisual(self)
     if #self.completionRewardCards == 0 then self.root:SetHeight(391) end
+    self.offerActionRoot:EnableMouse(true)
     self.acceptButton.label:SetText("Finish in Blizzard")
     self.acceptButton:ClearAllPoints()
     self.acceptButton:SetPoint("CENTER", self.offerActionRoot, "CENTER", 0, 9)
@@ -695,6 +742,7 @@ function Dialogue:HidePresentation(reason)
 
     if self.offerActionRoot then
         self.offerActionRoot:Hide()
+        self.offerActionRoot:EnableMouse(false)
     end
 
     self.offerActionsEnabled = false
@@ -1297,7 +1345,10 @@ function Dialogue:HandleQuestComplete()
                 -- Raise only this owned action over addon reward art/option siblings.
                 -- No Blizzard frame strata or protected state is changed.
                 local actionLevel = readOwnedFrameValue(self.root, "GetFrameLevel")
-                if actionLevel then self.offerActionRoot:SetFrameLevel(actionLevel + 8) end
+                if actionLevel then
+                    self.offerActionRoot:SetFrameLevel(actionLevel + 8)
+                    self.acceptButton:SetFrameLevel(actionLevel + 9)
+                end
                 self.acceptButton:EnableMouse(true)
                 self.acceptButton.label:SetText("Complete Quest")
                 self.acceptButton:ClearAllPoints()
@@ -2107,6 +2158,8 @@ function Dialogue:OnInitialize()
     self.progressOwned = false
     self.progressStockModule = nil
     self.progressStockSnapshot = nil
+    self.progressContinuePending = false
+    self.progressContinueSerial = 0
     self.lastProgressReason = "not-observed"
     self.lastProgressSecret = false
     self.acceptedEventCount = 0

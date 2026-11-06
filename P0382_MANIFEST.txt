@@ -1,0 +1,10 @@
+P0382 R1 — quest handoff, input and Eastern diagnostics
+Verified input HEAD: b672104a2d11492334cf56e9e52e8f8d1a4f56c0
+Runtime version: 0.0.266-dev
+PREWRITE: 252/252 STATIC PASS
+POSTWRITE: 252/252 STATIC PASS
+git diff --check: PASS
+WoW gameplay: UNVERIFIED; L-002/L-005 OPEN/PARTIAL; L-040 TOOLING UNVERIFIED
+P0382 R0 assistant audit: REFUSED shared action mouse-state regression before install; R1 candidate tested
+Changed: Logres/Quest/Dialogue.lua, Logres/Quest/CompletionControl.lua, tools/check_p0379_completion_input_provenance_contract.py, tools/check_p0381_integrated_gameplay_contract.py, tools/check_p0374_issue_ledger_contract.py, tools/check_p0380_integrated_gameplay_plan_contract.py, tools/export_panel_diagnostics.py, Logres/Logres.toc, Logres/Core/Bootstrap.lua, docs/memory/CURRENT.md, docs/memory/handoffs/CURRENT_HANDOFF.md, docs/memory/investigations/ISSUE_LEDGER.md, docs/memory/investigations/ACTIVE.md, docs/memory/roadmap/STATUS.md, docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md, docs/memory/patches/PATCH_INDEX.md, docs/memory/PRE_HANDOFF_AUDIT.md, docs/ROADMAP.md, tools/check_p0382_quest_handoff_and_eastern_contract.py, docs/memory/evidence/P0382_QUEST_HANDOFF_AND_EASTERN.md, docs/memory/patches/P0382_QUEST_HANDOFF_AND_EASTERN.md
+Git commit/push performed by applier: NO

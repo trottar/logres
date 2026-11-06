@@ -116,6 +116,7 @@ end
 function Control:Restore(reason)
     -- Remove Logres interaction first; never leave a duplicate claim target.
     self.actionRoot:Hide()
+    self.actionRoot:EnableMouse(false)
     if not self.applied then
         self.choiceCount = 0
         self.selectedChoiceIndex = nil
@@ -127,9 +128,10 @@ function Control:Restore(reason)
         module.RestoreOfferPresentation, module, snapshot
     )
     if not ok then
-        ok = module and snapshot and pcall(
+        local emergencyOK, restored = module and snapshot and pcall(
             module.EmergencyRestoreOfferPresentation, module, snapshot
         )
+        ok = emergencyOK and restored == true
     end
     if not ok then
         self.lastReason = "restore-failed"
@@ -200,6 +202,9 @@ function Control:Activate()
     self.expectedQuestID = self.dialogue.lastQuestID
     self.applyCount = self.applyCount + 1
     self.lastReason = "applied"
+    -- Native capture is already established. Own a real hit-test root only
+    -- while the existing Complete Quest button is actionable.
+    self.actionRoot:EnableMouse(true)
     self.actionRoot:Show()
     return true, "applied"
 end

@@ -45,8 +45,8 @@ for token in (
     'pcall(module.SuppressOfferPresentation, module, snapshot)',
     'module.RestoreOfferPresentation, module, snapshot',
     'module.EmergencyRestoreOfferPresentation, module, snapshot',
-    'self:RestoreProgressStock("progress-continue-click")',
-    'local hidden = self:HidePresentation("progress-continue-handoff")',
+    'self:RestoreProgressStock("progress-transition-timeout")',
+    'self.progressContinuePending = true',
     'local called = pcall(_G.QuestProgressCompleteButton_OnClick)',
     'self:RestoreProgressStock(reason or "progress-hidden")',
     'self:UpdateProgressPagePresentation()',
@@ -57,12 +57,15 @@ for token in (
     need(token in D, "progress native/restoration capability missing: " + token)
 
 progress = D[D.index('-- P0381: the quest progress stage'):D.index('function Dialogue:HandleCompletionAction()')]
-need(progress.index('self:RestoreProgressStock("progress-continue-click")')
-     < progress.index('local called = pcall(_G.QuestProgressCompleteButton_OnClick)'),
-     "native mouse and alpha must restore before native Continue action")
+need(progress.index('self.progressContinuePending = true')
+     < progress.index('local called = pcall(_G.QuestProgressCompleteButton_OnClick)')
+     < progress.index('self:RestoreProgressStock("progress-transition-timeout")'),
+     "native progress bridge must defer restoration until event or bounded timeout")
 need('GetQuestReward(' not in progress and 'QuestRewardCompleteButton_OnClick' not in progress and 'pcall(CompleteQuest)' not in progress,
      "progress Continue must not claim a reward")
-for forbidden in ('C_Timer.', 'SetScript("OnUpdate"', 'GetMouseFocus(', 'GetMouseFoci('):
+need(progress.count('pcall(C_Timer.After, 1.5, function()') == 1,
+     'transition timeout must be a single fail-open callback, not polling')
+for forbidden in ('SetScript("OnUpdate"', 'GetMouseFocus(', 'GetMouseFoci('):
     need(forbidden not in progress, 'progress may not poll or probe protected input: ' + forbidden)
 need(D.index('owner:HandleProgressContinue()') < D.index('owner:HandleCompletionAction()'),
      'Continue action must be routed before reward claim')
@@ -121,7 +124,7 @@ for token in ('0.0.', 'P0381'):
 need(len(CUR.encode('utf-8')) < 9800 and len(HAND.encode('utf-8')) < 8000,
      'historical memory budgets exceeded')
 rows = [line for line in L.splitlines() if re.match(r'^\| L-\d{3} \|', line)]
-need(len(rows) == 39, 'issue ledger identity count changed')
+need(len(rows) == 40, 'issue ledger identity count changed')
 for lid, status in [('L-001', 'OPEN'), ('L-002', 'OPEN'), ('L-005', 'PARTIAL'),
                     ('L-025', 'PARTIAL'), ('L-029', 'PARTIAL'), ('L-033', 'OPEN'),
                     ('L-034', 'OPEN'), ('L-038', 'OPEN'), ('L-039', 'OPEN')]:
@@ -137,7 +140,7 @@ for path in ('docs/memory/investigations/ACTIVE.md',
              'docs/memory/roadmap/STATUS.md',
              'docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md',
              'docs/memory/patches/PATCH_INDEX.md', 'docs/ROADMAP.md'):
-    need(read(path).startswith('## P0381 —'), 'active roadmap not synchronized: '+path)
+    need(read(path).startswith('## P0382 —') and '## P0381 —' in read(path), 'active roadmap not synchronized or P0381 history lost: '+path)
 vt = re.search(r'^## Version: (\S+)$', T, re.M)
 vb = re.search(r'^Logres\.VERSION = "([^"]+)"$', B, re.M)
 need(vt and vb and vt.group(1) == vb.group(1), 'TOC/Bootstrap version parity')

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 import hashlib
 import json
 import os
@@ -23,6 +24,7 @@ DEFAULT_WOW_ROOT = Path('/mnt/c/Program Files (x86)/World of Warcraft')
 LIVE_PATTERN = '_forever_/WTF/Account/*/SavedVariables/Logres.lua'
 DEFAULT_OUTPUT = 'LOGRES_DIAGNOSTICS_LATEST.lua'
 DEFAULT_BUNDLE = 'LOGRES_BUG_REPORT_LATEST.zip'
+EASTERN = ZoneInfo('America/New_York')  # handles EST and EDT automatically
 SCREENSHOT_WINDOW_SECONDS = 90
 SCREENSHOT_COUNT_LIMIT = 12
 SCREENSHOT_SIZE_LIMIT = 64 * 1024 * 1024
@@ -66,10 +68,10 @@ def export(wow_root: Path, output: Path) -> Path:
     finally:
         if temp_name and os.path.exists(temp_name):
             os.unlink(temp_name)
-    modified = datetime.fromtimestamp(source.stat().st_mtime).isoformat(timespec='seconds')
+    modified = datetime.fromtimestamp(source.stat().st_mtime, EASTERN).isoformat(timespec='seconds')
     print(output)
     print(f'source={source}')
-    print(f'source_modified={modified} bytes={len(data)}')
+    print(f'source_modified_eastern={modified} bytes={len(data)}')
     print('LIVE Forever SavedVariables copied; recorded diagnostic runs only. '
           'No probes execute during export.')
     return source
@@ -214,11 +216,14 @@ def build_bundle(wow_root: Path, exported: Path, bundle: Path, source: Path) -> 
         'schema': 1,
         'client': 'World of Warcraft Forever',
         'generated_utc': datetime.now(timezone.utc).isoformat(timespec='seconds'),
+        'generated_eastern': datetime.now(EASTERN).isoformat(timespec='seconds'),
+        'display_timezone': 'America/New_York',
         'diagnostics_file': DEFAULT_OUTPUT,
         'diagnostics_sha256': hashlib.sha256(data).hexdigest(),
         'source_modified_utc': datetime.fromtimestamp(source.stat().st_mtime, timezone.utc).isoformat(timespec='seconds'),
+        'source_modified_eastern': datetime.fromtimestamp(source.stat().st_mtime, EASTERN).isoformat(timespec='seconds'),
         'screenshot_correlation': 'INFERRED by image filesystem mtime within 90s of Report Bug timestamp; never verified by client filename or screenshot bytes in Lua',
-        'incidents': incidents,
+        'incidents': [dict(incident, time_eastern=datetime.fromtimestamp(incident['time'], EASTERN).isoformat(timespec='seconds')) for incident in incidents],
         'screenshots': [{'incident_id': incident['id'],
                          'archive_path': 'screenshots/' + path.name,
                          'mtime_delta_seconds': delta,
