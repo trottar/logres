@@ -100,6 +100,8 @@ function Visual.New(root, objectiveText)
             -- selects/claims an actual quest reward.
             if self.previewChoiceHandler and button.choiceIndex then
                 self.previewChoiceHandler(button.choiceIndex)
+            elseif self.liveChoiceHandler and button.nativeChoiceIndex then
+                self.liveChoiceHandler(button.nativeChoiceIndex)
             end
         end)
         slot.icon = icon
@@ -120,12 +122,17 @@ function Visual:PaintPreviewChoices()
         local interactive = self.previewChoiceHandler ~= nil
             and slot.choiceIndex ~= nil and slot:IsShown()
         slot:EnableMouse(interactive)
-        -- Preserve preview-only click dispatch while enabling live hover.
-        if not interactive and (slot.itemLink or slot.itemID) then
+        local liveInteractive = self.liveChoiceHandler ~= nil
+            and slot.nativeChoiceIndex ~= nil and slot:IsShown()
+        -- Hover-only rows remain read-only; click ownership stays in
+        -- preview or guarded live completion controller callbacks.
+        if liveInteractive or (not interactive and (slot.itemLink or slot.itemID)) then
             slot:EnableMouse(true)
         end
-        local selected = interactive
-            and slot.choiceIndex == self.previewSelectedChoice
+        local selected = (interactive
+            and slot.choiceIndex == self.previewSelectedChoice)
+            or (liveInteractive
+                and slot.nativeChoiceIndex == self.liveSelectedChoice)
         if selected then
             slot.wash:SetVertexColor(0.34, 0.23, 0.08, 0.96)
             slot.rule:SetVertexColor(1.00, 0.83, 0.42, 1.00)
@@ -150,6 +157,26 @@ function Visual:SetPreviewChoiceHandler(handler)
     return true
 end
 
+-- Live choices are visually selectable only when the owning
+-- completion controller has acquired the native fallback snapshot.
+function Visual:SetLiveChoiceHandler(handler, selectedIndex)
+    if self.previewChoiceHandler or type(handler) ~= "function" then
+        return false
+    end
+    self.liveChoiceHandler = handler
+    self.liveSelectedChoice = selectedIndex
+    self:PaintPreviewChoices()
+    return true
+end
+
+-- Restore hover-only behavior and remove live choice click ownership.
+function Visual:ClearLiveChoiceHandler()
+    self.liveChoiceHandler = nil
+    self.liveSelectedChoice = nil
+    self:PaintPreviewChoices()
+    return true
+end
+
 function Visual:SelectPreviewChoice(index)
     if not self.previewChoiceHandler
         or type(index) ~= "number" or index < 1
@@ -164,6 +191,8 @@ end
 function Visual:Reset()
     self.previewChoiceHandler = nil
     self.previewSelectedChoice = nil
+    self.liveChoiceHandler = nil
+    self.liveSelectedChoice = nil
     self.choiceCount = 0
     for i = 1, MAX_CARDS do
         self.slots[i]:Hide()
@@ -172,6 +201,7 @@ function Visual:Reset()
         self.slots[i].choiceName = nil
         self.slots[i].itemID = nil
         self.slots[i].itemLink = nil
+        self.slots[i].nativeChoiceIndex = nil
         self.slots[i].icon:SetTexture(nil)
     end
     self.root:SetHeight(BASE_HEIGHT)
@@ -190,6 +220,7 @@ function Visual:Present(cards, footer)
         -- Sanitized identity is supplied only by the dialogue controller.
         slot.itemID = card.itemID
         slot.itemLink = card.itemLink
+        slot.nativeChoiceIndex = card.nativeChoiceIndex
         if card.kind == "choice" then
             choiceIndex = choiceIndex + 1
             slot.choiceIndex = choiceIndex

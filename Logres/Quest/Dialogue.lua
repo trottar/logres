@@ -145,6 +145,9 @@ local function createOfferButton(
         -- The original Accept button also serves guarded completion.
         -- This is the exact same visual and input object, not a clone.
         if kind == "accept" and owner.completionActive
+            and owner.completionFallbackActive then
+            owner:HandleCompletionFallback()
+        elseif kind == "accept" and owner.completionActive
             and owner.completionControl
             and owner.completionControl.applied
         then
@@ -212,6 +215,7 @@ function Dialogue:UpdateOfferControls()
     if self.completionControl and self.completionControl.applied then
         return
     end
+    if self.completionFallbackActive then return end
     local pageCount = #self.pages
     local finalPage =
         pageCount <= 1
@@ -376,6 +380,56 @@ function Dialogue:HandleCompletionAction()
     return self.completionControl:Click()
 end
 
+function Dialogue:ShowCompletionStockFallback(reason)
+    if not self.completionActive or not self.presentationShown then
+        return false, "completion-not-active"
+    end
+    if self.completionControl and self.completionControl.applied then
+        if not self.completionControl:Restore("fallback-requested") then
+            self:SetOfferActionFeedback("Native controls unavailable. Try /reload.")
+            return false, "stock-restoration-failed"
+        end
+    end
+    self.completionFallbackActive = true
+    if self.rewardVisual then self.rewardVisual:ClearLiveChoiceHandler() end
+    Dialogue.PositionCompletionActionVisual(self)
+    if #self.completionRewardCards == 0 then self.root:SetHeight(391) end
+    self.acceptButton.label:SetText("Finish in Blizzard")
+    self.acceptButton:ClearAllPoints()
+    self.acceptButton:SetPoint("CENTER", self.offerActionRoot, "CENTER", 0, 9)
+    self.acceptButton:Show()
+    if self.currentPage == #self.pages then self.offerActionRoot:Show() end
+    self:SetOfferActionFeedback("Use Blizzard controls to finish this quest.")
+    Logres:TraceEvent("quest", "completion-stock-action",
+        {questID = self.lastQuestID, reason = reason or "unsupported"})
+    return true, "native-fallback-ready"
+end
+
+function Dialogue:HandleLiveRewardChoice(index)
+    if not self.completionControl or not self.completionActive
+        or not self.completionControl.applied then
+        return false, "choice-controller-not-active"
+    end
+    local ok, reason = self.completionControl:SelectChoice(index)
+    if ok and self.rewardVisual then
+        self.rewardVisual:SetLiveChoiceHandler(function(choice)
+            self:HandleLiveRewardChoice(choice)
+        end, self.completionControl.selectedChoiceIndex)
+        self:SetOfferActionFeedback("Reward selected. Complete Quest to claim.")
+    elseif not ok then
+        self:ShowCompletionStockFallback(reason)
+    end
+    return ok, reason
+end
+
+function Dialogue:HandleCompletionFallback()
+    if not self.completionActive or not self.completionFallbackActive then
+        return false, "fallback-not-active"
+    end
+    Logres:TraceEvent("quest", "completion-native-fallback-requested",
+        {questID = self.lastQuestID})
+    return self:HidePresentation("completion-native-fallback")
+end
 function Dialogue:HidePresentation(reason)
     -- Other dialogue/immersion callbacks can independently dismiss the view.
     -- Do not leave its SHOWN native source stranded offscreen on those exits.
@@ -400,6 +454,7 @@ function Dialogue:HidePresentation(reason)
     self.presentationShown = false
     self.progressActive = false
     self.completionActive = false
+    self.completionFallbackActive = false
     self.pendingCompletionItem = nil
     self.completionRewardCards = {}
     self.completionRewardOverflow = false
@@ -710,7 +765,12 @@ local function readCompletionRewardCard(kind, index)
         pcall(GetQuestItemInfo, kind, index)
     if not ok then return nil end
     local card = completionRewardCard(kind, name, icon, quantity, itemID)
-    if card then card.itemLink = ordinaryQuestRewardLink(kind,index) end
+    if card then
+        card.itemLink = ordinaryQuestRewardLink(kind,index)
+        -- Preserve the native reward slot index even when other cards
+        -- are omitted. Visual list ordinals are never claim indices.
+        if kind == "choice" then card.nativeChoiceIndex = index end
+    end
     return card
 end
 
@@ -987,6 +1047,7 @@ function Dialogue:HandleQuestComplete()
             self.acceptButton:Hide()
             self.declineButton:Hide()
             local applied, controlReason = self.completionControl:Activate()
+            self.completionFallbackActive = not applied
             Logres:TraceEvent("quest",
                 applied and "completion-owned" or "completion-stock-fallback",
                 {questID = completion.questID, reason = controlReason})
@@ -1011,12 +1072,19 @@ function Dialogue:HandleQuestComplete()
                 local ownedFooter = rewardFooter:gsub(
                     "\nComplete using Blizzard quest controls", ""
                 )
+                ownedFooter = ownedFooter:gsub(
+                    "\nChoose and complete in Blizzard quest window", ""
+                )
                 self.completionRewardFooter = ownedFooter
                 if self.rewardVisual and #self.completionRewardCards > 0 then
                     self.rewardVisual:Present(self.completionRewardCards, ownedFooter)
                 else
                     self.objectiveText:SetText(ownedFooter)
                 end
+            else
+                -- Unsupported or ambiguous native state gets an
+                -- explicit usable stock handoff, never a dead-end GUI.
+                self:ShowCompletionStockFallback(controlReason)
             end
         end
         -- PresentText() starts on page one; refresh after stock ownership
@@ -1178,7 +1246,8 @@ function Dialogue:UpdateCompletionPagePresentation()
             end
         end
         self.root:SetHeight(styleValue("height"))
-        if self.completionControl and self.completionControl.applied then
+        if (self.completionControl and self.completionControl.applied)
+            or self.completionFallbackActive then
             self.completionActionRoot:Hide()
         end
         return
@@ -1197,6 +1266,13 @@ function Dialogue:UpdateCompletionPagePresentation()
         end
     end
     if self.completionControl and self.completionControl.applied then
+        self.completionActionRoot:Show()
+        if self.rewardVisual and self.completionControl.choiceCount > 0 then
+            self.rewardVisual:SetLiveChoiceHandler(function(index)
+                self:HandleLiveRewardChoice(index)
+            end, self.completionControl.selectedChoiceIndex)
+        end
+    elseif self.completionFallbackActive then
         self.completionActionRoot:Show()
     end
 end
@@ -1763,6 +1839,7 @@ function Dialogue:OnInitialize()
     self.completionShownCount = 0
     self.completionSkippedCount = 0
     self.completionActive = false
+    self.completionFallbackActive = false
     self.rewardPreviewChoiceCount = 0
     self.rewardPreviewChoiceClicks = 0
     self.goodbyeClicks = 0

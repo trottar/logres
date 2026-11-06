@@ -11,7 +11,7 @@ Prepare evidence-gated Forever Logres alpha, then D-048 five-domain 1.0. Preserv
 
 ## Current Work Item
 
-**P0376** L-031/L-035/L-038; P0375, P0374 ledger. P0371/P0372 R0–R3; P0373 R0/R1 REFUSED. L-001/L-002/L-005/L-027/L-033/L-034/L-036/L-037 OPEN; L-021 PASS; L-019 BLOCKED.
+**P0377** L-005 choice, L-035/L-038; P0376/P0375/P0374. P0371/P0372 R0–R3; P0373 R0/R1, P0377 R0-R3 REFUSED. L-001/L-002/L-005/L-027/L-033/L-034/L-036/L-037 OPEN; L-021 PASS; L-019 BLOCKED.
 
 ## Verified State
 
@@ -38,11 +38,11 @@ Prepare evidence-gated Forever Logres alpha, then D-048 five-domain 1.0. Preserv
 
 ## Next Action
 
-P0376 246 STATIC; test item hover/compass.
+P0377: 247 STATIC; test rewards/fallback.
 
 ## Success Criteria
 
-Native claim unchanged; WoW UNVERIFIED.
+Claim guarded; WoW UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
@@ -50,7 +50,7 @@ Do not change P0321 gossip parking, frozen camera, protected action routing, pet
 ## Relevant References
 - `docs/memory/evidence/P0375_QUEST_PRESENTATION_PROVENANCE.md`
 - `docs/memory/investigations/ISSUE_LEDGER.md` (first bug lookup)
-- `docs/memory/evidence/P0376_REWARD_TOOLTIP_NEAR_COMPASS.md`
+- `docs/memory/evidence/P0377_LIVE_REWARD_SELECTION.md`
 - `docs/memory/evidence/P0372_PASSIVE_JOURNAL_BUG_MARKER.md`
 - `docs/memory/evidence/P0371_NPC_DIAGNOSTIC_BATCH.md` and `docs/memory/patches/P0371_NPC_DIAGNOSTIC_BATCH.md`
 - `docs/memory/evidence/P0370_PET_HOTKEY_PRESENTATION_GATE.md` and `docs/memory/patches/P0370_PET_HOTKEY_PRESENTATION_GATE.md`

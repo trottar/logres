@@ -1,0 +1,8 @@
+P0377 MODULAR QUEST REWARD CHOICE
+Baseline: 44d9269d78a0c16e8beee3404191dd47dc8649dd
+Version: 0.0.263-dev
+L-005 user-reported choice/button FAIL; L-002 native fallback popup OPEN
+247/247 PREWRITE STATIC PASS
+247/247 POSTWRITE STATIC PASS
+git diff --check PASS
+WoW runtime UNVERIFIED; no commit/push performed
