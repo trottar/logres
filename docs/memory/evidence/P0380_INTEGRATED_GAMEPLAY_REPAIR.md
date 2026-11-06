@@ -50,3 +50,35 @@ until the actual WSL PREWRITE/POSTWRITE suite has run.
 ## P0380 R1 refused PREWRITE; R2 version-policy correction
 
 R1 passed baseline and initial memory-budget guards, then was **REFUSED at 27/250 PREWRITE** by `tools/check_checker_version_policy.py`. The new P0380 contract checker wrongly contained hardcoded historical runtime-version literals. It was an assistant-authored checker defect, **not** a game failure; zero tracked files were written. R2 removes both exact runtime-version references from the checker, validates TOC and Bootstrap parity dynamically, and independently rejects version-pinned checkers before launching the full 250-checker suite. R0's unrelated `ActiveQuest.lua` baseline refusal remains recorded above. P0380 remains docs-only and requires actual WSL 250/250 PREWRITE and POSTWRITE passes before commit.
+
+## P0381 R0 refused; P0380 R4 assistant-audit memory correction
+
+The user applied `P0381_INTEGRATED_GAMEPLAY_IMPLEMENTATION.zip` on verified
+P0380 R2 main. The hash check and extraction passed; the applier reported
+`P0381: baseline, source anchors, budgets and 15 prepared files PASS`, then
+**`P0381: REFUSED PREWRITE: REFUSED 77/251 check_p0241_quest_progress_contract.py`**
+with **`ERROR: forbidden direct quest mutation: pcall(CompleteQuest)`**.
+The intended progress control had placed `pcall(CompleteQuest)` in
+`Logres/Quest/Dialogue.lua`, and the newly authored P0381 checker was also
+incompatible with historical P0241. The refusal occurred before tracked
+writes. **P0381 R0 DID NOT APPLY**, no client test, no gameplay resolution.
+L-002 remains OPEN; L-005 remains PARTIAL/FAIL. The cause is missing
+assistant-side historical checker audit, not user WSL misconfiguration or
+proof that the underlying Forever native action is unsupported.
+
+**Disposition:** P0381 R0 rejected and not to be reapplied. P0380 R4
+establishes an assistant-owned hard pre-handoff audit gate in
+`docs/memory/PRE_HANDOFF_AUDIT.md`, updates AGENTS and active pointers,
+and preserves this negative evidence. Before attempting P0381 R1,
+inspect P0241 and all other historical source contracts, resolve native
+progress through a supported, capability-gated owner/fallback without
+weakening protection, assemble the exact candidate, and run the full suite
+**before delivery**. The R4 change itself is memory-only and does not
+repair game behavior.
+
+**P0380 R3 refusal:** The R3 ZIP checksum and extraction passed, but its applier
+refused `audit policy absent not a replacement` before static tests. The
+policy actually read `not **a** replacement`; literal substring comparison
+did not normalize Markdown emphasis. No tracked writes and no manifest. R4
+repairs this assistant-authored assertion failure. Neither docs attempt
+proves a gameplay fix.

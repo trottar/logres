@@ -322,3 +322,16 @@ Reusable rule:
 - preserve project-specific safety/coexistence rules at the adapter boundary;
 - distinguish a dependency's temporary/restored setting ownership from unrelated persistent setting mutation;
 - runtime-prove the adapted mechanism before layering additional profile features on top.
+
+## L-021 — The assistant must preflight *all* historical contracts before a code ZIP
+
+P0381 R0 was delivered with direct quest mutation `pcall(CompleteQuest)` in
+`Dialogue.lua`; the historical P0241 checker prohibited it while a new P0381
+checker required it. User PREWRITE REFUSED at 77/251 with no tracked writes.
+The applier protected the repository, but the assistant had already failed
+at artifact preparation. The correct invariant is assistant-side **complete
+post-transform candidate** validation before code delivery: audit relevant
+historical checks and native ownership, run the full suite, and verify the
+exact ZIP independently of the user's applier. Do not weaken a real safety
+rule to make an implementation check pass. Policy:
+`docs/memory/PRE_HANDOFF_AUDIT.md`. P0380 R3 also REFUSED before static checks because its policy asserted an unformatted substring against `not **a** replacement`; no tracked writes. R4 repairs this assistant validation failure. Neither refusal is evidence of a gameplay/API failure or P0381 implementation success.

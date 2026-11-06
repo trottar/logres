@@ -11,7 +11,7 @@ Prepare evidence-gated Forever Logres alpha, then D-048 five-domain 1.0. Preserv
 
 ## Current Work Item
 
-**P0380** docs; P0379 `285be52` 249 STATIC, 0.0.264-dev client FAIL. P0381 code L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039. P0373/P0374/P0376/P0378; L-020 PARTIAL L-021 PASS L-035/L-037 OPEN; P0379 R0/R1 REFUSED.
+**P0380 R4** audit docs (R3 REFUSED policy assertion); P0381 R0 REFUSED 77/251 (P0241). P0379 `285be52` FAIL. P0381 code L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039. P0373/P0374/P0376/P0378; L-020 PARTIAL L-021 PASS L-035/L-037 OPEN; P0379 R0/R1 REFUSED.
 
 ## Verified State
 
@@ -38,7 +38,7 @@ Prepare evidence-gated Forever Logres alpha, then D-048 five-domain 1.0. Preserv
 
 ## Next Action
 
-P0381 next: guarded Continue, Complete Quest hit delivery, NPC fail-open and tracker/menu repairs. P0380 memory-only.
+P0381 R1 code only after assistant pre-handoff audit (`docs/memory/PRE_HANDOFF_AUDIT.md`); then Continue/claim, NPC and tracker/menu repair.
 
 ## Success Criteria
 
@@ -48,6 +48,7 @@ P0380 docs-only; P0381 requires working Continue/claim or native fallback and co
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/PRE_HANDOFF_AUDIT.md`
 - `docs/memory/evidence/P0380_INTEGRATED_GAMEPLAY_REPAIR.md`
 - `docs/memory/evidence/P0379_COMPLETION_INPUT_PROVENANCE.md`
 - `docs/memory/evidence/P0375_QUEST_PRESENTATION_PROVENANCE.md`

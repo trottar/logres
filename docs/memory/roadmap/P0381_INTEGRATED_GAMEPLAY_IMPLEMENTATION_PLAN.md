@@ -25,3 +25,19 @@ Authority: `docs/memory/investigations/ISSUE_LEDGER.md`; P0380 evidence; observe
 ## Patch and handoff procedure
 
 Use P0381 ZIP with strict P0380 remote main baseline; patch code plus evidence+memory in a single transactional apply, static checker #251, full checkers PREWRITE and POSTWRITE, git diff --check, one-time manifest and no assistant commits. Deploy only to `_forever_/Interface/AddOns` then `/reload`, use native gameplay Report Bug and `python3 tools/export_panel_diagnostics.py`. Verify pushed commit before reporting durability. Distinguish static PASS from actual Forever client PASS. If one subcase fails, retain FAIL and correct that cause without suppressing stock fallback.
+
+## Blocking prerequisite — P0380 R4 assistant-side audit
+
+P0381 R0 **REFUSED PREWRITE 77/251** on P0241 because it introduced
+forbidden `pcall(CompleteQuest)` and its own checker expected that
+incompatible code. No tracked files were changed. R0 is rejected; the
+original client failures and acceptance matrix remain OPEN. For P0381 R1,
+first audit **all historical contract restrictions** on quest-progress
+mutation, native action routing, mouse input and stock fallbacks. Resolve
+the conflict *without* bypassing a safety rule. Before delivering any code
+ZIP, the assistant must execute the full checker suite on the exact prepared
+candidate, validate ZIP/applier/rollback, and provide audit evidence per
+`docs/memory/PRE_HANDOFF_AUDIT.md`. A user-side PREWRITE run alone does not
+satisfy this new prerequisite. P0380 R3 docs gate also REFUSED before static
+checks on a brittle Markdown phrase match; R4 corrects the assertion. No code work is authorized by the R4
+docs-only checkpoint.

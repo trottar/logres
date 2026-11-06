@@ -1,3 +1,7 @@
+## P0380 R4 — Assistant-side pre-handoff audit rule (2026-11-06)
+
+P0381 R0 **REFUSED PREWRITE 77/251** at historical P0241: assistant inserted forbidden direct `pcall(CompleteQuest)` and a contradictory new checker; no tracked writes. R3 docs applier also REFUSED before static checks on a brittle Markdown phrase assertion, with no tracked writes. R4 **DOCS ONLY** makes a complete, assistant-executed candidate contract audit mandatory before any future code ZIP. No gameplay fix or WoW PASS; L-002/L-005 remain unresolved. See `docs/memory/PRE_HANDOFF_AUDIT.md` and `docs/memory/evidence/P0380_INTEGRATED_GAMEPLAY_REPAIR.md`.
+
 ## P0380 — Three-batch Forever repair checkpoint (2026-11-06)
 
 Remote P0379 `285be528` verified, manifest 249 PRE/POST STATIC; client 0.0.264-dev session 25 confirms L-002 native-only Continue and L-005 Enter/Leave without Down/Up/dispatch/claim. L-039 records tracker-internal collision separately from L-025 map/menu overlap. Batch 1 plan complete; Batch 2 P0380 **DOCS ONLY**, 250 PRE/POST static required; Batch 3 P0381 coordinates quest input/progress, safe NPC ownership and tracker/menu fixes. P0380 R0 PREWRITE REFUSED: unnecessary ActiveQuest.lua blob gate; no tracked writes. P0380 R1 PREWRITE REFUSED 27/250: new checker pinned runtime version; no tracked writes. No runtime code changed, no WoW PASS claimed. Details: `docs/memory/evidence/P0380_INTEGRATED_GAMEPLAY_REPAIR.md` and `docs/memory/roadmap/P0381_INTEGRATED_GAMEPLAY_IMPLEMENTATION_PLAN.md`.

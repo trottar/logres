@@ -156,6 +156,24 @@ Do not duplicate full evidence into active memory. Point to canonical detail.
 
 `handoffs/CURRENT_HANDOFF.md` is a compact transfer note only and must never become a second append-only CURRENT file.
 
+## Mandatory assistant-side pre-handoff audit
+
+Before **every code ZIP handoff**, the assistant must complete and record the
+historical-contract and exact-candidate audit in
+`docs/memory/PRE_HANDOFF_AUDIT.md`. This is a **hard gate before delivery**;
+the user's applier PREWRITE checks are defense in depth, not the assistant's
+first test. Inspect all relevant historical `tools/check_*.py` invariants
+and API/owner/protected rules **before implementing**. Reject a candidate
+whose new checker conflicts with an older contract rather than bypassing or
+silently weakening the old contract. Construct the full exact post-transform
+candidate locally, run **every** static checker and required syntax/diff tests
+against it, verify the final ZIP/applier/rollback and SHA, and disclose
+which tests actually ran. If the full candidate cannot be audited, **do not
+handoff a code ZIP**. A docs-only checkpoint may be delivered with scoped
+documentation validation and explicit limitations; never claim unrun tests
+passed. Preserve PREWRITE failures as negative evidence. Static PASS is not
+WoW runtime PASS.
+
 ## Patch handoff shell safety
 
 The user's interactive development shell is zsh and has historically enabled
