@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-11-05
+as_of: 2026-11-06
 project: logres
 ---
 
@@ -11,14 +11,14 @@ Prepare evidence-gated Forever Logres alpha, then D-048 five-domain 1.0. Preserv
 
 ## Current Work Item
 
-**P0378** L-020 ZIP; P0377 L-005/L-035/L-038, P0376/P0375/P0374. P0371/P0372 R0–R3; P0373 R0/R1, P0377 R0-R3 REFUSED. L-001/L-002/L-005/L-027/L-033/L-034/L-036/L-037 OPEN; L-021 PASS; L-019 BLOCKED.
+**P0379 R2** L-005 input provenance. P0378 ZIP pixels reviewed; P0373/P0374/P0376 history. L-002 OPEN, L-005 PARTIAL/FAIL, L-020 PARTIAL, L-021 scope PASS; L-033/L-034/L-035/L-037/L-038 unresolved. R0/R1 PREWRITE REFUSED; see issue ledger.
 
 ## Verified State
 
-- P0370 `f754f349aa54a3fd5c8d30f5247f07cb7d659c96` 240/240 STATIC; no-pet labels user PASS. P0369 240, P0368 239, P0367 238, P0366 R1 237, P0365 R1 236, P0364 R1 235, P0363 234, P0362 233, P0361 R1 232, P0360 231, P0359 230, P0358 R1 229, P0357 228, P0356 227 / same totals STATIC. Prior R0/R1 refusals preserved; L-001/L-002/L-005 FAIL.
-- P0352 `61f0f49c2cf990168c1415dd2100a0f286627a91` 223/223 STATIC, WoW UNVERIFIED.
-- P0351 `e8b71bc59a04f3077925bb24f0d6850a71340841` 222/222 STATIC; WoW UNVERIFIED.
-- P0350 `fd2d2676ffb41d509143b398b61b8474ecacf53d` 221/221 STATIC; WoW UNVERIFIED.
+- P0378 `4ffbe3b` verified, 12 inferred image matches. P0379 R0 REFUSED 129/249 (CURRENT limit); R1 REFUSED 191/249 (HANDOFF limit); R2 249-check candidate, WoW UNVERIFIED.
+
+- P0370 240 STATIC; no-pet labels user PASS. P0369 P0368 P0367 P0366 R1 P0365 R1 P0364 R1 P0363 P0362 P0361 R1 P0360 P0359 P0358 R1 P0357 P0356: 239–227 STATIC, client checks pending; prior refusals in evidence. L-001/L-002/L-005 FAIL.
+- P0352 223, P0351 222, P0350 221 STATIC; WoW UNVERIFIED. Full hashes in linked evidence.
 - P0349 R1 `4e59c8f2f03daf30b630fb15e3e14d5f38cc8da6` 220/220 STATIC; R0 REFUSED, WoW UNVERIFIED.
 - P0348 `4b7481d731d5f90e214b285bc7cce16ec826176f` 219/219 STATIC; D-048 model OFFLINE ONLY.
 - P0347 R1 `b94beb4706005757497002927d80845d5355037f` 218/218 STATIC; R0 PREWRITE REFUSED, WoW UNVERIFIED.
@@ -31,23 +31,24 @@ Prepare evidence-gated Forever Logres alpha, then D-048 five-domain 1.0. Preserv
 - P0341 R1 `fb3b2658985e7f6d05f7730a3de6eb7b7dca6ad9` 212/212 STATIC; R0 historical-version checker REFUSED before writes; WoW UNVERIFIED.
 - P0340 `27fb9eb` 211/211; P0339 `8a5d3f86` 210/210 STATIC; neither establishes client PASS.
 - P0338 R1 `342cab97` 209/209; P0337 R1 `cfdc07af` 208/208. Historical PREWRITE failures, narrow remedies and deferred L-031 focused-yard/quest-giver validation remain in their evidence files.
-- P0336 `d535906` 207/207; P0335 `ffdbbca` 206/206; P0334 R3 `1b7b1ff` 205/205; P0333 `68c0955` 204/204; P0332 `cbc2015` 203/203; P0331 `dce2355` 202/202; P0330 `1f48bbe` 201/201; P0329 `126d165` 200/200. All counts are pushed static manifests, not client PASS. P0332 targets only ordinary aura fallback; the native AuraContainer remains a separate owner.
-- P0328 internal alpha packaging/runbook only; P0317, P0318, P0319, P0320 are historical native gossip observations; P0321 `9a180c8` native GossipFrame parking is runtime UNVERIFIED and first November 4 safety gate. P0322, P0323, P0324, P0325 are inert D-048 five-domain planning/model checks; P0326 and P0327 assess native merchant/flight source and models only. Stock UI/Quest 237 preserved.
+- P0336/P0335/P0334 R3/P0333/P0332/P0331/P0330/P0329: 207–200 STATIC only. P0332 ordinary aura fallback; native AuraContainer separate. See PATCH_INDEX.
+- P0328 alpha runbook; P0317/P0318/P0319/P0320 gossip observations; P0321 `9a180c8` parking UNVERIFIED. P0322/P0323/P0324/P0325 D-048 inert models; P0326/P0327 merchant/flight models only. Stock UI/quest 237 preserved.
 - D-048 independent live domain selectors and saved migration do not exist: schema 3 still stores `immersionEnabled` and `activeQuestEnabled`. D-046 preview-first and D-047 frozen Camera/DynamicCam remain required. Native UI and protected/secret fallbacks remain accessible.
 - L-020–L-032 are tracked user reports; source fixes are not client-accepted. L-028 duplicated/missing target debuffs remains OPEN; L-022 focused quest artifact requires screenshot, L-027 Blizzard transient popup requires `/fstack` owner evidence. L-019 root project license remains unresolved, public distribution NOT APPROVED.
 
 ## Next Action
 
-P0378: 248 STATIC; upload ZIP.
+P0379 R2: validate 249-check candidate, deploy, click Complete Quest, Report Bug, export ZIP. Native Continue retained.
 
 ## Success Criteria
 
-Claim guarded; WoW UNVERIFIED.
+P0379 R2 PRE/POST static plus client input evidence required; L-005 PARTIAL/FAIL, L-002 OPEN.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/evidence/P0379_COMPLETION_INPUT_PROVENANCE.md`
 - `docs/memory/evidence/P0375_QUEST_PRESENTATION_PROVENANCE.md`
 - `docs/memory/investigations/ISSUE_LEDGER.md` (first bug lookup)
 - `docs/memory/evidence/P0377_LIVE_REWARD_SELECTION.md`

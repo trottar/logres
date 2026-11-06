@@ -1,5 +1,7 @@
 # Ledger first: docs/memory/investigations/ISSUE_LEDGER.md
 
+P0379 R2 completion input provenance; main P0378 `4ffbe3b` verified, 12 inferred screenshot matches. R0 REFUSED 129/249 PREWRITE (CURRENT bytes); R1 REFUSED 191/249 PREWRITE (HANDOFF bytes), both no tracked writes. L-005 Complete Quest input origin unknown; L-002 Continue native-only OPEN. R2 addon-owned event/geometry diagnostics only; 249 STATIC and WoW UNVERIFIED. See P0379 evidence and `CURRENT.md`.
+
 P0372 `39f404c` PASS. P0373 v0.0.260-dev, checker #243: trainer purchase FAIL; Trainer denial shows cause and restores native stock; guards intact. Quest popup L-002/L-005 FAIL: keep safe Blizzard fallback; record QUEST_COMPLETE ownership/fallback. L-001 FAIL, L-021 PASS, L-019 BLOCKED. P0378 ZIP; P0377 R0-R3 REFUSED, choice; L-035/L-038; P0376, P0375, P0374; P0373 claim unconfirmed; L-034 OPEN. P0372 R0–R3 and P0373 R0/R1 checker REFUSED; P0371 R0/R1 REFUSED; P0362 P0363 P0367 P0368 P0370; P0369 R0/R1, P0366 R0, P0365 R0, P0364 R0; P0337 `cfdc07af`; P0354 R0 P0354 R1 P0354 R2 check_memory_health.py; P0355 R0 P0355 R1, P0358 R0, P0361 R0 handoff. D-046/D-047/D-048 and L-022/L-027/L-028/L-031/L-033 OPEN/DEFERRED. No polling or native-secret inspection.
 
 # P0361 — ImmersionController diagnostic owner; CURRENT.md authoritative
@@ -12,15 +14,15 @@ Verified pushed P0359 main `6ec4b5ac3db1626c7273b8a2590d4492679b0c0c`: 230/230 P
 
 # P0359 — D-026 PlayerFrame diagnostic seam; CURRENT.md authoritative
 
-Verified pushed P0358 R1 `542ee03612bfcec299274dcecba5ed43b1302ad8`: 229/229 PRE/POST STATIC, `0.0.247-dev`, WoW UNVERIFIED. Move original D-026 PlayerFrame status-only report from Commands to preloaded Immersion/PlayerFrameReplacement; Commands retains wrapper, Run All, slash, panel and PASS/FAIL outputs, including pending combat rule and stock child preservation. No secure action changes, native suppression, secret value probes, camera, timer, polling, or saved-schema changes. P0358 static checker count becomes >=229; candidate version `0.0.248-dev`, #230, Lua94, 120 actions/38 previews, schema3/D-048 unchanged. P0321 native GossipFrame restore FIRST contingent runtime gate; L-022/L-027/L-028 OPEN, L-019 public distribution BLOCKED, L-031 deferred. P0354 R0/R1/R2 check_memory_health.py; P0355 R0/R1 and P0358 R0 PREWRITE refusals preserved, zero writes. WoW UNVERIFIED; P0337 `cfdc07af` retained.
+P0359 moved only read-only PlayerFrame diagnostics to the controller; native/secure behavior unchanged. Baseline P0358 R1 229 STATIC, client UNVERIFIED. P0321 gate, L-019 and L-022/L-027/L-028/L-031 unresolved; full history in evidence.
 
 # P0358 — D.3 Quiet Mode diagnostic; CURRENT.md authoritative
 
-Verified pushed P0357 main `36103d83c22f54a809bfffc1e28ab6fe9af2c12c`: 228/228 PRE/POST STATIC, `0.0.246-dev`, WoW UNVERIFIED. Move only read-only Quiet Mode diagnostic body to preloaded Immersion/QuietMode, preserve Commands wrapper, Run All, slash and panel routes, exact PASS/FAIL output. D.3 native chat suppression and restoration behavior unchanged; user outbound chat retained. P0357 static checker inventory migrated to >=228; candidate `0.0.247-dev`, #229, 94 Lua, 120 actions/38 previews, schema3/D-048 and camera unchanged. P0321 GossipFrame restoration FIRST client safety gate; L-022/L-027/L-028 OPEN, L-019 BLOCKED; WoW remains UNVERIFIED. P0358 R0 guard-path refusal before PREWRITE (no tracked writes). P0354 R0, P0354 R1, P0354 R2 check_memory_health.py, P0355 R0, P0355 R1 refusals retained in exact evidence; L-031 and P0337 `cfdc07af` history intact.
+P0358 moved only Quiet Mode diagnostics while retaining chat restoration and outbound chat. P0358 R0 REFUSED; R1 STATIC, WoW UNVERIFIED. Original negative evidence in P0358 records; P0321 and L-019 remain blocked.
 
 # P0357 — F.6 read-only objective-progress diagnostic; CURRENT.md authoritative
 
-Verified pushed P0356 `56afe0f9c99f522de8d1980994bf4b1dc2f21e1f`: 227/227 PREWRITE/POSTWRITE STATIC (`0.0.245-dev`), WoW UNVERIFIED. Original Objective Progress Check report is owned by preloaded Quest/Progress; Commands keeps exact wrapper, Run All, slash and Phase F panel. Candidate `0.0.246-dev`/#228, 94 Lua, 120 actions/38 previews; no schema3/D-048 selector, native stock/quest suppression, camera, new event, polling or secret-value access. P0321 GossipFrame restoration FIRST contingent client gate; L-022/L-027/L-028 OPEN, L-019 BLOCKED. P0354 R0/R1/R2 and P0355 R0/R1 refusals remain in full evidence.
+P0357 moved only objective-progress diagnostics to the quest module; P0356 227 STATIC, WoW UNVERIFIED. No quest/native/camera mutation; P0321/L-019/L-022/L-027/L-028 still unresolved. See evidence.
 
 # P0356 — F.3 XP diagnostic ownership; CURRENT.md is authoritative
 

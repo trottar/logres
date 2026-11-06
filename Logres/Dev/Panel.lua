@@ -206,6 +206,15 @@ function Logres:CaptureBugIncident()
     end), {"applied", "shown", "lastReason", "lastResult",
         "applyCount", "restoreCount", "blockedCount",
         "clickCount", "claimCalls"})
+
+    -- P0379: snapshot Logres-owned button input chain and geometry only.
+    incident.snapshot.completionInput = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("QuestDialogue"):GetDebugStatus().completionInput
+    end), {"enterCount", "leaveCount", "downCount", "upCount",
+        "dispatchCount", "lastInput", "buttonShown", "buttonVisible",
+        "buttonMouseEnabled", "buttonLeft", "buttonRight", "buttonTop",
+        "buttonBottom", "buttonLevel", "actionRootShown",
+        "actionRootMouseEnabled"})
     incident.snapshot.completionView = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("QuestDialogue"):GetDebugStatus()
     end), {"completeEventCount", "completionShownCount",

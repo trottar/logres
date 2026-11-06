@@ -136,6 +136,7 @@ local function createOfferButton(
         parent, kind, label, offerStyleValue, offerColor, offerAssets
     )
     button:SetScript("OnClick", function()
+        owner:RecordCompletionInput("dispatch")
         -- Visual samples never dispatch to real quest offer or claim handlers,
         -- even when this exact button is reused for live completion.
         if owner.offerActionPreview then
@@ -371,6 +372,54 @@ function Dialogue:HandleOfferAction(kind)
     self.offerActionRoot:Hide()
 
     return false, reason
+end
+
+
+-- P0379: observe only this addon-owned button; do not re-route native claims.
+local function readOwnedFrameValue(frame, method)
+    if not frame or type(frame[method]) ~= "function"
+        or type(issecretvalue) ~= "function" then return nil end
+    local ok, value = pcall(frame[method], frame)
+    if not ok then return nil end
+    local classified, secret = pcall(issecretvalue, value)
+    if not classified or secret ~= false then return nil end
+    if type(value) == "boolean" or type(value) == "number" then
+        return value
+    end
+    return nil
+end
+
+function Dialogue:RecordCompletionInput(phase)
+    if not self.completionActive or self.offerActionPreview then return end
+    local counters = self.completionInputCounters
+    if not counters or counters[phase] == nil then return end
+    counters[phase] = counters[phase] + 1
+    self.lastCompletionInput = phase
+    Logres:TraceEvent("quest", "completion-input-" .. phase,
+        {reason = self.completionFallbackActive and "stock-fallback"
+            or "logres-owned", result = "observed"})
+end
+
+function Dialogue:CompletionInputStatus()
+    local counts = self.completionInputCounters or {}
+    return {
+        enterCount = counts.enter or 0,
+        leaveCount = counts.leave or 0,
+        downCount = counts.down or 0,
+        upCount = counts.up or 0,
+        dispatchCount = counts.dispatch or 0,
+        lastInput = self.lastCompletionInput or "none",
+        buttonShown = readOwnedFrameValue(self.acceptButton, "IsShown"),
+        buttonVisible = readOwnedFrameValue(self.acceptButton, "IsVisible"),
+        buttonMouseEnabled = readOwnedFrameValue(self.acceptButton, "IsMouseEnabled"),
+        buttonLeft = readOwnedFrameValue(self.acceptButton, "GetLeft"),
+        buttonRight = readOwnedFrameValue(self.acceptButton, "GetRight"),
+        buttonTop = readOwnedFrameValue(self.acceptButton, "GetTop"),
+        buttonBottom = readOwnedFrameValue(self.acceptButton, "GetBottom"),
+        buttonLevel = readOwnedFrameValue(self.acceptButton, "GetFrameLevel"),
+        actionRootShown = readOwnedFrameValue(self.completionActionRoot, "IsShown"),
+        actionRootMouseEnabled = readOwnedFrameValue(self.completionActionRoot, "IsMouseEnabled"),
+    }
 end
 
 function Dialogue:HandleCompletionAction()
@@ -1718,6 +1767,7 @@ function Dialogue:GetDebugStatus()
         rewardPreviewChoiceClicks = self.rewardPreviewChoiceClicks,
         rewardPreviewSelected = self.rewardPreviewSelected,
         rewardPreviewChoiceState = self.rewardPreviewChoiceState,
+        completionInput = self:CompletionInputStatus(),
         completionControl = self.completionControl and
             self.completionControl:GetDebugStatus() or nil,
         itemInfoRegistered = self.eventRegistration.GET_ITEM_INFO_RECEIVED == true,
@@ -1881,6 +1931,10 @@ function Dialogue:OnInitialize()
     self.rootShowCount = 0
     self.rootHideCount = 0
 
+    self.completionInputCounters = {
+        enter = 0, leave = 0, down = 0, up = 0, dispatch = 0
+    }
+    self.lastCompletionInput = "none"
     self.offerActionsEnabled = false
     self.offerActionPreview = false
     self.offerActionPending = false
@@ -2247,6 +2301,21 @@ function Dialogue:OnInitialize()
         ) / 2,
         9
     )
+
+
+    -- P0379: additive observations; visual and action OnClick owners stay intact.
+    acceptButton:HookScript("OnEnter", function()
+        self:RecordCompletionInput("enter")
+    end)
+    acceptButton:HookScript("OnLeave", function()
+        self:RecordCompletionInput("leave")
+    end)
+    acceptButton:HookScript("OnMouseDown", function()
+        self:RecordCompletionInput("down")
+    end)
+    acceptButton:HookScript("OnMouseUp", function()
+        self:RecordCompletionInput("up")
+    end)
 
     local offerActionFeedback =
         offerActionRoot:CreateFontString(
