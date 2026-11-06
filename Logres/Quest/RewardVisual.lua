@@ -11,6 +11,29 @@ local SLOT_PITCH = 42
 local BASE_HEIGHT = 320
 local GOLD = { 0.77, 0.60, 0.32, 0.95 }
 local WHITE = "Interface\\Buttons\\WHITE8x8"
+-- A passive reward row may show a standard item tooltip, never choose/claim.
+local function showRewardTooltip(button)
+    local tooltip = GameTooltip
+    if not tooltip or type(tooltip.SetOwner)~="function" then return end
+    if not button.itemLink and not button.itemID then return end
+    if not pcall(tooltip.SetOwner,tooltip,button,"ANCHOR_RIGHT") then return end
+    local ok = false
+    if button.itemLink and type(tooltip.SetHyperlink)=="function" then
+        ok = pcall(tooltip.SetHyperlink,tooltip,button.itemLink)
+    end
+    if not ok and button.itemID and type(tooltip.SetItemByID)=="function" then
+        ok = pcall(tooltip.SetItemByID,tooltip,button.itemID)
+    end
+    if not ok then pcall(tooltip.Hide,tooltip); return end
+    pcall(tooltip.Show,tooltip)
+    -- Shift comparison is a client UI feature, not a gameplay mutation.
+    if type(IsShiftKeyDown)=="function" and type(GameTooltip_ShowCompareItem)=="function" then
+        local shiftOK,shift = pcall(IsShiftKeyDown)
+        if shiftOK and shift==true then
+            pcall(GameTooltip_ShowCompareItem,tooltip,true)
+        end
+    end
+end
 
 function Visual.New(root, objectiveText)
     local self = setmetatable(
@@ -64,8 +87,12 @@ function Visual.New(root, objectiveText)
             if self.previewChoiceHandler and button.choiceIndex then
                 button.wash:SetVertexColor(0.28, 0.21, 0.11, 0.90)
             end
+            showRewardTooltip(button)
         end)
         slot:SetScript("OnLeave", function()
+            if GameTooltip and type(GameTooltip.Hide)=="function" then
+                pcall(GameTooltip.Hide,GameTooltip)
+            end
             self:PaintPreviewChoices()
         end)
         slot:SetScript("OnClick", function(button)
@@ -93,6 +120,10 @@ function Visual:PaintPreviewChoices()
         local interactive = self.previewChoiceHandler ~= nil
             and slot.choiceIndex ~= nil and slot:IsShown()
         slot:EnableMouse(interactive)
+        -- Preserve preview-only click dispatch while enabling live hover.
+        if not interactive and (slot.itemLink or slot.itemID) then
+            slot:EnableMouse(true)
+        end
         local selected = interactive
             and slot.choiceIndex == self.previewSelectedChoice
         if selected then
@@ -139,6 +170,8 @@ function Visual:Reset()
         self.slots[i]:EnableMouse(false)
         self.slots[i].choiceIndex = nil
         self.slots[i].choiceName = nil
+        self.slots[i].itemID = nil
+        self.slots[i].itemLink = nil
         self.slots[i].icon:SetTexture(nil)
     end
     self.root:SetHeight(BASE_HEIGHT)
@@ -154,6 +187,9 @@ function Visual:Present(cards, footer)
     for i = 1, n do
         local card = cards[i]
         local slot = self.slots[i]
+        -- Sanitized identity is supplied only by the dialogue controller.
+        slot.itemID = card.itemID
+        slot.itemLink = card.itemLink
         if card.kind == "choice" then
             choiceIndex = choiceIndex + 1
             slot.choiceIndex = choiceIndex
@@ -180,5 +216,6 @@ function Visual:Present(cards, footer)
         "TOP", self.root, "TOP", 0, -247 - rows * SLOT_PITCH
     )
     self.objectiveText:SetText(footer)
+    self:PaintPreviewChoices()
     return true
 end

@@ -8,10 +8,10 @@ import re
 if __import__('sys').argv[1:] == ['--selftest']:
     def demo(name,distance):
         valid=isinstance(distance,(float,int)) and not isinstance(distance,bool) and math.isfinite(distance) and distance>=0
-        return f'{name}  ·  ~{math.floor(distance+0.5)} yd' if valid else f'{name}  ·  distance unavailable'
-    assert demo('Quest destination',125)=='Quest destination  ·  ~125 yd'
-    assert demo('Marker',13.7)=='Marker  ·  ~14 yd'
-    assert demo('POI',0)=='POI  ·  ~0 yd'
+        return f'{name}  ·  {math.floor(distance+0.5)} yd' if valid else f'{name}  ·  distance unavailable'
+    assert demo('Quest destination',125)=='Quest destination  ·  125 yd'
+    assert demo('Marker',13.7)=='Marker  ·  14 yd'
+    assert demo('POI',0)=='POI  ·  0 yd'
     assert demo('Waypoint',None).endswith('distance unavailable')
     assert demo('Waypoint',float('nan')).endswith('distance unavailable')
     assert demo('Waypoint',float('inf')).endswith('distance unavailable')
@@ -35,12 +35,12 @@ def need(ok, why):
 # acceptance boundary; no native gameplay APIs are invoked from this test.
 def focused_text(name,distance):
     valid=isinstance(distance,(float,int)) and not isinstance(distance,bool) and math.isfinite(distance) and distance>=0
-    return f'{name}  ·  ~{math.floor(distance+0.5)} yd' if valid else f'{name}  ·  distance unavailable'
+    return f'{name}  ·  {math.floor(distance+0.5)} yd' if valid else f'{name}  ·  distance unavailable'
 
 def run_fixtures():
-    assert focused_text('Quest destination',125)=='Quest destination  ·  ~125 yd'
-    assert focused_text('Marker',13.7)=='Marker  ·  ~14 yd'
-    assert focused_text('POI',0)=='POI  ·  ~0 yd'
+    assert focused_text('Quest destination',125)=='Quest destination  ·  125 yd'
+    assert focused_text('Marker',13.7)=='Marker  ·  14 yd'
+    assert focused_text('POI',0)=='POI  ·  0 yd'
     assert focused_text('Waypoint',None)=='Waypoint  ·  distance unavailable'
     assert focused_text('Waypoint',float('nan')).endswith('distance unavailable')
     assert focused_text('Waypoint',float('inf')).endswith('distance unavailable')

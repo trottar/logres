@@ -677,12 +677,31 @@ local function completionRewardCard(kind, name, icon, quantity, itemID)
             end
         end
     end
+    -- Item identity remains ordinary and read-only; reward purchasing is native.
+    local safeItemID = nil
+    if not isSecret(itemID) and type(itemID)=="number"
+        and itemID==itemID and itemID==math.floor(itemID)
+        and itemID>0 and itemID<10000000 then
+        safeItemID = itemID
+    end
     return {
         kind = kind,
         name = name,
         quantity = math.floor(quantity),
         icon = displayIcon,
+        itemID = safeItemID,
     }
+end
+
+-- GetQuestItemLink is available in Forever; no link means a safe ID-only fallback.
+local function ordinaryQuestRewardLink(kind, index)
+    if type(GetQuestItemLink)~="function" then return nil end
+    local ok, link = pcall(GetQuestItemLink, kind, index)
+    if not ok or isSecret(link) or type(link)~="string" then return nil end
+    if #link<10 or #link>2048 or not link:find("|Hitem:",1,true) then
+        return nil
+    end
+    return link
 end
 
 local function readCompletionRewardCard(kind, index)
@@ -690,7 +709,9 @@ local function readCompletionRewardCard(kind, index)
     local ok, name, icon, quantity, _, _, itemID =
         pcall(GetQuestItemInfo, kind, index)
     if not ok then return nil end
-    return completionRewardCard(kind, name, icon, quantity, itemID)
+    local card = completionRewardCard(kind, name, icon, quantity, itemID)
+    if card then card.itemLink = ordinaryQuestRewardLink(kind,index) end
+    return card
 end
 
 function Dialogue:ReadCompletionRewardSummary()
@@ -804,7 +825,10 @@ function Dialogue:ReadCompletionRewardSummary()
                     local card = completionRewardCard(
                         "reward", resolvedName, texture, quantity, itemID
                     )
-                    if card then self.completionRewardCards[1] = card end
+                    if card then
+                        card.itemLink = ordinaryQuestRewardLink("reward",1)
+                        self.completionRewardCards[1] = card
+                    end
                     reason = nameSource == "item-cache"
                         and "guaranteed-item-cache"
                         or "guaranteed-item-ordinary"

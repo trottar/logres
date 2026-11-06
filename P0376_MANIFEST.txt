@@ -1,0 +1,10 @@
+P0376 REWARD TOOLTIP + NEAR QUEST COMPASS
+Baseline: 5b45be81db1eba4c60cf96010e5d27b95176a751
+Version: 0.0.262-dev
+P0375 client event 33 native choice fallback/turnin; event 15 native handler/turnin
+L-031 no-tilde label / L-035 near compass snap / L-038 tooltip candidate
+L-002 L-005 L-025 L-027 L-036 L-037 still OPEN or PARTIAL; no claim or native suppression change
+PREWRITE 246/246 STATIC PASS
+POSTWRITE 246/246 STATIC PASS
+git diff --check PASS
+WoW runtime UNVERIFIED

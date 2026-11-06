@@ -143,7 +143,7 @@ end
 -- Both the inert art fixture and live focused candidates use this renderer.
 local function showFocusedMarkerLabel(label, name, distance, magnitude)
     local yards = ordinaryFocusedDistance(distance)
-    local text = yards and ("~" .. tostring(math.floor(yards + 0.5)) .. " yd")
+    local text = yards and (tostring(math.floor(yards + 0.5)) .. " yd")
         or "distance unavailable"
     label:SetText(name .. "  ·  " .. text)
     local fade = 1 - math.min(8, math.abs(magnitude)) / 8
@@ -688,6 +688,8 @@ function Compass:RefreshAvailableQuestPOIs(reason)
             nativeCurrentQuestOffers[row.questID] = true
         end
     end
+    local previousNearQuest = self.nearQuestCenterKeys or {}
+    local nearQuestCenterKeys = {}
     local seenQuest={}
     local function add(row,role,key)
         if type(row)~="table" then return end
@@ -706,9 +708,17 @@ function Compass:RefreshAvailableQuestPOIs(reason)
         local distance=math.sqrt(dx*dx+dy*dy)
         local cap=row.potential == true and 50
             or (radius and (role=="quest" and radius*8 or radius))
-        if not cap or distance<=0 or distance>cap then return end
+        if not cap or distance>cap then return end
+        -- Only quest-linked map markers snap; native services keep bearings.
+        -- Release at 4yd to avoid oscillation around the 3yd threshold.
+        local questLinked = role=="quest" or (type(row.questID)=="number" and row.questID>0)
+        local nearKey = tostring(role) .. ":" .. tostring(key)
+        local wasNear = previousNearQuest[nearKey] == true
+        local centered = questLinked and (distance<=3 or (wasNear and distance<4))
+        if centered then nearQuestCenterKeys[nearKey] = true end
         local bearing=(math.deg(math.atan2(dx,-dy))+360)%360
         local relative=normalizeRelativeDegrees(bearing-self.headingDegrees)
+        if centered then relative=0 end
         local magnitude=math.abs(relative)
         if magnitude>VISIBLE_HALF_ANGLE then return end
         local serviceStyle = role=="service" and SERVICE_MARKER_STYLE[row.serviceKind] or nil
@@ -795,6 +805,8 @@ function Compass:RefreshAvailableQuestPOIs(reason)
             end
         end
     end
+    -- Replace, do not accumulate, per-refresh near-center history.
+    self.nearQuestCenterKeys = nearQuestCenterKeys
     local function nearestFirst(a,b)
         if a.potential ~= b.potential then return b.potential == true end
         if a.distance==b.distance then return a.sortKey < b.sortKey end
