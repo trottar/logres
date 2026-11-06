@@ -1,0 +1,8 @@
+P0383 — isolated completion hit surface
+Verified input HEAD: 79fb96368aabbef496601d11de31814e4799f594
+PREWRITE: 253/253 STATIC PASS
+POSTWRITE: 253/253 STATIC PASS
+git diff --check: PASS
+WoW: UNVERIFIED; L-005 PARTIAL/FAIL; L-002 scoped PASS only
+Changed: Logres/Quest/Dialogue.lua, Logres/Logres.toc, Logres/Core/Bootstrap.lua, tools/check_p0381_integrated_gameplay_contract.py, docs/memory/CURRENT.md, docs/memory/handoffs/CURRENT_HANDOFF.md, docs/memory/investigations/ISSUE_LEDGER.md, docs/memory/investigations/ACTIVE.md, docs/memory/roadmap/STATUS.md, docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md, docs/memory/patches/PATCH_INDEX.md, docs/ROADMAP.md, docs/memory/PRE_HANDOFF_AUDIT.md, tools/check_p0383_completion_hit_surface_contract.py, docs/memory/evidence/P0383_COMPLETION_HIT_SURFACE.md, docs/memory/patches/P0383_COMPLETION_HIT_SURFACE.md
+Git commit/push: NO

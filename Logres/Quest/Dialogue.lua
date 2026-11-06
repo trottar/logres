@@ -2236,6 +2236,9 @@ function Dialogue:OnInitialize()
              applied = self.presentationShown == true})
     end)
     root:HookScript("OnHide", function()
+        -- The action root is a UIParent sibling: never strand a clickable
+        -- Logres action after an external parent-panel hide.
+        if self.offerActionRoot then self.offerActionRoot:Hide() end
         self.rootHideCount = self.rootHideCount + 1
         Logres:TraceEvent("quest", "root-onhide",
             {reason = self.lastPresentationReason or "unclassified",
@@ -2492,12 +2495,20 @@ function Dialogue:OnInitialize()
         end
     )
 
+    -- P0383: isolate the same live Accept/Continue/Complete button from the
+    -- dialogue panel's disabled mouse ancestry. This is addon-owned UI only;
+    -- it is anchored to the panel and shown solely by explicit action gates.
     local offerActionRoot =
         CreateFrame(
             "Frame",
             nil,
-            root
+            UIParent
         )
+    offerActionRoot:SetFrameStrata("HIGH")
+    -- A UIParent sibling has no inherited dialogue level. Preserve the
+    -- panel-relative hit priority for Accept/Decline as well as completion.
+    local ownedLevel = readOwnedFrameValue(root, "GetFrameLevel")
+    if ownedLevel then offerActionRoot:SetFrameLevel(ownedLevel + 8) end
     offerActionRoot:SetSize(
         offerStyleValue("width"),
         offerStyleValue("height")

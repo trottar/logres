@@ -1,5 +1,12 @@
 # Mandatory assistant-side pre-handoff audit
 
+## P0383 exact-candidate handoff — 2026-11-06
+
+- Authority: P0382 verified pushed `79fb963` on main. User Forever 0.0.266-dev session 29 incident 2797, L-005 FAIL; no native claim attempted despite selected reward and mouse-enabled addon action. L-002 no-flash PASS only within tested Continue flow. Evidence screenshot bundled, Eastern time correlation inferred from filename/mtime.
+- Hypothesis, not confirmed root cause: the original action's parent is the dialogue's mouse-disabled panel. Change only the addon-owned action root parent to UIParent, keep existing control, explicit gating, panel-relative anchor, HIGH strata, guarded relative frame level, and panel OnHide cleanup. Native reward handling and stock snapshot unchanged.
+- Boundary: no reading or altering protected/secret native state, no direct reward transactions, no polling, no cloned action. Off, dismissal, Goodbye, failure restoration and menus require client testing.
+- Assistant-side candidate: **253/253 historical static checkers PASS**, executed in four bounded batches on the exact 16-file payload; syntax/version/contract checks included. The isolated P0382-baseline transaction tested source guards, injected POSTWRITE rollback (0 tracked files altered afterward), 16/16 installed payload bytes, and git diff --check; its suite invocation was stubbed only for the transaction test because sequential prewrite exceeded the command limit. The packaged applier itself runs the real 253-checker PREWRITE and POSTWRITE suites. WoW UNVERIFIED, L-005 PARTIAL/FAIL.
+
 Authority: `AGENTS.md`. Effective starting with the P0380 R4 documentation checkpoint (2026-11-06). This is a **hard release gate for every future code ZIP**, not a task delegated to the user's patch applier. It applies to a repaired ZIP as fully as to a first attempt. A passing in-user PREWRITE guard is defense in depth; it is **not** a replacement for the audit described here.
 
 ## 1. Establish authority and scope
