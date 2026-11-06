@@ -11,11 +11,11 @@ Prepare evidence-gated Forever Logres alpha, then D-048 five-domain 1.0. Preserv
 
 ## Current Work Item
 
-**P0379 R2** L-005 input provenance. P0378 ZIP pixels reviewed; P0373/P0374/P0376 history. L-002 OPEN, L-005 PARTIAL/FAIL, L-020 PARTIAL, L-021 scope PASS; L-033/L-034/L-035/L-037/L-038 unresolved. R0/R1 PREWRITE REFUSED; see issue ledger.
+**P0380** docs; P0379 `285be52` 249 STATIC, 0.0.264-dev client FAIL. P0381 code L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039. P0373/P0374/P0376/P0378; L-020 PARTIAL L-021 PASS L-035/L-037 OPEN; P0379 R0/R1 REFUSED.
 
 ## Verified State
 
-- P0378 `4ffbe3b` verified, 12 inferred image matches. P0379 R0 REFUSED 129/249 (CURRENT limit); R1 REFUSED 191/249 (HANDOFF limit); R2 249-check candidate, WoW UNVERIFIED.
+- P0379 `285be528` 249 PRE/POST STATIC; 0.0.264-dev session 25 Enter/Leave, no Down/Up/click/claim. L-002 Continue native, L-005 FAIL. R0/R1 refused; P0378 screenshots inferred.
 
 - P0370 240 STATIC; no-pet labels user PASS. P0369 P0368 P0367 P0366 R1 P0365 R1 P0364 R1 P0363 P0362 P0361 R1 P0360 P0359 P0358 R1 P0357 P0356: 239–227 STATIC, client checks pending; prior refusals in evidence. L-001/L-002/L-005 FAIL.
 - P0352 223, P0351 222, P0350 221 STATIC; WoW UNVERIFIED. Full hashes in linked evidence.
@@ -38,16 +38,17 @@ Prepare evidence-gated Forever Logres alpha, then D-048 five-domain 1.0. Preserv
 
 ## Next Action
 
-P0379 R2: validate 249-check candidate, deploy, click Complete Quest, Report Bug, export ZIP. Native Continue retained.
+P0381 next: guarded Continue, Complete Quest hit delivery, NPC fail-open and tracker/menu repairs. P0380 memory-only.
 
 ## Success Criteria
 
-P0379 R2 PRE/POST static plus client input evidence required; L-005 PARTIAL/FAIL, L-002 OPEN.
+P0380 docs-only; P0381 requires working Continue/claim or native fallback and collision-free UI. L-002 OPEN; L-005 PARTIAL.
 
 ## Do Not Reopen Without New Evidence
 Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
+- `docs/memory/evidence/P0380_INTEGRATED_GAMEPLAY_REPAIR.md`
 - `docs/memory/evidence/P0379_COMPLETION_INPUT_PROVENANCE.md`
 - `docs/memory/evidence/P0375_QUEST_PRESENTATION_PROVENANCE.md`
 - `docs/memory/investigations/ISSUE_LEDGER.md` (first bug lookup)
