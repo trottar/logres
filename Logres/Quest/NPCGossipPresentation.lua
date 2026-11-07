@@ -21,7 +21,8 @@ local function hide(reason)
     end
     pending = false
     local d = dialogue()
-    if d.optionSession and d.optionSession.liveReadOnly == true then
+    if d.optionSession and d.optionSession.liveReadOnly == true
+        and d.optionSession.questGreeting ~= true then
         d:HidePresentation(reason or "gossip-closed")
         closes = closes + 1
     end

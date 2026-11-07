@@ -1,0 +1,10 @@
+P0386 — guarded QuestFrame greeting selection/stock parking
+Verified P0384 HEAD: 6722e2829fd8df38c5b29fc11a556e1a2df4fa16
+Runtime version: 0.0.270-dev
+PREWRITE: 256/256 STATIC PASS
+POSTWRITE: 256/256 STATIC PASS
+git diff --check: PASS
+WoW runtime: UNVERIFIED; L-001/L-002 OPEN; L-005 PARTIAL
+Native quest selection guarded; reward claim ordering unchanged
+Changed: Logres/Core/Bootstrap.lua, Logres/Dev/Panel.lua, Logres/Logres.toc, Logres/Quest/Dialogue.lua, Logres/Quest/NPCGossipPresentation.lua, Logres/Quest/NPCGossipQuestChoice.lua, Logres/Quest/OptionSession.lua, docs/ROADMAP.md, docs/memory/CURRENT.md, docs/memory/PRE_HANDOFF_AUDIT.md, docs/memory/handoffs/CURRENT_HANDOFF.md, docs/memory/investigations/ACTIVE.md, docs/memory/investigations/ISSUE_LEDGER.md, docs/memory/patches/PATCH_INDEX.md, docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md, docs/memory/roadmap/STATUS.md, tools/check_p0381_integrated_gameplay_contract.py, docs/memory/evidence/P0386_QUEST_GREETING_HANDOFF.md, docs/memory/patches/P0386_QUEST_GREETING_HANDOFF.md, tools/check_p0386_quest_greeting_handoff_contract.py
+Commit/push performed: NO

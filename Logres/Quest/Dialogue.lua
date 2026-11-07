@@ -756,6 +756,11 @@ function Dialogue:HidePresentation(reason)
             reason or "dialogue-hidden")
         if not restored then return false, "stock-restoration-pending" end
     end
+    if Logres.QuestGreetingControl and Logres.QuestGreetingControl.IsParked() then
+        local restored = Logres.QuestGreetingControl.Restore(
+            reason or "dialogue-greeting-hidden")
+        if not restored then return false, "greeting-restoration-pending" end
+    end
     if self.completionControl then
         self.completionControl:Restore(reason or "hide-presentation")
     end
@@ -1371,6 +1376,16 @@ function Dialogue:ObserveQuestGreeting()
     Logres:TraceEvent("quest", "greeting-observed", {
         available = available, active = active, result = status,
     })
+    -- P0386: only a complete ordinary list with native selectors and
+    -- restorable nonprotected QuestFrame may obtain Logres ownership.
+    if status == "ordinary-quest-greeting-ready" then
+        local owned, why = Logres.QuestGreetingControl.TryShow(self)
+        self.lastGreetingPresentationReason = why
+        Logres:TraceEvent("quest", "greeting-ownership-result", {
+            result = owned and "logres-owned" or "native-stock-owned",
+            reason = why,
+        })
+    end
 end
 
 function Dialogue:HandleQuestComplete()
@@ -1735,7 +1750,8 @@ function Dialogue:PresentText(
     self.rewardPreviewChoiceState = "inactive"
     if self.optionSession then
         if reason == "npc-options-preview"
-            or reason == "npc-options-read-only" then
+            or reason == "npc-options-read-only"
+            or reason == "npc-quest-greeting" then
             self.optionView:Clear()
         else
             self.optionSession:Reset()
@@ -2058,6 +2074,19 @@ end
 
 -- P0317: use the already accepted NPC options/narrative visual for real
 -- ordinary gossip source. Native choices remain Blizzard-owned.
+-- Same accepted narrative/list component as live gossip, but QuestFrame
+-- greeting uses its own native selector and native stock parking policy.
+function Dialogue:ShowReadOnlyQuestGreeting(model)
+    if not self.moduleEnabled or not self.immersionEnabled then
+        return false, "immersion-disabled"
+    end
+    if self.completionActive or self.progressActive or self.activeDetail
+        or self.presentationShown then return false, "another-view-active" end
+    if not self.optionSession or not model or model.questGreeting ~= true then
+        return false, "quest-greeting-model-unavailable" end
+    return self.optionSession:StartReadOnly(model)
+end
+
 function Dialogue:ShowReadOnlyGossip(model)
     if not self.moduleEnabled then return false, "module-disabled" end
     if not self.immersionEnabled then return false, "immersion-off" end
@@ -2102,6 +2131,8 @@ function Dialogue:GetDebugStatus()
         lastGreetingAvailable = self.lastGreetingAvailable,
         lastGreetingActive = self.lastGreetingActive,
         lastGreetingStatus = self.lastGreetingStatus,
+        lastGreetingPresentationReason = self.lastGreetingPresentationReason,
+        greetingStockParked = Logres.QuestGreetingControl.IsParked(),
         questDetailRegistered =
             self.eventRegistration.QUEST_DETAIL == true,
         questAcceptedRegistered =
@@ -2254,6 +2285,7 @@ function Dialogue:OnInitialize()
     self.lastGreetingAvailable = nil
     self.lastGreetingActive = nil
     self.lastGreetingStatus = "not-observed"
+    self.lastGreetingPresentationReason = "not-attempted"
     self.completeEventCount = 0
     self.completionShownCount = 0
     self.completionSkippedCount = 0

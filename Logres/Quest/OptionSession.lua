@@ -16,6 +16,7 @@ end
 function Session:Reset()
     self.active = false
     self.liveReadOnly = false
+    self.questGreeting = false
     self.model, self.nodeKey = nil, nil
     self.mode, self.optionPage = nil, 1
     self.history = {}
@@ -27,7 +28,9 @@ function Session:Gate()
     local d = self.dialogue
     return self.active and d.moduleEnabled and d.immersionEnabled
         and d.presentationShown
-        and ((self.liveReadOnly and d.lastPresentationReason == "npc-options-read-only")
+        and ((self.liveReadOnly and
+                ((self.questGreeting and d.lastPresentationReason == "npc-quest-greeting")
+                or (not self.questGreeting and d.lastPresentationReason == "npc-options-read-only")))
             or (not self.liveReadOnly and d.offerActionPreview
                 and d.lastPresentationReason == "npc-options-preview"))
         and not d.completionActive
@@ -37,8 +40,8 @@ function Session:Render()
     local node = self.model and self.model.nodes[self.nodeKey]
     if not node then self.lastResult = "missing-node"; return false end
     local d = self.dialogue
-    local presentationReason = self.liveReadOnly
-        and "npc-options-read-only" or "npc-options-preview"
+    local presentationReason = self.questGreeting and "npc-quest-greeting"
+        or (self.liveReadOnly and "npc-options-read-only" or "npc-options-preview")
     local ok, state = d:PresentText(
         node.title or self.model.title, node.body or "", "",
         presentationReason, false, false, not self.liveReadOnly)
@@ -57,9 +60,15 @@ function Session:Render()
         }, self.liveReadOnly)
         if self.liveReadOnly then
             self.visual:SetLiveSelectable(Logres.NPCGossipChoice.CanSelect())
-            self.visual:SetQuestSelectable(
-                Logres.NPCGossipQuestChoice.CanSelect("available"),
-                Logres.NPCGossipQuestChoice.CanSelect("active"))
+            if self.questGreeting then
+                self.visual:SetQuestSelectable(
+                    Logres.QuestGreetingControl.CanSelect("available"),
+                    Logres.QuestGreetingControl.CanSelect("active"))
+            else
+                self.visual:SetQuestSelectable(
+                    Logres.NPCGossipQuestChoice.CanSelect("available"),
+                    Logres.NPCGossipQuestChoice.CanSelect("active"))
+            end
         end
     end
     d:UpdatePageControls()
@@ -100,8 +109,9 @@ function Session:StartReadOnly(model)
     end
     self:Reset()
     self.model = model
-    self.mode = "live-read-only"
+    self.mode = model.questGreeting == true and "quest-greeting" or "live-read-only"
     self.nodeKey = model.start
+    self.questGreeting = model.questGreeting == true
     self.liveReadOnly = true
     self.active = true
     if not self:Render() then self:Reset(); return false, "render-failed" end
@@ -119,7 +129,9 @@ function Session:Choose(index)
         local node = self.model.nodes[self.nodeKey]
         local option = node and node.options and node.options[index]
         local ok, reason
-        if type(option) == "table" and option.questKind then
+        if self.questGreeting then
+            ok, reason = Logres.QuestGreetingControl.Activate(self.model, index)
+        elseif type(option) == "table" and option.questKind then
             ok, reason = Logres.NPCGossipQuestChoice.Activate(self.model, index)
         else
             ok, reason = Logres.NPCGossipChoice.Activate(self.model, index)
@@ -195,7 +207,12 @@ function Session:Goodbye()
         return false, "inactive-option-preview"
     end
     if self.liveReadOnly then
-        local ok, reason = Logres.NPCGossipPresentation.Goodbye()
+        local ok, reason
+        if self.questGreeting then
+            ok, reason = Logres.QuestGreetingControl.Goodbye()
+        else
+            ok, reason = Logres.NPCGossipPresentation.Goodbye()
+        end
         if ok then self.goodbyes = self.goodbyes + 1 end
         return ok, reason
     end
@@ -226,6 +243,7 @@ end
 
 function Session:Debug()
     return { active = self.active, mode = self.mode, liveReadOnly = self.liveReadOnly,
+        questGreeting = self.questGreeting == true,
         node = self.nodeKey, optionPage = self.optionPage,
         depth = #self.history, clicks = self.clicks, branches = self.branches,
         backs = self.backCount, rootReturns = self.rootReturns,

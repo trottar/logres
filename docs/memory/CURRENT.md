@@ -7,15 +7,15 @@ project: logres
 # Current State
 
 ## Active Objective
-Forever alpha D-048; D-046 preview/stock fallback, D-047 camera frozen. Release blocked.
+Forever alpha D-048; D-046 preview/stock fallback, D-047 camera frozen. Blocked.
 
 ## Current Work Item
 
-**P0385** L-001 QUEST_GREETING, L-002 native claim flash; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue no-flash scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
+**P0386** L-001 greeting selector/stock handoff; P0385 QUEST_GREETING, L-002 claim flash; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue no-flash scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
 
 ## Verified State
 
-- P0383 `cc783a0` 253 STATIC; client 0.0.267-dev quest18 TURNED_IN; hotspot offset and stock greeting OPEN. L-005 PARTIAL, L-001/L-002 OPEN. P0384 quest21 aligned hover in 0.0.268-dev incident 3196; P0385 UNVERIFIED.
+- P0383 `cc783a0` 253 STATIC; client 0.0.267-dev quest18 TURNED_IN; hotspot offset and stock greeting OPEN. L-005 PARTIAL, L-001/L-002 OPEN. P0384 quest21 aligned hover in 0.0.268-dev incident 3196; P0385 observed; P0386 UNVERIFIED.
 
 - P0379 `285be528` 249 STATIC; 0.0.264-dev no claim. L-002 native, L-005 FAIL. R0/R1 refused; P0378 screenshots inferred.
 
@@ -35,19 +35,19 @@ Forever alpha D-048; D-046 preview/stock fallback, D-047 camera frozen. Release 
 - P0338 R1 `342cab97` 209/209; P0337 R1 `cfdc07af` 208/208. Historical PREWRITE failures, narrow remedies and deferred L-031 focused-yard/quest-giver validation remain in their evidence files.
 - P0336/P0335/P0334 R3/P0333/P0332/P0331/P0330/P0329: 207–200 STATIC only. P0332 ordinary aura fallback; native AuraContainer separate. See PATCH_INDEX.
 - P0328 alpha runbook; P0317/P0318/P0319/P0320 gossip observations; P0321 `9a180c8` parking UNVERIFIED. P0322/P0323/P0324/P0325 D-048 inert models; P0326/P0327 merchant/flight models only. Stock UI/quest 237 preserved.
-- D-048 independent live domain selectors and saved migration do not exist: schema 3 still stores `immersionEnabled` and `activeQuestEnabled`. D-046 preview-first and D-047 frozen Camera/DynamicCam remain required. Native UI and protected/secret fallbacks remain accessible.
+- D-048 independent live domain selectors and saved migration do not exist: schema 3 still stores `immersionEnabled` and `activeQuestEnabled`. D-046 preview-first and D-047 frozen Camera/DynamicCam remain required. Native UI and protected/secret fallbacks stay usable.
 - L-020–L-032 are tracked user reports; source fixes are not client-accepted. L-028 duplicated/missing target debuffs remains OPEN; L-022 focused quest artifact requires screenshot, L-027 Blizzard transient popup requires `/fstack` owner evidence. L-019 root project license remains unresolved, public distribution NOT APPROVED.
 
 ## Next Action
 
-P0385: record native quest-greeting source readiness and pre-claim stock restore automatically; next safe QuestFrame replacement/claim handoff.
+P0386: gated actionable QuestFrame greeting, stock restoration before selection; L-002 flash separate.
 
 ## Success Criteria
 
-P0385 source/event client UNVERIFIED; Continue PASS scoped; quest18 TURNED_IN; L-001/L-002/L-040 OPEN, L-005 PARTIAL.
+P0385 greeting 2/0; P0386 UNVERIFIED; Continue PASS scoped; quest18 TURNED_IN; L-001/L-002/L-040 OPEN, L-005 PARTIAL.
 
 ## Do Not Reopen Without New Evidence
-Preserve P0321 gossip parking, frozen camera, protected actions, pet secure state, stock UI, fifth-domain prefs, saves, quest 237 and P0329 merchant/flight fallback. No polling, secret inspection or blanket suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
+Preserve P0321 gossip parking, frozen camera, protected actions, pet secure state, stock UI, fifth-domain prefs, saves, quest 237 and P0329 merchant/flight fallback. No polling, secret inspection or blanket suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and release blockers/negative evidence.
 
 ## Relevant References
 - `docs/memory/PRE_HANDOFF_AUDIT.md`
