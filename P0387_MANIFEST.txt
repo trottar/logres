@@ -1,0 +1,10 @@
+P0387 — guarded late QUEST_ACCEPTED multi-quest handoff
+Verified P0386 HEAD: 68232a43ac497690f6dad8d41f251f66b899fc88
+Runtime version: 0.0.271-dev
+PREWRITE: 257/257 STATIC PASS
+POSTWRITE: 257/257 STATIC PASS
+git diff --check: PASS
+WoW runtime: UNVERIFIED; L-001/L-002 OPEN; L-005 PARTIAL
+Native greeting selection and reward claim handlers unchanged
+Changed: Logres/Core/Bootstrap.lua, Logres/Logres.toc, Logres/Quest/Dialogue.lua, Logres/Quest/OfferStockSuppression.lua, docs/ROADMAP.md, docs/memory/CURRENT.md, docs/memory/PRE_HANDOFF_AUDIT.md, docs/memory/handoffs/CURRENT_HANDOFF.md, docs/memory/investigations/ACTIVE.md, docs/memory/investigations/ISSUE_LEDGER.md, docs/memory/patches/PATCH_INDEX.md, docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md, docs/memory/roadmap/STATUS.md, tools/check_p0381_integrated_gameplay_contract.py, docs/memory/evidence/P0387_LATE_ACCEPTED_QUEST_HANDOFF.md, docs/memory/patches/P0387_LATE_ACCEPTED_QUEST_HANDOFF.md, tools/check_p0387_late_accepted_quest_handoff_contract.py
+Commit/push performed: NO

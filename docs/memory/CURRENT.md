@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-11-06
+as_of: 2026-11-07
 project: logres
 ---
 
@@ -11,7 +11,7 @@ Forever alpha D-048; D-046 preview/stock fallback, D-047 camera frozen. Blocked.
 
 ## Current Work Item
 
-**P0386** L-001 greeting selector/stock handoff; P0385 QUEST_GREETING, L-002 claim flash; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue no-flash scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
+**P0387** late-accept fix, P0386 L-001 greeting; P0385 QUEST_GREETING, L-002 claim flash; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue no-flash scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
 
 ## Verified State
 
@@ -40,7 +40,7 @@ Forever alpha D-048; D-046 preview/stock fallback, D-047 camera frozen. Blocked.
 
 ## Next Action
 
-P0386: gated actionable QuestFrame greeting, stock restoration before selection; L-002 flash separate.
+P0387: guard late accept after next quest detail; L-002 flash OPEN.
 
 ## Success Criteria
 

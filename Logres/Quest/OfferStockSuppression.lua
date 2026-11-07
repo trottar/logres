@@ -641,7 +641,7 @@ function Suppression:OnInitialize()
     end
 
     local eventFrame = CreateFrame("Frame")
-    eventFrame:SetScript("OnEvent", function(_, event)
+    eventFrame:SetScript("OnEvent", function(_, event, ...)
         if event == "PLAYER_REGEN_ENABLED" then
             if self.pending and self.requestedEnabled then
                 self:Reconcile("combat-ended")
@@ -652,6 +652,25 @@ function Suppression:OnInitialize()
         if RESTORE_EVENTS[event]
             and (self.appliedEnabled or self.requestedEnabled)
         then
+            -- P0387: QUEST_ACCEPTED for the previously accepted quest may
+            -- arrive after a new QUEST_DETAIL already gained Logres ownership.
+            -- Use only addon-owned identity and fully guarded event payload.
+            if event == "QUEST_ACCEPTED" and self.appliedEnabled
+                and self.requestedEnabled then
+                local found, dialogue = pcall(Logres.GetModule,
+                    Logres, "QuestDialogue")
+                if found and dialogue and
+                    type(dialogue.ShouldPreserveNewOfferOnAccepted) == "function" then
+                    local ok, preserve = pcall(
+                        dialogue.ShouldPreserveNewOfferOnAccepted,
+                        dialogue, ...)
+                    if ok and preserve == true then
+                        Logres:TraceEvent("quest", "late-accepted-stock-preserved",
+                            {result = "new-offer-stock-retained"})
+                        return
+                    end
+                end
+            end
             self:Restore("event:" .. event)
         end
     end)

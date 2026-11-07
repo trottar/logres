@@ -1,0 +1,3 @@
+# P0387 — Late QUEST_ACCEPTED multi-quest handoff
+
+Baseline P0386 `68232a43ac497690f6dad8d41f251f66b899fc88`; runtime regression after first accepted quest leaves next quest Blizzard-only. Fix single native-event identity gate shared between QuestDialogue and QuestOfferStockSuppression, preserving native recovery and future quest controls. Source: `Logres/Quest/Dialogue.lua`, `Logres/Quest/OfferStockSuppression.lua`; version 0.0.271-dev; checker #257. Negative evidence and exact 0.0.270-dev session36 event IDs in `docs/memory/evidence/P0387_LATE_ACCEPTED_QUEST_HANDOFF.md`. L-001 remains OPEN until real second-offer validation; L-002 native transition flash unchanged OPEN. No commit/push by applier.

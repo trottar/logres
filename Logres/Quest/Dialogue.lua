@@ -339,6 +339,11 @@ function Dialogue:HandleOfferAction(kind)
         return false, "no-active-detail"
     end
 
+    -- P0387: this ordinary identity belongs to the clicked offer, not the
+    -- next offer Blizzard may open before QUEST_ACCEPTED is delivered.
+    -- Set before native dispatch so synchronous events see the same token.
+    self.pendingAcceptedOfferQuestID =
+        kind == "accept" and detail.questID or nil
     local actionRuntime =
         Logres:GetModule(
             "QuestOfferActionProbe"
@@ -365,6 +370,7 @@ function Dialogue:HandleOfferAction(kind)
         return true, reason
     end
 
+    self.pendingAcceptedOfferQuestID = nil
     self:RequestStockOfferSuppression(
         false,
         "offer-action-blocked"
@@ -1831,6 +1837,37 @@ function Dialogue:PresentNarrativeModel(model)
     )
 end
 
+-- P0387: Forever's QUEST_ACCEPTED carries the accepted questID
+-- (Classic variants may prefix a quest-log index). Classify the final
+-- payload as ordinary BEFORE reading its type or comparing with addon data.
+local function ordinaryAcceptedEventQuestID(...)
+    local count = select("#", ...)
+    if (count ~= 1 and count ~= 2)
+        or type(issecretvalue) ~= "function" then return nil end
+    local candidate = select(count, ...)
+    local ok, secret = pcall(issecretvalue, candidate)
+    if not ok or secret ~= false then return nil end
+    if type(candidate) ~= "number" or candidate <= 0
+        or candidate ~= candidate or candidate == math.huge then
+        return nil
+    end
+    return candidate
+end
+
+-- Only a proven Logres-owned, already-presented *different* offer may
+-- survive the late acceptance of the preceding offer. Both QuestDialogue
+-- and QuestOfferStockSuppression consult this same predicate, independently
+-- of event handler ordering. A missing/secret event identity fails open.
+function Dialogue:ShouldPreserveNewOfferOnAccepted(...)
+    local detail = self.activeDetail
+    local pending = self.pendingAcceptedOfferQuestID
+    if not detail or not pending or not self.presentationShown
+        or not self.offerActionsEnabled or self.offerActionPreview
+        or detail.questID == pending then return false end
+    local accepted = ordinaryAcceptedEventQuestID(...)
+    return accepted ~= nil and accepted == pending
+end
+
 function Dialogue:HandleQuestDetail()
     self.detailEventCount =
         self.detailEventCount + 1
@@ -2322,6 +2359,7 @@ function Dialogue:OnInitialize()
     self.progressContinueSerial = 0
     self.lastProgressReason = "not-observed"
     self.lastProgressSecret = false
+    self.pendingAcceptedOfferQuestID = nil
     self.acceptedEventCount = 0
     self.finishedEventCount = 0
     self.worldEventCount = 0
@@ -2863,6 +2901,17 @@ function Dialogue:OnInitialize()
             if event == "QUEST_ACCEPTED" then
                 self.acceptedEventCount =
                     self.acceptedEventCount + 1
+                if self:ShouldPreserveNewOfferOnAccepted(...) then
+                    -- Keep the prior identity until this event finishes;
+                    -- another addon event handler may run after ours.
+                    Logres:TraceEvent("quest", "late-accepted-preserved", {
+                        questID = self.pendingAcceptedOfferQuestID,
+                        activeQuestID = self.activeDetail.questID,
+                        result = "new-offer-retained",
+                    })
+                    return
+                end
+                self.pendingAcceptedOfferQuestID = nil
                 self:ClearActiveDetail(
                     "QUEST_ACCEPTED"
                 )
@@ -2901,6 +2950,7 @@ function Dialogue:OnInitialize()
             if event ==
                 "PLAYER_ENTERING_WORLD"
             then
+                self.pendingAcceptedOfferQuestID = nil
                 self.worldEventCount =
                     self.worldEventCount + 1
                 self:ClearActiveDetail(
@@ -2927,6 +2977,7 @@ end
 
 function Dialogue:OnDisable()
     self.moduleEnabled = false
+    self.pendingAcceptedOfferQuestID = nil
     self:ClearActiveDetail(
         "module-disabled"
     )
