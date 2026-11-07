@@ -215,6 +215,16 @@ function Logres:CaptureBugIncident()
         "buttonMouseEnabled", "buttonLeft", "buttonRight", "buttonTop",
         "buttonBottom", "buttonLevel", "actionRootShown",
         "actionRootMouseEnabled"})
+    local inputReport = ownedTraceStatus(function()
+        return self:GetModule("QuestDialogue"):GetDebugStatus().completionInput
+    end)
+    local mapFields = {"phase", "buttonLeft", "buttonRight", "buttonTop",
+        "buttonBottom", "labelLeft", "labelRight", "labelTop", "labelBottom",
+        "scale", "cursorPixelsX", "cursorPixelsY", "cursorX", "cursorY"}
+    incident.snapshot.completionEnterMap = inputReport and
+        pickTraceStatus(inputReport.enterMap, mapFields) or nil
+    incident.snapshot.completionDownMap = inputReport and
+        pickTraceStatus(inputReport.downMap, mapFields) or nil
     incident.snapshot.completionView = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("QuestDialogue"):GetDebugStatus()
     end), {"completeEventCount", "completionShownCount",

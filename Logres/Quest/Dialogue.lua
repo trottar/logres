@@ -397,12 +397,57 @@ local function readOwnedFrameValue(frame, method)
     return nil
 end
 
+-- P0384: capture only the addon-owned button, label and user cursor.
+-- The HUD screen map is not a runtime quest-button hitbox map. The saved
+-- sample remains available to Report Bug after native completion closes UI.
+local function captureCompletionInputMap(button, phase)
+    if not button or not button.label then return nil end
+    local report = { phase = phase,
+        buttonLeft = readOwnedFrameValue(button, "GetLeft"),
+        buttonRight = readOwnedFrameValue(button, "GetRight"),
+        buttonTop = readOwnedFrameValue(button, "GetTop"),
+        buttonBottom = readOwnedFrameValue(button, "GetBottom"),
+        labelLeft = readOwnedFrameValue(button.label, "GetLeft"),
+        labelRight = readOwnedFrameValue(button.label, "GetRight"),
+        labelTop = readOwnedFrameValue(button.label, "GetTop"),
+        labelBottom = readOwnedFrameValue(button.label, "GetBottom"),
+        scale = readOwnedFrameValue(button, "GetEffectiveScale"),
+    }
+    -- GetCursorPosition is a user-input API, not a Blizzard frame probe.
+    -- Every potentially secret-capable result is classified BEFORE use.
+    if type(GetCursorPosition) == "function"
+        and type(issecretvalue) == "function" then
+        local ok, rawX, rawY = pcall(GetCursorPosition)
+        if ok then
+            local checkedX, secretX = pcall(issecretvalue, rawX)
+            local checkedY, secretY = pcall(issecretvalue, rawY)
+            if checkedX and checkedY and secretX == false and secretY == false
+                and type(rawX) == "number" and type(rawY) == "number"
+                and rawX == rawX and rawY == rawY
+                and math.abs(rawX) < 1000000 and math.abs(rawY) < 1000000
+            then
+                report.cursorPixelsX, report.cursorPixelsY = rawX, rawY
+                if type(report.scale) == "number" and report.scale > 0 then
+                    report.cursorX = rawX / report.scale
+                    report.cursorY = rawY / report.scale
+                end
+            end
+        end
+    end
+    return report
+end
+
 function Dialogue:RecordCompletionInput(phase)
     if not self.completionActive or self.offerActionPreview then return end
     local counters = self.completionInputCounters
     if not counters or counters[phase] == nil then return end
     counters[phase] = counters[phase] + 1
     self.lastCompletionInput = phase
+    if phase == "enter" or phase == "down" then
+        local map = captureCompletionInputMap(self.acceptButton, phase)
+        if phase == "enter" then self.lastCompletionEnterMap = map
+        else self.lastCompletionDownMap = map end
+    end
     Logres:TraceEvent("quest", "completion-input-" .. phase,
         {reason = self.completionFallbackActive and "stock-fallback"
             or "logres-owned", result = "observed"})
@@ -427,6 +472,9 @@ function Dialogue:CompletionInputStatus()
         buttonLevel = readOwnedFrameValue(self.acceptButton, "GetFrameLevel"),
         actionRootShown = readOwnedFrameValue(self.completionActionRoot, "IsShown"),
         actionRootMouseEnabled = readOwnedFrameValue(self.completionActionRoot, "IsMouseEnabled"),
+        -- These retained samples survive dismissal; no native frame reads.
+        enterMap = self.lastCompletionEnterMap,
+        downMap = self.lastCompletionDownMap,
     }
 end
 
@@ -1265,6 +1313,8 @@ function Dialogue:HandleQuestComplete()
         self.completeEventCount = self.completeEventCount + 1
     end
     self:ClearActiveDetail("QUEST_COMPLETE")
+    self.lastCompletionEnterMap = nil
+    self.lastCompletionDownMap = nil
     local completion, reason, secret = self:ReadCompletion()
     if not completion then
         self.activeCompletion = nil

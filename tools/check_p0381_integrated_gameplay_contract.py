@@ -140,7 +140,7 @@ for path in ('docs/memory/investigations/ACTIVE.md',
              'docs/memory/roadmap/STATUS.md',
              'docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md',
              'docs/memory/patches/PATCH_INDEX.md', 'docs/ROADMAP.md'):
-    need(read(path).startswith('## P0383 —') and '## P0382 —' in read(path) and '## P0381 —' in read(path), 'active roadmap not synchronized or P0381/P0382 history lost: '+path)
+    need(read(path).startswith('## P0384 —') and '## P0383 —' in read(path) and '## P0382 —' in read(path) and '## P0381 —' in read(path), 'active roadmap not synchronized or P0381/P0382/P0383 history lost: '+path)
 vt = re.search(r'^## Version: (\S+)$', T, re.M)
 vb = re.search(r'^Logres\.VERSION = "([^"]+)"$', B, re.M)
 need(vt and vb and vt.group(1) == vb.group(1), 'TOC/Bootstrap version parity')

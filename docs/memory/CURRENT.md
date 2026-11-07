@@ -7,15 +7,17 @@ project: logres
 # Current State
 
 ## Active Objective
-Prepare evidence-gated Forever Logres alpha, then D-048 five-domain 1.0. Preserve D-046 preview-first, native fallback, and frozen D-047 Camera/DynamicCam. November 4 runtime tests are contingent, not release approval.
+Prepare Forever alpha, D-048 five-domain 1.0; preserve D-046 preview, stock fallback, D-047 frozen Camera. Not release-approved.
 
 ## Current Work Item
 
-**P0383** L-005 hit-surface trial; P0382 L-002 no-flash PASS scoped, L-005 FAIL, L-040 EST; P0381 b672104 251 STATIC, client FAIL (R0/P0241, R2/R3 refused); P0380 R4; P0379 285be52 FAIL. P0381 code L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039. P0373/P0374/P0376/P0378; L-020 PARTIAL L-021 PASS L-035/L-037 OPEN; P0379 R0/R1 REFUSED.
+**P0384** L-005 input map; P0383 scoped turn-in PASS, stock greeting OPEN; P0382 L-002 no-flash PASS scoped, L-040 EST; P0381 b672104 251 STATIC, R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
 
 ## Verified State
 
-- P0379 `285be528` 249 PRE/POST STATIC; 0.0.264-dev session 25 Enter/Leave, no Down/Up/click/claim. L-002 Continue native, L-005 FAIL. R0/R1 refused; P0378 screenshots inferred.
+- P0383 `cc783a0` 253 STATIC; client 0.0.267-dev quest18 TURNED_IN; hotspot offset and stock greeting OPEN. L-005 PARTIAL, L-001/L-002 OPEN. P0384 UNVERIFIED.
+
+- P0379 `285be528` 249 STATIC; 0.0.264-dev no claim. L-002 native, L-005 FAIL. R0/R1 refused; P0378 screenshots inferred.
 
 - P0370 240 STATIC; no-pet labels user PASS. P0369 P0368 P0367 P0366 R1 P0365 R1 P0364 R1 P0363 P0362 P0361 R1 P0360 P0359 P0358 R1 P0357 P0356: 239–227 STATIC, client checks pending; prior refusals in evidence. L-001/L-002/L-005 FAIL.
 - P0352 223, P0351 222, P0350 221 STATIC; WoW UNVERIFIED. Full hashes in linked evidence.
@@ -38,14 +40,14 @@ Prepare evidence-gated Forever Logres alpha, then D-048 five-domain 1.0. Preserv
 
 ## Next Action
 
-P0382: event-held native progress, completion hit-test, EST/EDT reports. Full static suite then client validation.
+P0384: capture addon-owned hover/cursor geometry via Report Bug on unclaimed reward page. Hitbox and native-greeting fixes await evidence.
 
 ## Success Criteria
 
-P0382: no native flash, working claim or stock fallback, Eastern reports. L-002 OPEN; L-005 PARTIAL; L-040 OPEN.
+P0384 geometry OPEN; Continue PASS scoped, quest18 TURNED_IN, reward unverified; stock greeting OPEN. L-002/L-040 OPEN; L-005 PARTIAL.
 
 ## Do Not Reopen Without New Evidence
-Do not change P0321 gossip parking, frozen camera, protected action routing, pet secure state, native UI suppression, fifth-domain live preferences, user save migration, quest 237 or unverified merchant/flight ownership in P0329. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
+Preserve P0321 gossip parking, frozen camera, protected actions, pet secure state, stock UI, fifth-domain prefs, saves, quest 237 and P0329 merchant/flight fallback. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
 - `docs/memory/PRE_HANDOFF_AUDIT.md`
