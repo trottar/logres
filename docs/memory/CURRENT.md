@@ -7,15 +7,15 @@ project: logres
 # Current State
 
 ## Active Objective
-Prepare Forever alpha, D-048 five-domain 1.0; preserve D-046 preview, stock fallback, D-047 frozen Camera. Not release-approved.
+Forever alpha D-048; D-046 preview/stock fallback, D-047 camera frozen. Release blocked.
 
 ## Current Work Item
 
-**P0384** L-005 input map; P0383 scoped turn-in PASS, stock greeting OPEN; P0382 L-002 no-flash PASS scoped, L-040 EST; P0381 b672104 251 STATIC, R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
+**P0385** L-001 QUEST_GREETING, L-002 native claim flash; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue no-flash scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
 
 ## Verified State
 
-- P0383 `cc783a0` 253 STATIC; client 0.0.267-dev quest18 TURNED_IN; hotspot offset and stock greeting OPEN. L-005 PARTIAL, L-001/L-002 OPEN. P0384 UNVERIFIED.
+- P0383 `cc783a0` 253 STATIC; client 0.0.267-dev quest18 TURNED_IN; hotspot offset and stock greeting OPEN. L-005 PARTIAL, L-001/L-002 OPEN. P0384 quest21 aligned hover in 0.0.268-dev incident 3196; P0385 UNVERIFIED.
 
 - P0379 `285be528` 249 STATIC; 0.0.264-dev no claim. L-002 native, L-005 FAIL. R0/R1 refused; P0378 screenshots inferred.
 
@@ -40,14 +40,14 @@ Prepare Forever alpha, D-048 five-domain 1.0; preserve D-046 preview, stock fall
 
 ## Next Action
 
-P0384: capture addon-owned hover/cursor geometry via Report Bug on unclaimed reward page. Hitbox and native-greeting fixes await evidence.
+P0385: record native quest-greeting source readiness and pre-claim stock restore automatically; next safe QuestFrame replacement/claim handoff.
 
 ## Success Criteria
 
-P0384 geometry OPEN; Continue PASS scoped, quest18 TURNED_IN, reward unverified; stock greeting OPEN. L-002/L-040 OPEN; L-005 PARTIAL.
+P0385 source/event client UNVERIFIED; Continue PASS scoped; quest18 TURNED_IN; L-001/L-002/L-040 OPEN, L-005 PARTIAL.
 
 ## Do Not Reopen Without New Evidence
-Preserve P0321 gossip parking, frozen camera, protected actions, pet secure state, stock UI, fifth-domain prefs, saves, quest 237 and P0329 merchant/flight fallback. No periodic hooks, secret-value introspection or blanket visual frame suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
+Preserve P0321 gossip parking, frozen camera, protected actions, pet secure state, stock UI, fifth-domain prefs, saves, quest 237 and P0329 merchant/flight fallback. No polling, secret inspection or blanket suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and all existing release blockers and negative evidence.
 
 ## Relevant References
 - `docs/memory/PRE_HANDOFF_AUDIT.md`

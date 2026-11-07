@@ -1,0 +1,10 @@
+P0385 — read-only QUEST_GREETING and pre-claim restore provenance
+Verified P0384 HEAD: c1c77e288fa295d2001256129096ce7bb57795b1
+Runtime version: 0.0.269-dev
+PREWRITE: 255/255 STATIC PASS
+POSTWRITE: 255/255 STATIC PASS
+git diff --check: PASS
+WoW runtime: UNVERIFIED; L-001/L-002 OPEN; L-005 PARTIAL
+Native quest selection and claim ordering unchanged
+Changed: Logres/Core/Bootstrap.lua, Logres/Dev/Panel.lua, Logres/Logres.toc, Logres/Quest/CompletionControl.lua, Logres/Quest/Dialogue.lua, docs/ROADMAP.md, docs/memory/CURRENT.md, docs/memory/PRE_HANDOFF_AUDIT.md, docs/memory/handoffs/CURRENT_HANDOFF.md, docs/memory/investigations/ACTIVE.md, docs/memory/investigations/ISSUE_LEDGER.md, docs/memory/patches/PATCH_INDEX.md, docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md, docs/memory/roadmap/STATUS.md, tools/check_p0381_integrated_gameplay_contract.py, docs/memory/evidence/P0385_QUEST_GREETING_PROVENANCE.md, docs/memory/patches/P0385_QUEST_GREETING_PROVENANCE.md, tools/check_p0385_quest_greeting_provenance_contract.py
+Commit/push performed: NO

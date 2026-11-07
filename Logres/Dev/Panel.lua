@@ -229,6 +229,10 @@ function Logres:CaptureBugIncident()
         return self:GetModule("QuestDialogue"):GetDebugStatus()
     end), {"completeEventCount", "completionShownCount",
         "completionSkippedCount", "completionActive", "lastCompletionReason"})
+    incident.snapshot.questGreeting = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("QuestDialogue"):GetDebugStatus()
+    end), {"questGreetingRegistered", "greetingEventCount",
+        "lastGreetingAvailable", "lastGreetingActive", "lastGreetingStatus"})
     incident.snapshot.questPresentation = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("QuestDialogue"):GetDebugStatus()
     end), {"rootShown", "presentationShown", "lastPresentationReason",

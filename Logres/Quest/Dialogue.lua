@@ -1305,6 +1305,74 @@ function Dialogue:PositionCompletionActionVisual()
     )
 end
 
+-- P0385: QUEST_GREETING is the separate QuestFrame greeting path used by
+-- NPCs offering multiple quests. Sample ordinary source data at the event;
+-- never park or suppress the Blizzard QuestFrame on unverified coverage.
+local function greetingOrdinary(value)
+    if type(issecretvalue) ~= "function" then return false end
+    local ok, secret = pcall(issecretvalue, value)
+    return ok and secret == false
+end
+
+local function greetingCount(fn)
+    if not greetingOrdinary(fn) or type(fn) ~= "function" then
+        return nil, "count-api-unavailable"
+    end
+    local ok, value = pcall(fn)
+    if not ok or not greetingOrdinary(value) or type(value) ~= "number"
+        or value ~= math.floor(value) or value < 0 or value > 24 then
+        return nil, "count-not-ordinary-or-overflow"
+    end
+    return value, "ordinary"
+end
+
+local function greetingTitlesReady(count, fn)
+    if not greetingOrdinary(fn) or type(fn) ~= "function" then
+        return false, "title-api-unavailable"
+    end
+    for index = 1, count do
+        local ok, title = pcall(fn, index)
+        if not ok or not greetingOrdinary(title) or type(title) ~= "string"
+            or title == "" or #title > 2048 then
+            return false, "title-not-ordinary"
+        end
+    end
+    return true, "titles-ordinary"
+end
+
+function Dialogue:ObserveQuestGreeting()
+    self.greetingEventCount = self.greetingEventCount + 1
+    local available, availableStatus = greetingCount(GetNumAvailableQuests)
+    local active, activeStatus = greetingCount(GetNumActiveQuests)
+    local status = "counts-ordinary"
+    if available == nil then status = "available-" .. availableStatus
+    elseif active == nil then status = "active-" .. activeStatus
+    else
+        local availableReady, aReason = greetingTitlesReady(available, GetAvailableTitle)
+        local activeReady, bReason = greetingTitlesReady(active, GetActiveTitle)
+        if not availableReady then status = "available-" .. aReason
+        elseif not activeReady then status = "active-" .. bReason
+        else
+            local textOK, greeting = false, nil
+            if greetingOrdinary(GetGreetingText) and type(GetGreetingText) == "function" then
+                textOK, greeting = pcall(GetGreetingText)
+            end
+            if not textOK or not greetingOrdinary(greeting)
+                or type(greeting) ~= "string" or #greeting > 2048 then
+                status = "greeting-text-unavailable"
+            else
+                status = "ordinary-quest-greeting-ready"
+            end
+        end
+    end
+    self.lastGreetingAvailable = available
+    self.lastGreetingActive = active
+    self.lastGreetingStatus = status
+    Logres:TraceEvent("quest", "greeting-observed", {
+        available = available, active = active, result = status,
+    })
+end
+
 function Dialogue:HandleQuestComplete()
     Logres:TraceEvent("quest", "completion-observed",
         {source = self.restoringCompletion and "preference" or "native-event"})
@@ -2028,6 +2096,12 @@ function Dialogue:GetDebugStatus()
         immersionEnabled =
             self.immersionEnabled == true,
 
+        questGreetingRegistered =
+            self.eventRegistration.QUEST_GREETING == true,
+        greetingEventCount = self.greetingEventCount,
+        lastGreetingAvailable = self.lastGreetingAvailable,
+        lastGreetingActive = self.lastGreetingActive,
+        lastGreetingStatus = self.lastGreetingStatus,
         questDetailRegistered =
             self.eventRegistration.QUEST_DETAIL == true,
         questAcceptedRegistered =
@@ -2176,6 +2250,10 @@ function Dialogue:OnInitialize()
     self.progressEventCount = 0
     self.progressShownCount = 0
     self.progressSkippedCount = 0
+    self.greetingEventCount = 0
+    self.lastGreetingAvailable = nil
+    self.lastGreetingActive = nil
+    self.lastGreetingStatus = "not-observed"
     self.completeEventCount = 0
     self.completionShownCount = 0
     self.completionSkippedCount = 0
@@ -2680,6 +2758,7 @@ function Dialogue:OnInitialize()
 
     local eventFrame = CreateFrame("Frame")
     local events = {
+        "QUEST_GREETING",
         "QUEST_DETAIL",
         "QUEST_PROGRESS",
         "QUEST_COMPLETE",
@@ -2710,6 +2789,11 @@ function Dialogue:OnInitialize()
         "OnEvent",
         function(_, event, ...)
             if not self.moduleEnabled then
+                return
+            end
+
+            if event == "QUEST_GREETING" then
+                self:ObserveQuestGreeting()
                 return
             end
 

@@ -260,6 +260,11 @@ function Control:Click()
     if not self:Restore("claim-invoked") then
         return false, "restore-failed"
     end
+    -- Native visual restoration is intentionally BEFORE this handler under
+    -- the P0251/P0377 contract. Journal the request to distinguish a short
+    -- stock turn-in flash from an unexpected frame owner; no frame probing.
+    Logres:TraceEvent("quest", "claim-stock-restore-requested",
+        {questID = self.dialogue.lastQuestID, result = "before-native-handler"})
     -- The Forever native handler reads QuestInfoFrame.itemChoice.
     -- Write only an explicitly selected, bounded addon-owned index
     -- after stock restoration, without inspecting native value/state.
