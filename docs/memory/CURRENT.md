@@ -11,7 +11,7 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0401** recovery; P0400 main; P0399/P0398; P0397; P0396; P0395; P0394; P0393; P0392; P0391 session 46; P0390; P0389; P0388 L-027 gate; P0387 late-accept fix, P0386 L-001 greeting; P0385 QUEST_GREETING, L-002 claim flash; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
+**P0402** audit; P0401 main; P0400/P0399/P0398; P0397; P0396; P0395; P0394; P0393; P0392; P0391 session 46; P0390; P0389; P0388 L-027; P0387 late-accept; P0386 L-001; P0385 greeting/L-002; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
 
 ## Verified State
 
@@ -35,20 +35,21 @@ Alpha blocked. D-046/D-047/D-048.
 - P0336/P0335/P0334 R3/P0333/P0332/P0331/P0330/P0329: 207–200 STATIC. See PATCH_INDEX.
 - P0328 alpha runbook; P0317/P0318/P0319/P0320 gossip observations; P0321 `9a180c8` parking UNVERIFIED. P0322/P0323/P0324/P0325 D-048 inert models; P0326/P0327 merchant/flight models only. Stock UI/quest 237 kept.
 - D-048 independent live domain selectors and saved migration do not exist: schema 3 still stores `immersionEnabled` and `activeQuestEnabled`. D-046 preview-first and D-047 frozen Camera/DynamicCam remain required. Native UI and protected/secret fallbacks stay usable.
-- L-020–L-032 are tracked user reports; runtime gates apply. L-028 duplicated/missing target debuffs remains OPEN; L-022 focused quest artifact requires screenshot, L-027 Blizzard transient popup requires `/fstack` owner evidence. L-019 license unresolved, public distribution NOT APPROVED.
+- L-020–L-032 are tracked user reports; runtime gates apply. L-028 duplicated/missing target debuffs remains OPEN; L-022 focused quest artifact requires screenshot, L-027 Blizzard transient popup requires `/fstack` owner evidence. L-019 license unresolved, release blocked.
 
 ## Next Action
 
-Verify recovery and capture. L-002 deferred; L-027/L-033/L-041 OPEN.
+Capture flight child input. L-002 deferred; L-027/L-033/L-041 OPEN.
 
 ## Success Criteria
 
-P0400 FAIL; P0401 UNVERIFIED.
+P0401 recovery PASS. P0402 UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
-Preserve P0321/P0329, camera, secure actions, saves, quest 237. No polling or secret reads.
+Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0402_FLIGHT_CHILD_INVENTORY.md
 - docs/memory/evidence/P0401_FLIGHT_RECOVERY.md
 - docs/memory/evidence/P0400_FLIGHT_HOST.md
 - docs/memory/evidence/P0399_FLIGHT_ROUTE_LIST.md

@@ -1,0 +1,28 @@
+P0402 Forever flight child input inventory
+Verified P0401 baseline: bcb7353b9c254f68387a63cc5d80b242a147411b
+Runtime version: 0.0.286-dev
+PREWRITE: 272/272 STATIC PASS
+POSTWRITE: 272/272 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Quest/FlightWindow.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0402_FLIGHT_CHILD_INVENTORY.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0402_FLIGHT_CHILD_INVENTORY.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0381_integrated_gameplay_contract.py
+tools/check_p0402_flight_child_inventory_contract.py
+P0402_MANIFEST.txt

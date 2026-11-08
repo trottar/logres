@@ -13,6 +13,8 @@ local result, opens, restores = "idle", 0, 0
 local lastState, lastFare
 local routeRequests = 0
 local hostGate, hostChildren, hostChild
+local hostInventoryStatus, hostInventory
+local MAX_INVENTORY_CHILDREN = 32
 local chooseRoute
 local PAGE_SIZE = 6
 local frames = setmetatable({}, {__mode = "k"})
@@ -350,6 +352,68 @@ local function mouseGate(frame, prefix)
         or propertyGate(frame, "IsMouseMotionEnabled", "SetMouseMotionEnabled", prefix .. "-motion")
 end
 
+local function frameLabel(frame)
+    local name = chrome.read(frame, "GetName")
+    if type(name) ~= "string" or name == "" then name = chrome.read(frame, "GetDebugName") end
+    if type(name) == "string" and #name <= 80 and name:match("^%a[%w_.]*$") then
+        return name
+    end
+end
+
+local function describeChild(child, index, routeMap, close)
+    local row = {index = index}
+    if not chrome.ordinary(child) then
+        row.input = "restricted"
+        return row
+    end
+    row.role = child == routeMap and "route-map" or (child == close and "close" or "other")
+    if not chrome.mutable(child) then
+        row.input = "protected-or-unknown"
+        return row
+    end
+
+    row.name = frameLabel(child)
+    local kind = chrome.read(child, "GetObjectType")
+    if type(kind) == "string" and #kind <= 32 and kind:match("^%a+$") then row.kind = kind end
+    local click = chrome.read(child, "IsMouseClickEnabled")
+    local motion = chrome.read(child, "IsMouseMotionEnabled")
+    local descendants = chrome.read(child, "GetNumChildren")
+    if type(click) == "boolean" then row.click = click end
+    if type(motion) == "boolean" then row.motion = motion end
+    if type(descendants) == "number" and descendants >= 0 and descendants <= 1024
+        and descendants == math.floor(descendants) then
+        row.children = descendants
+    end
+    if row.click or row.motion then
+        row.input = "direct"
+    elseif row.click == false and row.motion == false and row.children == 0 then
+        row.input = "inert-leaf"
+    elseif row.children and row.children > 0 then
+        row.input = "descendants-unchecked"
+    else
+        row.input = "unknown"
+    end
+    return row
+end
+
+local function inventoryChildren(children, recoveryArt, routeMap, close)
+    if #children > MAX_INVENTORY_CHILDREN + (recoveryArt and 1 or 0) then
+        hostInventoryStatus = "limit"
+        return
+    end
+    local rows = {}
+    for _, child in ipairs(children) do
+        if not chrome.ordinary(child) or child ~= recoveryArt then
+            if #rows == MAX_INVENTORY_CHILDREN then
+                hostInventoryStatus = "limit"
+                return
+            end
+            rows[#rows + 1] = describeChild(child, #rows + 1, routeMap, close)
+        end
+    end
+    hostInventory, hostInventoryStatus = rows, "complete"
+end
+
 local function childGate(root, routeMap, close)
     local get = chrome.method(root, "GetChildren")
     if not get then return "children-method" end
@@ -358,6 +422,7 @@ local function childGate(root, routeMap, close)
     -- The recovered art is a child of TaxiFrame on later visits. P0400's
     -- separate host was not, so omit only this exact addon-owned frame.
     local recoveryArt = frames[root] and frames[root].art
+    inventoryChildren(children, recoveryArt, routeMap, close)
     local native = {}
     for index, child in ipairs(children) do
         if not chrome.ordinary(child) then
@@ -488,7 +553,12 @@ function Flight.GetAudit()
         pending = live and live.pending or nil, scaleMatched = live and not live.pending or false,
         lastNodeState = lastState, lastFareCopper = lastFare,
         hostGate = hostGate, hostChildren = hostChildren, hostChild = hostChild,
+        hostInventoryStatus = hostInventoryStatus,
         routeRequests = routeRequests, routes = live and #live.art.view.routes.records or 0}
+end
+
+function Flight.GetHostChildAudit()
+    return hostInventory
 end
 
 local function buildPreview()
@@ -546,6 +616,7 @@ Logres:RegisterEvent("TAXIMAP_OPENED", function(_, system)
     visit = taxi ~= nil and chrome.ordinary(system) and system == taxi
     stockOnly = false
     hostGate, hostChildren, hostChild = nil, nil, nil
+    hostInventory, hostInventoryStatus = nil, "not-sampled"
     if visit then reconcile() else restore("stock-map-system") end
 end)
 Logres:RegisterEvent("TAXIMAP_CLOSED", function()

@@ -1,3 +1,7 @@
+## P0402 flight child inventory audit (2026-11-08)
+
+P0401 bcb7353b9c254f68387a63cc5d80b242a147411b verified. Incident 6641 confirms live recovery and the retired host's first refusal at 20 versus eight children. Inventory uses the same captured child list, checks ordinary and unprotected status before any additional reads, copies only selected scalar metadata to Report Bug, skips the exact cached addon art and leaves descendants unchecked. The recovered presentation and native actions retain their previous behavior. Exact gates cover Lua compilation, all static checks, simulated 20 child shapes and bounded refusal, isolated actual apply, rollback and Git whitespace. Client inventory and centering remain unverified.
+
 ## P0401 flight recovery audit (2026-11-08)
 
 Verified P0400 fc6c352f63782accbc3ef91fc488996aae2eb12e. Incident 6551 proves capture refusal before writes, with oversized stock fallback. Recovery uses the existing flight controller, shared merchant presentation and catalogue, and original route input guards. Removed speculative reparenting and failed reposition hook. The read-only diagnostic replays named capture capability checks with opaque throwaway tokens and keeps the diagnostic separate from presentation policy. Final gates cover exact static suite, TOC Lua compile, mock probe refusal with recovered map and list still usable, guarded isolated apply/rollback, manifest and Git whitespace. Centering and client acceptance remain open.
