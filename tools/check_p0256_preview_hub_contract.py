@@ -33,6 +33,8 @@ if len(required) != 35: errors.append('unexpected baseline visual preview invent
 required.add('nativeTrainerEmptyPreview')  # P0310 reviewed inert visual preview
 required.update({'pvpBadgePreviewOn', 'pvpBadgePreviewOff'})  # P0334 reviewed additive inert preview pair
 if len(required) != 38: errors.append('unexpected expanded P0334 visual preview inventory')
+required.add('merchantCataloguePreview')  # P0392 inert merchant preview
+if len(required) != 39: errors.append('unexpected P0392 visual preview inventory')
 if set(id_ for id_,label,cmd,phase in actions if phase=='P') != required:
     errors.append('P gallery has missing or unreviewed additional actions')
 for id_,label,command,phase in actions:

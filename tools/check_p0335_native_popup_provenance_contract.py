@@ -70,7 +70,7 @@ need('if command == "gameplaycapture" then' in C and
 need('MAX_DIAGNOSTIC_RUNS = 100' in read('Logres/Dev/Panel.lua') and
      'MAX_DIAGNOSTIC_LINES = 120' in read('Logres/Dev/Panel.lua'),
      'bounded diagnostic store changed')
-need(len([line for line in T.splitlines() if line.endswith('.lua')])==94,
+need(len([line for line in T.splitlines() if line.endswith('.lua')])==95,
      'no new WoW module permitted')
 need(re.search(r'^## Version: (\S+)$',T,re.M) is not None,
      'TOC version absent')

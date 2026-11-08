@@ -123,7 +123,7 @@ need('distanceYards = dist, potential = true' in DB,'optional source distance co
 need(re.search(r'(?m)^## Version: (\S+)$',TOC).group(1)==
      re.search(r'(?m)^Logres.VERSION = "([^"]+)"$',BOOT).group(1),
      'runtime version TOC and Bootstrap mismatch')
-need(len([x for x in TOC.splitlines() if x.endswith('.lua')])==94,
+need(len([x for x in TOC.splitlines() if x.endswith('.lua')])==95,
      'TOC inventory changed')
 for item in ('P0337','cfdc07af','P0338','L-031','UNVERIFIED'):
     need(item in CURRENT and item in HANDOFF, 'CURRENT/HANDOFF continuity '+item)

@@ -67,7 +67,7 @@ need('R0 PREWRITE shadow' in read('docs/memory/evidence/P0347_SUBSCRIPTION_LIFEC
 need('local CURRENT_SCHEMA = 3' in DB and 'activeQuestEnabled = true' in DB,
      'persisted preference schema unexpectedly changed')
 need('Core\\State.lua' in TOC and 'Core\\Preferences.lua' in TOC and
-     len([l for l in TOC.splitlines() if l.endswith('.lua')])==94,
+     len([l for l in TOC.splitlines() if l.endswith('.lua')])==95,
      'Lua load inventory changed')
 need(re.search(r'(?m)^## Version: (\S+)$',TOC).group(1)==
      re.search(r'(?m)^Logres.VERSION = "([^\"]+)"$',BOOT).group(1),

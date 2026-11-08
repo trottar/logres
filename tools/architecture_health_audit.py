@@ -71,11 +71,11 @@ def verify(report: dict) -> list[str]:
     faults = []
     for key in ('missing_loaded_paths', 'orphan_lua_paths', 'duplicate_loaded_paths', 'dev_panel_duplicate_ids'):
         if report[key]: faults.append(f'{key}: {report[key]}')
-    if report['loaded_lua_count'] != 94 or report['unique_loaded_lua'] != 94:
-        faults.append('94 unique loaded Lua files baseline changed: review the TOC and P0323 audit')
+    if report['loaded_lua_count'] != 95 or report['unique_loaded_lua'] != 95:
+        faults.append('95 unique loaded Lua files baseline changed: review the TOC and P0323 audit')
     if report['toc_version'] is None or report['toc_version'] != report['bootstrap_version']:
         faults.append('TOC and Bootstrap version parity mismatch')
-    if report['dev_panel_phases']['P'] != 38:
+    if report['dev_panel_phases']['P'] != 39:
         faults.append('P preview gallery inventory changed: review the P0256 contract')
     if report['dev_panel_actions'] < 120:
         faults.append('developer-panel actions unexpectedly removed')

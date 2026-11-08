@@ -4124,6 +4124,14 @@ local function handleCommand(message)
         return
     end
 
+    if command == "merchantpreview" or command == "merchantlive" then
+        local merchant = Logres.NPCMerchantCatalogue
+        local open = command == "merchantpreview" and merchant.Preview or merchant.OpenLive
+        local ok, reason = open()
+        emit("Logres merchant catalogue: " .. (ok and "" or "DEFERRED — ") .. reason)
+        return
+    end
+
     if command == "nativetraineremptypreview" then
         local ok, reason = Logres.NPCNativeTrainerSkin.EmptyPreview()
         emit(string.format("Logres trainer empty preview: %s (%s; synthetic only, no native actions)",
@@ -4780,6 +4788,12 @@ Logres:RegisterDevPanelAction(
     "nativeTrainerEmptyPreview",
     "Trainer Empty Preview",
     "nativetraineremptypreview",
+    "P"
+)
+Logres:RegisterDevPanelAction(
+    "merchantCataloguePreview",
+    "Merchant Catalogue Preview",
+    "merchantpreview",
     "P"
 )
 Logres:RegisterDevPanelAction(

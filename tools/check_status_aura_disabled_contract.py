@@ -37,7 +37,7 @@ else:
 for s in (
     'renderLane(self.lanes.target, snapshot.harmfulRows, active and not useNative)',
     'renderLane(self.lanes.targetHelpful, snapshot.helpfulRows, active)',
-    'renderLane(self.lanes.player, snapshot.rows, active and not useNative)',
+    'renderLane(self.lanes.player, snapshot.rows, active and not useNative and not stock)',
     'self:SubscribePreferences(function()',
     'self:Refresh("preference")',
     'function StatusAuras:OnDisable()',

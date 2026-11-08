@@ -55,7 +55,7 @@ need(len(re.findall(r'(?m)^## Version: \S+',TOC))==1,'TOC version missing')
 need(re.search(r'(?m)^## Version: (\S+)$',TOC).group(1)==
      re.search(r'(?m)^Logres.VERSION = "([^"]+)"$',BOOT).group(1),
      'TOC / Bootstrap parity')
-need(len([line for line in TOC.splitlines() if line.endswith('.lua')])==94,
+need(len([line for line in TOC.splitlines() if line.endswith('.lua')])==95,
      'P0340 preserved TOC load inventory')
 need('alpha_prefreeze_audit.py' not in TOC and 'check_p0340_alpha_prefreeze_contract.py' not in TOC,
      'offline tools became addon runtime source')
@@ -64,7 +64,7 @@ spec=importlib.util.spec_from_file_location('p0340_actual_prefreeze',R/'tools/al
 need(spec and spec.loader, 'audit source not importable')
 module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
 result=module.audit(R)
-need(result['lua_count']==94 and result['media_count']>0 and
+need(result['lua_count']==95 and result['media_count']>0 and
      result['stage_members']==result['lua_count']+result['media_count']+3,
      'internal staged file count does not match TOC+media+TOC+notice+stamp')
 need(not result['public_approved'] and not result['client_tested'],

@@ -102,9 +102,9 @@ need(C.count('        runAuraStatusProbe()') == 1,
 need('HUD\\AuraStatusProbe.lua' in T and 'Core\\Commands.lua' in T and
      T.index('HUD\\AuraStatusProbe.lua') < T.index('Core\\Commands.lua'),
      'AuraStatusProbe must load before commands')
-need(len([x for x in T.splitlines() if x.endswith('.lua')]) == 94,
+need(len([x for x in T.splitlines() if x.endswith('.lua')]) == 95,
      'Lua load inventory changed')
-need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"', C)) == 120,
+need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"', C)) == 121,
      'developer panel inventory changed')
 tv = re.search(r'(?m)^## Version: (\S+)$', T)
 bv = re.search(r'(?m)^Logres.VERSION = "([^"]+)"$', B)

@@ -14,7 +14,7 @@ evidence=read('docs/memory/evidence/P0288_TRAINER_LIVE_READONLY_TRIAL.md')
 errors=[]
 def need(x,why):
     if not x:errors.append(why)
-for token in ('function Trial.FromSnapshot(report)','function Trial.Toggle(mode)',
+for token in ('function Trial.FromSnapshot(report)','function Trial.Toggle(mode, afterTraining)',
     'function Trial.Disable(why)', 'Logres.NPCTrainerLiveTrial = Trial',
     'Logres.NPCNativeTrainerServiceProbe.Read()',
     'Logres.NPCTrainerLandscape.Build(model)',

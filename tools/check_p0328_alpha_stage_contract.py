@@ -84,7 +84,7 @@ with tempfile.TemporaryDirectory(prefix='p0328-stage-contract-') as tmp:
 
 # Real repository source-level assertions; no ZIP is written here.
 metadata, rows, count = stage.collect(ROOT)
-need(count == 94, 'current 94-loaded-source ownership inventory drift')
+need(count == 95, 'current 95-loaded-source ownership inventory drift')
 need(metadata['OptionalDeps'] == 'QuestieDB', 'optional provider became mandatory')
 need(any(name.endswith('LIBCAMERA_NOTICE.txt') for name, _ in rows),
      'third-party attribution omitted')

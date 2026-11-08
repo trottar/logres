@@ -54,7 +54,7 @@ need(v is not None and b is not None and v.group(1) == b.group(1),
      "TOC/Bootstrap runtime version diverged")
 need('Core\\Commands.lua' in toc and 'Dev\\Panel.lua' in toc,
      "existing production modules missing")
-need(len([s for s in toc.splitlines() if s.endswith('.lua')]) == 94,
+need(len([s for s in toc.splitlines() if s.endswith('.lua')]) == 95,
      "source inventory unexpectedly changed")
 for issue in range(20,33):
     need(f'| L-{issue:03d} |' in issues, f'missing issue L-{issue:03d}')

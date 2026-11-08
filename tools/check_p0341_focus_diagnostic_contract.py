@@ -76,7 +76,7 @@ bootstrap_version = re.search(r'(?m)^Logres.VERSION = "([^"]+)"$', BOOT)
 need(toc_version is not None and bootstrap_version is not None and
      toc_version.group(1) == bootstrap_version.group(1),
      'source diagnostic TOC/Bootstrap version parity')
-need(len([l for l in TOC.splitlines() if l.endswith('.lua')])==94,
+need(len([l for l in TOC.splitlines() if l.endswith('.lua')])==95,
      'TOC Lua load inventory drift')
 need('Core\\Commands.lua' in TOC and 'Navigation\\Compass.lua' in TOC,
      'runtime diagnostics disconnected from loaded source')

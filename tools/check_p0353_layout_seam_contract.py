@@ -76,9 +76,9 @@ for route in ('    runLayoutCheck()', 'if command == "layoutcheck" then',
 need('Integration\\Layout.lua' in T and 'Core\\Commands.lua' in T and
      T.index('Integration\\Layout.lua') < T.index('Core\\Commands.lua'),
      'Layout must precede Commands in TOC')
-need(len([x for x in T.splitlines() if x.endswith('.lua')]) == 94,
+need(len([x for x in T.splitlines() if x.endswith('.lua')]) == 95,
      'addon Lua inventory changed')
-need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"', C)) == 120,
+need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"', C)) == 121,
      'panel action inventory changed')
 need(re.search(r'(?m)^## Version: (\S+)$', T).group(1) ==
      re.search(r'(?m)^Logres.VERSION = "([^"]+)"$', B).group(1),

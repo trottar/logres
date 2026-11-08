@@ -343,6 +343,10 @@ local function refreshBrowse()
             model.trainLabel = "Stock Train"
         end
     end
+    if browse.trainingPending and not browse.trainingPending.confirmation then
+        model.trainEnabled = false
+        model.trainLabel = "Training requested"
+    end
     model.filters.mode = browse.availableOnly and "Available only" or "All sampled"
     if model.emptyService then
         model.profession = "0 native services | Blizzard available"
@@ -706,26 +710,31 @@ local function attachBrowseControls(root, model, controls)
             {kind = browse.model.nativeSession.profession == true
                 and "profession" or "class", result = "explicit-selection",
                 serviceIndex = chosen.serviceIndex})
+        local pending = {dispatching = true}
+        visit.trainingPending = pending
         local accepted, reason
         if browse.model.nativeSession.profession == true then
-            if not Logres.NPCTrainerProfessionPurchaseTrial then return end
-            accepted, reason = Logres.NPCTrainerProfessionPurchaseTrial.Attempt(
-                chosen, browse.model.nativeSession)
+            if Logres.NPCTrainerProfessionPurchaseTrial then
+                accepted, reason = Logres.NPCTrainerProfessionPurchaseTrial.Attempt(
+                    chosen, visit.model.nativeSession)
+            end
         elseif browse.model.nativeSession.profession == false then
             accepted, reason = Logres.NPCTrainerPurchaseTrial.Attempt(
                 chosen, browse.model.nativeSession)
         else
-            return
+            accepted, reason = false, "trainer-family-unavailable"
         end
+        if browse ~= visit then return end
+        pending.dispatching = false
+        pending.confirmation = accepted and reason == "blizzard-confirmation-open"
         if accepted and reason == "blizzard-confirmation-open" then
-            if browse == visit then browse.confirmationPending = true end
             Logres:TraceEvent("trainer", "train-confirmation", {result = reason})
         elseif accepted then
-            -- Stock remains accessible; this sample is stale after a buy request.
             Logres:TraceEvent("trainer", "train-requested",
                 {result = "native-call-returned-unconfirmed"})
-            Trial.Disable("native-purchase-requested-unconfirmed")
+            refreshBrowse()
         else
+            visit.trainingPending = nil
             -- An explicit user click must never end at an inert Logres button.
             -- Restore stock before dismissing Logres; failures remain fail-open.
             Logres:TraceEvent("trainer", "train-deferred", {reason = reason})
@@ -741,6 +750,7 @@ local function attachBrowseControls(root, model, controls)
                 {reason = reason, result = restored and "stock-restored"
                     or "stock-restore-pending"})
         end
+        if accepted and pending.updateObserved then Trial.RefreshAfterTraining() end
     end)
     -- One deliberate physical click. The owned UI is invalidated after
     -- ANY issued bulk request, including partially completed batches.
@@ -773,18 +783,30 @@ local function attachBrowseControls(root, model, controls)
     end)
 end
 
-function Trial.RefreshAfterConfirmation()
-    if not browse or not browse.confirmationPending then return false end
-    local visible = _G.StaticPopup_Visible
-    if not ordinaryInput(visible) or type(visible) ~= "function" then return false end
-    local ok, popup = pcall(visible, "CONFIRM_PROFESSION")
-    if not ok or not ordinaryInput(popup) or popup then return false end
-    browse.confirmationPending = nil
-    if not Trial.Disable("trainer-source-refreshed") then return false end
-    return Trial.Toggle("on")
+function Trial.RefreshAfterTraining()
+    local pending = browse and browse.trainingPending
+    if not pending then return false end
+    if pending.dispatching then
+        pending.updateObserved = true
+        return true
+    end
+    if pending.confirmation then
+        local visible = _G.StaticPopup_Visible
+        if not ordinaryInput(visible) or type(visible) ~= "function" then return true end
+        local ok, popup = pcall(visible, "CONFIRM_PROFESSION")
+        if not ok or not ordinaryInput(popup) or popup then return true end
+    end
+    local refreshed, reason = Trial.Toggle("on", true)
+    if refreshed then
+        Logres:TraceEvent("trainer", "training-catalogue-refreshed", {result = reason})
+    else
+        Trial.Disable("native-purchase-deferred")
+        Logres:TraceEvent("trainer", "training-catalogue-deferred", {reason = reason})
+    end
+    return true
 end
 
-function Trial.Toggle(mode)
+function Trial.Toggle(mode, afterTraining)
     if mode == "off" or (mode == nil and active and active:IsShown()) then
         return Trial.Disable("trial-hidden")
     end
@@ -801,6 +823,9 @@ function Trial.Toggle(mode)
         last = why
         return false, why
     end
+    local reuseParking = afterTraining and browse and browse.stockParked
+        and browse.model.nativeSession.trainerName == model.nativeSession.trainerName
+        and Logres.NPCServiceNativeParking.GetAudit().parked == true
     -- P0309: capture ordinary trainer family before enabling training.
     model.nativeSession.profession = trainerFamily()
     -- P0312: owned profession progress is independent of native service rows.
@@ -877,6 +902,10 @@ function Trial.Toggle(mode)
     end
     displays = displays + 1
     last = why == "native-snapshot-mapped-partial" and "live-partial-visible" or "live-read-only-visible"
+    if reuseParking then
+        browse.stockParked = true
+        return true, "live-refreshed-after-training"
+    end
     -- Only after the fully usable Logres view is shown may the whole native
     -- nonprotected trainer be parked. If anything defers, keep stock visible.
     if not model.emptyService and Logres.NPCServiceNativeParking then
@@ -938,7 +967,7 @@ function Trial.GetAudit()
         walletCopper=model and model.walletCopper,
         trainLabel=model and model.trainLabel,
         trainEnabled=model and model.trainEnabled,
-        confirmationPending=browse and browse.confirmationPending,
+        confirmationPending=browse and browse.trainingPending and browse.trainingPending.confirmation,
         purchases=0, filterWrites=0, selectionWrites=0, nativeGeometryWrites=0,
         purchaseTrial=Logres.NPCTrainerPurchaseTrial.GetAudit(),
         bulkTrial=Logres.NPCTrainerPurchaseTrial.GetBulkAudit(),

@@ -65,11 +65,11 @@ need('npcbatch  (one-shot saved read-only NPC incident)' in C,
      'help route not advertised')
 
 matches = re.findall(r'Logres:RegisterDevPanelAction\(\s*"([^\"]+)",\s*"([^\"]+)",\s*"([^\"]+)",\s*"([0A-HP])"\s*\)',C)
-need(len(matches)==120, 'developer-panel action count changed')
-need(sum(1 for _,_,_,ph in matches if ph=='P')==38, 'preview action count changed')
+need(len(matches)==121, 'developer-panel action count changed')
+need(sum(1 for _,_,_,ph in matches if ph=='P')==39, 'preview action count changed')
 need('## SavedVariables: LogresDB, LogresDiagnosticsDB' in T,
      'saved diagnostic DB removed')
-need(len([l for l in T.splitlines() if l.endswith('.lua')])==94,
+need(len([l for l in T.splitlines() if l.endswith('.lua')])==95,
      'loaded Lua inventory changed')
 mt=re.search(r'(?m)^## Version: (\S+)$',T)
 mb=re.search(r'(?m)^Logres.VERSION = "([^\"]+)"$',B)

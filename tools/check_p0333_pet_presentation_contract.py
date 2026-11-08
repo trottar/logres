@@ -102,7 +102,7 @@ need(indicators(True,None,None,False)==(True,True,False), 'undecorated checked f
 need(indicators(False,True,True,True)==(False,False,True), 'autocast without active invalid')
 v=re.search(r'(?m)^## Version: (\S+)$',T);b=re.search(r'(?m)^Logres.VERSION = "([^"]+)"$',boot)
 need(v and b and v.group(1)==b.group(1), 'TOC/Bootstrap mismatch')
-need(len([x for x in T.splitlines() if x.endswith('.lua')])==94,'loaded Lua inventory changed')
+need(len([x for x in T.splitlines() if x.endswith('.lua')])==95,'loaded Lua inventory changed')
 need('| L-021 |' in issues and '| L-024 |' in issues and 'P0333' in issues,'issue continuity lost')
 for n in range(317,334): need(f'P{n:04d}' in current,'CURRENT history lost '+str(n))
 for x in ('CURRENT.md','P0326','P0327','P0332','P0333'):

@@ -21,7 +21,7 @@ assert confirm.index("scalar(selection) ~= serviceIndex") < confirm.index('pcall
 assert "second ~= nil" in confirm and 'if popup then return true' in confirm
 assert purchase.index('if money < copper') < purchase.index('return confirmProfession(root, row.serviceIndex)')
 assert purchase.count('pcall(buy, row.serviceIndex)') == 1
-assert 'RefreshAfterConfirmation' in read("UI/NPCServiceSession.lua")
+assert 'RefreshAfterTraining' in read("UI/NPCServiceSession.lua")
 
 dialogue = read("Quest/Dialogue.lua")
 bridge = dialogue.split("function Dialogue:BeginNativeQuestHandoff", 1)[1].split(
@@ -40,14 +40,8 @@ claim = read("Quest/CompletionControl.lua")
 assert claim.index('self:Restore("claim-invoked")') < claim.index(
     'pcall(_G.QuestRewardCompleteButton_OnClick)') < claim.index('BeginNativeQuestHandoff("claim")')
 
-native = read("HUD/NativeDebuffs.lua")
-assert "Native.BoostedRestSpellID = 1229451" in native
-assert 'candidateFilters = unit == "player" and Native.UsesStockBoostedRest()' in native
-assert "excludeSpellIDs = {[Native.BoostedRestSpellID] = true}" in native
-assert "aura.spellId" not in native
-lua = read("HUD/StatusAuras.lua")
-assert 'unit == "player" and Logres.NativeDebuffs.UsesStockBoostedRest()' in lua
-assert "not isSecret(spellID) and spellID == Logres.NativeDebuffs.BoostedRestSpellID" in lua
+# Session 45 disproved P0390's aura exclusion. Keep the confirmed P0390
+# trainer and quest boundaries here; the replacement aura policy is P0391.
 panel = read("Dev/Panel.lua")
 assert '"walletCopper", "trainLabel", "trainEnabled", "confirmationPending"' in panel
 print("P0390 session 44 safety contracts PASS")

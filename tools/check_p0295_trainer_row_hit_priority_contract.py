@@ -13,7 +13,7 @@ errors = []
 def need(x, why):
     if not x: errors.append(why)
 start = v.find('local function attachBrowseControls(root, model, controls)')
-end = v.find('function Trial.Toggle(mode)', start)
+end = v.find('function Trial.Toggle(mode, afterTraining)', start)
 need(start >= 0 and end > start, "missing live browse controller")
 segment = v[start:end] if start >= 0 and end > start else ""
 for token in ('wheel:SetFrameLevel(root:GetFrameLevel() + 4)',

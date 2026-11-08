@@ -75,7 +75,7 @@ for token in ('Logres:TraceEvent("quest", "suppression-applied"',
     need(token in suppression, 'suppression transition missing '+token)
 need('## SavedVariables: LogresDB, LogresDiagnosticsDB' in toc,
      'saved diagnostic persistence lost')
-need(len([line for line in toc.splitlines() if line.endswith('.lua')]) == 94,
+need(len([line for line in toc.splitlines() if line.endswith('.lua')]) == 95,
      'do not change historical Lua inventory in this patch')
 mt=re.search(r'(?m)^## Version: (\S+)$', toc)
 mb=re.search(r'(?m)^Logres.VERSION = "([^"]+)"$', boot)

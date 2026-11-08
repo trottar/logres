@@ -4,13 +4,82 @@ local _, Logres = ...
 -- Never read, classify or enumerate restricted aura payloads in Lua.
 local Native = {}
 Logres.NativeDebuffs = Native
-Native.BoostedRestSpellID = 1229451
-
-function Native.UsesStockBoostedRest()
+local function ordinary(value)
     if type(issecretvalue) ~= "function" then return false end
-    local stock = _G.DebuffFrame
-    local ok, secret = pcall(issecretvalue, stock)
-    return ok and secret == false and stock ~= nil
+    local ok, secret = pcall(issecretvalue, value)
+    return ok and secret == false
+end
+
+function Native.StockPlayerHarmful()
+    local root = _G.DebuffFrame
+    if ordinary(root) and root ~= nil then return root end
+end
+
+local function restoreStockPlacement(state)
+    local saved = state.stockPlacement
+    if not saved then return true end
+    local checked, protected = pcall(saved.root.IsProtected, saved.root)
+    if not checked or not ordinary(protected) or protected ~= false then return false end
+    local ok, _, relative = pcall(saved.root.GetPoint, saved.root, 1)
+    if not ok or not ordinary(relative) then return false end
+    if relative == saved.anchor then
+        ok = pcall(function()
+            saved.root:ClearAllPoints()
+            for _, p in ipairs(saved.points) do
+                saved.root:SetPoint(p[1], p[2], p[3], p[4], p[5])
+            end
+        end)
+        if not ok then
+            pcall(saved.root.SetPoint, saved.root, "BOTTOM", saved.anchor, "CENTER", 0, 0)
+            return false
+        end
+    end
+    state.stockPlacement = nil
+    return true
+end
+
+local function placeStockPlayerHarmful(state, active)
+    if not active then
+        state.stockPlacementAttempted = false
+        state.stockPlacementReason = restoreStockPlacement(state) and "stock-default"
+            or "stock-anchor-restore-deferred"
+        return
+    end
+    local root = Native.StockPlayerHarmful()
+    if not root or state.stockPlacementAttempted then return end
+    state.stockPlacementAttempted = true
+    state.stockPlacementReason = "stock-default"
+    local anchor = type(Logres.Layout.GetAnchor) == "function" and Logres.Layout.GetAnchor("playerHarmful")
+    if not anchor or type(root.IsProtected) ~= "function" or type(root.GetNumPoints) ~= "function"
+        or type(root.GetPoint) ~= "function" or type(root.ClearAllPoints) ~= "function"
+        or type(root.SetPoint) ~= "function" then return end
+    local checked, protected = pcall(root.IsProtected, root)
+    if not checked or not ordinary(protected) or protected ~= false then return end
+    local counted, count = pcall(root.GetNumPoints, root)
+    if not counted or not ordinary(count) or type(count) ~= "number"
+        or count < 1 or count > 8 or count ~= math.floor(count) then return end
+    local points = {}
+    for i = 1, count do
+        local captured, p, relative, rp, x, y = pcall(root.GetPoint, root, i)
+        if not captured then return end
+        points[i] = {p, relative, rp, x, y}
+    end
+    local moved = pcall(function()
+        root:ClearAllPoints()
+        root:SetPoint("BOTTOM", anchor, "CENTER", 0, 0)
+    end)
+    if not moved then
+        local restored = pcall(function()
+            root:ClearAllPoints()
+            for _, p in ipairs(points) do root:SetPoint(p[1], p[2], p[3], p[4], p[5]) end
+        end)
+        if not restored then
+            pcall(root.SetPoint, root, "TOPRIGHT", UIParent, "TOPRIGHT", -260, -95)
+        end
+        return
+    end
+    state.stockPlacement = {root = root, anchor = anchor, points = points}
+    state.stockPlacementReason = "stock-player-lane-requested"
 end
 
 local harmfulStyle = (Logres.Theme and Logres.Theme.nativeHarmfulAuras) or {}
@@ -38,8 +107,6 @@ local function createContainer(unit, key, point, relativePoint, dx, dy)
 
     frame:AddAuraGroup("LogresHarmful", "HARMFUL", {
         maxFrameCount = MAX,
-        candidateFilters = unit == "player" and Native.UsesStockBoostedRest()
-            and {excludeSpellIDs = {[Native.BoostedRestSpellID] = true}} or nil,
         layout = {
             elementWidth = ICON,
             elementHeight = ICON,
@@ -120,7 +187,7 @@ function Native.Create()
     return { frames = frames, active = false }, nil
 end
 
-function Native.SetActive(state, active)
+function Native.SetActive(state, active, placementEvent)
     if not state then return false, "unavailable" end
     active = active == true
     -- Do not mutate restricted native controls in combat. Existing Blizzard
@@ -132,10 +199,12 @@ function Native.SetActive(state, active)
         return false, "combat-deferred"
     end
     local ok = pcall(function()
-        for _, frame in pairs(state.frames) do
-            frame:SetEnabled(active)
-            frame:SetShown(active)
-            if active then frame:UpdateAllAuras() end
+        if not active or placementEvent then placeStockPlayerHarmful(state, active) end
+        for unit, frame in pairs(state.frames) do
+            local visible = active and (unit ~= "player" or Native.StockPlayerHarmful() == nil)
+            frame:SetEnabled(visible)
+            frame:SetShown(visible)
+            if visible then frame:UpdateAllAuras() end
         end
     end)
     if not ok then

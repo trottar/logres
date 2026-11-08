@@ -11,7 +11,7 @@ errors=[]
 for token in ('"AuraContainer", nil, UIParent, "CustomAuraContainerTemplate"',
               'frame:AddAuraGroup("LogresHarmful", "HARMFUL", {',
               'button:SetIcon(icon)', 'frame:SetUnit(unit)',
-              'frame:SetEnabled(active)', 'frame:UpdateAllAuras()',
+              'frame:SetEnabled(visible)', 'frame:UpdateAllAuras()',
               'Logres.Layout.Bind(frame, key', 'InCombatLockdown()',
               'return nil, "native-setup-failed"'):
     if token not in N: errors.append('missing native contract: '+token)

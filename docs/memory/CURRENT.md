@@ -11,7 +11,7 @@ Forever alpha D-048; D-046 preview/stock fallback, D-047 camera frozen. Blocked.
 
 ## Current Work Item
 
-**P0390** session 44 repairs; P0389 locally applied; P0388 L-027 gate; P0387 late-accept fix, P0386 L-001 greeting; P0385 QUEST_GREETING, L-002 claim flash; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue no-flash scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
+**P0392** merchant; P0391 session 46; P0390 main; P0389 applied; P0388 L-027 gate; P0387 late-accept fix, P0386 L-001 greeting; P0385 QUEST_GREETING, L-002 claim flash; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue no-flash scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
 
 ## Verified State
 
@@ -39,16 +39,18 @@ Forever alpha D-048; D-046 preview/stock fallback, D-047 camera frozen. Blocked.
 
 ## Next Action
 
-Validate P0390 Train, quest handoffs and one Boosted Rest icon via Report Bug. L-002/L-027/L-033/L-041 OPEN.
+Validate merchant preview then live; flight L-004 follows. L-002 flash deferred; L-027/L-033/L-041 OPEN.
 
 ## Success Criteria
 
-P0389 session 44 quest 54 turned in. Flashes, funded Train and duplicate aura remain open. P0390 WoW UNVERIFIED.
+Merchant stock controls usable. P0391 trainer refresh PASS scoped; debuff placement unverified. P0392 WoW UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
-Preserve P0321 gossip parking, frozen camera, protected actions, pet secure state, stock UI, fifth-domain prefs, saves, quest 237 and P0329 merchant/flight fallback. No polling, secret inspection or blanket suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and release blockers/negative evidence.
+Preserve P0321 gossip parking, frozen camera, protected actions, pet secure state, stock UI, fifth-domain prefs, saves, quest 237 and P0329 merchant/flight fallback. No polling, secret inspection or blanket suppression. Preserve D-046, D-048, optional QuestieDB, sparse HP/target, stock aura/group fallback and negative evidence.
 
 ## Relevant References
+- docs/memory/evidence/P0392_MERCHANT_CATALOGUE.md
+- docs/memory/evidence/P0391_FOREVER_SESSION_45.md
 - docs/memory/evidence/P0390_FOREVER_SESSION_44.md
 - docs/memory/evidence/P0389_SESSION_41_REGRESSIONS.md
 - `docs/memory/PRE_HANDOFF_AUDIT.md`

@@ -86,12 +86,12 @@ for marker in ('runStateCheck()', 'runSensorCheck()',
 need('Core\\State.lua' in T and 'Core\\Commands.lua' in T and
      T.index('Core\\State.lua') < T.index('Core\\Commands.lua'),
      'State must be loaded before Commands')
-need(len([x for x in T.splitlines() if x.endswith('.lua')]) == 94,
+need(len([x for x in T.splitlines() if x.endswith('.lua')]) == 95,
      'Lua load inventory changed')
 need(re.search(r'(?m)^## Version: (\S+)$', T).group(1) ==
      re.search(r'(?m)^Logres.VERSION = "([^"]+)"$', B).group(1),
      'TOC and Bootstrap versions diverge')
-need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"', C)) == 120,
+need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"', C)) == 121,
      'panel action count changed')
 need('Logres:GetState()' in C, 'legacy Commands state consumer contract lost')
 for marker in ('P0350', 'P0349', 'P0348', 'P0347', 'P0346', 'P0321',

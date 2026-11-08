@@ -17,11 +17,11 @@ def need(ok,why):
 report=audit.inspect(ROOT)
 faults=audit.verify(report)
 need(not faults, 'architecture static audit refused: '+str(faults))
-need(report['loaded_lua_count']==94 and not report['orphan_lua_paths'] and not report['missing_loaded_paths'],
-     '94 loaded modules must include every Lua file once')
-need(report['dev_panel_actions']>=120 and report['dev_panel_phases']['P']==38 and
+need(report['loaded_lua_count']==95 and not report['orphan_lua_paths'] and not report['missing_loaded_paths'],
+     '95 loaded modules must include every Lua file once')
+need(report['dev_panel_actions']>=120 and report['dev_panel_phases']['P']==39 and
      report['dev_panel_actions']==report['dev_panel_unique_ids'],
-     'historical developer-panel registry/galleries must remain unchanged')
+     'registered developer-panel actions must be unique and match the reviewed gallery')
 need(report['commands_bytes']>0 and report['commands_percent_loaded_source']>=0,
      'dispatcher source metrics must remain measurable; do not require permanent bloat')
 need('not runtime capability' in report['meaning'], 'runtime-claim boundary missing')
@@ -33,7 +33,7 @@ for field in ('missing_loaded_paths','orphan_lua_paths','duplicate_loaded_paths'
     need(any(field in f for f in audit.verify(simulated)),
          'audit must reject source or panel inventory failure: '+field)
 simulated=dict(report)
-simulated['dev_panel_phases']=dict(report['dev_panel_phases'], P=39)
+simulated['dev_panel_phases']=dict(report['dev_panel_phases'], P=report['dev_panel_phases']['P'] + 1)
 need(any('preview' in f for f in audit.verify(simulated)), 'extra P action must be rejected')
 simulated=dict(report);simulated['bootstrap_version']='0.0.invalid'
 need(any('parity' in f for f in audit.verify(simulated)), 'version mismatch must be rejected')

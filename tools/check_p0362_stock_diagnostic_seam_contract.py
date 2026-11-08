@@ -110,9 +110,9 @@ need(C.index('    runPrimaryOwnershipCheck()') <
 need('Actions\\StockReplacement.lua' in T and 'Core\\Commands.lua' in T and
      T.index('Actions\\StockReplacement.lua') < T.index('Core\\Commands.lua'),
      'StockReplacement owner load order changed')
-need(len([x for x in T.splitlines() if x.endswith('.lua')]) == 94,
+need(len([x for x in T.splitlines() if x.endswith('.lua')]) == 95,
      'Lua TOC inventory changed')
-need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"', C)) == 120,
+need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"', C)) == 121,
      'developer action inventory changed')
 tv = re.search(r'(?m)^## Version: (\S+)$', T)
 bv = re.search(r'(?m)^Logres.VERSION = "([^"]+)"$', B)

@@ -1,0 +1,40 @@
+P0391 Forever session 45 trainer and player debuff repair
+Verified P0390 baseline: 6e1495913edd7434a8c3134e219f28fa32e61628
+Runtime version: 0.0.275-dev
+PREWRITE: 261/261 STATIC PASS
+POSTWRITE: 261/261 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/HUD/NativeDebuffs.lua
+Logres/HUD/StatusAuras.lua
+Logres/Logres.toc
+Logres/Quest/TrainerLiveTrial.lua
+Logres/UI/NPCServiceSession.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0391_FOREVER_SESSION_45.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0391_FOREVER_SESSION_45.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_native_debuff_container_contract.py
+tools/check_p0288_trainer_live_trial_contract.py
+tools/check_p0289_trainer_live_panel_contract.py
+tools/check_p0295_trainer_row_hit_priority_contract.py
+tools/check_p0296_trainer_scroll_train_contract.py
+tools/check_p0300_trainer_goodbye_contract.py
+tools/check_p0309_profession_single_transaction_contract.py
+tools/check_p0381_integrated_gameplay_contract.py
+tools/check_p0390_session_44_contract.py
+tools/check_p0391_session_45_contract.py
+tools/check_status_aura_disabled_contract.py
+P0391_MANIFEST.txt

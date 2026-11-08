@@ -24,7 +24,7 @@ for token in ('CreateFrame("Slider", nil, root)', 'rail:SetOrientation("VERTICAL
               'browse.localChoiceConfirmed = true', 'localChoiceConfirmed=false',
               'browse.localChoiceConfirmed or browse.defaultServiceIndex == browse.selectedServiceIndex',
               'Logres.NPCTrainerPurchaseTrial.Attempt(',
-              'Trial.Disable("native-purchase-requested-unconfirmed")',
+              'visit.trainingPending = pending',
               'or "Train selected"', 'elseif wallet < cost then',
               'nativeSession={total=report.total, trainerName=report.trainerName}',
               'sourceName=hasName and native.name or nil',

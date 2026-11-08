@@ -170,7 +170,7 @@ Logres:RegisterEvent("TRAINER_UPDATE", function()
     lastReady = "TRAINER_UPDATE"
     Session.Reconcile("trainer-update")
     if Logres.NPCTrainerLiveTrial then
-        if not Logres.NPCTrainerLiveTrial.RefreshAfterConfirmation() then
+        if not Logres.NPCTrainerLiveTrial.RefreshAfterTraining() then
             Logres.NPCTrainerLiveTrial.RefreshEmptyFromSource()
         end
     end

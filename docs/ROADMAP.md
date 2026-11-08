@@ -1,3 +1,11 @@
+## P0392 — Merchant catalogue preview and live trial (2026-11-08)
+
+P0392 implements the first merchant browse surface for L-003 with one renderer for the P preview and explicitly requested live trials. Blizzard owns the vendor controls. Forever session 46 confirms a scoped P0391 profession purchase and catalogue refresh. NPC window flash remains OPEN and deferred by user direction. Merchant client trial pending, then flight master L-004. Evidence in docs/memory/evidence/P0392_MERCHANT_CATALOGUE.md.
+
+## P0391 — Forever trainer receipt and player debuff placement (2026-11-07)
+
+Verified P0390 main 6e14959. Session 45 confirms Cooking learned through Logres, followed by an unwanted stock trainer handoff. Both Bonus XP icons persisted. P0391 refreshes the owned trainer on TRAINER_UPDATE and selects one stock player harmful renderer with guarded placement. Evidence in docs/memory/evidence/P0391_FOREVER_SESSION_45.md. Candidate client UNVERIFIED.
+
 ## P0390 — Forever session 44 repairs (2026-11-07)
 
 P0388 main verified. P0389 applied locally. Session 44 confirmed a two-quest greeting, Continue and quest 54 turn-in, but the user still saw stock quest flashes. Apprentice Tailoring costs 10c with 17c available, and Train stopped at an unconfirmed selection. Boosted Rest duplicates across the tracker and player harmful lane. P0390 repairs the trainer selection and confirmation path, quest transition timing, duplicate aura routing and one-click capture. Client validation is pending. Evidence: docs/memory/evidence/P0390_FOREVER_SESSION_44.md

@@ -54,6 +54,6 @@ need(len(C.encode('utf-8')) < 9800,'CURRENT maintenance budget')
 a=re.search(r'(?m)^## Version: (\S+)$',T)
 b=re.search(r'(?m)^Logres.VERSION = "([^"]+)"$',B)
 need(a and b and a.group(1)==b.group(1),'runtime version parity')
-need(len([x for x in T.splitlines() if x.endswith('.lua')])==94,
+need(len([x for x in T.splitlines() if x.endswith('.lua')])==95,
      'loaded Lua inventory drift')
 print('P0344 Forever popup owner-family attribution: PASS (STATIC; user symptom UNVERIFIED)')

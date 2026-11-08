@@ -85,12 +85,6 @@ local function readAura(unit, index, filter, kind)
     if type(aura) ~= "table" then
         return nil, "invalid-aura"
     end
-    if unit == "player" and Logres.NativeDebuffs.UsesStockBoostedRest() then
-        local spellID = aura.spellId
-        if not isSecret(spellID) and spellID == Logres.NativeDebuffs.BoostedRestSpellID then
-            return nil, "stock-boosted-rest"
-        end
-    end
 
     local icon = aura.icon
     if isSecret(icon) then
@@ -180,7 +174,7 @@ local function readUnit(unit)
                 break
             elseif state == "secret" then
                 result.secretSkips = result.secretSkips + 1
-            elseif state ~= "ordinary" and state ~= "stock-boosted-rest" then
+            elseif state ~= "ordinary" then
                 result.failures = result.failures + 1
                 result.lastError = state
             elseif aura then
@@ -423,7 +417,9 @@ function StatusAuras:Refresh(reason, onlyUnit)
     local useNative = false
     if self.nativeDebuffs then
         local nativeOK, activationReason = Logres.NativeDebuffs.SetActive(
-            self.nativeDebuffs, active and not self.preview
+            self.nativeDebuffs, active and not self.preview,
+            reason == "PLAYER_ENTERING_WORLD" or reason == "preference"
+                or reason == "PLAYER_REGEN_ENABLED" or reason == "preview-off"
         )
         useNative = nativeOK and active and not self.preview
         self.nativeActivationReason = activationReason
@@ -457,7 +453,8 @@ function StatusAuras:Refresh(reason, onlyUnit)
                 renderLane(self.lanes.target, snapshot.harmfulRows, active and not useNative)
                 renderLane(self.lanes.targetHelpful, snapshot.helpfulRows, active)
             else
-                renderLane(self.lanes.player, snapshot.rows, active and not useNative)
+                local stock = not self.preview and Logres.NativeDebuffs.StockPlayerHarmful()
+                renderLane(self.lanes.player, snapshot.rows, active and not useNative and not stock)
             end
         end
     end
@@ -512,6 +509,8 @@ function StatusAuras:GetDebugStatus()
         nativeEnabledCached = self.nativeDebuffs ~= nil
             and self.nativeDebuffs.active == true,
         nativeActivationReason = self.nativeActivationReason,
+        stockPlayerHarmful = Logres.NativeDebuffs.StockPlayerHarmful() ~= nil,
+        stockPlayerPlacementReason = self.nativeDebuffs and self.nativeDebuffs.stockPlacementReason,
         nativeReason = self.nativeReason,
         eventsReady = self.unitAuraRegistered == true
             and self.targetEventRegistered == true
@@ -561,6 +560,8 @@ function StatusAuras:OnInitialize()
     )
     eventFrame:SetScript("OnEvent", function(_, event, unit)
         if not self.moduleEnabled then
+            if event == "PLAYER_REGEN_ENABLED" and self.nativeDebuffs
+                and self.nativeDebuffs.stockPlacement then self:Refresh(event) end
             return
         end
         if event == "UNIT_AURA" then

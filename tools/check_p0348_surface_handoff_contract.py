@@ -101,7 +101,7 @@ for banned in ('CreateFrame(', 'C_Timer', 'SetPreference(', 'RegisterEvent(',
     need(banned not in source,'offline fixture contains client access: '+banned)
 need('p0348_surface_handoff.py' not in read('Logres/Logres.toc'), 'offline model must not load in WoW')
 toc=read('Logres/Logres.toc');bootstrap=read('Logres/Core/Bootstrap.lua')
-need(len([x for x in toc.splitlines() if x.endswith('.lua')])==94,'loaded Lua count changed')
+need(len([x for x in toc.splitlines() if x.endswith('.lua')])==95,'loaded Lua count changed')
 need(re.search(r'(?m)^## Version: (\S+)$',toc).group(1)==
      re.search(r'(?m)^Logres.VERSION = "([^"]+)"$',bootstrap).group(1),
      'runtime version parity lost')
