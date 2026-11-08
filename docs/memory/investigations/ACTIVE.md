@@ -1,3 +1,7 @@
+## P0405 — Deterministic Chat-to-ZIP builder (2026-11-08)
+
+Verified P0404 main fab3259. Forever flight window layout PASS from user screenshot. Paid travel and P0403 late quest handoff remain unverified. Pause NPC expansion and use the existing merchant/catalogue or gossip/quest framework when it resumes. P0405 adds a guarded WSL builder for a reviewed Chat diff. See docs/memory/evidence/P0405_CHAT_TO_ZIP.md.
+
 ## P0404 — Centered flight master with native pins (2026-11-08)
 
 Verified P0403 main 50ba114. Forever incident 7173 identifies 18 direct TaxiFrame pins beside the route map and close control. P0404 centers the shared service shell, moves only recognized map inputs with reversible state, and makes the guarded sidebar work with both observed and source-described pin parents. The P0401 readable layout is the fallback. L-004 and P0403 client quest validation remain OPEN. See docs/memory/evidence/P0404_CENTERED_FLIGHT_MASTER.md.

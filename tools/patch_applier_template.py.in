@@ -1,0 +1,221 @@
+#!/usr/bin/env python3
+"""Apply a one-time Logres patch to its exact clean baseline."""
+import hashlib
+import io
+import os
+from pathlib import Path
+import shutil
+import stat
+import subprocess
+import sys
+import tarfile
+import tempfile
+
+SPEC = __PATCH_SPEC__
+PATCH = SPEC["id"]
+BASELINE = SPEC["baseline"]
+SOURCE_HASHES = SPEC["hashes"]
+EXPECTED_CHECKERS = SPEC["checkers"]
+ROOT = Path(__file__).resolve().parent
+PAYLOAD = ROOT / f"{PATCH}_PAYLOAD"
+MANIFEST = ROOT / f"{PATCH}_MANIFEST.txt"
+LOCK = ROOT / f".{PATCH}_APPLY.lock"
+ENV = dict(os.environ, GIT_OPTIONAL_LOCKS="0", PYTHONDONTWRITEBYTECODE="1")
+
+
+class Refused(Exception):
+    pass
+
+
+def command(*args, cwd=ROOT):
+    return subprocess.run(args, cwd=cwd, env=ENV, capture_output=True, check=False)
+
+
+def git(*args):
+    result = command("git", *args)
+    if result.returncode:
+        raise Refused(result.stderr.decode(errors="replace").strip())
+    return result.stdout
+
+
+def digest(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def check_checkout():
+    if Path(git("rev-parse", "--show-toplevel").decode().strip()).resolve() != ROOT:
+        raise Refused("Run the applier from the extracted files at the repository root.")
+    head = git("rev-parse", "--verify", "HEAD").decode().strip()
+    if head != BASELINE:
+        raise Refused(f"Expected baseline HEAD {BASELINE}, found {head}.")
+    if git("status", "--porcelain=v1", "-z", "--untracked-files=no"):
+        raise Refused("Tracked changes are present. Inspect git status before applying.")
+    if os.path.lexists(MANIFEST):
+        raise Refused(f"{MANIFEST.name} already exists.")
+
+
+def read_payload():
+    if PAYLOAD.is_symlink() or not PAYLOAD.is_dir():
+        raise Refused(f"{PAYLOAD.name} is missing or is a symbolic link.")
+    items = list(PAYLOAD.rglob("*"))
+    if any(p.is_symlink() or not (p.is_dir() or p.is_file()) for p in items):
+        raise Refused("Payload contains an unsupported filesystem entry.")
+    paths = {p.relative_to(PAYLOAD).as_posix() for p in items if p.is_file()}
+    if paths != set(SOURCE_HASHES):
+        raise Refused("Payload file list differs from the packaged patch.")
+    data = {}
+    for name, (_, after) in SOURCE_HASHES.items():
+        content = (PAYLOAD / name).read_bytes()
+        if digest(content) != after:
+            raise Refused(f"Payload hash mismatch: {name}")
+        data[name] = content
+    return data
+
+
+def snapshot(root):
+    originals = {}
+    for name, (before, _) in SOURCE_HASHES.items():
+        path = root / name
+        if path.resolve() != path or not path.parent.is_dir():
+            raise Refused(f"Unsafe path or missing parent directory: {name}")
+        if before is None:
+            if os.path.lexists(path):
+                raise Refused(f"New patch path already exists: {name}")
+            originals[name] = (None, 0o644)
+            continue
+        if not path.is_file() or digest(content := path.read_bytes()) != before:
+            raise Refused(f"Expected baseline source bytes do not match: {name}")
+        originals[name] = (content, stat.S_IMODE(path.stat().st_mode))
+    return originals
+
+
+def atomic_write(path, content, mode):
+    with tempfile.NamedTemporaryFile(prefix=f".{PATCH.lower()}-", dir=path.parent, delete=False) as file:
+        temporary = Path(file.name)
+        try:
+            file.write(content)
+            file.close()
+            temporary.chmod(mode)
+            os.replace(temporary, path)
+        finally:
+            temporary.unlink(missing_ok=True)
+
+
+def run_suite(root, phase):
+    checkers = sorted((root / "tools").glob("check_*.py"))
+    if [checker.name for checker in checkers] != EXPECTED_CHECKERS:
+        raise Refused(f"{phase} checker list differs from the packaged candidate.")
+    failures = []
+    for checker in checkers:
+        result = command(sys.executable, str(checker), cwd=root)
+        if result.returncode:
+            failures.append(checker.name)
+            print((result.stdout + result.stderr).decode(errors="replace"), end="", flush=True)
+    if failures:
+        raise Refused(f"{phase} {len(checkers) - len(failures)}/{len(checkers)} passed. Failed: "
+                      + ", ".join(failures))
+    print(f"{phase} {len(checkers)}/{len(checkers)} STATIC PASS", flush=True)
+
+
+def write_candidate(data, originals, root):
+    for name, content in data.items():
+        atomic_write(root / name, content, originals[name][1])
+
+
+def prewrite(data):
+    with tempfile.TemporaryDirectory(prefix=f"logres-{PATCH.lower()}-") as directory:
+        base = Path(directory) / "baseline"
+        base.mkdir()
+        archive = git("archive", "--format=tar", "HEAD")
+        with tarfile.open(fileobj=io.BytesIO(archive)) as tar:
+            tar.extractall(base, filter="data")
+        candidate = base.parent / "candidate"
+        shutil.copytree(base, candidate)
+        originals = snapshot(candidate)
+        write_candidate(data, originals, candidate)
+        diff = command("git", "diff", "--no-index", "--check", str(base), str(candidate))
+        if diff.returncode not in (0, 1) or diff.stdout or diff.stderr:
+            raise Refused("PREWRITE diff hygiene failed:\n" +
+                          (diff.stdout + diff.stderr).decode(errors="replace"))
+        run_suite(candidate, "PREWRITE")
+
+
+def rollback(touched, originals):
+    failed = []
+    for name in reversed(touched):
+        path = ROOT / name
+        content, mode = originals[name]
+        try:
+            if content is None:
+                path.unlink(missing_ok=True)
+            else:
+                atomic_write(path, content, mode)
+        except OSError as error:
+            failed.append(f"{name}: {error}")
+    if failed:
+        raise Refused("ROLLBACK INCOMPLETE. Inspect these paths before staging:\n" + "\n".join(failed))
+
+
+def apply():
+    check_checkout()
+    data = read_payload()
+    snapshot(ROOT)
+    prewrite(data)
+    # Revalidate immediately before writes after the full PREWRITE suite.
+    check_checkout()
+    originals = snapshot(ROOT)
+    touched = []
+    try:
+        for name, content in data.items():
+            atomic_write(ROOT / name, content, originals[name][1])
+            touched.append(name)
+        run_suite(ROOT, "POSTWRITE")
+        git("diff", "--check")
+        for name, content in data.items():
+            if (ROOT / name).read_bytes() != content:
+                raise Refused(f"POSTWRITE file changed during checks: {name}")
+        receipt = [
+            f"{PATCH} {SPEC['title']}",
+            f"Verified baseline: {BASELINE}",
+            f"Candidate runtime version: {SPEC['version']}",
+            f"PREWRITE: {len(EXPECTED_CHECKERS)}/{len(EXPECTED_CHECKERS)} STATIC PASS",
+            f"POSTWRITE: {len(EXPECTED_CHECKERS)}/{len(EXPECTED_CHECKERS)} STATIC PASS",
+            "git diff --check: PASS",
+            "WoW Forever runtime: " + ("UNVERIFIED" if SPEC["runtime"] else "NO RUNTIME FILES CHANGED"),
+            "Commit/push performed: NO",
+            "",
+            "Changed paths:",
+            *sorted(data),
+            MANIFEST.name,
+        ]
+        atomic_write(MANIFEST, ("\n".join(receipt) + "\n").encode(), 0o644)
+    except BaseException:
+        rollback(touched, originals)
+        print(f"{PATCH} ROLLBACK PASS. Patch-owned files restored. No manifest.", flush=True)
+        raise
+    try:
+        shutil.rmtree(PAYLOAD)
+    except OSError as error:
+        print(f"{PATCH} applied. Payload cleanup needs attention: {error}", flush=True)
+    print(f"{PATCH} PASS. {MANIFEST.name} written.", flush=True)
+
+
+def main():
+    try:
+        with LOCK.open("x"):
+            pass
+    except FileExistsError:
+        print(f"{PATCH} REFUSED: a patch lock already exists.", file=sys.stderr)
+        return 1
+    try:
+        apply()
+        return 0
+    except (Refused, OSError, tarfile.TarError, KeyboardInterrupt) as error:
+        print(f"{PATCH} REFUSED: {error}", file=sys.stderr)
+        return 1
+    finally:
+        LOCK.unlink(missing_ok=True)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,27 @@
+P0405 Deterministic Chat-to-ZIP builder
+Verified baseline: fab3259b9efdfeee7adb61c9fd2a4b6dadb35d96
+Candidate runtime version: 0.0.288-dev
+PREWRITE: 275/275 STATIC PASS
+POSTWRITE: 275/275 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: NO RUNTIME FILES CHANGED
+Commit/push performed: NO
+
+Changed paths:
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0405_CHAT_TO_ZIP.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/CHAT_TO_ZIP_WORKFLOW.md
+docs/memory/patches/P0405_CHAT_TO_ZIP.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/build_patch_zip.py
+tools/check_p0381_integrated_gameplay_contract.py
+tools/check_p0405_chat_patch_zip_contract.py
+tools/patch_applier_template.py.in
+P0405_MANIFEST.txt

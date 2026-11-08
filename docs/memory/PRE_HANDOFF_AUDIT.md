@@ -1,3 +1,7 @@
+## P0405 — Deterministic Chat-to-ZIP builder (2026-11-08)
+
+Exact P0404 main verified. P0405 covers text diff staging on the baseline archive, explicit allowlists, deterministic ZIP bytes and a self-contained guarded applier. The pilot uses the builder's own reviewed tools-and-memory diff. Gates cover unsafe input refusal, two identical builds, full checker runs, checkout guards, rollback and exact manifest. No runtime changes.
+
 ## P0404 — Centered flight master with native pins (2026-11-08)
 
 P0403 main verified. Incident 7173 anchors the native child shape. Guard all known native input before mutations, preserve anchor tokens and original click scripts, and fail open to the readable flight layout. The initial 97-entry TOC caused historical source inventory checks to fail. The native host adapter now stays scoped within the existing flight load entry. Exact source checks, all Lua compilation, flight replay, guarded ZIP apply, rollback, manifest and Git whitespace are the local gates. Client centering and paid travel remain unverified.
