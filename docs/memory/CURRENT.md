@@ -7,11 +7,11 @@ project: logres
 # Current State
 
 ## Active Objective
-Forever alpha blocked. D-046 preview/fallback, D-047 camera frozen, D-048.
+Forever alpha blocked. D-046, D-047 camera frozen, D-048.
 
 ## Current Work Item
 
-**P0397** flight; P0396 main; P0395; P0394; P0393; P0392; P0391 session 46; P0390; P0389; P0388 L-027 gate; P0387 late-accept fix, P0386 L-001 greeting; P0385 QUEST_GREETING, L-002 claim flash; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue no-flash scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
+**P0398** flight scale; P0397 main; P0396; P0395; P0394; P0393; P0392; P0391 session 46; P0390; P0389; P0388 L-027 gate; P0387 late-accept fix, P0386 L-001 greeting; P0385 QUEST_GREETING, L-002 claim flash; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue no-flash scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
 
 ## Verified State
 
@@ -39,16 +39,17 @@ Forever alpha blocked. D-046 preview/fallback, D-047 camera frozen, D-048.
 
 ## Next Action
 
-Verify flight L-004 in Forever. L-002 deferred; L-027/L-033/L-041 OPEN.
+Verify flight scale L-004. L-002 deferred; L-027/L-033/L-041 OPEN.
 
 ## Success Criteria
 
-Merchant purchase and buyback PASS scoped. Flight UNVERIFIED.
+Merchant scoped PASS. Flight P0397 visual FAIL; P0398 UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
-Preserve P0321 gossip, frozen camera, secure actions/pet, stock fallback, prefs, saves, quest 237 and P0329. No polling, secret inspection or blanket suppression. D-046/D-048 and stock fallback.
+Preserve P0321, camera, secure actions/pet, stock fallback, prefs, saves, quest 237 and P0329. No polling, secret inspection or blanket suppression.
 
 ## Relevant References
+- docs/memory/evidence/P0398_FLIGHT_SCALE.md
 - docs/memory/evidence/P0397_FLIGHT_WINDOW.md
 - docs/memory/evidence/P0396_MERCHANT_PAGE_CHEVRONS.md
 - docs/memory/evidence/P0395_MERCHANT_TAB_LABELS.md

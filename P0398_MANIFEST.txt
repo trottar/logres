@@ -1,0 +1,28 @@
+P0398 Forever flight window scale
+Verified P0397 baseline: 8d9588aae6cad9a6a620e7b66ccdf1603fd6fdc2
+Runtime version: 0.0.282-dev
+PREWRITE: 268/268 STATIC PASS
+POSTWRITE: 268/268 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Quest/FlightWindow.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0398_FLIGHT_SCALE.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0398_FLIGHT_SCALE.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0381_integrated_gameplay_contract.py
+tools/check_p0398_flight_scale_contract.py
+P0398_MANIFEST.txt

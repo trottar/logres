@@ -34,28 +34,29 @@ local function copper(value)
     return table.concat(parts, " ")
 end
 
-local function paint(root, sample)
+local function paint(root, sample, foreground)
     assert(Logres.PanelSurface.Paint(root, config.surface, visual.width, visual.height))
     local text, wash = chrome.text, chrome.wash
-    wash(root, 32, 102, 220, 578, palette.sidebarWash)
-    wash(root, 260, 102, 1, 578, palette.sidebarRule)
-    wash(root, 28, 85, visual.width - 56, 1, palette.gold)
+    local labels = foreground or root
+    wash(labels, 32, 102, 220, 578, palette.sidebarWash)
+    wash(labels, 260, 102, 1, 578, palette.sidebarRule)
+    wash(labels, 28, 85, visual.width - 56, 1, palette.gold)
     wash(root, mapX - 1, mapY - 1, mapSize + 2, mapSize + 2, palette.sidebarRule)
-    text(root, "Flight Paths", "GameFontHighlightLarge", 120, 19, visual.width - 240,
+    text(labels, "Flight Paths", "GameFontHighlightLarge", 120, 19, visual.width - 240,
         palette.goldText, "CENTER")
-    text(root, sample and "FLIGHT MASTER  /  PREVIEW" or "FLIGHT MASTER",
+    text(labels, sample and "FLIGHT MASTER  /  PREVIEW" or "FLIGHT MASTER",
         "GameFontHighlightSmall", 120, 49, visual.width - 240, palette.muted, "CENTER")
-    text(root, "Departure", "GameFontHighlight", 44, 114, 194, palette.goldText)
-    local origin = text(root, "", "GameFontHighlight", 44, 142, 194, palette.body)
-    text(root, "Destination", "GameFontHighlight", 44, 218, 194, palette.goldText)
-    local name = text(root, "", "GameFontHighlight", 44, 246, 194, palette.body)
+    text(labels, "Departure", "GameFontHighlight", 44, 114, 194, palette.goldText)
+    local origin = text(labels, "", "GameFontHighlight", 44, 142, 194, palette.body)
+    text(labels, "Destination", "GameFontHighlight", 44, 218, 194, palette.goldText)
+    local name = text(labels, "", "GameFontHighlight", 44, 246, 194, palette.body)
     origin:SetHeight(42)
     name:SetHeight(42)
-    local status = text(root, "", "GameFontHighlight", 44, 292, 194, palette.muted)
-    local fare = text(root, "", "GameFontHighlight", 44, 325, 194, palette.goldText)
-    text(root, "Hover over a destination for its fare.", "GameFontHighlightSmall",
+    local status = text(labels, "", "GameFontHighlight", 44, 292, 194, palette.muted)
+    local fare = text(labels, "", "GameFontHighlight", 44, 325, 194, palette.goldText)
+    text(labels, "Hover over a destination for its fare.", "GameFontHighlightSmall",
         44, 376, 194, palette.body):SetHeight(42)
-    text(root, sample and "Sample destinations only." or "Click a reachable pin to pay and fly.",
+    text(labels, sample and "Sample destinations only." or "Click a reachable pin to pay and fly.",
         "GameFontHighlightSmall", 44, 425, 194, palette.body):SetHeight(42)
     return {origin = origin, name = name, status = status, fare = fare}
 end
@@ -117,11 +118,33 @@ local borders = {"Bg", "TitleBg", "TopTileStreaks", "TitleText", "TopLeftCorner"
     "InsetBorderBottomLeft", "InsetBorderBottomRight", "InsetBorderTop",
     "InsetBorderBottom", "InsetBorderLeft", "InsetBorderRight"}
 
+local function normalizeScale(changes, root)
+    if chrome.read(root, "GetParent") ~= UIParent then return false end
+    local get, set = chrome.method(root, "GetScale"), chrome.method(root, "SetScale")
+    if not get or not set then return false end
+    local ok, stockScale = pcall(get, root)
+    if not ok then return false end
+    -- The native value is an opaque token used only to restore the original panel.
+    changes[#changes + 1] = {
+        apply = function() set(root, 1) end,
+        undo = function() set(root, stockScale) end,
+    }
+    return true
+end
+
+local function matchesParentScale(root)
+    local actual = chrome.read(root, "GetEffectiveScale")
+    local expected = chrome.read(UIParent, "GetEffectiveScale")
+    return type(actual) == "number" and type(expected) == "number"
+        and actual > 0 and expected > 0 and math.abs(actual - expected) < 0.001
+end
+
 local function capture(root, map)
     local close = chrome.member(root, "CloseButton")
     if not chrome.member(root, "Bg") or not chrome.member(root, "TitleText") then return nil end
     local changes = {}
     if not chrome.anchor(changes, root, visual.point, UIParent, visual.relativePoint, visual.x, visual.y)
+        or not normalizeScale(changes, root)
         or not chrome.resize(changes, root, visual.width, visual.height)
         or not chrome.anchor(changes, map, "TOPLEFT", root, "TOPLEFT", mapX, -mapY)
         or not chrome.resize(changes, map, mapSize, mapSize)
@@ -171,7 +194,12 @@ local function buildArt(root)
     if type(level) ~= "number" then return nil end
     art:SetFrameLevel(math.max(0, level - 1))
     art:EnableMouse(false)
-    art.view = paint(art, false)
+    -- The text sits above native backing, while map artwork and input stay clear.
+    local labels = CreateFrame("Frame", nil, art)
+    labels:SetAllPoints(art)
+    labels:SetFrameLevel(level + 2)
+    labels:EnableMouse(false)
+    art.view = paint(art, false, labels)
     return art
 end
 
@@ -206,6 +234,11 @@ local function apply(root)
             restore("stock-layout-restored")
             return
         end
+    end
+    if not matchesParentScale(root) then
+        stockOnly = true
+        restore("stock-scale-mismatch")
+        return
     end
     if not pcall(art.Show, art) then
         stockOnly = true
@@ -245,7 +278,8 @@ end
 
 function Flight.GetAudit()
     return {result = result, live = live ~= nil, opens = opens, restores = restores,
-        pending = live and live.pending or nil, lastNodeState = lastState, lastFareCopper = lastFare}
+        pending = live and live.pending or nil, scaleMatched = live and not live.pending or false,
+        lastNodeState = lastState, lastFareCopper = lastFare}
 end
 
 local function buildPreview()
@@ -308,7 +342,12 @@ Logres:RegisterEvent("PLAYER_REGEN_ENABLED", function()
     if live and live.pending then restore(live.pending) else reconcile() end
 end)
 Logres:RegisterEvent("DISPLAY_SIZE_CHANGED", function()
-    if live and not chrome.fits() then restore("stock-small-viewport") end
+    if live and not chrome.fits() then
+        restore("stock-small-viewport")
+    elseif live and not matchesParentScale(live.root) then
+        stockOnly = true
+        restore("stock-scale-mismatch")
+    end
 end)
 Logres:SubscribeState(function(state)
     if live and not inContext(state) then

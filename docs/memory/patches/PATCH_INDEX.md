@@ -1,3 +1,7 @@
+## P0398 — Flight window scale and label layering (2026-11-08)
+
+Verified P0397 main 8d9588a. The user screenshot shows the live Logres taxi panel enlarged beyond the viewport and dim sidebar text. P0398 uses UIParent scale for the supported taxi layout, verifies the effective scale, restores the original stock scale, and places labels above native backing. WoW retest pending. See docs/memory/evidence/P0398_FLIGHT_SCALE.md.
+
 ## P0397 — Logres flight-master window (2026-11-08)
 
 Verified P0396 main 9597955. Forever session 52 records a merchant visit; user reports successful purchase and pager use. P0397 embeds the Classic taxi map and its original fare and destination controls in the shared Logres NPC window. Supported journeys use the map inside Logres. Stock fallback remains for unsupported cases. Flight runtime UNVERIFIED. See docs/memory/evidence/P0397_FLIGHT_WINDOW.md.

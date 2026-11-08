@@ -1,3 +1,7 @@
+## P0398 flight scale audit (2026-11-08)
+
+Published P0397 8d9588aae6cad9a6a620e7b66ccdf1603fd6fdc2 verified. The user screenshot shows live taxi integration but oversize clipping and dim text. Original scale was not measured. P0398 normalizes only a guarded UIParent-owned TaxiFrame and verifies effective scale before showing Logres art. Original stock scale and anchors are restored in reverse mutation order, including on refusal and rollback. Readable header and sidebar art uses a mouse-inert foreground away from the original map input. No loaded module, preview registry, route transaction or camera change. Exact checks include full historical suite, Lua syntax, simulated 1.9x inherited scale with original token restore, rejected effective-scale match, isolated real apply, refusal/rollback and Git whitespace. Forever remains unverified.
+
 ## P0397 flight window audit (2026-11-08)
 
 Verified published P0396 959795568e24aaa2108d16dc25bf28feaeab4180. User approved end-to-end flight presentation within Logres. P0272 establishes observed Classic TaxiFrame metadata. P0397 uses named stock map, click and lifecycle with the shared merchant anchor and Goodbye styling. One module and one inert P action bring source inventory to 96 Lua and 40 previews; historical exact counts updated without dropping existing actions. No camera or travel API dispatch. Gate release on actual historical check suite, TOC syntax, simulated layout/route hover and native click identity, fallback and rollback, exact guarded apply and whitespace. Client visuals and travel UNVERIFIED.

@@ -1,0 +1,7 @@
+## P0398 — Flight window scale and label layering (2026-11-08)
+
+Verified published P0397 8d9588aae6cad9a6a620e7b66ccdf1603fd6fdc2. User screenshot of live Stormwind taxi visit shows a Logres Flight Paths shell and Stormwind, Elwynn departure, native map and native pins. The frame extends beyond the screenshot and the sidebar text appears dark. L-004 visual FAIL. No purchase or departure evidence was supplied. The clipping affects frame text and map together, consistent with inherited native root scaling. The exact original runtime scale was not captured.
+
+P0397 resized the stock root in its existing scale. P0398 requires the observed TaxiFrame to be parented to UIParent. Before revealing the Logres presentation, it sets the root's local scale to 1 and checks that its effective scale matches UIParent. The previous local scale is kept solely as an opaque restoration token. Restore, rollback and fallback retain original geometry and stock scale. An unsupported scale or a mismatch falls back to the original layout. The map stays 580 by 580 native units with original route pins and click handlers. Sidebar and header text render in a mouse-inert foreground confined to those areas.
+
+Retest with a normal flight master, Immersion on. The entire panel including Goodbye should fit, and the sidebar should be readable. Hover a pin to verify its fare and close with Goodbye. Travel remains an optional natural test and requires an intentional native pin click. P0398 client UNVERIFIED.
