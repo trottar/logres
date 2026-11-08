@@ -9,6 +9,17 @@ local PRESENTATION_HEIGHT = 32
 local FALLBACK_Y = -5
 local PREVIEW_TEXT = "PREVIEW · Objective progress · 3/10"
 
+-- Only known, numbered quest-objective information messages are candidates.
+-- In particular, ERR_QUEST_UNKNOWN_COMPLETE has no objective identity and
+-- must remain Blizzard-owned. IDs are resolved by name per client build.
+local NATIVE_OBJECTIVE_INFO = {
+    { id = "LE_GAME_ERR_QUEST_ADD_KILL_SII", format = "ERR_QUEST_ADD_KILL_SII" },
+    { id = "LE_GAME_ERR_QUEST_ADD_FOUND_SII", format = "ERR_QUEST_ADD_FOUND_SII" },
+    { id = "LE_GAME_ERR_QUEST_ADD_ITEM_SII", format = "ERR_QUEST_ADD_ITEM_SII" },
+    { id = "LE_GAME_ERR_QUEST_ADD_PLAYER_KILL_SII", format = "ERR_QUEST_ADD_PLAYER_KILL_SII" },
+    { id = "LE_GAME_ERR_QUEST_OBJECTIVE_COMPLETE_S", format = "ERR_QUEST_OBJECTIVE_COMPLETE_S" },
+}
+
 local Progress = Logres:RegisterModule("QuestObjectiveProgress", {
     autoEnable = true,
 })
@@ -50,9 +61,143 @@ local function readField(value, expectedType, label, allowNil)
     return value, nil, false
 end
 
+-- This is an *identity-gated presentation* filter, never an error-frame hide.
+-- Unknown types and all failures pass through the original Blizzard method.
+local function knownNativeObjectiveFormat(messageType)
+    if isSecret(messageType) or type(messageType) ~= "number" then
+        return nil
+    end
+    for _, entry in ipairs(NATIVE_OBJECTIVE_INFO) do
+        local id = _G[entry.id]
+        if id ~= nil and not isSecret(id) and type(id) == "number"
+            and id == messageType then
+            return _G[entry.format], entry.id == "LE_GAME_ERR_QUEST_OBJECTIVE_COMPLETE_S"
+        end
+    end
+    return nil
+end
+
+local function rowMatchesNativeText(row, format, message)
+    if isSecret(format) or type(format) ~= "string" then
+        return false
+    end
+    if isSecret(message) or type(message) ~= "string" then
+        return false
+    end
+    local name = row.text
+    if isSecret(name) or type(name) ~= "string" then return false end
+    -- Objective text from GetQuestObjectives can already include the N/M
+    -- suffix. Accept it only when it is the same sanitized numeric progress.
+    local fulfilled, required = row.fulfilled, row.required
+    if isSecret(fulfilled) or isSecret(required)
+        or type(fulfilled) ~= "number" or type(required) ~= "number"
+        or fulfilled < 0 or required <= 0 then return false end
+    local count = string.format("%.0f/%.0f", fulfilled, required)
+    local stem = name
+    if name:sub(-#count) == count then
+        stem = name:sub(1, #name - #count):gsub("[%s:]+$", "")
+    end
+    if message == name then return true end
+    -- The source supports both "/" objectives and localized formatted
+    -- quest progress. If the format is incompatible, fail open.
+    local formatted, expected = pcall(string.format, format, stem, fulfilled, required)
+    if formatted and expected == message then return true end
+    if row.finished == true then
+        formatted, expected = pcall(string.format, format, stem)
+        if formatted and expected == message then return true end
+    end
+    return false
+end
+
+function Progress:ShouldSuppressNativeObjective(messageType, message)
+    if not self.moduleEnabled or not self.immersionEnabled
+        or self.previewMode or not self.timerAvailable then return false end
+    local format, completionOnly = knownNativeObjectiveFormat(messageType)
+    if format == nil then return false end
+    if isSecret(message) or type(message) ~= "string" then return false end
+    -- A native info message may precede QUEST_LOG_UPDATE. Resample the
+    -- addon-owned quest source once; this uses the normal baseline/diff gate,
+    -- not native Blizzard frame visibility or any periodic polling.
+    self:Refresh("native-objective-info", false)
+    if not self.pulseShown or not self.nativePulseRows
+        or self.nativePulseQuestID ~= self.currentQuestID then return false end
+    for _, row in ipairs(self.nativePulseRows) do
+        if (not completionOnly or row.finished == true)
+            and rowMatchesNativeText(row, format, message) then
+            self.nativeObjectiveSuppressed = self.nativeObjectiveSuppressed + 1
+            self.lastNativeObjectiveDecision = "matched-owned-pulse"
+            return true
+        end
+    end
+    return false
+end
+
+function Progress:InstallNativeObjectiveGate()
+    if self.nativeInfoFrame then return true end
+    local frame = _G.UIErrorsFrame
+    if frame == nil or isSecret(frame) then
+        self.lastNativeObjectiveDecision = "frame-unavailable"
+        return false
+    end
+    if type(InCombatLockdown) ~= "function" or InCombatLockdown() then
+        self.lastNativeObjectiveDecision = "combat-or-lockdown-unavailable"
+        return false
+    end
+    local prior = frame.ShouldDisplayMessageType
+    if isSecret(prior) or type(prior) ~= "function" then
+        self.lastNativeObjectiveDecision = "message-policy-unavailable"
+        return false
+    end
+    local function scopedPolicy(owner, messageType, message)
+        -- Never replace Blizzard's blacklist, throttle, or other decisions.
+        local ok, nativeDecision = pcall(prior, owner, messageType, message)
+        if not ok then return true end -- preserve information on failure
+        if isSecret(nativeDecision) or nativeDecision ~= true then
+            return nativeDecision
+        end
+        if isSecret(owner) or owner ~= frame then return nativeDecision end
+        local success, suppress = pcall(self.ShouldSuppressNativeObjective,
+            self, messageType, message)
+        if success and suppress == true then return false end
+        return nativeDecision
+    end
+    local ok = pcall(function() frame.ShouldDisplayMessageType = scopedPolicy end)
+    if not ok or isSecret(frame.ShouldDisplayMessageType)
+        or frame.ShouldDisplayMessageType ~= scopedPolicy then
+        self.lastNativeObjectiveDecision = "policy-install-unavailable"
+        return false
+    end
+    self.nativeInfoFrame = frame
+    self.nativeInfoPrior = prior
+    self.nativeInfoPolicy = scopedPolicy
+    self.lastNativeObjectiveDecision = "scoped-policy-installed"
+    return true
+end
+
+function Progress:RestoreNativeObjectiveGate()
+    local frame = self.nativeInfoFrame
+    if frame then
+        if type(InCombatLockdown) ~= "function" or InCombatLockdown() then
+            -- The still-installed policy is inert when the module is disabled.
+            self.lastNativeObjectiveDecision = "combat-restoration-deferred-inert"
+            return false
+        end
+        if not isSecret(frame) and not isSecret(frame.ShouldDisplayMessageType)
+            and frame.ShouldDisplayMessageType == self.nativeInfoPolicy then
+            pcall(function() frame.ShouldDisplayMessageType = self.nativeInfoPrior end)
+        end
+    end
+    self.nativeInfoFrame = nil
+    self.nativeInfoPolicy = nil
+    self.nativeInfoPrior = nil
+    return true
+end
+
 function Progress:HidePulse(reason)
     self.pulseGeneration = self.pulseGeneration + 1
     self.pulseShown = false
+    self.nativePulseRows = nil
+    self.nativePulseQuestID = nil
 
     if self.root then
         self.root:Hide()
@@ -400,6 +545,7 @@ end
 
 function Progress:FindChangedRows(previousRows, currentRows)
     local changed = {}
+    local changedRows = {}
     local completed = false
     local maximum =
         math.max(#previousRows, #currentRows)
@@ -435,6 +581,7 @@ function Progress:FindChangedRows(previousRows, currentRows)
 
                     if line then
                         changed[#changed + 1] = line
+                        changedRows[#changedRows + 1] = current
 
                         if finishedChanged and current.finished == true then
                             completed = true
@@ -445,6 +592,7 @@ function Progress:FindChangedRows(previousRows, currentRows)
         end
     end
 
+    self.pendingNativeRows = changedRows
     return changed, completed
 end
 
@@ -479,6 +627,8 @@ function Progress:PresentLines(lines, reason, completed)
     end
 
     self.pulseGeneration = self.pulseGeneration + 1
+    self.nativePulseRows = nil
+    self.nativePulseQuestID = nil
     local generation = self.pulseGeneration
 
     Logres.ContextVisual.SetComplete(
@@ -503,6 +653,8 @@ function Progress:PresentLines(lines, reason, completed)
         end
 
         self.pulseShown = false
+        self.nativePulseRows = nil
+        self.nativePulseQuestID = nil
         self.root:Hide()
         self.lastPresentationReason = "timeout"
     end)
@@ -584,11 +736,18 @@ function Progress:Refresh(reason, forceBaseline)
     end
 
     self.pulseCount = self.pulseCount + 1
-    self:PresentLines(
+    local displayed, state = self:PresentLines(
         changed,
         reason or "objective-change",
         completed
     )
+    if displayed and state == "shown" then
+        self.nativePulseRows = {}
+        for index = 1, math.min(#changedRows, MAX_PRESENTATION_ROWS) do
+            self.nativePulseRows[index] = changedRows[index]
+        end
+        self.nativePulseQuestID = questID
+    end
 
     return true
 end
@@ -732,6 +891,9 @@ function Progress:GetDebugStatus()
         currentQuestID = self.currentQuestID,
         baselineRowCount = self.baselineRowCount,
         pulseShown = self.pulseShown == true,
+        nativeObjectiveGateInstalled = self.nativeInfoFrame ~= nil,
+        nativeObjectiveSuppressed = self.nativeObjectiveSuppressed,
+        lastNativeObjectiveDecision = self.lastNativeObjectiveDecision,
 
         lastSecret = self.lastSecret == true,
         lastSampleReason = self.lastSampleReason,
@@ -774,6 +936,13 @@ function Progress:OnInitialize()
     self.previewCount = 0
     self.pulseGeneration = 0
     self.pulseShown = false
+    self.nativePulseRows = nil
+    self.nativePulseQuestID = nil
+    self.nativeInfoFrame = nil
+    self.nativeInfoPrior = nil
+    self.nativeInfoPolicy = nil
+    self.nativeObjectiveSuppressed = 0
+    self.lastNativeObjectiveDecision = "not-installed"
 
     self.lastSecret = false
     self.lastSampleReason = "initialize"
@@ -877,10 +1046,12 @@ function Progress:OnEnable()
 
     self:ApplyPreferences(Logres:GetPreferences())
     self:Refresh("enable", true)
+    self:InstallNativeObjectiveGate()
 end
 
 function Progress:OnDisable()
     self.moduleEnabled = false
+    self:RestoreNativeObjectiveGate()
     self:ClearBaseline(
         "module-disabled",
         nil,

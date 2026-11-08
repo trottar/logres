@@ -207,6 +207,12 @@ function Logres:CaptureBugIncident()
         "applyCount", "restoreCount", "blockedCount",
         "clickCount", "claimCalls"})
 
+    -- P0388: Logres-owned native objective information gate, no Blizzard frame read.
+    incident.snapshot.objectiveInfo = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("QuestObjectiveProgress"):GetDebugStatus()
+    end), {"nativeObjectiveGateInstalled", "nativeObjectiveSuppressed",
+        "lastNativeObjectiveDecision", "currentQuestID", "pulseShown",
+        "lastPresentationReason"})
     -- P0379: snapshot Logres-owned button input chain and geometry only.
     incident.snapshot.completionInput = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("QuestDialogue"):GetDebugStatus().completionInput
