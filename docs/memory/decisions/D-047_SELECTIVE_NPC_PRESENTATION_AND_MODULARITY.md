@@ -21,6 +21,10 @@
 2. **Hybrid interaction:** Logres handles session narrative/selection/visual composition while a proven Blizzard subsystem retains complex transactions or protected controls. Restore usable stock surfaces before Logres interaction is removed.
 3. **Full Logres ownership:** only after capability and runtime evidence proves equivalent information, player control, identity/eligibility guards and fail-open restoration. No silent auto-accept, claim, spend, vendor transaction or travel action.
 
+### P0393 merchant presentation correction
+
+The user explicitly requires a trainer-style merchant at the trainer anchor, with feature coverage matching the vendor's available Blizzard controls. The P0392 side catalogue is rejected. Apply the native-backed tier by retaining original merchant item buttons, filters, paging, transactions and confirmations inside the trainer-style layout. Stock availability, restriction and release gates still apply.
+
 ## Shared NPC session contract (to audit, not yet implemented)
 
 A session coordinator should track native NPC context/lifecycle, transitions between gossip and services, close/cancel/restoration, and camera context handoff. DynamicCam remains separately owned; a session coordinator may request only supported existing camera behavior, not invent profiles or force camera state. Keep observed client state distinct from presentation policy. Missing or secret data must not be inspected or fabricated.

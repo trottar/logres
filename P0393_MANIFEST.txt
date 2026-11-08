@@ -1,0 +1,32 @@
+P0393 Forever trainer-style merchant
+Verified P0392 baseline: e431643adcd640fd1239a771f500b5c3888e813c
+Runtime version: 0.0.277-dev
+PREWRITE: 263/263 STATIC PASS
+POSTWRITE: 263/263 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Quest/MerchantCatalogue.lua
+Logres/Quest/NativeServicePlacementTrial.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/decisions/D-047_SELECTIVE_NPC_PRESENTATION_AND_MODULARITY.md
+docs/memory/evidence/P0393_TRAINER_STYLE_MERCHANT.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0393_TRAINER_STYLE_MERCHANT.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0381_integrated_gameplay_contract.py
+tools/check_p0392_merchant_catalogue_contract.py
+tools/check_p0393_trainer_style_merchant_contract.py
+P0393_MANIFEST.txt

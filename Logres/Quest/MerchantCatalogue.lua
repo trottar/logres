@@ -1,18 +1,59 @@
--- P0392: one renderer for the merchant preview and explicit live catalogue.
+-- P0393: trainer-style presentation around the original merchant controls.
 local _, Logres = ...
 local Merchant = {}
 Logres.NPCMerchantCatalogue = Merchant
 
-local ROWS, LIMIT = 7, 200
-local WIDTH, HEIGHT = 438, 394
-local view, model, offset
-local visit, live = false, false
-local scenario, reads, result = 0, 0, "idle"
-local labels = {
-    empty = "This merchant has no items.",
-    unavailable = "Catalogue unavailable. See Blizzard's merchant window.",
-    handoff = "Use the native merchant window for transactions.",
-}
+local config = Logres.PanelConfigs.trainer
+local visual, style = config.preview, config.landscape
+local palette, geometry = style.palette, style.geometry
+local list, sidebar = geometry.list, geometry.left
+local firstX, firstY, columnGap = list.x + 22, list.y + 31, 125
+local live, preview, visit, stockOnly
+local merchantState = false
+local hooked = setmetatable({}, {__mode = "k"})
+local result, starts, restores = "idle", 0, 0
+
+local function text(parent, value, font, x, y, width, color, align)
+    local label = parent:CreateFontString(nil, "OVERLAY", font)
+    label:SetPoint("TOPLEFT", parent, "TOPLEFT", x, -y)
+    label:SetSize(width, 22)
+    label:SetJustifyH(align or "LEFT")
+    label:SetTextColor(unpack(color))
+    label:SetText(value)
+    return label
+end
+
+local function wash(parent, x, y, w, h, rgba)
+    local texture = parent:CreateTexture(nil, "BORDER")
+    texture:SetPoint("TOPLEFT", parent, "TOPLEFT", x, -y)
+    texture:SetSize(w, h)
+    texture:SetColorTexture(unpack(rgba))
+end
+
+local function shell(owner, title, sample)
+    assert(Logres.PanelSurface.Paint(owner, config.surface, visual.width, visual.height))
+    local function label(value, x, y, width, tint)
+        return text(owner, value, "GameFontHighlight", x, y, width, tint or palette.body)
+    end
+    wash(owner, sidebar.x, sidebar.y, sidebar.w, sidebar.h, palette.sidebarWash)
+    wash(owner, list.x, list.y, list.w, list.h, palette.catalogueWash)
+    wash(owner, sidebar.x + sidebar.w + 7, sidebar.y + 8, 1, sidebar.h - 16, palette.sidebarRule)
+    wash(owner, 28, 85, visual.width - 56, 1, palette.gold)
+    wash(owner, 28, 525, visual.width - 56, 1, palette.gold)
+    local heading = text(owner, title, "GameFontHighlightLarge", 120, 19, visual.width - 240,
+        palette.goldText, "CENTER")
+    text(owner, sample and "MERCHANT  /  PREVIEW" or "MERCHANT  /  LIVE STOCK",
+        "GameFontHighlightSmall", 120, 49, visual.width - 240, palette.muted, "CENTER")
+    label("Merchant services", 42, 107, 200, palette.goldText)
+    label("Buying and selling", 42, 196, 200, palette.goldText)
+    label("Right-click an item to buy.", 42, 224, 200)
+    label("Shift-click to choose quantity.", 42, 247, 200)
+    label("Sell items from your bags.", 42, 270, 200)
+    label("Stock and prices", list.x + 16, list.y + 4, 200, palette.goldText)
+    label("Service controls", 42, 541, 240, palette.goldText)
+    label("Repairs and other services appear when offered.", 42, 571, 440, palette.muted)
+    return heading
+end
 
 local function ordinary(value)
     if type(issecretvalue) ~= "function" then return false end
@@ -20,265 +61,382 @@ local function ordinary(value)
     return ok and secret == false
 end
 
-local function field(info, key, kind)
-    local value = info[key]
-    if ordinary(value) and type(value) == kind then return value end
+local function member(owner, key)
+    local ok, value = pcall(function() return owner[key] end)
+    if ok and ordinary(value) then return value end
 end
 
-local function rowFromInfo(info)
-    if not ordinary(info) or type(info) ~= "table" then return nil end
-    local name = field(info, "name", "string")
-    if not name or name == "" then return nil end
-    local currency = info.currencyID
-    local currencyKnown = ordinary(currency) and (currency == nil or type(currency) == "number")
-    return {
-        name = name,
-        price = field(info, "price", "number"),
-        stack = field(info, "stackCount", "number"),
-        stock = field(info, "numAvailable", "number"),
-        purchasable = field(info, "isPurchasable", "boolean"),
-        extended = field(info, "hasExtendedCost", "boolean"),
-        currency = field(info, "currencyID", "number"),
-        currencyKnown = currencyKnown,
+local function method(owner, key)
+    local value = member(owner, key)
+    if type(value) == "function" then return value end
+end
+
+local function read(owner, key)
+    local fn = method(owner, key)
+    if not fn then return nil end
+    local ok, value = pcall(fn, owner)
+    if ok and ordinary(value) then return value end
+end
+
+local function unlocked()
+    if type(InCombatLockdown) ~= "function" then return false end
+    local ok, locked = pcall(InCombatLockdown)
+    return ok and ordinary(locked) and locked == false
+end
+
+local function mutable(frame)
+    return frame and read(frame, "IsForbidden") == false and read(frame, "IsProtected") == false
+end
+
+local function fits()
+    local w, h = read(UIParent, "GetWidth"), read(UIParent, "GetHeight")
+    return type(w) == "number" and w >= visual.width
+        and type(h) == "number" and h >= visual.height + math.abs(visual.y)
+end
+
+-- Native values in these captures are opaque restoration tokens.
+local function anchor(plan, frame, point, relative, relativePoint, x, y)
+    if not mutable(frame) then return false end
+    local count = read(frame, "GetNumPoints")
+    local get = method(frame, "GetPoint")
+    local clear, set = method(frame, "ClearAllPoints"), method(frame, "SetPoint")
+    if not get or not clear or not set or type(count) ~= "number"
+        or count < 1 or count > 8 or count ~= math.floor(count) then return false end
+    local old = {}
+    for i = 1, count do
+        local ok, p, r, rp, a, b = pcall(get, frame, i)
+        if not ok then return false end
+        old[i] = {p, r, rp, a, b}
+    end
+    plan[#plan + 1] = {
+        apply = function()
+            clear(frame)
+            set(frame, point, relative, relativePoint, x, y)
+        end,
+        undo = function()
+            clear(frame)
+            for _, token in ipairs(old) do set(frame, unpack(token, 1, 5)) end
+        end,
+    }
+    return true
+end
+
+local function resize(plan, frame)
+    local get, set = method(frame, "GetSize"), method(frame, "SetSize")
+    if not get or not set then return false end
+    local ok, w, h = pcall(get, frame)
+    if not ok then return false end
+    plan[#plan + 1] = {
+        apply = function() set(frame, visual.width, visual.height) end,
+        undo = function() set(frame, w, h) end,
+    }
+    return true
+end
+
+-- Optional, named decorative regions only. No controls, visibility or scripts.
+local function fade(plan, region)
+    if not mutable(region) then return end
+    local get, set = method(region, "GetAlpha"), method(region, "SetAlpha")
+    if not get or not set then return end
+    local ok, alpha = pcall(get, region)
+    if not ok then return end
+    plan[#plan + 1] = {
+        apply = function() set(region, 0) end,
+        undo = function() set(region, alpha) end,
     }
 end
 
-local function readCatalogue()
-    local api = C_MerchantFrame and C_MerchantFrame.GetItemInfo
-    local legacy = GetMerchantItemInfo
-    if type(GetMerchantNumItems) ~= "function"
-        or (type(api) ~= "function" and type(legacy) ~= "function") then
-        return nil
-    end
-    local count = GetMerchantNumItems()
-    if not ordinary(count) or type(count) ~= "number"
-        or count < 0 or count > LIMIT or count ~= math.floor(count) then
-        return nil
-    end
-    local items = {}
-    for i = 1, count do
-        local info
-        if type(api) == "function" then
-            info = api(i)
-        else
-            local name, _, price, stack, stock, purchasable, _, extended, currency = legacy(i)
-            info = { name = name, price = price, stackCount = stack, numAvailable = stock,
-                isPurchasable = purchasable, hasExtendedCost = extended, currencyID = currency }
-        end
-        local row = rowFromInfo(info)
-        if not row then return nil end
-        items[i] = row
-    end
-    return items
-end
+local decorations = {"MerchantFramePortrait", "MerchantNameText", "BuybackBG",
+    "MerchantFrameBottomLeftBorder", "MerchantFrameBottomRightBorder"}
+local rootDecorations = {"Bg", "TitleBg", "TopTileStreaks", "PortraitContainer",
+    "NineSlice", "Inset", "TitleText"}
 
-local fixtures = {
-    { state = "list", items = {
-        { name = "Refreshing Spring Water", price = 25, stack = 5, stock = -1, extended = false, currencyKnown = true, purchasable = true },
-        { name = "Coarse Thread", price = 10, stock = -1, extended = false, currencyKnown = true, purchasable = true },
-        { name = "Pattern: Blue Linen Vest", price = 250, stock = 1, extended = false, currencyKnown = true, purchasable = true },
-        { name = "Pattern: Red Linen Bag", price = 400, stock = 0, extended = false, currencyKnown = true, purchasable = false },
-        { name = "Supply Satchel", extended = true, stock = 3 },
-        { name = "Worn Satchel", price = 10005, stock = -1, extended = false, currencyKnown = true, purchasable = false },
-        { name = "Simple Wood", price = 5, stock = -1, extended = false, currencyKnown = true, purchasable = true },
-        { name = "Shiny Bauble", price = 50, stock = -1, extended = false, currencyKnown = true, purchasable = true },
-    }},
-    { state = "empty", items = {} },
-    { state = "unavailable", items = {} },
-    { state = "handoff", items = {} },
-}
-
-local function coin(item)
-    local value = item.price
-    if item.extended ~= false or not item.currencyKnown or item.currency
-        or type(value) ~= "number" or value < 0 or value >= 1e12
-        or value ~= math.floor(value) then
-        return "See Blizzard"
-    end
-    if value == 0 then return "Free" end
-    local parts = {}
-    local gold, silver, copper = math.floor(value / 10000), math.floor(value / 100) % 100, value % 100
-    if gold > 0 then parts[#parts + 1] = gold .. "g" end
-    if silver > 0 then parts[#parts + 1] = silver .. "s" end
-    if copper > 0 then parts[#parts + 1] = copper .. "c" end
-    return table.concat(parts, " ")
-end
-
-local function stock(item)
-    if item.stock == 0 then return "Sold out" end
-    if item.purchasable == false then return "Unavailable" end
-    if item.stock and item.stock > 0 and item.stock < 40000 and item.stock == math.floor(item.stock) then
-        return item.stock .. " in stock"
-    end
-    if item.purchasable == true and item.stock == -1 then return "In stock" end
-    return "See Blizzard"
-end
-
-local function render()
-    local last = math.max(1, math.floor((#model.items - 1) / ROWS) * ROWS + 1)
-    offset = math.min(offset, last)
-    local size = math.max(1, math.min(ROWS, #model.items - offset + 1))
-    local page, first, _, finish = Logres.NPCServiceCatalogue.Window(model.items, offset, size)
-    view.title:SetText(live and "Merchant Catalogue" or "Merchant Catalogue Preview")
-    view.mode:SetText(live and "Live stock  /  Read-only" or "Sample stock  /  Preview " .. scenario .. " of 4")
-    view.status:SetText(labels[model.state] or "")
-    view.footer:SetText(#model.items > 0 and (first .. "–" .. finish .. " of " .. #model.items) or "")
-    view.back:SetEnabled(first > 1)
-    view.forward:SetEnabled(first < last)
-    view.fixture:SetShown(not live)
-    for index, frame in ipairs(view.rows) do
-        local item = page[index]
-        frame:SetShown(item ~= nil)
-        if item then
-            local quantity = item.stack and item.stack > 1 and item.stack < LIMIT * LIMIT
-                and "  ×" .. item.stack or ""
-            frame.name:SetText(item.name .. quantity)
-            frame.price:SetText(coin(item))
-            frame.stock:SetText(stock(item))
+local function capture(frame)
+    local plan = {}
+    local close = member(frame, "CloseButton")
+    local tab = member(_G, "MerchantFrameTab1")
+    local secondTab = member(_G, "MerchantFrameTab2")
+    local first = member(_G, "MerchantItem1")
+    if not close or not tab or not secondTab or not first then return nil end
+    -- Verify both native tabs and every item has a real input target. Their
+    -- buttons, IDs, tooltip/modified clicks and scripts stay native.
+    for i = 1, 12 do
+        local row = member(_G, "MerchantItem" .. i)
+        local button = row and member(row, "ItemButton")
+        if not button or read(row, "GetParent") ~= frame or read(button, "GetParent") ~= row then
+            return nil
         end
     end
-    view:Show()
-end
-
-local function close(reason)
-    live, model = false, nil
-    if view then view:Hide() end
-    if reason then result = reason end
-end
-
-local function text(parent, font, point, x, y)
-    local label = parent:CreateFontString(nil, "OVERLAY", font)
-    label:SetPoint(point, parent, point, x, y)
-    return label
-end
-
-local function button(parent, caption, width, point, x, y, action)
-    local control = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
-    control:SetSize(width, 24)
-    control:SetPoint(point, parent, point, x, y)
-    control:SetText(caption)
-    control:SetScript("OnClick", action)
-    return control
-end
-
-local function ensureView()
-    if view then return end
-    local frame = CreateFrame("Frame", nil, UIParent)
-    frame:Hide()
-    frame:SetSize(WIDTH, HEIGHT)
-    frame:SetPoint("TOP", UIParent, "TOP", 184, -104)
-    frame:SetClampedToScreen(true)
-    frame:SetFrameStrata("DIALOG")
-    frame:EnableMouse(false)
-    local art = Logres.Theme.panelSurface
-    assert(Logres.PanelSurface.Paint(frame, {
-        background = { mode = "stretch", texture = art.assets.panel, layer = "BACKGROUND" },
-        divider = { texture = art.assets.divider, layer = "ARTWORK",
-            horizontalInset = 48, height = 16, x = 0, y = -54 },
-    }, WIDTH, HEIGHT))
-    frame.title = text(frame, "GameFontNormalLarge", "TOP", 0, -17)
-    frame.mode = text(frame, "GameFontHighlightSmall", "TOP", 0, -39)
-    frame.status = text(frame, "GameFontHighlight", "CENTER", 0, 0)
-    frame.status:SetWidth(WIDTH - 48)
-    frame.footer = text(frame, "GameFontHighlightSmall", "BOTTOM", 0, 59)
-    text(frame, "GameFontHighlightSmall", "BOTTOM", 0, 13):SetText("Purchases, sales, buyback and repairs use Blizzard's window.")
-    button(frame, "Close", 58, "TOPRIGHT", -15, -16, function() close("dismissed") end)
-    frame.fixture = button(frame, "Next sample", 96, "BOTTOM", 0, 29, function() Merchant.Preview() end)
-    frame.back = button(frame, "Previous", 78, "BOTTOMLEFT", 24, 29, function()
-        offset = math.max(1, offset - ROWS)
-        render()
-    end)
-    frame.forward = button(frame, "Next", 78, "BOTTOMRIGHT", -24, 29, function()
-        offset = offset + ROWS
-        render()
-    end)
-    frame.rows = {}
-    for i = 1, ROWS do
-        local row = CreateFrame("Frame", nil, frame)
-        row:SetSize(WIDTH - 48, 34)
-        row:SetPoint("TOPLEFT", frame, "TOPLEFT", 24, -67 - (i - 1) * 36)
-        row.name = text(row, "GameFontHighlight", "TOPLEFT", 2, -2)
-        row.name:SetWidth(251)
-        row.name:SetJustifyH("LEFT")
-        row.name:SetMaxLines(1)
-        row.price = text(row, "GameFontNormal", "TOPRIGHT", -2, -2)
-        row.stock = text(row, "GameFontHighlightSmall", "BOTTOMLEFT", 2, 2)
-        frame.rows[i] = row
+    if not anchor(plan, frame, visual.point, UIParent, visual.relativePoint, visual.x, visual.y)
+        or not resize(plan, frame)
+        or not anchor(plan, close, "TOPRIGHT", frame, "TOPRIGHT", -34, -20)
+        or not anchor(plan, tab, "TOPLEFT", frame, "TOPLEFT", 38, -140)
+        or not anchor(plan, secondTab, "LEFT", tab, "RIGHT", -12, 0)
+        or not anchor(plan, first, "TOPLEFT", frame, "TOPLEFT", firstX, -firstY) then
+        return nil
     end
-    view = frame
-end
-
-local function show()
-    local ok = pcall(function()
-        ensureView()
-        render()
-    end)
-    if not ok then
-        close("display-unavailable")
-        return false, result
+    for i = 2, 12, 2 do
+        local row = member(_G, "MerchantItem" .. i)
+        local previous = member(_G, "MerchantItem" .. (i - 1))
+        if not anchor(plan, row, "TOPLEFT", previous, "TOPRIGHT", columnGap, 0) then return nil end
     end
-    return true, result
-end
-
-function Merchant.Preview()
-    live, offset = false, 1
-    scenario = scenario % #fixtures + 1
-    model = fixtures[scenario]
-    result = "preview-" .. model.state
-    return show()
-end
-
-local function refresh()
-    reads = reads + 1
-    local ok, items = pcall(readCatalogue)
-    if not ok or not items then
-        model = { state = "unavailable", items = {} }
-    else
-        model = { state = #items == 0 and "empty" or "list", items = items }
+    for i = 1, 12 do
+        fade(plan, member(_G, "MerchantItem" .. i .. "NameFrame"))
     end
-    result = "live-" .. model.state
-    return show()
+    for _, key in ipairs(decorations) do fade(plan, member(_G, key)) end
+    for _, key in ipairs(rootDecorations) do fade(plan, member(frame, key)) end
+    local title = member(frame, "TitleContainer")
+    if title then fade(plan, member(title, "TitleText")) end
+    -- Some layouts expose an item-filter dropdown in the upper right.
+    local filter = member(frame, "FilterDropdown")
+    if filter and not anchor(plan, filter, "TOPRIGHT", frame, "TOPRIGHT", -45, -97) then
+        return nil
+    end
+    return plan
 end
 
-local function merchantContext(state)
-    return Logres:GetPreference("immersionEnabled") == true
-        and state and state.interacting == true
-        and state.interactionType == 5
+local function restore(reason)
+    if not live then return true end
+    if not unlocked() then
+        live.pending = reason
+        result = "combat-restore-deferred"
+        return false
+    end
+    local complete = true
+    for i = live.applied, 1, -1 do
+        if not pcall(live.plan[i].undo) then complete = false end
+    end
+    if not complete then
+        live.pending = reason
+        result = "restore-incomplete"
+        return false
+    end
+    live.art:Hide()
+    live = nil
+    restores = restores + 1
+    result = reason
+    return true
+end
+
+local function context(state)
+    return Logres:GetPreference("immersionEnabled") == true and state
+        and state.interacting == true and state.interactionType == 5
+end
+
+local artByFrame = setmetatable({}, {__mode = "k"})
+local function merchantName()
+    if type(UnitName) == "function" then
+        local ok, name = pcall(UnitName, "npc")
+        if ok and ordinary(name) and type(name) == "string" and name ~= "" then return name end
+    end
+    return "Merchant"
+end
+
+local function buildLiveArt(frame)
+    local art = artByFrame[frame]
+    if art then
+        art.heading:SetText(merchantName())
+        return art
+    end
+    local level = read(frame, "GetFrameLevel")
+    if type(level) ~= "number" then return nil end
+    art = CreateFrame("Frame", nil, frame)
+    art:Hide()
+    art:SetAllPoints(frame)
+    art:SetFrameLevel(math.max(0, level - 1))
+    art:EnableMouse(false)
+    art.heading = shell(art, merchantName(), false)
+    artByFrame[frame] = art
+    return art
+end
+
+local function apply(frame)
+    if live or stockOnly or not visit or not unlocked() or not context(Logres:GetState())
+        or not mutable(frame) or read(frame, "IsShown") ~= true then return end
+    if not fits() then
+        result = "stock-layout-small-viewport"
+        return
+    end
+    local positioning = Logres.NPCNativeServicePlacementTrial.GetAudit()
+    if positioning.active ~= "none" or positioning.autoEnabled then
+        result = "native-placement-owns-session"
+        return
+    end
+    local ok, plan = pcall(capture, frame)
+    if not ok or not plan then
+        stockOnly, result = true, "stock-layout-unsupported"
+        return
+    end
+    local built, art = pcall(buildLiveArt, frame)
+    if not built or not art then
+        stockOnly, result = true, "stock-art-unavailable"
+        return
+    end
+    if preview then preview:Hide() end
+    live = {frame = frame, art = art, plan = plan, applied = 0}
+    for i, action in ipairs(plan) do
+        live.applied = i
+        if not pcall(action.apply) then
+            stockOnly = true
+            restore("stock-layout-restored")
+            return
+        end
+    end
+    if not pcall(art.Show, art) then
+        stockOnly = true
+        restore("stock-art-restored")
+        return
+    end
+    starts = starts + 1
+    result = "merchant-layout-active"
+end
+
+local function reconcile()
+    if not visit or stockOnly or not unlocked() then return end
+    local frame = member(_G, "MerchantFrame")
+    if not mutable(frame) then result = "stock-frame-unavailable"; return end
+    local hooks = hooked[frame]
+    if not hooks then
+        hooks = {}
+        hooked[frame] = hooks
+    end
+    local hook = method(frame, "HookScript")
+    if not hook then return end
+    if not hooks.hide then
+        hooks.hide = pcall(hook, frame, "OnHide", function()
+            if live and live.frame == frame then restore("merchant-hidden") end
+        end)
+        if not hooks.hide then result = "stock-hide-hook-unavailable"; return end
+    end
+    if not hooks.show then
+        hooks.show = pcall(hook, frame, "OnShow", function() apply(frame) end)
+    end
+    apply(frame)
+end
+
+function Merchant.IsActive()
+    return live ~= nil
 end
 
 function Merchant.OpenLive()
-    if not visit or not merchantContext(Logres:GetState()) then
-        return false, "open a Blizzard merchant while Immersion is on"
+    if not visit or not context(Logres:GetState()) then
+        return false, "open a merchant while Immersion is on"
     end
-    live, offset = true, 1
-    return refresh()
+    if live then
+        stockOnly = true
+        return restore("stock-requested"), result
+    end
+    stockOnly = false
+    reconcile()
+    return live ~= nil, result
+end
+
+local sampleItems = {
+    {"Refreshing Spring Water", 132794, "25c  /  ×5"},
+    {"Coarse Thread", 132891, "10c"},
+    {"Pattern: Blue Linen Vest", 134942, "2s 50c"},
+    {"Fine Thread", 132892, "1s"},
+    {"Red Dye", 134732, "50c"},
+    {"Simple Wood", 135435, "5c"},
+    {"Pattern: White Wedding Dress", 134942, "25s"},
+    {"Bleach", 134797, "25c"},
+    {"Blue Dye", 134731, "50c"},
+    {"Bolt of Linen Cloth", 132890, "1s 50c"},
+}
+local function buildPreview()
+    local frame = CreateFrame("Frame", nil, UIParent)
+    frame:Hide()
+    frame:SetSize(visual.width, visual.height)
+    frame:SetPoint(visual.point, UIParent, visual.relativePoint, visual.x, visual.y)
+    frame:SetFrameStrata(visual.strata)
+    frame:EnableMouse(false)
+    shell(frame, "Tailoring Supplies", true)
+    wash(frame, 41, 139, 193, 35, palette.active)
+    wash(frame, 41, 139, 3, 35, palette.gold)
+    text(frame, "Merchant        Buyback", "GameFontHighlight", 49, 145, 185, palette.body)
+    for i, item in ipairs(sampleItems) do
+        local x = firstX + ((i - 1) % 2) * (153 + columnGap)
+        local y = firstY + math.floor((i - 1) / 2) * 52
+        wash(frame, x - 3, y - 3, 42, 42, palette.iconBorder)
+        local icon = frame:CreateTexture(nil, "ARTWORK")
+        icon:SetSize(36, 36)
+        icon:SetPoint("TOPLEFT", frame, "TOPLEFT", x, -y)
+        icon:SetTexture(item[2])
+        text(frame, item[1], "GameFontHighlight", x + 45, y, 224, palette.body)
+        text(frame, item[3], "GameFontHighlightSmall", x + 45, y + 18, 214, palette.goldText)
+    end
+    local close = CreateFrame("Button", nil, frame)
+    close:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -34, -20)
+    close:SetSize(86, 28)
+    text(close, "Goodbye", "GameFontHighlight", 0, 1, 86, palette.goldText, "CENTER")
+    close:SetScript("OnClick", function() frame:Hide() end)
+    return frame
+end
+
+function Merchant.Preview()
+    if live then return false, "close the live merchant first" end
+    if preview and preview:IsShown() then
+        preview:Hide()
+        return true, "preview-closed"
+    end
+    if not preview then
+        local ok, built = pcall(buildPreview)
+        if not ok then return false, "preview-unavailable" end
+        preview = built
+    end
+    preview:Show()
+    return true, "merchant-preview"
 end
 
 function Merchant.GetAudit()
-    return { result = result, visit = visit, live = live, reads = reads,
-        rows = model and #model.items or 0, nativeOwner = "Blizzard" }
+    return {result = result, visit = visit == true, live = live ~= nil,
+        starts = starts, restores = restores, pending = live and live.pending or nil,
+        nativeOwner = "Blizzard"}
 end
 
 Logres:RegisterEvent("MERCHANT_SHOW", function()
-    if live then close("merchant-reopened") end
-    visit = true
+    if not visit then visit, stockOnly = true, false end
+    reconcile()
 end)
 Logres:RegisterEvent("MERCHANT_UPDATE", function()
-    if live then refresh() end
+    if visit and not live then reconcile() end
 end)
 Logres:RegisterEvent("MERCHANT_CLOSED", function()
     visit = false
-    if live then close("merchant-closed") end
+    restore("merchant-closed")
 end)
 Logres:RegisterEvent("PLAYER_ENTERING_WORLD", function()
-    visit = false
-    close("world-changed")
+    visit, merchantState = false, false
+    restore("world-changed")
+    if preview then preview:Hide() end
+end)
+Logres:RegisterEvent("DISPLAY_SIZE_CHANGED", function()
+    if live and not fits() then restore("stock-layout-small-viewport") end
+end)
+Logres:RegisterEvent("PLAYER_REGEN_ENABLED", function()
+    if live and live.pending then
+        restore(live.pending)
+    elseif visit then
+        reconcile()
+    end
 end)
 Logres:SubscribeState(function(state)
-    if live and not merchantContext(state) then close("merchant-context-ended") end
+    local inMerchant = state.interacting == true and state.interactionType == 5
+    if inMerchant and not merchantState and not visit then
+        visit, stockOnly = true, false
+    elseif merchantState and not inMerchant then
+        visit = false
+        restore("merchant-context-ended")
+    end
+    merchantState = inMerchant
+    if inMerchant and not live then reconcile() end
 end)
 Logres:SubscribePreferences(function(preferences)
-    if live and not preferences.immersionEnabled then close("immersion-off") end
+    if live and not preferences.immersionEnabled then
+        restore("immersion-off")
+    elseif preferences.immersionEnabled then
+        reconcile()
+    end
 end)
 
 return Merchant

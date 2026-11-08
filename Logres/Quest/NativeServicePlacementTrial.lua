@@ -131,6 +131,10 @@ function Trial.Toggle()
     local candidate = state and state.interacting == true
         and CANDIDATES[state.interactionType] or nil
     if not candidate then return finish("no-supported-open-service", false) end
+    local merchant = Logres.NPCMerchantCatalogue
+    if candidate.key == "merchant" and merchant and merchant.IsActive() then
+        return finish("merchant-layout-owns-session", false)
+    end
     local okFrame, frame = pcall(function() return _G[candidate.name] end)
     if not okFrame or not ordinary(frame) or frame == nil then
         return finish("frame-unavailable", false)

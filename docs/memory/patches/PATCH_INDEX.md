@@ -1,3 +1,7 @@
+## P0393 — Trainer-style merchant with native controls (2026-11-08)
+
+Verified P0392 main e431643. The user rejected the offset catalogue preview and asked for the trainer layout and full merchant functions, including quantity purchases. P0393 uses the trainer frame geometry, surface and palette with the original Blizzard vendor controls in the window. Live layout is gated with stock fallback. Forever visuals and transactions UNVERIFIED. NPC flash remains deferred. Evidence in docs/memory/evidence/P0393_TRAINER_STYLE_MERCHANT.md.
+
 ## P0392 — Merchant catalogue preview and live trial (2026-11-08)
 
 P0392 implements the first merchant browse surface for L-003 with one renderer for the P preview and explicitly requested live trials. Blizzard owns the vendor controls. Forever session 46 confirms a scoped P0391 profession purchase and catalogue refresh. NPC window flash remains OPEN and deferred by user direction. Merchant client trial pending, then flight master L-004. Evidence in docs/memory/evidence/P0392_MERCHANT_CATALOGUE.md.
