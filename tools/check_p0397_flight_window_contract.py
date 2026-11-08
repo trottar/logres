@@ -13,7 +13,7 @@ for token in (
     'chrome.member(root, "InsetBg")', 'chrome.member(_G, "TaxiRouteMap")',
     'chrome.read(routeMap, "GetParent") ~= root', 'state.interactionType == 6',
     'chrome.read(root, "IsShown") ~= true', 'chrome.member(systems, "Taxi")',
-    'adopt(changes, map, root, host', 'chrome.goodbyeArt(goodbye)',
+    'chrome.anchor(changes, map', 'chrome.goodbye(changes, root, close)',
     'readAPI("TaxiNodeName", id)', 'readAPI("TaxiNodeGetType", index)', 'readAPI("TaxiNodeCost", index)',
     '"TAXIMAP_OPENED"', '"TAXIMAP_CLOSED"', '"PLAYER_REGEN_ENABLED"',
     'pcall(live.plan[i].undo)', 'restore("stock-requested")', 'Flight.Preview()',

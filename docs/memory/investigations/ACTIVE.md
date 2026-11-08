@@ -1,3 +1,7 @@
+## P0401 — Flight route recovery and capture diagnosis (2026-11-08)
+
+Verified P0400 main fc6c352. Forever session 58 incident 6551 confirmed capture refusal and oversized stock fallback. P0401 restores the earlier readable map and route list with a read-only diagnostic of the failed hosting checks. Centering remains open. See docs/memory/evidence/P0401_FLIGHT_RECOVERY.md.
+
 ## P0400 — Independent centered flight host (2026-11-08)
 
 Verified P0399 main 706e7c1. The screenshot shows the reachable Ironforge route and 50c fare, but the flight window remains clipped at the upper left. P0400 removes the ineffective root reposition hook and places the native map and input in a centered Logres host, with reversible stock presentation and input. Forever unverified. See docs/memory/evidence/P0400_FLIGHT_HOST.md.

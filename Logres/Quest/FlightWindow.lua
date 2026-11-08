@@ -12,6 +12,7 @@ local live, preview, visit, stockOnly
 local result, opens, restores = "idle", 0, 0
 local lastState, lastFare
 local routeRequests = 0
+local hostGate, hostChildren, hostChild
 local chooseRoute
 local PAGE_SIZE = 6
 local frames = setmetatable({}, {__mode = "k"})
@@ -167,94 +168,54 @@ local function bindPins(root, routeMap, view)
     end
 end
 
-local function setAndRestore(plan, object, getName, setName, value)
-    local get, set = chrome.method(object, getName), chrome.method(object, setName)
+local borders = {"Bg", "TitleBg", "TopTileStreaks", "TitleText", "TopLeftCorner",
+    "TopRightCorner", "TopBorder", "BotLeftCorner", "BotRightCorner", "BottomBorder",
+    "LeftBorder", "RightBorder", "InsetBorderTopLeft", "InsetBorderTopRight",
+    "InsetBorderBottomLeft", "InsetBorderBottomRight", "InsetBorderTop",
+    "InsetBorderBottom", "InsetBorderLeft", "InsetBorderRight"}
+
+local function normalizeScale(changes, root)
+    if chrome.read(root, "GetParent") ~= UIParent then return false end
+    local get, set = chrome.method(root, "GetScale"), chrome.method(root, "SetScale")
     if not get or not set then return false end
-    local ok, stock = pcall(get, object)
+    local ok, stockScale = pcall(get, root)
     if not ok then return false end
-    plan[#plan + 1] = {
-        apply = function() set(object, value) end,
-        undo = function() set(object, stock) end,
+    -- The native value is an opaque token used only to restore the original panel.
+    changes[#changes + 1] = {
+        apply = function() set(root, 1) end,
+        undo = function() set(root, stockScale) end,
     }
     return true
 end
 
-local function quietMouse(plan, frame)
-    return chrome.mutable(frame)
-        and setAndRestore(plan, frame, "IsMouseClickEnabled", "SetMouseClickEnabled", false)
-        and setAndRestore(plan, frame, "IsMouseMotionEnabled", "SetMouseMotionEnabled", false)
-end
-
-local function knownChildren(root, routeMap, close)
-    local get = chrome.method(root, "GetChildren")
-    if not get then return false end
-    local ok, children = pcall(function() return {get(root)} end)
-    if not ok or #children < 2 or #children > 8 then return false end
-    local mapFound, closeFound = false, false
-    for _, child in ipairs(children) do
-        if not chrome.ordinary(child) then return false end
-        if child == routeMap then
-            mapFound = true
-        elseif child == close then
-            closeFound = true
-        elseif not chrome.mutable(child) or chrome.read(child, "IsMouseClickEnabled") ~= false
-            or chrome.read(child, "IsMouseMotionEnabled") ~= false
-            or chrome.read(child, "GetNumChildren") ~= 0 then
-            return false
-        end
-    end
-    return mapFound and closeFound
-end
-
-local function adopt(plan, child, root, host, relative, x, y, level)
-    if not chrome.mutable(child) or chrome.read(child, "GetParent") ~= root then return false end
-    local setParent = chrome.method(child, "SetParent")
-    local geometry, layers = {}, {}
-    if not setParent or not chrome.anchor(geometry, child, "TOPLEFT", relative, "TOPLEFT", x, y)
-        or not chrome.resize(geometry, child, mapSize, mapSize) then return false end
-    if level and (not setAndRestore(layers, child, "GetFrameStrata", "SetFrameStrata", visual.strata)
-        or not setAndRestore(layers, child, "GetFrameLevel", "SetFrameLevel", level)) then
-        return false
-    end
-    plan[#plan + 1] = {
-        apply = function()
-            setParent(child, host)
-            for _, action in ipairs(geometry) do action.apply() end
-            for _, action in ipairs(layers) do action.apply() end
-        end,
-        undo = function()
-            setParent(child, root)
-            for i = #geometry, 1, -1 do geometry[i].undo() end
-            for i = #layers, 1, -1 do layers[i].undo() end
-        end,
-    }
-    return true
-end
-
-local function matchesHostScale(routeMap, host)
-    local actual = chrome.read(routeMap, "GetEffectiveScale")
-    local expected = chrome.read(host, "GetEffectiveScale")
+local function matchesParentScale(root)
+    local actual = chrome.read(root, "GetEffectiveScale")
+    local expected = chrome.read(UIParent, "GetEffectiveScale")
     return type(actual) == "number" and type(expected) == "number"
         and actual > 0 and expected > 0 and math.abs(actual - expected) < 0.001
 end
 
-local function capture(root, map, routeMap, host)
+local function capture(root, map)
     local close = chrome.member(root, "CloseButton")
-    local level = host:GetFrameLevel()
+    if not chrome.member(root, "Bg") or not chrome.member(root, "TitleText") then return nil end
     local changes = {}
-    if chrome.read(root, "GetParent") ~= UIParent or not close or not knownChildren(root, routeMap, close)
-        or not adopt(changes, map, root, host, host, mapX, -mapY)
-        or not adopt(changes, routeMap, root, host, map, 0, 0, level + 1)
-        or not quietMouse(changes, root) or not quietMouse(changes, close)
-        or not chrome.fade(changes, root) then
+    if not chrome.anchor(changes, root, visual.point, UIParent, visual.relativePoint, visual.x, visual.y)
+        or not normalizeScale(changes, root)
+        or not chrome.resize(changes, root, visual.width, visual.height)
+        or not chrome.anchor(changes, map, "TOPLEFT", root, "TOPLEFT", mapX, -mapY)
+        or not chrome.resize(changes, map, mapSize, mapSize)
+        or not chrome.mutable(close) or not chrome.goodbye(changes, root, close) then
         return nil
+    end
+    for _, key in ipairs(borders) do
+        local region = chrome.member(root, key)
+        if region and not chrome.fade(changes, region) then return nil end
     end
     return changes
 end
 
-local function restore(reason, closing)
+local function restore(reason)
     if not live then return true end
-    if closing then live.art:Hide() end
     if not chrome.unlocked() then
         live.pending = reason
         result = "combat-restore-deferred"
@@ -345,25 +306,100 @@ chooseRoute = function(route)
 end
 
 local function buildArt(root)
-    local art = CreateFrame("Frame", nil, UIParent)
+    local art = CreateFrame("Frame", nil, root)
     art:Hide()
-    art:SetSize(visual.width, visual.height)
-    art:SetPoint(visual.point, UIParent, visual.relativePoint, visual.x, visual.y)
-    art:SetFrameStrata(visual.strata)
+    art:SetAllPoints(root)
+    local level = chrome.read(root, "GetFrameLevel")
+    if type(level) ~= "number" then return nil end
+    art:SetFrameLevel(math.max(0, level - 1))
     art:EnableMouse(false)
-    art.view = paint(art, false)
-
-    local goodbye = CreateFrame("Button", nil, art)
-    goodbye:SetSize(78, 24)
-    goodbye:SetPoint("TOPRIGHT", art, "TOPRIGHT", -45, -12)
-    chrome.goodbyeArt(goodbye)
-    goodbye:SetScript("OnClick", function()
-        if live and live.root == root and not live.pending and chrome.unlocked() then
-            local hide = chrome.member(_G, "HideUIPanel")
-            if type(hide) == "function" then pcall(hide, root) end
-        end
-    end)
+    -- The text sits above native backing, while map artwork and input stay clear.
+    local labels = CreateFrame("Frame", nil, art)
+    labels:SetAllPoints(art)
+    labels:SetFrameLevel(level + 2)
+    labels:EnableMouse(false)
+    art.view = paint(art, false, labels)
     return art
+end
+
+-- P0401: replay the retired host's capture checks without applying a plan.
+-- Return bounded capability labels only. No original anchors or properties
+-- are exposed, and this result never gates the recovered presentation.
+local function propertyGate(frame, getName, setName, prefix)
+    local get = chrome.method(frame, getName)
+    if not get then return prefix .. "-getter" end
+    if not chrome.method(frame, setName) then return prefix .. "-setter" end
+    if not pcall(get, frame) then return prefix .. "-read" end
+end
+
+local function adoptionGate(root, child, prefix)
+    if not chrome.mutable(child) then return prefix .. "-protected-or-unknown" end
+    if chrome.read(child, "GetParent") ~= root then return prefix .. "-parent" end
+    if not chrome.method(child, "SetParent") then return prefix .. "-set-parent" end
+    -- The shared helpers capture opaque rollback tokens. The throwaway plans
+    -- are discarded here, so no native setters or stored undo handlers run.
+    if not chrome.anchor({}, child, "TOPLEFT", root, "TOPLEFT", 0, 0) then
+        return prefix .. "-anchor-capture"
+    end
+    if not chrome.resize({}, child, mapSize, mapSize) then return prefix .. "-size-capture" end
+end
+
+local function mouseGate(frame, prefix)
+    if not chrome.mutable(frame) then return prefix .. "-protected-or-unknown" end
+    return propertyGate(frame, "IsMouseClickEnabled", "SetMouseClickEnabled", prefix .. "-click")
+        or propertyGate(frame, "IsMouseMotionEnabled", "SetMouseMotionEnabled", prefix .. "-motion")
+end
+
+local function childGate(root, routeMap, close)
+    local get = chrome.method(root, "GetChildren")
+    if not get then return "children-method" end
+    local ok, children = pcall(function() return {get(root)} end)
+    if not ok then return "children-read" end
+    -- The recovered art is a child of TaxiFrame on later visits. P0400's
+    -- separate host was not, so omit only this exact addon-owned frame.
+    local recoveryArt = frames[root] and frames[root].art
+    local native = {}
+    for index, child in ipairs(children) do
+        if not chrome.ordinary(child) then
+            hostChild = index
+            return "child-restricted"
+        end
+        if child ~= recoveryArt then native[#native + 1] = child end
+    end
+    hostChildren = #native
+    if #native < 2 or #native > 8 then return "children-count" end
+    local mapFound, closeFound = false, false
+    for index, child in ipairs(native) do
+        if child == routeMap then
+            mapFound = true
+        elseif child == close then
+            closeFound = true
+        else
+            hostChild = index
+            if not chrome.mutable(child) then return "extra-child-protected-or-unknown" end
+            if chrome.read(child, "IsMouseClickEnabled") ~= false then return "extra-child-click" end
+            if chrome.read(child, "IsMouseMotionEnabled") ~= false then return "extra-child-motion" end
+            if chrome.read(child, "GetNumChildren") ~= 0 then return "extra-child-descendants" end
+            hostChild = nil
+        end
+    end
+    if not mapFound then return "children-route-map-missing" end
+    if not closeFound then return "children-close-missing" end
+end
+
+local function probeHost(root, map, routeMap)
+    if chrome.read(root, "GetParent") ~= UIParent then return "root-parent" end
+    local close = chrome.member(root, "CloseButton")
+    if not close then return "close-missing" end
+    return childGate(root, routeMap, close)
+        or adoptionGate(root, map, "map")
+        or adoptionGate(root, routeMap, "route-map")
+        or propertyGate(routeMap, "GetFrameStrata", "SetFrameStrata", "route-map-strata")
+        or propertyGate(routeMap, "GetFrameLevel", "SetFrameLevel", "route-map-level")
+        or mouseGate(root, "root-mouse")
+        or mouseGate(close, "close-mouse")
+        or propertyGate(root, "GetAlpha", "SetAlpha", "root-alpha")
+        or "capture-passed"
 end
 
 local function apply(root)
@@ -376,17 +412,18 @@ local function apply(root)
         result = "stock-map-shape-unsupported"
         return
     end
-    if type(chrome.member(_G, "HideUIPanel")) ~= "function" then return end
+    local probed, gate = pcall(probeHost, root, map, routeMap)
+    hostGate = probed and gate or "probe-error"
+    local ok, plan = pcall(capture, root, map)
+    if not ok or not plan then stockOnly, result = true, "stock-layout-unsupported"; return end
     local cache = frames[root]
     if not cache.art then
         local built, art = pcall(buildArt, root)
         if not built or not art then stockOnly, result = true, "stock-art-unavailable"; return end
         cache.art = art
     end
-    local art = cache.art
-    local ok, plan = pcall(capture, root, map, routeMap, art)
-    if not ok or not plan then stockOnly, result = true, "stock-layout-unsupported"; return end
     if preview then preview:Hide() end
+    local art = cache.art
     art.view.origin:SetText("Current flight master")
     local list = art.view.routes
     list.page, list.highlight, list.locked, list.message = 1, nil, false, nil
@@ -400,7 +437,7 @@ local function apply(root)
             return
         end
     end
-    if not matchesHostScale(routeMap, art) then
+    if not matchesParentScale(root) then
         stockOnly = true
         restore("stock-scale-mismatch")
         return
@@ -433,7 +470,7 @@ local function reconcile()
     if not hook then return end
     if not cache.hide then
         cache.hide = pcall(hook, root, "OnHide", function()
-            if live and live.root == root then restore("taxi-frame-hidden", true) end
+            if live and live.root == root then restore("taxi-frame-hidden") end
         end)
         if not cache.hide then return end
     end
@@ -449,7 +486,8 @@ end
 function Flight.GetAudit()
     return {result = result, live = live ~= nil, opens = opens, restores = restores,
         pending = live and live.pending or nil, scaleMatched = live and not live.pending or false,
-        lastNodeState = lastState, lastFareCopper = lastFare, hosted = live ~= nil,
+        lastNodeState = lastState, lastFareCopper = lastFare,
+        hostGate = hostGate, hostChildren = hostChildren, hostChild = hostChild,
         routeRequests = routeRequests, routes = live and #live.art.view.routes.records or 0}
 end
 
@@ -507,15 +545,16 @@ Logres:RegisterEvent("TAXIMAP_OPENED", function(_, system)
     local taxi = systems and chrome.member(systems, "Taxi")
     visit = taxi ~= nil and chrome.ordinary(system) and system == taxi
     stockOnly = false
+    hostGate, hostChildren, hostChild = nil, nil, nil
     if visit then reconcile() else restore("stock-map-system") end
 end)
 Logres:RegisterEvent("TAXIMAP_CLOSED", function()
     visit = false
-    restore("taxi-map-closed", true)
+    restore("taxi-map-closed")
 end)
 Logres:RegisterEvent("PLAYER_ENTERING_WORLD", function()
     visit = false
-    restore("world-changed", true)
+    restore("world-changed")
     if preview then preview:Hide() end
 end)
 Logres:RegisterEvent("PLAYER_REGEN_ENABLED", function()
@@ -531,7 +570,7 @@ end)
 Logres:RegisterEvent("DISPLAY_SIZE_CHANGED", function()
     if live and not chrome.fits() then
         restore("stock-small-viewport")
-    elseif live and not matchesHostScale(live.routeMap, live.art) then
+    elseif live and not matchesParentScale(live.root) then
         stockOnly = true
         restore("stock-scale-mismatch")
     end
@@ -539,7 +578,7 @@ end)
 Logres:SubscribeState(function(state)
     if live and not inContext(state) then
         visit = false
-        restore("flight-context-ended", true)
+        restore("flight-context-ended")
     elseif visit then
         reconcile()
     end

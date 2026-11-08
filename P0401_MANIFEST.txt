@@ -1,0 +1,32 @@
+P0401 Forever flight recovery and capture diagnosis
+Verified P0400 baseline: fc6c352f63782accbc3ef91fc488996aae2eb12e
+Runtime version: 0.0.285-dev
+PREWRITE: 271/271 STATIC PASS
+POSTWRITE: 271/271 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Quest/FlightWindow.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0401_FLIGHT_RECOVERY.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0401_FLIGHT_RECOVERY.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0381_integrated_gameplay_contract.py
+tools/check_p0397_flight_window_contract.py
+tools/check_p0398_flight_scale_contract.py
+tools/check_p0399_flight_route_list_contract.py
+tools/check_p0400_flight_host_contract.py
+tools/check_p0401_flight_recovery_contract.py
+P0401_MANIFEST.txt

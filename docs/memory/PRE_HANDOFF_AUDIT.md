@@ -1,3 +1,7 @@
+## P0401 flight recovery audit (2026-11-08)
+
+Verified P0400 fc6c352f63782accbc3ef91fc488996aae2eb12e. Incident 6551 proves capture refusal before writes, with oversized stock fallback. Recovery uses the existing flight controller, shared merchant presentation and catalogue, and original route input guards. Removed speculative reparenting and failed reposition hook. The read-only diagnostic replays named capture capability checks with opaque throwaway tokens and keeps the diagnostic separate from presentation policy. Final gates cover exact static suite, TOC Lua compile, mock probe refusal with recovered map and list still usable, guarded isolated apply/rollback, manifest and Git whitespace. Centering and client acceptance remain open.
+
 ## P0400 flight host audit (2026-11-08)
 
 P0399 706e7c13333b3c1cfcb53df9b19cc474b4d6cad0 verified. User screenshot confirms route list/fare and failed centering. P0400 replaces the unsuccessful live SetPoint hook with a separate UIParent-owned host. Exact unprotected map texture and route-map container are adopted with reversible parent, anchors, size, frame strata and level. The stock frame stays in its manager, with its own and close-button mouse regions disabled during the presentation. Extra interactive child shapes refuse. Exit hides the host even if native restoration must wait. Guarded native farewell and route click retained. Final gates cover static suite, compilation, mocked native root relocation, native clicks, restoration and isolated ZIP rollback/real prewrite/postwrite. Client verification pending.
