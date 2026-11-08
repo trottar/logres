@@ -72,7 +72,7 @@ for name in (
     historical=read(name)
     require(all(n in historical for n in pair),name+' must exclude only the two named P0334 previews from its historical baseline')
     require(('==36' in historical or '== 36' in historical) and
-            ('==39' in historical or '== 39' in historical) and 'merchantCataloguePreview' in historical,
+            ('==40' in historical or '== 40' in historical) and 'flightWindowPreview' in historical and 'merchantCataloguePreview' in historical,
             name+' must assert BOTH original 36 and newly reviewed total 38')
 for term in ("required.add('nativeTrainerEmptyPreview')",
              "required.update({'pvpBadgePreviewOn', 'pvpBadgePreviewOff'})"):
@@ -101,7 +101,7 @@ require(show(False,False,True)==(False,True),'target only')
 require(show(False,None,None)==(False,False),'unknown source fallback')
 v=re.search(r'(?m)^## Version: (\S+)$',t);bv=re.search(r'(?m)^Logres.VERSION = "([^"]+)"$',b)
 require(bool(v and bv and v.group(1)==bv.group(1)),'TOC/Bootstrap version parity')
-require(len([line for line in t.splitlines() if line.endswith('.lua')])==95,'TOC inventory drift')
+require(len([line for line in t.splitlines() if line.endswith('.lua')])==96,'TOC inventory drift')
 for n in range(317,335):require(f'P{n:04d}' in current,'CURRENT historical checkpoint missing '+str(n))
 for term in ('CURRENT.md','P0326','P0327','P0332','P0333','P0334'):
     require(term in handoff,'handoff continuity missing '+term)

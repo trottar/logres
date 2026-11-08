@@ -108,9 +108,9 @@ need('Immersion\\TargetFrameReplacement.lua' in TOC and
      'Core\\Commands.lua' in TOC and
      TOC.index('Immersion\\TargetFrameReplacement.lua') < TOC.index('Core\\Commands.lua'),
      'TargetFrame owner load order changed')
-need(len([x for x in TOC.splitlines() if x.endswith('.lua')]) == 95,
+need(len([x for x in TOC.splitlines() if x.endswith('.lua')]) == 96,
      'Lua inventory changed')
-need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"', C)) == 121,
+need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"', C)) == 122,
      'developer-panel action inventory changed')
 tv = re.search(r'(?m)^## Version: (\S+)$', TOC)
 bv = re.search(r'(?m)^Logres.VERSION = "([^"]+)"$', BOOT)

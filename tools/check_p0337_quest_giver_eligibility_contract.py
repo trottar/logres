@@ -65,7 +65,7 @@ for unsafe in ('C_QuestLog.','C_QuestLine.','C_TaskQuest.','C_SuperTrack.','C_Ti
 need('## OptionalDeps: QuestieDB' in toc,'optional provider required only as optional')
 v=re.search(r'(?m)^## Version: (\S+)$',toc);b=re.search(r'(?m)^Logres.VERSION = "([^"]+)"$',boot)
 need(bool(v and b and v.group(1)==b.group(1)),'TOC/Bootstrap metadata mismatch')
-need(len([x for x in toc.splitlines() if x.endswith('.lua')])==95,'Lua TOC inventory drift')
+need(len([x for x in toc.splitlines() if x.endswith('.lua')])==96,'Lua TOC inventory drift')
 for idx in range(317,338):need(f'P{idx:04d}' in cur,'CURRENT history '+str(idx))
 for marker in ('CURRENT.md','P0326','P0327','P0335','P0336','P0337'):
     need(marker in handoff,'handoff marker lost '+marker)

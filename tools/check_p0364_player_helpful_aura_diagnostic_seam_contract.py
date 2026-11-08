@@ -110,9 +110,9 @@ need(all(run_all.count(call) == 1 for call in run_all_calls) and
 need('HUD\\PlayerHelpfulAuras.lua' in T and 'Core\\Commands.lua' in T and
      T.index('HUD\\PlayerHelpfulAuras.lua') < T.index('Core\\Commands.lua'),
      'module no longer loads before Commands')
-need(len([x for x in T.splitlines() if x.endswith('.lua')]) == 95,
+need(len([x for x in T.splitlines() if x.endswith('.lua')]) == 96,
      'original 94 Lua load entries changed')
-need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"', C)) == 121,
+need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"', C)) == 122,
      'original 120 developer-panel actions changed')
 tv = re.search(r'(?m)^## Version: (\S+)$', T)
 bv = re.search(r'(?m)^Logres.VERSION = "([^"]+)"$', B)

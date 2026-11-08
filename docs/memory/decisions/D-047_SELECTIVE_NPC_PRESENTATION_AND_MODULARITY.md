@@ -25,6 +25,10 @@
 
 The user explicitly requires a trainer-style merchant at the trainer anchor, with feature coverage matching the vendor's available Blizzard controls. The P0392 side catalogue is rejected. Apply the native-backed tier by retaining original merchant item buttons, filters, paging, transactions and confirmations inside the trainer-style layout. Stock availability, restriction and release gates still apply.
 
+### P0397 flight and modular NPC direction
+
+User-approved direction is one Logres window for supported flight-master destinations, fares, selection and payment. Keep the client's route and payment logic behind the presentation. An unsupported client or unsafe layout receives usable stock. Reuse the merchant framework for merchant-like interactions and the gossip and quest frameworks for their respective conversations and actions, including multiple roles at one NPC. After the NPC work, test deterministic local Chat-to-ZIP delivery. Chat is the default and Work is reserved for persistent issues.
+
 ## Shared NPC session contract (to audit, not yet implemented)
 
 A session coordinator should track native NPC context/lifecycle, transitions between gossip and services, close/cancel/restoration, and camera context handoff. DynamicCam remains separately owned; a session coordinator may request only supported existing camera behavior, not invent profiles or force camera state. Keep observed client state distinct from presentation policy. Missing or secret data must not be inspected or fabricated.

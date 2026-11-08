@@ -1,3 +1,7 @@
+## P0397 flight window audit (2026-11-08)
+
+Verified published P0396 959795568e24aaa2108d16dc25bf28feaeab4180. User approved end-to-end flight presentation within Logres. P0272 establishes observed Classic TaxiFrame metadata. P0397 uses named stock map, click and lifecycle with the shared merchant anchor and Goodbye styling. One module and one inert P action bring source inventory to 96 Lua and 40 previews; historical exact counts updated without dropping existing actions. No camera or travel API dispatch. Gate release on actual historical check suite, TOC syntax, simulated layout/route hover and native click identity, fallback and rollback, exact guarded apply and whitespace. Client visuals and travel UNVERIFIED.
+
 ## P0396 merchant chevron audit (2026-11-08)
 
 Verified published P0395 fabc155f09b30e4d790214b8cab217e2a2f5d807. Screenshot and user report confirm one tab label. Scope is the existing quest chevron painter plus the merchant page controls and inert preview. Original button scripts and page count text are retained. Native enabled/disabled hooks update addon-owned texture colors. Optional art is captured for the pair before writes and restored on all existing merchant exits. The exact candidate gates include all static checks, Lua compilation, mock native paging and boundary state/fallback, isolated real PREWRITE/POSTWRITE, guarded source/ZIP refusal, rollback, manifest and Git whitespace. Forever runtime is UNVERIFIED.

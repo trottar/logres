@@ -74,7 +74,7 @@ for doc in (E,P):need(doc.endswith('\n') and not doc.endswith('\n\n'),'evidence 
 t=re.search(r'(?m)^## Version: (\S+)$',T)
 b=re.search(r'(?m)^Logres.VERSION = "([^"]+)"$',B)
 need(t and b and t.group(1)==b.group(1),'TOC/Bootstrap version parity')
-need(len([l for l in T.splitlines() if l.endswith('.lua')])==95,'loaded Lua inventory drift')
+need(len([l for l in T.splitlines() if l.endswith('.lua')])==96,'loaded Lua inventory drift')
 # Pure state-route negative case; not a WoW simulation.
 def decide(cached, requested, in_combat):
     if in_combat and cached!=requested:return (False,cached,'combat-deferred')

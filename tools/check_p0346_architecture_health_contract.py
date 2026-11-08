@@ -17,9 +17,9 @@ def need(ok,why):
 report=audit.inspect(ROOT)
 faults=audit.verify(report)
 need(not faults, 'architecture static audit refused: '+str(faults))
-need(report['loaded_lua_count']==95 and not report['orphan_lua_paths'] and not report['missing_loaded_paths'],
-     '95 loaded modules must include every Lua file once')
-need(report['dev_panel_actions']>=120 and report['dev_panel_phases']['P']==39 and
+need(report['loaded_lua_count']==96 and not report['orphan_lua_paths'] and not report['missing_loaded_paths'],
+     '96 loaded modules must include every Lua file once')
+need(report['dev_panel_actions']>=120 and report['dev_panel_phases']['P']==40 and
      report['dev_panel_actions']==report['dev_panel_unique_ids'],
      'registered developer-panel actions must be unique and match the reviewed gallery')
 need(report['commands_bytes']>0 and report['commands_percent_loaded_source']>=0,

@@ -77,5 +77,5 @@ for doc in (E,REC):
 t=re.search(r'(?m)^## Version: (\S+)$',T)
 b=re.search(r'(?m)^Logres.VERSION = "([^"]+)"$',B)
 need(t and b and t.group(1)==b.group(1),'TOC/Bootstrap dynamic version parity')
-need(len([x for x in T.splitlines() if x.endswith('.lua')])==95,'TOC module inventory drift')
+need(len([x for x in T.splitlines() if x.endswith('.lua')])==96,'TOC module inventory drift')
 print('P0343 R1 existing-normal Active Quest missing-percent preview contract PASS (STATIC; WoW UNVERIFIED)')

@@ -85,6 +85,6 @@ for s in (E,P,M):
 need(re.search(r'^## Version: (\S+)$',T,re.M).group(1) ==
      re.search(r'^Logres.VERSION = "([^"]+)"$',BOOT,re.M).group(1),
      'TOC/Bootstrap parity')
-need(len([line for line in T.splitlines() if line.endswith('.lua')])==95,
+need(len([line for line in T.splitlines() if line.endswith('.lua')])==96,
      'P0339 docs-only: loaded Lua inventory changed')
 print('P0339 Nov04 source-verified panel/evidence matrix: PASS (STATIC; client UNVERIFIED)')

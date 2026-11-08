@@ -70,9 +70,9 @@ for token in (
 need('Quest\\Progress.lua' in T and 'Core\\Commands.lua' in T and
      T.index('Quest\\Progress.lua')<T.index('Core\\Commands.lua'),
      'Progress must load before Commands')
-need(len([x for x in T.splitlines() if x.endswith('.lua')])==95,
+need(len([x for x in T.splitlines() if x.endswith('.lua')])==96,
      'Lua load inventory changed')
-need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"',C))==121,
+need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"',C))==122,
      'developer panel inventory changed')
 tv=re.search(r'(?m)^## Version: (\S+)$',T)
 bv=re.search(r'(?m)^Logres.VERSION = "([^"]+)"$',B)

@@ -57,7 +57,7 @@ for f in ('docs/ROADMAP.md','docs/memory/investigations/ACTIVE.md',
 a = re.search(r'(?m)^## Version: (\S+)$', T)
 b = re.search(r'(?m)^Logres.VERSION = "([^"]+)"$', B)
 need(a and b and a.group(1) == b.group(1), 'dynamic TOC/Bootstrap version parity')
-need(len([line for line in T.splitlines() if line.endswith('.lua')]) == 95,
+need(len([line for line in T.splitlines() if line.endswith('.lua')]) == 96,
      'loaded Lua inventory drift')
 need('R0 PREWRITE' in E and '25/213' in E and '10000-byte' in E and 'no tracked write' in E and 'R1 PREWRITE' in E and '1/213' in E and 'L-031' in E,
      'P0342 R0 assistant failure and memory budget guard not recorded')

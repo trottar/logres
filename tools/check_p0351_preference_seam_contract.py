@@ -77,7 +77,7 @@ need(P.index("function Logres:SetPreference(name, value, reason)") <
 need('Core\\Preferences.lua' in T and 'Core\\Commands.lua' in T and
      T.index('Core\\Preferences.lua') < T.index('Core\\Commands.lua'),
      "Preferences must load before Commands")
-need(len([l for l in T.splitlines() if l.endswith('.lua')]) == 95,
+need(len([l for l in T.splitlines() if l.endswith('.lua')]) == 96,
      "94 module TOC inventory must remain")
 need(re.search(r'(?m)^## Version: (\S+)$', T).group(1) ==
      re.search(r'(?m)^Logres.VERSION = "([^"]+)"$', B).group(1),
@@ -89,7 +89,7 @@ for token in ('local function runPreferenceCheck()',
 need(C.index('    runStateCheck()') < C.index('    runSensorCheck()') <
      C.index('    runPreferenceCheck()') < C.index('    runLifecycleCheck()'),
      "Run All order changed")
-need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"', C)) == 121,
+need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"', C)) == 122,
      "120 original developer-panel registrations required")
 legacy = read("tools/check_status_aura_disabled_contract.py")
 need("'local function runPreferenceCheck()'" in legacy and

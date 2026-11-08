@@ -81,7 +81,7 @@ for bad in ('C_QuestLog.','C_SuperTrack.','C_VignetteInfo.','C_Timer.NewTicker('
             'RegisterStateDriver(', 'HideUIPanel(', 'SetUserWaypoint('):
     need(bad not in C,'unsafe source or mutation: '+bad)
 need('frame:SetFrameStrata("BACKGROUND")' in C,'P0331 menu layering changed')
-need(len([x for x in T.splitlines() if x.endswith('.lua')])==95,'loaded Lua inventory drift')
+need(len([x for x in T.splitlines() if x.endswith('.lua')])==96,'loaded Lua inventory drift')
 ver=re.search(r'^## Version: (\S+)$',T,re.M)
 boot=re.search(r'^Logres.VERSION = "([^"]+)"$',BOOT,re.M)
 need(ver and boot and ver.group(1)==boot.group(1),'Bootstrap/TOC mismatch')

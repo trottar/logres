@@ -689,4 +689,9 @@ Logres:SubscribePreferences(function(preferences)
     end
 end)
 
+-- Shared, reversible service chrome. Each service owns its source and lifecycle.
+Logres.NPCServicePresentation = {ordinary = ordinary, member = member, method = method,
+    read = read, unlocked = unlocked, mutable = mutable, fits = fits, anchor = anchor,
+    resize = resize, fade = fade, goodbye = goodbye, goodbyeArt = goodbyeArt, text = text, wash = wash}
+
 return Merchant

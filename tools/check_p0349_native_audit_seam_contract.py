@@ -67,7 +67,7 @@ need('Logres:GetModule("NativeAccess")' in C,
 need('Core\\UIOwnershipAudit.lua' in TOC and 'Core\\Commands.lua' in TOC
      and TOC.index('Core\\UIOwnershipAudit.lua') < TOC.index('Core\\Commands.lua'),
      'ownership module no longer loads before command dispatch')
-need(len([x for x in TOC.splitlines() if x.endswith('.lua')])==95,
+need(len([x for x in TOC.splitlines() if x.endswith('.lua')])==96,
      'original 94 addon Lua load inventory changed')
 need(re.search(r'(?m)^## Version: (\S+)$',TOC).group(1)==
      re.search(r'(?m)^Logres.VERSION = "([^"]+)"$',B).group(1),

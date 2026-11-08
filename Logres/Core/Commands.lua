@@ -4125,6 +4125,14 @@ local function handleCommand(message)
         return
     end
 
+    if command == "flightpreview" or command == "flightstock" then
+        local flight = Logres.NPCFlightWindow
+        local action = command == "flightpreview" and flight.Preview or flight.Stock
+        local ok, why = action()
+        emit("Logres flight: " .. (ok and "" or "DEFERRED — ") .. why)
+        return
+    end
+
     if command == "merchantpreview" or command == "merchantlive" then
         local merchant = Logres.NPCMerchantCatalogue
         local open = command == "merchantpreview" and merchant.Preview or merchant.OpenLive
@@ -4795,6 +4803,12 @@ Logres:RegisterDevPanelAction(
     "merchantCataloguePreview",
     "Merchant Catalogue Preview",
     "merchantpreview",
+    "P"
+)
+Logres:RegisterDevPanelAction(
+    "flightWindowPreview",
+    "Flight Window Preview",
+    "flightpreview",
     "P"
 )
 Logres:RegisterDevPanelAction(

@@ -64,9 +64,9 @@ need(C.index('    runImmersionCheck()')<C.index('    runQuietModeCheck()')<
 need('Immersion\\QuietMode.lua' in T and 'Core\\Commands.lua' in T and
      T.index('Immersion\\QuietMode.lua')<T.index('Core\\Commands.lua'),
      'Quiet module must load before Commands')
-need(len([x for x in T.splitlines() if x.endswith('.lua')])==95,
+need(len([x for x in T.splitlines() if x.endswith('.lua')])==96,
      'Lua load count changed')
-need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"',C))==121,
+need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"',C))==122,
      'developer actions count changed')
 tv=re.search(r'(?m)^## Version: (\S+)$',T)
 bv=re.search(r'(?m)^Logres.VERSION = "([^"]+)"$',B)

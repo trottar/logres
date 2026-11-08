@@ -50,9 +50,9 @@ for route in ('    runXPCheck()', 'if command == "xpcheck" then',
 need('Quest\\XP.lua' in T and 'Core\\Commands.lua' in T and
      T.index('Quest\\XP.lua')<T.index('Core\\Commands.lua'),
      'XP module must load before Commands')
-need(len([x for x in T.splitlines() if x.endswith('.lua')])==95,
+need(len([x for x in T.splitlines() if x.endswith('.lua')])==96,
      'original Lua load inventory changed')
-need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"',C))==121,
+need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"',C))==122,
      '120 developer panel registrations changed')
 match=re.search(r'(?m)^## Version: (\S+)$',T)
 bootstrap=re.search(r'(?m)^Logres.VERSION = "([^"]+)"$',B)

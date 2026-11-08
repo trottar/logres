@@ -1,0 +1,83 @@
+P0397 Forever flight-master window
+Verified P0396 baseline: 959795568e24aaa2108d16dc25bf28feaeab4180
+Runtime version: 0.0.281-dev
+PREWRITE: 267/267 STATIC PASS
+POSTWRITE: 267/267 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Quest/FlightWindow.lua
+Logres/Quest/MerchantCatalogue.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/architecture/P0323_MODULE_OWNERSHIP_AUDIT.md
+docs/memory/decisions/D-047_SELECTIVE_NPC_PRESENTATION_AND_MODULARITY.md
+docs/memory/evidence/P0397_FLIGHT_WINDOW.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0397_FLIGHT_WINDOW.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/architecture_health_audit.py
+tools/check_p0256_preview_hub_contract.py
+tools/check_p0271_native_placement_trial_contract.py
+tools/check_p0272_native_auto_handoff_contract.py
+tools/check_p0273_native_gossip_continuity_contract.py
+tools/check_p0274_native_service_accent_contract.py
+tools/check_p0276_r1_native_trainer_skin_contract.py
+tools/check_p0289_trainer_live_panel_contract.py
+tools/check_p0310_trainer_empty_catalogue_contract.py
+tools/check_p0323_module_ownership_contract.py
+tools/check_p0328_alpha_stage_contract.py
+tools/check_p0329_gameplay_capture_contract.py
+tools/check_p0331_gameplay_layers_contract.py
+tools/check_p0333_pet_presentation_contract.py
+tools/check_p0334_pvp_badges_contract.py
+tools/check_p0335_native_popup_provenance_contract.py
+tools/check_p0336_compass_single_baseline_contract.py
+tools/check_p0337_quest_giver_eligibility_contract.py
+tools/check_p0338_focused_compass_yards_contract.py
+tools/check_p0339_nov04_gameplay_matrix_contract.py
+tools/check_p0340_alpha_prefreeze_contract.py
+tools/check_p0341_focus_diagnostic_contract.py
+tools/check_p0342_target_aura_route_contract.py
+tools/check_p0343_active_quest_unknown_preview_contract.py
+tools/check_p0344_popup_ownership_contract.py
+tools/check_p0345_aura_activation_provenance_contract.py
+tools/check_p0346_architecture_health_contract.py
+tools/check_p0347_subscription_lifecycle_contract.py
+tools/check_p0348_surface_handoff_contract.py
+tools/check_p0349_native_audit_seam_contract.py
+tools/check_p0350_state_sensor_seam_contract.py
+tools/check_p0351_preference_seam_contract.py
+tools/check_p0352_lifecycle_seam_contract.py
+tools/check_p0353_layout_seam_contract.py
+tools/check_p0354_hud_diagnostic_seam_contract.py
+tools/check_p0355_primary_ownership_seam_contract.py
+tools/check_p0356_xp_diagnostic_seam_contract.py
+tools/check_p0357_objective_progress_seam_contract.py
+tools/check_p0358_quiet_diagnostic_seam_contract.py
+tools/check_p0359_player_frame_diagnostic_seam_contract.py
+tools/check_p0360_target_frame_diagnostic_seam_contract.py
+tools/check_p0361_immersion_diagnostic_seam_contract.py
+tools/check_p0362_stock_diagnostic_seam_contract.py
+tools/check_p0363_quest_offer_stock_diagnostic_seam_contract.py
+tools/check_p0364_player_helpful_aura_diagnostic_seam_contract.py
+tools/check_p0365_aura_status_probe_diagnostic_seam_contract.py
+tools/check_p0366_quest_interaction_probe_diagnostic_seam_contract.py
+tools/check_p0367_world_target_probe_diagnostic_seam_contract.py
+tools/check_p0371_npc_diagnostic_batch_contract.py
+tools/check_p0372_incident_journal_contract.py
+tools/check_p0381_integrated_gameplay_contract.py
+tools/check_p0388_objective_info_gate_contract.py
+tools/check_p0397_flight_window_contract.py
+P0397_MANIFEST.txt

@@ -72,9 +72,9 @@ need(C.index('    runActionCheck()')<C.index('    runPrimaryOwnershipCheck()')<
 need('Actions\\Primary.lua' in T and 'Core\\Commands.lua' in T and
      T.index('Actions\\Primary.lua')<T.index('Core\\Commands.lua'),
      'Primary must be loaded before Commands')
-need(len([x for x in T.splitlines() if x.endswith('.lua')])==95,
+need(len([x for x in T.splitlines() if x.endswith('.lua')])==96,
      'original 94 Lua entries changed')
-need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"',C))==121,
+need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"',C))==122,
      'original 120 developer actions changed')
 versionT=re.search(r'(?m)^## Version: (\S+)$',T)
 versionB=re.search(r'(?m)^Logres.VERSION = "([^"]+)"$',B)

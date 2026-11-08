@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""P0323: 95 loaded Lua ownership entries + five-domain audit without runtime edits."""
+"""P0323: 96 loaded Lua ownership entries + five-domain audit without runtime edits."""
 from pathlib import Path
 import re
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,12 +14,12 @@ lines = [x.strip() for x in toc.splitlines() if x.strip().endswith(".lua")]
 errors=[]
 def need(ok, why):
     if not ok: errors.append(why)
-need(len(lines)==95 and len(set(lines))==95,"TOC expected 95 unique loaded Lua files")
+need(len(lines)==96 and len(set(lines))==96,"TOC expected 96 unique loaded Lua files")
 for relative in lines:
     path="Logres/"+relative.replace("\\","/")
     need((ROOT/path).is_file(),"missing TOC source: "+path)
     need(audit.count("| `"+path+"` |") == 1,"audit missing/duplicate TOC source: "+path)
-need(audit.count("| `Logres/")==95,"audit does not contain exactly 95 source rows")
+need(audit.count("| `Logres/")==96,"audit does not contain exactly 96 source rows")
 for term in ("NAV","ACT","NPC","STATUS","CAM","SHARED","Quest/Dialogue.lua", "Immersion/Controller.lua", "D-048", "D-047", "D-046", "UNVERIFIED", "November 4", "32", "frozen", "native", "Merchant", "flight"):
     need(term.lower() in audit.lower(), "audit missing "+term)
 for term in ("## Active Objective","## Current Work Item","## Verified State","## Next Action","## Success Criteria","## Do Not Reopen Without New Evidence","## Relevant References"):
@@ -40,4 +40,4 @@ need("## Version:" in toc,"TOC version metadata missing")
 print("P0323 complete TOC modularity and native-ownership source inventory")
 for e in errors: print("ERROR:",e)
 if errors: raise SystemExit(1)
-print("PASS: 95 exact TOC mappings, five domains, policy coupling, history and deferral")
+print("PASS: 96 exact TOC mappings, five domains, policy coupling, history and deferral")

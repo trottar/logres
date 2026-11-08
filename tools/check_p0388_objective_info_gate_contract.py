@@ -16,7 +16,7 @@ checks={
     'restore on disable': 'self:RestoreNativeObjectiveGate()' in p,
     'fail open on closed module': 'if not self.moduleEnabled or not self.immersionEnabled' in p,
     'not in combat install': 'InCombatLockdown()' in p,
-    'uses same 95 loaded Lua modules': len([s for s in (r/'Logres/Logres.toc').read_text().splitlines() if s.strip().endswith('.lua')]) == 95,
+    'uses same 96 loaded Lua modules': len([s for s in (r/'Logres/Logres.toc').read_text().splitlines() if s.strip().endswith('.lua')]) == 96,
     'version synchronized': __import__('re').search(r'Logres\.VERSION\s*=\s*"([^"]+)"', (r/'Logres/Core/Bootstrap.lua').read_text()).group(1) == __import__('re').search(r'## Version:\s*([^\s]+)',(r/'Logres/Logres.toc').read_text()).group(1),
     'issue preserved': '| L-027 |' in (r/'docs/memory/investigations/ISSUE_LEDGER.md').read_text(),
     'report bug carries addon-owned snapshot': 'incident.snapshot.objectiveInfo = pickTraceStatus' in (r/'Logres/Dev/Panel.lua').read_text(),

@@ -86,12 +86,12 @@ need(C.index('    runPreferenceCheck()') < C.index('    runLifecycleCheck()') <
 need('Core\\Modules.lua' in T and 'Core\\Commands.lua' in T and
      T.index('Core\\Modules.lua') < T.index('Core\\Commands.lua') <
      T.index('Core\\Lifecycle.lua'), "TOC module order changed")
-need(len([x for x in T.splitlines() if x.endswith('.lua')]) == 95,
+need(len([x for x in T.splitlines() if x.endswith('.lua')]) == 96,
      "94 Lua entry inventory changed")
 need(re.search(r'(?m)^## Version: (\S+)$', T).group(1) ==
      re.search(r'(?m)^Logres.VERSION = "([^"]+)"$', B).group(1),
      "TOC/Bootstrap version parity")
-need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"', C)) == 121,
+need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"', C)) == 122,
      "120 existing developer actions must remain")
 legacy = read('tools/check_module_contract.py')
 need('Logres:RegisterModule("DevLifecycleProbe"' in legacy and

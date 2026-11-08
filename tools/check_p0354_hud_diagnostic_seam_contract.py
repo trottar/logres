@@ -65,9 +65,9 @@ need(C.index('    runLifecycleCheck()')<C.index('    runHUDCheck()')<C.index('  
 need('HUD\\HUD.lua' in T and 'Core\\Commands.lua' in T and
      T.index('HUD\\HUD.lua')<T.index('Core\\Commands.lua'),
      'HUD loaded after Commands')
-need(len([x for x in T.splitlines() if x.endswith('.lua')])==95,
+need(len([x for x in T.splitlines() if x.endswith('.lua')])==96,
      'Lua load inventory changed')
-need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"',C))==121,
+need(len(re.findall(r'Logres:RegisterDevPanelAction\(\s*"',C))==122,
      'panel action count changed')
 toc_version = re.search(r'(?m)^## Version: (\S+)$', T)
 bootstrap_version = re.search(r'(?m)^Logres.VERSION = "([^"]+)"$', B)

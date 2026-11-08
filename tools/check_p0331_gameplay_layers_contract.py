@@ -60,7 +60,7 @@ for bad in ('SetScript("OnUpdate"','C_Timer.NewTicker','SetAttribute(','HideUIPa
 v=re.search(r'(?m)^## Version: (\S+)\s*$',toc)
 b=re.search(r'(?m)^Logres.VERSION = "([^"]+)"\s*$',boot)
 need(v and b and v.group(1)==b.group(1), 'runtime metadata parity')
-need(len([line for line in toc.splitlines() if line.endswith('.lua')])==95,'TOC source inventory drift')
+need(len([line for line in toc.splitlines() if line.endswith('.lua')])==96,'TOC source inventory drift')
 for key in ('L-025','L-029','L-026'):
     need(key in issues, 'issue continuity missing '+key)
 for key in ('P0317','P0318','P0319','P0320','P0321','P0322','P0323',
