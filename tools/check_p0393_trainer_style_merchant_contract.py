@@ -18,7 +18,7 @@ for token in (
     'member(_G, "MerchantFrameTab1")', 'member(_G, "MerchantFrameTab2")',
     'member(row, "ItemButton")', 'read(button, "GetParent") ~= row',
     'member(frame, "FilterDropdown")', "for i = 2, 12, 2 do",
-    "local ok, plan, goodbyeMode, tabs = pcall(capture, frame)", "live.applied = i",
+    "local ok, plan, goodbyeMode, tabs, pagerStyled = pcall(capture, frame)", "live.applied = i",
     "pcall(action.apply)", 'restore("stock-layout-restored")',
     'restore("stock-requested")', 'restore("merchant-closed")',
     'restore("merchant-hidden")', 'restore("merchant-context-ended")',
@@ -26,7 +26,9 @@ for token in (
     '"PLAYER_REGEN_ENABLED"', 'stockOnly, result = true, "stock-layout-unsupported"',
 ):
     assert token in source, token
-assert source.count(":SetScript(") == 1  # Inert preview Close only.
+before_preview, preview = source.split("local function buildPreview()", 1)
+assert ":SetScript(" not in before_preview
+assert preview.count(':SetScript("OnClick"') == 3  # Preview paging and Close only.
 assert "SetParent(" not in source and ":Click(" not in source
 assert 'EnableMouse(false)' in source and 'frame:Hide()' in source.split("local function buildPreview()", 1)[1]
 assert "merchant.IsActive()" in read("Logres/Quest/NativeServicePlacementTrial.lua")

@@ -2709,24 +2709,7 @@ function Dialogue:OnInitialize()
     )
     previousButton:Hide()
 
-    local previousTexture =
-        previousButton:CreateTexture(
-            nil,
-            "ARTWORK"
-        )
-    previousTexture:SetAllPoints(
-        previousButton
-    )
-    previousTexture:SetTexture(
-        dialogueAssets.pageChevron
-        or "Interface\\Buttons\\WHITE8x8"
-    )
-    previousTexture:SetTexCoord(
-        1,
-        0,
-        0,
-        1
-    )
+    local previousTexture = Logres.NPCNarrativePages.CreateChevron(previousButton, true)
 
     previousButton:SetScript(
         "OnClick",
@@ -2751,16 +2734,7 @@ function Dialogue:OnInitialize()
     )
     nextButton:Hide()
 
-    local nextTexture =
-        nextButton:CreateTexture(
-            nil,
-            "ARTWORK"
-        )
-    nextTexture:SetAllPoints(nextButton)
-    nextTexture:SetTexture(
-        dialogueAssets.pageChevron
-        or "Interface\\Buttons\\WHITE8x8"
-    )
+    local nextTexture = Logres.NPCNarrativePages.CreateChevron(nextButton, false)
 
     nextButton:SetScript(
         "OnClick",

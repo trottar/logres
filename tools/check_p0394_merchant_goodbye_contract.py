@@ -19,7 +19,8 @@ for token in (
     'member(_G, "MerchantPrevPageButton")', 'member(_G, "MerchantNextPageButton")',
 ):
     assert token in source, token
-assert source.count(":SetScript(") == 1
+before_preview, preview = source.split("local function buildPreview()", 1)
+assert ":SetScript(" not in before_preview and preview.count(':SetScript("OnClick"') == 3
 assert 'SetScript("OnClick", function() frame:Hide() end)' in source
 for forbidden in ("StackSplitFrame", "CloseMerchant", "BuyMerchantItem", ":Click(", "EnableMouse(true)"):
     assert forbidden not in source, forbidden

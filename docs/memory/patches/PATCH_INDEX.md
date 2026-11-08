@@ -1,3 +1,7 @@
+## P0396 — Shared Logres merchant page chevrons (2026-11-08)
+
+Verified P0395 main fabc155. User confirms one label per merchant tab and asks for the existing Logres pager visual. P0396 shares the quest page chevron with live merchant and inert merchant preview, keeping native page inputs and availability. Shift-click quantity styling is deferred at the user's lower priority. Forever P0396 UNVERIFIED. See docs/memory/evidence/P0396_MERCHANT_PAGE_CHEVRONS.md.
+
 ## P0395 — Single-label merchant tabs (2026-11-08)
 
 Verified P0394 main cc25d7d. Forever session 50 incident 5829 shows duplicate Merchant and Buyback labels while Goodbye and tab styling are active. User reports a successful sale and buyback. P0395 keeps one native localized label per live tab and draws the Logres selection accent behind it. Client retest pending. See docs/memory/evidence/P0395_MERCHANT_TAB_LABELS.md.

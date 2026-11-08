@@ -13,6 +13,7 @@ local merchantState = false
 local hooked = setmetatable({}, {__mode = "k"})
 local result, starts, restores = "idle", 0, 0
 local goodbyeWidth, goodbyeHeight, goodbyeX, goodbyeY = 78, 24, -45, -12
+local pagerCenter, pagerY, chevronGap = list.x + list.w / 2 - 28, 91, 78
 
 local function text(parent, value, font, x, y, width, color, align)
     local label = parent:CreateFontString(nil, "OVERLAY", font)
@@ -279,16 +280,82 @@ local function skinTabs(plan, frame, first, second)
     return tabs
 end
 
+local function pagerArt(owner, previous)
+    local texture = Logres.NPCNarrativePages.CreateChevron(owner, previous)
+    local colors = Logres.Theme.questDialogue.colors
+    return function(enabled)
+        texture:SetVertexColor(unpack(enabled and colors.pageActive or colors.pageInactive))
+    end
+end
+
+local pagerHooks = setmetatable({}, {__mode = "k"})
+
+local function skinPageButton(plan, button, previous)
+    if not mutable(button) then return false end
+    local enabled = read(button, "IsEnabled")
+    local get = method(button, "GetRegions")
+    local hook = method(button, "HookScript")
+    if type(enabled) ~= "boolean" or not get or not hook then return false end
+    local ok, regions = pcall(function() return {get(button)} end)
+    if not ok or #regions < 2 or #regions > 8 then return false end
+
+    -- The two stock merchant pager buttons have a static word label and
+    -- decorative textures. Refuse an unexpected child or region shape.
+    local labels, seen = 0, {}
+    for _, region in ipairs(regions) do
+        if not ordinary(region) or read(region, "GetParent") ~= button then return false end
+        local kind = read(region, "GetObjectType")
+        if kind == "FontString" then
+            labels = labels + 1
+        elseif kind ~= "Texture" then
+            return false
+        end
+        if not fade(plan, region) then return false end
+        seen[region] = true
+    end
+    if labels ~= 1 then return false end
+    for _, key in ipairs({"GetNormalTexture", "GetPushedTexture", "GetDisabledTexture", "GetHighlightTexture"}) do
+        local region, known = read(button, key)
+        if not known or (not region and key == "GetNormalTexture") then return false end
+        if region and not seen[region] then
+            if read(region, "GetParent") ~= button or not fade(plan, region) then return false end
+            seen[region] = true
+        end
+    end
+
+    local painted, overlay, select = pcall(artwork, button, pagerArt, previous)
+    if not painted then return false end
+    local registered = pagerHooks[button]
+    if not registered then
+        registered = {}
+        pagerHooks[button] = registered
+    end
+    if not registered.enable then
+        registered.enable = pcall(hook, button, "OnEnable", function() select(true) end)
+    end
+    if not registered.disable then
+        registered.disable = pcall(hook, button, "OnDisable", function() select(false) end)
+    end
+    if not registered.enable or not registered.disable then return false end
+    select(enabled)
+    present(plan, overlay)
+    return true
+end
+
 local function placePager(plan, frame)
-    local changes = {}
-    local center = list.x + list.w / 2 - 28
+    local changes, art = {}, {}
     local prev, nextPage = member(_G, "MerchantPrevPageButton"), member(_G, "MerchantNextPageButton")
     local label = member(_G, "MerchantPageText")
-    if anchor(changes, prev, "CENTER", frame, "BOTTOMLEFT", center - 107, 91)
-        and anchor(changes, nextPage, "CENTER", frame, "BOTTOMLEFT", center + 107, 91)
-        and anchor(changes, label, "CENTER", frame, "BOTTOMLEFT", center, 91) then
-        append(plan, changes)
+    local styled = skinPageButton(art, prev, true) and skinPageButton(art, nextPage, false)
+    local gap = styled and chevronGap or 107
+    if not anchor(changes, prev, "CENTER", frame, "BOTTOMLEFT", pagerCenter - gap, pagerY)
+        or not anchor(changes, nextPage, "CENTER", frame, "BOTTOMLEFT", pagerCenter + gap, pagerY)
+        or not anchor(changes, label, "CENTER", frame, "BOTTOMLEFT", pagerCenter, pagerY) then
+        return false
     end
+    append(plan, changes)
+    if styled then append(plan, art) end
+    return styled
 end
 
 local function capture(frame)
@@ -336,8 +403,8 @@ local function capture(frame)
         return nil
     end
     local tabs = skinTabs(plan, frame, tab, secondTab)
-    placePager(plan, frame)
-    return plan, goodbyeMode, tabs
+    local pagerStyled = placePager(plan, frame)
+    return plan, goodbyeMode, tabs, pagerStyled
 end
 
 local function restore(reason)
@@ -407,7 +474,7 @@ local function apply(frame)
         result = "native-placement-owns-session"
         return
     end
-    local ok, plan, goodbyeMode, tabs = pcall(capture, frame)
+    local ok, plan, goodbyeMode, tabs, pagerStyled = pcall(capture, frame)
     if not ok or not plan then
         stockOnly, result = true, "stock-layout-unsupported"
         return
@@ -418,7 +485,8 @@ local function apply(frame)
         return
     end
     if preview then preview:Hide() end
-    live = {frame = frame, art = art, plan = plan, applied = 0, goodbye = goodbyeMode, tabs = tabs}
+    live = {frame = frame, art = art, plan = plan, applied = 0, goodbye = goodbyeMode,
+        tabs = tabs, pagerStyled = pagerStyled}
     for i, action in ipairs(plan) do
         live.applied = i
         if not pcall(action.apply) then
@@ -502,17 +570,49 @@ local function buildPreview()
         tab:SetPoint("TOPLEFT", frame, "TOPLEFT", 38 + (i - 1) * 86, -140)
         tabArt(tab, caption)(i == 1)
     end
+    local rows, perPage = {}, 6
     for i, item in ipairs(sampleItems) do
-        local x = firstX + ((i - 1) % 2) * (153 + columnGap)
-        local y = firstY + math.floor((i - 1) / 2) * 52
-        wash(frame, x - 3, y - 3, 42, 42, palette.iconBorder)
-        local icon = frame:CreateTexture(nil, "ARTWORK")
+        local slot = (i - 1) % perPage
+        local x = firstX + (slot % 2) * (153 + columnGap)
+        local y = firstY + math.floor(slot / 2) * 52
+        local row = CreateFrame("Frame", nil, frame)
+        row:SetPoint("TOPLEFT", frame, "TOPLEFT", x, -y)
+        row:SetSize(270, 42)
+        wash(row, -3, -3, 42, 42, palette.iconBorder)
+        local icon = row:CreateTexture(nil, "ARTWORK")
         icon:SetSize(36, 36)
-        icon:SetPoint("TOPLEFT", frame, "TOPLEFT", x, -y)
+        icon:SetPoint("TOPLEFT", row, "TOPLEFT", 0, 0)
         icon:SetTexture(item[2])
-        text(frame, item[1], "GameFontHighlight", x + 45, y, 224, palette.body)
-        text(frame, item[3], "GameFontHighlightSmall", x + 45, y + 18, 214, palette.goldText)
+        text(row, item[1], "GameFontHighlight", 45, 0, 224, palette.body)
+        text(row, item[3], "GameFontHighlightSmall", 45, 18, 214, palette.goldText)
+        rows[i] = row
     end
+    local indicator = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    indicator:SetPoint("CENTER", frame, "BOTTOMLEFT", pagerCenter, pagerY)
+    indicator:SetTextColor(unpack(Logres.Theme.questDialogue.colors.page))
+    local function previewArrow(previous)
+        local button = CreateFrame("Button", nil, frame)
+        button:SetPoint("CENTER", frame, "BOTTOMLEFT",
+            pagerCenter + (previous and -chevronGap or chevronGap), pagerY)
+        button:SetSize(28, 28)
+        return button, pagerArt(button, previous)
+    end
+    local prev, paintPrev = previewArrow(true)
+    local nextPage, paintNext = previewArrow(false)
+    local count = math.ceil(#rows / perPage)
+    local page = 1
+    local function showPage(target)
+        page = target
+        for i, row in ipairs(rows) do row:SetShown(math.ceil(i / perPage) == page) end
+        indicator:SetFormattedText("%d / %d", page, count)
+        prev:SetEnabled(page > 1)
+        nextPage:SetEnabled(page < count)
+        paintPrev(page > 1)
+        paintNext(page < count)
+    end
+    prev:SetScript("OnClick", function() showPage(math.max(1, page - 1)) end)
+    nextPage:SetScript("OnClick", function() showPage(math.min(count, page + 1)) end)
+    showPage(1)
     local close = CreateFrame("Button", nil, frame)
     close:SetPoint("TOPRIGHT", frame, "TOPRIGHT", goodbyeX, goodbyeY)
     close:SetSize(goodbyeWidth, goodbyeHeight)
@@ -540,6 +640,7 @@ function Merchant.GetAudit()
     return {result = result, visit = visit == true, live = live ~= nil,
         starts = starts, restores = restores, pending = live and live.pending or nil,
         goodbye = live and live.goodbye or nil, tabsStyled = live and live.tabs ~= nil or false,
+        pagerStyled = live and live.pagerStyled or false,
         nativeOwner = "Blizzard"}
 end
 

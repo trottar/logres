@@ -84,6 +84,15 @@ function Pages.Build(text, limit)
     return pages
 end
 
+function Pages.CreateChevron(owner, previous)
+    local texture = owner:CreateTexture(nil, "ARTWORK")
+    texture:SetAllPoints(owner)
+    texture:SetTexture(Logres.Theme.questDialogue.assets.pageChevron
+        or "Interface\\Buttons\\WHITE8x8")
+    if previous then texture:SetTexCoord(1, 0, 0, 1) end
+    return texture
+end
+
 function Pages.Paint(self, activeColor, inactiveColor)
     -- P0254: the guarded completion action sits inside the panel; retain
     -- paging at the lower right instead of covering the centered button.

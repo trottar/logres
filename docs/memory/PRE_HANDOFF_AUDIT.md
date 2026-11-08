@@ -1,3 +1,7 @@
+## P0396 merchant chevron audit (2026-11-08)
+
+Verified published P0395 fabc155f09b30e4d790214b8cab217e2a2f5d807. Screenshot and user report confirm one tab label. Scope is the existing quest chevron painter plus the merchant page controls and inert preview. Original button scripts and page count text are retained. Native enabled/disabled hooks update addon-owned texture colors. Optional art is captured for the pair before writes and restored on all existing merchant exits. The exact candidate gates include all static checks, Lua compilation, mock native paging and boundary state/fallback, isolated real PREWRITE/POSTWRITE, guarded source/ZIP refusal, rollback, manifest and Git whitespace. Forever runtime is UNVERIFIED.
+
 ## P0395 single-label merchant tabs audit (2026-11-08)
 
 Verified P0394 main cc25d7db22d38eab1fe390f8b6dc2b5eafd478bc. Incident 5829 session 50 shows duplicate Merchant and Buyback labels in the real merchant, with P0394's styling active. User-reported scoped sale and buyback PASS recorded separately. P0395 removes live duplicate text construction and native label fades. Fixture labels remain. Layout preserves native tabs, stock transaction handlers and their safe fallback. It renders only the selected accent beneath native tab text. Exact audit gates cover historical and new static suite, Lua compilation, simulated native text identity/alpha, preview labels, native clicks and stock fallback, and an isolated real apply with refusal, rollback, payload/manifest and Git whitespace checks. Client validation pending.

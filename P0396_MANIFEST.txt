@@ -1,0 +1,32 @@
+P0396 Forever merchant page chevrons
+Verified P0395 baseline: fabc155f09b30e4d790214b8cab217e2a2f5d807
+Runtime version: 0.0.280-dev
+PREWRITE: 266/266 STATIC PASS
+POSTWRITE: 266/266 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Quest/Dialogue.lua
+Logres/Quest/MerchantCatalogue.lua
+Logres/UI/NarrativePages.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0396_MERCHANT_PAGE_CHEVRONS.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0396_MERCHANT_PAGE_CHEVRONS.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0381_integrated_gameplay_contract.py
+tools/check_p0393_trainer_style_merchant_contract.py
+tools/check_p0394_merchant_goodbye_contract.py
+tools/check_p0396_merchant_chevron_contract.py
+P0396_MANIFEST.txt
