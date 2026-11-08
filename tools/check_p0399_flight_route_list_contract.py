@@ -7,8 +7,7 @@ for token in (
     'chrome.anchor(changes, root, visual.point, UIParent, visual.relativePoint, visual.x, visual.y)',
     'Logres.NPCServiceCatalogue.Window', 'readAPI("TaxiNodeGetType", id) == "REACHABLE"',
     'readAPI("TaxiNodeName", route.id) ~= route.name', 'cost ~= route.cost',
-    'funds < cost', 'chrome.read(pin, "GetParent") ~= session.routeMap',
-    'chrome.read(pin, "GetID") ~= id', 'chrome.read(pin, "IsEnabled") ~= true',
+    'funds < cost', 'host.IsPin(pin, session.routeMap, id) or host.IsPin(pin, session.root, id)', 'chrome.read(pin, "IsEnabled") ~= true',
     'session.requested, list.locked = true, true', 'pcall(click, pin, "LeftButton")',
     'view.routes.highlight = point[4]', '"PLAYER_MONEY"',
 ):

@@ -1,3 +1,7 @@
+## P0404 — Centered flight master with native pins (2026-11-08)
+
+Verified P0403 main 50ba114. Forever incident 7173 identifies 18 direct TaxiFrame pins beside the route map and close control. P0404 centers the shared service shell, moves only recognized map inputs with reversible state, and makes the guarded sidebar work with both observed and source-described pin parents. The P0401 readable layout is the fallback. L-004 and P0403 client quest validation remain OPEN. See docs/memory/evidence/P0404_CENTERED_FLIGHT_MASTER.md.
+
 ## P0403 — Late acceptance during quest progress and rewards (2026-11-08)
 
 Verified P0402 main e8be49d7. Forever session 60 confirms late acceptance of quest 35 dismissed owned completion for 62, and acceptance of 61 dismissed owned progress for 107 (incident 7173). P0403 retains a different already-owned quest stage for the matching pending acceptance. L-001 remains OPEN pending Forever validation. Flight input inventory captured. See docs/memory/evidence/P0403_QUEST_STAGE_HANDOFF.md.

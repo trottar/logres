@@ -204,7 +204,7 @@ function Logres:CaptureBugIncident()
     incident.snapshot.flight = pickTraceStatus(ownedTraceStatus(function()
         return self.NPCFlightWindow.GetAudit()
     end), {"result", "live", "opens", "restores", "pending", "scaleMatched", "lastNodeState", "lastFareCopper",
-        "hostGate", "hostChildren", "hostChild", "hostInventoryStatus", "routeRequests", "routes"})
+        "hostGate", "hostChildren", "hostChild", "hostInventoryStatus", "hostResult", "centered", "routeRequests", "routes"})
     local flightChildren = ownedTraceStatus(function()
         return self.NPCFlightWindow.GetHostChildAudit()
     end)

@@ -5,6 +5,131 @@ local Flight = {}
 Logres.NPCFlightWindow = Flight
 
 local chrome = Logres.NPCServicePresentation
+-- Capture and restore native taxi input separately from the service view.
+local host = {}
+do
+    local MAX_PINS = 400
+
+    function host.IsPin(pin, parent, id)
+        return type(id) == "number" and id >= 1 and id <= MAX_PINS and id == math.floor(id)
+            and chrome.mutable(pin) and chrome.read(pin, "GetParent") == parent
+            and chrome.read(pin, "GetObjectType") == "Button" and chrome.read(pin, "GetID") == id
+            and chrome.member(_G, "TaxiButton" .. id) == pin
+    end
+
+    local function collectPins(root, routeMap, close, recoveryArt, activeCount)
+        local pins, found, hasMap, hasClose = {}, {}, false, false
+        if type(activeCount) ~= "number" or activeCount < 1 or activeCount > MAX_PINS
+            or activeCount ~= math.floor(activeCount) then return nil end
+        for _, parent in ipairs({root, routeMap}) do
+            local get = chrome.method(parent, "GetChildren")
+            if not get then return nil end
+            local ok, children = pcall(function() return {get(parent)} end)
+            if not ok or #children > MAX_PINS + 3 then return nil end
+            for _, child in ipairs(children) do
+                if not chrome.ordinary(child) then return nil end
+                if parent == root and child == routeMap then
+                    hasMap = true
+                elseif parent == root and child == close then
+                    hasClose = true
+                elseif parent ~= root or child ~= recoveryArt then
+                    if not chrome.mutable(child) then return nil end
+                    local id = chrome.read(child, "GetID")
+                    if not host.IsPin(child, parent, id) or found[id]
+                        or chrome.read(child, "GetNumChildren") ~= 0 then return nil end
+                    found[id] = true
+                    pins[#pins + 1] = {frame = child, parent = parent}
+                end
+            end
+        end
+        for id = 1, activeCount do
+            if not found[id] then return nil end
+        end
+        if hasMap and hasClose then return pins end
+    end
+
+    local function property(plan, frame, getter, setter, value)
+        local get, set = chrome.method(frame, getter), chrome.method(frame, setter)
+        if not get or not set then return false end
+        local ok, original = pcall(get, frame)
+        if not ok then return false end
+        plan[#plan + 1] = {
+            apply = function() set(frame, value) end,
+            undo = function() set(frame, original) end,
+        }
+        return true
+    end
+
+    -- Restore parent before the original layer. SetParent can reset frame level.
+    local function adopt(plan, frame, parent, target, strata, level)
+        if not chrome.mutable(frame) or chrome.read(frame, "GetParent") ~= parent then return false end
+        local set = chrome.method(frame, "SetParent")
+        if not set then return false end
+        local layers = {}
+        if level and (not property(layers, frame, "GetFrameStrata", "SetFrameStrata", strata)
+            or not property(layers, frame, "GetFrameLevel", "SetFrameLevel", level)) then return false end
+        plan[#plan + 1] = {
+            apply = function()
+                if parent ~= target then set(frame, target) end
+                for _, layer in ipairs(layers) do layer.apply() end
+            end,
+            undo = function()
+                if parent ~= target then set(frame, parent) end
+                for i = #layers, 1, -1 do layers[i].undo() end
+            end,
+        }
+        return true
+    end
+
+    local function quietMouse(plan, frame)
+        return chrome.mutable(frame)
+            and property(plan, frame, "IsMouseClickEnabled", "SetMouseClickEnabled", false)
+            and property(plan, frame, "IsMouseMotionEnabled", "SetMouseMotionEnabled", false)
+    end
+
+    function host.Capture(root, map, routeMap, art, recoveryArt, activeCount, x, y, size)
+        local close = chrome.member(root, "CloseButton")
+        if not chrome.mutable(routeMap) or not chrome.mutable(close)
+            or chrome.read(root, "GetParent") ~= UIParent
+            or type(chrome.member(_G, "HideUIPanel")) ~= "function" then return nil, "native-close-unavailable" end
+        local pins = collectPins(root, routeMap, close, recoveryArt, activeCount)
+        if not pins then return nil, "pin-shape-unsupported" end
+        local plan, strata, level = {}, art:GetFrameStrata(), art:GetFrameLevel()
+        -- Preserve original pin anchors. Native pins are anchored to the map
+        -- texture and the native route container draws the matching route lines.
+        if not adopt(plan, map, root, art)
+            or not chrome.anchor(plan, map, "TOPLEFT", art, "TOPLEFT", x, -y)
+            or not chrome.resize(plan, map, size, size)
+            or not adopt(plan, routeMap, root, art, strata, level + 1)
+            or not chrome.anchor(plan, routeMap, "TOPLEFT", map, "TOPLEFT", 0, 0)
+            or not chrome.resize(plan, routeMap, size, size) then return nil, "map-capture-unavailable" end
+        for _, pin in ipairs(pins) do
+            if not adopt(plan, pin.frame, pin.parent, routeMap, strata, level + 2) then
+                return nil, "pin-capture-unavailable"
+            end
+        end
+        if not quietMouse(plan, root) or not quietMouse(plan, close) or not chrome.fade(plan, root) then
+            return nil, "stock-capture-unavailable"
+        end
+        return plan, "captured", pins
+    end
+
+    function host.MatchesScale(art, routeMap, pins)
+        local scale = chrome.read(art, "GetEffectiveScale")
+        if type(scale) ~= "number" or scale <= 0 then return false end
+        local function matches(frame)
+            if not chrome.mutable(frame) then return false end
+            local actual = chrome.read(frame, "GetEffectiveScale")
+            return type(actual) == "number" and actual > 0 and math.abs(actual - scale) < 0.001
+        end
+        if not matches(routeMap) then return false end
+        for _, pin in ipairs(pins) do
+            if not matches(pin.frame) then return false end
+        end
+        return true
+    end
+end
+local hostResult = "not-attempted"
 local config = Logres.PanelConfigs.trainer
 local visual, palette = config.preview, config.landscape.palette
 local mapX, mapY, mapSize = 279, 100, 580
@@ -150,14 +275,14 @@ local function bindPins(root, routeMap, view)
     if type(count) ~= "number" or count < 1 or count > 400 or count ~= math.floor(count) then return end
     for i = 1, count do
         local pin = chrome.member(_G, "TaxiButton" .. i)
-        if pin and not pins[pin] and chrome.mutable(pin) and chrome.read(pin, "GetParent") == routeMap then
+        if pin and not pins[pin] and (host.IsPin(pin, routeMap, i) or host.IsPin(pin, root, i)) then
             local hook = chrome.method(pin, "HookScript")
             if hook then
                 local attached = pcall(hook, pin, "OnEnter", function(button)
-                    if live and live.root == root and live.art.view == view then
+                    if live and live.root == root and not live.pending then
                         local index = chrome.read(button, "GetID")
                         if type(index) == "number" and index >= 1 and index <= 400
-                            and index == math.floor(index) then showPin(view, index) end
+                            and index == math.floor(index) then showPin(live.art.view, index) end
                     end
                 end)
                 if attached then pins[pin] = true end
@@ -216,8 +341,9 @@ local function capture(root, map)
     return changes
 end
 
-local function restore(reason)
+local function restore(reason, closing)
     if not live then return true end
+    if closing and live.centered then live.art:Hide() end
     if not chrome.unlocked() then
         live.pending = reason
         result = "combat-restore-deferred"
@@ -246,8 +372,8 @@ end
 
 local function resolvePin(session, id)
     local pin = chrome.member(_G, "TaxiButton" .. id)
-    if not chrome.mutable(pin) or chrome.read(pin, "GetParent") ~= session.routeMap
-        or chrome.read(pin, "GetID") ~= id or chrome.read(pin, "IsShown") ~= true
+    if not (host.IsPin(pin, session.routeMap, id) or host.IsPin(pin, session.root, id))
+        or chrome.read(pin, "IsShown") ~= true
         or chrome.read(pin, "IsEnabled") ~= true then return nil end
     return pin, chrome.method(pin, "Click")
 end
@@ -322,6 +448,31 @@ local function buildArt(root)
     labels:EnableMouse(false)
     art.view = paint(art, false, labels)
     return art
+end
+
+local function buildShell(sample, onGoodbye)
+    local art = CreateFrame("Frame", nil, UIParent)
+    art:Hide()
+    art:SetSize(visual.width, visual.height)
+    art:SetPoint(visual.point, UIParent, visual.relativePoint, visual.x, visual.y)
+    art:SetFrameStrata(visual.strata)
+    art:EnableMouse(false)
+    art.view = paint(art, sample)
+    local goodbye = CreateFrame("Button", nil, art)
+    goodbye:SetSize(78, 24)
+    goodbye:SetPoint("TOPRIGHT", art, "TOPRIGHT", -45, -12)
+    chrome.goodbyeArt(goodbye)
+    goodbye:SetScript("OnClick", function() onGoodbye(art) end)
+    return art
+end
+
+local function buildHost(root)
+    return buildShell(false, function(art)
+        if live and live.art == art and not live.pending and chrome.unlocked() then
+            local hide = chrome.member(_G, "HideUIPanel")
+            if type(hide) == "function" then pcall(hide, root) end
+        end
+    end)
 end
 
 -- P0401: replay the retired host's capture checks without applying a plan.
@@ -467,6 +618,31 @@ local function probeHost(root, map, routeMap)
         or "capture-passed"
 end
 
+local function activate(root, routeMap, art, plan, hostedPins)
+    if preview then preview:Hide() end
+    art.view.origin:SetText("Current flight master")
+    local list = art.view.routes
+    list.page, list.highlight, list.locked, list.message = 1, nil, false, nil
+    lastState, lastFare = nil, nil
+    live = {root = root, routeMap = routeMap, art = art, plan = plan, applied = 0,
+        centered = hostedPins ~= nil, hostedPins = hostedPins}
+    for i, action in ipairs(plan) do
+        live.applied = i
+        if not pcall(action.apply) then return false, "stock-layout-restored" end
+    end
+    if hostedPins then
+        if not host.MatchesScale(art, routeMap, hostedPins) then return false, "stock-scale-mismatch" end
+    elseif not matchesParentScale(root) then
+        return false, "stock-scale-mismatch"
+    end
+    if not pcall(art.Show, art) then return false, "stock-art-restored" end
+    pcall(bindPins, root, routeMap, art.view)
+    if not pcall(refreshRoutes, live) then return false, "stock-routes-unavailable" end
+    opens = opens + 1
+    result = "taxi-layout-active"
+    return true
+end
+
 local function apply(root)
     if live or not visit or stockOnly or not inContext(Logres:GetState()) or not chrome.unlocked()
         or not chrome.mutable(root) or chrome.read(root, "IsShown") ~= true then return end
@@ -479,47 +655,36 @@ local function apply(root)
     end
     local probed, gate = pcall(probeHost, root, map, routeMap)
     hostGate = probed and gate or "probe-error"
+    local cache = frames[root]
+    if not cache.host then
+        local built, art = pcall(buildHost, root)
+        if built then cache.host = art end
+    end
+    hostResult = "center-art-unavailable"
+    if cache.host then
+        local captured, plan, reason, hostedPins = pcall(host.Capture, root, map, routeMap,
+            cache.host, cache.art, readAPI("NumTaxiNodes"), mapX, mapY, mapSize)
+        hostResult = captured and reason or "center-capture-error"
+        if captured and plan then
+            local started, failure = activate(root, routeMap, cache.host, plan, hostedPins)
+            if started then hostResult = "centered"; return end
+            hostResult = failure
+            if not restore(failure) then stockOnly = true; return end
+        end
+    end
     local ok, plan = pcall(capture, root, map)
     if not ok or not plan then stockOnly, result = true, "stock-layout-unsupported"; return end
-    local cache = frames[root]
     if not cache.art then
         local built, art = pcall(buildArt, root)
         if not built or not art then stockOnly, result = true, "stock-art-unavailable"; return end
         cache.art = art
     end
     if preview then preview:Hide() end
-    local art = cache.art
-    art.view.origin:SetText("Current flight master")
-    local list = art.view.routes
-    list.page, list.highlight, list.locked, list.message = 1, nil, false, nil
-    lastState, lastFare = nil, nil
-    live = {root = root, routeMap = routeMap, art = art, plan = plan, applied = 0}
-    for i, action in ipairs(plan) do
-        live.applied = i
-        if not pcall(action.apply) then
-            stockOnly = true
-            restore("stock-layout-restored")
-            return
-        end
-    end
-    if not matchesParentScale(root) then
+    local started, failure = activate(root, routeMap, cache.art, plan)
+    if not started then
         stockOnly = true
-        restore("stock-scale-mismatch")
-        return
+        restore(failure)
     end
-    if not pcall(art.Show, art) then
-        stockOnly = true
-        restore("stock-art-restored")
-        return
-    end
-    pcall(bindPins, root, routeMap, art.view)
-    if not pcall(refreshRoutes, live) then
-        stockOnly = true
-        restore("stock-routes-unavailable")
-        return
-    end
-    opens = opens + 1
-    result = "taxi-layout-active"
 end
 
 local function reconcile()
@@ -535,7 +700,7 @@ local function reconcile()
     if not hook then return end
     if not cache.hide then
         cache.hide = pcall(hook, root, "OnHide", function()
-            if live and live.root == root then restore("taxi-frame-hidden") end
+            if live and live.root == root then restore("taxi-frame-hidden", true) end
         end)
         if not cache.hide then return end
     end
@@ -553,6 +718,7 @@ function Flight.GetAudit()
         pending = live and live.pending or nil, scaleMatched = live and not live.pending or false,
         lastNodeState = lastState, lastFareCopper = lastFare,
         hostGate = hostGate, hostChildren = hostChildren, hostChild = hostChild,
+        hostResult = hostResult, centered = live and live.centered or false,
         hostInventoryStatus = hostInventoryStatus,
         routeRequests = routeRequests, routes = live and #live.art.view.routes.records or 0}
 end
@@ -562,12 +728,8 @@ function Flight.GetHostChildAudit()
 end
 
 local function buildPreview()
-    local root = CreateFrame("Frame", nil, UIParent)
-    root:Hide()
-    root:SetSize(visual.width, visual.height)
-    root:SetPoint(visual.point, UIParent, visual.relativePoint, visual.x, visual.y)
-    root:SetFrameStrata(visual.strata)
-    local view = paint(root, true)
+    local root = buildShell(true, function(art) art:Hide() end)
+    local view = root.view
     view.origin:SetText("Stormwind")
     view.routes.records = {
         {id = 1, name = "Sentinel Hill", cost = 110, price = "1s 10c", usable = true},
@@ -585,17 +747,12 @@ local function buildPreview()
         local pin = CreateFrame("Button", nil, root)
         pin:SetSize(135, 24)
         pin:SetPoint("TOPLEFT", root, "TOPLEFT", mapX + point[2], -mapY - point[3])
-        chrome.text(pin, "• " .. point[1], "GameFontHighlight", 0, 0, 135, palette.goldText)
+        chrome.text(pin, "ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ " .. point[1], "GameFontHighlight", 0, 0, 135, palette.goldText)
         pin:SetScript("OnClick", function()
             view.routes.highlight = point[4]
             renderRoutes(view.routes)
         end)
     end
-    local close = CreateFrame("Button", nil, root)
-    close:SetSize(78, 24)
-    close:SetPoint("TOPRIGHT", root, "TOPRIGHT", -45, -12)
-    chrome.goodbyeArt(close)
-    close:SetScript("OnClick", function() root:Hide() end)
     return root
 end
 
@@ -617,15 +774,16 @@ Logres:RegisterEvent("TAXIMAP_OPENED", function(_, system)
     stockOnly = false
     hostGate, hostChildren, hostChild = nil, nil, nil
     hostInventory, hostInventoryStatus = nil, "not-sampled"
+    hostResult = "not-attempted"
     if visit then reconcile() else restore("stock-map-system") end
 end)
 Logres:RegisterEvent("TAXIMAP_CLOSED", function()
     visit = false
-    restore("taxi-map-closed")
+    restore("taxi-map-closed", true)
 end)
 Logres:RegisterEvent("PLAYER_ENTERING_WORLD", function()
     visit = false
-    restore("world-changed")
+    restore("world-changed", true)
     if preview then preview:Hide() end
 end)
 Logres:RegisterEvent("PLAYER_REGEN_ENABLED", function()
@@ -641,7 +799,8 @@ end)
 Logres:RegisterEvent("DISPLAY_SIZE_CHANGED", function()
     if live and not chrome.fits() then
         restore("stock-small-viewport")
-    elseif live and not matchesParentScale(live.root) then
+    elseif live and not (live.centered and host.MatchesScale(live.art, live.routeMap, live.hostedPins)
+        or not live.centered and matchesParentScale(live.root)) then
         stockOnly = true
         restore("stock-scale-mismatch")
     end
@@ -649,7 +808,7 @@ end)
 Logres:SubscribeState(function(state)
     if live and not inContext(state) then
         visit = false
-        restore("flight-context-ended")
+        restore("flight-context-ended", true)
     elseif visit then
         reconcile()
     end

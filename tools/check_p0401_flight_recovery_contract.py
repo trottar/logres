@@ -3,7 +3,7 @@
 from pathlib import Path
 root = Path(__file__).resolve().parents[1]
 source = (root / "Logres/Quest/FlightWindow.lua").read_text(encoding="utf-8")
-probe = source.split("local function propertyGate(", 1)[1].split("local function apply(", 1)[0]
+probe = source.split("local function propertyGate(", 1)[1].split("local function activate(", 1)[0]
 for token in (
     'local function adoptionGate', 'local function childGate', 'local function probeHost',
     'local recoveryArt = frames[root] and frames[root].art', 'child ~= recoveryArt',

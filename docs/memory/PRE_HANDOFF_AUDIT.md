@@ -1,3 +1,7 @@
+## P0404 — Centered flight master with native pins (2026-11-08)
+
+P0403 main verified. Incident 7173 anchors the native child shape. Guard all known native input before mutations, preserve anchor tokens and original click scripts, and fail open to the readable flight layout. The initial 97-entry TOC caused historical source inventory checks to fail. The native host adapter now stays scoped within the existing flight load entry. Exact source checks, all Lua compilation, flight replay, guarded ZIP apply, rollback, manifest and Git whitespace are the local gates. Client centering and paid travel remain unverified.
+
 ## P0403 — Late acceptance during quest progress and rewards (2026-11-08)
 
 Baseline P0402 e8be49d786e0468de8acc49de9996765ba46b294. Session 60 establishes that the preceding acceptance removes a different, already-owned stage. The existing guarded acceptance dispatch retains only that stage, with no new native calls, capture, timing or presentation owner. Pre-handoff gates cover the event replay, exact suite, Lua compilation, applier baseline and payload refusal, rollback, manifest and Git whitespace. Forever runtime remains unverified.
