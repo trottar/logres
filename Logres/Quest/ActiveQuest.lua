@@ -658,9 +658,11 @@ function ActiveQuest:Render(snapshot, reason)
                 and colorValue("complete")
                 or colorValue("objective")
 
-            visual.label:SetText(
-                progress:NormalizeObjectiveLabel(row)
-            )
+            local label = progress:NormalizeObjectiveLabel(row)
+            local binary = not isSecret(row.required) and row.required == 1
+                and not isSecret(row.finished) and type(row.finished) == "boolean"
+            if binary then label = label .. (finished and " · Done" or " · Pending") end
+            visual.label:SetText(label)
             visual.label:SetTextColor(
                 objectiveColor[1],
                 objectiveColor[2],
@@ -671,7 +673,10 @@ function ActiveQuest:Render(snapshot, reason)
 
             local percent = self:PercentForRow(row)
 
-            if percent ~= nil then
+            if binary then
+                visual.bar:Hide()
+                visual.unknown:Hide()
+            elseif percent ~= nil then
                 visual.unknown:Hide()
                 visual.bar.status:SetValue(percent)
                 local progressColor =

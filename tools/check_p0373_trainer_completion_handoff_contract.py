@@ -18,9 +18,10 @@ for t in ('train-not-ready','train-click','train-requested','train-deferred',
           'train-fallback','serviceIndex = chosen.serviceIndex','native-purchase-deferred','stock-restored',
           'stock-restore-pending','Trial.Disable("native-purchase-deferred")'):
     need(t in live,'trainer fail-open or click trace absent '+t)
-need('or not browse.localChoiceConfirmed' in live and 'browse.model.trainEnabled' in live,
+need('browse.localChoiceConfirmed or browse.defaultServiceIndex == browse.selectedServiceIndex' in live
+     and 'if availableCount ~= 1 then selected = nil end' in live,
      'historical P0296 physical selection/purchase gate removed')
-need('if not browse or not browse.localChoiceConfirmed\n' in live,
+need('if not browse.model.trainEnabled then' in live,
      'P0296 guard no longer belongs to the executable train readiness branch')
 need('Logres.NPCTrainerProfessionPurchaseTrial.Attempt' in live,
      'dedicated profession guard bypassed')

@@ -43,9 +43,9 @@ row_pat = re.compile(
 )
 rows = [m.groups() for line in ledger.splitlines()
         if (m := row_pat.fullmatch(line))]
-expected = [f"L-{i:03d}" for i in range(1, 41)]
+expected = [f"L-{i:03d}" for i in range(1, 42)]
 require([row[0] for row in rows] == expected,
-        "must contain precisely one ordered issue row for L-001..L-040")
+        "must contain precisely one ordered issue row for L-001..L-041")
 for identifier, title, status, attempted, verified, evidence in rows:
     require(all(x.strip() for x in (title, attempted, verified, evidence)),
             identifier + " lacks status/resolution/verification/evidence")

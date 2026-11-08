@@ -47,7 +47,7 @@ function Trial.FromSnapshot(report)
     if #report.sample < 1 or #report.sample > 64 then
         return nil, "source-sample-size-deferred"
     end
-    local rows, first, selected = {}, nil, nil
+    local rows, first, selected, availableCount = {}, nil, nil, 0
     local visibleNamed, visibleWithheld = 0, 0
     for i = 1, #report.sample do
         local native = report.sample[i]
@@ -78,8 +78,6 @@ function Trial.FromSnapshot(report)
                 local withRank = name .. " (" .. native.rank .. ")"
                 if #withRank <= 100 then name = withRank end
             end
-            local selectedRow = type(report.selected) == "number"
-                and native.index == report.selected
             local recognized = native.state == "numeric-category-unclassified"
                 or native.state == "source-observed"
                 or native.state == "forever-service-observed"
@@ -130,7 +128,7 @@ function Trial.FromSnapshot(report)
             local row = {serviceIndex=native.index, name=name,
                 requirement="Availability not classified",
                 price=recognized and price(native.cost) or "Cost unknown",
-                icon=texture, selected=selectedRow, disabled=false,
+                icon=texture, selected=false, disabled=false,
                 sourceType=native.state == "forever-service-observed" and native.serviceType or nil,
                 description=recognized and native.description or nil,
                 -- These already secret-gated source copies are only used for
@@ -142,15 +140,21 @@ function Trial.FromSnapshot(report)
                 sourceSkillRequirement=bounded(native.skillRequirement, 42) and native.skillRequirement or nil,
                 sourceSkillRank=type(native.skillRank) == "number" and native.skillRank or nil,
                 costCopper=type(native.cost) == "number" and native.cost or nil}
+            row.requiresProfessionConfirmation = native.requiresProfessionConfirmation
             row.requirement = requirement
             rows[#rows + 1] = row
             if hasName then visibleNamed = visibleNamed + 1
             else visibleWithheld = visibleWithheld + 1 end
             if not first then first = row end
-            if selectedRow then selected = row end
+            if row.sourceType == "available" then
+                availableCount = availableCount + 1
+                if row.sourceName and row.costCopper then selected = row end
+            end
         end
     end
     if not first then return nil, "no-readable-services" end
+    if availableCount ~= 1 then selected = nil end
+    if selected then selected.selected = true end
     local catalog = rows
     rows = {}
     for i = 1, math.min(#catalog, panel.landscape.maxRows) do
@@ -168,13 +172,15 @@ function Trial.FromSnapshot(report)
         profession="Sampled: " .. tostring(#catalog) .. " | showing 1-" .. tostring(#rows),
         rows=rows, catalog=catalog, localBrowse=true,
         nativeSession={total=report.total, trainerName=report.trainerName},
-        selected={name=selected and selected.name or "Selection outside view",
-            requirement=selected and selected.requirement or "Availability not classified",
+        walletCopper=report.wallet,
+        selected={name=selected and selected.name or "Select a service",
+            requirement=selected and selected.requirement or "Choose a lesson from the list",
             description=selected and bounded(selected.description, 260) and selected.description
-                or "Live training details are read-only. Use Blizzard's trainer to filter, select or train.",
+                or (selected and "Click Train to request the highlighted lesson."
+                    or "Choose a lesson, then click Train to request it."),
             icon=selected and selected.icon or placeholder},
         reagents={}, trainLabel="Stock Train", trainEnabled=false,
-        footnote="LIVE READ-ONLY  /  SELECT LOCALLY / TRAIN IN BLIZZARD",
+        footnote="SELECT A LESSON  /  TRAIN FROM THIS PANEL",
     }
     if not Logres.NPCTrainerLandscape.Build(model) then
         return nil, "landscape-model-rejected"
@@ -303,18 +309,40 @@ local function refreshBrowse()
             price="", icon=placeholder, selected=false, disabled=true}
     end
     model.rows = rows
-    local trainable = false
-    if browse.localChoiceConfirmed then
+    local chosen
+    if browse.selectedServiceIndex
+        and (browse.localChoiceConfirmed or browse.defaultServiceIndex == browse.selectedServiceIndex) then
         for _, entry in ipairs(matching) do
-            if entry.serviceIndex == browse.selectedServiceIndex
-                and entry.sourceType == "available" then
-                trainable = true
+            if entry.serviceIndex == browse.selectedServiceIndex then
+                chosen = entry
                 break
             end
         end
     end
-    model.trainEnabled = trainable and model.nativeSession.profession ~= nil
-    model.trainLabel = trainable and "Train selected (TEST)" or "Stock Train"
+    local wallet = model.walletCopper
+    local cost = chosen and chosen.costCopper
+    model.trainEnabled = false
+    model.trainLabel = "Select a service"
+    if chosen then
+        if chosen.sourceType == "used" then
+            model.trainLabel = "Already learned"
+        elseif chosen.sourceType ~= "available" then
+            model.trainLabel = "Requirements unmet"
+        elseif type(wallet) ~= "number" or type(cost) ~= "number" then
+            model.trainLabel = "Funds or cost unknown"
+        elseif wallet < cost then
+            model.trainLabel = "Need " .. price(cost - wallet) .. " more"
+        elseif model.nativeSession.profession == true
+            and chosen.requiresProfessionConfirmation == nil then
+            model.trainLabel = "Use Blizzard UI"
+        elseif model.nativeSession.profession ~= nil then
+            model.trainEnabled = true
+            model.trainLabel = chosen.requiresProfessionConfirmation == true
+                and "Train · Confirm" or "Train selected"
+        else
+            model.trainLabel = "Stock Train"
+        end
+    end
     model.filters.mode = browse.availableOnly and "Available only" or "All sampled"
     if model.emptyService then
         model.profession = "0 native services | Blizzard available"
@@ -351,6 +379,21 @@ local function refreshBrowse()
     end
     return true
 end
+
+Logres:RegisterEvent("PLAYER_MONEY", function()
+    if not browse or not active or not active:IsShown() then return end
+    local getMoney = _G.GetMoney
+    local ok, wallet = false, nil
+    if ordinaryInput(getMoney) and type(getMoney) == "function" then
+        ok, wallet = pcall(getMoney)
+    end
+    if not ok or not ordinaryInput(wallet) then wallet = nil end
+    local gold, silver, copper = coin(wallet)
+    local model = browse.model
+    model.walletCopper = gold ~= "?" and wallet or nil
+    model.funds.gold, model.funds.silver, model.funds.copper = gold, silver, copper
+    refreshBrowse()
+end)
 
 -- This controller never calls a Blizzard service selector. Slot index is
 -- resolved into a copied catalogue service identity at the moment of click.
@@ -425,7 +468,8 @@ local function attachBrowseControls(root, model, controls)
         if row.selected then initiallySelected = row.serviceIndex; break end
     end
     browse = {model=model, controls=controls, offset=1, availableOnly=false,
-        selectedServiceIndex=initiallySelected, rowHits={}, searchQuery="",
+        defaultServiceIndex=initiallySelected, selectedServiceIndex=initiallySelected,
+        rowHits={}, searchQuery="",
         localChoiceConfirmed=false}
     -- These children alone receive pointer input; the underlying approved
     -- landscape and all Blizzard controls remain without Logres actions.
@@ -641,13 +685,13 @@ local function attachBrowseControls(root, model, controls)
     trainHit:SetScript("OnMouseUp", function(_, button)
         if not ordinaryInput(button) or button ~= "LeftButton"
             or active ~= root or not browse then return end
-        if not browse or not browse.localChoiceConfirmed
-            or not browse.model.trainEnabled then
+        if not browse.model.trainEnabled then
             Logres:TraceEvent("trainer", "train-not-ready",
-                {reason = "select-available-service"})
-            Logres:DevPrint("Select an available training row before Train.")
+                {reason = browse.model.trainLabel})
+            Logres:DevPrint(browse.model.trainLabel)
             return
         end
+        local visit = browse
         -- Visible slot numbers are not native service indices. Always locate
         -- the selected source record before handing it to the purchase guard.
         local chosen = Logres.NPCServiceCatalogue.Find(
@@ -673,7 +717,10 @@ local function attachBrowseControls(root, model, controls)
         else
             return
         end
-        if accepted then
+        if accepted and reason == "blizzard-confirmation-open" then
+            if browse == visit then browse.confirmationPending = true end
+            Logres:TraceEvent("trainer", "train-confirmation", {result = reason})
+        elseif accepted then
             -- Stock remains accessible; this sample is stale after a buy request.
             Logres:TraceEvent("trainer", "train-requested",
                 {result = "native-call-returned-unconfirmed"})
@@ -724,6 +771,17 @@ local function attachBrowseControls(root, model, controls)
             last = "bulk-training-deferred-" .. tostring(reason)
         end
     end)
+end
+
+function Trial.RefreshAfterConfirmation()
+    if not browse or not browse.confirmationPending then return false end
+    local visible = _G.StaticPopup_Visible
+    if not ordinaryInput(visible) or type(visible) ~= "function" then return false end
+    local ok, popup = pcall(visible, "CONFIRM_PROFESSION")
+    if not ok or not ordinaryInput(popup) or popup then return false end
+    browse.confirmationPending = nil
+    if not Trial.Disable("trainer-source-refreshed") then return false end
+    return Trial.Toggle("on")
 end
 
 function Trial.Toggle(mode)
@@ -870,8 +928,17 @@ function Trial.RefreshEmptyFromSource()
 end
 
 function Trial.GetAudit()
+    local model = browse and browse.model
+    local chosen = model and Logres.NPCServiceCatalogue.Find(
+        model.catalog, browse.selectedServiceIndex, function(entry) return entry.serviceIndex end)
     return {shown=active and active:IsShown() or false,
         displays=displays, deferrals=deferrals, last=last,
+        selectedServiceIndex=browse and browse.selectedServiceIndex,
+        selectedCostCopper=chosen and chosen.costCopper,
+        walletCopper=model and model.walletCopper,
+        trainLabel=model and model.trainLabel,
+        trainEnabled=model and model.trainEnabled,
+        confirmationPending=browse and browse.confirmationPending,
         purchases=0, filterWrites=0, selectionWrites=0, nativeGeometryWrites=0,
         purchaseTrial=Logres.NPCTrainerPurchaseTrial.GetAudit(),
         bulkTrial=Logres.NPCTrainerPurchaseTrial.GetBulkAudit(),

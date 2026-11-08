@@ -124,7 +124,7 @@ for token in ('0.0.', 'P0381'):
 need(len(CUR.encode('utf-8')) < 9800 and len(HAND.encode('utf-8')) < 8000,
      'historical memory budgets exceeded')
 rows = [line for line in L.splitlines() if re.match(r'^\| L-\d{3} \|', line)]
-need(len(rows) == 40, 'issue ledger identity count changed')
+need(len(rows) >= 40, 'original issue ledger identities were lost')
 for lid, status in [('L-001', 'OPEN'), ('L-002', 'OPEN'), ('L-005', 'PARTIAL'),
                     ('L-025', 'PARTIAL'), ('L-029', 'PARTIAL'), ('L-033', 'OPEN'),
                     ('L-034', 'OPEN'), ('L-038', 'OPEN'), ('L-039', 'OPEN')]:
@@ -140,7 +140,7 @@ for path in ('docs/memory/investigations/ACTIVE.md',
              'docs/memory/roadmap/STATUS.md',
              'docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md',
              'docs/memory/patches/PATCH_INDEX.md', 'docs/ROADMAP.md'):
-    need(read(path).startswith('## P0388 —') and '## P0387 —' in read(path) and '## P0386 —' in read(path) and '## P0385 —' in read(path) and '## P0384 —' in read(path) and '## P0383 —' in read(path) and '## P0382 —' in read(path) and '## P0381 —' in read(path), 'active roadmap not synchronized or P0381/P0382/P0383 history lost: '+path)
+    need(read(path).startswith('## P0390 —') and '## P0389 —' in read(path) and '## P0388 —' in read(path) and '## P0387 —' in read(path) and '## P0386 —' in read(path) and '## P0385 —' in read(path) and '## P0384 —' in read(path) and '## P0383 —' in read(path) and '## P0382 —' in read(path) and '## P0381 —' in read(path), 'active roadmap not synchronized or P0381/P0382/P0383 history lost: '+path)
 vt = re.search(r'^## Version: (\S+)$', T, re.M)
 vb = re.search(r'^Logres\.VERSION = "([^"]+)"$', B, re.M)
 need(vt and vb and vt.group(1) == vb.group(1), 'TOC/Bootstrap version parity')

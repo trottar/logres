@@ -4,6 +4,14 @@ local _, Logres = ...
 -- Never read, classify or enumerate restricted aura payloads in Lua.
 local Native = {}
 Logres.NativeDebuffs = Native
+Native.BoostedRestSpellID = 1229451
+
+function Native.UsesStockBoostedRest()
+    if type(issecretvalue) ~= "function" then return false end
+    local stock = _G.DebuffFrame
+    local ok, secret = pcall(issecretvalue, stock)
+    return ok and secret == false and stock ~= nil
+end
 
 local harmfulStyle = (Logres.Theme and Logres.Theme.nativeHarmfulAuras) or {}
 local ICON = harmfulStyle.iconSize or 25
@@ -30,6 +38,8 @@ local function createContainer(unit, key, point, relativePoint, dx, dy)
 
     frame:AddAuraGroup("LogresHarmful", "HARMFUL", {
         maxFrameCount = MAX,
+        candidateFilters = unit == "player" and Native.UsesStockBoostedRest()
+            and {excludeSpellIDs = {[Native.BoostedRestSpellID] = true}} or nil,
         layout = {
             elementWidth = ICON,
             elementHeight = ICON,

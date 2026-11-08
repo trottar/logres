@@ -22,10 +22,10 @@ for token in ('CreateFrame("Slider", nil, root)', 'rail:SetOrientation("VERTICAL
               'browse.syncSlider = true', 'browse.syncSlider = false',
               'moveBrowse(delta > 0 and -1 or 1)',
               'browse.localChoiceConfirmed = true', 'localChoiceConfirmed=false',
-              'or not browse.localChoiceConfirmed',
+              'browse.localChoiceConfirmed or browse.defaultServiceIndex == browse.selectedServiceIndex',
               'Logres.NPCTrainerPurchaseTrial.Attempt(',
               'Trial.Disable("native-purchase-requested-unconfirmed")',
-              'model.trainLabel = trainable and "Train selected (TEST)" or "Stock Train"',
+              'or "Train selected"', 'elseif wallet < cost then',
               'nativeSession={total=report.total, trainerName=report.trainerName}',
               'sourceName=hasName and native.name or nil',
               'costCopper=type(native.cost) == "number" and native.cost or nil'):

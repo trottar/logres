@@ -28,7 +28,7 @@ for token in ('function Trial.FromSnapshot(report)','function Trial.Toggle(mode)
     'trainAll={label="Train All unavailable", enabled=false}',
     'trainLabel="Stock Train", trainEnabled=false',
     'purchases=0, filterWrites=0, selectionWrites=0, nativeGeometryWrites=0',
-    'serviceIndex=native.index', 'footnote="LIVE READ-ONLY'):
+    'serviceIndex=native.index', 'footnote="SELECT A LESSON  /  TRAIN FROM THIS PANEL"'):
     need(token in trial,'missing live read-only adapter contract: '+token)
 for forbidden in ('BuyTrainerService(', 'SelectTrainerService(',
     'SetTrainerServiceTypeFilter(', 'ClearAllPoints(', 'SetParent(',

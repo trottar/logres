@@ -196,7 +196,8 @@ function Logres:CaptureBugIncident()
     -- Only addon-owned, already collected controller counters and reasons.
     incident.snapshot.trainer = pickTraceStatus(ownedTraceStatus(function()
         return self.NPCTrainerLiveTrial.GetAudit()
-    end), {"shown", "displays", "deferrals", "last"})
+    end), {"shown", "displays", "deferrals", "last", "selectedServiceIndex", "selectedCostCopper",
+        "walletCopper", "trainLabel", "trainEnabled", "confirmationPending"})
     incident.snapshot.professionPurchase = pickTraceStatus(ownedTraceStatus(function()
         return self.NPCTrainerProfessionPurchaseTrial.GetAudit()
     end), {"attempts", "requests", "deferrals", "failures", "last"})
@@ -213,6 +214,13 @@ function Logres:CaptureBugIncident()
     end), {"nativeObjectiveGateInstalled", "nativeObjectiveSuppressed",
         "lastNativeObjectiveDecision", "currentQuestID", "pulseShown",
         "lastPresentationReason"})
+    incident.snapshot.playerHarmful = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("StatusAuras"):GetDebugStatus()
+    end), {"playerShown", "playerVisible", "playerReason", "nativeActive",
+        "nativeActivationReason"})
+    incident.snapshot.playerHelpful = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("PlayerHelpfulAuras"):GetDebugStatus()
+    end), {"rootShown", "visibleCount", "lastPresentationReason", "secretSkipCount"})
     -- P0379: snapshot Logres-owned button input chain and geometry only.
     incident.snapshot.completionInput = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("QuestDialogue"):GetDebugStatus().completionInput
@@ -545,6 +553,7 @@ local Panel = Logres:RegisterModule("DevPanel", {
             UIParent, "UIPanelButtonTemplate")
         bugButton:SetSize(94, 22)
         bugButton:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -20, -160)
+        Logres.Layout.Bind(bugButton, "nativeAccess", "TOPRIGHT", "TOPRIGHT", 0, -58)
         bugButton:SetFrameStrata("LOW")
         bugButton:SetText("Report Bug")
         bugButton:SetScript("OnClick", function()

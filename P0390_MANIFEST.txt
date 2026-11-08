@@ -1,0 +1,56 @@
+P0390 Forever session 44 regression repair
+Verified P0388 baseline: 4b03024eb1d00a98618a39b51049c84b4042cca4
+Verified exact locally applied P0389 source and manifest
+Runtime version: 0.0.274-dev
+PREWRITE: 260/260 STATIC PASS
+POSTWRITE: 260/260 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/HUD/NativeDebuffs.lua
+Logres/HUD/StatusAuras.lua
+Logres/Logres.toc
+Logres/Quest/ActiveQuest.lua
+Logres/Quest/CompletionControl.lua
+Logres/Quest/Dialogue.lua
+Logres/Quest/NPCGossipQuestChoice.lua
+Logres/Quest/NPCGossipSource.lua
+Logres/Quest/NativeTrainerServiceProbe.lua
+Logres/Quest/OfferStockSuppression.lua
+Logres/Quest/TrainerLandscape.lua
+Logres/Quest/TrainerLiveTrial.lua
+Logres/Quest/TrainerProfessionPurchaseTrial.lua
+Logres/UI/NPCServiceSession.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0389_SESSION_41_REGRESSIONS.md
+docs/memory/evidence/P0390_FOREVER_SESSION_44.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0389_SESSION_41_REGRESSIONS.md
+docs/memory/patches/P0390_FOREVER_SESSION_44.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0252_completion_visual_contract.py
+tools/check_p0253_shared_offer_action_contract.py
+tools/check_p0288_trainer_live_trial_contract.py
+tools/check_p0291_forever_trainer_data_contract.py
+tools/check_p0296_trainer_scroll_train_contract.py
+tools/check_p0299_trainer_local_search_contract.py
+tools/check_p0309_profession_single_transaction_contract.py
+tools/check_p0373_trainer_completion_handoff_contract.py
+tools/check_p0374_issue_ledger_contract.py
+tools/check_p0380_integrated_gameplay_plan_contract.py
+tools/check_p0381_integrated_gameplay_contract.py
+tools/check_p0382_quest_handoff_and_eastern_contract.py
+tools/check_p0389_session_41_regressions.py
+tools/check_p0390_session_44_contract.py
+P0389_MANIFEST.txt
+P0390_MANIFEST.txt

@@ -122,9 +122,15 @@ local function snapshotForeverRow(infoFn, costFn, skillFn, descriptionFn, index)
     -- Each optional source is independent: an absent cost/rank/description
     -- never invalidates a safe name, icon or level.
     if serviceType ~= "header" then
-        local copper, knownCost = scalar(costFn, index)
-        if knownCost and cappedInteger(copper, 100000000000) then
-            row.cost = copper
+        if costFn then
+            local okCost, copper, isProfession, extra = pcall(costFn, index)
+            if okCost and ordinary(copper) and cappedInteger(copper, 100000000000) then
+                row.cost = copper
+                if ordinary(isProfession) and ordinary(extra) and extra == nil
+                    and (isProfession == nil or type(isProfession) == "boolean") then
+                    row.requiresProfessionConfirmation = isProfession == true
+                end
+            end
         end
         if skillFn then
             local skillOK, skill, rank, hasRequirement = pcall(skillFn, index)

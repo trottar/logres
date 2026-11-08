@@ -1,3 +1,11 @@
+## P0390 — Forever session 44 repairs (2026-11-07)
+
+P0388 main verified. P0389 applied locally. Session 44 confirmed a two-quest greeting, Continue and quest 54 turn-in, but the user still saw stock quest flashes. Apprentice Tailoring costs 10c with 17c available, and Train stopped at an unconfirmed selection. Boosted Rest duplicates across the tracker and player harmful lane. P0390 repairs the trainer selection and confirmation path, quest transition timing, duplicate aura routing and one-click capture. Client validation is pending. Evidence: docs/memory/evidence/P0390_FOREVER_SESSION_44.md
+
+## P0389 — Forever session 41 regression repair (2026-11-07)
+
+P0388 main verified at 4b03024 and installed by the user. Session 41 is P0387. Late acceptance dismissed a parked Logres greeting twice; protect newer greeting and synchronous offer stages. Preserve native turn-in and trainer confirmation. Fix completion copy, binary objective status, insufficient-funds trainer controls and Report Bug overlap. L-001/L-002/L-027/L-033/L-041 OPEN, L-005 PARTIAL; candidate WoW UNVERIFIED. Evidence: docs/memory/evidence/P0389_SESSION_41_REGRESSIONS.md
+
 ## P0388 — scoped objective info notification gate (2026-11-07)
 
 P0387 `2ad6f3a` verified main; 0.0.271-dev session40 screenshot incident Milly's Harvest 7/8 and Objective Complete 8/8 confirms yellow duplicate native information text alongside Logres pulse. First-party Forever `Blizzard_UIErrorsFrame/Mainline/UIErrorsFrame.lua` uses `UI_INFO_MESSAGE` and `ShouldDisplayMessageType`; native `ERR_QUEST_ADD_*` formats have client-version IDs. L-027 remains OPEN. P0388 candidate gates only known quest objective message types, exact currently displayed Logres objective rows and active quest identity, and logs addon-owned provenance in Report Bug without hiding UIErrorsFrame or removing quest/action/other system errors. Unsupported types/secret/unavailable source and user Immersion OFF fail open. A single scoped message-policy wrapper is installed only out of combat and removed on module disable when safe. Runtime ownership and usefulness remain UNVERIFIED; L-002 native quest selection/claim flash remains separate and OPEN. Evidence: `docs/memory/evidence/P0388_OBJECTIVE_INFO_GATE.md`.

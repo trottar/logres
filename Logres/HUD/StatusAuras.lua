@@ -85,6 +85,12 @@ local function readAura(unit, index, filter, kind)
     if type(aura) ~= "table" then
         return nil, "invalid-aura"
     end
+    if unit == "player" and Logres.NativeDebuffs.UsesStockBoostedRest() then
+        local spellID = aura.spellId
+        if not isSecret(spellID) and spellID == Logres.NativeDebuffs.BoostedRestSpellID then
+            return nil, "stock-boosted-rest"
+        end
+    end
 
     local icon = aura.icon
     if isSecret(icon) then
@@ -174,7 +180,7 @@ local function readUnit(unit)
                 break
             elseif state == "secret" then
                 result.secretSkips = result.secretSkips + 1
-            elseif state ~= "ordinary" then
+            elseif state ~= "ordinary" and state ~= "stock-boosted-rest" then
                 result.failures = result.failures + 1
                 result.lastError = state
             elseif aura then

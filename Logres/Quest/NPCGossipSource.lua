@@ -85,8 +85,16 @@ local function appendQuestChoices(rows, kind, into)
         if not label or label == "" or not ordinary(identity)
             or type(identity) ~= "number" or identity < 1
             or identity ~= math.floor(identity) then return false end
+        local prefix = "Quest: "
+        if kind == "active" then
+            local complete = member(row, "isComplete")
+            if ordinary(complete) then
+                if complete == true then prefix = "Ready to turn in: " end
+                if complete == false then prefix = "Quest in progress: " end
+            end
+        end
         into[#into + 1] = {
-            label = (kind == "available" and "Quest: " or "Quest in progress: ") .. label,
+            label = prefix .. label,
             enabled = false, reason = "Blizzard quest controls retained",
             questKind = kind, questID = identity,
         }

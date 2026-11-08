@@ -356,15 +356,16 @@ function Landscape.Render(owner, model)
                 g.reagents.w - 51, 37, "GameFontHighlightSmall", p.body)
             created[#created + 1] = reagent
         end
-        -- Money values and cost/count are authored demo data, never live funds.
+        -- Preview values are authored. Live values are ordinary copied funds.
         text(owner, view.funds.label, g.funds.x, g.funds.y,
             49, 19, "GameFontHighlightSmall", p.muted)
-        text(owner, view.funds.gold .. "g", g.funds.x + 50, g.funds.y,
+        local gold = text(owner, view.funds.gold .. "g", g.funds.x + 50, g.funds.y,
             40, 19, "GameFontNormalSmall", p.goldText)
-        text(owner, view.funds.silver .. "s", g.funds.x + 95, g.funds.y,
+        local silver = text(owner, view.funds.silver .. "s", g.funds.x + 95, g.funds.y,
             41, 19, "GameFontNormalSmall", p.coinSilver)
-        text(owner, view.funds.copper .. "c", g.funds.x + 144, g.funds.y,
+        local copper = text(owner, view.funds.copper .. "c", g.funds.x + 144, g.funds.y,
             41, 19, "GameFontNormalSmall", p.coinCopper)
+        if view.localBrowse then liveControls.funds = {gold, silver, copper} end
         local trainAll = frame(owner, g.trainAll.x, g.trainAll.y,
             g.trainAll.w, g.trainAll.h)
         created[#created + 1] = trainAll
@@ -432,6 +433,11 @@ function Landscape.UpdateLiveRows(controls, view)
     if not controls.trainText then return false end
     controls.trainText:SetText(view.trainLabel)
     controls.trainText:SetTextColor(unpack(view.trainEnabled and p.goldText or p.muted))
+    if controls.funds then
+        controls.funds[1]:SetText(view.funds.gold .. "g")
+        controls.funds[2]:SetText(view.funds.silver .. "s")
+        controls.funds[3]:SetText(view.funds.copper .. "c")
+    end
     if not controls.detail then return false end
     controls.detail.icon:SetTexture(view.selected.icon)
     controls.detail.name:SetText(view.selected.name)

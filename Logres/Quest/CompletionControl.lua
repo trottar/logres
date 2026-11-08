@@ -281,7 +281,13 @@ function Control:Click()
         end
     end
     self.claimCalls = self.claimCalls + 1
+    local generation = self.dialogue.presentationGeneration
     local ok = pcall(_G.QuestRewardCompleteButton_OnClick)
+    if ok and self.dialogue.presentationGeneration == generation then
+        -- Stock was fully restored for the native call. Hold the old pane
+        -- only if the client is still waiting for its asynchronous reply.
+        self.dialogue:BeginNativeQuestHandoff("claim")
+    end
     self.lastResult = ok and "native-handler-invoked" or "native-handler-failed"
     Logres:TraceEvent("quest", "completion-click-result",
         {result = self.lastResult})

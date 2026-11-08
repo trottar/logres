@@ -546,6 +546,24 @@ function Suppression:RequestEnabled(enabled, reason)
     return self:ApplySuppression(reason or "request-on")
 end
 
+function Suppression:CanHoldOfferForTransition()
+    if not self.appliedEnabled or not self.snapshot then return false end
+    return self:CanBridgeVisual(self.snapshot.visual)
+end
+
+function Suppression:CanBridgeVisual(snapshot)
+    local combat = safeBoolean("combat", InCombatLockdown)
+    if combat ~= false then return false end
+    -- A delayed restoration can cross combat. Hold only a captured
+    -- subtree whose frames all establish ordinary nonprotected capability.
+    for _, entry in ipairs(snapshot.mouseFrames) do
+        local frame = entry.frame
+        local protected = safeBoolean("protected", frame.IsProtected, frame)
+        if protected ~= false then return false end
+    end
+    return true
+end
+
 function Suppression:NotifyDialogue()
     local ok, dialogue = pcall(
         Logres.GetModule,

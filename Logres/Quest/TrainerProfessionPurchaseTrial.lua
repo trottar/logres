@@ -40,6 +40,50 @@ local function deny(reason)
     return false, reason
 end
 
+local function confirmProfession(root, serviceIndex)
+    local selectDisplay = api("ClassTrainer_SetSelection")
+    local selection = api("GetTrainerSelectionIndex")
+    local professions = api("GetProfessions")
+    local visible, show = api("StaticPopup_Visible"), api("StaticPopup_Show")
+    if not selectDisplay or not selection or not professions or not visible or not show then
+        return deny("blizzard-confirmation-required")
+    end
+    local seen, popup = pcall(visible, "CONFIRM_PROFESSION")
+    if not seen or not ordinary(popup) then return deny("confirmation-state-unavailable") end
+    if popup then return true, "blizzard-confirmation-open" end
+
+    local slotsOK, first, second = pcall(professions)
+    if not slotsOK or not ordinary(first) or not ordinary(second) or second ~= nil then
+        return deny("profession-slot-unavailable")
+    end
+    local mapped, byService, byDisplay = pcall(function()
+        return root.skillIndexToDisplayIndex, root.displayIndexToSkillIndex
+    end)
+    if not mapped or not ordinary(byService) or not ordinary(byDisplay)
+        or type(byService) ~= "table" or type(byDisplay) ~= "table" then
+        return deny("trainer-display-mapping-unavailable")
+    end
+    local displayIndex = byService[serviceIndex]
+    if not ordinary(displayIndex) or not integer(displayIndex, 384) then
+        return deny("trainer-display-index-unavailable")
+    end
+    local nativeIndex = byDisplay[displayIndex]
+    if not ordinary(nativeIndex) or nativeIndex ~= serviceIndex then
+        return deny("trainer-display-mapping-changed")
+    end
+    if not pcall(selectDisplay, displayIndex) or scalar(selection) ~= serviceIndex then
+        return deny("native-selection-failed")
+    end
+    -- The stock popup owns the final authorization and its OnAccept purchase.
+    -- Verify its exact native selection before opening it from the Train click.
+    local shown, dialog = pcall(show, "CONFIRM_PROFESSION")
+    if not shown or not ordinary(dialog) or not dialog then
+        return deny("native-confirmation-unavailable")
+    end
+    last = "blizzard-confirmation-open"
+    return true, last
+end
+
 -- Only one physical click on an explicitly selected available profession row.
 -- Native identity/cost/skill requirements are re-read after the click; cached
 -- view data is never authority to buy. The native root stays visible.
@@ -86,7 +130,7 @@ function Trial.Attempt(row, snapshot)
         return deny("secret-or-unreadable-service")
     end
     if name ~= row.sourceName or kind ~= "available"
-        or texture ~= row.sourceTextureID or rank ~= row.sourceRank
+        or texture ~= row.sourceTextureID or (rank == nil and "" or rank) ~= row.sourceRank
         or not integer(level, 120)
         or (row.sourceRequiredLevel ~= nil and level ~= row.sourceRequiredLevel) then
         return deny("service-identity-or-requirement-changed")
@@ -103,15 +147,19 @@ function Trial.Attempt(row, snapshot)
             return deny("skill-prerequisite-changed")
         end
     end
-    -- Forever API may return non-money talent/profession costs separately.
-    -- Unknown or positive extra costs are NOT silently treated as copper.
-    local costOK, copper, talentCost, professionCost = pcall(cost, row.serviceIndex)
-    if not costOK or not ordinary(copper) or not ordinary(talentCost)
-        or not ordinary(professionCost) then return deny("cost-secret-or-unreadable") end
-    if not integer(copper, 100000000000) or copper ~= row.costCopper
-        or (talentCost ~= nil and talentCost ~= 0)
-        or (professionCost ~= nil and professionCost ~= 0)
-        or money < copper then return deny("cost-resources-or-funds-changed") end
+    -- Forever uses the second return to select its native confirmation
+    -- dialog for acquiring a primary profession. Never bypass that dialog.
+    local costOK, copper, isProfession, extra = pcall(cost, row.serviceIndex)
+    if not costOK or not ordinary(copper) or not ordinary(isProfession)
+        or not ordinary(extra) then return deny("cost-secret-or-unreadable") end
+    if not integer(copper, 100000000000) or copper ~= row.costCopper then
+        return deny("service-cost-changed")
+    end
+    if money < copper then return deny("insufficient-funds") end
+    if (type(isProfession) ~= "boolean" and isProfession ~= nil) or extra ~= nil then
+        return deny("unsupported-cost-shape")
+    end
+    if isProfession == true then return confirmProfession(root, row.serviceIndex) end
     local sent = pcall(buy, row.serviceIndex)
     if not sent then
         failures = failures + 1

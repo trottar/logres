@@ -22,7 +22,7 @@ for token in (
     'owner:HandleCompletionAction()',
     'if self.completionControl and self.completionControl.applied then',
     'self.completionControl:Activate()',
-    'local ownedFooter = rewardFooter:gsub(',
+    'local ownedFooter = ownedRewardCopy(rewardFooter)',
     r'"\nComplete using Blizzard quest controls", ""',
     r'return label .. "\nComplete using Blizzard quest controls"',
     'self.completionControl = Logres.QuestCompletionControl.New(',

@@ -209,11 +209,16 @@ function Greeting.ReadModel()
         local titleFn = fn(row.read)
         if row.n > 0 and not titleFn then return nil, "title-api-unavailable" end
         for index = 1, row.n do
-            local ok, title = pcall(titleFn, index)
+            local ok, title, isComplete = pcall(titleFn, index)
             title = ok and safeText(title) or nil
             if not title then return nil, "title-not-ordinary" end
+            local prefix = "Quest: "
+            if row.kind == "active" and ordinary(isComplete) then
+                if isComplete == true then prefix = "Ready to turn in: " end
+                if isComplete == false then prefix = "Quest in progress: " end
+            end
             options[#options + 1] = {
-                label = (row.kind == "available" and "Quest: " or "Quest in progress: ") .. title,
+                label = prefix .. title,
                 title = title, questKind = row.kind, questIndex = index,
                 enabled = false, reason = "Blizzard quest selection is the fallback",
             }
@@ -415,13 +420,18 @@ function Greeting.Activate(model, index)
     if not selectFn or not unlocked() then return defer("selector-no-longer-available") end
     -- Restore native QuestFrame BEFORE dispatch, then allow Blizzard to drive
     -- QUEST_DETAIL/QUEST_PROGRESS and their existing Logres controllers.
+    local handoff = dialogue:BeginNativeQuestHandoff("greeting-selection")
     if not Greeting.Restore("native-quest-selected") then
+        if handoff then dialogue:EndNativeQuestHandoff("greeting-restore-failed", handoff) end
         return defer("native-restore-pending")
     end
     dialogue:HidePresentation("greeting-native-selection")
     clicks = clicks + 1
     local ok = pcall(selectFn, chosen.questIndex)
-    if not ok then return defer("native-quest-selection-failed") end
+    if not ok then
+        if handoff then dialogue:EndNativeQuestHandoff("greeting-selection-failed", handoff) end
+        return defer("native-quest-selection-failed")
+    end
     last = "native-quest-selection-issued"
     Logres:TraceEvent("quest", "greeting-quest-selected", {
         kind = chosen.questKind, index = chosen.questIndex, result = last,

@@ -11,7 +11,7 @@ Forever alpha D-048; D-046 preview/stock fallback, D-047 camera frozen. Blocked.
 
 ## Current Work Item
 
-**P0388** L-027 quest info gate; P0387 late-accept fix, P0386 L-001 greeting; P0385 QUEST_GREETING, L-002 claim flash; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue no-flash scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
+**P0390** session 44 repairs; P0389 locally applied; P0388 L-027 gate; P0387 late-accept fix, P0386 L-001 greeting; P0385 QUEST_GREETING, L-002 claim flash; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue no-flash scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
 
 ## Verified State
 
@@ -20,36 +20,37 @@ Forever alpha D-048; D-046 preview/stock fallback, D-047 camera frozen. Blocked.
 - P0379 `285be528` 249 STATIC; 0.0.264-dev no claim. L-002 native, L-005 FAIL. R0/R1 refused; P0378 screenshots inferred.
 
 - P0370 240 STATIC; no-pet labels user PASS. P0369 P0368 P0367 P0366 R1 P0365 R1 P0364 R1 P0363 P0362 P0361 R1 P0360 P0359 P0358 R1 P0357 P0356: 239–227 STATIC, client checks pending; prior refusals in evidence. L-001/L-002/L-005 FAIL.
-- P0352 223, P0351 222, P0350 221 STATIC; WoW UNVERIFIED. Full hashes in linked evidence.
+- P0352 223, P0351 222, P0350 221 STATIC; client UNVERIFIED.
 - P0349 R1 `4e59c8f2f03daf30b630fb15e3e14d5f38cc8da6` 220/220 STATIC; R0 REFUSED, WoW UNVERIFIED.
 - P0348 `4b7481d731d5f90e214b285bc7cce16ec826176f` 219/219 STATIC; D-048 model OFFLINE ONLY.
 - P0347 R1 `b94beb4706005757497002927d80845d5355037f` 218/218 STATIC; R0 PREWRITE REFUSED, WoW UNVERIFIED.
-- P0347 R0 PREWRITE REFUSED 1/218: historical checker ceiling; R1 corrected, no writes. Failure preserved.
+- P0347 R0 REFUSED 1/218; R1 corrected, no writes on R0.
 - P0346 `26370095bd092d076868cd3d2e5e6a74f6b845d3` 217/217 PRE/POST STATIC; WoW UNVERIFIED.
 - P0345 `626b220` 216/216 STATIC; target aura client UNVERIFIED.
 - P0344 `e44f66ba` 215/215 STATIC; L-027 owner UNVERIFIED.
 - P0343 R1 `ef4d96040fa15c0fc1a49766b1e0efcec6fe1cb1` 214/214 STATIC; R0 REFUSED before writes, L-022 OPEN.
 - P0342 R2 `be3be5e80cf65cf1bf6d261b84b573f1f1effca2` 213/213 STATIC; R0/R1 PREWRITE REFUSED; L-028 OPEN.
 - P0341 R1 `fb3b2658985e7f6d05f7730a3de6eb7b7dca6ad9` 212/212 STATIC; R0 historical-version checker REFUSED before writes; WoW UNVERIFIED.
-- P0340 `27fb9eb` 211/211; P0339 `8a5d3f86` 210/210 STATIC; neither establishes client PASS.
 - P0338 R1 `342cab97` 209/209; P0337 R1 `cfdc07af` 208/208. Historical PREWRITE failures, narrow remedies and deferred L-031 focused-yard/quest-giver validation remain in their evidence files.
-- P0336/P0335/P0334 R3/P0333/P0332/P0331/P0330/P0329: 207–200 STATIC only. P0332 ordinary aura fallback; native AuraContainer separate. See PATCH_INDEX.
+- P0336/P0335/P0334 R3/P0333/P0332/P0331/P0330/P0329: 207–200 STATIC. See PATCH_INDEX.
 - P0328 alpha runbook; P0317/P0318/P0319/P0320 gossip observations; P0321 `9a180c8` parking UNVERIFIED. P0322/P0323/P0324/P0325 D-048 inert models; P0326/P0327 merchant/flight models only. Stock UI/quest 237 preserved.
 - D-048 independent live domain selectors and saved migration do not exist: schema 3 still stores `immersionEnabled` and `activeQuestEnabled`. D-046 preview-first and D-047 frozen Camera/DynamicCam remain required. Native UI and protected/secret fallbacks stay usable.
 - L-020–L-032 are tracked user reports; source fixes are not client-accepted. L-028 duplicated/missing target debuffs remains OPEN; L-022 focused quest artifact requires screenshot, L-027 Blizzard transient popup requires `/fstack` owner evidence. L-019 root project license remains unresolved, public distribution NOT APPROVED.
 
 ## Next Action
 
-P0388: scoped L-027 info gate runtime pending; L-002 flash OPEN.
+Validate P0390 Train, quest handoffs and one Boosted Rest icon via Report Bug. L-002/L-027/L-033/L-041 OPEN.
 
 ## Success Criteria
 
-P0385 greeting 2/0; P0386 UNVERIFIED; Continue PASS scoped; quest18 TURNED_IN; L-001/L-002/L-040 OPEN, L-005 PARTIAL.
+P0389 session 44 quest 54 turned in. Flashes, funded Train and duplicate aura remain open. P0390 WoW UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
 Preserve P0321 gossip parking, frozen camera, protected actions, pet secure state, stock UI, fifth-domain prefs, saves, quest 237 and P0329 merchant/flight fallback. No polling, secret inspection or blanket suppression. Preserve D-046 preview-first, D-048 five systems, optional QuestieDB, no exact player HP, sparse target, Blizzard aura/group fallback, and release blockers/negative evidence.
 
 ## Relevant References
+- docs/memory/evidence/P0390_FOREVER_SESSION_44.md
+- docs/memory/evidence/P0389_SESSION_41_REGRESSIONS.md
 - `docs/memory/PRE_HANDOFF_AUDIT.md`
 - `docs/memory/evidence/P0380_INTEGRATED_GAMEPLAY_REPAIR.md`
 - `docs/memory/evidence/P0379_COMPLETION_INPUT_PROVENANCE.md`

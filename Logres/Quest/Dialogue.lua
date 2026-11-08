@@ -223,6 +223,7 @@ function Dialogue:UpdateOfferControls()
     end
     if self.progressOwned then return end
     if self.completionFallbackActive then return end
+    if self.offerActionPending then return end
     local pageCount = #self.pages
     local finalPage =
         pageCount <= 1
@@ -344,6 +345,7 @@ function Dialogue:HandleOfferAction(kind)
     -- Set before native dispatch so synchronous events see the same token.
     self.pendingAcceptedOfferQuestID =
         kind == "accept" and detail.questID or nil
+    local generation = self.presentationGeneration
     local actionRuntime =
         Logres:GetModule(
             "QuestOfferActionProbe"
@@ -355,11 +357,13 @@ function Dialogue:HandleOfferAction(kind)
             detail.title
         )
 
+    -- Native dispatch can synchronously close this offer or open another
+    -- stage. The return path belongs only to the presentation that clicked.
+    if self.presentationGeneration ~= generation then
+        return ok, reason
+    end
+
     if ok then
-        self:RequestStockOfferSuppression(
-            false,
-            "offer-action-started"
-        )
         self.offerActionsEnabled = false
         self.offerActionPending = true
         self.lastOfferActionResult =
@@ -367,6 +371,21 @@ function Dialogue:HandleOfferAction(kind)
         self.lastOfferActionError = nil
         self:SetOfferActionFeedback(nil)
         self.offerActionRoot:Hide()
+        self.offerActionRoot:EnableMouse(false)
+        -- Keep this offer's stock suppression until its native exit. A
+        -- single generation-scoped timeout hands stock back if it stays open.
+        if kind == "accept" and self.stockOfferSuppressionApplied
+            and self.timerAvailable
+            and Logres:GetModule("QuestOfferStockSuppression"):CanHoldOfferForTransition() then
+            local scheduled = pcall(C_Timer.After, 1.5, function()
+                if self.presentationGeneration == generation and self.offerActionPending then
+                    self.pendingAcceptedOfferQuestID = nil
+                    self:ClearActiveDetail("offer-transition-timeout")
+                end
+            end)
+            if scheduled then return true, reason end
+        end
+        self:ClearActiveDetail("offer-action-started")
         return true, reason
     end
 
@@ -508,6 +527,50 @@ local function nativeProgressFlag(frame, name)
     return ok and ordinaryProgress(value) and value == true
 end
 
+function Dialogue:EndNativeQuestHandoff(reason, expected)
+    local handoff = self.nativeQuestHandoff
+    if not handoff or (expected and handoff ~= expected) then return true end
+    local module, snapshot = handoff.module, handoff.snapshot
+    local ok = pcall(module.RestoreOfferPresentation, module, snapshot)
+    if not ok then
+        local called, restored = pcall(module.EmergencyRestoreOfferPresentation, module, snapshot)
+        ok = called and restored == true
+    end
+    if ok then self.nativeQuestHandoff = nil end
+    Logres:TraceEvent("quest", "native-handoff-restored",
+        {reason = reason, result = ok and "restored" or "restore-failed"})
+    return ok
+end
+
+function Dialogue:BeginNativeQuestHandoff(reason)
+    if not self.immersionEnabled or not self.timerAvailable or self.nativeQuestHandoff then
+        return nil
+    end
+    local module = Logres:GetModule("QuestOfferStockSuppression")
+    local captured, snapshot = pcall(module.CaptureOfferPresentation, module)
+    if not captured or not snapshot or not module:CanBridgeVisual(snapshot) then return nil end
+    local handoff = {module = module, snapshot = snapshot}
+    self.nativeQuestHandoff = handoff
+    if not pcall(module.SuppressOfferPresentation, module, snapshot) then
+        self:EndNativeQuestHandoff("handoff-suppress-failed", handoff)
+        return nil
+    end
+    local generation = self.presentationGeneration
+    local scheduled = pcall(C_Timer.After, 1.25, function()
+        if self.nativeQuestHandoff ~= handoff then return end
+        if self:EndNativeQuestHandoff("handoff-timeout", handoff)
+            and reason == "claim" and self.presentationGeneration == generation then
+            self:HidePresentation("claim-native-fallback")
+        end
+    end)
+    if not scheduled then
+        self:EndNativeQuestHandoff("handoff-timer-unavailable", handoff)
+        return nil
+    end
+    Logres:TraceEvent("quest", "native-handoff-held", {reason = reason})
+    return handoff
+end
+
 function Dialogue:ProgressGate()
     if not self.moduleEnabled or not self.immersionEnabled
         or not self.progressActive or not self.presentationShown
@@ -584,6 +647,11 @@ function Dialogue:UpdateProgressPagePresentation()
         return
     end
     self.root:SetHeight(391)
+    if self.progressContinuePending then
+        self.offerActionRoot:Hide()
+        self.offerActionRoot:EnableMouse(false)
+        return
+    end
     self.declineButton:Hide()
     self.acceptButton.label:SetText("Continue")
     self.acceptButton:Show()
@@ -1306,6 +1374,13 @@ function Dialogue:ReadCompletionRewardSummary()
         itemText ~= nil, money, moneyReason or (money ~= nil and "ordinary" or "unknown"), rewardFooter
 end
 
+local function ownedRewardCopy(text)
+    return text:gsub("\nComplete using Blizzard quest controls", "")
+        :gsub("\nChoose and complete in Blizzard quest window", "")
+        :gsub("^Review rewards in Blizzard quest window | ", "")
+        :gsub("^Review rewards in Blizzard quest window$", "Reward details unavailable")
+end
+
 -- P0257 R1: one component geometry for guarded live and inert preview.
 -- Caller determines ownership; the helper touches Logres-owned frames only.
 function Dialogue:PositionCompletionActionVisual()
@@ -1497,12 +1572,8 @@ function Dialogue:HandleQuestComplete()
                 self.acceptButton:Show()
                 -- The actionable Logres button already communicates the
                 -- next step. Keep reward amounts, not a duplicate instruction.
-                local ownedFooter = rewardFooter:gsub(
-                    "\nComplete using Blizzard quest controls", ""
-                )
-                ownedFooter = ownedFooter:gsub(
-                    "\nChoose and complete in Blizzard quest window", ""
-                )
+                local ownedFooter = ownedRewardCopy(rewardFooter)
+                self.completionRewardText = ownedRewardCopy(rewardSummary)
                 self.completionRewardFooter = ownedFooter
                 if self.rewardVisual and #self.completionRewardCards > 0 then
                     self.rewardVisual:Present(self.completionRewardCards, ownedFooter)
@@ -1596,9 +1667,12 @@ function Dialogue:HandleCompletionItemData(eventItemID, success)
         return
     end
     if self.objectiveText and type(pending.suffix) == "string" then
-        self.objectiveText:SetText(
-            name .. " x" .. tostring(pending.quantity) .. pending.suffix
-        )
+        local text = name .. " x" .. tostring(pending.quantity) .. pending.suffix
+        if self.completionControl and self.completionControl.applied then
+            text = ownedRewardCopy(text)
+        end
+        self.completionRewardText = text
+        self.objectiveText:SetText(text)
         -- Convert the text fallback into the identical portrait row if
         -- metadata eventually arrives for this still-active completion.
         local card = completionRewardCard(
@@ -1811,6 +1885,7 @@ function Dialogue:PresentText(
                 return
             end
 
+
             if self.presentationGeneration ~= generation then
                 return
             end
@@ -1966,6 +2041,7 @@ function Dialogue:ApplyPreferences(preferences)
         preferences.immersionEnabled == true
 
     if not self.immersionEnabled then
+        self:EndNativeQuestHandoff("immersion-off")
         self:HidePresentation("immersion-off")
         return
     end
@@ -2862,6 +2938,11 @@ function Dialogue:OnInitialize()
                 return
             end
 
+            if (event == "QUEST_GREETING" or event == "QUEST_DETAIL"
+                or event == "QUEST_PROGRESS" or event == "QUEST_COMPLETE"
+                or event == "PLAYER_ENTERING_WORLD")
+                and not self:EndNativeQuestHandoff(event) then return end
+
             if event == "QUEST_GREETING" then
                 self:ObserveQuestGreeting()
                 return
@@ -2909,6 +2990,16 @@ function Dialogue:OnInitialize()
                         activeQuestID = self.activeDetail.questID,
                         result = "new-offer-retained",
                     })
+                    return
+                end
+                local accepted = ordinaryAcceptedEventQuestID(...)
+                if accepted ~= nil and accepted == self.pendingAcceptedOfferQuestID
+                    and self.presentationShown and self.optionSession
+                    and self.optionSession.questGreeting == true
+                    and Logres.QuestGreetingControl.IsParked() then
+                    self.pendingAcceptedOfferQuestID = nil
+                    Logres:TraceEvent("quest", "late-accepted-greeting-preserved",
+                        {questID = accepted, result = "owned-greeting-retained"})
                     return
                 end
                 self.pendingAcceptedOfferQuestID = nil
@@ -2976,6 +3067,7 @@ function Dialogue:OnEnable()
 end
 
 function Dialogue:OnDisable()
+    self:EndNativeQuestHandoff("dialogue-disabled")
     self.moduleEnabled = false
     self.pendingAcceptedOfferQuestID = nil
     self:ClearActiveDetail(
