@@ -11,6 +11,9 @@ local mapX, mapY, mapSize = 279, 100, 580
 local live, preview, visit, stockOnly
 local result, opens, restores = "idle", 0, 0
 local lastState, lastFare
+local recenters, routeRequests = 0, 0
+local chooseRoute
+local PAGE_SIZE = 6
 local frames = setmetatable({}, {__mode = "k"})
 local pins = setmetatable({}, {__mode = "k"})
 
@@ -34,6 +37,74 @@ local function copper(value)
     return table.concat(parts, " ")
 end
 
+local function renderRoutes(list)
+    local count = math.max(1, math.ceil(#list.records / PAGE_SIZE))
+    list.page = math.max(1, math.min(list.page, count))
+    local offset = (list.page - 1) * PAGE_SIZE + 1
+    local size = math.max(1, math.min(PAGE_SIZE, #list.records - offset + 1))
+    local rows = Logres.NPCServiceCatalogue.Window(list.records, offset, size)
+    for i, button in ipairs(list.buttons) do
+        local route = rows[i]
+        button.route = route
+        button:SetShown(route ~= nil)
+        if route then
+            local canChoose = route.usable and not list.locked
+                and (route.cost == 0 or (list.funds and list.funds >= route.cost))
+            button.name:SetText(route.name)
+            button.fare:SetText(route.price or "See map pin")
+            button.name:SetTextColor(unpack(canChoose and palette.body or palette.muted))
+            button:SetEnabled(canChoose == true)
+            button.mark:SetShown(route.id == list.highlight)
+        end
+    end
+    list.pageText:SetShown(count > 1)
+    list.pageText:SetFormattedText("%d / %d", list.page, count)
+    list.prev:SetShown(list.page > 1)
+    list.next:SetShown(list.page < count)
+    list.notice:SetText(list.message or (#list.records == 0
+        and "No reachable flights listed." or "Click a route or pin to buy and fly."))
+end
+
+local function buildRouteList(parent, onChoose)
+    local box = CreateFrame("Frame", nil, parent)
+    box:SetPoint("TOPLEFT", parent, "TOPLEFT", 32, -102)
+    box:SetSize(220, 578)
+    box:EnableMouse(true)
+    local list = {records = {}, page = 1, buttons = {}}
+    for i = 1, PAGE_SIZE do
+        local button = CreateFrame("Button", nil, box)
+        button:SetSize(196, 49)
+        button:SetPoint("TOPLEFT", box, "TOPLEFT", 12, -111 - (i - 1) * 54)
+        chrome.wash(button, 0, 0, 196, 49, palette.sidebarWash)
+        button.mark = button:CreateTexture(nil, "BACKGROUND")
+        button.mark:SetAllPoints(button)
+        button.mark:SetColorTexture(unpack(palette.active))
+        button.name = chrome.text(button, "", "GameFontHighlightSmall", 8, 2, 181, palette.body)
+        button.name:SetHeight(28)
+        button.fare = chrome.text(button, "", "GameFontHighlightSmall", 8, 27, 181, palette.goldText)
+        button:SetScript("OnClick", function()
+            if button.route then onChoose(button.route) end
+        end)
+        list.buttons[i] = button
+    end
+    list.notice = chrome.text(box, "", "GameFontHighlightSmall", 12, 512, 194, palette.body)
+    list.notice:SetHeight(44)
+    list.pageText = chrome.text(box, "", "GameFontHighlightSmall", 70, 452, 80, palette.muted, "CENTER")
+    local function arrow(previous)
+        local button = CreateFrame("Button", nil, box)
+        button:SetSize(28, 28)
+        button:SetPoint("TOPLEFT", box, "TOPLEFT", previous and 44 or 148, -449)
+        Logres.NPCNarrativePages.CreateChevron(button, previous)
+        button:SetScript("OnClick", function()
+            list.page = list.page + (previous and -1 or 1)
+            renderRoutes(list)
+        end)
+        return button
+    end
+    list.prev, list.next = arrow(true), arrow(false)
+    return list
+end
+
 local function paint(root, sample, foreground)
     assert(Logres.PanelSurface.Paint(root, config.surface, visual.width, visual.height))
     local text, wash = chrome.text, chrome.wash
@@ -48,43 +119,27 @@ local function paint(root, sample, foreground)
         "GameFontHighlightSmall", 120, 49, visual.width - 240, palette.muted, "CENTER")
     text(labels, "Departure", "GameFontHighlight", 44, 114, 194, palette.goldText)
     local origin = text(labels, "", "GameFontHighlight", 44, 142, 194, palette.body)
-    text(labels, "Destination", "GameFontHighlight", 44, 218, 194, palette.goldText)
-    local name = text(labels, "", "GameFontHighlight", 44, 246, 194, palette.body)
     origin:SetHeight(42)
-    name:SetHeight(42)
-    local status = text(labels, "", "GameFontHighlight", 44, 292, 194, palette.muted)
-    local fare = text(labels, "", "GameFontHighlight", 44, 325, 194, palette.goldText)
-    text(labels, "Hover over a destination for its fare.", "GameFontHighlightSmall",
-        44, 376, 194, palette.body):SetHeight(42)
-    text(labels, sample and "Sample destinations only." or "Click a reachable pin to pay and fly.",
-        "GameFontHighlightSmall", 44, 425, 194, palette.body):SetHeight(42)
-    return {origin = origin, name = name, status = status, fare = fare}
-end
-
-local function showRoute(view, name, state, price)
-    view.name:SetText(name or "Choose a map pin")
-    view.status:SetText(state or "")
-    view.fare:SetText(price and ("Fare  " .. price) or "")
+    text(labels, "Available flights", "GameFontHighlight", 44, 185, 194, palette.goldText)
+    local view = {origin = origin}
+    view.routes = buildRouteList(labels, function(route)
+        if sample then
+            view.routes.highlight = route.id
+            renderRoutes(view.routes)
+        else
+            chooseRoute(route)
+        end
+    end)
+    return view
 end
 
 local function showPin(view, index)
-    local name, state = readAPI("TaxiNodeName", index), readAPI("TaxiNodeGetType", index)
-    if type(name) ~= "string" or name == "" then name = nil end
-    local price
-    if state == "REACHABLE" then
-        local amount = readAPI("TaxiNodeCost", index)
-        price = copper(amount)
-        lastState, lastFare = "reachable", price and amount or nil
-        showRoute(view, name, "Available", price or "See map tooltip")
-    elseif state == "CURRENT" then
-        lastState, lastFare = "current", nil
-        showRoute(view, name, "You are here")
-    elseif state == "UNREACHABLE" or state == "DISTANT" then
-        lastState, lastFare = "unavailable", nil
-        showRoute(view, name, "Unavailable")
-    else
-        showRoute(view, name)
-    end
+    local state = readAPI("TaxiNodeGetType", index)
+    local amount = state == "REACHABLE" and readAPI("TaxiNodeCost", index) or nil
+    lastState = state == "REACHABLE" and "reachable" or (state == "CURRENT" and "current" or "unavailable")
+    lastFare = copper(amount) and amount or nil
+    view.routes.highlight = state == "REACHABLE" and index or nil
+    renderRoutes(view.routes)
 end
 
 local function bindPins(root, routeMap, view)
@@ -166,9 +221,11 @@ local function restore(reason)
         return false
     end
     local restored = true
+    live.busy = true
     for i = live.applied, 1, -1 do
         if not pcall(live.plan[i].undo) then restored = false end
     end
+    live.busy = false
     if not restored then
         live.pending = reason
         result = "restore-pending"
@@ -184,6 +241,89 @@ end
 local function inContext(state)
     return state and state.interacting == true and state.interactionType == 6
         and not state.onTaxi and Logres:GetPreference("immersionEnabled") == true
+end
+
+local function resolvePin(session, id)
+    local pin = chrome.member(_G, "TaxiButton" .. id)
+    if not chrome.mutable(pin) or chrome.read(pin, "GetParent") ~= session.routeMap
+        or chrome.read(pin, "GetID") ~= id or chrome.read(pin, "IsShown") ~= true
+        or chrome.read(pin, "IsEnabled") ~= true then return nil end
+    return pin, chrome.method(pin, "Click")
+end
+
+local function refreshRoutes(session)
+    local list = session.art.view.routes
+    local records, count = {}, readAPI("NumTaxiNodes")
+    if type(count) == "number" and count >= 1 and count <= 400 and count == math.floor(count) then
+        for id = 1, count do
+            if readAPI("TaxiNodeGetType", id) == "REACHABLE" then
+                local name = readAPI("TaxiNodeName", id)
+                local cost = readAPI("TaxiNodeCost", id)
+                local price = copper(cost)
+                local _, click = resolvePin(session, id)
+                if type(name) == "string" and name ~= "" then
+                    records[#records + 1] = {id = id, name = name, cost = price and cost or nil,
+                        price = price, usable = price ~= nil and click ~= nil}
+                end
+            end
+        end
+    end
+    local funds = readAPI("GetMoney")
+    list.records, list.funds = records, copper(funds) and funds or nil
+    renderRoutes(list)
+end
+
+chooseRoute = function(route)
+    local session = live
+    if not session or session.pending or session.requested or not visit
+        or not chrome.unlocked() or not inContext(Logres:GetState()) then return end
+    local list = session.art.view.routes
+    local cost, funds = readAPI("TaxiNodeCost", route.id), readAPI("GetMoney")
+    if not route.usable or not copper(cost) or cost ~= route.cost
+        or readAPI("TaxiNodeName", route.id) ~= route.name
+        or readAPI("TaxiNodeGetType", route.id) ~= "REACHABLE"
+        or (cost > 0 and (not copper(funds) or funds < cost)) then
+        list.message = "Fare or availability changed. Choose again."
+        refreshRoutes(session)
+        return
+    end
+    local pin, click = resolvePin(session, route.id)
+    if not click then
+        list.message = "Use the map pin for this route."
+        refreshRoutes(session)
+        return
+    end
+    session.requested, list.locked = true, true
+    routeRequests = routeRequests + 1
+    list.message = "Flight requested. Use the map if you need to retry."
+    renderRoutes(list)
+    -- Only an explicit, revalidated sidebar click can invoke the original pin.
+    local dispatched = pcall(click, pin, "LeftButton")
+    if not dispatched and live == session then
+        result = "sidebar-native-click-rejected"
+        list.message = "Use the map pin for this route."
+        renderRoutes(list)
+    end
+end
+
+local function recenter(root)
+    local session = live
+    if not session or session.root ~= root or session.busy or session.pending then return end
+    if not chrome.unlocked() then session.recenterPending = true; return end
+    if not chrome.mutable(root) or not matchesParentScale(root) then
+        stockOnly = true
+        restore("stock-recenter-unsafe")
+        return
+    end
+    session.busy = true
+    local ok = pcall(session.plan[1].apply)
+    session.busy, session.recenterPending = false, false
+    if not ok then
+        stockOnly = true
+        restore("stock-recenter-failed")
+        return
+    end
+    recenters = recenters + 1
 end
 
 local function buildArt(root)
@@ -224,9 +364,10 @@ local function apply(root)
     if preview then preview:Hide() end
     local art = cache.art
     art.view.origin:SetText("Current flight master")
-    showRoute(art.view)
+    local list = art.view.routes
+    list.page, list.highlight, list.locked, list.message = 1, nil, false, nil
     lastState, lastFare = nil, nil
-    live = {root = root, art = art, plan = plan, applied = 0}
+    live = {root = root, routeMap = routeMap, art = art, plan = plan, applied = 0, busy = true}
     for i, action in ipairs(plan) do
         live.applied = i
         if not pcall(action.apply) then
@@ -235,6 +376,7 @@ local function apply(root)
             return
         end
     end
+    live.busy = false
     if not matchesParentScale(root) then
         stockOnly = true
         restore("stock-scale-mismatch")
@@ -246,6 +388,11 @@ local function apply(root)
         return
     end
     pcall(bindPins, root, routeMap, art.view)
+    if not pcall(refreshRoutes, live) then
+        stockOnly = true
+        restore("stock-routes-unavailable")
+        return
+    end
     opens = opens + 1
     result = "taxi-layout-active"
 end
@@ -267,6 +414,15 @@ local function reconcile()
         end)
         if not cache.hide then return end
     end
+    if not cache.anchor then
+        local secureHook = chrome.member(_G, "hooksecurefunc")
+        if type(secureHook) ~= "function" then result = "stock-anchor-hook-unavailable"; return end
+        cache.anchor = pcall(secureHook, root, "SetPoint", function(_, point)
+            -- The stock left-panel layout pass can run after TaxiFrame OnShow.
+            if chrome.ordinary(point) and point == "TOPLEFT" then recenter(root) end
+        end)
+        if not cache.anchor then result = "stock-anchor-hook-rejected"; return end
+    end
     if not cache.show then cache.show = pcall(hook, root, "OnShow", function() apply(root) end) end
     apply(root)
 end
@@ -279,7 +435,8 @@ end
 function Flight.GetAudit()
     return {result = result, live = live ~= nil, opens = opens, restores = restores,
         pending = live and live.pending or nil, scaleMatched = live and not live.pending or false,
-        lastNodeState = lastState, lastFareCopper = lastFare}
+        lastNodeState = lastState, lastFareCopper = lastFare, recenters = recenters,
+        routeRequests = routeRequests, routes = live and #live.art.view.routes.records or 0}
 end
 
 local function buildPreview()
@@ -290,18 +447,27 @@ local function buildPreview()
     root:SetFrameStrata(visual.strata)
     local view = paint(root, true)
     view.origin:SetText("Stormwind")
-    showRoute(view)
+    view.routes.records = {
+        {id = 1, name = "Sentinel Hill", cost = 110, price = "1s 10c", usable = true},
+        {id = 2, name = "Lakeshire", cost = 240, price = "2s 40c", usable = true},
+    }
+    view.routes.funds = 1000
+    view.routes.message = "Preview  /  Select a sample route"
+    renderRoutes(view.routes)
     chrome.wash(root, mapX, mapY, mapSize, mapSize, {0.19, 0.15, 0.08, 0.94})
     for _, point in ipairs({
-        {"Stormwind", 78, 312, "You are here"},
-        {"Sentinel Hill", 166, 427, "Available", "1s 10c"},
-        {"Lakeshire", 393, 210, "Unavailable"},
+        {"Stormwind", 78, 312},
+        {"Sentinel Hill", 166, 427, 1},
+        {"Lakeshire", 393, 210, 2},
     }) do
         local pin = CreateFrame("Button", nil, root)
         pin:SetSize(135, 24)
         pin:SetPoint("TOPLEFT", root, "TOPLEFT", mapX + point[2], -mapY - point[3])
         chrome.text(pin, "• " .. point[1], "GameFontHighlight", 0, 0, 135, palette.goldText)
-        pin:SetScript("OnClick", function() showRoute(view, point[1], point[4], point[5]) end)
+        pin:SetScript("OnClick", function()
+            view.routes.highlight = point[4]
+            renderRoutes(view.routes)
+        end)
     end
     local close = CreateFrame("Button", nil, root)
     close:SetSize(78, 24)
@@ -339,7 +505,16 @@ Logres:RegisterEvent("PLAYER_ENTERING_WORLD", function()
     if preview then preview:Hide() end
 end)
 Logres:RegisterEvent("PLAYER_REGEN_ENABLED", function()
-    if live and live.pending then restore(live.pending) else reconcile() end
+    if live and live.pending then
+        restore(live.pending)
+    elseif live and live.recenterPending then
+        recenter(live.root)
+    else
+        reconcile()
+    end
+end)
+Logres:RegisterEvent("PLAYER_MONEY", function()
+    if live and not live.pending and not live.requested then refreshRoutes(live) end
 end)
 Logres:RegisterEvent("DISPLAY_SIZE_CHANGED", function()
     if live and not chrome.fits() then

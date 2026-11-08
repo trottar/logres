@@ -1,0 +1,7 @@
+## P0399 — Centered flight window and selectable routes (2026-11-08)
+
+Verified P0398 main bc560a5953d117d668eccfb484808720cd376f37. Stormwind screenshot confirms normal panel scale and readable text but the native TaxiFrame is attached at the top left, with its Logres header partly off-screen. The pinned UIParentPanelManager rewrites the stock left panel with ClearAllPoints and TOPLEFT SetPoint. P0399 uses one per-TaxiFrame secure posthook for that exact placement. The live instance reuses its existing anchor action, guards its own setup/restore, defers during combat and fails open if unavailable. No global hook, polling or camera change.
+
+The list uses ordinary reachable nodes in the Classic taxi source. It displays known fares, pages through the shared catalogue, and highlights the map route on hover when visible on that page. Each explicit sidebar click rechecks live context, funds, name, reachability, fare and the original visible enabled pin's parent and ID. It dispatches that original unprotected pin once. The sidebar locks after dispatch until the visit ends. The native map remains available to recover from a refused request. The fixture uses sample routes and no native action.
+
+P0398 screenshot is placement evidence only. Purchase and departure are not confirmed. Verify centered window, one or more reachable rows and fares, map hover highlight, and close. Click a sidebar row only for an intended flight because the original click charges immediately. Report Bug captures safe addon-owned counts. P0399 Forever UNVERIFIED.

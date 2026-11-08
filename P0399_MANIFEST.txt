@@ -1,0 +1,29 @@
+P0399 Forever centered flight window and routes
+Verified P0398 baseline: bc560a5953d117d668eccfb484808720cd376f37
+Runtime version: 0.0.283-dev
+PREWRITE: 269/269 STATIC PASS
+POSTWRITE: 269/269 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Quest/FlightWindow.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0399_FLIGHT_ROUTE_LIST.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0399_FLIGHT_ROUTE_LIST.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0381_integrated_gameplay_contract.py
+tools/check_p0397_flight_window_contract.py
+tools/check_p0399_flight_route_list_contract.py
+P0399_MANIFEST.txt

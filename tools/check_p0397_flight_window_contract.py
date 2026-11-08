@@ -14,7 +14,7 @@ for token in (
     'chrome.read(routeMap, "GetParent") ~= root', 'state.interactionType == 6',
     'chrome.read(root, "IsShown") ~= true', 'chrome.member(systems, "Taxi")',
     'chrome.anchor(changes, map', 'chrome.goodbye(changes, root, close)',
-    'readAPI("TaxiNodeName", index)', 'readAPI("TaxiNodeGetType", index)', 'readAPI("TaxiNodeCost", index)',
+    'readAPI("TaxiNodeName", id)', 'readAPI("TaxiNodeGetType", index)', 'readAPI("TaxiNodeCost", index)',
     '"TAXIMAP_OPENED"', '"TAXIMAP_CLOSED"', '"PLAYER_REGEN_ENABLED"',
     'pcall(live.plan[i].undo)', 'restore("stock-requested")', 'Flight.Preview()',
 ):
@@ -22,7 +22,8 @@ for token in (
 for forbidden in ("TakeTaxiNode", "CloseTaxiMap", "ShowTaxiMapFrame", ":Click(", "SetParent(", "C_Timer", "OnUpdate"):
     assert forbidden not in source, forbidden
 live = source.split("local function buildPreview()", 1)[0]
-assert ":SetScript(" not in live
+assert 'root:SetScript(' not in live and 'pin:SetScript(' not in live
+assert 'pcall(click, pin, "LeftButton")' in live
 assert "incident.snapshot.flight = pickTraceStatus" in read("Logres/Dev/Panel.lua")
 assert "P0397_FLIGHT_WINDOW.md" in read("docs/memory/investigations/ISSUE_LEDGER.md")
 print("P0397 Classic taxi, native payment/input, shared styling and fail-open flight restoration: PASS (STATIC)")
