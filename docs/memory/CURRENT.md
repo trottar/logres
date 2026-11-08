@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-11-07
+as_of: 2026-11-08
 project: logres
 ---
 
@@ -11,7 +11,7 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0402** audit; P0401 main; P0400/P0399/P0398; P0397; P0396; P0395; P0394; P0393; P0392; P0391 session 46; P0390; P0389; P0388 L-027; P0387 late-accept; P0386 L-001; P0385 greeting/L-002; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
+**P0403** L-001 quest handoff; P0402 main; P0401–P0397 flight; P0396; P0395; P0394; P0393; P0392; P0391 session 46; P0390; P0389; P0388 L-027; P0387 late-accept; P0386 L-001; P0385 greeting/L-002; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
 
 ## Verified State
 
@@ -32,23 +32,24 @@ Alpha blocked. D-046/D-047/D-048.
 - P0342 R2 `be3be5e80cf65cf1bf6d261b84b573f1f1effca2` 213/213 STATIC; R0/R1 PREWRITE REFUSED; L-028 OPEN.
 - P0341 R1 `fb3b2658985e7f6d05f7730a3de6eb7b7dca6ad9` 212/212 STATIC; R0 historical-version checker REFUSED before writes; WoW UNVERIFIED.
 - P0338 R1 `342cab97` 209/209; P0337 R1 `cfdc07af` 208/208. Historical PREWRITE failures, narrow remedies and deferred L-031 focused-yard/quest-giver validation remain in their evidence files.
-- P0336/P0335/P0334 R3/P0333/P0332/P0331/P0330/P0329: 207–200 STATIC. See PATCH_INDEX.
+- P0340 prefreeze; P0336/P0335/P0334 R3/P0333/P0332/P0331/P0330/P0329: 207–200 STATIC. See PATCH_INDEX.
 - P0328 alpha runbook; P0317/P0318/P0319/P0320 gossip observations; P0321 `9a180c8` parking UNVERIFIED. P0322/P0323/P0324/P0325 D-048 inert models; P0326/P0327 merchant/flight models only. Stock UI/quest 237 kept.
 - D-048 independent live domain selectors and saved migration do not exist: schema 3 still stores `immersionEnabled` and `activeQuestEnabled`. D-046 preview-first and D-047 frozen Camera/DynamicCam remain required. Native UI and protected/secret fallbacks stay usable.
 - L-020–L-032 are tracked user reports; runtime gates apply. L-028 duplicated/missing target debuffs remains OPEN; L-022 focused quest artifact requires screenshot, L-027 Blizzard transient popup requires `/fstack` owner evidence. L-019 license unresolved, release blocked.
 
 ## Next Action
 
-Capture flight child input. L-002 deferred; L-027/L-033/L-041 OPEN.
+Validate the late-accept quest handoff in Forever. Flight inventory captured. L-002 deferred; L-027/L-033/L-041 OPEN.
 
 ## Success Criteria
 
-P0401 recovery PASS. P0402 UNVERIFIED.
+Owned progress or completion stays usable after late acceptance. Forever UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0403_QUEST_STAGE_HANDOFF.md
 - docs/memory/evidence/P0402_FLIGHT_CHILD_INVENTORY.md
 - docs/memory/evidence/P0401_FLIGHT_RECOVERY.md
 - docs/memory/evidence/P0400_FLIGHT_HOST.md
@@ -98,7 +99,6 @@ Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret re
 - `docs/memory/evidence/P0343_ACTIVE_QUEST_UNKNOWN_PREVIEW.md` and `docs/memory/patches/P0343_ACTIVE_QUEST_UNKNOWN_PREVIEW.md`
 - `docs/memory/evidence/P0342_TARGET_AURA_ROUTE.md` and `docs/memory/patches/P0342_TARGET_AURA_ROUTE.md`
 - `docs/memory/evidence/P0341_FOCUSED_MARKER_DIAGNOSTICS.md` and `docs/memory/patches/P0341_FOCUSED_MARKER_DIAGNOSTICS.md`
-- `docs/memory/evidence/P0340_ALPHA_PREFREEZE_AUDIT.md`, `docs/memory/patches/P0340_ALPHA_PREFREEZE_AUDIT.md`, `tools/alpha_prefreeze_audit.py`, `docs/memory/roadmap/LAUNCH_READINESS.md`
 - `docs/memory/roadmap/NOV04_GAMEPLAY_REGRESSION_MATRIX.md` and `docs/memory/evidence/P0339_GAMEPLAY_RUNTIME_MATRIX.md`
 - `docs/memory/evidence/P0338_FOCUSED_COMPASS_YARDS.md` and `docs/memory/patches/P0338_FOCUSED_COMPASS_YARDS.md`
 - `docs/memory/evidence/P0337_QUEST_GIVER_ELIGIBILITY.md` and `docs/memory/patches/P0337_QUEST_GIVER_ELIGIBILITY.md`

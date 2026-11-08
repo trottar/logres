@@ -1,3 +1,7 @@
+## P0403 — Late acceptance during quest progress and rewards (2026-11-08)
+
+Baseline P0402 e8be49d786e0468de8acc49de9996765ba46b294. Session 60 establishes that the preceding acceptance removes a different, already-owned stage. The existing guarded acceptance dispatch retains only that stage, with no new native calls, capture, timing or presentation owner. Pre-handoff gates cover the event replay, exact suite, Lua compilation, applier baseline and payload refusal, rollback, manifest and Git whitespace. Forever runtime remains unverified.
+
 ## P0402 flight child inventory audit (2026-11-08)
 
 P0401 bcb7353b9c254f68387a63cc5d80b242a147411b verified. Incident 6641 confirms live recovery and the retired host's first refusal at 20 versus eight children. Inventory uses the same captured child list, checks ordinary and unprotected status before any additional reads, copies only selected scalar metadata to Report Bug, skips the exact cached addon art and leaves descendants unchecked. The recovered presentation and native actions retain their previous behavior. Exact gates cover Lua compilation, all static checks, simulated 20 child shapes and bounded refusal, isolated actual apply, rollback and Git whitespace. Client inventory and centering remain unverified.

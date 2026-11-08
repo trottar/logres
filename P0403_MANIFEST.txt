@@ -1,0 +1,27 @@
+P0403 Forever late-accept quest stage handoff
+Verified P0402 baseline: e8be49d786e0468de8acc49de9996765ba46b294
+Runtime version: 0.0.287-dev
+PREWRITE: 273/273 STATIC PASS
+POSTWRITE: 273/273 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Logres.toc
+Logres/Quest/Dialogue.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0403_QUEST_STAGE_HANDOFF.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0403_QUEST_STAGE_HANDOFF.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0381_integrated_gameplay_contract.py
+tools/check_p0403_quest_stage_handoff_contract.py
+P0403_MANIFEST.txt

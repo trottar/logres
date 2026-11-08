@@ -2976,6 +2976,25 @@ function Dialogue:OnInitialize()
                         {questID = accepted, result = "owned-greeting-retained"})
                     return
                 end
+                -- Accept can advance straight into a different quest's
+                -- progress or rewards before its own confirmation arrives.
+                if accepted ~= nil and accepted == self.pendingAcceptedOfferQuestID
+                    and self.presentationShown then
+                    local activeQuestID, stage
+                    if self.progressActive and self.progressOwned then
+                        activeQuestID, stage = self.lastQuestID, "progress"
+                    elseif self.completionActive and self.activeCompletion
+                        and self.completionControl and self.completionControl.applied then
+                        activeQuestID, stage = self.activeCompletion.questID, "completion"
+                    end
+                    if activeQuestID and activeQuestID ~= accepted then
+                        self.pendingAcceptedOfferQuestID = nil
+                        Logres:TraceEvent("quest", "late-accepted-stage-preserved", {
+                            questID = accepted, activeQuestID = activeQuestID, stage = stage,
+                        })
+                        return
+                    end
+                end
                 self.pendingAcceptedOfferQuestID = nil
                 self:ClearActiveDetail(
                     "QUEST_ACCEPTED"
