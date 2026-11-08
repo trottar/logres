@@ -14,7 +14,7 @@ for token in (
     "local function goodbye(plan, frame, button)", 'pcall(artwork, button, goodbyeArt)',
     '"GetNormalTexture", "GetPushedTexture", "GetHighlightTexture", "GetDisabledTexture"',
     'and "goodbye" or "stock-x"', "overlay:EnableMouse(false)", "goodbyeArt(close)",
-    'member(frame, "selectedTab")', 'read(button, "GetText")', 'pcall(hook, button, "OnClick", refreshTabs)',
+    'member(frame, "selectedTab")', 'read(button, "GetFrameLevel")', 'pcall(hook, button, "OnClick", refreshTabs)',
     "append(plan, changes)", 'member(_G, "MerchantPageText")',
     'member(_G, "MerchantPrevPageButton")', 'member(_G, "MerchantNextPageButton")',
 ):

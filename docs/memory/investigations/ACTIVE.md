@@ -1,3 +1,7 @@
+## P0395 — Single-label merchant tabs (2026-11-08)
+
+Verified P0394 main cc25d7d. Forever session 50 incident 5829 shows duplicate Merchant and Buyback labels while Goodbye and tab styling are active. User reports a successful sale and buyback. P0395 keeps one native localized label per live tab and draws the Logres selection accent behind it. Client retest pending. See docs/memory/evidence/P0395_MERCHANT_TAB_LABELS.md.
+
 ## P0394 — Merchant Goodbye and control styling (2026-11-08)
 
 Verified P0393 main eb94093. The Forever screenshot shows trainer placement, live vendor rows and the native quantity picker with 2 entered. User accepted the basic concept and called out the stock X where trainer menus say Goodbye. P0394 matches the trainer Goodbye appearance on the native close button, styles supported merchant tabs and groups the pager. Final client appearance and transaction parity remain UNVERIFIED. See docs/memory/evidence/P0394_MERCHANT_GOODBYE.md.

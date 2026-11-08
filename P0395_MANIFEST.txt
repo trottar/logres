@@ -1,0 +1,28 @@
+P0395 Forever merchant tab label repair
+Verified P0394 baseline: cc25d7db22d38eab1fe390f8b6dc2b5eafd478bc
+Runtime version: 0.0.279-dev
+PREWRITE: 265/265 STATIC PASS
+POSTWRITE: 265/265 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Logres.toc
+Logres/Quest/MerchantCatalogue.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0395_MERCHANT_TAB_LABELS.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0395_MERCHANT_TAB_LABELS.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0381_integrated_gameplay_contract.py
+tools/check_p0394_merchant_goodbye_contract.py
+tools/check_p0395_merchant_tab_labels_contract.py
+P0395_MANIFEST.txt

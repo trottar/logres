@@ -7,11 +7,11 @@ project: logres
 # Current State
 
 ## Active Objective
-Forever alpha D-048; D-046 preview/stock fallback, D-047 camera frozen. Blocked.
+Forever alpha blocked. D-046 preview/fallback, D-047 camera frozen, D-048.
 
 ## Current Work Item
 
-**P0394** Goodbye; P0393 main; P0392; P0391 session 46; P0390; P0389; P0388 L-027 gate; P0387 late-accept fix, P0386 L-001 greeting; P0385 QUEST_GREETING, L-002 claim flash; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue no-flash scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
+**P0395** tabs; P0394 main; P0393; P0392; P0391 session 46; P0390; P0389; P0388 L-027 gate; P0387 late-accept fix, P0386 L-001 greeting; P0385 QUEST_GREETING, L-002 claim flash; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue no-flash scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
 
 ## Verified State
 
@@ -35,20 +35,21 @@ Forever alpha D-048; D-046 preview/stock fallback, D-047 camera frozen. Blocked.
 - P0336/P0335/P0334 R3/P0333/P0332/P0331/P0330/P0329: 207–200 STATIC. See PATCH_INDEX.
 - P0328 alpha runbook; P0317/P0318/P0319/P0320 gossip observations; P0321 `9a180c8` parking UNVERIFIED. P0322/P0323/P0324/P0325 D-048 inert models; P0326/P0327 merchant/flight models only. Stock UI/quest 237 preserved.
 - D-048 independent live domain selectors and saved migration do not exist: schema 3 still stores `immersionEnabled` and `activeQuestEnabled`. D-046 preview-first and D-047 frozen Camera/DynamicCam remain required. Native UI and protected/secret fallbacks stay usable.
-- L-020–L-032 are tracked user reports; source fixes are not client-accepted. L-028 duplicated/missing target debuffs remains OPEN; L-022 focused quest artifact requires screenshot, L-027 Blizzard transient popup requires `/fstack` owner evidence. L-019 root project license remains unresolved, public distribution NOT APPROVED.
+- L-020–L-032 are tracked user reports; runtime gates apply. L-028 duplicated/missing target debuffs remains OPEN; L-022 focused quest artifact requires screenshot, L-027 Blizzard transient popup requires `/fstack` owner evidence. L-019 root project license remains unresolved, public distribution NOT APPROVED.
 
 ## Next Action
 
-Verify merchant Goodbye and tabs. Flight L-004 next. L-002 deferred; L-027/L-033/L-041 OPEN.
+Verify single tab labels. Flight L-004 next. L-002 deferred; L-027/L-033/L-041 OPEN.
 
 ## Success Criteria
 
-P0393 layout and quantity picker observed; purchase unverified. P0394 WoW UNVERIFIED.
+P0394 sale/buyback PASS reported; tab duplicates. P0395 WoW UNVERIFIED.
 
 ## Do Not Reopen Without New Evidence
-Preserve P0321 gossip parking, frozen camera, protected actions, pet secure state, stock UI, fifth-domain prefs, saves, quest 237 and P0329 merchant/flight fallback. No polling, secret inspection or blanket suppression. Preserve D-046/D-048, optional QuestieDB, sparse HP/target and stock aura/group.
+Preserve P0321 gossip parking, frozen camera, protected actions, pet secure state, stock UI, fifth-domain prefs, saves, quest 237 and P0329 merchant/flight fallback. No polling, secret inspection or blanket suppression. Preserve D-046/D-048, QuestieDB, sparse HP/target and stock aura/group.
 
 ## Relevant References
+- docs/memory/evidence/P0395_MERCHANT_TAB_LABELS.md
 - docs/memory/evidence/P0394_MERCHANT_GOODBYE.md
 - docs/memory/evidence/P0393_TRAINER_STYLE_MERCHANT.md
 - docs/memory/evidence/P0392_MERCHANT_CATALOGUE.md

@@ -52,13 +52,19 @@ local function tabArt(owner, caption)
     line:SetPoint("BOTTOMLEFT", owner, "BOTTOMLEFT", 1, 3)
     line:SetWidth(2)
     line:SetColorTexture(unpack(palette.gold))
-    local label = owner:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-    label:SetAllPoints(owner)
-    label:SetText(caption)
+    -- Fixtures need a label. Live tabs already have Blizzard's localized text.
+    local label
+    if caption then
+        label = owner:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+        label:SetAllPoints(owner)
+        label:SetText(caption)
+    end
     return function(active)
         fill:SetShown(active)
         line:SetShown(active)
-        label:SetTextColor(unpack(active and palette.goldText or palette.body))
+        if label then
+            label:SetTextColor(unpack(active and palette.goldText or palette.body))
+        end
     end
 end
 
@@ -187,13 +193,14 @@ local rootDecorations = {"Bg", "TitleBg", "TopTileStreaks", "PortraitContainer",
 
 local controlArt = setmetatable({}, {__mode = "k"})
 
-local function artwork(button, render, caption)
+local function artwork(button, render, caption, level)
     local existing = controlArt[button]
     if existing then return existing.frame, existing.select end
     local overlay = CreateFrame("Frame", nil, button)
     overlay:Hide()
     overlay:EnableMouse(false)
     overlay:SetAllPoints(button)
+    if level then overlay:SetFrameLevel(level) end
     local select = render(overlay, caption)
     controlArt[button] = {frame = overlay, select = select}
     return overlay, select
@@ -255,16 +262,14 @@ local function skinTabs(plan, frame, first, second)
             local region = modern and member(button, suffix) or member(_G, "MerchantFrameTab" .. i .. suffix)
             if not fade(changes, region) then return nil end
         end
-        local caption = read(button, "GetText")
-        if type(caption) ~= "string" or caption == "" or not fade(changes, read(button, "GetFontString")) then
-            return nil
-        end
+        local level = read(button, "GetFrameLevel")
+        if type(level) ~= "number" or level < 1 then return nil end
         if not tabHooks[button] then
             local hook = method(button, "HookScript")
             if not hook or not pcall(hook, button, "OnClick", refreshTabs) then return nil end
             tabHooks[button] = true
         end
-        local ok, overlay, select = pcall(artwork, button, tabArt, caption)
+        local ok, overlay, select = pcall(artwork, button, tabArt, nil, level - 1)
         if not ok then return nil end
         select(i == id)
         tabs[i] = select
