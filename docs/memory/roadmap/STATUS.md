@@ -1,3 +1,7 @@
+## P0394 — Merchant Goodbye and control styling (2026-11-08)
+
+Verified P0393 main eb94093. The Forever screenshot shows trainer placement, live vendor rows and the native quantity picker with 2 entered. User accepted the basic concept and called out the stock X where trainer menus say Goodbye. P0394 matches the trainer Goodbye appearance on the native close button, styles supported merchant tabs and groups the pager. Final client appearance and transaction parity remain UNVERIFIED. See docs/memory/evidence/P0394_MERCHANT_GOODBYE.md.
+
 ## P0393 — Trainer-style merchant with native controls (2026-11-08)
 
 Verified P0392 main e431643. The user rejected the offset catalogue preview and asked for the trainer layout and full merchant functions, including quantity purchases. P0393 uses the trainer frame geometry, surface and palette with the original Blizzard vendor controls in the window. Live layout is gated with stock fallback. Forever visuals and transactions UNVERIFIED. NPC flash remains deferred. Evidence in docs/memory/evidence/P0393_TRAINER_STYLE_MERCHANT.md.

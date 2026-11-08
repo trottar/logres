@@ -12,6 +12,7 @@ local live, preview, visit, stockOnly
 local merchantState = false
 local hooked = setmetatable({}, {__mode = "k"})
 local result, starts, restores = "idle", 0, 0
+local goodbyeWidth, goodbyeHeight, goodbyeX, goodbyeY = 78, 24, -45, -12
 
 local function text(parent, value, font, x, y, width, color, align)
     local label = parent:CreateFontString(nil, "OVERLAY", font)
@@ -28,6 +29,37 @@ local function wash(parent, x, y, w, h, rgba)
     texture:SetPoint("TOPLEFT", parent, "TOPLEFT", x, -y)
     texture:SetSize(w, h)
     texture:SetColorTexture(unpack(rgba))
+end
+
+local function goodbyeArt(owner)
+    local label = owner:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    label:SetAllPoints(owner)
+    label:SetText("Goodbye")
+    label:SetTextColor(0.97, 0.78, 0.44, 1)
+    local line = owner:CreateTexture(nil, "ARTWORK")
+    line:SetColorTexture(0.77, 0.60, 0.32, 0.72)
+    line:SetHeight(1)
+    line:SetPoint("BOTTOMLEFT", owner, "BOTTOMLEFT", 5, 0)
+    line:SetPoint("BOTTOMRIGHT", owner, "BOTTOMRIGHT", -5, 0)
+end
+
+local function tabArt(owner, caption)
+    local fill = owner:CreateTexture(nil, "BACKGROUND")
+    fill:SetAllPoints(owner)
+    fill:SetColorTexture(unpack(palette.active))
+    local line = owner:CreateTexture(nil, "ARTWORK")
+    line:SetPoint("TOPLEFT", owner, "TOPLEFT", 1, -3)
+    line:SetPoint("BOTTOMLEFT", owner, "BOTTOMLEFT", 1, 3)
+    line:SetWidth(2)
+    line:SetColorTexture(unpack(palette.gold))
+    local label = owner:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    label:SetAllPoints(owner)
+    label:SetText(caption)
+    return function(active)
+        fill:SetShown(active)
+        line:SetShown(active)
+        label:SetTextColor(unpack(active and palette.goldText or palette.body))
+    end
 end
 
 local function shell(owner, title, sample)
@@ -75,7 +107,8 @@ local function read(owner, key)
     local fn = method(owner, key)
     if not fn then return nil end
     local ok, value = pcall(fn, owner)
-    if ok and ordinary(value) then return value end
+    if ok and ordinary(value) then return value, true end
+    return nil, false
 end
 
 local function unlocked()
@@ -121,13 +154,13 @@ local function anchor(plan, frame, point, relative, relativePoint, x, y)
     return true
 end
 
-local function resize(plan, frame)
+local function resize(plan, frame, width, height)
     local get, set = method(frame, "GetSize"), method(frame, "SetSize")
     if not get or not set then return false end
     local ok, w, h = pcall(get, frame)
     if not ok then return false end
     plan[#plan + 1] = {
-        apply = function() set(frame, visual.width, visual.height) end,
+        apply = function() set(frame, width, height) end,
         undo = function() set(frame, w, h) end,
     }
     return true
@@ -135,21 +168,123 @@ end
 
 -- Optional, named decorative regions only. No controls, visibility or scripts.
 local function fade(plan, region)
-    if not mutable(region) then return end
+    if not mutable(region) then return false end
     local get, set = method(region, "GetAlpha"), method(region, "SetAlpha")
-    if not get or not set then return end
+    if not get or not set then return false end
     local ok, alpha = pcall(get, region)
-    if not ok then return end
+    if not ok then return false end
     plan[#plan + 1] = {
         apply = function() set(region, 0) end,
         undo = function() set(region, alpha) end,
     }
+    return true
 end
 
 local decorations = {"MerchantFramePortrait", "MerchantNameText", "BuybackBG",
     "MerchantFrameBottomLeftBorder", "MerchantFrameBottomRightBorder"}
 local rootDecorations = {"Bg", "TitleBg", "TopTileStreaks", "PortraitContainer",
     "NineSlice", "Inset", "TitleText"}
+
+local controlArt = setmetatable({}, {__mode = "k"})
+
+local function artwork(button, render, caption)
+    local existing = controlArt[button]
+    if existing then return existing.frame, existing.select end
+    local overlay = CreateFrame("Frame", nil, button)
+    overlay:Hide()
+    overlay:EnableMouse(false)
+    overlay:SetAllPoints(button)
+    local select = render(overlay, caption)
+    controlArt[button] = {frame = overlay, select = select}
+    return overlay, select
+end
+
+local function append(plan, changes)
+    for _, action in ipairs(changes) do plan[#plan + 1] = action end
+end
+
+local function present(plan, overlay)
+    plan[#plan + 1] = {
+        apply = function() overlay:Show() end,
+        undo = function() overlay:Hide() end,
+    }
+end
+
+local function goodbye(plan, frame, button)
+    local changes = {}
+    for _, key in ipairs({"GetNormalTexture", "GetPushedTexture", "GetHighlightTexture", "GetDisabledTexture"}) do
+        local region, known = read(button, key)
+        if not known or (not region and key == "GetNormalTexture")
+            or (region and not fade(changes, region)) then return false end
+    end
+    if not resize(changes, button, goodbyeWidth, goodbyeHeight)
+        or not anchor(changes, button, "TOPRIGHT", frame, "TOPRIGHT", goodbyeX, goodbyeY) then
+        return false
+    end
+    local ok, overlay = pcall(artwork, button, goodbyeArt)
+    if not ok then return false end
+    present(changes, overlay)
+    append(plan, changes)
+    return true
+end
+
+local function selectedTab(frame)
+    local id = member(frame, "selectedTab")
+    if id == 1 or id == 2 then return id end
+end
+
+local function refreshTabs()
+    if not live or not live.tabs then return end
+    local id = selectedTab(live.frame)
+    if id then
+        for i, update in ipairs(live.tabs) do update(i == id) end
+    end
+end
+
+local tabHooks = setmetatable({}, {__mode = "k"})
+local function skinTabs(plan, frame, first, second)
+    local id = selectedTab(frame)
+    if not id then return nil end
+    local changes, tabs = {}, {}
+    for i, button in ipairs({first, second}) do
+        local modern = member(button, "Left") ~= nil
+        local suffixes = modern and {"Left", "Middle", "Right", "LeftActive", "MiddleActive", "RightActive",
+            "LeftHighlight", "MiddleHighlight", "RightHighlight"}
+            or {"Left", "Middle", "Right", "LeftDisabled", "MiddleDisabled", "RightDisabled", "HighlightTexture"}
+        for _, suffix in ipairs(suffixes) do
+            local region = modern and member(button, suffix) or member(_G, "MerchantFrameTab" .. i .. suffix)
+            if not fade(changes, region) then return nil end
+        end
+        local caption = read(button, "GetText")
+        if type(caption) ~= "string" or caption == "" or not fade(changes, read(button, "GetFontString")) then
+            return nil
+        end
+        if not tabHooks[button] then
+            local hook = method(button, "HookScript")
+            if not hook or not pcall(hook, button, "OnClick", refreshTabs) then return nil end
+            tabHooks[button] = true
+        end
+        local ok, overlay, select = pcall(artwork, button, tabArt, caption)
+        if not ok then return nil end
+        select(i == id)
+        tabs[i] = select
+        present(changes, overlay)
+    end
+    append(plan, changes)
+    return tabs
+end
+
+local function placePager(plan, frame)
+    local changes = {}
+    local center = list.x + list.w / 2 - 28
+    local prev, nextPage = member(_G, "MerchantPrevPageButton"), member(_G, "MerchantNextPageButton")
+    local label = member(_G, "MerchantPageText")
+    if anchor(changes, prev, "CENTER", frame, "BOTTOMLEFT", center - 107, 91)
+        and anchor(changes, nextPage, "CENTER", frame, "BOTTOMLEFT", center + 107, 91)
+        and anchor(changes, label, "CENTER", frame, "BOTTOMLEFT", center, 91) then
+        append(plan, changes)
+    end
+end
 
 local function capture(frame)
     local plan = {}
@@ -168,10 +303,9 @@ local function capture(frame)
         end
     end
     if not anchor(plan, frame, visual.point, UIParent, visual.relativePoint, visual.x, visual.y)
-        or not resize(plan, frame)
-        or not anchor(plan, close, "TOPRIGHT", frame, "TOPRIGHT", -34, -20)
+        or not resize(plan, frame, visual.width, visual.height)
         or not anchor(plan, tab, "TOPLEFT", frame, "TOPLEFT", 38, -140)
-        or not anchor(plan, secondTab, "LEFT", tab, "RIGHT", -12, 0)
+        or not anchor(plan, secondTab, "LEFT", tab, "RIGHT", 6, 0)
         or not anchor(plan, first, "TOPLEFT", frame, "TOPLEFT", firstX, -firstY) then
         return nil
     end
@@ -192,7 +326,13 @@ local function capture(frame)
     if filter and not anchor(plan, filter, "TOPRIGHT", frame, "TOPRIGHT", -45, -97) then
         return nil
     end
-    return plan
+    local goodbyeMode = goodbye(plan, frame, close) and "goodbye" or "stock-x"
+    if goodbyeMode == "stock-x" and not anchor(plan, close, "TOPRIGHT", frame, "TOPRIGHT", -34, -20) then
+        return nil
+    end
+    local tabs = skinTabs(plan, frame, tab, secondTab)
+    placePager(plan, frame)
+    return plan, goodbyeMode, tabs
 end
 
 local function restore(reason)
@@ -262,7 +402,7 @@ local function apply(frame)
         result = "native-placement-owns-session"
         return
     end
-    local ok, plan = pcall(capture, frame)
+    local ok, plan, goodbyeMode, tabs = pcall(capture, frame)
     if not ok or not plan then
         stockOnly, result = true, "stock-layout-unsupported"
         return
@@ -273,7 +413,7 @@ local function apply(frame)
         return
     end
     if preview then preview:Hide() end
-    live = {frame = frame, art = art, plan = plan, applied = 0}
+    live = {frame = frame, art = art, plan = plan, applied = 0, goodbye = goodbyeMode, tabs = tabs}
     for i, action in ipairs(plan) do
         live.applied = i
         if not pcall(action.apply) then
@@ -351,9 +491,12 @@ local function buildPreview()
     frame:SetFrameStrata(visual.strata)
     frame:EnableMouse(false)
     shell(frame, "Tailoring Supplies", true)
-    wash(frame, 41, 139, 193, 35, palette.active)
-    wash(frame, 41, 139, 3, 35, palette.gold)
-    text(frame, "Merchant        Buyback", "GameFontHighlight", 49, 145, 185, palette.body)
+    for i, caption in ipairs({"Merchant", "Buyback"}) do
+        local tab = CreateFrame("Frame", nil, frame)
+        tab:SetSize(80, 30)
+        tab:SetPoint("TOPLEFT", frame, "TOPLEFT", 38 + (i - 1) * 86, -140)
+        tabArt(tab, caption)(i == 1)
+    end
     for i, item in ipairs(sampleItems) do
         local x = firstX + ((i - 1) % 2) * (153 + columnGap)
         local y = firstY + math.floor((i - 1) / 2) * 52
@@ -366,9 +509,9 @@ local function buildPreview()
         text(frame, item[3], "GameFontHighlightSmall", x + 45, y + 18, 214, palette.goldText)
     end
     local close = CreateFrame("Button", nil, frame)
-    close:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -34, -20)
-    close:SetSize(86, 28)
-    text(close, "Goodbye", "GameFontHighlight", 0, 1, 86, palette.goldText, "CENTER")
+    close:SetPoint("TOPRIGHT", frame, "TOPRIGHT", goodbyeX, goodbyeY)
+    close:SetSize(goodbyeWidth, goodbyeHeight)
+    goodbyeArt(close)
     close:SetScript("OnClick", function() frame:Hide() end)
     return frame
 end
@@ -391,6 +534,7 @@ end
 function Merchant.GetAudit()
     return {result = result, visit = visit == true, live = live ~= nil,
         starts = starts, restores = restores, pending = live and live.pending or nil,
+        goodbye = live and live.goodbye or nil, tabsStyled = live and live.tabs ~= nil or false,
         nativeOwner = "Blizzard"}
 end
 
@@ -399,7 +543,7 @@ Logres:RegisterEvent("MERCHANT_SHOW", function()
     reconcile()
 end)
 Logres:RegisterEvent("MERCHANT_UPDATE", function()
-    if visit and not live then reconcile() end
+    if live then refreshTabs() elseif visit then reconcile() end
 end)
 Logres:RegisterEvent("MERCHANT_CLOSED", function()
     visit = false

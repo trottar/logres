@@ -1,0 +1,29 @@
+P0394 Forever merchant Goodbye and control styling
+Verified P0393 baseline: eb940936ec1edee237da023da2c967bc02b85d19
+Runtime version: 0.0.278-dev
+PREWRITE: 264/264 STATIC PASS
+POSTWRITE: 264/264 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Quest/MerchantCatalogue.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0394_MERCHANT_GOODBYE.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0394_MERCHANT_GOODBYE.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0381_integrated_gameplay_contract.py
+tools/check_p0393_trainer_style_merchant_contract.py
+tools/check_p0394_merchant_goodbye_contract.py
+P0394_MANIFEST.txt

@@ -18,7 +18,7 @@ for token in (
     'member(_G, "MerchantFrameTab1")', 'member(_G, "MerchantFrameTab2")',
     'member(row, "ItemButton")', 'read(button, "GetParent") ~= row',
     'member(frame, "FilterDropdown")', "for i = 2, 12, 2 do",
-    "local ok, plan = pcall(capture, frame)", "live.applied = i",
+    "local ok, plan, goodbyeMode, tabs = pcall(capture, frame)", "live.applied = i",
     "pcall(action.apply)", 'restore("stock-layout-restored")',
     'restore("stock-requested")', 'restore("merchant-closed")',
     'restore("merchant-hidden")', 'restore("merchant-context-ended")',
