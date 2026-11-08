@@ -11,7 +11,7 @@ local mapX, mapY, mapSize = 279, 100, 580
 local live, preview, visit, stockOnly
 local result, opens, restores = "idle", 0, 0
 local lastState, lastFare
-local recenters, routeRequests = 0, 0
+local routeRequests = 0
 local chooseRoute
 local PAGE_SIZE = 6
 local frames = setmetatable({}, {__mode = "k"})
@@ -167,65 +167,103 @@ local function bindPins(root, routeMap, view)
     end
 end
 
-local borders = {"Bg", "TitleBg", "TopTileStreaks", "TitleText", "TopLeftCorner",
-    "TopRightCorner", "TopBorder", "BotLeftCorner", "BotRightCorner", "BottomBorder",
-    "LeftBorder", "RightBorder", "InsetBorderTopLeft", "InsetBorderTopRight",
-    "InsetBorderBottomLeft", "InsetBorderBottomRight", "InsetBorderTop",
-    "InsetBorderBottom", "InsetBorderLeft", "InsetBorderRight"}
-
-local function normalizeScale(changes, root)
-    if chrome.read(root, "GetParent") ~= UIParent then return false end
-    local get, set = chrome.method(root, "GetScale"), chrome.method(root, "SetScale")
+local function setAndRestore(plan, object, getName, setName, value)
+    local get, set = chrome.method(object, getName), chrome.method(object, setName)
     if not get or not set then return false end
-    local ok, stockScale = pcall(get, root)
+    local ok, stock = pcall(get, object)
     if not ok then return false end
-    -- The native value is an opaque token used only to restore the original panel.
-    changes[#changes + 1] = {
-        apply = function() set(root, 1) end,
-        undo = function() set(root, stockScale) end,
+    plan[#plan + 1] = {
+        apply = function() set(object, value) end,
+        undo = function() set(object, stock) end,
     }
     return true
 end
 
-local function matchesParentScale(root)
-    local actual = chrome.read(root, "GetEffectiveScale")
-    local expected = chrome.read(UIParent, "GetEffectiveScale")
+local function quietMouse(plan, frame)
+    return chrome.mutable(frame)
+        and setAndRestore(plan, frame, "IsMouseClickEnabled", "SetMouseClickEnabled", false)
+        and setAndRestore(plan, frame, "IsMouseMotionEnabled", "SetMouseMotionEnabled", false)
+end
+
+local function knownChildren(root, routeMap, close)
+    local get = chrome.method(root, "GetChildren")
+    if not get then return false end
+    local ok, children = pcall(function() return {get(root)} end)
+    if not ok or #children < 2 or #children > 8 then return false end
+    local mapFound, closeFound = false, false
+    for _, child in ipairs(children) do
+        if not chrome.ordinary(child) then return false end
+        if child == routeMap then
+            mapFound = true
+        elseif child == close then
+            closeFound = true
+        elseif not chrome.mutable(child) or chrome.read(child, "IsMouseClickEnabled") ~= false
+            or chrome.read(child, "IsMouseMotionEnabled") ~= false
+            or chrome.read(child, "GetNumChildren") ~= 0 then
+            return false
+        end
+    end
+    return mapFound and closeFound
+end
+
+local function adopt(plan, child, root, host, relative, x, y, level)
+    if not chrome.mutable(child) or chrome.read(child, "GetParent") ~= root then return false end
+    local setParent = chrome.method(child, "SetParent")
+    local geometry, layers = {}, {}
+    if not setParent or not chrome.anchor(geometry, child, "TOPLEFT", relative, "TOPLEFT", x, y)
+        or not chrome.resize(geometry, child, mapSize, mapSize) then return false end
+    if level and (not setAndRestore(layers, child, "GetFrameStrata", "SetFrameStrata", visual.strata)
+        or not setAndRestore(layers, child, "GetFrameLevel", "SetFrameLevel", level)) then
+        return false
+    end
+    plan[#plan + 1] = {
+        apply = function()
+            setParent(child, host)
+            for _, action in ipairs(geometry) do action.apply() end
+            for _, action in ipairs(layers) do action.apply() end
+        end,
+        undo = function()
+            setParent(child, root)
+            for i = #geometry, 1, -1 do geometry[i].undo() end
+            for i = #layers, 1, -1 do layers[i].undo() end
+        end,
+    }
+    return true
+end
+
+local function matchesHostScale(routeMap, host)
+    local actual = chrome.read(routeMap, "GetEffectiveScale")
+    local expected = chrome.read(host, "GetEffectiveScale")
     return type(actual) == "number" and type(expected) == "number"
         and actual > 0 and expected > 0 and math.abs(actual - expected) < 0.001
 end
 
-local function capture(root, map)
+local function capture(root, map, routeMap, host)
     local close = chrome.member(root, "CloseButton")
-    if not chrome.member(root, "Bg") or not chrome.member(root, "TitleText") then return nil end
+    local level = host:GetFrameLevel()
     local changes = {}
-    if not chrome.anchor(changes, root, visual.point, UIParent, visual.relativePoint, visual.x, visual.y)
-        or not normalizeScale(changes, root)
-        or not chrome.resize(changes, root, visual.width, visual.height)
-        or not chrome.anchor(changes, map, "TOPLEFT", root, "TOPLEFT", mapX, -mapY)
-        or not chrome.resize(changes, map, mapSize, mapSize)
-        or not chrome.mutable(close) or not chrome.goodbye(changes, root, close) then
+    if chrome.read(root, "GetParent") ~= UIParent or not close or not knownChildren(root, routeMap, close)
+        or not adopt(changes, map, root, host, host, mapX, -mapY)
+        or not adopt(changes, routeMap, root, host, map, 0, 0, level + 1)
+        or not quietMouse(changes, root) or not quietMouse(changes, close)
+        or not chrome.fade(changes, root) then
         return nil
-    end
-    for _, key in ipairs(borders) do
-        local region = chrome.member(root, key)
-        if region and not chrome.fade(changes, region) then return nil end
     end
     return changes
 end
 
-local function restore(reason)
+local function restore(reason, closing)
     if not live then return true end
+    if closing then live.art:Hide() end
     if not chrome.unlocked() then
         live.pending = reason
         result = "combat-restore-deferred"
         return false
     end
     local restored = true
-    live.busy = true
     for i = live.applied, 1, -1 do
         if not pcall(live.plan[i].undo) then restored = false end
     end
-    live.busy = false
     if not restored then
         live.pending = reason
         result = "restore-pending"
@@ -306,40 +344,25 @@ chooseRoute = function(route)
     end
 end
 
-local function recenter(root)
-    local session = live
-    if not session or session.root ~= root or session.busy or session.pending then return end
-    if not chrome.unlocked() then session.recenterPending = true; return end
-    if not chrome.mutable(root) or not matchesParentScale(root) then
-        stockOnly = true
-        restore("stock-recenter-unsafe")
-        return
-    end
-    session.busy = true
-    local ok = pcall(session.plan[1].apply)
-    session.busy, session.recenterPending = false, false
-    if not ok then
-        stockOnly = true
-        restore("stock-recenter-failed")
-        return
-    end
-    recenters = recenters + 1
-end
-
 local function buildArt(root)
-    local art = CreateFrame("Frame", nil, root)
+    local art = CreateFrame("Frame", nil, UIParent)
     art:Hide()
-    art:SetAllPoints(root)
-    local level = chrome.read(root, "GetFrameLevel")
-    if type(level) ~= "number" then return nil end
-    art:SetFrameLevel(math.max(0, level - 1))
+    art:SetSize(visual.width, visual.height)
+    art:SetPoint(visual.point, UIParent, visual.relativePoint, visual.x, visual.y)
+    art:SetFrameStrata(visual.strata)
     art:EnableMouse(false)
-    -- The text sits above native backing, while map artwork and input stay clear.
-    local labels = CreateFrame("Frame", nil, art)
-    labels:SetAllPoints(art)
-    labels:SetFrameLevel(level + 2)
-    labels:EnableMouse(false)
-    art.view = paint(art, false, labels)
+    art.view = paint(art, false)
+
+    local goodbye = CreateFrame("Button", nil, art)
+    goodbye:SetSize(78, 24)
+    goodbye:SetPoint("TOPRIGHT", art, "TOPRIGHT", -45, -12)
+    chrome.goodbyeArt(goodbye)
+    goodbye:SetScript("OnClick", function()
+        if live and live.root == root and not live.pending and chrome.unlocked() then
+            local hide = chrome.member(_G, "HideUIPanel")
+            if type(hide) == "function" then pcall(hide, root) end
+        end
+    end)
     return art
 end
 
@@ -353,21 +376,22 @@ local function apply(root)
         result = "stock-map-shape-unsupported"
         return
     end
-    local ok, plan = pcall(capture, root, map)
-    if not ok or not plan then stockOnly, result = true, "stock-layout-unsupported"; return end
+    if type(chrome.member(_G, "HideUIPanel")) ~= "function" then return end
     local cache = frames[root]
     if not cache.art then
         local built, art = pcall(buildArt, root)
         if not built or not art then stockOnly, result = true, "stock-art-unavailable"; return end
         cache.art = art
     end
-    if preview then preview:Hide() end
     local art = cache.art
+    local ok, plan = pcall(capture, root, map, routeMap, art)
+    if not ok or not plan then stockOnly, result = true, "stock-layout-unsupported"; return end
+    if preview then preview:Hide() end
     art.view.origin:SetText("Current flight master")
     local list = art.view.routes
     list.page, list.highlight, list.locked, list.message = 1, nil, false, nil
     lastState, lastFare = nil, nil
-    live = {root = root, routeMap = routeMap, art = art, plan = plan, applied = 0, busy = true}
+    live = {root = root, routeMap = routeMap, art = art, plan = plan, applied = 0}
     for i, action in ipairs(plan) do
         live.applied = i
         if not pcall(action.apply) then
@@ -376,8 +400,7 @@ local function apply(root)
             return
         end
     end
-    live.busy = false
-    if not matchesParentScale(root) then
+    if not matchesHostScale(routeMap, art) then
         stockOnly = true
         restore("stock-scale-mismatch")
         return
@@ -410,18 +433,9 @@ local function reconcile()
     if not hook then return end
     if not cache.hide then
         cache.hide = pcall(hook, root, "OnHide", function()
-            if live and live.root == root then restore("taxi-frame-hidden") end
+            if live and live.root == root then restore("taxi-frame-hidden", true) end
         end)
         if not cache.hide then return end
-    end
-    if not cache.anchor then
-        local secureHook = chrome.member(_G, "hooksecurefunc")
-        if type(secureHook) ~= "function" then result = "stock-anchor-hook-unavailable"; return end
-        cache.anchor = pcall(secureHook, root, "SetPoint", function(_, point)
-            -- The stock left-panel layout pass can run after TaxiFrame OnShow.
-            if chrome.ordinary(point) and point == "TOPLEFT" then recenter(root) end
-        end)
-        if not cache.anchor then result = "stock-anchor-hook-rejected"; return end
     end
     if not cache.show then cache.show = pcall(hook, root, "OnShow", function() apply(root) end) end
     apply(root)
@@ -435,7 +449,7 @@ end
 function Flight.GetAudit()
     return {result = result, live = live ~= nil, opens = opens, restores = restores,
         pending = live and live.pending or nil, scaleMatched = live and not live.pending or false,
-        lastNodeState = lastState, lastFareCopper = lastFare, recenters = recenters,
+        lastNodeState = lastState, lastFareCopper = lastFare, hosted = live ~= nil,
         routeRequests = routeRequests, routes = live and #live.art.view.routes.records or 0}
 end
 
@@ -497,18 +511,16 @@ Logres:RegisterEvent("TAXIMAP_OPENED", function(_, system)
 end)
 Logres:RegisterEvent("TAXIMAP_CLOSED", function()
     visit = false
-    restore("taxi-map-closed")
+    restore("taxi-map-closed", true)
 end)
 Logres:RegisterEvent("PLAYER_ENTERING_WORLD", function()
     visit = false
-    restore("world-changed")
+    restore("world-changed", true)
     if preview then preview:Hide() end
 end)
 Logres:RegisterEvent("PLAYER_REGEN_ENABLED", function()
     if live and live.pending then
         restore(live.pending)
-    elseif live and live.recenterPending then
-        recenter(live.root)
     else
         reconcile()
     end
@@ -519,7 +531,7 @@ end)
 Logres:RegisterEvent("DISPLAY_SIZE_CHANGED", function()
     if live and not chrome.fits() then
         restore("stock-small-viewport")
-    elseif live and not matchesParentScale(live.root) then
+    elseif live and not matchesHostScale(live.routeMap, live.art) then
         stockOnly = true
         restore("stock-scale-mismatch")
     end
@@ -527,7 +539,7 @@ end)
 Logres:SubscribeState(function(state)
     if live and not inContext(state) then
         visit = false
-        restore("flight-context-ended")
+        restore("flight-context-ended", true)
     elseif visit then
         reconcile()
     end

@@ -204,7 +204,7 @@ function Logres:CaptureBugIncident()
     incident.snapshot.flight = pickTraceStatus(ownedTraceStatus(function()
         return self.NPCFlightWindow.GetAudit()
     end), {"result", "live", "opens", "restores", "pending", "scaleMatched", "lastNodeState", "lastFareCopper",
-        "recenters", "routeRequests", "routes"})
+        "hosted", "routeRequests", "routes"})
     incident.snapshot.professionPurchase = pickTraceStatus(ownedTraceStatus(function()
         return self.NPCTrainerProfessionPurchaseTrial.GetAudit()
     end), {"attempts", "requests", "deferrals", "failures", "last"})

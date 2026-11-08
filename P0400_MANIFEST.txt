@@ -1,0 +1,31 @@
+P0400 Forever independent flight host
+Verified P0399 baseline: 706e7c13333b3c1cfcb53df9b19cc474b4d6cad0
+Runtime version: 0.0.284-dev
+PREWRITE: 270/270 STATIC PASS
+POSTWRITE: 270/270 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Quest/FlightWindow.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0400_FLIGHT_HOST.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0400_FLIGHT_HOST.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0381_integrated_gameplay_contract.py
+tools/check_p0397_flight_window_contract.py
+tools/check_p0398_flight_scale_contract.py
+tools/check_p0399_flight_route_list_contract.py
+tools/check_p0400_flight_host_contract.py
+P0400_MANIFEST.txt

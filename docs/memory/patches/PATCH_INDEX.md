@@ -1,3 +1,7 @@
+## P0400 — Independent centered flight host (2026-11-08)
+
+Verified P0399 main 706e7c1. The screenshot shows the reachable Ironforge route and 50c fare, but the flight window remains clipped at the upper left. P0400 removes the ineffective root reposition hook and places the native map and input in a centered Logres host, with reversible stock presentation and input. Forever unverified. See docs/memory/evidence/P0400_FLIGHT_HOST.md.
+
 ## P0399 — Centered flight window and selectable routes (2026-11-08)
 
 Verified P0398 main bc560a5. User screenshot confirms improved scale and readable sidebar but an upper-left panel clips the header. P0399 preserves the Logres center anchor and adds a paginated list of reachable destinations with live fares and explicit native pin dispatch. Both map and list can choose travel. Forever P0399 UNVERIFIED. See docs/memory/evidence/P0399_FLIGHT_ROUTE_LIST.md.
