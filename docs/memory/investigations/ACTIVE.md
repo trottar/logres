@@ -1,3 +1,17 @@
+## P0418 — Approved whole-screen map translation (2026-11-09)
+
+P0417 verified remote main `bc91448bcb3632e493c5c2d9b28dd57baff744c6`.
+User now reports the Blizzard pet frame/bar regression seems fixed and uploads
+`LOGRES_SCREEN_MAP_APPROVED.json` as the accepted whole-screen authority.
+P0418 keeps P0417's pet readiness correction and P0416's five secure action
+clusters, but translates the approved center-based viewport map into addon-owned
+anchors for the five bars, quest/context/dialogue surfaces, player/target aura
+lanes, allies, pet actions, passive status and Report Bug. The H.2 panel/overlay
+now represent the full approved set instead of the original 13-rectangle sheet.
+WoW runtime remains UNVERIFIED until the user applies and tests; L-008 stays
+OPEN for broader pet-edge validation and L-009 stays DEFERRED for live editing.
+See `docs/memory/evidence/P0418_APPROVED_SCREEN_MAP_TRANSLATION.md`.
+
 ## P0417 — Pet suppression readiness gate points at removed dock (2026-11-09)
 
 P0416 verified remote main `d11b76ab786f3b08151c426e52502a3415fb4877`.

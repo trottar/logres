@@ -50,7 +50,12 @@ tracker = read("Logres/Quest/ActiveQuest.lua")
 assert "not isSecret(row.required) and row.required == 1" in tracker
 assert 'finished and " · Done" or " · Pending"' in tracker
 panel = read("Logres/Dev/Panel.lua")
-assert 'Logres.Layout.Bind(bugButton, "nativeAccess"' in panel
+# P0418 gives Report Bug an independent addon-owned anchor. Preserve the
+# historical accessibility/placement intent without re-coupling the button
+# to P0172 native-access stock restoration.
+assert 'Logres.Layout.Bind(bugButton, "reportBug", "CENTER", "CENTER")' in panel
+assert 'bugButton:SetFrameStrata("LOW")' in panel
+assert 'Logres.Layout.Bind(bugButton, "nativeAccess"' not in panel
 assert "incident.snapshot.playerHarmful" in panel and "incident.snapshot.playerHelpful" in panel
 ledger = read("docs/memory/investigations/ISSUE_LEDGER.md")
 assert "| L-041 | Boosted Rest" in ledger and "P0389_SESSION_41_REGRESSIONS.md" in ledger

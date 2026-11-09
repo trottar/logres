@@ -32,8 +32,8 @@ start = L.index('local LAYOUT_EXPECTED = {\n')
 end = L.index('\n}\n', start) + len('\n}\n')
 role_table = L[start:end]
 roles = re.findall(r'^\s*\{ "(Logres[^\"]+)", "([^\"]+)" \},$', role_table, re.M)
-need(len(roles) == 16 and len({name for name, key in roles}) == 16,
-     'original 16 unique Logres-owned roles must remain')
+need(len(roles) == 17 and len({name for name, key in roles}) == 17,
+     'Logres-owned role inventory drifted')
 need(all(name.startswith('Logres') and key for name, key in roles),
      'non-addon-owned probe frame may not be added')
 need(roles.count(('LogresNativeAccessDock', 'nativeAccess')) == 1 and
@@ -49,8 +49,8 @@ need('local frame = _G[definition[1]]' in report and
 expected_report = (
     'Logres layoutcheck: FAIL ',
     'Logres layoutcheck: %s (anchors=%s binds=%s failures=%s missing=%s mismatched=%s error=%s)',
-    'Logres H2 v4 placement: %s (reason=%s anchors=%s)',
-    'Logres H2 v4 geometry AUDIT (measured=%s/%s missing=%s deferred=%s reason=%s; layout unchanged)',
+    'Logres H2 approved placement: %s (reason=%s anchors=%s)',
+    'Logres H2 geometry AUDIT (measured=%s/%s missing=%s deferred=%s reason=%s; layout unchanged)',
     'Logres H2 %s %s actual=(%.1f,%.1f,%.1f,%.1f) planned=(%.1f,%.1f,%.1f,%.1f)',
     'Logres H2 %s %s frame=%s planned=(%.1f,%.1f,%.1f,%.1f)',
 )
@@ -93,15 +93,15 @@ legacy = {
   ],
   'tools/check_h2_unified_placement_contract.py': [
       "'status.anchorCount == #LAYOUT_EXPECTED + 3' not in L",
-      "'Logres H2 v4 placement:' not in L",
+      "'Logres H2 approved placement:' not in L",
       "'Logres.Layout.RunDevLayoutCheck(emit)' not in C",
       'restoreOriginalLayoutAnchors',
   ],
   'tools/check_h2_geometry_audit_contract.py': [
-      'if required not in layout:',
-      'Logres.Layout.RunDevLayoutCheck(emit)',
-      'pcall(issecretvalue, value)',
       'function Layout.GetH2ScreenMapAudit()',
+      'ordinaryGeometryNumber',
+      'read-only geometry audit',
+      '19 approved rows',
   ],
   'tools/check_native_access_contract.py': [
       "'{ \"LogresNativeAccessDock\", \"nativeAccess\" },' not in layout.read_text",

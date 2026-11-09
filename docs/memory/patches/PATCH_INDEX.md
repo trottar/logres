@@ -1,3 +1,4 @@
+| P0418 | 2026-11-09 | R0 REFUSED 283/286 PREWRITE; R1 PREPARED — APPROVED WHOLE-SCREEN MAP TRANSLATION | Baseline P0417 `bc91448`; user reports pet frame/bar regression seems fixed and uploads approved whole-screen layout. Translate the center-based map into addon-owned anchors, widen H.2 plan/audit to 19 approved regions, move Report Bug onto its own anchor, preserve P0416 secure bar routing and P0417 pet readiness repair. |
 ## P0417 — Pet suppression readiness gate points at removed dock (2026-11-09)
 
 P0416 verified remote main `d11b76ab786f3b08151c426e52502a3415fb4877`.

@@ -128,6 +128,13 @@ local ANCHOR_SPECS = {
         x = -22,
         y = -74,
     },
+    reportBug = {
+        name = "LogresLayoutReportBug",
+        point = "TOPRIGHT",
+        relativePoint = "TOPRIGHT",
+        x = -96,
+        y = -224,
+    },
 }
 
 local anchors = {}
@@ -202,19 +209,25 @@ end
 -- Only addon-owned frame references are inspected; no Blizzard presentation
 -- visibility or protected action state is read or mutated.
 local H2_SCREEN_MAP_V4 = {
-    { "compass", "LogresCompassFrame", 31.4, 4.8, 37.4, 6.9 },
-    { "quest", "LogresActiveQuest", 80, 5, 19.6, 19.2 },
-    { "enemy-debuff", "LogresStatusAurastarget", 65.2, 40, 6, 9 },
-    { "enemy", "LogresHUDTarget", 72, 40, 13, 9 },
-    { "enemy-buff", "LogresStatusAurastargetHelpful", 85.8, 40, 6, 9 },
-    { "group", "LogresHUDAllies", 21, 32.7, 9, 25.9 },
-    { "class", "LogresPetActionExecutionProbeCluster", 5.1, 53.5, 12, 5 },
-    { "secondary", "LogresSecondaryActionCluster", 5.1, 60.4, 12, 38 },
-    { "main", "LogresPrimaryActionCluster", 18.2, 60.4, 12, 38 },
-    { "player-debuff", "LogresStatusAurasplayer", 39.5, 81, 22.5, 5.8 },
-    { "resource", "LogresHUDResourceBar", 39.5, 88.3, 22.5, 6 },
-    { "player-buff", "LogresPlayerHelpfulAuras", 76, 80.5, 23.4, 6.2 },
-    { "utility", "LogresUtilityActionCluster", 76, 88.2, 23.4, 9.3 },
+    { "compass", "LogresCompassFrame", 31.4, 6.55, 37.4, 6.9 },
+    { "activeQuest", "LogresActiveQuest", 78.2, 5.4, 19.6, 19.2 },
+    { "questDialogue", "LogresQuestDialogue", 35.0, 28.0, 30.0, 30.0 },
+    { "contextObjective", "LogresQuestObjectiveProgress", 40.0, 47.5, 20.0, 5.0 },
+    { "contextXP", "LogresQuestXPPulse", 40.0, 61.0, 20.0, 4.0 },
+    { "player-debuff", "LogresStatusAurasplayer", 39.5, 81.0, 22.5, 5.8 },
+    { "resource", "LogresHUDResourceBar", 39.5, 88.3, 22.5, 6.0 },
+    { "player-buff", "LogresPlayerHelpfulAuras", 77.0, 72.5, 22.0, 5.0 },
+    { "enemy-debuff", "LogresStatusAurastarget", 65.2, 40.0, 6.0, 9.0 },
+    { "enemy", "LogresHUDTarget", 72.0, 40.0, 13.0, 9.0 },
+    { "enemy-buff", "LogresStatusAurastargetHelpful", 85.8, 40.0, 6.0, 9.0 },
+    { "group", "LogresHUDAllies", 20.0, 32.7, 10.0, 25.9 },
+    { "petActions", "LogresPetActionExecutionProbeCluster", 5.0, 52.5, 10.0, 5.0 },
+    { "bar2", "LogresSecondaryActionCluster", 0.0, 56.0, 10.0, 38.0 },
+    { "bar1", "LogresPrimaryActionCluster", 9.0, 56.0, 8.0, 38.0 },
+    { "bar4", "LogresBar4ActionCluster", 5.0, 90.0, 10.0, 8.0 },
+    { "bar3", "LogresUtilityActionCluster", 76.0, 80.0, 24.0, 10.0 },
+    { "bar5", "LogresBar5ActionCluster", 76.0, 90.0, 24.0, 8.0 },
+    { "reportBug", "LogresBugReportButton", 91.0, 33.25, 8.0, 3.5 },
 }
 
 -- Values returned by geometry APIs can be unavailable or secret-capable.
@@ -323,11 +336,11 @@ local ACTION_BAR_LAYOUT = {
     secondary = { role = "secondary", columns = 2, rows = 6,
         xPercent = 5, yPercent = 75, scale = 1 },
     utility = { role = "utility", columns = 6, rows = 2,
-        xPercent = 90, yPercent = 85, scale = 1 },
+        xPercent = 88, yPercent = 85, scale = 1 },
     bar4 = { role = "secondary", columns = 6, rows = 2,
         xPercent = 10, yPercent = 95, scale = 1 },
     bar5 = { role = "utility", columns = 6, rows = 2,
-        xPercent = 90, yPercent = 95, scale = 1 },
+        xPercent = 88, yPercent = 95, scale = 1 },
 }
 
 function Layout.GetActionBarSpec(key)
@@ -385,23 +398,26 @@ end
 -- Planning boxes remain immutable; each live widget retains intrinsic size.
 -- No protected frame is moved in combat; legacy P0166 anchors are fallback.
 local H2_APPROVED_ANCHORS = {
-    navigation = { id = "compass", x = 50.1, y = 4.8 },
-    activeQuest = { id = "quest", x = 99.6, y = 5.0 },
+    navigation = { id = "compass", x = 50.1, y = 6.55 },
+    activeQuest = { id = "activeQuest", x = 97.8, y = 5.4 },
+    questDialogue = { id = "questDialogue", x = 50.0, y = 28.0 },
+    contextObjective = { id = "contextObjective", x = 50.0, y = 50.0 },
+    contextXP = { id = "contextXP", x = 50.0, y = 63.0 },
     playerReaction = { id = "resource", x = 50.75, y = 91.3 },
     playerHarmful = { id = "player-debuff", x = 50.75, y = 83.9 },
     targetFallback = { id = "enemy", x = 78.5, y = 44.5 },
     targetHarmful = { id = "enemy-debuff", x = 68.2, y = 44.5 },
     targetHelpful = { id = "enemy-buff", x = 88.8, y = 44.5 },
-    allies = { id = "group", x = 25.5, y = 45.65 },
-    classPet = { id = "class", x = 11.1, y = 54.5 },
-    secondaryActions = { id = "secondary", x = ACTION_BAR_LAYOUT.secondary.xPercent, y = ACTION_BAR_LAYOUT.secondary.yPercent },
-    primaryActions = { id = "main", x = ACTION_BAR_LAYOUT.primary.xPercent, y = ACTION_BAR_LAYOUT.primary.yPercent },
-    passiveStatus = { id = "player-buff", x = 82.35, y = 83.6 },
-    utilityActions = { id = "utility", x = ACTION_BAR_LAYOUT.utility.xPercent, y = ACTION_BAR_LAYOUT.utility.yPercent },
-    -- Independent non-D-045 control surfaces: retain separate access.
-    bar4Actions = { id = "bar4-safe-satellite", x = ACTION_BAR_LAYOUT.bar4.xPercent, y = ACTION_BAR_LAYOUT.bar4.yPercent },
-    bar5Actions = { id = "bar5-safe-satellite", x = ACTION_BAR_LAYOUT.bar5.xPercent, y = ACTION_BAR_LAYOUT.bar5.yPercent },
+    allies = { id = "group", x = 25.0, y = 45.65 },
+    classPet = { id = "petActions", x = 10.0, y = 55.0 },
+    secondaryActions = { id = "bar2", x = ACTION_BAR_LAYOUT.secondary.xPercent, y = ACTION_BAR_LAYOUT.secondary.yPercent },
+    primaryActions = { id = "bar1", x = ACTION_BAR_LAYOUT.primary.xPercent, y = ACTION_BAR_LAYOUT.primary.yPercent },
+    passiveStatus = { id = "player-buff", x = 77.0, y = 75.0 },
+    utilityActions = { id = "bar3", x = ACTION_BAR_LAYOUT.utility.xPercent, y = ACTION_BAR_LAYOUT.utility.yPercent },
+    bar4Actions = { id = "bar4", x = ACTION_BAR_LAYOUT.bar4.xPercent, y = ACTION_BAR_LAYOUT.bar4.yPercent },
+    bar5Actions = { id = "bar5", x = ACTION_BAR_LAYOUT.bar5.xPercent, y = ACTION_BAR_LAYOUT.bar5.yPercent },
     nativeAccess = { id = "native-access-safe-dock", x = 98.4, y = 27.8 },
+    reportBug = { id = "reportBug", x = 95.0, y = 35.0 },
 }
 local h2Placement = { active = false, reason = "not-attempted", anchors = 0 }
 
@@ -455,7 +471,7 @@ function Layout.ApplyApprovedV4()
         return false, h2Placement.reason
     end
     h2Placement.active = true
-    h2Placement.reason = "approved-v4-anchors"
+    h2Placement.reason = "approved-screen-map"
     h2Placement.anchors = 16
     return true, h2Placement.reason
 end
@@ -539,7 +555,7 @@ local function getH2MapOverlay()
     end
     local legend = root:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     legend:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 12, -12)
-    legend:SetText("LOGRES H.2 SCREEN MAP | BLUE = APPROVED V4 | GOLD = CURRENT LOGRES FRAMES | /logres h2map off")
+    legend:SetText("LOGRES H.2 SCREEN MAP | BLUE = APPROVED SCREEN MAP | GOLD = CURRENT LOGRES FRAMES | /logres h2map off")
     legend:SetTextColor(1, 1, 1, 1)
     h2MapOverlay = root
     return root
@@ -571,7 +587,7 @@ function Layout.SetH2MapVisible(visible)
     for index = 1, #H2_SCREEN_MAP_V4 do
         local plan = H2_SCREEN_MAP_V4[index]
         placeMapOutline(root.planned[index], viewport.width, viewport.height,
-            plan[3], plan[4], plan[5], plan[6], plan[1] .. " [v4]")
+            plan[3], plan[4], plan[5], plan[6], plan[1] .. " [approved]")
         local row = report.rows[index]
         if row and row.state == "MEASURED" then
             placeMapOutline(root.measured[index], viewport.width,
@@ -626,6 +642,7 @@ local LAYOUT_EXPECTED = {
     { "LogresPlayerHelpfulAuras", "passiveStatus" },
     { "LogresPetActionExecutionProbeCluster", "classPet" },
     { "LogresNativeAccessDock", "nativeAccess" },
+    { "LogresBugReportButton", "reportBug" },
 }
 
 function Layout.RunDevLayoutCheck(emit)
@@ -677,7 +694,7 @@ function Layout.RunDevLayoutCheck(emit)
 
     local placement = Logres.Layout.GetH2PlacementStatus()
     emit(string.format(
-        "Logres H2 v4 placement: %s (reason=%s anchors=%s)",
+        "Logres H2 approved placement: %s (reason=%s anchors=%s)",
         placement.active and "APPLIED" or "DEFERRED",
         tostring(placement.reason), tostring(placement.anchors)
     ))
@@ -686,7 +703,7 @@ function Layout.RunDevLayoutCheck(emit)
     -- NOT collision/visibility/secure-action validation or layout acceptance.
     local h2 = Logres.Layout.GetH2ScreenMapAudit()
     emit(string.format(
-        "Logres H2 v4 geometry AUDIT (measured=%s/%s missing=%s deferred=%s reason=%s; layout unchanged)",
+        "Logres H2 geometry AUDIT (measured=%s/%s missing=%s deferred=%s reason=%s; layout unchanged)",
         tostring(h2.measured), tostring(h2.total),
         tostring(h2.missing), tostring(h2.deferred), tostring(h2.reason)
     ))

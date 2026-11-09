@@ -1,3 +1,38 @@
+## P0418 — approved whole-screen map translation (2026-11-09)
+
+Verified remote P0417 `bc91448`; read the new approved upload
+`LOGRES_SCREEN_MAP_APPROVED.json` and the latest diagnostics before editing. The
+pet regression is user-reported improved, but the only code scope here is the
+approved H.2 whole-screen map: translate center-based coordinates into the
+existing addon-owned anchor system, keep secure bar ownership and out-of-combat
+repositioning, and extend the H.2 panel/overlay to the full approved set.
+Report Bug may move to its own anchor, but native-access fallback remains. No
+new secure state drivers, no Blizzard frame suppression broadening, and no live
+action editing are introduced. Full static proof belongs in the author receipt;
+WoW runtime proof remains separate.
+
+**P0418 R0 PREWRITE REFUSED, no tracked changes applied.** The user ran the
+exact SHA-verified archive `468d87a2...` and `tools/chat_change.py check`
+refused 283/286 before mutation: P0381 required the active P0418 heading in
+`docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md`, P0389 still expected
+Report Bug bound to nativeAccess instead of the now-authorized standalone
+reportBug anchor, and P0408 transitively failed through P0381. R1 repairs
+both independent causes: synchronize the active heading in the phase roadmap
+(and `docs/ROADMAP.md`) and migrate the P0389 checker narrowly while retaining
+LOW strata and stock native-access independence. Full exact post-transform
+validation must pass before handoff. No P0418 gameplay was run on R0.
+
+**R1 sandbox contract audit:** the exact reconstructed P0417 source edits passed
+all 286 candidate `check_*.py` contracts (parallel per-checker audit), Python
+checker compilation, `git diff --check`, and staged package-byte/manifest
+verification against an isolated P0417-content test checkout. The test-only
+checkout uses a synthetic local commit SHA; the distributed JSON remains
+pinned to the verified remote P0417 SHA. Sequential `chat_change.py check`
+and a separately attempted guarded apply exceeded this sandbox's execution
+time limit, so those *complete wrapper runs* are NOT recorded as PASS. The
+user-side guarded P0418 R1 applier must run the full suite before changing
+tracked files, then verify the manifest and staged bytes. WoW UNVERIFIED.
+
 ## P0417 — P0416 pet native-access guard source diagnosis (2026-11-09)
 
 Remote P0416 `d11b76a` verified; uploaded Forever incident 8609 read before

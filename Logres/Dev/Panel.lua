@@ -513,13 +513,14 @@ local Panel = Logres:RegisterModule("DevPanel", {
             horizontal:SetSize(552, 1)
         end
         local planned, measured = {}, {}
-        for index = 1, 13 do
+        local approvedPlan = Logres.Layout.GetH2ScreenMapPlan()
+        for index = 1, #approvedPlan do
             planned[index] = createH2PanelBox(canvas, 0.30, 0.66, 1.0, 0.07, true)
             measured[index] = createH2PanelBox(canvas, 1.0, 0.72, 0.22, 0.025, false)
         end
         local legend = mapHost:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
         legend:SetPoint("TOPLEFT", canvas, "BOTTOMLEFT", 0, -6)
-        legend:SetText("BLUE approved v4 regions      GOLD actual Logres frame bounds")
+        legend:SetText("BLUE approved full-screen regions      GOLD actual Logres frame bounds")
         local info = mapHost:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
         info:SetPoint("TOPLEFT", legend, "BOTTOMLEFT", 0, -4)
         info:SetText("Awaiting geometry measurements")
@@ -590,7 +591,7 @@ local Panel = Logres:RegisterModule("DevPanel", {
         local bugButton = CreateFrame("Button", "LogresBugReportButton", UIParent)
         bugButton:SetSize(116, 27)
         bugButton:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -20, -160)
-        Logres.Layout.Bind(bugButton, "nativeAccess", "TOPRIGHT", "TOPRIGHT", 0, -58)
+        Logres.Layout.Bind(bugButton, "reportBug", "CENTER", "CENTER")
         bugButton:SetFrameStrata("LOW")
         -- Match the existing bronze native-access skin without a stock
         -- UIPanel template. The button remains independent of panel visibility.

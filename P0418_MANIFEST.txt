@@ -1,0 +1,34 @@
+P0418 Translate approved whole-screen map with repaired historical checkpoints
+Verified baseline: bc91448bcb3632e493c5c2d9b28dd57baff744c6
+Candidate runtime version: 0.0.295-dev
+PREWRITE: 286/286 STATIC PASS
+POSTWRITE: 286/286 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Integration/Layout.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/design/layout/SCREEN_MAP_V5.json
+docs/design/layout/SCREEN_MAP_V5.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0418_APPROVED_SCREEN_MAP_TRANSLATION.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0418_APPROVED_SCREEN_MAP_TRANSLATION.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_h2_geometry_audit_contract.py
+tools/check_h2_screen_overlay_contract.py
+tools/check_h2_unified_placement_contract.py
+tools/check_p0353_layout_seam_contract.py
+tools/check_p0389_session_41_regressions.py
+tools/check_p0416_five_bar_layout_contract.py
+tools/check_p0418_approved_screen_map_contract.py
+P0418_MANIFEST.txt

@@ -16,7 +16,8 @@ for k in ('playerHarmful','targetHarmful','targetHelpful'):
 for k in ('navigation','activeQuest','playerReaction','playerHarmful','targetFallback',
           'targetHarmful','targetHelpful','allies','classPet','secondaryActions',
           'primaryActions','passiveStatus','utilityActions','bar4Actions',
-          'bar5Actions','nativeAccess'):
+          'bar5Actions','nativeAccess','questDialogue','contextObjective',
+          'contextXP','reportBug'):
     if ('    '+k+' = { id = ') not in L:error.append('missing plan '+k)
 for t in ('function Layout.ApplyApprovedV4()',
           'function Layout.GetH2PlacementStatus()',
@@ -59,7 +60,7 @@ if 'targetFrame:SetSize(198, 54)' not in H or 'targetNameText:SetWidth(190)' not
 if 'targetCastCue:SetPoint("TOP", targetFrame, "BOTTOM", 0, -6)' not in H:
     error.append('target cast cue geometry')
 if 'status.anchorCount == #LAYOUT_EXPECTED + 3' not in L:error.append('anchor count')
-if 'Logres H2 v4 placement:' not in L:error.append('runtime placement diagnostic')
+if 'Logres H2 approved placement:' not in L:error.append('runtime placement diagnostic')
 if 'Logres.Layout.RunDevLayoutCheck(emit)' not in C:error.append('command layout diagnostic route')
 if any(x in L for x in ('C_Timer.After','C_Timer.NewTicker','SetScript("OnUpdate"',
                          'BuffFrame:Hide','DebuffFrame:Hide')):error.append('unsafe layout forcing')
