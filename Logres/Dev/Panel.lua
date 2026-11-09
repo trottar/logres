@@ -520,7 +520,7 @@ local Panel = Logres:RegisterModule("DevPanel", {
         end
         local legend = mapHost:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
         legend:SetPoint("TOPLEFT", canvas, "BOTTOMLEFT", 0, -6)
-        legend:SetText("BLUE approved full-screen regions      GOLD actual Logres frame bounds")
+        legend:SetText("BLUE expected at approved anchors    GOLD measured Logres frames")
         local info = mapHost:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
         info:SetPoint("TOPLEFT", legend, "BOTTOMLEFT", 0, -4)
         info:SetText("Awaiting geometry measurements")
@@ -1004,8 +1004,9 @@ end
 function Panel:RefreshH2Map()
     if not self.h2MapCanvas then return end
     local plan = Logres.Layout.GetH2ScreenMapPlan()
-    -- The approved planning rectangles are static and always available. The
-    -- actual boxes remain deferred whenever their secret-safe audit cannot run.
+    -- Blue projects the approved anchor using the source-owned grid or
+    -- intrinsic frame dimensions. Historical envelopes are fallback only.
+    -- Gold remains independent read-only addon-frame measurement.
     local report = Logres.Layout.GetH2ScreenMapAudit()
     for index = 1, #plan do
         local entry = plan[index]

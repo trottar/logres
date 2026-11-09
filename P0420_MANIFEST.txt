@@ -1,0 +1,27 @@
+P0420 P0420 H2 anchor-based footprint comparison and drift diagnostics
+Verified baseline: c1e23fc264e413aaf00522e65c265454be1d1d01
+Candidate runtime version: 0.0.297-dev
+PREWRITE: 288/288 STATIC PASS
+POSTWRITE: 288/288 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Integration/Layout.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0420_H2_INTRINSIC_ANCHOR_PROJECTION.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0420_H2_INTRINSIC_ANCHOR_PROJECTION.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_h2_screen_overlay_contract.py
+tools/check_p0420_h2_semantic_anchor_contract.py
+P0420_MANIFEST.txt

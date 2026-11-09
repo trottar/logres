@@ -1,3 +1,23 @@
+## P0420 — H.2 semantic anchor and intrinsic-frame projection (2026-11-09)
+
+Pinned main P0419 `c1e23fc264e413aaf00522e65c265454be1d1d01`.
+User's 0.0.296-dev screenshot shows P0419 bar/pet action outlines now align,
+but most other H.2 blue design envelopes still differ greatly from measured
+intrinsic frame footprints. The screenshot shows that compass, Quest Dialogue,
+Active Quest, group and resource/status frames largely share intended anchor
+points; width/height mismatch alone does not justify changing live geometry.
+
+P0420 retains the approved V5 authoring rectangles and gameplay anchors,
+changes the H.2 blue rectangle for each remaining addon-owned region to the
+**expected footprint at its approved semantic anchor** using secret-checked
+intrinsic frame dimensions, and reports independent position offsets and design
+size differences. Gold remains independent observed geometry. Missing/unsafe
+measurements fail open to the original design envelope and are labeled `design`.
+No runtime frame position, secure bar, keybind, pet driver, Blizzard ownership,
+or UI polling changes. WoW validation PENDING; L-008 pet scope unchanged and
+L-009 live editing still DEFERRED.
+See `docs/memory/evidence/P0420_H2_INTRINSIC_ANCHOR_PROJECTION.md`.
+
 ## P0419 — H.2 action footprint calibration (2026-11-09)
 
 P0418 verified GitHub main `e4fcc318c859cad7e6e31ec6a282eef71ed667f5`. User's 19-region overlay screenshot and Forever `0.0.295-dev` session show broadly approved placement, but blue/gold footprint-size mismatch for the five action clusters and Logres pet action grid. Pet native frame/bar remain absent and Logres pet buttons work: narrow regression PASS scoped, broader L-008 fallback/combat/Edit Mode remains OPEN. P0419 updates only developer H.2 action-overlay sizes, using addon-owned role/grid/style constants and UIParent viewport. It does **not** reposition runtime controls, touch secure actions, alter Blizzard fallback, or overwrite the approved V5 authoring map. WoW P0419 visual validation pending. See `docs/memory/evidence/P0419_H2_ACTION_FOOTPRINT_CALIBRATION.md`.

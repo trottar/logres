@@ -30,7 +30,7 @@ for token in (
     'Overlay ON',
     'Overlay OFF',
     'Refresh Map',
-    'BLUE approved full-screen regions      GOLD actual Logres frame bounds',
+    'BLUE expected at approved anchors    GOLD measured Logres frames',
 ):
     need(token in panel, 'panel H.2 map token missing: ' + token)
 
@@ -43,7 +43,7 @@ for token in (
     'root:EnableMouse(false)',
     'placeMapOutline(root.planned[index], viewport.width, viewport.height,',
     'placeMapOutline(root.measured[index], viewport.width,',
-    'BLUE = APPROVED SCREEN MAP | GOLD = CURRENT LOGRES FRAMES',
+    'BLUE = EXPECTED AT APPROVED ANCHOR | GOLD = MEASURED LOGRES FRAME',
 ):
     need(token in layout, 'runtime overlay token missing: ' + token)
 

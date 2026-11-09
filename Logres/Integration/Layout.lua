@@ -204,7 +204,7 @@ function Layout.Bind(
     return true, "bound"
 end
 
--- P0192: read-only Phase H.2 v4 geometry audit. Design envelopes are NOT
+-- P0192/P0420: read-only H.2 geometry audit. Design envelopes are NOT
 -- native frame bounds and are NOT automatically applied to anchors.
 -- Only addon-owned frame references are inspected; no Blizzard presentation
 -- visibility or protected action state is read or mutated.
@@ -293,6 +293,8 @@ function Layout.GetH2ScreenMapAudit()
             id = s[1], frameName = s[2],
             targetX = target.x, targetY = target.y,
             targetW = target.w, targetH = target.h,
+            expectedMode = target.mode,
+            designW = s[5], designH = s[6],
             state = "DEFERRED",
         }
         local frame = _G[s[2]]
@@ -308,6 +310,12 @@ function Layout.GetH2ScreenMapAudit()
                 row.y = (root.top - rect.top) * 100 / rootHeight
                 row.w = rect.width * 100 / rootWidth
                 row.h = rect.height * 100 / rootHeight
+                -- Position error is calculated independently of the
+                -- approved design-envelope size, in UIParent logical units.
+                row.offsetX = (row.x - target.x) * rootWidth / 100
+                row.offsetY = (row.y - target.y) * rootHeight / 100
+                row.designDeltaW = (row.w - s[5]) * rootWidth / 100
+                row.designDeltaH = (row.h - s[6]) * rootHeight / 100
                 row.state = "MEASURED"
                 report.measured = report.measured + 1
             end
@@ -560,7 +568,7 @@ local function getH2MapOverlay()
     end
     local legend = root:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     legend:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 12, -12)
-    legend:SetText("LOGRES H.2 SCREEN MAP | BLUE = APPROVED SCREEN MAP | GOLD = CURRENT LOGRES FRAMES | /logres h2map off")
+    legend:SetText("LOGRES H.2 | BLUE = EXPECTED AT APPROVED ANCHOR | GOLD = MEASURED LOGRES FRAME | /logres h2map off")
     legend:SetTextColor(1, 1, 1, 1)
     h2MapOverlay = root
     return root
@@ -594,7 +602,8 @@ function Layout.SetH2MapVisible(visible)
         local target = plan[index]
         placeMapOutline(root.planned[index], viewport.width, viewport.height,
             target.x, target.y, target.w, target.h,
-            target.id .. " [approved]")
+            target.id .. (target.mode == "design-fallback"
+                and " [design]" or " [expected]"))
         local row = report.rows[index]
         if row and row.state == "MEASURED" then
             placeMapOutline(root.measured[index], viewport.width,
@@ -651,15 +660,65 @@ local function actionPlanFootprint(id, viewport)
             * 100 / viewport.height
 end
 
--- Copy authored non-secret planning geometry. For the six action regions,
--- replace only the outdated design-envelope width/height with the source-
--- exact button grid footprint. Centers remain the user's approved positions.
+-- P0420: project each remaining addon-owned widget from its approved
+-- semantic anchor and its currently measured intrinsic size. This is a
+-- position comparison, NOT a claim that design-envelope sizes were approved
+-- for runtime mutation. Bind() supplies the same alignment below for each
+-- supported owned frame; unmeasurable frames retain the historical envelope.
+local H2_INTRINSIC_ANCHORS = {
+    compass = { key = "navigation", point = "TOP" },
+    activeQuest = { key = "activeQuest", point = "TOPRIGHT" },
+    questDialogue = { key = "questDialogue", point = "TOP" },
+    contextObjective = { key = "contextObjective", point = "CENTER" },
+    contextXP = { key = "contextXP", point = "CENTER" },
+    ["player-debuff"] = { key = "playerHarmful", point = "CENTER" },
+    resource = { key = "playerReaction", point = "CENTER" },
+    ["player-buff"] = { key = "passiveStatus", point = "LEFT" },
+    ["enemy-debuff"] = { key = "targetHarmful", point = "CENTER" },
+    enemy = { key = "targetFallback", point = "CENTER" },
+    ["enemy-buff"] = { key = "targetHelpful", point = "CENTER" },
+    group = { key = "allies", point = "CENTER" },
+    reportBug = { key = "reportBug", point = "CENTER" },
+}
+
+local function intrinsicExpectedRect(entry, viewport)
+    if type(InCombatLockdown) ~= "function" or InCombatLockdown() then
+        return nil
+    end
+    local binding = H2_INTRINSIC_ANCHORS[entry[1]]
+    if not binding then return nil end
+    local approved = H2_APPROVED_ANCHORS[binding.key]
+    local frame = _G[entry[2]] -- P0192 addon-owned frame allowlist only
+    if not approved or not frame then return nil end
+    local rect = readAddonRect(frame)
+    if not rect then return nil end
+    local w, h = rect.width * 100 / viewport.width,
+        rect.height * 100 / viewport.height
+    local x, y = approved.x, approved.y
+    if binding.point == "TOP" then
+        x = x - w / 2
+    elseif binding.point == "TOPRIGHT" then
+        x = x - w
+    elseif binding.point == "LEFT" then
+        y = y - h / 2
+    else
+        x, y = x - w / 2, y - h / 2
+    end
+    return x, y, w, h
+end
+
+-- The design envelope is preserved in SCREEN_MAP_V5.json. The H.2 blue
+-- outline is instead an expected frame footprint at the approved anchor,
+-- using source-exact action grids or secret-checked, addon-owned dimensions.
+-- Gold remains independent observed frame geometry. Any true offset stays
+-- visible because expected X/Y never comes from the measured frame position.
 function Layout.GetH2ScreenMapPlan()
     local result = {}
     local viewport = readAddonRect(UIParent)
     for index = 1, #H2_SCREEN_MAP_V4 do
         local entry = H2_SCREEN_MAP_V4[index]
         local x, y, w, h = entry[3], entry[4], entry[5], entry[6]
+        local mode = "design-fallback"
         if viewport then
             local gridW, gridH = actionPlanFootprint(entry[1], viewport)
             if gridW and gridH then
@@ -674,9 +733,17 @@ function Layout.GetH2ScreenMapPlan()
                 end
                 x, y = centerX - gridW / 2, centerY - gridH / 2
                 w, h = gridW, gridH
+                mode = "authored-grid"
+            else
+                local px, py, pw, ph = intrinsicExpectedRect(entry, viewport)
+                if px and py and pw and ph then
+                    x, y, w, h = px, py, pw, ph
+                    mode = "intrinsic-anchor"
+                end
             end
         end
-        result[index] = { id = entry[1], x = x, y = y, w = w, h = h }
+        result[index] = { id = entry[1], x = x, y = y, w = w, h = h,
+            mode = mode, designW = entry[5], designH = entry[6] }
     end
     return result
 end
@@ -771,6 +838,11 @@ function Layout.RunDevLayoutCheck(emit)
                 "Logres H2 %s %s actual=(%.1f,%.1f,%.1f,%.1f) planned=(%.1f,%.1f,%.1f,%.1f)",
                 row.id, row.state, row.x, row.y, row.w, row.h,
                 row.targetX, row.targetY, row.targetW, row.targetH
+            ))
+            emit(string.format(
+                "Logres H2 %s position-offset=(%+.1f,%+.1f) design-size-delta=(%+.1f,%+.1f) UI-units projection=%s",
+                row.id, row.offsetX, row.offsetY,
+                row.designDeltaW, row.designDeltaH, row.expectedMode
             ))
         else
             emit(string.format(
