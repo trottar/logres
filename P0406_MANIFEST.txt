@@ -1,0 +1,27 @@
+P0406 Add Logres context and one-command Chat changes
+Verified baseline: 4aa464d1463dac5deb495bedefcea40ca05a2baa
+Candidate runtime version: 0.0.288-dev
+PREWRITE: 276/276 STATIC PASS
+POSTWRITE: 276/276 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: NO RUNTIME FILES CHANGED
+Commit/push performed: NO
+
+Changed paths:
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0406_CHAT_CHANGE_RUNNER.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/patches/CHAT_TO_ZIP_WORKFLOW.md
+docs/memory/patches/P0406_CHAT_CHANGE_RUNNER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/build_patch_zip.py
+tools/chat_change.py
+tools/check_p0381_integrated_gameplay_contract.py
+tools/check_p0406_chat_change_contract.py
+tools/patch_applier_template.py.in
+P0406_MANIFEST.txt

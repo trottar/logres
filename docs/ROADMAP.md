@@ -1,3 +1,7 @@
+## P0406 — Logres checkout context and one-command Chat changes (2026-11-08)
+
+Verified P0405 main 4aa464d. The original Chat handoff did not produce a usable diff. The user runs ordinary Chat and asked Work to build deterministic infrastructure. P0406 adds a scoped checkout receipt and a one-command WSL runner for one structured change from Chat. NPC work stays parked. See docs/memory/evidence/P0406_CHAT_CHANGE_RUNNER.md.
+
 ## P0405 — Deterministic Chat-to-ZIP builder (2026-11-08)
 
 Verified P0404 main fab3259. Forever flight window layout PASS from user screenshot. Paid travel and P0403 late quest handoff remain unverified. Pause NPC expansion and use the existing merchant/catalogue or gossip/quest framework when it resumes. P0405 adds a guarded WSL builder for a reviewed Chat diff. See docs/memory/evidence/P0405_CHAT_TO_ZIP.md.

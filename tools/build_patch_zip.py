@@ -132,7 +132,7 @@ def zip_bytes(files, spec, template):
     return buffer.getvalue()
 
 
-def build(repo, args):
+def build(repo, args, *, announce=True, check_candidate=True):
     if not re.fullmatch(r"P[0-9]{4}", args.id) or not re.fullmatch(r"[0-9a-f]{40}", args.baseline):
         raise Refused("Use a P00XX patch ID and the full lowercase 40-character baseline commit.")
     if not args.title or len(args.title) > 100 or not args.title.isprintable():
@@ -159,10 +159,11 @@ def build(repo, args):
         checkers = sorted((candidate / "tools").glob("check_*.py"))
         if not checkers:
             raise Refused("Candidate is missing the repository checker suite.")
-        for checker in checkers:
-            command(sys.executable, str(checker), cwd=candidate, isolated=True)
-        if any((candidate / name).read_bytes() != content for name, content in files.items()):
-            raise Refused("A checker changed patch content.")
+        if check_candidate:
+            for checker in checkers:
+                command(sys.executable, str(checker), cwd=candidate, isolated=True)
+            if any((candidate / name).read_bytes() != content for name, content in files.items()):
+                raise Refused("A checker changed patch content.")
         spec = {"id": args.id, "title": args.title, "baseline": head, "hashes": hashes,
                 "checkers": [p.name for p in checkers], "version": version[1],
                 "runtime": any(name.startswith("Logres/") for name in files)}
@@ -170,8 +171,10 @@ def build(repo, args):
         payload = zip_bytes(files, spec, template)
     with args.output.open("xb") as output:
         output.write(payload)
-    print(f"{len(checkers)}/{len(checkers)} STATIC PASS in candidate shadow")
-    print(f"{sha256(payload).hexdigest()}  {args.output}")
+    if announce and check_candidate:
+        print(f"{len(checkers)}/{len(checkers)} STATIC PASS in candidate shadow")
+    if announce:
+        print(f"{sha256(payload).hexdigest()}  {args.output}")
 
 
 def main():

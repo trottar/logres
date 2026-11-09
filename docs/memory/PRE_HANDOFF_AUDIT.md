@@ -1,3 +1,7 @@
+## P0406 — Logres checkout context and one-command Chat changes (2026-11-08)
+
+Verified P0405 main. The ordinary Chat handoff failed before any diff reached the builder. P0406 replaces manual diff assembly with a strict text-change package and a scoped local receipt. The new runner reuses the existing builder, checkers, prewrite shadow, rollback and manifest. The first candidate was refused by the checker version policy because a new fixture used the live TOC version. The fixture now uses a synthetic version. The local pilot exercises the real runner, exact ZIP parity and refusal cases. The user runs ordinary Chat. No runtime changes.
+
 ## P0405 — Deterministic Chat-to-ZIP builder (2026-11-08)
 
 Exact P0404 main verified. P0405 covers text diff staging on the baseline archive, explicit allowlists, deterministic ZIP bytes and a self-contained guarded applier. The pilot uses the builder's own reviewed tools-and-memory diff. Gates cover unsafe input refusal, two identical builds, full checker runs, checkout guards, rollback and exact manifest. No runtime changes.

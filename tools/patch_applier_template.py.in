@@ -27,8 +27,17 @@ class Refused(Exception):
     pass
 
 
-def command(*args, cwd=ROOT):
-    return subprocess.run(args, cwd=cwd, env=ENV, capture_output=True, check=False)
+def configure_paths(root, payload):
+    """Keep the same guards when the local runner extracts the ZIP to a temp directory."""
+    global ROOT, PAYLOAD, MANIFEST, LOCK
+    ROOT, PAYLOAD = root.resolve(), payload
+    MANIFEST = ROOT / f"{PATCH}_MANIFEST.txt"
+    LOCK = ROOT / f".{PATCH}_APPLY.lock"
+
+
+def command(*args, cwd=None):
+    return subprocess.run(args, cwd=ROOT if cwd is None else cwd, env=ENV,
+                          capture_output=True, check=False)
 
 
 def git(*args):

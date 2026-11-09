@@ -11,7 +11,7 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0405** Chat-to-ZIP; P0404 L-004; P0403 L-001; P0402–P0397 flight; P0396; P0395; P0394; P0393; P0392; P0391 session 46; P0390; P0389; P0388 L-027; P0387 late-accept; P0386 L-001; P0385 greeting/L-002; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
+**P0406** Chat runner; P0405 main; P0404 L-004; P0403 L-001; P0402–P0397 flight; P0396; P0395; P0394; P0393; P0392; P0391 session 46; P0390; P0389; P0388 L-027; P0387 late-accept; P0386 L-001; P0385 greeting/L-002; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
 
 ## Verified State
 
@@ -39,7 +39,7 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Next Action
 
-Pilot Chat-to-ZIP. NPC expansion deferred. L-002 deferred; L-027/L-033/L-041 OPEN.
+Trial the one-command Chat runner. NPC expansion deferred. L-002 deferred; L-027/L-033/L-041 OPEN.
 
 ## Success Criteria
 
@@ -52,7 +52,7 @@ Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret re
 - docs/memory/evidence/P0403_QUEST_STAGE_HANDOFF.md
 - docs/memory/evidence/P0402_FLIGHT_CHILD_INVENTORY.md
 - docs/memory/evidence/P0404_CENTERED_FLIGHT_MASTER.md
-- docs/memory/evidence/P0405_CHAT_TO_ZIP.md
+- docs/memory/evidence/P0406_CHAT_CHANGE_RUNNER.md
 - docs/memory/evidence/P0399_FLIGHT_ROUTE_LIST.md
 - docs/memory/evidence/P0398_FLIGHT_SCALE.md
 - docs/memory/evidence/P0397_FLIGHT_WINDOW.md
