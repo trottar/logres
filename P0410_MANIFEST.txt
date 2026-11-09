@@ -1,0 +1,24 @@
+P0410 Verify exact Chat package staging
+Verified baseline: 9c9ec52403997ab63d659ad3d4d6ac12572941c9
+Candidate runtime version: 0.0.289-dev
+PREWRITE: 279/279 STATIC PASS
+POSTWRITE: 279/279 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: NO RUNTIME FILES CHANGED
+Commit/push performed: NO
+
+Changed paths:
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0410_CHAT_STAGING_AUDIT.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/patches/CHAT_TO_ZIP_WORKFLOW.md
+docs/memory/patches/P0410_CHAT_STAGING.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/chat_change.py
+tools/check_p0410_chat_staging_contract.py
+P0410_MANIFEST.txt

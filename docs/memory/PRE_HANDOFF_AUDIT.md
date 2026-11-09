@@ -1,3 +1,7 @@
+## P0410 — Verify exact Chat package staging (2026-11-08)
+
+Verified P0409 R0/R1 replay and exact final main payload parity. The original 276/278 refusal and two-file first-commit omission are separate failures. P0410 gates cover checker reference hints, exact staged paths and bytes, manifest parity, the historical incomplete commit, guarded apply, rollback and deterministic ZIP. No runtime changes.
+
 ## P0409 — Ordinary Chat JSON candidate preflight (2026-11-08)
 
 Verified exact P0408 GitHub main and read P0408 Chat workflow and original source handlers. Native/pet/Report Bug static safety contracts were inspected; P0409 revises historical requirements only where HUD buttons were intentionally retired. The package's new focused checker covers exactly nine actions, HUD hit regions, panel routing, fallback and screenshot. **Full exact-candidate suite, Lua compilation, transaction/rollback and ZIP SHA cannot run against the full GitHub checkout in this Chat container; no full audit or WoW PASS is claimed.** The first executable gate is `tools/chat_change.py check P0409.logres.json` in WSL. If it refuses, no apply, deploy or commit is authorized. This is a JSON change package, not an assistant-side code ZIP handoff.

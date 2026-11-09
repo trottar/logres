@@ -8,6 +8,7 @@ import importlib.util
 import json
 from pathlib import Path
 import re
+import shlex
 import shutil
 import sys
 import tarfile
@@ -144,22 +145,28 @@ def text_lines(text):
     return [line + "\n" for line in text.split("\n")[:-1]]
 
 
+def updated_text(change, original):
+    path = change["path"]
+    if "create" in change:
+        if original is not None:
+            raise Refused(f"Create path already exists: {path}")
+        new = change["create"]
+    else:
+        if original is None:
+            raise Refused(f"Edit path does not exist: {path}")
+        valid_text(original, f"{path} baseline", allow_empty=True)
+        new = change_text(original, change["edits"], path)
+    if new == original:
+        raise Refused(f"No net change in {path}.")
+    return new
+
+
 def make_diff(package, originals):
     patch = []
     for change in sorted(package["files"], key=lambda entry: entry["path"]):
         path = change["path"]
         original = originals[path]
-        if "create" in change:
-            if original is not None:
-                raise Refused(f"Create path already exists: {path}")
-            new = change["create"]
-        else:
-            if original is None:
-                raise Refused(f"Edit path does not exist: {path}")
-            valid_text(original, f"{path} baseline", allow_empty=True)
-            new = change_text(original, change["edits"], path)
-        if new == original:
-            raise Refused(f"No net change in {path}.")
+        new = updated_text(change, original)
         patch.append(f"diff --git a/{path} b/{path}\n")
         if original is None:
             patch.append("new file mode 100644\n")
@@ -170,10 +177,15 @@ def make_diff(package, originals):
     return "".join(patch)
 
 
-def prepared_diff(repo, package):
+def package_head(repo, package):
     head = checkout_head(repo)
     if head != package["baseline"]:
         raise Refused(f"Expected HEAD {package['baseline']}, found {head}.")
+    return head
+
+
+def prepared_diff(repo, package):
+    head = package_head(repo, package)
     dirty = tracked_status(repo)
     if dirty:
         raise Refused("Tracked changes are present: " + ", ".join(row["path"] for row in dirty))
@@ -193,6 +205,74 @@ def prepared_diff(repo, package):
                 raise Refused(f"Local file bytes differ from the baseline: {name}")
             originals[name] = blob.decode("utf-8")
     return make_diff(package, originals)
+
+
+def referenced_checkers(repo, package):
+    paths = [entry["path"].encode("utf-8") for entry in package["files"]
+             if entry["path"].startswith("Logres/")]
+    if not paths:
+        return []
+    directory = repo / "tools"
+    if directory.resolve() != directory:
+        raise Refused("Checker directory must stay inside the Logres repository.")
+    matches = []
+    for checker in sorted(directory.glob("check_*.py")):
+        if checker.is_symlink() or not checker.is_file():
+            continue
+        contents = checker.read_bytes()
+        if any(path in contents for path in paths):
+            matches.append(checker.relative_to(repo).as_posix())
+    return matches
+
+
+def manifest_paths(package):
+    return sorted(entry["path"] for entry in package["files"]) + [f"{package['id']}_MANIFEST.txt"]
+
+
+def stage_command(package, source):
+    stage = shlex.join(["git", "add", "--", *manifest_paths(package)])
+    verify = shlex.join(["python3", "tools/chat_change.py", "verify-staged", str(source.resolve())])
+    return f"{stage} && {verify}"
+
+
+def diff_paths(repo, *args):
+    output = git(repo, "diff", *args, "--name-only", "--no-renames", "-z")
+    return {path.decode("utf-8") for path in output.split(b"\0") if path}
+
+
+def verify_staged(repo, package):
+    head = package_head(repo, package)
+    expected = manifest_paths(package)
+    staged = diff_paths(repo, "--cached")
+    missing = set(expected) - staged
+    extra = staged - set(expected)
+    if missing or extra:
+        raise Refused(f"Staged paths differ from the package. Missing: {sorted(missing)}. Extra: {sorted(extra)}.")
+
+    manifest = expected[-1]
+    lines = git(repo, "show", f":{manifest}").decode("utf-8").splitlines()
+    if not lines or lines[0] != f"{package['id']} {package['title']}" or (
+        f"Verified baseline: {head}" not in lines or lines.count("Changed paths:") != 1
+        or lines[lines.index("Changed paths:") + 1:] != expected
+    ):
+        raise Refused(f"Staged {manifest} does not match this package.")
+
+    different = []
+    for change in package["files"]:
+        path = change["path"]
+        if "create" in change:
+            if git(repo, "ls-tree", "--name-only", head, "--", path):
+                raise Refused(f"Create path already exists at the baseline: {path}")
+            original = None
+        else:
+            original = git(repo, "show", f"{head}:{path}").decode("utf-8")
+        wanted = updated_text(change, original).encode("utf-8")
+        if git(repo, "show", f":{path}") != wanted:
+            different.append(path)
+    if different:
+        raise Refused(f"Staged file bytes differ from the package: {', '.join(sorted(different))}.")
+    git(repo, "diff", "--cached", "--check")
+    print(f"{package['id']} staged paths, package bytes, and manifest match. Ready to commit.")
 
 
 def require_runtime_opt_in(package, allowed):
@@ -256,6 +336,8 @@ def apply_change(repo, source, package, patch):
             if not applied:
                 output.unlink(missing_ok=True)
     print(f"Verified ZIP {sha256(output.read_bytes()).hexdigest()}  {output}")
+    print("To stage and verify this package before committing:")
+    print(stage_command(package, source))
 
 
 def main(repo=REPO):
@@ -264,6 +346,7 @@ def main(repo=REPO):
     sub.add_parser("context", help="Print a read-only Logres checkout context receipt")
     sub.add_parser("review", help="Show the exact diff without running checkers").add_argument("package", type=Path)
     sub.add_parser("check", help="Run all checkers on a temporary candidate").add_argument("package", type=Path)
+    sub.add_parser("verify-staged", help="Check the Git index against the exact package").add_argument("package", type=Path)
     apply = sub.add_parser("apply", help="Validate and apply a reviewed change")
     apply.add_argument("package", type=Path)
     apply.add_argument("--allow-runtime", action="store_true",
@@ -274,11 +357,19 @@ def main(repo=REPO):
             print(json.dumps(context(repo), indent=2, sort_keys=True))
             return
         package = parse_change(args.package.read_bytes())
+        if args.operation == "verify-staged":
+            verify_staged(repo, package)
+            return
         if args.operation == "apply":
             require_runtime_opt_in(package, args.allow_runtime)
         patch = prepared_diff(repo, package)
         if args.operation == "review":
             print("Diff only. Use check to run the checker suite.", file=sys.stderr)
+            matches = referenced_checkers(repo, package)
+            if matches:
+                print("Checkers that directly reference changed runtime paths:", file=sys.stderr)
+                for name in matches:
+                    print(f"  {name}", file=sys.stderr)
             print(patch, end="")
         elif args.operation == "check":
             check_change(repo, package, patch)

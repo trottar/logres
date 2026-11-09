@@ -1,3 +1,7 @@
+## P0410 — Verify exact Chat package staging (2026-11-08)
+
+Verified P0409 main 9c9ec52. User reports the HUD relocation and Report Bug styling worked on R1. R0 missed two historical contracts. R1 passed locally, but the first commit omitted those two checker files and a follow-up added them. P0410 lists direct checker references during review and verifies the exact staged package before commit. See docs/memory/evidence/P0410_CHAT_STAGING_AUDIT.md.
+
 ## P0409 — Move HUD native controls into /logres panel (2026-11-08)
 
 Verified P0408 main `9a2df3b`. Ordinary Chat candidate replaces the nine native HUD buttons with panel N controls, preserves direct stock/fallback handlers and one-click styled Report Bug, and updates static contracts. WSL exact-candidate checks and Forever runtime remain UNVERIFIED. See `docs/memory/evidence/P0409_HUD_CONTROL_PANEL.md`.
