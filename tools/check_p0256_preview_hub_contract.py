@@ -50,7 +50,7 @@ for id_,label,command,phase in actions:
 if len(actions) < 108: errors.append('unexpected total action registrations: '+str(len(actions)))
 for token in (
     '{ id = "P", title = "Previews — All UI Areas" }',
-    'local TAB_WIDTH = 52',
+    'local TAB_WIDTH = 46',
     'local PREVIEW_PAGE_SIZE = MAX_ACTIONS_PER_PHASE',
     'self.previewPage = 1',
     'function Panel:CreatePreviewPager(frame)',

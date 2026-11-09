@@ -34,9 +34,10 @@ for bad in ('[combat] show; hide','[combat] hide; show','stock:SetPoint(', 'stoc
 if t.count('RegisterStateDriver(')+t.count('pcall(RegisterStateDriver,')<4:e.append('driver arming/restoration incomplete')
 if 'if nativeReuse:IsAcquired() then' not in p:e.append('existing pet probe ownership guard missing')
 if 'trial:ToggleNativeAccess()' not in n:e.append('PET stock dock not integrated')
-for s in ('if key == "petFrame" then return false end','if key == "petActions" then return false end',
-          'button:SetText("PET STOCK")'):
+for s in ('if key == "petFrame" then return false end','if key == "petActions" then return false end'):
  if s not in n:e.append('native fold quarantine or dock missing '+s)
+if '"Pet Stock"' not in panel or 'nativefallback pet' not in panel:
+ e.append('PET stock panel fallback missing')
 if 'MAX_ACTIONS_PER_PHASE = BUTTON_COLUMNS * 6' not in panel:e.append('18 action panel altered')
 for s in ('command == "petbardriver"', '"Native Pet Bar ON (TEST)"',
           '"Native Pet Bar OFF"','"Native Pet Bar Check"'):

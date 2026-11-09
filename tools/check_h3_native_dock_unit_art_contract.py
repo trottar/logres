@@ -20,10 +20,19 @@ for file,sha,size in (
  if hashlib.sha256(b).hexdigest()!=sha:errors.append('asset hash drift '+file)
 for token in ('theme.nativeAccessDock = {','assets = {','Dock\\\\dock_tab.tga','Dock\\\\dock_fallback.tga','fallbackText =','fallbackHover =','petName =','targetAccent =','allyAccent =','petAccent ='):
  if token not in t:errors.append('missing Theme token '+token)
-for token in ('Logres.Layout.Bind(dock, "nativeAccess", "TOPRIGHT", "TOPRIGHT")','local dockAssets = dockStyle.assets or {}','bronze:SetTexture(dockAssets.tab)','self:Toggle(key)','button:RegisterForClicks("LeftButtonUp")'):
- if token not in n:errors.append('dock source missing '+token)
-for token in ('button:SetSize(110, 23)','button:SetPoint("TOPLEFT", row, "TOPLEFT", x, 0)', 'button:SetText("PET STOCK")','button:SetScript("OnClick", function() self:Toggle(key) end)','button:SetFontString(text)','bronze:SetTexture(dockAssets.fallback)','button:RegisterForClicks("LeftButtonUp")'):
- if token not in s:errors.append('fallback control missing '+token)
+for token in ('Logres.Layout.Bind(dock, "nativeAccess", "TOPRIGHT", "TOPRIGHT")',
+              'dock:EnableMouse(false)', 'dock:Hide()', 'self.dock:Hide()'):
+ if token not in n:errors.append('retired dock anchor/hidden policy missing '+token)
+if 'CreateFrame("Button", nil, dock)' in n or 'self.dock:Show()' in n:
+ errors.append('retired six-button HUD dock still interactive')
+if 'CreateFrame("Button", nil, row)' in s or 'nativeAccessRow' in s:
+ errors.append('retired three-button fallback HUD row still interactive')
+panel=text('Logres/Dev/Panel.lua')
+for token in ('"Pet Stock"', '"Buffs"', '"Target"', 'nativefallback pet',
+              'nativefallback buffs', 'nativefallback target',
+              'bronze:SetTexture((skin.assets or {}).fallback)',
+              'bugButton:SetText("Report Bug")'):
+ if token not in panel:errors.append('panel stock/bronze fallback missing '+token)
 if '"UIPanelButtonTemplate"' in s:errors.append('stock red fallback template still in use')
 for token in ('targetFrame:SetSize(198, 54)','targetNameText:SetWidth(190)','"LogresHUDTargetHealthBar",','"compact",','self.targetNameText:SetText(UnitName("target"))','row.nameText:SetText(UnitName(unit))','local targetAccent = targetFrame:CreateTexture(nil, "ARTWORK")','local rowAccent = rowFrame:CreateTexture(nil, "ARTWORK")','unit == "pet"'):
  if token not in h:errors.append('HUD rendering/data boundary missing '+token)

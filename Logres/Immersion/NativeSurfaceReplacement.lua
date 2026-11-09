@@ -87,11 +87,11 @@ function Native:Ready(key)
     end
     if key == "playerBuffs" then
         local helpful = secureReadiness("PlayerHelpfulAuras")
-        -- Four crafted Logres slots are partial coverage. The BUFFS stock
-        -- access control must be present before folding the native strip.
+        -- Four crafted slots are partial coverage. Only fold stock while
+        -- the /logres panel fallback remains reachable through its slash route.
         return helpful and helpful.moduleEnabled == true
             and helpful.root ~= nil and helpful.slots ~= nil
-            and self.buttons and self.buttons.playerBuffs ~= nil
+            and type(Logres.ToggleDevPanel) == "function"
     end
     if key == "targetAuras" then
         -- H.2: the Logres helpful lane and Blizzard-owned secure harmful
@@ -101,7 +101,7 @@ function Native:Ready(key)
         return status and status.moduleEnabled == true
             and status.nativeDebuffs ~= nil and status.nativeActive == true
             and status.lanes and status.lanes.targetHelpful ~= nil
-            and self.buttons and self.buttons.targetAuras ~= nil
+            and type(Logres.ToggleDevPanel) == "function"
             and _G.TargetFrame ~= nil
             and type(_G.TargetFrame.ConfigureAuraContainer) == "function"
     end
@@ -328,13 +328,10 @@ function Native:Toggle(domain)
 end
 
 function Native:UpdateButtons()
-    if not self.buttons then return end
-    for key, button in pairs(self.buttons) do
-        if key == "pet" then
-            button:SetText("PET STOCK")
-        else
-            button:SetText(LABELS[key] .. (self.manual[key] and " OPEN" or ""))
-        end
+    -- Only addon-owned panel labels change; no hidden HUD fallback region.
+    local ok, panel = pcall(Logres.GetModule, Logres, "DevPanel")
+    if ok and panel and type(panel.UpdateNativeAccessLabels) == "function" then
+        panel:UpdateNativeAccessLabels()
     end
 end
 
@@ -407,58 +404,8 @@ function Native:OnInitialize()
         end
         self:Reconcile(event)
     end)
-    local dock = _G.LogresNativeAccessDock
-    if dock then
-        local dockStyle = (Logres.Theme and Logres.Theme.nativeAccessDock) or {}
-        local dockAssets = dockStyle.assets or {}
-        local dockText = dockStyle.fallbackText or { 0.96, 0.86, 0.66, 1.00 }
-        local dockHover = dockStyle.fallbackHover or { 0.68, 0.47, 0.20, 0.25 }
-        self.buttons = {}
-        local row = CreateFrame("Frame", nil, UIParent)
-        row:SetSize(342, 23)
-        row:SetFrameStrata("DIALOG")
-        row:SetPoint("TOPLEFT", dock, "BOTTOMLEFT", 0, -5)
-        self.nativeAccessRow = row
-        row:SetShown(dock:IsShown())
-        dock:HookScript("OnShow", function() row:Show() end)
-        dock:HookScript("OnHide", function() row:Hide() end)
-        local groups = {{"pet", 0}, {"playerBuffs", 116},
-            {"targetAuras", 232}}
-        for _, spec in ipairs(groups) do
-            local key, x = spec[1], spec[2]
-            -- Native stock fallback remains an ordinary addon-owned button;
-            -- no template-red chrome, unit/aura read, or protected operation.
-            local button = CreateFrame("Button", nil, row)
-            button:SetSize(110, 23)
-            button:SetPoint("TOPLEFT", row, "TOPLEFT", x, 0)
-            local base = button:CreateTexture(nil, "BACKGROUND")
-            base:SetAllPoints(button)
-            base:SetColorTexture(0.035, 0.029, 0.020, 0.74)
-            local bronze = button:CreateTexture(nil, "BORDER")
-            bronze:SetAllPoints(button)
-            bronze:SetTexture(dockAssets.fallback)
-            local hover = button:CreateTexture(nil, "HIGHLIGHT")
-            hover:SetAllPoints(button)
-            hover:SetColorTexture(
-                dockHover[1], dockHover[2], dockHover[3], dockHover[4]
-            )
-            button:SetHighlightTexture(hover)
-            local pressed = button:CreateTexture(nil, "ARTWORK")
-            pressed:SetAllPoints(button)
-            pressed:SetColorTexture(0.62, 0.40, 0.14, 0.22)
-            button:SetPushedTexture(pressed)
-            local text = button:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-            text:SetAllPoints(button)
-            text:SetTextColor(dockText[1], dockText[2], dockText[3], dockText[4])
-            text:SetShadowColor(0, 0, 0, 0.95)
-            text:SetShadowOffset(1, -1)
-            button:SetFontString(text)
-            button:SetText(LABELS[key])
-            button:RegisterForClicks("LeftButtonUp")
-            button:SetScript("OnClick", function() self:Toggle(key) end)
-            self.buttons[key] = button
-        end
-    end
+    -- Stock pet, player buffs, and target aura access now use only the
+    -- panel's N tab. No UIParent fallback row/buttons or click regions.
 end
 
 function Native:OnEnable()

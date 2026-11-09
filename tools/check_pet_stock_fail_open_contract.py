@@ -17,7 +17,8 @@ else:
         legacy=re.search(r'if key == "'+key+r'" then\n',gate)
         if not match:errors.append(key+' stock gate missing')
         elif legacy and match.start()>legacy.start():errors.append(key+' stock guard after legacy readiness')
-if 'button:SetText("PET STOCK")' not in native:errors.append('PET dock stock label missing')
+if '"Pet Stock"' not in panel or 'nativefallback pet' not in panel or 'native:Toggle(domain)' not in commands:
+    errors.append('PET panel stock access route missing')
 if 'self:Reconcile("pet-stock-access")' not in native:errors.append('PET stock-only reconcile missing')
 if 'petPolicy=stock/stock' not in native or 'petVisual=UNVERIFIED' not in native:errors.append('native ownership/visibility qualification missing')
 if 'local ORDER = {"petFrame", "petActions", "playerBuffs", "targetAuras"}' not in native:errors.append('native order changed')

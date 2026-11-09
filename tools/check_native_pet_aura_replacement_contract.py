@@ -20,10 +20,9 @@ for t in ('"SecureUnitButtonTemplate"', '"unit", "pet"', '"*type2", "togglemenu"
           'self:Restore(key)', 'self:Fold(key)', 'pcall(frame.HookScript',
           'if InCombatLockdown() then', '"PET"', '"BUFFS"', '"TARGET"',
           'local helpful = secureReadiness("PlayerHelpfulAuras")',
-          'helpful.root ~= nil', 'self.buttons.playerBuffs ~= nil',
+          'helpful.root ~= nil', 'and type(Logres.ToggleDevPanel) == "function"',
           'if key == "targetAuras" then',
-          'local row = CreateFrame("Frame", nil, UIParent)',
-          'row:SetPoint("TOPLEFT", dock, "BOTTOMLEFT", 0, -5)',
+          'function Native:UpdateButtons()',
           'function Native:RefreshNativeAuras()'):
     if t not in N:errors.append('native gate missing: '+t)
 for t in ('function Native:FoldTargetAuras()',
@@ -33,10 +32,12 @@ for t in ('function Native:FoldTargetAuras()',
           'snapshot.target.maxBuffs = snapshot.maxBuffs',
           'snapshot.target.maxDebuffs = snapshot.maxDebuffs',
           'status.nativeDebuffs ~= nil and status.nativeActive == true',
-          'self.buttons.targetAuras ~= nil',
+          'and type(Logres.ToggleDevPanel) == "function"',
           'if key == "targetAuras" then return self:FoldTargetAuras() end',
           'if key == "targetAuras" then return self:RestoreTargetAuras() end'):
     if t not in N:errors.append('source-backed target fold missing: '+t)
+if 'CreateFrame("Button", nil, row)' in N or 'nativeAccessRow' in N:
+    errors.append('retired native HUD fallback button/row still constructed')
 if 'pcall(frame.HookScript, frame, "OnShow"' not in N:
     errors.append('non-target on-show hook behavior unexpectedly removed')
 if 'auraContainer:Hide()' in N and 'Blizzard Forever' not in N:

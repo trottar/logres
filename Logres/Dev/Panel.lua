@@ -2,7 +2,7 @@ local _, Logres = ...
 
 local PANEL_WIDTH = 620
 local PANEL_HEIGHT = 590
-local TAB_WIDTH = 52
+local TAB_WIDTH = 46 -- 12 phase tabs fit the existing panel width
 local TAB_HEIGHT = 24
 local TAB_GAP = 0
 local BUTTON_WIDTH = 180
@@ -27,6 +27,7 @@ local PHASES = {
     { id = "F", title = "Phase F — Quest Experience" },
     { id = "G", title = "Phase G — Cinematic Camera" },
     { id = "H", title = "Phase H — Integration and Polish" },
+    { id = "N", title = "Native UI — Stock Access (HUD controls)" },
     { id = "P", title = "Previews — All UI Areas" },
     { id = "M", title = "UI Mapping — Element Index" },
 }
@@ -35,6 +36,21 @@ local PHASE_BY_ID = {}
 for index = 1, #PHASES do
     PHASE_BY_ID[PHASES[index].id] = PHASES[index]
 end
+
+-- The first six call the unchanged NativeAccess:Toggle route. The final
+-- three call NativeSurfaceReplacement:Toggle via a stable slash command.
+-- Phase N is not a diagnostic action-registration bucket (122 unchanged).
+local NATIVE_ACCESS_ACTIONS = {
+    {label = "Stock", command = "nativeui all", domain = "all"},
+    {label = "Map", command = "nativeui navigation", domain = "navigation"},
+    {label = "Quests", command = "nativeui objectives", domain = "objectives"},
+    {label = "XP", command = "nativeui progress", domain = "progress"},
+    {label = "Menu", command = "nativeui menu", domain = "menu"},
+    {label = "Cast", command = "nativeui casts", domain = "casts"},
+    {label = "Pet Stock", command = "nativefallback pet", domain = "pet"},
+    {label = "Buffs", command = "nativefallback buffs", domain = "playerBuffs"},
+    {label = "Target", command = "nativefallback target", domain = "targetAuras"},
+}
 
 local function ensureDiagnosticsDB()
     LogresDiagnosticsDB = LogresDiagnosticsDB or {}
@@ -547,6 +563,7 @@ local Panel = Logres:RegisterModule("DevPanel", {
         self.results = results
         self.phaseTabs = {}
         self.actionButtons = {}
+        self.nativeAccessButtons = nil
         self.activePhase = DEFAULT_PHASE
         self.previewPage = 1
         self:CreatePreviewPager(frame)
@@ -567,13 +584,35 @@ local Panel = Logres:RegisterModule("DevPanel", {
         self:SetActivePhase(DEFAULT_PHASE)
 
         -- P0372: explicit screenshot/incident marker during normal gameplay.
-        local bugButton = CreateFrame("Button", "LogresBugReportButton",
-            UIParent, "UIPanelButtonTemplate")
-        bugButton:SetSize(94, 22)
+        local bugButton = CreateFrame("Button", "LogresBugReportButton", UIParent)
+        bugButton:SetSize(116, 27)
         bugButton:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -20, -160)
         Logres.Layout.Bind(bugButton, "nativeAccess", "TOPRIGHT", "TOPRIGHT", 0, -58)
         bugButton:SetFrameStrata("LOW")
+        -- Match the existing bronze native-access skin without a stock
+        -- UIPanel template. The button remains independent of panel visibility.
+        local skin = (Logres.Theme and Logres.Theme.nativeAccessDock) or {}
+        local colors = skin.fallbackText or {0.96, 0.86, 0.66, 1.00}
+        local hoverColors = skin.fallbackHover or {0.68, 0.47, 0.20, 0.25}
+        local base = bugButton:CreateTexture(nil, "BACKGROUND")
+        base:SetAllPoints(bugButton)
+        base:SetColorTexture(0.035, 0.029, 0.020, 0.80)
+        local bronze = bugButton:CreateTexture(nil, "BORDER")
+        bronze:SetAllPoints(bugButton)
+        bronze:SetTexture((skin.assets or {}).fallback)
+        local hover = bugButton:CreateTexture(nil, "HIGHLIGHT")
+        hover:SetAllPoints(bugButton)
+        hover:SetColorTexture(hoverColors[1], hoverColors[2],
+            hoverColors[3], hoverColors[4])
+        bugButton:SetHighlightTexture(hover)
+        local text = bugButton:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+        text:SetAllPoints(bugButton)
+        text:SetTextColor(colors[1], colors[2], colors[3], colors[4])
+        text:SetShadowColor(0, 0, 0, 0.98)
+        text:SetShadowOffset(1, -1)
+        bugButton:SetFontString(text)
         bugButton:SetText("Report Bug")
+        bugButton:RegisterForClicks("LeftButtonUp")
         bugButton:SetScript("OnClick", function()
             local _, result = Logres:CaptureBugIncident()
             Logres:DevPrint("Incident recorded: " .. result
@@ -638,6 +677,31 @@ function Panel:RunCommand(command)
     Logres:RunDevCommand(command, function(line)
         self:AddResult(line, run)
     end)
+end
+
+-- Native-control labels report only addon-owned manual intent, never
+-- Blizzard frame presentation or secret-capable native state.
+function Panel:UpdateNativeAccessLabels()
+    if not self.nativeAccessButtons then return end
+    local native = Logres:GetModule("NativeAccess")
+    local surfaces = Logres:GetModule("NativeSurfaceReplacement")
+    local domains = {"navigation", "objectives", "progress", "menu", "casts"}
+    local allOpen = true
+    for _, domain in ipairs(domains) do
+        if not native.manualOpen[domain] then allOpen = false end
+    end
+    for index, button in ipairs(self.nativeAccessButtons) do
+        local entry = NATIVE_ACCESS_ACTIONS[index]
+        local open
+        if entry.domain == "all" then
+            open = allOpen
+        elseif index <= 6 then
+            open = native.manualOpen[entry.domain] == true
+        elseif entry.domain ~= "pet" then
+            open = surfaces.manual[entry.domain] == true
+        end
+        button:SetText(entry.label .. (open and " [OPEN]" or ""))
+    end
 end
 
 -- The preview collection intentionally lives in a single tab, but more than
@@ -783,6 +847,32 @@ function Panel:RefreshActionButtons()
     for index = 1, #self.actionButtons do
         self.actionButtons[index]:Hide()
         self.actionButtons[index] = nil
+    end
+    self.nativeAccessButtons = nil
+
+    if self.activePhase == "N" then
+        -- Six navigation/stock toggles followed by three pet/aura fallbacks.
+        -- All buttons are children of the closable panel, not the HUD.
+        self.nativeAccessButtons = {}
+        self:UpdatePreviewPager(0)
+        self.emptyLabel:Hide()
+        for index, entry in ipairs(NATIVE_ACCESS_ACTIONS) do
+            local button = CreateFrame("Button", nil, self.buttonHost, "UIPanelButtonTemplate")
+            local offset = index - 1
+            button:SetSize(BUTTON_WIDTH, BUTTON_HEIGHT)
+            button:SetPoint("TOPLEFT", self.buttonHost, "TOPLEFT",
+                (offset % BUTTON_COLUMNS) * (BUTTON_WIDTH + BUTTON_GAP_X),
+                -math.floor(offset / BUTTON_COLUMNS) * (BUTTON_HEIGHT + BUTTON_GAP_Y))
+            button:SetText(entry.label)
+            button:SetScript("OnClick", function()
+                self:RunCommand(entry.command)
+                self:UpdateNativeAccessLabels()
+            end)
+            self.actionButtons[#self.actionButtons + 1] = button
+            self.nativeAccessButtons[index] = button
+        end
+        self:UpdateNativeAccessLabels()
+        return
     end
 
     if self.activePhase == "M" then

@@ -69,8 +69,8 @@ else:
         errors.append('P0208 stock PetFrame fail-open guard missing')
     if gate.find('if key == "petFrame" then return false end') > gate.find('if key == "petFrame" then\n'):
         errors.append('P0208 stock pet unit fail-open guard must precede legacy fold readiness')
-if 'button:SetText("PET STOCK")' not in N:
-    errors.append('P0208 native PET dock stock label missing')
+if '"Pet Stock"' not in D or 'nativefallback pet' not in D:
+    errors.append('P0208 native PET panel stock access missing')
 if 'petPolicy=stock/stock' not in N or 'petVisual=UNVERIFIED' not in N:
     errors.append('P0208 native pet source-policy/unverified diagnostics missing')
 

@@ -1,3 +1,9 @@
+## P0409 — Ordinary Chat JSON candidate preflight (2026-11-08)
+
+Verified exact P0408 GitHub main and read P0408 Chat workflow and original source handlers. Native/pet/Report Bug static safety contracts were inspected; P0409 revises historical requirements only where HUD buttons were intentionally retired. The package's new focused checker covers exactly nine actions, HUD hit regions, panel routing, fallback and screenshot. **Full exact-candidate suite, Lua compilation, transaction/rollback and ZIP SHA cannot run against the full GitHub checkout in this Chat container; no full audit or WoW PASS is claimed.** The first executable gate is `tools/chat_change.py check P0409.logres.json` in WSL. If it refuses, no apply, deploy or commit is authorized. This is a JSON change package, not an assistant-side code ZIP handoff.
+
+R0 WSL preflight **REFUSED 276/278**: `check_h3_visual_fidelity_contract.py` assumed HUD dock styles/clicks and `check_interaction_native_contract.py` assumed the `"CAST"` label remained in NativeAccess. This was an incomplete historical audit; the check stopped before any apply. R1 scopes these two checker requirements to panel routing, existing Theme art and original cast-source/refold invariants. Full R1 checker/runner/rollback/WoW status remains **UNVERIFIED** until WSL runs them.
+
 ## P0408 — Prevent stale Chat patch checks and enforce runtime opt-in (2026-11-08)
 
 Verified P0406 main and replayed the exact rejected P0407 package. The original prewrite stopped at 276/277 with zero tracked writes. P0408 removes the frozen current-checkpoint requirement, preserves historical guards, reports full local check results and requires runtime opt-in. Validation includes the original candidate with only the repaired checker, a future-heading regression, runtime refusal, exact P0408 suites, ZIP parity, rollback and Git whitespace. No runtime changes.

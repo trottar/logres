@@ -1,0 +1,37 @@
+P0409 HUD controls into panel: repair legacy CAST and dock contracts after R0 refusal
+Verified baseline: 9a2df3ba8d8576ef87adbfd3bfe9e4a5aa39c074
+Candidate runtime version: 0.0.289-dev
+PREWRITE: 278/278 STATIC PASS
+POSTWRITE: 278/278 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Core/UIOwnershipAudit.lua
+Logres/Dev/Panel.lua
+Logres/Immersion/NativeAccess.lua
+Logres/Immersion/NativeSurfaceReplacement.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0409_HUD_CONTROL_PANEL.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/patches/P0409_HUD_CONTROL_PANEL.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_h3_native_dock_unit_art_contract.py
+tools/check_h3_visual_fidelity_contract.py
+tools/check_interaction_native_contract.py
+tools/check_native_pet_aura_replacement_contract.py
+tools/check_p0256_preview_hub_contract.py
+tools/check_p0279_service_mapping_inspector_contract.py
+tools/check_p0409_hud_control_panel_contract.py
+tools/check_pet_combat_candidate_contract.py
+tools/check_pet_stock_fail_open_contract.py
+tools/check_petbar_visibility_trial_contract.py
+P0409_MANIFEST.txt

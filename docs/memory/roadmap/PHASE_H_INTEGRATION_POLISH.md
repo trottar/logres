@@ -1,3 +1,7 @@
+## P0409 — Move HUD native controls into /logres panel (2026-11-08)
+
+Verified P0408 main `9a2df3b`. Ordinary Chat candidate replaces the nine native HUD buttons with panel N controls, preserves direct stock/fallback handlers and one-click styled Report Bug, and updates static contracts. WSL exact-candidate checks and Forever runtime remain UNVERIFIED. See `docs/memory/evidence/P0409_HUD_CONTROL_PANEL.md`.
+
 ## P0408 — Prevent stale Chat patch checks and enforce runtime opt-in (2026-11-08)
 
 Verified P0406 main e093bed. P0407 failed before writes because P0381 required a P0406 roadmap heading. P0408 derives the active heading from CURRENT, retains the historical checks, adds a full local check command and requires explicit opt-in for runtime edits. Innkeeper work remains investigation-only. See docs/memory/evidence/P0408_CHAT_PREFLIGHT.md.

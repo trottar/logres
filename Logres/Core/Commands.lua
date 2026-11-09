@@ -3761,6 +3761,20 @@ local function handleCommand(message)
         return
     end
 
+    if command == "nativefallback" then
+        local domain = ({pet = "pet", buffs = "playerBuffs",
+            target = "targetAuras"})[argument]
+        if not domain then
+            emit("Usage: /logres nativefallback [pet|buffs|target]")
+            return
+        end
+        local native = Logres:GetModule("NativeSurfaceReplacement")
+        local ok = native:Toggle(domain)
+        emit("Logres nativefallback " .. argument .. ": "
+            .. (ok and "updated" or "deferred/failed"))
+        return
+    end
+
     if command == "layoutcheck" then
         runLayoutCheck()
         return

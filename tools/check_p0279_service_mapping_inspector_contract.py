@@ -42,7 +42,7 @@ for forbidden in ('BuyTrainerService(', 'BuyMerchantItem(', 'TakeTaxiNode(',
     need(forbidden not in M and forbidden not in I,
          'inspector/index may not mutate native object or transact '+forbidden)
 for token in ('{ id = "M", title = "UI Mapping — Element Index" }',
-              'local TAB_WIDTH = 52', 'local TAB_GAP = 0',
+              'local TAB_WIDTH = 46', 'local TAB_GAP = 0',
               'function Panel:RefreshMappingButtons()',
               'Logres.MappingInspector.Entries()',
               'Logres.MappingInspector.Highlight(entry.id)',

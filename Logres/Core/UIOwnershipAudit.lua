@@ -321,7 +321,7 @@ function Audit.RunNativeAccessCheck(emit)
         and status.enabled == true
         and result.moduleEnabled == true
         and result.desired == expected
-        and result.dockShown == expected
+        and result.dockShown == false -- P0409: anchor exists, HUD dock retired
         and result.incompleteDomains == 0
         and result.foldedDomains + result.openDomains == (expected and 5 or 0)
         and result.failures == 0
