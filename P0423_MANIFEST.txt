@@ -1,0 +1,29 @@
+P0423 restore pet action bar and preserve party frame offset
+Verified baseline: b8428a36fd091a7b70ed413afdd3434e082f1767
+Candidate runtime version: 0.0.300-dev
+PREWRITE: 291/291 STATIC PASS
+POSTWRITE: 291/291 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Integration/Layout.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/design/layout/SCREEN_MAP_V8.json
+docs/design/layout/SCREEN_MAP_V8.md
+docs/design/layout/SCREEN_MAP_V8_REFINEMENTS.json
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0423_PET_PARTY_FRAME_CORRECTION.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0423_PET_PARTY_FRAME_CORRECTION.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0422_v7_spacing_contract.py
+tools/check_p0423_pet_party_frame_correction_contract.py
+P0423_MANIFEST.txt

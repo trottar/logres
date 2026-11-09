@@ -1,0 +1,163 @@
+{
+  "source": "P0423 user clarification after P0422 runtime screenshot",
+  "schema": "logres-screen-map/v8",
+  "coordinateSpace": "viewport percentages, intrinsic component centers; origin top-left",
+  "baseline": "b8428a36fd091a7b70ed413afdd3434e082f1767",
+  "reference": "docs/design/layout/SCREEN_MAP_V7.json",
+  "approvedOn": "2026-11-09",
+  "changes": 1,
+  "components": [
+    {
+      "id": "compass",
+      "name": "Compass",
+      "x": 50,
+      "y": 5,
+      "w": 37.4,
+      "h": 6.9
+    },
+    {
+      "id": "activeQuest",
+      "name": "Active Quest",
+      "x": 88,
+      "y": 10,
+      "w": 19.6,
+      "h": 19.2
+    },
+    {
+      "id": "playerReaction",
+      "name": "Player Reaction",
+      "x": 50,
+      "y": 90,
+      "w": 22.5,
+      "h": 6.0
+    },
+    {
+      "id": "playerHarmful",
+      "name": "Player Harmful",
+      "x": 50,
+      "y": 85,
+      "w": 22.5,
+      "h": 5.8
+    },
+    {
+      "id": "targetFallback",
+      "name": "Target Fallback",
+      "x": 80,
+      "y": 50,
+      "w": 13.0,
+      "h": 9.0
+    },
+    {
+      "id": "targetHarmful",
+      "name": "Target Harmful",
+      "x": 70,
+      "y": 50,
+      "w": 6.0,
+      "h": 9.0
+    },
+    {
+      "id": "targetHelpful",
+      "name": "Target Helpful",
+      "x": 90,
+      "y": 50,
+      "w": 6.0,
+      "h": 9.0
+    },
+    {
+      "id": "allies",
+      "name": "Allies",
+      "x": 24,
+      "y": 50,
+      "w": 10.0,
+      "h": 25.9
+    },
+    {
+      "id": "petActions",
+      "name": "Pet Actions",
+      "x": 9,
+      "y": 50,
+      "w": 10.0,
+      "h": 5.0
+    },
+    {
+      "id": "bar2",
+      "name": "Bar 2",
+      "x": 4,
+      "y": 75.16,
+      "w": 10.0,
+      "h": 38.0
+    },
+    {
+      "id": "bar1",
+      "name": "Bar 1",
+      "x": 13.0,
+      "y": 75.0,
+      "w": 8.0,
+      "h": 38.0
+    },
+    {
+      "id": "bar4",
+      "name": "Bar 4",
+      "x": 10.0,
+      "y": 95.0,
+      "w": 10.0,
+      "h": 8.0
+    },
+    {
+      "id": "bar3",
+      "name": "Bar 3",
+      "x": 89,
+      "y": 85,
+      "w": 24.0,
+      "h": 10.0
+    },
+    {
+      "id": "bar5",
+      "name": "Bar 5",
+      "x": 89,
+      "y": 95,
+      "w": 24.0,
+      "h": 8.0
+    },
+    {
+      "id": "passiveStatus",
+      "name": "Passive Status",
+      "x": 89,
+      "y": 78,
+      "w": 22.0,
+      "h": 5.0
+    },
+    {
+      "id": "contextObjective",
+      "name": "Context Objective",
+      "x": 50.0,
+      "y": 50.0,
+      "w": 20.0,
+      "h": 5.0
+    },
+    {
+      "id": "contextXP",
+      "name": "Context XP",
+      "x": 50,
+      "y": 55,
+      "w": 20.0,
+      "h": 4.0
+    },
+    {
+      "id": "questDialogue",
+      "name": "Quest Dialogue",
+      "x": 50,
+      "y": 25,
+      "w": 30.0,
+      "h": 30.0
+    },
+    {
+      "id": "reportBug",
+      "name": "Report Bug",
+      "x": 95.0,
+      "y": 35.0,
+      "w": 8.0,
+      "h": 3.5
+    }
+  ]
+}

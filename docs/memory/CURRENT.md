@@ -11,12 +11,14 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0422** Apply the final V7 pet/party spacing refinement: shift the allies
-frame and pet-action cluster 1% to the right relative to P0421. Preserve P0416
-secure five-bar routing, P0417 pet suppression behavior, and the P0420 read-only
-H.2 overlay. WoW Forever runtime verification of this last spacing adjustment is
-PENDING. L-009 live editing remains DEFERRED; L-008 pet-edge coverage remains
-OPEN. See P0381 historical quest failures in the linked evidence and issue ledger.
+**P0423** Correct the P0422 pet/party interpretation. P0422 moved the pet
+**action bar** and allies/status frame right 1%; the user reports that only the
+**pet/party status frame** was intended to shift. V8 restores `classPet` to
+P0421 X=9%, keeps `allies` at X=24% (+1% from P0421), and changes nothing else.
+P0422 visual spacing was NOT accepted; P0423 WoW Forever check is PENDING.
+P0416 secure five-bar routing, P0417 native pet suppression, and P0420 H.2
+read-only overlay remain unchanged. L-009 live editing DEFERRED; L-008 pet-edge
+coverage OPEN. Historical P0381 quest failures remain separately recorded.
 
 ## Verified State
 

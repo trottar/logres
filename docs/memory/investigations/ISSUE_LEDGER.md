@@ -1,3 +1,12 @@
+## P0423 — Scoped visual-placement regression (2026-11-09)
+
+P0422 shifted the pet-action bar from X=9% to X=10%, as well as the allies
+status frame X=23% to 24%. The user reports the bar shift was unintended:
+request concerned the pet/party **status frame**. P0423 restores only the bar
+X=9%, retaining the intended status-frame offset X=24%. This layout failure is
+OPEN until P0423 visual acceptance; not evidence of L-008 pet secure-control
+failure. Historical V7 remains in the repository for traceability.
+
 ## P0422 layout refinement note (2026-11-09)
 
 P0421 runtime screenshot is accepted except for a final minor spacing issue: the

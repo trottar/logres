@@ -1,0 +1,32 @@
+{
+  "schema": "logres-screen-map-adjustment/v2",
+  "baseline": "b8428a36fd091a7b70ed413afdd3434e082f1767",
+  "reference": "docs/design/layout/SCREEN_MAP_V7.json",
+  "coordinates": "UIParent normalized center percentages; origin top-left",
+  "changeScope": "restore pet-actions cluster to P0421 position; leave party/allies frame 1% right of P0421",
+  "source": "user correction after P0422 screenshot; pet bar had been moved accidentally",
+  "changes": [
+    {
+      "id": "petActions",
+      "anchor": "classPet",
+      "from": {
+        "x": 10,
+        "y": 50
+      },
+      "to": {
+        "x": 9,
+        "y": 50
+      },
+      "delta": {
+        "x": -1,
+        "y": 0
+      }
+    }
+  ],
+  "unchanged": {
+    "id": "allies",
+    "anchor": "allies",
+    "x": 24,
+    "y": 50
+  }
+}

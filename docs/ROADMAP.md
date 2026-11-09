@@ -1,3 +1,16 @@
+## P0423 — Restore pet action bar; retain party-status shift (2026-11-09)
+
+Pinned main P0422 `b8428a36fd091a7b70ed413afdd3434e082f1767`.
+P0422 incorrectly interpreted the user's 1% rightward request as applying to
+both the pet-action bar and pet/party status frame. User screenshot and follow-up
+correct this: pet actions must return to P0421 X=9%; the allied pet/party status
+frame remains at X=24%, 1% right of P0421. V8 supersedes V7 for runtime
+placement, but V7 and P0422 remain preserved as observed negative evidence.
+Only the owned `classPet` semantic anchor changes; five action-bar slots,
+bindings, contextual alpha, pet driver/suppression, native access and OOC
+fallback do not change. WoW Forever acceptance remains PENDING. See
+`docs/memory/evidence/P0423_PET_PARTY_FRAME_CORRECTION.md`.
+
 ## P0422 — Final V7 pet/party spacing refinement (2026-11-09)
 
 P0421 verified remote main `ac373444999aabc8309b212e746f213de9fb6384`. The

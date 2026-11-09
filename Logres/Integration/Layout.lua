@@ -423,7 +423,7 @@ local H2_APPROVED_ANCHORS = {
     targetHarmful = { id = "enemy-debuff", x = 70.0, y = 50.0 },
     targetHelpful = { id = "enemy-buff", x = 90.0, y = 50.0 },
     allies = { id = "group", x = 24.0, y = 50.0 },
-    classPet = { id = "petActions", x = 10.0, y = 50.0 },
+    classPet = { id = "petActions", x = 9.0, y = 50.0 },
     secondaryActions = { id = "bar2", x = ACTION_BAR_LAYOUT.secondary.xPercent, y = ACTION_BAR_LAYOUT.secondary.yPercent },
     primaryActions = { id = "bar1", x = ACTION_BAR_LAYOUT.primary.xPercent, y = ACTION_BAR_LAYOUT.primary.yPercent },
     passiveStatus = { id = "player-buff", x = 83.6, y = 78.0 },
@@ -485,7 +485,7 @@ function Layout.ApplyApprovedV4()
         return false, h2Placement.reason
     end
     h2Placement.active = true
-    h2Placement.reason = "approved-screen-map-v7"
+    h2Placement.reason = "approved-screen-map-v8"
     h2Placement.anchors = 16
     return true, h2Placement.reason
 end

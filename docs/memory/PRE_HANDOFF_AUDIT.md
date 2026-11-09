@@ -1,3 +1,12 @@
+## P0423 — pet/party frame versus pet-action bar correction (2026-11-09)
+
+The user observed the P0422 pet action bar had been moved right, contrary to
+intention. The approved correction restores that bar to P0421 X=9% while
+retaining the allies/status frame at X=24% (+1% from P0421). This is a concrete
+P0422 interpretation failure, not a new pet suppression regression. Historical
+V7 and negative evidence remain. V8 alters only addon-owned `classPet` anchor;
+pet controls, stock fallback, and secure routing must remain unchanged.
+
 ## P0422 pre-handoff audit (2026-11-09)
 
 - GitHub `main` verified at P0421 commit `ac373444999aabc8309b212e746f213de9fb6384` before authoring.

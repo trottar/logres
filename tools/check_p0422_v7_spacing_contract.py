@@ -33,12 +33,26 @@ for cid in ('allies','petActions'):
 for cid,row in v6c.items():
     if cid not in ('allies','petActions'):
         need(v7c[cid]==row,'unexpected V7 component drift: '+cid)
+# Historical V7 request and map are immutable; the P0423 runtime V8
+# correction restores petActions without rewriting P0422 evidence.
+need(v7c['allies']['x'] == 24 and v7c['petActions']['x'] == 10,
+     'historical V7 shift lost')
+v8 = json.loads(read('docs/design/layout/SCREEN_MAP_V8.json'))
+v8c = {c['id']: c for c in v8['components']}
+need(v8.get('reference') == 'docs/design/layout/SCREEN_MAP_V7.json' and
+     v8.get('changes') == 1, 'V8 did not preserve V7 as its parent')
+for cid, row in v7c.items():
+    if cid == 'petActions':
+        need(v8c[cid]['x'] == row['x'] - 1 and v8c[cid]['y'] == row['y'],
+             'V8 pet-actions restore not based on V7')
+    else:
+        need(v8c[cid] == row, 'unexpected V8 map drift: ' + cid)
 for token in (
     'allies = { id = "group", x = 24.0, y = 50.0 }',
-    'classPet = { id = "petActions", x = 10.0, y = 50.0 }',
-    'approved-screen-map-v7',
+    'classPet = { id = "petActions", x = 9.0, y = 50.0 }',
+    'approved-screen-map-v8',
 ):
-    need(token in layout,'layout V7 token missing: '+token)
+    need(token in layout,'V8 runtime correction missing: '+token)
 # preserve key safe patterns
 for token in (
     'local fit, boundsReason = actionBarsFitViewport(viewport.width, viewport.height)',
@@ -60,4 +74,4 @@ for text in (current,status,active,phase,roadmap,pre,patch,issue,read('docs/memo
 print('P0422 final V7 pet/party spacing contract')
 for e in errors: print('ERROR:',e)
 if errors: raise SystemExit(1)
-print('PASS: only allies/petActions move 1% right, V7 provenance holds, safety seams remain, and repo continuity is updated')
+print('PASS: historical V7 preserved, V8 restores pet actions, safety seams and memory remain')
