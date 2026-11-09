@@ -17,6 +17,7 @@ import zipfile
 
 import build_patch_zip as builder
 from build_patch_zip import Refused
+from check_checker_version_policy import checker_version_pins
 
 
 REPO = Path(__file__).resolve().parents[1]
@@ -79,11 +80,13 @@ def exact_keys(value, expected, description):
         raise Refused(f"{description} must contain exactly {', '.join(sorted(expected))}.")
 
 
-def valid_text(text, description, allow_empty=False):
-    if not isinstance(text, str) or (text and not text.endswith("\n")) or (
-        not text and not allow_empty
-    ) or "\r" in text or "\0" in text or text.startswith("\ufeff"):
+def valid_text(text, description, allow_empty=False, *, complete=True):
+    if not isinstance(text, str) or (not text and not allow_empty) or (
+        "\r" in text or "\0" in text or text.startswith("\ufeff")
+    ):
         raise Refused(f"{description} must use UTF-8 text with LF endings.")
+    if complete and text and not text.endswith("\n"):
+        raise Refused(f"{description} must end with LF.")
     text.encode("utf-8")
 
 
@@ -119,8 +122,8 @@ def parse_change(raw):
             raise Refused(f"{path} requires at least one edit.")
         for edit in change["edits"]:
             exact_keys(edit, {"before", "after"}, "Edit")
-            valid_text(edit["before"], f"{path} before")
-            valid_text(edit["after"], f"{path} after", allow_empty=True)
+            valid_text(edit["before"], f"{path} before", complete=False)
+            valid_text(edit["after"], f"{path} after", allow_empty=True, complete=False)
             if edit["before"] == edit["after"]:
                 raise Refused(f"Empty change in {path}.")
     return package
@@ -161,12 +164,15 @@ def updated_text(change, original):
     return new
 
 
-def make_diff(package, originals):
+def make_diff(package, originals, *, show_checker_warnings=False):
     patch = []
     for change in sorted(package["files"], key=lambda entry: entry["path"]):
         path = change["path"]
         original = originals[path]
         new = updated_text(change, original)
+        if show_checker_warnings and (pins := checker_version_pins(path, new)):
+            print(f"CHECK WILL REFUSE {path}: pinned runtime version(s) {', '.join(pins)}. "
+                  "Compare the TOC and Bootstrap versions dynamically.", file=sys.stderr)
         patch.append(f"diff --git a/{path} b/{path}\n")
         if original is None:
             patch.append("new file mode 100644\n")
@@ -184,7 +190,7 @@ def package_head(repo, package):
     return head
 
 
-def prepared_diff(repo, package):
+def prepared_diff(repo, package, *, show_checker_warnings=False):
     head = package_head(repo, package)
     dirty = tracked_status(repo)
     if dirty:
@@ -204,12 +210,24 @@ def prepared_diff(repo, package):
             if not path.is_file() or path.read_bytes() != blob:
                 raise Refused(f"Local file bytes differ from the baseline: {name}")
             originals[name] = blob.decode("utf-8")
-    return make_diff(package, originals)
+    return make_diff(package, originals, show_checker_warnings=show_checker_warnings)
+
+
+def version_only(change):
+    patterns = {
+        "Logres/Logres.toc": r"(?m)^(## Version: )[^\n]+$",
+        "Logres/Core/Bootstrap.lua": r'(?m)^(Logres\.VERSION = ")[^"\n]+("$)',
+    }
+    pattern = patterns.get(change["path"])
+    return bool(pattern and "edits" in change and all(
+        re.sub(pattern, r"\1", edit["before"]) == re.sub(pattern, r"\1", edit["after"])
+        for edit in change["edits"]
+    ))
 
 
 def referenced_checkers(repo, package):
     paths = [entry["path"].encode("utf-8") for entry in package["files"]
-             if entry["path"].startswith("Logres/")]
+             if entry["path"].startswith("Logres/") and not version_only(entry)]
     if not paths:
         return []
     directory = repo / "tools"
@@ -362,7 +380,7 @@ def main(repo=REPO):
             return
         if args.operation == "apply":
             require_runtime_opt_in(package, args.allow_runtime)
-        patch = prepared_diff(repo, package)
+        patch = prepared_diff(repo, package, show_checker_warnings=args.operation == "review")
         if args.operation == "review":
             print("Diff only. Use check to run the checker suite.", file=sys.stderr)
             matches = referenced_checkers(repo, package)

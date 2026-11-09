@@ -1,3 +1,7 @@
+## P0412 — Accept exact Chat fragments and prevent stale author checks (2026-11-09)
+
+Verified P0410 main 7f702f6. P0411 review rejected two exact edits for missing trailing LF. The format-only R1 exposed a pinned version and three stale check assumptions. P0412 accepts exact line-start fragments, keeps final LF and baseline guards, and fixes the stale issue and merchant checker boundaries. See docs/memory/evidence/P0412_CHAT_AUTHOR_PREFLIGHT.md.
+
 ## P0410 — Verify exact Chat package staging (2026-11-08)
 
 Verified P0409 main 9c9ec52. User reports the HUD relocation and Report Bug styling worked on R1. R0 missed two historical contracts. R1 passed locally, but the first commit omitted those two checker files and a follow-up added them. P0410 lists direct checker references during review and verifies the exact staged package before commit. See docs/memory/evidence/P0410_CHAT_STAGING_AUDIT.md.

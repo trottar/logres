@@ -26,7 +26,9 @@ for token in (
     '"PLAYER_REGEN_ENABLED"', 'stockOnly, result = true, "stock-layout-unsupported"',
 ):
     assert token in source, token
-before_preview, preview = source.split("local function buildPreview()", 1)
+before_preview, preview_and_later = source.split("local function buildPreview()", 1)
+preview, end_marker, _ = preview_and_later.partition("\nfunction Merchant.Preview()")
+assert end_marker, "merchant preview builder boundary missing"
 assert ":SetScript(" not in before_preview
 assert preview.count(':SetScript("OnClick"') == 3  # Preview paging and Close only.
 assert "SetParent(" not in source and ":Click(" not in source

@@ -41,11 +41,19 @@ row_pat = re.compile(
     r"(OPEN|PARTIAL|DEFERRED|BLOCKED|RESOLVED-SCOPE|RESOLVED-DOCS|RESOLVED-TOOLING) "
     r"\| ([^|]+) \| ([^|]+) \| ([^|]+) \|$"
 )
-rows = [m.groups() for line in ledger.splitlines()
-        if (m := row_pat.fullmatch(line))]
-expected = [f"L-{i:03d}" for i in range(1, 42)]
-require([row[0] for row in rows] == expected,
-        "must contain precisely one ordered issue row for L-001..L-041")
+def issue_rows(text):
+    candidates = [line for line in text.splitlines() if re.match(r"^\|\s*L-", line)]
+    matches = [row_pat.fullmatch(line) for line in candidates]
+    require(all(matches), "every issue row must have the canonical columns and status")
+    rows = [match.groups() for match in matches]
+    require(len(rows) >= 41, "historical issues L-001 through L-041 must remain present")
+    expected = [f"L-{number:03d}" for number in range(1, len(rows) + 1)]
+    require([row[0] for row in rows] == expected,
+            "issue rows must be unique, ordered and consecutive from L-001")
+    return rows
+
+
+rows = issue_rows(ledger)
 for identifier, title, status, attempted, verified, evidence in rows:
     require(all(x.strip() for x in (title, attempted, verified, evidence)),
             identifier + " lacks status/resolution/verification/evidence")

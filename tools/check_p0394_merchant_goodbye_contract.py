@@ -19,7 +19,9 @@ for token in (
     'member(_G, "MerchantPrevPageButton")', 'member(_G, "MerchantNextPageButton")',
 ):
     assert token in source, token
-before_preview, preview = source.split("local function buildPreview()", 1)
+before_preview, preview_and_later = source.split("local function buildPreview()", 1)
+preview, end_marker, _ = preview_and_later.partition("\nfunction Merchant.Preview()")
+assert end_marker, "merchant preview builder boundary missing"
 assert ":SetScript(" not in before_preview and preview.count(':SetScript("OnClick"') == 3
 assert 'SetScript("OnClick", function() frame:Hide() end)' in source
 for forbidden in ("StackSplitFrame", "CloseMerchant", "BuyMerchantItem", ":Click(", "EnableMouse(true)"):

@@ -1,0 +1,29 @@
+P0412 Accept exact Chat fragments and prevent stale author checks
+Verified baseline: 7f702f668e61f7b881972f131149d23333f2f010
+Candidate runtime version: 0.0.289-dev
+PREWRITE: 280/280 STATIC PASS
+POSTWRITE: 280/280 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: NO RUNTIME FILES CHANGED
+Commit/push performed: NO
+
+Changed paths:
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0412_CHAT_AUTHOR_PREFLIGHT.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/patches/CHAT_TO_ZIP_WORKFLOW.md
+docs/memory/patches/P0412_CHAT_AUTHOR_PREFLIGHT.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/chat_change.py
+tools/check_checker_version_policy.py
+tools/check_p0374_issue_ledger_contract.py
+tools/check_p0380_integrated_gameplay_plan_contract.py
+tools/check_p0393_trainer_style_merchant_contract.py
+tools/check_p0394_merchant_goodbye_contract.py
+tools/check_p0412_chat_author_contract.py
+P0412_MANIFEST.txt

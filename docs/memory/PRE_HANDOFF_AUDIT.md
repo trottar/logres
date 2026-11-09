@@ -1,3 +1,7 @@
+## P0412 — Accept exact Chat fragments and prevent stale author checks (2026-11-09)
+
+Exact P0411 and R1 replay isolate a fragment-format failure and four candidate failures. P0412 repairs the authoring and checker boundaries. Release gates cover R0/R1 byte parity, revised diagnostics, historical scope, version-policy refusal, actual isolated package application, rollback and deterministic ZIP. No runtime changes.
+
 ## P0410 — Verify exact Chat package staging (2026-11-08)
 
 Verified P0409 R0/R1 replay and exact final main payload parity. The original 276/278 refusal and two-file first-commit omission are separate failures. P0410 gates cover checker reference hints, exact staged paths and bytes, manifest parity, the historical incomplete commit, guarded apply, rollback and deterministic ZIP. No runtime changes.
