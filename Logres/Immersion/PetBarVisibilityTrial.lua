@@ -86,8 +86,13 @@ function Trial:Ready()
         return false, "logres-secure-pet-actions-unavailable"
     end
     local native = getNative()
+    -- P0417: P0409 moved stock-access controls exclusively to panel N;
+    -- NativeSurfaceReplacement no longer creates native.buttons.pet.
+    -- The native module's pet interaction and Toggle("pet") are the real
+    -- addon-owned readiness/fallback capabilities. Do not require an old
+    -- on-screen dock button that does not exist.
     if not native or not native:IsEnabled() or not native.petInteraction
-        or not native.buttons or not native.buttons.pet then
+        or type(native.Toggle) ~= "function" then
         return false, "secure-pet-unit-or-stock-access-unavailable"
     end
     return true, "pet-controls-and-fallback-ready"

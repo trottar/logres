@@ -11,11 +11,12 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0416** five-bar authored geometry (runtime unverified); P0415 modular; P0414; P0413; P0411 refused; P0410; P0409; P0408; P0407 refused; P0406 main; P0405; P0404 L-004; P0403 L-001; P0402–P0397 flight; P0396; P0395; P0394; P0393; P0392; P0391 session 46; P0390; P0389; P0388 L-027; P0387 late-accept; P0386 L-001; P0385 greeting/L-002; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
+**P0417** native PET STOCK readiness gate correction (runtime unverified); P0416 five-bar visual fit accepted with small offsets pending; P0415 modular; P0414; P0413; P0411 refused; P0410; P0409; P0408; P0407 refused; P0406 main; P0405; P0404 L-004; P0403 L-001; P0402–P0397 flight; P0396; P0395; P0394; P0393; P0392; P0391 session 46; P0390; P0389; P0388 L-027; P0387 late-accept; P0386 L-001; P0385 greeting/L-002; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
 
 ## Verified State
 
-- P0416 source profile is candidate only: 1 Primary (3x4), 2 Secondary (Bar 2 2x6, Bar 4 6x2), 2 Utility (Bar 3/5 6x2) on normalized centers. L-008 pet duplication recurred visually; static and client validation pending. See P0416 evidence.
+- P0416 pushed main `d11b76a`; user visually reports five action bars generally correct, minor offsets and other screen elements need coordinated H.2 map calibration. Secure clicks/menu overlap not yet validated. No new geometry patch until map is approved.
+- Forever `0.0.293-dev` session 73 incident 8609: Immersion ON, Logres pet probe READY (8 occupied), NativeSurfaceReplacement petInteraction=true, but pet driver `armed=false nativeDriver=false`, reason `secure-pet-unit-or-stock-access-unavailable`. P0417 corrects stale `native.buttons.pet` readiness from pre-P0409 dock; the existing `Native:Toggle("pet")` is the supported panel-N fallback. P0417 candidate only; WoW UNVERIFIED. L-008 OPEN.
 
 - P0383 `cc783a0` 253 STATIC; client 0.0.267-dev quest18 TURNED_IN; hotspot offset and stock greeting OPEN. L-005 PARTIAL, L-001/L-002 OPEN. P0384 quest21 aligned hover in 0.0.268-dev incident 3196; P0385 observed; P0386 UNVERIFIED.
 
@@ -41,7 +42,7 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Next Action
 
-P0416 authored five-bar in-game validation; L-009 editing DEFERRED; L-008 pet regression OPEN; P0415 L-042 scoped user report; L-001/L-002/L-033 OPEN.
+P0417 narrow PET STOCK gate repair: static + Forever visual, secure clicks, panel N PET STOCK, Immersion OFF/ON, natural combat/Edit Mode as available. H.2 whole-screen map calibration next; L-009 live editing DEFERRED; L-008 OPEN; P0415 L-042 scoped user report; L-001/L-002/L-033 OPEN.
 
 ## Success Criteria
 
@@ -51,6 +52,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0417_PET_STOCK_GATE_REPAIR.md
 - docs/memory/evidence/P0416_FIVE_BAR_AUTHORED_LAYOUT.md
 - docs/design/layout/ACTION_BARS_V1.json
 - docs/memory/evidence/P0403_QUEST_STAGE_HANDOFF.md

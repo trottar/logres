@@ -1,3 +1,16 @@
+## P0417 — Pet suppression readiness gate points at removed dock (2026-11-09)
+
+P0416 verified remote main `d11b76ab786f3b08151c426e52502a3415fb4877`.
+Uploaded Forever `0.0.293-dev` loadCount 92, session 73 incident 8609 and
+four panel actions show pet probe armed/visible, eight occupied slots,
+`petInteraction=true`, but P0209's stock visibility driver unarmed because
+`native.buttons.pet` no longer exists after P0409 removed HUD dock controls.
+`NativeSurfaceReplacement:Toggle("pet")` and the N-tab stock handler remain.
+P0417 changes that readiness check only. No protected driver, action, slot,
+keybinding or Blizzard frame mutation changes. Client behavior UNVERIFIED;
+L-008 OPEN. Separate full-screen H.2 map is next for P0416 minor offsets.
+See `docs/memory/evidence/P0417_PET_STOCK_GATE_REPAIR.md`.
+
 ## P0416 — Approved five-bar authored geometry (2026-11-09)
 
 Main P0415 `43efc89` verified as exact pinned baseline. User approved

@@ -1,0 +1,25 @@
+P0417 Repair native pet suppression stock-access readiness after P0409 panel migration
+Verified baseline: d11b76ab786f3b08151c426e52502a3415fb4877
+Candidate runtime version: 0.0.294-dev
+PREWRITE: 285/285 STATIC PASS
+POSTWRITE: 285/285 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Immersion/PetBarVisibilityTrial.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0417_PET_STOCK_GATE_REPAIR.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0417_PET_STOCK_GATE_REPAIR.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0417_pet_stock_gate_contract.py
+P0417_MANIFEST.txt

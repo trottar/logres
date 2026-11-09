@@ -1,3 +1,15 @@
+## P0417 — P0416 pet native-access guard source diagnosis (2026-11-09)
+
+Remote P0416 `d11b76a` verified; uploaded Forever incident 8609 read before
+source changes. P0409 eliminated the native HUD PET dock button but retained
+NativeSurfaceReplacement.Toggle("pet") and panel N. PetBarVisibilityTrial.Ready
+still requires `native.buttons.pet`, which the referenced module does not
+construct. Candidate removes only that obsolete condition and checks the live
+pet-unit secure interaction plus the stock-toggle capability. The constant
+secure visibility driver, combat/Edit Mode gates, PET STOCK restoration,
+pet actions, keybinds and P0416 geometry are unchanged. Full static check and
+WoW runtime acceptance are separate; L-008 stays OPEN.
+
 ## P0416 — Authored five-bar profile candidate audit (2026-11-09)
 
 Pinned remote baseline `43efc89b8651d278630d48517fb6101ca4d14a74`
