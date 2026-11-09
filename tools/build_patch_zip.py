@@ -132,6 +132,18 @@ def zip_bytes(files, spec, template):
     return buffer.getvalue()
 
 
+def run_candidate_checks(candidate, checkers):
+    failures = []
+    for checker in checkers:
+        result = command(sys.executable, str(checker), cwd=candidate, check=False, isolated=True)
+        if result.returncode:
+            output = (result.stdout + result.stderr).decode(errors="replace").strip()
+            failures.append(f"{checker.name}:\n{output}")
+    if failures:
+        passed = len(checkers) - len(failures)
+        raise Refused(f"Candidate checks: {passed}/{len(checkers)} passed.\n" + "\n\n".join(failures))
+
+
 def build(repo, args, *, announce=True, check_candidate=True):
     if not re.fullmatch(r"P[0-9]{4}", args.id) or not re.fullmatch(r"[0-9a-f]{40}", args.baseline):
         raise Refused("Use a P00XX patch ID and the full lowercase 40-character baseline commit.")
@@ -160,8 +172,7 @@ def build(repo, args, *, announce=True, check_candidate=True):
         if not checkers:
             raise Refused("Candidate is missing the repository checker suite.")
         if check_candidate:
-            for checker in checkers:
-                command(sys.executable, str(checker), cwd=candidate, isolated=True)
+            run_candidate_checks(candidate, checkers)
             if any((candidate / name).read_bytes() != content for name, content in files.items()):
                 raise Refused("A checker changed patch content.")
         spec = {"id": args.id, "title": args.title, "baseline": head, "hashes": hashes,
@@ -175,6 +186,7 @@ def build(repo, args, *, announce=True, check_candidate=True):
         print(f"{len(checkers)}/{len(checkers)} STATIC PASS in candidate shadow")
     if announce:
         print(f"{sha256(payload).hexdigest()}  {args.output}")
+    return len(checkers)
 
 
 def main():

@@ -1,0 +1,26 @@
+P0408 Prevent stale Chat patch checks and enforce runtime opt-in
+Verified baseline: e093bed4e1454f63a18c488206855f28559b87fa
+Candidate runtime version: 0.0.288-dev
+PREWRITE: 277/277 STATIC PASS
+POSTWRITE: 277/277 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: NO RUNTIME FILES CHANGED
+Commit/push performed: NO
+
+Changed paths:
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0408_CHAT_PREFLIGHT.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/patches/CHAT_TO_ZIP_WORKFLOW.md
+docs/memory/patches/P0408_CHAT_PREFLIGHT.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/build_patch_zip.py
+tools/chat_change.py
+tools/check_p0381_integrated_gameplay_contract.py
+tools/check_p0408_chat_preflight_contract.py
+P0408_MANIFEST.txt

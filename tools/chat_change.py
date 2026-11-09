@@ -195,6 +195,30 @@ def prepared_diff(repo, package):
     return make_diff(package, originals)
 
 
+def require_runtime_opt_in(package, allowed):
+    if not allowed and any(entry["path"].startswith("Logres/") for entry in package["files"]):
+        raise Refused("This package changes Logres runtime files. Use check to validate it. "
+                      "If you intended a runtime change, apply with --allow-runtime.")
+
+
+def build_bundle(repo, package, patch, work, *, check_candidate):
+    patch_id = package["id"]
+    diff = work / f"{patch_id}.patch"
+    diff.write_bytes(patch.encode("utf-8"))
+    bundle = work / f"{patch_id}.zip"
+    checked = builder.build(repo, argparse.Namespace(
+        id=patch_id, title=package["title"], baseline=package["baseline"],
+        path=[entry["path"] for entry in package["files"]], patch=diff, output=bundle,
+    ), announce=False, check_candidate=check_candidate)
+    return bundle, checked
+
+
+def check_change(repo, package, patch):
+    with tempfile.TemporaryDirectory(prefix="logres-chat-check-") as directory:
+        _, checked = build_bundle(repo, package, patch, Path(directory), check_candidate=True)
+    print(f"CHECK {checked}/{checked} STATIC PASS. No patch files installed.")
+
+
 def apply_change(repo, source, package, patch):
     patch_id = package["id"]
     output = source.with_name(f"{patch_id}.zip")
@@ -202,15 +226,8 @@ def apply_change(repo, source, package, patch):
         raise Refused(f"Output already exists: {output}")
     with tempfile.TemporaryDirectory(prefix="logres-chat-") as directory:
         work = Path(directory)
-        diff = work / f"{patch_id}.patch"
-        diff.write_bytes(patch.encode("utf-8"))
-        bundle = work / f"{patch_id}.zip"
-        # The guarded applier below owns PREWRITE and POSTWRITE, so the
-        # combined command avoids running a third identical candidate suite.
-        builder.build(repo, argparse.Namespace(
-            id=patch_id, title=package["title"], baseline=package["baseline"],
-            path=[entry["path"] for entry in package["files"]], patch=diff, output=bundle,
-        ), announce=False, check_candidate=False)
+        # The applier owns PREWRITE and POSTWRITE.
+        bundle, _ = build_bundle(repo, package, patch, work, check_candidate=False)
 
         # This archive was generated locally by the repository's trusted builder.
         with zipfile.ZipFile(bundle) as archive:
@@ -245,17 +262,26 @@ def main(repo=REPO):
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="operation", required=True)
     sub.add_parser("context", help="Print a read-only Logres checkout context receipt")
-    for operation in ("review", "apply"):
-        sub.add_parser(operation).add_argument("package", type=Path)
+    sub.add_parser("review", help="Show the exact diff without running checkers").add_argument("package", type=Path)
+    sub.add_parser("check", help="Run all checkers on a temporary candidate").add_argument("package", type=Path)
+    apply = sub.add_parser("apply", help="Validate and apply a reviewed change")
+    apply.add_argument("package", type=Path)
+    apply.add_argument("--allow-runtime", action="store_true",
+                       help="Explicitly allow this change to edit Logres runtime files")
     args = parser.parse_args()
     try:
         if args.operation == "context":
             print(json.dumps(context(repo), indent=2, sort_keys=True))
             return
         package = parse_change(args.package.read_bytes())
+        if args.operation == "apply":
+            require_runtime_opt_in(package, args.allow_runtime)
         patch = prepared_diff(repo, package)
         if args.operation == "review":
+            print("Diff only. Use check to run the checker suite.", file=sys.stderr)
             print(patch, end="")
+        elif args.operation == "check":
+            check_change(repo, package, patch)
         else:
             apply_change(repo, args.package, package, patch)
     except (Refused, OSError, UnicodeError, json.JSONDecodeError, SyntaxError,

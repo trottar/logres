@@ -1,3 +1,7 @@
+## P0408 — Prevent stale Chat patch checks and enforce runtime opt-in (2026-11-08)
+
+Verified P0406 main e093bed. P0407 failed before writes because P0381 required a P0406 roadmap heading. P0408 derives the active heading from CURRENT, retains the historical checks, adds a full local check command and requires explicit opt-in for runtime edits. Innkeeper work remains investigation-only. See docs/memory/evidence/P0408_CHAT_PREFLIGHT.md.
+
 ## P0406 — Logres checkout context and one-command Chat changes (2026-11-08)
 
 Verified P0405 main 4aa464d. The original Chat handoff did not produce a usable diff. The user runs ordinary Chat and asked Work to build deterministic infrastructure. P0406 adds a scoped checkout receipt and a one-command WSL runner for one structured change from Chat. NPC work stays parked. See docs/memory/evidence/P0406_CHAT_CHANGE_RUNNER.md.

@@ -1,3 +1,7 @@
+## P0408 — Prevent stale Chat patch checks and enforce runtime opt-in (2026-11-08)
+
+Verified P0406 main and replayed the exact rejected P0407 package. The original prewrite stopped at 276/277 with zero tracked writes. P0408 removes the frozen current-checkpoint requirement, preserves historical guards, reports full local check results and requires runtime opt-in. Validation includes the original candidate with only the repaired checker, a future-heading regression, runtime refusal, exact P0408 suites, ZIP parity, rollback and Git whitespace. No runtime changes.
+
 ## P0406 — Logres checkout context and one-command Chat changes (2026-11-08)
 
 Verified P0405 main. The ordinary Chat handoff failed before any diff reached the builder. P0406 replaces manual diff assembly with a strict text-change package and a scoped local receipt. The new runner reuses the existing builder, checkers, prewrite shadow, rollback and manifest. The first candidate was refused by the checker version policy because a new fixture used the live TOC version. The fixture now uses a synthetic version. The local pilot exercises the real runner, exact ZIP parity and refusal cases. The user runs ordinary Chat. No runtime changes.

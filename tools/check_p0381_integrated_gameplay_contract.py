@@ -136,11 +136,30 @@ for path in ('docs/memory/evidence/P0381_INTEGRATED_GAMEPLAY_IMPLEMENTATION.md',
     record = read(path)
     need('P0381' in record and 'UNVERIFIED' in record and 'L-005' in record,
          'missing candidate negative evidence: ' + path)
+def current_checkpoint(current):
+    _, heading, tail = current.partition("\n## Current Work Item\n")
+    need(heading, "CURRENT is missing Current Work Item")
+    work_item = tail.split("\n## ", 1)[0]
+    checkpoint = re.search(r"(?m)^\*\*(P[0-9]{4})\*\*(?:\s|$)", work_item)
+    need(checkpoint, "CURRENT must identify the active patch in Current Work Item")
+    return checkpoint[1]
+
+
+def check_roadmap_checkpoint(path, roadmap, active):
+    headings = re.findall(r"(?m)^## (P[0-9]{4}) —", roadmap)
+    need(roadmap.startswith(f"## {active} —"),
+         f"{path} must start with CURRENT checkpoint {active}")
+    required_history = {f"P{number:04d}" for number in range(381, 407)}
+    missing = required_history.difference(headings)
+    need(not missing, f"{path} lost checkpoint history: {', '.join(sorted(missing))}")
+
+
+active = current_checkpoint(CUR)
 for path in ('docs/memory/investigations/ACTIVE.md',
              'docs/memory/roadmap/STATUS.md',
              'docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md',
-             'docs/memory/patches/PATCH_INDEX.md', 'docs/ROADMAP.md'):
-    need(read(path).startswith('## P0406 —') and '## P0405 —' in read(path) and '## P0404 —' in read(path) and '## P0403 —' in read(path) and '## P0402 —' in read(path) and '## P0401 —' in read(path) and '## P0400 —' in read(path) and '## P0399 —' in read(path) and '## P0398 —' in read(path) and '## P0397 —' in read(path) and '## P0396 —' in read(path) and '## P0395 —' in read(path) and '## P0394 —' in read(path) and '## P0393 —' in read(path) and '## P0392 —' in read(path) and '## P0391 —' in read(path) and '## P0390 —' in read(path) and '## P0389 —' in read(path) and '## P0388 —' in read(path) and '## P0387 —' in read(path) and '## P0386 —' in read(path) and '## P0385 —' in read(path) and '## P0384 —' in read(path) and '## P0383 —' in read(path) and '## P0382 —' in read(path) and '## P0381 —' in read(path), 'active roadmap not synchronized or P0381/P0382/P0383 history lost: '+path)
+             'docs/ROADMAP.md'):
+    check_roadmap_checkpoint(path, read(path), active)
 vt = re.search(r'^## Version: (\S+)$', T, re.M)
 vb = re.search(r'^Logres\.VERSION = "([^"]+)"$', B, re.M)
 need(vt and vb and vt.group(1) == vb.group(1), 'TOC/Bootstrap version parity')
