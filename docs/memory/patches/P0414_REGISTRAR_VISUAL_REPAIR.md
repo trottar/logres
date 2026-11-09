@@ -1,0 +1,3 @@
+# P0414 — Guild registrar native presentation visual repair
+
+Baseline `478752d5abab20695e2dd6670e9f58bd115848c8` (P0413). Issue L-042; actual client `0.0.290-dev` incident 8259 shows overlapping parchment and near-black native options despite `registrar-logres-live`. Preserve native charter purchase/registration and stock fail-open. Scoped reversible color, geometry, decoration suppression only, within `Logres/Quest/MerchantCatalogue.lua`. Candidate version `0.0.291-dev`. Reference `docs/memory/evidence/P0414_REGISTRAR_VISUAL_REPAIR.md` for screenshot analysis, supported and inferred causes, negative result and required runtime validation. No in-game success asserted. Stage and verify the exact Chat JSON with `chat_change.py verify-staged`; user owns commit and push.

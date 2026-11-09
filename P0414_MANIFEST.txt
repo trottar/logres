@@ -1,0 +1,25 @@
+P0414 Repair Guild Registrar visual composition (L-042)
+Verified baseline: 478752d5abab20695e2dd6670e9f58bd115848c8
+Candidate runtime version: 0.0.291-dev
+PREWRITE: 282/282 STATIC PASS
+POSTWRITE: 282/282 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Logres.toc
+Logres/Quest/MerchantCatalogue.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0414_REGISTRAR_VISUAL_REPAIR.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0414_REGISTRAR_VISUAL_REPAIR.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0414_registrar_visual_contract.py
+P0414_MANIFEST.txt

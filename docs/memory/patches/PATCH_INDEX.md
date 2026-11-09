@@ -1,3 +1,7 @@
+## P0414 — Repair guild registrar visual composition after Forever incident 8259 (2026-11-09)
+
+Verified pushed P0413 `478752d`; Forever 0.0.290 session69 guild screen showed a Logres shell with duplicate native name, bright parchment/scroll and unreadable black choices (L-042 **OPEN / VISUAL FAIL**). P0414 guards and restores native label colors, named decorative elements and original button placement; no guild transactions touched. Full checker/client PASS not yet established. Evidence: `docs/memory/evidence/P0414_REGISTRAR_VISUAL_REPAIR.md`.
+
 ## P0413 — Guild registrar native-backed Logres presentation (2026-11-09)
 
 Verified P0412 main 2032904; P0411 R0/R1 REFUSED, no runtime install. P0413 integrates source-gated GuildRegistrarFrame into existing merchant/trainer panel surface and the shared P preview cycle. Blizzard owns all charter actions and confirmations; unsupported Forever layouts remain stock. L-042 OPEN and WoW UNVERIFIED. See docs/memory/evidence/P0413_GUILD_REGISTRAR.md.

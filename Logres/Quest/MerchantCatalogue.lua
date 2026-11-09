@@ -779,6 +779,42 @@ local function guildFade(plan, region)
     return true
 end
 
+-- P0414: Guild services retain their native FontStrings, but the quest-font
+-- palette is too dark over Logres's shared service panel. Capture all original
+-- colors as ordinary restoration values before a single native mutation.
+local function guildTextColor(plan, label, rgba)
+    if not label or read(label, "GetObjectType") ~= "FontString" then return false end
+    local get, set = method(label, "GetTextColor"), method(label, "SetTextColor")
+    if not get or not set then return false end
+    local ok, r, g, b, a = pcall(get, label)
+    if not ok or not ordinary(r) or not ordinary(g)
+        or not ordinary(b) or not ordinary(a) then return false end
+    if type(r) ~= "number" or type(g) ~= "number"
+        or type(b) ~= "number" or type(a) ~= "number" then return false end
+    plan[#plan + 1] = {
+        apply = function() set(label, rgba[1], rgba[2], rgba[3], rgba[4]) end,
+        undo = function() set(label, r, g, b, a) end,
+    }
+    return true
+end
+
+-- The Classic GuildRegistrarFrame ScrollBar is cosmetic only. Hide rather
+-- than alpha-zero: no invisible Blizzard scrollbar hit regions are left.
+-- This is an exact, reversible state change of a named native decoration.
+local function guildHideCosmetic(plan, region)
+    if not region or not mutable(region) then return false end
+    local shown = read(region, "IsShown")
+    local hide, show = method(region, "Hide"), method(region, "Show")
+    if type(shown) ~= "boolean" or not hide or not show then return false end
+    plan[#plan + 1] = {
+        apply = function() hide(region) end,
+        undo = function()
+            if shown then show(region) else hide(region) end
+        end,
+    }
+    return true
+end
+
 local function guildCapture(root)
     local greeting = member(_G, "GuildRegistrarGreetingFrame")
     local purchase = member(_G, "GuildRegistrarPurchaseFrame")
@@ -794,9 +830,14 @@ local function guildCapture(root)
     local purchaseText = member(_G, "GuildRegistrarPurchaseText")
     local costText = member(_G, "GuildRegistrarCostLabel")
     local background = member(_G, "GuildRegistrarFrameBg")
+    local labels = {read(choices[1], "GetFontString"),
+        read(choices[2], "GetFontString")}
+    local nameplate = member(_G, "GuildRegistrarNpcNameFrame")
+    local inset, scroll = member(root, "Inset"), member(root, "ScrollBar")
     if not greeting or not purchase or not choices[1] or not choices[2]
         or not goodbyeButton or not cancelButton or not buyButton or not nameEdit
         or not money or not heading or not purchaseText or not costText
+        or not labels[1] or not labels[2]
         or not background then return nil, "registrar-children-unavailable" end
     if read(greeting, "GetParent") ~= root or read(purchase, "GetParent") ~= root
         or read(choices[1], "GetParent") ~= greeting
@@ -806,7 +847,10 @@ local function guildCapture(root)
         or read(buyButton, "GetParent") ~= purchase
         or read(nameEdit, "GetParent") ~= purchase
         or read(money, "GetParent") ~= purchase
-        or read(background, "GetParent") ~= root then
+        or read(background, "GetParent") ~= root
+        or (nameplate and read(nameplate, "GetParent") ~= root)
+        or (inset and read(inset, "GetParent") ~= root)
+        or (scroll and read(scroll, "GetParent") ~= root) then
         return nil, "registrar-source-identity-unsupported"
     end
     if not mutable(root) or not mutable(choices[1]) or not mutable(choices[2])
@@ -817,18 +861,41 @@ local function guildCapture(root)
     local plan = {}
     if not anchor(plan, root, visual.point, UIParent, visual.relativePoint, visual.x, visual.y)
         or not resize(plan, root, visual.width, visual.height)
-        or not guildLabelAnchor(plan, heading, list.x + 23, list.y + 57, root)
-        or not guildLabelAnchor(plan, purchaseText, list.x + 23, list.y + 57, root)
+        -- Keep Blizzard's original clickable option buttons, not duplicates.
+        -- Move their *native* labels and hitboxes together into the right pane.
+        or not guildLabelAnchor(plan, heading, list.x + 44, list.y + 46, root)
+        or not anchor(plan, choices[1], "TOPLEFT", root, "TOPLEFT",
+            list.x + 44, -(list.y + 109))
+        or not anchor(plan, choices[2], "TOPLEFT", root, "TOPLEFT",
+            list.x + 44, -(list.y + 166))
+        or not guildLabelAnchor(plan, purchaseText, list.x + 44, list.y + 46, root)
         or not anchor(plan, buyButton, "BOTTOMRIGHT", root, "BOTTOMRIGHT", -45, 38)
-        or not anchor(plan, nameEdit, "TOPLEFT", root, "TOPLEFT", list.x + 23, -(list.y + 218))
+        or not anchor(plan, nameEdit, "TOPLEFT", root, "TOPLEFT",
+            list.x + 44, -(list.y + 232))
+        -- Native QuestFont/QuestTitleButtonTemplate text is black on Logres.
+        -- Restore all native RGBA colors when the service closes.
+        or not guildTextColor(plan, heading, palette.goldText)
+        or not guildTextColor(plan, labels[1], palette.body)
+        or not guildTextColor(plan, labels[2], palette.body)
+        or not guildTextColor(plan, purchaseText, palette.body)
+        or not guildTextColor(plan, costText, palette.goldText)
         or not guildFade(plan, background) then
         return nil, "registrar-layout-unsupported"
+    end
+    -- ButtonFrameTemplate can draw its own parchment Inset, separate from
+    -- GuildRegistrarFrameBg; both must be suppressed for one Logres surface.
+    -- The stock nameplate also duplicates the Logres-owned NPC heading.
+    if (inset and not guildFade(plan, inset))
+        or (nameplate and not guildFade(plan, nameplate))
+        or (scroll and not guildHideCosmetic(plan, scroll)) then
+        return nil, "registrar-chrome-unsupported"
     end
     -- Preserve all native purchase/registration scripts and the native money
     -- frame, edit box, disabled states, tooltip and purchase confirmation.
     local portraits = {member(_G, "GuildRegistrarFramePortrait"),
         member(root, "NineSlice"), member(root, "TitleBg"),
-        member(root, "TopTileStreaks"), member(root, "PortraitContainer")}
+        member(root, "TopTileStreaks"), member(root, "PortraitContainer"),
+        member(root, "TitleText")}
     for _, decoration in ipairs(portraits) do
         if decoration and not guildFade(plan, decoration) then
             return nil, "registrar-decoration-unsupported"
