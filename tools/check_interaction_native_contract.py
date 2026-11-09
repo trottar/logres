@@ -20,13 +20,19 @@ for token in ('index = index,', 'slot.auraIndex = aura.index',
               'GameTooltip:SetUnitAura("player", slot.auraIndex, FILTER)',
               'slotFrame:EnableMouse(true)'):
     if token not in aura: errors.append('aura hover missing: '+token)
+# P0409: CAST is the panel label now; preserve the exact stock cast
+# source and event refold invariants without restoring a gameplay HUD button.
+panel = (root / 'Logres/Dev/Panel.lua').read_text()
 for token in ('"casts"', '"PlayerCastingBarFrame"',
               '"OverlayPlayerCastingBarFrame"', '"TargetFrameSpellBar"',
-              '"CAST"', 'function NativeAccess:Refold(',
+              'function NativeAccess:Refold(',
               'self:Refold("objectives", event)',
               'self:Refold("casts", event)',
               'self.refoldAttempts', 'self.refoldFailures'):
     if token not in native: errors.append('native source missing: '+token)
+if '{label = "Cast", command = "nativeui casts", domain = "casts"}' not in panel or \
+        'if command == "nativeui" then' not in commands:
+    errors.append('native cast stock access not routed through the panel')
 for token in ('expected and 5 or 0', 'refolds=%s', 'castStockOnDemand=true'):
     if token not in audit: errors.append('native check missing: '+token)
 if 'MainActionBar:Hide()' in native or 'PetActionBar:Hide()' in native:

@@ -35,10 +35,23 @@ require('aura_frame_passive.tga' in t and 'theme.playerHelpfulAuras' in t,
         'approved authored Aura frame family must remain')
 require('theme.hudTypography' in t and 'hudTypography.targetName' in h
         and 'hudTypography.allyName' in h, 'shared HUD name color tokens')
-require('theme.nativeAccessDock' in t and 'dockStyle.ruleColor' in d,
-        'native dock must use presentation Theme tokens')
-require('self:Toggle(key)' in d and 'button:RegisterForClicks("LeftButtonUp")' in d,
-        'native dock must retain click behavior')
+# P0409: old dock tabs are intentionally retired. Keep the approved Theme
+# family on the single gameplay Report Bug button and route native access via
+# the panel. Do not reintroduce invisible HUD input to satisfy old tokens.
+p = (root/'Logres/Dev/Panel.lua').read_text(encoding='utf-8')
+require('theme.nativeAccessDock' in t and
+        'local skin = (Logres.Theme and Logres.Theme.nativeAccessDock) or {}' in p and
+        'bronze:SetTexture((skin.assets or {}).fallback)' in p,
+        'native stock access / Report Bug must retain approved Theme art')
+require('function NativeAccess:Toggle(key)' in d and
+        'self:RunCommand(entry.command)' in p and
+        'if self.activePhase == "N" then' in p and
+        'bugButton:RegisterForClicks("LeftButtonUp")' in p and
+        'bugButton:SetScript("OnClick", function()' in p,
+        'native access panel routing / Report Bug click behavior missing')
+require('CreateFrame("Button", nil, dock)' not in d and
+        'self.dock:Show()' not in d and 'dock:EnableMouse(false)' in d,
+        'retired HUD dock must not expose click regions')
 require('HOTKEY_BORDER' in source['button'] and 'HOTKEY_TEXT' in source['button'],
         'action metadata presentation')
 require('Logres.Layout.Bind(root, anchorKey' in (root/'Logres/HUD/StatusAuras.lua').read_text(),
