@@ -1,0 +1,27 @@
+P0413 Guild registrar native-backed Logres presentation
+Verified baseline: 2032904425cfe355e9d13a4bc2059e3e657df85a
+Candidate runtime version: 0.0.290-dev
+PREWRITE: 281/281 STATIC PASS
+POSTWRITE: 281/281 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Quest/MerchantCatalogue.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0413_GUILD_REGISTRAR.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0413_GUILD_REGISTRAR.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0413_guild_registrar_contract.py
+P0413_MANIFEST.txt

@@ -4151,7 +4151,7 @@ local function handleCommand(message)
         local merchant = Logres.NPCMerchantCatalogue
         local open = command == "merchantpreview" and merchant.Preview or merchant.OpenLive
         local ok, reason = open()
-        emit("Logres merchant catalogue: " .. (ok and "" or "DEFERRED — ") .. reason)
+        emit("Logres native service preview: " .. (ok and "" or "DEFERRED — ") .. reason)
         return
     end
 
@@ -4815,7 +4815,7 @@ Logres:RegisterDevPanelAction(
 )
 Logres:RegisterDevPanelAction(
     "merchantCataloguePreview",
-    "Merchant Catalogue Preview",
+    "Merchant / Registrar Preview",
     "merchantpreview",
     "P"
 )

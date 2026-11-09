@@ -1,3 +1,7 @@
+## P0413 — Native-backed guild registrar handoff (2026-11-09)
+
+Verified GitHub main P0412 `2032904`; P0411 R0/R1 failures retained in P0413 evidence. P0412 runner accepts exact line-start fragments and retains resulting LF. Candidate keeps the original 96 Lua and 122 developer-panel action inventory, 40 P fixtures; merchant preview builder remains isolated with the original three handlers. The new registrar fixture uses the same painter as live source. GuildRegistrarFrame/classic named children are from upstream Classic source; their presence/protection in Forever is UNVERIFIED. All guild operations stay in native handlers, with source/parent ordinary gates, out-of-combat reversible anchors, alpha and button styling. Fallback is stock on unavailable/secret/unsafe shapes, never a blanket UI hide. New checker is dynamic-version parity only and covers these boundaries. Full `check_*.py` suite, Lua compilation, real WSL runner and WoW runtime are pending WSL/client; no assistant-side full-suite or in-game PASS claimed. If the preflight refuses, no apply or deployment is authorized.
+
 ## P0412 — Accept exact Chat fragments and prevent stale author checks (2026-11-09)
 
 Exact P0411 and R1 replay isolate a fragment-format failure and four candidate failures. P0412 repairs the authoring and checker boundaries. Release gates cover R0/R1 byte parity, revised diagnostics, historical scope, version-policy refusal, actual isolated package application, rollback and deterministic ZIP. No runtime changes.

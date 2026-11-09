@@ -1,3 +1,7 @@
+## P0413 — Guild registrar native-backed Logres presentation (2026-11-09)
+
+Verified P0412 main 2032904; P0411 R0/R1 REFUSED, no runtime install. P0413 integrates source-gated GuildRegistrarFrame into existing merchant/trainer panel surface and the shared P preview cycle. Blizzard owns all charter actions and confirmations; unsupported Forever layouts remain stock. L-042 OPEN and WoW UNVERIFIED. See docs/memory/evidence/P0413_GUILD_REGISTRAR.md.
+
 ## P0412 — Accept exact Chat fragments and prevent stale author checks (2026-11-09)
 
 Verified P0410 main 7f702f6. P0411 review rejected two exact edits for missing trailing LF. The format-only R1 exposed a pinned version and three stale check assumptions. P0412 accepts exact line-start fragments, keeps final LF and baseline guards, and fixes the stale issue and merchant checker boundaries. See docs/memory/evidence/P0412_CHAT_AUTHOR_PREFLIGHT.md.

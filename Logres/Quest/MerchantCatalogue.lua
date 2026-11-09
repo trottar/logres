@@ -9,6 +9,7 @@ local palette, geometry = style.palette, style.geometry
 local list, sidebar = geometry.list, geometry.left
 local firstX, firstY, columnGap = list.x + 22, list.y + 31, 125
 local live, preview, visit, stockOnly
+local registrarPreview, guildLive, guildPreviewStep = nil, nil, 0
 local merchantState = false
 local hooked = setmetatable({}, {__mode = "k"})
 local result, starts, restores = "idle", 0, 0
@@ -621,19 +622,32 @@ local function buildPreview()
     return frame
 end
 
+-- The existing P action cycles both native-backed service fixtures without
+-- increasing historical action/preview counts or removing merchant paging.
 function Merchant.Preview()
-    if live then return false, "close the live merchant first" end
-    if preview and preview:IsShown() then
-        preview:Hide()
-        return true, "preview-closed"
+    if live or guildLive then return false, "close the live NPC service first" end
+    if guildPreviewStep == 0 then
+        if registrarPreview then registrarPreview:Hide() end
+        if not preview then
+            local ok, built = pcall(buildPreview)
+            if not ok then return false, "merchant-preview-unavailable" end
+            preview = built
+        end
+        preview:Show()
+        guildPreviewStep = 1
+        return true, "merchant-preview (next: guild registrar)"
     end
-    if not preview then
-        local ok, built = pcall(buildPreview)
-        if not ok then return false, "preview-unavailable" end
-        preview = built
+    if guildPreviewStep == 1 then
+        if preview then preview:Hide() end
+        local ok, reason = Merchant.GuildPreview()
+        if not ok then guildPreviewStep = 0; return false, reason end
+        guildPreviewStep = 2
+        return true, "guild-registrar-preview (next: close)"
     end
-    preview:Show()
-    return true, "merchant-preview"
+    if preview then preview:Hide() end
+    if registrarPreview then registrarPreview:Hide() end
+    guildPreviewStep = 0
+    return true, "service-previews-closed"
 end
 
 function Merchant.GetAudit()
@@ -643,6 +657,359 @@ function Merchant.GetAudit()
         pagerStyled = live and live.pagerStyled or false,
         nativeOwner = "Blizzard"}
 end
+
+-- P0413: native-backed guild registrar stage, on the merchant/trainer visual family.
+-- All charter actions, edit-box validation, costs, and confirmations remain
+-- exactly Blizzard-owned. This code never dispatches a guild transaction.
+local guildVisit, guildStockOnly, guildState = false, false, false
+local guildResult, guildShows, guildRestores, guildDeferrals = "idle", 0, 0, 0
+local guildHooks = setmetatable({}, {__mode = "k"})
+local guildArtByRoot = setmetatable({}, {__mode = "k"})
+
+local function guildName()
+    if type(UnitName) == "function" then
+        local ok, name = pcall(UnitName, "npc")
+        if ok and ordinary(name) and type(name) == "string" and name ~= "" then
+            return name
+        end
+    end
+    return "Guild Registrar"
+end
+
+-- Same PanelSurface and trainer geometry, typography and wash tokens are
+-- consumed by the synthetic preview and the native-backed live visit.
+local function guildPaint(owner, npc, sample)
+    assert(Logres.PanelSurface.Paint(owner, config.surface, visual.width, visual.height))
+    wash(owner, sidebar.x, sidebar.y, sidebar.w, sidebar.h, palette.sidebarWash)
+    wash(owner, list.x, list.y, list.w, list.h, palette.catalogueWash)
+    wash(owner, sidebar.x + sidebar.w + 7, sidebar.y + 8, 1,
+        sidebar.h - 16, palette.sidebarRule)
+    wash(owner, 28, 85, visual.width - 56, 1, palette.gold)
+    wash(owner, 28, 525, visual.width - 56, 1, palette.gold)
+    text(owner, npc, "GameFontHighlightLarge", 120, 19, visual.width - 240,
+        palette.goldText, "CENTER")
+    text(owner, sample and "GUILD REGISTRAR / PREVIEW" or "GUILD REGISTRAR / LIVE STOCK",
+        "GameFontHighlightSmall", 120, 49, visual.width - 240, palette.muted, "CENTER")
+    text(owner, "Guild services", "GameFontHighlight", 42, 108, 195, palette.goldText)
+    text(owner, "Charters and registration", "GameFontHighlight", 42, 195, 202, palette.body)
+    text(owner, "Choose a service to continue.", "GameFontHighlightSmall",
+        42, 236, 199, palette.muted)
+    text(owner, "Blizzard handles purchase and registration.",
+        "GameFontHighlightSmall", 42, 272, 199, palette.muted)
+    text(owner, "Charter desk", "GameFontHighlight", list.x + 17,
+        list.y + 5, 240, palette.goldText)
+    text(owner, "Guild charter costs, eligibility and confirmations remain native.",
+        "GameFontHighlightSmall", 42, 552, 720, palette.muted)
+end
+
+local function guildBuildPreview()
+    local root = CreateFrame("Frame", nil, UIParent)
+    root:Hide()
+    root:SetSize(visual.width, visual.height)
+    root:SetPoint(visual.point, UIParent, visual.relativePoint, visual.x, visual.y)
+    root:SetFrameStrata(visual.strata)
+    root:EnableMouse(false)
+    guildPaint(root, "Aldwin Laughlin", true)
+    text(root, "AVAILABLE SERVICES", "GameFontHighlight", list.x + 23,
+        list.y + 57, 500, palette.goldText)
+    text(root, "Purchase a Guild Charter", "GameFontHighlight", list.x + 23,
+        list.y + 99, 500, palette.body)
+    text(root, "Register a Guild Charter", "GameFontHighlight", list.x + 23,
+        list.y + 139, 500, palette.body)
+    text(root, "Purchase page: name entry, cost and Purchase remain native.",
+        "GameFontHighlightSmall", list.x + 23, list.y + 221, 515, palette.muted)
+    local close = CreateFrame("Button", nil, root)
+    close:SetPoint("TOPRIGHT", root, "TOPRIGHT", goodbyeX, goodbyeY)
+    close:SetSize(goodbyeWidth, goodbyeHeight)
+    goodbyeArt(close)
+    close:SetScript("OnClick", function() root:Hide(); guildPreviewStep = 0 end)
+    return root
+end
+
+function Merchant.GuildPreview()
+    if guildLive then return false, "guild-registrar-live" end
+    if not registrarPreview then
+        local ok, built = pcall(guildBuildPreview)
+        if not ok then return false, "registrar-preview-unavailable" end
+        registrarPreview = built
+    end
+    registrarPreview:Show()
+    return true, "guild-registrar-preview"
+end
+
+-- FontStrings are noninteractive Blizzard labels. Capture their position as
+-- opaque GetPoint tokens; do not examine secret-capable anchor components.
+local function guildLabelAnchor(plan, label, x, y, frame)
+    if read(label, "GetObjectType") ~= "FontString" then return false end
+    local get = method(label, "GetPoint")
+    local clear, set = method(label, "ClearAllPoints"), method(label, "SetPoint")
+    local n = read(label, "GetNumPoints")
+    if not get or not clear or not set or type(n) ~= "number"
+        or n < 1 or n > 8 or n ~= math.floor(n) then return false end
+    local tokens = {}
+    for i = 1, n do
+        local ok, p, relative, relativePoint, dx, dy = pcall(get, label, i)
+        if not ok then return false end
+        tokens[i] = {p, relative, relativePoint, dx, dy}
+    end
+    plan[#plan + 1] = {
+        apply = function()
+            clear(label)
+            set(label, "TOPLEFT", frame, "TOPLEFT", x, -y)
+        end,
+        undo = function()
+            clear(label)
+            for _, token in ipairs(tokens) do set(label, unpack(token, 1, 5)) end
+        end,
+    }
+    return true
+end
+
+local function guildFade(plan, region)
+    if not region then return true end
+    local get, set = method(region, "GetAlpha"), method(region, "SetAlpha")
+    local old = read(region, "GetAlpha")
+    if not get or not set or type(old) ~= "number" or old < 0 or old > 1 then
+        return false
+    end
+    plan[#plan + 1] = {
+        apply = function() set(region, 0) end,
+        undo = function() set(region, old) end,
+    }
+    return true
+end
+
+local function guildCapture(root)
+    local greeting = member(_G, "GuildRegistrarGreetingFrame")
+    local purchase = member(_G, "GuildRegistrarPurchaseFrame")
+    local choices = {member(_G, "GuildRegistrarButton1"),
+        member(_G, "GuildRegistrarButton2")}
+    local goodbyeButton = member(_G, "GuildRegistrarFrameGoodbyeButton")
+    local cancelButton = member(_G, "GuildRegistrarFrameCancelButton")
+    local buyButton = member(_G, "GuildRegistrarFramePurchaseButton")
+    local nameEdit = member(_G, "GuildRegistrarFrameEditBox")
+    local money = member(_G, "GuildRegistrarMoneyFrame")
+    local heading = member(_G, "GuildAvailableServicesText")
+        or member(_G, "AvailableServicesText")
+    local purchaseText = member(_G, "GuildRegistrarPurchaseText")
+    local costText = member(_G, "GuildRegistrarCostLabel")
+    local background = member(_G, "GuildRegistrarFrameBg")
+    if not greeting or not purchase or not choices[1] or not choices[2]
+        or not goodbyeButton or not cancelButton or not buyButton or not nameEdit
+        or not money or not heading or not purchaseText or not costText
+        or not background then return nil, "registrar-children-unavailable" end
+    if read(greeting, "GetParent") ~= root or read(purchase, "GetParent") ~= root
+        or read(choices[1], "GetParent") ~= greeting
+        or read(choices[2], "GetParent") ~= greeting
+        or read(goodbyeButton, "GetParent") ~= greeting
+        or read(cancelButton, "GetParent") ~= purchase
+        or read(buyButton, "GetParent") ~= purchase
+        or read(nameEdit, "GetParent") ~= purchase
+        or read(money, "GetParent") ~= purchase
+        or read(background, "GetParent") ~= root then
+        return nil, "registrar-source-identity-unsupported"
+    end
+    if not mutable(root) or not mutable(choices[1]) or not mutable(choices[2])
+        or not mutable(goodbyeButton) or not mutable(cancelButton)
+        or not mutable(buyButton) or not mutable(nameEdit) then
+        return nil, "registrar-protected-or-forbidden"
+    end
+    local plan = {}
+    if not anchor(plan, root, visual.point, UIParent, visual.relativePoint, visual.x, visual.y)
+        or not resize(plan, root, visual.width, visual.height)
+        or not guildLabelAnchor(plan, heading, list.x + 23, list.y + 57, root)
+        or not guildLabelAnchor(plan, purchaseText, list.x + 23, list.y + 57, root)
+        or not anchor(plan, buyButton, "BOTTOMRIGHT", root, "BOTTOMRIGHT", -45, 38)
+        or not anchor(plan, nameEdit, "TOPLEFT", root, "TOPLEFT", list.x + 23, -(list.y + 218))
+        or not guildFade(plan, background) then
+        return nil, "registrar-layout-unsupported"
+    end
+    -- Preserve all native purchase/registration scripts and the native money
+    -- frame, edit box, disabled states, tooltip and purchase confirmation.
+    local portraits = {member(_G, "GuildRegistrarFramePortrait"),
+        member(root, "NineSlice"), member(root, "TitleBg"),
+        member(root, "TopTileStreaks"), member(root, "PortraitContainer")}
+    for _, decoration in ipairs(portraits) do
+        if decoration and not guildFade(plan, decoration) then
+            return nil, "registrar-decoration-unsupported"
+        end
+    end
+    -- The root template has an independent native X. Only skin THAT native
+    -- control as Goodbye; keep each mutually exclusive native Cancel button
+    -- at its own original bottom-right anchor to avoid overlapping hit areas.
+    local rootClose = member(root, "CloseButton")
+    local goodbyeStyled = rootClose and mutable(rootClose)
+        and goodbye(plan, root, rootClose) or false
+    return plan, goodbyeStyled
+end
+
+local function guildRestore(why)
+    if not guildLive then return true end
+    if not unlocked() then
+        guildLive.pending = why
+        guildResult = "registrar-restore-deferred-combat"
+        return false
+    end
+    local complete = true
+    for i = guildLive.applied, 1, -1 do
+        if not pcall(guildLive.plan[i].undo) then complete = false end
+    end
+    if not complete then
+        guildLive.pending = why
+        guildResult = "registrar-restoration-incomplete"
+        return false
+    end
+    guildLive.art:Hide()
+    guildLive = nil
+    guildRestores = guildRestores + 1
+    guildResult = why or "registrar-native-stock"
+    return true
+end
+
+local function guildContext()
+    local state = Logres:GetState()
+    return Logres:GetPreference("immersionEnabled") == true and state
+        and state.interacting == true and state.interactionType == 11
+end
+
+local function guildArt(root)
+    local existing = guildArtByRoot[root]
+    if existing then return existing end
+    local level = read(root, "GetFrameLevel")
+    if type(level) ~= "number" then return nil end
+    local art = CreateFrame("Frame", nil, root)
+    art:Hide()
+    art:SetAllPoints(root)
+    art:SetFrameLevel(math.max(0, level - 1))
+    art:EnableMouse(false)
+    guildPaint(art, guildName(), false)
+    guildArtByRoot[root] = art
+    return art
+end
+
+local function guildApply(root)
+    if guildLive or not guildVisit or guildStockOnly or not guildContext()
+        or not unlocked() or not mutable(root) or read(root, "IsShown") ~= true then
+        return
+    end
+    if not fits() then guildResult = "registrar-stock-small-viewport"; return end
+    local placement = Logres.NPCNativeServicePlacementTrial.GetAudit()
+    if placement.active ~= "none" or placement.autoEnabled then
+        guildResult = "registrar-stock-placement-active"; return
+    end
+    local ok, plan, closeStyled = pcall(guildCapture, root)
+    if not ok or not plan then
+        guildStockOnly, guildResult = true, ok and closeStyled or "registrar-capture-error"
+        guildDeferrals = guildDeferrals + 1
+        return
+    end
+    local built, art = pcall(guildArt, root)
+    if not built or not art then
+        guildStockOnly, guildResult = true, "registrar-art-unavailable"
+        guildDeferrals = guildDeferrals + 1
+        return
+    end
+    if preview then preview:Hide() end
+    if registrarPreview then registrarPreview:Hide() end
+    guildLive = {frame = root, plan = plan, applied = 0, art = art, closeStyled = closeStyled}
+    for i, action in ipairs(plan) do
+        guildLive.applied = i
+        if not pcall(action.apply) then
+            guildStockOnly = true
+            guildRestore("registrar-apply-rollback")
+            guildDeferrals = guildDeferrals + 1
+            return
+        end
+    end
+    if not pcall(art.Show, art) then
+        guildStockOnly = true
+        guildRestore("registrar-art-rollback")
+        guildDeferrals = guildDeferrals + 1
+        return
+    end
+    guildShows = guildShows + 1
+    guildResult = "registrar-logres-live"
+    Logres:TraceEvent("npc", "guild-registrar-owned", {result = guildResult})
+end
+
+local function guildReconcile()
+    if guildLive or not guildVisit or guildStockOnly or not unlocked() then return end
+    local root = member(_G, "GuildRegistrarFrame")
+    if not root then guildResult = "registrar-native-root-unavailable"; return end
+    local hooks = guildHooks[root]
+    if not hooks then hooks = {}; guildHooks[root] = hooks end
+    local hook = method(root, "HookScript")
+    if not hook then guildResult = "registrar-hooks-unavailable"; return end
+    if not hooks.hide then
+        hooks.hide = pcall(hook, root, "OnHide", function()
+            if guildLive and guildLive.frame == root then
+                guildRestore("registrar-native-hidden")
+            end
+        end)
+        if not hooks.hide then return end
+    end
+    if not hooks.show then
+        hooks.show = pcall(hook, root, "OnShow", function() guildApply(root) end)
+    end
+    guildApply(root)
+end
+
+function Merchant.GuildGetAudit()
+    return {result = guildResult, visit = guildVisit, live = guildLive ~= nil,
+        shows = guildShows, restores = guildRestores, deferrals = guildDeferrals,
+        pending = guildLive and guildLive.pending or nil,
+        closeStyled = guildLive and guildLive.closeStyled or false,
+        nativeOwner = "Blizzard"}
+end
+
+Logres:RegisterEvent("GUILD_REGISTRAR_SHOW", function()
+    guildVisit, guildStockOnly = true, false
+    guildReconcile()
+end)
+Logres:RegisterEvent("GUILD_REGISTRAR_CLOSED", function()
+    guildVisit = false
+    guildRestore("registrar-closed")
+end)
+Logres:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE", function()
+    if guildVisit then
+        guildVisit = false
+        guildRestore("registrar-interaction-ended")
+    end
+end)
+Logres:RegisterEvent("PLAYER_ENTERING_WORLD", function()
+    guildVisit, guildState = false, false
+    guildRestore("registrar-world-changed")
+    if registrarPreview then registrarPreview:Hide() end
+    guildPreviewStep = 0
+end)
+Logres:RegisterEvent("DISPLAY_SIZE_CHANGED", function()
+    if guildLive and not fits() then guildRestore("registrar-viewport-changed") end
+end)
+Logres:RegisterEvent("PLAYER_REGEN_ENABLED", function()
+    if guildLive and guildLive.pending then
+        guildRestore(guildLive.pending)
+    elseif guildVisit then
+        guildReconcile()
+    end
+end)
+Logres:SubscribeState(function(state)
+    local inRegistrar = state.interacting == true and state.interactionType == 11
+    if inRegistrar and not guildState and not guildVisit then
+        guildVisit, guildStockOnly = true, false
+    elseif guildState and not inRegistrar then
+        guildVisit = false
+        guildRestore("registrar-context-ended")
+    end
+    guildState = inRegistrar
+    if inRegistrar and not guildLive then guildReconcile() end
+end)
+Logres:SubscribePreferences(function(preferences)
+    if guildLive and not preferences.immersionEnabled then
+        guildRestore("registrar-immersion-off")
+    elseif preferences.immersionEnabled and guildVisit then
+        guildReconcile()
+    end
+end)
 
 Logres:RegisterEvent("MERCHANT_SHOW", function()
     if not visit then visit, stockOnly = true, false end
