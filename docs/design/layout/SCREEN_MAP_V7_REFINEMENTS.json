@@ -1,0 +1,50 @@
+{
+  "schema": "logres-screen-map-adjustment/v2",
+  "baseline": "ac373444999aabc8309b212e746f213de9fb6384",
+  "reference": "docs/design/layout/SCREEN_MAP_V6.json",
+  "coordinates": "UIParent normalized center percentages; origin top-left",
+  "changeScope": "add-on-owned layout anchors only; no grid, binding, stock fallback or size changes",
+  "source": "direct user instruction after P0421 WoW review",
+  "changes": [
+    {
+      "id": "allies",
+      "anchor": "allies",
+      "from": {
+        "x": 23,
+        "y": 50
+      },
+      "approvedV6": {
+        "x": 23,
+        "y": 50
+      },
+      "to": {
+        "x": 24,
+        "y": 50
+      },
+      "delta": {
+        "x": 1,
+        "y": 0
+      }
+    },
+    {
+      "id": "petActions",
+      "anchor": "classPet",
+      "from": {
+        "x": 9,
+        "y": 50
+      },
+      "approvedV6": {
+        "x": 9,
+        "y": 50
+      },
+      "to": {
+        "x": 10,
+        "y": 50
+      },
+      "delta": {
+        "x": 1,
+        "y": 0
+      }
+    }
+  ]
+}

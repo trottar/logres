@@ -1,18 +1,15 @@
-## P0421 — Approved V6 whole-screen position refinements (2026-11-09)
+## P0422 — Final V7 pet/party spacing refinement (2026-11-09)
 
-Source: user-uploaded `LOGRES_SCREEN_MAP_REFINEMENTS_P0421.json` (15 center
-adjustments; P0420 verified main `bd55e34`). After the P0420 expected-vs-
-measured overlay aligned, the user requested actual placement refinements.
-P0421 records V6 as the new authored runtime-position authority and moves only
-the 15 specified addon-owned anchors: three extra action-bar centers, pet,
-compass, Active Quest, target triplet, allies, player debuff/resource, passive
-status, context XP and Quest Dialogue. The four semantic non-center anchors use
-center deltas so visual centers land at the intended positions. No widget size,
-source role/grid, binding, protected click behavior, Blizzard UI ownership or
-pet driver changes. Existing out-of-combat fit/recovery and read-only H.2
-comparison remain. The P0420 alignment observation remains scoped PASS; P0421
-runtime UI fit is UNVERIFIED. See
-`docs/memory/evidence/P0421_V6_SCREEN_REFINEMENTS.md`.
+P0421 verified remote main `ac373444999aabc8309b212e746f213de9fb6384`. The
+user reports the V6 whole-screen layout now looks effectively complete and asks
+for one final runtime adjustment: shift the party/allies region and pet-actions
+cluster 1% to the right to create slightly more spacing from the pet bar.
+P0422 records V7 as the new runtime-position authority for only those two
+centers. No action bar role/grid changes, bindings, key ownership, widget
+resizing, Blizzard ownership, pet driver logic, or H.2 overlay behavior change.
+WoW Forever runtime validation is PENDING; L-008 broader pet-edge coverage and
+L-009 live editing both remain unchanged. See
+`docs/memory/evidence/P0422_V7_FINAL_SPACING_REFINEMENT.md`.
 
 ## P0420 — H.2 semantic anchor and intrinsic-frame projection (2026-11-09)
 

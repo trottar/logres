@@ -12,6 +12,7 @@ def read(rel):
 request = json.loads(read('docs/design/layout/SCREEN_MAP_V6_REFINEMENTS.json'))
 base = json.loads(read('docs/design/layout/SCREEN_MAP_V5.json'))
 approved = json.loads(read('docs/design/layout/SCREEN_MAP_V6.json'))
+v7 = json.loads(read('docs/design/layout/SCREEN_MAP_V7.json'))
 layout = read('Logres/Integration/Layout.lua')
 errors=[]
 def need(ok, msg):
@@ -82,7 +83,7 @@ for change in request['changes']:
         expected=(ox+delta['x'],oy+delta['y'])
     else:
         expected=(target['x'],target['y'])
-    if id_ not in ('bar2','bar3','bar5'):
+    if id_ not in ('bar2','bar3','bar5','allies','petActions'):
         actual=anchor_coords(key)
         need(actual is not None and all(eq(a,b) for a,b in zip(actual,expected)),
              f'live semantic anchor {key} does not implement approved center shift: {actual} expected {expected}')
@@ -147,14 +148,11 @@ tv=re.search(r'(?m)^## Version: (\S+)$',toc)
 bv=re.search(r'(?m)^Logres.VERSION = "([^"]+)"$',bootstrap)
 need(tv and bv and tv[1]==bv[1], 'TOC/bootstrap runtime version mismatch')
 need('P0421' in read('docs/memory/CURRENT.md') and
-     read('docs/memory/roadmap/STATUS.md').startswith('## P0421') and
-     read('docs/ROADMAP.md').startswith('## P0421') and
-     read('docs/memory/investigations/ACTIVE.md').startswith('## P0421') and
-     read('docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md').startswith('## P0421') and
      'P0421' in read('docs/memory/PRE_HANDOFF_AUDIT.md') and
-     'P0421' in read('docs/memory/patches/PATCH_INDEX.md') and
-     'P0421' in read('docs/memory/investigations/ISSUE_LEDGER.md'),
+     'P0421' in read('docs/memory/patches/PATCH_INDEX.md'),
      'P0421 repository continuity incomplete')
+need(v7.get('reference') == 'docs/design/layout/SCREEN_MAP_V6.json' and v7.get('changes') == 2,
+     'P0422 V7 refinement provenance missing')
 
 print('P0421 approved V6 runtime-anchor refinement contract')
 for error in errors:

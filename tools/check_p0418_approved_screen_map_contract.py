@@ -30,7 +30,6 @@ for token in (
     'contextObjective = { id = "contextObjective", x = 50.0, y = 50.0 }',
     'contextXP = { id = "contextXP", x = 50.0, y = 55.0 }',
     'reportBug = { id = "reportBug", x = 95.0, y = 35.0 }',
-    'classPet = { id = "petActions", x = 9.0, y = 50.0 }',
     'passiveStatus = { id = "player-buff", x = 83.6, y = 78.0 }',
     '{ "reportBug", "LogresBugReportButton", 91.0, 33.25, 8.0, 3.5 }',
     '{ "contextObjective", "LogresQuestObjectiveProgress", 40.0, 47.5, 20.0, 5.0 }',

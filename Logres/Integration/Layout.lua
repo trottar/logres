@@ -407,8 +407,8 @@ local function actionBarsFitViewport(width, height)
     return true, "approved-action-bounds"
 end
 
--- P0195/P0421: approved V6 viewport translation for owned semantic anchors.
--- V5 planning boxes remain historical; V6 updates centers only.
+-- P0195/P0422: approved V7 viewport translation for owned semantic anchors.
+-- V5/V6 planning boxes remain historical; V7 updates only allies/pet spacing.
 -- Each live widget retains its intrinsic size.
 -- No protected frame is moved in combat; legacy P0166 anchors are fallback.
 local H2_APPROVED_ANCHORS = {
@@ -422,8 +422,8 @@ local H2_APPROVED_ANCHORS = {
     targetFallback = { id = "enemy", x = 80.0, y = 50.0 },
     targetHarmful = { id = "enemy-debuff", x = 70.0, y = 50.0 },
     targetHelpful = { id = "enemy-buff", x = 90.0, y = 50.0 },
-    allies = { id = "group", x = 23.0, y = 50.0 },
-    classPet = { id = "petActions", x = 9.0, y = 50.0 },
+    allies = { id = "group", x = 24.0, y = 50.0 },
+    classPet = { id = "petActions", x = 10.0, y = 50.0 },
     secondaryActions = { id = "bar2", x = ACTION_BAR_LAYOUT.secondary.xPercent, y = ACTION_BAR_LAYOUT.secondary.yPercent },
     primaryActions = { id = "bar1", x = ACTION_BAR_LAYOUT.primary.xPercent, y = ACTION_BAR_LAYOUT.primary.yPercent },
     passiveStatus = { id = "player-buff", x = 83.6, y = 78.0 },
@@ -485,7 +485,7 @@ function Layout.ApplyApprovedV4()
         return false, h2Placement.reason
     end
     h2Placement.active = true
-    h2Placement.reason = "approved-screen-map-v6"
+    h2Placement.reason = "approved-screen-map-v7"
     h2Placement.anchors = 16
     return true, h2Placement.reason
 end

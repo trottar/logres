@@ -11,14 +11,15 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0421** P0420 visual overlay alignment accepted; apply the 15 user-exported
-V6 full-screen position refinements. Keep V5 as source history, P0416 secure
-bar roles/actions, P0417 pet suppression, and P0420 read-only H.2 overlay.
-WoW Forever runtime verification of the new positions is PENDING. L-009 live
-editing remains DEFERRED; L-008 pet-edge evidence remains OPEN. See P0381
-historical quest failures in the linked evidence and issue ledger.
+**P0422** Apply the final V7 pet/party spacing refinement: shift the allies
+frame and pet-action cluster 1% to the right relative to P0421. Preserve P0416
+secure five-bar routing, P0417 pet suppression behavior, and the P0420 read-only
+H.2 overlay. WoW Forever runtime verification of this last spacing adjustment is
+PENDING. L-009 live editing remains DEFERRED; L-008 pet-edge coverage remains
+OPEN. See P0381 historical quest failures in the linked evidence and issue ledger.
 
 ## Verified State
+
 
 - P0420 pushed main `bd55e34`; user screenshot shows expected and measured
   H.2 outlines aligned, but requests actual visual refinement. P0421 uses

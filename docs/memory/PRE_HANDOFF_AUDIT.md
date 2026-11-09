@@ -1,3 +1,10 @@
+## P0422 pre-handoff audit (2026-11-09)
+
+- GitHub `main` verified at P0421 commit `ac373444999aabc8309b212e746f213de9fb6384` before authoring.
+- User accepted P0421 visually except for a final 1% right shift for the party/allies and pet-actions regions.
+- Planned scope: change only V7 runtime centers for `allies` and `petActions`; preserve all action slots/bindings, P0417 pet suppression, and the P0420 read-only H.2 overlay.
+- WoW Forever runtime validation is still REQUIRED after deployment.
+
 ## P0421 — approved whole-screen V6 refinement (2026-11-09)
 
 Author-side candidate R0 checker attempt **280/289 REFUSED** because a

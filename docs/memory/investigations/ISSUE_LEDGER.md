@@ -1,3 +1,10 @@
+## P0422 layout refinement note (2026-11-09)
+
+P0421 runtime screenshot is accepted except for a final minor spacing issue: the
+party/allies frame and pet-actions cluster sit slightly too close to the pet
+bar. P0422 moves those two addon-owned regions 1% to the right. This does not
+change issue ownership for broader L-008 pet coverage or L-009 live editing.
+
 # Logres — Canonical issue and resolution ledger
 
 **Authority:** This is the **first reference for every Logres bug report, investigation, attempted fix, validation, and closure**. Updated 2026-11-06 at P0380 on verified P0379 `285be528` main. The append-only [issue history](ISSUE_REGISTER.md), original evidence, source, and test transcripts remain authoritative for what actually happened; this ledger is the current status/index, **not a replacement for evidence**.
