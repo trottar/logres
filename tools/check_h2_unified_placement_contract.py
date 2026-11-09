@@ -27,12 +27,16 @@ for t in ('function Layout.ApplyApprovedV4()',
           'PLAYER_REGEN_ENABLED',
           'UI_SCALE_CHANGED'):
     if t not in L:error.append('missing placement safety '+t)
-for token in ('local COLUMNS = 2','local ROWS = 6'):
-    if token not in P:error.append('Primary '+token)
-for token in ('secondary = { columns = 2, rows = 6 }',
-              'utility = { columns = 6, rows = 2 }',
-              'bar4 = { columns = 2, rows = 6 }',
-              'bar5 = { columns = 2, rows = 6 }',
+# P0416 keeps the original secure construction/routing checks, but the
+# accepted role grids are now obtained from Integration/Layout.lua.
+for token in ('Logres.Layout.GetActionBarSpec("primary")',
+              'local COLUMNS = PRIMARY_GRID.columns',
+              'local ROWS = PRIMARY_GRID.rows'):
+    if token not in P:error.append('Primary approved grid '+token)
+for token in ('secondary = Logres.Layout.GetActionBarSpec("secondary")',
+              'utility = Logres.Layout.GetActionBarSpec("utility")',
+              'bar4 = Logres.Layout.GetActionBarSpec("bar4")',
+              'bar5 = Logres.Layout.GetActionBarSpec("bar5")',
               'config.frameName,\n        columns,\n        rows,',
               '            columns\n        )'):
     if token not in A:error.append('action roles '+token)
@@ -62,4 +66,4 @@ if any(x in L for x in ('C_Timer.After','C_Timer.NewTicker','SetScript("OnUpdate
 print('Logres P0195 coordinated screen placement contract')
 for e in error:print('ERROR:',e)
 if error:raise SystemExit(1)
-print('PASS: unified 16 semantic anchors, status/native safety, role shapes')
+print('PASS: unified 16 semantic anchors, status/native safety, authored role shapes')

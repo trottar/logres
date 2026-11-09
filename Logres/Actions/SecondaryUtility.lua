@@ -5,12 +5,13 @@ local ActionButton = Logres.ActionButton
 local BUTTON_COUNT = 12
 local COLUMNS = 3
 local ROWS = 4
--- P0195: per-role secure button geometry. Preserve action slots and routing.
+-- P0416: source keys retain exact action slots/bindings; grid dimensions
+-- and role semantics come from the same approved immutable layout profile.
 local ROLE_SHAPES = {
-    secondary = { columns = 2, rows = 6 },
-    utility = { columns = 6, rows = 2 },
-    bar4 = { columns = 2, rows = 6 },
-    bar5 = { columns = 2, rows = 6 },
+    secondary = Logres.Layout.GetActionBarSpec("secondary"),
+    utility = Logres.Layout.GetActionBarSpec("utility"),
+    bar4 = Logres.Layout.GetActionBarSpec("bar4"),
+    bar5 = Logres.Layout.GetActionBarSpec("bar5"),
 }
 
 local ACTION_EVENTS = {

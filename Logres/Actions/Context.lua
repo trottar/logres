@@ -68,10 +68,11 @@ function Context:ApplyPolicy(policyName)
     local sides = Logres:GetModule("SecondaryUtilityActions")
 
     primary.cluster:SetAlpha(policy.primary)
-    sides.clusters.secondary.frame:SetAlpha(policy.secondary)
-    sides.clusters.utility.frame:SetAlpha(policy.utility)
-    sides.clusters.bar4.frame:SetAlpha(policy.secondary)
-    sides.clusters.bar5.frame:SetAlpha(policy.utility)
+    for _, source in ipairs({"secondary", "utility", "bar4", "bar5"}) do
+        local role = Logres.Layout.GetActionBarSpec(source).role
+        -- Context is presentation-only; never change secure action attributes.
+        sides.clusters[source].frame:SetAlpha(policy[role])
+    end
 
     self.policyName = policyName
     self.primaryAlpha = policy.primary

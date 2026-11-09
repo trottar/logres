@@ -1,3 +1,18 @@
+## P0416 — Authored five-bar profile candidate audit (2026-11-09)
+
+Pinned remote baseline `43efc89b8651d278630d48517fb6101ca4d14a74`
+P0415 source; all user-requested coordinates and roles preserved in
+`ACTION_BARS_V1.json`. Pre-read historical H.2 P0195 and ActionContext C.4
+contracts before implementation, inspected `Primary`, `SecondaryUtility`,
+`Context`, `Button`, `StockReplacement`, `MainReplacement`, and
+`Integration/Layout` protected/ownership boundaries. Changed only the
+geometry and role consumer paths, retained original 96 Lua entries and 12
+slots per source, no saved bindings, no Blizzard target/pet modifications.
+The two exact historical test assumptions superseded by user-approved layout
+were migrated narrowly, with original constraints retained. No P0416 runtime
+client proof is claimed. The full-candidate checker and exact applier/manifest
+results will be recorded in the author receipt, not fabricated here.
+
 ## P0415 — Replace registrar collage with existing Quest/NPC option pipeline (2026-11-09)
 
 Pushed P0414 main `ae151e6` installed Forever 0.0.291; session 70 incident 8350 showed the native parchment/name still inside the stretched service canvas. This is VISUAL FAIL under L-042, not a successful UI integration. P0413 and P0414 created a second surface instead of the existing QuestDialogue/OptionSession/OptionList path. User explicitly rejected that design. P0415 removes the live native-geometry skin and routes registrar service labels through the accepted NPC option view with source revalidation, existing service lifecycle and specifically authorized reversible whole-root parking. Blizzard keeps the original purchase and registration scripts. Native purchase/edit/cost form remains stock as safe fallback; full form replacement is still unverified. No transaction is tested or asserted. WSL static checks and Forever behavior remain UNVERIFIED pending test. P0415 R1 author-preflight REFUSED 278/283 (historical version policy, canonical ledger status, P0317 visual contract and new P0415 proof marker); R2 repairs these and gates shared Dialogue dismissal on registrar stock restoration. A passing independent author receipt is STATIC only. See `docs/memory/evidence/P0415_REGISTRAR_OPTION_ADAPTER.md`.

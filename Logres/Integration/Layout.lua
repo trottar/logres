@@ -314,6 +314,73 @@ function Layout.GetDebugStatus()
 end
 
 
+-- P0416: approved user-authored five-bar source/role/geometry profile.
+-- These are author-time constants, not a live combat/editor mutation.
+-- All 12 secure action slots and their persistent Blizzard bindings stay fixed.
+local ACTION_BAR_LAYOUT = {
+    primary = { role = "primary", columns = 3, rows = 4,
+        xPercent = 13, yPercent = 75, scale = 1 },
+    secondary = { role = "secondary", columns = 2, rows = 6,
+        xPercent = 5, yPercent = 75, scale = 1 },
+    utility = { role = "utility", columns = 6, rows = 2,
+        xPercent = 90, yPercent = 85, scale = 1 },
+    bar4 = { role = "secondary", columns = 6, rows = 2,
+        xPercent = 10, yPercent = 95, scale = 1 },
+    bar5 = { role = "utility", columns = 6, rows = 2,
+        xPercent = 90, yPercent = 95, scale = 1 },
+}
+
+function Layout.GetActionBarSpec(key)
+    local source = ACTION_BAR_LAYOUT[key]
+    if not source then return nil end
+    -- Return a copy: callers cannot mutate the authored layout profile.
+    return { role = source.role, columns = source.columns,
+        rows = source.rows, xPercent = source.xPercent,
+        yPercent = source.yPercent, scale = source.scale }
+end
+
+-- Check the authored five 12-button extents before moving ANY anchors.
+-- Only UIParent's previously classified ordinary viewport geometry and our
+-- own action/theme constants are used: no protected Blizzard inspection.
+local function actionBarsFitViewport(width, height)
+    local style = Logres.Theme and Logres.Theme.action or {}
+    local size, gap = style.buttonSize or 42, style.buttonGap or 5
+    local art = style.artOverscan or 2
+    if type(size) ~= "number" or type(gap) ~= "number"
+        or type(art) ~= "number" or size <= 0 or gap < 0 or art < 0 then
+        return false, "action-geometry-unavailable"
+    end
+    local rectangles = {}
+    for _, key in ipairs({"primary", "secondary", "utility", "bar4", "bar5"}) do
+        local item = ACTION_BAR_LAYOUT[key]
+        local w = (item.columns * size + (item.columns - 1) * gap)
+            * item.scale
+        local h = (item.rows * size + (item.rows - 1) * gap)
+            * item.scale
+        local centerX = width * item.xPercent / 100
+        local centerY = height * item.yPercent / 100
+        local margin = art * item.scale + 1
+        local left, right = centerX - w / 2, centerX + w / 2
+        local top, bottom = centerY - h / 2, centerY + h / 2
+        if left < margin or right > width - margin
+            or top < margin or bottom > height - margin then
+            return false, "action-bounds:" .. key
+        end
+        for _, previous in ipairs(rectangles) do
+            -- Maintain a small separation between secure click regions.
+            if left < previous.right + 2 and right > previous.left - 2
+                and top < previous.bottom + 2
+                and bottom > previous.top - 2 then
+                return false, "action-overlap:" .. key .. ":" .. previous.key
+            end
+        end
+        rectangles[#rectangles + 1] = {
+            key = key, left = left, right = right, top = top, bottom = bottom,
+        }
+    end
+    return true, "approved-action-bounds"
+end
+
 -- P0195: central D-045 viewport translation for addon-owned semantic anchors.
 -- Planning boxes remain immutable; each live widget retains intrinsic size.
 -- No protected frame is moved in combat; legacy P0166 anchors are fallback.
@@ -327,13 +394,13 @@ local H2_APPROVED_ANCHORS = {
     targetHelpful = { id = "enemy-buff", x = 88.8, y = 44.5 },
     allies = { id = "group", x = 25.5, y = 45.65 },
     classPet = { id = "class", x = 11.1, y = 54.5 },
-    secondaryActions = { id = "secondary", x = 11.1, y = 79.4 },
-    primaryActions = { id = "main", x = 24.2, y = 79.4 },
+    secondaryActions = { id = "secondary", x = ACTION_BAR_LAYOUT.secondary.xPercent, y = ACTION_BAR_LAYOUT.secondary.yPercent },
+    primaryActions = { id = "main", x = ACTION_BAR_LAYOUT.primary.xPercent, y = ACTION_BAR_LAYOUT.primary.yPercent },
     passiveStatus = { id = "player-buff", x = 82.35, y = 83.6 },
-    utilityActions = { id = "utility", x = 87.7, y = 92.85 },
+    utilityActions = { id = "utility", x = ACTION_BAR_LAYOUT.utility.xPercent, y = ACTION_BAR_LAYOUT.utility.yPercent },
     -- Independent non-D-045 control surfaces: retain separate access.
-    bar4Actions = { id = "bar4-safe-satellite", x = 34.8, y = 79.4 },
-    bar5Actions = { id = "bar5-safe-satellite", x = 3.4, y = 79.4 },
+    bar4Actions = { id = "bar4-safe-satellite", x = ACTION_BAR_LAYOUT.bar4.xPercent, y = ACTION_BAR_LAYOUT.bar4.yPercent },
+    bar5Actions = { id = "bar5-safe-satellite", x = ACTION_BAR_LAYOUT.bar5.xPercent, y = ACTION_BAR_LAYOUT.bar5.yPercent },
     nativeAccess = { id = "native-access-safe-dock", x = 98.4, y = 27.8 },
 }
 local h2Placement = { active = false, reason = "not-attempted", anchors = 0 }
@@ -358,6 +425,15 @@ function Layout.ApplyApprovedV4()
     if not viewport then
         h2Placement.active = false
         h2Placement.reason = "viewport-unavailable"
+        return false, h2Placement.reason
+    end
+    local fit, boundsReason = actionBarsFitViewport(viewport.width, viewport.height)
+    if not fit then
+        -- On a smaller/changed viewport, restore the known legacy anchors
+        -- instead of leaving protected action clusters clipped offscreen.
+        local restored = pcall(restoreOriginalLayoutAnchors)
+        h2Placement.active = false
+        h2Placement.reason = restored and boundsReason or "action-fallback-failed"
         return false, h2Placement.reason
     end
     local ok, failure = pcall(function()

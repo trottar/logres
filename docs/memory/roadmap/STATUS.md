@@ -1,3 +1,17 @@
+## P0416 — Approved five-bar authored geometry (2026-11-09)
+
+Main P0415 `43efc89` verified as exact pinned baseline. User approved
+Bar 1 Primary 3x4 center 13/75; Bar 2 Secondary 2x6 5/75;
+Bar 3 Utility 6x2 90/85; Bar 4 Secondary 6x2 10/95;
+Bar 5 Utility 6x2 90/95 (scale 1). This candidate maps roles/grids/centers
+through `Integration/Layout.lua` and existing secure clusters, preserves native
+stock and binding/slot ownership, and protects out-of-combat anchor moves with
+viewport bounds plus legacy fallback. Historic P0195/D-045 remain the
+whole-screen precedent; D-032 limits generalized editing. L-009 remains
+DEFERRED for live bar-content/profile editing, and L-008 recurrent native pet
+frame remains OPEN / separate. FULL STATIC and WoW client results are
+UNVERIFIED until tests run; see `docs/memory/evidence/P0416_FIVE_BAR_AUTHORED_LAYOUT.md`.
+
 ## P0415 — Replace registrar collage with existing Quest/NPC option pipeline (2026-11-09)
 
 Pushed P0414 main `ae151e6` installed Forever 0.0.291; session 70 incident 8350 showed the native parchment/name still inside the stretched service canvas. This is VISUAL FAIL under L-042, not a successful UI integration. P0413 and P0414 created a second surface instead of the existing QuestDialogue/OptionSession/OptionList path. User explicitly rejected that design. P0415 removes the live native-geometry skin and routes registrar service labels through the accepted NPC option view with source revalidation, existing service lifecycle and specifically authorized reversible whole-root parking. Blizzard keeps the original purchase and registration scripts. Native purchase/edit/cost form remains stock as safe fallback; full form replacement is still unverified. No transaction is tested or asserted. WSL static checks and Forever behavior remain UNVERIFIED pending test. See `docs/memory/evidence/P0415_REGISTRAR_OPTION_ADAPTER.md`.

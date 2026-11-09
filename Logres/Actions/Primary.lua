@@ -3,8 +3,10 @@ local _, Logres = ...
 local ActionButton = Logres.ActionButton
 
 local BUTTON_COUNT = 12
-local COLUMNS = 2
-local ROWS = 6
+-- P0416: secure button creation uses the approved immutable source layout.
+local PRIMARY_GRID = Logres.Layout.GetActionBarSpec("primary")
+local COLUMNS = PRIMARY_GRID.columns
+local ROWS = PRIMARY_GRID.rows
 
 local PRIMARY_PAGE_DRIVER =
     "[bar:2]2;"

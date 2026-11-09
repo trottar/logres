@@ -1,0 +1,32 @@
+P0416 Apply approved five-bar roles and normalized action layout
+Verified baseline: 43efc89b8651d278630d48517fb6101ca4d14a74
+Candidate runtime version: 0.0.293-dev
+PREWRITE: 284/284 STATIC PASS
+POSTWRITE: 284/284 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Actions/Context.lua
+Logres/Actions/Primary.lua
+Logres/Actions/SecondaryUtility.lua
+Logres/Core/Bootstrap.lua
+Logres/Integration/Layout.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/design/layout/ACTION_BARS_V1.json
+docs/design/layout/ACTION_BARS_V1.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0416_FIVE_BAR_AUTHORED_LAYOUT.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0416_FIVE_BAR_AUTHORED_LAYOUT.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_action_context_contract.py
+tools/check_h2_unified_placement_contract.py
+tools/check_p0416_five_bar_layout_contract.py
+P0416_MANIFEST.txt

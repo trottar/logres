@@ -1,0 +1,47 @@
+{
+  "schema": "logres-action-layout-request/v1",
+  "baseline": "43efc89b8651d278630d48517fb6101ca4d14a74",
+  "coordinates": "UIParent normalized center percentages",
+  "bars": [
+    {
+      "source": "bar1",
+      "role": "primary",
+      "grid": "3x4",
+      "xPercent": 13,
+      "yPercent": 75,
+      "scale": 1
+    },
+    {
+      "source": "bar2",
+      "role": "secondary",
+      "grid": "2x6",
+      "xPercent": 5,
+      "yPercent": 75,
+      "scale": 1
+    },
+    {
+      "source": "bar3",
+      "role": "utility",
+      "grid": "6x2",
+      "xPercent": 90,
+      "yPercent": 85,
+      "scale": 1
+    },
+    {
+      "source": "bar4",
+      "role": "secondary",
+      "grid": "6x2",
+      "xPercent": 10,
+      "yPercent": 95,
+      "scale": 1
+    },
+    {
+      "source": "bar5",
+      "role": "utility",
+      "grid": "6x2",
+      "xPercent": 90,
+      "yPercent": 95,
+      "scale": 1
+    }
+  ]
+}
