@@ -817,6 +817,17 @@ function Dialogue:HandleCompletionFallback()
     return self:HidePresentation("completion-native-fallback")
 end
 function Dialogue:HidePresentation(reason)
+    -- A shared narrative hide can occur without a registrar close event.
+    -- Never clear the only usable option view while native stock is parked.
+    if self.optionSession and self.optionSession.liveReadOnly == true
+        and self.optionSession.model
+        and self.optionSession.model.nativeService == "guild-registrar"
+        and Logres.NPCGuildRegistrar then
+        if not Logres.NPCGuildRegistrar.PrepareDialogueExit(
+            reason or "registrar-dialogue-hidden") then
+            return false, "registrar-stock-restoration-pending"
+        end
+    end
     -- Restore native progress mouse ownership before dismissing replacement.
     if not self:RestoreProgressStock(reason or "progress-hidden") then
         return false, "progress-restoration-pending"

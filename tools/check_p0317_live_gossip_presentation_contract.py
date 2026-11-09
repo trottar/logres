@@ -26,8 +26,13 @@ for token in ['function Session:StartReadOnly(model)', 'model.previewOnly ~= fal
     need(token in session, 'missing inert session: '+token)
 for token in ['function Visual:Present(options, page, canBack, callbacks, displayOnly)',
               'self.displayOnly = displayOnly == true', 'if not slot.optionEnabled and not self.displayOnly then',
-              'if button.optionEnabled or self.displayOnly then']:
+              ]:
     need(token in visual, 'missing shared renderer read-only variant: '+token)
+# P0415 adds only a registrar-specific disabled-paint exception. Legacy gossip
+# continues to receive the unmodified displayOnly path.
+need('if button.optionEnabled or self.displayOnly then' in visual
+     or 'if button.optionEnabled or (self.displayOnly and not self.serviceMode) then' in visual,
+     'missing shared renderer read-only paint policy')
 for token in ['function Dialogue:ShowReadOnlyGossip(model)',
               'return self.optionSession:StartReadOnly(model)',
               'reason == "npc-options-read-only"']:

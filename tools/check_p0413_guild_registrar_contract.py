@@ -14,6 +14,17 @@ panel = read("Logres/Dev/Panel.lua")
 toc = read("Logres/Logres.toc")
 boot = read("Logres/Core/Bootstrap.lua")
 ledger = read("docs/memory/investigations/ISSUE_LEDGER.md")
+# P0415 intentionally retires P0413/P0414 native-frame geometry. The
+# dedicated P0415 contract owns the new adapter/parking and option pipeline.
+if 'Logres.NPCGuildRegistrar = Registrar' in src:
+    need('function Merchant.GuildGetAudit()' in src, 'registrar audit seam missing')
+    need('function Merchant.GuildPreview()' in src, 'registrar preview seam missing')
+    need('local function guildPaint(' not in src, 'retired service skin still loaded')
+    need('P0413' in read('docs/memory/evidence/P0413_GUILD_REGISTRAR.md'), 'P0413 evidence lost')
+    need('P0414' in read('docs/memory/evidence/P0414_REGISTRAR_VISUAL_REPAIR.md'), 'P0414 evidence lost')
+    need('P0415' in read('tools/check_p0415_registrar_option_contract.py'), 'replacement contract absent')
+    print('P0413 old registrar skin superseded by P0415 option adapter: PASS (STATIC)')
+    raise SystemExit(0)
 for required in (
     "local function guildPaint(owner, npc, sample)",
     'guildPaint(root, "Aldwin Laughlin", true)',

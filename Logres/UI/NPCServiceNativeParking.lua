@@ -9,6 +9,9 @@ local Parking = {}
 Logres.NPCServiceNativeParking = Parking
 
 local permitted = {trainer={native="ClassTrainerFrame", interactionType=7}}
+-- P0415: one independently proven ordinary registrar root; no other service
+-- is authorized by this gate. Guild form transactions stay Blizzard-owned.
+permitted["guild-registrar"] = {native="GuildRegistrarFrame", interactionType=11}
 local parked, pendingExit = nil, false
 local attempts, parks, restores, deferrals, failures = 0, 0, 0, 0, 0
 local last = "stock-visible"
@@ -111,10 +114,14 @@ retry:SetScript("OnEvent", function(_, event)
     if event ~= "PLAYER_REGEN_ENABLED" or not parked or not parked.pending then
         return
     end
-    local shouldClose = pendingExit
+    local shouldClose, serviceKey = pendingExit, parked.key
     local restored = Parking.Restore("regen-stock-restored")
-    if restored and shouldClose and Logres.NPCTrainerLiveTrial then
-        Logres.NPCTrainerLiveTrial.Disable("deferred-stock-restored")
+    if restored and shouldClose then
+        if serviceKey == "trainer" and Logres.NPCTrainerLiveTrial then
+            Logres.NPCTrainerLiveTrial.Disable("deferred-stock-restored")
+        elseif serviceKey == "guild-registrar" and Logres.NPCGuildRegistrar then
+            Logres.NPCGuildRegistrar.Close("deferred-stock-restored")
+        end
     end
 end)
 
@@ -167,20 +174,21 @@ function Parking.Park(key)
     -- trainers Logres may render a read-only view, but the stock
     -- transaction window MUST remain on-screen until the specialized
     -- training adapter has been proven. Never park an unknown family.
-    local okProfession, family = pcall(function() return _G.IsTradeskillTrainer end)
-    if not okProfession or not ordinary(family)
-        or type(family) ~= "function" then
-        return defer("trainer-family-api-unavailable-stock-retained")
-    end
-    local okFamily, profession = pcall(family)
-    if not okFamily or not ordinary(profession)
-        or type(profession) ~= "boolean" then
-        return defer("profession-or-unknown-stock-retained")
-    end
-    -- Class trainers use the original unarmed route. Profession trainers
-    -- require a single armed call after Logres has attached Blizzard UI.
-    if profession == true and not professionPermit then
-        return defer("profession-or-unknown-stock-retained")
+    if key == "trainer" then
+        local okProfession, family = pcall(function() return _G.IsTradeskillTrainer end)
+        if not okProfession or not ordinary(family)
+            or type(family) ~= "function" then
+            return defer("trainer-family-api-unavailable-stock-retained")
+        end
+        local okFamily, profession = pcall(family)
+        if not okFamily or not ordinary(profession)
+            or type(profession) ~= "boolean" then
+            return defer("profession-or-unknown-stock-retained")
+        end
+        -- The historical class/profession gate remains trainer-only.
+        if profession == true and not professionPermit then
+            return defer("profession-or-unknown-stock-retained")
+        end
     end
     if placementConflict() then return defer("native-placement-conflict") end
     local okRoot, root = pcall(function() return _G[spec.native] end)
@@ -200,10 +208,19 @@ function Parking.Park(key)
         -- Restore the actual saved anchors and release Logres afterwards.
         local attached = pcall(hook, root, "OnHide", function()
             if parked and parked.key == key then
-                local restored = Parking.Restore("native-trainer-closed")
-                if restored and Logres.NPCTrainerLiveTrial then
-                    Logres.NPCTrainerLiveTrial.Disable("native-context-ended")
-                elseif not restored then
+                local restored
+                if key == "trainer" then
+                    restored = Parking.Restore("native-trainer-closed")
+                else
+                    restored = Parking.Restore("native-registrar-closed")
+                end
+                if restored then
+                    if key == "trainer" and Logres.NPCTrainerLiveTrial then
+                        Logres.NPCTrainerLiveTrial.Disable("native-context-ended")
+                    elseif key == "guild-registrar" and Logres.NPCGuildRegistrar then
+                        Logres.NPCGuildRegistrar.OnNativeHidden()
+                    end
+                else
                     Parking.DeferExit()
                 end
             end

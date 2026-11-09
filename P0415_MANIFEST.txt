@@ -1,0 +1,34 @@
+P0415 Guild registrar via existing Quest/NPC option session, no native skin
+Verified baseline: ae151e66aa7f09b34abeb4e4a6f8db4df17ac486
+Candidate runtime version: 0.0.292-dev
+PREWRITE: 283/283 STATIC PASS
+POSTWRITE: 283/283 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Quest/Dialogue.lua
+Logres/Quest/MerchantCatalogue.lua
+Logres/Quest/OptionModel.lua
+Logres/Quest/OptionSession.lua
+Logres/UI/NPCServiceNativeParking.lua
+Logres/UI/OptionList.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0415_REGISTRAR_OPTION_ADAPTER.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0415_REGISTRAR_OPTION_ADAPTER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0317_live_gossip_presentation_contract.py
+tools/check_p0413_guild_registrar_contract.py
+tools/check_p0414_registrar_visual_contract.py
+tools/check_p0415_registrar_option_contract.py
+P0415_MANIFEST.txt

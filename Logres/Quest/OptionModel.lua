@@ -105,7 +105,23 @@ local function locked()
     }
 end
 
+-- Guild services are an ordinary NPC option page, not merchant wallpaper.
+-- This preview is authored and never invokes a native charter action.
+local function registrarFixture()
+    return {title="Aldwin Laughlin", start="services", previewOnly=true,
+        nodes={
+            services={title="Aldwin Laughlin",
+                body="Available guild services.", options={
+                    entry("Purchase a Guild Charter", "purchase"),
+                    entry("Register a Guild Charter", "register"),
+                }},
+            purchase={title="Guild Charter", body="The native purchase form handles name, price and confirmation.", options={}},
+            register={title="Guild Registration", body="Registration is handled by the native charter control.", options={}},
+        }}
+end
+
 function Model.Preview(mode)
+    if mode == "guild-registrar" then return registrarFixture() end
     if mode == "branching" then return branching() end
     if mode == "services" then return services() end
     if mode == "overflow" then return overflow() end

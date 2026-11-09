@@ -112,7 +112,7 @@ function Visual.New(root)
 end
 
 function Visual:Paint(button)
-    if button.optionEnabled or self.displayOnly then
+    if button.optionEnabled or (self.displayOnly and not self.serviceMode) then
         button.wash:SetVertexColor(0.12, 0.10, 0.075, 0.80)
         button.line:SetVertexColor(0.77, 0.60, 0.32, 0.75)
         button.label:SetTextColor(0.94, 0.82, 0.60, 1)
@@ -125,6 +125,7 @@ end
 
 function Visual:Clear()
     self.active = false
+    self.serviceMode = false
     self.onChoose, self.onBack, self.onPage = nil, nil, nil
     self.canBack, self.totalPages = false, 1
     self.currentOptions = {}
@@ -190,6 +191,23 @@ function Visual:SetLiveSelectable(enabled)
         local option = self.currentOptions[slot.optionIndex]
         slot.optionEnabled = self.liveSelectable and slot.optionVisible == true
             and type(option) == "table" and option.gossipStatus == 0
+        slot:EnableMouse(slot.optionEnabled)
+        if slot.optionVisible then self:Paint(slot) end
+    end
+end
+
+-- Service choices are source-gated and only enabled after native stock
+-- parking succeeds. They share the standard NPC option rows and paging.
+function Visual:SetServiceSelectable(allowed)
+    self.serviceMode = true
+    local enabled = allowed == true and self.displayOnly == true
+    for i = 1, PAGE_SIZE do
+        local slot = self.slots[i]
+        local option = self.currentOptions[slot.optionIndex]
+        slot.optionEnabled = enabled and slot.optionVisible == true
+            and type(option) == "table"
+            and option.serviceKind == "guild-registrar"
+            and option.serviceStatus == 0
         slot:EnableMouse(slot.optionEnabled)
         if slot.optionVisible then self:Paint(slot) end
     end

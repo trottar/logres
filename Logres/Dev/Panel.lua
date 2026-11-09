@@ -219,7 +219,7 @@ function Logres:CaptureBugIncident()
     end), {"result", "visit", "live", "starts", "restores", "pending", "goodbye", "tabsStyled", "pagerStyled", "nativeOwner"})
     incident.snapshot.registrar = pickTraceStatus(ownedTraceStatus(function()
         return self.NPCMerchantCatalogue.GuildGetAudit()
-    end), {"result", "visit", "live", "shows", "restores", "deferrals", "pending", "closeStyled", "nativeOwner"})
+    end), {"result", "live", "visits", "closes", "deferrals", "actions", "rejected", "nativeOwner", "nativeControls"})
     incident.snapshot.flight = pickTraceStatus(ownedTraceStatus(function()
         return self.NPCFlightWindow.GetAudit()
     end), {"result", "live", "opens", "restores", "pending", "scaleMatched", "lastNodeState", "lastFareCopper",

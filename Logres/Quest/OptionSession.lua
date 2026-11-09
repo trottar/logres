@@ -59,15 +59,19 @@ function Session:Render()
             page = function(delta) return self:MovePage(delta) end,
         }, self.liveReadOnly)
         if self.liveReadOnly then
-            self.visual:SetLiveSelectable(Logres.NPCGossipChoice.CanSelect())
-            if self.questGreeting then
-                self.visual:SetQuestSelectable(
-                    Logres.QuestGreetingControl.CanSelect("available"),
-                    Logres.QuestGreetingControl.CanSelect("active"))
+            if self.model.nativeService == "guild-registrar" then
+                self.visual:SetServiceSelectable(Logres.NPCGuildRegistrar.CanSelect())
             else
-                self.visual:SetQuestSelectable(
-                    Logres.NPCGossipQuestChoice.CanSelect("available"),
-                    Logres.NPCGossipQuestChoice.CanSelect("active"))
+                self.visual:SetLiveSelectable(Logres.NPCGossipChoice.CanSelect())
+                if self.questGreeting then
+                    self.visual:SetQuestSelectable(
+                        Logres.QuestGreetingControl.CanSelect("available"),
+                        Logres.QuestGreetingControl.CanSelect("active"))
+                else
+                    self.visual:SetQuestSelectable(
+                        Logres.NPCGossipQuestChoice.CanSelect("available"),
+                        Logres.NPCGossipQuestChoice.CanSelect("active"))
+                end
             end
         end
     end
@@ -131,6 +135,8 @@ function Session:Choose(index)
         local ok, reason
         if self.questGreeting then
             ok, reason = Logres.QuestGreetingControl.Activate(self.model, index)
+        elseif self.model.nativeService == "guild-registrar" then
+            ok, reason = Logres.NPCGuildRegistrar.Activate(self.model, index)
         elseif type(option) == "table" and option.questKind then
             ok, reason = Logres.NPCGossipQuestChoice.Activate(self.model, index)
         else
@@ -210,6 +216,8 @@ function Session:Goodbye()
         local ok, reason
         if self.questGreeting then
             ok, reason = Logres.QuestGreetingControl.Goodbye()
+        elseif self.model.nativeService == "guild-registrar" then
+            ok, reason = Logres.NPCGuildRegistrar.Goodbye()
         else
             ok, reason = Logres.NPCGossipPresentation.Goodbye()
         end

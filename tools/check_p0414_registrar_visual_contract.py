@@ -8,6 +8,16 @@ s = read("Logres/Quest/MerchantCatalogue.lua")
 base = read("tools/check_p0413_guild_registrar_contract.py")
 ledger = read("docs/memory/investigations/ISSUE_LEDGER.md")
 proof = read("docs/memory/evidence/P0414_REGISTRAR_VISUAL_REPAIR.md")
+# The malformed collage was not an approved UI. After P0415, enforce its
+# removal, retaining its failure evidence instead of testing obsolete geometry.
+if 'Logres.NPCGuildRegistrar = Registrar' in s:
+    assert 'local function guildPaint(' not in s
+    assert 'guildTextColor(' not in s
+    assert 'native-frame geometry' in read('docs/memory/evidence/P0415_REGISTRAR_OPTION_ADAPTER.md')
+    assert 'P0414' in proof and '8259' in proof
+    assert 'P0415' in read('docs/memory/CURRENT.md')
+    print('P0414 failed visual design retired by P0415: PASS (STATIC)')
+    raise SystemExit(0)
 for term in (
     "local function guildTextColor(plan, label, rgba)",
     'read(label, "GetObjectType") ~= "FontString"',
