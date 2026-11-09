@@ -1,3 +1,19 @@
+## P0421 — Approved V6 whole-screen position refinements (2026-11-09)
+
+Source: user-uploaded `LOGRES_SCREEN_MAP_REFINEMENTS_P0421.json` (15 center
+adjustments; P0420 verified main `bd55e34`). After the P0420 expected-vs-
+measured overlay aligned, the user requested actual placement refinements.
+P0421 records V6 as the new authored runtime-position authority and moves only
+the 15 specified addon-owned anchors: three extra action-bar centers, pet,
+compass, Active Quest, target triplet, allies, player debuff/resource, passive
+status, context XP and Quest Dialogue. The four semantic non-center anchors use
+center deltas so visual centers land at the intended positions. No widget size,
+source role/grid, binding, protected click behavior, Blizzard UI ownership or
+pet driver changes. Existing out-of-combat fit/recovery and read-only H.2
+comparison remain. The P0420 alignment observation remains scoped PASS; P0421
+runtime UI fit is UNVERIFIED. See
+`docs/memory/evidence/P0421_V6_SCREEN_REFINEMENTS.md`.
+
 ## P0420 — H.2 semantic anchor and intrinsic-frame projection (2026-11-09)
 
 Pinned main P0419 `c1e23fc264e413aaf00522e65c265454be1d1d01`.

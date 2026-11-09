@@ -26,12 +26,12 @@ need(plan.get('coordinateSpace') == 'viewport percentages, component centers', '
 ids = [item.get('id') for item in plan.get('components', [])]
 need(ids == ['compass','activeQuest','playerReaction','playerHarmful','targetFallback','targetHarmful','targetHelpful','allies','petActions','bar2','bar1','bar4','bar3','bar5','passiveStatus','contextObjective','contextXP','questDialogue','reportBug'], 'approved component order drift')
 for token in (
-    'questDialogue = { id = "questDialogue", x = 50.0, y = 28.0 }',
+    'questDialogue = { id = "questDialogue", x = 50.0, y = 8.3 }',
     'contextObjective = { id = "contextObjective", x = 50.0, y = 50.0 }',
-    'contextXP = { id = "contextXP", x = 50.0, y = 63.0 }',
+    'contextXP = { id = "contextXP", x = 50.0, y = 55.0 }',
     'reportBug = { id = "reportBug", x = 95.0, y = 35.0 }',
-    'classPet = { id = "petActions", x = 10.0, y = 55.0 }',
-    'passiveStatus = { id = "player-buff", x = 77.0, y = 75.0 }',
+    'classPet = { id = "petActions", x = 9.0, y = 50.0 }',
+    'passiveStatus = { id = "player-buff", x = 83.6, y = 78.0 }',
     '{ "reportBug", "LogresBugReportButton", 91.0, 33.25, 8.0, 3.5 }',
     '{ "contextObjective", "LogresQuestObjectiveProgress", 40.0, 47.5, 20.0, 5.0 }',
     '{ "contextXP", "LogresQuestXPPulse", 40.0, 61.0, 20.0, 4.0 }',

@@ -36,20 +36,35 @@ need([
     for x in hist.get("bars", [])
 ] == expected_hist, "historical P0416 approved source/role/grid/center/scale drift")
 
-# Runtime is now driven by the approved whole-screen map.
-approved = json.loads(read("docs/design/layout/SCREEN_MAP_V5.json"))
-components = {row["id"]: row for row in approved.get("components", [])}
-expected_runtime = [
+# Preserve the historical P0418 V5 geometry as evidence. P0421 adds an
+# independent V6 authoring map; only its changed centers are live now.
+archived_v5 = json.loads(read("docs/design/layout/SCREEN_MAP_V5.json"))
+archived = {row["id"]: row for row in archived_v5.get("components", [])}
+for source, role, grid, x, y, scale in (
     ("bar1", "primary", "3x4", 13, 75, 1),
     ("bar2", "secondary", "2x6", 5, 75, 1),
     ("bar3", "utility", "6x2", 88, 85, 1),
     ("bar4", "secondary", "6x2", 10, 95, 1),
     ("bar5", "utility", "6x2", 88, 95, 1),
+):
+    need((archived[source]["x"], archived[source]["y"]) == (x, y),
+         "historical P0418 V5 action center drift: " + source)
+need(archived_v5.get("baseline") == "d11b76ab786f3b08151c426e52502a3415fb4877",
+     "historical P0418 V5 baseline drift")
+
+approved = json.loads(read("docs/design/layout/SCREEN_MAP_V6.json"))
+components = {row["id"]: row for row in approved.get("components", [])}
+expected_runtime = [
+    ("bar1", "primary", "3x4", 13, 75, 1),
+    ("bar2", "secondary", "2x6", 4, 75.16, 1),
+    ("bar3", "utility", "6x2", 89, 85, 1),
+    ("bar4", "secondary", "6x2", 10, 95, 1),
+    ("bar5", "utility", "6x2", 89, 95, 1),
 ]
-need(approved.get("coordinateSpace") == "viewport percentages, component centers",
-     "approved screen-map coordinate convention drift")
-need(approved.get("baseline") == "d11b76ab786f3b08151c426e52502a3415fb4877",
-     "approved screen-map baseline drift")
+need(approved.get("coordinateSpace") == "viewport percentages, intrinsic component centers; origin top-left",
+     "V6 center coordinate convention drift")
+need(approved.get("baseline") == "bd55e34e823abadd093930aa184fcd14e0f64ab0",
+     "V6 source baseline drift")
 for source, role, grid, x, y, scale in expected_runtime:
     row = components.get(source)
     need(row is not None, "approved screen map missing action bar: " + source)

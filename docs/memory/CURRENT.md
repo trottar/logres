@@ -11,12 +11,22 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0420** H.2 intrinsic-anchor comparison after P0419 visual report: blue/gold still differ for dynamic HUD surfaces because design envelopes are not intrinsic frame footprints. Project expected positions from approved semantic anchors and safe addon-owned frame sizes, record position delta independently of design-size delta; gameplay geometry unchanged. Pet controls stay corrected (scoped PASS). Preserve P0418 gameplay positions; P0415 modular; P0414; P0413; P0411 refused; P0410; P0409; P0408; P0407 refused; P0406 main; P0405; P0404 L-004; P0403 L-001; P0402–P0397 flight; P0396; P0395; P0394; P0393; P0392; P0391 session 46; P0390; P0389; P0388 L-027; P0387 late-accept; P0386 L-001; P0385 greeting/L-002; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
+**P0421** P0420 visual overlay alignment accepted; apply the 15 user-exported
+V6 full-screen position refinements. Keep V5 as source history, P0416 secure
+bar roles/actions, P0417 pet suppression, and P0420 read-only H.2 overlay.
+WoW Forever runtime verification of the new positions is PENDING. L-009 live
+editing remains DEFERRED; L-008 pet-edge evidence remains OPEN. See P0381
+historical quest failures in the linked evidence and issue ledger.
 
 ## Verified State
 
-- P0417 pushed main `bc91448`; user now reports the Blizzard pet frame/bar regression seems fixed. Uploaded diagnostics still show the prior session evidence that motivated P0417, and the current report does not claim broader pet-edge validation. Treat the narrow regression as user-observed improved, with L-008 still OPEN for reload/combat/Edit Mode/fallback coverage.
-- Uploaded `LOGRES_SCREEN_MAP_APPROVED.json` is the new whole-screen authority. It approves all five action bars plus Active Quest, Quest Dialogue, Context Objective, Context XP, player/target aura lanes, allies, pet actions, passive status and the Report Bug button. P0418 translates those center-based viewport coordinates into addon-owned runtime anchors and expands the H.2 map/audit surface to the full approved set.
+- P0420 pushed main `bd55e34`; user screenshot shows expected and measured
+  H.2 outlines aligned, but requests actual visual refinement. P0421 uses
+  `LOGRES_SCREEN_MAP_REFINEMENTS_P0421.json` to move 15 owned regions in V6.
+  P0416 action slots/roles, P0418 initial map, P0419 footprints, P0420
+  semantic-anchor overlay remain intact; no Blizzard control is moved.
+- P0417 main `bc91448`: Blizzard pet bar/frame user-observed suppressed and Logres actions working; L-008 still OPEN for combat/Edit Mode/fallback coverage.
+- P0418 V5 initial 19-region map (`LOGRES_SCREEN_MAP_APPROVED.json`) is archived; V6 supersedes only runtime centers, preserving the H.2 audit and native fallbacks.
 
 - P0383 `cc783a0` 253 STATIC; client 0.0.267-dev quest18 TURNED_IN; hotspot offset and stock greeting OPEN. L-005 PARTIAL, L-001/L-002 OPEN. P0384 quest21 aligned hover in 0.0.268-dev incident 3196; P0385 observed; P0386 UNVERIFIED.
 
@@ -40,9 +50,14 @@ Alpha blocked. D-046/D-047/D-048.
 - D-048 independent live domain selectors and saved migration do not exist: schema 3 still stores `immersionEnabled` and `activeQuestEnabled`. D-046 preview-first and D-047 frozen Camera/DynamicCam remain required. Native UI and protected/secret fallbacks stay usable.
 - L-020–L-032 are tracked user reports; runtime gates apply. L-028 duplicated/missing target debuffs remains OPEN; L-022 focused quest artifact requires screenshot, L-027 Blizzard transient popup requires `/fstack` owner evidence. L-019 license unresolved, release blocked.
 
+- Historical markers retained for continuity; status/evidence in PATCH_INDEX and ISSUE_LEDGER: L-004, L-021, L-025, L-029, L-033, L-034, L-035, L-037, L-038, L-039, L-040, P0241, P0373, P0374, P0376, P0380, P0382, P0387, P0388, P0389, P0390, P0391, P0392, P0393, P0394, P0395, P0396, P0397, P0402, P0405, P0406, P0407, P0408, P0410, P0411, P0413, P0414, P0415.
+
 ## Next Action
 
-P0420 H.2 semantic anchor overlay: validate blue/gold expected-vs-measured frame position; use per-frame position deltas to identify genuine offsets, not design envelope size differences. L-008 remains OPEN until that broader pet coverage is proven; L-009 live editing stays DEFERRED.
+P0421 authored V6 anchor change: verify 289 static checks and guarded exact
+baseline apply; user tests in WoW Forever with H.2 map, secure bars/pet actions,
+quest/dialogue positioning, menu layering and Immersion OFF/ON. L-008 edge
+coverage remains OPEN; L-009 live editing stays DEFERRED.
 
 ## Success Criteria
 
@@ -52,6 +67,9 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0421_V6_SCREEN_REFINEMENTS.md
+- docs/design/layout/SCREEN_MAP_V6.json
+- docs/design/layout/SCREEN_MAP_V6.md
 - docs/memory/evidence/P0420_H2_INTRINSIC_ANCHOR_PROJECTION.md
 - docs/memory/evidence/P0419_H2_ACTION_FOOTPRINT_CALIBRATION.md
 - docs/memory/evidence/P0418_APPROVED_SCREEN_MAP_TRANSLATION.md

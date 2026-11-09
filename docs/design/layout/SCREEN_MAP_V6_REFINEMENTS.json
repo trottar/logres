@@ -1,0 +1,314 @@
+{
+  "schema": "logres-screen-map-adjustment/v2",
+  "baseline": "bd55e34e823abadd093930aa184fcd14e0f64ab0",
+  "reference": "docs/design/layout/SCREEN_MAP_V5.json",
+  "referenceViewport": {
+    "width": 1917,
+    "height": 1198
+  },
+  "coordinates": "UIParent normalized center percentages; origin top-left",
+  "changeScope": "add-on-owned layout anchors only; no grid, binding, stock fallback or size changes",
+  "sourceImage": "P0420 user-provided screenshot; current centers and visual footprints estimated; P0420_FIXED offline editor",
+  "changes": [
+    {
+      "id": "bar2",
+      "anchor": "secondaryActions",
+      "from": {
+        "x": 5,
+        "y": 75
+      },
+      "approvedV5": {
+        "x": 5,
+        "y": 75
+      },
+      "to": {
+        "x": 4,
+        "y": 75.16
+      },
+      "delta": {
+        "x": -1,
+        "y": 0.16
+      }
+    },
+    {
+      "id": "bar3",
+      "anchor": "utilityActions",
+      "from": {
+        "x": 88,
+        "y": 85
+      },
+      "approvedV5": {
+        "x": 88,
+        "y": 85
+      },
+      "to": {
+        "x": 89,
+        "y": 85
+      },
+      "delta": {
+        "x": 1,
+        "y": 0
+      }
+    },
+    {
+      "id": "bar5",
+      "anchor": "bar5Actions",
+      "from": {
+        "x": 88,
+        "y": 95
+      },
+      "approvedV5": {
+        "x": 88,
+        "y": 95
+      },
+      "to": {
+        "x": 89,
+        "y": 95
+      },
+      "delta": {
+        "x": 1,
+        "y": 0
+      }
+    },
+    {
+      "id": "petActions",
+      "anchor": "classPet",
+      "from": {
+        "x": 10,
+        "y": 55
+      },
+      "approvedV5": {
+        "x": 10,
+        "y": 55
+      },
+      "to": {
+        "x": 9,
+        "y": 50
+      },
+      "delta": {
+        "x": -1,
+        "y": -5
+      }
+    },
+    {
+      "id": "compass",
+      "anchor": "navigation",
+      "from": {
+        "x": 50.1,
+        "y": 9.3
+      },
+      "approvedV5": {
+        "x": 50.1,
+        "y": 10
+      },
+      "to": {
+        "x": 50,
+        "y": 5
+      },
+      "delta": {
+        "x": -0.1,
+        "y": -4.3
+      }
+    },
+    {
+      "id": "activeQuest",
+      "anchor": "activeQuest",
+      "from": {
+        "x": 87.5,
+        "y": 12.5
+      },
+      "approvedV5": {
+        "x": 88,
+        "y": 15
+      },
+      "to": {
+        "x": 88,
+        "y": 10
+      },
+      "delta": {
+        "x": 0.5,
+        "y": -2.5
+      }
+    },
+    {
+      "id": "targetHarmful",
+      "anchor": "targetHarmful",
+      "from": {
+        "x": 68.2,
+        "y": 44.5
+      },
+      "approvedV5": {
+        "x": 68.2,
+        "y": 44.5
+      },
+      "to": {
+        "x": 70,
+        "y": 50
+      },
+      "delta": {
+        "x": 1.8,
+        "y": 5.5
+      }
+    },
+    {
+      "id": "targetFallback",
+      "anchor": "targetFallback",
+      "from": {
+        "x": 78.5,
+        "y": 44.5
+      },
+      "approvedV5": {
+        "x": 78.5,
+        "y": 44.5
+      },
+      "to": {
+        "x": 80,
+        "y": 50
+      },
+      "delta": {
+        "x": 1.5,
+        "y": 5.5
+      }
+    },
+    {
+      "id": "targetHelpful",
+      "anchor": "targetHelpful",
+      "from": {
+        "x": 88.8,
+        "y": 44.5
+      },
+      "approvedV5": {
+        "x": 88.8,
+        "y": 44.5
+      },
+      "to": {
+        "x": 90,
+        "y": 50
+      },
+      "delta": {
+        "x": 1.2,
+        "y": 5.5
+      }
+    },
+    {
+      "id": "allies",
+      "anchor": "allies",
+      "from": {
+        "x": 25,
+        "y": 45.65
+      },
+      "approvedV5": {
+        "x": 25,
+        "y": 45.65
+      },
+      "to": {
+        "x": 23,
+        "y": 50
+      },
+      "delta": {
+        "x": -2,
+        "y": 4.35
+      }
+    },
+    {
+      "id": "playerHarmful",
+      "anchor": "playerHarmful",
+      "from": {
+        "x": 50.75,
+        "y": 83.9
+      },
+      "approvedV5": {
+        "x": 50.75,
+        "y": 83.9
+      },
+      "to": {
+        "x": 50,
+        "y": 85
+      },
+      "delta": {
+        "x": -0.75,
+        "y": 1.1
+      }
+    },
+    {
+      "id": "playerReaction",
+      "anchor": "playerReaction",
+      "from": {
+        "x": 50.75,
+        "y": 91.3
+      },
+      "approvedV5": {
+        "x": 50.75,
+        "y": 91.3
+      },
+      "to": {
+        "x": 50,
+        "y": 90
+      },
+      "delta": {
+        "x": -0.75,
+        "y": -1.3
+      }
+    },
+    {
+      "id": "passiveStatus",
+      "anchor": "passiveStatus",
+      "from": {
+        "x": 82.4,
+        "y": 75
+      },
+      "approvedV5": {
+        "x": 88,
+        "y": 75
+      },
+      "to": {
+        "x": 89,
+        "y": 78
+      },
+      "delta": {
+        "x": 6.6,
+        "y": 3
+      }
+    },
+    {
+      "id": "contextXP",
+      "anchor": "contextXP",
+      "from": {
+        "x": 50,
+        "y": 63
+      },
+      "approvedV5": {
+        "x": 50,
+        "y": 63
+      },
+      "to": {
+        "x": 50,
+        "y": 55
+      },
+      "delta": {
+        "x": 0,
+        "y": -8
+      }
+    },
+    {
+      "id": "questDialogue",
+      "anchor": "questDialogue",
+      "from": {
+        "x": 50,
+        "y": 44.7
+      },
+      "approvedV5": {
+        "x": 50,
+        "y": 43
+      },
+      "to": {
+        "x": 50,
+        "y": 25
+      },
+      "delta": {
+        "x": 0,
+        "y": -19.7
+      }
+    }
+  ]
+}

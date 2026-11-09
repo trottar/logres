@@ -1,0 +1,30 @@
+P0421 Apply approved V6 whole-screen center refinements
+Verified baseline: bd55e34e823abadd093930aa184fcd14e0f64ab0
+Candidate runtime version: 0.0.298-dev
+PREWRITE: 289/289 STATIC PASS
+POSTWRITE: 289/289 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Integration/Layout.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/design/layout/SCREEN_MAP_V6.json
+docs/design/layout/SCREEN_MAP_V6.md
+docs/design/layout/SCREEN_MAP_V6_REFINEMENTS.json
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0421_V6_SCREEN_REFINEMENTS.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0421_V6_SCREEN_REFINEMENTS.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0416_five_bar_layout_contract.py
+tools/check_p0418_approved_screen_map_contract.py
+tools/check_p0421_v6_runtime_anchor_contract.py
+P0421_MANIFEST.txt

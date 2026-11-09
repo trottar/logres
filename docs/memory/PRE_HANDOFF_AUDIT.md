@@ -1,3 +1,20 @@
+## P0421 — approved whole-screen V6 refinement (2026-11-09)
+
+Author-side candidate R0 checker attempt **280/289 REFUSED** because a
+CURRENT.md compression lost nine historical marker contracts; no checkout
+patch was issued. The restored continuity markers yielded 289/289 static PASS.
+Do not treat the initial negative static attempt as a runtime failure or as
+successful patch application.
+
+User-uploaded 15-row P0421 map was checked against remote P0420 `bd55e34`
+and source P0420 `Layout.lua`. The request's `from` coordinates are visual
+center estimates: translate non-center semantic bindings via delta, not by
+setting runtime anchor equal to `to`. Keep V5 as history and V6 as current
+runtime authored map. Preserve all existing native and secure fallbacks, no
+resize, no combat-time mutation or polling. Preflight must run every repo
+checker including P0381/P0408 continuity and version checks; do not mark WoW
+PASS from static reasoning. L-008 edge cases OPEN, L-009 live editing DEFERRED.
+
 ## P0420 — H.2 semantic anchor and intrinsic-frame projection (2026-11-09)
 
 Pinned main P0419 `c1e23fc264e413aaf00522e65c265454be1d1d01`.
