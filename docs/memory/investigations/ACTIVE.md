@@ -1,3 +1,7 @@
+## P0419 — H.2 action footprint calibration (2026-11-09)
+
+P0418 verified GitHub main `e4fcc318c859cad7e6e31ec6a282eef71ed667f5`. User's 19-region overlay screenshot and Forever `0.0.295-dev` session show broadly approved placement, but blue/gold footprint-size mismatch for the five action clusters and Logres pet action grid. Pet native frame/bar remain absent and Logres pet buttons work: narrow regression PASS scoped, broader L-008 fallback/combat/Edit Mode remains OPEN. P0419 updates only developer H.2 action-overlay sizes, using addon-owned role/grid/style constants and UIParent viewport. It does **not** reposition runtime controls, touch secure actions, alter Blizzard fallback, or overwrite the approved V5 authoring map. WoW P0419 visual validation pending. See `docs/memory/evidence/P0419_H2_ACTION_FOOTPRINT_CALIBRATION.md`.
+
 ## P0418 — Approved whole-screen map translation (2026-11-09)
 
 P0417 verified remote main `bc91448bcb3632e493c5c2d9b28dd57baff744c6`.

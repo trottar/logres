@@ -11,7 +11,7 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0418** approved whole-screen map translation candidate; user now reports P0417 pet-frame/bar regression seems fixed, and uploaded an approved full-screen layout. P0418 applies that map to addon-owned anchors and H.2 diagnostics. P0417 narrow native PET STOCK readiness gate correction remains runtime-unverified beyond this user report; P0415 modular; P0414; P0413; P0411 refused; P0410; P0409; P0408; P0407 refused; P0406 main; P0405; P0404 L-004; P0403 L-001; P0402–P0397 flight; P0396; P0395; P0394; P0393; P0392; P0391 session 46; P0390; P0389; P0388 L-027; P0387 late-accept; P0386 L-001; P0385 greeting/L-002; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
+**P0419** H.2 action footprint calibration; approved P0418 placement appears correct, but blue design envelopes differ from intrinsic action-grid sizes; pet regression absent and Logres pet buttons functional (scoped PASS). Preserve P0418 gameplay positions; P0415 modular; P0414; P0413; P0411 refused; P0410; P0409; P0408; P0407 refused; P0406 main; P0405; P0404 L-004; P0403 L-001; P0402–P0397 flight; P0396; P0395; P0394; P0393; P0392; P0391 session 46; P0390; P0389; P0388 L-027; P0387 late-accept; P0386 L-001; P0385 greeting/L-002; P0384 L-005 input map, P0383 turn-in PASS scoped, P0382 Continue scoped, L-040 EST; P0381 b672104 R0/P0241 R2/R3 REFUSED; P0380 R4; P0379 285be52 FAIL R0/R1 REFUSED. P0381 L-001/L-002/L-005/L-025/L-029/L-033/L-034/L-038/L-039; P0373/P0374/P0376/P0378; L-020 PARTIAL, L-021 PASS, L-035/L-037 OPEN.
 
 ## Verified State
 
@@ -42,7 +42,7 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Next Action
 
-P0418 approved whole-screen layout translation: run static suite, then validate the approved H.2 map in Forever. Confirm quest/context/dialogue/Report Bug positioning, five-bar fit, secure clicks, panel N PET STOCK, and Immersion OFF/ON with normal combat/Edit Mode where available. L-008 remains OPEN until that broader pet coverage is proven; L-009 live editing stays DEFERRED.
+P0419 H.2 diagnostic footprint: validate blue/gold action alignment, preserving secure layout, pet fallback and approved positions. L-008 remains OPEN until that broader pet coverage is proven; L-009 live editing stays DEFERRED.
 
 ## Success Criteria
 
@@ -52,6 +52,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0419_H2_ACTION_FOOTPRINT_CALIBRATION.md
 - docs/memory/evidence/P0418_APPROVED_SCREEN_MAP_TRANSLATION.md
 - docs/design/layout/SCREEN_MAP_V5.md
 - docs/design/layout/SCREEN_MAP_V5.json

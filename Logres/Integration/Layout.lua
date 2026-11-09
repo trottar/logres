@@ -281,13 +281,18 @@ function Layout.GetH2ScreenMapAudit()
         return report
     end
     local rootWidth, rootHeight = root.width, root.height
+    -- The approved authoring envelope is not the actual button footprint.
+    -- Compare the authored center against the known addon-owned secure grid
+    -- extent for action clusters, while keeping other design envelopes intact.
+    local plan = Layout.GetH2ScreenMapPlan()
     report.reason = "read-only-addon-geometry"
     for index = 1, #H2_SCREEN_MAP_V4 do
         local s = H2_SCREEN_MAP_V4[index]
+        local target = plan[index]
         local row = {
             id = s[1], frameName = s[2],
-            targetX = s[3], targetY = s[4],
-            targetW = s[5], targetH = s[6],
+            targetX = target.x, targetY = target.y,
+            targetW = target.w, targetH = target.h,
             state = "DEFERRED",
         }
         local frame = _G[s[2]]
@@ -584,10 +589,12 @@ function Layout.SetH2MapVisible(visible)
         return false, h2MapLastReason
     end
     local root = getH2MapOverlay()
-    for index = 1, #H2_SCREEN_MAP_V4 do
-        local plan = H2_SCREEN_MAP_V4[index]
+    local plan = Layout.GetH2ScreenMapPlan()
+    for index = 1, #plan do
+        local target = plan[index]
         placeMapOutline(root.planned[index], viewport.width, viewport.height,
-            plan[3], plan[4], plan[5], plan[6], plan[1] .. " [approved]")
+            target.x, target.y, target.w, target.h,
+            target.id .. " [approved]")
         local row = report.rows[index]
         if row and row.state == "MEASURED" then
             placeMapOutline(root.measured[index], viewport.width,
@@ -610,16 +617,66 @@ function Layout.GetH2MapOverlayStatus()
     }
 end
 
--- P0194 R3: copy only the approved non-secret design map to the panel.
--- Do not expose a live addon frame, native aura payload, or protected state.
+-- P0419: preserve the approved center and show the real authored grid
+-- footprint for action clusters. The original H.2 design-envelope widths
+-- were never the secure button frame dimensions; their blue/orange mismatch
+-- was a diagnostic projection error, not evidence of displaced bindings.
+-- This reads only previously classified UIParent geometry plus addon-owned
+-- role/style constants. No native frame or protected state is inspected.
+local H2_ACTION_PLAN_KEYS = {
+    bar1 = "primary", bar2 = "secondary", bar3 = "utility",
+    bar4 = "bar4", bar5 = "bar5",
+}
+
+local function actionPlanFootprint(id, viewport)
+    local key = H2_ACTION_PLAN_KEYS[id]
+    local columns, rows, scale
+    if key then
+        local spec = ACTION_BAR_LAYOUT[key]
+        columns, rows, scale = spec.columns, spec.rows, spec.scale
+    elseif id == "petActions" then
+        columns, rows, scale = 5, 2, 1 -- PetActionExecutionProbe source grid
+    else
+        return nil
+    end
+    local theme = Logres.Theme and Logres.Theme.action or {}
+    local size, gap = theme.buttonSize or 42, theme.buttonGap or 5
+    if type(size) ~= "number" or type(gap) ~= "number"
+        or size <= 0 or gap < 0 then
+        return nil
+    end
+    return (columns * size + (columns - 1) * gap) * scale
+            * 100 / viewport.width,
+        (rows * size + (rows - 1) * gap) * scale
+            * 100 / viewport.height
+end
+
+-- Copy authored non-secret planning geometry. For the six action regions,
+-- replace only the outdated design-envelope width/height with the source-
+-- exact button grid footprint. Centers remain the user's approved positions.
 function Layout.GetH2ScreenMapPlan()
     local result = {}
+    local viewport = readAddonRect(UIParent)
     for index = 1, #H2_SCREEN_MAP_V4 do
         local entry = H2_SCREEN_MAP_V4[index]
-        result[index] = {
-            id = entry[1], x = entry[3], y = entry[4],
-            w = entry[5], h = entry[6],
-        }
+        local x, y, w, h = entry[3], entry[4], entry[5], entry[6]
+        if viewport then
+            local gridW, gridH = actionPlanFootprint(entry[1], viewport)
+            if gridW and gridH then
+                local approvedKey = H2_ACTION_PLAN_KEYS[entry[1]]
+                local centerX, centerY
+                if approvedKey then
+                    local spec = ACTION_BAR_LAYOUT[approvedKey]
+                    centerX, centerY = spec.xPercent, spec.yPercent
+                else
+                    centerX, centerY = H2_APPROVED_ANCHORS.classPet.x,
+                        H2_APPROVED_ANCHORS.classPet.y
+                end
+                x, y = centerX - gridW / 2, centerY - gridH / 2
+                w, h = gridW, gridH
+            end
+        end
+        result[index] = { id = entry[1], x = x, y = y, w = w, h = h }
     end
     return result
 end

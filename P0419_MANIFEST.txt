@@ -1,0 +1,25 @@
+P0419 Calibrate H2 action overlay footprints against the existing approved five-bar centers
+Verified baseline: e4fcc318c859cad7e6e31ec6a282eef71ed667f5
+Candidate runtime version: 0.0.296-dev
+PREWRITE: 287/287 STATIC PASS
+POSTWRITE: 287/287 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Integration/Layout.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0419_H2_ACTION_FOOTPRINT_CALIBRATION.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0419_H2_ACTION_FOOTPRINT_CALIBRATION.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0419_h2_action_footprint_contract.py
+P0419_MANIFEST.txt
