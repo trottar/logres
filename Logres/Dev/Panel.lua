@@ -178,7 +178,14 @@ function Logres:CaptureBugIncident()
         "interactionType", "changedBy"})
     incident.snapshot.preferences = pickTraceStatus(ownedTraceStatus(function()
         return self:GetPreferences()
-    end), {"revision", "immersionEnabled", "activeQuestEnabled"})
+    end), {"revision", "immersionEnabled", "activeQuestEnabled",
+        "screenSpaceEnemyFrameEnabled"})
+    incident.snapshot.enemyDisplay = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("HUD"):GetDebugStatus()
+    end), {"enemyPreviewReady", "enemyPreviewVisible",
+        "enemyPreviewTargetScale", "enemyPreviewAggroScale",
+        "enemyPreviewAggroAlpha", "enemyWorldAttachmentEnabled",
+        "enemyFallbackPreserved", "screenSpaceEnemyFrameEnabled"})
     incident.snapshot.gossip = pickTraceStatus(ownedTraceStatus(function()
         return self.NPCGossipPresentation.GetAudit()
     end), {"enabled", "pending", "active", "opens", "deferrals", "closes",

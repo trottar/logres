@@ -224,20 +224,36 @@ local function readUnit(unit)
     return result
 end
 
-local function createLane(unit, point, relativePoint, offsetX, offsetY, laneName)
-    local root = CreateFrame("Frame", "LogresStatusAuras" .. (laneName or unit), UIParent)
+local function createLane(unit, point, relativePoint, offsetX, offsetY, laneName, previewParent)
+    local root = CreateFrame("Frame", "LogresStatusAuras" .. (laneName or unit), previewParent or UIParent)
     local columns = unit == "player" and MAX_ICONS or 2
     local rows = math.ceil(MAX_ICONS / columns)
     root:SetSize(
         columns * ICON_SIZE + (columns - 1) * GAP,
         rows * ICON_SIZE + (rows - 1) * GAP
     )
-    root:SetFrameStrata("BACKGROUND")
+    if previewParent then
+        root:SetFrameStrata("DIALOG")
+    else
+        root:SetFrameStrata("BACKGROUND")
+    end
     root:EnableMouse(false)
     root:Hide()
     local anchorKey = unit == "player" and "playerHarmful"
         or laneName == "targetHelpful" and "targetHelpful" or "targetHarmful"
-    Logres.Layout.Bind(root, anchorKey, "CENTER", "CENTER")
+    if previewParent then
+        -- Reproduce V8's buff-right/debuff-left relative placement: 25 px
+        -- between the target's 198 px root and each 53 px two-column lane.
+        -- Both are children of the unit fixture so 50% scale/alpha applies
+        -- uniformly to name, bar, helpful and harmful icons and their gaps.
+        if point == "RIGHT" then
+            root:SetPoint("RIGHT", previewParent, "LEFT", -25, 0)
+        else
+            root:SetPoint("LEFT", previewParent, "RIGHT", 25, 0)
+        end
+    else
+        Logres.Layout.Bind(root, anchorKey, "CENTER", "CENTER")
+    end
 
     local slots = {}
     for i = 1, MAX_ICONS do
@@ -248,7 +264,7 @@ local function createLane(unit, point, relativePoint, offsetX, offsetY, laneName
         local row = math.floor(index / columns)
         slot:SetPoint("TOPLEFT", root, "TOPLEFT",
             column * (ICON_SIZE + GAP), -row * (ICON_SIZE + GAP))
-        slot:EnableMouse(true)
+        slot:EnableMouse(previewParent == nil)
         slot:Hide()
         local icon = slot:CreateTexture(nil, "ARTWORK")
         icon:SetPoint("TOPLEFT", slot, "TOPLEFT", 2, -2)
@@ -458,6 +474,22 @@ function StatusAuras:Refresh(reason, onlyUnit)
             end
         end
     end
+end
+
+-- Synthetic owned preview lanes share live StatusAuras.createLane/renderLane.
+-- Neither hidden nor displayed fixtures query, inspect, suppress or relocate
+-- native auras. The fixture omits tooltips and cannot claim live aggro.
+function StatusAuras:CreateEnemyFixtureLanes(parent, ordinal)
+    if parent.enemyFixtureLanes then return parent.enemyFixtureLanes end
+    local suffix = tostring(ordinal)
+    local harmful = createLane("target", "RIGHT", "LEFT", 0, 0,
+        "P0435Harmful" .. suffix, parent)
+    local helpful = createLane("target", "LEFT", "RIGHT", 0, 0,
+        "P0435Helpful" .. suffix, parent)
+    renderLane(harmful, PREVIEW.target, true)
+    renderLane(helpful, PREVIEW.targetHelpful, true)
+    parent.enemyFixtureLanes = {harmful = harmful, helpful = helpful}
+    return parent.enemyFixtureLanes
 end
 
 function StatusAuras:SetPreview(enabled)

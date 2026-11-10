@@ -31,8 +31,12 @@ for forbidden in ['Logres.db', 'SetAttribute(', 'RegisterStateDriver',
     if forbidden in panel: errors.append('forbidden settings panel side effect '+forbidden)
 if 'Settings\\Panel.lua' not in toc or toc.index('Settings\\Panel.lua') >= toc.index('Core\\Lifecycle.lua'):
     errors.append('settings module must load before lifecycle')
+# Historical two preferences remain exactly once; the additive P0435 control
+# is independent, and native/protected mutation prohibitions above still hold.
 if len(re.findall(r'SetPreference\("(?:immersionEnabled|activeQuestEnabled)"',panel)) != 2:
-    errors.append('only the two approved preference mutations are allowed')
+    errors.append('the original two preference mutations changed')
+if len(re.findall(r'SetPreference\("screenSpaceEnemyFrameEnabled"',panel)) != 1:
+    errors.append('expected exactly one screen-space enemy preference mutation')
 a=re.search(r'(?m)^## Version: (\S+)$',toc)
 b=re.search(r'Logres.VERSION = "([^"]+)"',boot)
 if not a or not b or a.group(1)!=b.group(1):errors.append('runtime version mismatch')

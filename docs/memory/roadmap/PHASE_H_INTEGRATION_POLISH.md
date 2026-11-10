@@ -1,3 +1,15 @@
+## P0435 — Shared enemy unit preview and saved preference (2026-11-10)
+
+P0434 main `d3ca9cce3ae404949c692ea7f1e1e23dda2d54e4` verified.
+Shared Logres name/percentage primitives with independent V8-spaced target
+helpful/harmful fixture lanes: OOC selected 100%; combat selected 100% and
+explicit synthetic confirmed-aggro example 50% size and alpha. Production
+world attachment, secondary threat routing and protected action stay DEFERRED
+under D-042/L-011. Saved screen-space enemy preference defaults OFF on new and
+existing schema-3 saves; usable native/Logres fallback remains regardless of
+preference until positive attachment proof. P0427 compass historical invariants
+unchanged. See `docs/memory/evidence/P0435_ENEMY_DISPLAY_PREVIEW.md`.
+
 ## P0427 — Focused compass identity / role / yards (2026-11-09)
 
 Verified P0426 main `32451c20b2a76bc6b689459251900c5e04b1fd6c`

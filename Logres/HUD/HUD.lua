@@ -631,6 +631,7 @@ function HUD:ApplyPreview()
 end
 
 function HUD:SetPreviewEnabled(enabled)
+    self:SetEnemyDisplayPreview(enabled == true)
     if enabled then
         return self:SetHealthPreviewPercent(30)
     end
@@ -832,6 +833,14 @@ function HUD:GetDebugStatus()
         moduleEnabled = self:IsEnabled(),
         rootShown = self.root and self.root:IsShown() or false,
         immersionEnabled = preferences.immersionEnabled,
+        screenSpaceEnemyFrameEnabled = preferences.screenSpaceEnemyFrameEnabled,
+        enemyPreviewReady = self.enemyDisplayPreview ~= nil,
+        enemyPreviewVisible = self.enemyPreviewVisible == true,
+        enemyPreviewTargetScale = 1,
+        enemyPreviewAggroScale = 0.5,
+        enemyPreviewAggroAlpha = 0.5,
+        enemyWorldAttachmentEnabled = false,
+        enemyFallbackPreserved = true,
         previewEnabled = self.previewEnabled and true or false,
         previewPercent = self.previewPercent,
         deathTravelMode = self.deathTravelMode and true or false,
@@ -860,6 +869,105 @@ function HUD:GetDebugStatus()
             self.allyEventFrames and #self.allyEventFrames or 0,
         allyRosterEventFrameReady = self.allyRosterEventFrame ~= nil,
     }
+end
+
+-- The font treatment is shared by the original target fallback and the
+-- owned two-size enemy fixtures. No Blizzard unit or nameplate is mutated.
+local function styleEnemyNameText(label)
+    local enemyNameColor = hudTypography.targetName or { 0.97, 0.91, 0.80, 1.00 }
+    label:SetTextColor(
+        enemyNameColor[1], enemyNameColor[2],
+        enemyNameColor[3], enemyNameColor[4]
+    )
+    label:SetShadowColor(0, 0, 0, 0.96)
+    label:SetShadowOffset(1, -1)
+    label:SetJustifyH("CENTER")
+    label:SetWidth(190)
+end
+
+-- Purely addon-owned fixture: the same percentage-bar primitive, font,
+-- accent and target cast layout as the existing fallback. This constructor
+-- can become the world display only after D-042's attachment proof.
+local function buildEnemyDisplayFixture(parent, fixtureName, label, percent)
+    local frame = CreateFrame("Frame", fixtureName, parent)
+    frame:SetSize(198, 54)
+    frame:EnableMouse(false)
+    local nameText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    nameText:SetPoint("TOP", frame, "TOP", 0, 0)
+    styleEnemyNameText(nameText)
+    nameText:SetText(label) -- fixed preview fixture, never UnitName() data
+    local bar = createPercentageBar(frame, nil, "normal",
+        percentageBarColors.targetHealth or DEFAULT_TARGET_COLOR)
+    bar:SetPoint("TOP", nameText, "BOTTOM", 0, -4)
+    bar.status:SetValue(percent)
+    bar.percentText:SetFormattedText("%.0f%%", percent)
+    local accentColor = hudTypography.targetAccent or { 0.70, 0.47, 0.22, 0.74 }
+    local accent = frame:CreateTexture(nil, "ARTWORK")
+    accent:SetPoint("TOP", bar, "BOTTOM", 0, -5)
+    accent:SetSize(46, 1)
+    accent:SetColorTexture(accentColor[1], accentColor[2],
+        accentColor[3], accentColor[4])
+    local cue = createCastCue(frame, nil)
+    cue:SetPoint("TOP", frame, "BOTTOM", 0, -6)
+    return frame
+end
+
+-- Preview is a synthetic policy demonstration, not a live threat classifier.
+-- OOC: one selected hostile. Combat: selected 100/100 and only a fixture
+-- explicitly marked confirmed aggro at 50/50. No nameplate frame touched.
+function HUD:BuildEnemyDisplayPreview()
+    if self.enemyDisplayPreview then return true end
+    local host = CreateFrame("Frame", "LogresEnemyDisplayPreview", UIParent)
+    host:SetSize(810, 390)
+    host:SetPoint("CENTER", UIParent, "CENTER", 0, 15)
+    host:SetFrameStrata("DIALOG")
+    host:EnableMouse(false)
+    host:Hide()
+    local tint = host:CreateTexture(nil, "BACKGROUND")
+    tint:SetAllPoints(host)
+    tint:SetColorTexture(0.02, 0.02, 0.02, 0.85)
+    local title = host:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+    title:SetPoint("TOP", host, "TOP", 0, -12)
+    title:SetText("ENEMY DISPLAY — FIXTURE PREVIEW (NOT LIVE)")
+    local ooc = host:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    ooc:SetPoint("TOPLEFT", host, "TOPLEFT", 20, -41)
+    ooc:SetText("OUT OF COMBAT: only selected hostile  |  100% size / opacity")
+    local combat = host:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    combat:SetPoint("TOPLEFT", host, "TOPLEFT", 20, -204)
+    combat:SetText("COMBAT: current target 100%  |  confirmed-aggro non-target 50%")
+
+    local oocTarget = buildEnemyDisplayFixture(host, nil, "Selected hostile", 78)
+    oocTarget:SetPoint("TOP", host, "TOP", -95, -86)
+    local combatTarget = buildEnemyDisplayFixture(host, nil, "Current hostile target", 61)
+    combatTarget:SetPoint("TOP", host, "TOP", -160, -252)
+    local aggro = buildEnemyDisplayFixture(host, nil, "Confirmed aggro", 43)
+    aggro:SetPoint("TOP", host, "TOP", 245, -267)
+    aggro:SetScale(0.5)
+    aggro:SetAlpha(0.5)
+
+    self.enemyDisplayPreview = host
+    self.enemyPreviewUnits = {oocTarget, combatTarget, aggro}
+    return true
+end
+
+function HUD:SetEnemyDisplayPreview(enabled)
+    if enabled and not self.enemyDisplayPreview then
+        self:BuildEnemyDisplayPreview()
+    end
+    if self.enemyDisplayPreview then
+        if enabled then
+            -- Always defer real attachment and use only owned sample auras.
+            local auras = Logres:GetModule("StatusAuras")
+            if auras and type(auras.CreateEnemyFixtureLanes) == "function" then
+                for index, frame in ipairs(self.enemyPreviewUnits) do
+                    auras:CreateEnemyFixtureLanes(frame, index)
+                end
+            end
+        end
+        self.enemyDisplayPreview:SetShown(enabled == true)
+    end
+    self.enemyPreviewVisible = enabled == true
+    return true
 end
 
 function HUD:OnInitialize()
@@ -940,6 +1048,8 @@ function HUD:OnInitialize()
     targetNameText:SetShadowOffset(1, -1)
     targetNameText:SetJustifyH("CENTER")
     targetNameText:SetWidth(190)
+    -- Shared target typography is used by the independent preview fixtures.
+    styleEnemyNameText(targetNameText)
 
     local targetHealthBar = createPercentageBar(
         targetFrame,
@@ -1222,6 +1332,7 @@ function HUD:OnEnable()
 end
 
 function HUD:OnDisable()
+    self:SetEnemyDisplayPreview(false)
     self.previewEnabled = false
     self.previewPercent = nil
     self.pvpPreviewEnabled = false

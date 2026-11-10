@@ -11,17 +11,15 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0427** Compass focus-label presentation: `<Name> [role] - <N> yd`
-for ordinary source identities and same-map distance; keep the explicit
-`distance unavailable` fallback. No QuestieDB eligibility, geometry, pool,
-or native API changes. Client runtime UNVERIFIED; L-043 OPEN pending retest.
-P0428 records the successful Chat workflow. Next separate investigation is
-QuestieDB freshness/missed givers (L-030 PARTIAL, L-044 OPEN). P0425 NPC visual PASS; transactions/fallback UNVERIFIED.
-V8 HUD accepted; L-008 OPEN, L-009 DEFERRED; P0381 failures retained.
+**P0435** enemy display preview from P0434 main. Synthetic OOC target 100%;
+combat target 100% and confirmed-aggro fixture 50% with V8 aura spacing.
+Default-OFF saved screen-space preference, but fallback remains usable;
+production nameplate attachment and per-unit aggro DEFERRED (D-042/L-011).
+**P0427** compass historical; P0425 visual PASS; L-043/L-030/L-044 OPEN.
 
 ## Verified State
 
-- P0432 combat anchor seen, attachment UNVERIFIED. P0434 author kit; L-011 DEFERRED.
+- P0435 shared enemy preview, protected attachment UNVERIFIED; P0434 author kit.
 
 - P0422 moved the pet-action bar in error; P0423 restored it and V8 was visually accepted.
 
@@ -58,9 +56,8 @@ V8 HUD accepted; L-008 OPEN, L-009 DEFERRED; P0381 failures retained.
 
 ## Next Action
 
-P0427 main `aef719b`, 295/295 STATIC. Validate Forever focus text for known
-service, qualified quest, unknown name and unknown distance. Then investigate
-L-030/L-044 separately against verified main.
+P0435: author-check, guarded apply, then Forever preview + preference
+persistence and preserved fallback. World attachment/aggro gated.
 
 ## Success Criteria
 

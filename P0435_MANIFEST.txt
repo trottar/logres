@@ -1,0 +1,30 @@
+P0435 Enemy display 100/50 fixture and saved screen-space preference
+Verified baseline: d3ca9cce3ae404949c692ea7f1e1e23dda2d54e4
+Candidate runtime version: 0.0.306-dev
+PREWRITE: 299/299 STATIC PASS
+POSTWRITE: 299/299 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Database.lua
+Logres/Core/Preferences.lua
+Logres/Dev/Panel.lua
+Logres/HUD/HUD.lua
+Logres/HUD/StatusAuras.lua
+Logres/Logres.toc
+Logres/Settings/Panel.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0435_ENEMY_DISPLAY_PREVIEW.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0238_settings_panel_contract.py
+tools/check_p0435_enemy_display_preview_contract.py
+P0435_MANIFEST.txt

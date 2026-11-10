@@ -28,6 +28,9 @@ local PREFERENCE_SPECS = {
     activeQuestEnabled = {
         valueType = "boolean",
     },
+    screenSpaceEnemyFrameEnabled = {
+        valueType = "boolean",
+    },
 }
 
 local function requireDatabase()
@@ -51,6 +54,7 @@ local function copyPreferences()
         revision = preferenceRevision,
         immersionEnabled = Logres.db.settings.immersionEnabled and true or false,
         activeQuestEnabled = Logres.db.settings.activeQuestEnabled and true or false,
+        screenSpaceEnemyFrameEnabled = Logres.db.settings.screenSpaceEnemyFrameEnabled == true,
     }
 end
 
@@ -82,6 +86,7 @@ local function publishPreferenceChange(previous, changes, reason)
                         revision = previous.revision,
                         immersionEnabled = previous.immersionEnabled,
                         activeQuestEnabled = previous.activeQuestEnabled,
+                        screenSpaceEnemyFrameEnabled = previous.screenSpaceEnemyFrameEnabled,
                     },
                     copyChanges(changes),
                     reason

@@ -5,7 +5,7 @@ local _, Logres = ...
 local SettingsPanel = Logres:RegisterModule("SettingsPanel", {
     OnInitialize = function(self)
         local frame = CreateFrame("Frame", "LogresSettingsPanel", UIParent)
-        frame:SetSize(430, 264)
+        frame:SetSize(430, 338)
         frame:SetPoint("CENTER", UIParent, "CENTER", 0, 44)
         frame:SetFrameStrata("DIALOG")
         frame:SetClampedToScreen(true)
@@ -65,6 +65,22 @@ local SettingsPanel = Logres:RegisterModule("SettingsPanel", {
         end)
         self.activeButton = activeButton
 
+        local enemyLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        enemyLabel:SetPoint("TOPLEFT", frame, "TOPLEFT", 22, -224)
+        enemyLabel:SetText("Screen-space Enemy Frame")
+        local enemyHint = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+        enemyHint:SetPoint("TOPLEFT", enemyLabel, "BOTTOMLEFT", 0, -5)
+        enemyHint:SetText("Fallback stays available until overhead attachment is proven")
+        local enemyButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+        enemyButton:SetSize(102, 27)
+        enemyButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -22, -220)
+        enemyButton:SetScript("OnClick", function()
+            Logres:SetPreference("screenSpaceEnemyFrameEnabled",
+                not Logres:GetPreference("screenSpaceEnemyFrameEnabled"), "settings-panel")
+            self:Refresh()
+        end)
+        self.enemyButton = enemyButton
+
         local footer = frame:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
         footer:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 22, 18)
         footer:SetText("Changes persist. Additional options remain under development.")
@@ -79,9 +95,10 @@ local SettingsPanel = Logres:RegisterModule("SettingsPanel", {
 })
 
 function SettingsPanel:Refresh()
-    if not self.immersionButton or not self.activeButton then return end
+    if not self.immersionButton or not self.activeButton or not self.enemyButton then return end
     self.immersionButton:SetText(Logres:GetPreference("immersionEnabled") and "ON" or "OFF")
     self.activeButton:SetText(Logres:GetPreference("activeQuestEnabled") and "ON" or "OFF")
+    self.enemyButton:SetText(Logres:GetPreference("screenSpaceEnemyFrameEnabled") and "ON" or "OFF")
 end
 
 function SettingsPanel:Toggle()

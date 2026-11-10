@@ -1,3 +1,33 @@
+## P0435 — Shared enemy display author audit (2026-11-10)
+
+Authoritative baseline P0434 main `d3ca9cce3ae404949c692ea7f1e1e23dda2d54e4`
+verified against portable kit tree `1579d7635aa074cdd60926df7b98d999397c626a`.
+D-042/L-011 prohibit production relocation until safe attachment is proven;
+P0432 combat-only anchor availability is positive but relative mutation was
+combat-deferred. P0435 constructs owned synthetic OOC selected-only and
+combat selected/aggro fixtures, reuses the actual percentage bar and status
+icon grid, and leaves screen fallback/native interaction untouched. The
+new saved preference defaults false for both new and legacy schema-3 saves,
+but its requested state does not suppress an un-replaced information surface.
+
+Negative author evidence: R0 exact author-check REFUSED 298/299 when
+P0425 historical visual-acceptance marker was accidentally omitted from
+CURRENT.md. No tracked writes were made. R1 restores that marker and
+requires the complete exact-candidate author-check to pass again.
+
+Historical contract review: P0426/P0427 roadmap first-heading assertions
+updated to preserve their historical formatting and prior heading, and P0238
+preserves exactly two original option mutators plus the new third. P0347 keeps
+schema=3, 96-file Lua inventory and short CURRENT. P0332/P0342 target status
+still owns independent real harmful/helpful lanes and native fallback.
+
+Exact-candidate Python checker suite, git diff hygiene, portable kit receipt,
+transactional guarded apply and Forever runtime are independent validation
+gates. Author-check result must be inserted here only if actually run; no
+client test can be inferred from static validation. Test preview via Report
+Bug right-click → P → HUD Preview ON/OFF; target/auras unchanged outside
+preview. Real secondary identity/aggro remains unproven, no world attachment.
+
 ## P0434 — Portable exact-candidate Chat author preflight (2026-11-10)
 
 Verified P0432 main `8a3815754a68d54a3e161675cb25cc08cbcf848e`.
