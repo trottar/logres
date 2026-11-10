@@ -10,12 +10,12 @@ E=read('docs/memory/evidence/P0426_NPC_VISUAL_AND_COMPASS_INTAKE.md')
 D=read('docs/DEPENDENCIES.md')
 P=read('docs/design/navigation/COMPASS_IDENTITY_AND_PROVIDER_FRESHNESS.md')
 assert len(C.encode('utf-8')) < 9800, 'CURRENT budget'
-assert C.split('## Current Work Item')[1].split('## Verified State')[0].strip().startswith('**P0426**'), 'active checkpoint'
+assert '**P0427**' in C.split('## Current Work Item')[1].split('## Verified State')[0] and 'P0426' in C, 'active/historical checkpoint'
 for rel in ('docs/memory/investigations/ACTIVE.md',
             'docs/memory/roadmap/STATUS.md',
             'docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md',
             'docs/ROADMAP.md'):
-    assert read(rel).startswith('## P0426 —'), rel
+    assert read(rel).startswith('## P0427 —') and '## P0426 —' in read(rel), rel
 for lid,status in (('L-003','PARTIAL'),('L-030','PARTIAL'),
                    ('L-033','OPEN'),('L-043','OPEN'),('L-044','OPEN')):
     row=next((r for r in L.splitlines() if r.startswith('| '+lid+' |')), None)

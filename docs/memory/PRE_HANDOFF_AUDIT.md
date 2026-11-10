@@ -1,3 +1,13 @@
+## P0427 — focused compass labels (2026-11-09)
+
+P0426 verified main `32451c20b2a76bc6b689459251900c5e04b1fd6c`.
+L-043 text is currently `Possible repair: <Name> · yards`; nearby source,
+collision and current quest offer guards are independently correct and
+must remain unchanged. Implement presentation-only service/quest labels and
+update the historical format contracts. Test unknown names and distances,
+real source-backed focused roles, preview path and exact protected/secret
+behavior. WoW remains UNVERIFIED, and P0428 QuestieDB remains separate.
+
 ## P0426 — docs-only author audit (2026-11-09)
 
 Verified P0425 `main` at `5af8d14b496f4d96cedc3e09fc3f4dc51a2d64b5`.

@@ -1,3 +1,14 @@
+## P0427 compass identity label candidate (2026-11-09)
+
+P0426 verified on GitHub main `32451c20b2a76bc6b689459251900c5e04b1fd6c`.
+P0427 changes only the focused compass label, replacing the historical
+`Possible <service>:` and `Possible quest giver:` prefixes with source-backed
+`<Name> [role] - <rounded yards> yd`. An absent ordinary name produces no
+focus label; an unavailable compatible distance remains explicitly unknown.
+Marker pools, quest eligibility (P0337), native source and QuestieDB candidate
+logic are unchanged. **L-043 remains OPEN until runtime label PASS**; L-030
+missing quest givers PARTIAL and L-044 provider health OPEN. No client PASS.
+
 ## P0426 scoped P0425 visual PASS and compass intake (2026-11-09)
 
 User screenshots show Brog Hamfist merchant Buyback control above the footer

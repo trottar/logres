@@ -19,22 +19,22 @@ local poiStyle = compassStyle.localPOI or {}
 local trackingStyle = compassStyle.tracking or {}
 -- These are only possible historical service sites, not live tracking blips.
 local SERVICE_MARKER_STYLE = {
-    flight = { name = "Possible flight master: ", r = 0.52, g = 0.79, b = 0.98 },
-    inn = { name = "Possible innkeeper: ", r = 0.97, g = 0.75, b = 0.44 },
-    repair = { name = "Possible repair: ", r = 0.70, g = 0.83, b = 0.71 },
-    vendor = { name = "Possible vendor: ", r = 0.84, g = 0.80, b = 0.60 },
-    trainer = { name = "Possible trainer: ", r = 0.72, g = 0.68, b = 0.96 },
-    banker = { name = "Possible banker: ", r = 0.94, g = 0.84, b = 0.43 },
-    auction = { name = "Possible auctioneer: ", r = 0.96, g = 0.69, b = 0.63 },
-    stable = { name = "Possible stable master: ", r = 0.64, g = 0.87, b = 0.66 },
-    battle = { name = "Possible battlemaster: ", r = 0.93, g = 0.58, b = 0.59 },
-    healer = { name = "Possible spirit healer: ", r = 0.70, g = 0.92, b = 0.91 },
-    guide = { name = "Possible spirit guide: ", r = 0.56, g = 0.85, b = 0.93 },
-    tabard = { name = "Possible tabard designer: ", r = 0.88, g = 0.66, b = 0.87 },
-    petition = { name = "Possible petitioner: ", r = 0.75, g = 0.79, b = 0.64 },
-    barber = { name = "Possible barber: ", r = 0.92, g = 0.65, b = 0.85 },
-    reforge = { name = "Possible reforger: ", r = 0.66, g = 0.75, b = 0.95 },
-    transmog = { name = "Possible transmogrifier: ", r = 0.73, g = 0.64, b = 0.97 },
+    flight = { role = "flight", r = 0.52, g = 0.79, b = 0.98 },
+    inn = { role = "inn", r = 0.97, g = 0.75, b = 0.44 },
+    repair = { role = "repair", r = 0.70, g = 0.83, b = 0.71 },
+    vendor = { role = "vendor", r = 0.84, g = 0.80, b = 0.60 },
+    trainer = { role = "profession", r = 0.72, g = 0.68, b = 0.96 },
+    banker = { role = "banker", r = 0.94, g = 0.84, b = 0.43 },
+    auction = { role = "auction", r = 0.96, g = 0.69, b = 0.63 },
+    stable = { role = "stable", r = 0.64, g = 0.87, b = 0.66 },
+    battle = { role = "battleground", r = 0.93, g = 0.58, b = 0.59 },
+    healer = { role = "spirit healer", r = 0.70, g = 0.92, b = 0.91 },
+    guide = { role = "spirit guide", r = 0.56, g = 0.85, b = 0.93 },
+    tabard = { role = "tabard", r = 0.88, g = 0.66, b = 0.87 },
+    petition = { role = "petition", r = 0.75, g = 0.79, b = 0.64 },
+    barber = { role = "barber", r = 0.92, g = 0.65, b = 0.85 },
+    reforge = { role = "reforge", r = 0.66, g = 0.75, b = 0.95 },
+    transmog = { role = "transmog", r = 0.73, g = 0.64, b = 0.97 },
 }
 
 -- Local POI size conveys distance, unlike the separate long-range quest lane.
@@ -140,12 +140,22 @@ local function ordinaryFocusedDistance(distance)
     return distance
 end
 
+-- Presentation-only identity formatting. Names originate in ordinary native /
+-- optional provider rows; missing, secret or empty names never become "nil".
+-- A bracketed role describes the source's type, NOT current availability.
+local function focusedIdentity(name, role)
+    if isSecret(name) or isSecret(role) then return nil end
+    if type(name) ~= "string" or type(role) ~= "string"
+        or not string.find(name, "%S") then return nil end
+    return name .. " [" .. role .. "]"
+end
+
 -- Both the inert art fixture and live focused candidates use this renderer.
 local function showFocusedMarkerLabel(label, name, distance, magnitude)
     local yards = ordinaryFocusedDistance(distance)
     local text = yards and (tostring(math.floor(yards + 0.5)) .. " yd")
         or "distance unavailable"
-    label:SetText(name .. "  ·  " .. text)
+    label:SetText(name .. " - " .. text)
     local fade = 1 - math.min(8, math.abs(magnitude)) / 8
     label:SetAlpha(fade * fade)
     label:Show()
@@ -586,7 +596,7 @@ function Compass:UpdateArtworkPreview()
     if shown then
         -- Synthetic yards on the same real text widget and formatting path.
         showFocusedMarkerLabel(self.availableQuestPoiFocus,
-            "Quest destination", 125, 0)
+            "Quest destination [quest]", 125, 0)
     else
         self.availableQuestPoiFocus:Hide()
     end
@@ -723,10 +733,12 @@ function Compass:RefreshAvailableQuestPOIs(reason)
         if magnitude>VISIBLE_HALF_ANGLE then return end
         local serviceStyle = role=="service" and SERVICE_MARKER_STYLE[row.serviceKind] or nil
         if role=="service" and not serviceStyle then return end
+        local identityRole = serviceStyle and serviceStyle.role
+            or (role == "tracking" and "tracking")
+            or (questLinked and "quest") or "point of interest"
         local candidate={distance=distance,relative=relative,magnitude=magnitude,
             x=relative*PIXELS_PER_DEGREE,
-            name=serviceStyle and (serviceStyle.name .. tostring(row.name))
-                or (row.potential == true and ("Possible quest giver: " .. tostring(row.name)) or row.name),
+            name=focusedIdentity(row.name, identityRole),
             potential=row.potential == true, sortKey=tostring(key),
             kind=role, serviceKind=role=="service" and row.serviceKind or nil}
         if role=="quest" then majorQuests[#majorQuests+1]=candidate
@@ -900,7 +912,7 @@ function Compass:RefreshAvailableQuestPOIs(reason)
         and math.abs(manualRelative) <= focusDegrees
         and (not closestFocus or math.abs(manualRelative) < closestFocus.magnitude) then
         closestFocus = {
-            name = "Waypoint", kind = "waypoint",
+            name = "Waypoint [waypoint]", kind = "waypoint",
             magnitude = math.abs(manualRelative),
             distance = self.waypointDistanceAvailable and self.waypointDistanceYards or nil,
         }

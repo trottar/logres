@@ -8,10 +8,10 @@ import re
 if __import__('sys').argv[1:] == ['--selftest']:
     def demo(name,distance):
         valid=isinstance(distance,(float,int)) and not isinstance(distance,bool) and math.isfinite(distance) and distance>=0
-        return f'{name}  ·  {math.floor(distance+0.5)} yd' if valid else f'{name}  ·  distance unavailable'
-    assert demo('Quest destination',125)=='Quest destination  ·  125 yd'
-    assert demo('Marker',13.7)=='Marker  ·  14 yd'
-    assert demo('POI',0)=='POI  ·  0 yd'
+        return f'{name} - {math.floor(distance+0.5)} yd' if valid else f'{name} - distance unavailable'
+    assert demo('Quest destination',125)=='Quest destination - 125 yd'
+    assert demo('Marker',13.7)=='Marker - 14 yd'
+    assert demo('POI',0)=='POI - 0 yd'
     assert demo('Waypoint',None).endswith('distance unavailable')
     assert demo('Waypoint',float('nan')).endswith('distance unavailable')
     assert demo('Waypoint',float('inf')).endswith('distance unavailable')
@@ -35,13 +35,13 @@ def need(ok, why):
 # acceptance boundary; no native gameplay APIs are invoked from this test.
 def focused_text(name,distance):
     valid=isinstance(distance,(float,int)) and not isinstance(distance,bool) and math.isfinite(distance) and distance>=0
-    return f'{name}  ·  {math.floor(distance+0.5)} yd' if valid else f'{name}  ·  distance unavailable'
+    return f'{name} - {math.floor(distance+0.5)} yd' if valid else f'{name} - distance unavailable'
 
 def run_fixtures():
-    assert focused_text('Quest destination',125)=='Quest destination  ·  125 yd'
-    assert focused_text('Marker',13.7)=='Marker  ·  14 yd'
-    assert focused_text('POI',0)=='POI  ·  0 yd'
-    assert focused_text('Waypoint',None)=='Waypoint  ·  distance unavailable'
+    assert focused_text('Quest destination',125)=='Quest destination - 125 yd'
+    assert focused_text('Marker',13.7)=='Marker - 14 yd'
+    assert focused_text('POI',0)=='POI - 0 yd'
+    assert focused_text('Waypoint',None)=='Waypoint - distance unavailable'
     assert focused_text('Waypoint',float('nan')).endswith('distance unavailable')
     assert focused_text('Waypoint',float('inf')).endswith('distance unavailable')
     print('P0338 6/6 pure focus-label fixtures: PASS')
@@ -55,7 +55,7 @@ for item in ('isSecret(distance)', 'type(distance) ~= "number"','distance ~= dis
              'distance < 0','distance == math.huge',
              'local function showFocusedMarkerLabel(label, name, distance, magnitude)',
              'math.floor(yards + 0.5)', '"distance unavailable"',
-             'label:SetText(name .. "  ·  " .. text)', 'label:SetAlpha(fade * fade)',
+             'label:SetText(name .. " - " .. text)', 'label:SetAlpha(fade * fade)',
              'label:Show()', 'return yards'):
     need(item in helper,'missing focused distance guard/renderer: '+item)
 need(C.count('showFocusedMarkerLabel(')==3,
@@ -70,7 +70,7 @@ need('{ "questDestination", compassAssets.questDestination, questStyle, "CENTER"
 for item in ('self.artworkPreviewShown == shown','self.artworkPreviewRoles',
              'reserveMarkerBearing(role[5], role[3].width or 9, occupied)',
              'showFocusedMarkerLabel(self.availableQuestPoiFocus,',
-             '"Quest destination", 125, 0',
+             '"Quest destination [quest]", 125, 0',
              'self.availableQuestPoiFocus:Hide()'):
     need(item in preview,'art preview must use live focus widget/renderer: '+item)
 block=C[C.index('function Compass:RefreshAvailableQuestPOIs(reason)'):C.index('function Compass:SetArtworkPreview')]

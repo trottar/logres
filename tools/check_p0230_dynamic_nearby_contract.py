@@ -23,7 +23,7 @@ for term in ('LOCH_MODAN_MAP','LOCH_MODAN_AREA','QuestDB.GetAllIds',
  if term in f:err.append('forbidden implementation shortcut: '+term)
 if f.count('read(npc.GetAllIds)')!=1:err.append('NPC list should be read once per area-index build')
 for term in ('Logres:GetModule("QuestieDBNearby")','db:GetNearbyRows(',
- 'self.dbCandidateShown', 'Possible quest giver: ',
+ 'self.dbCandidateShown', 'focusedIdentity(row.name, identityRole)',
  'candidate.potential', 'self.dbNearbyStatus',
  'local cap=row.potential == true and 50'):
  if term not in c:err.append('compass integration missing '+term)

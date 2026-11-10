@@ -32,8 +32,8 @@ for term in ('loadstring','C_Timer','GetChildren','EnumeratePins','SetCVar'):
     if term in n:errors.append('forbidden source '+term)
 has(c,('db:GetNearbyRows(', 'self.serviceMarkers',
     'self.dbServiceCandidateShown','self.dbServiceStatus',
-    'candidate.serviceKind','"Possible flight master: "',
-    '"Possible innkeeper: "','"Possible repair: "',
+    'candidate.serviceKind','role = "flight"',
+    'role = "inn"','role = "repair"',
     'glyph:SetVertexColor', 'self.dbCandidateShown',
     'local cap=row.potential == true and 50'), 'compass')
 has(cmd,('Logres compass services:', 'Logres questiedbservices:',

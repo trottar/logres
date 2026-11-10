@@ -19,7 +19,7 @@ def need(ok,msg):
 # Distances remain sourced only from guarded native map/ordinary source positions.
 for token in ('local function ordinaryFocusedDistance(distance)',
               'isSecret(distance)', 'math.floor(yards + 0.5)',
-              'label:SetText(name .. "  ·  " .. text)',
+              'label:SetText(name .. " - " .. text)',
               'local previousNearQuest = self.nearQuestCenterKeys or {}',
               'local nearQuestCenterKeys = {}',
               'local questLinked = role=="quest" or',

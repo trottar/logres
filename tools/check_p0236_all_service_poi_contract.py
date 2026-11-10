@@ -17,8 +17,17 @@ for term in ['MAX_NEARBY_SERVICES = 32','MAX_NEARBY_PER_SERVICE_KIND = 2','LOCAL
 if n.count('read(npc.GetAllIds)')!=1:errors.append('unexpected full index scanning')
 for term in ['local function nearbySizeScale(', 'math.max(0.74, math.min(1.30', 'self.poiSizeShown','self.poiSizeMin','self.poiSizeMax', 'glyph:SetSize((roleStyle.width or 9)*scale','for index = 1, 32 do']:
     if term not in c:errors.append('compass missing '+term)
-for role in ['vendor','trainer','banker','auction','stable','battle','healer','guide','tabard','petition','barber','reforge','transmog']:
-    if role+' = { name = "Possible ' not in c:errors.append('missing service label '+role)
+# Legacy P0236 verified all supported service categories had human labels.
+# P0427 retains every category and maps it to a concise typed role; native
+# provider flags, location candidates, and POI sizes are unchanged.
+labels={'vendor':'vendor','trainer':'profession','banker':'banker',
+    'auction':'auction','stable':'stable','battle':'battleground',
+    'healer':'spirit healer','guide':'spirit guide','tabard':'tabard',
+    'petition':'petition','barber':'barber','reforge':'reforge',
+    'transmog':'transmog'}
+for category,role in labels.items():
+    if category+' = { role = "'+role+'"' not in c:
+        errors.append('missing service label '+category)
 for term in ['Logres questiedbservicecoverage:','Logres compass POI proximity:']:
     if term not in cmd:errors.append('diagnostic missing '+term)
 if '## OptionalDeps: QuestieDB' not in toc or '## Dependencies: QuestieDB' in toc:errors.append('QuestieDB must remain optional')

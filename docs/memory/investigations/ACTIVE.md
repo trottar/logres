@@ -1,3 +1,15 @@
+## P0427 — Focused compass identity / role / yards (2026-11-09)
+
+Verified P0426 main `32451c20b2a76bc6b689459251900c5e04b1fd6c`
+(docs-only NPC visual acceptance and compass intake). Change only the
+addon-owned focus-label string to `<Name> [role] - <N> yd` for ordinary
+source identity and compatible world-yard distance. Keep role flags rather
+than asserting a live service; unknown distance stays explicit, absent names
+are not synthesized. Same glyph bearing, quest eligibility, optional provider,
+source priorities, secret guards, and native fallback. L-043 remains OPEN
+pending WoW Forever validation. P0428 L-030 / L-044 is separate. See
+`docs/memory/evidence/P0427_COMPASS_IDENTITY_LABELS.md`.
+
 ## P0426 — P0425 visual acceptance and compass source intake (2026-11-09)
 
 Verified P0425 main `5af8d14b496f4d96cedc3e09fc3f4dc51a2d64b5`.

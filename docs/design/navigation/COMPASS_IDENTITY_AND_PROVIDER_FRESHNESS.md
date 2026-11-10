@@ -2,7 +2,7 @@
 
 2026-11-09 | DOCS-ONLY | baseline P0425 `5af8d14b496f4d96cedc3e09fc3f4dc51a2d64b5`
 
-## Approved focus text contract (planned P0427)
+## Approved focus text contract (P0427 implementation candidate)
 
 For an ordinary, source-backed NPC identity, supported role and compatible
 same-map world-yard distance, focus displays:

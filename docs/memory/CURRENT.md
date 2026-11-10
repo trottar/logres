@@ -11,13 +11,13 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0426** Docs-only checkpoint after Forever P0425 screenshot acceptance:
-merchant Buyback tab/item and compact trainer (seven visible lessons) visual
-PASS; native purchases, buyback transactions, training, repairs, stock recovery
-and combat remain UNVERIFIED. Next: P0427 compass identity/role/yard labels;
-then QuestieDB freshness and missing-giver diagnostics (L-030 PARTIAL,
-L-043/L-044 OPEN). V8 HUD accepted, L-003 PARTIAL, L-033 OPEN;
-L-008 OPEN, L-009 DEFERRED. Historical P0381 failures retained.
+**P0427** Compass focus-label presentation: `<Name> [role] - <N> yd`
+for ordinary source identities and same-map distance; keep the explicit
+`distance unavailable` fallback. No QuestieDB eligibility, geometry, pool,
+or native API changes. Client runtime UNVERIFIED; L-043 OPEN pending retest.
+Then P0428 provider freshness/missing quest-giver diagnosis (L-030 PARTIAL,
+L-044 OPEN). P0425 NPC visual PASS; transactions/fallback UNVERIFIED.
+V8 HUD accepted; L-008 OPEN, L-009 DEFERRED; P0381 failures retained.
 
 ## Verified State
 
@@ -56,11 +56,9 @@ L-008 OPEN, L-009 DEFERRED. Historical P0381 failures retained.
 
 ## Next Action
 
-P0426 DOCS ONLY: user applies, verifies and pushes memory checkpoint before
-runtime work. Next P0427: targeted compass focus-label formatting while
-preserving source gating, secret checks, and range. Then instrument L-030
-missing-giver cause and L-044 installed QuestieDB version/compatibility,
-compare with stable v1.0.13; do not infer provider update success.
+P0427 exact-P0426 source guard and static suite, then WoW Forever focus text
+for known service, qualified quest, unknown name and unknown distance.
+No marker-eligibility changes. Then P0428 L-030/L-044 provider diagnostics.
 
 ## Success Criteria
 
