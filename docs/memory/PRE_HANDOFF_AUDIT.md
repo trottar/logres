@@ -1,3 +1,14 @@
+## P0431 R1 — Debug and World Target capture (2026-11-10)
+
+Verified P0429 main `d949f7db03ccc58bd8886fe4fbace98e659e30c6`.
+Exact Chat draft passed review and refused 295/296 in an isolated checkout.
+H.3 pinned the old click registration and handler signature. R1 keeps
+native panel routing, the themed button and the left-click capture path,
+and admits right-click panel access. P0427 stays active. The release
+gate is the exact-candidate static suite, Lua syntax, simulated click
+routing, guarded apply/refusal/rollback and diff hygiene. The generated
+manifest records the actual checker results. Forever remains UNVERIFIED.
+
 ## P0428 — Chat workflow replication (2026-11-10)
 
 Verified P0427 main `aef719b582c98ca60502734723287f64beaca0e6`.

@@ -1,3 +1,4 @@
+| P0431 | 2026-11-10 | PREPARED — DEBUG/REPORT BUG WORLD-TARGET CAPTURE | Draft refused 295/296; R1 adapts H.3 click contract. P0427 stays active, L-011 DEFERRED, Forever UNVERIFIED. |
 | P0429 | 2026-11-10 | DOCS-ONLY — COMPASS BUG INTAKE | L-045 OPEN, intermittent and unreproduced. Screenshot and recurrence criteria recorded. |
 | P0428 | 2026-11-10 | DOCS-ONLY — CHAT WORKFLOW REPLICATION | P0427 main `aef719b`; audits recent delivered ZIPs, commits, refusals and visual feedback. Standardizes author checks and guarded apply. QuestieDB investigation remains next. |
 | P0427 | 2026-11-09 | PREPARED — SOURCE-BACKED COMPASS FOCUS LABELS | Verified P0426 `32451c20`; role/name + rounded world-yard focus text only; L-043 runtime OPEN, P0428 provider investigations distinct. |

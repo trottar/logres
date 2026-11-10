@@ -10,6 +10,16 @@ source priorities, secret guards, and native fallback. L-043 remains OPEN
 pending WoW Forever validation. P0428 L-030 / L-044 is separate. See
 `docs/memory/evidence/P0427_COMPASS_IDENTITY_LABELS.md`.
 
+## P0431 — Debug World Target Probe capture (2026-11-10)
+
+P0427 remains the active compass checkpoint; P0429 main baseline unchanged.
+The Report Bug control should include the World Target Probe's sanitized
+anchor/attachment/reaction fields on left-click, and right-click should be
+its only ordinary developer-panel entry. No production world target movement,
+secondary anchor or aggro semantics are enabled. L-011 stays DEFERRED.
+Draft refused 295/296. R1 adapts the H.3 click contract. Forever runtime UNVERIFIED.
+See `docs/memory/evidence/P0431_DEBUG_WORLD_TARGET_CAPTURE.md`.
+
 ## P0426 — P0425 visual acceptance and compass source intake (2026-11-09)
 
 Verified P0425 main `5af8d14b496f4d96cedc3e09fc3f4dc51a2d64b5`.

@@ -3439,7 +3439,7 @@ end
 
 local function printHelp()
     emit("Logres development commands:")
-    emit("  /logres panel")
+    emit("  Right-click Report Bug to open the developer panel.")
     emit("  /logres gameplaycapture  (one-shot SAVED diagnostic; READ-ONLY)")
     emit("  /logres merchantlive  (switch merchant layout for this visit)")
     emit("  /logres npcbatch  (one-shot saved read-only NPC incident)")
@@ -3560,20 +3560,13 @@ local function handleCommand(message)
         (message or ""):lower():match("^%s*(%S*)%s*(.-)%s*$")
 
     if command == "" then
-        if Logres.ToggleDevPanel then
-            Logres:ToggleDevPanel()
-        else
-            printStatus()
-        end
+        printStatus()
+        emit("Logres panel: right-click the on-screen Report Bug button to open diagnostics.")
         return
     end
 
     if command == "panel" then
-        if Logres.ToggleDevPanel then
-            Logres:ToggleDevPanel()
-        else
-            emit("Logres: development panel is not available yet.")
-        end
+        emit("Logres panel: right-click the on-screen Report Bug button to open diagnostics.")
         return
     end
 

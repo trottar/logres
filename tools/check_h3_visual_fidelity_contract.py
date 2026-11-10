@@ -46,8 +46,8 @@ require('theme.nativeAccessDock' in t and
 require('function NativeAccess:Toggle(key)' in d and
         'self:RunCommand(entry.command)' in p and
         'if self.activePhase == "N" then' in p and
-        'bugButton:RegisterForClicks("LeftButtonUp")' in p and
-        'bugButton:SetScript("OnClick", function()' in p,
+        'bugButton:RegisterForClicks("LeftButtonUp", "RightButtonUp")' in p and
+        'bugButton:SetScript("OnClick", function(_, button)' in p,
         'native access panel routing / Report Bug click behavior missing')
 require('CreateFrame("Button", nil, dock)' not in d and
         'self.dock:Show()' not in d and 'dock:EnableMouse(false)' in d,

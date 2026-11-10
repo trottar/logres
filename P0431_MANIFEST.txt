@@ -1,0 +1,23 @@
+P0431 Capture world target evidence from Report Bug
+Verified baseline: d949f7db03ccc58bd8886fe4fbace98e659e30c6
+Candidate runtime version: 0.0.304-dev
+PREWRITE: 296/296 STATIC PASS
+POSTWRITE: 296/296 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0431_DEBUG_WORLD_TARGET_CAPTURE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/STATUS.md
+tools/check_h3_visual_fidelity_contract.py
+tools/check_p0409_hud_control_panel_contract.py
+tools/check_p0431_debug_worldtarget_contract.py
+P0431_MANIFEST.txt

@@ -59,13 +59,15 @@ need('result.dockShown == false' in U, 'retired HUD diagnostic expectation stale
 need('CreateFrame("Button", "LogresBugReportButton", UIParent)' in P and
      'bugButton:SetFrameStrata("LOW")' in P and
      'bugButton:SetText("Report Bug")' in P and
-     'bugButton:RegisterForClicks("LeftButtonUp")' in P,
+     'bugButton:RegisterForClicks("LeftButtonUp", "RightButtonUp")' in P,
      'gameplay report access/style missing')
 need('bronze:SetTexture((skin.assets or {}).fallback)' in P and
      'bugButton:SetFontString(text)' in P, 'bronze skin/readable title missing')
-click = P.split('bugButton:SetScript("OnClick", function()',1)[1].split('end)',1)[0]
-need('Logres:CaptureBugIncident()' in click and 'Logres:DevPrint(' in click,
-     'one-click capture altered')
+click = P.split('bugButton:SetScript("OnClick", function(_, button)',1)[1].split('end)',1)[0]
+need('if button == "RightButton" then' in click and
+     'Logres:ToggleDevPanel()' in click and
+     'Logres:CaptureBugIncident()' in click and 'Logres:DevPrint(' in click,
+     'original left-click capture or new right-click panel access altered')
 need('function Logres:CaptureBugIncident()' in P and 'pcall(Screenshot)' in P and
      'journal.pendingScreenshot = incident.id' in P,
      'screenshot/diagnostic persistence changed')

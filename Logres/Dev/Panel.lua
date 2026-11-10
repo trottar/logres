@@ -285,6 +285,20 @@ function Logres:CaptureBugIncident()
     end), {"questGreetingRegistered", "greetingEventCount",
         "lastGreetingAvailable", "lastGreetingActive", "lastGreetingStatus",
         "lastGreetingPresentationReason", "greetingStockParked"})
+    -- P0431: Report Bug also performs an explicit contextual world-target
+    -- capture. The probe owns any temporary hidden addon-frame attachment;
+    -- this journal stores only its sanitized, scalar diagnostics.
+    incident.snapshot.worldTarget = pickTraceStatus(ownedTraceStatus(function()
+        local probe = self:GetModule("WorldTargetProbe")
+        probe:CaptureManual()
+        return probe:GetDebugStatus()
+    end), {"moduleEnabled", "eventFrameReady", "proxyReady", "lastReason",
+        "nameplateAPIAvailable", "behindCameraAPIAvailable",
+        "targetChangedEvents", "nameplateAddedEvents",
+        "nameplateRemovedEvents", "behindCameraChangedEvents",
+        "anchorPresent", "behindCamera", "attachmentState", "worldCandidate",
+        "fallback", "reactionCategory", "canAttack", "isFriend", "isTrivial",
+        "secretSkipCount", "failureCount"})
     incident.snapshot.questPresentation = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("QuestDialogue"):GetDebugStatus()
     end), {"rootShown", "presentationShown", "lastPresentationReason",
@@ -378,6 +392,7 @@ local Panel = Logres:RegisterModule("DevPanel", {
         ensureDiagnosticsDB()
 
         local frame = CreateFrame("Frame", "LogresDevPanel", UIParent)
+        frame:Hide() -- Panel is opened explicitly from the on-screen debug control.
         frame:SetSize(PANEL_WIDTH, PANEL_HEIGHT)
         frame:SetPoint("CENTER", UIParent, "CENTER", 0, 40)
         frame:SetFrameStrata("DIALOG")
@@ -616,11 +631,28 @@ local Panel = Logres:RegisterModule("DevPanel", {
         text:SetShadowOffset(1, -1)
         bugButton:SetFontString(text)
         bugButton:SetText("Report Bug")
-        bugButton:RegisterForClicks("LeftButtonUp")
-        bugButton:SetScript("OnClick", function()
+        -- Left-click remains the original one-click incident screenshot.
+        -- Right-click is the sole ordinary on-screen entrance to DevPanel.
+        bugButton:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+        bugButton:SetScript("OnClick", function(_, button)
+            if button == "RightButton" then
+                Logres:ToggleDevPanel()
+                return
+            end
             local _, result = Logres:CaptureBugIncident()
             Logres:DevPrint("Incident recorded: " .. result
                 .. ". Screenshot image remains in the client Screenshots folder.")
+        end)
+        bugButton:SetScript("OnEnter", function(current)
+            if not GameTooltip then return end
+            GameTooltip:SetOwner(current, "ANCHOR_LEFT")
+            GameTooltip:SetText("Report Bug / Debug")
+            GameTooltip:AddLine("Left-click: capture incident and world-target diagnostics", 1, 1, 1)
+            GameTooltip:AddLine("Right-click: open the full developer panel", 1, 1, 1)
+            GameTooltip:Show()
+        end)
+        bugButton:SetScript("OnLeave", function()
+            if GameTooltip then GameTooltip:Hide() end
         end)
         self.bugButton = bugButton
 
@@ -630,7 +662,7 @@ local Panel = Logres:RegisterModule("DevPanel", {
     end,
 
     OnEnable = function(self)
-        self.frame:Show()
+        self.frame:Hide() -- Do not open the panel automatically on login.
         self:SetActivePhase(self.activePhase or DEFAULT_PHASE)
         self:RunCommand("status")
     end,
