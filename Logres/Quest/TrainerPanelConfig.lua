@@ -16,6 +16,21 @@ local trainer = {
         titleX = 0, titleY = -20, noteX = 0, noteY = -59,
         titleColor = art.colors.title, noteColor = art.colors.body,
     },
+    -- P0424: compact merchant service profile. It reuses the trainer visual
+    -- language and shared PanelSurface; the larger trainer catalogue, detail,
+    -- profession and training controls intentionally retain their own geometry.
+    merchant = {
+        width = 800, height = 625,
+        point = "TOP", relativePoint = "TOP", x = 0, y = -86,
+        strata = "DIALOG", mouse = false,
+        sidebar = {x=32, y=102, w=222, h=352},
+        list = {x=268, y=102, w=500, h=352},
+        topRuleY = 85, footerRuleY = 468,
+        footerTitleY = 484, footerNoteY = 514,
+        pagerY = 42, -- pixels above bottom edge
+        previewRowWidth = 192, previewNameWidth = 142,
+        previewPriceWidth = 135,
+    },
     -- Approved landscape screenshot: ONE complete UI, not isolated sample paint.
     -- Only addon-owned preview geometry; live Blizzard child positions NEVER change.
     landscape = {

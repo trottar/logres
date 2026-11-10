@@ -1,3 +1,12 @@
+## P0424 — Cosmetic NPC merchant window refinement (2026-11-09)
+
+User accepted P0423 V8 HUD visually and requests a more compact merchant
+window. This is a new scoped presentation request, **not a report of broken
+vendor purchases or L-008 pet controls**. P0424 preserves native transaction
+ownership and avoids forcing the seven-row trainer into the merchant's smaller
+service profile. Merchant/trainer runtime behavior remains UNVERIFIED until
+checked in WoW Forever. No existing L-ID is closed by this change.
+
 ## P0423 — Scoped visual-placement regression (2026-11-09)
 
 P0422 shifted the pet-action bar from X=9% to X=10%, as well as the allies

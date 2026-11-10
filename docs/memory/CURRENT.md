@@ -11,17 +11,17 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0423** Correct the P0422 pet/party interpretation. P0422 moved the pet
-**action bar** and allies/status frame right 1%; the user reports that only the
-**pet/party status frame** was intended to shift. V8 restores `classPet` to
-P0421 X=9%, keeps `allies` at X=24% (+1% from P0421), and changes nothing else.
-P0422 visual spacing was NOT accepted; P0423 WoW Forever check is PENDING.
-P0416 secure five-bar routing, P0417 native pet suppression, and P0420 H.2
-read-only overlay remain unchanged. L-009 live editing DEFERRED; L-008 pet-edge
-coverage OPEN. Historical P0381 quest failures remain separately recorded.
+**P0424** Compact the native-backed merchant service shell from 896×712 to
+800×625 through a service-specific profile in shared `TrainerPanelConfig`.
+Leave the seven-row trainer catalogue and all Blizzard merchant interaction,
+purchase, buyback, repair and recovery handlers unchanged. User accepted P0423
+V8 HUD visually; the merchant compact layout is UNVERIFIED in WoW Forever.
+L-008 pet-edge coverage OPEN; L-009 live action editing DEFERRED. Historical
+P0381 quest failures remain separate.
 
 ## Verified State
 
+- P0422 moved the pet-action bar in error; P0423 restored it and V8 was visually accepted.
 
 - P0420 pushed main `bd55e34`; user screenshot shows expected and measured
   H.2 outlines aligned, but requests actual visual refinement. P0421 uses
@@ -57,10 +57,10 @@ coverage OPEN. Historical P0381 quest failures remain separately recorded.
 
 ## Next Action
 
-P0421 authored V6 anchor change: verify 289 static checks and guarded exact
-baseline apply; user tests in WoW Forever with H.2 map, secure bars/pet actions,
-quest/dialogue positioning, menu layering and Immersion OFF/ON. L-008 edge
-coverage remains OPEN; L-009 live editing stays DEFERRED.
+P0424: verify full static contract set and guarded exact P0423 baseline apply;
+then check merchant stock, buyback, page controls, native quantity/currency,
+Goodbye, trainer geometry, combat deferral and stock fallback in WoW Forever.
+Do not infer purchase/training PASS from a screenshot. V8 HUD is accepted.
 
 ## Success Criteria
 
@@ -70,6 +70,8 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0424_COMPACT_MERCHANT_PROFILE.md
+- docs/design/layout/NPC_MERCHANT_COMPACT_V1.md
 - docs/memory/evidence/P0421_V6_SCREEN_REFINEMENTS.md
 - docs/design/layout/SCREEN_MAP_V6.json
 - docs/design/layout/SCREEN_MAP_V6.md

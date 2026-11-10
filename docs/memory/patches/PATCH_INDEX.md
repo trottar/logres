@@ -1,3 +1,7 @@
+- **P0424** — Merchant-specific 800×625 compact profile within shared trainer
+  PanelSurface configuration. Preserves 896×712 trainer, native merchant
+  purchase/quantity/buyback/repair, secure HUD V8 and stock rollback. Client
+  acceptance pending.
 - **P0423** — Correct P0422 pet/party interpretation: V8 restores pet-actions cluster X=9% (P0421), retains allies/status frame X=24%; no pet secure logic or action-bar changes. P0422 visual misplacement kept as evidence.
 - **P0422** — Final V7 pet/party spacing refinement; moves only `allies` and `petActions` 1% right from P0421, preserving action routing, pet suppression, and H.2 diagnostics.
 | P0421 | 2026-11-09 | PREPARED — USER-APPROVED V6 SCREEN REFINEMENTS | P0420 main `bd55e34`; 15 source-exported viewport-center adjustments translated to real owned anchors (four semantic non-center widgets delta-shifted), bar source/routing/pet ownership intact; WoW UNVERIFIED. |

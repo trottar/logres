@@ -8,7 +8,7 @@ def read(name):
 
 source = read("Logres/Quest/MerchantCatalogue.lua")
 for token in (
-    "Logres.PanelConfigs.trainer", "config.preview, config.landscape",
+    "Logres.PanelConfigs.trainer", "config.merchant, config.landscape",
     "Logres.PanelSurface.Paint(owner, config.surface, visual.width, visual.height)",
     "visual.point, UIParent, visual.relativePoint, visual.x, visual.y",
     "shell(art, merchantName(), false)", 'shell(frame, "Tailoring Supplies", true)',
@@ -35,4 +35,4 @@ assert "SetParent(" not in source and ":Click(" not in source
 assert 'EnableMouse(false)' in source and 'frame:Hide()' in source.split("local function buildPreview()", 1)[1]
 assert "merchant.IsActive()" in read("Logres/Quest/NativeServicePlacementTrial.lua")
 assert "P0393_TRAINER_STYLE_MERCHANT.md" in read("docs/memory/investigations/ISSUE_LEDGER.md")
-print("P0393 trainer shell, native input ownership, capability gates and restoration: PASS (STATIC)")
+print("P0393/P0424 shared trainer shell, service-specific merchant profile, native ownership/restoration: PASS (STATIC)")

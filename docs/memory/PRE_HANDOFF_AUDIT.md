@@ -1,3 +1,18 @@
+## P0424 — Compact merchant layout pre-handoff (2026-11-09)
+
+Author baseline: GitHub `main` P0423 `f283202db47ddee9e9c3c2d7ba2c95e5d6e68d00`.
+The user accepted V8 HUD and requests less blank space in the live vendor.
+Native MerchantFrame remains the transaction/input owner. A merchant-specific
+profile in the shared trainer configuration compresses the merchant shell to
+800×625; trainer preview and live seven-row catalogue stay 896×712. This
+avoidance of blanket NPC window shrinking is deliberate. No protected or
+secret reads, native transaction scripts, polling or camera APIs are added.
+Static and in-game tests must be recorded separately. P0424 client pending.
+Author negative: a P0422 marker lost during CURRENT compression caused a
+291/292 static refusal; restored before full 292/292 PASS. A pre-handoff
+applier Python string-quoting error was caught and fixed by `py_compile`; the
+archive was rebuilt before any user delivery. See P0424 evidence.
+
 ## P0423 — pet/party frame versus pet-action bar correction (2026-11-09)
 
 The user observed the P0422 pet action bar had been moved right, contrary to

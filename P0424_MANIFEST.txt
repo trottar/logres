@@ -1,0 +1,28 @@
+P0424 Compact merchant NPC shell with service-specific shared panel geometry
+Verified baseline: f283202db47ddee9e9c3c2d7ba2c95e5d6e68d00
+Candidate runtime version: 0.0.301-dev
+PREWRITE: 292/292 STATIC PASS
+POSTWRITE: 292/292 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Logres.toc
+Logres/Quest/MerchantCatalogue.lua
+Logres/Quest/TrainerPanelConfig.lua
+docs/ROADMAP.md
+docs/design/layout/NPC_MERCHANT_COMPACT_V1.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0424_COMPACT_MERCHANT_PROFILE.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0424_COMPACT_MERCHANT_PROFILE.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0393_trainer_style_merchant_contract.py
+tools/check_p0424_compact_npc_merchant_contract.py
+P0424_MANIFEST.txt

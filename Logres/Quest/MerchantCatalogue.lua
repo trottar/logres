@@ -4,9 +4,9 @@ local Merchant = {}
 Logres.NPCMerchantCatalogue = Merchant
 
 local config = Logres.PanelConfigs.trainer
-local visual, style = config.preview, config.landscape
-local palette, geometry = style.palette, style.geometry
-local list, sidebar = geometry.list, geometry.left
+local visual, style = config.merchant, config.landscape
+local palette = style.palette
+local list, sidebar = visual.list, visual.sidebar
 local firstX, firstY, columnGap = list.x + 22, list.y + 31, 125
 local live, preview, visit, stockOnly
 local guildPreviewStep = 0
@@ -14,7 +14,7 @@ local merchantState = false
 local hooked = setmetatable({}, {__mode = "k"})
 local result, starts, restores = "idle", 0, 0
 local goodbyeWidth, goodbyeHeight, goodbyeX, goodbyeY = 78, 24, -45, -12
-local pagerCenter, pagerY, chevronGap = list.x + list.w / 2 - 28, 91, 78
+local pagerCenter, pagerY, chevronGap = list.x + list.w / 2 - 28, visual.pagerY, 78
 
 local function text(parent, value, font, x, y, width, color, align)
     local label = parent:CreateFontString(nil, "OVERLAY", font)
@@ -78,8 +78,8 @@ local function shell(owner, title, sample)
     wash(owner, sidebar.x, sidebar.y, sidebar.w, sidebar.h, palette.sidebarWash)
     wash(owner, list.x, list.y, list.w, list.h, palette.catalogueWash)
     wash(owner, sidebar.x + sidebar.w + 7, sidebar.y + 8, 1, sidebar.h - 16, palette.sidebarRule)
-    wash(owner, 28, 85, visual.width - 56, 1, palette.gold)
-    wash(owner, 28, 525, visual.width - 56, 1, palette.gold)
+    wash(owner, 28, visual.topRuleY, visual.width - 56, 1, palette.gold)
+    wash(owner, 28, visual.footerRuleY, visual.width - 56, 1, palette.gold)
     local heading = text(owner, title, "GameFontHighlightLarge", 120, 19, visual.width - 240,
         palette.goldText, "CENTER")
     text(owner, sample and "MERCHANT  /  PREVIEW" or "MERCHANT  /  LIVE STOCK",
@@ -90,8 +90,8 @@ local function shell(owner, title, sample)
     label("Shift-click to choose quantity.", 42, 247, 200)
     label("Sell items from your bags.", 42, 270, 200)
     label("Stock and prices", list.x + 16, list.y + 4, 200, palette.goldText)
-    label("Service controls", 42, 541, 240, palette.goldText)
-    label("Repairs and other services appear when offered.", 42, 571, 440, palette.muted)
+    label("Service controls", 42, visual.footerTitleY, 240, palette.goldText)
+    label("Repairs and other services appear when offered.", 42, visual.footerNoteY, 440, palette.muted)
     return heading
 end
 
@@ -578,14 +578,14 @@ local function buildPreview()
         local y = firstY + math.floor(slot / 2) * 52
         local row = CreateFrame("Frame", nil, frame)
         row:SetPoint("TOPLEFT", frame, "TOPLEFT", x, -y)
-        row:SetSize(270, 42)
+        row:SetSize(visual.previewRowWidth, 42)
         wash(row, -3, -3, 42, 42, palette.iconBorder)
         local icon = row:CreateTexture(nil, "ARTWORK")
         icon:SetSize(36, 36)
         icon:SetPoint("TOPLEFT", row, "TOPLEFT", 0, 0)
         icon:SetTexture(item[2])
-        text(row, item[1], "GameFontHighlight", 45, 0, 224, palette.body)
-        text(row, item[3], "GameFontHighlightSmall", 45, 18, 214, palette.goldText)
+        text(row, item[1], "GameFontHighlight", 45, 0, visual.previewNameWidth, palette.body)
+        text(row, item[3], "GameFontHighlightSmall", 45, 18, visual.previewPriceWidth, palette.goldText)
         rows[i] = row
     end
     local indicator = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")

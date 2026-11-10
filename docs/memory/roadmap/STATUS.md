@@ -1,3 +1,16 @@
+## P0424 — Compact merchant within shared modular NPC panel (2026-11-09)
+
+Verified P0423 main `f283202db47ddee9e9c3c2d7ba2c95e5d6e68d00`.
+The user accepts V8 HUD visual placement as complete. Their live merchant
+screenshot shows unnecessary outer and footer whitespace. The P0393 merchant
+borrows the trainer's 896×712 panel although the trainer's seven-row catalogue
+needs that full size. P0424 adds a 800×625 merchant-specific geometry profile
+inside the shared panel config, preserving the common PanelSurface styling,
+native vendor controls, original trainer geometry and fail-open restoration.
+This is a layout candidate: **WoW Forever runtime UNVERIFIED**. The approved
+V8 HUD, native PET STOCK, secure action routing and unrelated quest issues
+remain unchanged. See `docs/memory/evidence/P0424_COMPACT_MERCHANT_PROFILE.md`.
+
 ## P0423 — Restore pet action bar; retain party-status shift (2026-11-09)
 
 Pinned main P0422 `b8428a36fd091a7b70ed413afdd3434e082f1767`.
