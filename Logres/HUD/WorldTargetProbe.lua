@@ -425,6 +425,46 @@ function Probe:Capture(reason)
     return capture
 end
 
+-- Preserve bounded event-time evidence instead of allowing a later Report Bug
+-- (or target loss) to overwrite the only in-combat nameplate observation.
+-- This observes the current target only; secondary anchors and aggro are NOT
+-- inferred from nameplate event counts or unexamined event unit tokens.
+function Probe:RecordEventAnchor(reason, capture)
+    local combat = readBoolean(InCombatLockdown)
+    local active = sanitizedBoolean(combat)
+    if active == nil then
+        self.combatStateUnknownSamples = self.combatStateUnknownSamples + 1
+        return
+    end
+
+    local ordinaryAnchor = capture.anchor
+        and capture.anchor.ok == true
+        and capture.anchor.secret ~= true
+        and capture.anchor.present == true
+        or false
+
+    if active == true then
+        self.combatEventSamples = self.combatEventSamples + 1
+        self.lastCombatEvent = reason
+        self.lastCombatAnchorPresent = ordinaryAnchor
+        self.lastCombatFallback = capture.fallback
+        self.lastCombatAttachmentState = attachmentState(capture.attachment)
+        if ordinaryAnchor then
+            self.targetAnchorEverSeenInCombat = true
+            self.lastCombatPositiveEvent = reason
+        end
+    else
+        self.outOfCombatEventSamples = self.outOfCombatEventSamples + 1
+        self.lastOutOfCombatEvent = reason
+        if ordinaryAnchor then
+            self.targetAnchorEverSeenOutOfCombat = true
+        end
+        if capture.worldCandidate == true then
+            self.worldCandidateEverSeenOutOfCombat = true
+        end
+    end
+end
+
 function Probe:CaptureManual()
     self.manualCount = self.manualCount + 1
     return self:Capture("manual")
@@ -514,6 +554,18 @@ function Probe:GetDebugStatus()
         proxyReady = self.anchorProxy ~= nil,
         captureCount = self.captureCount,
         manualCount = self.manualCount,
+        combatEventSamples = self.combatEventSamples,
+        outOfCombatEventSamples = self.outOfCombatEventSamples,
+        combatStateUnknownSamples = self.combatStateUnknownSamples,
+        targetAnchorEverSeenInCombat = self.targetAnchorEverSeenInCombat,
+        targetAnchorEverSeenOutOfCombat = self.targetAnchorEverSeenOutOfCombat,
+        worldCandidateEverSeenOutOfCombat = self.worldCandidateEverSeenOutOfCombat,
+        lastCombatEvent = self.lastCombatEvent,
+        lastCombatPositiveEvent = self.lastCombatPositiveEvent,
+        lastCombatAnchorPresent = self.lastCombatAnchorPresent,
+        lastCombatFallback = self.lastCombatFallback,
+        lastCombatAttachmentState = self.lastCombatAttachmentState,
+        lastOutOfCombatEvent = self.lastOutOfCombatEvent,
         lastReason = self.lastReason,
         secretCheckerAvailable = api.secretChecker,
         nameplateAPIAvailable = api.nameplate,
@@ -576,6 +628,19 @@ function Probe:OnInitialize()
     self.moduleEnabled = false
     self.captureCount = 0
     self.manualCount = 0
+    -- Session-scoped scalar observations; no Blizzard frame/token retained.
+    self.combatEventSamples = 0
+    self.outOfCombatEventSamples = 0
+    self.combatStateUnknownSamples = 0
+    self.targetAnchorEverSeenInCombat = false
+    self.targetAnchorEverSeenOutOfCombat = false
+    self.worldCandidateEverSeenOutOfCombat = false
+    self.lastCombatEvent = "none"
+    self.lastCombatPositiveEvent = "none"
+    self.lastCombatAnchorPresent = false
+    self.lastCombatFallback = "uncaptured"
+    self.lastCombatAttachmentState = "uncaptured"
+    self.lastOutOfCombatEvent = "none"
     self.lastCapture = nil
     self.lastReason = nil
     self.eventCounts = {}
@@ -611,7 +676,8 @@ function Probe:OnInitialize()
         self.eventCounts[event] =
             (self.eventCounts[event] or 0) + 1
 
-        self:Capture(event)
+        local capture = self:Capture(event)
+        self:RecordEventAnchor(event, capture)
     end)
 
     self.eventFrame = eventFrame
@@ -620,6 +686,7 @@ end
 function Probe:OnEnable()
     self.moduleEnabled = true
     self:Capture("enable")
+    self:RecordEventAnchor("enable", self.lastCapture)
 end
 
 function Probe:OnDisable()

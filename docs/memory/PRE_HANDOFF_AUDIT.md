@@ -1,3 +1,16 @@
+## P0432 — Author preflight draft; NOT RELEASED (2026-11-10)
+
+Pinned GitHub main P0431 `ee923bf172bafb1803cf8a5d3d53a7d9559edf8c`.
+User established target-only nameplate out of combat and combat-only confirmed
+aggro secondary policy. P0431 incident 10283 correctly captured no accessible
+anchor at the one-shot capture time. P0432 retains event-time observed target
+anchor evidence in bounded addon-owned scalar state, with combat/ordinary
+source guards and no event payload inspection. No actual world attachment or
+secondary aggro is asserted. All before-anchor occurrences must be unique and
+candidate must pass ALL repository checkers in WSL before applying. This JSON
+is a DRAFT, not an audited code ZIP. Local static checks / client P0432 tests
+not run; never claim checker PASS or runtime PASS from this note.
+
 ## P0431 R1 — Debug and World Target capture (2026-11-10)
 
 Verified P0429 main `d949f7db03ccc58bd8886fe4fbace98e659e30c6`.

@@ -1,0 +1,22 @@
+P0432 Record event-time current-target nameplate evidence
+Verified baseline: ee923bf172bafb1803cf8a5d3d53a7d9559edf8c
+Candidate runtime version: 0.0.305-dev
+PREWRITE: 297/297 STATIC PASS
+POSTWRITE: 297/297 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/HUD/WorldTargetProbe.lua
+Logres/Logres.toc
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0432_COMBAT_NAMEPLATE_OBSERVATIONS.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0432_combat_nameplate_event_contract.py
+P0432_MANIFEST.txt

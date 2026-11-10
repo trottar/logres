@@ -10,6 +10,17 @@ source priorities, secret guards, and native fallback. L-043 remains OPEN
 pending WoW Forever validation. P0428 L-030 / L-044 is separate. See
 `docs/memory/evidence/P0427_COMPASS_IDENTITY_LABELS.md`.
 
+## P0432 — Current-target nameplate event evidence (2026-11-10)
+
+P0427 remains active. New Forever 0.0.304-dev incident 10283 correctly captures
+P0431 world-target fields, but anchor=false on that snapshot. Screenshot
+clarifies: outside combat only SELECTED hostile target gets a nameplate; other
+nearby enemies remain unlabeled. P0432 proposes session-scoped positive-anchor
+latches and last combat event state, sampled from existing native events without
+reading event unit payloads. No CVars, nameplate visibility, renderer, aura,
+secondary-anchor, or threat changes. L-011 DEFERRED. AUTHOR CHECKER PREFLIGHT
+PENDING; not an accepted runtime checkpoint. See P0432 evidence.
+
 ## P0431 — Debug World Target Probe capture (2026-11-10)
 
 P0427 remains the active compass checkpoint; P0429 main baseline unchanged.

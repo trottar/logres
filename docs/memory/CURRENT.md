@@ -21,6 +21,8 @@ V8 HUD accepted; L-008 OPEN, L-009 DEFERRED; P0381 failures retained.
 
 ## Verified State
 
+- P0432 event-anchor diagnostic DRAFT; L-011 still DEFERRED; P0427 stays active.
+
 - P0422 moved the pet-action bar in error; P0423 restored it and V8 was visually accepted.
 
 - P0420 pushed main `bd55e34`; user screenshot shows expected and measured

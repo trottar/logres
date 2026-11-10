@@ -298,7 +298,13 @@ function Logres:CaptureBugIncident()
         "nameplateRemovedEvents", "behindCameraChangedEvents",
         "anchorPresent", "behindCamera", "attachmentState", "worldCandidate",
         "fallback", "reactionCategory", "canAttack", "isFriend", "isTrivial",
-        "secretSkipCount", "failureCount"})
+        "secretSkipCount", "failureCount",
+        "combatEventSamples", "outOfCombatEventSamples",
+        "combatStateUnknownSamples", "targetAnchorEverSeenInCombat",
+        "targetAnchorEverSeenOutOfCombat", "worldCandidateEverSeenOutOfCombat",
+        "lastCombatEvent", "lastCombatPositiveEvent", "lastCombatAnchorPresent",
+        "lastCombatFallback", "lastCombatAttachmentState",
+        "lastOutOfCombatEvent"})
     incident.snapshot.questPresentation = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("QuestDialogue"):GetDebugStatus()
     end), {"rootShown", "presentationShown", "lastPresentationReason",

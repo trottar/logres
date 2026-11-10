@@ -1,3 +1,4 @@
+| P0432 | 2026-11-10 | AUTHOR PREFLIGHT DRAFT — EVENT-TIME WORLD TARGET DIAGNOSTICS | Event capture/Report Bug, no production relocation. P0427 stays active; full exact-candidate checker suite NOT RUN by author. L-011 DEFERRED. |
 | P0431 | 2026-11-10 | PREPARED — DEBUG/REPORT BUG WORLD-TARGET CAPTURE | Draft refused 295/296; R1 adapts H.3 click contract. P0427 stays active, L-011 DEFERRED, Forever UNVERIFIED. |
 | P0429 | 2026-11-10 | DOCS-ONLY — COMPASS BUG INTAKE | L-045 OPEN, intermittent and unreproduced. Screenshot and recurrence criteria recorded. |
 | P0428 | 2026-11-10 | DOCS-ONLY — CHAT WORKFLOW REPLICATION | P0427 main `aef719b`; audits recent delivered ZIPs, commits, refusals and visual feedback. Standardizes author checks and guarded apply. QuestieDB investigation remains next. |
