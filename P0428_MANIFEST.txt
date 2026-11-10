@@ -1,0 +1,18 @@
+P0428 Record the repeatable Chat release workflow
+Verified baseline: aef719b582c98ca60502734723287f64beaca0e6
+Candidate runtime version: 0.0.303-dev
+PREWRITE: 295/295 STATIC PASS
+POSTWRITE: 295/295 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: NO RUNTIME FILES CHANGED
+Commit/push performed: NO
+
+Changed paths:
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0428_CHAT_WORKFLOW_REPLICATION.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/patches/CHAT_TO_ZIP_WORKFLOW.md
+docs/memory/patches/P0428_CHAT_WORKFLOW_REPLICATION.md
+docs/memory/patches/PATCH_INDEX.md
+P0428_MANIFEST.txt

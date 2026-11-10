@@ -1,3 +1,12 @@
+## P0428 — Chat workflow replication (2026-11-10)
+
+Verified P0427 main `aef719b582c98ca60502734723287f64beaca0e6`.
+Docs-only process checkpoint. Compare delivery files with their Git parents
+and final commits, and check that CURRENT and the handoff remain within
+their byte limits. Preserve the P0427 gameplay checkpoint and legacy issue
+statuses. The guarded applier's manifest records the actual candidate check
+results. See [P0428 evidence](evidence/P0428_CHAT_WORKFLOW_REPLICATION.md).
+
 ## P0427 — focused compass labels (2026-11-09)
 
 P0426 verified main `32451c20b2a76bc6b689459251900c5e04b1fd6c`.

@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-11-09
+as_of: 2026-11-10
 project: logres
 ---
 
@@ -15,8 +15,8 @@ Alpha blocked. D-046/D-047/D-048.
 for ordinary source identities and same-map distance; keep the explicit
 `distance unavailable` fallback. No QuestieDB eligibility, geometry, pool,
 or native API changes. Client runtime UNVERIFIED; L-043 OPEN pending retest.
-Then P0428 provider freshness/missing quest-giver diagnosis (L-030 PARTIAL,
-L-044 OPEN). P0425 NPC visual PASS; transactions/fallback UNVERIFIED.
+P0428 records the successful Chat workflow. Next separate investigation is
+QuestieDB freshness/missed givers (L-030 PARTIAL, L-044 OPEN). P0425 NPC visual PASS; transactions/fallback UNVERIFIED.
 V8 HUD accepted; L-008 OPEN, L-009 DEFERRED; P0381 failures retained.
 
 ## Verified State
@@ -56,9 +56,9 @@ V8 HUD accepted; L-008 OPEN, L-009 DEFERRED; P0381 failures retained.
 
 ## Next Action
 
-P0427 exact-P0426 source guard and static suite, then WoW Forever focus text
-for known service, qualified quest, unknown name and unknown distance.
-No marker-eligibility changes. Then P0428 L-030/L-044 provider diagnostics.
+P0427 main `aef719b`, 295/295 STATIC. Validate Forever focus text for known
+service, qualified quest, unknown name and unknown distance. Then investigate
+L-030/L-044 separately against verified main.
 
 ## Success Criteria
 
@@ -68,6 +68,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/patches/CHAT_TO_ZIP_WORKFLOW.md (P0428)
 - docs/memory/evidence/P0426_NPC_VISUAL_AND_COMPASS_INTAKE.md
 - docs/design/navigation/COMPASS_IDENTITY_AND_PROVIDER_FRESHNESS.md
 - docs/DEPENDENCIES.md

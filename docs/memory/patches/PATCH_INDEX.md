@@ -1,3 +1,4 @@
+| P0428 | 2026-11-10 | DOCS-ONLY — CHAT WORKFLOW REPLICATION | P0427 main `aef719b`; audits recent delivered ZIPs, commits, refusals and visual feedback. Standardizes author checks and guarded apply. QuestieDB investigation remains next. |
 | P0427 | 2026-11-09 | PREPARED — SOURCE-BACKED COMPASS FOCUS LABELS | Verified P0426 `32451c20`; role/name + rounded world-yard focus text only; L-043 runtime OPEN, P0428 provider investigations distinct. |
 | P0426 | 2026-11-09 | DOCS-ONLY — P0425 VISUAL PASS / COMPASS INTAKE | P0425 main `5af8d14`; merchant buyback/trainer visual PASS scoped; L-030 missed giver remains PARTIAL, new L-043 label/L-044 provider freshness OPEN; v1.0.13 release docs; compass runtime untouched. |
 | P0425 | 2026-11-09 | PREPARED — MERCHANT BUYBACK ALIGNMENT / COMPACT TRAINER | P0424 main `80b46f4`; fix separate native buyback item overlap, raise native tabs together, compact trainer 820×660 with 7 rows and full control fit; runtime UNVERIFIED. |
