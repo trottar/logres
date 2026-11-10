@@ -1,0 +1,29 @@
+P0438 Guarded out-of-combat world target developer trial
+Verified baseline: 5437e810869459a472c7576c064d511060412037
+Candidate runtime version: 0.0.309-dev
+PREWRITE: 302/302 STATIC PASS
+POSTWRITE: 302/302 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/HUD/HUD.lua
+Logres/HUD/StatusAuras.lua
+Logres/HUD/WorldTargetProbe.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0438_WORLD_TARGET_TRIAL.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0437_enemy_hp_accent_removal_contract.py
+tools/check_p0438_world_target_trial_contract.py
+P0438_MANIFEST.txt

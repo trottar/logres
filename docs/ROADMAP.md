@@ -1,3 +1,20 @@
+## P0438 — Guarded live world-target attachment trial (2026-11-10)
+
+Verified P0437 main `5437e810869459a472c7576c064d511060412037`,
+tree `aa418e69b55d8238b14702f8ed03930d2f3387c5`. P0437 screenshot
+accepts the no-gold-underlines 100/50 visual preview and V8 aura lanes.
+P0438 adds developer-only `/logres worldtrial on|off`: primary hostile selected
+unit is displayed with real native-forwarded name/percent and ordinary safe
+StatusAuras lanes only when an OOC hidden addon-owned anchor test passes and
+nameplate forbidden state is ordinary false. Secure combat state driver hides
+the owned trial during lockdown without in-combat SetPoint/Hide. No Blizzard
+frame changes, no polling or CVar forcing, no native or Logres fallback
+suppression, and NO production relocation. The saved screen-space preference
+remains default OFF. Report Bug records scalar trial state. D-042/L-011 safe
+runtime attachment still UNPROVEN until Forever; secondary anchors and
+confirmed per-unit aggro remain separately DEFERRED. See
+`docs/memory/evidence/P0438_WORLD_TARGET_TRIAL.md`.
+
 ## P0437 — Enemy HP underline removal (2026-11-10)
 
 P0436 main `2982b30745828267f54a3ecaf3ba06800bc72f10` verified. Forever

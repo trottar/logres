@@ -1,3 +1,23 @@
+## P0438 — OOC world target trial gate (2026-11-10)
+
+Baseline verified main `5437e810869459a472c7576c064d511060412037`,
+tree `aa418e69b55d8238b14702f8ed03930d2f3387c5`. User screenshot
+accepts P0437 100/50 fixture without gold line; normal fallback and P0438
+live attachment are not yet visually accepted. The earlier P0432 runtime
+proved *accessible combat anchor only*, with mutation deferred in lockdown.
+No safe attachment PASS is invented from that observation.
+
+P0438 adds a developer-only slash `worldtrial` trial (not saved, default OFF),
+using the same owned enemy renderer and safe ordinary target aura lanes;
+only a current hostile, ordinary, non-forbidden nameplate with a successful
+hidden addon-owned attachment attempt can be used outside combat. Secure
+state driver auto-hides the owned parent in combat, without Lua combat frame
+mutation. It never alters Blizzard nameplates or suppresses screen/native
+fallback; 50% secondary remains synthetic until separately confirmed. Report
+Bug records reason, counts and trial visibility. If no OOC anchor exists,
+DEFERRED is an expected result, not an addon failure. Explicit client runtime
+validation is required for actual attachment, state driver and aura spacing.
+
 ## P0437 — Remove enemy HP underline (2026-11-10)
 
 Verified P0436 main `2982b30745828267f54a3ecaf3ba06800bc72f10`,

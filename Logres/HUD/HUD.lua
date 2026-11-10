@@ -782,6 +782,7 @@ function HUD:UpdateTarget()
 
     if not UnitExists("target") then
         self.targetFrame:Hide()
+        self:UpdateWorldTrialValues()
         return
     end
 
@@ -802,6 +803,7 @@ function HUD:UpdateTarget()
     self.targetHealthBar.status:SetValue(percent)
     self.targetHealthText:SetFormattedText("%.0f%%", percent)
     self.targetFrame:Show()
+    self:UpdateWorldTrialValues()
 end
 
 function HUD:ApplyImmersionPreference(preferences)
@@ -822,6 +824,7 @@ function HUD:ApplyImmersionPreference(preferences)
         self:RefreshPvPIndicators()
     else
         self.root:Hide()
+        self:SetWorldTargetTrial(false)
     end
 end
 
@@ -840,6 +843,12 @@ function HUD:GetDebugStatus()
         enemyPreviewAggroAlpha = 0.5,
         enemyWorldAttachmentEnabled = false,
         enemyFallbackPreserved = true,
+        worldTrialRequested = self.worldTrialRequested == true,
+        worldTrialVisible = self.worldTrialVisible == true,
+        worldTrialLastReason = self.worldTrialLastReason,
+        worldTrialAttachCount = self.worldTrialAttachCount or 0,
+        worldTrialFailures = self.worldTrialFailures or 0,
+        worldTrialCombatHidden = self.worldTrialCombatHidden == true,
         previewEnabled = self.previewEnabled and true or false,
         previewPercent = self.previewPercent,
         deathTravelMode = self.deathTravelMode and true or false,
@@ -902,6 +911,10 @@ local function buildEnemyDisplayFixture(parent, fixtureName, label, percent)
     bar.percentText:SetFormattedText("%.0f%%", percent)
     local cue = createCastCue(frame, nil)
     cue:SetPoint("TOP", frame, "BOTTOM", 0, -6)
+    frame.enemyNameText = nameText
+    frame.enemyHealthBar = bar
+    frame.enemyHealthText = bar.percentText
+    frame.enemyCastCue = cue
     return frame
 end
 
@@ -951,6 +964,158 @@ function HUD:BuildEnemyDisplayPreview()
     return true
 end
 
+-- P0438: a developer-only live target preview on an *already proven* anchor.
+-- No production relocation, no replacement, no Blizzard mutations, no polling.
+-- This must never be enabled automatically from saved preferences.
+local function ordinaryOutOfCombat()
+    if type(InCombatLockdown) ~= "function"
+        or type(issecretvalue) ~= "function" then return false end
+    local ok, value = pcall(InCombatLockdown)
+    if not ok then return false end
+    local checked, secret = pcall(issecretvalue, value)
+    return checked and secret == false
+        and type(value) == "boolean" and value == false
+end
+
+function HUD:BuildWorldTargetTrial()
+    if self.worldTrialFrame then return true end
+    if not ordinaryOutOfCombat() then
+        return false, "combat-or-state-unavailable"
+    end
+    if type(RegisterStateDriver) ~= "function" then
+        return false, "combat-state-driver-unavailable"
+    end
+    -- A separate parent has a secure combat visibility driver, so no Lua
+    -- SetPoint/Show/Hide is needed on combat entry or target transitions.
+    local shell = CreateFrame("Frame", "LogresWorldTargetTrialShell", UIParent)
+    shell:SetAllPoints(UIParent)
+    shell:SetFrameStrata("HIGH")
+    shell:EnableMouse(false)
+    shell:SetScript("OnShow", function()
+        -- A stale target must not briefly resurface when the secure driver
+        -- reveals its parent after combat. OOC events reacquire the anchor.
+        if self.worldTrialFrame and ordinaryOutOfCombat() then
+            self.worldTrialFrame:Hide()
+            self.worldTrialVisible = false
+        end
+    end)
+    local frame = buildEnemyDisplayFixture(shell,
+        "LogresWorldTargetTrial", "World target (trial)", 100)
+    frame:EnableMouse(false)
+    frame:Hide()
+    local ok = pcall(RegisterStateDriver, shell,
+        "visibility", "[combat] hide; show")
+    if not ok then
+        shell:Hide()
+        self.worldTrialLastReason = "combat-state-driver-failed"
+        return false, self.worldTrialLastReason
+    end
+    self.worldTrialShell = shell
+    self.worldTrialFrame = frame
+    -- Always reuse StatusAuras' ordinary-source renderer and its +/-25px
+    -- unit-relative lanes; no synthetic auras in the world trial.
+    local aura = Logres:GetModule("StatusAuras")
+    if aura and type(aura.CreateWorldTrialLanes) == "function" then
+        aura:CreateWorldTrialLanes(frame)
+    end
+    return true
+end
+
+function HUD:UpdateWorldTrialValues()
+    if not self.worldTrialFrame or not self.worldTrialVisible
+        or not ordinaryOutOfCombat() then return end
+    local frame = self.worldTrialFrame
+    local ok = pcall(function()
+        -- Secret-capable unit identity and percent flow directly into native
+        -- consumers, with no Lua comparison, arithmetic or formatting.
+        frame.enemyNameText:SetText(UnitName("target"))
+        local percent = UnitHealthPercent("target", true, self.percentScaleCurve)
+        frame.enemyHealthBar.status:SetValue(percent)
+        frame.enemyHealthText:SetFormattedText("%.0f%%", percent)
+    end)
+    if not ok then
+        self.worldTrialFailures = self.worldTrialFailures + 1
+        self.worldTrialLastReason = "unit-consumer-failed"
+        self.worldTrialVisible = false
+        -- This addon-owned trial is still OOC; never display stale fixtures.
+        frame:Hide()
+        return false
+    end
+    return true
+end
+
+function HUD:RefreshWorldTargetTrial(reason)
+    if not self.worldTrialRequested then return false, "not-requested" end
+    if not ordinaryOutOfCombat() then
+        self.worldTrialLastReason = "combat-deferred"
+        self.worldTrialVisible = false
+        -- The secure parent handles combat hiding. Do not mutate frames here.
+        return false, self.worldTrialLastReason
+    end
+    local built, buildReason = self:BuildWorldTargetTrial()
+    if not built then
+        self.worldTrialLastReason = buildReason
+        return false, buildReason
+    end
+    local frame = self.worldTrialFrame
+    frame:Hide()
+    self.worldTrialVisible = false
+    pcall(frame.ClearAllPoints, frame)
+    local preferences = Logres:GetPreferences()
+    if preferences.immersionEnabled ~= true then
+        self.worldTrialLastReason = "immersion-off"
+        return false, self.worldTrialLastReason
+    end
+    local probe = Logres:GetModule("WorldTargetProbe")
+    if not probe or type(probe.AcquireWorldTrialAnchor) ~= "function" then
+        self.worldTrialLastReason = "probe-unavailable"
+        return false, self.worldTrialLastReason
+    end
+    local anchor, why = probe:AcquireWorldTrialAnchor()
+    if not anchor then
+        self.worldTrialLastReason = why
+        return false, why
+    end
+    local attached = pcall(frame.SetPoint, frame,
+        "BOTTOM", anchor, "TOP", 0, 6)
+    if not attached then
+        self.worldTrialFailures = self.worldTrialFailures + 1
+        self.worldTrialLastReason = "live-trial-setpoint-failed"
+        pcall(frame.ClearAllPoints, frame)
+        return false, self.worldTrialLastReason
+    end
+    self.worldTrialVisible = true
+    self.worldTrialAttachCount = self.worldTrialAttachCount + 1
+    self.worldTrialLastReason = "preview-anchored-ooc"
+    if not self:UpdateWorldTrialValues() then
+        return false, self.worldTrialLastReason
+    end
+    local auras = Logres:GetModule("StatusAuras")
+    if auras and type(auras.RefreshWorldTrialLanes) == "function" then
+        auras:RefreshWorldTrialLanes()
+    end
+    frame:Show()
+    return true, self.worldTrialLastReason
+end
+
+function HUD:SetWorldTargetTrial(enabled)
+    if enabled and not ordinaryOutOfCombat() then
+        self.worldTrialLastReason = "combat-deferred"
+        return false, self.worldTrialLastReason
+    end
+    self.worldTrialRequested = enabled == true
+    if not self.worldTrialRequested then
+        if ordinaryOutOfCombat() and self.worldTrialFrame then
+            self.worldTrialFrame:Hide()
+            pcall(self.worldTrialFrame.ClearAllPoints, self.worldTrialFrame)
+        end
+        self.worldTrialVisible = false
+        self.worldTrialLastReason = "off"
+        return true, "off"
+    end
+    return self:RefreshWorldTargetTrial("manual")
+end
+
 function HUD:SetEnemyDisplayPreview(enabled)
     if enabled and not self.enemyDisplayPreview then
         self:BuildEnemyDisplayPreview()
@@ -972,6 +1137,12 @@ function HUD:SetEnemyDisplayPreview(enabled)
 end
 
 function HUD:OnInitialize()
+    self.worldTrialRequested = false
+    self.worldTrialVisible = false
+    self.worldTrialCombatHidden = false
+    self.worldTrialLastReason = "off"
+    self.worldTrialAttachCount = 0
+    self.worldTrialFailures = 0
     local root = CreateFrame("Frame", "LogresHUDRoot", UIParent)
     root:SetAllPoints(UIParent)
     root:SetFrameStrata("BACKGROUND")
@@ -1192,6 +1363,19 @@ function HUD:OnInitialize()
 
     self.targetEventFrame = targetEventFrame
 
+    local worldTrialEvents = CreateFrame("Frame")
+    worldTrialEvents:SetScript("OnEvent", function(_, event)
+        if event == "PLAYER_REGEN_DISABLED" then
+            -- No frame mutation during combat. Secure state driver owns hide.
+            self.worldTrialCombatHidden = true
+            self.worldTrialVisible = false
+            self.worldTrialLastReason = "combat-state-driver"
+        elseif self.worldTrialRequested then
+            self:RefreshWorldTargetTrial(event)
+        end
+    end)
+    self.worldTrialEvents = worldTrialEvents
+
     local pvpEventFrame = CreateFrame("Frame")
     pvpEventFrame:SetScript("OnEvent", function()
         -- Ignore event payloads. Re-evaluate both ordinary booleans only.
@@ -1281,6 +1465,12 @@ function HUD:OnEnable()
     self.targetEventFrame:RegisterUnitEvent("UNIT_MAXHEALTH", "target")
     self.targetEventFrame:RegisterUnitEvent("UNIT_NAME_UPDATE", "target")
 
+    for _, event in ipairs({"PLAYER_TARGET_CHANGED", "NAME_PLATE_UNIT_ADDED",
+        "NAME_PLATE_UNIT_REMOVED", "NAME_PLATE_UNIT_BEHIND_CAMERA_CHANGED",
+        "PLAYER_REGEN_DISABLED", "PLAYER_REGEN_ENABLED"}) do
+        self.worldTrialEvents:RegisterEvent(event)
+    end
+
     for index = 1, #CAST_EVENTS do
         local event = CAST_EVENTS[index]
         self.playerCastEventFrame:RegisterUnitEvent(event, "player")
@@ -1305,6 +1495,7 @@ function HUD:OnEnable()
         self.healthEventFrame:UnregisterAllEvents()
         self.resourceEventFrame:UnregisterAllEvents()
         self.targetEventFrame:UnregisterAllEvents()
+        self.worldTrialEvents:UnregisterAllEvents()
         self.pvpEventFrame:UnregisterAllEvents()
         self.playerCastEventFrame:UnregisterAllEvents()
         self.targetCastEventFrame:UnregisterAllEvents()
@@ -1325,6 +1516,7 @@ function HUD:OnEnable()
 end
 
 function HUD:OnDisable()
+    self:SetWorldTargetTrial(false)
     self:SetEnemyDisplayPreview(false)
     self.previewEnabled = false
     self.previewPercent = nil

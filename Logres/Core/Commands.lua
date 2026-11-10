@@ -3343,6 +3343,17 @@ local function runAllChecks()
     emit("Logres checkall: complete")
 end
 
+function Logres:HandleWorldTrialCommand(argument)
+    local hud = Logres:GetModule("HUD")
+    if argument ~= "on" and argument ~= "off" then
+        emit("Usage: /logres worldtrial [on|off]")
+        return
+    end
+    local ok, why = hud:SetWorldTargetTrial(argument == "on")
+    emit(string.format("Logres worldtrial: %s (%s; live world preview only, fallback retained)",
+        ok and "PASS" or "DEFERRED", tostring(why)))
+end
+
 local function handleHUDPreview(argument)
     local hud = Logres:GetModule("HUD")
 
@@ -3504,6 +3515,7 @@ local function printHelp()
     emit("  /logres questofferdeclineprobe")
     emit("  /logres pvppreview [on|off]  (HUD visual fixture)")
     emit("  /logres hudpreview [on|off]")
+    emit("  /logres worldtrial [on|off] (gated live target trial)")
     emit("  /logres healthpreview [100|80|70|60|50|40|30|20|15|5|0|off]")
     emit("  /logres immersion [on|off|toggle]")
     emit("  /logres debug on")
@@ -4311,6 +4323,10 @@ local function handleCommand(message)
 
     if command == "hudpreview" then
         handleHUDPreview(argument)
+        return
+    end
+    if command == "worldtrial" then
+        Logres:HandleWorldTrialCommand(argument)
         return
     end
 

@@ -11,16 +11,16 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0437** shared enemy HP-bar cosmetic repair from P0436 main: remove thin
-gold underline beneath selected and half-scale bars, including screen-space
-target fallback. P0436 screenshot accepts alignment, auras and live health;
-saved enemy preference OFF. Runtime P0437 UNVERIFIED. World attachment and
-per-unit aggro DEFERRED (D-042/L-011). **P0427** historical;
-P0425 visual PASS; L-043/L-030/L-044 OPEN.
+**P0438** opt-in OOC live world-anchor trial on verified P0437 main; only
+attach an owned selected-hostile sample if hidden attachment is positive,
+ordinary and outside combat. Combat visibility uses secure state driver;
+screen-space/native fallback remains. P0437 user visual PASS (no gold bar).
+Production attachment and secondary aggro remain DEFERRED D-042/L-011.
+**P0427** historical; P0425 visual PASS; L-043/L-030/L-044 OPEN.
 
 ## Verified State
 
-- P0436 main `2982b30`; user accepts no false vignette and corrected 50% alignment; gold enemy HP underline rejected, P0437 removes it.
+- P0437 main `5437e81`; user screenshot visually accepts no gold underline; P0438 owned world-trial unverified in Forever.
 
 - P0422 moved the pet-action bar in error; P0423 restored it and V8 was visually accepted.
 
@@ -57,9 +57,9 @@ P0425 visual PASS; L-043/L-030/L-044 OPEN.
 
 ## Next Action
 
-P0437: author-check/apply; Forever verify no gold underline in preview or
-target fallback, aura spacing and OFF preference unchanged. Safe world
-attachment and secondary unit aggro remain gated.
+P0438: author-check/apply and test explicit worldtrial ON/OFF OOC, nameplate
+unavailable/hostile/friendly, combat secure hide and fallback; Report Bug.
+Do not promote until positive Forever attachment and native fallback PASS.
 
 ## Success Criteria
 

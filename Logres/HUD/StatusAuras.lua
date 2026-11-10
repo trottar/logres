@@ -462,6 +462,9 @@ function StatusAuras:Refresh(reason, onlyUnit)
                 }
             end
             self.last[unit] = snapshot
+            if unit == "target" and self.worldTrialLanes then
+                self:RefreshWorldTrialLanes()
+            end
             if active and not self.preview then
                 self:RecordLiveSnapshot(unit, snapshot, reason)
             end
@@ -490,6 +493,37 @@ function StatusAuras:CreateEnemyFixtureLanes(parent, ordinal)
     renderLane(helpful, PREVIEW.targetHelpful, true)
     parent.enemyFixtureLanes = {harmful = harmful, helpful = helpful}
     return parent.enemyFixtureLanes
+end
+
+-- Live world trial uses the SAME owned aura renderer and spacing as the
+-- 100/50 fixture, but uses only already-validated ordinary target aura rows.
+-- Stock aura and screen-space fallback ownership are never changed here.
+function StatusAuras:CreateWorldTrialLanes(parent)
+    if self.worldTrialLanes then return self.worldTrialLanes end
+    local harmful = createLane("target", "RIGHT", "LEFT", 0, 0,
+        "P0438WorldHarmful", parent)
+    local helpful = createLane("target", "LEFT", "RIGHT", 0, 0,
+        "P0438WorldHelpful", parent)
+    self.worldTrialLanes = {harmful = harmful, helpful = helpful}
+    return self.worldTrialLanes
+end
+
+function StatusAuras:RefreshWorldTrialLanes()
+    if not self.worldTrialLanes then return end
+    -- Once an owned trial is anchored to a native plate, even child aura
+    -- mutations are deferred through lockdown. The parent secure driver
+    -- handles visibility; ordinary rows refresh only after combat.
+    if type(InCombatLockdown) ~= "function" then return end
+    local ok, lockdown = pcall(InCombatLockdown)
+    if not ok or isSecret(lockdown) or lockdown ~= false then return end
+    local snapshot = self.last.target
+    local trial = Logres:GetModule("HUD")
+    local active = trial and trial.worldTrialVisible == true
+        and self.moduleEnabled and not self.preview
+    renderLane(self.worldTrialLanes.harmful,
+        snapshot and snapshot.harmfulRows or {}, active)
+    renderLane(self.worldTrialLanes.helpful,
+        snapshot and snapshot.helpfulRows or {}, active)
 end
 
 function StatusAuras:SetPreview(enabled)

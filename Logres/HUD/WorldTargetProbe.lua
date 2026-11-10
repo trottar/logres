@@ -422,7 +422,33 @@ function Probe:Capture(reason)
 
     self.lastCapture = capture
     self.lastReason = reason
-    return capture
+    -- The frame remains an ephemeral local value, never saved in the capture.
+    -- An explicit developer trial may use it only after this hidden test passes.
+    if worldCandidate == true
+        and reaction.reaction.category == "hostile"
+    then
+        return capture, anchorFrame
+    end
+    return capture, nil
+end
+
+function Probe:AcquireWorldTrialAnchor()
+    local capture, anchorFrame = self:Capture("world-trial")
+    if capture.worldCandidate ~= true then
+        return nil, capture.fallback
+    end
+    if capture.reaction.reaction.category ~= "hostile" or not anchorFrame then
+        return nil, "not-hostile"
+    end
+    -- The nameplate is an ordinary anchor token, never an object to mutate.
+    -- Fail closed if its forbidden state cannot be positively established.
+    local forbidden = readBoolean(anchorFrame.IsForbidden, anchorFrame)
+    if forbidden.failure or not forbidden.ok or forbidden.secret
+        or not forbidden.present or forbidden.value ~= false
+    then
+        return nil, "forbidden-state-unavailable"
+    end
+    return anchorFrame, "hidden-attachment-passed"
 end
 
 -- Preserve bounded event-time evidence instead of allowing a later Report Bug

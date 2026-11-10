@@ -295,6 +295,11 @@ function Logres:CaptureBugIncident()
     -- P0431: Report Bug also performs an explicit contextual world-target
     -- capture. The probe owns any temporary hidden addon-frame attachment;
     -- this journal stores only its sanitized, scalar diagnostics.
+    incident.snapshot.worldTargetTrial = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("HUD"):GetDebugStatus()
+    end), {"worldTrialRequested", "worldTrialVisible", "worldTrialLastReason",
+        "worldTrialAttachCount", "worldTrialFailures", "worldTrialCombatHidden",
+        "enemyFallbackPreserved", "enemyWorldAttachmentEnabled"})
     incident.snapshot.worldTarget = pickTraceStatus(ownedTraceStatus(function()
         local probe = self:GetModule("WorldTargetProbe")
         probe:CaptureManual()

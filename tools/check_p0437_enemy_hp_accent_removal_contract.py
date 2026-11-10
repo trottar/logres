@@ -33,7 +33,7 @@ assert re.search(r'(?m)^## Version: (\S+)$', toc).group(1) == re.search(r'(?m)^L
 for p in ('docs/ROADMAP.md','docs/memory/investigations/ACTIVE.md',
           'docs/memory/roadmap/STATUS.md','docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md'):
     value = read(p)
-    assert value.startswith('## P0437 —'), p
+    assert re.match(r'## P[0-9]{4} —', value) and '## P0437 —' in value, p
     assert '## P0436 —' in value and '## P0435 —' in value and '## P0427 —' in value
 assert len(read('docs/memory/CURRENT.md').encode()) < 9800
 assert 'P0425 visual PASS' in read('docs/memory/CURRENT.md')
