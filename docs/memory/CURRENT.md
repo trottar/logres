@@ -21,7 +21,7 @@ V8 HUD accepted; L-008 OPEN, L-009 DEFERRED; P0381 failures retained.
 
 ## Verified State
 
-- P0432 event-anchor diagnostic DRAFT; L-011 still DEFERRED; P0427 stays active.
+- P0432 combat anchor seen, attachment UNVERIFIED. P0434 author kit; L-011 DEFERRED.
 
 - P0422 moved the pet-action bar in error; P0423 restored it and V8 was visually accepted.
 
@@ -70,7 +70,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
-- docs/memory/patches/CHAT_TO_ZIP_WORKFLOW.md (P0428)
+- docs/memory/patches/CHAT_TO_ZIP_WORKFLOW.md (P0428/P0434)
 - docs/memory/evidence/P0426_NPC_VISUAL_AND_COMPASS_INTAKE.md
 - docs/design/navigation/COMPASS_IDENTITY_AND_PROVIDER_FRESHNESS.md
 - docs/DEPENDENCIES.md

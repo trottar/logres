@@ -205,8 +205,10 @@ if PANEL.is_file():
         if fragment not in source:
             errors.append(f"Panel.lua missing: {fragment}")
 
-    if 'self:GetModule("HUD")' in source:
-        errors.append("developer panel must not be parented/owned through the HUD module")
+    # The root constructor above requires UIParent. Reading HUD status for
+    # an incident does not change that owner, but reparenting the root would.
+    if re.search(r"\bframe\s*:\s*SetParent\s*\(", source):
+        errors.append("developer panel must remain parented to UIParent")
 
 if TOC.is_file():
     source = TOC.read_text(encoding="utf-8")

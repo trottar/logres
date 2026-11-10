@@ -144,6 +144,30 @@ def run_candidate_checks(candidate, checkers):
         raise Refused(f"Candidate checks: {passed}/{len(checkers)} passed.\n" + "\n\n".join(failures))
 
 
+def prepare_bundle(baseline, patch, paths, patch_id, title, head, *, check_candidate):
+    """Build the same candidate from an exact archive in WSL or in Chat."""
+    candidate = baseline.with_name("candidate")
+    shutil.copytree(baseline, candidate)
+    files, hashes = stage_patch(baseline, candidate, patch, paths)
+    version = re.search(r"^## Version: (\S+)$", (candidate / "Logres/Logres.toc").read_text(encoding="utf-8"),
+                        re.MULTILINE)
+    if not version:
+        raise Refused("Candidate TOC is missing its version.")
+    checkers = sorted((candidate / "tools").glob("check_*.py"))
+    if not checkers:
+        raise Refused("Candidate is missing the repository checker suite.")
+    if check_candidate:
+        run_candidate_checks(candidate, checkers)
+        if any((candidate / name).read_bytes() != content for name, content in files.items()):
+            raise Refused("A checker changed patch content.")
+    spec = {"id": patch_id, "title": title, "baseline": head, "hashes": hashes,
+            "checkers": [p.name for p in checkers], "version": version[1],
+            "runtime": any(name.startswith("Logres/") for name in files)}
+    template = Path(__file__).with_name("patch_applier_template.py.in").read_text(encoding="utf-8")
+    payload = zip_bytes(files, spec, template)
+    return payload, len(checkers)
+
+
 def build(repo, args, *, announce=True, check_candidate=True):
     if not re.fullmatch(r"P[0-9]{4}", args.id) or not re.fullmatch(r"[0-9a-f]{40}", args.baseline):
         raise Refused("Use a P00XX patch ID and the full lowercase 40-character baseline commit.")
@@ -161,32 +185,17 @@ def build(repo, args, *, announce=True, check_candidate=True):
         baseline = Path(folder) / "baseline"
         with tarfile.open(fileobj=io.BytesIO(tar_data)) as archive:
             archive.extractall(baseline, filter="data")
-        candidate = baseline.with_name("candidate")
-        shutil.copytree(baseline, candidate)
-        files, hashes = stage_patch(baseline, candidate, args.patch.read_bytes(), set(args.path))
-        version = re.search(r"^## Version: (\S+)$", (candidate / "Logres/Logres.toc").read_text(encoding="utf-8"),
-                            re.MULTILINE)
-        if not version:
-            raise Refused("Candidate TOC is missing its version.")
-        checkers = sorted((candidate / "tools").glob("check_*.py"))
-        if not checkers:
-            raise Refused("Candidate is missing the repository checker suite.")
-        if check_candidate:
-            run_candidate_checks(candidate, checkers)
-            if any((candidate / name).read_bytes() != content for name, content in files.items()):
-                raise Refused("A checker changed patch content.")
-        spec = {"id": args.id, "title": args.title, "baseline": head, "hashes": hashes,
-                "checkers": [p.name for p in checkers], "version": version[1],
-                "runtime": any(name.startswith("Logres/") for name in files)}
-        template = Path(__file__).with_name("patch_applier_template.py.in").read_text(encoding="utf-8")
-        payload = zip_bytes(files, spec, template)
+        payload, checked = prepare_bundle(
+            baseline, args.patch.read_bytes(), set(args.path),
+            args.id, args.title, head, check_candidate=check_candidate,
+        )
     with args.output.open("xb") as output:
         output.write(payload)
     if announce and check_candidate:
-        print(f"{len(checkers)}/{len(checkers)} STATIC PASS in candidate shadow")
+        print(f"{checked}/{checked} STATIC PASS in candidate shadow")
     if announce:
         print(f"{sha256(payload).hexdigest()}  {args.output}")
-    return len(checkers)
+    return checked
 
 
 def main():

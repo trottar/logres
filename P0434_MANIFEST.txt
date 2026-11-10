@@ -1,0 +1,23 @@
+P0434 Require exact author preflight for Chat releases
+Verified baseline: 8a3815754a68d54a3e161675cb25cc08cbcf848e
+Candidate runtime version: 0.0.305-dev
+PREWRITE: 298/298 STATIC PASS
+POSTWRITE: 298/298 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: NO RUNTIME FILES CHANGED
+Commit/push performed: NO
+
+Changed paths:
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0434_CHAT_AUTHOR_PREFLIGHT.md
+docs/memory/patches/CHAT_TO_ZIP_WORKFLOW.md
+docs/memory/patches/PATCH_INDEX.md
+tools/build_patch_zip.py
+tools/chat_author.py
+tools/chat_change.py
+tools/check_dev_panel_contract.py
+tools/check_p0426_docs_compass_intake_contract.py
+tools/check_p0427_compass_identity_contract.py
+tools/check_p0434_chat_author_contract.py
+P0434_MANIFEST.txt

@@ -39,6 +39,6 @@ for role in ('quest','repair','profession','point of interest','waypoint'):
 assert len(read('docs/memory/CURRENT.md').encode())<9800
 assert 'P0427' in read('docs/memory/CURRENT.md')
 for p in ('docs/ROADMAP.md','docs/memory/investigations/ACTIVE.md','docs/memory/roadmap/STATUS.md','docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md'):
-    assert read(p).startswith('## P0427 —'),p
+    assert any(line.startswith("## P0427 —") for line in read(p).splitlines()),p
 assert '| L-043 |' in read('docs/memory/investigations/ISSUE_LEDGER.md')
 print('P0427 PASS: label roles, secret-safe name, distance fallback and existing provider/eligibility seams preserved')

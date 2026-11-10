@@ -1,3 +1,13 @@
+## P0434 — Portable exact-candidate Chat author preflight (2026-11-10)
+
+Verified P0432 main `8a3815754a68d54a3e161675cb25cc08cbcf848e`.
+P0433 title rejection and two further check failures reproduced without
+tracked writes. P0434 validates portable and WSL candidate parity, refusal,
+receipt binding and transactional apply. Preserve P0427's historical
+compass evidence, the existing active roadmap relationship and the
+developer panel's UIParent ownership. No WoW runtime code change. See
+[evidence](evidence/P0434_CHAT_AUTHOR_PREFLIGHT.md) and the generated manifest.
+
 ## P0432 — Author preflight draft; NOT RELEASED (2026-11-10)
 
 Pinned GitHub main P0431 `ee923bf172bafb1803cf8a5d3d53a7d9559edf8c`.
