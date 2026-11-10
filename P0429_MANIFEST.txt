@@ -1,0 +1,14 @@
+P0429 Record intermittent compass alignment report
+Verified baseline: 06cca2c4d2e61543370ec93a3286cb592d922f4b
+Candidate runtime version: 0.0.303-dev
+PREWRITE: 295/295 STATIC PASS
+POSTWRITE: 295/295 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: NO RUNTIME FILES CHANGED
+Commit/push performed: NO
+
+Changed paths:
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0429_COMPASS_ISSUE_INTAKE.md
+docs/memory/patches/PATCH_INDEX.md
+P0429_MANIFEST.txt
