@@ -1,3 +1,15 @@
+## P0437 — Enemy HP underline removal (2026-11-10)
+
+P0436 main `2982b30745828267f54a3ecaf3ba06800bc72f10` verified. Forever
+screenshot accepts the enemy preview's 100/50 size/opacity, aligned combat
+row, inherited V8 aura spacing, and absence of a false low-HP vignette.
+User requests removing the thin gold rule below HP bars. P0437 removes only
+that decorative accent on the owned synthetic fixtures and existing Logres
+target fallback, retaining cast cues, health percentage, 25px aura offsets,
+settings OFF, and native fail-open interaction. L-046 OPEN until scoped
+Forever visual retest. No world nameplate attachment or confirmed live aggro;
+D-042/L-011 still DEFERRED. See `docs/memory/evidence/P0437_ENEMY_HP_UNDERLINE.md`.
+
 ## P0436 — Enemy preview health separation and aligned aggro slot (2026-11-10)
 
 P0435 main `9df287e50925d41989e2d62dad0f7f51ca1e428c` verified. User

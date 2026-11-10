@@ -1,3 +1,4 @@
+| P0437 | 2026-11-10 | PREPARED — ENEMY HP UNDERLINE REMOVAL | P0436 screenshot accepts corrected preview and auras; user requests no gold 46x1 HP underline. Remove it from preview and screen fallback, preserve casting/percent/spacing, D-042/L-011 deferred; Forever UNVERIFIED. |
 | P0436 | 2026-11-10 | PREPARED — ENEMY FIXTURE PREVIEW REPAIR | P0435 visually approved except red simulated health vignette and offset aggro row; separate HUD/health preview, align half-scale aggro via unscaled slot, shorten setting hint. D-042/L-011 no world attachment; Forever UNVERIFIED. |
 | P0435 | 2026-11-10 | PREPARED — SHARED ENEMY DISPLAY FIXTURE | P0434 main; full author-check required; saved OFF preference and 100/50 synthetic preview only. L-011 safe attachment still DEFERRED. |
 | P0434 | 2026-11-10 | PREPARED — PORTABLE CHAT AUTHOR PREFLIGHT | P0432 main; exact tracked author kit and receipt-bound Chat apply. P0433 refusal retained. WoW code untouched. |

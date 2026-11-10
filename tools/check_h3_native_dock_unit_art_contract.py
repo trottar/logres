@@ -34,7 +34,7 @@ for token in ('"Pet Stock"', '"Buffs"', '"Target"', 'nativefallback pet',
               'bugButton:SetText("Report Bug")'):
  if token not in panel:errors.append('panel stock/bronze fallback missing '+token)
 if '"UIPanelButtonTemplate"' in s:errors.append('stock red fallback template still in use')
-for token in ('targetFrame:SetSize(198, 54)','targetNameText:SetWidth(190)','"LogresHUDTargetHealthBar",','"compact",','self.targetNameText:SetText(UnitName("target"))','row.nameText:SetText(UnitName(unit))','local targetAccent = targetFrame:CreateTexture(nil, "ARTWORK")','local rowAccent = rowFrame:CreateTexture(nil, "ARTWORK")','unit == "pet"'):
+for token in ('targetFrame:SetSize(198, 54)','targetNameText:SetWidth(190)','"LogresHUDTargetHealthBar",','"compact",','self.targetNameText:SetText(UnitName("target"))','row.nameText:SetText(UnitName(unit))','targetHealthBar:SetPoint("TOP", targetNameText, "BOTTOM", 0, -4)','local rowAccent = rowFrame:CreateTexture(nil, "ARTWORK")','unit == "pet"'):
  if token not in h:errors.append('HUD rendering/data boundary missing '+token)
 for forbidden in ('UnitLevel(', 'UnitClassification(', 'UnitHealth("player"', 'UnitHealthMax("player"'):
  if forbidden in h:errors.append('forbidden unit detail read '+forbidden)

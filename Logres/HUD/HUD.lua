@@ -885,7 +885,7 @@ local function styleEnemyNameText(label)
 end
 
 -- Purely addon-owned fixture: the same percentage-bar primitive, font,
--- accent and target cast layout as the existing fallback. This constructor
+-- and target cast layout as the existing fallback. This constructor
 -- can become the world display only after D-042's attachment proof.
 local function buildEnemyDisplayFixture(parent, fixtureName, label, percent)
     local frame = CreateFrame("Frame", fixtureName, parent)
@@ -900,12 +900,6 @@ local function buildEnemyDisplayFixture(parent, fixtureName, label, percent)
     bar:SetPoint("TOP", nameText, "BOTTOM", 0, -4)
     bar.status:SetValue(percent)
     bar.percentText:SetFormattedText("%.0f%%", percent)
-    local accentColor = hudTypography.targetAccent or { 0.70, 0.47, 0.22, 0.74 }
-    local accent = frame:CreateTexture(nil, "ARTWORK")
-    accent:SetPoint("TOP", bar, "BOTTOM", 0, -5)
-    accent:SetSize(46, 1)
-    accent:SetColorTexture(accentColor[1], accentColor[2],
-        accentColor[3], accentColor[4])
     local cue = createCastCue(frame, nil)
     cue:SetPoint("TOP", frame, "BOTTOM", 0, -6)
     return frame
@@ -1065,15 +1059,7 @@ function HUD:OnInitialize()
         percentageBarColors.targetHealth or DEFAULT_TARGET_COLOR
     )
     targetHealthBar:SetPoint("TOP", targetNameText, "BOTTOM", 0, -4)
-    -- Approved sheet-06 sparse name/bar identity; no source read or level icon.
-    local targetAccentColor = hudTypography.targetAccent or { 0.70, 0.47, 0.22, 0.74 }
-    local targetAccent = targetFrame:CreateTexture(nil, "ARTWORK")
-    targetAccent:SetPoint("TOP", targetHealthBar, "BOTTOM", 0, -5)
-    targetAccent:SetSize(46, 1)
-    targetAccent:SetColorTexture(
-        targetAccentColor[1], targetAccentColor[2],
-        targetAccentColor[3], targetAccentColor[4]
-    )
+    -- Approved sparse name/bar identity; decorative HP underline retired in P0437.
 
     local targetPvPBadge = createPvPBadge(root)
     targetPvPBadge:SetPoint("TOPLEFT", targetFrame, "TOPRIGHT", 4, -1)

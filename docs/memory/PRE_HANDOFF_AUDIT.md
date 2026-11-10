@@ -1,3 +1,18 @@
+## P0437 — Remove enemy HP underline (2026-11-10)
+
+Verified P0436 main `2982b30745828267f54a3ecaf3ba06800bc72f10`,
+tree `fdcc650671839b1c90e3adcae8689256b887f3be`. User Forever screenshot
+confirms P0436 fixture alignment and live vignette are now visually accepted.
+User rejects only the narrow gold rule beneath HP bars. The shared 100/50
+fixture and existing screen-space target fallback each created a separate
+46x1 decorative accent below the health bar. Remove both without changing
+percent, cast cue, auras, frame positioning or any Blizzard-owned surface.
+L-046 OPEN pending actual Forever retest. P0435/P0436 visual acceptances and
+historical negative findings retained. D-042/L-011 remain DEFERRED for
+unproven world attachment and secondary confirmed aggro. This source change
+is not a runtime PASS; full exact-candidate author check and guarded apply
+must be independently verified before committing.
+
 ## P0436 — Enemy fixture preview repair (2026-11-10)
 
 Verified P0435 main `9df287e50925d41989e2d62dad0f7f51ca1e428c`

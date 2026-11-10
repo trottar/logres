@@ -11,16 +11,16 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0436** P0435 preview repair: no forced low-health vignette; half-size aggro
-frame anchored in unscaled combat-row slot. P0435 visual 100/50/aura PASS,
-layout/health-preview defects OPEN pending retest. Saved screen-space
-preference OFF; usable fallback preserved; world attachment and live aggro
-DEFERRED D-042/L-011. **P0427** historical; P0425 visual PASS;
-L-043/L-030/L-044 OPEN.
+**P0437** shared enemy HP-bar cosmetic repair from P0436 main: remove thin
+gold underline beneath selected and half-scale bars, including screen-space
+target fallback. P0436 screenshot accepts alignment, auras and live health;
+saved enemy preference OFF. Runtime P0437 UNVERIFIED. World attachment and
+per-unit aggro DEFERRED (D-042/L-011). **P0427** historical;
+P0425 visual PASS; L-043/L-030/L-044 OPEN.
 
 ## Verified State
 
-- P0435 main `9df287e`; user preview visual PASS, red vignette and aggro row offset reported. P0436 fixes source; client UNVERIFIED.
+- P0436 main `2982b30`; user accepts no false vignette and corrected 50% alignment; gold enemy HP underline rejected, P0437 removes it.
 
 - P0422 moved the pet-action bar in error; P0423 restored it and V8 was visually accepted.
 
@@ -57,9 +57,9 @@ L-043/L-030/L-044 OPEN.
 
 ## Next Action
 
-P0436: author-check, apply and Forever verify enemy-only HUD Preview,
-combat-row aggro alignment, OFF saved preference and native fallback.
-World attachment and confirmed aggro remain gated.
+P0437: author-check/apply; Forever verify no gold underline in preview or
+target fallback, aura spacing and OFF preference unchanged. Safe world
+attachment and secondary unit aggro remain gated.
 
 ## Success Criteria
 
