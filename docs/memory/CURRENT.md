@@ -11,13 +11,12 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0424** Compact the native-backed merchant service shell from 896×712 to
-800×625 through a service-specific profile in shared `TrainerPanelConfig`.
-Leave the seven-row trainer catalogue and all Blizzard merchant interaction,
-purchase, buyback, repair and recovery handlers unchanged. User accepted P0423
-V8 HUD visually; the merchant compact layout is UNVERIFIED in WoW Forever.
-L-008 pet-edge coverage OPEN; L-009 live action editing DEFERRED. Historical
-P0381 quest failures remain separate.
+**P0425** Repair merchant Buyback positioning and compact trainer to 820×660
+with seven rows. Forever `0.0.301-dev` incidents 9547/9549: buyback item
+crosses divider; tabs low. Incident 9565: trainer 896×712 as P0424 intended.
+P0425 R0 prewrite REFUSED (contracts/version/budget); no tracked writes.
+R1 retest PENDING. V8 HUD accepted; L-003 PARTIAL, L-033 OPEN, L-008 OPEN,
+L-009 DEFERRED.
 
 ## Verified State
 
@@ -31,7 +30,7 @@ P0381 quest failures remain separate.
 - P0417 main `bc91448`: Blizzard pet bar/frame user-observed suppressed and Logres actions working; L-008 still OPEN for combat/Edit Mode/fallback coverage.
 - P0418 V5 initial 19-region map (`LOGRES_SCREEN_MAP_APPROVED.json`) is archived; V6 supersedes only runtime centers, preserving the H.2 audit and native fallbacks.
 
-- P0383 `cc783a0` 253 STATIC; client 0.0.267-dev quest18 TURNED_IN; hotspot offset and stock greeting OPEN. L-005 PARTIAL, L-001/L-002 OPEN. P0384 quest21 aligned hover in 0.0.268-dev incident 3196; P0385 observed; P0386 UNVERIFIED.
+- P0381 integrated gameplay OPEN; P0383 `cc783a0` 253 STATIC; client 0.0.267-dev quest18 TURNED_IN; hotspot offset and stock greeting OPEN. L-005 PARTIAL, L-001/L-002 OPEN. P0384 quest21 aligned hover in 0.0.268-dev incident 3196; P0385 observed; P0386 UNVERIFIED.
 
 - P0379 `285be528` 249 STATIC; 0.0.264-dev no claim. L-002 native, L-005 FAIL. R0/R1 refused; P0378 screenshots inferred.
 
@@ -57,10 +56,10 @@ P0381 quest failures remain separate.
 
 ## Next Action
 
-P0424: verify full static contract set and guarded exact P0423 baseline apply;
-then check merchant stock, buyback, page controls, native quantity/currency,
-Goodbye, trainer geometry, combat deferral and stock fallback in WoW Forever.
-Do not infer purchase/training PASS from a screenshot. V8 HUD is accepted.
+P0425: run exact-baseline static checks then validate merchant tab, native
+buyback item/button, close/reopen, native transaction/fallback, and compact
+trainer seven-row selection, scroll, cost and safe training handoff in Forever.
+Record any unsupported native shape as a deferral, not PASS.
 
 ## Success Criteria
 

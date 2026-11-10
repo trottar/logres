@@ -377,9 +377,19 @@ local function capture(frame)
     end
     if not anchor(plan, frame, visual.point, UIParent, visual.relativePoint, visual.x, visual.y)
         or not resize(plan, frame, visual.width, visual.height)
-        or not anchor(plan, tab, "TOPLEFT", frame, "TOPLEFT", 38, -140)
+        or not anchor(plan, tab, "TOPLEFT", frame, "TOPLEFT", 38, -visual.tabY)
         or not anchor(plan, secondTab, "LEFT", tab, "RIGHT", 6, 0)
         or not anchor(plan, first, "TOPLEFT", frame, "TOPLEFT", firstX, -firstY) then
+        return nil
+    end
+    -- P0425: this Blizzard-owned buyback item is separate from Tab 2.
+    -- It was left at the stock Y when P0424 reduced the shell, so its native
+    -- hit region crossed the new footer divider. Capture/restore its points
+    -- through the existing reversible OOC plan; fail open for unknown shape.
+    local buyback = member(_G, "MerchantBuyBackItem")
+    if buyback and (read(buyback, "GetParent") ~= frame
+        or not anchor(plan, buyback, "TOPLEFT", frame, "TOPLEFT",
+            visual.buybackItemX, -visual.buybackItemY)) then
         return nil
     end
     for i = 2, 12, 2 do
@@ -568,7 +578,7 @@ local function buildPreview()
     for i, caption in ipairs({"Merchant", "Buyback"}) do
         local tab = CreateFrame("Frame", nil, frame)
         tab:SetSize(80, 30)
-        tab:SetPoint("TOPLEFT", frame, "TOPLEFT", 38 + (i - 1) * 86, -140)
+        tab:SetPoint("TOPLEFT", frame, "TOPLEFT", 38 + (i - 1) * 86, -visual.tabY)
         tabArt(tab, caption)(i == 1)
     end
     local rows, perPage = {}, 6

@@ -72,11 +72,11 @@ for token in (
 ):
     need(token in merchant, 'required compact/native safety token missing: ' + token)
 
-# Original trainer screens are content-dense and retain their full geometry.
-need('preview = {\n        width = 896, height = 712,' in config,
-     'trainer/fixture preview dimensions were changed')
-need('landscape = {\n        width = 896, height = 712, maxRows = 7,' in config,
-     'trainer seven-row landscape dimensions were changed')
+# P0425 retains trainer seven-row capacity, using its own compact bounds.
+need('preview = {\n        width = 820, height = 660,' in config,
+     'P0425 trainer fixture compact profile missing')
+need('landscape = {\n        width = 820, height = 660, maxRows = 7,' in config,
+     'P0425 trainer seven-row compact profile missing')
 need('root:SetSize(visual.width, visual.height)' in trainer and
      'Logres.NPCTrainerLandscape.Render(root, model)' in trainer,
      'trainer live renderer ownership or sizes changed')
@@ -134,4 +134,4 @@ for err in errors:
     print('ERROR:', err)
 if errors:
     raise SystemExit(1)
-print('PASS: 800x625 native-backed merchant, trainer geometry preserved, safe restorable compact shell')
+print('PASS: 800x625 native-backed merchant, compact seven-row trainer, safe restorable shells')

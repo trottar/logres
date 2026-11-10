@@ -1,3 +1,24 @@
+## P0425 R1 — prewrite repair after R0 refused
+
+R0 user preflight returned 248/293 static PASS and REFUSED with zero tracked
+writes: version-pin checker, three obsolete P0281 geometry tokens, and
+CURRENT.md 9800-byte budget gates (plus P0425 design marker). The R1 archive
+corrects these in the same exact P0424 baseline before any runtime change.
+Never treat the R0 refusal as a deployed or runtime result.
+
+## P0425 — pre-handoff diagnosis and scope (2026-11-09)
+
+Verified remote P0424 main `80b46f49dd71feb3a499b1885499b82ce744a2dd`.
+Attached Forever incident bundle contains screenshots 9547/9549 (merchant
+stock/Buyback) and 9565 (trainer), client `0.0.301-dev`. Diagnostics show
+merchant active with native tab/pager styling; trainer `shown=true` and
+`last=live-native-parking-requested`, so the report is layout rather than an
+observed training transaction failure. Only merchant tab and native buyback
+item location plus addon-owned trainer geometry may change. Native controls,
+scripts, transaction owner, restorations and HUD V8 must remain intact.
+Full static suite and gameplay runtime remain distinct; recorded negative
+check results are not silently erased.
+
 ## P0424 — Compact merchant layout pre-handoff (2026-11-09)
 
 Author baseline: GitHub `main` P0423 `f283202db47ddee9e9c3c2d7ba2c95e5d6e68d00`.

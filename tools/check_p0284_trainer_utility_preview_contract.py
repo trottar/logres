@@ -53,11 +53,11 @@ for token in (
 for token in (
     'filters = {x=166, y=117, w=78, h=24}',
     'filterMode = {x=40, y=148}',
-    'funds = {x=575, y=614}',
-    'trainAll = {x=574, y=642, w=150, h=31}',
+    'funds = {x=533, y=569}',
+    'trainAll = {x=532, y=593, w=140, h=31}',
     '["trainer.trainAll"] =',
     'coinSilver =', 'coinCopper =',
-    'width = 896, height = 712, maxRows = 7',
+    'width = 820, height = 660, maxRows = 7',
 ):
     need(token in config, 'style/geometry missing '+token)
 for token in (

@@ -1,3 +1,16 @@
+## P0425 — Merchant buyback alignment and compact trainer (2026-11-09)
+
+P0424 pushed main `80b46f49dd71feb3a499b1885499b82ce744a2dd`.
+The user's Forever `0.0.301-dev` session 84 screenshots/diagnostics show that
+P0424 compact merchant shell is generally approved but the native buyback-item
+button crosses the lower rule and the Merchant/Buyback tab group sits too low.
+The trainer still uses 896×712, as P0424 deliberately excluded it. P0425
+raises both tabs, capture/reanchors the native buyback-item root reversibly
+within the existing OOC fail-open plan, and compacts the owned seven-row trainer
+to 820×660. The five-bar HUD V8, native transaction ownership, trainer
+purchase flow, and fallbacks remain unchanged. Runtime P0425 UNVERIFIED.
+See `docs/memory/evidence/P0425_NPC_COMPACT_ALIGNMENT.md`.
+
 ## P0424 — Compact merchant within shared modular NPC panel (2026-11-09)
 
 Verified P0423 main `f283202db47ddee9e9c3c2d7ba2c95e5d6e68d00`.

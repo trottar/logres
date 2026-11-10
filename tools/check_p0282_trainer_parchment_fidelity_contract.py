@@ -39,7 +39,7 @@ for bad in (
 for token in ('sidebarWash =', 'catalogueWash =', 'detailWash =',
               'sidebarRule =', 'previewComponents = {',
               '["trainer.selection"] =', '["trainer.train"] =',
-              'width = 896, height = 712, maxRows = 7',
+              'width = 820, height = 660, maxRows = 7',
               'mode = "nine-slice"'):
     need(token in c,'declarative continuous parchment config missing '+token)
 for name in ('sidebarWash','catalogueWash','detailWash'):

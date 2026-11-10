@@ -6,7 +6,7 @@ Logres.PanelConfigs = Logres.PanelConfigs or {}
 
 local trainer = {
     preview = {
-        width = 896, height = 712,
+        width = 820, height = 660,
         point = "TOP", relativePoint = "TOP", x = 0, y = -86,
         strata = "DIALOG", mouse = false,
         title = "TRAINER / PANEL ART",
@@ -16,9 +16,9 @@ local trainer = {
         titleX = 0, titleY = -20, noteX = 0, noteY = -59,
         titleColor = art.colors.title, noteColor = art.colors.body,
     },
-    -- P0424: compact merchant service profile. It reuses the trainer visual
-    -- language and shared PanelSurface; the larger trainer catalogue, detail,
-    -- profession and training controls intentionally retain their own geometry.
+    -- P0425: both services use content-fit geometry within the same painter.
+    -- Merchant preserves native actions; trainer retains seven owned lesson rows
+    -- and its native training handoff while occupying a compact viewport.
     merchant = {
         width = 800, height = 625,
         point = "TOP", relativePoint = "TOP", x = 0, y = -86,
@@ -28,13 +28,17 @@ local trainer = {
         topRuleY = 85, footerRuleY = 468,
         footerTitleY = 484, footerNoteY = 514,
         pagerY = 42, -- pixels above bottom edge
+        tabY = 128, -- relative top offset shared by both native tabs
+        buybackItemX = 592, buybackItemY = 405, -- stock buyback item above lower divider
         previewRowWidth = 192, previewNameWidth = 142,
         previewPriceWidth = 135,
     },
+    -- P0425: compact trainer landscape retains seven complete rows and controls.
+    -- Earlier P0281 geometry is recorded in historical evidence, not active.
     -- Approved landscape screenshot: ONE complete UI, not isolated sample paint.
     -- Only addon-owned preview geometry; live Blizzard child positions NEVER change.
     landscape = {
-        width = 896, height = 712, maxRows = 7,
+        width = 820, height = 660, maxRows = 7,
         palette = {
             -- Preserve the existing textured PanelSurface underneath.
             -- Translucent *warm* tonal washes; no opaque black subpanels.
@@ -78,18 +82,18 @@ local trainer = {
                 fillSublevel=-2,ruleSublevel=-5,ruleHeight=1,ruleY=0},
         },
         geometry = {
-            left = {x=32, y=102, w=222, h=392},
+            left = {x=32, y=102, w=222, h=352},
             search = {x=38, y=115, w=210, h=29},
             filters = {x=166, y=117, w=78, h=24},
             filterMode = {x=40, y=148},
             categories = {x=38, y=166, w=210, height=31, pitch=35},
-            status = {x=40, y=463, w=205, h=19},
-            list = {x=273, y=102, w=591, h=392, top=6, pitch=52, rowHeight=52},
-            detail = {x=33, y=529, w=531, h=140},
-            reagents = {x=574, y=529, w=253},
-            funds = {x=575, y=614},
-            trainAll = {x=574, y=642, w=150, h=31},
-            train = {x=732, y=642, w=120, h=31},
+            status = {x=40, y=422, w=205, h=19},
+            list = {x=268, y=102, w=520, h=352, top=6, pitch=46, rowHeight=46},
+            detail = {x=33, y=483, w=480, h=137},
+            reagents = {x=532, y=483, w=252},
+            funds = {x=533, y=569},
+            trainAll = {x=532, y=593, w=140, h=31},
+            train = {x=680, y=593, w=110, h=31},
         },
     },
     motif = {

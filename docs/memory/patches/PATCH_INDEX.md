@@ -1,3 +1,4 @@
+| P0425 | 2026-11-09 | PREPARED — MERCHANT BUYBACK ALIGNMENT / COMPACT TRAINER | P0424 main `80b46f4`; fix separate native buyback item overlap, raise native tabs together, compact trainer 820×660 with 7 rows and full control fit; runtime UNVERIFIED. |
 - **P0424** — Merchant-specific 800×625 compact profile within shared trainer
   PanelSurface configuration. Preserves 896×712 trainer, native merchant
   purchase/quantity/buyback/repair, secure HUD V8 and stock rollback. Client

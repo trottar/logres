@@ -41,10 +41,10 @@ created = re.search(r'local (\w+) = CreateFrame\("Frame", nil, owner\)',
 need(bool(created and
           f'{created.group(1)}:EnableMouse(false)' in helper.group(1)),
      'landscape frame helper must disable mouse interaction')
-for token in ('landscape = {', 'width = 896, height = 712, maxRows = 7',
+for token in ('landscape = {', 'width = 820, height = 660, maxRows = 7',
               'left = {x=32', 'search = {x=38', 'categories = {x=38',
-              'list = {x=273', 'detail = {x=33', 'reagents = {x=574',
-              'train = {x=732', 'art.motifs.goldLine'):
+              'list = {x=268', 'detail = {x=33', 'reagents = {x=532',
+              'train = {x=680', 'art.motifs.goldLine'):
     need(token in c,'landscape geometry/color missing '+token)
 for token in ('function Motif.PaintFixtureRow(owner, state)',
               'return paintRow(owner, recipe, colors)'):

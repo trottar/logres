@@ -330,9 +330,9 @@ function Landscape.Render(owner, model)
         created[#created + 1] = selected
         if view.emptyFixtureIconFix then selected.logresEmptyFixtureIconFix = true end
         local _, selectedImage = icon(selected, view.selected.icon, 5, 7, 53, view.localBrowse)
-        local selectedName = text(selected, view.selected.name, 70, 2, 458, 30,
+        local selectedName = text(selected, view.selected.name, 70, 2, 400, 30,
             "GameFontNormalLarge", p.goldText)
-        local selectedRequirement = text(selected, view.selected.requirement, 70, 32, 443, 24,
+        local selectedRequirement = text(selected, view.selected.requirement, 70, 32, 390, 24,
             "GameFontHighlightSmall", p.body)
         local selectedDescription = text(selected, view.selected.description, 6, 73, 460, 63,
             "GameFontHighlight", p.body)
