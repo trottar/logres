@@ -1,3 +1,15 @@
+## P0426 — docs-only author audit (2026-11-09)
+
+Verified P0425 `main` at `5af8d14b496f4d96cedc3e09fc3f4dc51a2d64b5`.
+The P0425 scoped visual PASS and compass complaints are documented without
+claiming merchant transactions, unknown quest-giver root cause, or installed
+QuestieDB version. Official upstream v1.0.13 Forever asset digest was
+independently verified. P0426 is docs-only; runtime files unchanged.
+Historical issue statuses, P0381 roadmap headings, CURRENT/HANDOFF budgets,
+full checker suite, diff hygiene and exact baseline hashes must pass before
+handoff. No WoW redeploy needed. P0427 source change follows only after P0426
+user push verified.
+
 ## P0425 R1 — prewrite repair after R0 refused
 
 R0 user preflight returned 248/293 static PASS and REFUSED with zero tracked

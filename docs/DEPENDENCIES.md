@@ -7,11 +7,12 @@ P0228 adds `## OptionalDeps: QuestieDB` to Logres's TOC, following an existing o
 ## Identifying the correct project
 
 - **Provider:** [`Questie/QuestieDB`](https://github.com/Questie/QuestieDB) (standalone data addon), not the full Questie quest helper.
-- **Pinned tested-target package:** [`QuestieDB-Forever.zip` from v1.0.6](https://github.com/Questie/QuestieDB/releases/download/v1.0.6/QuestieDB-Forever.zip), published October 12, 2026; the actual Logres + WoW Forever compatibility test is still pending.
-- **SHA-256 for that package**, from the GitHub release asset digest:
+- **Latest stable upstream candidate as of 2026-11-09:** [`QuestieDB-1.0.13-Forever.zip` from v1.0.13](https://github.com/Questie/QuestieDB/releases/download/v1.0.13/QuestieDB-1.0.13-Forever.zip), published 2026-11-08. The player's currently installed version and 1.0.13 Logres compatibility are **UNVERIFIED**. Historical P0227 provider target v1.0.6 is retained in older evidence, not the current recommended download.
+- **SHA-256 for the v1.0.13 Forever package**, from the upstream GitHub release asset digest:
 
-  `d78b066c362eaf28258d9e2d041c0a7b03d6943a2dfc741dec70c6bfd8e1fc27`
+  `f07c6cb18a723c8fba824038ffaaf5de23ab5c8ecd1d9235b122f06a59666f0c`
 
+- **Historical continuity:** P0227 used the earlier `QuestieDB-Forever.zip` filename at v1.0.6 (SHA-256 `d78b066c362eaf28258d9e2d041c0a7b03d6943a2dfc741dec70c6bfd8e1fc27`). That asset is not the current 1.0.13 download.
 - **Do not substitute** CurseForge's [`LibQuestDB`](https://www.curseforge.com/wow/addons/questdb): it is a *different* project with a different API and directory name.
 
 ## Manual installation and update (WSL / Windows WoW)
@@ -19,7 +20,7 @@ P0228 adds `## OptionalDeps: QuestieDB` to Logres's TOC, following an existing o
 Close World of Warcraft before installing or updating. In WSL, set `ADDONS` to **your own** Forever `Interface/AddOns` directory; do not put a machine-specific path in the tracked repository. The commands download, verify, inspect, and install the official upstream ZIP while backing up an existing `QuestieDB` directory outside AddOns.
 
 ```bash
-ADDONS="/path/to/World of Warcraft/_classic_beta_/Interface/AddOns"
+ADDONS="/path/to/World of Warcraft/_forever_/Interface/AddOns"
 
 (
   set -e
@@ -28,11 +29,11 @@ ADDONS="/path/to/World of Warcraft/_classic_beta_/Interface/AddOns"
   mkdir -p "$ADDONS"
 
   curl -fL --retry 3 \
-    -o "$TMPDIR_QDB/QuestieDB-Forever.zip" \
-    "https://github.com/Questie/QuestieDB/releases/download/v1.0.6/QuestieDB-Forever.zip"
-  echo "d78b066c362eaf28258d9e2d041c0a7b03d6943a2dfc741dec70c6bfd8e1fc27  $TMPDIR_QDB/QuestieDB-Forever.zip" \
+    -o "$TMPDIR_QDB/QuestieDB-1.0.13-Forever.zip" \
+    "https://github.com/Questie/QuestieDB/releases/download/v1.0.13/QuestieDB-1.0.13-Forever.zip"
+  echo "f07c6cb18a723c8fba824038ffaaf5de23ab5c8ecd1d9235b122f06a59666f0c  $TMPDIR_QDB/QuestieDB-1.0.13-Forever.zip" \
     | sha256sum -c -
-  unzip -q "$TMPDIR_QDB/QuestieDB-Forever.zip" -d "$TMPDIR_QDB/extracted"
+  unzip -q "$TMPDIR_QDB/QuestieDB-1.0.13-Forever.zip" -d "$TMPDIR_QDB/extracted"
   test -f "$TMPDIR_QDB/extracted/QuestieDB/QuestieDB_Forever.toc"
 
   if [ -d "$ADDONS/QuestieDB" ]; then
@@ -43,13 +44,13 @@ ADDONS="/path/to/World of Warcraft/_classic_beta_/Interface/AddOns"
 
   cp -a "$TMPDIR_QDB/extracted/QuestieDB" "$ADDONS/QuestieDB"
   test -f "$ADDONS/QuestieDB/QuestieDB_Forever.toc"
-  echo "QuestieDB Forever v1.0.6 installed"
+  echo "QuestieDB Forever v1.0.13 installed; verify in-game contract and real POI sample"
 )
 ```
 
 Expected on disk: `<your Forever AddOns>/QuestieDB/QuestieDB_Forever.toc`. Enable **QuestieDB** in the character selection addon list and restart WoW. The data addon alone does not draw pins or add Logres glyphs. For P0226, open a real nearby available-quest gossip on a supported map and run `/logres questiedbprobe` (Phase E **QuestieDB Location Probe**); capture diagnostics. `provider=not-installed` means the separate addon is not loaded. Lack of a natural matching quest offer is DEFERRED, not a passing source test.
 
-**Updates:** A new game patch may require a newer QuestieDB release. Review [upstream releases](https://github.com/Questie/QuestieDB/releases), compatibility notes and released ZIP checksums. Do not keep the v1.0.6 checksum for a different ZIP; update the documented release URL and hash together after validation. The game does not automatically update a GitHub-only manually installed addon. Keep a rollback backup and retest compass source compatibility after any change.
+**Updates:** A new game patch may require a newer QuestieDB release. Review [upstream releases](https://github.com/Questie/QuestieDB/releases), compatibility notes and released ZIP checksums. Do not keep the v1.0.13 checksum for a different ZIP; update the URL and hash together after upstream verification. The game does not automatically update a GitHub-only manually installed addon. Keep a rollback backup and retest compass source compatibility after any change.
 
 ## Production compass policy
 
@@ -58,11 +59,25 @@ Priority: native Blizzard live positions when genuinely exposed, then QuestieDB 
 ## Future CurseForge or public distribution
 
 1. **Current classification:** optional integration for Logres as a whole, *not* a hard dependency in the Logres TOC or a guaranteed CurseForge-resolved package. If future features require QuestieDB, document those feature-specific requirements and fail-open behavior; only change to a hard dependency after a separate design decision and compatibility proof.
-2. **Exact package identification:** the dependency is `Questie/QuestieDB` with folder name `QuestieDB`, not `LibQuestDB`/`QuestDB`. At this checkpoint no verified CurseForge package ID exists for the exact QuestieDB provider. Do not insert a guessed CurseForge `required-dependencies` slug/project ID or claim the CurseForge app will install it.
-3. **Packaging:** distribute the Logres addon separately; prominently link the official QuestieDB GitHub release and installation steps. Do **not** silently bundle QuestieDB in Logres releases. The inspected upstream QuestieDB repository tree has no top-level LICENSE/COPYING file, so redistribution rights have not been established here; obtain explicit permission or a confirmed compatible license first. Revisit if the upstream publishes verified redistribution terms or a matching CurseForge entry.
+2. **Exact package identification:** the dependency is `Questie/QuestieDB` with folder name `QuestieDB`, not `LibQuestDB`/`QuestDB`. The matching-named [QuestieDB 1.0.13 Forever file](https://www.curseforge.com/wow/addons/questiedb/files/9514215) is now listed on CurseForge (file ID 9514215, 2026-11-08). GitHub's official asset SHA is verified; *byte-equivalence of the CurseForge download and automatic-update behavior are not yet verified.* Do not guess CurseForge dependency metadata or equate this with `LibQuestDB`.
+3. **Packaging:** distribute the Logres addon separately; prominently link the official QuestieDB GitHub release and installation steps. Do **not** silently bundle QuestieDB in Logres releases. The inspected upstream QuestieDB repository tree has no top-level LICENSE/COPYING file, so redistribution rights have not been established here; obtain explicit permission or a confirmed compatible license first. Revisit redistribution terms separately; the CurseForge listing does not grant permission to bundle its files.
 4. **Documentation and QA:** maintain a supported-provider version table, install/update/rollback steps, missing-provider state, source limitations, and a real positive/negative runtime acceptance test on the intended Forever client. Dependency availability alone does not prove the compass gains POIs.
 
 This file is a dependency policy and install guide, not a claim that unaccepted-quest or service POIs currently work.
+
+## P0426 ongoing provider freshness policy (2026-11-09)
+
+User reports real-world quest givers with no Logres marker; a newer database
+release **may** help but cannot by itself bypass P0337's current-offer gate.
+Logres already exposes installed `tocVersion`, flavor/mode and public contract
+via `/logres questiedbprobe`. P0427/P0428 planning: surface these in a provider
+health check, compare with a curated verified stable release (never assert
+live/latest without external verification), report unavailable/wrong-flavor,
+indexing, no record, native-offer suppression, distance/canonical-map and
+marker-cap/collision as distinct cases. Keep provider optional, no in-game
+network calls or silent installation; prefer externally managed updates,
+checksums, backups and client retest. The current release link is a documentation
+candidate, **not an installed-version assertion or compatibility PASS**.
 
 ## P0235 optional historical service-role coverage
 

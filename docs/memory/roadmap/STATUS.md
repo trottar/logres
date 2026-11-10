@@ -1,3 +1,18 @@
+## P0426 — P0425 visual acceptance and compass source intake (2026-11-09)
+
+Verified P0425 main `5af8d14b496f4d96cedc3e09fc3f4dc51a2d64b5`.
+User screenshots accept merchant Buyback alignment and seven-row compact
+trainer visually; native merchant/trainer transactions, repair and fallback
+remain UNVERIFIED (L-003 PARTIAL, L-033 OPEN). The user requests
+`<NPC name> [role] - <yards> yd` focus labels instead of `Possible repair`;
+L-043 OPEN. They also report real quest givers absent from compass markers:
+L-030 PARTIAL, source-cause UNKNOWN. QuestieDB provider freshness is L-044
+OPEN, independent of L-017 packaging constraints. Official stable v1.0.13
+Forever released 2026-11-08, installed version UNKNOWN; docs were stale at
+v1.0.6. P0426 updates evidence, dependency instructions and the P0427/P0428
+investigation plan only. No runtime code or V8 geometry change, no WoW deploy.
+See `docs/memory/evidence/P0426_NPC_VISUAL_AND_COMPASS_INTAKE.md`.
+
 ## P0425 — Merchant buyback alignment and compact trainer (2026-11-09)
 
 P0424 pushed main `80b46f49dd71feb3a499b1885499b82ce744a2dd`.

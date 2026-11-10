@@ -11,12 +11,13 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0425** Repair merchant Buyback positioning and compact trainer to 820×660
-with seven rows. Forever `0.0.301-dev` incidents 9547/9549: buyback item
-crosses divider; tabs low. Incident 9565: trainer 896×712 as P0424 intended.
-P0425 R0 prewrite REFUSED (contracts/version/budget); no tracked writes.
-R1 retest PENDING. V8 HUD accepted; L-003 PARTIAL, L-033 OPEN, L-008 OPEN,
-L-009 DEFERRED.
+**P0426** Docs-only checkpoint after Forever P0425 screenshot acceptance:
+merchant Buyback tab/item and compact trainer (seven visible lessons) visual
+PASS; native purchases, buyback transactions, training, repairs, stock recovery
+and combat remain UNVERIFIED. Next: P0427 compass identity/role/yard labels;
+then QuestieDB freshness and missing-giver diagnostics (L-030 PARTIAL,
+L-043/L-044 OPEN). V8 HUD accepted, L-003 PARTIAL, L-033 OPEN;
+L-008 OPEN, L-009 DEFERRED. Historical P0381 failures retained.
 
 ## Verified State
 
@@ -38,15 +39,14 @@ L-009 DEFERRED.
 - P0352 223, P0351 222, P0350 221 STATIC; client UNVERIFIED.
 - P0349 R1 `4e59c8f2f03daf30b630fb15e3e14d5f38cc8da6` 220/220 STATIC; R0 REFUSED, WoW UNVERIFIED.
 - P0348 `4b7481d731d5f90e214b285bc7cce16ec826176f` 219/219 STATIC; D-048 model OFFLINE ONLY.
-- P0347 R1 `b94beb4706005757497002927d80845d5355037f` 218/218 STATIC; R0 PREWRITE REFUSED, WoW UNVERIFIED.
-- P0347 R0 REFUSED 1/218; R1 corrected, no writes on R0.
-- P0346 `26370095bd092d076868cd3d2e5e6a74f6b845d3` 217/217 PRE/POST STATIC; WoW UNVERIFIED.
+- P0347 R1 `b94beb47` 218 STATIC; R0 REFUSED, WoW UNVERIFIED.
+- P0346 `26370095` 217 STATIC; WoW UNVERIFIED.
 - P0345 `626b220` 216/216 STATIC; target aura client UNVERIFIED.
 - P0344 `e44f66ba` 215/215 STATIC; L-027 owner UNVERIFIED.
-- P0343 R1 `ef4d96040fa15c0fc1a49766b1e0efcec6fe1cb1` 214/214 STATIC; R0 REFUSED before writes, L-022 OPEN.
+- P0343 R1 `ef4d9604` 214/214 STATIC; R0 REFUSED before writes, L-022 OPEN.
 - P0342 R2 `be3be5e80cf65cf1bf6d261b84b573f1f1effca2` 213/213 STATIC; R0/R1 PREWRITE REFUSED; L-028 OPEN.
-- P0341 R1 `fb3b2658985e7f6d05f7730a3de6eb7b7dca6ad9` 212/212 STATIC; R0 historical-version checker REFUSED before writes; WoW UNVERIFIED.
-- P0338 R1 `342cab97` 209/209; P0337 R1 `cfdc07af` 208/208. Historical PREWRITE failures, narrow remedies and deferred L-031 focused-yard/quest-giver validation remain in their evidence files.
+- P0341 R1 `fb3b2658` 212/212 STATIC; R0 historical-version checker REFUSED before writes; WoW UNVERIFIED.
+- P0338 R1 `342cab97` 209/209; P0337 R1 `cfdc07af` 208/208. PREWRITE failures recorded; L-031 remains deferred.
 - P0340 prefreeze; P0336/P0335/P0334 R3/P0333/P0332/P0331/P0330/P0329: 207–200 STATIC. See PATCH_INDEX.
 - P0328 alpha runbook; P0317/P0318/P0319/P0320 gossip observations; P0321 `9a180c8` parking UNVERIFIED. P0322/P0323/P0324/P0325 D-048 inert models; P0326/P0327 merchant/flight models only. Stock UI/quest 237 kept.
 - D-048 independent live domain selectors and saved migration do not exist: schema 3 still stores `immersionEnabled` and `activeQuestEnabled`. D-046 preview-first and D-047 frozen Camera/DynamicCam remain required. Native UI and protected/secret fallbacks stay usable.
@@ -56,10 +56,11 @@ L-009 DEFERRED.
 
 ## Next Action
 
-P0425: run exact-baseline static checks then validate merchant tab, native
-buyback item/button, close/reopen, native transaction/fallback, and compact
-trainer seven-row selection, scroll, cost and safe training handoff in Forever.
-Record any unsupported native shape as a deferral, not PASS.
+P0426 DOCS ONLY: user applies, verifies and pushes memory checkpoint before
+runtime work. Next P0427: targeted compass focus-label formatting while
+preserving source gating, secret checks, and range. Then instrument L-030
+missing-giver cause and L-044 installed QuestieDB version/compatibility,
+compare with stable v1.0.13; do not infer provider update success.
 
 ## Success Criteria
 
@@ -69,6 +70,9 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0426_NPC_VISUAL_AND_COMPASS_INTAKE.md
+- docs/design/navigation/COMPASS_IDENTITY_AND_PROVIDER_FRESHNESS.md
+- docs/DEPENDENCIES.md
 - docs/memory/evidence/P0424_COMPACT_MERCHANT_PROFILE.md
 - docs/design/layout/NPC_MERCHANT_COMPACT_V1.md
 - docs/memory/evidence/P0421_V6_SCREEN_REFINEMENTS.md
