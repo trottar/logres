@@ -1,3 +1,16 @@
+## P0436 — Enemy preview health separation and aligned aggro slot (2026-11-10)
+
+P0435 main `9df287e50925d41989e2d62dad0f7f51ca1e428c` verified. User
+screenshot visually accepts shared 100/50 enemy graphics and aura spacing,
+but HUD Preview ON also forces 30% health tunnel vision, and scaled aggro
+fixture shifts above the combat row. P0436 keeps health-preview actions
+separate from HUD Preview and uses a full-scale combat-row slot around the
+50% aggro fixture; shared 25px V8 aura offsets remain relative to each
+unit. Settings default OFF confirmed by screenshot; shorten clipped hint.
+No protected attachment, nameplate preference change, live aggro promotion,
+or screen fallback suppression (D-042/L-011). Forever repair UNVERIFIED.
+See `docs/memory/evidence/P0436_ENEMY_PREVIEW_LAYOUT_REPAIR.md`.
+
 ## P0435 — Shared enemy unit preview and saved preference (2026-11-10)
 
 P0434 main `d3ca9cce3ae404949c692ea7f1e1e23dda2d54e4` verified.

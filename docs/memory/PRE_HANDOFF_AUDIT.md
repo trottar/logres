@@ -1,3 +1,20 @@
+## P0436 — Enemy fixture preview repair (2026-11-10)
+
+Verified P0435 main `9df287e50925d41989e2d62dad0f7f51ca1e428c`
+(tree `8ba29774830af11592029a8258c5228c311ce0df`). The user screenshot
+shows 100/50 enemy preview graphics and V8 aura spacing visually acceptable,
+but HUD Preview unintentionally simulates 30% player HP and the 50% aggro unit
+sits above its combat row. The saved preference is visibly OFF. P0436 keeps
+HUD Preview fixture-only and retains separate explicit healthpreview controls,
+anchors the scaled aggro fixture to an unscaled combat-row slot, and shortens
+an overflowing settings hint. No production nameplate attachment or live
+aggro selection; D-042/L-011 remain gated and target fallback remains usable.
+
+Static/Python mocked preview checks are not proof of in-client geometry. The
+complete author-check exact-candidate receipt and WSL guarded apply remain
+separate gates; Forever visual and preference persistence test UNVERIFIED.
+No bug is silently closed on this source-only correction.
+
 ## P0435 — Shared enemy display author audit (2026-11-10)
 
 Authoritative baseline P0434 main `d3ca9cce3ae404949c692ea7f1e1e23dda2d54e4`

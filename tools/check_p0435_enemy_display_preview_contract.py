@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """P0435 preview is an owned 100/50 shared visual fixture, not a native mutation."""
 from pathlib import Path
+import re
 R=Path(__file__).resolve().parents[1]
 read=lambda p:(R/p).read_text(encoding="utf-8")
 db=read("Logres/Core/Database.lua")
@@ -43,7 +44,9 @@ assert 'C_NamePlate.GetNamePlates(' not in s
 for path in ("docs/ROADMAP.md", "docs/memory/investigations/ACTIVE.md",
              "docs/memory/roadmap/STATUS.md", "docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md"):
     value=read(path)
-    assert value.startswith("## P0435 —") and "## P0427 —" in value
+    # P0435 remains a historical checkpoint after later active work advances.
+    assert re.match(r"## P[0-9]{4} —", value) and "## P0435 —" in value
+    assert "## P0427 —" in value
 assert len(read('docs/memory/CURRENT.md').encode())<9800
 assert 'P0435' in read('docs/memory/PRE_HANDOFF_AUDIT.md')
 assert '| L-011 |' in read('docs/memory/investigations/ISSUE_LEDGER.md')

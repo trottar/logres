@@ -631,12 +631,11 @@ function HUD:ApplyPreview()
 end
 
 function HUD:SetPreviewEnabled(enabled)
+    -- HUD Preview is the owned enemy fixture only. Health simulation is a
+    -- separate explicit /logres healthpreview action; do not fabricate low
+    -- player health when previewing enemies at normal live health.
     self:SetEnemyDisplayPreview(enabled == true)
-    if enabled then
-        return self:SetHealthPreviewPercent(30)
-    end
-
-    return self:SetHealthPreviewPercent(nil)
+    return true, enabled and "enemy-preview" or "enemy-preview-hidden"
 end
 
 local function readOrdinaryDeathTravelState()
@@ -940,11 +939,19 @@ function HUD:BuildEnemyDisplayPreview()
     oocTarget:SetPoint("TOP", host, "TOP", -95, -86)
     local combatTarget = buildEnemyDisplayFixture(host, nil, "Current hostile target", 61)
     combatTarget:SetPoint("TOP", host, "TOP", -160, -252)
-    local aggro = buildEnemyDisplayFixture(host, nil, "Confirmed aggro", 43)
-    aggro:SetPoint("TOP", host, "TOP", 245, -267)
+    -- A scaled frame anchored directly to the dialog can drift vertically.
+    -- Keep the combat-row position in an unscaled slot, then scale only the
+    -- owned display and its V8-spaced aura children inside that slot.
+    local aggroSlot = CreateFrame("Frame", nil, host)
+    aggroSlot:SetSize(198, 54)
+    aggroSlot:SetPoint("TOP", host, "TOP", 245, -252)
+    aggroSlot:EnableMouse(false)
+    local aggro = buildEnemyDisplayFixture(aggroSlot, nil, "Confirmed aggro", 43)
     aggro:SetScale(0.5)
+    aggro:SetPoint("TOP", aggroSlot, "TOP", 0, 0)
     aggro:SetAlpha(0.5)
 
+    self.enemyPreviewAggroSlot = aggroSlot
     self.enemyDisplayPreview = host
     self.enemyPreviewUnits = {oocTarget, combatTarget, aggro}
     return true

@@ -1,3 +1,4 @@
+| P0436 | 2026-11-10 | PREPARED — ENEMY FIXTURE PREVIEW REPAIR | P0435 visually approved except red simulated health vignette and offset aggro row; separate HUD/health preview, align half-scale aggro via unscaled slot, shorten setting hint. D-042/L-011 no world attachment; Forever UNVERIFIED. |
 | P0435 | 2026-11-10 | PREPARED — SHARED ENEMY DISPLAY FIXTURE | P0434 main; full author-check required; saved OFF preference and 100/50 synthetic preview only. L-011 safe attachment still DEFERRED. |
 | P0434 | 2026-11-10 | PREPARED — PORTABLE CHAT AUTHOR PREFLIGHT | P0432 main; exact tracked author kit and receipt-bound Chat apply. P0433 refusal retained. WoW code untouched. |
 | P0432 | 2026-11-10 | AUTHOR PREFLIGHT DRAFT — EVENT-TIME WORLD TARGET DIAGNOSTICS | Event capture/Report Bug, no production relocation. P0427 stays active; full exact-candidate checker suite NOT RUN by author. L-011 DEFERRED. |

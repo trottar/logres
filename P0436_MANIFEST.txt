@@ -1,0 +1,26 @@
+P0436 Enemy fixture preview: live health and aligned half-scale aggro
+Verified baseline: 9df287e50925d41989e2d62dad0f7f51ca1e428c
+Candidate runtime version: 0.0.307-dev
+PREWRITE: 300/300 STATIC PASS
+POSTWRITE: 300/300 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/HUD/HUD.lua
+Logres/Logres.toc
+Logres/Settings/Panel.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0436_ENEMY_PREVIEW_LAYOUT_REPAIR.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0435_enemy_display_preview_contract.py
+tools/check_p0436_enemy_preview_repair_contract.py
+P0436_MANIFEST.txt

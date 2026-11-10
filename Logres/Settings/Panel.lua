@@ -70,7 +70,7 @@ local SettingsPanel = Logres:RegisterModule("SettingsPanel", {
         enemyLabel:SetText("Screen-space Enemy Frame")
         local enemyHint = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
         enemyHint:SetPoint("TOPLEFT", enemyLabel, "BOTTOMLEFT", 0, -5)
-        enemyHint:SetText("Fallback stays available until overhead attachment is proven")
+        enemyHint:SetText("Fallback retained until safe overhead attachment")
         local enemyButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
         enemyButton:SetSize(102, 27)
         enemyButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -22, -220)

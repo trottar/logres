@@ -11,15 +11,16 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0435** enemy display preview from P0434 main. Synthetic OOC target 100%;
-combat target 100% and confirmed-aggro fixture 50% with V8 aura spacing.
-Default-OFF saved screen-space preference, but fallback remains usable;
-production nameplate attachment and per-unit aggro DEFERRED (D-042/L-011).
-**P0427** compass historical; P0425 visual PASS; L-043/L-030/L-044 OPEN.
+**P0436** P0435 preview repair: no forced low-health vignette; half-size aggro
+frame anchored in unscaled combat-row slot. P0435 visual 100/50/aura PASS,
+layout/health-preview defects OPEN pending retest. Saved screen-space
+preference OFF; usable fallback preserved; world attachment and live aggro
+DEFERRED D-042/L-011. **P0427** historical; P0425 visual PASS;
+L-043/L-030/L-044 OPEN.
 
 ## Verified State
 
-- P0435 shared enemy preview, protected attachment UNVERIFIED; P0434 author kit.
+- P0435 main `9df287e`; user preview visual PASS, red vignette and aggro row offset reported. P0436 fixes source; client UNVERIFIED.
 
 - P0422 moved the pet-action bar in error; P0423 restored it and V8 was visually accepted.
 
@@ -56,8 +57,9 @@ production nameplate attachment and per-unit aggro DEFERRED (D-042/L-011).
 
 ## Next Action
 
-P0435: author-check, guarded apply, then Forever preview + preference
-persistence and preserved fallback. World attachment/aggro gated.
+P0436: author-check, apply and Forever verify enemy-only HUD Preview,
+combat-row aggro alignment, OFF saved preference and native fallback.
+World attachment and confirmed aggro remain gated.
 
 ## Success Criteria
 
