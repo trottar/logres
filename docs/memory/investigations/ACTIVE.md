@@ -1,3 +1,17 @@
+## P0442 — Combat world enemy co-location and lifecycle cleanup (2026-11-11)
+
+Verified P0441 main `a300d229` attached the addon-owned 100% hostile target
+frame once during combat in Forever session 105 / #11396–11400, failures=0.
+Screenshots expose separate Blizzard and Logres overhead bars. P0442 moves
+only the owned frame into the native nameplate anchor region (no native child,
+click-region or CVar mutation); centers may require client refinement.
+It also hides the owned frame before target switches/removal and avoids stale
+reacquisition on removed events; identity-unknown removal fails open. Report
+Bug and H status retain owned detach/removal evidence. Native presentation
+and screen-space fallback remain usable; production suppression and 50%
+secondary aggro remain unproven. See
+`docs/memory/evidence/P0442_WORLD_ENEMY_COMBAT_INTEGRATION.md`.
+
 ## P0441 — Opt-in event-driven world enemy target (2026-11-10)
 
 P0440 main `bec4038` verified; Forever session 102 incident 11161 established

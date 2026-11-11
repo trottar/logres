@@ -1,3 +1,12 @@
+## P0442 — World enemy combat integration author audit (2026-11-11)
+
+- Verified main P0441 `a300d229`, exact tree `03c9d8cd9986c6c9553082617299d8b1b7beefeb`.
+- Forever #11396–11400: red Forest Spider, one successful addon-owned combat attach, zero attachment failures; screenshots show two vertically separated bars. P0441 is a PARTIAL live visual success; P0442 runtime unknown.
+- D-042/L-011: retain native UI/interaction and screen-space fallback. No native child/CVar mutations, no guessed aggro, no polling, no secret inspection.
+- New layout center + conservative event lifecycle + Report Bug/Phase H owned status; preserve historical P0441 source contract, developer panel controls, aura lanes and saved OFF setting.
+- R0 exact-candidate author check REFUSED 298/306: L-011 status included illegal compound PARTIAL/OPEN and CURRENT compaction dropped P0425/P0426/P0427 historical markers, cascading into 8 old checkers. No tracked user or remote writes. R1 restores the legal PARTIAL status and historical markers; full rerun required.
+- Full exact-candidate author checks, Lua syntax and git diff --check required before release. No GitHub writes; user stages/pushes.
+
 ## P0441 — Combat world enemy opt-in author audit (2026-11-10)
 
 - Authority: P0440 `bec4038ebcf9faf7fb8534091e5cfd6075126aef` verified GitHub tree `4f27a68d41c94e9b51038cc89067798c95c69bcb`, exact reconstructed Git archive.

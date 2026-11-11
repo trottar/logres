@@ -850,6 +850,11 @@ function HUD:GetDebugStatus()
         worldEnemyLiveAttachments = self.worldEnemyLiveAttachments or 0,
         worldEnemyLiveCombatAttaches = self.worldEnemyLiveCombatAttaches or 0,
         worldEnemyLiveFailures = self.worldEnemyLiveFailures or 0,
+        worldEnemyLiveDetaches = self.worldEnemyLiveDetaches or 0,
+        worldEnemyLiveRemovalResult = self.worldEnemyLiveRemovalResult,
+        worldEnemyLiveAnchorSource = self.worldEnemyLiveAnchorUnit
+            and "event-token" or "target-query-or-none",
+        worldEnemyLiveLayout = "native-anchor-center",
         worldEnemySecondaryEnabled = false,
         worldTrialRequested = self.worldTrialRequested == true,
         worldTrialVisible = self.worldTrialVisible == true,
@@ -1169,7 +1174,11 @@ function HUD:BuildLiveWorldEnemy()
 end
 
 function HUD:HideLiveWorldEnemy(reason)
+    if self.worldEnemyLiveVisible then
+        self.worldEnemyLiveDetaches = (self.worldEnemyLiveDetaches or 0) + 1
+    end
     self.worldEnemyLiveVisible = false
+    self.worldEnemyLiveAnchorUnit = nil
     self.worldEnemyLiveLastReason = reason or "hidden"
     local frame = self.worldEnemyLiveFrame
     if not frame then return true end
@@ -1228,7 +1237,7 @@ function HUD:RefreshLiveWorldEnemy(event, eventUnit)
     end
     local requestedUnit
     if event == "NAME_PLATE_UNIT_ADDED" then requestedUnit = eventUnit end
-    local anchor, why = probe:AcquireLiveEnemyTargetAnchor(
+    local anchor, why, anchorUnit = probe:AcquireLiveEnemyTargetAnchor(
         requestedUnit, event == "NAME_PLATE_UNIT_ADDED")
     if not anchor then
         -- Another unit gaining a nameplate must not hide the selected unit.
@@ -1246,7 +1255,10 @@ function HUD:RefreshLiveWorldEnemy(event, eventUnit)
     local ok = pcall(function()
         frame:Hide()
         frame:ClearAllPoints()
-        frame:SetPoint("BOTTOM", anchor, "TOP", 0, 6)
+        -- P0442: place the owned display in the plate's native anchor
+        -- region, rather than 6px above its TOP. Native children and
+        -- their click regions are intentionally never read or changed.
+        frame:SetPoint("CENTER", anchor, "CENTER", 0, 0)
     end)
     if not ok then
         self.worldEnemyLiveFailures = self.worldEnemyLiveFailures + 1
@@ -1254,6 +1266,10 @@ function HUD:RefreshLiveWorldEnemy(event, eventUnit)
         return false, self.worldEnemyLiveLastReason
     end
     self.worldEnemyLiveVisible = true
+    -- Only an ordinary, event-validated nameplate token may be retained
+    -- for matching removal events. A target-query anchor is unknown here;
+    -- removal of any plate then conservatively hides the owned display.
+    self.worldEnemyLiveAnchorUnit = anchorUnit
     if not self:UpdateLiveWorldEnemyValues() then
         return false, self.worldEnemyLiveLastReason
     end
@@ -1319,6 +1335,9 @@ function HUD:OnInitialize()
     self.worldEnemyLiveAttachments = 0
     self.worldEnemyLiveCombatAttaches = 0
     self.worldEnemyLiveFailures = 0
+    self.worldEnemyLiveDetaches = 0
+    self.worldEnemyLiveAnchorUnit = nil
+    self.worldEnemyLiveRemovalResult = "none"
     self.worldTrialRequested = false
     self.worldTrialVisible = false
     self.worldTrialCombatHidden = false
@@ -1535,13 +1554,18 @@ function HUD:OnInitialize()
     self.resourceEventFrame = resourceEventFrame
 
     local targetEventFrame = CreateFrame("Frame")
-    targetEventFrame:SetScript("OnEvent", function(_, _, unit)
+    targetEventFrame:SetScript("OnEvent", function(_, event, unit)
         if unit and unit ~= "target" then
             return
         end
 
         self:UpdateTarget()
-        self:UpdateLiveWorldEnemyValues()
+        -- TARGET_CHANGED may run before the world-lifecycle handler. Do
+        -- not push the NEW target's identity/health into an OLD anchor.
+        -- The lifecycle handler first hides, then validates/reattaches.
+        if event ~= "PLAYER_TARGET_CHANGED" then
+            self:UpdateLiveWorldEnemyValues()
+        end
     end)
 
     self.targetEventFrame = targetEventFrame
@@ -1558,6 +1582,21 @@ function HUD:OnInitialize()
         end
         if self.worldEnemyLiveRequested then
             if event == "NAME_PLATE_UNIT_REMOVED" then
+                local probe = Logres:GetModule("WorldTargetProbe")
+                local relevant, reason = true, "unverified-removal"
+                if probe and type(probe.IsLiveEnemyRemovalRelevant) == "function" then
+                    relevant, reason = probe:IsLiveEnemyRemovalRelevant(
+                        unit, self.worldEnemyLiveAnchorUnit)
+                end
+                self.worldEnemyLiveRemovalResult = reason
+                if relevant then
+                    -- Do NOT reacquire on a REMOVED event: the native API
+                    -- may still return a stale anchor in the same dispatch.
+                    self:HideLiveWorldEnemy("nameplate-removed")
+                end
+            elseif event == "PLAYER_TARGET_CHANGED" then
+                -- Clear the old identity/anchor before considering a new one.
+                self:HideLiveWorldEnemy("target-changed")
                 self:RefreshLiveWorldEnemy(event)
             elseif event == "NAME_PLATE_UNIT_ADDED" then
                 -- Event token is screened inside WorldTargetProbe.

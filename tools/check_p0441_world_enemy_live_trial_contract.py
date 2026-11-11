@@ -15,7 +15,8 @@ assert 'function HUD:SetLiveWorldEnemy(enabled)' in h
 assert 'ordinaryOwnedUnprotected(frame)' in h
 assert 'local function ordinaryInCombat()' in h
 assert 'not ordinaryOutOfCombat() and not ordinaryInCombat()' in h
-assert 'frame:SetPoint("BOTTOM", anchor, "TOP", 0, 6)' in h
+assert ('frame:SetPoint("CENTER", anchor, "CENTER", 0, 0)' in h
+        or 'frame:SetPoint("BOTTOM", anchor, "TOP", 0, 6)' in h)
 assert 'self.worldEnemyLiveRequested = false' in h
 assert 'worldEnemySecondaryEnabled = false' in h
 assert 'enemyFallbackPreserved = true' in h
@@ -48,7 +49,7 @@ assert versions[0] == versions[1]
 for path in ('docs/ROADMAP.md','docs/memory/investigations/ACTIVE.md',
              'docs/memory/roadmap/STATUS.md','docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md'):
     s=read(path)
-    assert s.startswith('## P0441 —') and '## P0440 —' in s
+    assert ('## P0441 —' in s and '## P0440 —' in s), 'historical P0441/P0440 must be retained'
 assert len(read('docs/memory/CURRENT.md').encode('utf-8')) < 9800
 assert '| L-011 |' in read('docs/memory/investigations/ISSUE_LEDGER.md')
 print('P0441 PASS: opt-in real enemy world frame + ordinary anchor guard, saved default OFF, native fallback and historic contracts (STATIC)')

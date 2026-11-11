@@ -675,7 +675,18 @@ function Probe:AcquireLiveEnemyTargetAnchor(eventUnit, fromEvent)
     if not behind.ok or behind.secret or behind.value ~= false then
         return nil, "behind-camera-or-unknown"
     end
-    return anchor, "accessible-hostile-target"
+    return anchor, "accessible-hostile-target", fromEvent == true and unit or nil
+end
+
+-- Removal events must never reacquire a potentially stale native anchor.
+-- Comparing two ordinary event tokens is allowed; unknown identity fails
+-- open by hiding the owned overlay, never native interaction or fallback.
+function Probe:IsLiveEnemyRemovalRelevant(eventUnit, attachedUnit)
+    local unit, reason = ordinaryNameplateToken(eventUnit)
+    if not unit then return true, reason end
+    if attachedUnit == nil then return true, "unknown-attached-unit" end
+    if unit == attachedUnit then return true, "attached-unit-removed" end
+    return false, "other-unit-removed"
 end
 
 -- Preserve bounded event-time evidence instead of allowing a later Report Bug

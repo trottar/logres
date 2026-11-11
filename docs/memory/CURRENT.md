@@ -11,13 +11,13 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0441** opt-in World Enemy live target trial from verified P0440 main
-`bec4038`. P0440 Forever #11161: target/secondary anchors 12/17,
-combat anchors 29, hostile player-targeting 4, failures/secrets zero.
-These are observations, not attachment/aggro proof. Phase H controls
-World Enemy ON/OFF/Status, 100% hostile target; 50% secondary still gated.
-Native/screenspace fallback kept, saved preference OFF. D-042/L-011
-DEFERRED until Forever; P0425 visual PASS, P0427 historical.
+**P0442** live World Enemy combat co-location and removal cleanup from
+verified P0441 `a300d229`. Forever session 105 #11396–11400: one real
+combat attachment, zero failures, native and Logres bars vertically
+separated. Trial remains opt-in via Report Bug > H, 100% target, aura lanes
+unchanged. Native click/info and screen-space fallback preserved, preference
+OFF; 50% secondary gated on threat. L-011 OPEN. P0425 visual PASS;
+P0426 compass intake and P0427 historical identity labels retained.
 
 ## Verified State
 
@@ -61,11 +61,10 @@ DEFERRED until Forever; P0425 visual PASS, P0427 historical.
 
 ## Next Action
 
-P0441 developer-only Forever trial: deploy; right-click Report Bug > H >
-World Enemy ON outside combat, then natural combat with one selected hostile;
-World Enemy Status; left-click Report Bug; OFF. Check 100% target auras,
-protected-action/taint errors, target switch and fallback. No secondary
-rendering until confirmed threat, no nameplate setting changes.
+P0442 Forever test using Report Bug > H > World Enemy ON/OFF/Status:
+check centered live overhead target, aura spacing, target switches, native
+interaction, plate removal and combat exit. Left-click Report Bug for
+capture. No native suppression or secondary aggro until separately proven.
 
 ## Success Criteria
 

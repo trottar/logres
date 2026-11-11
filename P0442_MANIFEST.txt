@@ -1,0 +1,28 @@
+P0442 Co-locate live world enemy target and clean up target/nameplate transitions
+Verified baseline: a300d229ed5737d6a516fdb6d42f1d494a30034f
+Candidate runtime version: 0.0.313-dev
+PREWRITE: 306/306 STATIC PASS
+POSTWRITE: 306/306 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/HUD/HUD.lua
+Logres/HUD/WorldTargetProbe.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0442_WORLD_ENEMY_COMBAT_INTEGRATION.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0441_world_enemy_live_trial_contract.py
+tools/check_p0442_world_enemy_overlay_contract.py
+P0442_MANIFEST.txt
