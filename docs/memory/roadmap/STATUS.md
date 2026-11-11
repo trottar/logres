@@ -1,3 +1,18 @@
+## P0448 — Selected world enemy aura source refresh (2026-11-11)
+
+Verified main P0447 `dca2b0a` (`0.0.317-dev`), user confirms working
+selected enemy health bar/native decorative replacement but missing attached
+buff/debuff icons. Session 110 had 3 attachments/2 restores and no
+reported owner failures; target aura live positives and target events were
+zero in final capture, which was target-absent, so source-versus-render cause
+is not established. P0448 scans ordinary target auras at successful world
+attachment (rather than relying on stale cache), updates owned lanes using
+existing +/-25px positioning, and records attach-source, secret and render
+counts in Status/Report Bug. P0447 native alpha restoration, health, cast,
+click, transparent backing, screen fallback and 50% aggro gate unchanged.
+L-011 PARTIAL, L-028 OPEN, Forever aura runtime UNVERIFIED.
+See `docs/memory/evidence/P0448_WORLD_AURA_ATTACH_REFRESH.md`.
+
 ## P0447 — Combat-hostility and native decorative owner trial (2026-11-11)
 
 Verified pushed P0446 `4ad16a6`, deployed version 0.0.316-dev.

@@ -1,3 +1,12 @@
+## P0448 — World aura attachment refresh release audit (2026-11-11)
+
+- R0 full author-check **309/311 REFUSED**, isolated candidate, no user apply: P0442 CURRENT marker lost and P0444 legacy aura renderer call absent. R1 restores marker and actual capability-gated legacy fallback. Preserve refusal; fresh full gate and receipt required.
+
+- Verified GitHub P0447 main `dca2b0a971a3f91f2e9ee528783b38407e7667de`; P0447 source reconstructed from author-checked P0446 and P0447 patch payload; key blob hashes checked against GitHub. L-011 PARTIAL, L-028 OPEN.
+- Forever 0.0.317-dev user's selected world HP visually PASS, native decoration handoff works; buff/debuff icons absent. Session 110: 3 attachments/2 restores, zero reported owner failures; last aura evidence target-absent, not a negative combat-source scan. Preserve uncertainty.
+- P0448 only adds addon-owned event-time ordinary target source scan, HUD attach invocation, status/Report Bug counters, version parity and durable docs. No polling, secret reads, native aura/UI manipulation, alpha changes, cast/click/nameplate geometry modifications or 50% aggro promotion.
+- Exact P0448 author-check and receipt, ZIP hash, apply/reverse, drift refusal and checker count are release gates. Forever icon population remains UNVERIFIED until user exercises natural target with ordinary aura.
+
 ## P0447 — Hostile eligibility and selective native-decor owner release audit (2026-11-11)
 
 - Verified P0446 pushed GitHub main `4ad16a694f54cce96db2b72a59f500445b077a4d`. User says P0446 attackable-hostile test FAILED; screenshot `/logres worldenemy on` returns `not-hostile`. No claim of successful P0446 runtime acceptance; L-011 remains PARTIAL with native duplication OPEN.

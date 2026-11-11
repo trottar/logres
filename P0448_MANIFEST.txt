@@ -1,0 +1,28 @@
+P0448 Refresh world enemy auras on attachment and expose source/render diagnostics
+Verified baseline: dca2b0a971a3f91f2e9ee528783b38407e7667de
+Candidate runtime version: 0.0.318-dev
+PREWRITE: 311/311 STATIC PASS
+POSTWRITE: 311/311 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/HUD/HUD.lua
+Logres/HUD/StatusAuras.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0448_WORLD_AURA_ATTACH_REFRESH.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0448_world_enemy_aura_refresh_contract.py
+P0448_MANIFEST.txt

@@ -1404,7 +1404,14 @@ function HUD:RefreshLiveWorldEnemy(event, eventUnit)
         return false, self.worldEnemyLiveLastReason
     end
     local auras = Logres:GetModule("StatusAuras")
-    if auras and type(auras.RefreshWorldEnemyLiveLanes) == "function" then
+    if auras and type(auras.RefreshWorldEnemyLiveSource) == "function" then
+        -- The anchor's event-time target may differ from the last cached
+        -- UNIT_AURA scan. Refresh only the addon-owned ordinary aura source;
+        -- do not mutate native aura activation inside combat.
+        auras:RefreshWorldEnemyLiveSource("world-enemy-attach")
+    elseif auras and type(auras.RefreshWorldEnemyLiveLanes) == "function" then
+        -- Keep the pre-P0448 renderer available if the source capability
+        -- is not installed; no native aura container is touched.
         auras:RefreshWorldEnemyLiveLanes()
     end
     local nativeOwned, nativeReason = self:ClaimNativeEnemyDecor(anchor)

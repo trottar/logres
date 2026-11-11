@@ -1,3 +1,16 @@
+## P0448 — Event-time selected aura source and owned-lane proof (2026-11-11)
+
+Ledger first: docs/memory/investigations/ISSUE_LEDGER.md.
+
+Verified P0447 `dca2b0a`, user visually accepts target health and reports
+missing world auras. L-011 PARTIAL and L-028 OPEN. Session 110 has 3 attaches,
+2 restores, zero recorded owner failures; target live positive reads/events
+absent in the captured report, which ended target-absent. P0448 refreshes
+ordinary target auras on attachment and exposes source vs render counters;
+protects native aura/cast/click, alpha restore, black-matte rejection and
++/-25px geometry. Runtime aura icon PASS remains UNVERIFIED. See
+`docs/memory/evidence/P0448_WORLD_AURA_ATTACH_REFRESH.md`.
+
 ## P0447 — Combat-hostility and native decorative owner trial (2026-11-11)
 
 Verified pushed P0446 `4ad16a6`, deployed version 0.0.316-dev.

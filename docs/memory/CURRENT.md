@@ -11,14 +11,15 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0447** after pushed P0446 `4ad16a6`: user reports hostile selection failed
-and `not-hostile` deferral. L-011 PARTIAL, P0446 runtime FAIL.
-P0447 tests engaged attackable neutral fallback and reversible selected
-native decorative alpha claim; fail open on protected/unknown state.
-Forever behavior UNVERIFIED. Preserve transparent 100% opaque
-selected Logres frame, +/-25px auras, OFF default and screen fallback.
-P0443 matte rejected; 50% secondary unproven. P0425 visual PASS;
-P0426 compass intake and P0427 identity labels retained. P0442 lifecycle retained.
+**P0448** after verified P0447 main `dca2b0a`: user visually accepts the
+selected enemy health bar/native decorative handoff, but world buffs/debuffs
+are missing. L-011 PARTIAL and L-028 OPEN. Session 110 has 3 attaches,
+2 detaches, 0 owner failures; aura positive reads unproven (last target
+absent). P0448 adds an event-time ordinary target-aura scan on world attach,
+keeps existing UNIT_AURA updates, and reports source-versus-render counts.
+Preserve transparent opaque 100% name/HP, +/-25px auras, P0447 native decor
+restore/click/cast fallback, OFF default, P0443 matte rejection, secondary
+aggro gate and P0446 runtime FAIL. P0442 lifecycle and P0425 visual PASS; P0426/P0427 retained.
 
 ## Verified State
 
@@ -29,13 +30,11 @@ P0426 compass intake and P0427 identity labels retained. P0442 lifecycle retaine
 
 - P0422 moved the pet-action bar in error; P0423 restored it and V8 was visually accepted.
 
-- P0420 pushed main `bd55e34`; user screenshot shows expected and measured
-  H.2 outlines aligned, but requests actual visual refinement. P0421 uses
-  `LOGRES_SCREEN_MAP_REFINEMENTS_P0421.json` to move 15 owned regions in V6.
-  P0416 action slots/roles, P0418 initial map, P0419 footprints, P0420
-  semantic-anchor overlay remain intact; no Blizzard control is moved.
-- P0417 main `bc91448`: Blizzard pet bar/frame user-observed suppressed and Logres actions working; L-008 still OPEN for combat/Edit Mode/fallback coverage.
-- P0418 V5 initial 19-region map (`LOGRES_SCREEN_MAP_APPROVED.json`) is archived; V6 supersedes only runtime centers, preserving the H.2 audit and native fallbacks.
+- P0420 `bd55e34` H.2 outline observed; P0421 V6 translated 15 owned
+  regions from `LOGRES_SCREEN_MAP_REFINEMENTS_P0421.json`. P0416/P0418/P0419
+  semantic-anchor/layout contracts retained; no Blizzard controls moved.
+- P0417 `bc91448`: pet stock hidden/Logres actions work; L-008 OPEN for combat/Edit Mode/fallback.
+- P0418 V5 archive; V6 retains native fallback.
 
 - P0381 integrated gameplay OPEN; P0383 quest18 TURNED_IN, L-005 PARTIAL, L-001/L-002 OPEN; P0384 quest21 hover aligned; P0385 observed, P0386 UNVERIFIED. Details in evidence.
 
@@ -62,10 +61,12 @@ P0426 compass intake and P0427 identity labels retained. P0442 lifecycle retaine
 
 ## Next Action
 
-P0447 Forever: World Enemy ON; normal attackable hostile/engaged neutral,
-Status/Report Bug, exact selected native decorative handoff + click/cast/aura,
-no matte, fallback on denied native owner and OFF/target switch. Any taint/
-protected or restore error is FAIL, preserve L-011 OPEN.
+P0448 Forever: World Enemy ON, natural selected target with active ordinary
+aura, H World Enemy Status and Report Bug `worldEnemyAuras`: compare source
+harmful/helpful rows, secret skips, render slots/shown, and failure counts.
+Confirm health/name, target clicks/casts, transparent background, native
+restore on OFF/switch. Source restriction is DEFERRED, render refusal FAIL.
+L-011 PARTIAL; L-028 OPEN until icons have real visual proof.
 
 ## Success Criteria
 
@@ -75,6 +76,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0448_WORLD_AURA_ATTACH_REFRESH.md
 - docs/memory/patches/CHAT_TO_ZIP_WORKFLOW.md (P0428/P0434)
 - docs/memory/evidence/P0426_NPC_VISUAL_AND_COMPASS_INTAKE.md
 - docs/design/navigation/COMPASS_IDENTITY_AND_PROVIDER_FRESHNESS.md

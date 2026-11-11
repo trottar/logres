@@ -543,7 +543,7 @@ function StatusAuras:CreateWorldEnemyLiveLanes(parent)
 end
 
 function StatusAuras:RefreshWorldEnemyLiveLanes()
-    if not self.worldEnemyLiveLanes then return end
+    if not self.worldEnemyLiveLanes then return false end
     local hud = Logres:GetModule("HUD")
     local active = hud and hud.worldEnemyLiveVisible == true
         and self.moduleEnabled and not self.preview
@@ -552,12 +552,46 @@ function StatusAuras:RefreshWorldEnemyLiveLanes()
     local helpful = snapshot and snapshot.helpfulRows or {}
     -- Some Forever frame mutations may be protected in combat; failure is
     -- contained to this owned trial, never the native/Logres fallback.
+    self.worldEnemyLiveRenderAttempts = self.worldEnemyLiveRenderAttempts + 1
     local ok = pcall(function()
         renderLane(self.worldEnemyLiveLanes.harmful, rows, active)
         renderLane(self.worldEnemyLiveLanes.helpful, helpful, active)
     end)
-    if not ok then self.worldEnemyLiveFailures =
-        (self.worldEnemyLiveFailures or 0) + 1 end
+    if not ok then
+        self.worldEnemyLiveFailures = self.worldEnemyLiveFailures + 1
+        self.worldEnemyLiveRenderLastResult = "owned-render-refused"
+    else
+        self.worldEnemyLiveRenderLastResult = active and "rendered" or "inactive"
+    end
+    return ok
+end
+
+-- P0448: NAME_PLATE_UNIT_ADDED/target events can attach a world frame after
+-- the last target aura refresh. Scan the CURRENT target once on the attach
+-- event, rather than replaying a stale snapshot or reading Blizzard UI.
+-- Restricted/secret source data is never inferred or inspected.
+function StatusAuras:RefreshWorldEnemyLiveSource(reason)
+    if not self.moduleEnabled or self.preview then
+        self.worldEnemySourceLastReason = "inactive"
+        return false
+    end
+    self.worldEnemySourceAttachScans = self.worldEnemySourceAttachScans + 1
+    local ok, snapshot = pcall(readUnit, "target")
+    if not ok or type(snapshot) ~= "table" then
+        self.worldEnemySourceAttachFailures =
+            self.worldEnemySourceAttachFailures + 1
+        self.worldEnemySourceLastReason = "scan-refused"
+        return false
+    end
+    self.last.target = snapshot
+    self:RecordLiveSnapshot("target", snapshot, reason or "world-enemy-attach")
+    self.worldEnemySourceLastReason = snapshot.reason
+    self.worldEnemySourceLastHarmful = #snapshot.harmfulRows
+    self.worldEnemySourceLastHelpful = #snapshot.helpfulRows
+    self.worldEnemySourceLastSecrets = snapshot.secretSkips
+    self.worldEnemySourceLastFailures = snapshot.failures
+    self:RefreshWorldEnemyLiveLanes()
+    return true
 end
 
 function StatusAuras:SetPreview(enabled)
@@ -601,6 +635,24 @@ function StatusAuras:GetDebugStatus()
         historyScans = self.liveScans,
         historyFailures = self.liveFailures,
         historySecrets = self.liveSecrets,
+        worldEnemySourceAttachScans = self.worldEnemySourceAttachScans,
+        worldEnemySourceAttachFailures = self.worldEnemySourceAttachFailures,
+        worldEnemySourceLastReason = self.worldEnemySourceLastReason,
+        worldEnemySourceLastHarmful = self.worldEnemySourceLastHarmful,
+        worldEnemySourceLastHelpful = self.worldEnemySourceLastHelpful,
+        worldEnemySourceLastSecrets = self.worldEnemySourceLastSecrets,
+        worldEnemySourceLastFailures = self.worldEnemySourceLastFailures,
+        worldEnemyLiveRenderAttempts = self.worldEnemyLiveRenderAttempts,
+        worldEnemyLiveFailures = self.worldEnemyLiveFailures,
+        worldEnemyLiveRenderLastResult = self.worldEnemyLiveRenderLastResult,
+        worldEnemyLiveHarmfulSlots = self.worldEnemyLiveLanes
+            and self.worldEnemyLiveLanes.harmful.visible or 0,
+        worldEnemyLiveHelpfulSlots = self.worldEnemyLiveLanes
+            and self.worldEnemyLiveLanes.helpful.visible or 0,
+        worldEnemyLiveHarmfulShown = self.worldEnemyLiveLanes ~= nil
+            and self.worldEnemyLiveLanes.harmful.root:IsShown(),
+        worldEnemyLiveHelpfulShown = self.worldEnemyLiveLanes ~= nil
+            and self.worldEnemyLiveLanes.helpful.root:IsShown(),
         lastReason = self.lastReason,
         stockPreserved = true,
         nativeReady = self.nativeDebuffs ~= nil,
@@ -627,6 +679,16 @@ function StatusAuras:OnInitialize()
     self.liveScans = 0
     self.liveFailures = 0
     self.liveSecrets = 0
+    self.worldEnemySourceAttachScans = 0
+    self.worldEnemySourceAttachFailures = 0
+    self.worldEnemySourceLastReason = "not-attempted"
+    self.worldEnemySourceLastHarmful = 0
+    self.worldEnemySourceLastHelpful = 0
+    self.worldEnemySourceLastSecrets = 0
+    self.worldEnemySourceLastFailures = 0
+    self.worldEnemyLiveRenderAttempts = 0
+    self.worldEnemyLiveFailures = 0
+    self.worldEnemyLiveRenderLastResult = "not-attempted"
     self.liveHistory = {
         playerHarmful = { maxRows = 0, positiveReads = 0, lastReason = nil },
         targetHarmful = { maxRows = 0, positiveReads = 0, lastReason = nil },

@@ -3407,6 +3407,25 @@ function Logres:HandleLiveWorldEnemyCommand(argument)
             tostring(state.worldEnemyNativeRestoreCount),
             tostring(state.worldEnemyNativeRestoreFailures),
             tostring(state.worldEnemyNativeLastResult)))
+        local auras = Logres:GetModule("StatusAuras")
+        local auraState = auras and auras:GetDebugStatus() or {}
+        emit(string.format(
+            "World Enemy auras: attach scans=%s source=%s harmful=%s helpful=%s secret=%s failures=%s",
+            tostring(auraState.worldEnemySourceAttachScans),
+            tostring(auraState.worldEnemySourceLastReason),
+            tostring(auraState.worldEnemySourceLastHarmful),
+            tostring(auraState.worldEnemySourceLastHelpful),
+            tostring(auraState.worldEnemySourceLastSecrets),
+            tostring(auraState.worldEnemySourceLastFailures)))
+        emit(string.format(
+            "World Enemy aura lanes: harmful=%s/%s helpful=%s/%s renders=%s result=%s refusals=%s",
+            tostring(auraState.worldEnemyLiveHarmfulSlots),
+            tostring(auraState.worldEnemyLiveHarmfulShown),
+            tostring(auraState.worldEnemyLiveHelpfulSlots),
+            tostring(auraState.worldEnemyLiveHelpfulShown),
+            tostring(auraState.worldEnemyLiveRenderAttempts),
+            tostring(auraState.worldEnemyLiveRenderLastResult),
+            tostring(auraState.worldEnemyLiveFailures)))
         emit("World Enemy LIVE: target 100%; secondary aggro NOT ENABLED; fallback on detach.")
         return
     end

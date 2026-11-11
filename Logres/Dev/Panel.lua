@@ -338,6 +338,16 @@ function Logres:CaptureBugIncident()
         "worldEnemyNativeTransfers", "worldEnemyNativeRestoreCount",
         "worldEnemyNativeRestoreFailures", "worldEnemyNativeLastResult",
         "worldEnemySecondaryEnabled", "enemyFallbackPreserved"})
+    -- P0448: source-vs-render evidence from Logres-owned aura state only.
+    incident.snapshot.worldEnemyAuras = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("StatusAuras"):GetDebugStatus()
+    end), {"worldEnemySourceAttachScans", "worldEnemySourceAttachFailures",
+        "worldEnemySourceLastReason", "worldEnemySourceLastHarmful",
+        "worldEnemySourceLastHelpful", "worldEnemySourceLastSecrets",
+        "worldEnemySourceLastFailures", "worldEnemyLiveRenderAttempts",
+        "worldEnemyLiveFailures", "worldEnemyLiveRenderLastResult",
+        "worldEnemyLiveHarmfulSlots", "worldEnemyLiveHelpfulSlots",
+        "worldEnemyLiveHarmfulShown", "worldEnemyLiveHelpfulShown"})
     incident.snapshot.worldTargetTrial = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("HUD"):GetDebugStatus()
     end), {"worldTrialRequested", "worldTrialVisible", "worldTrialLastReason",
