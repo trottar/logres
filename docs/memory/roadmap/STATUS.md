@@ -8,6 +8,14 @@ buff/debuff lanes. Native Blizzard visual duplication remains OPEN;
 interaction, screen-space fallback, and 50% aggro gating remain unchanged.
 See `docs/memory/evidence/P0444_TRANSPARENT_ENEMY_ROLLBACK.md`.
 
+P0445 docs-only owner review on verified `2281af2`: current code attaches an
+addon-owned mouse-disabled frame at the native plate CENTER, but does not
+own Blizzard name/HP/level visuals. The black P0443 matte is rejected;
+a native-alpha/child hide has no Forever click/taint/restore proof and
+is not authorized by D-042. Preserve P0444 Forever transparency and
+native interaction verification before any separately gated owner transfer.
+See `docs/memory/evidence/P0445_NAMEPLATE_NATIVE_OWNER_INVESTIGATION.md`.
+
 ## P0443 — Owned name/health backing for live enemy overlap (2026-11-11)
 
 Verified P0442 main `32da2ec` (`0.0.313-dev`). Forever session 106

@@ -1,0 +1,21 @@
+P0445 Document native nameplate overlap ownership gates without runtime mutation
+Verified baseline: 2281af2b8480c8aef7443006ce115dcdeec5f7bd
+Candidate runtime version: 0.0.315-dev
+PREWRITE: 308/308 STATIC PASS
+POSTWRITE: 308/308 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: NO RUNTIME FILES CHANGED
+Commit/push performed: NO
+
+Changed paths:
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0445_NAMEPLATE_NATIVE_OWNER_INVESTIGATION.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+P0445_MANIFEST.txt

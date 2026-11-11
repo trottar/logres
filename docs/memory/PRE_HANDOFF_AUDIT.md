@@ -1,3 +1,10 @@
+## P0445 — Native visual ownership investigation author audit (docs only; 2026-11-11)
+
+- GitHub `main` exactly `2281af2b8480c8aef7443006ce115dcdeec5f7bd`; P0444 kit SHA-256 `3b140e365bca4489d80980359aa0e00b4efb2aed98023d0db376fb108d46eeab`; 308 source checkers. L-011 PARTIAL, P0444 Forever UNVERIFIED. P0442 positive attachment counts and native duplication, P0443 rejected black backing retained.
+- `Logres/HUD/HUD.lua`, `Logres/HUD/WorldTargetProbe.lua`, D-042 and historical P0441–P0444 checkers reviewed. No new native mutation, owner inspection, alpha/reparent/CVar/hook, source, version, data schema or renderer changes. Keep all four P0444-first roadmap headings because P0443 history enforces this invariant. Only text/evidence/roadmap references and canonical L-011 PARTIAL row are changed.
+- R0 **REFUSED 278/308** after the handoff heading both exceeded the historical <8000-byte budget and removed the exact `docs/memory/investigations/ISSUE_LEDGER.md` first-lookup marker. Thirty historical checks failed from these two documentation contracts, not runtime source. R1 targeted checkers then REFUSED 32/34 because CURRENT called P0445 the active checkpoint while four historical roadmap files still begin with P0444. R2 retains **P0444** as active until Forever runtime proof, with P0445 docs-only supporting evidence. No user/remote writes. Full exact rerun required.
+- Release gate: run the kit's full `author-check` on exact P0445 JSON and deliver its matching author receipt. This is a docs-only checkpoint; checks do not establish Forever behavior. No client redeploy or new gameplay PASS should be attributed to P0445.
+
 ## P0444 — Transparent world enemy rollback audit (2026-11-11)
 
 - Baseline: verified P0443 GitHub main `2bc9afc5cee537cc5d77be996da418d55c96a934`, tree `58a664d9100ab8f65bc82f8cfde72e1acffd8a1a`; clean, exact Git archive and 307 checkers.

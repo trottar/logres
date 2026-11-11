@@ -11,12 +11,14 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0444** remove P0443's visually rejected opaque 208x44 matte from
-verified `2bc9afc` main: black background visible, native nameplate still
-present (L-011 PARTIAL / VISUAL FAIL). Restore transparent Logres hostile
-HP/name and existing +/-25px aura lanes, preserve screen-space fallback,
-debug-panel controls, attachment lifecycle and OFF default. Native duplicate
-remains OPEN; 50% secondary still requires confirmed aggro. P0425 visual PASS; P0426 compass intake and P0427 identity labels retained. P0442 lifecycle retained.
+**P0444** Forever pending; P0445 review (`2281af2`): L-011
+native name/HP/border/level still overlap the addon-owned world target at
+CENTER. P0443 matte rejected; P0444 Forever UNVERIFIED.
+Keep selected 100% opaque name/HP/aura on transparent frame, +/-25px lanes,
+mouse-disabled attach, native clicks, screen-space fallback, OFF default.
+No native alpha/hide/CVar until build owner, restore and taint proof.
+Secondary 50% requires independently confirmed
+aggro. P0425 visual PASS; P0426 compass intake and P0427 identity labels retained. P0442 lifecycle retained.
 
 ## Verified State
 
@@ -60,9 +62,10 @@ remains OPEN; 50% secondary still requires confirmed aggro. P0425 visual PASS; P
 
 ## Next Action
 
-P0444 Forever: Report Bug > H > World Enemy ON/OFF/Status. Verify no
-black rectangle, normal clicking, health/aura spacing and fallback.
-Native duplicate remains unresolved; no suppression or aggro PASS claim.
+P0444 Forever: Report Bug > H > World Enemy ON/Status/OFF, then Report Bug
+export. Test transparent selected 100% bar/name/auras, native clicks, target
+switch/removal and fallback; reject any protected error. Then resolve L-011
+native duplicate only after same-build owner/reversible restore proof (P0445).
 
 ## Success Criteria
 
