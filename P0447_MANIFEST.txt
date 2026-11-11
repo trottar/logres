@@ -1,0 +1,29 @@
+P0447 Repair hostile target gate and trial reversible native nameplate decoration
+Verified baseline: 4ad16a694f54cce96db2b72a59f500445b077a4d
+Candidate runtime version: 0.0.317-dev
+PREWRITE: 310/310 STATIC PASS
+POSTWRITE: 310/310 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/HUD/HUD.lua
+Logres/HUD/WorldTargetProbe.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/decisions/D-042_WORLD_TARGET_ANCHOR_AND_FALLBACK_POLICY.md
+docs/memory/evidence/P0447_HOSTILITY_AND_NATIVE_DECOR_TRIAL.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0447_world_enemy_ownership_contract.py
+P0447_MANIFEST.txt

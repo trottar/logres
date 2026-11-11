@@ -1,3 +1,9 @@
+## P0447 — Hostile eligibility and selective native-decor owner release audit (2026-11-11)
+
+- Verified P0446 pushed GitHub main `4ad16a694f54cce96db2b72a59f500445b077a4d`. User says P0446 attackable-hostile test FAILED; screenshot `/logres worldenemy on` returns `not-hostile`. No claim of successful P0446 runtime acceptance; L-011 remains PARTIAL with native duplication OPEN.
+- P0447 attacks two connected defects in one opt-in corrective experiment: strict reaction-hostile OR verified attackable/nonfriend/engaged target in combat; exact selected native name/health/level decorative alpha transfer (not native UnitFrame, input/cast/aura), full rollback tokens. Only safe ordinary/unprotected regions are eligible; any refusal returns to stock nameplate and existing screen-space target. 50% secondary disabled. No live taint or click safety claim from static checks.
+- Required author-check of exact package and ZIP with rollback, drift refusal, all historical checkers and diff hygiene; user performs commit/push and Forever capture. P0443 rejected matte and P0446 runtime FAIL remain durable evidence.
+
 ## P0446 — World/screen target handoff audit (2026-11-11)
 
 - Verified GitHub main P0445 `53d74f95d4665a8ac9f01e4ef2b437849c17c1f0`, source kit reconstructed from identical P0444 tracked Git tree plus matching published P0445 JSON and manifest. P0444 Forever session 108 incident #11645 screenshot: no black matte, target world attach 1, failures 0, duplicate native visuals and redundant screen target. User confirms black absent; P0444 other scenarios still untested.

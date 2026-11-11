@@ -862,6 +862,12 @@ function HUD:GetDebugStatus()
             and self.targetHealthBar and self.targetNameText:IsShown()
             and self.targetHealthBar:IsShown() or false,
         worldEnemyLiveRemovalResult = self.worldEnemyLiveRemovalResult,
+        worldEnemyNativeVisualOwner = self.worldEnemyNativeClaim
+            and "Logres-decor-only" or "Blizzard",
+        worldEnemyNativeTransfers = self.worldEnemyNativeTransfers or 0,
+        worldEnemyNativeRestoreCount = self.worldEnemyNativeRestoreCount or 0,
+        worldEnemyNativeRestoreFailures = self.worldEnemyNativeRestoreFailures or 0,
+        worldEnemyNativeLastResult = self.worldEnemyNativeLastResult,
         worldEnemyLiveAnchorSource = self.worldEnemyLiveAnchorUnit
             and "event-token" or "target-query-or-none",
         worldEnemyLiveLayout = "native-anchor-center",
@@ -1166,6 +1172,102 @@ local function ordinaryOwnedUnprotected(frame)
     return checked and secret == false and protected == false
 end
 
+-- P0447 opt-in native decorative ownership trial. Only the known separate
+-- name/health/level regions may be dimmed. The unit frame, its mouse/target
+-- owner, casts, auras, raid icons, and selection highlights stay Blizzard-owned.
+-- Never inspect a secret-capable alpha: save it as an opaque restoration token.
+local function safeNativeDecor(region)
+    if not region or type(issecretvalue) ~= "function" then return false end
+    local secretOK, secret = pcall(issecretvalue, region)
+    if not secretOK or secret then return false end
+    if type(region.IsProtected) ~= "function"
+        or type(region.IsForbidden) ~= "function"
+        or type(region.GetAlpha) ~= "function"
+        or type(region.SetAlpha) ~= "function" then return false end
+    local protectedOK, protected = pcall(region.IsProtected, region)
+    local forbiddenOK, forbidden = pcall(region.IsForbidden, region)
+    if not protectedOK or not forbiddenOK then return false end
+    local pOK, pSecret = pcall(issecretvalue, protected)
+    local fOK, fSecret = pcall(issecretvalue, forbidden)
+    return pOK and not pSecret and protected == false
+        and fOK and not fSecret and forbidden == false
+end
+
+local function nativeDecorField(parent, field)
+    if not parent or type(issecretvalue) ~= "function" then return nil end
+    local ok, value = pcall(function() return parent[field] end)
+    if not ok or not value then return nil end
+    local checked, secret = pcall(issecretvalue, value)
+    if not checked or secret then return nil end
+    return value
+end
+
+function HUD:RestoreNativeEnemyDecor()
+    local claim = self.worldEnemyNativeClaim
+    if not claim then return true end
+    local restored = true
+    -- Restore all captured original tokens, without comparing or formatting.
+    for index = #claim, 1, -1 do
+        local entry = claim[index]
+        if not pcall(entry.region.SetAlpha, entry.region, entry.original) then
+            restored = false
+        end
+    end
+    if restored then
+        self.worldEnemyNativeClaim = nil
+        self.worldEnemyNativeRestoreCount = self.worldEnemyNativeRestoreCount + 1
+        self.worldEnemyNativeLastResult = "restored"
+    else
+        self.worldEnemyNativeRestoreFailures =
+            self.worldEnemyNativeRestoreFailures + 1
+        self.worldEnemyNativeLastResult = "restore-refused"
+    end
+    return restored
+end
+
+function HUD:ClaimNativeEnemyDecor(anchor)
+    if self.worldEnemyNativeClaim and not self:RestoreNativeEnemyDecor() then
+        return false, "pending-native-restore"
+    end
+    local unitFrame = nativeDecorField(anchor, "UnitFrame")
+    if not unitFrame then return false, "no-ordinary-unit-frame" end
+    -- Name and health are mandatory; level indicators are optional.
+    local name = nativeDecorField(unitFrame, "name")
+    local health = nativeDecorField(unitFrame, "HealthBarsContainer")
+    if not safeNativeDecor(name) or not safeNativeDecor(health) then
+        return false, "native-decor-protected-or-unknown"
+    end
+    local claim = {}
+    local candidates = {name, health}
+    local level = nativeDecorField(unitFrame, "LevelFrame")
+    local levelDiff = nativeDecorField(unitFrame, "PlayerLevelDiffFrame")
+    if level then candidates[#candidates + 1] = level end
+    if levelDiff then candidates[#candidates + 1] = levelDiff end
+    for index = 1, #candidates do
+        local region = candidates[index]
+        if region then
+            if not safeNativeDecor(region) then
+                return false, "native-decor-protected-or-unknown"
+            end
+            local ok, token = pcall(region.GetAlpha, region)
+            if not ok then return false, "native-alpha-capture-refused" end
+            claim[#claim + 1] = {region = region, original = token}
+        end
+    end
+    -- Every restoration token is captured before the first mutation.
+    self.worldEnemyNativeClaim = claim
+    for index = 1, #claim do
+        local region = claim[index].region
+        if not pcall(region.SetAlpha, region, 0) then
+            self:RestoreNativeEnemyDecor()
+            return false, "native-decor-mutation-refused"
+        end
+    end
+    self.worldEnemyNativeTransfers = self.worldEnemyNativeTransfers + 1
+    self.worldEnemyNativeLastResult = "decor-owned"
+    return true, "decor-owned"
+end
+
 function HUD:BuildLiveWorldEnemy()
     if self.worldEnemyLiveFrame then return true end
     if not ordinaryOutOfCombat() then return false, "build-requires-ooc" end
@@ -1193,6 +1295,9 @@ function HUD:HideLiveWorldEnemy(reason)
         self.worldEnemyLiveDetaches = (self.worldEnemyLiveDetaches or 0) + 1
     end
     self.worldEnemyLiveVisible = false
+    -- Native decorative presentation must regain its original alpha on
+    -- target change, removal, OFF and disable, even if our frame hide fails.
+    self:RestoreNativeEnemyDecor()
     self.worldEnemyLiveAnchorUnit = nil
     self.worldEnemyLiveLastReason = reason or "hidden"
     -- Always restore the independent addon-owned screen target after any
@@ -1302,6 +1407,12 @@ function HUD:RefreshLiveWorldEnemy(event, eventUnit)
     if auras and type(auras.RefreshWorldEnemyLiveLanes) == "function" then
         auras:RefreshWorldEnemyLiveLanes()
     end
+    local nativeOwned, nativeReason = self:ClaimNativeEnemyDecor(anchor)
+    if not nativeOwned then
+        self.worldEnemyNativeLastResult = nativeReason
+        self:HideLiveWorldEnemy("native-decor-unavailable")
+        return false, nativeReason
+    end
     if not pcall(frame.Show, frame) then
         self.worldEnemyLiveFailures = self.worldEnemyLiveFailures + 1
         self:HideLiveWorldEnemy("owned-show-refused")
@@ -1369,6 +1480,11 @@ function HUD:OnInitialize()
     self.worldEnemyLiveDetaches = 0
     self.worldEnemyScreenHandoffs = 0
     self.worldEnemyScreenFallbackRefreshes = 0
+    self.worldEnemyNativeClaim = nil
+    self.worldEnemyNativeTransfers = 0
+    self.worldEnemyNativeRestoreCount = 0
+    self.worldEnemyNativeRestoreFailures = 0
+    self.worldEnemyNativeLastResult = "not-attempted"
     self.worldEnemyLiveAnchorUnit = nil
     self.worldEnemyLiveRemovalResult = "none"
     self.worldTrialRequested = false
@@ -1605,6 +1721,10 @@ function HUD:OnInitialize()
 
     local worldTrialEvents = CreateFrame("Frame")
     worldTrialEvents:SetScript("OnEvent", function(_, event, unit)
+        if event == "PLAYER_REGEN_ENABLED" and self.worldEnemyNativeClaim
+            and not self.worldEnemyLiveVisible then
+            self:RestoreNativeEnemyDecor()
+        end
         if event == "PLAYER_REGEN_DISABLED" then
             -- No frame mutation during combat. Secure state driver owns hide.
             self.worldTrialCombatHidden = true

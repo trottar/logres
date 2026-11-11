@@ -334,7 +334,9 @@ function Logres:CaptureBugIncident()
         "worldEnemyScreenHandoffs", "worldEnemyScreenFallbackRefreshes",
         "worldEnemyScreenFallbackVisible",
         "worldEnemyLiveAnchorSource", "worldEnemyLiveLayout",
-        "worldEnemyLivePresentation",
+        "worldEnemyLivePresentation", "worldEnemyNativeVisualOwner",
+        "worldEnemyNativeTransfers", "worldEnemyNativeRestoreCount",
+        "worldEnemyNativeRestoreFailures", "worldEnemyNativeLastResult",
         "worldEnemySecondaryEnabled", "enemyFallbackPreserved"})
     incident.snapshot.worldTargetTrial = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("HUD"):GetDebugStatus()
@@ -351,6 +353,7 @@ function Logres:CaptureBugIncident()
         "nameplateRemovedEvents", "behindCameraChangedEvents",
         "anchorPresent", "behindCamera", "attachmentState", "worldCandidate",
         "fallback", "reactionCategory", "canAttack", "isFriend", "isTrivial",
+        "liveEnemyLastEligibility", "liveEnemyCombatFallbacks",
         "secretSkipCount", "failureCount",
         "combatEventSamples", "outOfCombatEventSamples",
         "combatStateUnknownSamples", "targetAnchorEverSeenInCombat",

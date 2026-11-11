@@ -11,15 +11,14 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0446** candidate after verified P0445 (`53d74f9`): P0444 Forever
-session 108/#11645 user confirms black backing GONE, successful world attach
-(1, failures 0), but native name/HP duplicate remains L-011 PARTIAL.
-P0446 hides screen-space target during successful live world attach;
-restores on detach/failure. Transparent background,
-+/-25px auras, native click/cast/aura, safe fallback, OFF default intact.
-P0443 matte rejected; no native alpha/hide/CVar; 50% secondary unproven.
-P0425 visual PASS; P0426 compass intake and P0427 identity labels retained.
-P0442 lifecycle retained.
+**P0447** after pushed P0446 `4ad16a6`: user reports hostile selection failed
+and `not-hostile` deferral. L-011 PARTIAL, P0446 runtime FAIL.
+P0447 tests engaged attackable neutral fallback and reversible selected
+native decorative alpha claim; fail open on protected/unknown state.
+Forever behavior UNVERIFIED. Preserve transparent 100% opaque
+selected Logres frame, +/-25px auras, OFF default and screen fallback.
+P0443 matte rejected; 50% secondary unproven. P0425 visual PASS;
+P0426 compass intake and P0427 identity labels retained. P0442 lifecycle retained.
 
 ## Verified State
 
@@ -63,10 +62,10 @@ P0442 lifecycle retained.
 
 ## Next Action
 
-P0446 Forever: World Enemy ON, confirm successful world attachment hides
-only screen-space name/HP; change/clear target, remove plate, OFF and test
-fallback restoration. Record Report Bug/status and check taint/click/cast.
-Native duplication remains OPEN until proven safe region-specific transfer.
+P0447 Forever: World Enemy ON; normal attackable hostile/engaged neutral,
+Status/Report Bug, exact selected native decorative handoff + click/cast/aura,
+no matte, fallback on denied native owner and OFF/target switch. Any taint/
+protected or restore error is FAIL, preserve L-011 OPEN.
 
 ## Success Criteria
 

@@ -653,13 +653,37 @@ function Probe:AcquireLiveEnemyTargetAnchor(eventUnit, fromEvent)
         end
     end
 
-    local reaction = readEventReaction(unit)
-    if reaction.category ~= "hostile" then
-        return nil, "not-hostile"
-    end
+    -- P0447: a selected enemy can remain reaction-neutral after engagement.
+    -- Attackability alone is insufficient: ordinary combat, a non-friend
+    -- result and a non-friendly reaction must corroborate this fallback.
     local attack = readBoolean(UnitCanAttack, "player", unit)
     if not attack.ok or attack.secret or attack.value ~= true then
+        self.liveEnemyLastEligibility = "not-attackable"
         return nil, "not-attackable"
+    end
+    local reaction = readEventReaction(unit)
+    if reaction.category == "hostile" then
+        self.liveEnemyLastEligibility = "reaction-hostile"
+    else
+        local friend = readBoolean(UnitIsFriend, "player", unit)
+        local playerCombat = readBoolean(UnitAffectingCombat, "player")
+        local unitCombat = readBoolean(UnitAffectingCombat, unit)
+        if reaction.category == "friendly" then
+            self.liveEnemyLastEligibility = "reaction-friendly"
+            return nil, "not-hostile"
+        end
+        if not friend.ok or friend.secret or friend.value ~= false
+            or not playerCombat.ok or playerCombat.secret
+            or playerCombat.value ~= true
+            or not unitCombat.ok or unitCombat.secret
+            or unitCombat.value ~= true
+        then
+            self.liveEnemyLastEligibility = reaction.category == "neutral"
+                and "neutral-not-engaged" or "reaction-unavailable"
+            return nil, self.liveEnemyLastEligibility
+        end
+        self.liveEnemyCombatFallbacks = (self.liveEnemyCombatFallbacks or 0) + 1
+        self.liveEnemyLastEligibility = "combat-attackable-nonfriend"
     end
     local source, anchor = readEventNameplate(unit)
     if not source.ok or source.secret or not source.present or not anchor then
@@ -913,6 +937,8 @@ function Probe:GetDebugStatus()
             and reaction.reaction.category
             or nil,
         canAttack = sanitizedBoolean(reaction.canAttack),
+        liveEnemyLastEligibility = self.liveEnemyLastEligibility or "not-tested",
+        liveEnemyCombatFallbacks = self.liveEnemyCombatFallbacks or 0,
         isFriend = sanitizedBoolean(reaction.isFriend),
         isTrivial = sanitizedBoolean(reaction.isTrivial),
     }

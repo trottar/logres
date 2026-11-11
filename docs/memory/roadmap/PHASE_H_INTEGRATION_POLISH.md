@@ -1,3 +1,17 @@
+## P0447 — Combat-hostility and native decorative owner trial (2026-11-11)
+
+Verified pushed P0446 `4ad16a6`, deployed version 0.0.316-dev.
+User reports attackable-hostile test failed; observed status `not-hostile`,
+no visual correction. P0447 distinguishes hostiles from engaged neutral
+attackable nonfriends and tries isolated native name/health/level alpha
+transfer only on unprotected ordinary regions. Exact original alpha tokens
+are restored on removal/switch/OFF/failure. No parent, cast, aura, click,
+CVar, polling, backing, secondary aggro change. If native ownership cannot
+be proved, keep stock visuals/screen target and no overlapping world copy.
+WoW taint, click safety, visual and restore still require Forever PASS.
+L-011 PARTIAL / P0446 runtime FAIL; P0443 matte remains rejected.
+See `docs/memory/evidence/P0447_HOSTILITY_AND_NATIVE_DECOR_TRIAL.md`.
+
 ## P0446 — World enemy screen fallback handoff (2026-11-11)
 
 P0446 candidate (main P0445 `53d74f9`): P0444 Forever #11645

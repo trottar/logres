@@ -3396,6 +3396,17 @@ function Logres:HandleLiveWorldEnemyCommand(argument)
             tostring(state.worldEnemyScreenHandoffs),
             tostring(state.worldEnemyScreenFallbackRefreshes),
             tostring(state.worldEnemyScreenFallbackVisible)))
+        local probe = Logres:GetModule("WorldTargetProbe")
+        local probeState = probe and probe:GetDebugStatus() or {}
+        emit(string.format(
+            "World Enemy eligibility: last=%s combat-fallback=%s native=%s transfers=%s restores=%s refused=%s reason=%s",
+            tostring(probeState.liveEnemyLastEligibility),
+            tostring(probeState.liveEnemyCombatFallbacks),
+            tostring(state.worldEnemyNativeVisualOwner),
+            tostring(state.worldEnemyNativeTransfers),
+            tostring(state.worldEnemyNativeRestoreCount),
+            tostring(state.worldEnemyNativeRestoreFailures),
+            tostring(state.worldEnemyNativeLastResult)))
         emit("World Enemy LIVE: target 100%; secondary aggro NOT ENABLED; fallback on detach.")
         return
     end

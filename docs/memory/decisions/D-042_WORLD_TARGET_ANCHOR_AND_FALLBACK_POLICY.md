@@ -86,3 +86,20 @@ P0140 must runtime-prove:
 - ordinary triviality state.
 
 No production target relocation occurs before that proof.
+
+## P0447 limited trial amendment (not production acceptance)
+
+P0446 live failure and repeated native/Logres duplicate evidence justify a
+**World Enemy ON-only**, selected-target, capability-gated native decorative
+visibility trial. This amends the historical no-native-child-mutation boundary
+**only for** ordinary, unprotected `UnitFrame.name`,
+`HealthBarsContainer`, `LevelFrame`, and `PlayerLevelDiffFrame` alpha setters.
+The corresponding original alpha returns are opaque restoration tokens;
+no reads/compares/stringification of those values are authorized. Entire
+nameplate, click/target owner, selection highlight, cast, status/aura, CVar,
+pooling, hooks and secondary nameplates remain Blizzard-owned. A refused
+capability or protected mutation must not leave an overlapping Logres world
+copy and must preserve the native/screen fallback. Restore on removal,
+change, OFF, disable, error and after combat when applicable. A taint or
+protected error is **FAIL**, not PASS; runtime testing must certify safe
+ownership before this can become production. Keep all historical rejections.
