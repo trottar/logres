@@ -78,8 +78,6 @@ for forbidden in (
     "UnitIsBossMob",
     "UnitSelectionType",
     "UnitSelectionColor",
-    "UnitThreatSituation",
-    "UnitDetailedThreatSituation",
     "SetCVar",
     "GetCVar",
     "SetParent",
@@ -95,6 +93,19 @@ for forbidden in (
             "WorldTargetProbe.lua contains forbidden inspection/mutation/"
             f"polling fragment: {forbidden}"
         )
+
+# P0451 retains the original no-threat contract everywhere except the
+# separately audited read-only ObserveSecondaryThreat function. Do not weaken
+# the original nameplate/attachment/ordinary-capture restrictions.
+secondary_i = probe.find("function Probe:ObserveSecondaryThreat(event, eventUnit, observation)")
+secondary_end = probe.find("function Probe:RunDevNameplateLifecycleStatus(emit)", secondary_i)
+if secondary_i < 0 or secondary_end < 0:
+    errors.append("P0451 secondary threat seam unavailable")
+else:
+    outside_threat_seam = probe[:secondary_i] + probe[secondary_end:]
+    for forbidden in ("UnitThreatSituation", "UnitDetailedThreatSituation"):
+        if forbidden in outside_threat_seam:
+            errors.append("WorldTargetProbe.lua threat source outside isolated P0451 seam: " + forbidden)
 
 ordinary_start = probe.find("local function callOrdinary(api, ...)")
 ordinary_end = probe.find("local function readBoolean", ordinary_start)

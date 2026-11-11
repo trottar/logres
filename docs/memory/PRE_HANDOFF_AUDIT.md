@@ -1,3 +1,12 @@
+## P0451 — Secondary threat source and historical-contract audit (2026-11-11)
+
+- Verified P0450 `main` `55af0b9d18e0d93b146a8a4a1647daf21bd09d03` and source blobs (P0450 manifest exact SHA; P0440 probe checker remains in force). Forever session 113 #12040/#12042/#12044 shows selected visual PASS scoped, not aggro proof.
+- P0140/P0432 historical global no-threat assertions apply unchanged in meaning to every original probe path; their P0451 exceptions are scoped to exactly one separately checked `ObserveSecondaryThreat` function. No source/content safety check is removed. The source retains exactly 96 loaded Lua entries.
+- New separate `ObserveSecondaryThreat` reads **only** same-event ordinary nameplate unit tokens after P0440 access qualification. Threat status 2/3 and independent detailed tanking Boolean must agree, plus ordinary anchor/hostile/combat/player targeting. Secret, absent, contradictory or failed results never qualify; no token/frame is saved.
+- No secondary frame creation, native mutation, aura/selected HP changes, hidden nameplates or periodic polling. Historical P0440 lifecycle checker still forbids threat APIs *within* its original observer; P0451 is a distinct evidence seam and uses the same event channel.
+- R0 full author-check REFUSED **313/314** at the historical P0450 active-heading assertion, with no release or user checkout writes. R1 retains the original P0450/P0449 chronology while making P0451 the active heading; runtime P0450 assertions unchanged. No user/remote writes.
+- Release requires exact candidate author-check with matching receipt, full static tests, rollback/diff, syntax and saved ZIP hash. Forever threat result remains **UNVERIFIED**; an event-level positive is not proof of stable aggro gain/loss or a 50%-scale renderer.
+
 ## P0450 — Native aura list and screen target ownership audit (2026-11-11)
 
 - Verified P0449 pushed main `19050699cd474be0deb235777b678b3feec290dc` and tracked source. Forever #11961 shows world-native icons; two other aura copies remain. L-011 PARTIAL/L-028 OPEN. P0449 world visual PASS, duplication FAIL.

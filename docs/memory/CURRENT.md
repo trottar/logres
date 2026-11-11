@@ -11,16 +11,15 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0450** on verified P0449 main `1905069`: Forever 0.0.319-dev
-#11961 shows selected world aura icons work, but Blizzard native overhead
-and addon-owned screen target native aura copies remain. P0449 visual
-PARTIAL; duplication FAIL. P0450 attempts reversible native list-only
-alpha transfer and addon-owned screen target alpha handoff on world attach;
-restores on detach/OFF, refuses protected/unknown regions. L-011 PARTIAL,
-L-028 OPEN. Preserve P0447 opaque health/name, transparent background,
-+/-25px auras, native click/cast/CC/fallback, P0442 lifecycle,
-P0443 rejected matte, P0446/P0448 FAIL, P0425 visual PASS,
-secondary aggro gate and P0426/P0427. Forever acceptance pending.
+**P0451** on verified P0450 main `55af0b9`: Forever `0.0.320-dev`
+#12040/#12042/#12044 selected HP/auras no longer duplicate; 4 world
+attaches, 4 aura handoffs, 3 restores, 0 failures. **Selected visual PASS
+scoped**; OFF/taint/cast/click not fully proved. L-011 PARTIAL/L-028 OPEN.
+8 secondary anchor/2 targeting-player *events* do not prove aggro. P0451
+adds same-event guarded threat+tanking evidence; no 50% renderer. Retain
+P0447 opaque health, P0444 transparency, +/-25px auras, P0450 restore,
+click/cast/CC, P0442 lifecycle, P0443 rejected matte, P0446/P0448 FAIL,
+P0425 visual PASS, P0426/P0427, secondary gate, D-046/D-047/D-048.
 
 ## Verified State
 
@@ -62,9 +61,11 @@ secondary aggro gate and P0426/P0427. Forever acceptance pending.
 
 ## Next Action
 
-P0450 Forever selected target: verify world icons without native or
-screen duplicates, cast/click and OFF/target-change aura restoration.
-Capability refusal is OPEN, not PASS. See P0450 evidence.
+P0451 Forever: natural two-enemy combat; Report Bug > H > Nameplate
+Lifecycle; capture Report Bug and compare `secondaryThreat*` events with
+observed aggro. Secret/refused/disagree and absence remain DEFERRAL, not
+PASS. No secondary 50% until live threat+attachment reliability is shown.
+See P0451 evidence.
 
 ## Success Criteria
 
@@ -74,6 +75,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0451_SECONDARY_THREAT_QUALIFICATION.md
 - docs/memory/evidence/P0450_WORLD_AURA_OWNERSHIP_HANDOFF.md
 - docs/memory/evidence/P0449_NATIVE_WORLD_AURA_CONTAINER.md
 - docs/memory/evidence/P0448_WORLD_AURA_ATTACH_REFRESH.md

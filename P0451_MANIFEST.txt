@@ -1,0 +1,29 @@
+P0451 Qualify secondary enemy threat in same-event read-only observations
+Verified baseline: 55af0b9d18e0d93b146a8a4a1647daf21bd09d03
+Candidate runtime version: 0.0.321-dev
+PREWRITE: 314/314 STATIC PASS
+POSTWRITE: 314/314 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/HUD/WorldTargetProbe.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0451_SECONDARY_THREAT_QUALIFICATION.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0432_combat_nameplate_event_contract.py
+tools/check_p0450_aura_owner_handoff_contract.py
+tools/check_p0451_secondary_threat_contract.py
+tools/check_world_target_probe_contract.py
+P0451_MANIFEST.txt

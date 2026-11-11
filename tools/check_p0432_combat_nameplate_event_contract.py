@@ -58,9 +58,17 @@ need('"NAME_PLATE_UNIT_ADDED"' in P and
      '"NAME_PLATE_UNIT_REMOVED"' in P and
      '"PLAYER_TARGET_CHANGED"' in P,
      'existing current-target event routes altered')
+# P0451 isolates new, read-only secondary threat qualification from P0432's
+# original selected-target nameplate/anchor probe. All older paths retain the
+# original no-threat source prohibition.
+secondary_i = P.find('function Probe:ObserveSecondaryThreat(event, eventUnit, observation)')
+secondary_end = P.find('function Probe:RunDevNameplateLifecycleStatus(emit)', secondary_i)
+need(secondary_i >= 0 and secondary_end >= 0, 'isolated P0451 observer missing')
+original_probe = P[:secondary_i] + P[secondary_end:]
 need('SetCVar(' not in P and 'GetNamePlates(' not in P and
-     'UnitThreatSituation(' not in P,
-     'no nameplate setting/enumeration/threat-value use is authorized')
+     'UnitThreatSituation(' not in original_probe and
+     'UnitDetailedThreatSituation(' not in original_probe,
+     'P0432 original nameplate probe cannot inspect threat or nameplate settings')
 vt = re.search(r'(?m)^## Version: (\S+)$', T)
 vb = re.search(r'(?m)^Logres.VERSION = "([^"]+)"$', B)
 need(bool(vt and vb and vt.group(1)==vb.group(1)),

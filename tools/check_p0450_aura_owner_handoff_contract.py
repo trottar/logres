@@ -46,8 +46,13 @@ for key in ('worldEnemyScreenAuraReason','worldEnemyScreenAuraHandoffs','worldEn
     assert key in a and key in c and ('"'+key+'"') in p,key
 for path in ('docs/ROADMAP.md','docs/memory/roadmap/STATUS.md','docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md','docs/memory/investigations/ACTIVE.md'):
     body=read(path)
-    assert body.startswith('## P0450 —') and '## P0449 —' in body,path
-assert read('docs/memory/handoffs/CURRENT_HANDOFF.md').startswith('# P0450:')
+    # P0451 is the active checkpoint; P0450's full historical heading and
+    # P0449 predecessor remain recorded in order, not overwritten.
+    assert body.startswith('## P0451 —') and ('## P0450 —' in body)
+    assert body.index('## P0451 —') < body.index('## P0450 —') < body.index('## P0449 —'), path
+handoff = read('docs/memory/handoffs/CURRENT_HANDOFF.md')
+assert handoff.startswith('# P0451:')
+assert '# P0450:' in handoff and handoff.index('# P0451:') < handoff.index('# P0450:')
 assert 'P0449 world aura visibility PASS' in read('docs/memory/evidence/P0450_WORLD_AURA_OWNERSHIP_HANDOFF.md')
 assert '| L-011 | World-attached target anchor | PARTIAL |' in read('docs/memory/investigations/ISSUE_LEDGER.md')
 assert 'P0449' in read('docs/memory/CURRENT.md')

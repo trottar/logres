@@ -1,3 +1,14 @@
+## P0451 — Same-event secondary aggro qualification (2026-11-11)
+
+P0450 selected aura ownership is visually PASS scoped (#12040/#12042/#12044);
+its World Enemy OFF / combat-taint/cast/click acceptance is not complete.
+Session 113 secondary anchor and targeting-player counters do not establish
+aggro. P0451 adds an ordinary threat-state and independent detailed tanking
+cross-check on the *same nameplate event*, without retaining unit tokens,
+frames, GUIDs or restricted data. Positive event counts are not unique enemies.
+No 50% secondary frame is activated. See P0451 evidence; Forever qualification
+remains pending.
+
 ## P0450 — World/native/screen target aura ownership handoff (2026-11-11)
 
 P0449 world aura icons visually PASS (Forever 0.0.319-dev #11961), but

@@ -607,6 +607,17 @@ function Probe:ObserveNameplateLifecycle(event, eventUnit)
             self.lifecycleFailures = self.lifecycleFailures + 1
         end
     end
+    -- P0451: same-event ordinary facts only; never persist the unit token,
+    -- nameplate frame, GUID, or restricted value for later use.
+    return {
+        secondary = currentTarget == false,
+        anchorSafe = permitted == true,
+        inCombat = inCombat == true,
+        enemyInCombat = enemyInCombat == true,
+        attackable = attackable == true,
+        targetingPlayer = targetingPlayer == true,
+        reaction = reaction.category or "unknown",
+    }
 end
 
 function Probe:GetNameplateLifecycleLines()
@@ -629,7 +640,81 @@ function Probe:GetNameplateLifecycleLines()
             tostring(self.lifecycleCombatHostileTargetingPlayer),
             tostring(self.lifecycleLastPlayerTargeting), tostring(self.lifecycleLastResult),
             tostring(self.lifecycleSecretResults), tostring(self.lifecycleFailures)),
+        string.format(
+            "Secondary THREAT (read-only events, not unique enemies): samples=%s primary=%s qualified=%s nonprimary=%s noTable=%s disagree=%s secret=%s error=%s unknown=%s last=%s; 50%% DISABLED",
+            tostring(self.secondaryThreatEvents), tostring(self.secondaryThreatPrimaryEvents),
+            tostring(self.secondaryThreatQualifiedEvents), tostring(self.secondaryThreatNonprimaryEvents),
+            tostring(self.secondaryThreatNoTableEvents), tostring(self.secondaryThreatDisagreementEvents),
+            tostring(self.secondaryThreatSecretEvents), tostring(self.secondaryThreatFailureEvents),
+            tostring(self.secondaryThreatUnknownEvents), tostring(self.secondaryThreatLastResult)),
     }
+end
+
+-- P0451: secondary aggro is not inferred from mere nameplate visibility
+-- or from the enemy selecting the player. Query independent ordinary threat
+-- sources only on the same nameplate event, and expose aggregate observations.
+-- No secondary renderer is promoted by these results.
+function Probe:ObserveSecondaryThreat(event, eventUnit, observation)
+    if not observation or observation.secondary ~= true then return end
+    if event == "NAME_PLATE_UNIT_REMOVED" then return end
+    local unit = ordinaryNameplateToken(eventUnit)
+    if not unit then return end
+    self.secondaryThreatEvents = self.secondaryThreatEvents + 1
+    self.secondaryThreatLastEvent = event
+
+    local source, status = callOrdinary(UnitThreatSituation, "player", unit)
+    local detail = readBoolean(UnitDetailedThreatSituation, "player", unit)
+    if source.secret or detail.secret then
+        self.secondaryThreatSecretEvents = self.secondaryThreatSecretEvents + 1
+        self.secondaryThreatLastResult = "secret-threat-deferred"
+        return
+    end
+    if source.failure or detail.failure then
+        self.secondaryThreatFailureEvents = self.secondaryThreatFailureEvents + 1
+        self.secondaryThreatLastResult = "threat-query-failed"
+        return
+    end
+    if not source.available or not detail.available
+        or not source.ok or not detail.ok then
+        self.secondaryThreatUnknownEvents = self.secondaryThreatUnknownEvents + 1
+        self.secondaryThreatLastResult = "threat-api-unavailable"
+        return
+    end
+    if not source.present or not detail.present then
+        self.secondaryThreatNoTableEvents = self.secondaryThreatNoTableEvents + 1
+        self.secondaryThreatLastResult = "no-ordinary-threat-pair"
+        return
+    end
+    if type(status) ~= "number" or status < 0 or status > 3
+        or status ~= math.floor(status) then
+        self.secondaryThreatFailureEvents = self.secondaryThreatFailureEvents + 1
+        self.secondaryThreatLastResult = "invalid-ordinary-threat-state"
+        return
+    end
+    local primary = status >= 2
+    if primary ~= (detail.value == true) then
+        self.secondaryThreatDisagreementEvents =
+            self.secondaryThreatDisagreementEvents + 1
+        self.secondaryThreatLastResult = "ordinary-threat-disagrees"
+        return
+    end
+    if not primary then
+        self.secondaryThreatNonprimaryEvents =
+            self.secondaryThreatNonprimaryEvents + 1
+        self.secondaryThreatLastResult = "not-player-primary-threat"
+        return
+    end
+    self.secondaryThreatPrimaryEvents = self.secondaryThreatPrimaryEvents + 1
+    if not observation.anchorSafe or not observation.inCombat
+        or not observation.enemyInCombat or not observation.attackable
+        or not observation.targetingPlayer
+        or observation.reaction ~= "hostile" then
+        self.secondaryThreatLastResult = "primary-threat-anchor-or-combat-unqualified"
+        return
+    end
+    self.secondaryThreatQualifiedEvents =
+        self.secondaryThreatQualifiedEvents + 1
+    self.secondaryThreatLastResult = "same-event-primary-threat-candidate"
 end
 
 function Probe:RunDevNameplateLifecycleStatus(emit)
@@ -867,6 +952,17 @@ function Probe:GetDebugStatus()
         lifecycleLastResult = self.lifecycleLastResult,
         lifecycleSecretResults = self.lifecycleSecretResults,
         lifecycleFailures = self.lifecycleFailures,
+        secondaryThreatEvents = self.secondaryThreatEvents,
+        secondaryThreatPrimaryEvents = self.secondaryThreatPrimaryEvents,
+        secondaryThreatQualifiedEvents = self.secondaryThreatQualifiedEvents,
+        secondaryThreatNonprimaryEvents = self.secondaryThreatNonprimaryEvents,
+        secondaryThreatNoTableEvents = self.secondaryThreatNoTableEvents,
+        secondaryThreatDisagreementEvents = self.secondaryThreatDisagreementEvents,
+        secondaryThreatSecretEvents = self.secondaryThreatSecretEvents,
+        secondaryThreatFailureEvents = self.secondaryThreatFailureEvents,
+        secondaryThreatUnknownEvents = self.secondaryThreatUnknownEvents,
+        secondaryThreatLastEvent = self.secondaryThreatLastEvent,
+        secondaryThreatLastResult = self.secondaryThreatLastResult,
         moduleEnabled = self.moduleEnabled == true,
         eventFrameReady = self.eventFrame ~= nil,
         proxyReady = self.anchorProxy ~= nil,
@@ -967,6 +1063,17 @@ function Probe:OnInitialize()
     self.lifecycleLastAnchor = "uncaptured"
     self.lifecycleLastPlayerTargeting = "unknown"
     self.lifecycleLastResult = "uncaptured"
+    self.secondaryThreatEvents = 0
+    self.secondaryThreatPrimaryEvents = 0
+    self.secondaryThreatQualifiedEvents = 0
+    self.secondaryThreatNonprimaryEvents = 0
+    self.secondaryThreatNoTableEvents = 0
+    self.secondaryThreatDisagreementEvents = 0
+    self.secondaryThreatSecretEvents = 0
+    self.secondaryThreatFailureEvents = 0
+    self.secondaryThreatUnknownEvents = 0
+    self.secondaryThreatLastEvent = "none"
+    self.secondaryThreatLastResult = "unobserved"
     self.lifecycleRegistration = {}
     self.moduleEnabled = false
     self.captureCount = 0
@@ -1035,7 +1142,8 @@ function Probe:OnInitialize()
     end
     lifecycleFrame:SetScript("OnEvent", function(_, event, unit)
         if self.moduleEnabled ~= true then return end
-        self:ObserveNameplateLifecycle(event, unit)
+        local observation = self:ObserveNameplateLifecycle(event, unit)
+        self:ObserveSecondaryThreat(event, unit, observation)
     end)
     self.lifecycleFrame = lifecycleFrame
 end
