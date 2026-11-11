@@ -638,6 +638,46 @@ function Probe:RunDevNameplateLifecycleStatus(emit)
     for i = 1, #lines do emit(lines[i]) end
 end
 
+-- P0441: opt-in world display may request a short-lived, ordinary anchor
+-- during nameplate events. It never writes to the Blizzard frame.
+-- P0440's read-only lifecycle observations remain independent.
+function Probe:AcquireLiveEnemyTargetAnchor(eventUnit, fromEvent)
+    local unit = "target"
+    if fromEvent == true then
+        local token, reason = ordinaryNameplateToken(eventUnit)
+        if not token then return nil, reason end
+        unit = token
+        local target = readBoolean(UnitIsUnit, unit, "target")
+        if not target.ok or target.secret or target.value ~= true then
+            return nil, "not-current-target"
+        end
+    end
+
+    local reaction = readEventReaction(unit)
+    if reaction.category ~= "hostile" then
+        return nil, "not-hostile"
+    end
+    local attack = readBoolean(UnitCanAttack, "player", unit)
+    if not attack.ok or attack.secret or attack.value ~= true then
+        return nil, "not-attackable"
+    end
+    local source, anchor = readEventNameplate(unit)
+    if not source.ok or source.secret or not source.present or not anchor then
+        return nil, "no-accessible-nameplate"
+    end
+    local forbidden = readBoolean(anchor.IsForbidden, anchor)
+    if not forbidden.ok or forbidden.secret or forbidden.value ~= false then
+        return nil, "forbidden-or-unknown"
+    end
+    local api = C_NamePlateManager
+        and C_NamePlateManager.IsNamePlateUnitBehindCamera
+    local behind = readBoolean(api, unit)
+    if not behind.ok or behind.secret or behind.value ~= false then
+        return nil, "behind-camera-or-unknown"
+    end
+    return anchor, "accessible-hostile-target"
+end
+
 -- Preserve bounded event-time evidence instead of allowing a later Report Bug
 -- (or target loss) to overwrite the only in-combat nameplate observation.
 -- This observes the current target only; secondary anchors and aggro are NOT

@@ -3371,6 +3371,34 @@ function Logres:HandleWorldTrialCommand(argument)
     end
 end
 
+function Logres:HandleLiveWorldEnemyCommand(argument)
+    local hud = Logres:GetModule("HUD")
+    if argument == "status" then
+        local state = hud:GetDebugStatus()
+        emit(string.format(
+            "World Enemy LIVE (opt-in): requested=%s visible=%s attachments=%s combat=%s failures=%s reason=%s",
+            tostring(state.worldEnemyLiveRequested),
+            tostring(state.worldEnemyLiveVisible),
+            tostring(state.worldEnemyLiveAttachments),
+            tostring(state.worldEnemyLiveCombatAttaches),
+            tostring(state.worldEnemyLiveFailures),
+            tostring(state.worldEnemyLiveLastReason)))
+        emit("World Enemy LIVE: target 100%; secondary aggro NOT ENABLED; fallback unchanged.")
+        return
+    end
+    if argument ~= "on" and argument ~= "off" then
+        emit("Use World Enemy ON/OFF/Status in Report Bug > H.")
+        return
+    end
+    local accepted, reason = hud:SetLiveWorldEnemy(argument == "on")
+    local armed = hud:GetDebugStatus().worldEnemyLiveRequested
+    emit(string.format("World Enemy %s: %s (%s)",
+        argument == "on" and "ON" or "OFF",
+        accepted and "READY" or armed and "ARMED / ANCHOR DEFERRED"
+            or "DEFERRED", tostring(reason)))
+    emit("Screen-space/native target interaction and auras remain available.")
+end
+
 function Logres:HandleNameplateLifecycleStatus()
     Logres:GetModule("WorldTargetProbe"):RunDevNameplateLifecycleStatus(emit)
 end
@@ -4348,6 +4376,10 @@ local function handleCommand(message)
     end
     if command == "worldtrial" then
         Logres:HandleWorldTrialCommand(argument)
+        return
+    end
+    if command == "worldenemy" then
+        Logres:HandleLiveWorldEnemyCommand(argument)
         return
     end
     if command == "nameplatelifecycle" then

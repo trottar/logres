@@ -825,6 +825,7 @@ function HUD:ApplyImmersionPreference(preferences)
     else
         self.root:Hide()
         self:SetWorldTargetTrial(false)
+        self:SetLiveWorldEnemy(false)
     end
 end
 
@@ -843,6 +844,13 @@ function HUD:GetDebugStatus()
         enemyPreviewAggroAlpha = 0.5,
         enemyWorldAttachmentEnabled = false,
         enemyFallbackPreserved = true,
+        worldEnemyLiveRequested = self.worldEnemyLiveRequested == true,
+        worldEnemyLiveVisible = self.worldEnemyLiveVisible == true,
+        worldEnemyLiveLastReason = self.worldEnemyLiveLastReason,
+        worldEnemyLiveAttachments = self.worldEnemyLiveAttachments or 0,
+        worldEnemyLiveCombatAttaches = self.worldEnemyLiveCombatAttaches or 0,
+        worldEnemyLiveFailures = self.worldEnemyLiveFailures or 0,
+        worldEnemySecondaryEnabled = false,
         worldTrialRequested = self.worldTrialRequested == true,
         worldTrialVisible = self.worldTrialVisible == true,
         worldTrialLastReason = self.worldTrialLastReason,
@@ -975,6 +983,18 @@ local function ordinaryOutOfCombat()
     local checked, secret = pcall(issecretvalue, value)
     return checked and secret == false
         and type(value) == "boolean" and value == false
+end
+
+-- Only an ordinary positive combat state can authorize a combat-only
+-- attachment attempt or contribute to the combat attachment count.
+local function ordinaryInCombat()
+    if type(InCombatLockdown) ~= "function"
+        or type(issecretvalue) ~= "function" then return false end
+    local ok, value = pcall(InCombatLockdown)
+    if not ok then return false end
+    local checked, secret = pcall(issecretvalue, value)
+    return checked and secret == false
+        and type(value) == "boolean" and value == true
 end
 
 function HUD:BuildWorldTargetTrial()
@@ -1116,6 +1136,162 @@ function HUD:SetWorldTargetTrial(enabled)
     return self:RefreshWorldTargetTrial("manual")
 end
 
+-- P0441: event-driven, opt-in real world enemy trial. Existing World Trial
+-- remains unchanged for its historical out-of-combat secure-driver tests.
+-- Only addon-owned UIParent children are moved; Blizzard plates/children and
+-- interaction remain untouched. Every combat mutation can be refused safely.
+local function ordinaryOwnedUnprotected(frame)
+    if not frame or type(frame.IsProtected) ~= "function"
+        or type(issecretvalue) ~= "function" then return false end
+    local ok, protected = pcall(frame.IsProtected, frame)
+    if not ok then return false end
+    local checked, secret = pcall(issecretvalue, protected)
+    return checked and secret == false and protected == false
+end
+
+function HUD:BuildLiveWorldEnemy()
+    if self.worldEnemyLiveFrame then return true end
+    if not ordinaryOutOfCombat() then return false, "build-requires-ooc" end
+    local frame = buildEnemyDisplayFixture(UIParent,
+        "LogresWorldEnemyLiveTrial", "Enemy world trial", 100)
+    frame:SetFrameStrata("HIGH")
+    frame:EnableMouse(false)
+    frame:Hide()
+    if not ordinaryOwnedUnprotected(frame) then
+        return false, "owned-frame-protected-or-unknown"
+    end
+    self.worldEnemyLiveFrame = frame
+    local auras = Logres:GetModule("StatusAuras")
+    if auras and type(auras.CreateWorldEnemyLiveLanes) == "function" then
+        auras:CreateWorldEnemyLiveLanes(frame)
+    end
+    return true
+end
+
+function HUD:HideLiveWorldEnemy(reason)
+    self.worldEnemyLiveVisible = false
+    self.worldEnemyLiveLastReason = reason or "hidden"
+    local frame = self.worldEnemyLiveFrame
+    if not frame then return true end
+    if not ordinaryOwnedUnprotected(frame) then
+        self.worldEnemyLiveFailures = self.worldEnemyLiveFailures + 1
+        self.worldEnemyLiveLastReason = "hide-protected-deferred"
+        return false
+    end
+    local ok = pcall(frame.Hide, frame)
+    if not ok then
+        self.worldEnemyLiveFailures = self.worldEnemyLiveFailures + 1
+        self.worldEnemyLiveLastReason = "hide-refused"
+    end
+    return ok
+end
+
+function HUD:UpdateLiveWorldEnemyValues()
+    if not self.worldEnemyLiveVisible then return false end
+    local frame = self.worldEnemyLiveFrame
+    if not frame or not ordinaryOwnedUnprotected(frame) then
+        return false
+    end
+    -- Secret-capable identity and percentage flow only to native consumers.
+    local ok = pcall(function()
+        frame.enemyNameText:SetText(UnitName("target"))
+        local health = UnitHealthPercent("target", true, self.percentScaleCurve)
+        frame.enemyHealthBar.status:SetValue(health)
+        frame.enemyHealthText:SetFormattedText("%.0f%%", health)
+    end)
+    if not ok then
+        self.worldEnemyLiveFailures = self.worldEnemyLiveFailures + 1
+        self:HideLiveWorldEnemy("native-unit-consumer-refused")
+    end
+    return ok
+end
+
+function HUD:RefreshLiveWorldEnemy(event, eventUnit)
+    if not self.worldEnemyLiveRequested then return false, "not-requested" end
+    local preferences = Logres:GetPreferences()
+    if preferences.immersionEnabled ~= true then
+        self:HideLiveWorldEnemy("immersion-off")
+        return false, self.worldEnemyLiveLastReason
+    end
+    if not self.worldEnemyLiveFrame then
+        self.worldEnemyLiveLastReason = "build-pending-ooc"
+        return false, self.worldEnemyLiveLastReason
+    end
+    if not ordinaryOutOfCombat() and not ordinaryInCombat() then
+        self:HideLiveWorldEnemy("combat-state-unavailable")
+        return false, self.worldEnemyLiveLastReason
+    end
+    local probe = Logres:GetModule("WorldTargetProbe")
+    if not probe or type(probe.AcquireLiveEnemyTargetAnchor) ~= "function" then
+        self:HideLiveWorldEnemy("probe-unavailable")
+        return false, self.worldEnemyLiveLastReason
+    end
+    local requestedUnit
+    if event == "NAME_PLATE_UNIT_ADDED" then requestedUnit = eventUnit end
+    local anchor, why = probe:AcquireLiveEnemyTargetAnchor(
+        requestedUnit, event == "NAME_PLATE_UNIT_ADDED")
+    if not anchor then
+        -- Another unit gaining a nameplate must not hide the selected unit.
+        if why ~= "not-current-target" then self:HideLiveWorldEnemy(why) end
+        return false, why
+    end
+    local frame = self.worldEnemyLiveFrame
+    if not ordinaryOwnedUnprotected(frame) then
+        self:HideLiveWorldEnemy("owned-frame-protected")
+        return false, self.worldEnemyLiveLastReason
+    end
+    -- This is the only experimental combat attachment step. It touches an
+    -- addon-owned unprotected frame, never the native nameplate. A refused
+    -- protected operation leaves the normal screen-space fallback usable.
+    local ok = pcall(function()
+        frame:Hide()
+        frame:ClearAllPoints()
+        frame:SetPoint("BOTTOM", anchor, "TOP", 0, 6)
+    end)
+    if not ok then
+        self.worldEnemyLiveFailures = self.worldEnemyLiveFailures + 1
+        self:HideLiveWorldEnemy("owned-attach-refused")
+        return false, self.worldEnemyLiveLastReason
+    end
+    self.worldEnemyLiveVisible = true
+    if not self:UpdateLiveWorldEnemyValues() then
+        return false, self.worldEnemyLiveLastReason
+    end
+    local auras = Logres:GetModule("StatusAuras")
+    if auras and type(auras.RefreshWorldEnemyLiveLanes) == "function" then
+        auras:RefreshWorldEnemyLiveLanes()
+    end
+    if not pcall(frame.Show, frame) then
+        self.worldEnemyLiveFailures = self.worldEnemyLiveFailures + 1
+        self:HideLiveWorldEnemy("owned-show-refused")
+        return false, self.worldEnemyLiveLastReason
+    end
+    self.worldEnemyLiveAttachments = self.worldEnemyLiveAttachments + 1
+    self.worldEnemyLiveCombatAttaches = self.worldEnemyLiveCombatAttaches
+        + (ordinaryInCombat() and 1 or 0)
+    self.worldEnemyLiveLastReason = "owned-target-attached"
+    return true, self.worldEnemyLiveLastReason
+end
+
+function HUD:SetLiveWorldEnemy(enabled)
+    if enabled then
+        if not ordinaryOutOfCombat() then
+            self.worldEnemyLiveLastReason = "enable-requires-ooc"
+            return false, self.worldEnemyLiveLastReason
+        end
+        local built, reason = self:BuildLiveWorldEnemy()
+        if not built then
+            self.worldEnemyLiveLastReason = reason
+            return false, reason
+        end
+        self.worldEnemyLiveRequested = true
+        return self:RefreshLiveWorldEnemy("manual")
+    end
+    self.worldEnemyLiveRequested = false
+    local stopped = self:HideLiveWorldEnemy("off")
+    return stopped, self.worldEnemyLiveLastReason
+end
+
 function HUD:SetEnemyDisplayPreview(enabled)
     if enabled and not self.enemyDisplayPreview then
         self:BuildEnemyDisplayPreview()
@@ -1137,6 +1313,12 @@ function HUD:SetEnemyDisplayPreview(enabled)
 end
 
 function HUD:OnInitialize()
+    self.worldEnemyLiveRequested = false
+    self.worldEnemyLiveVisible = false
+    self.worldEnemyLiveLastReason = "off"
+    self.worldEnemyLiveAttachments = 0
+    self.worldEnemyLiveCombatAttaches = 0
+    self.worldEnemyLiveFailures = 0
     self.worldTrialRequested = false
     self.worldTrialVisible = false
     self.worldTrialCombatHidden = false
@@ -1359,12 +1541,13 @@ function HUD:OnInitialize()
         end
 
         self:UpdateTarget()
+        self:UpdateLiveWorldEnemyValues()
     end)
 
     self.targetEventFrame = targetEventFrame
 
     local worldTrialEvents = CreateFrame("Frame")
-    worldTrialEvents:SetScript("OnEvent", function(_, event)
+    worldTrialEvents:SetScript("OnEvent", function(_, event, unit)
         if event == "PLAYER_REGEN_DISABLED" then
             -- No frame mutation during combat. Secure state driver owns hide.
             self.worldTrialCombatHidden = true
@@ -1372,6 +1555,16 @@ function HUD:OnInitialize()
             self.worldTrialLastReason = "combat-state-driver"
         elseif self.worldTrialRequested then
             self:RefreshWorldTargetTrial(event)
+        end
+        if self.worldEnemyLiveRequested then
+            if event == "NAME_PLATE_UNIT_REMOVED" then
+                self:RefreshLiveWorldEnemy(event)
+            elseif event == "NAME_PLATE_UNIT_ADDED" then
+                -- Event token is screened inside WorldTargetProbe.
+                self:RefreshLiveWorldEnemy(event, unit)
+            elseif event ~= "PLAYER_REGEN_DISABLED" then
+                self:RefreshLiveWorldEnemy(event)
+            end
         end
     end)
     self.worldTrialEvents = worldTrialEvents
@@ -1516,6 +1709,7 @@ function HUD:OnEnable()
 end
 
 function HUD:OnDisable()
+    self:SetLiveWorldEnemy(false)
     self:SetWorldTargetTrial(false)
     self:SetEnemyDisplayPreview(false)
     self.previewEnabled = false

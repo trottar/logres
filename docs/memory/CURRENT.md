@@ -11,16 +11,20 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0440** lifecycle probe; P0439 main `572c558` verified. OOC anchor
-unavailable in Forever #11003/#11082; P0432 combat anchor observed.
-Read-only nameplate event tokens distinguish target, secondary anchors and
-hostile combat player-targeting. Report Bug > H > Nameplate Lifecycle.
-No protected changes; fallback preserved. D-042/L-011 DEFERRED; L-047
-panel controls scoped PASS. P0427 historical; P0425 visual PASS.
+**P0441** opt-in World Enemy live target trial from verified P0440 main
+`bec4038`. P0440 Forever #11161: target/secondary anchors 12/17,
+combat anchors 29, hostile player-targeting 4, failures/secrets zero.
+These are observations, not attachment/aggro proof. Phase H controls
+World Enemy ON/OFF/Status, 100% hostile target; 50% secondary still gated.
+Native/screenspace fallback kept, saved preference OFF. D-042/L-011
+DEFERRED until Forever; P0425 visual PASS, P0427 historical.
 
 ## Verified State
 
-- P0439 `572c558` panel controls PASS scoped; OOC trial DEFERRED, zero failures. P0437 visual PASS, P0432 combat anchor observed, production attachment/aggro unproven.
+- P0440 main `bec4038`: Forever #11161 0.0.311-dev read-only nameplate
+  anchor target=12, secondary=17, combat=29, hostile player targeting=4;
+  failures/secret=0. P0439 OOC trial DEFERRED; P0437 visual PASS.
+  No safe production attachment/confirmed threat proof.
 
 - P0422 moved the pet-action bar in error; P0423 restored it and V8 was visually accepted.
 
@@ -32,11 +36,11 @@ panel controls scoped PASS. P0427 historical; P0425 visual PASS.
 - P0417 main `bc91448`: Blizzard pet bar/frame user-observed suppressed and Logres actions working; L-008 still OPEN for combat/Edit Mode/fallback coverage.
 - P0418 V5 initial 19-region map (`LOGRES_SCREEN_MAP_APPROVED.json`) is archived; V6 supersedes only runtime centers, preserving the H.2 audit and native fallbacks.
 
-- P0381 integrated gameplay OPEN; P0383 `cc783a0` 253 STATIC; client 0.0.267-dev quest18 TURNED_IN; hotspot offset and stock greeting OPEN. L-005 PARTIAL, L-001/L-002 OPEN. P0384 quest21 aligned hover in 0.0.268-dev incident 3196; P0385 observed; P0386 UNVERIFIED.
+- P0381 integrated gameplay OPEN; P0383 quest18 TURNED_IN, L-005 PARTIAL, L-001/L-002 OPEN; P0384 quest21 hover aligned; P0385 observed, P0386 UNVERIFIED. Details in evidence.
 
 - P0379 `285be528` 249 STATIC; 0.0.264-dev no claim. L-002 native, L-005 FAIL. R0/R1 refused; P0378 screenshots inferred.
 
-- P0370 240 STATIC; no-pet labels user PASS. P0369 P0368 P0367 P0366 R1 P0365 R1 P0364 R1 P0363 P0362 P0361 R1 P0360 P0359 P0358 R1 P0357 P0356: 239–227 STATIC, client checks pending; prior refusals in evidence. L-001/L-002/L-005 FAIL.
+- P0370 240 STATIC no-pet PASS; P0367, P0357 P0358 P0359; historic checks remain. L-001/L-002/L-005 FAIL.
 - P0352 223, P0351 222, P0350 221 STATIC; client UNVERIFIED.
 - P0349 R1 `4e59c8f2f03daf30b630fb15e3e14d5f38cc8da6` 220/220 STATIC; R0 REFUSED, WoW UNVERIFIED.
 - P0348 `4b7481d731d5f90e214b285bc7cce16ec826176f` 219/219 STATIC; D-048 model OFFLINE ONLY.
@@ -53,13 +57,15 @@ panel controls scoped PASS. P0427 historical; P0425 visual PASS.
 - D-048 independent live domain selectors and saved migration do not exist: schema 3 still stores `immersionEnabled` and `activeQuestEnabled`. D-046 preview-first and D-047 frozen Camera/DynamicCam remain required. Native UI and protected/secret fallbacks stay usable.
 - L-020–L-032 are tracked user reports; runtime gates apply. L-028 duplicated/missing target debuffs remains OPEN; L-022 focused quest artifact requires screenshot, L-027 Blizzard transient popup requires `/fstack` owner evidence. L-019 license unresolved, release blocked.
 
-- Historical markers retained for continuity; status/evidence in PATCH_INDEX and ISSUE_LEDGER: L-004, L-021, L-025, L-029, L-033, L-034, L-035, L-037, L-038, L-039, L-040, P0241, P0373, P0374, P0376, P0380, P0382, P0387, P0388, P0389, P0390, P0391, P0392, P0393, P0394, P0395, P0396, P0397, P0402, P0405, P0406, P0407, P0408, P0410, P0411, P0413, P0414, P0415.
+- Historical markers retained for continuity; status/evidence in PATCH_INDEX and ISSUE_LEDGER: L-004, L-021, L-025, L-029, L-033, L-034, L-035, L-037, L-038, L-039, L-040, P0241, P0373, P0374, P0376, P0380, P0382, P0387, P0388, P0389, P0390, P0391–P0397, P0402, P0405–P0408, P0410, P0411, P0413–P0415.
 
 ## Next Action
 
-P0440: during natural two-enemy Forever combat, use Report Bug > H >
-Nameplate Lifecycle and left-click Report Bug. Verify target/secondary anchors
-and combat targeting separately; threat/attachment remain UNPROVEN.
+P0441 developer-only Forever trial: deploy; right-click Report Bug > H >
+World Enemy ON outside combat, then natural combat with one selected hostile;
+World Enemy Status; left-click Report Bug; OFF. Check 100% target auras,
+protected-action/taint errors, target switch and fallback. No secondary
+rendering until confirmed threat, no nameplate setting changes.
 
 ## Success Criteria
 

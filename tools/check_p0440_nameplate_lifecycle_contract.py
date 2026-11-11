@@ -64,6 +64,6 @@ for path in ('docs/ROADMAP.md', 'docs/memory/investigations/ACTIVE.md',
              'docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md',
              'docs/memory/roadmap/STATUS.md'):
     s = read(path)
-    assert s.startswith('## P0440 —') and '## P0439 —' in s
+    assert '## P0440 —' in s and '## P0439 —' in s
 assert len(read('docs/memory/CURRENT.md').encode()) < 9800
 print('P0440 PASS: event-time source, independent secondary anchor/targeting evidence, safe panel/incident, fallback intact (STATIC)')

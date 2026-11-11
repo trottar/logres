@@ -1,3 +1,54 @@
+## P0441 — Opt-in event-driven world enemy target (2026-11-10)
+
+P0440 main `bec4038` verified; Forever session 102 incident 11161 established
+12 target, 17 secondary and 29 combat accessible-anchor observations,
+4 hostile combat player-targeting events, zero secret/failures. These are
+repeated observations, not unique-unit counts or attachment/aggro proof.
+P0441 implements a separate opt-in World Enemy ON/OFF/Status trial under
+Report Bug > H using the approved 100% target display and real cached aura
+lanes (+/-25px). The owned unprotected, precreated UIParent frame tries a
+protected-safe event-time relative anchor with pcall. It never changes a
+Blizzard nameplate, click region, CVar, or native target; the regular Logres
+screen-space and Blizzard fallback remain usable. Unavailable/refused combat
+mutations are recorded and fail open. No secondary 50% production renderer:
+confirmed per-unit threat/aggro still lacks a valid contract. Forever trial
+and cleanup behavior UNVERIFIED. D-042/L-011 remain gated. See
+`docs/memory/evidence/P0441_WORLD_ENEMY_LIVE_TRIAL.md`.
+
+## P0441 — Opt-in event-driven world enemy target (2026-11-10)
+
+P0440 main `bec4038` verified; Forever session 102 incident 11161 established
+12 target, 17 secondary and 29 combat accessible-anchor observations,
+4 hostile combat player-targeting events, zero secret/failures. These are
+repeated observations, not unique-unit counts or attachment/aggro proof.
+P0441 implements a separate opt-in World Enemy ON/OFF/Status trial under
+Report Bug > H using the approved 100% target display and real cached aura
+lanes (+/-25px). The owned unprotected, precreated UIParent frame tries a
+protected-safe event-time relative anchor with pcall. It never changes a
+Blizzard nameplate, click region, CVar, or native target; the regular Logres
+screen-space and Blizzard fallback remain usable. Unavailable/refused combat
+mutations are recorded and fail open. No secondary 50% production renderer:
+confirmed per-unit threat/aggro still lacks a valid contract. Forever trial
+and cleanup behavior UNVERIFIED. D-042/L-011 remain gated. See
+`docs/memory/evidence/P0441_WORLD_ENEMY_LIVE_TRIAL.md`.
+
+## P0441 — Opt-in event-driven world enemy target (2026-11-10)
+
+P0440 main `bec4038` verified; Forever session 102 incident 11161 established
+12 target, 17 secondary and 29 combat accessible-anchor observations,
+4 hostile combat player-targeting events, zero secret/failures. These are
+repeated observations, not unique-unit counts or attachment/aggro proof.
+P0441 implements a separate opt-in World Enemy ON/OFF/Status trial under
+Report Bug > H using the approved 100% target display and real cached aura
+lanes (+/-25px). The owned unprotected, precreated UIParent frame tries a
+protected-safe event-time relative anchor with pcall. It never changes a
+Blizzard nameplate, click region, CVar, or native target; the regular Logres
+screen-space and Blizzard fallback remain usable. Unavailable/refused combat
+mutations are recorded and fail open. No secondary 50% production renderer:
+confirmed per-unit threat/aggro still lacks a valid contract. Forever trial
+and cleanup behavior UNVERIFIED. D-042/L-011 remain gated. See
+`docs/memory/evidence/P0441_WORLD_ENEMY_LIVE_TRIAL.md`.
+
 ## P0440 — Event-time nameplate lifecycle and secondary targeting probe (2026-11-10)
 
 Verified P0439 main `572c55826f86c2183b94497bb52cea5ee547474a`,

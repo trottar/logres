@@ -1,0 +1,30 @@
+P0441 Add opt-in live world-attached current enemy target trial
+Verified baseline: bec4038ebcf9faf7fb8534091e5cfd6075126aef
+Candidate runtime version: 0.0.312-dev
+PREWRITE: 305/305 STATIC PASS
+POSTWRITE: 305/305 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/HUD/HUD.lua
+Logres/HUD/StatusAuras.lua
+Logres/HUD/WorldTargetProbe.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0441_WORLD_ENEMY_LIVE_TRIAL.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/FUTURE_WORLD_TARGET_PRESENTATION.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0440_nameplate_lifecycle_contract.py
+tools/check_p0441_world_enemy_live_trial_contract.py
+P0441_MANIFEST.txt

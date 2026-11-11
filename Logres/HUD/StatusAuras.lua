@@ -465,6 +465,9 @@ function StatusAuras:Refresh(reason, onlyUnit)
             if unit == "target" and self.worldTrialLanes then
                 self:RefreshWorldTrialLanes()
             end
+            if unit == "target" and self.worldEnemyLiveLanes then
+                self:RefreshWorldEnemyLiveLanes()
+            end
             if active and not self.preview then
                 self:RecordLiveSnapshot(unit, snapshot, reason)
             end
@@ -524,6 +527,37 @@ function StatusAuras:RefreshWorldTrialLanes()
         snapshot and snapshot.harmfulRows or {}, active)
     renderLane(self.worldTrialLanes.helpful,
         snapshot and snapshot.helpfulRows or {}, active)
+end
+
+-- P0441: the combat world trial uses the same ordinary target snapshot,
+-- aura renderer, grid and +/-25px lane geometry. These are addon-owned
+-- children; never inspect or mutate Blizzard's native aura frames.
+function StatusAuras:CreateWorldEnemyLiveLanes(parent)
+    if self.worldEnemyLiveLanes then return self.worldEnemyLiveLanes end
+    local harmful = createLane("target", "RIGHT", "LEFT", 0, 0,
+        "P0441WorldHarmful", parent)
+    local helpful = createLane("target", "LEFT", "RIGHT", 0, 0,
+        "P0441WorldHelpful", parent)
+    self.worldEnemyLiveLanes = {harmful = harmful, helpful = helpful}
+    return self.worldEnemyLiveLanes
+end
+
+function StatusAuras:RefreshWorldEnemyLiveLanes()
+    if not self.worldEnemyLiveLanes then return end
+    local hud = Logres:GetModule("HUD")
+    local active = hud and hud.worldEnemyLiveVisible == true
+        and self.moduleEnabled and not self.preview
+    local snapshot = self.last.target
+    local rows = snapshot and snapshot.harmfulRows or {}
+    local helpful = snapshot and snapshot.helpfulRows or {}
+    -- Some Forever frame mutations may be protected in combat; failure is
+    -- contained to this owned trial, never the native/Logres fallback.
+    local ok = pcall(function()
+        renderLane(self.worldEnemyLiveLanes.harmful, rows, active)
+        renderLane(self.worldEnemyLiveLanes.helpful, helpful, active)
+    end)
+    if not ok then self.worldEnemyLiveFailures =
+        (self.worldEnemyLiveFailures or 0) + 1 end
 end
 
 function StatusAuras:SetPreview(enabled)

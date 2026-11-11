@@ -161,3 +161,15 @@ reliable threat/aggro and is not routed into any production frame.
 An event-time anchor does not itself prove safe frame attachment during
 combat. Native nameplate control/click regions, aura owners, saved OFF setting
 and usable screen/native target fallback remain unchanged.
+
+## P0441 — Combat-capable opt-in attachment trial (2026-11-10)
+
+P0440 runtime session 102 incident 11161 verified ordinary target and
+secondary nameplate anchor **reads** during combat. This is new positive
+capability evidence, not positive `SetPoint`/rendering evidence. The P0441
+opt-in real-world target trial is a separate UIParent addon-owned unprotected
+frame prebuilt OOC. On nameplate events it checks a hostile current target,
+non-forbidden/visible anchor and attempts a guarded relative SetPoint;
+refusals leave all native and screen-space fallback functional. Aggro and
+secondary 50% remain disabled. Forever combat mutation, cleanup and taint
+results are pending. No historical negative anchor evidence is superseded.

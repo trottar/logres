@@ -1,3 +1,12 @@
+## P0441 — Combat world enemy opt-in author audit (2026-11-10)
+
+- Authority: P0440 `bec4038ebcf9faf7fb8534091e5cfd6075126aef` verified GitHub tree `4f27a68d41c94e9b51038cc89067798c95c69bcb`, exact reconstructed Git archive.
+- L-011/D-042: #11161 target=12, secondary=17, combat anchor=29; no production attachment, secure mutation or aggro ownership proof. P0438/P0439 negative OOC path retained.
+- Historical checkers: P0440 event-time read-only method and target-only P0432 payload-discard path unchanged. Existing P0438 World Trial and 122 panel action registrations unchanged. P0440 checker updated to retain historical section without pinning active roadmap heading.
+- Runtime scope: independent opt-in World Enemy Phase H controls; precreated addon-only unprotected frame, target hostility/nameplate safety gates, guarded combat SetPoint attempt, real ordinary target aura lanes, scalar Report Bug. No Blizzard child or CVar mutation, no fallback suppression, no automatic startup. Secondary 50% disabled until confirmed threat.
+- R0 rejected: full independent 305-checker candidate run returned 291 PASS / 14 FAIL. Every refusal was historical CURRENT/HANDOFF continuity for P0357, P0358 or P0359 after an overbroad CURRENT summary compaction. No remote/user tracked writes. R1 restores explicit markers and retains historical contract semantics; full exact-candidate rerun required.
+- Release gate: exact post-transform complete checker suite, syntax, diff, matching author receipt required. Static success is NOT Forever protected or gameplay proof; do not advance on untested combat behaviors.
+
 ## P0440 — Event-time nameplate lifecycle author audit (2026-11-10)
 
 - Authority: verified P0439 main `572c55826f86c2183b94497bb52cea5ee547474a`, tree `9b8f13883aa33b7929a104f24175c44cac4e7718`. Reconstructed its exact tracked tree from verified P0438 author kit + P0439 guarded package and generated P0439 manifest; no remote write.

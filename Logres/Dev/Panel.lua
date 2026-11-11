@@ -60,6 +60,9 @@ local WORLD_TRIAL_PANEL_ACTIONS = {
     {id = "worldTrialPanelOff", label = "World Trial OFF", command = "worldtrial off"},
     {id = "worldTrialPanelStatus", label = "World Trial Status", command = "worldtrial status"},
     {id = "nameplateLifecyclePanelStatus", label = "Nameplate Lifecycle", command = "nameplatelifecycle"},
+    {id = "worldEnemyPanelOn", label = "World Enemy ON", command = "worldenemy on"},
+    {id = "worldEnemyPanelOff", label = "World Enemy OFF", command = "worldenemy off"},
+    {id = "worldEnemyPanelStatus", label = "World Enemy Status", command = "worldenemy status"},
 }
 
 local function ensureDiagnosticsDB()
@@ -320,6 +323,14 @@ function Logres:CaptureBugIncident()
         "lifecycleLastRole", "lifecycleLastReaction", "lifecycleLastAnchor",
         "lifecycleLastPlayerTargeting", "lifecycleLastResult",
         "lifecycleSecretResults", "lifecycleFailures"})
+    -- P0441: additive, addon-owned live world trial result. Native
+    -- presentation and unit interaction are never inspected or changed.
+    incident.snapshot.worldEnemyLive = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("HUD"):GetDebugStatus()
+    end), {"worldEnemyLiveRequested", "worldEnemyLiveVisible",
+        "worldEnemyLiveLastReason", "worldEnemyLiveAttachments",
+        "worldEnemyLiveCombatAttaches", "worldEnemyLiveFailures",
+        "worldEnemySecondaryEnabled", "enemyFallbackPreserved"})
     incident.snapshot.worldTargetTrial = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("HUD"):GetDebugStatus()
     end), {"worldTrialRequested", "worldTrialVisible", "worldTrialLastReason",
