@@ -1,3 +1,10 @@
+## P0449 — Native aura world delegation audit (2026-11-11)
+
+- P0449 R0 author-check **278/312 REFUSED**: historic P0183 exact native renderer source signature broken by refactor, and handoff exceeded the 8 KB bound. No user checkout or GitHub writes. R1 restores P0183 code verbatim, creates a dedicated native world container and compresses the handoff without deleting historical markers.
+- Verified P0448 GitHub main `55f7cb7652c60e070dcf76a4d240fde22a60c76f`. User says icons unchanged; deployed session 111 #11882 records 40 rejected secret index probes, 0 ordinary helpful/harmful rows, 0 icons and 1 working world attach. P0448 runtime aura FAIL, not a request for more proof of that failure.
+- New world child AuraContainer HARMFUL/HELPFUL setup is capability-gated before combat, within addon-owned parent at +/-25px; delegates restricted aura processing to native Blizzard engine. It never introspects native icon children or secret values. Native target aura fallback remains if unavailable. No changes to P0447 successful HP bar, decor restoration, target click/cast or secondary aggro.
+- Native renderer READY alone is not a visual PASS. Exact full author-check and receipt, ZIP, rollback, static contracts and Forever run required before closure. Do not remove historical failure records or claim live safe operation from static checks.
+
 ## P0448 — World aura attachment refresh release audit (2026-11-11)
 
 - R0 full author-check **309/311 REFUSED**, isolated candidate, no user apply: P0442 CURRENT marker lost and P0444 legacy aura renderer call absent. R1 restores marker and actual capability-gated legacy fallback. Preserve refusal; fresh full gate and receipt required.

@@ -11,15 +11,16 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0448** after verified P0447 main `dca2b0a`: user visually accepts the
-selected enemy health bar/native decorative handoff, but world buffs/debuffs
-are missing. L-011 PARTIAL and L-028 OPEN. Session 110 has 3 attaches,
-2 detaches, 0 owner failures; aura positive reads unproven (last target
-absent). P0448 adds an event-time ordinary target-aura scan on world attach,
-keeps existing UNIT_AURA updates, and reports source-versus-render counts.
+**P0449** after verified P0448 main `55f7cb7`: selected enemy health
+visually PASS but P0448 world auras FAIL in Forever session 111.
+Report Bug #11882: 1 attach, 0 failures, 40 restricted index skips,
+aura rows 0/0, icons 0/0. New native
+AuraContainer HARMFUL/HELPFUL children delegate secret data to Blizzard
+without reading payloads or mutating Blizzard nameplates.
+L-011 PARTIAL, L-028 OPEN, native world aura visibility UNVERIFIED.
 Preserve transparent opaque 100% name/HP, +/-25px auras, P0447 native decor
 restore/click/cast fallback, OFF default, P0443 matte rejection, secondary
-aggro gate and P0446 runtime FAIL. P0442 lifecycle and P0425 visual PASS; P0426/P0427 retained.
+aggro gate and P0446 runtime FAIL. P0442 lifecycle; P0425 visual PASS; P0426/P0427 retained.
 
 ## Verified State
 
@@ -61,12 +62,10 @@ aggro gate and P0446 runtime FAIL. P0442 lifecycle and P0425 visual PASS; P0426/
 
 ## Next Action
 
-P0448 Forever: World Enemy ON, natural selected target with active ordinary
-aura, H World Enemy Status and Report Bug `worldEnemyAuras`: compare source
-harmful/helpful rows, secret skips, render slots/shown, and failure counts.
-Confirm health/name, target clicks/casts, transparent background, native
-restore on OFF/switch. Source restriction is DEFERRED, render refusal FAIL.
-L-011 PARTIAL; L-028 OPEN until icons have real visual proof.
+P0449 Forever: World Enemy ON/Status/Report Bug with a known buff/DoT;
+verify world icons, health/cast/click, transparency and OFF restoration.
+Native-ready does not prove visible icons; P0448 failure is established.
+L-011 PARTIAL; L-028 OPEN until native icons visibly PASS.
 
 ## Success Criteria
 
@@ -76,6 +75,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0449_NATIVE_WORLD_AURA_CONTAINER.md
 - docs/memory/evidence/P0448_WORLD_AURA_ATTACH_REFRESH.md
 - docs/memory/patches/CHAT_TO_ZIP_WORKFLOW.md (P0428/P0434)
 - docs/memory/evidence/P0426_NPC_VISUAL_AND_COMPASS_INTAKE.md

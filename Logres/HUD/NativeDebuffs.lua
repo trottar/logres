@@ -187,6 +187,88 @@ function Native.Create()
     return { frames = frames, active = false }, nil
 end
 
+-- Exact P0183 player/target renderer stays unchanged above. A separate
+-- world implementation avoids changing its historical protected fallback.
+local function createWorldContainer(parent, filter, point, relative, x, y)
+    local frame = CreateFrame(
+        "AuraContainer", nil, parent, "CustomAuraContainerTemplate"
+    )
+    frame:Hide()
+    frame:SetSize(2 * ICON + GAP, 3 * ICON + 2 * GAP)
+    frame:ClearAllPoints()
+    frame:SetPoint(point, parent, relative, x, y)
+    frame:EnableMouse(false)
+    frame:AddAuraGroup(filter == "HELPFUL" and "LogresWorldHelpful"
+        or "LogresWorldHarmful", filter, {
+        maxFrameCount = MAX,
+        layout = {
+            elementWidth = ICON,
+            elementHeight = ICON,
+            elementSpacing = GAP,
+        },
+        initializeFrame = function(button)
+            button:SetSize(ICON, ICON)
+            button:EnableMouse(false)
+            local icon = button:CreateTexture(nil, "ARTWORK")
+            icon:SetPoint("TOPLEFT", button, "TOPLEFT", INSET, -INSET)
+            icon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -INSET, INSET)
+            button:SetIcon(icon)
+            local border = button:CreateTexture(nil, "OVERLAY")
+            border:SetAllPoints(button)
+            border:SetTexture(
+                (harmfulStyle.assets and harmfulStyle.assets.frame)
+                    or "Interface\\Buttons\\UI-Quickslot2"
+            )
+            border:SetVertexColor(
+                FRAME_COLOR[1], FRAME_COLOR[2],
+                FRAME_COLOR[3], FRAME_COLOR[4]
+            )
+        end,
+    })
+    frame:SetUnit("target")
+    frame:SetEnabled(false)
+    return frame
+end
+
+-- P0449: Blizzard-native aura data stays inside AuraContainer. Two addon-
+-- owned, mouse-disabled world children inherit the transparent target parent.
+-- SetUnit/SetEnabled/initial UpdateAllAuras occur only out of combat. The
+-- native engine handles later restricted aura changes; Lua never receives
+-- or inspects aura payloads. Failure leaves stock and ordinary lanes intact.
+function Native.CreateWorldEnemyLanes(parent)
+    if not parent then return nil, "missing-owner" end
+    if type(InCombatLockdown) ~= "function" then
+        return nil, "lockdown-unknown"
+    end
+    local combatOK, locked = pcall(InCombatLockdown)
+    if not combatOK or not ordinary(locked) or locked ~= false then
+        return nil, "combat-deferred"
+    end
+    if not nativeReady() then return nil, "native-unavailable" end
+    local frames = {}
+    local ok = pcall(function()
+        frames.harmful = createWorldContainer(
+            parent, "HARMFUL", "RIGHT", "LEFT", -25, 0
+        )
+        frames.helpful = createWorldContainer(
+            parent, "HELPFUL", "LEFT", "RIGHT", 25, 0
+        )
+        for _, frame in pairs(frames) do
+            frame:SetEnabled(true)
+            frame:UpdateAllAuras()
+            frame:Show() -- the owned parent remains hidden until attachment
+        end
+    end)
+    if not ok then
+        for _, frame in pairs(frames) do
+            pcall(frame.SetEnabled, frame, false)
+            pcall(frame.Hide, frame)
+        end
+        return nil, "native-world-setup-refused"
+    end
+    return frames, "native-delegated"
+end
+
 function Native.SetActive(state, active, placementEvent)
     if not state then return false, "unavailable" end
     active = active == true

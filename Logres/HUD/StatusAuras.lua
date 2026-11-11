@@ -217,6 +217,9 @@ local function readUnit(unit)
     end
     if #result.rows > 0 then
         result.reason = "populated"
+    elseif result.secretSkips > 0 then
+        -- This counts skipped index probes, NOT the number of actual auras.
+        result.reason = "restricted-no-ordinary"
     end
     if result.failures > 0 then
         result.reason = "partial-source-failure"
@@ -539,6 +542,20 @@ function StatusAuras:CreateWorldEnemyLiveLanes(parent)
     local helpful = createLane("target", "LEFT", "RIGHT", 0, 0,
         "P0441WorldHelpful", parent)
     self.worldEnemyLiveLanes = {harmful = harmful, helpful = helpful}
+    -- The ordinary texture lanes remain a complete fail-open fallback. The
+    -- preferred world lanes are secure Blizzard AuraContainer *children of
+    -- our own frame*, not native nameplate/target-frame children. Construct
+    -- only while out of combat, before this world parent can be shown.
+    local ok, nativeFrames, nativeReason = pcall(
+        Logres.NativeDebuffs.CreateWorldEnemyLanes, parent
+    )
+    if ok and nativeFrames then
+        self.worldEnemyNativeLanes = nativeFrames
+        self.worldEnemyNativeReason = nativeReason or "native-delegated"
+    else
+        self.worldEnemyNativeReason = ok and (nativeReason or "native-refused")
+            or "native-init-error"
+    end
     return self.worldEnemyLiveLanes
 end
 
@@ -553,6 +570,13 @@ function StatusAuras:RefreshWorldEnemyLiveLanes()
     -- Some Forever frame mutations may be protected in combat; failure is
     -- contained to this owned trial, never the native/Logres fallback.
     self.worldEnemyLiveRenderAttempts = self.worldEnemyLiveRenderAttempts + 1
+    if self.worldEnemyNativeLanes then
+        -- Never query native icon children or inspect restricted values in
+        -- combat. Ready means engine delegated, NOT confirmed visible icons.
+        self.worldEnemyLiveRenderLastResult = active and "native-delegated"
+            or "native-parent-hidden"
+        return true
+    end
     local ok = pcall(function()
         renderLane(self.worldEnemyLiveLanes.harmful, rows, active)
         renderLane(self.worldEnemyLiveLanes.helpful, helpful, active)
@@ -645,6 +669,9 @@ function StatusAuras:GetDebugStatus()
         worldEnemyLiveRenderAttempts = self.worldEnemyLiveRenderAttempts,
         worldEnemyLiveFailures = self.worldEnemyLiveFailures,
         worldEnemyLiveRenderLastResult = self.worldEnemyLiveRenderLastResult,
+        worldEnemyNativeReady = self.worldEnemyNativeLanes ~= nil,
+        worldEnemyNativeReason = self.worldEnemyNativeReason,
+        worldEnemyNativeVisibilityProof = "unobserved",
         worldEnemyLiveHarmfulSlots = self.worldEnemyLiveLanes
             and self.worldEnemyLiveLanes.harmful.visible or 0,
         worldEnemyLiveHelpfulSlots = self.worldEnemyLiveLanes
@@ -689,6 +716,8 @@ function StatusAuras:OnInitialize()
     self.worldEnemyLiveRenderAttempts = 0
     self.worldEnemyLiveFailures = 0
     self.worldEnemyLiveRenderLastResult = "not-attempted"
+    self.worldEnemyNativeLanes = nil
+    self.worldEnemyNativeReason = "not-attempted"
     self.liveHistory = {
         playerHarmful = { maxRows = 0, positiveReads = 0, lastReason = nil },
         targetHarmful = { maxRows = 0, positiveReads = 0, lastReason = nil },

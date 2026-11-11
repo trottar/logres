@@ -3426,6 +3426,11 @@ function Logres:HandleLiveWorldEnemyCommand(argument)
             tostring(auraState.worldEnemyLiveRenderAttempts),
             tostring(auraState.worldEnemyLiveRenderLastResult),
             tostring(auraState.worldEnemyLiveFailures)))
+        emit(string.format(
+            "World Enemy native auras: ready=%s route=%s iconVisibility=%s (Blizzard-owned rendering; no secret icon inspection)",
+            tostring(auraState.worldEnemyNativeReady),
+            tostring(auraState.worldEnemyNativeReason),
+            tostring(auraState.worldEnemyNativeVisibilityProof)))
         emit("World Enemy LIVE: target 100%; secondary aggro NOT ENABLED; fallback on detach.")
         return
     end

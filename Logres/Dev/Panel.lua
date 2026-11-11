@@ -347,7 +347,9 @@ function Logres:CaptureBugIncident()
         "worldEnemySourceLastFailures", "worldEnemyLiveRenderAttempts",
         "worldEnemyLiveFailures", "worldEnemyLiveRenderLastResult",
         "worldEnemyLiveHarmfulSlots", "worldEnemyLiveHelpfulSlots",
-        "worldEnemyLiveHarmfulShown", "worldEnemyLiveHelpfulShown"})
+        "worldEnemyLiveHarmfulShown", "worldEnemyLiveHelpfulShown",
+        "worldEnemyNativeReady", "worldEnemyNativeReason",
+        "worldEnemyNativeVisibilityProof"})
     incident.snapshot.worldTargetTrial = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("HUD"):GetDebugStatus()
     end), {"worldTrialRequested", "worldTrialVisible", "worldTrialLastReason",

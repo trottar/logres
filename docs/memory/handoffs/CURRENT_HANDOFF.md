@@ -1,3 +1,12 @@
+# P0449: Ledger first: docs/memory/investigations/ISSUE_LEDGER.md
+
+Authoritative docs/memory/CURRENT.md. P0448 main `55f7cb7` Forever
+#11882: HP PASS, world auras FAIL (40 restricted index skips; 0 rows/icons).
+P0449 adds native AuraContainer world children with +/-25px geometry,
+OOC gate, native fallback; L-011 PARTIAL/L-028 OPEN. Keep P0447
+transparent bar, native click/cast/restore, P0443 rejected matte and
+secondary aggro restriction. Native world icons UNVERIFIED, user commits.
+
 # P0448: Ledger first: docs/memory/investigations/ISSUE_LEDGER.md
 
 P0447 pushed main `dca2b0a`, selected enemy world health visually PASS; buff/
@@ -37,7 +46,10 @@ Verified pushed P0355 R2 `fac39a1e3960c7d9a238f76543027838647330ed`: 226/226 PRE
 
 # P0355 — read-only primary stock ownership report; CURRENT.md authoritative
 
-Verified pushed P0354 R3 main `4254d0a80f2f8ffd98a708836482a093bed06e62`: 225/225 PREWRITE/POSTWRITE STATIC, version `0.0.243-dev`, WoW UNVERIFIED. Extract ONLY command-invoked P0173 primaryownershipcheck report into preloaded Actions/Primary.lua. Commands keeps local wrapper, Run All, slash and action panel; primary stock-action suppression remains UNAUTHORIZED, candidate-only and stock-preserved. P0173 original native gate remains unchanged. Candidate `0.0.244-dev`, #226, 94 Lua and 120 panel actions/38 previews, schema 3 unchanged. No native/protected mutation, secret inspection, polling, camera or D-048 live selector.
+Verified P0354 R3 main `4254d0a` (225 STATIC): P0355 moves only
+read-only primaryownershipcheck to Actions/Primary.lua; Blizzard stock
+actions remain owner. P0173 secure gate; schema 3 and D-048 unchanged.
+Candidate P0355 runtime unverified, R0/R1 refusals preserved below.
 
 ## Safety gates and negative evidence
 

@@ -1,0 +1,29 @@
+P0449 Delegate restricted world enemy aura icons to native containers
+Verified baseline: 55f7cb7652c60e070dcf76a4d240fde22a60c76f
+Candidate runtime version: 0.0.319-dev
+PREWRITE: 312/312 STATIC PASS
+POSTWRITE: 312/312 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/HUD/NativeDebuffs.lua
+Logres/HUD/StatusAuras.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0449_NATIVE_WORLD_AURA_CONTAINER.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0448_world_enemy_aura_refresh_contract.py
+tools/check_p0449_native_world_aura_container_contract.py
+P0449_MANIFEST.txt

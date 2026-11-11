@@ -33,9 +33,9 @@ assert 'self:RestoreNativeEnemyDecor()' in h
 assert 'P0443 matte' in read('docs/memory/evidence/P0448_WORLD_AURA_ATTACH_REFRESH.md')
 assert 'L-028 | Target debuffs' in read('docs/memory/investigations/ISSUE_LEDGER.md')
 for p in ('docs/ROADMAP.md','docs/memory/roadmap/STATUS.md','docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md'):
-    assert read(p).startswith('## P0448 —'),p
+    assert read(p).startswith('## P0449 —'),p
 assert read('docs/memory/CURRENT.md').count('## Next Action')==1
-assert 'P0448' in read('docs/memory/handoffs/CURRENT_HANDOFF.md').splitlines()[0]
+assert 'P0449' in read('docs/memory/handoffs/CURRENT_HANDOFF.md').splitlines()[0]
 toc=re.search(r'^## Version: ([^\n]+)$',read('Logres/Logres.toc'),re.M)
 boot=re.search(r'Logres.VERSION = "([^"]+)"',read('Logres/Core/Bootstrap.lua'))
 assert toc and boot and toc.group(1)==boot.group(1) and toc.group(1).endswith('-dev')

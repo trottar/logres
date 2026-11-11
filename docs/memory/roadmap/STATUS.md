@@ -1,3 +1,25 @@
+## P0449 — Restricted aura world-lane delegation (2026-11-11)
+
+P0448 (`0.0.318-dev`) Forever session 111, Report Bug #11882: selected
+world health/native decoration still functioning, but buffs and debuffs
+remain absent. Source attach scan=1, secret-index skips=40, ordinary
+harmful/helpful rows=0/0, owned renderer attempts=5, displayed=0/0;
+world attachment failures=0. Forty skips are index probes, NOT a count
+of actual auras. P0448 runtime aura FAIL; this is source restriction,
+not proof of renderer geometry failure.
+
+P0449 creates two addon-owned Blizzard AuraContainer children of the
+precreated world enemy frame, using HARMFUL and HELPFUL groups anchored
+-25px and +25px. Blizzard's native engine receives `target` and owns all
+aura data/updates; Lua does not inspect restricted icon or aura values.
+Construction and enablement require out-of-combat capability; refusal
+retains ordinary Logres lanes and native target-aura fallback. World
+health bar, 100% name/HP opacity, fully transparent backing, P0447
+native decoration restoration, native clicks/casts, target changes and
+secondary aggro gate remain untouched. Native engine READY is not
+proof of icons visible. L-011 PARTIAL / L-028 OPEN pending Forever proof.
+See `docs/memory/evidence/P0449_NATIVE_WORLD_AURA_CONTAINER.md`.
+
 ## P0448 — Selected world enemy aura source refresh (2026-11-11)
 
 Verified main P0447 `dca2b0a` (`0.0.317-dev`), user confirms working
