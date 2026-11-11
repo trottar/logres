@@ -3371,6 +3371,10 @@ function Logres:HandleWorldTrialCommand(argument)
     end
 end
 
+function Logres:HandleNameplateLifecycleStatus()
+    Logres:GetModule("WorldTargetProbe"):RunDevNameplateLifecycleStatus(emit)
+end
+
 local function handleHUDPreview(argument)
     local hud = Logres:GetModule("HUD")
 
@@ -4344,6 +4348,10 @@ local function handleCommand(message)
     end
     if command == "worldtrial" then
         Logres:HandleWorldTrialCommand(argument)
+        return
+    end
+    if command == "nameplatelifecycle" then
+        Logres:HandleNameplateLifecycleStatus()
         return
     end
 

@@ -11,16 +11,16 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0439** panel entry repair: P0438's slash-only world trial is now
-available as Phase H ON/OFF/Status controls inside the Report Bug developer
-panel, with readable saved results. P0438 main `4fc6e82` verified; OOC
-attachment, secure combat hide and safe target fallback runtime UNVERIFIED.
-Production nameplate and secondary aggro remain DEFERRED D-042/L-011.
-**P0427** historical; P0425 visual PASS; L-047/L-043/L-030/L-044 OPEN.
+**P0440** lifecycle probe; P0439 main `572c558` verified. OOC anchor
+unavailable in Forever #11003/#11082; P0432 combat anchor observed.
+Read-only nameplate event tokens distinguish target, secondary anchors and
+hostile combat player-targeting. Report Bug > H > Nameplate Lifecycle.
+No protected changes; fallback preserved. D-042/L-011 DEFERRED; L-047
+panel controls scoped PASS. P0427 historical; P0425 visual PASS.
 
 ## Verified State
 
-- P0438 main `4fc6e82`; attached enemy display remains a protected-safe OOC trial only. P0439 panel access/source unverified in Forever. P0437 visual PASS.
+- P0439 `572c558` panel controls PASS scoped; OOC trial DEFERRED, zero failures. P0437 visual PASS, P0432 combat anchor observed, production attachment/aggro unproven.
 
 - P0422 moved the pet-action bar in error; P0423 restored it and V8 was visually accepted.
 
@@ -57,9 +57,9 @@ Production nameplate and secondary aggro remain DEFERRED D-042/L-011.
 
 ## Next Action
 
-P0439: verify Phase H World Trial ON/OFF/Status and saved results through
-Report Bug; attach screenshots/diagnostics if deferred or broken. Keep world
-attachment and secondary threat production gated until Forever proof.
+P0440: during natural two-enemy Forever combat, use Report Bug > H >
+Nameplate Lifecycle and left-click Report Bug. Verify target/secondary anchors
+and combat targeting separately; threat/attachment remain UNPROVEN.
 
 ## Success Criteria
 

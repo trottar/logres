@@ -1,0 +1,29 @@
+P0440 Add read-only event-time nameplate lifecycle and player-targeting evidence
+Verified baseline: 572c55826f86c2183b94497bb52cea5ee547474a
+Candidate runtime version: 0.0.311-dev
+PREWRITE: 304/304 STATIC PASS
+POSTWRITE: 304/304 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/HUD/WorldTargetProbe.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0440_NAMEPLATE_LIFECYCLE_PROBE.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/FUTURE_WORLD_TARGET_PRESENTATION.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0438_world_target_trial_contract.py
+tools/check_p0439_world_trial_panel_contract.py
+tools/check_p0440_nameplate_lifecycle_contract.py
+P0440_MANIFEST.txt

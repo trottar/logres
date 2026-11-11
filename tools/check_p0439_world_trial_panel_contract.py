@@ -31,7 +31,7 @@ assert 'screenSpaceEnemyFrameEnabled = false' in read('Logres/Core/Database.lua'
 for path in ('docs/ROADMAP.md','docs/memory/investigations/ACTIVE.md',
              'docs/memory/roadmap/STATUS.md','docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md'):
     s=read(path)
-    assert s.startswith('## P0439 —'),path
+    assert '## P0439 —' in s,path
     assert '## P0438 —' in s and '## P0437 —' in s
 assert '| L-047 |' in read('docs/memory/investigations/ISSUE_LEDGER.md')
 assert '| L-011 |' in read('docs/memory/investigations/ISSUE_LEDGER.md')

@@ -44,7 +44,7 @@ for path in ('docs/ROADMAP.md', 'docs/memory/investigations/ACTIVE.md',
     s=read(path)
     # P0438 stays a historical capability gate; a later panel integration
     # may be active without changing its attachment/fallback assertions.
-    assert s.startswith('## P0439 —'), path
+    assert '## P0439 —' in s, path
     assert '## P0438 —' in s and '## P0437 —' in s and '## P0436 —' in s
 assert 'P0425 visual PASS' in read('docs/memory/CURRENT.md')
 assert len(read('docs/memory/CURRENT.md').encode()) < 9800

@@ -59,6 +59,7 @@ local WORLD_TRIAL_PANEL_ACTIONS = {
     {id = "worldTrialPanelOn", label = "World Trial ON", command = "worldtrial on"},
     {id = "worldTrialPanelOff", label = "World Trial OFF", command = "worldtrial off"},
     {id = "worldTrialPanelStatus", label = "World Trial Status", command = "worldtrial status"},
+    {id = "nameplateLifecyclePanelStatus", label = "Nameplate Lifecycle", command = "nameplatelifecycle"},
 }
 
 local function ensureDiagnosticsDB()
@@ -304,6 +305,21 @@ function Logres:CaptureBugIncident()
     -- P0431: Report Bug also performs an explicit contextual world-target
     -- capture. The probe owns any temporary hidden addon-frame attachment;
     -- this journal stores only its sanitized, scalar diagnostics.
+    -- P0440: event-time nameplate evidence survives target changes and the
+    -- post-combat screenshot; only the probe's owned scalar latches are saved.
+    incident.snapshot.nameplateLifecycle = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("WorldTargetProbe"):GetDebugStatus()
+    end), {"lifecycleEventFrameReady", "lifecycleNameplateAddedRegistered",
+        "lifecycleNameplateRemovedRegistered", "lifecycleUnitTargetRegistered",
+        "lifecycleRawEvents", "lifecycleAcceptedEvents", "lifecycleRejectedEvents",
+        "lifecycleSecretTokens", "lifecycleAddedEvents", "lifecycleRemovedEvents",
+        "lifecycleUnitTargetEvents", "lifecycleTargetAnchorsSeen",
+        "lifecycleSecondaryAnchorsSeen", "lifecycleCombatAnchorsSeen",
+        "lifecycleOutOfCombatAnchorsSeen", "lifecycleSecondaryTargetingPlayer",
+        "lifecycleCombatHostileTargetingPlayer", "lifecycleLastEvent",
+        "lifecycleLastRole", "lifecycleLastReaction", "lifecycleLastAnchor",
+        "lifecycleLastPlayerTargeting", "lifecycleLastResult",
+        "lifecycleSecretResults", "lifecycleFailures"})
     incident.snapshot.worldTargetTrial = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("HUD"):GetDebugStatus()
     end), {"worldTrialRequested", "worldTrialVisible", "worldTrialLastReason",

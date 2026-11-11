@@ -1,3 +1,11 @@
+## P0440 — Event-time nameplate lifecycle author audit (2026-11-10)
+
+- Authority: verified P0439 main `572c55826f86c2183b94497bb52cea5ee547474a`, tree `9b8f13883aa33b7929a104f24175c44cac4e7718`. Reconstructed its exact tracked tree from verified P0438 author kit + P0439 guarded package and generated P0439 manifest; no remote write.
+- L-011/L-047 ledger-first triage: P0439 Forever negative OOC anchor with selected neutral/attackable wolf; P0432 combat anchor is read-only observation. D-042 prohibits unsafe combat mutation and requires fallback.
+- Historical contracts: P0432 exact `eventFrame:SetScript("OnEvent", function(_, event)` and target-only payload-discard path preserved. P0367 WorldTargetProbe wrapper and 122 developer-panel registrations unchanged. P0438/P0439 old roadmap checks retain historical P0439 section without pinning active patch. No Lua/TOC entry inventory change.
+- P0440 adds **separate** event-time read-only unit-token probe, guarded `includeForbidden=false` nameplate reads, conservative hostile player-targeting observation, Phase H view-local status and incident scalar fields. No production frame or verified aggro inference.
+- Exact-candidate full author-check and checksum required; static success must not be represented as Forever combat proof. Capture failure/secret/unknown states and retain all negative evidence and screen/native fallback.
+
 ## P0439 — World trial via Report Bug developer panel (2026-11-10)
 
 P0438 verified main `4fc6e8257e5597f4a91dbf88a44415eb1edd916f`,

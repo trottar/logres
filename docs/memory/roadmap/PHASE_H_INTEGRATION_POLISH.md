@@ -1,3 +1,20 @@
+## P0440 — Event-time nameplate lifecycle and secondary targeting probe (2026-11-10)
+
+Verified P0439 main `572c55826f86c2183b94497bb52cea5ee547474a`,
+tree `9b8f13883aa33b7929a104f24175c44cac4e7718`.
+P0439 Forever #11003/#11082 deferred with `no-accessible-nameplate`
+outside combat; selected Young Wolf was neutral/attackable and no attach
+occurred. P0432 independently observed an accessible combat target anchor.
+P0440 adds read-only event-token nameplate lifecycle capture, separate target
+and secondary anchor evidence, and strictly gated hostile in-combat
+player-targeting evidence. Status is visible from Report Bug > H > Nameplate
+Lifecycle and retained in Report Bug `snapshot.nameplateLifecycle`.
+No Blizzard CVar, native frame/control mutation, polling, attachment in
+combat, fallback suppression, or production 50% aggro rendering. A player-
+targeting unit is NOT certified threat/aggro until Forever validates that
+independent capability. L-011 remains DEFERRED; L-047 panel proof scoped.
+See `docs/memory/evidence/P0440_NAMEPLATE_LIFECYCLE_PROBE.md`.
+
 ## P0439 — Developer-panel world trial controls (2026-11-10)
 
 Verified P0438 main `4fc6e8257e5597f4a91dbf88a44415eb1edd916f`.

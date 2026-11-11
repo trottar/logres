@@ -141,3 +141,23 @@ Runtime result is now recorded in
 `../evidence/P0140_WORLD_TARGET_RUNTIME_PASS_WITH_DEFERRALS_2026-10-05.md`.
 The fallback/reaction path passed; positive anchor/attachment remains environmental
 DEFERRED and production relocation stays prohibited.
+
+## P0440 event-driven nameplate investigation (2026-11-10)
+
+Outside-combat P0439 trial returned no accessible nameplate on Forever even
+with a selected neutral/attackable Young Wolf; P0432 observed an accessible
+combat nameplate but its hidden attachment was deferred by lockdown. The
+current fallback remains correct; no force-CVar or combat SetPoint attempt.
+
+Independent architecture review of ElvUI/oUF identified the event-time
+NAME_PLATE_UNIT_ADDED/REMOVED source and unit-token lifecycle. P0440 borrows
+that architectural idea only, not ElvUI source code or protected mutations.
+Its addon-owned read-only probe checks ephemeral ordinary nameplate unit
+tokens and native `includeForbidden=false` anchors, separates target and
+secondary accessible-anchor observations, and records hostile combat units
+positively targeting the player. Targeting is not yet demonstrated to be
+reliable threat/aggro and is not routed into any production frame.
+
+An event-time anchor does not itself prove safe frame attachment during
+combat. Native nameplate control/click regions, aura owners, saved OFF setting
+and usable screen/native target fallback remain unchanged.

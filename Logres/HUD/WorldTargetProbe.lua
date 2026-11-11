@@ -6,6 +6,16 @@ local Probe = Logres:RegisterModule("WorldTargetProbe", {
     autoEnable = true,
 })
 
+-- P0440: separate event-time unit-token observation from the existing
+-- current-target hidden attachment probe. No Blizzard frame is retained.
+local LIFECYCLE_EVENTS = {
+    "NAME_PLATE_UNIT_ADDED",
+    "NAME_PLATE_UNIT_REMOVED",
+    "UNIT_TARGET",
+    "UNIT_FLAGS",
+    "UNIT_THREAT_LIST_UPDATE",
+}
+
 local EVENTS = {
     "PLAYER_TARGET_CHANGED",
     "NAME_PLATE_UNIT_ADDED",
@@ -451,6 +461,183 @@ function Probe:AcquireWorldTrialAnchor()
     return anchorFrame, "hidden-attachment-passed"
 end
 
+-- P0440: consume a nameplate event's unit token only after proving it ordinary.
+-- The token is never written to SavedVariables or retained on the module.
+local function ordinaryNameplateToken(unit)
+    if isSecret(unit) then return nil, "secret-token" end
+    if type(unit) ~= "string" then return nil, "missing-token" end
+    if #unit > 24 or not unit:match("^nameplate%d+$") then
+        return nil, "non-nameplate-token"
+    end
+    return unit
+end
+
+local function readEventNameplate(unit)
+    local api = C_NamePlate and C_NamePlate.GetNamePlateForUnit or nil
+    return callOrdinary(api, unit, false)
+end
+
+local function readEventReaction(unit)
+    local source, value = callOrdinary(UnitReaction, "player", unit)
+    if source.ok and source.present and not source.secret then
+        if type(value) ~= "number" then
+            source.failure = true
+            source.error = "unexpected-reaction-type"
+        elseif value <= 3 then
+            source.category = "hostile"
+        elseif value == 4 then
+            source.category = "neutral"
+        else
+            source.category = "friendly"
+        end
+    end
+    return source
+end
+
+-- Event-time read-only proof: no frame creation, native mutations,
+-- native enumeration, console-variable changes or polling.
+-- A hostile, in-combat unit targeting the player is evidence of targeting;
+-- it is not yet a verified threat/aggro contract for production 50% frames.
+function Probe:ObserveNameplateLifecycle(event, eventUnit)
+    self.lifecycleRawEvents = self.lifecycleRawEvents + 1
+    self.lifecycleLastEvent = event
+    local unit, reject = ordinaryNameplateToken(eventUnit)
+    if not unit then
+        self.lifecycleRejectedEvents = self.lifecycleRejectedEvents + 1
+        if reject == "secret-token" then
+            self.lifecycleSecretTokens = self.lifecycleSecretTokens + 1
+        end
+        self.lifecycleLastRole = "unknown"
+        self.lifecycleLastAnchor = "not-read"
+        self.lifecycleLastPlayerTargeting = "unknown"
+        self.lifecycleLastResult = reject
+        return
+    end
+
+    self.lifecycleAcceptedEvents = self.lifecycleAcceptedEvents + 1
+    if event == "NAME_PLATE_UNIT_REMOVED" then
+        self.lifecycleRemovedEvents = self.lifecycleRemovedEvents + 1
+        self.lifecycleLastRole = "removed"
+        self.lifecycleLastAnchor = "removed"
+        self.lifecycleLastPlayerTargeting = "unknown"
+        self.lifecycleLastResult = "unit-removed"
+        return
+    end
+    if event == "NAME_PLATE_UNIT_ADDED" then
+        self.lifecycleAddedEvents = self.lifecycleAddedEvents + 1
+    elseif event == "UNIT_TARGET" then
+        self.lifecycleUnitTargetEvents = self.lifecycleUnitTargetEvents + 1
+    end
+
+    local combat = readBoolean(InCombatLockdown)
+    local role = readBoolean(UnitIsUnit, unit, "target")
+    local reaction = readEventReaction(unit)
+    local canAttack = readBoolean(UnitCanAttack, "player", unit)
+    local enemyCombat = readBoolean(UnitAffectingCombat, unit)
+    local playerTargeted = readBoolean(UnitIsUnit, unit .. "target", "player")
+    local anchor, frame = readEventNameplate(unit)
+    local forbidden, behind
+    if anchor.ok and anchor.present and not anchor.secret and frame then
+        -- Read only. A forbidden/secret/unknown anchor never qualifies.
+        forbidden = readBoolean(frame.IsForbidden, frame)
+        local api = C_NamePlateManager
+            and C_NamePlateManager.IsNamePlateUnitBehindCamera or nil
+        behind = readBoolean(api, unit)
+    end
+
+    local inCombat = sanitizedBoolean(combat)
+    local currentTarget = sanitizedBoolean(role)
+    local targetingPlayer = sanitizedBoolean(playerTargeted)
+    local enemyInCombat = sanitizedBoolean(enemyCombat)
+    local attackable = sanitizedBoolean(canAttack)
+    local permitted = anchor.ok and not anchor.secret and anchor.present
+        and sanitizedBoolean(forbidden) == false
+        and sanitizedBoolean(behind) == false
+        and not (forbidden and forbidden.failure)
+        and not (behind and behind.failure)
+
+    self.lifecycleLastRole = currentTarget == true and "target"
+        or currentTarget == false and "secondary" or "unknown"
+    self.lifecycleLastReaction = reaction.category or "unknown"
+    self.lifecycleLastAnchor = permitted and "accessible-safe"
+        or anchor.secret and "secret-anchor"
+        or anchor.failure and "anchor-query-failed"
+        or not anchor.present and "absent"
+        or "anchor-unqualified"
+    self.lifecycleLastPlayerTargeting = targetingPlayer == true and "yes"
+        or targetingPlayer == false and "no" or "unknown"
+    self.lifecycleLastResult = "observed"
+
+    if permitted then
+        if inCombat == true then
+            self.lifecycleCombatAnchorsSeen = self.lifecycleCombatAnchorsSeen + 1
+        elseif inCombat == false then
+            self.lifecycleOutOfCombatAnchorsSeen =
+                self.lifecycleOutOfCombatAnchorsSeen + 1
+        end
+        if currentTarget == true then
+            self.lifecycleTargetAnchorsSeen = self.lifecycleTargetAnchorsSeen + 1
+        elseif currentTarget == false then
+            self.lifecycleSecondaryAnchorsSeen =
+                self.lifecycleSecondaryAnchorsSeen + 1
+        end
+    end
+
+    if currentTarget == false and targetingPlayer == true then
+        self.lifecycleSecondaryTargetingPlayer =
+            self.lifecycleSecondaryTargetingPlayer + 1
+        -- Strictly positive candidate; not enough alone to prove aggro.
+        if inCombat == true and enemyInCombat == true
+            and reaction.category == "hostile" and attackable == true
+        then
+            self.lifecycleCombatHostileTargetingPlayer =
+                self.lifecycleCombatHostileTargetingPlayer + 1
+            self.lifecycleLastResult = "hostile-combat-targeting-player"
+        end
+    end
+
+    local sources = {combat, role, reaction, canAttack, enemyCombat,
+        playerTargeted, anchor, forbidden, behind}
+    for i = 1, #sources do
+        local source = sources[i]
+        if source and source.secret == true then
+            self.lifecycleSecretResults = self.lifecycleSecretResults + 1
+        end
+        if source and source.failure == true then
+            self.lifecycleFailures = self.lifecycleFailures + 1
+        end
+    end
+end
+
+function Probe:GetNameplateLifecycleLines()
+    return {
+        string.format(
+            "Nameplate lifecycle (READ ONLY): raw=%s accepted=%s rejected=%s secretTokens=%s add=%s remove=%s unitTarget=%s",
+            tostring(self.lifecycleRawEvents), tostring(self.lifecycleAcceptedEvents),
+            tostring(self.lifecycleRejectedEvents), tostring(self.lifecycleSecretTokens),
+            tostring(self.lifecycleAddedEvents), tostring(self.lifecycleRemovedEvents),
+            tostring(self.lifecycleUnitTargetEvents)),
+        string.format(
+            "Nameplate anchors: target=%s secondary=%s combat=%s OOC=%s; lastEvent=%s role=%s reaction=%s anchor=%s",
+            tostring(self.lifecycleTargetAnchorsSeen), tostring(self.lifecycleSecondaryAnchorsSeen),
+            tostring(self.lifecycleCombatAnchorsSeen), tostring(self.lifecycleOutOfCombatAnchorsSeen),
+            tostring(self.lifecycleLastEvent), tostring(self.lifecycleLastRole),
+            tostring(self.lifecycleLastReaction), tostring(self.lifecycleLastAnchor)),
+        string.format(
+            "Enemy targeting player: secondary=%s hostileInCombat=%s last=%s result=%s secretResults=%s failures=%s; aggro NOT YET PROVEN",
+            tostring(self.lifecycleSecondaryTargetingPlayer),
+            tostring(self.lifecycleCombatHostileTargetingPlayer),
+            tostring(self.lifecycleLastPlayerTargeting), tostring(self.lifecycleLastResult),
+            tostring(self.lifecycleSecretResults), tostring(self.lifecycleFailures)),
+    }
+end
+
+function Probe:RunDevNameplateLifecycleStatus(emit)
+    -- Reads only addon-owned scalar observations; no live protected reads.
+    local lines = self:GetNameplateLifecycleLines()
+    for i = 1, #lines do emit(lines[i]) end
+end
+
 -- Preserve bounded event-time evidence instead of allowing a later Report Bug
 -- (or target loss) to overwrite the only in-combat nameplate observation.
 -- This observes the current target only; secondary anchors and aggro are NOT
@@ -575,6 +762,36 @@ function Probe:GetDebugStatus()
     local reaction = capture and capture.reaction or {}
 
     return {
+        -- Event-time, unit-token evidence; never a stored Blizzard frame.
+        lifecycleEventFrameReady = self.lifecycleFrame ~= nil,
+        lifecycleNameplateAddedRegistered =
+            self.lifecycleRegistration.NAME_PLATE_UNIT_ADDED == true,
+        lifecycleNameplateRemovedRegistered =
+            self.lifecycleRegistration.NAME_PLATE_UNIT_REMOVED == true,
+        lifecycleUnitTargetRegistered =
+            self.lifecycleRegistration.UNIT_TARGET == true,
+        lifecycleRawEvents = self.lifecycleRawEvents,
+        lifecycleAcceptedEvents = self.lifecycleAcceptedEvents,
+        lifecycleRejectedEvents = self.lifecycleRejectedEvents,
+        lifecycleSecretTokens = self.lifecycleSecretTokens,
+        lifecycleAddedEvents = self.lifecycleAddedEvents,
+        lifecycleRemovedEvents = self.lifecycleRemovedEvents,
+        lifecycleUnitTargetEvents = self.lifecycleUnitTargetEvents,
+        lifecycleTargetAnchorsSeen = self.lifecycleTargetAnchorsSeen,
+        lifecycleSecondaryAnchorsSeen = self.lifecycleSecondaryAnchorsSeen,
+        lifecycleCombatAnchorsSeen = self.lifecycleCombatAnchorsSeen,
+        lifecycleOutOfCombatAnchorsSeen = self.lifecycleOutOfCombatAnchorsSeen,
+        lifecycleSecondaryTargetingPlayer = self.lifecycleSecondaryTargetingPlayer,
+        lifecycleCombatHostileTargetingPlayer =
+            self.lifecycleCombatHostileTargetingPlayer,
+        lifecycleLastEvent = self.lifecycleLastEvent,
+        lifecycleLastRole = self.lifecycleLastRole,
+        lifecycleLastReaction = self.lifecycleLastReaction,
+        lifecycleLastAnchor = self.lifecycleLastAnchor,
+        lifecycleLastPlayerTargeting = self.lifecycleLastPlayerTargeting,
+        lifecycleLastResult = self.lifecycleLastResult,
+        lifecycleSecretResults = self.lifecycleSecretResults,
+        lifecycleFailures = self.lifecycleFailures,
         moduleEnabled = self.moduleEnabled == true,
         eventFrameReady = self.eventFrame ~= nil,
         proxyReady = self.anchorProxy ~= nil,
@@ -651,6 +868,29 @@ function Probe:GetDebugStatus()
 end
 
 function Probe:OnInitialize()
+    -- Bounded scalar counters; never retain nameplate tokens or frame objects.
+    self.lifecycleRawEvents = 0
+    self.lifecycleAcceptedEvents = 0
+    self.lifecycleRejectedEvents = 0
+    self.lifecycleSecretTokens = 0
+    self.lifecycleAddedEvents = 0
+    self.lifecycleRemovedEvents = 0
+    self.lifecycleUnitTargetEvents = 0
+    self.lifecycleTargetAnchorsSeen = 0
+    self.lifecycleSecondaryAnchorsSeen = 0
+    self.lifecycleCombatAnchorsSeen = 0
+    self.lifecycleOutOfCombatAnchorsSeen = 0
+    self.lifecycleSecondaryTargetingPlayer = 0
+    self.lifecycleCombatHostileTargetingPlayer = 0
+    self.lifecycleSecretResults = 0
+    self.lifecycleFailures = 0
+    self.lifecycleLastEvent = "none"
+    self.lifecycleLastRole = "unknown"
+    self.lifecycleLastReaction = "unknown"
+    self.lifecycleLastAnchor = "uncaptured"
+    self.lifecycleLastPlayerTargeting = "unknown"
+    self.lifecycleLastResult = "uncaptured"
+    self.lifecycleRegistration = {}
     self.moduleEnabled = false
     self.captureCount = 0
     self.manualCount = 0
@@ -707,6 +947,20 @@ function Probe:OnInitialize()
     end)
 
     self.eventFrame = eventFrame
+
+    -- Independent event channel preserves P0432's historical target-only
+    -- capture lifecycle, including its exact payload-discard contract.
+    local lifecycleFrame = CreateFrame("Frame")
+    for index = 1, #LIFECYCLE_EVENTS do
+        local event = LIFECYCLE_EVENTS[index]
+        self.lifecycleRegistration[event] = pcall(
+            lifecycleFrame.RegisterEvent, lifecycleFrame, event)
+    end
+    lifecycleFrame:SetScript("OnEvent", function(_, event, unit)
+        if self.moduleEnabled ~= true then return end
+        self:ObserveNameplateLifecycle(event, unit)
+    end)
+    self.lifecycleFrame = lifecycleFrame
 end
 
 function Probe:OnEnable()
