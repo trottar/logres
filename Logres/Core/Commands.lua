@@ -3391,7 +3391,12 @@ function Logres:HandleLiveWorldEnemyCommand(argument)
         emit(string.format(
             "World Enemy: presentation=%s; native input unchanged",
             tostring(state.worldEnemyLivePresentation)))
-        emit("World Enemy LIVE: target 100%; secondary aggro NOT ENABLED; fallback unchanged.")
+        emit(string.format(
+            "World Enemy: screen handoffs=%s fallback refreshes=%s visible=%s",
+            tostring(state.worldEnemyScreenHandoffs),
+            tostring(state.worldEnemyScreenFallbackRefreshes),
+            tostring(state.worldEnemyScreenFallbackVisible)))
+        emit("World Enemy LIVE: target 100%; secondary aggro NOT ENABLED; fallback on detach.")
         return
     end
     if argument ~= "on" and argument ~= "off" then

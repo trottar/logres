@@ -802,7 +802,12 @@ function HUD:UpdateTarget()
 
     self.targetHealthBar.status:SetValue(percent)
     self.targetHealthText:SetFormattedText("%.0f%%", percent)
+    -- P0446: the world copy owns selected-target presentation only while
+    -- successfully attached. The canonical screen target stays as fallback.
     self.targetFrame:Show()
+    -- The cast cue is a child of targetFrame, so never hide its parent.
+    self.targetNameText:SetShown(self.worldEnemyLiveVisible ~= true)
+    self.targetHealthBar:SetShown(self.worldEnemyLiveVisible ~= true)
     self:UpdateWorldTrialValues()
 end
 
@@ -851,6 +856,11 @@ function HUD:GetDebugStatus()
         worldEnemyLiveCombatAttaches = self.worldEnemyLiveCombatAttaches or 0,
         worldEnemyLiveFailures = self.worldEnemyLiveFailures or 0,
         worldEnemyLiveDetaches = self.worldEnemyLiveDetaches or 0,
+        worldEnemyScreenHandoffs = self.worldEnemyScreenHandoffs or 0,
+        worldEnemyScreenFallbackRefreshes = self.worldEnemyScreenFallbackRefreshes or 0,
+        worldEnemyScreenFallbackVisible = self.targetNameText
+            and self.targetHealthBar and self.targetNameText:IsShown()
+            and self.targetHealthBar:IsShown() or false,
         worldEnemyLiveRemovalResult = self.worldEnemyLiveRemovalResult,
         worldEnemyLiveAnchorSource = self.worldEnemyLiveAnchorUnit
             and "event-token" or "target-query-or-none",
@@ -1178,17 +1188,27 @@ function HUD:BuildLiveWorldEnemy()
 end
 
 function HUD:HideLiveWorldEnemy(reason)
-    if self.worldEnemyLiveVisible then
+    local hadWorldOwner = self.worldEnemyLiveVisible == true
+    if hadWorldOwner then
         self.worldEnemyLiveDetaches = (self.worldEnemyLiveDetaches or 0) + 1
     end
     self.worldEnemyLiveVisible = false
     self.worldEnemyLiveAnchorUnit = nil
     self.worldEnemyLiveLastReason = reason or "hidden"
+    -- Always restore the independent addon-owned screen target after any
+    -- detach attempt, even when hiding our world frame is refused.
+    local function refreshScreenFallback()
+        if not hadWorldOwner then return end
+        self.worldEnemyScreenFallbackRefreshes =
+            (self.worldEnemyScreenFallbackRefreshes or 0) + 1
+        self:UpdateTarget()
+    end
     local frame = self.worldEnemyLiveFrame
-    if not frame then return true end
+    if not frame then refreshScreenFallback(); return true end
     if not ordinaryOwnedUnprotected(frame) then
         self.worldEnemyLiveFailures = self.worldEnemyLiveFailures + 1
         self.worldEnemyLiveLastReason = "hide-protected-deferred"
+        refreshScreenFallback()
         return false
     end
     local ok = pcall(frame.Hide, frame)
@@ -1196,6 +1216,7 @@ function HUD:HideLiveWorldEnemy(reason)
         self.worldEnemyLiveFailures = self.worldEnemyLiveFailures + 1
         self.worldEnemyLiveLastReason = "hide-refused"
     end
+    refreshScreenFallback()
     return ok
 end
 
@@ -1289,6 +1310,12 @@ function HUD:RefreshLiveWorldEnemy(event, eventUnit)
     self.worldEnemyLiveAttachments = self.worldEnemyLiveAttachments + 1
     self.worldEnemyLiveCombatAttaches = self.worldEnemyLiveCombatAttaches
         + (ordinaryInCombat() and 1 or 0)
+    -- Only after Show succeeds may the world copy replace screen-space
+    -- presentation. Native nameplate visuals, casts and click owners remain.
+    self.targetFrame:Show() -- Preserve its independent cast cue child.
+    self.targetNameText:Hide()
+    self.targetHealthBar:Hide()
+    self.worldEnemyScreenHandoffs = (self.worldEnemyScreenHandoffs or 0) + 1
     self.worldEnemyLiveLastReason = "owned-target-attached"
     return true, self.worldEnemyLiveLastReason
 end
@@ -1340,6 +1367,8 @@ function HUD:OnInitialize()
     self.worldEnemyLiveCombatAttaches = 0
     self.worldEnemyLiveFailures = 0
     self.worldEnemyLiveDetaches = 0
+    self.worldEnemyScreenHandoffs = 0
+    self.worldEnemyScreenFallbackRefreshes = 0
     self.worldEnemyLiveAnchorUnit = nil
     self.worldEnemyLiveRemovalResult = "none"
     self.worldTrialRequested = false

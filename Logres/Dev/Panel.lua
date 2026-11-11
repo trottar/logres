@@ -331,6 +331,8 @@ function Logres:CaptureBugIncident()
         "worldEnemyLiveLastReason", "worldEnemyLiveAttachments",
         "worldEnemyLiveCombatAttaches", "worldEnemyLiveFailures",
         "worldEnemyLiveDetaches", "worldEnemyLiveRemovalResult",
+        "worldEnemyScreenHandoffs", "worldEnemyScreenFallbackRefreshes",
+        "worldEnemyScreenFallbackVisible",
         "worldEnemyLiveAnchorSource", "worldEnemyLiveLayout",
         "worldEnemyLivePresentation",
         "worldEnemySecondaryEnabled", "enemyFallbackPreserved"})

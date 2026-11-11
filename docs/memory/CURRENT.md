@@ -11,14 +11,15 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0444** Forever pending; P0445 review (`2281af2`): L-011
-native name/HP/border/level still overlap the addon-owned world target at
-CENTER. P0443 matte rejected; P0444 Forever UNVERIFIED.
-Keep selected 100% opaque name/HP/aura on transparent frame, +/-25px lanes,
-mouse-disabled attach, native clicks, screen-space fallback, OFF default.
-No native alpha/hide/CVar until build owner, restore and taint proof.
-Secondary 50% requires independently confirmed
-aggro. P0425 visual PASS; P0426 compass intake and P0427 identity labels retained. P0442 lifecycle retained.
+**P0446** candidate after verified P0445 (`53d74f9`): P0444 Forever
+session 108/#11645 user confirms black backing GONE, successful world attach
+(1, failures 0), but native name/HP duplicate remains L-011 PARTIAL.
+P0446 hides screen-space target during successful live world attach;
+restores on detach/failure. Transparent background,
++/-25px auras, native click/cast/aura, safe fallback, OFF default intact.
+P0443 matte rejected; no native alpha/hide/CVar; 50% secondary unproven.
+P0425 visual PASS; P0426 compass intake and P0427 identity labels retained.
+P0442 lifecycle retained.
 
 ## Verified State
 
@@ -62,10 +63,10 @@ aggro. P0425 visual PASS; P0426 compass intake and P0427 identity labels retaine
 
 ## Next Action
 
-P0444 Forever: Report Bug > H > World Enemy ON/Status/OFF, then Report Bug
-export. Test transparent selected 100% bar/name/auras, native clicks, target
-switch/removal and fallback; reject any protected error. Then resolve L-011
-native duplicate only after same-build owner/reversible restore proof (P0445).
+P0446 Forever: World Enemy ON, confirm successful world attachment hides
+only screen-space name/HP; change/clear target, remove plate, OFF and test
+fallback restoration. Record Report Bug/status and check taint/click/cast.
+Native duplication remains OPEN until proven safe region-specific transfer.
 
 ## Success Criteria
 

@@ -1,0 +1,28 @@
+P0446 Handoff world enemy target and screen fallback with provenance
+Verified baseline: 53d74f95d4665a8ac9f01e4ef2b437849c17c1f0
+Candidate runtime version: 0.0.316-dev
+PREWRITE: 309/309 STATIC PASS
+POSTWRITE: 309/309 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/HUD/HUD.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0446_WORLD_SCREEN_FALLBACK_HANDOFF.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0443_owned_enemy_matte_contract.py
+tools/check_p0446_world_screen_handoff_contract.py
+P0446_MANIFEST.txt

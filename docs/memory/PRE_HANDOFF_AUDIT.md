@@ -1,3 +1,9 @@
+## P0446 — World/screen target handoff audit (2026-11-11)
+
+- Verified GitHub main P0445 `53d74f95d4665a8ac9f01e4ef2b437849c17c1f0`, source kit reconstructed from identical P0444 tracked Git tree plus matching published P0445 JSON and manifest. P0444 Forever session 108 incident #11645 screenshot: no black matte, target world attach 1, failures 0, duplicate native visuals and redundant screen target. User confirms black absent; P0444 other scenarios still untested.
+- P0446 confines suppression to the **addon-owned screen-space target** after successful world Show (not its cast cue); on detach and failure, re-evaluates the ordinary target to restore the canonical fallback. Native plate, child, input, cast and aura state are not read/mutated. Remains an opt-in trial; no secondary aggro promotion. New bounded Report Bug handoff/fallback counters.
+- Full exact candidate author-check and receipt mandatory; 309 static checkers expected after adding focused contract. No WoW behavior is claimed from a static check. Native visual duplication L-011 stays OPEN.
+
 ## P0445 — Native visual ownership investigation author audit (docs only; 2026-11-11)
 
 - GitHub `main` exactly `2281af2b8480c8aef7443006ce115dcdeec5f7bd`; P0444 kit SHA-256 `3b140e365bca4489d80980359aa0e00b4efb2aed98023d0db376fb108d46eeab`; 308 source checkers. L-011 PARTIAL, P0444 Forever UNVERIFIED. P0442 positive attachment counts and native duplication, P0443 rejected black backing retained.

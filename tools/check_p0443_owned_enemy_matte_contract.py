@@ -26,10 +26,16 @@ assert 'World Enemy: presentation=' in c
 assert 'screenSpaceEnemyFrameEnabled = false' in read('Logres/Core/Database.lua')
 assert 'worldEnemySecondaryEnabled = false' in h
 assert '208x44 fully' in read('docs/memory/evidence/P0444_TRANSPARENT_ENEMY_ROLLBACK.md')
+current = read('docs/memory/CURRENT.md')
+work_item = current.split('\n## Current Work Item\n', 1)[1].split('\n## ', 1)[0]
+active = re.search(r'(?m)^\*\*(P[0-9]{4})\*\*(?:\s|$)', work_item)
+assert active, 'CURRENT work item must name the active checkpoint'
 for path in ('docs/ROADMAP.md', 'docs/memory/investigations/ACTIVE.md',
              'docs/memory/roadmap/STATUS.md', 'docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md'):
  s=read(path)
- assert s.startswith('## P0444 —') and '## P0443 —' in s and '## P0442 —' in s
+ assert s.startswith('## ' + active[1] + ' —')
+ assert all('## ' + old + ' —' in s for old in ('P0444', 'P0443', 'P0442'))
+ assert s.index('## P0444 —') < s.index('## P0443 —') < s.index('## P0442 —')
 assert '| L-011 | World-attached target anchor | PARTIAL |' in read('docs/memory/investigations/ISSUE_LEDGER.md')
 assert 'P0443' in read('docs/memory/CURRENT.md')
 assert len(read('docs/memory/CURRENT.md').encode()) < 9800

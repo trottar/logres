@@ -1,3 +1,13 @@
+## P0446 — World enemy screen fallback handoff (2026-11-11)
+
+P0446 candidate (main P0445 `53d74f9`): P0444 Forever #11645
+user confirms black backing removed; one world attach/zero failures, native
+name/HP still duplicates. P0446 removes only the redundant simultaneous
+Logres screen-space name/HP when live world attach succeeds, restoring it
+on detach/failure. The draft was narrowed to preserve the child cast cue. No Blizzard mutation or native-click/cast suppression;
+secondary aggro still gated. Report Bug adds handoff/refresh/visible state.
+See `docs/memory/evidence/P0446_WORLD_SCREEN_FALLBACK_HANDOFF.md`.
+
 ## P0444 — Restore transparent world enemy display (2026-11-11)
 
 Verified P0443 `main` `2bc9afc` (`0.0.314-dev`) introduced an opaque
