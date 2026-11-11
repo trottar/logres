@@ -1,0 +1,27 @@
+P0444 Restore transparent live world enemy display
+Verified baseline: 2bc9afc5cee537cc5d77be996da418d55c96a934
+Candidate runtime version: 0.0.315-dev
+PREWRITE: 308/308 STATIC PASS
+POSTWRITE: 308/308 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/HUD/HUD.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0444_TRANSPARENT_ENEMY_ROLLBACK.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0443_owned_enemy_matte_contract.py
+tools/check_p0444_transparent_enemy_rollback_contract.py
+P0444_MANIFEST.txt

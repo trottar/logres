@@ -855,11 +855,8 @@ function HUD:GetDebugStatus()
         worldEnemyLiveAnchorSource = self.worldEnemyLiveAnchorUnit
             and "event-token" or "target-query-or-none",
         worldEnemyLiveLayout = "native-anchor-center",
-        -- Only addon-owned presentation state: never inspect Blizzard
-        -- nameplate children or their protected geometry for diagnostics.
-        worldEnemyLiveMatteReady = self.worldEnemyLiveMatteReady == true,
-        worldEnemyLivePresentation = self.worldEnemyLiveMatteReady
-            and "owned-opaque-name-health" or "native-visible-fallback",
+        -- Only the name, health and aura widgets render; no opaque backing.
+        worldEnemyLivePresentation = "transparent-owned-unit",
         worldEnemySecondaryEnabled = false,
         worldTrialRequested = self.worldTrialRequested == true,
         worldTrialVisible = self.worldTrialVisible == true,
@@ -1160,12 +1157,7 @@ local function ordinaryOwnedUnprotected(frame)
 end
 
 function HUD:BuildLiveWorldEnemy()
-    if self.worldEnemyLiveFrame then
-        if not self.worldEnemyLiveMatteReady then
-            return false, "owned-matte-unavailable"
-        end
-        return true
-    end
+    if self.worldEnemyLiveFrame then return true end
     if not ordinaryOutOfCombat() then return false, "build-requires-ooc" end
     local frame = buildEnemyDisplayFixture(UIParent,
         "LogresWorldEnemyLiveTrial", "Enemy world trial", 100)
@@ -1176,25 +1168,8 @@ function HUD:BuildLiveWorldEnemy()
         return false, "owned-frame-protected-or-unknown"
     end
     self.worldEnemyLiveFrame = frame
-    -- P0443: an OOC-created, fully opaque OWNED visual backing covers the
-    -- duplicated native name/health region without touching its frame,
-    -- children, click surface, level, or CVars. It travels with this owned
-    -- trial and disappears automatically on detach/OFF. Do not cover the
-    -- lower native cast/status region or alter aura-lane anchors.
-    local built, matte = pcall(function()
-        local texture = frame:CreateTexture(nil, "BACKGROUND")
-        texture:SetSize(208, 44)
-        texture:SetPoint("TOP", frame, "TOP", 0, 0)
-        texture:SetColorTexture(0.016, 0.012, 0.009, 1)
-        return texture
-    end)
-    if not built or not matte then
-        self.worldEnemyLiveFailures = (self.worldEnemyLiveFailures or 0) + 1
-        self.worldEnemyLiveLastReason = "owned-matte-unavailable"
-        return false, self.worldEnemyLiveLastReason
-    end
-    self.worldEnemyLiveMatte = matte
-    self.worldEnemyLiveMatteReady = true
+    -- P0444: never cover Blizzard's nameplate with an opaque background.
+    -- Preserve the existing transparent health/name and aura layout.
     local auras = Logres:GetModule("StatusAuras")
     if auras and type(auras.CreateWorldEnemyLiveLanes) == "function" then
         auras:CreateWorldEnemyLiveLanes(frame)
@@ -1367,8 +1342,6 @@ function HUD:OnInitialize()
     self.worldEnemyLiveDetaches = 0
     self.worldEnemyLiveAnchorUnit = nil
     self.worldEnemyLiveRemovalResult = "none"
-    self.worldEnemyLiveMatte = nil
-    self.worldEnemyLiveMatteReady = false
     self.worldTrialRequested = false
     self.worldTrialVisible = false
     self.worldTrialCombatHidden = false

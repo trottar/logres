@@ -1,3 +1,13 @@
+## P0444 — Restore transparent world enemy display (2026-11-11)
+
+Verified P0443 `main` `2bc9afc` (`0.0.314-dev`) introduced an opaque
+208x44 backing; Forever user reports BLACK RECTANGLE while native plate
+remains visible: L-011 VISUAL FAIL. P0444 removes the backing and its gate;
+restores transparent 100% selected hostile health/name with existing
+buff/debuff lanes. Native Blizzard visual duplication remains OPEN;
+interaction, screen-space fallback, and 50% aggro gating remain unchanged.
+See `docs/memory/evidence/P0444_TRANSPARENT_ENEMY_ROLLBACK.md`.
+
 ## P0443 — Owned name/health backing for live enemy overlap (2026-11-11)
 
 Verified P0442 main `32da2ec` (`0.0.313-dev`). Forever session 106

@@ -332,7 +332,7 @@ function Logres:CaptureBugIncident()
         "worldEnemyLiveCombatAttaches", "worldEnemyLiveFailures",
         "worldEnemyLiveDetaches", "worldEnemyLiveRemovalResult",
         "worldEnemyLiveAnchorSource", "worldEnemyLiveLayout",
-        "worldEnemyLiveMatteReady", "worldEnemyLivePresentation",
+        "worldEnemyLivePresentation",
         "worldEnemySecondaryEnabled", "enemyFallbackPreserved"})
     incident.snapshot.worldTargetTrial = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("HUD"):GetDebugStatus()

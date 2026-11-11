@@ -1,3 +1,12 @@
+## P0444 — Transparent world enemy rollback audit (2026-11-11)
+
+- Baseline: verified P0443 GitHub main `2bc9afc5cee537cc5d77be996da418d55c96a934`, tree `58a664d9100ab8f65bc82f8cfde72e1acffd8a1a`; clean, exact Git archive and 307 checkers.
+- L-011 negative runtime: P0443 introduced a black 208x44 opaque backing; user reports black rectangle AND visible Blizzard native plate. VISUAL FAIL; no successful native visual replacement demonstrated. Historical P0443 outcome retained in evidence, do not hide or repeat it.
+- Corrective scope: remove owned matte and failure gate; preserve unprotected owned frame, existing name/health and +/-25px aura positioning, ON/OFF/Status buttons, 122 registered actions, protected/native controls, default-OFF screen-space preference and target fallback. Native duplicate remains OPEN.
+- Checker reconciliation: historical P0443 contract must preserve its evidence but no longer demand retaining a rejected visual; new P0444 contract requires transparent display. Four roadmap headings synchronized; original P0442 anchor/removal and previous P0425/P0426/P0427 markers retained. Canonical L-011 status PARTIAL.
+- R0 exact candidate checker run REFUSED 305/308; the P0436/P0437/P0438 historical contracts required the verbatim `P0425 visual PASS` marker, which R0 split across lines in CURRENT.md. No runtime-source checker failed, and there were no user/GitHub writes. R1 restores that literal marker rather than weakening the three historical assertions.
+- Full R1 exact-candidate author-check, Lua syntax/mock, diff hygiene and receipt binding required before release. P0444 Forever runtime UNVERIFIED.
+
 ## P0443 — Owned world enemy backing author audit (2026-11-11)
 
 - Authority: verified P0442 GitHub main `32da2ec7547a77e07b6284d97366bb3f83412a48`, exact tree `5d3b18f377df02db971a37dc048114eb76ca21a7`; verified archive-derived baseline.

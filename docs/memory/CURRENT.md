@@ -11,14 +11,12 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0443** opt-in World Enemy visual overlap fix from verified P0442
-`32da2ec`. Forever session 106 #11479–11485 (`0.0.313-dev`): two combat
-attaches, two detaches, zero recorded failures; native and Logres name/HP
-still overlap (VISUAL FAIL). Add bounded owned name/HP backing only; native
-input/children/CVars unchanged, cast/status and aura spacing preserved.
-Screen fallback and saved OFF preference retained; 50% secondary requires
-confirmed per-unit threat. L-011 PARTIAL, runtime P0443 UNVERIFIED.
-P0425 visual PASS; P0426 compass intake and P0427 labels retained.
+**P0444** remove P0443's visually rejected opaque 208x44 matte from
+verified `2bc9afc` main: black background visible, native nameplate still
+present (L-011 PARTIAL / VISUAL FAIL). Restore transparent Logres hostile
+HP/name and existing +/-25px aura lanes, preserve screen-space fallback,
+debug-panel controls, attachment lifecycle and OFF default. Native duplicate
+remains OPEN; 50% secondary still requires confirmed aggro. P0425 visual PASS; P0426 compass intake and P0427 identity labels retained. P0442 lifecycle retained.
 
 ## Verified State
 
@@ -62,10 +60,9 @@ P0425 visual PASS; P0426 compass intake and P0427 labels retained.
 
 ## Next Action
 
-P0443 Forever: Report Bug > H > World Enemy ON/OFF/Status; verify single
-readable name/HP, no obstructed native cast/interaction, real aura spacing,
-target switch, and nameplate removal. Capture during combat via Report Bug;
-OFF must fully restore native. No production suppression or secondary aggro.
+P0444 Forever: Report Bug > H > World Enemy ON/OFF/Status. Verify no
+black rectangle, normal clicking, health/aura spacing and fallback.
+Native duplicate remains unresolved; no suppression or aggro PASS claim.
 
 ## Success Criteria
 
