@@ -1,3 +1,12 @@
+## P0443 — Owned world enemy backing author audit (2026-11-11)
+
+- Authority: verified P0442 GitHub main `32da2ec7547a77e07b6284d97366bb3f83412a48`, exact tree `5d3b18f377df02db971a37dc048114eb76ca21a7`; verified archive-derived baseline.
+- L-011: Forever 0.0.313-dev session 106 #11479–11485: 2 combat attaches, 2 detaches, failures=0, overlapping Blizzard/Logres name and HP VISUAL FAIL; no proven taint or successful native replacement. Keep this negative result.
+- D-042: never read or mutate native children, click surfaces or CVars. P0443 creates only one mouse-disabled owned opaque backing in the existing frame outside combat, shows/hides with that frame, preserving percent, cast cue, +/-25px aura lanes, screen fallback and original World Enemy ON/OFF/Status controls. If texture creation fails, refuse trial and retain fallback.
+- Historical checker audit: preserve P0441/P0442 CENTER anchor, removal behavior, 122 registered actions, default OFF, all four synchronized roadmap headings, old historical markers in CURRENT, canonical L-011 PARTIAL status, dynamic version checker parity.
+- Author R0 preflight (same runtime bytes): 307/307 unchanged static checker scripts PASS in the portable exact archive-derived candidate, zero checker refusals; all five runtime Lua syntax tests PASS; focused OOC/owned-matte/fail-open Lua execution mock PASS; scratch `git apply --check`, `git diff --check`, and clean baseline restoration PASS. R1 only adds this audited outcome and is rechecked in full before handoff. No user apply or WoW runtime result is inferred.
+- Full final exact-candidate author receipt, SHA-256 and bundle integrity are required. P0443 Forever visual/cast/interaction remains UNVERIFIED; no native child mutation or production suppression authorized.
+
 ## P0442 — World enemy combat integration author audit (2026-11-11)
 
 - Verified main P0441 `a300d229`, exact tree `03c9d8cd9986c6c9553082617299d8b1b7beefeb`.

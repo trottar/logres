@@ -30,7 +30,7 @@ assert 'screenSpaceEnemyFrameEnabled = false' in read('Logres/Core/Database.lua'
 for path in ('docs/ROADMAP.md','docs/memory/investigations/ACTIVE.md',
              'docs/memory/roadmap/STATUS.md','docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md'):
     s=read(path)
-    assert s.startswith('## P0442 —') and '## P0441 —' in s
+    assert '## P0442 —' in s and '## P0441 —' in s  # preserve history, not active phase
 assert 'P0442' in read('docs/memory/CURRENT.md')
 assert '| L-011 |' in read('docs/memory/investigations/ISSUE_LEDGER.md')
 version=re.search(r'(?m)^## Version: (\S+)$',read('Logres/Logres.toc')).group(1)

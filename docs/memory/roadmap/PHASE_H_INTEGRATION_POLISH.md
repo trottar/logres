@@ -1,3 +1,17 @@
+## P0443 — Owned name/health backing for live enemy overlap (2026-11-11)
+
+Verified P0442 main `32da2ec` (`0.0.313-dev`). Forever session 106
+incidents #11479/#11481/#11483/#11485 show two real combat attaches,
+two detaches and zero recorded attachment failures. Visual FAIL: native
+name/health/border/level remain overlaid by Logres in the same region;
+unknown-attached-unit removal safely hides; normal fallback remains.
+P0443 adds an opt-in, noninteractive opaque OWNED backing limited to the
+name/health region of the existing combat frame, precreated OOC and hidden
+with the owned frame. It neither mutates nor reads Blizzard children,
+click surfaces, or CVars. Exact visual occlusion and native cast/interaction
+preservation require Forever runtime proof; secondary 50% remains gated.
+See `docs/memory/evidence/P0443_WORLD_ENEMY_OWNED_BACKING.md`.
+
 ## P0442 — Combat world enemy co-location and lifecycle cleanup (2026-11-11)
 
 Verified P0441 main `a300d229` attached the addon-owned 100% hostile target

@@ -1,0 +1,27 @@
+P0443 Add owned backing for live enemy nameplate presentation
+Verified baseline: 32da2ec7547a77e07b6284d97366bb3f83412a48
+Candidate runtime version: 0.0.314-dev
+PREWRITE: 307/307 STATIC PASS
+POSTWRITE: 307/307 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/HUD/HUD.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0443_WORLD_ENEMY_OWNED_BACKING.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0442_world_enemy_overlay_contract.py
+tools/check_p0443_owned_enemy_matte_contract.py
+P0443_MANIFEST.txt

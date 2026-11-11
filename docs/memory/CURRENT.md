@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-11-10
+as_of: 2026-11-11
 project: logres
 ---
 
@@ -11,13 +11,14 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0442** live World Enemy combat co-location and removal cleanup from
-verified P0441 `a300d229`. Forever session 105 #11396–11400: one real
-combat attachment, zero failures, native and Logres bars vertically
-separated. Trial remains opt-in via Report Bug > H, 100% target, aura lanes
-unchanged. Native click/info and screen-space fallback preserved, preference
-OFF; 50% secondary gated on threat. L-011 OPEN. P0425 visual PASS;
-P0426 compass intake and P0427 historical identity labels retained.
+**P0443** opt-in World Enemy visual overlap fix from verified P0442
+`32da2ec`. Forever session 106 #11479–11485 (`0.0.313-dev`): two combat
+attaches, two detaches, zero recorded failures; native and Logres name/HP
+still overlap (VISUAL FAIL). Add bounded owned name/HP backing only; native
+input/children/CVars unchanged, cast/status and aura spacing preserved.
+Screen fallback and saved OFF preference retained; 50% secondary requires
+confirmed per-unit threat. L-011 PARTIAL, runtime P0443 UNVERIFIED.
+P0425 visual PASS; P0426 compass intake and P0427 labels retained.
 
 ## Verified State
 
@@ -61,10 +62,10 @@ P0426 compass intake and P0427 historical identity labels retained.
 
 ## Next Action
 
-P0442 Forever test using Report Bug > H > World Enemy ON/OFF/Status:
-check centered live overhead target, aura spacing, target switches, native
-interaction, plate removal and combat exit. Left-click Report Bug for
-capture. No native suppression or secondary aggro until separately proven.
+P0443 Forever: Report Bug > H > World Enemy ON/OFF/Status; verify single
+readable name/HP, no obstructed native cast/interaction, real aura spacing,
+target switch, and nameplate removal. Capture during combat via Report Bug;
+OFF must fully restore native. No production suppression or secondary aggro.
 
 ## Success Criteria
 

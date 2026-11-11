@@ -3388,6 +3388,10 @@ function Logres:HandleLiveWorldEnemyCommand(argument)
             tostring(state.worldEnemyLiveLayout),
             tostring(state.worldEnemyLiveDetaches),
             tostring(state.worldEnemyLiveRemovalResult)))
+        emit(string.format(
+            "World Enemy: owned backing ready=%s presentation=%s; native input unchanged",
+            tostring(state.worldEnemyLiveMatteReady),
+            tostring(state.worldEnemyLivePresentation)))
         emit("World Enemy LIVE: target 100%; secondary aggro NOT ENABLED; fallback unchanged.")
         return
     end
