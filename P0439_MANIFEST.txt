@@ -1,0 +1,26 @@
+P0439 Expose guarded world-target trial in Report Bug developer panel
+Verified baseline: 4fc6e8257e5597f4a91dbf88a44415eb1edd916f
+Candidate runtime version: 0.0.310-dev
+PREWRITE: 303/303 STATIC PASS
+POSTWRITE: 303/303 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0439_WORLD_TRIAL_PANEL.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0438_world_target_trial_contract.py
+tools/check_p0439_world_trial_panel_contract.py
+P0439_MANIFEST.txt

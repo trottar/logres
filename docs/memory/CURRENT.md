@@ -11,16 +11,16 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0438** opt-in OOC live world-anchor trial on verified P0437 main; only
-attach an owned selected-hostile sample if hidden attachment is positive,
-ordinary and outside combat. Combat visibility uses secure state driver;
-screen-space/native fallback remains. P0437 user visual PASS (no gold bar).
-Production attachment and secondary aggro remain DEFERRED D-042/L-011.
-**P0427** historical; P0425 visual PASS; L-043/L-030/L-044 OPEN.
+**P0439** panel entry repair: P0438's slash-only world trial is now
+available as Phase H ON/OFF/Status controls inside the Report Bug developer
+panel, with readable saved results. P0438 main `4fc6e82` verified; OOC
+attachment, secure combat hide and safe target fallback runtime UNVERIFIED.
+Production nameplate and secondary aggro remain DEFERRED D-042/L-011.
+**P0427** historical; P0425 visual PASS; L-047/L-043/L-030/L-044 OPEN.
 
 ## Verified State
 
-- P0437 main `5437e81`; user screenshot visually accepts no gold underline; P0438 owned world-trial unverified in Forever.
+- P0438 main `4fc6e82`; attached enemy display remains a protected-safe OOC trial only. P0439 panel access/source unverified in Forever. P0437 visual PASS.
 
 - P0422 moved the pet-action bar in error; P0423 restored it and V8 was visually accepted.
 
@@ -57,9 +57,9 @@ Production attachment and secondary aggro remain DEFERRED D-042/L-011.
 
 ## Next Action
 
-P0438: author-check/apply and test explicit worldtrial ON/OFF OOC, nameplate
-unavailable/hostile/friendly, combat secure hide and fallback; Report Bug.
-Do not promote until positive Forever attachment and native fallback PASS.
+P0439: verify Phase H World Trial ON/OFF/Status and saved results through
+Report Bug; attach screenshots/diagnostics if deferred or broken. Keep world
+attachment and secondary threat production gated until Forever proof.
 
 ## Success Criteria
 

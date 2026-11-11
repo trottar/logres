@@ -1,3 +1,15 @@
+## P0439 — Developer-panel world trial controls (2026-11-10)
+
+Verified P0438 main `4fc6e8257e5597f4a91dbf88a44415eb1edd916f`.
+User could not operate the P0438 slash-only trial from gameplay chat.
+Phase H now exposes World Trial ON/OFF/Status in its first paged view;
+output is rendered/saved by the existing DevPanel, with Report Bug still
+capturing the same scalar trial result. Existing 122 registered actions stay
+untouched. Trial default OFF, proof gate, secure combat hide, target fallback,
+100/50 preview and auras unchanged. Client behavior remains UNVERIFIED.
+L-047 OPEN until panel input/output is confirmed in Forever; L-011 DEFERRED.
+See `docs/memory/evidence/P0439_WORLD_TRIAL_PANEL.md`.
+
 ## P0438 — Guarded live world-target attachment trial (2026-11-10)
 
 Verified P0437 main `5437e810869459a472c7576c064d511060412037`,

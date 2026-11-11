@@ -3345,13 +3345,30 @@ end
 
 function Logres:HandleWorldTrialCommand(argument)
     local hud = Logres:GetModule("HUD")
+    if argument == "status" then
+        -- HUD status contains only addon-owned scalar trial state. Never
+        -- query protected Blizzard presentation state for a status label.
+        local state = hud:GetDebugStatus()
+        emit(string.format(
+            "World trial: %s; requested=%s visible=%s attachments=%s failures=%s reason=%s",
+            state.worldTrialVisible and "VISIBLE" or "NOT VISIBLE",
+            tostring(state.worldTrialRequested), tostring(state.worldTrialVisible),
+            tostring(state.worldTrialAttachCount), tostring(state.worldTrialFailures),
+            tostring(state.worldTrialLastReason)))
+        emit("World trial: original screen-space/native target fallback remains available.")
+        return
+    end
     if argument ~= "on" and argument ~= "off" then
-        emit("Usage: /logres worldtrial [on|off]")
+        emit("World Trial: use the ON, OFF and Status controls in Report Bug > H.")
         return
     end
     local ok, why = hud:SetWorldTargetTrial(argument == "on")
-    emit(string.format("Logres worldtrial: %s (%s; live world preview only, fallback retained)",
+    emit(string.format("World trial %s: %s (%s)",
+        argument == "on" and "ON" or "OFF",
         ok and "PASS" or "DEFERRED", tostring(why)))
+    if not ok then
+        emit("World trial: no safe attachment proven yet; the normal target fallback is retained.")
+    end
 end
 
 local function handleHUDPreview(argument)

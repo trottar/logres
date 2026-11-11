@@ -42,8 +42,10 @@ for forbidden in ('SetCVar(', 'C_NamePlate.GetNamePlates(', 'SetParent(anchor', 
 for path in ('docs/ROADMAP.md', 'docs/memory/investigations/ACTIVE.md',
     'docs/memory/roadmap/STATUS.md', 'docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md'):
     s=read(path)
-    assert s.startswith('## P0438 —'), path
-    assert '## P0437 —' in s and '## P0436 —' in s
+    # P0438 stays a historical capability gate; a later panel integration
+    # may be active without changing its attachment/fallback assertions.
+    assert s.startswith('## P0439 —'), path
+    assert '## P0438 —' in s and '## P0437 —' in s and '## P0436 —' in s
 assert 'P0425 visual PASS' in read('docs/memory/CURRENT.md')
 assert len(read('docs/memory/CURRENT.md').encode()) < 9800
 assert '| L-011 |' in read('docs/memory/investigations/ISSUE_LEDGER.md')

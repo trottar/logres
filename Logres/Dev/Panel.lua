@@ -52,6 +52,15 @@ local NATIVE_ACCESS_ACTIONS = {
     {label = "Target", command = "nativefallback target", domain = "targetAuras"},
 }
 
+-- P0439: independent Phase H panel controls for the existing world trial.
+-- These are view-local entries, not registrations; the historical 122
+-- diagnostic actions and all their original commands remain intact.
+local WORLD_TRIAL_PANEL_ACTIONS = {
+    {id = "worldTrialPanelOn", label = "World Trial ON", command = "worldtrial on"},
+    {id = "worldTrialPanelOff", label = "World Trial OFF", command = "worldtrial off"},
+    {id = "worldTrialPanelStatus", label = "World Trial Status", command = "worldtrial status"},
+}
+
 local function ensureDiagnosticsDB()
     LogresDiagnosticsDB = LogresDiagnosticsDB or {}
     LogresDiagnosticsDB.schema = 1
@@ -952,6 +961,11 @@ function Panel:RefreshActionButtons()
         end
         visible = {}
         for i = 1, #leading do visible[#visible + 1] = leading[i] end
+        -- Keep the trial immediately visible on H page one, rather than
+        -- asking the player to read or type slash commands in chat.
+        for i = 1, #WORLD_TRIAL_PANEL_ACTIONS do
+            visible[#visible + 1] = WORLD_TRIAL_PANEL_ACTIONS[i]
+        end
         for i = 1, #remainder do visible[#visible + 1] = remainder[i] end
     end
     if self.activePhase == "P" or self.activePhase == "H" then
