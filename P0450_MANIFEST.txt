@@ -1,0 +1,30 @@
+P0450 Handoff native and screen target auras to selected world owner
+Verified baseline: 19050699cd474be0deb235777b678b3feec290dc
+Candidate runtime version: 0.0.320-dev
+PREWRITE: 313/313 STATIC PASS
+POSTWRITE: 313/313 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/HUD/HUD.lua
+Logres/HUD/NativeDebuffs.lua
+Logres/HUD/StatusAuras.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0450_WORLD_AURA_OWNERSHIP_HANDOFF.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0448_world_enemy_aura_refresh_contract.py
+tools/check_p0449_native_world_aura_container_contract.py
+tools/check_p0450_aura_owner_handoff_contract.py
+P0450_MANIFEST.txt

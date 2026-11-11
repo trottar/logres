@@ -1,3 +1,14 @@
+## P0450 — World/native/screen target aura ownership handoff (2026-11-11)
+
+P0449 world aura icons visually PASS (Forever 0.0.319-dev #11961), but
+native Blizzard overhead and addon-owned screen target auras duplicate.
+P0450 tries reversible alpha transfer on ordinary unprotected native buff/
+debuff list regions only when world native replacement is ready, plus
+addon-owned screen native aura handoff after world Show. Stock fallback on
+refusal, restore on OFF/target change. Preserve P0447 health/transparent
+backing, +/-25px icons, click/cast/CC and secondary aggro gate. L-011
+PARTIAL/L-028 OPEN; Forever test required. See P0450 evidence.
+
 ## P0449 — Restricted aura world-lane delegation (2026-11-11)
 
 P0448 (`0.0.318-dev`) Forever session 111, Report Bug #11882: selected

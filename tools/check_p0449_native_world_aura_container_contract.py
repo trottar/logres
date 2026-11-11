@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """P0449: delegate secret-capable world aura presentation to Blizzard engine."""
 from pathlib import Path
+import re
 R=Path(__file__).resolve().parents[1]
 read=lambda p:(R/p).read_text(encoding='utf-8')
 n=read('Logres/HUD/NativeDebuffs.lua')
@@ -29,9 +30,17 @@ assert 'frame:SetFrameStrata("HIGH")' in h
 assert 'self:RestoreNativeEnemyDecor()' in h and 'worldEnemySecondaryEnabled = false' in h
 assert 'root:SetPoint("RIGHT", previewParent, "LEFT", -25, 0)' in a
 assert 'root:SetPoint("LEFT", previewParent, "RIGHT", 25, 0)' in a
+current = read('docs/memory/CURRENT.md')
+work = current.split('\n## Current Work Item\n',1)[1].split('\n## ',1)[0]
+active = re.search(r'(?m)^\*\*(P[0-9]{4})\*\*(?:\s|$)',work)
+assert active
 for path in ('docs/ROADMAP.md','docs/memory/roadmap/STATUS.md','docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md','docs/memory/investigations/ACTIVE.md'):
-    assert read(path).startswith('## P0449 —'),path
-assert read('docs/memory/handoffs/CURRENT_HANDOFF.md').startswith('# P0449:')
+    body=read(path)
+    assert body.startswith('## '+active.group(1)+' —'),path
+    assert '## P0449 —' in body,path
+handoff=read('docs/memory/handoffs/CURRENT_HANDOFF.md')
+assert handoff.startswith('# '+active.group(1)+':')
+assert '# P0449:' in handoff
 assert 'P0448 runtime aura FAIL' in read('docs/memory/evidence/P0449_NATIVE_WORLD_AURA_CONTAINER.md')
 assert 'L-028 | Target debuffs' in read('docs/memory/investigations/ISSUE_LEDGER.md')
 print('P0449 PASS: native engine aura source, world +/-25px children, strict OOC setup and historical fallback')

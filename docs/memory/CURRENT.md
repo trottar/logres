@@ -11,16 +11,16 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0449** after verified P0448 main `55f7cb7`: selected enemy health
-visually PASS but P0448 world auras FAIL in Forever session 111.
-Report Bug #11882: 1 attach, 0 failures, 40 restricted index skips,
-aura rows 0/0, icons 0/0. New native
-AuraContainer HARMFUL/HELPFUL children delegate secret data to Blizzard
-without reading payloads or mutating Blizzard nameplates.
-L-011 PARTIAL, L-028 OPEN, native world aura visibility UNVERIFIED.
-Preserve transparent opaque 100% name/HP, +/-25px auras, P0447 native decor
-restore/click/cast fallback, OFF default, P0443 matte rejection, secondary
-aggro gate and P0446 runtime FAIL. P0442 lifecycle; P0425 visual PASS; P0426/P0427 retained.
+**P0450** on verified P0449 main `1905069`: Forever 0.0.319-dev
+#11961 shows selected world aura icons work, but Blizzard native overhead
+and addon-owned screen target native aura copies remain. P0449 visual
+PARTIAL; duplication FAIL. P0450 attempts reversible native list-only
+alpha transfer and addon-owned screen target alpha handoff on world attach;
+restores on detach/OFF, refuses protected/unknown regions. L-011 PARTIAL,
+L-028 OPEN. Preserve P0447 opaque health/name, transparent background,
++/-25px auras, native click/cast/CC/fallback, P0442 lifecycle,
+P0443 rejected matte, P0446/P0448 FAIL, P0425 visual PASS,
+secondary aggro gate and P0426/P0427. Forever acceptance pending.
 
 ## Verified State
 
@@ -62,10 +62,9 @@ aggro gate and P0446 runtime FAIL. P0442 lifecycle; P0425 visual PASS; P0426/P04
 
 ## Next Action
 
-P0449 Forever: World Enemy ON/Status/Report Bug with a known buff/DoT;
-verify world icons, health/cast/click, transparency and OFF restoration.
-Native-ready does not prove visible icons; P0448 failure is established.
-L-011 PARTIAL; L-028 OPEN until native icons visibly PASS.
+P0450 Forever selected target: verify world icons without native or
+screen duplicates, cast/click and OFF/target-change aura restoration.
+Capability refusal is OPEN, not PASS. See P0450 evidence.
 
 ## Success Criteria
 
@@ -75,6 +74,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0450_WORLD_AURA_OWNERSHIP_HANDOFF.md
 - docs/memory/evidence/P0449_NATIVE_WORLD_AURA_CONTAINER.md
 - docs/memory/evidence/P0448_WORLD_AURA_ATTACH_REFRESH.md
 - docs/memory/patches/CHAT_TO_ZIP_WORKFLOW.md (P0428/P0434)

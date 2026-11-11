@@ -868,6 +868,11 @@ function HUD:GetDebugStatus()
         worldEnemyNativeRestoreCount = self.worldEnemyNativeRestoreCount or 0,
         worldEnemyNativeRestoreFailures = self.worldEnemyNativeRestoreFailures or 0,
         worldEnemyNativeLastResult = self.worldEnemyNativeLastResult,
+        worldEnemyNativeAuraOwner = self.worldEnemyNativeAuraOwned
+            and "Logres-world" or "Blizzard",
+        worldEnemyNativeAuraLastResult = self.worldEnemyNativeAuraLastResult,
+        worldEnemyNativeAuraTransfers = self.worldEnemyNativeAuraTransfers or 0,
+        worldEnemyNativeAuraRestores = self.worldEnemyNativeAuraRestores or 0,
         worldEnemyLiveAnchorSource = self.worldEnemyLiveAnchorUnit
             and "event-token" or "target-query-or-none",
         worldEnemyLiveLayout = "native-anchor-center",
@@ -1214,6 +1219,11 @@ function HUD:RestoreNativeEnemyDecor()
         end
     end
     if restored then
+        if self.worldEnemyNativeAuraOwned then
+            self.worldEnemyNativeAuraRestores = self.worldEnemyNativeAuraRestores + 1
+            self.worldEnemyNativeAuraLastResult = "restored"
+        end
+        self.worldEnemyNativeAuraOwned = false
         self.worldEnemyNativeClaim = nil
         self.worldEnemyNativeRestoreCount = self.worldEnemyNativeRestoreCount + 1
         self.worldEnemyNativeLastResult = "restored"
@@ -1239,6 +1249,29 @@ function HUD:ClaimNativeEnemyDecor(anchor)
     end
     local claim = {}
     local candidates = {name, health}
+    -- P0450: Native nameplate aura lists are presentation-only, separate
+    -- from casts, raid markers, CC and target hit regions. Only when an
+    -- addon-owned *native* world aura renderer is ready may these two
+    -- independently verified, unprotected lists be transferred. Otherwise
+    -- Blizzard retains all auras unchanged. No aura values are inspected.
+    local auraAccepted = false
+    local auraModule = Logres:GetModule("StatusAuras")
+    if auraModule and auraModule.moduleEnabled
+        and auraModule.worldEnemyNativeLanes then
+        local auraRoot = nativeDecorField(unitFrame, "AurasFrame")
+        local harmful = nativeDecorField(auraRoot, "DebuffListFrame")
+        local helpful = nativeDecorField(auraRoot, "BuffListFrame")
+        if safeNativeDecor(harmful) and safeNativeDecor(helpful) then
+            candidates[#candidates + 1] = harmful
+            candidates[#candidates + 1] = helpful
+            auraAccepted = true
+            self.worldEnemyNativeAuraLastResult = "aura-lists-capable"
+        else
+            self.worldEnemyNativeAuraLastResult = "aura-lists-protected-or-unavailable"
+        end
+    else
+        self.worldEnemyNativeAuraLastResult = "world-aura-not-ready"
+    end
     local level = nativeDecorField(unitFrame, "LevelFrame")
     local levelDiff = nativeDecorField(unitFrame, "PlayerLevelDiffFrame")
     if level then candidates[#candidates + 1] = level end
@@ -1262,6 +1295,11 @@ function HUD:ClaimNativeEnemyDecor(anchor)
             self:RestoreNativeEnemyDecor()
             return false, "native-decor-mutation-refused"
         end
+    end
+    self.worldEnemyNativeAuraOwned = auraAccepted
+    if auraAccepted then
+        self.worldEnemyNativeAuraTransfers = self.worldEnemyNativeAuraTransfers + 1
+        self.worldEnemyNativeAuraLastResult = "aura-lists-owned"
     end
     self.worldEnemyNativeTransfers = self.worldEnemyNativeTransfers + 1
     self.worldEnemyNativeLastResult = "decor-owned"
@@ -1295,6 +1333,13 @@ function HUD:HideLiveWorldEnemy(reason)
         self.worldEnemyLiveDetaches = (self.worldEnemyLiveDetaches or 0) + 1
     end
     self.worldEnemyLiveVisible = false
+    -- Restore the addon-owned screen aura copy on every detach/failure/OFF.
+    -- Its native aura container remains active; only its alpha was handed
+    -- off, and a refused restore remains an explicit diagnostic failure.
+    local statusAuras = Logres:GetModule("StatusAuras")
+    if statusAuras and type(statusAuras.SetWorldEnemyScreenAuraHandoff) == "function" then
+        statusAuras:SetWorldEnemyScreenAuraHandoff(false)
+    end
     -- Native decorative presentation must regain its original alpha on
     -- target change, removal, OFF and disable, even if our frame hide fails.
     self:RestoreNativeEnemyDecor()
@@ -1433,6 +1478,11 @@ function HUD:RefreshLiveWorldEnemy(event, eventUnit)
     self.targetFrame:Show() -- Preserve its independent cast cue child.
     self.targetNameText:Hide()
     self.targetHealthBar:Hide()
+    -- Preserve the cast cue and the entire Blizzard target/plate input.
+    -- Only the addon-created screen aura copy receives reversible alpha.
+    if auras and type(auras.SetWorldEnemyScreenAuraHandoff) == "function" then
+        auras:SetWorldEnemyScreenAuraHandoff(true)
+    end
     self.worldEnemyScreenHandoffs = (self.worldEnemyScreenHandoffs or 0) + 1
     self.worldEnemyLiveLastReason = "owned-target-attached"
     return true, self.worldEnemyLiveLastReason
@@ -1492,6 +1542,10 @@ function HUD:OnInitialize()
     self.worldEnemyNativeRestoreCount = 0
     self.worldEnemyNativeRestoreFailures = 0
     self.worldEnemyNativeLastResult = "not-attempted"
+    self.worldEnemyNativeAuraOwned = false
+    self.worldEnemyNativeAuraLastResult = "not-attempted"
+    self.worldEnemyNativeAuraTransfers = 0
+    self.worldEnemyNativeAuraRestores = 0
     self.worldEnemyLiveAnchorUnit = nil
     self.worldEnemyLiveRemovalResult = "none"
     self.worldTrialRequested = false

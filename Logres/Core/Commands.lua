@@ -3431,6 +3431,17 @@ function Logres:HandleLiveWorldEnemyCommand(argument)
             tostring(auraState.worldEnemyNativeReady),
             tostring(auraState.worldEnemyNativeReason),
             tostring(auraState.worldEnemyNativeVisibilityProof)))
+        emit(string.format(
+            "World Enemy aura ownership: nativePlate=%s plateResult=%s transfers=%s restores=%s screenOwned=%s screenResult=%s screenHandoffs=%s screenRestores=%s refusals=%s",
+            tostring(state.worldEnemyNativeAuraOwner),
+            tostring(state.worldEnemyNativeAuraLastResult),
+            tostring(state.worldEnemyNativeAuraTransfers),
+            tostring(state.worldEnemyNativeAuraRestores),
+            tostring(auraState.worldEnemyScreenAuraOwned),
+            tostring(auraState.worldEnemyScreenAuraReason),
+            tostring(auraState.worldEnemyScreenAuraHandoffs),
+            tostring(auraState.worldEnemyScreenAuraRestores),
+            tostring(auraState.worldEnemyScreenAuraFailures)))
         emit("World Enemy LIVE: target 100%; secondary aggro NOT ENABLED; fallback on detach.")
         return
     end

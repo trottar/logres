@@ -559,6 +559,35 @@ function StatusAuras:CreateWorldEnemyLiveLanes(parent)
     return self.worldEnemyLiveLanes
 end
 
+-- P0450: native, addon-owned screen target auras must not duplicate the
+-- world child. This is a presentation-only alpha handoff. Failure leaves
+-- the existing Blizzard/Logres fallback accessible and is reported.
+function StatusAuras:SetWorldEnemyScreenAuraHandoff(worldOwned)
+    if not self.nativeDebuffs
+        or type(Logres.NativeDebuffs.SetScreenTargetWorldOwned) ~= "function"
+    then
+        self.worldEnemyScreenAuraReason = "unavailable"
+        return false
+    end
+    local wasOwned = self.worldEnemyScreenAuraOwned == true
+    local ok, accepted, reason = pcall(
+        Logres.NativeDebuffs.SetScreenTargetWorldOwned,
+        self.nativeDebuffs, worldOwned == true
+    )
+    self.worldEnemyScreenAuraReason = ok and reason or "handoff-error"
+    self.worldEnemyScreenAuraOwned = ok and accepted == true
+        and worldOwned == true
+    if worldOwned == true and self.worldEnemyScreenAuraOwned and not wasOwned then
+        self.worldEnemyScreenAuraHandoffs = self.worldEnemyScreenAuraHandoffs + 1
+    elseif worldOwned ~= true and wasOwned and ok and accepted == true then
+        self.worldEnemyScreenAuraRestores = self.worldEnemyScreenAuraRestores + 1
+    end
+    if not ok or accepted ~= true then
+        self.worldEnemyScreenAuraFailures = self.worldEnemyScreenAuraFailures + 1
+    end
+    return ok and accepted == true
+end
+
 function StatusAuras:RefreshWorldEnemyLiveLanes()
     if not self.worldEnemyLiveLanes then return false end
     local hud = Logres:GetModule("HUD")
@@ -672,6 +701,11 @@ function StatusAuras:GetDebugStatus()
         worldEnemyNativeReady = self.worldEnemyNativeLanes ~= nil,
         worldEnemyNativeReason = self.worldEnemyNativeReason,
         worldEnemyNativeVisibilityProof = "unobserved",
+        worldEnemyScreenAuraOwned = self.worldEnemyScreenAuraOwned == true,
+        worldEnemyScreenAuraReason = self.worldEnemyScreenAuraReason,
+        worldEnemyScreenAuraHandoffs = self.worldEnemyScreenAuraHandoffs,
+        worldEnemyScreenAuraRestores = self.worldEnemyScreenAuraRestores,
+        worldEnemyScreenAuraFailures = self.worldEnemyScreenAuraFailures,
         worldEnemyLiveHarmfulSlots = self.worldEnemyLiveLanes
             and self.worldEnemyLiveLanes.harmful.visible or 0,
         worldEnemyLiveHelpfulSlots = self.worldEnemyLiveLanes
@@ -718,6 +752,11 @@ function StatusAuras:OnInitialize()
     self.worldEnemyLiveRenderLastResult = "not-attempted"
     self.worldEnemyNativeLanes = nil
     self.worldEnemyNativeReason = "not-attempted"
+    self.worldEnemyScreenAuraOwned = false
+    self.worldEnemyScreenAuraReason = "not-attempted"
+    self.worldEnemyScreenAuraHandoffs = 0
+    self.worldEnemyScreenAuraRestores = 0
+    self.worldEnemyScreenAuraFailures = 0
     self.liveHistory = {
         playerHarmful = { maxRows = 0, positiveReads = 0, lastReason = nil },
         targetHarmful = { maxRows = 0, positiveReads = 0, lastReason = nil },
@@ -798,6 +837,7 @@ function StatusAuras:OnEnable()
 end
 
 function StatusAuras:OnDisable()
+    self:SetWorldEnemyScreenAuraHandoff(false)
     self.moduleEnabled = false
     self.preview = false
     self:Refresh("disable")

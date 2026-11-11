@@ -1,11 +1,12 @@
-# P0449: Ledger first: docs/memory/investigations/ISSUE_LEDGER.md
+# P0450: Ledger first: docs/memory/investigations/ISSUE_LEDGER.md
 
-Authoritative docs/memory/CURRENT.md. P0448 main `55f7cb7` Forever
-#11882: HP PASS, world auras FAIL (40 restricted index skips; 0 rows/icons).
-P0449 adds native AuraContainer world children with +/-25px geometry,
-OOC gate, native fallback; L-011 PARTIAL/L-028 OPEN. Keep P0447
-transparent bar, native click/cast/restore, P0443 rejected matte and
-secondary aggro restriction. Native world icons UNVERIFIED, user commits.
+P0449 main `1905069` #11961: world icons PASS, native plate and
+P0183 screen copies duplicate. P0450 reversible guarded alpha for only
+native buff/debuff lists and addon screen aura; restore on detach/OFF;
+protected refusal leaves stock. P0447 HP/click/cast, P0444 transparency,
+P0443 rejection, +/-25px and aggro gate retained. L-011/L-028 OPEN.
+
+# P0449: P0448 aura FAIL; P0449 world icons PASS.
 
 # P0448: Ledger first: docs/memory/investigations/ISSUE_LEDGER.md
 

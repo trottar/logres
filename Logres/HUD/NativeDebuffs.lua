@@ -300,3 +300,55 @@ function Native.SetActive(state, active, placementEvent)
     state.active = active
     return true, active and "native-active" or "native-disabled"
 end
+
+
+-- P0450: Hide only our separately created screen-space target aura container
+-- while a successful owned world presentation is attached. The native aura
+-- renderer continues updating behind this alpha; exact original alpha is
+-- retained as an opaque token and restored on every detach/OFF/failure.
+-- Never inspect protected/secret state to prove a presentation mutation.
+function Native.SetScreenTargetWorldOwned(state, worldOwned)
+    if not state or not state.frames or not state.frames.target then
+        return false, "screen-target-unavailable"
+    end
+    local frame = state.frames.target
+    if worldOwned ~= true then
+        local saved = state.screenTargetWorldAlpha
+        if not saved then return true, "screen-target-default" end
+        local ok = pcall(saved.frame.SetAlpha, saved.frame, saved.alpha)
+        if ok then
+            state.screenTargetWorldAlpha = nil
+            return true, "screen-target-restored"
+        end
+        return false, "screen-target-restore-refused"
+    end
+    if state.screenTargetWorldAlpha then return true, "screen-target-owned" end
+    if type(issecretvalue) ~= "function"
+        or type(frame.IsProtected) ~= "function"
+        or type(frame.IsForbidden) ~= "function"
+        or type(frame.GetAlpha) ~= "function"
+        or type(frame.SetAlpha) ~= "function"
+    then
+        return false, "screen-target-capability-unavailable"
+    end
+    local ok, frameSecret = pcall(issecretvalue, frame)
+    if not ok or frameSecret then return false, "screen-target-secret" end
+    local protectedOK, protected = pcall(frame.IsProtected, frame)
+    local forbiddenOK, forbidden = pcall(frame.IsForbidden, frame)
+    if not protectedOK or not forbiddenOK
+        or not ordinary(protected) or protected ~= false
+        or not ordinary(forbidden) or forbidden ~= false
+    then
+        return false, "screen-target-protected"
+    end
+    -- Alpha is opaque: capture it and pass straight back to SetAlpha later.
+    local captured, alpha = pcall(frame.GetAlpha, frame)
+    if not captured then return false, "screen-target-capture-refused" end
+    state.screenTargetWorldAlpha = {frame = frame, alpha = alpha}
+    if not pcall(frame.SetAlpha, frame, 0) then
+        local restored = pcall(frame.SetAlpha, frame, alpha)
+        if restored then state.screenTargetWorldAlpha = nil end
+        return false, "screen-target-mutation-refused"
+    end
+    return true, "screen-target-owned"
+end

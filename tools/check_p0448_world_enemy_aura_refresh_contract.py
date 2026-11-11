@@ -32,10 +32,15 @@ assert 'worldEnemySecondaryEnabled = false' in h
 assert 'self:RestoreNativeEnemyDecor()' in h
 assert 'P0443 matte' in read('docs/memory/evidence/P0448_WORLD_AURA_ATTACH_REFRESH.md')
 assert 'L-028 | Target debuffs' in read('docs/memory/investigations/ISSUE_LEDGER.md')
+current=read('docs/memory/CURRENT.md')
+active=re.search(r'(?m)^\*\*(P[0-9]{4})\*\*',current.split('\n## Current Work Item\n',1)[1].split('\n## ',1)[0])
+assert active
 for p in ('docs/ROADMAP.md','docs/memory/roadmap/STATUS.md','docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md'):
-    assert read(p).startswith('## P0449 —'),p
-assert read('docs/memory/CURRENT.md').count('## Next Action')==1
-assert 'P0449' in read('docs/memory/handoffs/CURRENT_HANDOFF.md').splitlines()[0]
+    body=read(p)
+    assert body.startswith('## '+active.group(1)+' —') and '## P0449 —' in body,p
+assert current.count('## Next Action')==1
+handoff=read('docs/memory/handoffs/CURRENT_HANDOFF.md')
+assert handoff.startswith('# '+active.group(1)+':') and '# P0449:' in handoff
 toc=re.search(r'^## Version: ([^\n]+)$',read('Logres/Logres.toc'),re.M)
 boot=re.search(r'Logres.VERSION = "([^"]+)"',read('Logres/Core/Bootstrap.lua'))
 assert toc and boot and toc.group(1)==boot.group(1) and toc.group(1).endswith('-dev')

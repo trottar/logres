@@ -1,3 +1,9 @@
+## P0450 — Native aura list and screen target ownership audit (2026-11-11)
+
+- Verified P0449 pushed main `19050699cd474be0deb235777b678b3feec290dc` and tracked source. Forever #11961 shows world-native icons; two other aura copies remain. L-011 PARTIAL/L-028 OPEN. P0449 world visual PASS, duplication FAIL.
+- Review: P0183 original renderer signature retained; P0443 matte ban, P0446 cast child, P0447 alpha restore, P0448 source, P0449 world AuraContainer and secondary gate preserved. P0450 adds alpha-only addon-owned screen/native *list* capability transfer and exact restore tokens, guarded refusal, no protected/secret inspection, native frame/cast/CC/input edits, CVar or polling.
+- Release gate: exact JSON/kit full author-check and matching receipt, ZIP SHA/rollback/drift refusal and syntax/diff. No P0450 in-game PASS is claimed; all prior negative evidence retained.
+
 ## P0449 — Native aura world delegation audit (2026-11-11)
 
 - P0449 R0 author-check **278/312 REFUSED**: historic P0183 exact native renderer source signature broken by refactor, and handoff exceeded the 8 KB bound. No user checkout or GitHub writes. R1 restores P0183 code verbatim, creates a dedicated native world container and compresses the handoff without deleting historical markers.
