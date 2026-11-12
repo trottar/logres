@@ -1,3 +1,15 @@
+## P0456 — Suspend unaccepted secondary visual ownership (2026-11-12)
+
+Verified P0455 main `9317229`/tree `364684e`; Forever `0.0.324-dev`
+#12628/#12630 still visually janky. Secondary 1→2 attachments, 0→2
+detaches, 6→22 unrelated updates ignored; selected 4→8 attaches,
+3→8 detaches; 0 restore failures. Both P0454/P0455 VISUAL FAIL.
+P0456 disables automatic secondary 50/50 takeover when World Enemy ON
+without changing selected 100%, basic threat probe, native auras/casts/
+clicks or restoration. Do not claim secondary PASS. Reinvestigate
+same-unit continuity and repeated selected refresh ownership before
+any new secondary alpha mutation. See P0456 evidence; L-011 PARTIAL.
+
 ## P0455 — Secondary nameplate unrelated-event flicker correction (2026-11-12)
 
 Verified P0454 main `1424fd7`/tree `302f0a6`. Forever session 119,

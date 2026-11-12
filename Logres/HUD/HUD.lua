@@ -1714,13 +1714,13 @@ function HUD:SetLiveWorldEnemy(enabled)
             self.worldEnemyLiveLastReason = reason
             return false, reason
         end
-        local ready, secondaryReason = self:BuildSecondaryAggroTrial()
-        self.worldEnemySecondaryTrialArmed = ready == true
-        if not ready then
-            self.worldEnemySecondaryTrialFailures =
-                self.worldEnemySecondaryTrialFailures + 1
-            self.worldEnemySecondaryTrialLastResult = secondaryReason
-        end
+        -- P0456: P0454/P0455 live secondary alpha ownership failed visual
+        -- acceptance. Keep the selected 100% display, but do not arm an
+        -- automatic 50% takeover on World Enemy ON. The ordinary threat
+        -- probe and its event counters remain independent and read-only.
+        -- Restore any earlier claim before leaving this experiment idle.
+        self.worldEnemySecondaryTrialArmed = false
+        self:HideSecondaryAggroTrial("secondary-trial-suspended")
         self.worldEnemyLiveRequested = true
         return self:RefreshLiveWorldEnemy("manual")
     end

@@ -48,7 +48,9 @@ for token in ("function HUD:BuildSecondaryAggroTrial()", "if not ordinaryOutOfCo
               '"secondary-threat-lost-or-unknown"'):
     assert token in s,token
 assert 'GetPreferences().immersionEnabled ~= true' in s
-assert 'self.worldEnemySecondaryTrialArmed = ready == true' in h
+# P0454 introduced the experimental arm; P0456 may suspend it after
+# two real visual failures without removing the guarded trial machinery.
+assert 'self.worldEnemySecondaryTrialArmed = false' in h
 assert 'self.worldEnemySecondaryTrialArmed = false' in h
 assert 'self:HideSecondaryAggroTrial("off")' in h
 assert 'self:HideSecondaryAggroTrial("secondary-combat-ended")' in h
@@ -58,7 +60,7 @@ assert 'self.secondaryValueEvents:UnregisterAllEvents()' in h
 assert 'worldEnemySecondaryEnabled = false' in h # production not silently on
 assert 'worldEnemySecondaryTrialVisible' in d and 'worldEnemySecondaryTrialRestoreFailures' in d
 assert 'World Enemy secondary DEV trial:' in c
-assert 'one opt-in secondary at 50%/50%' in c
+assert 'one opt-in secondary at 50%/50%' in c or 'secondary 50% visual trial SUSPENDED' in c
 for name in ("docs/ROADMAP.md","docs/memory/roadmap/STATUS.md",
              "docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md",
              "docs/memory/investigations/ACTIVE.md"):

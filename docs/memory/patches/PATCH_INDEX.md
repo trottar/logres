@@ -1,3 +1,11 @@
+## P0456 — Fail-open suspension of secondary takeover (2026-11-12)
+
+P0455 main `9317229` user Forever #12628/#12630 visual FAIL; 22
+unrelated updates ignored, secondary still 2 attaches/detaches, selected
+8 attaches/detaches, 0 restore failures. P0456 stops auto-arming the
+50% visual trial on World Enemy ON, retains selected 100% and threat
+provenance. Client UNVERIFIED; further continuity investigation OPEN.
+
 ## P0455 — Unrelated secondary update flicker repair (2026-11-12)
 
 Verified P0454 `1424fd7` main. Runtime Forever 0.0.323-dev incidents

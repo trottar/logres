@@ -1,0 +1,28 @@
+P0456 Suspend unstable secondary nameplate takeover after Forever visual failures
+Verified baseline: 9317229dd9e6befd42ff3d936a516c2d9cd76c77
+Candidate runtime version: 0.0.325-dev
+PREWRITE: 319/319 STATIC PASS
+POSTWRITE: 319/319 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/HUD/HUD.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0456_SECONDARY_TRIAL_SUSPENSION.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0454_secondary_trial_contract.py
+tools/check_p0455_secondary_unrelated_event_contract.py
+tools/check_p0456_secondary_trial_suspension_contract.py
+P0456_MANIFEST.txt

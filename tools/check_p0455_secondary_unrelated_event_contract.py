@@ -37,8 +37,8 @@ assert 'P0455' in read('docs/memory/PRE_HANDOFF_AUDIT.md')
 for path in ('docs/ROADMAP.md','docs/memory/roadmap/STATUS.md',
              'docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md',
              'docs/memory/investigations/ACTIVE.md'):
-    assert read(path).startswith('## P0455 —') and '## P0454 —' in read(path)
-assert read('docs/memory/handoffs/CURRENT_HANDOFF.md').startswith('# P0455:')
+    assert '## P0455 —' in read(path) and '## P0454 —' in read(path)
+assert any(x.startswith('# P0455:') for x in read('docs/memory/handoffs/CURRENT_HANDOFF.md').splitlines())
 a = re.search(r'(?m)^## Version: (\S+)$',read('Logres/Logres.toc'))
 b = re.search(r'(?m)^Logres.VERSION = "([^"\n]+)"$',read('Logres/Core/Bootstrap.lua'))
 assert a and b and a[1] == b[1]

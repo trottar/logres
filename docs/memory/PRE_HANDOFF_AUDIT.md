@@ -1,3 +1,15 @@
+## P0456 fail-open secondary suspension (2026-11-12)
+
+Verified main P0455 `9317229`/tree `364684e`. Forever #12628/#12630
+current 0.0.324-dev, standalone Lua SHA `41a726d2e555f9999d742135db64eba4ad5a1b1fb99f5e92b12e20d4614b870b`.
+P0455 runtime VISUAL FAIL; 22 unrelated updates ignored but 2 secondary
+attach/detach and 8 selected attach/detach still observed. P0456 R0
+AUTHOR REFUSED 318/319 due to lost literal `P0379 R1` handoff marker;
+no user tracked writes or release receipt. R1 restores marker.
+P0456 disarms
+only secondary visual takeover while preserving selected UI and read-only
+threat evidence. Static author-check and guarded apply separate from WoW.
+
 ## P0455 reported flicker investigation (2026-11-12)
 P0454 pushed `1424fd740ad5be8d8ba32c2d09a7c967ec24ea2a` tree
 `302f0a6b2ff77d305c5ea53716445dd2efdb7929`. Forever Report Bug

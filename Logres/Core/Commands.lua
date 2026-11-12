@@ -3457,7 +3457,7 @@ function Logres:HandleLiveWorldEnemyCommand(argument)
             "World Enemy secondary updates: ignored unrelated=%s lastDetach=%s (nameplate removal and same-unit loss still restore Blizzard)",
             tostring(state.worldEnemySecondaryTrialIgnoredUnrelatedEvents),
             tostring(state.worldEnemySecondaryTrialLastDetachReason)))
-        emit("World Enemy LIVE: target 100%; one opt-in secondary at 50%/50%; production secondary remains DISABLED; stock auras/casts/input remain.")
+        emit("World Enemy LIVE: selected target 100%; secondary 50% visual trial SUSPENDED after P0455 runtime FAIL; basic threat diagnostics remain; stock secondary auras/casts/input retained.")
         return
     end
     if argument ~= "on" and argument ~= "off" then

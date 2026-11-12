@@ -11,20 +11,17 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0455** P0454 main `1424fd7`: Forever 0.0.323-dev
-#12547/#12549 9 secondary attach/detach/restore, zero
-counted API errors but flicker VISUAL FAIL. P0454 hid on
-unrelated non-nameplate UPDATE tokens; P0455 ignores only
-those, records ignored/lastDetach. Same-unit threat loss,
-removal, target change, combat exit/OFF still restore native.
-Selected 100%, secondary 50/50, native aura/cast/click safe.
-P0455 UNVERIFIED; L-011 PARTIAL, L-028 OPEN.
-
-P0454 context: P0453 #12307 basic ordinary 18 (11 primary,
-8 eligible), detail secret 18. DEV 50/50 only; production OFF.
-P0450 selected 100% PASS scoped; native aura/cast/click kept.
-P0442/P0443, P0425 visual PASS, P0426/P0427 retained;
-OFF/taint unverified.
+**P0456** verified P0455 main `9317229`, tree `364684e`:
+Forever 0.0.324-dev #12628/#12630 reports continuing secondary
+visual jank despite 22 unrelated updates ignored; secondary 2
+attach/2 detach (last loss/unknown), selected 8 attach/8 detach,
+no restore errors. P0455 VISUAL FAIL, P0454 VISUAL FAIL. P0456
+suspends automatic secondary 50/50 takeover on World Enemy ON,
+retains accepted selected 100% and read-only basic threat evidence.
+Secondary presentation redesign DEFERRED; selected refresh repeated
+ownership operations require separate evidence. L-011 PARTIAL/L-028 OPEN.
+P0450 selected visual PASS scoped; native aura/cast/click preserved;
+P0442/P0443, P0425 visual PASS, P0426/P0427 retained.
 
 ## Verified State
 
@@ -66,16 +63,12 @@ OFF/taint unverified.
 
 ## Next Action
 
-P0455: test one naturally engaged secondary nameplate; compare
-ignored-unrelated event count and last actual detach reason after
-combat. Any continued Blizzard↔Logres flicker, native restore
-failure or taint remains FAIL. Selected P0450 acceptance is scoped.
-
-User applies P0454 guarded release, pushes, and deploys 0.0.323-dev.
-Arm World Enemy ON **out of combat**; capture a natural two-enemy
-encounter and Report Bug for single-secondary attachment, 50/50 visual,
-native name/health restoration on loss/removal/OFF; test taint/click/cast.
-No gameplay PASS yet. If visual overlaps, restore with World Enemy OFF.
+P0456: after checked deployment, World Enemy ON should keep the
+accepted selected 100% world presentation and leave all secondary
+plates Blizzard-owned. Verify OFF, native aura/cast/click and no taint;
+P0454/P0455 visual failures stay OPEN. Do not restart 50% rendering
+until same-event continuity and selected refresh handoffs have
+specific event-time diagnostic proof, without polling or secret reads.
 
 ## Success Criteria
 
