@@ -1,3 +1,8 @@
+# P0454: Ledger, main `7050f9c`.
+P0453 #12307: basic 18 ordinary, 11 primary, 8 eligible;
+detailed secret 18. P0454 DEV-only secondary 50/50 trial,
+OOC World Enemy ON; native restore. UNVERIFIED.
+
 # P0453: Ledger first: docs/memory/investigations/ISSUE_LEDGER.md
 
 P0453 probes basic/detailed secrecy; Report Bug only, 50% disabled.
@@ -7,12 +12,8 @@ CURRENT.md authoritative.
 
 # P0451: history.
 
-# P0450: Ledger first: docs/memory/investigations/ISSUE_LEDGER.md
-
-P0449 icons PASS/#11961, Blizzard/P0183 duplicates FAIL. P0450 guarded
-alpha list/screen ownership, restore on detach/OFF; protected refusal.
-P0447 health/click/cast, P0444 transparency, P0443 rejection, +/-25px and
-aggro gate retained; L-011/L-028 OPEN.
+# P0450: selected world health/native aura visual PASS scoped; OFF/taint
+unverified. Preserve restore, click/cast/CC. L-011/L-028 OPEN.
 
 # P0449: P0448 aura FAIL; P0449 world icons PASS.
 

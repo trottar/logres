@@ -1,3 +1,14 @@
+## P0454 — Single secondary aggro developer-only trial (2026-11-11)
+
+Baseline verified P0453 `7050f9c`/tree `5fc10c8`; P0453 Forever
+#12307 basic status ordinary 18, 11 primary, 8 eligible; detailed
+18 secret. P0454 source gate uses basic 2/3 and all same-event
+eligibility; one OOC-precreated mouse-disabled 50% scale/opacity
+secondary display only while developer World Enemy ON. Native name/
+health alpha capture/restore and fail-open deferrals; stock auras,
+casts, hit regions untouched. P0450 selected 100% unchanged.
+0.0.323-dev, new P0454 static contract; WoW UNVERIFIED.
+
 | P0453 | 2026-11-11 | AUTHOR CANDIDATE — BASIC/DETAILED SECONDARY THREAT SOURCE PROVENANCE | P0452 main `e96506e`; P0451 #12124 12 secret deferrals do not identify which source is restricted. Separate same-event read-only basic/detailed event categories; World Enemy 50% disabled; Forever UNVERIFIED. |
 | P0452 | 2026-11-11 | PREPARED — CHAT RELEASE AUDIT / EVIDENCE PROVENANCE | P0451 main; recent ZIP parity, repeated-upload diagnosis, offline evidence inspection and guarded ZIP staged verification. Tools/docs only. |
 | P0451 | 2026-11-11 | AUTHOR CANDIDATE — SECONDARY AGGRO SAME-EVENT PROBE | P0450 main `55af0b9` selected world HP/aura visuals PASS scoped in Forever session 113, no recorded handoff failures. 8 secondary-anchor and 2 player-targeting samples do not prove aggro. P0451 records ordinary primary threat status and independent tanking cross-check only on the same event, with secret/unknown refusals and no 50% production frame. |

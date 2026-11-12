@@ -672,6 +672,7 @@ function Probe:ObserveSecondaryThreat(event, eventUnit, observation)
     if not unit then return end
     self.secondaryThreatEvents = self.secondaryThreatEvents + 1
     self.secondaryThreatLastEvent = event
+    local trialDecision = "unknown"
 
     local source, status = callOrdinary(UnitThreatSituation, "player", unit)
     local detail = readBoolean(UnitDetailedThreatSituation, "player", unit)
@@ -711,12 +712,16 @@ function Probe:ObserveSecondaryThreat(event, eventUnit, observation)
                 and observation.reaction == "hostile" then
                 self.secondaryThreatBasicEligibleEvents =
                     self.secondaryThreatBasicEligibleEvents + 1
+                trialDecision = "eligible"
                 if detail.secret then
                     self.secondaryThreatBasicEligibleDetailSecretEvents =
                         self.secondaryThreatBasicEligibleDetailSecretEvents + 1
                 end
+            else
+                trialDecision = "unqualified"
             end
         else
+            trialDecision = "nonprimary"
             self.secondaryThreatBasicNonprimaryEvents =
                 self.secondaryThreatBasicNonprimaryEvents + 1
             self.secondaryThreatLastBasic = "ordinary-nonprimary-0-or-1"
@@ -752,42 +757,42 @@ function Probe:ObserveSecondaryThreat(event, eventUnit, observation)
     if source.secret or detail.secret then
         self.secondaryThreatSecretEvents = self.secondaryThreatSecretEvents + 1
         self.secondaryThreatLastResult = "secret-threat-deferred"
-        return
+        return trialDecision
     end
     if source.failure or detail.failure then
         self.secondaryThreatFailureEvents = self.secondaryThreatFailureEvents + 1
         self.secondaryThreatLastResult = "threat-query-failed"
-        return
+        return trialDecision
     end
     if not source.available or not detail.available
         or not source.ok or not detail.ok then
         self.secondaryThreatUnknownEvents = self.secondaryThreatUnknownEvents + 1
         self.secondaryThreatLastResult = "threat-api-unavailable"
-        return
+        return trialDecision
     end
     if not source.present or not detail.present then
         self.secondaryThreatNoTableEvents = self.secondaryThreatNoTableEvents + 1
         self.secondaryThreatLastResult = "no-ordinary-threat-pair"
-        return
+        return trialDecision
     end
     if type(status) ~= "number" or status < 0 or status > 3
         or status ~= math.floor(status) then
         self.secondaryThreatFailureEvents = self.secondaryThreatFailureEvents + 1
         self.secondaryThreatLastResult = "invalid-ordinary-threat-state"
-        return
+        return trialDecision
     end
     local primary = status >= 2
     if primary ~= (detail.value == true) then
         self.secondaryThreatDisagreementEvents =
             self.secondaryThreatDisagreementEvents + 1
         self.secondaryThreatLastResult = "ordinary-threat-disagrees"
-        return
+        return trialDecision
     end
     if not primary then
         self.secondaryThreatNonprimaryEvents =
             self.secondaryThreatNonprimaryEvents + 1
         self.secondaryThreatLastResult = "not-player-primary-threat"
-        return
+        return trialDecision
     end
     self.secondaryThreatPrimaryEvents = self.secondaryThreatPrimaryEvents + 1
     if not observation.anchorSafe or not observation.inCombat
@@ -795,11 +800,12 @@ function Probe:ObserveSecondaryThreat(event, eventUnit, observation)
         or not observation.targetingPlayer
         or observation.reaction ~= "hostile" then
         self.secondaryThreatLastResult = "primary-threat-anchor-or-combat-unqualified"
-        return
+        return trialDecision
     end
     self.secondaryThreatQualifiedEvents =
         self.secondaryThreatQualifiedEvents + 1
     self.secondaryThreatLastResult = "same-event-primary-threat-candidate"
+    return trialDecision
 end
 
 function Probe:RunDevNameplateLifecycleStatus(emit)
@@ -870,6 +876,34 @@ function Probe:AcquireLiveEnemyTargetAnchor(eventUnit, fromEvent)
         return nil, "behind-camera-or-unknown"
     end
     return anchor, "accessible-hostile-target", fromEvent == true and unit or nil
+end
+
+-- P0454: short-lived secondary nameplate acquisition for an already
+-- qualified ordinary basic-threat event. No native frame is mutated here.
+function Probe:OrdinaryEventNameplateToken(eventUnit)
+    return ordinaryNameplateToken(eventUnit)
+end
+
+function Probe:AcquireLiveEnemySecondaryAnchor(eventUnit)
+    local unit, reason = ordinaryNameplateToken(eventUnit)
+    if not unit then return nil, reason end
+    local role = readBoolean(UnitIsUnit, unit, "target")
+    if not role.ok or role.secret or role.value ~= false then
+        return nil, "no-longer-secondary"
+    end
+    local source, anchor = readEventNameplate(unit)
+    if not source.ok or source.secret or not source.present or not anchor then
+        return nil, "secondary-anchor-unavailable"
+    end
+    local forbidden = readBoolean(anchor.IsForbidden, anchor)
+    local manager = C_NamePlateManager
+        and C_NamePlateManager.IsNamePlateUnitBehindCamera or nil
+    local behind = readBoolean(manager, unit)
+    if not forbidden.ok or forbidden.secret or forbidden.value ~= false
+        or not behind.ok or behind.secret or behind.value ~= false then
+        return nil, "secondary-anchor-unsafe"
+    end
+    return anchor, "secondary-safe-anchor", unit
 end
 
 -- Removal events must never reacquire a potentially stale native anchor.
@@ -1258,7 +1292,13 @@ function Probe:OnInitialize()
     lifecycleFrame:SetScript("OnEvent", function(_, event, unit)
         if self.moduleEnabled ~= true then return end
         local observation = self:ObserveNameplateLifecycle(event, unit)
-        self:ObserveSecondaryThreat(event, unit, observation)
+        local decision = self:ObserveSecondaryThreat(event, unit, observation)
+        -- Rendering policy lives in HUD, never in this read-only probe.
+        -- No secondary unit/frame is retained by the probe.
+        local hud = Logres:GetModule("HUD")
+        if hud and type(hud.ObserveSecondaryAggroTrial) == "function" then
+            hud:ObserveSecondaryAggroTrial(event, unit, decision)
+        end
     end)
     self.lifecycleFrame = lifecycleFrame
 end

@@ -47,7 +47,8 @@ for field in fields:
 for path in ("docs/ROADMAP.md", "docs/memory/roadmap/STATUS.md",
              "docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md",
              "docs/memory/investigations/ACTIVE.md"):
-    assert read(path).startswith("## P0453 \u2014".replace("\u2014", "—")), path
+    # P0454 is the active heading; the P0453 evidence heading must remain.
+    assert "## P0453 —" in read(path), path
     assert "## P0451 —" in read(path), path
 assert '| L-011 |' in read('docs/memory/investigations/ISSUE_LEDGER.md')
 assert re.search(r'(?m)^## Version: (\S+)$',read('Logres/Logres.toc')).group(1)==re.search(r'(?m)^Logres.VERSION = "([^"\n]+)"$',read('Logres/Core/Bootstrap.lua')).group(1)

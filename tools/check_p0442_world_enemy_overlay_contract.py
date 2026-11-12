@@ -17,7 +17,11 @@ assert 'self:RefreshLiveWorldEnemy(event)' in h
 assert 'IsLiveEnemyRemovalRelevant' in p
 assert 'ordinaryNameplateToken(eventUnit)' in p
 assert 'return false, "other-unit-removed"' in p
-removal=h.split('if event == "NAME_PLATE_UNIT_REMOVED" then',1)[1].split('elseif event == "PLAYER_TARGET_CHANGED"',1)[0]
+# P0454 adds a separate secondary-removal handler; constrain this historical
+# check to the original selected-target worldTrialEvents callback.
+world_events = h[h.index('local worldTrialEvents = CreateFrame('):
+                 h.index('self.worldTrialEvents = worldTrialEvents')]
+removal = world_events.split('if event == "NAME_PLATE_UNIT_REMOVED" then',1)[1].split('elseif event == "PLAYER_TARGET_CHANGED"',1)[0]
 assert 'RefreshLiveWorldEnemy' not in removal, 'Never reacquire on removed event'
 trial=h.split('-- P0441: event-driven',1)[1].split('function HUD:SetEnemyDisplayPreview',1)[0]
 for forbidden in ('SetCVar', 'GetNamePlates(', 'SetParent(', 'SetAttribute(',

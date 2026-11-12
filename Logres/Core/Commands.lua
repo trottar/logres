@@ -3442,7 +3442,18 @@ function Logres:HandleLiveWorldEnemyCommand(argument)
             tostring(auraState.worldEnemyScreenAuraHandoffs),
             tostring(auraState.worldEnemyScreenAuraRestores),
             tostring(auraState.worldEnemyScreenAuraFailures)))
-        emit("World Enemy LIVE: target 100%; secondary aggro NOT ENABLED; fallback on detach.")
+        emit(string.format(
+            "World Enemy secondary DEV trial: armed=%s visible=%s eligible=%s attaches=%s detaches=%s failures=%s restores=%s restoreFailures=%s last=%s",
+            tostring(state.worldEnemySecondaryTrialArmed),
+            tostring(state.worldEnemySecondaryTrialVisible),
+            tostring(state.worldEnemySecondaryTrialEligibleEvents),
+            tostring(state.worldEnemySecondaryTrialAttachments),
+            tostring(state.worldEnemySecondaryTrialDetaches),
+            tostring(state.worldEnemySecondaryTrialFailures),
+            tostring(state.worldEnemySecondaryTrialRestores),
+            tostring(state.worldEnemySecondaryTrialRestoreFailures),
+            tostring(state.worldEnemySecondaryTrialLastResult)))
+        emit("World Enemy LIVE: target 100%; one opt-in secondary at 50%/50%; production secondary remains DISABLED; stock auras/casts/input remain.")
         return
     end
     if argument ~= "on" and argument ~= "off" then

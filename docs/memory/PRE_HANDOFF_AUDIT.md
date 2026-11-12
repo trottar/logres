@@ -1,3 +1,20 @@
+## P0454 author preflight (2026-11-11)
+Initial R0 offline `author-check` REFUSED at 309/317: lost CURRENT
+historical markers P0368/P0369/P0426/P0427 caused 7 checker failures;
+new P0454 checker accidentally pinned a literal runtime version (1
+failure). R0 emitted no release receipt and made no user repo writes.
+R1 restores the markers and replaces the version pin with dynamic TOC/
+Bootstrap equality. Retest the exact R1 package from fresh checked kit;
+never credit R0 as PASS.
+
+
+Verified main P0453 `7050f9c` tree `5fc10c8`, reconstructed
+exact tree from P0452 author kit + checked P0453 payload and manifest.
+P0453 Forever #12307 proves ordinary basic primary 2/3 even with
+secret detailed values. P0454 one-secondary DEV-only 50/50 opt-in;
+selected and stock fallback retained. Static preflight must run after
+final edit and before releasing; no client PASS is claimed here.
+
 ## P0453 — Same-event basic threat source classification (2026-11-11)
 
 Reviewed the P0452 exact main tree and P0451 #12124 negative evidence;

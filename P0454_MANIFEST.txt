@@ -1,0 +1,30 @@
+P0454 Single-secondary ordinary basic-aggro developer trial
+Verified baseline: 7050f9c267dd2f7de309b97e1a1ec42372d3d1ef
+Candidate runtime version: 0.0.323-dev
+PREWRITE: 317/317 STATIC PASS
+POSTWRITE: 317/317 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/HUD/HUD.lua
+Logres/HUD/WorldTargetProbe.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0454_SECONDARY_AGGRO_SINGLE_TRIAL.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0442_world_enemy_overlay_contract.py
+tools/check_p0453_secondary_threat_sources_contract.py
+tools/check_p0454_secondary_trial_contract.py
+P0454_MANIFEST.txt

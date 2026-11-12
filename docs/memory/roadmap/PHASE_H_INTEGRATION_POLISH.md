@@ -1,3 +1,25 @@
+## P0454 — Opt-in single secondary basic-aggro world trial (2026-11-11)
+
+P0453 pushed `7050f9c`/tree `5fc10c8`. Forever #12307 (0.0.322-dev)
+confirms 18 ordinary basic threat statuses (11 at 2/3, 7 at 0/1),
+18 secret detailed outputs, 10 missing basic/detailed pairs, no query
+failures, and 8 same-event basic-primary eligible observations.
+Those are event samples, not eight individual enemies. The paired
+P0451 qualified count remains zero because detailed is secret.
+P0454 preserves historical paired counters, returns independent basic
+eligible/nonprimary/unqualified/unknown decision, and implements one
+explicit World Enemy ON developer-only OOC-precreated secondary at
+50% scale and 50% opacity. Same-event hostile/attackable/in-combat/
+targeting-player/safe-nameplate gates apply. Unknown/nonprimary/removal,
+selection switch, combat exit, OFF and immersion OFF hide the owned
+frame and restore captured ordinary unprotected native name/health
+alphas; retry restoration after combat when refused. No polling,
+nameplate enumeration, retained token in probe or secret comparisons.
+Stock native auras/casts/clicks remain untouched. This is not
+production multi-enemy replacement and not visual/runtime PASS.
+Selected P0450 geometry, screen aura handoff and 100% HP untouched;
+L-011 PARTIAL, L-028 OPEN. See P0454 evidence.
+
 ## P0453 — Basic/detailed secondary threat source isolation (2026-11-11)
 
 P0452 `e96506e` source audit: P0451 #12124 (0.0.321-dev) 14 threat

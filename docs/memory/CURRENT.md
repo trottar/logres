@@ -11,16 +11,17 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0453** on verified P0452 main `e96506e`/tree `4a2bb6b`:
-P0451 Forever #12124 had 14 threat samples, 12 secret, 2 missing,
-0 qualified/failures; paired deferral obscures which API is secret.
-P0453 reports basic 0–3 versus detailed tanking independently;
-50% stays disabled, Forever UNVERIFIED. P0450 selected
-world health/native aura visual PASS scoped #12040/#12042/#12044;
-OFF/taint/cast/click unverified, L-011 PARTIAL/L-028 OPEN. Keep P0447
-health, P0444 transparency, +/-25px icons, P0450 restore, click/cast/CC,
-P0442 lifecycle, P0443 rejected matte, P0446/P0448 FAIL,
-P0425 visual PASS, P0426/P0427, 50% gate, D-046/D-047/D-048.
+**P0454** on verified P0453 `7050f9c`/tree `5fc10c8`.
+Forever #12307/0.0.322-dev: basic threat ordinary 18 (11 primary,
+7 nonprimary), detailed secret 18, 8 eligible samples;
+not eight distinct enemies. Detailed paired cross-check remains
+blocked; basic 2/3 is supported. P0454 DEV-only **one** OOC-prebuilt
+secondary trial, 50% scale/alpha under World Enemy ON; restore stock
+name/HP on loss, removal, target switch, exit, OFF. Stock
+secondary auras/casts/click remain native. 0.0.323-dev client
+UNVERIFIED, production secondary OFF. P0450 selected HP/auras PASS scoped, 100%, transparent; +/-25px
+and native restore/click/cast/CC retained. P0442 lifecycle, P0443 matte rejected;
+P0425 visual PASS. OFF/taint unverified; L-011 PARTIAL, L-028 OPEN.
 
 ## Verified State
 
@@ -58,13 +59,15 @@ P0425 visual PASS, P0426/P0427, 50% gate, D-046/D-047/D-048.
 - D-048 independent live domain selectors and saved migration do not exist: schema 3 still stores `immersionEnabled` and `activeQuestEnabled`. D-046 preview-first and D-047 frozen Camera/DynamicCam remain required. Native UI and protected/secret fallbacks stay usable.
 - L-020–L-032 are tracked user reports; runtime gates apply. L-028 duplicated/missing target debuffs remains OPEN; L-022 focused quest artifact requires screenshot, L-027 Blizzard transient popup requires `/fstack` owner evidence. L-019 license unresolved, release blocked.
 
-- Historical markers retained for continuity; status/evidence in PATCH_INDEX and ISSUE_LEDGER: L-004, L-021, L-025, L-029, L-033, L-034, L-035, L-037, L-038, L-039, L-040, P0241, P0373, P0374, P0376, P0380, P0382, P0387, P0388, P0389, P0390, P0391–P0397, P0402, P0405–P0408, P0410, P0411, P0413–P0415.
+- Historical markers retained for continuity; status/evidence in PATCH_INDEX and ISSUE_LEDGER: P0368, P0369, P0426, P0427, L-004, L-021, L-025, L-029, L-033, L-034, L-035, L-037, L-038, L-039, L-040, P0241, P0373, P0374, P0376, P0380, P0382, P0387, P0388, P0389, P0390, P0391–P0397, P0402, P0405–P0408, P0410, P0411, P0413–P0415.
 
 ## Next Action
 
-P0453: inspect basic versus detailed source categories from natural combat
-only after checked deployment. If basic status remains secret, secondary
-aggro stays blocked. P0452 provenance resolved stale export; 50% OFF.
+User applies P0454 guarded release, pushes, and deploys 0.0.323-dev.
+Arm World Enemy ON **out of combat**; capture a natural two-enemy
+encounter and Report Bug for single-secondary attachment, 50/50 visual,
+native name/health restoration on loss/removal/OFF; test taint/click/cast.
+No gameplay PASS yet. If visual overlaps, restore with World Enemy OFF.
 
 ## Success Criteria
 
@@ -119,10 +122,6 @@ Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret re
 - `docs/memory/evidence/P0377_LIVE_REWARD_SELECTION.md`
 - `docs/memory/evidence/P0372_PASSIVE_JOURNAL_BUG_MARKER.md`
 - `docs/memory/evidence/P0371_NPC_DIAGNOSTIC_BATCH.md` and `docs/memory/patches/P0371_NPC_DIAGNOSTIC_BATCH.md`
-- `docs/memory/evidence/P0370_PET_HOTKEY_PRESENTATION_GATE.md` and `docs/memory/patches/P0370_PET_HOTKEY_PRESENTATION_GATE.md`
-- `docs/memory/evidence/P0369_LIVE_DIAGNOSTIC_EXPORT_RECOVERY.md` and `docs/memory/patches/P0369_LIVE_DIAGNOSTIC_EXPORT_RECOVERY.md`
-- `docs/memory/evidence/P0368_NOV04_FREEZE_GATE.md` and `docs/memory/patches/P0368_NOV04_FREEZE_GATE.md`
-- `docs/memory/evidence/P0367_WORLD_TARGET_PROBE_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0367_WORLD_TARGET_PROBE_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0366_QUEST_INTERACTION_PROBE_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0366_QUEST_INTERACTION_PROBE_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0365_AURA_STATUS_PROBE_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0365_AURA_STATUS_PROBE_DIAGNOSTIC_SEAM.md`
 - `docs/memory/evidence/P0364_PLAYER_HELPFUL_AURA_DIAGNOSTIC_SEAM.md` and `docs/memory/patches/P0364_PLAYER_HELPFUL_AURA_DIAGNOSTIC_SEAM.md`
