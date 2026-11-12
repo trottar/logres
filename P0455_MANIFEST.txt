@@ -1,0 +1,28 @@
+P0455 Secondary aggro unrelated update flicker repair
+Verified baseline: 1424fd740ad5be8d8ba32c2d09a7c967ec24ea2a
+Candidate runtime version: 0.0.324-dev
+PREWRITE: 318/318 STATIC PASS
+POSTWRITE: 318/318 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/HUD/HUD.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0455_SECONDARY_UNRELATED_EVENT_FLICKER.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0454_secondary_trial_contract.py
+tools/check_p0455_secondary_unrelated_event_contract.py
+P0455_MANIFEST.txt

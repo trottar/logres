@@ -1,3 +1,21 @@
+## P0455 — Secondary nameplate unrelated-event flicker correction (2026-11-12)
+
+Verified P0454 main `1424fd7`/tree `302f0a6`. Forever session 119,
+0.0.323-dev, incidents #12547/#12549 show 5→9 secondary attachments,
+4→9 detaches, 4→9 native restores, zero recorded restoration/failure
+errors, with user-reported Blizzard↔Logres flicker. #12549 final reason
+`secondary-event-token-unknown`. Source P0454 hid the owned secondary
+for unrelated non-nameplate threat UPDATE tokens, despite no evidence
+about the attached nameplate. P0455 ignores only these unrelated
+updates and counts them; NAME_PLATE_UNIT_REMOVED stays conservative,
+while same-unit status 0/1/missing/secret, target changes, combat exit,
+OFF and immersion OFF still restore native name/health. Record last
+actual detach reason for next capture. Preserve selected enemy at 100%,
+secondary 50% scale/opacity, native aura/cast/click, transparent backing,
+opaque alpha restore tokens. No polling or secret branching. **P0454
+flicker is a runtime VISUAL FAIL**, not a PASS; P0455 Forever test
+UNVERIFIED. L-011 PARTIAL, L-028 OPEN. See P0455 evidence.
+
 ## P0454 — Opt-in single secondary basic-aggro world trial (2026-11-11)
 
 P0453 pushed `7050f9c`/tree `5fc10c8`. Forever #12307 (0.0.322-dev)

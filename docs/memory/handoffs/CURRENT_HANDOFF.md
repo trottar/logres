@@ -1,14 +1,13 @@
-# P0454: Ledger, main `7050f9c`.
-P0453 #12307: basic 18 ordinary, 11 primary, 8 eligible;
-detailed secret 18. P0454 DEV-only secondary 50/50 trial,
-OOC World Enemy ON; native restore. UNVERIFIED.
+# P0455: `1424fd7` #12547/#12549 flicker FAIL.
+Ignore unrelated updates; retain native restoration.
+
+# P0454: main `7050f9c`, DEV 50/50 trial; native restore.
+P0453 #12307 basic 18, primary 11, eligible 8, detail secret.
 
 # P0453: Ledger first: docs/memory/investigations/ISSUE_LEDGER.md
-
-P0453 probes basic/detailed secrecy; Report Bug only, 50% disabled.
-P0451 #12124: 14 events, 12 secret, 2 missing, zero qualified.
-P0450 selected visual PASS scoped; OFF/taint/click/cast unverified.
-CURRENT.md authoritative.
+P0451 #12124: 14 samples, 12 secret, 2 missing. P0453
+read-only sources; 50% disabled. P0450 visual PASS scoped;
+OFF/taint/click/cast open. CURRENT.md authoritative.
 
 # P0451: history.
 

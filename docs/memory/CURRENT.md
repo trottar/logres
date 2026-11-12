@@ -11,17 +11,20 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0454** on verified P0453 `7050f9c`/tree `5fc10c8`.
-Forever #12307/0.0.322-dev: basic threat ordinary 18 (11 primary,
-7 nonprimary), detailed secret 18, 8 eligible samples;
-not eight distinct enemies. Detailed paired cross-check remains
-blocked; basic 2/3 is supported. P0454 DEV-only **one** OOC-prebuilt
-secondary trial, 50% scale/alpha under World Enemy ON; restore stock
-name/HP on loss, removal, target switch, exit, OFF. Stock
-secondary auras/casts/click remain native. 0.0.323-dev client
-UNVERIFIED, production secondary OFF. P0450 selected HP/auras PASS scoped, 100%, transparent; +/-25px
-and native restore/click/cast/CC retained. P0442 lifecycle, P0443 matte rejected;
-P0425 visual PASS. OFF/taint unverified; L-011 PARTIAL, L-028 OPEN.
+**P0455** P0454 main `1424fd7`: Forever 0.0.323-dev
+#12547/#12549 9 secondary attach/detach/restore, zero
+counted API errors but flicker VISUAL FAIL. P0454 hid on
+unrelated non-nameplate UPDATE tokens; P0455 ignores only
+those, records ignored/lastDetach. Same-unit threat loss,
+removal, target change, combat exit/OFF still restore native.
+Selected 100%, secondary 50/50, native aura/cast/click safe.
+P0455 UNVERIFIED; L-011 PARTIAL, L-028 OPEN.
+
+P0454 context: P0453 #12307 basic ordinary 18 (11 primary,
+8 eligible), detail secret 18. DEV 50/50 only; production OFF.
+P0450 selected 100% PASS scoped; native aura/cast/click kept.
+P0442/P0443, P0425 visual PASS, P0426/P0427 retained;
+OFF/taint unverified.
 
 ## Verified State
 
@@ -62,6 +65,11 @@ P0425 visual PASS. OFF/taint unverified; L-011 PARTIAL, L-028 OPEN.
 - Historical markers retained for continuity; status/evidence in PATCH_INDEX and ISSUE_LEDGER: P0368, P0369, P0426, P0427, L-004, L-021, L-025, L-029, L-033, L-034, L-035, L-037, L-038, L-039, L-040, P0241, P0373, P0374, P0376, P0380, P0382, P0387, P0388, P0389, P0390, P0391–P0397, P0402, P0405–P0408, P0410, P0411, P0413–P0415.
 
 ## Next Action
+
+P0455: test one naturally engaged secondary nameplate; compare
+ignored-unrelated event count and last actual detach reason after
+combat. Any continued Blizzard↔Logres flicker, native restore
+failure or taint remains FAIL. Selected P0450 acceptance is scoped.
 
 User applies P0454 guarded release, pushes, and deploys 0.0.323-dev.
 Arm World Enemy ON **out of combat**; capture a natural two-enemy

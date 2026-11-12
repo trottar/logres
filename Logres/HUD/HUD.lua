@@ -888,6 +888,8 @@ function HUD:GetDebugStatus()
         worldEnemySecondaryTrialRestores = self.worldEnemySecondaryTrialRestores,
         worldEnemySecondaryTrialRestoreFailures = self.worldEnemySecondaryTrialRestoreFailures,
         worldEnemySecondaryTrialLastResult = self.worldEnemySecondaryTrialLastResult,
+        worldEnemySecondaryTrialLastDetachReason = self.worldEnemySecondaryTrialLastDetachReason,
+        worldEnemySecondaryTrialIgnoredUnrelatedEvents = self.worldEnemySecondaryTrialIgnoredUnrelatedEvents,
         worldTrialRequested = self.worldTrialRequested == true,
         worldTrialVisible = self.worldTrialVisible == true,
         worldTrialLastReason = self.worldTrialLastReason,
@@ -1390,6 +1392,7 @@ function HUD:HideSecondaryAggroTrial(reason)
     if wasVisible then
         self.worldEnemySecondaryTrialDetaches =
             self.worldEnemySecondaryTrialDetaches + 1
+        self.worldEnemySecondaryTrialLastDetachReason = reason or "secondary-hidden"
     end
     -- Restore Blizzard presentation before withdrawing owned presentation.
     local restored = self:RestoreNativeSecondaryEnemyDecor()
@@ -1447,9 +1450,14 @@ function HUD:ObserveSecondaryAggroTrial(event, eventUnit, decision)
     end
     local unit = probe:OrdinaryEventNameplateToken(eventUnit)
     if not unit then
-        -- Unknown removal/update identity cannot justify stale presentation.
+        -- P0455: non-nameplate UPDATE tokens cannot establish the identity or
+        -- state of the attached secondary. Ignore them rather than restoring
+        -- and reclaiming Blizzard name/health on unrelated threat events.
+        -- NAME_PLATE_UNIT_REMOVED remains conservative above; a matching
+        -- ordinary nameplate update can still withdraw on threat loss.
         if self.worldEnemySecondaryTrialUnit then
-            self:HideSecondaryAggroTrial("secondary-event-token-unknown")
+            self.worldEnemySecondaryTrialIgnoredUnrelatedEvents =
+                self.worldEnemySecondaryTrialIgnoredUnrelatedEvents + 1
         end
         return
     end
@@ -1776,6 +1784,8 @@ function HUD:OnInitialize()
     self.worldEnemySecondaryTrialRestores = 0
     self.worldEnemySecondaryTrialRestoreFailures = 0
     self.worldEnemySecondaryTrialLastResult = "disabled"
+    self.worldEnemySecondaryTrialLastDetachReason = "none"
+    self.worldEnemySecondaryTrialIgnoredUnrelatedEvents = 0
     self.worldTrialRequested = false
     self.worldTrialVisible = false
     self.worldTrialCombatHidden = false

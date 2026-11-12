@@ -1,3 +1,17 @@
+## P0455 reported flicker investigation (2026-11-12)
+P0454 pushed `1424fd740ad5be8d8ba32c2d09a7c967ec24ea2a` tree
+`302f0a6b2ff77d305c5ea53716445dd2efdb7929`. Forever Report Bug
+bundle `736787cb5ce5cccc89bfb304f7e09a2a441f286b18a42b63e244bb525c273600`
+with standalone Lua `e78f11e15bd48ffcd4eb4ffb09170e92d676bbd7da120e11922376f718429f24`,
+version/source/deployed `0.0.323-dev`. Session 119 incidents
+#12547/#12549 show 5→9 attachments, 4→9 detaches, 4→9 restores,
+0 failures, last `secondary-event-token-unknown`; visual flicker FAIL.
+P0455 R0 author-check REFUSED 266/318 on historical CURRENT.md
+9800-byte ceiling; no release receipt or user repo writes. R1 compresses
+only active CURRENT summary; full exact-candidate recheck required.
+Static and WoW outcomes must be recorded separately. Historical P0454 static PASS does
+not override runtime VISUAL FAIL.
+
 ## P0454 author preflight (2026-11-11)
 Initial R0 offline `author-check` REFUSED at 309/317: lost CURRENT
 historical markers P0368/P0369/P0426/P0427 caused 7 checker failures;

@@ -1,3 +1,14 @@
+## P0455 — Unrelated secondary update flicker repair (2026-11-12)
+
+Verified P0454 `1424fd7` main. Runtime Forever 0.0.323-dev incidents
+#12547/#12549 had repeated native/Logres handoffs (9 attaches,
+9 detaches, 9 native restores), 0 reported API/restore errors; user
+observed flicker. Source branch hid on non-nameplate UPDATE token.
+P0455 ignores these irrelevant updates, retains strict nameplate
+removal and same-unit threat-loss restoration, adds counters/last
+actual detach reason, no opacity or selected layout change. Static
+and Forever acceptance pending; P0454 VISUAL FAIL, L-011 PARTIAL.
+
 ## P0454 — Single secondary aggro developer-only trial (2026-11-11)
 
 Baseline verified P0453 `7050f9c`/tree `5fc10c8`; P0453 Forever

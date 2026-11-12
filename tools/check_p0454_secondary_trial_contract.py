@@ -63,7 +63,7 @@ for name in ("docs/ROADMAP.md","docs/memory/roadmap/STATUS.md",
              "docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md",
              "docs/memory/investigations/ACTIVE.md"):
     body=read(name)
-    assert body.startswith("## P0454 —") and "## P0453 —" in body,name
+    assert "## P0454 —" in body and "## P0453 —" in body,name
 assert read("docs/memory/CURRENT.md").find("P0454")>=0
 assert any(line.startswith("# P0454:") for line in read("docs/memory/handoffs/CURRENT_HANDOFF.md").splitlines())
 assert "P0453 #12307" in read("docs/memory/investigations/ISSUE_LEDGER.md")
