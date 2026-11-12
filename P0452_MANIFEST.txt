@@ -1,0 +1,23 @@
+P0452 Reinforce Chat release and evidence provenance
+Verified baseline: 8a6732b088ffaf53431cd33d93cabbabeb61d0eb
+Candidate runtime version: 0.0.321-dev
+PREWRITE: 315/315 STATIC PASS
+POSTWRITE: 315/315 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: NO RUNTIME FILES CHANGED
+Commit/push performed: NO
+
+Changed paths:
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0452_CHAT_RELEASE_AUDIT.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/CHAT_TO_ZIP_WORKFLOW.md
+docs/memory/patches/PATCH_INDEX.md
+tools/chat_change.py
+tools/check_p0450_aura_owner_handoff_contract.py
+tools/check_p0451_secondary_threat_contract.py
+tools/check_p0452_evidence_provenance_contract.py
+tools/export_panel_diagnostics.py
+P0452_MANIFEST.txt

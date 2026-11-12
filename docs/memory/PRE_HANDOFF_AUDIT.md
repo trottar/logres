@@ -1,3 +1,12 @@
+## P0452 — Recent Chat workflow reinforcement (2026-11-11)
+
+Verified P0451 main 8a6732b088ffaf53431cd33d93cabbabeb61d0eb.
+Audit ZIP bytes against their parents and pushed commits. Preserve scoped
+P0450 acceptance and fresh P0451 negative threat evidence. Run provenance,
+identity and index regression checks, full exact author preflight, guarded
+pre/post checks, refusal/rollback and diff hygiene. No runtime-code change.
+The manifest records actual checker results. See P0452 evidence.
+
 ## P0451 — Secondary threat source and historical-contract audit (2026-11-11)
 
 - Verified P0450 `main` `55af0b9d18e0d93b146a8a4a1647daf21bd09d03` and source blobs (P0450 manifest exact SHA; P0440 probe checker remains in force). Forever session 113 #12040/#12042/#12044 shows selected visual PASS scoped, not aggro proof.

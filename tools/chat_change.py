@@ -2,6 +2,7 @@
 """Export Logres checkout context or apply a structured Chat change in WSL."""
 
 import argparse
+import ast
 from difflib import unified_diff
 from hashlib import sha256
 import importlib.util
@@ -294,6 +295,55 @@ def verify_staged(repo, package):
     print(f"{package['id']} staged paths, package bytes, and manifest match. Ready to commit.")
 
 
+def verify_zip_staged(repo, source):
+    """Verify the staged payload and manifest directly against a guarded ZIP."""
+    with zipfile.ZipFile(source) as archive:
+        appliers = [name for name in archive.namelist() if re.fullmatch(r"P[0-9]{4}_APPLY[.]py", name)]
+        if len(appliers) != 1:
+            raise Refused("Expected one canonical P00XX_APPLY.py in the ZIP.")
+        assignments = [
+            node.value for node in ast.parse(archive.read(appliers[0]).decode("utf-8")).body
+            if isinstance(node, ast.Assign)
+            and any(isinstance(target, ast.Name) and target.id == "SPEC" for target in node.targets)
+        ]
+        if len(assignments) != 1:
+            raise Refused("Guarded ZIP must contain one literal patch specification.")
+        spec = ast.literal_eval(assignments[0])
+        exact_keys(spec, {"id", "title", "baseline", "hashes", "checkers", "version", "runtime"},
+                   "Guarded ZIP specification")
+        if (not isinstance(spec["id"], str) or not isinstance(spec["title"], str)
+                or not isinstance(spec["hashes"], dict)):
+            raise Refused("Malformed guarded ZIP specification.")
+        patch_id = spec["id"]
+        if not re.fullmatch(r"P[0-9]{4}", patch_id) or appliers[0] != patch_id + "_APPLY.py":
+            raise Refused("ZIP patch ID and applier disagree.")
+        paths = sorted(spec["hashes"])
+        if not paths or any(not builder.safe_path(path) for path in paths):
+            raise Refused("Guarded ZIP has unsafe payload paths.")
+        expected_names = {patch_id + "_APPLY.py", patch_id + "_README.txt",
+                          *(patch_id + "_PAYLOAD/" + path for path in paths)}
+        if len(archive.namelist()) != len(expected_names) or set(archive.namelist()) != expected_names:
+            raise Refused("Guarded ZIP entries differ from its payload specification.")
+        package_head(repo, spec)
+        expected = paths + [patch_id + "_MANIFEST.txt"]
+        if diff_paths(repo, "--cached") != set(expected):
+            raise Refused("Staged paths differ from the guarded ZIP.")
+        for path in paths:
+            payload = archive.read(patch_id + "_PAYLOAD/" + path)
+            if sha256(payload).hexdigest() != spec["hashes"][path][1]:
+                raise Refused(f"Guarded ZIP payload hash mismatch: {path}")
+            if git(repo, "show", ":" + path) != payload:
+                raise Refused(f"Staged bytes differ from the guarded ZIP: {path}")
+        lines = git(repo, "show", ":" + expected[-1]).decode("utf-8").splitlines()
+        if (not lines or lines[0] != patch_id + " " + spec["title"]
+                or "Verified baseline: " + spec["baseline"] not in lines
+                or lines.count("Changed paths:") != 1
+                or lines[lines.index("Changed paths:") + 1:] != expected):
+            raise Refused("Staged manifest differs from the guarded ZIP.")
+        git(repo, "diff", "--cached", "--check")
+    print(f"{patch_id} staged payload bytes, path list and manifest match the guarded ZIP.")
+
+
 def require_runtime_opt_in(package, allowed):
     if not allowed and any(entry["path"].startswith("Logres/") for entry in package["files"]):
         raise Refused("This package changes Logres runtime files. Use check to validate it. "
@@ -373,6 +423,7 @@ def main(repo=REPO):
     sub.add_parser("review", help="Show the exact diff without running checkers").add_argument("package", type=Path)
     sub.add_parser("check", help="Run all checkers on a temporary candidate").add_argument("package", type=Path)
     sub.add_parser("verify-staged", help="Check the Git index against the exact package").add_argument("package", type=Path)
+    sub.add_parser("verify-zip", help="Check the Git index against a guarded payload ZIP").add_argument("package", type=Path)
     kit = sub.add_parser("author-context", help="Export a clean, tracked-only baseline kit for Chat")
     kit.add_argument("output", type=Path)
     author = sub.add_parser("author-check", help="Check an exact draft offline and emit its release receipt")
@@ -396,6 +447,9 @@ def main(repo=REPO):
             archive = git(repo, "archive", "--format=tar", info["head"])
             chat_author.export_context(args.output, info, archive)
             print(f"Author kit {info['head']} written to {args.output}")
+            return
+        if args.operation == "verify-zip":
+            verify_zip_staged(repo, args.package)
             return
         raw = args.package.read_bytes()
         package = parse_change(raw)
@@ -432,7 +486,7 @@ def main(repo=REPO):
             check_change(repo, package, patch)
         else:
             apply_change(repo, args.package, package, patch, raw, receipt)
-    except (Refused, OSError, UnicodeError, json.JSONDecodeError, SyntaxError,
+    except (Refused, OSError, UnicodeError, json.JSONDecodeError, KeyError, ValueError, SyntaxError,
             tarfile.TarError, zipfile.BadZipFile) as error:
         parser.exit(1, f"REFUSED: {error}\n")
 

@@ -1,9 +1,10 @@
 # P0451: Ledger first: docs/memory/investigations/ISSUE_LEDGER.md
 
-P0450 `55af0b9` selected HP/aura visual PASS scoped #12040–12044.
-8 secondary anchor/2 targeting events are NOT aggro proof. P0451 adds
-same-event threat/tanking diagnostics; no secondary frame, OFF/taint
-unverified; L-011/L-028 OPEN.
+P0451 #12124: 14 threat events, 12 secret, 2 no-table, 0 qualified/failures.
+P0450 selected visual PASS scoped. P0452 export identity/provenance.
+Fresh export resolves stale upload; 50% gated.
+
+# P0451: Prior threat evidence checkpoint.
 
 # P0450: Ledger first: docs/memory/investigations/ISSUE_LEDGER.md
 

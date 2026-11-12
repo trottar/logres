@@ -45,12 +45,12 @@ assert 'function HUD:RefreshLiveWorldEnemy(' in h
 assert 'worldEnemySecondaryEnabled = false' in h
 assert read('docs/memory/CURRENT.md').find('P0451')>=0
 assert read('docs/memory/CURRENT.md').find('P0442')>=0
-assert read('docs/memory/handoffs/CURRENT_HANDOFF.md').startswith('# P0451:')
+assert any(line.startswith("# P0451:") for line in read("docs/memory/handoffs/CURRENT_HANDOFF.md").splitlines())
 for path in ('docs/ROADMAP.md','docs/memory/investigations/ACTIVE.md',
              'docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md',
              'docs/memory/roadmap/STATUS.md'):
     body=read(path)
-    assert body.startswith('## P0451 —') and '## P0450 —' in body,path
+    assert any(line.startswith("## P0451 —") for line in body.splitlines()) and '## P0450 —' in body,path
 assert 'P0450 selected-target visual PASS' in read('docs/memory/investigations/ISSUE_LEDGER.md')
 assert re.search(r'(?m)^## Version: (\S+)$',read('Logres/Logres.toc')).group(1)==re.search(r'(?m)^Logres.VERSION = "([^"\n]+)"$',read('Logres/Core/Bootstrap.lua')).group(1)
 print('P0451 PASS: same-event ordinary primary-threat evidence, fail-open, no 50% mutation')

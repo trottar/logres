@@ -113,6 +113,64 @@ Use the actual full GitHub SHA and next patch ID. The title must be printable, o
 The [P0428 audit](../evidence/P0428_CHAT_WORKFLOW_REPLICATION.md) shows how
 these checks relate to the successful multi-update run and its revisions.
 
+## Evidence intake before another test or upload request
+
+Inspect every supplied export before asking for another capture. For a Report
+Bug ZIP and its standalone Lua copy, use the tracked inspector. It reads saved
+evidence and never executes Lua or runs a live probe.
+
+```bash
+python3 tools/export_panel_diagnostics.py --inspect LOGRES_BUG_REPORT_LATEST.zip --standalone LOGRES_DIAGNOSTICS_LATEST.lua
+```
+
+When a prior export is available, use --previous with its actual path.
+Compare diagnostics SHA-256, latest incident ID/session/time/version,
+screenshot hashes and timestamp-inferred associations. A different ZIP
+generation time or ZIP hash alone is not evidence of new gameplay. An
+unchanged incident can coexist with new independent diagnostic runs.
+Inspect those runs before treating the entire export as unchanged.
+
+New exports include the SavedVariables source, repository source version,
+deployed Forever TOC version and latest captured version. Missing deployment
+metadata is UNKNOWN. A capture older than main does not establish an outdated
+installation. Check the deployed TOC and selected SavedVariables source,
+then re-export existing saved evidence before requesting gameplay.
+Prefer Report Bug when it records the needed fields. Request one named
+panel action only if it supplies missing evidence.
+
+Keep screenshot visual acceptance, ownership counters, lifecycle restoration
+and source applicability scoped to what each demonstrates. Distinguish
+separate enemies from duplicate UI on one enemy. An initialized native aura
+container or successful attachment does not prove visible icons. Preserve
+negative results and accepted slices in the next patch's evidence.
+
+## Repeatable release and rollover
+
+The P0452 audit verifies exact-baseline reconstruction, guarded
+PREWRITE/POSTWRITE and repository contract checks. Continue those practices.
+A code release carries the exact author receipt, and any draft revision
+needs a new receipt. Historical contracts preserve the invariant they
+protect while allowing the active checkpoint to advance. P0381 remains
+the active-roadmap synchronization gate.
+
+For a standalone guarded payload ZIP, stage only its payload and manifest,
+then verify staged bytes against that same archive.
+
+```bash
+python3 tools/chat_change.py verify-zip /actual/saved/path/P00XX.zip
+```
+
+Use the archive's real path. No searches of Windows user folders, automatic
+copying to Downloads, or implied staged verification from whitespace checks.
+For JSON delivery, continue verify-staged against the same JSON.
+
+At rollover, verify main, export a fresh author kit, and provide the full SHA,
+current version, latest evidence identity, accepted visuals, unresolved
+failures, next source question and the exact diagnostic action if needed.
+Include already-saved fresh evidence when available. Changing conversations
+does not require restarting an investigation or repeating an encounter.
+See [P0452 audit](../evidence/P0452_CHAT_RELEASE_AUDIT.md).
+
 ## Run in WSL
 
 Keep the returned JSON and its matching author receipt together at their saved location. Run the following from the Logres checkout root, using the package's actual path. The optional review command prints the exact derived diff and names existing checkers that mention changed runtime paths literally. These are search leads. Review leaves pure version bumps out of that list and warns about pinned versions in proposed checker files. The full suite still covers indirect dependencies. The check command runs the full checker suite on a temporary copy and reports every failing checker. The apply command builds the ZIP, checks and applies with rollback. It writes the ZIP beside the JSON and a manifest in the checkout.
@@ -123,4 +181,4 @@ python3 tools/chat_change.py check P0413.logres.json
 python3 tools/chat_change.py apply P0413.logres.json
 ```
 
-For a released Chat change, only apply is required. It refuses a missing or mismatched receipt and independently reconstructs the local candidate ZIP before any tracked writes. The receipt binds exact draft bytes, archive, tree, paths, checker count and candidate ZIP. It is an integrity record, not a signature or WoW runtime result. Guarded PREWRITE and POSTWRITE still run locally. `--local-preflight` is an explicit Work/local-author route when you already control author validation and packaging. Do not use it to turn an unchecked Chat draft into a release. Packages that change files under `Logres/` require explicit `--allow-runtime` on the apply command. Use it when you requested and reviewed a runtime change. The runner derives paths and hashes. It refuses ambiguous or absent anchors, an unexpected HEAD, tracked edits and file collisions. Review any changed Python checker before apply because the checker suite executes it. After JSON apply, use the staging command printed by the runner. It stages the complete package and then runs `verify-staged`, which checks the index paths, exact file bytes and manifest against the same JSON. For a standalone payload ZIP, stage only its explicit payload paths plus the verified manifest, compare staged bytes with the verified payload or its recorded hashes, and run `git diff --cached --check`. Once that passes, commit and push. The runner itself reads Git only. For runtime changes, the Chat handoff should include the existing deployment block and in-client validation. Use Work for persistent issues requiring deeper investigation.
+For a released Chat change, only apply is required. It refuses a missing or mismatched receipt and independently reconstructs the local candidate ZIP before any tracked writes. The receipt binds exact draft bytes, archive, tree, paths, checker count and candidate ZIP. It is an integrity record, not a signature or WoW runtime result. Guarded PREWRITE and POSTWRITE still run locally. `--local-preflight` is an explicit Work/local-author route when you already control author validation and packaging. Do not use it to turn an unchecked Chat draft into a release. Packages that change files under `Logres/` require explicit `--allow-runtime` on the apply command. Use it when you requested and reviewed a runtime change. The runner derives paths and hashes. It refuses ambiguous or absent anchors, an unexpected HEAD, tracked edits and file collisions. Review any changed Python checker before apply because the checker suite executes it. After JSON apply, use the staging command printed by the runner. It stages the complete package and then runs `verify-staged`, which checks the index paths, exact file bytes and manifest against the same JSON. For a standalone payload ZIP, stage only its explicit payload paths plus the verified manifest, run verify-zip against that same archive, then git diff --cached --check. Once that passes, commit and push. The runner itself reads Git only. For runtime changes, the Chat handoff should include the existing deployment block and in-client validation. Use Work for persistent issues requiring deeper investigation.

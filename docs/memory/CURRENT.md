@@ -61,11 +61,9 @@ P0425 visual PASS, P0426/P0427, secondary gate, D-046/D-047/D-048.
 
 ## Next Action
 
-P0451 Forever: natural two-enemy combat; Report Bug > H > Nameplate
-Lifecycle; capture Report Bug and compare `secondaryThreat*` events with
-observed aggro. Secret/refused/disagree and absence remain DEFERRAL, not
-PASS. No secondary 50% until live threat+attachment reliability is shown.
-See P0451 evidence.
+P0451 #12124, 0.0.321-dev: 14 threat events, 12 secret, 2 no-table,
+0 qualified/failures. Audit source capability before more gameplay.
+P0452 export provenance resolves stale upload; see evidence. Keep 50% gated.
 
 ## Success Criteria
 
@@ -79,7 +77,7 @@ Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret re
 - docs/memory/evidence/P0450_WORLD_AURA_OWNERSHIP_HANDOFF.md
 - docs/memory/evidence/P0449_NATIVE_WORLD_AURA_CONTAINER.md
 - docs/memory/evidence/P0448_WORLD_AURA_ATTACH_REFRESH.md
-- docs/memory/patches/CHAT_TO_ZIP_WORKFLOW.md (P0428/P0434)
+- docs/memory/patches/CHAT_TO_ZIP_WORKFLOW.md (P0428/P0434/P0452)
 - docs/memory/evidence/P0426_NPC_VISUAL_AND_COMPASS_INTAKE.md
 - docs/design/navigation/COMPASS_IDENTITY_AND_PROVIDER_FRESHNESS.md
 - docs/DEPENDENCIES.md
