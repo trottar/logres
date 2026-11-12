@@ -1,3 +1,14 @@
+## P0453 — Basic/detailed secondary threat source isolation (2026-11-11)
+
+P0452 `e96506e` source audit: P0451 #12124 (0.0.321-dev) 14 threat
+samples, 12 secret, 2 missing and 0 qualified; combined deferral cannot
+attribute secrecy to basic status versus detailed tanking. P0453 read-only
+same-event source categories and an additional threat-situation event,
+with Report Bug provenance. Selected health/native auras, 100% geometry,
+transparent background, +/-25px aura lanes, native restoration, and
+secondary 50% disabled unchanged. Client capability still UNVERIFIED;
+L-011 PARTIAL/L-028 OPEN. See P0453 evidence.
+
 ## P0451 — Same-event secondary aggro qualification (2026-11-11)
 
 P0450 selected aura ownership is visually PASS scoped (#12040/#12042/#12044);

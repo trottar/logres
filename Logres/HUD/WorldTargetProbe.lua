@@ -14,6 +14,7 @@ local LIFECYCLE_EVENTS = {
     "UNIT_TARGET",
     "UNIT_FLAGS",
     "UNIT_THREAT_LIST_UPDATE",
+    "UNIT_THREAT_SITUATION_UPDATE",
 }
 
 local EVENTS = {
@@ -647,6 +648,16 @@ function Probe:GetNameplateLifecycleLines()
             tostring(self.secondaryThreatNoTableEvents), tostring(self.secondaryThreatDisagreementEvents),
             tostring(self.secondaryThreatSecretEvents), tostring(self.secondaryThreatFailureEvents),
             tostring(self.secondaryThreatUnknownEvents), tostring(self.secondaryThreatLastResult)),
+        string.format(
+            "Secondary sources (event samples): basic ordinary=%s primary=%s nonprimary=%s secret=%s missing=%s failures=%s eligible=%s eligibleDetailSecret=%s last=%s; detailed ordinary=%s tanking=%s secret=%s missing=%s failures=%s last=%s; 50%% DISABLED",
+            tostring(self.secondaryThreatBasicOrdinaryEvents), tostring(self.secondaryThreatBasicPrimaryEvents),
+            tostring(self.secondaryThreatBasicNonprimaryEvents), tostring(self.secondaryThreatBasicSecretEvents),
+            tostring(self.secondaryThreatBasicMissingEvents), tostring(self.secondaryThreatBasicFailureEvents),
+            tostring(self.secondaryThreatBasicEligibleEvents), tostring(self.secondaryThreatBasicEligibleDetailSecretEvents),
+            tostring(self.secondaryThreatLastBasic), tostring(self.secondaryThreatDetailOrdinaryEvents),
+            tostring(self.secondaryThreatDetailTankingEvents), tostring(self.secondaryThreatDetailSecretEvents),
+            tostring(self.secondaryThreatDetailMissingEvents), tostring(self.secondaryThreatDetailFailureEvents),
+            tostring(self.secondaryThreatLastDetail)),
     }
 end
 
@@ -664,6 +675,80 @@ function Probe:ObserveSecondaryThreat(event, eventUnit, observation)
 
     local source, status = callOrdinary(UnitThreatSituation, "player", unit)
     local detail = readBoolean(UnitDetailedThreatSituation, "player", unit)
+
+    -- P0453: independent source provenance. Never infer status from a
+    -- secret value or from the enemy's target. The paired P0451 rule below
+    -- remains unchanged and cannot authorize secondary rendering.
+    if source.secret then
+        self.secondaryThreatBasicSecretEvents =
+            self.secondaryThreatBasicSecretEvents + 1
+        self.secondaryThreatLastBasic = "secret"
+    elseif source.failure then
+        self.secondaryThreatBasicFailureEvents =
+            self.secondaryThreatBasicFailureEvents + 1
+        self.secondaryThreatLastBasic = "failure"
+    elseif not source.available or not source.ok then
+        self.secondaryThreatLastBasic = "unavailable"
+    elseif not source.present then
+        self.secondaryThreatBasicMissingEvents =
+            self.secondaryThreatBasicMissingEvents + 1
+        self.secondaryThreatLastBasic = "no-table"
+    elseif type(status) ~= "number" or status < 0 or status > 3
+        or status ~= math.floor(status) then
+        self.secondaryThreatBasicFailureEvents =
+            self.secondaryThreatBasicFailureEvents + 1
+        self.secondaryThreatLastBasic = "invalid-ordinary-status"
+    else
+        self.secondaryThreatBasicOrdinaryEvents =
+            self.secondaryThreatBasicOrdinaryEvents + 1
+        if status >= 2 then
+            self.secondaryThreatBasicPrimaryEvents =
+                self.secondaryThreatBasicPrimaryEvents + 1
+            self.secondaryThreatLastBasic = "ordinary-primary-2-or-3"
+            if observation.anchorSafe and observation.inCombat
+                and observation.enemyInCombat and observation.attackable
+                and observation.targetingPlayer
+                and observation.reaction == "hostile" then
+                self.secondaryThreatBasicEligibleEvents =
+                    self.secondaryThreatBasicEligibleEvents + 1
+                if detail.secret then
+                    self.secondaryThreatBasicEligibleDetailSecretEvents =
+                        self.secondaryThreatBasicEligibleDetailSecretEvents + 1
+                end
+            end
+        else
+            self.secondaryThreatBasicNonprimaryEvents =
+                self.secondaryThreatBasicNonprimaryEvents + 1
+            self.secondaryThreatLastBasic = "ordinary-nonprimary-0-or-1"
+        end
+    end
+
+    if detail.secret then
+        self.secondaryThreatDetailSecretEvents =
+            self.secondaryThreatDetailSecretEvents + 1
+        self.secondaryThreatLastDetail = "secret"
+    elseif detail.failure then
+        self.secondaryThreatDetailFailureEvents =
+            self.secondaryThreatDetailFailureEvents + 1
+        self.secondaryThreatLastDetail = "failure"
+    elseif not detail.available or not detail.ok then
+        self.secondaryThreatLastDetail = "unavailable"
+    elseif not detail.present then
+        self.secondaryThreatDetailMissingEvents =
+            self.secondaryThreatDetailMissingEvents + 1
+        self.secondaryThreatLastDetail = "no-table"
+    else
+        self.secondaryThreatDetailOrdinaryEvents =
+            self.secondaryThreatDetailOrdinaryEvents + 1
+        if detail.value == true then
+            self.secondaryThreatDetailTankingEvents =
+                self.secondaryThreatDetailTankingEvents + 1
+            self.secondaryThreatLastDetail = "ordinary-tanking"
+        else
+            self.secondaryThreatLastDetail = "ordinary-not-tanking"
+        end
+    end
+
     if source.secret or detail.secret then
         self.secondaryThreatSecretEvents = self.secondaryThreatSecretEvents + 1
         self.secondaryThreatLastResult = "secret-threat-deferred"
@@ -963,6 +1048,21 @@ function Probe:GetDebugStatus()
         secondaryThreatUnknownEvents = self.secondaryThreatUnknownEvents,
         secondaryThreatLastEvent = self.secondaryThreatLastEvent,
         secondaryThreatLastResult = self.secondaryThreatLastResult,
+        secondaryThreatBasicOrdinaryEvents = self.secondaryThreatBasicOrdinaryEvents,
+        secondaryThreatBasicPrimaryEvents = self.secondaryThreatBasicPrimaryEvents,
+        secondaryThreatBasicNonprimaryEvents = self.secondaryThreatBasicNonprimaryEvents,
+        secondaryThreatBasicSecretEvents = self.secondaryThreatBasicSecretEvents,
+        secondaryThreatBasicMissingEvents = self.secondaryThreatBasicMissingEvents,
+        secondaryThreatBasicFailureEvents = self.secondaryThreatBasicFailureEvents,
+        secondaryThreatBasicEligibleEvents = self.secondaryThreatBasicEligibleEvents,
+        secondaryThreatBasicEligibleDetailSecretEvents = self.secondaryThreatBasicEligibleDetailSecretEvents,
+        secondaryThreatDetailOrdinaryEvents = self.secondaryThreatDetailOrdinaryEvents,
+        secondaryThreatDetailTankingEvents = self.secondaryThreatDetailTankingEvents,
+        secondaryThreatDetailSecretEvents = self.secondaryThreatDetailSecretEvents,
+        secondaryThreatDetailMissingEvents = self.secondaryThreatDetailMissingEvents,
+        secondaryThreatDetailFailureEvents = self.secondaryThreatDetailFailureEvents,
+        secondaryThreatLastBasic = self.secondaryThreatLastBasic,
+        secondaryThreatLastDetail = self.secondaryThreatLastDetail,
         moduleEnabled = self.moduleEnabled == true,
         eventFrameReady = self.eventFrame ~= nil,
         proxyReady = self.anchorProxy ~= nil,
@@ -1074,6 +1174,21 @@ function Probe:OnInitialize()
     self.secondaryThreatUnknownEvents = 0
     self.secondaryThreatLastEvent = "none"
     self.secondaryThreatLastResult = "unobserved"
+    self.secondaryThreatBasicOrdinaryEvents = 0
+    self.secondaryThreatBasicPrimaryEvents = 0
+    self.secondaryThreatBasicNonprimaryEvents = 0
+    self.secondaryThreatBasicSecretEvents = 0
+    self.secondaryThreatBasicMissingEvents = 0
+    self.secondaryThreatBasicFailureEvents = 0
+    self.secondaryThreatBasicEligibleEvents = 0
+    self.secondaryThreatBasicEligibleDetailSecretEvents = 0
+    self.secondaryThreatDetailOrdinaryEvents = 0
+    self.secondaryThreatDetailTankingEvents = 0
+    self.secondaryThreatDetailSecretEvents = 0
+    self.secondaryThreatDetailMissingEvents = 0
+    self.secondaryThreatDetailFailureEvents = 0
+    self.secondaryThreatLastBasic = "unobserved"
+    self.secondaryThreatLastDetail = "unobserved"
     self.lifecycleRegistration = {}
     self.moduleEnabled = false
     self.captureCount = 0

@@ -1,10 +1,11 @@
-# P0451: Ledger first: docs/memory/investigations/ISSUE_LEDGER.md
+# P0453: Ledger first: docs/memory/investigations/ISSUE_LEDGER.md
 
-P0451 #12124: 14 threat events, 12 secret, 2 no-table, 0 qualified/failures.
-P0450 selected visual PASS scoped. P0452 export identity/provenance.
-Fresh export resolves stale upload; 50% gated.
+P0453 probes basic/detailed secrecy; Report Bug only, 50% disabled.
+P0451 #12124: 14 events, 12 secret, 2 missing, zero qualified.
+P0450 selected visual PASS scoped; OFF/taint/click/cast unverified.
+CURRENT.md authoritative.
 
-# P0451: Prior threat evidence checkpoint.
+# P0451: history.
 
 # P0450: Ledger first: docs/memory/investigations/ISSUE_LEDGER.md
 

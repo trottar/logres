@@ -1,3 +1,11 @@
+## P0453 basic/detailed threat source isolation (2026-11-11)
+
+P0452 main `e96506e`, Forever #12124 P0451: 14 threat samples,
+12 secret deferrals, 2 no-table, zero qualified. Combined deferral cannot
+distinguish which API is restricted. P0453 read-only source categories and
+basic primary+same-event eligibility counters; no 50% renderer. Forever
+P0453 UNVERIFIED, L-011 PARTIAL, L-028 OPEN. See P0453 evidence.
+
 ## P0452 evidence provenance and P0451 negative result (2026-11-11)
 
 Source and deployed Forever are both 0.0.321-dev. The repeated upload ended

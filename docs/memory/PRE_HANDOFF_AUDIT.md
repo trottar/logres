@@ -1,3 +1,24 @@
+## P0453 — Same-event basic threat source classification (2026-11-11)
+
+Reviewed the P0452 exact main tree and P0451 #12124 negative evidence;
+P0451 combined status/detailed source deferral cannot identify which API
+is secret. Reviewed original P0432/P0440/P0451 source scopes, P0447–P0450
+selected HP/aura/restore contracts, P0381 active-heading and memory-byte
+limits, and P0452 evidence/ZIP integrity checks. The candidate modifies
+only the event-time observer and scalar Report Bug diagnostic plus matched
+runtime versions. No 50% renderer, Blizzard UI alteration, polling, secret
+value inspection, lost fallback or change to accepted selected presentation.
+
+R0 exact author-check REFUSED 313/316: P0436/P0437/P0438 historical
+checks require `P0425 visual PASS` as one contiguous CURRENT.md marker;
+line wrapping split it. R1 restores the historical marker. This refusal
+occurred entirely in the scratch author candidate; no user/remote writes.
+
+Final release gate: author-check exact R1 JSON against P0452 kit, verify
+matching author receipt, complete static suite, syntax/diff, PREWRITE/
+POSTWRITE and rollback/refusal tests. Tests executed/results are reported
+separately in the handoff; no Forever PASS from static checks.
+
 ## P0452 — Recent Chat workflow reinforcement (2026-11-11)
 
 Verified P0451 main 8a6732b088ffaf53431cd33d93cabbabeb61d0eb.

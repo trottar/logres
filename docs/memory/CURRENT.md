@@ -11,15 +11,16 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0451** on verified P0450 main `55af0b9`: Forever `0.0.320-dev`
-#12040/#12042/#12044 selected HP/auras no longer duplicate; 4 world
-attaches, 4 aura handoffs, 3 restores, 0 failures. **Selected visual PASS
-scoped**; OFF/taint/cast/click not fully proved. L-011 PARTIAL/L-028 OPEN.
-8 secondary anchor/2 targeting-player *events* do not prove aggro. P0451
-adds same-event guarded threat+tanking evidence; no 50% renderer. Retain
-P0447 opaque health, P0444 transparency, +/-25px auras, P0450 restore,
-click/cast/CC, P0442 lifecycle, P0443 rejected matte, P0446/P0448 FAIL,
-P0425 visual PASS, P0426/P0427, secondary gate, D-046/D-047/D-048.
+**P0453** on verified P0452 main `e96506e`/tree `4a2bb6b`:
+P0451 Forever #12124 had 14 threat samples, 12 secret, 2 missing,
+0 qualified/failures; paired deferral obscures which API is secret.
+P0453 reports basic 0–3 versus detailed tanking independently;
+50% stays disabled, Forever UNVERIFIED. P0450 selected
+world health/native aura visual PASS scoped #12040/#12042/#12044;
+OFF/taint/cast/click unverified, L-011 PARTIAL/L-028 OPEN. Keep P0447
+health, P0444 transparency, +/-25px icons, P0450 restore, click/cast/CC,
+P0442 lifecycle, P0443 rejected matte, P0446/P0448 FAIL,
+P0425 visual PASS, P0426/P0427, 50% gate, D-046/D-047/D-048.
 
 ## Verified State
 
@@ -61,9 +62,9 @@ P0425 visual PASS, P0426/P0427, secondary gate, D-046/D-047/D-048.
 
 ## Next Action
 
-P0451 #12124, 0.0.321-dev: 14 threat events, 12 secret, 2 no-table,
-0 qualified/failures. Audit source capability before more gameplay.
-P0452 export provenance resolves stale upload; see evidence. Keep 50% gated.
+P0453: inspect basic versus detailed source categories from natural combat
+only after checked deployment. If basic status remains secret, secondary
+aggro stays blocked. P0452 provenance resolved stale export; 50% OFF.
 
 ## Success Criteria
 
@@ -73,6 +74,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0453_SECONDARY_THREAT_SOURCE_ISOLATION.md
 - docs/memory/evidence/P0451_SECONDARY_THREAT_QUALIFICATION.md
 - docs/memory/evidence/P0450_WORLD_AURA_OWNERSHIP_HANDOFF.md
 - docs/memory/evidence/P0449_NATIVE_WORLD_AURA_CONTAINER.md

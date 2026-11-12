@@ -1,0 +1,26 @@
+P0453 Isolate secondary basic and detailed threat evidence
+Verified baseline: e96506e58ee465387cc375811511268778cd59a5
+Candidate runtime version: 0.0.322-dev
+PREWRITE: 316/316 STATIC PASS
+POSTWRITE: 316/316 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/HUD/WorldTargetProbe.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0453_SECONDARY_THREAT_SOURCE_ISOLATION.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0453_secondary_threat_sources_contract.py
+P0453_MANIFEST.txt

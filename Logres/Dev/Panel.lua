@@ -328,7 +328,16 @@ function Logres:CaptureBugIncident()
         "secondaryThreatNoTableEvents", "secondaryThreatDisagreementEvents",
         "secondaryThreatSecretEvents", "secondaryThreatFailureEvents",
         "secondaryThreatUnknownEvents", "secondaryThreatLastEvent",
-        "secondaryThreatLastResult"})
+        "secondaryThreatLastResult",
+        "secondaryThreatBasicOrdinaryEvents", "secondaryThreatBasicPrimaryEvents",
+        "secondaryThreatBasicNonprimaryEvents", "secondaryThreatBasicSecretEvents",
+        "secondaryThreatBasicMissingEvents", "secondaryThreatBasicFailureEvents",
+        "secondaryThreatBasicEligibleEvents", "secondaryThreatBasicEligibleDetailSecretEvents",
+        "secondaryThreatDetailOrdinaryEvents", "secondaryThreatDetailTankingEvents",
+        "secondaryThreatDetailSecretEvents", "secondaryThreatDetailMissingEvents",
+        "secondaryThreatDetailFailureEvents", "secondaryThreatLastBasic",
+        "secondaryThreatLastDetail"
+        })
     -- P0441: additive, addon-owned live world trial result. Native
     -- presentation and unit interaction are never inspected or changed.
     incident.snapshot.worldEnemyLive = pickTraceStatus(ownedTraceStatus(function()
