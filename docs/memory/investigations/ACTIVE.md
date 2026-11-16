@@ -1,3 +1,21 @@
+## P0458 — Multi-secondary aggro ownership, capability-gated (2026-11-15)
+
+Verified P0457 main `ff860151`/tree `ddfca65` (0.0.326-dev).
+Selected enemy 100% already visually accepted; P0454/P0455 failed
+secondary flicker, P0456 suspended it, and P0457 did not repair it.
+Source directly showed single-secondary refusal and eligible→missing→eligible
+teardown. P0458 adds a 40-slot OOC-created 50%/50% secondary pool;
+read-only ordinary basic threat status 2/3 with same-event role, hostile,
+combat and player-targeting proof authorizes each owner. On steady owner
+updates only name/HP changes; one missing/secret threat observation is
+inconclusive and can be held for at most three safe same-identity events.
+Ordinary 0/1, unsafe anchor/capability, removal, promotion, end combat,
+OFF or unknown removal restores native. Ordinary GUID and ADD generation
+mitigate token reuse; no-GUID/no-epoch cannot claim, pool overflow remains
+native. Refused alpha restoration quarantines the slot for retry. Selected
+path, auras/casts/click owners are unchanged. P0458 Forever UNVERIFIED;
+L-011 PARTIAL / L-028 OPEN. See P0458 evidence and tests.
+
 ## P0457 — Preserve selected owner on non-transition refresh (2026-11-15)
 
 P0456 main `267bb947` verified, 0.0.325-dev: Forever #12710/#12712/

@@ -1,3 +1,12 @@
+# P0458: P0457 `ff860151`/tree `ddfca65`, 0.0.327-dev.
+Secondary 50/50 multi-owner lifecycle: 40 precreated slots, same-event
+basic 2/3 + safety eligibility, ordinary GUID/ADD epochs, bounded 3-event
+unknown hold, confirmed loss/removal/promotion/unsafe/OFF native restore;
+pending restores quarantined, overflow stock. Selected 100% untouched.
+P0454/P0455 FAIL; P0456 suspended; P0457 selected-only.
+L-011 PARTIAL/L-028 OPEN, P0458 Forever UNVERIFIED; multi-enemy
+Report Bug is next. CURRENT authoritative.
+
 # P0457: `267bb947`, P0456 #12792 secondary OFF PASS.
 Retain selected owner on steady updates; client UNVERIFIED.
 
@@ -8,8 +17,8 @@ L-011 OPEN.
 # P0455: `1424fd7` #12547/#12549 flicker FAIL.
 Ignore unrelated updates; retain native restoration.
 
-# P0454: main `7050f9c`, DEV 50/50 trial; native restore.
-P0453 #12307 basic 18, primary 11, eligible 8, detail secret.
+# P0454: `7050f9c` DEV 50/50; native restore. P0453 #12307
+basic 18, primary 11, eligible 8, detail secret.
 
 # P0453: Ledger first: docs/memory/investigations/ISSUE_LEDGER.md
 P0451 #12124: 14 samples, 12 secret, 2 missing. P0453
@@ -28,9 +37,24 @@ unverified. Preserve restore, click/cast/CC. L-011/L-028 OPEN.
 P0447 HP PASS, auras missing. P0448 source scan Forever FAIL;
 L-011/L-028 OPEN; details in P0448 evidence.
 
-**P0428 Chat workflow in CURRENT; P0412; P0411 refused; P0410; P0409; P0408; P0407; P0406; P0405; P0404 PASS; P0403 L-001; P0402 inventory; P0401 PASS; P0400/P0399 FAIL; P0396 purchase PASS; P0395 labels, P0394 sale/buyback PASS; P0393 quantity; P0392 visual FAIL; P0391 trainer PASS scoped; flash deferred; P0390 session 44; P0389 session 41 repair; P0388 L-027; P0387 CANDIDATE (P0384 `c1c77e2` 254 STATIC; P0383 `cc783a0` claim PASS scoped; P0382 Continue no-flash, L-040 EST; L-005/L-001/L-002 OPEN):** verified main P0379 `285be528` and manifest 249/249 STATIC. Forever 0.0.264-dev incident 2399: hover, no down/up/dispatch/claim; L-005 PARTIAL/FAIL. L-002 native Continue gap; L-039 tracker text/icon collision owner UNKNOWN (1321); L-001/L-025/L-029/L-033/L-034 remain open/partial. P0381 integration; see P0380 evidence. P0381 R0 PREWRITE REFUSED at P0241 (77/251): direct `pcall(CompleteQuest)` violated historical native-ownership contract; zero tracked writes. P0380 R0–R3; P0379 R0 and P0379 R1 PREWRITE REFUSED; see archived evidence. P0380 R4 fixed policy; R2 retained dynamic version parity.
+**P0428 Chat workflow in CURRENT; P0412/P0411/R0 refusals, P0410,
+P0409/P0408/P0407/P0406/P0405/P0404 PASS, P0403 L-001, P0402;
+P0401 PASS, P0400/P0399 FAIL; P0396–P0392 merchant; P0391 trainer;
+P0390, P0389, P0388 L-027, P0387, P0384 `c1c77e2` 254 STATIC;
+P0383 `cc783a0` quest18 PASS scoped; P0382 Continue; L-040:**
+P0379 main `285be528`, 249 STATIC. Forever incident 2399 no down/up/
+dispatch/claim; L-005 FAIL/PARTIAL; L-002 native Continue OPEN; L-039
+tracker owner UNKNOWN; L-001/L-025/L-029/L-033/L-034 OPEN.
+P0381 R0 PREWRITE REFUSED P0241 (77/251) on protected quest handoff;
+P0380 R0–R4 history retained; P0379 R0, P0379 R1 PREWRITE REFUSED;
+no writes. See CURRENT/P0379 evidence for precise negative results.
 
-P0385 2/0; P0386 stale accept FAIL; P0387 guard; L-002 OPEN. P0379 R2 completion input provenance; main P0378 `4ffbe3b` verified, 12 inferred screenshot matches. R0 REFUSED 129/249 PREWRITE (CURRENT bytes); R1 REFUSED 191/249 PREWRITE (HANDOFF bytes), both no tracked writes. L-005 Complete Quest input origin unknown; L-002 Continue native-only OPEN. R2 addon-owned event/geometry diagnostics only; 249 STATIC and WoW UNVERIFIED. See P0379 evidence and `CURRENT.md`.
+P0385 2/0; P0386 stale accept FAIL; P0387 guard; L-002 OPEN.
+P0379 R2 completion input provenance; P0378 `4ffbe3b` verified,
+12 screenshot inferences. R0/R1 PREWRITE REFUSED at 129/249 and
+191/249 (CURRENT/HANDOFF budgets), no writes. L-005 input unknown,
+L-002 native Continue-only OPEN. R2 addon geometry diagnostics only,
+249 STATIC, WoW UNVERIFIED; see P0379 evidence.
 
 P0372 `39f404c` PASS. P0373 v0.0.260-dev, checker #243: trainer purchase FAIL; Trainer denial shows cause and restores native stock; guards intact. Quest popup L-002/L-005 FAIL: keep safe Blizzard fallback; record QUEST_COMPLETE ownership/fallback. L-001 FAIL, L-021 PASS, L-019 BLOCKED. P0378 ZIP; P0377 R0-R3 REFUSED, choice; L-035/L-038; P0376, P0375, P0374; P0373 claim unconfirmed; L-034 OPEN. P0372 R0–R3 and P0373 R0/R1 checker REFUSED; P0371 R0/R1 REFUSED; P0362 P0363 P0367 P0368 P0370; P0369 R0/R1, P0366 R0, P0365 R0, P0364 R0; P0337 `cfdc07af`; P0354 R0 P0354 R1 P0354 R2 check_memory_health.py; P0355 R0 P0355 R1, P0358 R0, P0361 R0 handoff. D-046/D-047/D-048 and L-022/L-027/L-028/L-031/L-033 OPEN/DEFERRED. No polling or native-secret inspection.
 

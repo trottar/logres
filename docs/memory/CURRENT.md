@@ -11,19 +11,20 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0457** prepared against verified P0456 `267bb947` (0.0.325-dev).
-Forever session 121 #12710/#12712 and session 122 #12792 confirm
-secondary visual takeover suspended (0 secondary attachments, stock
-non-targeted plates) with selected world name/HP visible. Selected
-4 attaches/3 detaches and 7 target changes in #12792 are not proof
-of flicker, but source refresh unconditionally Hide/ClearAllPoints/
-SetPoint/restore/reclaim even on non-identity events. P0457 retains
-an ordinary validated selected owner on those events; new nameplate
-or target change still restores and reattaches. Only addon-owned
-state is examined; native alpha restoration remains opaque. L-011
-PARTIAL, L-028 OPEN. P0454/P0455 secondary visual FAIL and 50% OFF.
-P0450 selected visual PASS scoped; P0442/P0443, P0425 visual PASS,
-P0426/P0427 retained. Forever P0457 behavior UNVERIFIED.
+**P0458** secondary aggro ownership against verified P0457 main
+`ff860151`/tree `ddfca65` (0.0.326-dev). Accepted selected 100% world
+name/health remains unchanged. P0454/P0455 secondary 50/50 VISUAL FAIL;
+P0456 suspended it; P0457 selected continuity did not fix secondary.
+Source eligible→missing→eligible previously caused attach/restore/attach;
+other eligible enemies were ignored. P0458
+uses read-only event classification and 40 precreated owners, with
+ADD epochs/optional ordinary GUID.
+Positive basic status 2/3 + safe hostile combat targeting player authorizes
+attach; ordinary 0/1, removal, promotion, unsafe gate, end combat and OFF
+restore; missing status holds only 3 same-unit safe events then restores.
+Auras/casts/input native; unsafe/overflow remain stock.
+P0457 selected regression separate. L-011 PARTIAL/L-028 OPEN.
+P0442/P0443, P0425 visual PASS retained. P0458 NOT Forever PASS.
 
 ## Verified State
 
@@ -65,11 +66,12 @@ P0426/P0427 retained. Forever P0457 behavior UNVERIFIED.
 
 ## Next Action
 
-P0457: verify steady updates increment without repeated native
-transfers/screen handoffs, actual target changes and nameplate removal
-restore correctly, World Enemy OFF returns stock, and cast/click/aura
-remain usable. Secondary trial stays suspended. No client PASS from
-static tests; preserve any runtime regression evidence.
+P0458 **secondary implementation**: multi-enemy Forever combat,
+selected 100%, two eligible secondaries 50/50, stable through no-table.
+Report Bug: active/steady/hold/withdraw/restore, loss, removal,
+promotion/demotion, OFF and native fallback.
+No selected-only validation substitute. P0454/P0455 FAIL remain in
+history; WoW visual/taint acceptance is pending.
 
 ## Success Criteria
 

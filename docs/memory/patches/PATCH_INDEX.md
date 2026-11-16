@@ -1,3 +1,11 @@
+## P0458 — Secondary per-nameplate continuity (2026-11-15)
+
+Verified P0457 `ff860151` baseline. Gated multi-secondary 50%/50%
+OOC frame pool, positive vs inconclusive vs confirmed negative threat,
+ADD/GUID identity, same-owner updates, native restoration quarantine,
+secondary-focused Report Bug diagnostics; selected 100% unchanged.
+P0454/P0455 visual FAIL preserved. WoW P0458 UNVERIFIED.
+
 ## P0457 — Selected world owner continuity (2026-11-15)
 
 P0456 main `267bb947`/Forever #12792 confirms secondary takeover

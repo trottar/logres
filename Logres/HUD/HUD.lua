@@ -885,6 +885,16 @@ function HUD:GetDebugStatus()
         worldEnemySecondaryEnabled = false, -- production remains disabled
         worldEnemySecondaryTrialArmed = self.worldEnemySecondaryTrialArmed == true,
         worldEnemySecondaryTrialVisible = self.worldEnemySecondaryTrialVisible == true,
+        worldEnemySecondaryTrialActive = self.worldEnemySecondaryTrialActive or 0,
+        worldEnemySecondaryTrialPending = self.worldEnemySecondaryTrialPending or 0,
+        worldEnemySecondaryTrialPoolCapacity = self.worldEnemySecondaryTrialPoolCapacity or 0,
+        worldEnemySecondaryTrialStableUpdates = self.worldEnemySecondaryTrialStableUpdates or 0,
+        worldEnemySecondaryTrialInconclusiveHolds = self.worldEnemySecondaryTrialInconclusiveHolds or 0,
+        worldEnemySecondaryTrialInconclusiveWithdrawals = self.worldEnemySecondaryTrialInconclusiveWithdrawals or 0,
+        worldEnemySecondaryTrialTokenReuse = self.worldEnemySecondaryTrialTokenReuse or 0,
+        worldEnemySecondaryTrialIdentityDeferrals = self.worldEnemySecondaryTrialIdentityDeferrals or 0,
+        worldEnemySecondaryTrialPoolExhaustions = self.worldEnemySecondaryTrialPoolExhaustions or 0,
+        worldEnemySecondaryTrialDemotionChecks = self.worldEnemySecondaryTrialDemotionChecks or 0,
         worldEnemySecondaryTrialEligibleEvents = self.worldEnemySecondaryTrialEligibleEvents,
         worldEnemySecondaryTrialAttachments = self.worldEnemySecondaryTrialAttachments,
         worldEnemySecondaryTrialDetaches = self.worldEnemySecondaryTrialDetaches,
@@ -1321,39 +1331,48 @@ function HUD:ClaimNativeEnemyDecor(anchor)
     return true, "decor-owned"
 end
 
--- P0454: one developer-only 50% secondary at a time. The frame is
--- precreated OOC and never accepts mouse input. It owns name/health only;
--- Blizzard retains native auras, casts, targeting, and hit regions.
+-- P0458: bounded, OOC-precreated secondary pool. Pool exhaustion leaves
+-- excess enemies Blizzard-owned (and is diagnosed), never a shared single
+-- secondary frame. Frames contain only name and health; Blizzard keeps auras,
+-- casts, raid/CC indicators and all nameplate input/hit areas.
+local SECONDARY_POOL_CAPACITY = 40
+local SECONDARY_MAX_INCONCLUSIVE = 3
+
 function HUD:BuildSecondaryAggroTrial()
-    if self.worldEnemySecondaryTrialFrame then return true end
     if not ordinaryOutOfCombat() then return false, "secondary-build-requires-ooc" end
-    local frame = buildEnemyDisplayFixture(UIParent,
-        "LogresWorldEnemySecondaryTrial", "Secondary aggro", 100)
-    frame:SetFrameStrata("HIGH")
-    frame:SetScale(0.5)
-    frame:SetAlpha(0.5)
-    frame:EnableMouse(false)
-    frame:Hide()
-    if not ordinaryOwnedUnprotected(frame) then
-        return false, "secondary-owned-frame-unsafe"
+    self.worldEnemySecondaryPool = self.worldEnemySecondaryPool or {}
+    local pool = self.worldEnemySecondaryPool
+    for index = #pool + 1, SECONDARY_POOL_CAPACITY do
+        local frame = buildEnemyDisplayFixture(UIParent,
+            "LogresWorldEnemySecondary" .. index, "Secondary aggro", 100)
+        frame:SetFrameStrata("HIGH")
+        frame:SetScale(0.5)
+        frame:SetAlpha(0.5)
+        frame:EnableMouse(false)
+        frame:Hide()
+        if not ordinaryOwnedUnprotected(frame) then
+            return false, "secondary-owned-frame-unsafe"
+        end
+        pool[index] = {frame = frame, visible = false}
     end
-    self.worldEnemySecondaryTrialFrame = frame
     return true
 end
 
-function HUD:RestoreNativeSecondaryEnemyDecor()
-    local claim = self.worldEnemySecondaryTrialClaim
+-- A slot is never reused while a native-alpha restoration or addon-frame
+-- hide is pending. Original alphas can be secret opaque tokens: no reads,
+-- comparisons, formatting or diagnostic serialization are permitted.
+function HUD:RestoreNativeSecondaryEnemyDecor(slot)
+    local claim = slot and slot.claim
     if not claim then return true end
     local success = true
     for index = #claim, 1, -1 do
         local entry = claim[index]
-        -- Captured alpha is an opaque token: never inspect or compare it.
         if not pcall(entry.region.SetAlpha, entry.region, entry.original) then
             success = false
         end
     end
     if success then
-        self.worldEnemySecondaryTrialClaim = nil
+        slot.claim = nil
         self.worldEnemySecondaryTrialRestores =
             self.worldEnemySecondaryTrialRestores + 1
     else
@@ -1363,8 +1382,8 @@ function HUD:RestoreNativeSecondaryEnemyDecor()
     return success
 end
 
-function HUD:ClaimNativeSecondaryEnemyDecor(anchor)
-    if not self:RestoreNativeSecondaryEnemyDecor() then
+function HUD:ClaimNativeSecondaryEnemyDecor(slot, anchor)
+    if not slot or slot.claim or slot.blocked then
         return false, "secondary-restore-pending"
     end
     local unitFrame = nativeDecorField(anchor, "UnitFrame")
@@ -1379,150 +1398,313 @@ function HUD:ClaimNativeSecondaryEnemyDecor(anchor)
         if not ok then return false, "secondary-alpha-capture-refused" end
         claim[#claim + 1] = {region = region, original = alpha}
     end
-    self.worldEnemySecondaryTrialClaim = claim
+    slot.claim = claim
     for _, entry in ipairs(claim) do
         if not pcall(entry.region.SetAlpha, entry.region, 0) then
-            self:RestoreNativeSecondaryEnemyDecor()
+            self:RestoreNativeSecondaryEnemyDecor(slot)
+            if slot.claim then slot.blocked = true end
             return false, "secondary-native-mutation-refused"
         end
     end
     return true, "secondary-native-name-health-owned"
 end
 
-function HUD:HideSecondaryAggroTrial(reason)
-    local wasVisible = self.worldEnemySecondaryTrialVisible == true
-    self.worldEnemySecondaryTrialVisible = false
-    self.worldEnemySecondaryTrialUnit = nil
+function HUD:RefreshSecondaryOwnerCount()
+    local active, pending = 0, 0
+    for _, slot in ipairs(self.worldEnemySecondaryPool or {}) do
+        if slot.visible then active = active + 1 end
+        if slot.blocked or slot.claim and not slot.visible then
+            pending = pending + 1
+        end
+    end
+    self.worldEnemySecondaryTrialActive = active
+    self.worldEnemySecondaryTrialPending = pending
+    self.worldEnemySecondaryTrialVisible = active > 0
+end
+
+function HUD:HideSecondaryAggroOwner(slot, reason)
+    if not slot then return true end
+    local wasVisible = slot.visible == true
     if wasVisible then
         self.worldEnemySecondaryTrialDetaches =
             self.worldEnemySecondaryTrialDetaches + 1
         self.worldEnemySecondaryTrialLastDetachReason = reason or "secondary-hidden"
     end
-    -- Restore Blizzard presentation before withdrawing owned presentation.
-    local restored = self:RestoreNativeSecondaryEnemyDecor()
-    local frame = self.worldEnemySecondaryTrialFrame
-    local hidden = true
-    if frame then
-        hidden = ordinaryOwnedUnprotected(frame) and pcall(frame.Hide, frame)
-    end
-    if not hidden or not restored then
+    slot.visible = false
+    -- Native restoration comes before withdrawing the addon-owned overlay.
+    local restored = self:RestoreNativeSecondaryEnemyDecor(slot)
+    local hidden = ordinaryOwnedUnprotected(slot.frame)
+        and pcall(slot.frame.Hide, slot.frame)
+    if restored and hidden then
+        if slot.unit then self.worldEnemySecondaryOwners[slot.unit] = nil end
+        slot.unit, slot.guid, slot.generation = nil, nil, nil
+        slot.inconclusive, slot.blocked = nil, nil
+    else
+        slot.blocked = true
         self.worldEnemySecondaryTrialFailures =
             self.worldEnemySecondaryTrialFailures + 1
-        self.worldEnemySecondaryTrialLastResult =
-            not restored and "secondary-native-restore-refused"
-            or "secondary-owned-hide-refused"
-        return false
     end
-    self.worldEnemySecondaryTrialLastResult = reason or "secondary-hidden"
-    return true
+    self.worldEnemySecondaryTrialLastResult = not restored
+        and "secondary-native-restore-refused"
+        or not hidden and "secondary-owned-hide-refused"
+        or reason or "secondary-hidden"
+    self:RefreshSecondaryOwnerCount()
+    return restored and hidden
 end
 
-function HUD:UpdateSecondaryAggroTrialValues(unit)
-    local frame = self.worldEnemySecondaryTrialFrame
-    if not frame or not ordinaryOwnedUnprotected(frame) then return false end
-    -- Secret-capable unit name/health go directly into native UI consumers.
+function HUD:HideSecondaryAggroTrial(reason)
+    local ok = true
+    for _, slot in ipairs(self.worldEnemySecondaryPool or {}) do
+        if slot.unit or slot.claim or slot.blocked then
+            if not self:HideSecondaryAggroOwner(slot, reason) then ok = false end
+        end
+    end
+    self:RefreshSecondaryOwnerCount()
+    return ok
+end
+
+function HUD:SecondaryOwnerForUnit(unit)
+    return self.worldEnemySecondaryOwners and self.worldEnemySecondaryOwners[unit]
+end
+
+function HUD:UpdateSecondaryAggroTrialValues(slot, unit)
+    if not slot or not slot.visible or not ordinaryOwnedUnprotected(slot.frame) then
+        return false
+    end
+    -- Values may be secret. They flow directly to Blizzard's native UI
+    -- consumers, without arithmetic/branching/stringifying in Lua.
     local ok = pcall(function()
-        frame.enemyNameText:SetText(UnitName(unit))
+        slot.frame.enemyNameText:SetText(UnitName(unit))
         local health = UnitHealthPercent(unit, true, self.percentScaleCurve)
-        frame.enemyHealthBar.status:SetValue(health)
-        frame.enemyHealthText:SetFormattedText("%.0f%%", health)
+        slot.frame.enemyHealthBar.status:SetValue(health)
+        slot.frame.enemyHealthText:SetFormattedText("%.0f%%", health)
     end)
     if not ok then
         self.worldEnemySecondaryTrialFailures =
             self.worldEnemySecondaryTrialFailures + 1
-        self:HideSecondaryAggroTrial("secondary-unit-consumer-refused")
+        self:HideSecondaryAggroOwner(slot, "secondary-unit-consumer-refused")
     end
     return ok
 end
 
+function HUD:FindFreeSecondaryAggroSlot()
+    for _, slot in ipairs(self.worldEnemySecondaryPool or {}) do
+        if not slot.unit and not slot.claim and not slot.blocked then
+            return slot
+        end
+    end
+    return nil
+end
+
+-- Plain token strings are short-lived addon-owned lookup keys, not proof of
+-- unit identity. Each ordinary ADD establishes a new epoch; ordinary GUID,
+-- when available, additionally detects token reuse without an ADD event.
 function HUD:ObserveSecondaryAggroTrial(event, eventUnit, decision)
+    local probe = Logres:GetModule("WorldTargetProbe")
+    if not probe or type(probe.OrdinaryEventNameplateToken) ~= "function" then return end
+    local unit = probe:OrdinaryEventNameplateToken(eventUnit)
+    if event == "NAME_PLATE_UNIT_REMOVED" then
+        if not unit then
+            -- Unknown removed token: conservative release of every claim.
+            self:HideSecondaryAggroTrial("secondary-removal-unknown")
+            self.worldEnemySecondaryEpochs = {}
+        else
+            local slot = self:SecondaryOwnerForUnit(unit)
+            if slot then self:HideSecondaryAggroOwner(slot, "secondary-removed") end
+            if self.worldEnemySecondaryEpochs then
+                self.worldEnemySecondaryEpochs[unit] = nil
+            end
+        end
+        return
+    end
     if not self.worldEnemyLiveRequested
         or not self.worldEnemySecondaryTrialArmed then return end
-    if Logres:GetPreferences().immersionEnabled ~= true then
-        self:HideSecondaryAggroTrial("secondary-immersion-off")
+    if Logres:GetPreferences().immersionEnabled ~= true
+        or not ordinaryInCombat() then
+        self:HideSecondaryAggroTrial("secondary-unsafe-global-state")
         return
     end
-    local probe = Logres:GetModule("WorldTargetProbe")
-    if not probe then return end
-    if event == "NAME_PLATE_UNIT_REMOVED" then
-        if self.worldEnemySecondaryTrialUnit then
-            local relevant = probe:IsLiveEnemyRemovalRelevant(
-                eventUnit, self.worldEnemySecondaryTrialUnit)
-            if relevant then self:HideSecondaryAggroTrial("secondary-removed") end
-        end
-        return
-    end
-    local unit = probe:OrdinaryEventNameplateToken(eventUnit)
     if not unit then
-        -- P0455: non-nameplate UPDATE tokens cannot establish the identity or
-        -- state of the attached secondary. Ignore them rather than restoring
-        -- and reclaiming Blizzard name/health on unrelated threat events.
-        -- NAME_PLATE_UNIT_REMOVED remains conservative above; a matching
-        -- ordinary nameplate update can still withdraw on threat loss.
-        if self.worldEnemySecondaryTrialUnit then
-            self.worldEnemySecondaryTrialIgnoredUnrelatedEvents =
-                self.worldEnemySecondaryTrialIgnoredUnrelatedEvents + 1
+        -- Unrelated unit events cannot establish *any* secondary transition.
+        self.worldEnemySecondaryTrialIgnoredUnrelatedEvents =
+            self.worldEnemySecondaryTrialIgnoredUnrelatedEvents + 1
+        return
+    end
+    local old = self:SecondaryOwnerForUnit(unit)
+    local guid = probe:OrdinarySecondaryIdentity(unit)
+    if event == "NAME_PLATE_UNIT_ADDED" then
+        -- A fresh ADD is a new token generation unless an ordinary GUID
+        -- proves the already-owned generation is the same unit.
+        if old and (not guid or not old.guid or old.guid ~= guid) then
+            self.worldEnemySecondaryTrialTokenReuse =
+                self.worldEnemySecondaryTrialTokenReuse + 1
+            self:HideSecondaryAggroOwner(old, "secondary-token-reused")
+            old = self:SecondaryOwnerForUnit(unit)
+        end
+        if not old then
+            self.worldEnemySecondarySerial = self.worldEnemySecondarySerial + 1
+            self.worldEnemySecondaryEpochs[unit] = self.worldEnemySecondarySerial
+        elseif not old.generation then
+            self.worldEnemySecondarySerial = self.worldEnemySecondarySerial + 1
+            self.worldEnemySecondaryEpochs[unit] = self.worldEnemySecondarySerial
+            old.generation = self.worldEnemySecondarySerial
+        end
+    elseif old and old.guid and guid and old.guid ~= guid then
+        self.worldEnemySecondaryTrialTokenReuse =
+            self.worldEnemySecondaryTrialTokenReuse + 1
+        self:HideSecondaryAggroOwner(old, "secondary-identity-changed")
+        old = self:SecondaryOwnerForUnit(unit)
+        -- A fresh, ordinary GUID is sufficient identity proof for a new owner.
+    end
+    if old and old.blocked then
+        self:HideSecondaryAggroOwner(old, "secondary-restore-retry")
+        return
+    end
+    -- A GUID-only claim cannot be carried through a restricted GUID read;
+    -- an observed ordinary ADD epoch is the only independent boundary.
+    if old and old.visible and not guid and not old.generation then
+        self:HideSecondaryAggroOwner(old, "secondary-identity-unavailable")
+        return
+    end
+    if decision == "promoted" or decision == "unsafe"
+        or decision == "confirmed-loss" then
+        if old then
+            self:HideSecondaryAggroOwner(old,
+                decision == "promoted" and "secondary-promoted"
+                or decision == "unsafe" and "secondary-capability-lost"
+                or "secondary-confirmed-threat-loss")
         end
         return
     end
-    if self.worldEnemySecondaryTrialUnit
-        and self.worldEnemySecondaryTrialUnit ~= unit then
-        return -- one-unit trial; ignore other units, never steal their plates
+    local anchor, reason = probe:AcquireLiveEnemySecondaryAnchor(unit)
+    if not anchor then
+        if old then self:HideSecondaryAggroOwner(old, reason) end
+        self.worldEnemySecondaryTrialLastResult = reason
+        return
     end
-    if decision ~= "eligible" or not ordinaryInCombat() then
-        if self.worldEnemySecondaryTrialUnit == unit then
-            self:HideSecondaryAggroTrial("secondary-threat-lost-or-unknown")
+    -- A current target is never a secondary. GUID loss alone is inconclusive:
+    -- it cannot replace an ordinary generation or authorize a new claim.
+    if decision ~= "eligible" then
+        if old and old.visible then
+            old.inconclusive = (old.inconclusive or 0) + 1
+            if old.inconclusive > SECONDARY_MAX_INCONCLUSIVE then
+                self.worldEnemySecondaryTrialInconclusiveWithdrawals =
+                    self.worldEnemySecondaryTrialInconclusiveWithdrawals + 1
+                self:HideSecondaryAggroOwner(old, "secondary-inconclusive-limit")
+            else
+                self.worldEnemySecondaryTrialInconclusiveHolds =
+                    self.worldEnemySecondaryTrialInconclusiveHolds + 1
+                self.worldEnemySecondaryTrialLastResult = "secondary-inconclusive-held"
+            end
         end
         return
     end
     self.worldEnemySecondaryTrialEligibleEvents =
         self.worldEnemySecondaryTrialEligibleEvents + 1
-    local anchor, reason = probe:AcquireLiveEnemySecondaryAnchor(unit)
-    if not anchor then
-        if self.worldEnemySecondaryTrialUnit == unit then
-            self:HideSecondaryAggroTrial(reason)
-        end
-        self.worldEnemySecondaryTrialLastResult = reason
+    if old and old.visible then
+        old.inconclusive = 0
+        if not old.guid and guid then old.guid = guid end
+        self.worldEnemySecondaryTrialStableUpdates =
+            self.worldEnemySecondaryTrialStableUpdates + 1
+        self:UpdateSecondaryAggroTrialValues(old, unit)
         return
     end
-    if self.worldEnemySecondaryTrialVisible then
-        self:UpdateSecondaryAggroTrialValues(unit)
+    local generation = self.worldEnemySecondaryEpochs[unit]
+    if not generation and not guid then
+        self.worldEnemySecondaryTrialIdentityDeferrals =
+            self.worldEnemySecondaryTrialIdentityDeferrals + 1
+        self.worldEnemySecondaryTrialLastResult = "secondary-identity-unproven"
         return
     end
-    local frame = self.worldEnemySecondaryTrialFrame
-    if not ordinaryOwnedUnprotected(frame)
-        or self.worldEnemySecondaryTrialClaim then
-        self.worldEnemySecondaryTrialLastResult = "secondary-frame-or-restore-unsafe"
+    local slot = self:FindFreeSecondaryAggroSlot()
+    if not slot then
+        self.worldEnemySecondaryTrialPoolExhaustions =
+            self.worldEnemySecondaryTrialPoolExhaustions + 1
+        self.worldEnemySecondaryTrialLastResult = "secondary-pool-exhausted"
         return
     end
+    if not ordinaryOwnedUnprotected(slot.frame) then
+        self.worldEnemySecondaryTrialFailures =
+            self.worldEnemySecondaryTrialFailures + 1
+        self.worldEnemySecondaryTrialLastResult = "secondary-owned-frame-unsafe"
+        return
+    end
+    -- No Hide/SetPoint/native claim on a steady owner: only new generations
+    -- attach. All native decoration must be safely captured before mutation.
     local attached = pcall(function()
-        frame:Hide()
-        frame:ClearAllPoints()
-        frame:SetPoint("CENTER", anchor, "CENTER", 0, 0)
+        slot.frame:Hide()
+        slot.frame:ClearAllPoints()
+        slot.frame:SetPoint("CENTER", anchor, "CENTER", 0, 0)
     end)
     if not attached then
         self.worldEnemySecondaryTrialFailures =
             self.worldEnemySecondaryTrialFailures + 1
-        self:HideSecondaryAggroTrial("secondary-attach-refused")
+        self.worldEnemySecondaryTrialLastResult = "secondary-attach-refused"
         return
     end
-    if not self:UpdateSecondaryAggroTrialValues(unit) then return end
-    local claimed, claimReason = self:ClaimNativeSecondaryEnemyDecor(anchor)
+    local claimed, claimReason = self:ClaimNativeSecondaryEnemyDecor(slot, anchor)
     if not claimed then
-        self:HideSecondaryAggroTrial(claimReason)
+        -- A partial mutation can leave opaque restoration pending; the slot
+        -- is quarantined and never reused until native restoration succeeds.
+        if slot.claim then
+            slot.blocked = true
+            slot.unit, slot.guid, slot.generation = unit, guid, generation
+            self.worldEnemySecondaryOwners[unit] = slot
+        end
+        pcall(slot.frame.Hide, slot.frame)
+        self.worldEnemySecondaryTrialLastResult = claimReason
+        self:RefreshSecondaryOwnerCount()
         return
     end
-    if not pcall(frame.Show, frame) then
+    slot.unit, slot.guid, slot.generation = unit, guid, generation
+    slot.inconclusive = 0
+    self.worldEnemySecondaryOwners[unit] = slot
+    slot.visible = true
+    if not self:UpdateSecondaryAggroTrialValues(slot, unit) then return end
+    if not pcall(slot.frame.Show, slot.frame) then
         self.worldEnemySecondaryTrialFailures =
             self.worldEnemySecondaryTrialFailures + 1
-        self:HideSecondaryAggroTrial("secondary-show-refused")
+        self:HideSecondaryAggroOwner(slot, "secondary-show-refused")
         return
     end
-    self.worldEnemySecondaryTrialUnit = unit -- ordinary token for removal only
-    self.worldEnemySecondaryTrialVisible = true
     self.worldEnemySecondaryTrialAttachments =
         self.worldEnemySecondaryTrialAttachments + 1
     self.worldEnemySecondaryTrialLastResult = "secondary-basic-aggro-attached"
+    self:RefreshSecondaryOwnerCount()
+end
+
+-- Target switches are not blanket teardown events for unrelated secondary
+-- enemies. Withdraw promoted/unknown-role owners before selected claiming;
+-- a safely known previous selected token may be evaluated for demotion.
+function HUD:ReconcileSecondaryAggroTargetChange(previousSelectedUnit)
+    local probe = Logres:GetModule("WorldTargetProbe")
+    if not probe then return false end
+    local ok = true
+    for _, slot in ipairs(self.worldEnemySecondaryPool or {}) do
+        if slot.unit then
+            local isTarget = probe:OrdinarySecondaryRole(slot.unit)
+            if isTarget ~= false then
+                if not self:HideSecondaryAggroOwner(slot,
+                    isTarget == true and "secondary-promoted"
+                    or "secondary-role-unknown") then
+                    ok = false
+                end
+            end
+        end
+    end
+    if previousSelectedUnit and self.worldEnemySecondaryTrialArmed then
+        local old = probe:OrdinaryEventNameplateToken(previousSelectedUnit)
+        if old and not self:SecondaryOwnerForUnit(old) then
+            local observation = probe:ObserveNameplateLifecycle(
+                "PLAYER_TARGET_CHANGED", old)
+            local decision = probe:ObserveSecondaryThreat(
+                "PLAYER_TARGET_CHANGED", old, observation)
+            self:ObserveSecondaryAggroTrial("PLAYER_TARGET_CHANGED", old, decision)
+            self.worldEnemySecondaryTrialDemotionChecks =
+                self.worldEnemySecondaryTrialDemotionChecks + 1
+        end
+    end
+    return ok
 end
 
 function HUD:BuildLiveWorldEnemy()
@@ -1754,20 +1936,23 @@ function HUD:SetLiveWorldEnemy(enabled)
             self.worldEnemyLiveLastReason = reason
             return false, reason
         end
-        -- P0456: P0454/P0455 live secondary alpha ownership failed visual
-        -- acceptance. Keep the selected 100% display, but do not arm an
-        -- automatic 50% takeover on World Enemy ON. The ordinary threat
-        -- probe and its event counters remain independent and read-only.
-        -- Restore any earlier claim before leaving this experiment idle.
-        self.worldEnemySecondaryTrialArmed = false
-        self:HideSecondaryAggroTrial("secondary-trial-suspended")
+        -- P0458: capability-gated precreated per-enemy pool, no combat
+        -- creation. If the pool cannot be built, selected 100% still works
+        -- and every secondary remains entirely Blizzard-owned.
+        local secondaryBuilt, secondaryReason = self:BuildSecondaryAggroTrial()
+        self.worldEnemySecondaryTrialArmed = secondaryBuilt == true
+        if not secondaryBuilt then
+            self.worldEnemySecondaryTrialLastResult = secondaryReason
+        end
         self.worldEnemyLiveRequested = true
         return self:RefreshLiveWorldEnemy("manual")
     end
     self.worldEnemyLiveRequested = false
     self.worldEnemySecondaryTrialArmed = false
-    self:HideSecondaryAggroTrial("off")
+    local secondaryStopped = self:HideSecondaryAggroTrial("off")
+    self.worldEnemySecondaryEpochs = {}
     local stopped = self:HideLiveWorldEnemy("off")
+    if not secondaryStopped then return false, "secondary-restore-pending" end
     return stopped, self.worldEnemyLiveLastReason
 end
 
@@ -1817,9 +2002,13 @@ function HUD:OnInitialize()
     self.worldEnemyLiveAnchorUnit = nil
     self.worldEnemyLiveRemovalResult = "none"
     self.worldEnemySecondaryTrialArmed = false
-    self.worldEnemySecondaryTrialFrame = nil
-    self.worldEnemySecondaryTrialUnit = nil
-    self.worldEnemySecondaryTrialClaim = nil
+    self.worldEnemySecondaryPool = {}
+    self.worldEnemySecondaryOwners = {}
+    self.worldEnemySecondaryEpochs = {}
+    self.worldEnemySecondarySerial = 0
+    self.worldEnemySecondaryTrialActive = 0
+    self.worldEnemySecondaryTrialPending = 0
+    self.worldEnemySecondaryTrialPoolCapacity = SECONDARY_POOL_CAPACITY
     self.worldEnemySecondaryTrialVisible = false
     self.worldEnemySecondaryTrialEligibleEvents = 0
     self.worldEnemySecondaryTrialAttachments = 0
@@ -1830,6 +2019,13 @@ function HUD:OnInitialize()
     self.worldEnemySecondaryTrialLastResult = "disabled"
     self.worldEnemySecondaryTrialLastDetachReason = "none"
     self.worldEnemySecondaryTrialIgnoredUnrelatedEvents = 0
+    self.worldEnemySecondaryTrialStableUpdates = 0
+    self.worldEnemySecondaryTrialInconclusiveHolds = 0
+    self.worldEnemySecondaryTrialInconclusiveWithdrawals = 0
+    self.worldEnemySecondaryTrialTokenReuse = 0
+    self.worldEnemySecondaryTrialIdentityDeferrals = 0
+    self.worldEnemySecondaryTrialPoolExhaustions = 0
+    self.worldEnemySecondaryTrialDemotionChecks = 0
     self.worldTrialRequested = false
     self.worldTrialVisible = false
     self.worldTrialCombatHidden = false
@@ -2066,8 +2262,7 @@ function HUD:OnInitialize()
     worldTrialEvents:SetScript("OnEvent", function(_, event, unit)
         if event == "PLAYER_REGEN_ENABLED" then
             self:HideSecondaryAggroTrial("secondary-combat-ended")
-        elseif event == "PLAYER_TARGET_CHANGED" then
-            self:HideSecondaryAggroTrial("secondary-target-changed")
+            self.worldEnemySecondaryEpochs = {}
         end
         if event == "PLAYER_REGEN_ENABLED" and self.worldEnemyNativeClaim
             and not self.worldEnemyLiveVisible then
@@ -2096,9 +2291,14 @@ function HUD:OnInitialize()
                     self:HideLiveWorldEnemy("nameplate-removed")
                 end
             elseif event == "PLAYER_TARGET_CHANGED" then
-                -- Clear the old identity/anchor before considering a new one.
+                -- Restore previous selected native decoration, release any
+                -- promoted secondary *before* a new selected native claim.
+                -- Unrelated secondary owners stay attached across a switch.
+                local previous = self.worldEnemyLiveAnchorUnit
                 self:HideLiveWorldEnemy("target-changed")
-                self:RefreshLiveWorldEnemy(event)
+                if self:ReconcileSecondaryAggroTargetChange(previous) then
+                    self:RefreshLiveWorldEnemy(event)
+                end
             elseif event == "NAME_PLATE_UNIT_ADDED" then
                 -- Event token is screened inside WorldTargetProbe.
                 self:RefreshLiveWorldEnemy(event, unit)
@@ -2118,9 +2318,22 @@ function HUD:OnInitialize()
         local probe = Logres:GetModule("WorldTargetProbe")
         if not probe then return end
         local unit = probe:OrdinaryEventNameplateToken(eventUnit)
-        if unit and unit == self.worldEnemySecondaryTrialUnit then
-            self:UpdateSecondaryAggroTrialValues(unit)
+        if not unit then return end
+        local slot = self:SecondaryOwnerForUnit(unit)
+        if not slot or not slot.visible then return end
+        local role = probe:OrdinarySecondaryRole(unit)
+        local guid = probe:OrdinarySecondaryIdentity(unit)
+        if role ~= false or slot.guid and guid and slot.guid ~= guid
+            or not guid and not slot.generation then
+            self:HideSecondaryAggroOwner(slot, "secondary-value-identity-unsafe")
+            return
         end
+        local anchor, reason = probe:AcquireLiveEnemySecondaryAnchor(unit)
+        if not anchor then
+            self:HideSecondaryAggroOwner(slot, reason)
+            return
+        end
+        self:UpdateSecondaryAggroTrialValues(slot, unit)
     end)
     self.secondaryValueEvents = secondaryValueEvents
 

@@ -29,7 +29,7 @@ for forbidden in ('SetAlpha(', 'SetParent(', 'SetPoint(', 'CreateFrame(',
     assert forbidden not in section, forbidden
 assert 'local observation = self:ObserveNameplateLifecycle(event, unit)' in p
 assert 'self:ObserveSecondaryThreat(event, unit, observation)' in p
-assert '50%% DISABLED' in p
+assert '50%% gated' in p  # P0458 lifecycle supersedes P0451/53 read-only display policy; basic gate retained
 keys=['secondaryThreatEvents','secondaryThreatPrimaryEvents',
       'secondaryThreatQualifiedEvents','secondaryThreatNonprimaryEvents',
       'secondaryThreatNoTableEvents','secondaryThreatDisagreementEvents',

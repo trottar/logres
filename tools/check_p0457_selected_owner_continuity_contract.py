@@ -30,8 +30,8 @@ assert 'if event == "NAME_PLATE_UNIT_ADDED" then requestedUnit = eventUnit end' 
 assert 'self:HideLiveWorldEnemy("target-changed")' in h
 assert 'self:HideLiveWorldEnemy("nameplate-removed")' in h
 assert 'self:HideLiveWorldEnemy("off")' in h
-assert 'self.worldEnemySecondaryTrialArmed = false' in h
-assert 'self:HideSecondaryAggroTrial("secondary-trial-suspended")' in h
+assert 'self.worldEnemySecondaryTrialArmed = secondaryBuilt == true' in h
+assert 'self:HideSecondaryAggroTrial("off")' in h
 assert 'worldEnemySecondaryEnabled = false' in h
 for p in ("Logres/Dev/Panel.lua","Logres/Core/Commands.lua"):
     v=read(p)
@@ -50,4 +50,4 @@ for p in ('docs/ROADMAP.md','docs/memory/roadmap/STATUS.md',
 a=re.search(r'(?m)^## Version: (\S+)$',read('Logres/Logres.toc'))
 b=re.search(r'(?m)^Logres.VERSION = "([^"\n]+)"$',read('Logres/Core/Bootstrap.lua'))
 assert a and b and a[1]==b[1]
-print('P0457 PASS: selected steady-state owner held; real transition restores; secondary suspended (STATIC)')
+print('P0457 PASS: selected steady-state owner and restoration unchanged; secondary separately gated (STATIC)')

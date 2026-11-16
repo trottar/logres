@@ -473,6 +473,30 @@ local function ordinaryNameplateToken(unit)
     return unit
 end
 
+-- P0458: identities are ordinary only after the secret/type gates. A GUID
+-- is optional; a NAME_PLATE_UNIT_ADDED epoch supplies a lifecycle boundary
+-- when the client restricts GUIDs. Never inspect a secret GUID or persist it.
+function Probe:OrdinarySecondaryIdentity(unit)
+    local token, reason = ordinaryNameplateToken(unit)
+    if not token then return nil, reason end
+    local source, guid = callOrdinary(UnitGUID, token)
+    if source.ok and not source.secret and source.present
+        and type(guid) == "string" and #guid > 0 and #guid <= 128 then
+        return guid, "ordinary-guid"
+    end
+    return nil, source.secret and "guid-restricted" or "guid-unavailable"
+end
+
+function Probe:OrdinarySecondaryRole(unit)
+    local token, reason = ordinaryNameplateToken(unit)
+    if not token then return nil, reason end
+    local source = readBoolean(UnitIsUnit, token, "target")
+    if source.ok and not source.secret and source.present then
+        return source.value == true, "ordinary-role"
+    end
+    return nil, "role-unknown"
+end
+
 local function readEventNameplate(unit)
     local api = C_NamePlate and C_NamePlate.GetNamePlateForUnit or nil
     return callOrdinary(api, unit, false)
@@ -612,11 +636,16 @@ function Probe:ObserveNameplateLifecycle(event, eventUnit)
     -- nameplate frame, GUID, or restricted value for later use.
     return {
         secondary = currentTarget == false,
+        currentTarget = currentTarget,
         anchorSafe = permitted == true,
         inCombat = inCombat == true,
+        inCombatObserved = inCombat,
         enemyInCombat = enemyInCombat == true,
+        enemyCombatObserved = enemyInCombat,
         attackable = attackable == true,
+        attackableObserved = attackable,
         targetingPlayer = targetingPlayer == true,
+        targetingObserved = targetingPlayer,
         reaction = reaction.category or "unknown",
     }
 end
@@ -642,14 +671,14 @@ function Probe:GetNameplateLifecycleLines()
             tostring(self.lifecycleLastPlayerTargeting), tostring(self.lifecycleLastResult),
             tostring(self.lifecycleSecretResults), tostring(self.lifecycleFailures)),
         string.format(
-            "Secondary THREAT (read-only events, not unique enemies): samples=%s primary=%s qualified=%s nonprimary=%s noTable=%s disagree=%s secret=%s error=%s unknown=%s last=%s; 50%% DISABLED",
+            "Secondary THREAT (event samples, not unique enemies): samples=%s primary=%s qualified=%s nonprimary=%s noTable=%s disagree=%s secret=%s error=%s unknown=%s last=%s; 50%% gated",
             tostring(self.secondaryThreatEvents), tostring(self.secondaryThreatPrimaryEvents),
             tostring(self.secondaryThreatQualifiedEvents), tostring(self.secondaryThreatNonprimaryEvents),
             tostring(self.secondaryThreatNoTableEvents), tostring(self.secondaryThreatDisagreementEvents),
             tostring(self.secondaryThreatSecretEvents), tostring(self.secondaryThreatFailureEvents),
             tostring(self.secondaryThreatUnknownEvents), tostring(self.secondaryThreatLastResult)),
         string.format(
-            "Secondary sources (event samples): basic ordinary=%s primary=%s nonprimary=%s secret=%s missing=%s failures=%s eligible=%s eligibleDetailSecret=%s last=%s; detailed ordinary=%s tanking=%s secret=%s missing=%s failures=%s last=%s; 50%% DISABLED",
+            "Secondary sources (event samples): basic ordinary=%s primary=%s nonprimary=%s secret=%s missing=%s failures=%s eligible=%s eligibleDetailSecret=%s last=%s; detailed ordinary=%s tanking=%s secret=%s missing=%s failures=%s last=%s; 50%% gated",
             tostring(self.secondaryThreatBasicOrdinaryEvents), tostring(self.secondaryThreatBasicPrimaryEvents),
             tostring(self.secondaryThreatBasicNonprimaryEvents), tostring(self.secondaryThreatBasicSecretEvents),
             tostring(self.secondaryThreatBasicMissingEvents), tostring(self.secondaryThreatBasicFailureEvents),
@@ -666,13 +695,23 @@ end
 -- sources only on the same nameplate event, and expose aggregate observations.
 -- No secondary renderer is promoted by these results.
 function Probe:ObserveSecondaryThreat(event, eventUnit, observation)
-    if not observation or observation.secondary ~= true then return end
-    if event == "NAME_PLATE_UNIT_REMOVED" then return end
+    if event == "NAME_PLATE_UNIT_REMOVED" then return "removed" end
+    if not observation then return "unrelated" end
+    if observation.currentTarget == true then return "promoted" end
+    if observation.secondary ~= true then return "unsafe" end
     local unit = ordinaryNameplateToken(eventUnit)
-    if not unit then return end
+    if not unit then return "unrelated" end
     self.secondaryThreatEvents = self.secondaryThreatEvents + 1
     self.secondaryThreatLastEvent = event
-    local trialDecision = "unknown"
+    local trialDecision = "inconclusive"
+    -- These ordinary, same-event observations independently authorize
+    -- immediate withdrawal. An unknown threat *table* alone never does.
+    local unsafe = not observation.anchorSafe or not observation.inCombat
+        or observation.attackableObserved == false
+        or observation.reaction == "friendly"
+    local confirmedLoss = observation.enemyCombatObserved == false
+        or observation.targetingObserved == false
+        or observation.reaction == "neutral"
 
     local source, status = callOrdinary(UnitThreatSituation, "player", unit)
     local detail = readBoolean(UnitDetailedThreatSituation, "player", unit)
@@ -718,14 +757,20 @@ function Probe:ObserveSecondaryThreat(event, eventUnit, observation)
                         self.secondaryThreatBasicEligibleDetailSecretEvents + 1
                 end
             else
-                trialDecision = "unqualified"
+                trialDecision = "inconclusive"
             end
         else
-            trialDecision = "nonprimary"
+            trialDecision = "confirmed-loss"
             self.secondaryThreatBasicNonprimaryEvents =
                 self.secondaryThreatBasicNonprimaryEvents + 1
             self.secondaryThreatLastBasic = "ordinary-nonprimary-0-or-1"
         end
+    end
+
+    if unsafe then
+        trialDecision = "unsafe"
+    elseif confirmedLoss then
+        trialDecision = "confirmed-loss"
     end
 
     if detail.secret then

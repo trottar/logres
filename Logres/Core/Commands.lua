@@ -3460,10 +3460,22 @@ function Logres:HandleLiveWorldEnemyCommand(argument)
             tostring(state.worldEnemySecondaryTrialRestoreFailures),
             tostring(state.worldEnemySecondaryTrialLastResult)))
         emit(string.format(
-            "World Enemy secondary updates: ignored unrelated=%s lastDetach=%s (nameplate removal and same-unit loss still restore Blizzard)",
+            "World Enemy secondary updates: ignored unrelated=%s lastDetach=%s (confirmed loss/removal/unsafe/OFF restore Blizzard; bounded unknown held)",
             tostring(state.worldEnemySecondaryTrialIgnoredUnrelatedEvents),
             tostring(state.worldEnemySecondaryTrialLastDetachReason)))
-        emit("World Enemy LIVE: selected target 100%; secondary 50% visual trial SUSPENDED after P0455 runtime FAIL; basic threat diagnostics remain; stock secondary auras/casts/input retained.")
+        emit(string.format(
+            "World Enemy secondary pool: active=%s pending=%s capacity=%s steady=%s holds=%s inconclusiveWithdrawals=%s tokenReuse=%s identityDeferrals=%s overflow=%s demotionChecks=%s",
+            tostring(state.worldEnemySecondaryTrialActive),
+            tostring(state.worldEnemySecondaryTrialPending),
+            tostring(state.worldEnemySecondaryTrialPoolCapacity),
+            tostring(state.worldEnemySecondaryTrialStableUpdates),
+            tostring(state.worldEnemySecondaryTrialInconclusiveHolds),
+            tostring(state.worldEnemySecondaryTrialInconclusiveWithdrawals),
+            tostring(state.worldEnemySecondaryTrialTokenReuse),
+            tostring(state.worldEnemySecondaryTrialIdentityDeferrals),
+            tostring(state.worldEnemySecondaryTrialPoolExhaustions),
+            tostring(state.worldEnemySecondaryTrialDemotionChecks)))
+        emit("World Enemy LIVE: selected 100%; qualifying secondary enemies each use guarded 50%/50% Logres name/HP; ordinary positive basic threat required; native auras/casts/input retained; OFF restores.")
         return
     end
     if argument ~= "on" and argument ~= "off" then

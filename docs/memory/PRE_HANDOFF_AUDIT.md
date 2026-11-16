@@ -1,3 +1,34 @@
+## P0458 secondary ownership lifecycle candidate audit (2026-11-15)
+
+Verified GitHub main P0457 `ff860151de8c95dab99d177e2d4180011fd6da55`,
+tree `ddfca65ddf835b8451aaf5b1772c0206daa22064`. Exact prior
+indexed checkout and remote tree agree. Scoped source diagnosis: P0455
+on the matching unit withdraws on any decision !=eligible; unknown/no
+threat table causes repeated native alpha transfer, and the single slot
+rejects another otherwise eligible unit. These are source faults, not
+proof of future runtime PASS. The P0454/P0455 static tests asserted the
+faults; P0456/P0457 asserted suspension as forever-invariant. P0458
+rewrites those historical checks to preserve negative evidence and real
+safety/opaque restoration contracts while allowing an independently
+checked multi-owner implementation. Do not weaken secret/secure gates.
+
+R0 isolated full suite REFUSED 265/321: CURRENT 9800 bytes (historic
+strict <9800), HANDOFF >8000, and stale P0451/P0453 read-only
+"50% DISABLED" assertions. R1 REFUSED 320/321: compacting the old
+handoff lost the exact `P0379 R1` refusal marker. Both attempts were
+scratch candidate only, with no writes to user/remote; historical
+checkers were corrected narrowly, required markers and budgets restored.
+
+Candidate: no selected rendering/refresh changes; read-only probe source
+and independent role/GUID identity checks; 40 OOC-precreated noninteractive
+50%/50% frames, per-unit native claim, separate decisions, ADD epoch reuse,
+three bounded inconclusive events only with revalidated role+anchor+identity,
+restoration quarantine, explicit pool/identity fallback. Report Bug adds
+scalar counters; no polling/CVars/protected owner comparisons. Behavioral
+source tests, syntax, full historical checkers, exact-package author receipt,
+PREWRITE/POSTWRITE, refusal/rollback/diff/manifest and ZIP checksum must
+all PASS before release. WoW Forever is NOT tested by this audit.
+
 ## P0457 selected continuity candidate audit (2026-11-15)
 
 Verified P0456 GitHub main `267bb947` / tree `394d43b`. User's
