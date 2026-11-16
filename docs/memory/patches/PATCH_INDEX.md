@@ -1,3 +1,16 @@
+## P0461 — Native nameplate aura fallback without visual duplication (2026-11-16)
+
+P0460 main `edf37197`/tree `fe8063ed` verified. Forever #13580
+user HP/nameplates PASS scoped, L-028 target aura OPEN with 40 skipped
+secret index reads, ordinary rows 0/0, native world icon visibility
+unobserved. Retire P0450 unsafe readiness-as-visibility inference;
+leave actual native nameplate aura lists untouched, disable competing
+selected world-child/ordinary icon lanes; retain existing addon-owned
+screen target alpha handoff only for ordinary structurally present stock
+nameplate lists. Selected/secondary HP and protected cast/click unchanged.
+P0449 world icons PASS, P0450 duplicate FAIL and other failed trials
+retained. Full candidate preflight required; WoW aura result UNVERIFIED.
+
 ## P0460 — Selected nameplate removal identity repair (2026-11-16)
 
 GitHub P0459 `0cbc8cc`/tree `64af7ead`; Forever #13499 0.0.328-dev

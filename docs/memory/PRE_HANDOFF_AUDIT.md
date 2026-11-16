@@ -1,3 +1,18 @@
+## P0461 native aura fallback audit (2026-11-16)
+
+Verified GitHub P0460 `edf37197` / tree `fe8063ed` and exact local
+P0460 indexed tree match. Latest Forever #13580 reports HP/nameplate
+PASS scoped, aura OPEN; 40 restricted index skips are not aura counts.
+Reviewed P0449 native OOC engine, P0450 screen/nameplate competing
+ownership, P0457 selected continuity and P0458/P0459 secondary safety.
+P0461 retracts P0450 list-alpha suppression based only on native
+container readiness. Historical checkers P0449/P0450 must retain their
+secure/secret/API invariants while asserting stock aura preservation;
+selected and secondary native health/cast/click remain unchanged.
+Full exact-source checker, Lua behavioral test, syntax, diff, refusal,
+rollback, manifest/ZIP parity, author receipt required before release.
+Native icon appearance UNVERIFIED until Forever screenshot with aura.
+
 ## P0460 selected-removal identity audit (2026-11-16)
 
 Verified GitHub P0459 `0cbc8cc7a9f9db14a308f9e24a556a66023e30ab`,

@@ -1,0 +1,30 @@
+P0461 Preserve native enemy nameplate auras without duplicate world lanes
+Verified baseline: edf37197e2f3b087a3f1b51d7ec41e6a3832aee4
+Candidate runtime version: 0.0.330-dev
+PREWRITE: 324/324 STATIC PASS
+POSTWRITE: 324/324 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/HUD/HUD.lua
+Logres/HUD/StatusAuras.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0461_NATIVE_NAMEPLATE_AURA_FALLBACK.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0448_world_enemy_aura_refresh_contract.py
+tools/check_p0449_native_world_aura_container_contract.py
+tools/check_p0450_aura_owner_handoff_contract.py
+tools/check_p0461_native_aura_fallback_contract.py
+tools/test_p0461_native_aura_source.lua
+P0461_MANIFEST.txt

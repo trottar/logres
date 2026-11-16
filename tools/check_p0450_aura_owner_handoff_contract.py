@@ -23,11 +23,22 @@ for forbidden in ('SetParent(', 'GetChildren(', 'C_UnitAuras', 'GetAuraDataByInd
 assert 'function StatusAuras:SetWorldEnemyScreenAuraHandoff(worldOwned)' in a
 assert 'SetScreenTargetWorldOwned' in a
 assert 'self:SetWorldEnemyScreenAuraHandoff(false)' in a
-# Two separate native LISTS may be owned only with world-native replacement;
-# the Blizzard UnitFrame, cast, CC/LOC, click and whole aura root stay stock.
-claim=h.split('function HUD:ClaimNativeEnemyDecor(anchor)',1)[1].split('function HUD:BuildLiveWorldEnemy()',1)[0]
-for required in ('auraModule.worldEnemyNativeLanes','nativeDecorField(unitFrame, "AurasFrame")','nativeDecorField(auraRoot, "DebuffListFrame")','nativeDecorField(auraRoot, "BuffListFrame")','safeNativeDecor(harmful)','safeNativeDecor(helpful)','candidates[#candidates + 1] = harmful','candidates[#candidates + 1] = helpful','auraAccepted','self.worldEnemyNativeAuraOwned = auraAccepted'):
-    assert required in claim, required
+# P0461 reverses the historical P0450 native-list alpha claim: readiness
+# was never visible-icon proof. Preserve all actual Blizzard nameplate aura
+# lists while continuing to capture/restore name and health decoration.
+claim=h.split('function HUD:ClaimNativeEnemyDecor(anchor)',1)[1].split('function HUD:BuildSecondaryAggroTrial()',1)[0]
+for required in ('nativeDecorField(unitFrame, "AurasFrame")',
+                 'nativeDecorField(auraRoot, "DebuffListFrame")',
+                 'nativeDecorField(auraRoot, "BuffListFrame")',
+                 'worldEnemyNativeAuraSourceCapable',
+                 'self.worldEnemyNativeAuraOwned = false',
+                 'local candidates = {name, health}'):
+    assert required in claim,required
+for forbidden in ('candidates[#candidates + 1] = harmful',
+                  'candidates[#candidates + 1] = helpful',
+                  'safeNativeDecor(harmful)', 'safeNativeDecor(helpful)',
+                  'worldEnemyNativeAuraTransfers + 1'):
+    assert forbidden not in claim,forbidden
 for forbidden in ('SetParent(', 'GetChildren(', 'GetRegions(', 'GetAuraDataByIndex', 'C_UnitAuras', 'SetCVar(', 'hooksecurefunc('):
     assert forbidden not in claim, forbidden
 assert 'pcall(region.GetAlpha, region)' in claim
@@ -35,10 +46,12 @@ assert 'pcall(region.SetAlpha, region, 0)' in claim
 restore=h.split('function HUD:RestoreNativeEnemyDecor()',1)[1].split('function HUD:ClaimNativeEnemyDecor(anchor)',1)[0]
 assert 'pcall(entry.region.SetAlpha, entry.region, entry.original)' in restore
 assert 'self.worldEnemyNativeAuraOwned = false' in restore
+assert 'self.worldEnemyNativeAuraSourceCapable = false' in restore
 hide=h.split('function HUD:HideLiveWorldEnemy(reason)',1)[1].split('function HUD:UpdateLiveWorldEnemyValues()',1)[0]
 assert 'statusAuras:SetWorldEnemyScreenAuraHandoff(false)' in hide
 attach=h.split('function HUD:RefreshLiveWorldEnemy(event, eventUnit)',1)[1].split('function HUD:SetLiveWorldEnemy(enabled)',1)[0]
 assert attach.index('if not pcall(frame.Show, frame)') < attach.index('auras:SetWorldEnemyScreenAuraHandoff(true)')
+assert attach.index('if self.worldEnemyNativeAuraSourceCapable') < attach.index('auras:SetWorldEnemyScreenAuraHandoff(true)')
 assert 'self.targetNameText:Hide()' in attach and 'self.targetHealthBar:Hide()' in attach
 for key in ('worldEnemyNativeAuraLastResult','worldEnemyNativeAuraTransfers','worldEnemyNativeAuraRestores'):
     assert key in h and key in c and ('"'+key+'"') in p,key
@@ -57,4 +70,4 @@ assert 'P0449 world aura visibility PASS' in read('docs/memory/evidence/P0450_WO
 assert '| L-011 | World-attached target anchor | PARTIAL |' in read('docs/memory/investigations/ISSUE_LEDGER.md')
 assert 'P0449' in read('docs/memory/CURRENT.md')
 assert re.search(r'(?m)^## Version: (\S+)$',read('Logres/Logres.toc')).group(1)==re.search(r'(?m)^Logres.VERSION = "([^"]+)"$',read('Logres/Core/Bootstrap.lua')).group(1)
-print('P0450 PASS: separately gated native list and owned screen alpha handoff, restore and failure evidence')
+print('P0450 PASS: historical screen alpha safety retained; P0461 native aura list ownership correctly reverted')

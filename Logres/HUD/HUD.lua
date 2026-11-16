@@ -1250,6 +1250,7 @@ function HUD:RestoreNativeEnemyDecor()
         end
     end
     if restored then
+        self.worldEnemyNativeAuraSourceCapable = false
         if self.worldEnemyNativeAuraOwned then
             self.worldEnemyNativeAuraRestores = self.worldEnemyNativeAuraRestores + 1
             self.worldEnemyNativeAuraLastResult = "restored"
@@ -1280,29 +1281,18 @@ function HUD:ClaimNativeEnemyDecor(anchor)
     end
     local claim = {}
     local candidates = {name, health}
-    -- P0450: Native nameplate aura lists are presentation-only, separate
-    -- from casts, raid markers, CC and target hit regions. Only when an
-    -- addon-owned *native* world aura renderer is ready may these two
-    -- independently verified, unprotected lists be transferred. Otherwise
-    -- Blizzard retains all auras unchanged. No aura values are inspected.
-    local auraAccepted = false
-    local auraModule = Logres:GetModule("StatusAuras")
-    if auraModule and auraModule.moduleEnabled
-        and auraModule.worldEnemyNativeLanes then
-        local auraRoot = nativeDecorField(unitFrame, "AurasFrame")
-        local harmful = nativeDecorField(auraRoot, "DebuffListFrame")
-        local helpful = nativeDecorField(auraRoot, "BuffListFrame")
-        if safeNativeDecor(harmful) and safeNativeDecor(helpful) then
-            candidates[#candidates + 1] = harmful
-            candidates[#candidates + 1] = helpful
-            auraAccepted = true
-            self.worldEnemyNativeAuraLastResult = "aura-lists-capable"
-        else
-            self.worldEnemyNativeAuraLastResult = "aura-lists-protected-or-unavailable"
-        end
-    else
-        self.worldEnemyNativeAuraLastResult = "world-aura-not-ready"
-    end
+    -- P0461: Preserve Blizzard-owned nameplate aura lists on every claimed
+    -- enemy. A precreated addon AuraContainer is not proof of rendered icons.
+    -- Do not inspect alpha/children of these native lists or mutate them.
+    -- Only ordinary references are inspected for fallback routing: if either
+    -- native list cannot be identified, the independent screen target aura
+    -- container must remain available rather than being hidden blindly.
+    local auraRoot = nativeDecorField(unitFrame, "AurasFrame")
+    local harmful = nativeDecorField(auraRoot, "DebuffListFrame")
+    local helpful = nativeDecorField(auraRoot, "BuffListFrame")
+    self.worldEnemyNativeAuraSourceCapable = harmful ~= nil and helpful ~= nil
+    self.worldEnemyNativeAuraLastResult = self.worldEnemyNativeAuraSourceCapable
+        and "stock-nameplate-lists-preserved" or "stock-nameplate-lists-unknown"
     local level = nativeDecorField(unitFrame, "LevelFrame")
     local levelDiff = nativeDecorField(unitFrame, "PlayerLevelDiffFrame")
     if level then candidates[#candidates + 1] = level end
@@ -1327,11 +1317,9 @@ function HUD:ClaimNativeEnemyDecor(anchor)
             return false, "native-decor-mutation-refused"
         end
     end
-    self.worldEnemyNativeAuraOwned = auraAccepted
-    if auraAccepted then
-        self.worldEnemyNativeAuraTransfers = self.worldEnemyNativeAuraTransfers + 1
-        self.worldEnemyNativeAuraLastResult = "aura-lists-owned"
-    end
+    -- The previous P0450 aura-list claim is deliberately retired; only
+    -- the native name, health and level decoration are captured/restored.
+    self.worldEnemyNativeAuraOwned = false
     self.worldEnemyNativeTransfers = self.worldEnemyNativeTransfers + 1
     self.worldEnemyNativeLastResult = "decor-owned"
     return true, "decor-owned"
@@ -1988,7 +1976,10 @@ function HUD:RefreshLiveWorldEnemy(event, eventUnit)
     self.targetHealthBar:Hide()
     -- Preserve the cast cue and the entire Blizzard target/plate input.
     -- Only the addon-created screen aura copy receives reversible alpha.
-    if auras and type(auras.SetWorldEnemyScreenAuraHandoff) == "function" then
+    if self.worldEnemyNativeAuraSourceCapable
+        and auras and type(auras.SetWorldEnemyScreenAuraHandoff) == "function" then
+        -- A native source is structurally present. Its icon visibility is
+        -- intentionally not inspected; no native list is ever suppressed.
         auras:SetWorldEnemyScreenAuraHandoff(true)
     end
     self.worldEnemyScreenHandoffs = (self.worldEnemyScreenHandoffs or 0) + 1
@@ -2067,6 +2058,7 @@ function HUD:OnInitialize()
     self.worldEnemyNativeRestoreFailures = 0
     self.worldEnemyNativeLastResult = "not-attempted"
     self.worldEnemyNativeAuraOwned = false
+    self.worldEnemyNativeAuraSourceCapable = false
     self.worldEnemyNativeAuraLastResult = "not-attempted"
     self.worldEnemyNativeAuraTransfers = 0
     self.worldEnemyNativeAuraRestores = 0

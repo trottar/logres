@@ -501,9 +501,9 @@ function StatusAuras:CreateEnemyFixtureLanes(parent, ordinal)
     return parent.enemyFixtureLanes
 end
 
--- Live world trial uses the SAME owned aura renderer and spacing as the
--- 100/50 fixture, but uses only already-validated ordinary target aura rows.
--- Stock aura and screen-space fallback ownership are never changed here.
+-- The historical ordinary world renderer and 100/50 fixture layout remain
+-- available for offline previews. The live world renderer is disabled by
+-- P0461 in favor of the engine-owned native nameplate aura lists.
 function StatusAuras:CreateWorldTrialLanes(parent)
     if self.worldTrialLanes then return self.worldTrialLanes end
     local harmful = createLane("target", "RIGHT", "LEFT", 0, 0,
@@ -542,20 +542,13 @@ function StatusAuras:CreateWorldEnemyLiveLanes(parent)
     local helpful = createLane("target", "LEFT", "RIGHT", 0, 0,
         "P0441WorldHelpful", parent)
     self.worldEnemyLiveLanes = {harmful = harmful, helpful = helpful}
-    -- The ordinary texture lanes remain a complete fail-open fallback. The
-    -- preferred world lanes are secure Blizzard AuraContainer *children of
-    -- our own frame*, not native nameplate/target-frame children. Construct
-    -- only while out of combat, before this world parent can be shown.
-    local ok, nativeFrames, nativeReason = pcall(
-        Logres.NativeDebuffs.CreateWorldEnemyLanes, parent
-    )
-    if ok and nativeFrames then
-        self.worldEnemyNativeLanes = nativeFrames
-        self.worldEnemyNativeReason = nativeReason or "native-delegated"
-    else
-        self.worldEnemyNativeReason = ok and (nativeReason or "native-refused")
-            or "native-init-error"
-    end
+    -- P0461: retain historical ordinary/secure renderer implementations,
+    -- but do not activate either on a live world enemy. P0450 hid the actual
+    -- nameplate aura lists solely because native child creation succeeded;
+    -- the latest client capture gave no visibility proof. Native nameplate
+    -- auras now remain the single world owner for selected AND secondary.
+    self.worldEnemyNativeLanes = nil
+    self.worldEnemyNativeReason = "stock-nameplate-native-preserved"
     return self.worldEnemyLiveLanes
 end
 
@@ -599,22 +592,19 @@ function StatusAuras:RefreshWorldEnemyLiveLanes()
     -- Some Forever frame mutations may be protected in combat; failure is
     -- contained to this owned trial, never the native/Logres fallback.
     self.worldEnemyLiveRenderAttempts = self.worldEnemyLiveRenderAttempts + 1
-    if self.worldEnemyNativeLanes then
-        -- Never query native icon children or inspect restricted values in
-        -- combat. Ready means engine delegated, NOT confirmed visible icons.
-        self.worldEnemyLiveRenderLastResult = active and "native-delegated"
-            or "native-parent-hidden"
-        return true
-    end
+    -- This addon-owned ordinary renderer must remain hidden while native
+    -- nameplate auras own presentation; otherwise normal/ordinary aura rows
+    -- could duplicate the stock icon. We never inspect native icon children.
     local ok = pcall(function()
-        renderLane(self.worldEnemyLiveLanes.harmful, rows, active)
-        renderLane(self.worldEnemyLiveLanes.helpful, helpful, active)
+        renderLane(self.worldEnemyLiveLanes.harmful, {}, false)
+        renderLane(self.worldEnemyLiveLanes.helpful, {}, false)
     end)
     if not ok then
         self.worldEnemyLiveFailures = self.worldEnemyLiveFailures + 1
-        self.worldEnemyLiveRenderLastResult = "owned-render-refused"
+        self.worldEnemyLiveRenderLastResult = "owned-aura-hide-refused"
     else
-        self.worldEnemyLiveRenderLastResult = active and "rendered" or "inactive"
+        self.worldEnemyLiveRenderLastResult = active
+            and "stock-nameplate-native-delegated" or "native-parent-hidden"
     end
     return ok
 end
@@ -700,6 +690,7 @@ function StatusAuras:GetDebugStatus()
         worldEnemyLiveRenderLastResult = self.worldEnemyLiveRenderLastResult,
         worldEnemyNativeReady = self.worldEnemyNativeLanes ~= nil,
         worldEnemyNativeReason = self.worldEnemyNativeReason,
+        worldEnemyAuraPresentationOwner = "Blizzard-nameplate",
         worldEnemyNativeVisibilityProof = "unobserved",
         worldEnemyScreenAuraOwned = self.worldEnemyScreenAuraOwned == true,
         worldEnemyScreenAuraReason = self.worldEnemyScreenAuraReason,

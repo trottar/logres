@@ -18,7 +18,12 @@ for key in ('self.last.target = snapshot','self:RecordLiveSnapshot("target", sna
     assert key in source,key
 for forbidden in ('NativeDebuffs.SetActive','SetCVar(', 'C_Timer.', 'GetNamePlates(', 'GetAuraDataByIndex(', 'AurasFrame', 'RegisterEvent(', 'GetChildren('):
     assert forbidden not in source,forbidden
-assert 'pcall(function()' in render and 'worldEnemyLiveRenderLastResult = "owned-render-refused"' in render
+# P0461 retains the event-time source diagnostics but suspends the owned
+# world icon renderer. An unproven replacement must not cover stock auras.
+assert 'pcall(function()' in render and 'worldEnemyLiveRenderLastResult = "owned-aura-hide-refused"' in render
+assert 'renderLane(self.worldEnemyLiveLanes.harmful, {}, false)' in render
+assert 'renderLane(self.worldEnemyLiveLanes.helpful, {}, false)' in render
+assert 'renderLane(self.worldEnemyLiveLanes.harmful, rows, active)' not in render
 assert 'worldEnemyLiveRenderAttempts' in render and 'return ok' in render
 for key in ('worldEnemySourceAttachScans','worldEnemySourceLastReason','worldEnemySourceLastHarmful','worldEnemySourceLastHelpful','worldEnemySourceLastSecrets','worldEnemySourceLastFailures','worldEnemyLiveRenderAttempts','worldEnemyLiveFailures','worldEnemyLiveRenderLastResult','worldEnemyLiveHarmfulSlots','worldEnemyLiveHelpfulSlots','worldEnemyLiveHarmfulShown','worldEnemyLiveHelpfulShown'):
     assert key in a,key
@@ -44,4 +49,4 @@ assert handoff.startswith('# '+active.group(1)+':') and '# P0449:' in handoff
 toc=re.search(r'^## Version: ([^\n]+)$',read('Logres/Logres.toc'),re.M)
 boot=re.search(r'Logres.VERSION = "([^"]+)"',read('Logres/Core/Bootstrap.lua'))
 assert toc and boot and toc.group(1)==boot.group(1) and toc.group(1).endswith('-dev')
-print('P0448 PASS: event-time ordinary aura scan, cached target/owned render diagnostics, stable native world enemy and aura geometry')
+print('P0448 PASS: event-time ordinary diagnostic retained; P0461 stock-native aura fallback prevents unproven duplicate world renderer')

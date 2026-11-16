@@ -19,9 +19,14 @@ assert 'frame:AddAuraGroup(' in n and 'frame:SetUnit(unit)' in n
 assert 'button:EnableMouse(false)' in n
 for forbid in ('C_UnitAuras', 'GetAuraDataByIndex', 'GetAuraDataByAuraInstanceID', 'GetChildren(', 'SetCVar(', 'C_Timer.', 'AuraButtonMixin'):
     assert forbid not in create, forbid
-assert 'CreateWorldEnemyLanes, parent' in a
-assert 'if self.worldEnemyNativeLanes then' in a
-assert '"native-delegated"' in a and '"restricted-no-ordinary"' in a
+# P0461 revised safety contract: the historical native helper is preserved,
+# but must NOT create an independent live world renderer without proof of
+# visible icons. Native nameplate auras are the designated fallback.
+world_create=a.split('function StatusAuras:CreateWorldEnemyLiveLanes(parent)',1)[1].split('function StatusAuras:SetWorldEnemyScreenAuraHandoff(',1)[0]
+assert 'CreateWorldEnemyLanes' not in world_create
+assert 'self.worldEnemyNativeLanes = nil' in world_create
+assert 'stock-nameplate-native-preserved' in world_create
+assert '"restricted-no-ordinary"' in a
 for key in ('worldEnemyNativeReady','worldEnemyNativeReason','worldEnemyNativeVisibilityProof'):
     assert key in a and key in cmd and ('"'+key+'"') in panel,key
 assert '"unobserved"' in a
@@ -43,4 +48,4 @@ assert handoff.startswith('# '+active.group(1)+':')
 assert '# P0449:' in handoff
 assert 'P0448 runtime aura FAIL' in read('docs/memory/evidence/P0449_NATIVE_WORLD_AURA_CONTAINER.md')
 assert 'L-028 | Target debuffs' in read('docs/memory/investigations/ISSUE_LEDGER.md')
-print('P0449 PASS: native engine aura source, world +/-25px children, strict OOC setup and historical fallback')
+print('P0449 PASS: retained native capability and OOC guard; live renderer suspended under P0461 stock-aura policy')

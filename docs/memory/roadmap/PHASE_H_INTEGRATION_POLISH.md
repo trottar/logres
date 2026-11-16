@@ -1,3 +1,22 @@
+## P0461 — Native nameplate aura ownership reconciliation (2026-11-16)
+
+Verified P0460 main `edf37197`/tree `fe8063ed`. Forever session 132
+#13580 0.0.329-dev user scoped visual PASS for selected/secondary HP:
+3 selected attachments/restores, 4 secondary, 17 stable updates and
+no native ownership/restore errors. Auras remain OPEN L-028: 40
+restricted index reads, ordinary harmful/helpful 0/0. An initialized
+addon AuraContainer is **not** proof of visible icons. P0450 hid
+stock nameplate buff/debuff lists on initialization alone; P0449 world
+native icons earlier PASS scoped, P0450 overlapping screen copy FAIL.
+P0461 preserves Blizzard-owned nameplate aura lists for all safely
+claimed enemies, disables competing world aura lanes, and only hides
+an addon-owned screen target aura copy when the native nameplate list
+references are ordinary and structurally present. Never touch secure
+aura unit binding, protected list alpha, icon children or secret data.
+Selected 100%/secondary 50% HP unchanged; native casts/click retained.
+Visual/taint/OFF/duplication runtime acceptance **UNVERIFIED**.
+P0454/P0455/P0458/P0459 failures retained; L-011 PARTIAL, L-028 OPEN.
+
 ## P0460 — Selected nameplate removal identity repair (2026-11-16)
 
 GitHub P0459 `0cbc8cc`/tree `64af7ead`; Forever #13499 0.0.328-dev

@@ -11,18 +11,21 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0460** main P0459 `0cbc8cc`/tree `64af7ead` verified.
-Forever 0.0.328-dev #13499 **VISUAL FAIL** after brief success:
-selected 4/4 attaches/detaches, secondary 3/3 restores, 0 refusals.
-Screenshot shows native Mangy Wolf decoration; removal attribution was
-`unknown-attached-unit`. P0459 target-query owner has nil token, so
-any nameplate removal can detach selected. P0460 caches ordinary ADD
-epochs, resolves selected via fresh ordinary `UnitIsUnit`; unrelated
-REMOVED is ignored, matching/unsafe/unknown restore. P0459 50%
-secondary hostile styling, selected 100%, native cast/aura/click and
-opaque tokens are unchanged. L-011/L-028 OPEN.
-P0454/P0455 secondary 50/50 VISUAL FAIL; P0458 VISUAL FAIL; P0425 visual PASS;
-P0442/P0443; P0456 suspension; P0457 selected accepted. P0460 Forever UNVERIFIED.
+**P0461** verified P0460 main `edf37197`/tree `fe8063ed`, Forever
+0.0.329-dev session 132 #13580. User reports enemy HP/nameplates
+visually stable (scoped PASS). Three selected attachments/restores,
+4 secondary attaches/restores, 17 secondary stable updates, 0 owner or
+restore failures; counters do not prove aura visibility. Aura issue
+**OPEN** L-028: 40 restricted target index reads, ordinary 0/0, native
+world renderer initialized without icon proof. P0450 hid native lists
+on initialization alone. P0461 preserves selected/secondary native
+nameplate aura lists, disables duplicate world lanes, gates the separate
+screen copy on ordinary list presence and never reads aura contents.
+HP unchanged. P0425 visual PASS; P0442/P0443 native overlap/matte
+FAIL; P0449 icons PASS; P0450 duplicates FAIL;
+P0454/P0455 secondary 50/50 VISUAL FAIL; P0456 suspension;
+P0457 selected PASS; P0458/P0459 visual FAIL. P0460 HP PASS.
+P0461 WoW UNVERIFIED; L-011 PARTIAL, L-028 OPEN.
 
 ## Verified State
 
@@ -64,12 +67,10 @@ P0442/P0443; P0456 suspension; P0457 selected accepted. P0460 Forever UNVERIFIED
 
 ## Next Action
 
-P0460 Forever: World Enemy ON OOC; keep selected Logres 100% while
-multiple other nameplates disappear, confirming other-unit removal
-never restores its Blizzard artwork. Check true selected removal,
-nameplate reuse, target switches, 50% secondary skins after threat
-changes, OFF restoration, casts/auras/clicks and Lua/taint. Export
-Report Bug. Unknown/unsafe/pool-native fallbacks remain OPEN.
+P0461 Forever: World Enemy ON OOC; selected and nonselected hostile with
+real buff/debuff; verify native icons once and no screen duplication.
+Check cast/click/removal/OFF, Lua/taint. Capture active aura via Report Bug;
+visibility UNPROVEN, screen fallback kept. Accepted HP unchanged.
 
 ## Success Criteria
 

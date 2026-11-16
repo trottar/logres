@@ -1,3 +1,15 @@
+# P0461: P0460 main `edf37197`/tree `fe8063ed` verified.
+Forever 0.0.329-dev session 132 #13580 user HP/nameplates visual PASS
+scoped (3 selected, 4 secondary, 17 stable; no native restore fails).
+Auras OPEN L-028: 40 restricted index skips, 0 ordinary icons;
+world native child readiness was unobserved but P0450 hid stock lists.
+P0461 preserves stock native nameplate aura lists for selected/secondary,
+retires competing addon world aura presentation, and gates separate
+screen-target aura handoff on ordinary stock-list presence. Native
+cast/aura/click state stays; never inspect protected icon contents,
+secret values or alpha. Past P0449 world icons PASS and P0450 screen
+and stock overlap FAIL retained. P0461 WoW UNVERIFIED; Report Bug.
+
 # P0460: P0459 `0cbc8cc`/tree `64af7ead` verified. Forever
 #13499 0.0.328-dev VISUAL FAIL after brief success: selected 4/4
 and secondary 3/3 restores, last selected `unknown-attached-unit`.
@@ -72,16 +84,11 @@ P0358 moved only Quiet Mode diagnostics while retaining chat restoration and out
 
 P0357 moved only objective-progress diagnostics to the quest module; P0356 227 STATIC, WoW UNVERIFIED. No quest/native/camera mutation; P0321/L-019/L-022/L-027/L-028 still unresolved. See evidence.
 
-# P0356 — F.3 XP diagnostic ownership; CURRENT.md is authoritative
+# P0356/P0355 diagnostic seam history (archived)
 
-Verified pushed P0355 R2 `fac39a1e3960c7d9a238f76543027838647330ed`: 226/226 PREWRITE/POSTWRITE STATIC, `0.0.244-dev`. XP structural report moves to preloaded Quest/XP.lua; Commands preserves exact Run All, slash, Phase F developer panel. XP live sample policy untouched. Candidate `0.0.245-dev`, checker #227, Lua94/actions120/previews38; WoW UNVERIFIED. P0321 GossipFrame stock restoration FIRST client gate; L-022/L-027/L-028 OPEN, L-019 public release BLOCKED; L-031 deferred, D-046/047/048 unchanged.
-
-# P0355 — read-only primary stock ownership report; CURRENT.md authoritative
-
-Verified P0354 R3 main `4254d0a` (225 STATIC): P0355 moves only
-read-only primaryownershipcheck to Actions/Primary.lua; Blizzard stock
-actions remain owner. P0173 secure gate; schema 3 and D-048 unchanged.
-Candidate P0355 runtime unverified, R0/R1 refusals preserved below.
+P0356 XP diagnostic ownership and P0355 primary stock ownership
+remain documented in evidence and historical handoffs. P0321/L-019
+BLOCKED, L-022/L-027/L-028 OPEN; refusals preserved below.
 
 ## Safety gates and negative evidence
 
