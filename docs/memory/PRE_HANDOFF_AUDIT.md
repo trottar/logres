@@ -1,3 +1,23 @@
+## P0459 appearance/aggro separation audit (2026-11-16)
+
+Verified GitHub P0458 main `6739cf2e5033fc445f258648525b12b0297a0ae1`,
+tree `fa02a20c1710e5c69d6b2d220434a3b3fb9e1d1f`; exact clean
+repo reconstructed from committed P0458 manifest/tree. Forever session
+128 incident #13250 0.0.327-dev source=deployed=capture: screenshot
+shows Forest Spider Blizzard red bar next to selected Mangy Wolf Logres;
+secondary 1 attachment/1 restore/0 active, 6 ordinary nonprimary
+threat readings. Prior P0458 threshold equated threat loss to visual
+teardown. The earlier source tests verified that wrong policy, not the
+user-requested no-native visual behavior. P0459 separates read-only
+threat from independently validated hostile/attackable appearance,
+retains reversible native safe artwork suppression and preserves
+native aura/cast/click controls, selected 100%. Historical checks
+corrected where they demanded threat→visual detach/combat-end restore.
+Native fallback remains for secret/unsafe/refused owner and pool
+exhaustion: absolute no-native cannot be promised under capability loss.
+P0454/P0455 visual FAIL retained. Full suite/behavioral/refusal gates
+must PASS before distribution; WoW acceptance UNVERIFIED.
+
 ## P0458 secondary ownership lifecycle candidate audit (2026-11-15)
 
 Verified GitHub main P0457 `ff860151de8c95dab99d177e2d4180011fd6da55`,

@@ -11,20 +11,20 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0458** secondary aggro ownership against verified P0457 main
-`ff860151`/tree `ddfca65` (0.0.326-dev). Accepted selected 100% world
-name/health remains unchanged. P0454/P0455 secondary 50/50 VISUAL FAIL;
-P0456 suspended it; P0457 selected continuity did not fix secondary.
-Source eligible→missing→eligible previously caused attach/restore/attach;
-other eligible enemies were ignored. P0458
-uses read-only event classification and 40 precreated owners, with
-ADD epochs/optional ordinary GUID.
-Positive basic status 2/3 + safe hostile combat targeting player authorizes
-attach; ordinary 0/1, removal, promotion, unsafe gate, end combat and OFF
-restore; missing status holds only 3 same-unit safe events then restores.
-Auras/casts/input native; unsafe/overflow remain stock.
-P0457 selected regression separate. L-011 PARTIAL/L-028 OPEN.
-P0442/P0443, P0425 visual PASS retained. P0458 NOT Forever PASS.
+**P0459** P0458 `6739cf2`/`fa02a20` verified. Forever
+0.0.327-dev session 128 #13250 **VISUAL FAIL**: selected Mangy Wolf
+Logres, secondary Forest Spider Blizzard red bar. One secondary attach,
+one native restore, 0 active; 6 ordinary basic statuses 0/1, only 1
+eligible. Root: P0458 coupled visual ownership to player-primary
+threat; ordinary threat loss restored Blizzard artwork. ElvUI-style
+architecture skins each safely observed attackable hostile/neutral enemy
+nameplate, independently of threat. P0459 changes only that visual gate:
+secondary 50% all supported hostile nonselected; selected 100%
+unchanged. Native cast/aura/click stay; removal, promotion,
+unsafe/refusal, OFF restore. Pool 40 and unsafe/secret fallbacks remain
+limitations, NOT guaranteed no-native. L-011 FAIL/PARTIAL,
+L-028 OPEN. P0454/P0455 secondary 50/50 VISUAL FAIL; P0457 selected,
+P0425 visual PASS, P0442/P0443; P0456 suspended, P0459 UNVERIFIED.
 
 ## Verified State
 
@@ -66,12 +66,12 @@ P0442/P0443, P0425 visual PASS retained. P0458 NOT Forever PASS.
 
 ## Next Action
 
-P0458 **secondary implementation**: multi-enemy Forever combat,
-selected 100%, two eligible secondaries 50/50, stable through no-table.
-Report Bug: active/steady/hold/withdraw/restore, loss, removal,
-promotion/demotion, OFF and native fallback.
-No selected-only validation substitute. P0454/P0455 FAIL remain in
-history; WoW visual/taint acceptance is pending.
+P0459 Forever: World Enemy ON OOC; compare selected 100% and all
+nonselected hostile plates Logres 50/50 both OOC and combat; threat
+0/1 and no-table must not cause Blizzard health/name to reappear.
+Capture multiple plates, target promotion/demotion, removal, OFF,
+cast/aura/click and Lua/taint via Report Bug. Explicitly record any
+unsafe/overflow/native fallback as incomplete visual coverage.
 
 ## Success Criteria
 

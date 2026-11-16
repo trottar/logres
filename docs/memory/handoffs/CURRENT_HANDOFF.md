@@ -1,29 +1,31 @@
-# P0458: P0457 `ff860151`/tree `ddfca65`, 0.0.327-dev.
-Secondary 50/50 multi-owner lifecycle: 40 precreated slots, same-event
-basic 2/3 + safety eligibility, ordinary GUID/ADD epochs, bounded 3-event
-unknown hold, confirmed loss/removal/promotion/unsafe/OFF native restore;
-pending restores quarantined, overflow stock. Selected 100% untouched.
-P0454/P0455 FAIL; P0456 suspended; P0457 selected-only.
-L-011 PARTIAL/L-028 OPEN, P0458 Forever UNVERIFIED; multi-enemy
-Report Bug is next. CURRENT authoritative.
+# P0459: verified P0458 `6739cf2`/tree `fa02a20`, 0.0.328-dev.
+Forever #13250 0.0.327-dev VISUAL FAIL: selected Mangy Wolf Logres,
+Forest Spider Blizzard after 6 threat 0/1 events; 1 secondary native
+restore. P0459 skins each safe attackable hostile/neutral enemy plate
+independent of threat (50% secondary; selected 100% unchanged).
+Threat remains diagnostic. Native aura/cast/click, opaque alpha restore,
+identity/epoch, removal, target switch, OFF, unsafe/pool fallback remain.
+ElvUI study independent. P0454/P0455 FAIL,
+L-011 OPEN/L-028 OPEN. P0459 unverified; Report Bug.
 
-# P0457: `267bb947`, P0456 #12792 secondary OFF PASS.
-Retain selected owner on steady updates; client UNVERIFIED.
+# P0458: 40 OOC owners, ADD/GUID identity, bounded 3 unknown,
+refused restore quarantine; wrong 2/3 visual gate, #13250 FAIL.
+Selected unaffected, P0454/P0455 failures retained.
+
+# P0457: P0456 `267bb947`; selected continuity patch. Selected
+accepted; not a fix for secondary nameplate flicker.
 
 # P0456: P0455 `9317229` visual FAIL #12628/#12630.
 Secondary 50% suspended; selected 100% + threat probe.
 L-011 OPEN.
 
-# P0455: `1424fd7` #12547/#12549 flicker FAIL.
-Ignore unrelated updates; retain native restoration.
+# P0455: #12547/#12549 flicker FAIL; unrelated gating.
 
 # P0454: `7050f9c` DEV 50/50; native restore. P0453 #12307
 basic 18, primary 11, eligible 8, detail secret.
 
-# P0453: Ledger first: docs/memory/investigations/ISSUE_LEDGER.md
-P0451 #12124: 14 samples, 12 secret, 2 missing. P0453
-read-only sources; 50% disabled. P0450 visual PASS scoped;
-OFF/taint/click/cast open. CURRENT.md authoritative.
+# P0453: #12124 14 threat samples, 12 secret; read-only,
+no render. P0450 selected PASS scoped; OFF/taint open.
 
 # P0451: history.
 
@@ -42,9 +44,8 @@ P0409/P0408/P0407/P0406/P0405/P0404 PASS, P0403 L-001, P0402;
 P0401 PASS, P0400/P0399 FAIL; P0396–P0392 merchant; P0391 trainer;
 P0390, P0389, P0388 L-027, P0387, P0384 `c1c77e2` 254 STATIC;
 P0383 `cc783a0` quest18 PASS scoped; P0382 Continue; L-040:**
-P0379 main `285be528`, 249 STATIC. Forever incident 2399 no down/up/
-dispatch/claim; L-005 FAIL/PARTIAL; L-002 native Continue OPEN; L-039
-tracker owner UNKNOWN; L-001/L-025/L-029/L-033/L-034 OPEN.
+P0379 `285be528` 249 STATIC; #2399 no input dispatch; L-005
+FAIL/PARTIAL, L-002 Continue native OPEN; L-039 UNKNOWN.
 P0381 R0 PREWRITE REFUSED P0241 (77/251) on protected quest handoff;
 P0380 R0–R4 history retained; P0379 R0, P0379 R1 PREWRITE REFUSED;
 no writes. See CURRENT/P0379 evidence for precise negative results.

@@ -24,8 +24,8 @@ assert 'P0454/P0455 secondary 50/50 VISUAL FAIL' in read('docs/memory/CURRENT.md
 assert 'P0455' in read('docs/memory/investigations/ISSUE_LEDGER.md')
 assert 'P0455' in read('docs/memory/evidence/P0456_SECONDARY_TRIAL_SUSPENSION.md')
 for path in ('docs/ROADMAP.md','docs/memory/roadmap/STATUS.md','docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md','docs/memory/investigations/ACTIVE.md'):
- s=read(path);assert s.startswith('## P0458 —') and '## P0456 —' in s and '## P0455 —' in s
-assert read('docs/memory/handoffs/CURRENT_HANDOFF.md').startswith('# P0458:')
+ s=read(path);assert s.startswith('## P0459 —') and '## P0456 —' in s and '## P0455 —' in s
+assert read('docs/memory/handoffs/CURRENT_HANDOFF.md').startswith('# P0459:')
 assert '# P0456:' in read('docs/memory/handoffs/CURRENT_HANDOFF.md')
 assert 'P0456' in read('docs/memory/CURRENT.md')
 assert 'P0456' in read('docs/memory/patches/PATCH_INDEX.md')

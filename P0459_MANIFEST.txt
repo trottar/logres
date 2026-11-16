@@ -1,0 +1,34 @@
+P0459 Keep hostile Logres nameplates visually owned independent of aggro
+Verified baseline: 6739cf2e5033fc445f258648525b12b0297a0ae1
+Candidate runtime version: 0.0.328-dev
+PREWRITE: 322/322 STATIC PASS
+POSTWRITE: 322/322 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/HUD/HUD.lua
+Logres/HUD/WorldTargetProbe.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0459_HOSTILE_PLATE_APPEARANCE.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0451_secondary_threat_contract.py
+tools/check_p0453_secondary_threat_sources_contract.py
+tools/check_p0454_secondary_trial_contract.py
+tools/check_p0455_secondary_unrelated_event_contract.py
+tools/check_p0456_secondary_trial_suspension_contract.py
+tools/check_p0458_multi_secondary_lifecycle_contract.py
+tools/check_p0459_hostile_plate_skin_contract.py
+tools/test_p0459_hostile_plate_source.lua
+P0459_MANIFEST.txt

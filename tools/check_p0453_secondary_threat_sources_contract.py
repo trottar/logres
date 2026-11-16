@@ -38,7 +38,7 @@ for s in ('SetPoint(', 'SetAlpha(', 'SetScale(', 'CreateFrame(', 'SetCVar(',
           'GetChildren(', 'GetAuraDataByIndex('):
     assert s not in section, s
 assert 'worldEnemySecondaryEnabled = false' in h
-assert '50%% gated' in p  # P0458 lifecycle supersedes P0451/53 read-only display policy; basic gate retained
+assert 'threat diagnostic (visual ownership independent)' in p  # P0459: basic threat remains read-only but cannot gate art
 fields = ['secondaryThreatBasicOrdinaryEvents', 'secondaryThreatBasicPrimaryEvents', 'secondaryThreatBasicNonprimaryEvents', 'secondaryThreatBasicSecretEvents', 'secondaryThreatBasicMissingEvents', 'secondaryThreatBasicFailureEvents', 'secondaryThreatBasicEligibleEvents', 'secondaryThreatBasicEligibleDetailSecretEvents', 'secondaryThreatDetailOrdinaryEvents', 'secondaryThreatDetailTankingEvents', 'secondaryThreatDetailSecretEvents', 'secondaryThreatDetailMissingEvents', 'secondaryThreatDetailFailureEvents', 'secondaryThreatLastBasic', 'secondaryThreatLastDetail']
 for field in fields:
     assert 'self.'+field+' =' in p, field

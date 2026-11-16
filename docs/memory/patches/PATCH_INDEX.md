@@ -1,3 +1,11 @@
+## P0459 — World enemy appearance/aggro separation (2026-11-16)
+
+Verified P0458 main `6739cf2`; incident #13250 VISUAL FAIL shows
+native Forest Spider when 0/1 threat triggered native restore. P0459
+skins safe attackable enemy plates independent of threat, preserves
+selected and native control/cast/aura fallback, records limitations.
+321 prior checks + 1 new contract. WoW UNVERIFIED.
+
 ## P0458 — Secondary per-nameplate continuity (2026-11-15)
 
 Verified P0457 `ff860151` baseline. Gated multi-secondary 50%/50%

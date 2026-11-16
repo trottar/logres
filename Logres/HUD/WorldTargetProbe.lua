@@ -671,14 +671,14 @@ function Probe:GetNameplateLifecycleLines()
             tostring(self.lifecycleLastPlayerTargeting), tostring(self.lifecycleLastResult),
             tostring(self.lifecycleSecretResults), tostring(self.lifecycleFailures)),
         string.format(
-            "Secondary THREAT (event samples, not unique enemies): samples=%s primary=%s qualified=%s nonprimary=%s noTable=%s disagree=%s secret=%s error=%s unknown=%s last=%s; 50%% gated",
+            "Secondary THREAT (event samples, not unique enemies): samples=%s primary=%s qualified=%s nonprimary=%s noTable=%s disagree=%s secret=%s error=%s unknown=%s last=%s; threat diagnostic (visual ownership independent)",
             tostring(self.secondaryThreatEvents), tostring(self.secondaryThreatPrimaryEvents),
             tostring(self.secondaryThreatQualifiedEvents), tostring(self.secondaryThreatNonprimaryEvents),
             tostring(self.secondaryThreatNoTableEvents), tostring(self.secondaryThreatDisagreementEvents),
             tostring(self.secondaryThreatSecretEvents), tostring(self.secondaryThreatFailureEvents),
             tostring(self.secondaryThreatUnknownEvents), tostring(self.secondaryThreatLastResult)),
         string.format(
-            "Secondary sources (event samples): basic ordinary=%s primary=%s nonprimary=%s secret=%s missing=%s failures=%s eligible=%s eligibleDetailSecret=%s last=%s; detailed ordinary=%s tanking=%s secret=%s missing=%s failures=%s last=%s; 50%% gated",
+            "Secondary sources (event samples): basic ordinary=%s primary=%s nonprimary=%s secret=%s missing=%s failures=%s eligible=%s eligibleDetailSecret=%s last=%s; detailed ordinary=%s tanking=%s secret=%s missing=%s failures=%s last=%s; threat diagnostic (visual ownership independent)",
             tostring(self.secondaryThreatBasicOrdinaryEvents), tostring(self.secondaryThreatBasicPrimaryEvents),
             tostring(self.secondaryThreatBasicNonprimaryEvents), tostring(self.secondaryThreatBasicSecretEvents),
             tostring(self.secondaryThreatBasicMissingEvents), tostring(self.secondaryThreatBasicFailureEvents),
@@ -851,6 +851,29 @@ function Probe:ObserveSecondaryThreat(event, eventUnit, observation)
         self.secondaryThreatQualifiedEvents + 1
     self.secondaryThreatLastResult = "same-event-primary-threat-candidate"
     return trialDecision
+end
+
+-- P0459: Enemy nameplate VISUAL eligibility is independent of threat.
+-- ElvUI-style presentation owns each safely observed hostile/attackable
+-- nameplate, while threat classification remains a separate read-only signal.
+-- This gate never reads secret-capable source values or mutates native UI.
+function Probe:ObserveSecondaryVisualEligibility(event, eventUnit, observation)
+    if event == "NAME_PLATE_UNIT_REMOVED" then return "removed" end
+    if not observation then return "unrelated" end
+    if observation.currentTarget == true then return "promoted" end
+    if observation.currentTarget ~= false or not observation.anchorSafe then
+        return "unsafe"
+    end
+    -- A known non-attackable/friendly unit is not an enemy nameplate.
+    if observation.attackableObserved == false
+        or observation.reaction == "friendly" then
+        return "ineligible"
+    end
+    if observation.attackableObserved ~= true then return "unsafe" end
+    if observation.reaction == "hostile" or observation.reaction == "neutral" then
+        return "eligible"
+    end
+    return "inconclusive"
 end
 
 function Probe:RunDevNameplateLifecycleStatus(emit)
@@ -1337,12 +1360,15 @@ function Probe:OnInitialize()
     lifecycleFrame:SetScript("OnEvent", function(_, event, unit)
         if self.moduleEnabled ~= true then return end
         local observation = self:ObserveNameplateLifecycle(event, unit)
-        local decision = self:ObserveSecondaryThreat(event, unit, observation)
-        -- Rendering policy lives in HUD, never in this read-only probe.
-        -- No secondary unit/frame is retained by the probe.
+        -- Preserve independent threat provenance; its 0/1/2/3 status
+        -- must NOT determine whether Blizzard or Logres draws a nameplate.
+        self:ObserveSecondaryThreat(event, unit, observation)
+        local visual = self:ObserveSecondaryVisualEligibility(
+            event, unit, observation)
+        -- Rendering policy stays in HUD; probe never owns a native frame.
         local hud = Logres:GetModule("HUD")
         if hud and type(hud.ObserveSecondaryAggroTrial) == "function" then
-            hud:ObserveSecondaryAggroTrial(event, unit, decision)
+            hud:ObserveSecondaryAggroTrial(event, unit, visual)
         end
     end)
     self.lifecycleFrame = lifecycleFrame

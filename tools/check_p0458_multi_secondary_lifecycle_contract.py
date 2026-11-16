@@ -4,7 +4,7 @@ from pathlib import Path
 import hashlib
 R=Path(__file__).resolve().parents[1];read=lambda x:(R/x).read_text(encoding='utf-8')
 h=read('Logres/HUD/HUD.lua');p=read('Logres/HUD/WorldTargetProbe.lua')
-s=h[h.index('-- P0458: bounded, OOC-precreated secondary pool'):h.index('function HUD:BuildLiveWorldEnemy()')]
+s=h[h.index('-- P0459: every safely observed hostile/attackable non-selected plate'):h.index('function HUD:BuildLiveWorldEnemy()')]
 o=p[p.index('function Probe:ObserveSecondaryThreat('):p.index('function Probe:RunDevNameplateLifecycleStatus(')]
 for x in ('SECONDARY_POOL_CAPACITY = 40','SECONDARY_MAX_INCONCLUSIVE = 3',
           'for index = #pool + 1, SECONDARY_POOL_CAPACITY do','if not ordinaryOutOfCombat()',
@@ -21,7 +21,7 @@ for x in ('SECONDARY_POOL_CAPACITY = 40','SECONDARY_MAX_INCONCLUSIVE = 3',
           'self.worldEnemySecondaryTrialPoolExhaustions',
           'self:HideSecondaryAggroOwner(old, "secondary-identity-unavailable")',
           'if decision == "promoted" or decision == "unsafe"',
-          'or decision == "confirmed-loss"',
+          'or decision == "ineligible"',
           'self:HideSecondaryAggroTrial("secondary-removal-unknown")',
           'self:HideSecondaryAggroOwner(slot, "secondary-removed")',
           'self:HideSecondaryAggroOwner(old, "secondary-inconclusive-limit")',
@@ -47,7 +47,7 @@ for x in ('function Probe:OrdinarySecondaryIdentity(unit)',
  assert x in p,x
 assert 'UnitDetailedThreatSituation' in o and 'UnitThreatSituation' in o
 assert 'self:HideSecondaryAggroTrial("off")' in h
-assert 'self:HideSecondaryAggroTrial("secondary-combat-ended")' in h
+assert 'self:HideSecondaryAggroTrial("secondary-combat-ended")' not in h  # P0459: end combat must not show stock art
 assert 'self:ReconcileSecondaryAggroTargetChange(previous)' in h
 assert 'self:HideLiveWorldEnemy("target-changed")' in h
 assert 'worldEnemySecondaryEnabled = false' in h

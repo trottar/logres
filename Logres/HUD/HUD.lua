@@ -1331,10 +1331,11 @@ function HUD:ClaimNativeEnemyDecor(anchor)
     return true, "decor-owned"
 end
 
--- P0458: bounded, OOC-precreated secondary pool. Pool exhaustion leaves
--- excess enemies Blizzard-owned (and is diagnosed), never a shared single
--- secondary frame. Frames contain only name and health; Blizzard keeps auras,
--- casts, raid/CC indicators and all nameplate input/hit areas.
+-- P0459: every safely observed hostile/attackable non-selected plate is
+-- skinned with a precreated 50% Logres name/health display regardless of
+-- basic/detailed threat. Threat is diagnostic, not a switch to Blizzard art.
+-- Pool overflow and unsafe anchors remain explicit capability limitations.
+-- Blizzard retains auras, casts, raid/CC indicators and native input.
 local SECONDARY_POOL_CAPACITY = 40
 local SECONDARY_MAX_INCONCLUSIVE = 3
 
@@ -1393,7 +1394,17 @@ function HUD:ClaimNativeSecondaryEnemyDecor(slot, anchor)
         return false, "secondary-native-decor-unsafe"
     end
     local claim = {}
-    for _, region in ipairs({name, health}) do
+    -- Decorative level labels are part of the Blizzard plate's visible
+    -- shell. Keep aura/cast/raid/CC controls completely untouched.
+    local candidates = {name, health}
+    for _, field in ipairs({"LevelFrame", "PlayerLevelDiffFrame"}) do
+        local region = nativeDecorField(unitFrame, field)
+        if region then candidates[#candidates + 1] = region end
+    end
+    for _, region in ipairs(candidates) do
+        if not safeNativeDecor(region) then
+            return false, "secondary-native-decor-unsafe"
+        end
         local ok, alpha = pcall(region.GetAlpha, region)
         if not ok then return false, "secondary-alpha-capture-refused" end
         claim[#claim + 1] = {region = region, original = alpha}
@@ -1519,8 +1530,10 @@ function HUD:ObserveSecondaryAggroTrial(event, eventUnit, decision)
     end
     if not self.worldEnemyLiveRequested
         or not self.worldEnemySecondaryTrialArmed then return end
+    -- Do not release hostile nameplate skins merely because combat ends.
+    -- UNKNOWN combat state is still fail-open; both known states are safe.
     if Logres:GetPreferences().immersionEnabled ~= true
-        or not ordinaryInCombat() then
+        or not (ordinaryInCombat() or ordinaryOutOfCombat()) then
         self:HideSecondaryAggroTrial("secondary-unsafe-global-state")
         return
     end
@@ -1566,13 +1579,15 @@ function HUD:ObserveSecondaryAggroTrial(event, eventUnit, decision)
         self:HideSecondaryAggroOwner(old, "secondary-identity-unavailable")
         return
     end
+    -- Appearance changes only on lifecycle/identity/capability changes.
+    -- A numeric threat loss (0/1) is NOT an appearance withdrawal.
     if decision == "promoted" or decision == "unsafe"
-        or decision == "confirmed-loss" then
+        or decision == "ineligible" then
         if old then
             self:HideSecondaryAggroOwner(old,
                 decision == "promoted" and "secondary-promoted"
                 or decision == "unsafe" and "secondary-capability-lost"
-                or "secondary-confirmed-threat-loss")
+                or "secondary-no-longer-enemy")
         end
         return
     end
@@ -1669,7 +1684,7 @@ function HUD:ObserveSecondaryAggroTrial(event, eventUnit, decision)
     end
     self.worldEnemySecondaryTrialAttachments =
         self.worldEnemySecondaryTrialAttachments + 1
-    self.worldEnemySecondaryTrialLastResult = "secondary-basic-aggro-attached"
+    self.worldEnemySecondaryTrialLastResult = "secondary-hostile-plate-skinned"
     self:RefreshSecondaryOwnerCount()
 end
 
@@ -1697,7 +1712,11 @@ function HUD:ReconcileSecondaryAggroTargetChange(previousSelectedUnit)
         if old and not self:SecondaryOwnerForUnit(old) then
             local observation = probe:ObserveNameplateLifecycle(
                 "PLAYER_TARGET_CHANGED", old)
-            local decision = probe:ObserveSecondaryThreat(
+            -- Demotion can acquire a 50% visual owner even when no threat
+            -- table is present. Aggro classification stays diagnostic.
+            probe:ObserveSecondaryThreat(
+                "PLAYER_TARGET_CHANGED", old, observation)
+            local decision = probe:ObserveSecondaryVisualEligibility(
                 "PLAYER_TARGET_CHANGED", old, observation)
             self:ObserveSecondaryAggroTrial("PLAYER_TARGET_CHANGED", old, decision)
             self.worldEnemySecondaryTrialDemotionChecks =
@@ -2260,10 +2279,9 @@ function HUD:OnInitialize()
 
     local worldTrialEvents = CreateFrame("Frame")
     worldTrialEvents:SetScript("OnEvent", function(_, event, unit)
-        if event == "PLAYER_REGEN_ENABLED" then
-            self:HideSecondaryAggroTrial("secondary-combat-ended")
-            self.worldEnemySecondaryEpochs = {}
-        end
+        -- P0459: combat end no longer restores native health/name artwork.
+        -- Only nameplate removal, unsafe identity/anchor, OFF and teardown
+        -- release a skin. A new combat state does not redefine its owner.
         if event == "PLAYER_REGEN_ENABLED" and self.worldEnemyNativeClaim
             and not self.worldEnemyLiveVisible then
             self:RestoreNativeEnemyDecor()

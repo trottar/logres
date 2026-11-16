@@ -3449,7 +3449,7 @@ function Logres:HandleLiveWorldEnemyCommand(argument)
             tostring(auraState.worldEnemyScreenAuraRestores),
             tostring(auraState.worldEnemyScreenAuraFailures)))
         emit(string.format(
-            "World Enemy secondary DEV trial: armed=%s visible=%s eligible=%s attaches=%s detaches=%s failures=%s restores=%s restoreFailures=%s last=%s",
+            "World Enemy secondary skin: armed=%s visible=%s eligible=%s attaches=%s detaches=%s failures=%s restores=%s restoreFailures=%s last=%s",
             tostring(state.worldEnemySecondaryTrialArmed),
             tostring(state.worldEnemySecondaryTrialVisible),
             tostring(state.worldEnemySecondaryTrialEligibleEvents),
@@ -3460,7 +3460,7 @@ function Logres:HandleLiveWorldEnemyCommand(argument)
             tostring(state.worldEnemySecondaryTrialRestoreFailures),
             tostring(state.worldEnemySecondaryTrialLastResult)))
         emit(string.format(
-            "World Enemy secondary updates: ignored unrelated=%s lastDetach=%s (confirmed loss/removal/unsafe/OFF restore Blizzard; bounded unknown held)",
+            "World Enemy secondary updates: ignored unrelated=%s lastDetach=%s (threat loss does not restore Blizzard art; remove/unsafe/OFF restores; bounded unknown held)",
             tostring(state.worldEnemySecondaryTrialIgnoredUnrelatedEvents),
             tostring(state.worldEnemySecondaryTrialLastDetachReason)))
         emit(string.format(
@@ -3475,7 +3475,7 @@ function Logres:HandleLiveWorldEnemyCommand(argument)
             tostring(state.worldEnemySecondaryTrialIdentityDeferrals),
             tostring(state.worldEnemySecondaryTrialPoolExhaustions),
             tostring(state.worldEnemySecondaryTrialDemotionChecks)))
-        emit("World Enemy LIVE: selected 100%; qualifying secondary enemies each use guarded 50%/50% Logres name/HP; ordinary positive basic threat required; native auras/casts/input retained; OFF restores.")
+        emit("World Enemy LIVE: selected 100%; safely identified hostile/attackable secondary plates use guarded 50%/50% Logres name/HP regardless of threat; native auras/casts/input retained; OFF restores. Unsafe/overflow are explicit fallback.")
         return
     end
     if argument ~= "on" and argument ~= "off" then

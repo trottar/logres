@@ -1,3 +1,19 @@
+## P0459 — Enemy plate styling independent of aggro (2026-11-16)
+
+P0458 `6739cf2`/tree `fa02a20` verified. Forever session 128 #13250
+0.0.327-dev VISUAL FAIL: selected Mangy Wolf Logres, Forest Spider
+Blizzard. Secondary 1 attachment/1 native restore, 0 active;
+basic threat nonprimary 6 vs eligible 1. P0458 ties *visual* owner
+to threat 2/3, exposing stock art on 0/1. P0459 follows the
+ElvUI-style separation: every safely observed attackable hostile/neutral
+nonselected plate gets 50/50 Logres name/HP; threat remains read-only,
+never a hide/restore command. Secondary skins survive combat end;
+level decorations join safe native claim. Selected 100% untouched;
+native cast/auras/click still own their controls. Off/removal/unsafe/
+promotion restores; restricted anchor, refusal, 40-slot overflow remain
+stock fallbacks, so absolute visual absence NOT proven or promised.
+P0454/P0455 FAIL retained; L-011 still OPEN; P0459 WoW UNVERIFIED.
+
 ## P0458 — Multi-secondary aggro ownership, capability-gated (2026-11-15)
 
 Verified P0457 main `ff860151`/tree `ddfca65` (0.0.326-dev).

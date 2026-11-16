@@ -17,14 +17,15 @@ assert obs.index('trialDecision = "eligible"')<obs.index('if source.secret or de
 assert obs.count('return trialDecision')>=8
 for forbidden in ('SetPoint(', 'SetAlpha(', 'CreateFrame(', 'SetParent(', 'OnUpdate', 'C_Timer.', 'GetNamePlates(', 'UnitGUID('):
     assert forbidden not in obs,forbidden
-assert 'local decision = self:ObserveSecondaryThreat(event, unit, observation)' in p
-assert 'hud:ObserveSecondaryAggroTrial(event, unit, decision)' in p
+assert 'self:ObserveSecondaryThreat(event, unit, observation)' in p
+assert 'local visual = self:ObserveSecondaryVisualEligibility(' in p
+assert 'hud:ObserveSecondaryAggroTrial(event, unit, visual)' in p
 anchor=p[p.index('function Probe:AcquireLiveEnemySecondaryAnchor('):p.index('-- Removal events must never reacquire',p.index('function Probe:AcquireLiveEnemySecondaryAnchor('))]
 for x in ('ordinaryNameplateToken','readBoolean(UnitIsUnit, unit, "target")','readEventNameplate(unit)',
           'anchor.IsForbidden','IsNamePlateUnitBehindCamera'):
     assert x in anchor,x
 for forbidden in ('SetAlpha(', 'SetPoint(', 'SetParent(', 'UnitGUID('):assert forbidden not in anchor,forbidden
-s=h[h.index('-- P0458: bounded, OOC-precreated secondary pool'):h.index('function HUD:BuildLiveWorldEnemy()')]
+s=h[h.index('-- P0459: every safely observed hostile/attackable non-selected plate'):h.index('function HUD:BuildLiveWorldEnemy()')]
 for x in ('function HUD:BuildSecondaryAggroTrial()', 'SECONDARY_POOL_CAPACITY = 40',
           'if not ordinaryOutOfCombat()', 'frame:SetScale(0.5)', 'frame:SetAlpha(0.5)',
           'frame:EnableMouse(false)', 'function HUD:RestoreNativeSecondaryEnemyDecor(slot)',
@@ -41,12 +42,12 @@ for x in ('function HUD:BuildSecondaryAggroTrial()', 'SECONDARY_POOL_CAPACITY = 
           'SECONDARY_MAX_INCONCLUSIVE = 3', 'slot.blocked = true'):
     assert x in s,x
 assert 'self:HideSecondaryAggroTrial("off")' in h
-assert 'self:HideSecondaryAggroTrial("secondary-combat-ended")' in h
+assert 'self:HideSecondaryAggroTrial("secondary-combat-ended")' not in h  # P0459: end combat must not show stock art
 assert 'self.secondaryValueEvents:RegisterEvent(event)' in h
 assert 'self.secondaryValueEvents:UnregisterAllEvents()' in h
 assert 'worldEnemySecondaryEnabled = false' in h # production gate distinct from DEV opt-in
 assert 'worldEnemySecondaryTrialVisible' in d and 'worldEnemySecondaryTrialRestoreFailures' in d
-assert 'World Enemy secondary DEV trial:' in c
+assert 'World Enemy secondary skin:' in c  # P0459 display policy changed; historic dev trial safety retained
 for path in ('docs/ROADMAP.md','docs/memory/roadmap/STATUS.md','docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md','docs/memory/investigations/ACTIVE.md'):
     body=read(path); assert '## P0454 —' in body and '## P0453 —' in body,path
 assert 'P0454' in read('docs/memory/CURRENT.md')

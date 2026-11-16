@@ -10,7 +10,7 @@ for x in ('if event == "NAME_PLATE_UNIT_REMOVED" then',
           'local unit = probe:OrdinaryEventNameplateToken(eventUnit)',
           'if not unit then', 'self.worldEnemySecondaryTrialIgnoredUnrelatedEvents',
           'if decision == "promoted" or decision == "unsafe"',
-          'or decision == "confirmed-loss"', 'SECONDARY_MAX_INCONCLUSIVE',
+          'or decision == "ineligible"', 'SECONDARY_MAX_INCONCLUSIVE',
           'self.worldEnemySecondaryTrialInconclusiveWithdrawals',
           'self.worldEnemySecondaryTrialInconclusiveHolds',
           'probe:AcquireLiveEnemySecondaryAnchor(unit)',
@@ -22,7 +22,7 @@ assert 'return' in unrelated
 assert 'frame:SetScale(0.5)' in h and 'frame:SetAlpha(0.5)' in h
 assert 'frame:EnableMouse(false)' in h and 'worldEnemySecondaryEnabled = false' in h
 assert 'self:RestoreNativeSecondaryEnemyDecor(slot)' in h
-assert 'self:HideSecondaryAggroTrial("secondary-combat-ended")' in h
+assert 'self:HideSecondaryAggroTrial("secondary-combat-ended")' not in h  # P0459: end combat must not show stock art
 assert 'self:HideSecondaryAggroTrial("off")' in h
 assert 'self.worldEnemySecondaryTrialLastDetachReason = reason or "secondary-hidden"' in h
 assert 'worldEnemySecondaryTrialIgnoredUnrelatedEvents' in read('Logres/Dev/Panel.lua')
