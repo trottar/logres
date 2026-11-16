@@ -3395,6 +3395,11 @@ function Logres:HandleLiveWorldEnemyCommand(argument)
             tostring(state.worldEnemyLiveLastContinuityEvent),
             tostring(state.worldEnemyLiveLastDetachReason)))
         emit(string.format(
+            "World Enemy selected removal proof: observed=%s unresolved=%s ignored-other-removals=%s",
+            tostring(state.worldEnemyLiveObservedTokenResolutions),
+            tostring(state.worldEnemyLiveUnknownTokenQueries),
+            tostring(state.worldEnemyLiveIgnoredOtherRemovals)))
+        emit(string.format(
             "World Enemy: presentation=%s; native input unchanged",
             tostring(state.worldEnemyLivePresentation)))
         emit(string.format(

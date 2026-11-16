@@ -53,5 +53,7 @@ for f in ('docs/memory/CURRENT.md','docs/memory/handoffs/CURRENT_HANDOFF.md',
           'docs/memory/investigations/ACTIVE.md'):
  assert 'P0459' in read(f),f
 assert 'P0454/P0455' in read('docs/memory/evidence/P0459_HOSTILE_PLATE_APPEARANCE.md')
-assert read('docs/ROADMAP.md').startswith('## P0459 —')
+# Historical invariant: P0459 remains documented, but need not be the
+# active roadmap after a verified newer checkpoint.
+assert '## P0459 —' in read('docs/ROADMAP.md')
 print('P0459 PASS: actual source visual eligibility independent of threat, owned native decorative shell, safety and memory (STATIC)')

@@ -1,3 +1,16 @@
+## P0460 — Selected nameplate removal identity repair (2026-11-16)
+
+GitHub P0459 `0cbc8cc`/tree `64af7ead`; Forever #13499 0.0.328-dev
+VISUAL FAIL after brief success, selected 4/4 and secondary 3/3
+native restores, no restore errors; selected removal attribution was
+`unknown-attached-unit`. Source target-query owner had nil token so
+unrelated nameplate REMOVE could hide selected. P0460 records bounded
+ordinary ADD epochs in HUD, derives selected token only from fresh
+ordinary role, ignores unrelated removals, restores on matching/unsafe/
+unknown/reuse/OFF. P0459 50% secondary threat-independent skin and
+selected 100% drawing retained. Actual-source mock, 323 static and
+transactional release gates; **WoW UNVERIFIED**. L-011/L-028 OPEN.
+
 ## P0459 — World enemy appearance/aggro separation (2026-11-16)
 
 Verified P0458 main `6739cf2`; incident #13250 VISUAL FAIL shows

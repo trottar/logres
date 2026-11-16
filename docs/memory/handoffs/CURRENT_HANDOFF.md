@@ -1,28 +1,21 @@
-# P0459: verified P0458 `6739cf2`/tree `fa02a20`, 0.0.328-dev.
-Forever #13250 0.0.327-dev VISUAL FAIL: selected Mangy Wolf Logres,
-Forest Spider Blizzard after 6 threat 0/1 events; 1 secondary native
-restore. P0459 skins each safe attackable hostile/neutral enemy plate
-independent of threat (50% secondary; selected 100% unchanged).
-Threat remains diagnostic. Native aura/cast/click, opaque alpha restore,
-identity/epoch, removal, target switch, OFF, unsafe/pool fallback remain.
-ElvUI study independent. P0454/P0455 FAIL,
-L-011 OPEN/L-028 OPEN. P0459 unverified; Report Bug.
+# P0460: P0459 `0cbc8cc`/tree `64af7ead` verified. Forever
+#13499 0.0.328-dev VISUAL FAIL after brief success: selected 4/4
+and secondary 3/3 restores, last selected `unknown-attached-unit`.
+P0459 target-query owner lost nameplate identity, so any other REMOVE
+hid selected. P0460 caches ordinary HUD ADD epochs and resolves current
+target from ordinary role; other REMOVE ignored, matching/unknown/
+unsafe/reuse/OFF restore. Selected 100%, 50% hostile secondary,
+native cast/aura/click unchanged. L-011/L-028 OPEN; WoW UNVERIFIED.
 
-# P0458: 40 OOC owners, ADD/GUID identity, bounded 3 unknown,
-refused restore quarantine; wrong 2/3 visual gate, #13250 FAIL.
-Selected unaffected, P0454/P0455 failures retained.
+# P0459: P0458 #13250 VISUAL FAIL on threat 0/1; P0459 skins
+hostile nonselected independent of threat. #13499 regression P0460.
+Prior P0454/P0455/P0458 failures preserved; no blanket suppression.
 
-# P0457: P0456 `267bb947`; selected continuity patch. Selected
-accepted; not a fix for secondary nameplate flicker.
-
-# P0456: P0455 `9317229` visual FAIL #12628/#12630.
-Secondary 50% suspended; selected 100% + threat probe.
-L-011 OPEN.
-
-# P0455: #12547/#12549 flicker FAIL; unrelated gating.
-
-# P0454: `7050f9c` DEV 50/50; native restore. P0453 #12307
-basic 18, primary 11, eligible 8, detail secret.
+# P0458: 40-owner trial; #13250 VISUAL FAIL on threat loss.
+# P0457: selected continuity; not secondary repair.
+# P0456: P0455 visual FAIL; secondary suspended.
+# P0455: secondary flicker visual FAIL.
+# P0454: secondary 50/50 visual FAIL.
 
 # P0453: #12124 14 threat samples, 12 secret; read-only,
 no render. P0450 selected PASS scoped; OFF/taint open.

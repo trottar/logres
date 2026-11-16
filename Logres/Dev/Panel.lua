@@ -346,6 +346,8 @@ function Logres:CaptureBugIncident()
         "worldEnemyLiveLastReason", "worldEnemyLiveAttachments",
         "worldEnemyLiveCombatAttaches", "worldEnemyLiveFailures",
         "worldEnemyLiveDetaches", "worldEnemyLiveRemovalResult",
+        "worldEnemyLiveObservedTokenResolutions", "worldEnemyLiveUnknownTokenQueries",
+        "worldEnemyLiveIgnoredOtherRemovals",
         "worldEnemyLiveContinuityRefreshes", "worldEnemyLiveReanchors",
         "worldEnemyLiveLastContinuityEvent", "worldEnemyLiveLastDetachReason",
         "worldEnemyScreenHandoffs", "worldEnemyScreenFallbackRefreshes",

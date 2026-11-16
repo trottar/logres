@@ -1,3 +1,26 @@
+## P0460 selected-removal identity audit (2026-11-16)
+
+Verified GitHub P0459 `0cbc8cc7a9f9db14a308f9e24a556a66023e30ab`,
+tree `64af7ead1f4ce638b3779c719a38d952edb310af`; local reconstructed
+checkout has the same exact Git tree. Forever session 131 #13499
+0.0.328-dev was VISUAL FAIL after brief success: selected 4/4,
+secondary 3/3, no restoration errors, `unknown-attached-unit` removal.
+P0459 selected target-query anchor stores no token, and every REMOVE
+then detaches it; this is a verified source mechanism consistent with
+capture, not client-attested per-unit event provenance. Reviewed
+P0440/P0441/P0442/P0447/P0457/P0458/P0459 protected-state and historical
+contracts. P0459 and P0456 roadmap-first static assertions were corrected to
+require retained history rather than a frozen active phase; the P0456
+check still insists on both historical visual failures and native
+restoration contracts. No runtime safety assertion was weakened. P0460 adds ordinary HUD ADD epoch bookkeeping and fresh
+ordinary target role matching. Native anchors, secret values, protected
+click/auras/casts untouched; no timer/polling or blanket suppression.
+P0459 multi-secondary owner remains unchanged. P0454/P0455/P0458 and
+P0459 visual failures retained. Exact-candidate 323-checker suite,
+behavioral mock, Lua compilation, refusal/rollback, ZIP byte-parity,
+author receipt, diff hygiene are release gates, not runtime acceptance.
+P0460 client UNVERIFIED, L-011/L-028 OPEN.
+
 ## P0459 appearance/aggro separation audit (2026-11-16)
 
 Verified GitHub P0458 main `6739cf2e5033fc445f258648525b12b0297a0ae1`,

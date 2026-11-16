@@ -11,20 +11,18 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0459** P0458 `6739cf2`/`fa02a20` verified. Forever
-0.0.327-dev session 128 #13250 **VISUAL FAIL**: selected Mangy Wolf
-Logres, secondary Forest Spider Blizzard red bar. One secondary attach,
-one native restore, 0 active; 6 ordinary basic statuses 0/1, only 1
-eligible. Root: P0458 coupled visual ownership to player-primary
-threat; ordinary threat loss restored Blizzard artwork. ElvUI-style
-architecture skins each safely observed attackable hostile/neutral enemy
-nameplate, independently of threat. P0459 changes only that visual gate:
-secondary 50% all supported hostile nonselected; selected 100%
-unchanged. Native cast/aura/click stay; removal, promotion,
-unsafe/refusal, OFF restore. Pool 40 and unsafe/secret fallbacks remain
-limitations, NOT guaranteed no-native. L-011 FAIL/PARTIAL,
-L-028 OPEN. P0454/P0455 secondary 50/50 VISUAL FAIL; P0457 selected,
-P0425 visual PASS, P0442/P0443; P0456 suspended, P0459 UNVERIFIED.
+**P0460** main P0459 `0cbc8cc`/tree `64af7ead` verified.
+Forever 0.0.328-dev #13499 **VISUAL FAIL** after brief success:
+selected 4/4 attaches/detaches, secondary 3/3 restores, 0 refusals.
+Screenshot shows native Mangy Wolf decoration; removal attribution was
+`unknown-attached-unit`. P0459 target-query owner has nil token, so
+any nameplate removal can detach selected. P0460 caches ordinary ADD
+epochs, resolves selected via fresh ordinary `UnitIsUnit`; unrelated
+REMOVED is ignored, matching/unsafe/unknown restore. P0459 50%
+secondary hostile styling, selected 100%, native cast/aura/click and
+opaque tokens are unchanged. L-011/L-028 OPEN.
+P0454/P0455 secondary 50/50 VISUAL FAIL; P0458 VISUAL FAIL; P0425 visual PASS;
+P0442/P0443; P0456 suspension; P0457 selected accepted. P0460 Forever UNVERIFIED.
 
 ## Verified State
 
@@ -66,12 +64,12 @@ P0425 visual PASS, P0442/P0443; P0456 suspended, P0459 UNVERIFIED.
 
 ## Next Action
 
-P0459 Forever: World Enemy ON OOC; compare selected 100% and all
-nonselected hostile plates Logres 50/50 both OOC and combat; threat
-0/1 and no-table must not cause Blizzard health/name to reappear.
-Capture multiple plates, target promotion/demotion, removal, OFF,
-cast/aura/click and Lua/taint via Report Bug. Explicitly record any
-unsafe/overflow/native fallback as incomplete visual coverage.
+P0460 Forever: World Enemy ON OOC; keep selected Logres 100% while
+multiple other nameplates disappear, confirming other-unit removal
+never restores its Blizzard artwork. Check true selected removal,
+nameplate reuse, target switches, 50% secondary skins after threat
+changes, OFF restoration, casts/auras/clicks and Lua/taint. Export
+Report Bug. Unknown/unsafe/pool-native fallbacks remain OPEN.
 
 ## Success Criteria
 

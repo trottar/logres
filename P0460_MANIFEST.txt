@@ -1,0 +1,30 @@
+P0460 Correct selected nameplate removal attribution without secondary resets
+Verified baseline: 0cbc8cc7a9f9db14a308f9e24a556a66023e30ab
+Candidate runtime version: 0.0.329-dev
+PREWRITE: 323/323 STATIC PASS
+POSTWRITE: 323/323 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/HUD/HUD.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0460_SELECTED_REMOVAL_IDENTITY.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0456_secondary_trial_suspension_contract.py
+tools/check_p0459_hostile_plate_skin_contract.py
+tools/check_p0460_selected_removal_identity_contract.py
+tools/test_p0460_selected_removal_source.lua
+P0460_MANIFEST.txt

@@ -866,6 +866,12 @@ function HUD:GetDebugStatus()
             and self.targetHealthBar and self.targetNameText:IsShown()
             and self.targetHealthBar:IsShown() or false,
         worldEnemyLiveRemovalResult = self.worldEnemyLiveRemovalResult,
+        worldEnemyLiveObservedTokenResolutions =
+            self.worldEnemyLiveObservedTokenResolutions or 0,
+        worldEnemyLiveUnknownTokenQueries =
+            self.worldEnemyLiveUnknownTokenQueries or 0,
+        worldEnemyLiveIgnoredOtherRemovals =
+            self.worldEnemyLiveIgnoredOtherRemovals or 0,
         worldEnemyNativeVisualOwner = self.worldEnemyNativeClaim
             and "Logres-decor-only" or "Blizzard",
         worldEnemyNativeTransfers = self.worldEnemyNativeTransfers or 0,
@@ -1765,6 +1771,7 @@ function HUD:HideLiveWorldEnemy(reason)
     -- target change, removal, OFF and disable, even if our frame hide fails.
     self:RestoreNativeEnemyDecor()
     self.worldEnemyLiveAnchorUnit = nil
+    self.worldEnemyLiveAnchorEpoch = nil
     self.worldEnemyLiveLastReason = reason or "hidden"
     -- Always restore the independent addon-owned screen target after any
     -- detach attempt, even when hiding our world frame is refused.
@@ -1811,6 +1818,26 @@ function HUD:UpdateLiveWorldEnemyValues()
     return ok
 end
 
+-- P0460: the target-query API provides an anchor but no nameplate token.
+-- Reconcile it to a nameplate token only from ordinary ADD events observed
+-- during this session and a fresh ordinary UnitIsUnit(role) result. Never
+-- compare native frame objects, GUIds or secret-capable payloads. Failure
+-- leaves the old conservative unknown-token removal fallback intact.
+function HUD:ResolveObservedSelectedNameplateUnit(probe)
+    if not probe or type(probe.OrdinarySecondaryRole) ~= "function" then
+        return nil
+    end
+    local selected
+    for unit in pairs(self.worldEnemyObservedNameplateEpochs or {}) do
+        local isTarget = probe:OrdinarySecondaryRole(unit)
+        if isTarget == true then
+            if selected then return nil end -- ambiguous; fail open
+            selected = unit
+        end
+    end
+    return selected
+end
+
 function HUD:RefreshLiveWorldEnemy(event, eventUnit)
     if not self.worldEnemyLiveRequested then return false, "not-requested" end
     local preferences = Logres:GetPreferences()
@@ -1840,6 +1867,19 @@ function HUD:RefreshLiveWorldEnemy(event, eventUnit)
         if why ~= "not-current-target" then self:HideLiveWorldEnemy(why) end
         return false, why
     end
+    -- For an ordinary target query, resolve the previously observed plate
+    -- unit before claiming. This prevents an unrelated secondary REMOVE
+    -- event from spuriously restoring the selected Blizzard artwork.
+    if not anchorUnit then
+        anchorUnit = self:ResolveObservedSelectedNameplateUnit(probe)
+        if anchorUnit then
+            self.worldEnemyLiveObservedTokenResolutions =
+                (self.worldEnemyLiveObservedTokenResolutions or 0) + 1
+        else
+            self.worldEnemyLiveUnknownTokenQueries =
+                (self.worldEnemyLiveUnknownTokenQueries or 0) + 1
+        end
+    end
     -- P0457: a successful ordinary current-target eligibility/anchor query
     -- on a non-identity event must not hide, reanchor, restore and reclaim
     -- the SAME selected owner. Those operations caused repeated handoffs
@@ -1854,7 +1894,17 @@ function HUD:RefreshLiveWorldEnemy(event, eventUnit)
         local sameOrdinaryAddedUnit = event == "NAME_PLATE_UNIT_ADDED"
             and anchorUnit ~= nil and self.worldEnemyLiveAnchorUnit ~= nil
             and anchorUnit == self.worldEnemyLiveAnchorUnit
+            and self.worldEnemyLiveAnchorEpoch ~= nil
+            and self.worldEnemyLiveAnchorEpoch ==
+                self.worldEnemyObservedNameplateEpochs[anchorUnit]
         if event ~= "NAME_PLATE_UNIT_ADDED" or sameOrdinaryAddedUnit then
+            -- A later ordinary event may supply identity to an initially
+            -- unknown target-query owner without reanchoring/reclaiming.
+            if not self.worldEnemyLiveAnchorUnit and anchorUnit then
+                self.worldEnemyLiveAnchorUnit = anchorUnit
+                self.worldEnemyLiveAnchorEpoch =
+                    self.worldEnemyObservedNameplateEpochs[anchorUnit]
+            end
             self.worldEnemyLiveContinuityRefreshes =
                 (self.worldEnemyLiveContinuityRefreshes or 0) + 1
             self.worldEnemyLiveLastContinuityEvent = event or "unknown"
@@ -1897,10 +1947,12 @@ function HUD:RefreshLiveWorldEnemy(event, eventUnit)
         return false, self.worldEnemyLiveLastReason
     end
     self.worldEnemyLiveVisible = true
-    -- Only an ordinary, event-validated nameplate token may be retained
-    -- for matching removal events. A target-query anchor is unknown here;
-    -- removal of any plate then conservatively hides the owned display.
+    -- An event token or a uniquely resolved ordinary observed ADD token
+    -- identifies the current owner. Do not retain native anchor objects.
+    -- Unknown identity still restores conservatively on removal.
     self.worldEnemyLiveAnchorUnit = anchorUnit
+    self.worldEnemyLiveAnchorEpoch = anchorUnit
+        and self.worldEnemyObservedNameplateEpochs[anchorUnit] or nil
     if not self:UpdateLiveWorldEnemyValues() then
         return false, self.worldEnemyLiveLastReason
     end
@@ -2019,6 +2071,12 @@ function HUD:OnInitialize()
     self.worldEnemyNativeAuraTransfers = 0
     self.worldEnemyNativeAuraRestores = 0
     self.worldEnemyLiveAnchorUnit = nil
+    self.worldEnemyLiveAnchorEpoch = nil
+    self.worldEnemyObservedNameplateEpochs = {}
+    self.worldEnemyObservedNameplateSerial = 0
+    self.worldEnemyLiveObservedTokenResolutions = 0
+    self.worldEnemyLiveUnknownTokenQueries = 0
+    self.worldEnemyLiveIgnoredOtherRemovals = 0
     self.worldEnemyLiveRemovalResult = "none"
     self.worldEnemySecondaryTrialArmed = false
     self.worldEnemySecondaryPool = {}
@@ -2279,6 +2337,30 @@ function HUD:OnInitialize()
 
     local worldTrialEvents = CreateFrame("Frame")
     worldTrialEvents:SetScript("OnEvent", function(_, event, unit)
+        -- Event-owned, ordinary tokens are cached only until their REMOVE.
+        -- Cache is kept even with World Enemy OFF so enabling later can
+        -- resolve the current selected anchor without scanning native UI.
+        local probe = Logres:GetModule("WorldTargetProbe")
+        local plateUnit
+        if (event == "NAME_PLATE_UNIT_ADDED"
+            or event == "NAME_PLATE_UNIT_REMOVED")
+            and probe and type(probe.OrdinaryEventNameplateToken) == "function" then
+            plateUnit = probe:OrdinaryEventNameplateToken(unit)
+        end
+        if event == "NAME_PLATE_UNIT_ADDED" and plateUnit then
+            self.worldEnemyObservedNameplateSerial =
+                self.worldEnemyObservedNameplateSerial + 1
+            self.worldEnemyObservedNameplateEpochs[plateUnit] =
+                self.worldEnemyObservedNameplateSerial
+        elseif event == "PLAYER_ENTERING_WORLD" then
+            self.worldEnemyObservedNameplateEpochs = {}
+            if self.worldEnemyLiveRequested then
+                self:HideSecondaryAggroTrial("world-transition")
+                self:HideLiveWorldEnemy("world-transition")
+                self.worldEnemySecondaryEpochs = {}
+            end
+            return
+        end
         -- P0459: combat end no longer restores native health/name artwork.
         -- Only nameplate removal, unsafe identity/anchor, OFF and teardown
         -- release a skin. A new combat state does not redefine its owner.
@@ -2296,7 +2378,6 @@ function HUD:OnInitialize()
         end
         if self.worldEnemyLiveRequested then
             if event == "NAME_PLATE_UNIT_REMOVED" then
-                local probe = Logres:GetModule("WorldTargetProbe")
                 local relevant, reason = true, "unverified-removal"
                 if probe and type(probe.IsLiveEnemyRemovalRelevant) == "function" then
                     relevant, reason = probe:IsLiveEnemyRemovalRelevant(
@@ -2307,6 +2388,9 @@ function HUD:OnInitialize()
                     -- Do NOT reacquire on a REMOVED event: the native API
                     -- may still return a stale anchor in the same dispatch.
                     self:HideLiveWorldEnemy("nameplate-removed")
+                else
+                    self.worldEnemyLiveIgnoredOtherRemovals =
+                        (self.worldEnemyLiveIgnoredOtherRemovals or 0) + 1
                 end
             elseif event == "PLAYER_TARGET_CHANGED" then
                 -- Restore previous selected native decoration, release any
@@ -2323,6 +2407,11 @@ function HUD:OnInitialize()
             elseif event ~= "PLAYER_REGEN_DISABLED" then
                 self:RefreshLiveWorldEnemy(event)
             end
+        end
+        -- Clear after attribution, not before: a valid selected REMOVE
+        -- must still match the identity recorded when its frame attached.
+        if event == "NAME_PLATE_UNIT_REMOVED" and plateUnit then
+            self.worldEnemyObservedNameplateEpochs[plateUnit] = nil
         end
     end)
     self.worldTrialEvents = worldTrialEvents
@@ -2446,7 +2535,8 @@ function HUD:OnEnable()
 
     for _, event in ipairs({"PLAYER_TARGET_CHANGED", "NAME_PLATE_UNIT_ADDED",
         "NAME_PLATE_UNIT_REMOVED", "NAME_PLATE_UNIT_BEHIND_CAMERA_CHANGED",
-        "PLAYER_REGEN_DISABLED", "PLAYER_REGEN_ENABLED"}) do
+        "PLAYER_REGEN_DISABLED", "PLAYER_REGEN_ENABLED",
+        "PLAYER_ENTERING_WORLD"}) do
         self.worldTrialEvents:RegisterEvent(event)
     end
 
