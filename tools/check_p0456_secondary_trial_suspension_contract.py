@@ -4,7 +4,10 @@ from pathlib import Path
 R=Path(__file__).resolve().parents[1];read=lambda x:(R/x).read_text()
 h=read('Logres/HUD/HUD.lua')
 setlive=h[h.index('function HUD:SetLiveWorldEnemy(enabled)'):h.index('function HUD:SetEnemyDisplayPreview(enabled)')]
-on=setlive[setlive.index('if enabled then'):setlive.index('self.worldEnemyLiveRequested = true')]
+on=setlive[setlive.index('if enabled == true then'):setlive.index('-- OFF always cancels')]
+assert 'if not ordinaryOutOfCombat() then' in on
+assert on.index('if not ordinaryOutOfCombat() then') < on.index('self:BuildLiveWorldEnemy()')
+assert 'self.worldEnemyEnablePending = true' in on
 assert 'self:BuildLiveWorldEnemy()' in on
 assert 'self:BuildSecondaryAggroTrial()' in on
 assert 'self.worldEnemySecondaryTrialArmed = secondaryBuilt == true' in on

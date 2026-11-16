@@ -850,6 +850,16 @@ function HUD:GetDebugStatus()
         enemyWorldAttachmentEnabled = false,
         enemyFallbackPreserved = true,
         worldEnemyLiveRequested = self.worldEnemyLiveRequested == true,
+        worldEnemyEnablePending = self.worldEnemyEnablePending == true,
+        worldEnemyDisablePending = self.worldEnemyDisablePending == true,
+        worldEnemyActivationState = self.worldEnemyDisablePending and "off-pending-restore"
+            or self.worldEnemyEnablePending and "on-pending-ooc"
+            or (self.worldEnemyLiveVisible
+                or (self.worldEnemySecondaryTrialActive or 0) > 0) and "active"
+            or self.worldEnemyLiveRequested and "requested"
+            or "off",
+        worldEnemyEnableAttempts = self.worldEnemyEnableAttempts or 0,
+        worldEnemyEnableLastResult = self.worldEnemyEnableLastResult or "not-attempted",
         worldEnemyLiveVisible = self.worldEnemyLiveVisible == true,
         worldEnemyLiveLastReason = self.worldEnemyLiveLastReason,
         worldEnemyLiveAttachments = self.worldEnemyLiveAttachments or 0,
@@ -1987,35 +1997,108 @@ function HUD:RefreshLiveWorldEnemy(event, eventUnit)
     return true, self.worldEnemyLiveLastReason
 end
 
+-- P0462: addon-owned opaque alpha restoration token, never read the
+-- alpha value itself. A refused restore must remain pending even when the
+-- screen-aura module's display-status Boolean has been cleared.
+local function hasOwnedWorldAuraRestoreToken()
+    local auras = Logres:GetModule("StatusAuras")
+    return auras and auras.nativeDebuffs
+        and auras.nativeDebuffs.screenTargetWorldAlpha ~= nil
+end
+
+-- P0462: one pending intent per HUD. No new event frame, timer or callback.
+-- A combat ON is requested, not active; the existing regen event performs
+-- the single capability-gated setup attempt once lockdown has ended.
 function HUD:SetLiveWorldEnemy(enabled)
-    if enabled then
+    if enabled == true then
+        if (self.worldEnemyLiveVisible
+            or (self.worldEnemySecondaryTrialActive or 0) > 0)
+            and self.worldEnemyLiveRequested
+            and not self.worldEnemyDisablePending then
+            self.worldEnemyEnablePending = false
+            self.worldEnemyEnableLastResult = "already-active"
+            return true, "owned-target-retained"
+        end
         if not ordinaryOutOfCombat() then
-            self.worldEnemyLiveLastReason = "enable-requires-ooc"
+            self.worldEnemyLiveRequested = true
+            self.worldEnemyEnablePending = true
+            self.worldEnemyEnableLastResult = ordinaryInCombat()
+                and "pending-combat" or "pending-lockdown-unknown"
+            self.worldEnemyLiveLastReason = self.worldEnemyEnableLastResult
             return false, self.worldEnemyLiveLastReason
         end
+        -- OFF requested while an existing owner was in combat: its opaque
+        -- restoration must finish before a new owner may be acquired.
+        if self.worldEnemyDisablePending then
+            local secondaryRestored = self:HideSecondaryAggroTrial("off-safe-event")
+            local selectedRestored = self:HideLiveWorldEnemy("off-safe-event")
+            if not secondaryRestored or not selectedRestored
+                or self.worldEnemyNativeClaim or hasOwnedWorldAuraRestoreToken() then
+                self.worldEnemyEnablePending = false
+                self.worldEnemyEnableLastResult = "previous-restore-refused"
+                self.worldEnemyLiveLastReason = self.worldEnemyEnableLastResult
+                return false, self.worldEnemyLiveLastReason
+            end
+            self.worldEnemyDisablePending = false
+            self.worldEnemySecondaryTrialArmed = false
+            self.worldEnemySecondaryEpochs = {}
+        end
+        self.worldEnemyLiveRequested = true
+        self.worldEnemyEnablePending = false
+        if self.worldEnemyLiveVisible and self.worldEnemySecondaryTrialArmed then
+            self.worldEnemyEnableLastResult = "already-active"
+            self.worldEnemyLiveLastReason = "owned-target-retained"
+            return true, self.worldEnemyLiveLastReason
+        end
+        self.worldEnemyEnableAttempts = (self.worldEnemyEnableAttempts or 0) + 1
         local built, reason = self:BuildLiveWorldEnemy()
         if not built then
-            self.worldEnemyLiveLastReason = reason
-            return false, reason
+            self.worldEnemyEnableLastResult = reason or "build-refused"
+            self.worldEnemyLiveLastReason = self.worldEnemyEnableLastResult
+            return false, self.worldEnemyLiveLastReason
         end
-        -- P0458: capability-gated precreated per-enemy pool, no combat
-        -- creation. If the pool cannot be built, selected 100% still works
-        -- and every secondary remains entirely Blizzard-owned.
+        -- Preserve selected-nameplate setup even if the secondary pool
+        -- is unavailable. Neither source identity nor geometry is changed.
         local secondaryBuilt, secondaryReason = self:BuildSecondaryAggroTrial()
         self.worldEnemySecondaryTrialArmed = secondaryBuilt == true
         if not secondaryBuilt then
             self.worldEnemySecondaryTrialLastResult = secondaryReason
         end
-        self.worldEnemyLiveRequested = true
-        return self:RefreshLiveWorldEnemy("manual")
+        local attached, attachReason = self:RefreshLiveWorldEnemy("manual")
+        self.worldEnemyEnableLastResult = attachReason or "refresh-refused"
+        return attached, self.worldEnemyEnableLastResult
     end
+    -- OFF always cancels an unstarted ON, including during lockdown.
+    local wasPending = self.worldEnemyEnablePending == true
     self.worldEnemyLiveRequested = false
+    self.worldEnemyEnablePending = false
+    if not ordinaryOutOfCombat() then
+        if self.worldEnemyLiveVisible or self.worldEnemyNativeClaim
+            or hasOwnedWorldAuraRestoreToken()
+            or (self.worldEnemySecondaryTrialActive or 0) > 0 then
+            -- Do not mutate native decoration or secure owners in combat.
+            self.worldEnemyDisablePending = true
+            self.worldEnemyLiveLastReason = "off-restoration-pending-ooc"
+            return false, self.worldEnemyLiveLastReason
+        end
+        self.worldEnemyDisablePending = false
+        self.worldEnemyLiveLastReason = wasPending
+            and "off-cancelled-pending" or "off-no-owner"
+        return true, self.worldEnemyLiveLastReason
+    end
+    self.worldEnemyDisablePending = false
     self.worldEnemySecondaryTrialArmed = false
     local secondaryStopped = self:HideSecondaryAggroTrial("off")
     self.worldEnemySecondaryEpochs = {}
     local stopped = self:HideLiveWorldEnemy("off")
-    if not secondaryStopped then return false, "secondary-restore-pending" end
-    return stopped, self.worldEnemyLiveLastReason
+    if not secondaryStopped or not stopped or self.worldEnemyNativeClaim
+        or hasOwnedWorldAuraRestoreToken() then
+        self.worldEnemyDisablePending = true
+        self.worldEnemyLiveLastReason = "off-restoration-refused"
+        return false, self.worldEnemyLiveLastReason
+    end
+    self.worldEnemyLiveLastReason = wasPending and "off-cancelled-pending" or "off"
+    return true, self.worldEnemyLiveLastReason
 end
 
 function HUD:SetEnemyDisplayPreview(enabled)
@@ -2040,6 +2123,10 @@ end
 
 function HUD:OnInitialize()
     self.worldEnemyLiveRequested = false
+    self.worldEnemyEnablePending = false
+    self.worldEnemyDisablePending = false
+    self.worldEnemyEnableAttempts = 0
+    self.worldEnemyEnableLastResult = "not-attempted"
     self.worldEnemyLiveVisible = false
     self.worldEnemyLiveLastReason = "off"
     self.worldEnemyLiveAttachments = 0
@@ -2360,6 +2447,36 @@ function HUD:OnInitialize()
             and not self.worldEnemyLiveVisible then
             self:RestoreNativeEnemyDecor()
         end
+        local consumedSafeEvent = false
+        if event == "PLAYER_REGEN_ENABLED" and ordinaryOutOfCombat() then
+            if self.worldEnemyDisablePending then
+                consumedSafeEvent = true
+                local secondaryRestored = self:HideSecondaryAggroTrial("off-safe-event")
+                local selectedRestored = self:HideLiveWorldEnemy("off-safe-event")
+                local restored = secondaryRestored and selectedRestored
+                    and not self.worldEnemyNativeClaim
+                    and not hasOwnedWorldAuraRestoreToken()
+                self.worldEnemyDisablePending = not restored
+                if restored then
+                    self.worldEnemySecondaryTrialArmed = false
+                    self.worldEnemySecondaryEpochs = {}
+                end
+                self.worldEnemyLiveLastReason = restored
+                    and "off-safe-restored" or "off-restore-refused"
+                if restored and self.worldEnemyEnablePending
+                    and self.worldEnemyLiveRequested then
+                    self.worldEnemyEnablePending = false
+                    self:SetLiveWorldEnemy(true)
+                end
+            elseif self.worldEnemyEnablePending and self.worldEnemyLiveRequested then
+                consumedSafeEvent = true
+                -- Exactly one attempt on the existing regen dispatch. A
+                -- refused capability remains requested but not pending, and
+                -- never installs a recurring retry/polling loop.
+                self.worldEnemyEnablePending = false
+                self:SetLiveWorldEnemy(true)
+            end
+        end
         if event == "PLAYER_REGEN_DISABLED" then
             -- No frame mutation during combat. Secure state driver owns hide.
             self.worldTrialCombatHidden = true
@@ -2368,7 +2485,8 @@ function HUD:OnInitialize()
         elseif self.worldTrialRequested then
             self:RefreshWorldTargetTrial(event)
         end
-        if self.worldEnemyLiveRequested then
+        if self.worldEnemyLiveRequested and not self.worldEnemyEnablePending
+            and not consumedSafeEvent then
             if event == "NAME_PLATE_UNIT_REMOVED" then
                 local relevant, reason = true, "unverified-removal"
                 if probe and type(probe.IsLiveEnemyRemovalRelevant) == "function" then

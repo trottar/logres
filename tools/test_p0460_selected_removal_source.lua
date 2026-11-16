@@ -98,7 +98,7 @@ local env={HUD=HUD,Logres=logres,
 setmetatable(env,{__index=_G})
 assert(load(section(source,"function HUD:ResolveObservedSelectedNameplateUnit(",
     "function HUD:SetLiveWorldEnemy("),"HUD-selected","t",env))()
-assert(load(section(source,"function HUD:SetLiveWorldEnemy(",
+assert(load(section(source,"local function hasOwnedWorldAuraRestoreToken()",
     "function HUD:SetEnemyDisplayPreview("),"HUD-toggle","t",env))()
 local block=section(source,"local worldTrialEvents = CreateFrame(\"Frame\")",
     "self.worldTrialEvents = worldTrialEvents")

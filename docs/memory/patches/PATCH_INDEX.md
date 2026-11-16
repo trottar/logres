@@ -1,3 +1,12 @@
+## P0462 — COMBAT-ON DRAFT; NOT A RELEASE (2026-11-16)
+
+Main `56861f5` P0461. Report Bug #13659 aura visual FAIL; #13661
+stock OFF restore scoped PASS; #13663 combat ON deferred without intent.
+Draft candidate implements event-driven pending ON and cancellation, while
+retaining native aura fallback (crowding remains OPEN). No complete author
+kit/checker suite/guarded ZIP verification; do not stage or deploy as a
+released patch. Full details in P0462 evidence.
+
 ## P0461 — Native nameplate aura fallback without visual duplication (2026-11-16)
 
 P0460 main `edf37197`/tree `fe8063ed` verified. Forever #13580

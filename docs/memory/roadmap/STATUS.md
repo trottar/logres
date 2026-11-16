@@ -1,3 +1,18 @@
+## P0462 — Pending World Enemy activation and aura visual blocker (2026-11-16)
+
+Main P0461 `56861f5`, Forever 0.0.330-dev session 133 #13659
+**aura visual FAIL** (native buff/debuff icons overlap accepted P0460
+name/HP), #13661 OFF native restored PASS scoped, #13663 ON in combat
+`enable-requires-ooc` with no recovery. Source: native plate aura lists
+retained, addon world aura lanes inactive; 40 index skips/0 ordinary
+rows do not prove any addon icon. P0462 **draft** adds requested/
+pending/active distinction, single event-driven out-of-combat retry,
+OFF cancel and deferred safe native restoration; does not alter accepted
+selected 100%, secondary 50% appearance/removal identity. No verified
+replacement aura layout; leave stock aura information available,
+L-028 OPEN. Full author suite/rollback and Forever tests UNVERIFIED.
+See `docs/memory/evidence/P0462_WORLD_ENEMY_PENDING_AND_AURA_BLOCKER.md`.
+
 ## P0461 — Native nameplate aura ownership reconciliation (2026-11-16)
 
 Verified P0460 main `edf37197`/tree `fe8063ed`. Forever session 132

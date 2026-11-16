@@ -59,9 +59,9 @@ assert 'worldEnemyNativeVisibilityProof = "unobserved"' in a
 for p in ('docs/ROADMAP.md','docs/memory/roadmap/STATUS.md',
           'docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md',
           'docs/memory/investigations/ACTIVE.md'):
-    assert read(p).startswith('## P0461 —'),p
-assert '**P0461**' in read('docs/memory/CURRENT.md')
-assert read('docs/memory/handoffs/CURRENT_HANDOFF.md').startswith('# P0461:')
+    assert '## P0461 —' in read(p),p
+assert 'P0461' in read('docs/memory/CURRENT.md')
+assert '# P0461:' in read('docs/memory/handoffs/CURRENT_HANDOFF.md')
 assert 'P0449' in read('docs/memory/evidence/P0461_NATIVE_NAMEPLATE_AURA_FALLBACK.md')
 assert 'P0460' in read('docs/memory/investigations/ISSUE_LEDGER.md')
 assert re.search(r'^## Version: (\S+)$',read('Logres/Logres.toc'),re.M).group(1)==re.search(r'^Logres.VERSION = "([^"]+)"$',read('Logres/Core/Bootstrap.lua'),re.M).group(1)

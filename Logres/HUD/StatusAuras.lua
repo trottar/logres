@@ -691,6 +691,9 @@ function StatusAuras:GetDebugStatus()
         worldEnemyNativeReady = self.worldEnemyNativeLanes ~= nil,
         worldEnemyNativeReason = self.worldEnemyNativeReason,
         worldEnemyAuraPresentationOwner = "Blizzard-nameplate",
+        -- P0462: stock icons were visually present but crowded #13659.
+        -- Deliberately not a success or a substitute for replacement icons.
+        worldEnemyAuraVisualStatus = "stock-crowding-P0461-unresolved",
         worldEnemyNativeVisibilityProof = "unobserved",
         worldEnemyScreenAuraOwned = self.worldEnemyScreenAuraOwned == true,
         worldEnemyScreenAuraReason = self.worldEnemyScreenAuraReason,

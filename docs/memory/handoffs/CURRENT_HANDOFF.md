@@ -1,14 +1,17 @@
-# P0461: P0460 main `edf37197`/tree `fe8063ed` verified.
-Forever 0.0.329-dev session 132 #13580 user HP/nameplates visual PASS
-scoped (3 selected, 4 secondary, 17 stable; no native restore fails).
-Auras OPEN L-028: 40 restricted index skips, 0 ordinary icons;
-world native child readiness was unobserved but P0450 hid stock lists.
-P0461 preserves stock native nameplate aura lists for selected/secondary,
-retires competing addon world aura presentation, and gates separate
-screen-target aura handoff on ordinary stock-list presence. Native
-cast/aura/click state stays; never inspect protected icon contents,
-secret values or alpha. Past P0449 world icons PASS and P0450 screen
-and stock overlap FAIL retained. P0461 WoW UNVERIFIED; Report Bug.
+# P0462: P0461 main `56861f5`, Forever `0.0.330-dev` session 133.
+#13659 aura VISUAL FAIL (native icons crowd accepted P0460 HP/name);
+#13661 OFF native restore scoped PASS; #13663 ON-in-combat refusal.
+Source/deployed/capture matched; no auto recovery in P0461.
+P0462 requests ON pending OOC with single regen attempt, OFF cancel,
+and pending-alpha restore gate. Selected 100%, secondary 50%, owner
+and ordinary removal identity unchanged. Stock aura lists remain: no
+proved safe independent renderer or layout; L-028 OPEN, L-011 PARTIAL.
+R0 author 307/325 REFUSED; R1 contract gates are
+in audit/receipt. Client activation and auras UNVERIFIED.
+
+# P0461: prior main `edf37197`, session 132 #13580 P0460 HP PASS.
+Native nameplate aura fallback VISUAL FAIL in #13659; keep selected/
+secondary geometry and identity. P0449 icons PASS, P0450 duplicate FAIL.
 
 # P0460: P0459 `0cbc8cc`/tree `64af7ead` verified. Forever
 #13499 0.0.328-dev VISUAL FAIL after brief success: selected 4/4

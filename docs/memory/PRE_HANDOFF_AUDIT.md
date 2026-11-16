@@ -1,3 +1,37 @@
+## P0462 guarded author audit (2026-11-16)
+
+Authority: GitHub `main` `56861f56919f45f43499a6726f31f074d6c2a744`,
+verified tree `af9acb51f6c910694f6fa2d988543c6c643fbc26`.
+Exact user-supplied `LOGRES_AUTHOR_KIT.zip` archive SHA-256
+`7ea36ae1bd0474c9e240996ef7ac3695e38fd8aa331417d276ab54141d3524d2`
+reconstructed all 324 original checkers and sources, with metadata
+and Git tree parity. Report Bug session 133 #13659/#13661/#13663 and
+each of three screenshots inspected independently; visual aura FAIL
+retained, selected/secondary HP PASS scoped. Issue L-011 PARTIAL and
+L-028 OPEN.
+
+R0 author-preflight **REFUSED 307/325**: 17 historical/current memory
+and contract assumptions plus one pinned runtime version. R0 omitted
+P0425, P0442 and P0454-P0459 markers from CURRENT; violated P0381's
+active **P0462** heading and P0456's old pre-request build slicing.
+The P0462 checker pinned a literal runtime version, contrary to policy.
+These negative checks were not delivered to the user. R1 preserves the
+historical source invariants and CURRENT markers, updates P0456's
+contract to gate both builds behind ordinary OOC, uses dynamic version
+parity, and adjusts the P0460 source mock to load the new helper while
+retaining exact selected owner/removal coverage. The immutable selected/
+secondary geometry, ordinary removal identity and native aura owner
+remain unchanged.
+
+Release gate: complete 325/325 exact-candidate checker suite and source
+Lua syntax/behavior; verify the canonical ZIP against the same tested
+candidate and test wrong HEAD, source/payload drift refusal, PREWRITE,
+POSTWRITE, rollback and manifest. The user-side applier repeats both
+325-checker passes. The author receipt binds exact package, ZIP and
+baseline. No static or mocked PASS implies WoW combat, aura visual,
+click or cast PASS; those remain client UNVERIFIED. Do not claim aura
+crowding repaired merely because Blizzard lists remain visible.
+
 ## P0461 native aura fallback audit (2026-11-16)
 
 Verified GitHub P0460 `edf37197` / tree `fe8063ed` and exact local

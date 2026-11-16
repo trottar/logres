@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-11-11
+as_of: 2026-11-16
 project: logres
 ---
 
@@ -11,21 +11,20 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0461** verified P0460 main `edf37197`/tree `fe8063ed`, Forever
-0.0.329-dev session 132 #13580. User reports enemy HP/nameplates
-visually stable (scoped PASS). Three selected attachments/restores,
-4 secondary attaches/restores, 17 secondary stable updates, 0 owner or
-restore failures; counters do not prove aura visibility. Aura issue
-**OPEN** L-028: 40 restricted target index reads, ordinary 0/0, native
-world renderer initialized without icon proof. P0450 hid native lists
-on initialization alone. P0461 preserves selected/secondary native
-nameplate aura lists, disables duplicate world lanes, gates the separate
-screen copy on ordinary list presence and never reads aura contents.
-HP unchanged. P0425 visual PASS; P0442/P0443 native overlap/matte
-FAIL; P0449 icons PASS; P0450 duplicates FAIL;
+**P0462** candidate on verified P0461 main `56861f5691` /
+`0.0.330-dev`. Forever session 133 #13659 aura **VISUAL FAIL**:
+Blizzard icons crowd name/HP; #13661 World Enemy OFF native restore
+scoped PASS; #13663 combat ON `enable-requires-ooc`. 40 restricted
+index skips are not forty auras. P0462 implements one safe regen ON
+attempt and OFF cancellation; visual/runtime acceptance UNVERIFIED.
+P0460 selected full size and secondary 50%/50% HP PASS;
+identity/removal/geometry unchanged. Stock aura lists remain available:
+no proved safe replacement placement, so L-028 OPEN; L-011 PARTIAL.
+P0425 visual PASS; P0442/P0443 native overlap/matte FAIL;
+P0449 icons PASS; P0450 duplicates FAIL;
 P0454/P0455 secondary 50/50 VISUAL FAIL; P0456 suspension;
-P0457 selected PASS; P0458/P0459 visual FAIL. P0460 HP PASS.
-P0461 WoW UNVERIFIED; L-011 PARTIAL, L-028 OPEN.
+P0457 selected PASS; P0458/P0459 visual FAIL; P0460 HP PASS.
+P0461 aura FAIL. See P0462 evidence and release audit.
 
 ## Verified State
 
@@ -67,10 +66,13 @@ P0461 WoW UNVERIFIED; L-011 PARTIAL, L-028 OPEN.
 
 ## Next Action
 
-P0461 Forever: World Enemy ON OOC; selected and nonselected hostile with
-real buff/debuff; verify native icons once and no screen duplication.
-Check cast/click/removal/OFF, Lua/taint. Capture active aura via Report Bug;
-visibility UNPROVEN, screen fallback kept. Accepted HP unchanged.
+P0462 Forever: after guarded deployment and `/reload`, observe World
+Enemy ON in combat, one out-of-combat activation event, OFF cancel,
+selected/secondary nameplate continuity, native click/cast and stock
+restoration. Report Bug only after natural gameplay. Aura stock icons
+still crowd HP; preserve aura information and investigate safe native
+layout/Blizzard engine rendering before suppressing or moving them.
+P0461 aura visual FAIL and L-028 OPEN are not a visual PASS.
 
 ## Success Criteria
 

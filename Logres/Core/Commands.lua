@@ -3384,6 +3384,13 @@ function Logres:HandleLiveWorldEnemyCommand(argument)
             tostring(state.worldEnemyLiveFailures),
             tostring(state.worldEnemyLiveLastReason)))
         emit(string.format(
+            "World Enemy intent: state=%s onPending=%s offRestorePending=%s setupAttempts=%s last=%s",
+            tostring(state.worldEnemyActivationState),
+            tostring(state.worldEnemyEnablePending),
+            tostring(state.worldEnemyDisablePending),
+            tostring(state.worldEnemyEnableAttempts),
+            tostring(state.worldEnemyEnableLastResult)))
+        emit(string.format(
             "World Enemy: layout=%s detaches=%s last removal=%s; native interaction retained",
             tostring(state.worldEnemyLiveLayout),
             tostring(state.worldEnemyLiveDetaches),
@@ -3488,11 +3495,11 @@ function Logres:HandleLiveWorldEnemyCommand(argument)
         return
     end
     local accepted, reason = hud:SetLiveWorldEnemy(argument == "on")
-    local armed = hud:GetDebugStatus().worldEnemyLiveRequested
-    emit(string.format("World Enemy %s: %s (%s)",
+    local state = hud:GetDebugStatus()
+    emit(string.format("World Enemy %s: %s (state=%s, reason=%s)",
         argument == "on" and "ON" or "OFF",
-        accepted and "READY" or armed and "ARMED / ANCHOR DEFERRED"
-            or "DEFERRED", tostring(reason)))
+        accepted and "ACCEPTED" or "DEFERRED",
+        tostring(state.worldEnemyActivationState), tostring(reason)))
     emit("Screen-space/native target interaction and auras remain available.")
 end
 
