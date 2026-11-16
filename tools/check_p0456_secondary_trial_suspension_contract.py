@@ -26,8 +26,8 @@ assert 'P0455' in read('docs/memory/investigations/ISSUE_LEDGER.md')
 assert 'P0455' in read('docs/memory/evidence/P0456_SECONDARY_TRIAL_SUSPENSION.md')
 for p in ('docs/ROADMAP.md','docs/memory/roadmap/STATUS.md','docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md','docs/memory/investigations/ACTIVE.md'):
     s=read(p)
-    assert s.startswith('## P0456 —') and '## P0455 —' in s
-assert read('docs/memory/handoffs/CURRENT_HANDOFF.md').startswith('# P0456:')
+    assert s.startswith('## P0457 —') and '## P0456 —' in s and '## P0455 —' in s
+assert read('docs/memory/handoffs/CURRENT_HANDOFF.md').startswith('# P0457:') and '# P0456:' in read('docs/memory/handoffs/CURRENT_HANDOFF.md')
 assert 'P0456' in read('docs/memory/CURRENT.md')
 assert 'P0456' in read('docs/memory/patches/PATCH_INDEX.md')
 assert 'P0456' in read('docs/memory/PRE_HANDOFF_AUDIT.md')

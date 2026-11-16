@@ -3389,6 +3389,12 @@ function Logres:HandleLiveWorldEnemyCommand(argument)
             tostring(state.worldEnemyLiveDetaches),
             tostring(state.worldEnemyLiveRemovalResult)))
         emit(string.format(
+            "World Enemy continuity: steady=%s structural=%s last event=%s last detach=%s",
+            tostring(state.worldEnemyLiveContinuityRefreshes),
+            tostring(state.worldEnemyLiveReanchors),
+            tostring(state.worldEnemyLiveLastContinuityEvent),
+            tostring(state.worldEnemyLiveLastDetachReason)))
+        emit(string.format(
             "World Enemy: presentation=%s; native input unchanged",
             tostring(state.worldEnemyLivePresentation)))
         emit(string.format(

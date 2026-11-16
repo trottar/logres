@@ -1,3 +1,11 @@
+## P0457 — Selected world owner continuity (2026-11-15)
+
+P0456 main `267bb947`/Forever #12792 confirms secondary takeover
+suspended. Selected refresh source nevertheless reacquires owner on
+non-identity events. Guard redundant updates; restore on transitions;
+report continuity/reanchor/last detach. No secondary arming. L-011
+PARTIAL, L-028 OPEN; WoW 0.0.326-dev UNVERIFIED.
+
 ## P0456 — Fail-open suspension of secondary takeover (2026-11-12)
 
 P0455 main `9317229` user Forever #12628/#12630 visual FAIL; 22

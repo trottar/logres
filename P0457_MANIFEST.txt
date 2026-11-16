@@ -1,0 +1,28 @@
+P0457 Preserve selected enemy ownership on safe steady-state updates
+Verified baseline: 267bb947a272fdee71636ae5fd21bad36d979a91
+Candidate runtime version: 0.0.326-dev
+PREWRITE: 320/320 STATIC PASS
+POSTWRITE: 320/320 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/HUD/HUD.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0457_SELECTED_OWNER_CONTINUITY.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0456_secondary_trial_suspension_contract.py
+tools/check_p0457_selected_owner_continuity_contract.py
+P0457_MANIFEST.txt

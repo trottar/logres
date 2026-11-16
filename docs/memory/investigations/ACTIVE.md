@@ -1,3 +1,18 @@
+## P0457 — Preserve selected owner on non-transition refresh (2026-11-15)
+
+P0456 main `267bb947` verified, 0.0.325-dev: Forever #12710/#12712/
+#12792 report 0 secondary Logres attachments, selected world bar visible;
+#12792 4 attachments/3 detaches, 7 target changes and 2 removals.
+These are event counts, not proof of flicker. Source refresh reclaims
+native name/HP and reapplies screen aura alpha on every successful
+non-transition refresh; P0457 retains the current addon-owned claim
+on ordinary revalidated updates. A distinct current-target plate addition
+may reanchor only after native restore; explicit target switch/removal,
+loss of eligibility, combat uncertainty and OFF still fail open. No native
+frame identity/secret inspection, polling, or secondary 50% rearming.
+L-011 PARTIAL, L-028 OPEN, P0457 Forever acceptance UNVERIFIED;
+P0454/P0455 visual failures remain recorded. See P0457 evidence.
+
 ## P0456 — Suspend unaccepted secondary visual ownership (2026-11-12)
 
 Verified P0455 main `9317229`/tree `364684e`; Forever `0.0.324-dev`

@@ -11,17 +11,19 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0456** verified P0455 main `9317229`, tree `364684e`:
-Forever 0.0.324-dev #12628/#12630 reports continuing secondary
-visual jank despite 22 unrelated updates ignored; secondary 2
-attach/2 detach (last loss/unknown), selected 8 attach/8 detach,
-no restore errors. P0455 VISUAL FAIL, P0454 VISUAL FAIL. P0456
-suspends automatic secondary 50/50 takeover on World Enemy ON,
-retains accepted selected 100% and read-only basic threat evidence.
-Secondary presentation redesign DEFERRED; selected refresh repeated
-ownership operations require separate evidence. L-011 PARTIAL/L-028 OPEN.
-P0450 selected visual PASS scoped; native aura/cast/click preserved;
-P0442/P0443, P0425 visual PASS, P0426/P0427 retained.
+**P0457** prepared against verified P0456 `267bb947` (0.0.325-dev).
+Forever session 121 #12710/#12712 and session 122 #12792 confirm
+secondary visual takeover suspended (0 secondary attachments, stock
+non-targeted plates) with selected world name/HP visible. Selected
+4 attaches/3 detaches and 7 target changes in #12792 are not proof
+of flicker, but source refresh unconditionally Hide/ClearAllPoints/
+SetPoint/restore/reclaim even on non-identity events. P0457 retains
+an ordinary validated selected owner on those events; new nameplate
+or target change still restores and reattaches. Only addon-owned
+state is examined; native alpha restoration remains opaque. L-011
+PARTIAL, L-028 OPEN. P0454/P0455 secondary visual FAIL and 50% OFF.
+P0450 selected visual PASS scoped; P0442/P0443, P0425 visual PASS,
+P0426/P0427 retained. Forever P0457 behavior UNVERIFIED.
 
 ## Verified State
 
@@ -63,12 +65,11 @@ P0442/P0443, P0425 visual PASS, P0426/P0427 retained.
 
 ## Next Action
 
-P0456: after checked deployment, World Enemy ON should keep the
-accepted selected 100% world presentation and leave all secondary
-plates Blizzard-owned. Verify OFF, native aura/cast/click and no taint;
-P0454/P0455 visual failures stay OPEN. Do not restart 50% rendering
-until same-event continuity and selected refresh handoffs have
-specific event-time diagnostic proof, without polling or secret reads.
+P0457: verify steady updates increment without repeated native
+transfers/screen handoffs, actual target changes and nameplate removal
+restore correctly, World Enemy OFF returns stock, and cast/click/aura
+remain usable. Secondary trial stays suspended. No client PASS from
+static tests; preserve any runtime regression evidence.
 
 ## Success Criteria
 

@@ -856,6 +856,10 @@ function HUD:GetDebugStatus()
         worldEnemyLiveCombatAttaches = self.worldEnemyLiveCombatAttaches or 0,
         worldEnemyLiveFailures = self.worldEnemyLiveFailures or 0,
         worldEnemyLiveDetaches = self.worldEnemyLiveDetaches or 0,
+        worldEnemyLiveContinuityRefreshes = self.worldEnemyLiveContinuityRefreshes or 0,
+        worldEnemyLiveReanchors = self.worldEnemyLiveReanchors or 0,
+        worldEnemyLiveLastContinuityEvent = self.worldEnemyLiveLastContinuityEvent,
+        worldEnemyLiveLastDetachReason = self.worldEnemyLiveLastDetachReason,
         worldEnemyScreenHandoffs = self.worldEnemyScreenHandoffs or 0,
         worldEnemyScreenFallbackRefreshes = self.worldEnemyScreenFallbackRefreshes or 0,
         worldEnemyScreenFallbackVisible = self.targetNameText
@@ -1546,6 +1550,7 @@ function HUD:HideLiveWorldEnemy(reason)
     local hadWorldOwner = self.worldEnemyLiveVisible == true
     if hadWorldOwner then
         self.worldEnemyLiveDetaches = (self.worldEnemyLiveDetaches or 0) + 1
+        self.worldEnemyLiveLastDetachReason = reason or "hidden"
     end
     self.worldEnemyLiveVisible = false
     -- Restore the addon-owned screen aura copy on every detach/failure/OFF.
@@ -1633,6 +1638,41 @@ function HUD:RefreshLiveWorldEnemy(event, eventUnit)
         -- Another unit gaining a nameplate must not hide the selected unit.
         if why ~= "not-current-target" then self:HideLiveWorldEnemy(why) end
         return false, why
+    end
+    -- P0457: a successful ordinary current-target eligibility/anchor query
+    -- on a non-identity event must not hide, reanchor, restore and reclaim
+    -- the SAME selected owner. Those operations caused repeated handoffs
+    -- even when Blizzard had not removed the plate or changed the target.
+    -- Event tokens are ordinary only after the probe verifies them. Do not
+    -- compare native anchors/frames (potentially protected/secret objects).
+    if self.worldEnemyLiveVisible then
+        if not self.worldEnemyNativeClaim then
+            self:HideLiveWorldEnemy("native-owner-claim-missing")
+            return false, self.worldEnemyLiveLastReason
+        end
+        local sameOrdinaryAddedUnit = event == "NAME_PLATE_UNIT_ADDED"
+            and anchorUnit ~= nil and self.worldEnemyLiveAnchorUnit ~= nil
+            and anchorUnit == self.worldEnemyLiveAnchorUnit
+        if event ~= "NAME_PLATE_UNIT_ADDED" or sameOrdinaryAddedUnit then
+            self.worldEnemyLiveContinuityRefreshes =
+                (self.worldEnemyLiveContinuityRefreshes or 0) + 1
+            self.worldEnemyLiveLastContinuityEvent = event or "unknown"
+            local updated = self:UpdateLiveWorldEnemyValues()
+            if updated then
+                self.worldEnemyLiveLastReason = "owned-target-retained"
+            end
+            return updated, self.worldEnemyLiveLastReason
+        end
+        -- New selected nameplate token (or previously unknown target-query
+        -- owner): restore the old native claim before a genuine reanchor.
+        -- If the opaque native-alpha restoration is refused, remain stock/
+        -- screen fallback rather than painting an unowned replacement.
+        self.worldEnemyLiveReanchors = (self.worldEnemyLiveReanchors or 0) + 1
+        self:HideLiveWorldEnemy("selected-anchor-transition")
+        if self.worldEnemyNativeClaim then
+            self.worldEnemyLiveLastReason = "native-restore-pending"
+            return false, self.worldEnemyLiveLastReason
+        end
     end
     local frame = self.worldEnemyLiveFrame
     if not ordinaryOwnedUnprotected(frame) then
@@ -1759,6 +1799,10 @@ function HUD:OnInitialize()
     self.worldEnemyLiveCombatAttaches = 0
     self.worldEnemyLiveFailures = 0
     self.worldEnemyLiveDetaches = 0
+    self.worldEnemyLiveContinuityRefreshes = 0
+    self.worldEnemyLiveReanchors = 0
+    self.worldEnemyLiveLastContinuityEvent = "none"
+    self.worldEnemyLiveLastDetachReason = "none"
     self.worldEnemyScreenHandoffs = 0
     self.worldEnemyScreenFallbackRefreshes = 0
     self.worldEnemyNativeClaim = nil

@@ -1,3 +1,28 @@
+## P0457 selected continuity candidate audit (2026-11-15)
+
+Verified P0456 GitHub main `267bb947` / tree `394d43b`. User's
+P0456 Forever #12792 (0.0.325-dev) reports 0 secondary attachments,
+selected 4 attach/3 detach, 7 target changes, 2 plate removals;
+selected visual PASS scoped but no same-unit event provenance. Exact
+source has Hide/ClearAllPoints/reanchor/native restore-and-claim on EVERY
+successful selected refresh. New change only retains existing selected
+ownership when an ordinary current-target eligibility/anchor query is
+valid and no identity transition is established. Nameplate-added token
+is reanchored if unknown/different; target change/removal, refusal,
+combat uncertainty and OFF still restore. It does not compare any native
+frame/secret, inspect opaque alpha, poll, or arm secondary. Historical
+P0454–P0456 threat/native contracts and 50% suspension are retained.
+R0 complete isolated source preflight was REFUSED 315/320: 5 older
+roadmap validators require the P0457 CURRENT checkpoint to lead the
+roadmap files, while the P0456 checker pinned its older first heading.
+R1 moves the P0457 section first and updates the P0456 checker to
+retain P0456/P0455 history while enforcing P0457 as active in
+roadmaps and handoff. R0 never
+modified any user checkout or produced a release receipt. Final exact
+candidate full author-check, guarded PREWRITE/POSTWRITE, ZIP hash and
+Lua syntax are required before handoff; WoW remains UNVERIFIED.
+P0454/P0455 failures remain in ledger.
+
 ## P0456 fail-open secondary suspension (2026-11-12)
 
 Verified main P0455 `9317229`/tree `364684e`. Forever #12628/#12630

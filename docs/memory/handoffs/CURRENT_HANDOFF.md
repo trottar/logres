@@ -1,7 +1,9 @@
-# P0456: main P0455 `9317229`, Forever #12628/#12630.
-P0455 0.0.324-dev VISUAL FAIL (2 secondary attach/detach,
-22 ignored updates; selected 8 attach/detach). 50% auto trial
-suspended; selected 100% and read-only threat retained. L-011 OPEN.
+# P0457: `267bb947`, P0456 #12792 secondary OFF PASS.
+Retain selected owner on steady updates; client UNVERIFIED.
+
+# P0456: P0455 `9317229` visual FAIL #12628/#12630.
+Secondary 50% suspended; selected 100% + threat probe.
+L-011 OPEN.
 
 # P0455: `1424fd7` #12547/#12549 flicker FAIL.
 Ignore unrelated updates; retain native restoration.
