@@ -1,3 +1,12 @@
+## P0471 — Exact native target faction crest
+
+P0470 `68a9ad3` verified; raw screenshot/fstack identifies target contextual
+PvpBackgroundIcon. Read D-026, target transaction/P0360 diagnostic contracts.
+Extend exact allowlist9->10, preserve all original entries/four child systems,
+opaque restoration and OOC deferral. Complete candidate suite, actual-source
+rollback/restore, syntax, canonical ZIP refusal/rollback mandatory before
+delivery; client UNVERIFIED. No player/contextual-parent suppression.
+
 ## P0470 — Target decorations and neutral plate eligibility
 
 P0469 `11458a0` verified. Read D-049/P0466, P0447, P0459, L-049/L-011,

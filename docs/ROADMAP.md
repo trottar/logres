@@ -1,3 +1,11 @@
+## P0471 — Identified native faction crest (2026-11-17)
+
+P0470 `68a9ad3` verified. L-049 #15393 remaining Alliance crest; user
+fstack identifies target contextual.PvpBackgroundIcon. Add exact tenth
+decorative region to existing capture/suppress/restore, preserve four child
+systems and all native interactions. 0.0.339-dev, client UNVERIFIED.
+See `docs/memory/evidence/P0471_TARGET_FACTION_CREST.md`.
+
 ## P0470 — Screen-target decoration opt-out and neutral eligibility (2026-11-17)
 
 P0469 main `11458a0` verified. L-049 reopened for screen PvP/auras;

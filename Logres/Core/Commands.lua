@@ -737,7 +737,7 @@ local function restorationOwnershipCoherent(snapshot)
     local target = snapshot.target
 
     local targetSuppressedExpected =
-        target.appliedEnabled and 9 or 0
+        target.appliedEnabled and 10 or 0
 
     return action.snapshotReady == action.appliedEnabled
         and action.routingManaged == action.appliedEnabled
