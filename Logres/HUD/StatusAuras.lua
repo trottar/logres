@@ -269,18 +269,8 @@ local function createLane(unit, point, relativePoint, offsetX, offsetY, laneName
             column * (ICON_SIZE + GAP), -row * (ICON_SIZE + GAP))
         slot:EnableMouse(previewParent == nil)
         slot:Hide()
-        local icon = slot:CreateTexture(nil, "ARTWORK")
-        icon:SetPoint("TOPLEFT", slot, "TOPLEFT", 2, -2)
-        icon:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", -2, 2)
-        local border = slot:CreateTexture(nil, "OVERLAY")
-        border:SetAllPoints(slot)
-        border:SetTexture(
-            statusAssets.frame
-            or (Logres.Theme and Logres.Theme.playerHelpfulAuras
-            and Logres.Theme.playerHelpfulAuras.assets
-            and Logres.Theme.playerHelpfulAuras.assets.frame)
-            or "Interface\\Buttons\\UI-Quickslot2"
-        )
+        local visual = Logres.AuraPresentation.CreateBase(slot)
+        local icon, border = visual.icon, visual.border
         -- Only addon-owned ordinary status presentations are decorated here.
         local urgentRail = slot:CreateTexture(nil, "OVERLAY")
         urgentRail:SetPoint("TOPLEFT", slot, "TOPLEFT", 2, -2)

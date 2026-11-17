@@ -1,3 +1,14 @@
+## P0465 — Shared Logres world aura styling (2026-11-16)
+
+Verified P0464 main `048eaed`, session137 #13986 0.0.333-dev.
+User accepts positioning, rejects aura styling (L-028 OPEN). Latest image
+is post-combat without active enemy; do not claim it proves the icon defect.
+24 binds/releases,0 refusals; source used stock cooldown sweep and tinted
+border, contrary to approved Sheet04. Share Logres passive frame/inset with
+StatusAuras; native text duration/stacks replace cooldown widget. Accepted
+HP,50/50,positions and ownership transaction unchanged. Client UNVERIFIED.
+Evidence: `docs/memory/evidence/P0465_WORLD_AURA_STYLE.md`.
+
 ## P0464 — Per-unit native world aura renderer (2026-11-16)
 
 Verified P0463 main `9ec4fd4`, runtime 0.0.332-dev session 135 #13829.

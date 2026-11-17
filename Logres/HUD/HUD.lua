@@ -849,6 +849,7 @@ function HUD:GetDebugStatus()
         enemyPreviewAggroAlpha = 0.5,
         enemyWorldAttachmentEnabled = false,
         enemyFallbackPreserved = true,
+        worldEnemyAuraRendererStyle = Logres.NativeDebuffs and Logres.NativeDebuffs.worldAuraStyle or "unavailable",
         worldEnemyAuraRendererBinds = Logres.NativeDebuffs and Logres.NativeDebuffs.worldAuraBinds or 0,
         worldEnemyAuraRendererReleases = Logres.NativeDebuffs and Logres.NativeDebuffs.worldAuraReleases or 0,
         worldEnemyAuraRendererRefusals = Logres.NativeDebuffs and Logres.NativeDebuffs.worldAuraRefusals or 0,

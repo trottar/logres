@@ -1,8 +1,8 @@
-# P0464: baseline `9ec4fd4`; aura-only repair, 0.0.333-dev.
-Session135 #13829: both HP PASS scoped; P0463 aura GetPoint FAIL.
-Native styled consumers; restore-before-withdrawal.
-HP/identity retained. Client UNVERIFIED; Report Bug captures state.
-See `docs/memory/evidence/P0464_PER_UNIT_NATIVE_WORLD_AURAS.md`.
+# P0465: baseline `048eaed`; shared aura style, 0.0.334-dev.
+P0464 position PASS; style FAIL. Sheet04 text, no sweep.
+HP/50/50 retained; client UNVERIFIED. Report Bug; no panel checklist.
+See `docs/memory/evidence/P0465_WORLD_AURA_STYLE.md`.
+# P0464: per-unit transaction retained; source evidence in P0464 record.
 
 # P0463: `b849955` session 134 #13743/#13745/#13748 regression.
 Unprotected native aura layout; cached plate replay/prebuilt ON;

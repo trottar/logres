@@ -11,18 +11,17 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0464** on verified P0463 main `9ec4fd4`, 0.0.332-dev session 135
-#13829. User confirms both selected HP and secondary 50/50 appearance
-PASS scoped. Auras FAIL: 0 point-layout claims, 4 capture refusals.
-P0464 replaces native GetPoint with OOC-prepared per-owner native renderers.
-Bind ordinary plate tokens, then handoff opaque local-shown flags; restore before
-withdrawal/reuse. Native engine owns payloads/duration/stacks.
-Accepted HP/identity/activation and P0463 tracker code remain unchanged.
+**P0465** on verified P0464 main `048eaed`. Session137 #13986
+0.0.333-dev: positioning user PASS scoped; aura styling user FAIL.
+24 native binds/releases,0 refusals; image post-combat, no aura proof.
+Share Sheet04 passive art/inset with StatusAuras; remove stock cooldown
+widget/filter tint; native duration/count text. HP/50/50/positions retained.
+P0464 positioning PASS scoped, styling FAIL. P0463 aura GetPoint FAIL.
 P0460 HP/nameplates PASS scoped; P0457 selected PASS; P0461 aura FAIL;
 P0454/P0455 secondary 50/50 VISUAL FAIL; P0458/P0459 FAIL.
 P0456 suspension is historical. P0425 visual PASS;
 P0442/P0443 overlap/matte FAIL; P0449 icons PASS; P0450 duplicates FAIL.
-L-011 PARTIAL, L-028/L-048 OPEN; P0464 client UNVERIFIED.
+L-011 PARTIAL, L-028/L-048 OPEN; P0465 client UNVERIFIED.
 
 ## Verified State
 
@@ -64,11 +63,10 @@ L-011 PARTIAL, L-028/L-048 OPEN; P0464 client UNVERIFIED.
 
 ## Next Action
 
-Apply/push/deploy P0464. Normal gameplay should retain accepted HP,
-with Logres-styled native auras beside each owned enemy. Refused native
-capability leaves stock auras; Report Bug captures bind/refusal/release state.
-No panel checklist: click Report Bug at the fault before toggling/refreshing,
-then export after /reload saves evidence. Client visual/taint remains UNVERIFIED.
+Apply/push/deploy P0465. Normal gameplay: keep accepted HP/positions;
+verify Logres frame and text metadata without cooldown sweep. Report Bug
+captures native style/bind/refusal state. No diagnostic panel checklist.
+Client appearance/taint UNVERIFIED; L-028 OPEN.
 
 ## Success Criteria
 
@@ -78,6 +76,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0465_WORLD_AURA_STYLE.md
 - docs/memory/evidence/P0464_PER_UNIT_NATIVE_WORLD_AURAS.md
 - docs/memory/evidence/P0463_AURA_ACTIVATION_TRACKER_REPAIR.md
 - docs/memory/evidence/P0453_SECONDARY_THREAT_SOURCE_ISOLATION.md

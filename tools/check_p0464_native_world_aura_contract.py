@@ -9,7 +9,7 @@ h=read('Logres/HUD/HUD.lua')
 for forbidden in ('GetPoint','GetNumPoints','GetChildren','GetRegions','GetAuraData','IsVisible','GetShown','SetParent','SetAttribute','C_Timer','OnUpdate','HookScript'):
  assert forbidden not in n,forbidden
 for token in ('Native.PrepareWorldAuraOwner','Native.BindWorldAuraOwner','Native.ReleaseWorldAuraOwner',
- 'ordinary(locked)','worldAuraRegionReady','SetDurationCooldown','SetApplicationCount',
+ 'ordinary(locked)','worldAuraRegionReady','SetDurationText','SetApplicationCount',
  'AnchorUtil.FlowDirection.Left','AnchorUtil.FlowDirection.Right','AnchorUtil.FlowDirection.Up',
  'pcall(region.IsShown, region)','pcall(entry.region.SetShown, entry.region, entry.shown)',
  'frame:SetUnit(unit)','frame:UpdateAllAuras()','aura-native-restore-pending'):

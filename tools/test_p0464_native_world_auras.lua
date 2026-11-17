@@ -22,7 +22,14 @@ local function object(kind,parent)
     function o:CreateTexture() return object("Texture",self) end
     function o:CreateFontString() return object("FontString",self) end
     function o:SetIcon(i) self.icon=i end
-    function o:SetDurationCooldown(v) self.cooldown=v end
+    function o:SetDurationText(v) self.duration=v end
+    function o:SetFont()end
+    function o:SetWidth()end
+    function o:SetWordWrap()end
+    function o:SetJustifyH()end
+    function o:SetTextColor()end
+    function o:SetShadowColor()end
+    function o:SetShadowOffset()end
     function o:SetApplicationCount(v) self.count=v end
     function o:AddAuraGroup(key,filter,opt)
         assert(not fail.setup);self.filter=filter;self.options=opt
@@ -30,7 +37,7 @@ local function object(kind,parent)
     end
     objects[#objects+1]=o;return o
 end
-local L={Theme={nativeHarmfulAuras={assets={frame="LogresBorder"}}},Layout={Bind=function()end}}
+local L={Theme={statusAura={assets={frame="LogresBorder"}},nativeHarmfulAuras={assets={frame="LogresBorder"}}},Layout={Bind=function()end}}
 local locked=false
 local env={UIParent={},AnchorUtil={FlowDirection={Left=-1,Right=1,Up=1}},
  issecretvalue=function(v) return type(v)=="table" and v.secret==true end,
@@ -59,8 +66,8 @@ for _,own in ipairs({owner,other}) do
  for key,f in pairs(own.frames) do
     assert(f.parent==(own==owner and parent or secondary));assert(f.mouse==false and not f.enabled)
     assert(f.options.maxFrameCount==12 and f.options.layout.elementWidth==25)
-    assert(f.button.icon and f.button.cooldown and f.button.count)
-    assert(f.button.cooldown.mouse==false)
+    assert(f.button.icon and f.button.duration and f.button.count)
+    assert(f.button.cooldown==nil,"radial cooldown must not return")
     assert(f.flowAnchor==(key=="harmful" and "BOTTOMRIGHT" or "BOTTOMLEFT"))
  end
 end

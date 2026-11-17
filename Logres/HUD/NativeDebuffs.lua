@@ -1,5 +1,51 @@
 local _, Logres = ...
 
+-- P0465 shared source-independent aura presentation.
+-- Sheet 04: one Logres icon/frame primitive, independent of aura source.
+-- Native consumers receive these new regions; no payload or child readback.
+local Presentation = {}
+Logres.AuraPresentation = Presentation
+Presentation.worldStyle = "logres-sheet04-native-text"
+
+function Presentation.CreateBase(frame)
+    local style = assert(Logres.Theme and Logres.Theme.statusAura)
+    local assets = assert(style.assets)
+    local icon = frame:CreateTexture(nil, "ARTWORK")
+    icon:SetPoint("TOPLEFT", frame, "TOPLEFT", 2, -2)
+    icon:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -2, 2)
+    local border = frame:CreateTexture(nil, "OVERLAY")
+    border:SetAllPoints(frame)
+    border:SetTexture(assert(assets.frame))
+    -- Preserve the approved gold art. Do not tint the whole frame by filter.
+    return {icon = icon, border = border}
+end
+
+function Presentation.CreateNativeMetadata(frame)
+    -- Fixed non-overlapping lower-right cells. The native engine formats
+    -- and updates each value, including restricted duration/applications.
+    -- No empty permanent count plate, radial swipe or aura-state inference.
+    local count = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    count:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -16, -1)
+    count:SetFont(STANDARD_TEXT_FONT, 8, "OUTLINE")
+    count:SetWidth(8)
+    count:SetWordWrap(false)
+    count:SetJustifyH("RIGHT")
+    count:SetTextColor(0.97, 0.91, 0.80, 1)
+    count:SetShadowColor(0, 0, 0, 0.98)
+    count:SetShadowOffset(1, -1)
+    local duration = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    duration:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 1, -1)
+    duration:SetFont(STANDARD_TEXT_FONT, 8, "OUTLINE")
+    duration:SetWidth(17)
+    duration:SetWordWrap(false)
+    duration:SetJustifyH("RIGHT")
+    duration:SetTextColor(0.97, 0.91, 0.80, 1)
+    duration:SetShadowColor(0, 0, 0, 0.98)
+    duration:SetShadowOffset(1, -1)
+    return count, duration
+end
+
+
 -- P0183: addon-owned placement, Blizzard-owned secure aura rendering.
 -- Never read, classify or enumerate restricted aura payloads in Lua.
 local Native = {}
@@ -480,22 +526,12 @@ local function createOwnedWorldAura(parent, filter, point, relative)
         initializeFrame = function(button)
             button:SetSize(ICON, ICON)
             button:EnableMouse(false)
-            local icon = button:CreateTexture(nil, "ARTWORK")
-            icon:SetPoint("TOPLEFT", button, "TOPLEFT", INSET, -INSET)
-            icon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -INSET, INSET)
-            button:SetIcon(icon)
-            local cooldown = CreateFrame("Cooldown", nil, button, "CooldownFrameTemplate")
-            cooldown:SetAllPoints(icon)
-            cooldown:EnableMouse(false)
-            button:SetDurationCooldown(cooldown)
-            local count = button:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-            count:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -1, 1)
+            local presentation = Logres.AuraPresentation
+            local visual = presentation.CreateBase(button)
+            button:SetIcon(visual.icon)
+            local count, duration = presentation.CreateNativeMetadata(button)
             button:SetApplicationCount(count, {})
-            local border = button:CreateTexture(nil, "OVERLAY")
-            border:SetAllPoints(button)
-            border:SetTexture((harmfulStyle.assets and harmfulStyle.assets.frame)
-                or "Interface\\Buttons\\UI-Quickslot2")
-            border:SetVertexColor(FRAME_COLOR[1], FRAME_COLOR[2], FRAME_COLOR[3], FRAME_COLOR[4])
+            button:SetDurationText(duration, {})
         end,
     })
     return frame
@@ -517,6 +553,8 @@ function Native.PrepareWorldAuraOwner(parent)
         end
         return nil, "aura-native-setup-refused"
     end
+    owner.style = Logres.AuraPresentation.worldStyle
+    Native.worldAuraStyle = owner.style
     return owner, "aura-prepared"
 end
 

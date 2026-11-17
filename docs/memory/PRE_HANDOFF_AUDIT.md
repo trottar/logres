@@ -1,3 +1,19 @@
+## P0465 — Shared Logres world aura styling (2026-11-16)
+
+Verified P0464 main `048eaed`, session137 #13986 0.0.333-dev.
+User accepts positioning, rejects aura styling (L-028 OPEN). Latest image
+is post-combat without active enemy; do not claim it proves the icon defect.
+24 binds/releases,0 refusals; source used stock cooldown sweep and tinted
+border, contrary to approved Sheet04. Share Logres passive frame/inset with
+StatusAuras; native text duration/stacks replace cooldown widget. Accepted
+HP,50/50,positions and ownership transaction unchanged. Client UNVERIFIED.
+Evidence: `docs/memory/evidence/P0465_WORLD_AURA_STYLE.md`.
+
+Full exact-candidate328 and transactional package audit required. Previous
+eight source fixtures plus new style source fixture; client UNVERIFIED.
+Historical source/API/safety gates reviewed before implementation. Only
+P0464 cooldown consumer assertion evolves to approved duration text.
+
 ## P0464 — Per-unit native world aura renderer (2026-11-16)
 
 Verified P0463 main `9ec4fd4`, runtime 0.0.332-dev session 135 #13829.
@@ -915,3 +931,10 @@ Verified P0390 main and session 45. Preserved native transaction guards and the 
 The initial static preflight found historical literal checks for the old close-on-success action, trainer signature and both aura renderers. Updated those contracts to enforce the new ownership gates. The first isolated aura test used a mock that returned a function for a missing numeric field. Corrected that mock and reran the Lua tests.
 
 Exact release execution passed 261/261 real static checkers in both WSL phases, syntax for all 94 Lua files and 15 isolated Lua checks. Tested trainer update reentrancy, confirmation waiting, failed refresh fallback, single aura ownership, one-time movement, combat/protection gates and exact or externally changed anchor restoration. Wrong HEAD, source and payload refusal, injected POSTWRITE rollback, clean install, manifest and payload hashes passed. Git diff hygiene passed. Client layout, continued trainer operation and the timed icon remain WoW UNVERIFIED.
+
+Source inventory audit refused an initial new loaded helper file (96-source
+ownership contract). Kept the independent Logres.AuraPresentation namespace
+inside existing NativeDebuffs.lua, loaded before StatusAuras, so the complete
+96-source TOC inventory remains unchanged. No historical inventory gate relaxed.
+
+Release validation: 328/328 exact-candidate STATIC PASS; 9/9 relevant actual-source fixtures PASS. New style fixture fails on unmodified P0464. Canonical PREWRITE/POSTWRITE328/328, refusal/rollback, manifest, payload parity, Lua5.1 syntax and Git-preservation audit are repeated on final ZIP before delivery. Client appearance/taint UNVERIFIED.

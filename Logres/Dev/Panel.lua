@@ -350,7 +350,7 @@ function Logres:CaptureBugIncident()
         return self:GetModule("HUD"):GetDebugStatus()
     end), {"worldEnemyLiveRequested", "worldEnemyLiveVisible",
         "worldEnemyLiveLastReason", "worldEnemyLiveAttachments",
-        "worldEnemyAuraRendererBinds", "worldEnemyAuraRendererReleases",
+        "worldEnemyAuraRendererStyle", "worldEnemyAuraRendererBinds", "worldEnemyAuraRendererReleases",
         "worldEnemyAuraRendererRefusals", "worldEnemyAuraRendererReason",
         "worldEnemyAuraLayoutReason", "worldEnemyAuraLayoutClaims",
         "worldEnemyAuraLayoutRestores", "worldEnemyAuraLayoutRefusals",

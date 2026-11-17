@@ -1,0 +1,31 @@
+P0465 Share approved Logres aura styling without stock cooldown sweep
+Verified baseline: 048eaed622f605d745abc63dfc6c069f2d646269
+Candidate runtime version: 0.0.334-dev
+PREWRITE: 328/328 STATIC PASS
+POSTWRITE: 328/328 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/HUD/HUD.lua
+Logres/HUD/NativeDebuffs.lua
+Logres/HUD/StatusAuras.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0465_WORLD_AURA_STYLE.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0464_native_world_aura_contract.py
+tools/check_p0465_aura_style_contract.py
+tools/test_p0464_native_world_auras.lua
+tools/test_p0465_aura_style.lua
+P0465_MANIFEST.txt
