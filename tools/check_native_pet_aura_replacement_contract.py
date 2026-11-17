@@ -49,11 +49,11 @@ for t in ('createAuraContainer(', 'CustomAuraContainerTemplate',
           'function StatusAuras:SetNativeHelpfulOverride(active)',
           'if self.nativeOverride', 'if self.nativeHelpfulOverride'):
     if t in N+H+S: errors.append('regressed native buff takeover: '+t)
-for t in ('local MAX_ICONS = 4', 'local FILTER = "HELPFUL|PLAYER"',
+for t in ('local MAX_ICONS = 40', 'local FILTER = "HELPFUL"',
           'frameTexture', 'auraStyle.assets'):
     if t not in H:errors.append('original Logres player buff contract missing: '+t)
 for t in ('renderLane(self.lanes.targetHelpful, snapshot.helpfulRows, active)',
-          'local columns = unit == "player" and MAX_ICONS or 2'):
+          'local columns = COLUMNS'):
     if t not in S:errors.append('original target-status lane missing: '+t)
 for t in ('self:Arm()', 'self.eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")'):
     if t not in P:errors.append('pet action autostart missing: '+t)

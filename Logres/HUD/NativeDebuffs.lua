@@ -216,7 +216,7 @@ end
 local harmfulStyle = (Logres.Theme and Logres.Theme.nativeHarmfulAuras) or {}
 local ICON = harmfulStyle.iconSize or 25
 local GAP = harmfulStyle.gap or 3
-local MAX = harmfulStyle.maxIcons or 5
+local MAX = harmfulStyle.maxIcons or 40
 local INSET = harmfulStyle.iconInset or 2
 local FRAME_COLOR = harmfulStyle.frameColor or { 0.94, 0.65, 0.50, 0.98 }
 
@@ -225,13 +225,17 @@ local function createContainer(unit, key, point, relativePoint, dx, dy)
         "AuraContainer", nil, UIParent, "CustomAuraContainerTemplate"
     )
     frame:Hide()
-    -- Target uses a compact 2-column native layout; player is 5 across.
-    -- Native AuraContainer owns aura membership/texture updates and packing.
-    local columns = unit == "target" and 2 or 5
+    -- Four columns for both native player/target harmful lanes.
+    -- Native AuraContainer owns restricted membership and rendering.
+    local columns = 4
     local width = columns * ICON + (columns - 1) * GAP
     local height = math.ceil(MAX / columns) * ICON
         + (math.ceil(MAX / columns) - 1) * GAP
     frame:SetSize(width, height)
+    frame:SetFlowLayoutAnchorPoint("BOTTOMLEFT")
+    frame:SetFlowLayoutGrowthDirection(
+        AnchorUtil.FlowDirection.Right, AnchorUtil.FlowDirection.Up)
+    frame:SetFlowLayoutMaximumLineSize(width)
     frame:SetFrameStrata("BACKGROUND")
     frame:EnableMouse(false)
     Logres.Layout.Bind(frame, key, "CENTER", "CENTER")
@@ -325,7 +329,8 @@ local function createWorldContainer(parent, filter, point, relative, x, y)
         "AuraContainer", nil, parent, "CustomAuraContainerTemplate"
     )
     frame:Hide()
-    frame:SetSize(2 * ICON + GAP, 3 * ICON + 2 * GAP)
+    frame:SetSize(4 * ICON + 3 * GAP,
+        math.ceil(MAX / 4) * ICON + (math.ceil(MAX / 4) - 1) * GAP)
     frame:ClearAllPoints()
     frame:SetPoint(point, parent, relative, x, y)
     frame:EnableMouse(false)
@@ -518,9 +523,9 @@ local function createOwnedWorldAura(parent, filter, point, relative)
     frame:SetFlowLayoutAnchorPoint(filter == "HARMFUL" and "BOTTOMRIGHT" or "BOTTOMLEFT")
     frame:SetFlowLayoutGrowthDirection(filter == "HARMFUL" and AnchorUtil.FlowDirection.Left
         or AnchorUtil.FlowDirection.Right, AnchorUtil.FlowDirection.Up)
-    frame:SetFlowLayoutMaximumLineSize(3 * ICON + 2 * GAP)
+    frame:SetFlowLayoutMaximumLineSize(4 * ICON + 3 * GAP)
     frame:AddAuraGroup("LogresWorld" .. filter, filter, {
-        maxFrameCount = 12,
+        maxFrameCount = MAX,
         layout = {elementWidth = ICON, elementHeight = ICON,
             elementSpacing = GAP, lineSpacing = GAP},
         initializeFrame = function(button)

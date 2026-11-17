@@ -18,7 +18,7 @@ local function object(kind,parent)
     function o:SetVertexColor(...) self.color={...} end
     function o:SetFlowLayoutAnchorPoint(p) self.flowAnchor=p end
     function o:SetFlowLayoutGrowthDirection(x,y) assert((x==1 or x==-1) and y==1);self.growth={x,y} end
-    function o:SetFlowLayoutMaximumLineSize(n) assert(n==81);self.line=n end
+    function o:SetFlowLayoutMaximumLineSize(n) assert(n==109);self.line=n end
     function o:CreateTexture() return object("Texture",self) end
     function o:CreateFontString() return object("FontString",self) end
     function o:SetIcon(i) self.icon=i end
@@ -65,7 +65,7 @@ local owner=assert(N.PrepareWorldAuraOwner(parent));local other=assert(N.Prepare
 for _,own in ipairs({owner,other}) do
  for key,f in pairs(own.frames) do
     assert(f.parent==(own==owner and parent or secondary));assert(f.mouse==false and not f.enabled)
-    assert(f.options.maxFrameCount==12 and f.options.layout.elementWidth==25)
+    assert(f.options.maxFrameCount==40 and f.options.layout.elementWidth==25)
     assert(f.button.icon and f.button.duration and f.button.count)
     assert(f.button.cooldown==nil,"radial cooldown must not return")
     assert(f.flowAnchor==(key=="harmful" and "BOTTOMRIGHT" or "BOTTOMLEFT"))

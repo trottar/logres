@@ -42,7 +42,7 @@ for token in ('secondary = Logres.Layout.GetActionBarSpec("secondary")',
               '            columns\n        )'):
     if token not in A:error.append('action roles '+token)
 for token in ('Logres.Layout.Bind(root, anchorKey, "CENTER", "CENTER")',
-              'local columns = unit == "player" and MAX_ICONS or 2',
+              'local columns = COLUMNS',
               'local anchorKey = unit == "player" and "playerHarmful"',
               'slot:SetPoint("TOPLEFT", root, "TOPLEFT"'):
     if token not in S:error.append('aura lane '+token)
@@ -50,7 +50,7 @@ for token in ('Logres.Layout.Bind(root, anchorKey, "CENTER", "CENTER")',
 # Phase H.3 bounded native-aura geometry, not an obsolete pixel literal.
 for token in ('"player", "playerHarmful"','"target", "targetHarmful"',
               'Logres.Layout.Bind(frame, key, "CENTER", "CENTER")',
-              'local columns = unit == "target" and 2 or 5',
+              'local columns = 4',
               'local width = columns * ICON + (columns - 1) * GAP',
               'math.ceil(MAX / columns)',
               'frame:SetSize(width, height)'):

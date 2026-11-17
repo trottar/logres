@@ -48,7 +48,7 @@ for token in (
     'status.enabled == true',
     'debugStatus.moduleEnabled == true',
     'debugStatus.rootReady == true',
-    'debugStatus.slotCount == 4',
+    'debugStatus.slotCount == MAX_ICONS',
     'debugStatus.unitAuraRegistered == true',
     'debugStatus.worldRegistered == true',
     'debugStatus.sourceAvailable == true',

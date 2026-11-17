@@ -1,3 +1,13 @@
+## P0468 — Compatible aura grid candidate (2026-11-16)
+
+Verified P0467 `d14a25a`/tree `3157407e` handoff and baseline; reviewed
+historical P0137, P0175, P0183, P0195, P0196, P0218, P0332, P0364,
+P0464/P0465 contracts and owner-safe fallback. Candidate expands only
+compatible player/target/world aura capacity and four-column geometry;
+keeps approved world appearance, 50/50 and name defaults. Exact candidate
+full static suite, source fixtures and transactional ZIP refusal/rollback
+are mandatory; WoW visual/combat/taint/restoration UNVERIFIED.
+
 ## P0467 — Chat procedure audit and discussion handoff (2026-11-16)
 
 Verified P0466 main `d1b1cdd`; source0.0.335-dev unchanged. User reports

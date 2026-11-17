@@ -1,8 +1,11 @@
 local _, Logres = ...
 
-local FILTER = "HELPFUL|PLAYER"
-local MAX_SCAN = 6
-local MAX_ICONS = 4
+-- Full helpful source, including effects from other casters. Guard every
+-- ordinary index; a bounded/secret scan never certifies complete coverage.
+local FILTER = "HELPFUL"
+local MAX_SCAN = 40
+local MAX_ICONS = 40
+local COLUMNS = 4
 
 local HelpfulAuras = Logres:RegisterModule("PlayerHelpfulAuras", {
     autoEnable = true,
@@ -46,6 +49,12 @@ local PREVIEW_AURAS = {
         icon = "Interface\\Icons\\Spell_Nature_LightningShield",
         applications = 1,
     },
+    -- Nine preview icons exercise four-column wrapping without gameplay.
+    { icon = "Interface\\Icons\\Spell_Nature_HealingTouch", applications = 2 },
+    { icon = "Interface\\Icons\\Spell_Holy_PowerWordShield", applications = 1 },
+    { icon = "Interface\\Icons\\Spell_Nature_Rejuvenation", applications = 1 },
+    { icon = "Interface\\Icons\\Spell_Nature_ResistNature", applications = 3 },
+    { icon = "Interface\\Icons\\Spell_Holy_DivineSpirit", applications = 1 },
 }
 
 local function styleValue(name)
@@ -187,10 +196,14 @@ function HelpfulAuras:ReadSnapshot()
         secretFields = 0,
         failures = 0,
         lastError = nil,
+        scanExhausted = false,
     }
 
     for index = 1, MAX_SCAN do
         local aura, reason, state = readAura(index)
+        if index == MAX_SCAN and state ~= "empty" then
+            snapshot.scanExhausted = true
+        end
 
         if state == "empty" then
             break
@@ -262,6 +275,7 @@ function HelpfulAuras:HidePresentation(reason)
 
     self.visibleCount = 0
     self.presentationShown = false
+    self.lastCoverageReady = false
 
     if reason then
         self.lastPresentationReason = reason
@@ -287,6 +301,15 @@ function HelpfulAuras:RenderSnapshot(snapshot, reason)
     end
 
     self.visibleCount = visible
+    self.lastCoverageReady = self.previewEnabled ~= true
+        and snapshot.secretSkips == 0 and snapshot.failures == 0
+        and snapshot.scanExhausted ~= true
+    self.lastScanExhausted = snapshot.scanExhausted == true
+    -- The LEFT anchor stays fixed at the original first icon's center;
+    -- extra rows grow downward without shifting the approved first row.
+    local iconSize = styleValue("iconSize")
+    local rows = math.ceil(math.max(visible, 1) / COLUMNS)
+    self.root:SetHeight(iconSize + (rows - 1) * (iconSize + styleValue("gap")))
     self.lastSecretSkipCount =
         snapshot.secretSkips or 0
     self.lastSecretFieldCount =
@@ -323,6 +346,7 @@ function HelpfulAuras:BuildPreviewSnapshot()
         secretFields = 0,
         failures = 0,
         lastError = nil,
+        scanExhausted = false,
     }
 end
 
@@ -443,6 +467,8 @@ function HelpfulAuras:GetDebugStatus()
             self.lastError,
         sourceAvailable =
             sourceAvailable() == true,
+        coverageReady = self.lastCoverageReady == true,
+        scanExhausted = self.lastScanExhausted == true,
         filter = FILTER,
     }
 end
@@ -452,6 +478,8 @@ function HelpfulAuras:OnInitialize()
     self.previewEnabled = false
     self.presentationShown = false
     self.visibleCount = 0
+    self.lastCoverageReady = false
+    self.lastScanExhausted = false
     self.refreshCount = 0
     self.previewCount = 0
     self.unitAuraEvents = 0
@@ -466,8 +494,8 @@ function HelpfulAuras:OnInitialize()
     local iconSize = styleValue("iconSize")
     local gap = styleValue("gap")
     local totalWidth =
-        (MAX_ICONS * iconSize)
-        + ((MAX_ICONS - 1) * gap)
+        (COLUMNS * iconSize)
+        + ((COLUMNS - 1) * gap)
 
     local root = CreateFrame(
         "Frame",
@@ -497,12 +525,12 @@ function HelpfulAuras:OnInitialize()
             root
         )
         slotFrame:SetSize(iconSize, iconSize)
+        local column = (index - 1) % COLUMNS
+        local row = math.floor((index - 1) / COLUMNS)
         slotFrame:SetPoint(
-            "LEFT",
-            root,
-            "LEFT",
-            (index - 1) * (iconSize + gap),
-            0
+            "LEFT", root, "LEFT",
+            column * (iconSize + gap),
+            -row * (iconSize + gap)
         )
         slotFrame:EnableMouse(true)
         slotFrame:Hide()
@@ -706,7 +734,7 @@ function HelpfulAuras:RunDevHelpfulAuraCheck(emit)
         and status.enabled == true
         and debugStatus.moduleEnabled == true
         and debugStatus.rootReady == true
-        and debugStatus.slotCount == 4
+        and debugStatus.slotCount == MAX_ICONS
         and debugStatus.unitAuraRegistered == true
         and debugStatus.worldRegistered == true
         and debugStatus.sourceAvailable == true
@@ -715,7 +743,7 @@ function HelpfulAuras:RunDevHelpfulAuraCheck(emit)
         and visibilityCoherent
 
     emit(string.format(
-        "Logres helpfulauracheck: %s (refresh=%s reason=%s root=%s expected=%s immersion=%s preview=%s slots=%s visible=%s shown=%s events=aura:%s world:%s source=%s filter=%s secretSkips=%s secretFields=%s failures=%s lastRefresh=%s presentation=%s error=%s)",
+        "Logres helpfulauracheck: %s (refresh=%s reason=%s root=%s expected=%s immersion=%s preview=%s slots=%s visible=%s shown=%s events=aura:%s world:%s source=%s filter=%s secretSkips=%s secretFields=%s failures=%s lastRefresh=%s presentation=%s error=%s coverage=%s exhausted=%s)",
         passed and "PASS" or "FAIL",
         tostring(refreshOK),
         tostring(refreshReason),
@@ -735,6 +763,8 @@ function HelpfulAuras:RunDevHelpfulAuraCheck(emit)
         tostring(debugStatus.failureCount),
         tostring(debugStatus.lastRefreshReason),
         tostring(debugStatus.lastPresentationReason),
-        tostring(debugStatus.lastError)
+        tostring(debugStatus.lastError),
+        tostring(debugStatus.coverageReady),
+        tostring(debugStatus.scanExhausted)
     ))
 end

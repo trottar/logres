@@ -87,10 +87,12 @@ function Native:Ready(key)
     end
     if key == "playerBuffs" then
         local helpful = secureReadiness("PlayerHelpfulAuras")
-        -- Four crafted slots are partial coverage. Only fold stock while
-        -- the /logres panel fallback remains reachable through its slash route.
+        -- The stock full-buff surface may fold only after a complete,
+        -- ordinary successful player scan. Restricted/incomplete results
+        -- leave stock usable; BUFFS always restores it on demand.
         return helpful and helpful.moduleEnabled == true
             and helpful.root ~= nil and helpful.slots ~= nil
+            and helpful.lastCoverageReady == true
             and type(Logres.ToggleDevPanel) == "function"
     end
     if key == "targetAuras" then

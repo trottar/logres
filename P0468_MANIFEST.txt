@@ -1,0 +1,40 @@
+P0468 Four-column compatible buff and debuff coverage
+Verified baseline: d14a25ad766d530dd841c7e7d01defedc31badb1
+Candidate runtime version: 0.0.336-dev
+PREWRITE: 331/331 STATIC PASS
+POSTWRITE: 331/331 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/HUD/NativeDebuffs.lua
+Logres/HUD/PlayerHelpfulAuras.lua
+Logres/HUD/StatusAuras.lua
+Logres/Immersion/NativeSurfaceReplacement.lua
+Logres/Logres.toc
+Logres/Media/Theme.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0468_COMPATIBLE_AURA_GRID.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0468_COMPATIBLE_AURA_GRID.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_h2_unified_placement_contract.py
+tools/check_h3_status_aura_visual_contract.py
+tools/check_h3_visual_fidelity_contract.py
+tools/check_native_pet_aura_replacement_contract.py
+tools/check_p0332_target_auras_contract.py
+tools/check_p0364_player_helpful_aura_diagnostic_seam_contract.py
+tools/check_p0468_compatible_aura_grid_contract.py
+tools/check_player_helpful_auras_contract.py
+tools/test_p0464_native_world_auras.lua
+tools/test_p0468_compatible_aura_grid.lua
+P0468_MANIFEST.txt

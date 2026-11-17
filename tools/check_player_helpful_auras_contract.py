@@ -48,9 +48,9 @@ if PLATE.is_file():
 
 for fragment in (
     'Logres:RegisterModule("PlayerHelpfulAuras"',
-    'local FILTER = "HELPFUL|PLAYER"',
-    "local MAX_SCAN = 6",
-    "local MAX_ICONS = 4",
+    'local FILTER = "HELPFUL"',
+    "local MAX_SCAN = 40",
+    "local MAX_ICONS = 40",
     "C_Secrets.ShouldUnitAuraIndexBeSecret",
     "C_UnitAuras.GetAuraDataByIndex",
     'eventFrame.RegisterUnitEvent',
@@ -175,7 +175,7 @@ if "..." in event_block or "unitAuraUpdateInfo" in event_block:
 
 for fragment in (
     "theme.playerHelpfulAuras = {",
-    "maxIcons = 4",
+    "maxIcons = 40",
     "iconSize = 36",
     'frame = MEDIA_ROOT .. "Aura\\\\aura_frame_passive.tga"',
     'countPlate = MEDIA_ROOT .. "Aura\\\\aura_count_plate.tga"',

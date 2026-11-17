@@ -6,9 +6,10 @@ local StatusAuras = Logres:RegisterModule("StatusAuras", {
     autoEnable = true,
 })
 
-local MAX_SCAN = 6
-local TARGET_HARMFUL_SCAN = 16
-local MAX_ICONS = 5
+local MAX_SCAN = 40
+local TARGET_HARMFUL_SCAN = 40
+local MAX_ICONS = 40
+local COLUMNS = 4
 local ICON_SIZE = 25
 local GAP = 3
 local statusStyle = (Logres.Theme and Logres.Theme.statusAura) or {}
@@ -162,7 +163,7 @@ local function readUnit(unit)
         local scanLimit = canonicalTargetHarmful
             and TARGET_HARMFUL_SCAN or MAX_SCAN
         for index = 1, scanLimit do
-            -- Scan beyond five for the canonical target harmful source so
+            -- Scan across the canonical target harmful source so
             -- later ordinary player-origin DoTs can still be prioritized.
             if not canonicalTargetHarmful and #bucket >= MAX_ICONS then
                 break
@@ -229,7 +230,7 @@ end
 
 local function createLane(unit, point, relativePoint, offsetX, offsetY, laneName, previewParent)
     local root = CreateFrame("Frame", "LogresStatusAuras" .. (laneName or unit), previewParent or UIParent)
-    local columns = unit == "player" and MAX_ICONS or 2
+    local columns = COLUMNS
     local rows = math.ceil(MAX_ICONS / columns)
     root:SetSize(
         columns * ICON_SIZE + (columns - 1) * GAP,
@@ -245,8 +246,8 @@ local function createLane(unit, point, relativePoint, offsetX, offsetY, laneName
     local anchorKey = unit == "player" and "playerHarmful"
         or laneName == "targetHelpful" and "targetHelpful" or "targetHarmful"
     if previewParent then
-        -- Reproduce V8's buff-right/debuff-left relative placement: 25 px
-        -- between the target's 198 px root and each 53 px two-column lane.
+        -- Reproduce V8's buff-right/debuff-left 25 px offsets,
+        -- but allow each lane to wrap independently to four columns.
         -- Both are children of the unit fixture so 50% scale/alpha applies
         -- uniformly to name, bar, helpful and harmful icons and their gaps.
         if point == "RIGHT" then
@@ -377,17 +378,30 @@ local function renderLane(lane, rows, shown)
 end
 
 local PREVIEW = {
+    -- Six-per-lane previews test the approved four-column row wrap.
     player = {
         { icon = "Interface\\Icons\\Spell_Shadow_CurseOfTounges", kind = "urgent", applications = 1 },
         { icon = "Interface\\Icons\\Spell_Shadow_AbominationExplosion", kind = "harmful", applications = 3 },
+        { icon = "Interface\\Icons\\Spell_Shadow_ShadowWordPain", kind = "harmful", applications = 1 },
+        { icon = "Interface\\Icons\\Spell_Shadow_SiphonMana", kind = "harmful", applications = 1 },
+        { icon = "Interface\\Icons\\Spell_Shadow_Possession", kind = "urgent", applications = 2 },
+        { icon = "Interface\\Icons\\Spell_Shadow_FingerOfDeath", kind = "harmful", applications = 1 },
     },
     target = {
         { icon = "Interface\\Icons\\Spell_Shadow_ShadowWordPain", kind = "harmful", applications = 1 },
         { icon = "Interface\\Icons\\Spell_Shadow_CurseOfTounges", kind = "urgent", applications = 2 },
+        { icon = "Interface\\Icons\\Spell_Shadow_AbominationExplosion", kind = "harmful", applications = 1 },
+        { icon = "Interface\\Icons\\Spell_Shadow_SiphonMana", kind = "harmful", applications = 1 },
+        { icon = "Interface\\Icons\\Spell_Shadow_Possession", kind = "urgent", applications = 2 },
+        { icon = "Interface\\Icons\\Spell_Shadow_FingerOfDeath", kind = "harmful", applications = 1 },
     },
     targetHelpful = {
         { icon = "Interface\\Icons\\Spell_Holy_DispelMagic", kind = "urgent", applications = 1 },
         { icon = "Interface\\Icons\\Spell_Holy_SealOfProtection", kind = "helpful", applications = 1 },
+        { icon = "Interface\\Icons\\Spell_Holy_PowerWordShield", kind = "helpful", applications = 1 },
+        { icon = "Interface\\Icons\\Spell_Holy_DivineSpirit", kind = "helpful", applications = 1 },
+        { icon = "Interface\\Icons\\Spell_Nature_Regeneration", kind = "helpful", applications = 2 },
+        { icon = "Interface\\Icons\\Spell_Nature_Rejuvenation", kind = "helpful", applications = 1 },
     },
 }
 

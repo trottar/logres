@@ -2533,7 +2533,7 @@ local function runPlayerHelpfulAuraPreview(argument)
         and debugAfter.failureCount == 0
         and (
             debugAfter.previewEnabled ~= true
-            or debugAfter.visibleCount == 4
+            or debugAfter.visibleCount == 9
         )
         and debugAfter.rootShown
             == expectedShown

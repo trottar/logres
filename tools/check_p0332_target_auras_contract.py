@@ -27,7 +27,7 @@ for f in ('HELPFUL|DISPELLABLE','HELPFUL|BIG_DEFENSIVE','HELPFUL|IMPORTANT',
     need(f'filter = "{f}"' in target, 'helpful source lost '+f)
 need('"HARMFUL|CROWD_CONTROL"' in filters and '"HARMFUL|RAID"' in filters,
      'player urgent filter behavior lost')
-need('local TARGET_HARMFUL_SCAN = 16' in s and 'local MAX_SCAN = 6' in s,
+need('local TARGET_HARMFUL_SCAN = 40' in s and 'local MAX_SCAN = 40' in s,
      'canonical target scan bound or other scope altered')
 reader=s.split('local function readUnit(unit)',1)[1].split('local function createLane(',1)[0]
 for t in ('local canonicalTargetHarmful = unit == "target"',
@@ -79,9 +79,9 @@ need('UNVERIFIED' in read('docs/memory/evidence/P0332_TARGET_AURAS.md'),
 
 # Synthetic distinct auras, identical icons, unknown IDs, out-of-view DoTs,
 # mixed-origin and >16 input. No Blizzard data and no spell-ID deduplication.
-def select(candidate,limit=5):
+def select(candidate,limit=40):
     seen=set(); scanned=[]
-    for item in candidate[:16]:
+    for item in candidate[:40]:
         ident=item.get('instance')
         if ident is not None and ident in seen: continue
         if ident is not None: seen.add(ident)
@@ -94,7 +94,7 @@ need(select([{'instance':7,'own':True},{'instance':7,'own':True}])==[{'instance'
      'proven duplicate ID not removed')
 c=[{'instance':i,'own':False} for i in range(1,7)]+[{'instance':7,'own':True}]
 need(select(c)[0]['instance']==7,'later player DoT not prioritized')
-need(len(select([{'instance':i} for i in range(30)]))==5,
+need(len(select([{'instance':i} for i in range(50)]))==40,
      'display or scan bounds drift')
 need(len(select([{'instance':None}]*3))==3,
      'identity-unknown DoTs incorrectly collapsed')

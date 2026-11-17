@@ -20,7 +20,7 @@ for fragment in (
     'CustomAuraContainerTemplate', '"LogresHarmful", "HARMFUL"',
     'button:SetIcon(icon)', 'frame:SetUnit(unit)', 'frame:SetEnabled(false)',
     'InCombatLockdown()', 'return false, "combat-deferred"',
-    'columns = unit == "target" and 2 or 5',
+    'local columns = 4',
     'local width = columns * ICON + (columns - 1) * GAP',
     'math.ceil(MAX / columns)',
     'harmfulStyle.assets and harmfulStyle.assets.frame',

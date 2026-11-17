@@ -49,7 +49,7 @@ theme.statusAura = {
 theme.nativeHarmfulAuras = {
     iconSize = 25,
     gap = 3,
-    maxIcons = 5,
+    maxIcons = 40,
     iconInset = 2,
     frameColor = { 0.96, 0.73, 0.59, 0.98 },
     assets = { frame = MEDIA_ROOT .. "Aura\\aura_frame_passive.tga" },
@@ -196,7 +196,7 @@ theme.contextMessage = {
 
 
 theme.playerHelpfulAuras = {
-    maxIcons = 4,
+    maxIcons = 40,
     iconSize = 36,
     iconInset = 4,
     frameOverscan = 2,

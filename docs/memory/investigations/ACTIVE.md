@@ -1,3 +1,11 @@
+## P0468 — Four-column compatible aura coverage (2026-11-16)
+
+P0467 main `d14a25a`, source0.0.335-dev. L-051 OPEN; user requests
+all Logres-compatible helpful/harmful auras in four-column wrapped
+rows. Candidate0.0.336-dev, bounded/secret-safe, native fail-open;
+accepted world HP, aura art,50/50 and immersive names unchanged.
+In-client behavior UNVERIFIED; see P0468 evidence.
+
 ## P0467 — Chat procedure audit and discussion handoff (2026-11-16)
 
 Verified P0466 main `d1b1cdd`; source0.0.335-dev unchanged. User reports

@@ -1,5 +1,4 @@
-# P0467: Chat audit; no runtime change. See CURRENT.
-P0466 PASS; fresh kit. Discuss L-051 buff cap4/scan6 first.
+# P0468: L-051 four-column auras; P0467 d14a25a baseline, WoW UNVERIFIED.
 # P0466: defaults/names accepted; recovery variants unverified.
 # P0465: accepted Sheet04 frame/native text; source evidence retained.
 # P0464: per-unit transaction retained; source evidence in P0464 record.

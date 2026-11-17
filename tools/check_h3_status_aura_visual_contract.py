@@ -21,7 +21,7 @@ for s in ('local statusAssets = statusStyle.assets or {}',
           'if aura.applications and aura.applications > 1 then',
           'item.count:SetFormattedText("%.0f", aura.applications)',
           'GameTooltip.SetUnitAura', 'C_Secrets.ShouldUnitAuraIndexBeSecret',
-          'local MAX_ICONS = 5', 'local ICON_SIZE = 25',
+          'local MAX_ICONS = 40', 'local ICON_SIZE = 25',
           'local GAP = 3', 'local FILTERS = {',
           'Logres.Layout.Bind(root, anchorKey, "CENTER", "CENTER")'):
     if s not in status:errs.append('StatusAuras missing '+s)
