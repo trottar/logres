@@ -3376,7 +3376,7 @@ function Logres:HandleLiveWorldEnemyCommand(argument)
     if argument == "status" then
         local state = hud:GetDebugStatus()
         emit(string.format(
-            "World Enemy LIVE (opt-in): requested=%s visible=%s attachments=%s combat=%s failures=%s reason=%s",
+            "World Enemy LIVE (saved): requested=%s visible=%s attachments=%s combat=%s failures=%s reason=%s",
             tostring(state.worldEnemyLiveRequested),
             tostring(state.worldEnemyLiveVisible),
             tostring(state.worldEnemyLiveAttachments),
@@ -3497,6 +3497,7 @@ function Logres:HandleLiveWorldEnemyCommand(argument)
         emit("Use World Enemy ON/OFF/Status in Report Bug > H.")
         return
     end
+    Logres:SetPreference("worldEnemyEnabled", argument == "on", "world-enemy-control")
     local accepted, reason = hud:SetLiveWorldEnemy(argument == "on")
     local state = hud:GetDebugStatus()
     emit(string.format("World Enemy %s: %s (state=%s, reason=%s)",

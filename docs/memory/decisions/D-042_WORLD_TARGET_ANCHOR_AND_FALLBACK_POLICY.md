@@ -103,3 +103,9 @@ copy and must preserve the native/screen fallback. Restore on removal,
 change, OFF, disable, error and after combat when applicable. A taint or
 protected error is **FAIL**, not PASS; runtime testing must certify safe
 ownership before this can become production. Keep all historical rejections.
+
+## P0466 explicit user policy update
+
+D-049 narrowly supersedes proof-stage opt-in/default-screen and no-CVar rules
+for accepted production world display and the reversible names whitelist.
+Original proof history and all anchor/secret/native-input safety rules remain.

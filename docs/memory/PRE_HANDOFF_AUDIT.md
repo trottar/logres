@@ -1,3 +1,18 @@
+## P0466 — Immersive names and saved world defaults (2026-11-16)
+
+Verified P0465 main `c0ed39a`; user aura/HP appearance PASS scoped, keep it.
+Session138 #14065 0.0.334-dev; new request: World Enemy ON by default,
+screen enemy OFF, ambient names/titles hidden, selected names and current
+combat Logres plates retained. Saved preference and reversible supported
+client CVar policy; defaults honor explicit choices. No nameplate drawing,
+aura or 50/50 changes. L-049/L-050 OPEN; P0466 client UNVERIFIED.
+Evidence: `docs/memory/evidence/P0466_IMMERSIVE_NAME_DEFAULTS.md`.
+
+Controller/native settings and target secure input/history contracts inspected.
+329 exact-candidate and ten actual-source fixtures required, canonical
+PREWRITE/POSTWRITE, syntax/diff hygiene, manifest/refusal/rollback audit before
+handoff. Static/source PASS is separate from client UNVERIFIED.
+
 ## P0465 — Shared Logres world aura styling (2026-11-16)
 
 Verified P0464 main `048eaed`, session137 #13986 0.0.333-dev.
@@ -938,3 +953,25 @@ inside existing NativeDebuffs.lua, loaded before StatusAuras, so the complete
 96-source TOC inventory remains unchanged. No historical inventory gate relaxed.
 
 Release validation: 328/328 exact-candidate STATIC PASS; 9/9 relevant actual-source fixtures PASS. New style fixture fails on unmodified P0464. Canonical PREWRITE/POSTWRITE328/328, refusal/rollback, manifest, payload parity, Lua5.1 syntax and Git-preservation audit are repeated on final ZIP before delivery. Client appearance/taint UNVERIFIED.
+
+Initial author candidate refused298/329: compact handoff exceeded8000 bytes,
+P0360 expected unconditional screen unit-watch ownership and P0446 expected
+unconditional screen fallback. Shortened handoff without changing its budget;
+preserved P0360 true/false diagnostics under explicit screen-opt-in branches.
+Only P0446 name/HP assertions evolve to require the stronger preference gate,
+backed by actual source tests. Native input/combat/secret checks unchanged.
+New source fixture fails on unmodified P0465, confirming behavioral coverage.
+
+Release validation: 329/329 complete exact-candidate STATIC PASS and ten
+actual-source fixtures PASS, including new default/name/secure-input tests.
+New fixture fails on unmodified P0465. Canonical final ZIP audit repeats
+PREWRITE/POSTWRITE329/329, payload/manifest/cleanup/diff hygiene, Lua5.1
+syntax, HEAD/source/hash/dirty/collision refusal and injected POSTWRITE
+byte-for-byte rollback, preserving actual user HEAD/refs/index/tracked bytes.
+Client defaults, selection/mouseover and CVar restoration remain UNVERIFIED.
+
+Final safety review: when an explicit screen ON is turned OFF during combat,
+its secure input may remain until regen. Keep the name/HP visible while that
+owned deferred input exists; refresh immediately after safe completion. New
+actual-source test prevents an invisible pending screen click area. Default
+OFF never enables it. This correction requires final full audit repetition.

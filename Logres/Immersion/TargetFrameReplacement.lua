@@ -47,6 +47,13 @@ local TargetFrameReplacement =
         OnEnable = function(self)
             self.eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
 
+            self:SubscribePreferences(function(_, _, changes)
+                if changes.screenSpaceEnemyFrameEnabled and self.appliedEnabled then
+                    self:RequestEnabled(true, "screen-enemy-preference")
+                    self:RefreshScreenPresentation()
+                end
+            end)
+
             self:OwnCleanup(function()
                 self.eventFrame:UnregisterAllEvents()
             end)
@@ -282,7 +289,16 @@ function TargetFrameReplacement:CaptureStock()
     }
 end
 
+function TargetFrameReplacement:RefreshScreenPresentation()
+    local ok, hud = pcall(Logres.GetModule, Logres, "HUD")
+    if ok and hud and type(hud.UpdateTarget) == "function" then hud:UpdateTarget() end
+end
+
 function TargetFrameReplacement:EnableInteraction()
+    if Logres:GetPreference("screenSpaceEnemyFrameEnabled") ~= true then
+        self:DisableInteraction()
+        return
+    end
     if self.unitWatchRegistered then
         self.interaction:EnableMouse(true)
         self.interactionMouseOwnedByLogres = true
@@ -345,17 +361,17 @@ function TargetFrameReplacement:RestoreStock(snapshot)
 end
 
 function TargetFrameReplacement:EnableReplacement(reason)
-    if self.appliedEnabled then
-        self.pending = false
-        self.lastError = nil
-        self.lastReason = reason or "already-applied"
-        return true
-    end
-
     if InCombatLockdown() then
         self.pending = true
         self.lastReason = reason or "deferred-enable"
         return false
+    end
+    if self.appliedEnabled then
+        local ok = pcall(self.EnableInteraction, self)
+        self.pending = not ok
+        self.lastError = not ok and "screen interaction update refused" or nil
+        self.lastReason = reason or "already-applied"
+        return ok
     end
 
     local snapshot, captureError = self:CaptureStock()
@@ -539,6 +555,7 @@ function TargetFrameReplacement:HandleEvent(event)
         and self.pending
     then
         self:ApplyRequestedState("PLAYER_REGEN_ENABLED")
+        self:RefreshScreenPresentation()
     end
 end
 
@@ -665,8 +682,14 @@ function TargetFrameReplacement:RunDevTargetFrameCheck(emit, boolText)
             and debugStatus.contextualSuppressedCount == 9
             and debugStatus.interactionReady == true
             and debugStatus.interactionConfigured == true
-            and debugStatus.unitWatchRegistered == true
-            and debugStatus.interactionMouseOwnedByLogres == true
+            and (
+                (Logres:GetPreference("screenSpaceEnemyFrameEnabled") == true
+                    and debugStatus.unitWatchRegistered == true
+                    and debugStatus.interactionMouseOwnedByLogres == true)
+                or (Logres:GetPreference("screenSpaceEnemyFrameEnabled") ~= true
+                    and debugStatus.unitWatchRegistered == false
+                    and debugStatus.interactionMouseOwnedByLogres == false)
+            )
             and debugStatus.interactionUnit == "target"
             and debugStatus.interactionLeftType == "target"
             and debugStatus.interactionRightType == "togglemenu"

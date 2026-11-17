@@ -11,17 +11,17 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0465** on verified P0464 main `048eaed`. Session137 #13986
-0.0.333-dev: positioning user PASS scoped; aura styling user FAIL.
-24 native binds/releases,0 refusals; image post-combat, no aura proof.
-Share Sheet04 passive art/inset with StatusAuras; remove stock cooldown
-widget/filter tint; native duration/count text. HP/50/50/positions retained.
-P0464 positioning PASS scoped, styling FAIL. P0463 aura GetPoint FAIL.
+**P0466** on verified P0465 main `c0ed39a`. Session138 #14065
+0.0.334-dev/user HP+aura visual PASS scoped. Preserve accepted rendering.
+World Enemy saved default ON; screen enemy default OFF now respected by
+HUD/input. Ambient labels/titles use reversible supported client settings;
+focused names and current combat plates retained. P0466 client UNVERIFIED.
+P0464 position PASS/style FAIL; P0463 GetPoint FAIL retained.
 P0460 HP/nameplates PASS scoped; P0457 selected PASS; P0461 aura FAIL;
 P0454/P0455 secondary 50/50 VISUAL FAIL; P0458/P0459 FAIL.
 P0456 suspension is historical. P0425 visual PASS;
 P0442/P0443 overlap/matte FAIL; P0449 icons PASS; P0450 duplicates FAIL.
-L-011 PARTIAL, L-028/L-048 OPEN; P0465 client UNVERIFIED.
+L-011 PARTIAL, L-028 full safety OPEN; L-048/L-049/L-050 OPEN.
 
 ## Verified State
 
@@ -63,10 +63,10 @@ L-011 PARTIAL, L-028/L-048 OPEN; P0465 client UNVERIFIED.
 
 ## Next Action
 
-Apply/push/deploy P0465. Normal gameplay: keep accepted HP/positions;
-verify Logres frame and text metadata without cooldown sweep. Report Bug
-captures native style/bind/refusal state. No diagnostic panel checklist.
-Client appearance/taint UNVERIFIED; L-028 OPEN.
+Apply/push/deploy P0466. No manual World Enemy ON after /reload.
+Check ambient labels absent, selected names and accepted combat plates
+retained; Report Bug captures policy/default state. Selection/mouseover,
+combat restore and new client behavior UNVERIFIED. No panel checklist.
 
 ## Success Criteria
 
@@ -76,6 +76,8 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0466_IMMERSIVE_NAME_DEFAULTS.md
+- docs/memory/decisions/D-049_IMMERSIVE_NAMES_AND_DEFAULTS.md
 - docs/memory/evidence/P0465_WORLD_AURA_STYLE.md
 - docs/memory/evidence/P0464_PER_UNIT_NATIVE_WORLD_AURAS.md
 - docs/memory/evidence/P0463_AURA_ACTIVATION_TRACKER_REPAIR.md

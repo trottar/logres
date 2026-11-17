@@ -1,7 +1,7 @@
-# P0465: baseline `048eaed`; shared aura style, 0.0.334-dev.
-P0464 position PASS; style FAIL. Sheet04 text, no sweep.
-HP/50/50 retained; client UNVERIFIED. Report Bug; no panel checklist.
-See `docs/memory/evidence/P0465_WORLD_AURA_STYLE.md`.
+# P0466: baseline `c0ed39a`; names/defaults, 0.0.335-dev.
+World ON/screen OFF; reversible names. Client UNVERIFIED.
+See `docs/memory/evidence/P0466_IMMERSIVE_NAME_DEFAULTS.md`.
+# P0465: accepted Sheet04 frame/native text; source evidence retained.
 # P0464: per-unit transaction retained; source evidence in P0464 record.
 
 # P0463: `b849955` session 134 #13743/#13745/#13748 regression.

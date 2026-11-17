@@ -1,0 +1,35 @@
+P0466 Enable saved world defaults and reversible immersive name policy
+Verified baseline: c0ed39acb94fab686b756b76b27a9c2de5a69d83
+Candidate runtime version: 0.0.335-dev
+PREWRITE: 329/329 STATIC PASS
+POSTWRITE: 329/329 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Core/Database.lua
+Logres/Core/Preferences.lua
+Logres/Dev/Panel.lua
+Logres/HUD/HUD.lua
+Logres/Immersion/Controller.lua
+Logres/Immersion/TargetFrameReplacement.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/decisions/D-042_WORLD_TARGET_ANCHOR_AND_FALLBACK_POLICY.md
+docs/memory/decisions/D-049_IMMERSIVE_NAMES_AND_DEFAULTS.md
+docs/memory/evidence/P0466_IMMERSIVE_NAME_DEFAULTS.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0446_world_screen_handoff_contract.py
+tools/check_p0466_immersive_names_contract.py
+tools/test_p0466_names_defaults.lua
+P0466_MANIFEST.txt

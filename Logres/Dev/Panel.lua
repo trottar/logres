@@ -310,6 +310,10 @@ function Logres:CaptureBugIncident()
     -- this journal stores only its sanitized, scalar diagnostics.
     -- P0440: event-time nameplate evidence survives target changes and the
     -- post-combat screenshot; only the probe's owned scalar latches are saved.
+    incident.snapshot.overheadNames = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("ImmersionController"):GetDebugStatus()
+    end), {"overheadNamesActive", "overheadNamesPending", "overheadNamesReason",
+        "overheadNamesApplied", "overheadNamesSkipped", "overheadNamesFailures"})
     incident.snapshot.nativeAccess = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("NativeAccess"):GetDebugStatus()
     end), {"objectiveTrackerReason", "objectiveTrackerPending", "objectiveTrackerManualOpen",

@@ -8,6 +8,7 @@ local DEFAULTS = {
         debug = true,
         immersionEnabled = true,
         activeQuestEnabled = true,
+        worldEnemyEnabled = true, -- preserve explicit OFF in existing saves
         screenSpaceEnemyFrameEnabled = false, -- additive default for existing saves
     },
     meta = {

@@ -4,6 +4,11 @@ local ImmersionController =
     Logres:RegisterModule("ImmersionController", {
         OnInitialize = function(self)
             self.policy = nil
+            self.overheadNames = Logres.OverheadNamePolicy.New(Logres.db.meta)
+            self.overheadNameEvents = CreateFrame("Frame")
+            self.overheadNameEvents:SetScript("OnEvent", function()
+                self:ReconcileOverheadNames({immersionEnabled = self.overheadNames.desired})
+            end)
             self.lastReconcileReason = "not-yet-reconciled"
 
             self.lastActionResult = "not-yet-requested"
@@ -46,6 +51,7 @@ local ImmersionController =
         end,
 
         OnDisable = function(self)
+            self:ReconcileOverheadNames({immersionEnabled = false})
             local targetReplacement =
                 Logres:GetModule("TargetFrameReplacement")
             local targetRestored, targetResult =
@@ -350,6 +356,7 @@ function ImmersionController:Reconcile(reason)
     self:ReconcileQuietMode(policy, self.lastReconcileReason)
     self:ReconcilePlayerFrame(policy, self.lastReconcileReason)
     self:ReconcileTargetFrame(policy, self.lastReconcileReason)
+    self:ReconcileOverheadNames(policy)
 end
 
 function ImmersionController:GetRecoveryStatus()
@@ -400,6 +407,12 @@ function ImmersionController:GetDebugStatus()
         Logres:GetModule("TargetFrameReplacement"):GetDebugStatus()
 
     return {
+        overheadNamesActive = self.overheadNames.active,
+        overheadNamesPending = self.overheadNames.pending,
+        overheadNamesReason = self.overheadNames.reason,
+        overheadNamesApplied = self.overheadNames.applied,
+        overheadNamesSkipped = self.overheadNames.skipped,
+        overheadNamesFailures = self.overheadNames.failures,
         moduleEnabled = self:IsEnabled(),
 
         preferenceRevision = policy.preferenceRevision,
@@ -630,4 +643,134 @@ function ImmersionController:RunDevImmersionCheck(emit, boolText)
         tostring(debugStatus.lastPlayerError),
         tostring(debugStatus.lastTargetError)
     ))
+end
+
+-- P0466: reversible client name-display policy, separate from unit rendering.
+-- Only supported ordinary client settings are read; never native frame state.
+local Names = {}
+Logres.OverheadNamePolicy = Names
+local NAME_SETTINGS = {
+    UnitNameOwn = "0", UnitNameNPC = "0", UnitNameHostleNPC = "0",
+    UnitNameFriendlySpecialNPCName = "0", UnitNameInteractiveNPC = "0",
+    UnitNameNonCombatCreatureName = "0", UnitNameFriendlyPlayerName = "0",
+    UnitNameEnemyPlayerName = "0", UnitNameFriendlyMinionName = "0",
+    UnitNameEnemyMinionName = "0", UnitNameFriendlyPetName = "0",
+    UnitNameEnemyPetName = "0", UnitNameFriendlyGuardianName = "0",
+    UnitNameEnemyGuardianName = "0", UnitNameFriendlyTotemName = "0",
+    UnitNameEnemyTotemName = "0", UnitNamePlayerGuild = "0",
+    UnitNamePlayerPVPTitle = "0", UnitNameGuildTitle = "0",
+    UnitNameFocused = "1",
+    nameplateShowEnemies = "1", nameplateShowAll = "0",
+    nameplateShowFriends = "0", nameplateShowFriendlyPlayers = "0",
+    nameplateShowFriendlyPlayerMinions = "0", nameplateShowFriendlyMinions = "0",
+    nameplateShowFriendlyNpcs = "0",
+}
+local REQUIRED_NAMES = {"UnitNameNPC", "UnitNameFriendlySpecialNPCName",
+    "UnitNameHostleNPC", "UnitNameInteractiveNPC", "UnitNameFriendlyPlayerName",
+    "UnitNameEnemyPlayerName", "UnitNameOwn"}
+
+local function plain(value)
+    if type(issecretvalue) ~= "function" then return false end
+    local ok, secret = pcall(issecretvalue, value)
+    return ok and secret == false
+end
+
+local function readSetting(key)
+    local get = C_CVar and C_CVar.GetCVar or GetCVar
+    if type(get) ~= "function" then return nil end
+    local ok, value = pcall(get, key)
+    if ok and plain(value) and (value == "0" or value == "1") then return value end
+end
+
+local function writeSetting(key, value)
+    local set = C_CVar and C_CVar.SetCVar or SetCVar
+    if type(set) ~= "function" then return false end
+    local ok = pcall(set, key, value)
+    return ok and readSetting(key) == value
+end
+
+function Names.New(meta)
+    return {meta = meta, active = false, pending = false, desired = false,
+        reason = "not-requested", applied = 0, skipped = 0, failures = 0}
+end
+
+function Names.Restore(state)
+    local snapshot = state.meta.overheadNameSnapshot
+    if type(snapshot) ~= "table" then state.active = false; return true end
+    local success = true
+    for key, expected in pairs(NAME_SETTINGS) do
+        local original = snapshot[key]
+        -- Saved metadata is untrusted: never accept arbitrary CVar names/values.
+        if original == "0" or original == "1" then
+            local current = readSetting(key)
+            if current == nil then
+                success = false
+            elseif current == expected and not writeSetting(key, original) then
+                success = false
+            end
+            -- An external edit different from our setting remains user-owned.
+        end
+    end
+    if success then state.meta.overheadNameSnapshot = nil; state.active = false end
+    return success
+end
+
+function Names.Apply(state, desired)
+    state.desired = desired == true
+    local ok, locked = pcall(InCombatLockdown)
+    if not ok or not plain(locked) or locked ~= false then
+        state.pending = true; state.reason = "names-deferred-ooc"; return false
+    end
+    state.pending = false
+    if not state.desired then
+        local restored = Names.Restore(state)
+        state.pending = not restored
+        state.reason = restored and "names-restored" or "names-restore-pending"
+        return restored
+    end
+    if state.active then state.reason = "selected-and-combat-names"; return true end
+    local snapshot = state.meta.overheadNameSnapshot
+    local fresh = type(snapshot) ~= "table"
+    if fresh then snapshot = {} end
+    local supported = {}
+    state.skipped = 0
+    -- Discover/capture every ordinary supported setting before any mutation.
+    for key in pairs(NAME_SETTINGS) do
+        local value = readSetting(key)
+        if value ~= nil then
+            supported[key] = true
+            if fresh or (snapshot[key] ~= "0" and snapshot[key] ~= "1") then snapshot[key] = value end
+        else state.skipped = state.skipped + 1 end
+    end
+    for _, key in ipairs(REQUIRED_NAMES) do
+        if not supported[key] then
+            state.reason = "names-required-cvar-unavailable"; return false
+        end
+    end
+    -- Persist ordinary original settings across /reload; never replace them
+    -- with our imposed values on subsequent loads.
+    state.meta.overheadNameSnapshot = snapshot
+    state.applied = 0
+    for key, value in pairs(NAME_SETTINGS) do
+        if supported[key] then
+            if not writeSetting(key, value) then
+                state.failures = state.failures + 1
+                local restored = Names.Restore(state)
+                state.pending = not restored
+                state.desired = false
+                state.reason = restored and "names-apply-refused-restored" or "names-restore-pending"
+                return false
+            end
+            state.applied = state.applied + 1
+        end
+    end
+    state.active = true; state.reason = "selected-and-combat-names"
+    return true
+end
+
+function ImmersionController:ReconcileOverheadNames(policy)
+    local state = self.overheadNames
+    Names.Apply(state, policy.immersionEnabled)
+    if state.pending then self.overheadNameEvents:RegisterEvent("PLAYER_REGEN_ENABLED")
+    else self.overheadNameEvents:UnregisterEvent("PLAYER_REGEN_ENABLED") end
 end

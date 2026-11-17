@@ -806,14 +806,28 @@ function HUD:UpdateTarget()
     -- successfully attached. The canonical screen target stays as fallback.
     self.targetFrame:Show()
     -- The cast cue is a child of targetFrame, so never hide its parent.
-    self.targetNameText:SetShown(self.worldEnemyLiveVisible ~= true)
-    self.targetHealthBar:SetShown(self.worldEnemyLiveVisible ~= true)
+    local screenEnemy = Logres:GetPreferences().screenSpaceEnemyFrameEnabled == true
+    -- A secure screen input cannot be withdrawn in combat. Keep its visible
+    -- presentation until the existing owner completes that deferred change.
+    local screenPending = false
+    if type(Logres.GetModule) == "function" then
+        local ok, owner = pcall(Logres.GetModule, Logres, "TargetFrameReplacement")
+        screenPending = ok and owner and owner.pending == true
+            and owner.interactionMouseOwnedByLogres == true or false
+    end
+    self.targetNameText:SetShown(screenPending or (screenEnemy and self.worldEnemyLiveVisible ~= true))
+    self.targetHealthBar:SetShown(screenPending or (screenEnemy and self.worldEnemyLiveVisible ~= true))
     self:UpdateWorldTrialValues()
 end
 
 function HUD:ApplyImmersionPreference(preferences)
     if preferences.immersionEnabled then
         self.root:Show()
+        local desiredWorld = preferences.worldEnemyEnabled == true
+        if self.worldEnemyPreferenceApplied ~= desiredWorld then
+            self.worldEnemyPreferenceApplied = desiredWorld
+            self:SetLiveWorldEnemy(desiredWorld)
+        end
 
         if self.deathTravelMode then
             self:UpdateHealthVignette()
@@ -828,6 +842,7 @@ function HUD:ApplyImmersionPreference(preferences)
         self:UpdateAllies()
         self:RefreshPvPIndicators()
     else
+        self.worldEnemyPreferenceApplied = nil
         self.root:Hide()
         self:SetWorldTargetTrial(false)
         self:SetLiveWorldEnemy(false)
@@ -841,6 +856,7 @@ function HUD:GetDebugStatus()
         moduleEnabled = self:IsEnabled(),
         rootShown = self.root and self.root:IsShown() or false,
         immersionEnabled = preferences.immersionEnabled,
+        worldEnemyEnabled = preferences.worldEnemyEnabled,
         screenSpaceEnemyFrameEnabled = preferences.screenSpaceEnemyFrameEnabled,
         enemyPreviewReady = self.enemyDisplayPreview ~= nil,
         enemyPreviewVisible = self.enemyPreviewVisible == true,
@@ -2819,6 +2835,7 @@ function HUD:OnEnable()
 end
 
 function HUD:OnDisable()
+    self.worldEnemyPreferenceApplied = nil
     self:SetLiveWorldEnemy(false)
     self:SetWorldTargetTrial(false)
     self:SetEnemyDisplayPreview(false)

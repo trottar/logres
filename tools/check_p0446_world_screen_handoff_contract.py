@@ -7,8 +7,8 @@ h=read('Logres/HUD/HUD.lua');d=read('Logres/Dev/Panel.lua');c=read('Logres/Core/
 update=h.split('function HUD:UpdateTarget()',1)[1].split('function HUD:ApplyImmersionPreference',1)[0]
 assert 'self.worldEnemyLiveVisible ~= true' in update
 assert 'self.targetFrame:Show()' in update and 'self.targetFrame:Hide()' in update
-assert 'self.targetNameText:SetShown(self.worldEnemyLiveVisible ~= true)' in update
-assert 'self.targetHealthBar:SetShown(self.worldEnemyLiveVisible ~= true)' in update
+assert 'self.targetNameText:SetShown(screenPending or (screenEnemy and self.worldEnemyLiveVisible ~= true))' in update
+assert 'self.targetHealthBar:SetShown(screenPending or (screenEnemy and self.worldEnemyLiveVisible ~= true))' in update
 assert 'self.targetNameText:SetText(UnitName("target"))' in update
 hide=h.split('function HUD:HideLiveWorldEnemy(reason)',1)[1].split('function HUD:UpdateLiveWorldEnemyValues',1)[0]
 assert 'hadWorldOwner' in hide and 'self:UpdateTarget()' in hide

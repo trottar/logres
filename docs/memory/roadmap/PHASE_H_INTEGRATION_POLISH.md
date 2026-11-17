@@ -1,3 +1,13 @@
+## P0466 — Immersive names and saved world defaults (2026-11-16)
+
+Verified P0465 main `c0ed39a`; user aura/HP appearance PASS scoped, keep it.
+Session138 #14065 0.0.334-dev; new request: World Enemy ON by default,
+screen enemy OFF, ambient names/titles hidden, selected names and current
+combat Logres plates retained. Saved preference and reversible supported
+client CVar policy; defaults honor explicit choices. No nameplate drawing,
+aura or 50/50 changes. L-049/L-050 OPEN; P0466 client UNVERIFIED.
+Evidence: `docs/memory/evidence/P0466_IMMERSIVE_NAME_DEFAULTS.md`.
+
 ## P0465 — Shared Logres world aura styling (2026-11-16)
 
 Verified P0464 main `048eaed`, session137 #13986 0.0.333-dev.
