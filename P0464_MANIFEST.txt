@@ -1,0 +1,30 @@
+P0464 Bind styled native auras to selected and secondary world enemies
+Verified baseline: 9ec4fd4f913d3d85934d0aed3756cda98f55c46d
+Candidate runtime version: 0.0.333-dev
+PREWRITE: 327/327 STATIC PASS
+POSTWRITE: 327/327 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/HUD/HUD.lua
+Logres/HUD/NativeDebuffs.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0464_PER_UNIT_NATIVE_WORLD_AURAS.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0463_regression_repair_contract.py
+tools/check_p0464_native_world_aura_contract.py
+tools/test_p0460_selected_removal_source.lua
+tools/test_p0464_native_world_auras.lua
+P0464_MANIFEST.txt

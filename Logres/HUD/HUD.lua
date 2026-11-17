@@ -849,6 +849,10 @@ function HUD:GetDebugStatus()
         enemyPreviewAggroAlpha = 0.5,
         enemyWorldAttachmentEnabled = false,
         enemyFallbackPreserved = true,
+        worldEnemyAuraRendererBinds = Logres.NativeDebuffs and Logres.NativeDebuffs.worldAuraBinds or 0,
+        worldEnemyAuraRendererReleases = Logres.NativeDebuffs and Logres.NativeDebuffs.worldAuraReleases or 0,
+        worldEnemyAuraRendererRefusals = Logres.NativeDebuffs and Logres.NativeDebuffs.worldAuraRefusals or 0,
+        worldEnemyAuraRendererReason = Logres.NativeDebuffs and Logres.NativeDebuffs.worldAuraLastReason or "unavailable",
         worldEnemyAuraLayoutReason = self.worldEnemyAuraLayoutReason or "not-attempted",
         worldEnemyAuraLayoutClaims = Logres.NativeDebuffs and Logres.NativeDebuffs.nameplateLayoutClaims or 0,
         worldEnemyAuraLayoutRestores = Logres.NativeDebuffs and Logres.NativeDebuffs.nameplateLayoutRestores or 0,
@@ -1253,6 +1257,10 @@ local function nativeDecorField(parent, field)
 end
 
 function HUD:RestoreNativeEnemyDecor()
+    if Logres.NativeDebuffs and Logres.NativeDebuffs.ReleaseWorldAuraOwner
+        and not Logres.NativeDebuffs.ReleaseWorldAuraOwner(self.worldEnemyAuraOwner) then
+        return false
+    end
     local layoutRestored = true
     if self.worldEnemyAuraLayoutClaim then
         layoutRestored = Logres.NativeDebuffs.RestoreNameplateAuraLayout(
@@ -1301,9 +1309,9 @@ function HUD:ClaimNativeEnemyDecor(anchor)
     end
     local claim = {}
     local candidates = {name, health}
-    -- P0461: Preserve Blizzard-owned nameplate aura lists on every claimed
-    -- enemy. A precreated addon AuraContainer is not proof of rendered icons.
-    -- Do not inspect alpha/children of these native lists or mutate them.
+    -- P0464: HP claim does not suppress auras. Separate per-unit native
+    -- consumer transaction runs only after the HP parent Show succeeds.
+    -- Never inspect aura payloads, child state or visibility as proof.
     -- Only ordinary references are inspected for fallback routing: if either
     -- native list cannot be identified, the independent screen target aura
     -- container must remain available rather than being hidden blindly.
@@ -1342,25 +1350,27 @@ function HUD:ClaimNativeEnemyDecor(anchor)
     self.worldEnemyNativeAuraOwned = false
     self.worldEnemyNativeTransfers = self.worldEnemyNativeTransfers + 1
     self.worldEnemyNativeLastResult = "decor-owned"
-    local native = Logres.NativeDebuffs
-    if native and type(native.ClaimNameplateAuraLayout) == "function" then
-        local accepted, reason
-        self.worldEnemyAuraLayoutClaim, accepted, reason =
-            native.ClaimNameplateAuraLayout(harmful, helpful, self.worldEnemyLiveFrame)
-        self.worldEnemyAuraLayoutReason = reason
-        if not accepted and self.worldEnemyAuraLayoutClaim then
-            self:RestoreNativeEnemyDecor()
-            return false, reason
-        end
-    end
     return true, "decor-owned"
+end
+
+function HUD:BindEnemyWorldAuras(owner, anchor, unit)
+    local native = Logres.NativeDebuffs
+    if not native or not native.BindWorldAuraOwner then return "aura-native-unavailable" end
+    local unitFrame = nativeDecorField(anchor, "UnitFrame")
+    local auraRoot = nativeDecorField(unitFrame, "AurasFrame")
+    local _, reason = native.BindWorldAuraOwner(owner, unit,
+        nativeDecorField(auraRoot, "DebuffListFrame"),
+        nativeDecorField(auraRoot, "BuffListFrame"))
+    native.worldAuraLastReason = reason
+    return reason
 end
 
 -- P0459: every safely observed hostile/attackable non-selected plate is
 -- skinned with a precreated 50% Logres name/health display regardless of
 -- basic/detailed threat. Threat is diagnostic, not a switch to Blizzard art.
 -- Pool overflow and unsafe anchors remain explicit capability limitations.
--- Blizzard retains auras, casts, raid/CC indicators and native input.
+-- Blizzard retains casts, raid/CC indicators and native input.
+-- Aura rendering uses an independent fail-open native consumer transaction.
 local SECONDARY_POOL_CAPACITY = 40
 local SECONDARY_MAX_INCONCLUSIVE = 3
 
@@ -1380,6 +1390,10 @@ function HUD:BuildSecondaryAggroTrial()
             return false, "secondary-owned-frame-unsafe"
         end
         pool[index] = {frame = frame, visible = false}
+        if Logres.NativeDebuffs and Logres.NativeDebuffs.PrepareWorldAuraOwner then
+            pool[index].auraOwner, pool[index].auraLayoutReason =
+                Logres.NativeDebuffs.PrepareWorldAuraOwner(frame)
+        end
     end
     return true
 end
@@ -1388,6 +1402,10 @@ end
 -- hide is pending. Original alphas can be secret opaque tokens: no reads,
 -- comparisons, formatting or diagnostic serialization are permitted.
 function HUD:RestoreNativeSecondaryEnemyDecor(slot)
+    if Logres.NativeDebuffs and Logres.NativeDebuffs.ReleaseWorldAuraOwner
+        and not Logres.NativeDebuffs.ReleaseWorldAuraOwner(slot and slot.auraOwner) then
+        return false
+    end
     local success = true
     if slot and slot.auraLayoutClaim then
         success = Logres.NativeDebuffs.RestoreNameplateAuraLayout(slot.auraLayoutClaim)
@@ -1446,19 +1464,6 @@ function HUD:ClaimNativeSecondaryEnemyDecor(slot, anchor)
             return false, "secondary-native-mutation-refused"
         end
     end
-    local native = Logres.NativeDebuffs
-    if native and type(native.ClaimNameplateAuraLayout) == "function" then
-        local auraRoot = nativeDecorField(unitFrame, "AurasFrame")
-        local accepted, reason
-        slot.auraLayoutClaim, accepted, reason = native.ClaimNameplateAuraLayout(
-            nativeDecorField(auraRoot, "DebuffListFrame"),
-            nativeDecorField(auraRoot, "BuffListFrame"), slot.frame)
-        slot.auraLayoutReason = reason
-        if not accepted and slot.auraLayoutClaim then
-            self:RestoreNativeSecondaryEnemyDecor(slot)
-            return false, reason
-        end
-    end
     return true, "secondary-native-name-health-owned"
 end
 
@@ -1477,6 +1482,12 @@ end
 
 function HUD:HideSecondaryAggroOwner(slot, reason)
     if not slot then return true end
+    if Logres.NativeDebuffs and Logres.NativeDebuffs.ReleaseWorldAuraOwner
+        and not Logres.NativeDebuffs.ReleaseWorldAuraOwner(slot.auraOwner) then
+        slot.blocked = true
+        self.worldEnemySecondaryTrialLastResult = "aura-native-restore-pending"
+        return false
+    end
     local wasVisible = slot.visible == true
     if wasVisible then
         self.worldEnemySecondaryTrialDetaches =
@@ -1724,6 +1735,7 @@ function HUD:ObserveSecondaryAggroTrial(event, eventUnit, decision)
         self:HideSecondaryAggroOwner(slot, "secondary-show-refused")
         return
     end
+    slot.auraLayoutReason = self:BindEnemyWorldAuras(slot.auraOwner, anchor, unit)
     self.worldEnemySecondaryTrialAttachments =
         self.worldEnemySecondaryTrialAttachments + 1
     self.worldEnemySecondaryTrialLastResult = "secondary-hostile-plate-skinned"
@@ -1780,6 +1792,10 @@ function HUD:BuildLiveWorldEnemy()
         return false, "owned-frame-protected-or-unknown"
     end
     self.worldEnemyLiveFrame = frame
+    if Logres.NativeDebuffs and Logres.NativeDebuffs.PrepareWorldAuraOwner then
+        self.worldEnemyAuraOwner, self.worldEnemyAuraLayoutReason =
+            Logres.NativeDebuffs.PrepareWorldAuraOwner(frame)
+    end
     -- P0444: never cover Blizzard's nameplate with an opaque background.
     -- Preserve the existing transparent health/name and aura layout.
     local auras = Logres:GetModule("StatusAuras")
@@ -1790,6 +1806,11 @@ function HUD:BuildLiveWorldEnemy()
 end
 
 function HUD:HideLiveWorldEnemy(reason)
+    if Logres.NativeDebuffs and Logres.NativeDebuffs.ReleaseWorldAuraOwner
+        and not Logres.NativeDebuffs.ReleaseWorldAuraOwner(self.worldEnemyAuraOwner) then
+        self.worldEnemyLiveLastReason = "aura-native-restore-pending"
+        return false
+    end
     local hadWorldOwner = self.worldEnemyLiveVisible == true
     if hadWorldOwner then
         self.worldEnemyLiveDetaches = (self.worldEnemyLiveDetaches or 0) + 1
@@ -1940,6 +1961,8 @@ function HUD:RefreshLiveWorldEnemy(event, eventUnit)
                 self.worldEnemyLiveAnchorUnit = anchorUnit
                 self.worldEnemyLiveAnchorEpoch =
                     self.worldEnemyObservedNameplateEpochs[anchorUnit]
+                self.worldEnemyAuraLayoutReason = self:BindEnemyWorldAuras(
+                    self.worldEnemyAuraOwner, anchor, anchorUnit)
             end
             self.worldEnemyLiveContinuityRefreshes =
                 (self.worldEnemyLiveContinuityRefreshes or 0) + 1
@@ -2014,6 +2037,8 @@ function HUD:RefreshLiveWorldEnemy(event, eventUnit)
         self:HideLiveWorldEnemy("owned-show-refused")
         return false, self.worldEnemyLiveLastReason
     end
+    self.worldEnemyAuraLayoutReason = self:BindEnemyWorldAuras(
+        self.worldEnemyAuraOwner, anchor, anchorUnit)
     self.worldEnemyLiveAttachments = self.worldEnemyLiveAttachments + 1
     self.worldEnemyLiveCombatAttaches = self.worldEnemyLiveCombatAttaches
         + (ordinaryInCombat() and 1 or 0)
@@ -2027,7 +2052,7 @@ function HUD:RefreshLiveWorldEnemy(event, eventUnit)
     if self.worldEnemyNativeAuraSourceCapable
         and auras and type(auras.SetWorldEnemyScreenAuraHandoff) == "function" then
         -- A native source is structurally present. Its icon visibility is
-        -- intentionally not inspected; no native list is ever suppressed.
+        -- intentionally not inspected; aura handoff uses native API contracts.
         auras:SetWorldEnemyScreenAuraHandoff(true)
     end
     self.worldEnemyScreenHandoffs = (self.worldEnemyScreenHandoffs or 0) + 1

@@ -90,6 +90,7 @@ function logres:GetModule(name)
     if name=="WorldTargetProbe" then return probe end
     return nil
 end
+HUD.BindEnemyWorldAuras=function()return "aura-not-prepared" end
 local env={HUD=HUD,Logres=logres,
     ordinaryOutOfCombat=function()return true end,
     ordinaryInCombat=function()return false end,

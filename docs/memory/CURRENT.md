@@ -11,19 +11,18 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0463** on verified P0462 main `b849955`, 0.0.331-dev session 134
-#13743/#13745/#13748 user regression FAIL. Selected later returns;
-secondary attachments 0; objective tracker visible during combat.
-P0463: reversible unprotected native aura-list placement at +/-25;
-reconcile cached ADD tokens on activation; reuse prebuilt pool in combat;
-ON cancels unexecuted OFF; tracker secure OOC gate plus unprotected fallback.
-Native aura data/membership remains Blizzard-owned. Unsafe/protected
-layout or unavailable tracker gate stays fallback/deferred.
+**P0464** on verified P0463 main `9ec4fd4`, 0.0.332-dev session 135
+#13829. User confirms both selected HP and secondary 50/50 appearance
+PASS scoped. Auras FAIL: 0 point-layout claims, 4 capture refusals.
+P0464 replaces native GetPoint with OOC-prepared per-owner native renderers.
+Bind ordinary plate tokens, then handoff opaque local-shown flags; restore before
+withdrawal/reuse. Native engine owns payloads/duration/stacks.
+Accepted HP/identity/activation and P0463 tracker code remain unchanged.
 P0460 HP/nameplates PASS scoped; P0457 selected PASS; P0461 aura FAIL;
 P0454/P0455 secondary 50/50 VISUAL FAIL; P0458/P0459 FAIL.
 P0456 suspension is historical. P0425 visual PASS;
 P0442/P0443 overlap/matte FAIL; P0449 icons PASS; P0450 duplicates FAIL.
-L-011 PARTIAL, L-028/L-048 OPEN; P0463 client UNVERIFIED.
+L-011 PARTIAL, L-028/L-048 OPEN; P0464 client UNVERIFIED.
 
 ## Verified State
 
@@ -65,12 +64,11 @@ L-011 PARTIAL, L-028/L-048 OPEN; P0463 client UNVERIFIED.
 
 ## Next Action
 
-Apply/push/deploy P0463. Normal gameplay: selected/secondary HP stays
-accepted; native aura lists flank bars without reparenting or data reads.
-Prebuilt ON works in combat; first setup remains pending OOC; OFF cancels
-pending ON and ON cancels unexecuted OFF. Secure gate handles protected tracker.
-Report Bug captures layout claims/refusals and tracker ownership reason;
-no extra panel checklist. Client layout/taint remains UNVERIFIED.
+Apply/push/deploy P0464. Normal gameplay should retain accepted HP,
+with Logres-styled native auras beside each owned enemy. Refused native
+capability leaves stock auras; Report Bug captures bind/refusal/release state.
+No panel checklist: click Report Bug at the fault before toggling/refreshing,
+then export after /reload saves evidence. Client visual/taint remains UNVERIFIED.
 
 ## Success Criteria
 
@@ -80,6 +78,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0464_PER_UNIT_NATIVE_WORLD_AURAS.md
 - docs/memory/evidence/P0463_AURA_ACTIVATION_TRACKER_REPAIR.md
 - docs/memory/evidence/P0453_SECONDARY_THREAT_SOURCE_ISOLATION.md
 - docs/memory/evidence/P0451_SECONDARY_THREAT_QUALIFICATION.md

@@ -1,3 +1,16 @@
+## P0464 — Per-unit native world aura renderer (2026-11-16)
+
+Verified P0463 main `9ec4fd4`, runtime 0.0.332-dev session 135 #13829.
+User confirms selected Logres HP and secondary 50% size/opacity PASS scoped.
+Aura FAIL: 0 layout claims, 4 refusals, `native-aura-point-capture-refused`.
+Replace live native-list positioning with OOC-prepared, per-owner styled
+native AuraContainers bound to ordinary nameplate tokens after parent Show.
+Native engine owns icons/duration/stacks; opaque local-shown handoff restores stock
+before owner withdrawal/reuse. Refusal preserves HP and stock auras; pending
+restore retains/quarantines replacement. HP/identity/activation/tracker policy
+unchanged. L-028 OPEN; P0464 static/source checks required, client UNVERIFIED.
+Evidence: `docs/memory/evidence/P0464_PER_UNIT_NATIVE_WORLD_AURAS.md`.
+
 ## P0463 — Aura layout and activation/tracker repair (2026-11-16)
 
 Verified P0462 main `b849955`, source/deploy/capture 0.0.331-dev;

@@ -15,7 +15,7 @@ for token in ('layoutRegionReady','region.IsProtected','region.IsForbidden','ord
 for forbidden in ('GetChildren','GetRegions','IsShown','GetAlpha','SetAlpha','SetParent','SetUnit','C_UnitAuras','C_Timer'):
  assert forbidden not in layout,forbidden
 assert layout.index('claim[#claim + 1]')<layout.index('harmful:ClearAllPoints()')
-for token in ('self.worldEnemyAuraLayoutClaim','slot.auraLayoutClaim','native.ClaimNameplateAuraLayout',
+for token in ('self.worldEnemyAuraLayoutClaim','slot.auraLayoutClaim','native.BindWorldAuraOwner',
  'function HUD:ReconcileObservedWorldEnemyPlates()', 'pairs(self.worldEnemyObservedNameplateEpochs or {})',
  'world-enemy-resume','combat-resume','cancelled-pending-off'):
  assert token in h,token

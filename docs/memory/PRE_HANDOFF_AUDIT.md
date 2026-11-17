@@ -1,3 +1,34 @@
+## P0464 — Per-unit native world aura renderer (2026-11-16)
+
+Verified P0463 main `9ec4fd4`, runtime 0.0.332-dev session 135 #13829.
+User confirms selected Logres HP and secondary 50% size/opacity PASS scoped.
+Aura FAIL: 0 layout claims, 4 refusals, `native-aura-point-capture-refused`.
+Replace live native-list positioning with OOC-prepared, per-owner styled
+native AuraContainers bound to ordinary nameplate tokens after parent Show.
+Native engine owns icons/duration/stacks; opaque local-shown handoff restores stock
+before owner withdrawal/reuse. Refusal preserves HP and stock auras; pending
+restore retains/quarantines replacement. HP/identity/activation/tracker policy
+unchanged. L-028 OPEN; P0464 static/source checks required, client UNVERIFIED.
+Evidence: `docs/memory/evidence/P0464_PER_UNIT_NATIVE_WORLD_AURAS.md`.
+
+New source fixture and all historical tests must execute; full exact candidate
+and applier PREWRITE/POSTWRITE checked before delivery. Candidate source PASS
+does not establish runtime aura appearance. Historical failed experiments below
+remain unchanged. Private fixture indexes protect user Git state.
+
+### Measured release validation
+
+327/327 full canonical exact-candidate checks and 8/8 relevant actual-source
+fixtures PASS. New P0464 source fixture fails against unmodified P0463 (missing
+PrepareWorldAuraOwner), confirming the test distinguishes this repair. Initial
+author candidates refused on CURRENT/HANDOFF byte budgets; concise summaries
+were repaired without weakening limits. No user-source writes occurred.
+Final archive requires repeated canonical PREWRITE/POSTWRITE327/327, payload
+parity, manifest, cleanup/diff hygiene, Lua5.1 runtime syntax, actual wrong-HEAD
+simulation/tamper/dirty/new-path refusal and injected POSTWRITE exact rollback.
+Final mouse-safety correction uses whole-list shown restoration, never alpha0.
+Client UNVERIFIED; source tests do not establish visible icons or combat trust.
+
 ## P0463 — Aura/activation/tracker exact-candidate audit (2026-11-16)
 
 Baseline main `b849955`; session 134 0.0.331-dev user regression FAIL.

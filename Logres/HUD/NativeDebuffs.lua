@@ -437,3 +437,160 @@ function Native.SetScreenTargetWorldOwned(state, worldOwned)
     end
     return true, "screen-target-owned"
 end
+
+-- P0464: per-owner native rendering, never read or relocate stock aura points.
+-- All setup is OOC. Native SetUnit owns payload/event updates thereafter.
+Native.worldAuraBinds, Native.worldAuraReleases, Native.worldAuraRefusals = 0, 0, 0
+Native.worldAuraLastReason = "not-bound"
+
+local function worldAuraRefused(owner, reason)
+    Native.worldAuraRefusals = Native.worldAuraRefusals + 1
+    Native.worldAuraLastReason = reason
+    if owner and not owner.pending then owner.reason = reason end
+    return false, reason
+end
+
+local function worldAuraRegionReady(region)
+    if not ordinary(region) or region == nil then return false end
+    local ok, ready = pcall(function()
+        if type(region.IsProtected) ~= "function" or type(region.IsForbidden) ~= "function"
+            or type(region.IsShown) ~= "function" or type(region.SetShown) ~= "function" then return false end
+        local pOK, protected = pcall(region.IsProtected, region)
+        local fOK, forbidden = pcall(region.IsForbidden, region)
+        return pOK and fOK and ordinary(protected) and protected == false
+            and ordinary(forbidden) and forbidden == false
+    end)
+    return ok and ready == true
+end
+
+local function createOwnedWorldAura(parent, filter, point, relative)
+    local frame = CreateFrame("AuraContainer", nil, parent, "CustomAuraContainerTemplate")
+    frame:Hide()
+    frame:SetEnabled(false)
+    frame:EnableMouse(false)
+    frame:SetPoint(point, parent, relative, filter == "HARMFUL" and -25 or 25, 0)
+    frame:SetFlowLayoutAnchorPoint(filter == "HARMFUL" and "BOTTOMRIGHT" or "BOTTOMLEFT")
+    frame:SetFlowLayoutGrowthDirection(filter == "HARMFUL" and AnchorUtil.FlowDirection.Left
+        or AnchorUtil.FlowDirection.Right, AnchorUtil.FlowDirection.Up)
+    frame:SetFlowLayoutMaximumLineSize(3 * ICON + 2 * GAP)
+    frame:AddAuraGroup("LogresWorld" .. filter, filter, {
+        maxFrameCount = 12,
+        layout = {elementWidth = ICON, elementHeight = ICON,
+            elementSpacing = GAP, lineSpacing = GAP},
+        initializeFrame = function(button)
+            button:SetSize(ICON, ICON)
+            button:EnableMouse(false)
+            local icon = button:CreateTexture(nil, "ARTWORK")
+            icon:SetPoint("TOPLEFT", button, "TOPLEFT", INSET, -INSET)
+            icon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -INSET, INSET)
+            button:SetIcon(icon)
+            local cooldown = CreateFrame("Cooldown", nil, button, "CooldownFrameTemplate")
+            cooldown:SetAllPoints(icon)
+            cooldown:EnableMouse(false)
+            button:SetDurationCooldown(cooldown)
+            local count = button:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+            count:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -1, 1)
+            button:SetApplicationCount(count, {})
+            local border = button:CreateTexture(nil, "OVERLAY")
+            border:SetAllPoints(button)
+            border:SetTexture((harmfulStyle.assets and harmfulStyle.assets.frame)
+                or "Interface\\Buttons\\UI-Quickslot2")
+            border:SetVertexColor(FRAME_COLOR[1], FRAME_COLOR[2], FRAME_COLOR[3], FRAME_COLOR[4])
+        end,
+    })
+    return frame
+end
+
+function Native.PrepareWorldAuraOwner(parent)
+    if not ordinary(parent) or parent == nil then return nil, "aura-owner-missing" end
+    local ok, locked = pcall(InCombatLockdown)
+    if not ok or not ordinary(locked) or locked ~= false then return nil, "aura-setup-requires-ooc" end
+    if not nativeReady() then return nil, "aura-native-unavailable" end
+    local owner = {frames = {}, active = false}
+    local created = pcall(function()
+        owner.frames.harmful = createOwnedWorldAura(parent, "HARMFUL", "RIGHT", "LEFT")
+        owner.frames.helpful = createOwnedWorldAura(parent, "HELPFUL", "LEFT", "RIGHT")
+    end)
+    if not created then
+        for _, frame in pairs(owner.frames) do
+            pcall(frame.SetEnabled, frame, false); pcall(frame.Hide, frame)
+        end
+        return nil, "aura-native-setup-refused"
+    end
+    return owner, "aura-prepared"
+end
+
+function Native.ReleaseWorldAuraOwner(owner)
+    if not owner then return true end
+    -- Restore BOTH native lists before withdrawing replacement information.
+    local restored = true
+    for _, entry in ipairs(owner.claim or {}) do
+        if not worldAuraRegionReady(entry.region)
+            or not pcall(entry.region.SetShown, entry.region, entry.shown) then restored = false end
+    end
+    if not restored then
+        owner.pending = true
+        owner.reason = "aura-native-restore-pending"
+        Native.worldAuraLastReason = owner.reason
+        return false
+    end
+    owner.claim, owner.pending = nil, false
+    local stopped = true
+    for _, frame in pairs(owner.frames) do
+        if not pcall(frame.SetEnabled, frame, false) then stopped = false end
+        if not pcall(frame.Hide, frame) then stopped = false end
+    end
+    if not stopped then owner.reason = "aura-owned-withdraw-pending"; return false end
+    if owner.active then Native.worldAuraReleases = Native.worldAuraReleases + 1 end
+    owner.active, owner.unit = false, nil
+    owner.reason = "aura-restored"
+    Native.worldAuraLastReason = owner.reason
+    return true
+end
+
+function Native.BindWorldAuraOwner(owner, unit, harmful, helpful)
+    if not owner then return worldAuraRefused(owner, "aura-not-prepared") end
+    if not ordinary(unit) or type(unit) ~= "string" or not unit:match("^nameplate%d+$") then
+        return worldAuraRefused(owner, "aura-unit-unproven")
+    end
+    if owner.active and not owner.pending and owner.unit == unit then return true, owner.reason end
+    if not Native.ReleaseWorldAuraOwner(owner) then return false, owner.reason end
+    if not worldAuraRegionReady(harmful) or not worldAuraRegionReady(helpful) then
+        return worldAuraRefused(owner, "aura-native-lists-unsafe")
+    end
+    -- Capture LOCAL shown flags solely as opaque restore tokens. Never test,
+    -- compare or serialize them. Hide whole lists, not alpha-zero mouse regions.
+    -- A later native Show fails open visibly; no hook reasserts suppression.
+    local claim = {}
+    for _, region in ipairs({harmful, helpful}) do
+        local captured, shown = pcall(region.IsShown, region)
+        if not captured then return worldAuraRefused(owner, "aura-shown-capture-refused") end
+        claim[#claim + 1] = {region = region, shown = shown}
+    end
+    -- Parent has already been attached/shown by HP owner. All native public
+    -- consumers must accept unit/filter/render activation before handoff.
+    local bound = pcall(function()
+        for _, frame in pairs(owner.frames) do
+            frame:SetUnit(unit)
+            frame:SetEnabled(true)
+            frame:UpdateAllAuras()
+            frame:Show()
+        end
+    end)
+    if not bound then
+        Native.ReleaseWorldAuraOwner(owner)
+        return worldAuraRefused(owner, "aura-unit-bind-refused")
+    end
+    owner.unit, owner.active, owner.claim = unit, true, claim
+    for _, entry in ipairs(claim) do
+        if not pcall(entry.region.SetShown, entry.region, false) then
+            Native.worldAuraRefusals = Native.worldAuraRefusals + 1
+            Native.ReleaseWorldAuraOwner(owner)
+            return false, owner.claim and "aura-native-restore-pending" or "aura-handoff-refused-restored"
+        end
+    end
+    owner.reason = "aura-native-renderer-bound"
+    Native.worldAuraBinds = Native.worldAuraBinds + 1
+    Native.worldAuraLastReason = owner.reason
+    return true, owner.reason
+end
