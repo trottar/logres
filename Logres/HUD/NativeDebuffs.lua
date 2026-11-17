@@ -408,11 +408,19 @@ end
 function Native.SetActive(state, active, placementEvent)
     if not state then return false, "unavailable" end
     active = active == true
+    local targetEnabled = active
+        and Logres:GetPreferences().screenSpaceEnemyFrameEnabled == true
     -- Do not mutate restricted native controls in combat. Existing Blizzard
     -- aura presentation remains untouched and available throughout.
     if type(InCombatLockdown) == "function" and InCombatLockdown() then
         if state.active == active then
-            return true, "unchanged-in-combat"
+            state.targetPending = state.targetEnabled ~= targetEnabled
+            if state.targetEnabled == targetEnabled then
+                return true, "unchanged-in-combat"
+            end
+            -- The global native renderer is still usable. Keep its ownership
+            -- so a target-only deferral cannot duplicate player harmful auras.
+            return true, "screen-target-combat-deferred"
         end
         return false, "combat-deferred"
     end
@@ -420,6 +428,7 @@ function Native.SetActive(state, active, placementEvent)
         if not active or placementEvent then placeStockPlayerHarmful(state, active) end
         for unit, frame in pairs(state.frames) do
             local visible = active and (unit ~= "player" or Native.StockPlayerHarmful() == nil)
+            if unit == "target" then visible = targetEnabled end
             frame:SetEnabled(visible)
             frame:SetShown(visible)
             if visible then frame:UpdateAllAuras() end
@@ -431,9 +440,13 @@ function Native.SetActive(state, active, placementEvent)
             pcall(frame.Hide, frame)
         end
         state.active = false
+        state.targetEnabled = false
+        state.targetPending = false
         return false, "native-update-failed"
     end
     state.active = active
+    state.targetEnabled = targetEnabled
+    state.targetPending = false
     return true, active and "native-active" or "native-disabled"
 end
 

@@ -488,6 +488,9 @@ function StatusAuras:Refresh(reason, onlyUnit)
                 self:RecordLiveSnapshot(unit, snapshot, reason)
             end
             if unit == "target" then
+                -- P0470: screen opt-out applies to both ordinary aura lanes.
+                -- Source snapshots and the world renderer remain independent.
+                local active = active and preferences.screenSpaceEnemyFrameEnabled == true
                 renderLane(self.lanes.target, snapshot.harmfulRows, active and not useNative)
                 renderLane(self.lanes.targetHelpful, snapshot.helpfulRows, active)
             else
@@ -729,6 +732,10 @@ function StatusAuras:GetDebugStatus()
         nativeEnabledCached = self.nativeDebuffs ~= nil
             and self.nativeDebuffs.active == true,
         nativeActivationReason = self.nativeActivationReason,
+        nativeScreenTargetEnabled = self.nativeDebuffs ~= nil
+            and self.nativeDebuffs.targetEnabled == true,
+        nativeScreenTargetPending = self.nativeDebuffs ~= nil
+            and self.nativeDebuffs.targetPending == true,
         stockPlayerHarmful = Logres.NativeDebuffs.StockPlayerHarmful() ~= nil,
         stockPlayerPlacementReason = self.nativeDebuffs and self.nativeDebuffs.stockPlacementReason,
         nativeReason = self.nativeReason,

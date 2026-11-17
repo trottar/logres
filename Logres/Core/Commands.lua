@@ -2369,17 +2369,18 @@ local function runStatusAuraCheck()
     local d = module:GetDebugStatus()
     local preferences = Logres:GetPreferences()
     local shouldShow = preferences.immersionEnabled == true
+    local targetShouldShow = shouldShow and preferences.screenSpaceEnemyFrameEnabled == true
     local coherent =
         d.playerShown == (shouldShow and d.playerVisible > 0)
-        and d.targetShown == (shouldShow and d.targetVisible > 0)
-        and d.targetHarmfulShown == (shouldShow and d.targetHarmfulVisible > 0)
-        and d.targetHelpfulShown == (shouldShow and d.targetHelpfulVisible > 0)
+        and d.targetShown == (targetShouldShow and d.targetVisible > 0)
+        and d.targetHarmfulShown == (targetShouldShow and d.targetHarmfulVisible > 0)
+        and d.targetHelpfulShown == (targetShouldShow and d.targetHelpfulVisible > 0)
     -- Native aura buttons own restricted icon presentation. Their live aura
     -- membership is intentionally never inspected by this diagnostic.
     coherent = coherent or (
         d.nativeActive == true and not d.preview and shouldShow
         and d.playerShown == false and d.targetHarmfulShown == false
-        and d.targetHelpfulShown == (shouldShow and d.targetHelpfulVisible > 0)
+        and d.targetHelpfulShown == (targetShouldShow and d.targetHelpfulVisible > 0)
     )
     local targetEvidence = d.preview and "preview-only"
         or d.targetVisible > 0 and "live-populated"

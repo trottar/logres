@@ -48,7 +48,7 @@ end}
 C_AddOns={IsAddOnLoaded=function()return true end}
 local L={ Theme={playerHelpfulAuras={},nativeHarmfulAuras={maxIcons=40}}, Layout={Bind=function()end}, }
 function L:RegisterModule(name,options) local m={};modules[name]=m;return m end
-function L:GetPreferences() return {immersionEnabled=true} end
+function L:GetPreferences() return {immersionEnabled=true,screenSpaceEnemyFrameEnabled=true} end
 L.AuraPresentation={CreateBase=function(frame)return {icon=frame:CreateTexture(),border=frame:CreateTexture()}end,
     CreateNativeMetadata=function(frame)return frame:CreateFontString(),frame:CreateFontString()end}
 assert(loadfile(path..'Logres/HUD/PlayerHelpfulAuras.lua'))('Logres',L)
@@ -143,3 +143,11 @@ helpful:RunDevHelpfulAuraCheck(function(line) report=line end)
 assert(type(report)=='string' and report:find('coverage=true',1,true)
     and report:find('exhausted=false',1,true),'coverage fields missing from report')
 print('P0468 actual-source player + target aura grid and native geometry: PASS')
+
+-- P0470: source rows remain available for world diagnostics with screen OFF.
+function L:GetPreferences()return {immersionEnabled=true,screenSpaceEnemyFrameEnabled=false}end
+status:SetPreview(false)
+status:Refresh('live-screen-off')
+assert(#status.last.target.harmfulRows==12 and #status.last.target.helpfulRows==9)
+assert(not status.lanes.target.root.visible and not status.lanes.targetHelpful.root.visible)
+assert(not status.nativeDebuffs or not status.nativeDebuffs.targetEnabled)

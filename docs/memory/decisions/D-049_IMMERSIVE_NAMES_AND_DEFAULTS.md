@@ -22,3 +22,12 @@ See docs/memory/evidence/P0466_IMMERSIVE_NAME_DEFAULTS.md and L-049/L-050.
 P0467 intake: user accepts P0466 requested default/name behavior on verified
 main d1b1cdd. Scoped runtime PASS; full recovery/taint/other-client matrix remains
 unverified. Prior implementation-UNVERIFIED label above is historical.
+
+P0470 user clarification: screen enemy OFF includes its Logres PvP badge
+and independently created target aura lanes for friendly and enemy targets.
+Keep target cast, original stock Auras and secure deferred input/fallback.
+Native clone enable/disable stays OOC, pending combat changes defer to regen.
+Selected ordinary attackable/nonfriend reaction-neutral plates use the same
+appearance eligibility as nonselected plates; threat/combat is diagnostic,
+not a prerequisite. Unknown reaction retains the historical corroborated
+fallback; secret/friendly/unsafe units keep stock.

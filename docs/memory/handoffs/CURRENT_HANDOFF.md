@@ -1,4 +1,4 @@
-# P0469: N Chat SHOW/AUTO; L-052 upward buffs/L-053 contextual preview; P0468 `24790ed` verified.
+# P0470: P0469 `11458a0`; L-049 screen OFF decorations/L-011 neutral gate; client UNVERIFIED.
 # P0468: L-051 four-column auras; P0467 d14a25a baseline, WoW UNVERIFIED.
 # P0466: defaults/names accepted; recovery variants unverified.
 # P0465: accepted Sheet04/native text.

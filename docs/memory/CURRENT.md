@@ -11,10 +11,11 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0469** panel Chat SHOW/AUTO, L-052 UP/L-053 preview; P0468 `24790ed` L-051 grid; P0467 audit on verified P0466 `d1b1cdd`: user defaults/names
-PASS scoped; L-049/L-050 RESOLVED-SCOPE. Preserve HP/aura/50-50.
-Recovery/taint unverified. Deterministic handoff;
-P0467 JSON roundtrip PASS.
+**P0470** L-049 screen-target badge/aura opt-out; L-011 selected neutral
+eligibility. P0469 `11458a0` verified, 0.0.337-dev capture #15316.
+P0467 defaults/names PASS scoped; L-049 reopened, L-050 RESOLVED-SCOPE.
+Preserve HP/aura/50-50, P0468 grid and P0469 UP/chat/preview.
+Recovery/taint unverified. P0467 JSON roundtrip PASS.
 P0464 position PASS/style FAIL; P0463 GetPoint FAIL retained.
 P0460 HP/nameplates PASS scoped; P0457 selected PASS; P0461 aura FAIL;
 P0454/P0455 secondary 50/50 VISUAL FAIL; P0458/P0459 FAIL.
@@ -62,8 +63,8 @@ L-011 PARTIAL; L-028 full safety and L-048 OPEN.
 
 ## Next Action
 
-P0468 verified; P0469 candidate, client UNVERIFIED. N Chat SHOW/AUTO. Export fresh Chat handoff:
-`python3 tools/chat_change.py handoff LOGRES_CHAT_HANDOFF_P0469.zip`.
+Validate P0470 friendly screen OFF and selected yellow world plate; client UNVERIFIED. Export after push:
+`python3 tools/chat_change.py handoff LOGRES_CHAT_HANDOFF_P0470.zip`.
 L-051: max4/scan6/self-cast baseline; four-column grid, WoW UNVERIFIED. Preserve accepted enemy UI.
 
 ## Success Criteria
@@ -74,7 +75,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
-- docs/memory/evidence/P0467_PLAYER_BUFF_COVERAGE_INTAKE.md
+- docs/memory/evidence/P0470_TARGET_POLICY_REPAIR.md
 - docs/memory/evidence/P0467_CHAT_WORKFLOW_AUDIT.md
 - docs/memory/evidence/P0466_IMMERSIVE_NAME_DEFAULTS.md
 - docs/memory/decisions/D-049_IMMERSIVE_NAMES_AND_DEFAULTS.md

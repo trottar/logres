@@ -908,6 +908,15 @@ function Probe:AcquireLiveEnemyTargetAnchor(eventUnit, fromEvent)
     local reaction = readEventReaction(unit)
     if reaction.category == "hostile" then
         self.liveEnemyLastEligibility = "reaction-hostile"
+    elseif reaction.category == "neutral" then
+        -- P0470: known attackable neutrals share secondary appearance policy.
+        -- Combat/threat is not a prerequisite for skinning a selected plate.
+        local friend = readBoolean(UnitIsFriend, "player", unit)
+        if not friend.ok or friend.secret or friend.value ~= false then
+            self.liveEnemyLastEligibility = "neutral-friend-unavailable"
+            return nil, self.liveEnemyLastEligibility
+        end
+        self.liveEnemyLastEligibility = "reaction-neutral-attackable-nonfriend"
     else
         local friend = readBoolean(UnitIsFriend, "player", unit)
         local playerCombat = readBoolean(UnitAffectingCombat, "player")

@@ -1,3 +1,11 @@
+## P0470 — Screen-target decoration opt-out and neutral eligibility (2026-11-17)
+
+P0469 main `11458a0` verified. L-049 reopened for screen PvP/auras;
+L-011 selected yellow enemy refusal confirmed in #14907. Gate only owned
+screen decorations; preserve stock Auras/cast/input and world art/50-50.
+Known attackable/nonfriend selected neutrals no longer need combat proof.
+0.0.338-dev candidate, WoW UNVERIFIED; see P0470 evidence.
+
 ## P0469 — Panel chat access (2026-11-16)
 
 Verified P0468 main `24790ed`; add N-tab Chat SHOW/AUTO session override

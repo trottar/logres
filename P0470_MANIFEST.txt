@@ -1,0 +1,33 @@
+P0470 Respect screen target opt-out and admit safely classified neutral nameplates
+Verified baseline: 11458a0a4d7322a14f6b71493ed1d74029fe86fd
+Candidate runtime version: 0.0.338-dev
+PREWRITE: 333/333 STATIC PASS
+POSTWRITE: 333/333 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/HUD/HUD.lua
+Logres/HUD/NativeDebuffs.lua
+Logres/HUD/StatusAuras.lua
+Logres/HUD/WorldTargetProbe.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/decisions/D-049_IMMERSIVE_NAMES_AND_DEFAULTS.md
+docs/memory/evidence/P0470_TARGET_POLICY_REPAIR.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0470_target_policy_contract.py
+tools/test_p0468_compatible_aura_grid.lua
+tools/test_p0470_target_policy.lua
+P0470_MANIFEST.txt

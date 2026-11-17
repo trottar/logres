@@ -276,7 +276,8 @@ function Logres:CaptureBugIncident()
     incident.snapshot.playerHarmful = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("StatusAuras"):GetDebugStatus()
     end), {"playerShown", "playerVisible", "playerReason", "nativeActive",
-        "nativeActivationReason", "stockPlayerHarmful", "stockPlayerPlacementReason"})
+        "nativeActivationReason", "stockPlayerHarmful", "stockPlayerPlacementReason",
+        "nativeScreenTargetEnabled", "nativeScreenTargetPending", "targetShown", "targetHelpfulShown", "targetHarmfulShown"})
     incident.snapshot.playerHelpful = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("PlayerHelpfulAuras"):GetDebugStatus()
     end), {"rootShown", "visibleCount", "lastPresentationReason", "secretSkipCount"})

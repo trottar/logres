@@ -1,3 +1,11 @@
+## P0470 — Target decorations and neutral plate eligibility
+
+P0469 `11458a0` verified. Read D-049/P0466, P0447, P0459, L-049/L-011,
+P0334/P0345/P0447/P0466 and native aura owner contracts. No native payload,
+secret inspection, anchor/owner churn or blanket suppression. Full exact
+candidate, behavioral fixtures, syntax/diff and canonical refusal/rollback
+mandatory before ZIP; client UNVERIFIED. See P0470 evidence.
+
 ## P0469 — Chat panel toggle
 
 P0468 main `24790ed` verified. Read D-025, quiet/context/restoration,
@@ -1035,3 +1043,7 @@ P0469 exact candidate332/332 STATIC PASS; actual-source chat policy/lifecycle
 and aura grid/preview tests PASS. R0/R1 memory budgets and P0175 shape refusal
 retained in P0469 evidence. Canonical ZIP refusal/rollback/syntax audit is
 required on the final bytes; client UNVERIFIED.
+
+P0470 first candidate333/333 STATIC PASS; source review added target-only
+combat pending ownership preservation, covered by actual-source fixture.
+Final full suite/package audit repeated on delivered bytes; WoW UNVERIFIED.

@@ -234,7 +234,18 @@ function HUD:RefreshPvPIndicators()
         or targetFlag and "flagged" or "unflagged"
     -- Unknown is not unflagged: hide only our additive badge, not stock UI.
     self.playerPvPBadge:SetShown(playerFlag == true)
-    self.targetPvPBadge:SetShown(targetFlag == true)
+    -- P0470: the badge belongs to the opted-in screen target, not an
+    -- independent floating decoration. Keep any deferred secure input visible.
+    local screen = Logres:GetPreferences().screenSpaceEnemyFrameEnabled == true
+        and self.worldEnemyLiveVisible ~= true
+    local owner = Logres:GetModule("TargetFrameReplacement")
+    local pending = owner and owner.pending == true
+        and owner.interactionMouseOwnedByLogres == true
+    if screen or pending then
+        self.targetPvPBadge:SetShown(targetFlag == true)
+    else
+        self.targetPvPBadge:Hide()
+    end
 end
 
 function HUD:SetPvPPreview(enabled)
