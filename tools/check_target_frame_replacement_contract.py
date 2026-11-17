@@ -160,8 +160,8 @@ if TARGET.is_file():
             "debugStatus.stockPresentationSuppressed == true",
             "debugStatus.stockMouseSuppressed == true",
             "debugStatus.preservedCount == 4",
-            "debugStatus.suppressedContextCount == 9",
-            "debugStatus.contextualSuppressedCount == 9",
+            "debugStatus.suppressedContextCount == 10",
+            "debugStatus.contextualSuppressedCount == 10",
             "debugStatus.interactionMouseOwnedByLogres == true",
         ):
             if marker not in target_check:

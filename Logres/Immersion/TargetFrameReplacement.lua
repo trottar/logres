@@ -91,6 +91,7 @@ local SUPPRESSED_CONTEXT_KEYS = {
     "GuideIcon",
     "BossIcon",
     "PvpIcon",
+    "PvpBackgroundIcon", -- P0471: independently rendered native faction crest
     "PrestigePortrait",
     "PrestigeBadge",
     "PetBattleIcon",
@@ -678,8 +679,8 @@ function TargetFrameReplacement:RunDevTargetFrameCheck(emit, boolText)
             and debugStatus.stockPresentationSuppressed == true
             and debugStatus.stockMouseSuppressed == true
             and debugStatus.preservedCount == 4
-            and debugStatus.suppressedContextCount == 9
-            and debugStatus.contextualSuppressedCount == 9
+            and debugStatus.suppressedContextCount == 10
+            and debugStatus.contextualSuppressedCount == 10
             and debugStatus.interactionReady == true
             and debugStatus.interactionConfigured == true
             and (

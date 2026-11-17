@@ -1,0 +1,29 @@
+P0471 Suppress identified native target faction crest with exact restoration
+Verified baseline: 68a9ad3ff2aefb6b956067c3a662d454903ee89a
+Candidate runtime version: 0.0.339-dev
+PREWRITE: 334/334 STATIC PASS
+POSTWRITE: 334/334 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Immersion/TargetFrameReplacement.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0471_TARGET_FACTION_CREST.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0360_target_frame_diagnostic_seam_contract.py
+tools/check_p0471_target_crest_contract.py
+tools/check_target_frame_replacement_contract.py
+tools/test_p0471_target_crest.lua
+P0471_MANIFEST.txt
