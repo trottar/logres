@@ -1,0 +1,30 @@
+P0473 Focused quest Next button and unassigned native keybind
+Verified baseline: 79bfc5a0500de2b20aa53e42c4e966ac91563fb1
+Candidate runtime version: 0.0.341-dev
+PREWRITE: 336/336 STATIC PASS
+POSTWRITE: 336/336 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Bindings.xml
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Quest/ActiveQuest.lua
+Logres/Quest/Progress.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0473_FOCUSED_QUEST_CYCLE.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/patches/P0473_FOCUSED_QUEST_CYCLE.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_objective_progress_contract.py
+tools/check_p0473_focused_quest_cycle_contract.py
+tools/test_p0473_quest_cycle.lua
+P0473_MANIFEST.txt

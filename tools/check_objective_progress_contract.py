@@ -117,7 +117,6 @@ if PROGRESS.is_file():
         "C_QuestLog.SetSelectedQuest",
         "C_QuestLog.AddQuestWatch",
         "C_QuestLog.RemoveQuestWatch",
-        "C_SuperTrack.Set",
         "ObjectiveTrackerFrame",
         "_G.LogresHUDTarget",
         "QuestObjectiveTracker",
@@ -133,6 +132,23 @@ if PROGRESS.is_file():
         "local label = trimText(row.text, TEXT_LIMIT)",
         "previous.text == current.text",
     ]
+
+    # P0473 user-triggered focus cycling narrowly supersedes the historical
+    # no-supertrack-write rule; all other objective/quest writes remain banned.
+    marker = "function Progress:AdvanceFocusedQuest()"
+    start = source.find(marker)
+    end = source.find("\nend\n", start)
+    if start < 0 or end < 0:
+        errors.append("missing bounded focus-cycle owner")
+    else:
+        block = source[start:end + 5]
+        if source.count("C_SuperTrack.SetSuperTrackedQuestID") != 2:  # capability + write
+            errors.append("unexpected supertrack write footprint")
+        if "pcall(C_SuperTrack.SetSuperTrackedQuestID, nextQuestID)" not in block:
+            errors.append("focus mutation not guarded by pcall")
+        remainder = source[:start] + source[end + 5:]
+        if "C_SuperTrack.Set" in remainder:
+            errors.append("supertrack mutation escaped user-initiated owner")
 
     for fragment in forbidden:
         if fragment in source:

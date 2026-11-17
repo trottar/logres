@@ -289,6 +289,7 @@ function ActiveQuest:HidePresentation(reason)
 
     self.presentationShown = false
     self.displayRows = {}
+    self.cycleCandidateCount = 0
 
     if GameTooltip and type(GameTooltip.Hide) == "function" then
         GameTooltip:Hide()
@@ -577,6 +578,14 @@ function ActiveQuest:Render(snapshot, reason)
         and colorValue("complete")
         or colorValue("ambient")
 
+    local cycleIDs = not snapshot.preview and progress:ReadCycleQuestIDs()
+    self.cycleCandidateCount = cycleIDs and #cycleIDs or 0
+    if self.cycleCandidateCount >= 2 then
+        self.cycleButton:Show()
+    else
+        self.cycleButton:Hide()
+    end
+
     self.title:SetText(snapshot.title)
     self.title:SetTextColor(
         titleColor[1],
@@ -746,6 +755,28 @@ function ActiveQuest:Render(snapshot, reason)
     return true, "shown"
 end
 
+-- P0473: button and unassigned native binding share one focus action.
+function ActiveQuest:CycleFocusedQuest(source)
+    if not self.moduleEnabled or not self.immersionEnabled
+        or not self.activeQuestEnabled or self.previewMode ~= nil then
+        self.lastCycleResult = "cycle-presentation-inactive"
+        return false, self.lastCycleResult
+    end
+    local progress = Logres:GetModule("QuestObjectiveProgress")
+    if not progress or not progress:IsEnabled() then
+        self.lastCycleResult = "cycle-source-inactive"
+        return false, self.lastCycleResult
+    end
+    self.cycleAttempts = self.cycleAttempts + 1
+    local changed, result, questID = progress:AdvanceFocusedQuest()
+    self.lastCycleResult = result
+    if changed then
+        self.lastCycleQuestID = questID
+        self:Refresh("cycle-" .. (source or "button"))
+    end
+    return changed, result
+end
+
 function ActiveQuest:Refresh(reason)
     self.refreshCount = self.refreshCount + 1
     self.lastReason = reason or "refresh"
@@ -866,6 +897,11 @@ function ActiveQuest:GetDebugStatus()
         immersionEnabled = self.immersionEnabled == true,
         activeQuestEnabled = self.activeQuestEnabled == true,
         previewMode = self.previewMode,
+        cycleButtonReady = self.cycleButton ~= nil,
+        cycleCandidateCount = self.cycleCandidateCount,
+        cycleAttempts = self.cycleAttempts,
+        lastCycleResult = self.lastCycleResult,
+        lastCycleQuestID = self.lastCycleQuestID,
         presentationShown = self.presentationShown == true,
         presentationCount = self.presentationCount,
         previewCount = self.previewCount,
@@ -928,6 +964,10 @@ function ActiveQuest:OnInitialize()
     self.lastPresentationReason = "initialize"
     self.lastError = nil
     self.displayRows = {}
+    self.cycleCandidateCount = 0
+    self.cycleAttempts = 0
+    self.lastCycleResult = "not-requested"
+    self.lastCycleQuestID = nil
 
     local root = CreateFrame(
         "Frame",
@@ -978,13 +1018,39 @@ function ActiveQuest:OnInitialize()
         48,
         -13
     )
-    title:SetWidth(styleValue("titleWidth"))
+    title:SetWidth(styleValue("titleWidth") - 36)
     title:SetHeight(34)
     title:SetJustifyH("LEFT")
     title:SetJustifyV("TOP")
     title:SetWordWrap(true)
     title:SetShadowColor(0, 0, 0, 0.90)
     title:SetShadowOffset(1, -1)
+
+    local cycleButton = CreateFrame("Button", nil, root)
+    cycleButton:SetSize(24, 24)
+    cycleButton:SetPoint("TOPRIGHT", root, "TOPRIGHT", -11, -12)
+    local cycleIcon = cycleButton:CreateTexture(nil, "ARTWORK")
+    cycleIcon:SetAllPoints(cycleButton)
+    cycleIcon:SetTexture(
+        (theme.questDialogue and theme.questDialogue.assets
+            and theme.questDialogue.assets.pageChevron)
+        or "Interface\\Buttons\\UI-SpellbookIcon-NextPage-Up"
+    )
+    cycleIcon:SetVertexColor(0.94, 0.84, 0.62, 0.90)
+    cycleButton:SetScript("OnClick", function()
+        self:CycleFocusedQuest("button")
+    end)
+    cycleButton:SetScript("OnEnter", function(button)
+        if not GameTooltip then return end
+        GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
+        GameTooltip:SetText("Next focused quest")
+        GameTooltip:AddLine("Key Bindings > AddOns > Logres", 0.8, 0.73, 0.60)
+        GameTooltip:Show()
+    end)
+    cycleButton:SetScript("OnLeave", function()
+        if GameTooltip then GameTooltip:Hide() end
+    end)
+    cycleButton:Hide()
 
     local ambient = root:CreateFontString(
         nil,
@@ -998,7 +1064,7 @@ function ActiveQuest:OnInitialize()
         48,
         -50
     )
-    ambient:SetWidth(styleValue("titleWidth"))
+    ambient:SetWidth(styleValue("titleWidth") - 36)
     ambient:SetJustifyH("LEFT")
     ambient:SetWordWrap(false)
     ambient:SetShadowColor(0, 0, 0, 0.85)
@@ -1031,6 +1097,7 @@ function ActiveQuest:OnInitialize()
     self.panel = panel
     self.glyph = glyph
     self.title = title
+    self.cycleButton = cycleButton
     self.ambient = ambient
     self.divider = divider
     self.completionRule = completionRule
@@ -1188,4 +1255,14 @@ function ActiveQuest:OnDisable()
     self.moduleEnabled = false
     self.previewMode = nil
     self:HidePresentation("module-disabled")
+end
+
+-- Bindings.xml is discovered by WoW automatically; it is not listed in TOC.
+BINDING_HEADER_LOGRES = "Logres"
+BINDING_NAME_LOGRES_NEXT_FOCUSED_QUEST = "Next focused quest"
+function Logres_NextFocusedQuest()
+    local active = Logres:GetModule("ActiveQuest")
+    if active and active:IsEnabled() then
+        active:CycleFocusedQuest("binding")
+    end
 end

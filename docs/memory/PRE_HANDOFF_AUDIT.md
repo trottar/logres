@@ -1,3 +1,7 @@
+## P0473 — Focused quest cycling candidate (2026-11-17)
+
+Exact GitHub P0472 main `79bfc5a` and tree `96712192` verified against local staged author candidate. Historical P0126/P0343 Active Quest and F.6 objective source contracts reviewed before changes; native quest mutation was previously prohibited. Only explicit focus mutation now permitted within one named Progress method; existing safety gates retained. Initial 336/336 checker pass and actual-source focus fixture PASS. Then added read-only Report Bug cycle counters, reset count when hidden, and source-enabled guard. Corrected exact candidate passed 336/336 checkers independently (10 parallel workers), 15 actual-source Lua fixtures, all three changed Lua parses under texlua (Lua 5.3), XML and runtime-version policy. Full canonical ZIP PREWRITE/POSTWRITE/rollback/refusal/manifest checks still required. No Lua 5.1 interpreter or WoW Forever execution; no gameplay PASS. Client UNVERIFIED.
+
 ## P0472 — Chat visible by default
 
 P0471 `d35bb85` verified, tracked-only handoff hashes passed. Reviewed D-025,

@@ -317,6 +317,84 @@ function Progress:ReadActiveQuestID()
     return nil, "no-active-quest", nil, false
 end
 
+-- P0473: user-initiated focus cycling, independent of watch membership and
+-- without altering Blizzard's quest selection or watched-quest list.
+local MAX_CYCLE_LOG_ENTRIES = 128
+
+function Progress:ReadCycleQuestIDs()
+    if not C_QuestLog
+        or type(C_QuestLog.GetNumQuestLogEntries) ~= "function"
+        or type(C_QuestLog.GetQuestIDForLogIndex) ~= "function"
+    then
+        return nil, "cycle-log-api-unavailable"
+    end
+
+    local ok, count = pcall(C_QuestLog.GetNumQuestLogEntries)
+    if not ok then return nil, "cycle-log-count-failed" end
+    if isSecret(count) then return nil, "cycle-log-count-secret" end
+    if type(count) ~= "number" or count < 0 or count > MAX_CYCLE_LOG_ENTRIES
+        or count % 1 ~= 0 then
+        return nil, "cycle-log-count-invalid-or-excessive"
+    end
+
+    local ids, seen = {}, {}
+    for index = 1, count do
+        local readOK, questID = pcall(C_QuestLog.GetQuestIDForLogIndex, index)
+        if not readOK then return nil, "cycle-quest-read-failed" end
+        if isSecret(questID) then return nil, "cycle-quest-secret" end
+        -- Header rows return nil. Anything else must be a complete ordinary ID.
+        if questID ~= nil then
+            if type(questID) ~= "number" or questID <= 0
+                or questID % 1 ~= 0 then
+                return nil, "cycle-quest-invalid"
+            end
+            if not seen[questID] then
+                seen[questID] = true
+                ids[#ids + 1] = questID
+            end
+        end
+    end
+    return ids, "cycle-log-ready"
+end
+
+function Progress:AdvanceFocusedQuest()
+    if not C_SuperTrack
+        or type(C_SuperTrack.SetSuperTrackedQuestID) ~= "function"
+        or type(C_SuperTrack.GetSuperTrackedQuestID) ~= "function"
+    then
+        return false, "cycle-supertrack-api-unavailable"
+    end
+
+    local ids, listReason = self:ReadCycleQuestIDs()
+    if not ids then return false, listReason end
+    if #ids < 2 then return false, "cycle-no-alternative" end
+
+    local currentID, currentReason, currentError, currentSecret =
+        self:ReadActiveQuestID()
+    if currentSecret or currentError then
+        return false, currentReason or "cycle-current-unknown"
+    end
+    local currentIndex = 0
+    for index = 1, #ids do
+        if ids[index] == currentID then
+            currentIndex = index
+            break
+        end
+    end
+    local nextQuestID = ids[(currentIndex % #ids) + 1]
+    local applied = pcall(C_SuperTrack.SetSuperTrackedQuestID, nextQuestID)
+    if not applied then return false, "cycle-set-refused" end
+
+    local readOK, confirmed = pcall(C_SuperTrack.GetSuperTrackedQuestID)
+    if readOK and not isSecret(confirmed)
+        and type(confirmed) == "number" and confirmed == nextQuestID then
+        return true, "cycle-confirmed", nextQuestID
+    end
+    -- The SUPER_TRACKING_CHANGED event is the native source of eventual
+    -- presentation refresh; never invent synchronous confirmation.
+    return true, "cycle-requested-unconfirmed", nextQuestID
+end
+
 function Progress:ReadObjectives(questID)
     self.objectiveAPIAvailable =
         C_QuestLog ~= nil

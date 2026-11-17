@@ -1,0 +1,5 @@
+<Bindings>
+  <Binding name="LOGRES_NEXT_FOCUSED_QUEST" header="LOGRES">
+    Logres_NextFocusedQuest()
+  </Binding>
+</Bindings>

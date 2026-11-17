@@ -191,6 +191,11 @@ function Logres:CaptureBugIncident()
     end), {"revision", "context", "combat", "pvpFlagged", "inInstance",
         "instanceType", "mounted", "resting", "onTaxi", "interacting",
         "interactionType", "changedBy"})
+    incident.snapshot.activeQuest = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("ActiveQuest"):GetDebugStatus()
+    end), {"presentationShown", "lastQuestID", "previewMode",
+        "cycleButtonReady", "cycleCandidateCount", "cycleAttempts",
+        "lastCycleResult", "lastCycleQuestID"})
     incident.snapshot.preferences = pickTraceStatus(ownedTraceStatus(function()
         return self:GetPreferences()
     end), {"revision", "immersionEnabled", "activeQuestEnabled",

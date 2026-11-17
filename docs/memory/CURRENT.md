@@ -11,10 +11,9 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0472** Default chat SHOW, with N-tab AUTO still available; verified
-P0471 main `d35bb85`. P0471 crest and L-049 runtime UNVERIFIED.
-Aura grids user-reported good; preserve HP/auras/50-50/UP.
-P0472 client UNVERIFIED.
+**P0473** Focused-quest Next button/bind candidate on verified P0472
+`79bfc5a`. P0472 Chat SHOW user PASS; P0471 crest UNVERIFIED.
+Preserve HP/auras/50-50/UP, native quest fallback. P0473 client UNVERIFIED.
 Recovery/taint unverified. P0467 JSON roundtrip PASS.
 P0464 position PASS/style FAIL; P0463 GetPoint FAIL retained.
 P0460 HP/nameplates PASS scoped; P0457 selected PASS; P0461 aura FAIL;
@@ -63,9 +62,9 @@ L-011 PARTIAL; L-028 full safety and L-048 OPEN.
 
 ## Next Action
 
-Validate P0472 default Chat [SHOW] after /reload, toggle [AUTO]/[SHOW],
-check Quiet/Immersion and confirm native chat remains usable. P0471 crest
-client validation still OPEN. Export diagnostics only for actual issues.
+Validate P0473 focused quest Next button and unassigned native keybind:
+normal multi-quest, single quest, preview, OFF, native focus/compass.
+P0471 crest restoration still unverified; diagnostics on actual issues.
 L-051: max4/scan6/self-cast baseline; four-column grid, WoW UNVERIFIED. Preserve accepted enemy UI.
 
 ## Success Criteria

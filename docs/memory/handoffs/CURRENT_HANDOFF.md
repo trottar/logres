@@ -1,5 +1,5 @@
-# P0472: d35bb85; chat SHOW default, AUTO retained; unverified.
-# P0471: P0470 `68a9ad3`; fstack crest; L-049 OPEN, client UNVERIFIED.
+# P0473: P0472 `79bfc5a`; quest Next/bind unverified, chat SHOW PASS.
+# P0471: crest L-049 OPEN; see P0471 evidence.
 # P0468: L-051 four-column auras; P0467 d14a25a baseline, WoW UNVERIFIED.
 # P0466: defaults/names accepted; recovery variants unverified.
 # P0465: accepted Sheet04/native text.
