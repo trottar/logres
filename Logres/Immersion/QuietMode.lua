@@ -9,7 +9,7 @@ local AUXILIARY_CONTROL_NAMES = {
 local QuietMode =
     Logres:RegisterModule("QuietMode", {
         OnInitialize = function(self)
-            self.manualOpen = false -- session-only stock access; resets on reload
+            self.manualOpen = true -- default stock chat shown; AUTO remains session-only
             self.requestedEnabled = false
             self.appliedEnabled = false
             self.lastError = nil

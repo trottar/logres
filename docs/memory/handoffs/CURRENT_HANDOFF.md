@@ -1,4 +1,5 @@
-# P0471: P0470 `68a9ad3`; fstack target.PvpBackgroundIcon; L-049 OPEN, client UNVERIFIED.
+# P0472: d35bb85; chat SHOW default, AUTO retained; unverified.
+# P0471: P0470 `68a9ad3`; fstack crest; L-049 OPEN, client UNVERIFIED.
 # P0468: L-051 four-column auras; P0467 d14a25a baseline, WoW UNVERIFIED.
 # P0466: defaults/names accepted; recovery variants unverified.
 # P0465: accepted Sheet04/native text.
@@ -74,7 +75,7 @@ P0360 `8963fb1d` 231/231 STATIC; WoW UNVERIFIED. P0361 moves read-only immersion
 
 # P0360 — D-026 TargetFrame diagnostic seam; CURRENT.md authoritative
 
-P0359 `6ec4b5a` 230/230 STATIC, WoW UNVERIFIED. Read-only D-026 TargetFrame check moves to TargetFrameReplacement; Commands, target auras and native target-of-target/focus/boss/party unchanged. Historical target checker rehomes diagnostic-only assertions; P0359 #230 ceiling becomes floor. Candidate `0.0.249-dev`, #231, 94 Lua, 120 actions/38 previews; schema3, D-046, D-047 camera and D-048 selectors unchanged. No runtime frame mutation, secret inspection, event or polling. P0321 GossipFrame restore FIRST contingent client gate; L-022/L-027/L-028 OPEN, L-019 BLOCKED, L-031 deferred. P0354 R0/R1/R2 check_memory_health.py, P0355 R0/R1 and P0358 R0 refused with zero writes and remain preserved. P0337 `cfdc07af` retained. WoW runtime UNVERIFIED.
+P0359 `6ec4b5a` 230/230 STATIC, WoW UNVERIFIED. Read-only D-026 TargetFrame check moves to TargetFrameReplacement; Commands, target auras and native target-of-target/focus/boss/party unchanged. Historical target checker rehomes diagnostic-only assertions; P0359 #230 ceiling becomes floor. Candidate `0.0.249-dev`, #231, 94 Lua, 120 actions/38 previews; schema3, D-046, D-047 camera and D-048 selectors unchanged. No runtime frame mutation, secret inspection, event or polling. P0321 GossipFrame restore FIRST contingent client gate; L-022/L-027/L-028 OPEN, L-019 BLOCKED, L-031 deferred. P0354 R0/R1/R2 check_memory_health.py, P0355 R0/R1 and P0358 R0 refused with zero writes and remain preserved. P0337 `cfdc07af` retained. WoW unverified.
 
 # P0359 — D-026 PlayerFrame diagnostic seam; CURRENT.md authoritative
 

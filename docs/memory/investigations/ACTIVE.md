@@ -1,3 +1,10 @@
+## P0472 — Chat default SHOW (2026-11-17)
+
+P0471 `d35bb85` verified; Quiet Mode session initializes manualOpen=true.
+Phase N Chat AUTO/SHOW remains reversible; other owners unchanged.
+User-reported aura appearance good; P0472 client UNVERIFIED.
+See `docs/memory/evidence/P0472_CHAT_DEFAULT_SHOW.md`.
+
 ## P0471 — Identified native faction crest (2026-11-17)
 
 P0470 `68a9ad3` verified. L-049 #15393 remaining Alliance crest; user

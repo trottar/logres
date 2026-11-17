@@ -15,7 +15,7 @@ for s in ('type(visible) ~= "boolean"','not self:IsEnabled()', 'not quietMode:Is
  assert s in setter,s
 for s in ('ReconcileActionReplacement','ReconcilePlayerFrame','ReconcileTargetFrame','ReconcileOverheadNames','SetCVar','GetAlpha','Hide(', 'Show('):
  assert s not in setter,s
-assert 'self.manualOpen = false' in Q and Q.count('manualOpen = self.manualOpen == true')==2
+assert 'self.manualOpen = true' in Q and Q.count('manualOpen = self.manualOpen == true')==2
 assert C.count('and not Logres:GetModule("QuietMode").manualOpen')==2
 assert 'and not quietMode.manualOpen' in Q
 assert 'and not snapshot.quiet.manualOpen' in CMD

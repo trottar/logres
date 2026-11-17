@@ -11,10 +11,10 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0471** L-049 native target PvpBackgroundIcon; P0470 `68a9ad3`
-verified. #15393 338 plus user fstack identifies omitted crest region.
-P0470 target badge/aura OFF visible; yellow runtime UNVERIFIED.
-L-049 OPEN; L-050 RESOLVED-SCOPE. Preserve HP/aura/50-50/grid/UP/chat.
+**P0472** Default chat SHOW, with N-tab AUTO still available; verified
+P0471 main `d35bb85`. P0471 crest and L-049 runtime UNVERIFIED.
+Aura grids user-reported good; preserve HP/auras/50-50/UP.
+P0472 client UNVERIFIED.
 Recovery/taint unverified. P0467 JSON roundtrip PASS.
 P0464 position PASS/style FAIL; P0463 GetPoint FAIL retained.
 P0460 HP/nameplates PASS scoped; P0457 selected PASS; P0461 aura FAIL;
@@ -63,8 +63,9 @@ L-011 PARTIAL; L-028 full safety and L-048 OPEN.
 
 ## Next Action
 
-Validate P0471 crest suppression/restoration; client UNVERIFIED. Export after push:
-`python3 tools/chat_change.py handoff LOGRES_CHAT_HANDOFF_P0471.zip`.
+Validate P0472 default Chat [SHOW] after /reload, toggle [AUTO]/[SHOW],
+check Quiet/Immersion and confirm native chat remains usable. P0471 crest
+client validation still OPEN. Export diagnostics only for actual issues.
 L-051: max4/scan6/self-cast baseline; four-column grid, WoW UNVERIFIED. Preserve accepted enemy UI.
 
 ## Success Criteria

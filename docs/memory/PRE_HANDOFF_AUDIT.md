@@ -1,3 +1,15 @@
+## P0472 — Chat visible by default
+
+P0471 `d35bb85` verified, tracked-only handoff hashes passed. Reviewed D-025,
+P0469 checker/fixture, context and quiet-check contracts. Change only
+initial manualOpen=true, retain session-only AUTO/SHOW, outbound entry and
+native snapshot restore. Entire exact candidate static suite, actual-source
+Lua fixture, version parity, ZIP PREWRITE/POSTWRITE, wrong-baseline/dirty/
+tamper/collision refusal, rollback and diff hygiene are mandatory.
+R0 334/335: new checker pinned version and was REFUSED; corrected to
+dynamic parity, retaining legacy version policy. Final audit must rerun.
+Runtime visual and Lua/taint recovery UNVERIFIED. See P0472 evidence.
+
 ## P0471 — Exact native target faction crest
 
 P0470 `68a9ad3` verified; raw screenshot/fstack identifies target contextual

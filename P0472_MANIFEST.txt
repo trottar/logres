@@ -1,0 +1,27 @@
+P0472 Chat visible by default; retain AUTO toggle
+Verified baseline: d35bb8590cbf3bc1e07e23bafe72bce1d8484987
+Candidate runtime version: 0.0.340-dev
+PREWRITE: 335/335 STATIC PASS
+POSTWRITE: 335/335 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Immersion/QuietMode.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0472_CHAT_DEFAULT_SHOW.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/patches/P0472_CHAT_DEFAULT_SHOW.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0469_panel_chat_contract.py
+tools/check_p0472_chat_default_contract.py
+tools/test_p0469_panel_chat.lua
+P0472_MANIFEST.txt
