@@ -18,3 +18,7 @@ an explicit opt-in; usable native fallback and restoration remain required.
 Other D-042 anchor/secret/native-input boundaries remain unchanged.
 
 See docs/memory/evidence/P0466_IMMERSIVE_NAME_DEFAULTS.md and L-049/L-050.
+
+P0467 intake: user accepts P0466 requested default/name behavior on verified
+main d1b1cdd. Scoped runtime PASS; full recovery/taint/other-client matrix remains
+unverified. Prior implementation-UNVERIFIED label above is historical.

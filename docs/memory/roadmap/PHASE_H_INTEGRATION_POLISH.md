@@ -1,3 +1,15 @@
+## P0467 — Chat procedure audit and discussion handoff (2026-11-16)
+
+Verified P0466 main `d1b1cdd`; source0.0.335-dev unchanged. User reports
+"works just as I wanted": defaults/names PASS scoped, L-049/L-050
+RESOLVED-SCOPE; full combat/restoration variants unverified. Tooling-only:
+cheap memory/parity preflight, deterministic tracked-only Chat bundle and
+discussion-first prompt. Real329-check JSON author/apply roundtrip PASS;
+new330-check candidate/package audit required. No WoW redeploy.
+Evidence: `docs/memory/evidence/P0467_CHAT_WORKFLOW_AUDIT.md`.
+
+L-051 player buff cap4/scan6/filter confirmed; discussion next, no runtime fix.
+
 ## P0466 — Immersive names and saved world defaults (2026-11-16)
 
 Verified P0465 main `c0ed39a`; user aura/HP appearance PASS scoped, keep it.

@@ -182,3 +182,64 @@ python3 tools/chat_change.py apply P0413.logres.json
 ```
 
 For a released Chat change, only apply is required. It refuses a missing or mismatched receipt and independently reconstructs the local candidate ZIP before any tracked writes. The receipt binds exact draft bytes, archive, tree, paths, checker count and candidate ZIP. It is an integrity record, not a signature or WoW runtime result. Guarded PREWRITE and POSTWRITE still run locally. `--local-preflight` is an explicit Work/local-author route when you already control author validation and packaging. Do not use it to turn an unchecked Chat draft into a release. Packages that change files under `Logres/` require explicit `--allow-runtime` on the apply command. Use it when you requested and reviewed a runtime change. The runner derives paths and hashes. It refuses ambiguous or absent anchors, an unexpected HEAD, tracked edits and file collisions. Review any changed Python checker before apply because the checker suite executes it. After JSON apply, use the staging command printed by the runner. It stages the complete package and then runs `verify-staged`, which checks the index paths, exact file bytes and manifest against the same JSON. For a standalone payload ZIP, stage only its explicit payload paths plus the verified manifest, run verify-zip against that same archive, then git diff --cached --check. Once that passes, commit and push. The runner itself reads Git only. For runtime changes, the Chat handoff should include the existing deployment block and in-client validation. Use Work for persistent issues requiring deeper investigation.
+
+## P0467 audit: start a discussion and refresh context deterministically
+
+The guarded procedure remains the release mechanism. Recent P0463–P0466
+candidate refusals were caught before delivery; they were not proof of a broken
+installer. Keep those failures as evidence. See
+[P0467 audit](../evidence/P0467_CHAT_WORKFLOW_AUDIT.md).
+
+For a new ordinary Chat, run from a clean tracked Logres checkout:
+
+```bash
+python3 tools/chat_change.py handoff LOGRES_CHAT_HANDOFF_P0467.zip
+```
+
+Use an unused output filename for later baselines. The deterministic outer ZIP
+contains a tracked-only LOGRES_AUTHOR_KIT.zip, repository checkout context,
+CHAT_HANDOFF.md and per-file hash manifest. It executes no checker, installer,
+WoW code or network/model session. It never starts ChatGPT, stages or writes
+Git. Existing outputs, dirty state and commit/version/checker inconsistencies
+refuse without replacement. It is not a machine-wide snapshot or live diagnostic
+export. Verify current GitHub main/tree in Chat; re-export after every push.
+
+Opening a chat is discussion, not a patch task. Read current context, briefly
+summarize accepted behavior and let the user describe the next fix/change.
+Do not emit placeholder goals or spend a new patch ID simply to start a chat.
+Generate implementation artifacts only after the user requests implementation.
+
+Two release forms remain supported; choose ONE in each handoff:
+
+- JSON plus exact author receipt: author-check, then the local runner apply
+  reconstructs the canonical ZIP. A carrier ZIP containing JSON is not a
+  standalone canonical payload ZIP.
+- Standalone canonical payload ZIP: build_patch_zip.py, tested transactional
+  applier, exact payload audit; stage explicit payload/manifest and verify-zip.
+
+Never invent a separate patch installer or offer mixed apply routes. Print
+checksum, exact apply AND git add/commit/push commands directly in the reply;
+a link to a README does not replace those commands. Keep files where saved.
+When a locally applied patch is not pushed, identify its exact applied state,
+give the already prepared commit/push commands, continue independent diagnosis,
+and wait for verified main before assigning the next guarded release baseline.
+
+The builder now cheaply refuses CURRENT>=9800 bytes, handoff>=8000 bytes and
+TOC/Bootstrap parity errors before running all checkers. Fix the first concrete
+invariant, then run the COMPLETE candidate suite. This does not bypass source
+inventory, ownership or historical contracts. A new pure helper need not become
+a new loaded Lua module; respect the current source inventory deliberately.
+
+Interpreter availability is execution evidence, not a property of the kit.
+The user's WSL and Chat's author environment are different. Report actual source
+fixtures run versus SKIPPED (for example missing Lua5.4/LOGRES_LUA); a static
+checker count is not proof those fixtures executed or WoW behaved correctly.
+Do not invent runtime PASS from native binding/ownership counters. Compare
+appearance with approved repository designs and preserve accepted geometry.
+Report Bug is the normal one-button capture; no broad manual panel itinerary.
+
+Tooling/docs-only patches need no WoW redeploy and do not bump runtime versions.
+Full author validation, canonical refusal/rollback and exact staged verification
+remain required for ready releases. A missing execution capability is a named
+deferral; never label an unchecked draft ready. Routine work uses Chat; persistent
+causal investigation can use Work when actually necessary.

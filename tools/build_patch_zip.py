@@ -144,6 +144,24 @@ def run_candidate_checks(candidate, checkers):
         raise Refused(f"Candidate checks: {passed}/{len(checkers)} passed.\n" + "\n\n".join(failures))
 
 
+def fast_candidate_preflight(candidate):
+    """Cheap release invariants first; the full real suite still follows."""
+    for name, limit in (("docs/memory/CURRENT.md", 9800),
+                        ("docs/memory/handoffs/CURRENT_HANDOFF.md", 8000)):
+        path = candidate / name
+        if path.exists() and len(path.read_bytes()) >= limit:
+            raise Refused(f"Fast preflight: {name} is {len(path.read_bytes())} bytes; "
+                          f"must be below {limit}. Full checker suite not run.")
+    boot = candidate / "Logres/Core/Bootstrap.lua"
+    toc = candidate / "Logres/Logres.toc"
+    if boot.exists() and toc.exists():
+        source = re.search(r'^Logres.VERSION = "([^"]+)"$', boot.read_text(), re.MULTILINE)
+        version = re.search(r'^## Version: (\S+)$', toc.read_text(), re.MULTILINE)
+        if not source or not version or source[1] != version[1]:
+            raise Refused("Fast preflight: TOC/Bootstrap runtime versions differ or are missing. "
+                          "Full checker suite not run.")
+
+
 def prepare_bundle(baseline, patch, paths, patch_id, title, head, *, check_candidate):
     """Build the same candidate from an exact archive in WSL or in Chat."""
     candidate = baseline.with_name("candidate")
@@ -157,6 +175,7 @@ def prepare_bundle(baseline, patch, paths, patch_id, title, head, *, check_candi
     if not checkers:
         raise Refused("Candidate is missing the repository checker suite.")
     if check_candidate:
+        fast_candidate_preflight(candidate)
         run_candidate_checks(candidate, checkers)
         if any((candidate / name).read_bytes() != content for name, content in files.items()):
             raise Refused("A checker changed patch content.")

@@ -1,0 +1,28 @@
+P0467 Audit deterministic Chat workflow and add discussion handoff export
+Verified baseline: d1b1cdd93b7212897a9fde939e74f8c128431668
+Candidate runtime version: 0.0.335-dev
+PREWRITE: 330/330 STATIC PASS
+POSTWRITE: 330/330 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: NO RUNTIME FILES CHANGED
+Commit/push performed: NO
+
+Changed paths:
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/decisions/D-049_IMMERSIVE_NAMES_AND_DEFAULTS.md
+docs/memory/evidence/P0467_CHAT_WORKFLOW_AUDIT.md
+docs/memory/evidence/P0467_PLAYER_BUFF_COVERAGE_INTAKE.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/CHAT_TO_ZIP_WORKFLOW.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/build_patch_zip.py
+tools/chat_author.py
+tools/chat_change.py
+tools/check_p0467_chat_rollover_contract.py
+P0467_MANIFEST.txt

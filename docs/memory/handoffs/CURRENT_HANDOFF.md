@@ -1,6 +1,6 @@
-# P0466: baseline `c0ed39a`; names/defaults, 0.0.335-dev.
-World ON/screen OFF; reversible names. Client UNVERIFIED.
-See `docs/memory/evidence/P0466_IMMERSIVE_NAME_DEFAULTS.md`.
+# P0467: Chat audit; no runtime change. See CURRENT.
+P0466 PASS; fresh kit. Discuss L-051 buff cap4/scan6 first.
+# P0466: defaults/names accepted; recovery variants unverified.
 # P0465: accepted Sheet04 frame/native text; source evidence retained.
 # P0464: per-unit transaction retained; source evidence in P0464 record.
 

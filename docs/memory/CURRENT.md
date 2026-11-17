@@ -11,17 +11,16 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0466** on verified P0465 main `c0ed39a`. Session138 #14065
-0.0.334-dev/user HP+aura visual PASS scoped. Preserve accepted rendering.
-World Enemy saved default ON; screen enemy default OFF now respected by
-HUD/input. Ambient labels/titles use reversible supported client settings;
-focused names and current combat plates retained. P0466 client UNVERIFIED.
+**P0467** audit on verified P0466 `d1b1cdd`: user defaults/names
+PASS scoped; L-049/L-050 RESOLVED-SCOPE. Preserve HP/aura/50-50.
+Recovery/taint unverified. Fast preflight and deterministic Chat handoff;
+real329-check JSON roundtrip PASS. No runtime change/redeploy.
 P0464 position PASS/style FAIL; P0463 GetPoint FAIL retained.
 P0460 HP/nameplates PASS scoped; P0457 selected PASS; P0461 aura FAIL;
 P0454/P0455 secondary 50/50 VISUAL FAIL; P0458/P0459 FAIL.
 P0456 suspension is historical. P0425 visual PASS;
 P0442/P0443 overlap/matte FAIL; P0449 icons PASS; P0450 duplicates FAIL.
-L-011 PARTIAL, L-028 full safety OPEN; L-048/L-049/L-050 OPEN.
+L-011 PARTIAL; L-028 full safety and L-048 OPEN.
 
 ## Verified State
 
@@ -63,10 +62,10 @@ L-011 PARTIAL, L-028 full safety OPEN; L-048/L-049/L-050 OPEN.
 
 ## Next Action
 
-Apply/push/deploy P0466. No manual World Enemy ON after /reload.
-Check ambient labels absent, selected names and accepted combat plates
-retained; Report Bug captures policy/default state. Selection/mouseover,
-combat restore and new client behavior UNVERIFIED. No panel checklist.
+Apply/push P0467; no redeploy. Export fresh Chat handoff:
+`python3 tools/chat_change.py handoff LOGRES_CHAT_HANDOFF_P0467.zip`.
+Discuss L-051 player buffs first: max4, scan6, self-cast filter confirmed.
+No runtime fix yet. User chooses implementation; preserve accepted enemy UI.
 
 ## Success Criteria
 
@@ -76,6 +75,8 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0467_PLAYER_BUFF_COVERAGE_INTAKE.md
+- docs/memory/evidence/P0467_CHAT_WORKFLOW_AUDIT.md
 - docs/memory/evidence/P0466_IMMERSIVE_NAME_DEFAULTS.md
 - docs/memory/decisions/D-049_IMMERSIVE_NAMES_AND_DEFAULTS.md
 - docs/memory/evidence/P0465_WORLD_AURA_STYLE.md

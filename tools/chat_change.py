@@ -426,6 +426,8 @@ def main(repo=REPO):
     sub.add_parser("verify-zip", help="Check the Git index against a guarded payload ZIP").add_argument("package", type=Path)
     kit = sub.add_parser("author-context", help="Export a clean, tracked-only baseline kit for Chat")
     kit.add_argument("output", type=Path)
+    handoff = sub.add_parser("handoff", help="Export tracked-only context, author kit and discussion-first Chat prompt")
+    handoff.add_argument("output", type=Path)
     author = sub.add_parser("author-check", help="Check an exact draft offline and emit its release receipt")
     author.add_argument("kit", type=Path)
     author.add_argument("package", type=Path)
@@ -439,6 +441,16 @@ def main(repo=REPO):
     try:
         if args.operation == "context":
             print(json.dumps(context(repo), indent=2, sort_keys=True))
+            return
+        if args.operation == "handoff":
+            info = context(repo)
+            if info["tracked_changes"]:
+                raise Refused("Chat handoff requires a clean tracked checkout.")
+            archive = git(repo, "archive", "--format=tar", info["head"])
+            if context(repo) != info:
+                raise Refused("Checkout changed during handoff export; export again from a stable baseline.")
+            checksum = chat_author.export_handoff(args.output, info, archive)
+            print(f"CHAT HANDOFF {info['head']} written to {args.output}; SHA-256 {checksum}")
             return
         if args.operation == "author-context":
             info = context(repo)
