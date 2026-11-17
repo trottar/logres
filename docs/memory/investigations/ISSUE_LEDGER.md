@@ -219,3 +219,6 @@ Verified P0400 main fc6c352. Forever session 58 incident 6551 confirmed capture 
 ## P0402 — Flight child input inventory (2026-11-08)
 
 Verified P0401 main bcb7353. Forever incident 6641 confirms the readable flight map and Ironforge 50c route recovered; the upper-left placement persists. The retired P0400 host refused 20 direct children against its cap of eight. P0402 records a bounded read-only child input inventory without changing the layout. See docs/memory/evidence/P0402_FLIGHT_CHILD_INVENTORY.md.
+
+| L-052 | Player buff expansion overlaps action buttons | OPEN | P0468 user image 884d80a4 shows wrapped player buffs descending into right action grid. P0469 makes only PlayerHelpfulAuras row stride positive, preserving first-row LEFT anchor and capacity. | Source fixture PASS required; client upward growth/overlap UNVERIFIED. L-051 coverage remains separate. | docs/memory/evidence/P0469_PANEL_CHAT_ACCESS.md |
+| L-053 | Status Aura Preview displays orphan target lanes with screen frame OFF | OPEN | User image 3ddeb721 on0.0.336-dev shows synthetic target aura groups while screen frame disabled. P0469 empties only synthetic target rows when explicit screenSpaceEnemyFrameEnabled=false. | Preview policy/source fixture required; live/native/world aura fallback unchanged; client UNVERIFIED. | docs/memory/evidence/P0469_PANEL_CHAT_ACCESS.md |

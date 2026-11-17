@@ -39,6 +39,7 @@ end
 
 -- The first six call the unchanged NativeAccess:Toggle route. The final
 -- three call NativeSurfaceReplacement:Toggle via a stable slash command.
+-- Chat uses the existing Quiet Mode owner as a session-only SHOW/AUTO override.
 -- Phase N is not a diagnostic action-registration bucket (122 unchanged).
 local NATIVE_ACCESS_ACTIONS = {
     {label = "Stock", command = "nativeui all", domain = "all"},
@@ -50,6 +51,7 @@ local NATIVE_ACCESS_ACTIONS = {
     {label = "Pet Stock", command = "nativefallback pet", domain = "pet"},
     {label = "Buffs", command = "nativefallback buffs", domain = "playerBuffs"},
     {label = "Target", command = "nativefallback target", domain = "targetAuras"},
+    {label = "Chat", command = "chat toggle", domain = "chat"},
 }
 
 -- P0439: independent Phase H panel controls for the existing world trial.
@@ -853,14 +855,19 @@ function Panel:UpdateNativeAccessLabels()
     for index, button in ipairs(self.nativeAccessButtons) do
         local entry = NATIVE_ACCESS_ACTIONS[index]
         local open
-        if entry.domain == "all" then
+        if entry.domain == "chat" then
+            local quiet = Logres:GetModule("QuietMode")
+            button:SetText("Chat [" .. (quiet.manualOpen and "SHOW" or "AUTO") .. "]")
+        elseif entry.domain == "all" then
             open = allOpen
         elseif index <= 6 then
             open = native.manualOpen[entry.domain] == true
         elseif entry.domain ~= "pet" then
             open = surfaces.manual[entry.domain] == true
         end
-        button:SetText(entry.label .. (open and " [OPEN]" or ""))
+        if entry.domain ~= "chat" then
+            button:SetText(entry.label .. (open and " [OPEN]" or ""))
+        end
     end
 end
 
@@ -1011,7 +1018,7 @@ function Panel:RefreshActionButtons()
     self.nativeAccessButtons = nil
 
     if self.activePhase == "N" then
-        -- Six navigation/stock toggles followed by three pet/aura fallbacks.
+        -- Nine existing stock controls plus the Quiet Mode chat override.
         -- All buttons are children of the closable panel, not the HUD.
         self.nativeAccessButtons = {}
         self:UpdatePreviewPager(0)

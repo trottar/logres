@@ -177,7 +177,8 @@ function ImmersionController:BuildPolicy()
 
         quietModeDesired =
             immersionEnabled
-            and state.context == "world",
+            and state.context == "world"
+            and not Logres:GetModule("QuietMode").manualOpen,
 
         playerFrameSuppressionDesired = immersionEnabled,
         targetFrameSuppressionDesired = immersionEnabled,
@@ -228,6 +229,21 @@ function ImmersionController:ReconcileActionReplacement(policy)
             .. tostring(self.lastActionError)
         )
     end
+end
+
+-- P0469: stock-chat access changes only Quiet Mode, never other ownership.
+-- SHOW is a session override; AUTO returns to the existing context policy.
+function ImmersionController:SetChatVisible(visible)
+    if type(visible) ~= "boolean" then return false, "invalid-value" end
+    if not self:IsEnabled() then return false, "controller-disabled" end
+    local quietMode = Logres:GetModule("QuietMode")
+    if not quietMode:IsEnabled() then return false, "quiet-mode-disabled" end
+    quietMode.manualOpen = visible
+    local policy = self:BuildPolicy()
+    self.policy = policy
+    self:ReconcileQuietMode(policy, "manual-chat-access")
+    if self.lastQuietError then return false, "failed-open-see-quiet-check" end
+    return true, visible and "show" or "auto"
 end
 
 function ImmersionController:ReconcileQuietMode(policy, reason)
@@ -503,6 +519,7 @@ function ImmersionController:RunDevImmersionCheck(emit, boolText)
     local expectedQuietMode =
         preferences.immersionEnabled == true
         and state.context == "world"
+        and not Logres:GetModule("QuietMode").manualOpen
     local expectedPlayerFrame =
         preferences.immersionEnabled == true
     local expectedTargetFrame =

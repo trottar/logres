@@ -1,0 +1,34 @@
+P0469 Add panel chat access, upward player buffs and contextual aura preview
+Verified baseline: 24790ed2fdbd8a8434f03f49d505f753e92f345c
+Candidate runtime version: 0.0.337-dev
+PREWRITE: 332/332 STATIC PASS
+POSTWRITE: 332/332 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/HUD/PlayerHelpfulAuras.lua
+Logres/HUD/StatusAuras.lua
+Logres/Immersion/Controller.lua
+Logres/Immersion/QuietMode.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0469_PANEL_CHAT_ACCESS.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0409_hud_control_panel_contract.py
+tools/check_p0468_compatible_aura_grid_contract.py
+tools/check_p0469_panel_chat_contract.py
+tools/test_p0468_compatible_aura_grid.lua
+tools/test_p0469_panel_chat.lua
+P0469_MANIFEST.txt

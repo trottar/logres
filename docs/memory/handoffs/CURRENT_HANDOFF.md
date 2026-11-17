@@ -1,6 +1,7 @@
+# P0469: N Chat SHOW/AUTO; L-052 upward buffs/L-053 contextual preview; P0468 `24790ed` verified.
 # P0468: L-051 four-column auras; P0467 d14a25a baseline, WoW UNVERIFIED.
 # P0466: defaults/names accepted; recovery variants unverified.
-# P0465: accepted Sheet04 frame/native text; source evidence retained.
+# P0465: accepted Sheet04/native text.
 # P0464: per-unit transaction retained; source evidence in P0464 record.
 
 # P0463: `b849955` session 134 #13743/#13745/#13748 regression.
@@ -18,9 +19,8 @@ secondary geometry and identity. P0449 icons PASS, P0450 duplicate FAIL.
 #13499 0.0.328-dev VISUAL FAIL after brief success: selected 4/4
 and secondary 3/3 restores, last selected `unknown-attached-unit`.
 P0459 target-query owner lost nameplate identity, so any other REMOVE
-hid selected. P0460 caches ordinary HUD ADD epochs and resolves current
-target from ordinary role; other REMOVE ignored, matching/unknown/
-unsafe/reuse/OFF restore. Selected 100%, 50% hostile secondary,
+hid selected. P0460 caches ADD epochs; ignores unrelated REMOVE; restores
+matching/unknown/unsafe/reused/OFF owners. Selected 100%, 50% hostile secondary,
 native cast/aura/click unchanged. L-011/L-028 OPEN; WoW UNVERIFIED.
 
 # P0459: P0458 #13250 VISUAL FAIL on threat 0/1; P0459 skins
@@ -66,7 +66,7 @@ P0379 R2 completion input provenance; P0378 `4ffbe3b` verified,
 L-002 native Continue-only OPEN. R2 addon geometry diagnostics only,
 249 STATIC, WoW UNVERIFIED; see P0379 evidence.
 
-P0372 `39f404c` PASS. P0373 v0.0.260-dev, checker #243: trainer purchase FAIL; Trainer denial shows cause and restores native stock; guards intact. Quest popup L-002/L-005 FAIL: keep safe Blizzard fallback; record QUEST_COMPLETE ownership/fallback. L-001 FAIL, L-021 PASS, L-019 BLOCKED. P0378 ZIP; P0377 R0-R3 REFUSED, choice; L-035/L-038; P0376, P0375, P0374; P0373 claim unconfirmed; L-034 OPEN. P0372 R0–R3 and P0373 R0/R1 checker REFUSED; P0371 R0/R1 REFUSED; P0362 P0363 P0367 P0368 P0370; P0369 R0/R1, P0366 R0, P0365 R0, P0364 R0; P0337 `cfdc07af`; P0354 R0 P0354 R1 P0354 R2 check_memory_health.py; P0355 R0 P0355 R1, P0358 R0, P0361 R0 handoff. D-046/D-047/D-048 and L-022/L-027/L-028/L-031/L-033 OPEN/DEFERRED. No polling or native-secret inspection.
+P0372 `39f404c` PASS. P0373 v0.0.260-dev, checker #243: trainer purchase FAIL; Trainer denial shows cause and restores native stock; guards intact. Quest popup L-002/L-005 FAIL: keep safe Blizzard fallback; record QUEST_COMPLETE ownership/fallback. L-001 FAIL, L-021 PASS, L-019 BLOCKED. P0378 ZIP; P0377 R0-R3 REFUSED, choice; L-035/L-038; P0376, P0375, P0374; P0373 claim unconfirmed; L-034 OPEN. P0372 R0–R3 and P0373 R0/R1 checker REFUSED; P0371 R0/R1 REFUSED; P0362 P0363 P0367 P0368 P0370; P0369 R0/R1, P0366 R0, P0365 R0, P0364 R0; P0337 `cfdc07af`; P0354 R0 P0354 R1 P0354 R2 check_memory_health.py; P0355 R0 P0355 R1, P0358 R0, P0361 R0 handoff. D-046/D-047/D-048 and L-022/L-027/L-028/L-031/L-033 OPEN/DEFERRED. No polling/secret inspection.
 
 # P0361 — ImmersionController diagnostic owner; CURRENT.md authoritative
 

@@ -33,7 +33,9 @@ expected = (
 )
 segment = P.split('local NATIVE_ACCESS_ACTIONS = {',1)[1].split('\n}',1)[0]
 actual = re.findall(r'\{label = "([^"]+)", command = "([^"]+)", domain = "([^"]+)"\}', segment)
-need(tuple(actual) == expected, 'exact nine label/handler/domain map changed')
+# P0469 appends Chat without changing any original handler or domain.
+need(tuple(actual[:9]) == expected, 'original nine label/handler/domain map changed')
+need(tuple(actual[9:]) == (('Chat', 'chat toggle', 'chat'),), 'Chat extension map changed')
 need('self:RunCommand(entry.command)' in P and 'self:UpdateNativeAccessLabels()' in P,
      'panel click route/toggle label missing')
 need('if command == "nativeui" then' in C and 'local ok, result = native:Toggle(domain)' in C,

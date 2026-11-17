@@ -87,9 +87,10 @@ for unsafe in ('C_Timer.NewTicker', 'SetScript("OnUpdate"',
     need(unsafe not in H+S+N, 'unsafe aura operation introduced: '+unsafe)
 need('L-051' in L and 'P0468' in E and 'UNVERIFIED' in E,
      'issue / evidence boundary missing')
-need(re.search(r'^Logres.VERSION = "0\.0\.336-dev"$',B,re.M) and
-     re.search(r'^## Version: 0\.0\.336-dev$',TOC,re.M),
-     'P0468 source versions not synchronized')
+bv=re.search(r'^Logres.VERSION = "([^"\n]+)"$',B,re.M)
+tv=re.search(r'^## Version: (\S+)$',TOC,re.M)
+need(bv and tv and bv.group(1)==tv.group(1),
+     'source versions not synchronized')
 need(len([x for x in TOC.splitlines() if x.endswith('.lua')])==96,
      'loaded source inventory changed')
 print('P0468 four-column compatible aura grid: PASS (STATIC; WoW UNVERIFIED)')

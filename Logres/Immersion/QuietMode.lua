@@ -9,6 +9,7 @@ local AUXILIARY_CONTROL_NAMES = {
 local QuietMode =
     Logres:RegisterModule("QuietMode", {
         OnInitialize = function(self)
+            self.manualOpen = false -- session-only stock access; resets on reload
             self.requestedEnabled = false
             self.appliedEnabled = false
             self.lastError = nil
@@ -495,6 +496,7 @@ function QuietMode:GetRecoveryStatus()
 
     return {
         moduleEnabled = self:IsEnabled(),
+        manualOpen = self.manualOpen == true,
         requestedEnabled = self.requestedEnabled == true,
         appliedEnabled = self.appliedEnabled == true,
         snapshotReady = snapshotReady,
@@ -593,6 +595,7 @@ function QuietMode:GetDebugStatus()
 
     return {
         moduleEnabled = self:IsEnabled(),
+        manualOpen = self.manualOpen == true,
         requestedEnabled =
             self.requestedEnabled == true,
         appliedEnabled =
@@ -648,6 +651,7 @@ function QuietMode:RunDevQuietCheck(emit, boolText)
     local expected =
         preferences.immersionEnabled == true
         and state.context == "world"
+        and not quietMode.manualOpen
 
     local stateMatches =
         debugStatus.requestedEnabled == expected

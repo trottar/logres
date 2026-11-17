@@ -1,3 +1,11 @@
+## P0469 — Panel chat access (2026-11-16)
+
+Verified P0468 main `24790ed`; add N-tab Chat SHOW/AUTO session override
+through Quiet Mode/controller only. Default/context policy, outbound chat,
+native saved configuration and all other owners preserved. Candidate
+0.0.337-dev; static/source tests separate from WoW UNVERIFIED.
+See `docs/memory/evidence/P0469_PANEL_CHAT_ACCESS.md`.
+
 ## P0468 — Four-column compatible aura coverage (2026-11-16)
 
 P0467 main `d14a25a`, source0.0.335-dev. L-051 OPEN; user requests

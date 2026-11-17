@@ -1,3 +1,12 @@
+## P0469 — Chat panel toggle
+
+P0468 main `24790ed` verified. Read D-025, quiet/context/restoration,
+P0358/P0361/P0409 contracts before edits. Preserve original nine mappings;
+append Chat session override, reconcile Quiet Mode only. New actual-source
+fixture covers policy matrix, failed restore, queued reconciliation and disabled
+owners. Full exact-candidate suite/syntax/refusal/rollback required before ZIP;
+source/static PASS does not establish client behavior, WoW UNVERIFIED.
+
 ## P0468 — Compatible aura grid candidate (2026-11-16)
 
 Verified P0467 `d14a25a`/tree `3157407e` handoff and baseline; reviewed
@@ -1008,3 +1017,21 @@ During rollover user reported player buffs capped at4. L-051 records the
 verified MAX_ICONS4/MAX_SCAN6/HELPFUL-player filter and historical source gate.
 New Chat starts by discussing complete player-buff coverage/layout; this
 tooling checkpoint does not change runtime or accepted enemy auras.
+
+Additional user steering: L-052 player helpful rows grow UP (positive stride),
+first row and four-column/40-slot/source safety unchanged. Native BuffFrame
+fallback unchanged. L-053 Status Aura Preview respects explicit screen enemy
+OFF: synthetic target rows become empty with reason preview-target-frame-disabled;
+player harmful preview remains at its own anchor. No live/native/world aura gate
+changed. Supplied screenshots inspected individually in conversation. Client
+UNVERIFIED. P0468 capacity request stays OPEN pending client coverage evidence.
+
+Construction negative results: first isolated transform refused an ambiguous
+two-status anchor (no real checkout writes); both status snapshots now explicitly
+gain manualOpen. P0468 checker pinned0.0.336-dev contrary to version policy;
+migrated to dynamic TOC/Bootstrap parity, preserving all aura/source gates.
+
+P0469 exact candidate332/332 STATIC PASS; actual-source chat policy/lifecycle
+and aura grid/preview tests PASS. R0/R1 memory budgets and P0175 shape refusal
+retained in P0469 evidence. Canonical ZIP refusal/rollback/syntax audit is
+required on the final bytes; client UNVERIFIED.

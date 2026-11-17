@@ -57,7 +57,7 @@ helpful:OnInitialize()
 assert(#helpful.slots==40)
 assert(helpful.root.width==165)
 local fifth=helpful.slots[5].frame.point
-assert(fifth[1]=='LEFT' and fifth[3]=='LEFT' and fifth[4]==0 and fifth[5]==-43)
+assert(fifth[1]=='LEFT' and fifth[3]=='LEFT' and fifth[4]==0 and fifth[5]==43)
 local preview=helpful:BuildPreviewSnapshot()
 assert(#preview.auras==9)
 local snapshot=helpful:ReadSnapshot()
@@ -120,6 +120,19 @@ assert(status.lanes.targetHelpful.slots[9].frame.visible)
 status:SetPreview(true)
 assert(status.lanes.player.visible==6 and status.lanes.target.visible==6)
 assert(status.lanes.targetHelpful.visible==6)
+-- P0469: explicit screen-frame OFF must not leave synthetic target islands.
+local oldPrefs=L.GetPreferences
+function L:GetPreferences()return {immersionEnabled=true,screenSpaceEnemyFrameEnabled=false}end
+status:Refresh('preview-frame-off')
+assert(status.lanes.target.visible==0 and status.lanes.targetHelpful.visible==0)
+assert(not status.lanes.target.root.visible and not status.lanes.targetHelpful.root.visible)
+assert(status.lanes.player.visible==6,'independent player preview was suppressed')
+assert(status.last.target.reason=='preview-target-frame-disabled')
+function L:GetPreferences()return {immersionEnabled=true,screenSpaceEnemyFrameEnabled=true}end
+status:Refresh('preview-frame-on')
+assert(status.lanes.target.visible==6 and status.lanes.targetHelpful.visible==6)
+L.GetPreferences=oldPrefs
+
 -- Report uses addon-owned status only; formatting must match every field.
 function L:GetModuleStatus() return {initialized=true,enabled=true} end
 function L:GetModule(name) return modules[name] end

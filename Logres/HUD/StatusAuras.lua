@@ -469,6 +469,15 @@ function StatusAuras:Refresh(reason, onlyUnit)
                 }
             end
             self.last[unit] = snapshot
+            -- P0469: do not preview orphan screen-target lanes when that
+            -- presentation is opted out. Live/world ownership is unchanged.
+            if self.preview and unit == "target"
+                and preferences.screenSpaceEnemyFrameEnabled == false then
+                snapshot.rows = {}
+                snapshot.harmfulRows = {}
+                snapshot.helpfulRows = {}
+                snapshot.reason = "preview-target-frame-disabled"
+            end
             if unit == "target" and self.worldTrialLanes then
                 self:RefreshWorldTrialLanes()
             end

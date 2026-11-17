@@ -11,10 +11,10 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0468** L-051 grid; P0467 audit on verified P0466 `d1b1cdd`: user defaults/names
+**P0469** panel Chat SHOW/AUTO, L-052 UP/L-053 preview; P0468 `24790ed` L-051 grid; P0467 audit on verified P0466 `d1b1cdd`: user defaults/names
 PASS scoped; L-049/L-050 RESOLVED-SCOPE. Preserve HP/aura/50-50.
-Recovery/taint unverified. Fast preflight and deterministic Chat handoff;
-real329-check JSON roundtrip PASS. No runtime change/redeploy.
+Recovery/taint unverified. Deterministic handoff;
+P0467 JSON roundtrip PASS.
 P0464 position PASS/style FAIL; P0463 GetPoint FAIL retained.
 P0460 HP/nameplates PASS scoped; P0457 selected PASS; P0461 aura FAIL;
 P0454/P0455 secondary 50/50 VISUAL FAIL; P0458/P0459 FAIL.
@@ -62,10 +62,9 @@ L-011 PARTIAL; L-028 full safety and L-048 OPEN.
 
 ## Next Action
 
-P0467 verified; P0468 candidate. Export fresh Chat handoff:
-`python3 tools/chat_change.py handoff LOGRES_CHAT_HANDOFF_P0467.zip`.
-L-051: max4/scan6/self-cast baseline; four-column compatible aura
-candidate, WoW UNVERIFIED. Preserve accepted enemy UI.
+P0468 verified; P0469 candidate, client UNVERIFIED. N Chat SHOW/AUTO. Export fresh Chat handoff:
+`python3 tools/chat_change.py handoff LOGRES_CHAT_HANDOFF_P0469.zip`.
+L-051: max4/scan6/self-cast baseline; four-column grid, WoW UNVERIFIED. Preserve accepted enemy UI.
 
 ## Success Criteria
 

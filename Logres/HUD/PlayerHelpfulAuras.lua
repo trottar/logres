@@ -306,7 +306,7 @@ function HelpfulAuras:RenderSnapshot(snapshot, reason)
         and snapshot.scanExhausted ~= true
     self.lastScanExhausted = snapshot.scanExhausted == true
     -- The LEFT anchor stays fixed at the original first icon's center;
-    -- extra rows grow downward without shifting the approved first row.
+    -- extra rows grow upward without shifting the approved first row.
     local iconSize = styleValue("iconSize")
     local rows = math.ceil(math.max(visible, 1) / COLUMNS)
     self.root:SetHeight(iconSize + (rows - 1) * (iconSize + styleValue("gap")))
@@ -530,7 +530,7 @@ function HelpfulAuras:OnInitialize()
         slotFrame:SetPoint(
             "LEFT", root, "LEFT",
             column * (iconSize + gap),
-            -row * (iconSize + gap)
+            row * (iconSize + gap)
         )
         slotFrame:EnableMouse(true)
         slotFrame:Hide()

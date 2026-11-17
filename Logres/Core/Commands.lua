@@ -771,6 +771,7 @@ local function restorationMatchDetails(
     local expectedQuiet =
         expectedImmersion
         and snapshot.context == "world"
+        and not snapshot.quiet.manualOpen
 
     local controller = snapshot.controller
 
@@ -1561,6 +1562,7 @@ local function runContextPolicyCheck()
     local expectedQuiet =
         immersion
         and state.context == "world"
+        and not Logres:GetModule("QuietMode").manualOpen
 
     local expectedActionPolicy =
         resolveExpectedContextPolicy(state)
@@ -3630,6 +3632,7 @@ local function printHelp()
     emit("  /logres mainreplacecheck")
     emit("  /logres immersioncheck")
     emit("  /logres quietcheck")
+    emit("  /logres chat [on|off|auto|toggle|status]")
     emit("  /logres playerframecheck")
     emit("  /logres targetframecheck")
     emit("  /logres restorationcheck")
@@ -3856,6 +3859,29 @@ local function handleCommand(message)
 
     if command == "immersioncheck" then
         runImmersionCheck()
+        return
+    end
+
+    if command == "chat" then
+        local quiet = Logres:GetModule("QuietMode")
+        if argument == "status" then
+            emit("Logres chat: " .. (quiet.manualOpen and "SHOW" or "AUTO")
+                .. " (session-only; AUTO follows Quiet Mode)")
+            return
+        end
+        local visible
+        if argument == "" or argument == "toggle" then
+            visible = not quiet.manualOpen
+        elseif argument == "on" then
+            visible = true
+        elseif argument == "off" or argument == "auto" then
+            visible = false
+        else
+            emit("Usage: /logres chat [on|off|auto|toggle|status]")
+            return
+        end
+        local ok, result = Logres:GetModule("ImmersionController"):SetChatVisible(visible)
+        emit("Logres chat: " .. (ok and "UPDATED " or "FAILED ") .. result)
         return
     end
 
