@@ -849,6 +849,10 @@ function HUD:GetDebugStatus()
         enemyPreviewAggroAlpha = 0.5,
         enemyWorldAttachmentEnabled = false,
         enemyFallbackPreserved = true,
+        worldEnemyAuraLayoutReason = self.worldEnemyAuraLayoutReason or "not-attempted",
+        worldEnemyAuraLayoutClaims = Logres.NativeDebuffs and Logres.NativeDebuffs.nameplateLayoutClaims or 0,
+        worldEnemyAuraLayoutRestores = Logres.NativeDebuffs and Logres.NativeDebuffs.nameplateLayoutRestores or 0,
+        worldEnemyAuraLayoutRefusals = Logres.NativeDebuffs and Logres.NativeDebuffs.nameplateLayoutRefusals or 0,
         worldEnemyLiveRequested = self.worldEnemyLiveRequested == true,
         worldEnemyEnablePending = self.worldEnemyEnablePending == true,
         worldEnemyDisablePending = self.worldEnemyDisablePending == true,
@@ -1249,9 +1253,15 @@ local function nativeDecorField(parent, field)
 end
 
 function HUD:RestoreNativeEnemyDecor()
+    local layoutRestored = true
+    if self.worldEnemyAuraLayoutClaim then
+        layoutRestored = Logres.NativeDebuffs.RestoreNameplateAuraLayout(
+            self.worldEnemyAuraLayoutClaim)
+        if layoutRestored then self.worldEnemyAuraLayoutClaim = nil end
+    end
     local claim = self.worldEnemyNativeClaim
-    if not claim then return true end
-    local restored = true
+    if not claim then return layoutRestored end
+    local restored = layoutRestored
     -- Restore all captured original tokens, without comparing or formatting.
     for index = #claim, 1, -1 do
         local entry = claim[index]
@@ -1332,6 +1342,17 @@ function HUD:ClaimNativeEnemyDecor(anchor)
     self.worldEnemyNativeAuraOwned = false
     self.worldEnemyNativeTransfers = self.worldEnemyNativeTransfers + 1
     self.worldEnemyNativeLastResult = "decor-owned"
+    local native = Logres.NativeDebuffs
+    if native and type(native.ClaimNameplateAuraLayout) == "function" then
+        local accepted, reason
+        self.worldEnemyAuraLayoutClaim, accepted, reason =
+            native.ClaimNameplateAuraLayout(harmful, helpful, self.worldEnemyLiveFrame)
+        self.worldEnemyAuraLayoutReason = reason
+        if not accepted and self.worldEnemyAuraLayoutClaim then
+            self:RestoreNativeEnemyDecor()
+            return false, reason
+        end
+    end
     return true, "decor-owned"
 end
 
@@ -1367,9 +1388,13 @@ end
 -- hide is pending. Original alphas can be secret opaque tokens: no reads,
 -- comparisons, formatting or diagnostic serialization are permitted.
 function HUD:RestoreNativeSecondaryEnemyDecor(slot)
-    local claim = slot and slot.claim
-    if not claim then return true end
     local success = true
+    if slot and slot.auraLayoutClaim then
+        success = Logres.NativeDebuffs.RestoreNameplateAuraLayout(slot.auraLayoutClaim)
+        if success then slot.auraLayoutClaim = nil end
+    end
+    local claim = slot and slot.claim
+    if not claim then return success end
     for index = #claim, 1, -1 do
         local entry = claim[index]
         if not pcall(entry.region.SetAlpha, entry.region, entry.original) then
@@ -1419,6 +1444,19 @@ function HUD:ClaimNativeSecondaryEnemyDecor(slot, anchor)
             self:RestoreNativeSecondaryEnemyDecor(slot)
             if slot.claim then slot.blocked = true end
             return false, "secondary-native-mutation-refused"
+        end
+    end
+    local native = Logres.NativeDebuffs
+    if native and type(native.ClaimNameplateAuraLayout) == "function" then
+        local auraRoot = nativeDecorField(unitFrame, "AurasFrame")
+        local accepted, reason
+        slot.auraLayoutClaim, accepted, reason = native.ClaimNameplateAuraLayout(
+            nativeDecorField(auraRoot, "DebuffListFrame"),
+            nativeDecorField(auraRoot, "BuffListFrame"), slot.frame)
+        slot.auraLayoutReason = reason
+        if not accepted and slot.auraLayoutClaim then
+            self:RestoreNativeSecondaryEnemyDecor(slot)
+            return false, reason
         end
     end
     return true, "secondary-native-name-health-owned"
@@ -2006,11 +2044,48 @@ local function hasOwnedWorldAuraRestoreToken()
         and auras.nativeDebuffs.screenTargetWorldAlpha ~= nil
 end
 
+-- P0463: reconcile the bounded addon-owned ADD cache after activation.
+-- Existing visible plates need not emit another ADDED event after OFF/ON.
+function HUD:ReconcileObservedWorldEnemyPlates()
+    if not self.worldEnemyLiveRequested or not self.worldEnemySecondaryTrialArmed then return end
+    local probe = Logres:GetModule("WorldTargetProbe")
+    if not probe then return end
+    for token in pairs(self.worldEnemyObservedNameplateEpochs or {}) do
+        local unit = probe:OrdinaryEventNameplateToken(token)
+        if unit then
+            if not self.worldEnemySecondaryEpochs[unit] then
+                self.worldEnemySecondarySerial = self.worldEnemySecondarySerial + 1
+                self.worldEnemySecondaryEpochs[unit] = self.worldEnemySecondarySerial
+            end
+            local observation = probe:ObserveNameplateLifecycle("world-enemy-resume", unit)
+            local decision = probe:ObserveSecondaryVisualEligibility(
+                "world-enemy-resume", unit, observation)
+            self:ObserveSecondaryAggroTrial("world-enemy-resume", unit, decision)
+        end
+    end
+end
+
 -- P0462: one pending intent per HUD. No new event frame, timer or callback.
 -- A combat ON is requested, not active; the existing regen event performs
 -- the single capability-gated setup attempt once lockdown has ended.
 function HUD:SetLiveWorldEnemy(enabled)
     if enabled == true then
+        -- Cancel an OFF that has not yet withdrawn a still-valid owner.
+        local resumeProbe = Logres:GetModule("WorldTargetProbe")
+        local sameSelected = self.worldEnemyLiveAnchorUnit and resumeProbe
+            and type(resumeProbe.OrdinarySecondaryRole) == "function"
+            and resumeProbe:OrdinarySecondaryRole(self.worldEnemyLiveAnchorUnit)
+        if self.worldEnemyDisablePending and self.worldEnemyLiveVisible
+            and sameSelected == true and self.worldEnemyLiveAnchorEpoch ~= nil
+            and self.worldEnemyObservedNameplateEpochs
+            and self.worldEnemyLiveAnchorEpoch ==
+                self.worldEnemyObservedNameplateEpochs[self.worldEnemyLiveAnchorUnit] then
+            self.worldEnemyDisablePending = false
+            self.worldEnemyLiveRequested = true
+            self.worldEnemyEnablePending = false
+            self.worldEnemyEnableLastResult = "cancelled-pending-off"
+            return true, "owned-target-retained"
+        end
         if (self.worldEnemyLiveVisible
             or (self.worldEnemySecondaryTrialActive or 0) > 0)
             and self.worldEnemyLiveRequested
@@ -2020,6 +2095,22 @@ function HUD:SetLiveWorldEnemy(enabled)
             return true, "owned-target-retained"
         end
         if not ordinaryOutOfCombat() then
+            -- Resume a fully precreated, unprotected display pool without
+            -- any setup, SetUnit, SetAttribute, registration or allocation.
+            -- Existing acquisition/claim functions retain all safety gates.
+            if ordinaryInCombat() and self.worldEnemyLiveFrame
+                and ordinaryOwnedUnprotected(self.worldEnemyLiveFrame)
+                and self.worldEnemySecondaryPool
+                and #self.worldEnemySecondaryPool == SECONDARY_POOL_CAPACITY
+                and not self.worldEnemyDisablePending then
+                self.worldEnemyLiveRequested = true
+                self.worldEnemyEnablePending = false
+                self.worldEnemySecondaryTrialArmed = true
+                self:ReconcileObservedWorldEnemyPlates()
+                local active, why = self:RefreshLiveWorldEnemy("combat-resume")
+                self.worldEnemyEnableLastResult = why
+                return active, why
+            end
             self.worldEnemyLiveRequested = true
             self.worldEnemyEnablePending = true
             self.worldEnemyEnableLastResult = ordinaryInCombat()
@@ -2064,6 +2155,7 @@ function HUD:SetLiveWorldEnemy(enabled)
         if not secondaryBuilt then
             self.worldEnemySecondaryTrialLastResult = secondaryReason
         end
+        self:ReconcileObservedWorldEnemyPlates()
         local attached, attachReason = self:RefreshLiveWorldEnemy("manual")
         self.worldEnemyEnableLastResult = attachReason or "refresh-refused"
         return attached, self.worldEnemyEnableLastResult

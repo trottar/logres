@@ -1,0 +1,35 @@
+P0463 Repair native aura layout, plate activation and objective tracker
+Verified baseline: b849955961944b9b62a879b360c6f27612686370
+Candidate runtime version: 0.0.332-dev
+PREWRITE: 326/326 STATIC PASS
+POSTWRITE: 326/326 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Dev/Panel.lua
+Logres/HUD/HUD.lua
+Logres/HUD/NativeDebuffs.lua
+Logres/HUD/StatusAuras.lua
+Logres/Immersion/NativeAccess.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0463_AURA_ACTIVATION_TRACKER_REPAIR.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0461_native_aura_fallback_contract.py
+tools/check_p0462_world_enemy_pending_contract.py
+tools/check_p0463_regression_repair_contract.py
+tools/test_p0463_activation.lua
+tools/test_p0463_aura_layout.lua
+tools/test_p0463_tracker.lua
+P0463_MANIFEST.txt

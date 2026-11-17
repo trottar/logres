@@ -197,6 +197,11 @@ function NativeAccess:Restore(key, reason)
         self.lastReasons[key] = "combat-deferred"
         return false
     end
+    if key == "objectives" and self.objectiveSecureGateArmed
+        and not self:SetObjectiveSecureGate(false) then
+        self.lastReasons[key] = "secure-objective-restore-deferred"
+        return false
+    end
     self.restoring[key] = true
     local ok, err = pcall(function()
         if key == "casts" then
@@ -244,6 +249,54 @@ end
 -- A source-specific OnShow notification closes the timing gap between a
 -- Blizzard Show() and the next quest/cast event. It never polls and does not
 -- inspect protected native visible/alpha state.
+-- P0463: protected objective roots require the native secure handler path.
+-- Install/arm only OOC. The post-handler hides the whole root in combat;
+-- it never changes children, reads presentation state or runs a Lua timer.
+function NativeAccess:SetObjectiveSecureGate(folded)
+    if InCombatLockdown() then return false end
+    if not folded and not self.objectiveSecureGate then return true end
+    local frame = _G.ObjectiveTrackerFrame
+    if not frame or type(frame.IsProtected) ~= "function"
+        or type(frame.IsForbidden) ~= "function" then return false end
+    local pOK, protected = pcall(frame.IsProtected, frame)
+    local fOK, forbidden = pcall(frame.IsForbidden, frame)
+    if not pOK or not fOK or ordinaryBool(protected) ~= true
+        or ordinaryBool(forbidden) ~= false then return false end
+    if not self.objectiveSecureGate then
+        if type(SecureHandlerWrapScript) ~= "function" then return false end
+        local control
+        local installed = pcall(function()
+            control = CreateFrame("Frame", nil, UIParent, "SecureHandlerStateTemplate")
+            control:SetAttribute("logresObjectiveFolded", false)
+            -- A non-nil pre-message enables the native post-handler after
+            -- the existing OnShow, preserving Blizzard's original script.
+            SecureHandlerWrapScript(frame, "OnShow", control, "return true, true", [[
+                if control:GetAttribute("logresObjectiveFolded") then self:Hide() end
+            ]])
+        end)
+        if not installed then
+            self.lastReasons.objectives = "secure-objective-gate-unavailable"
+            return false
+        end
+        self.objectiveSecureGate = control
+    end
+    local armed = pcall(self.objectiveSecureGate.SetAttribute,
+        self.objectiveSecureGate, "logresObjectiveFolded", folded == true)
+    if armed then self.objectiveSecureGateArmed = folded == true end
+    return armed
+end
+
+function NativeAccess:CanRefoldObjectivesInCombat(key)
+    if key ~= "objectives" or not self.snapshots[key] then return false end
+    local frame = _G.ObjectiveTrackerFrame
+    if not frame or type(frame.IsProtected) ~= "function"
+        or type(frame.IsForbidden) ~= "function" then return false end
+    local pOK, protected = pcall(frame.IsProtected, frame)
+    local fOK, forbidden = pcall(frame.IsForbidden, frame)
+    return pOK and fOK and ordinaryBool(protected) == false
+        and ordinaryBool(forbidden) == false
+end
+
 function NativeAccess:InstallRefoldHooks()
     for _, key in ipairs({ "objectives", "casts" }) do
         for _, name in ipairs(DOMAIN_FRAMES[key]) do
@@ -266,7 +319,11 @@ function NativeAccess:InstallRefoldHooks()
                         then
                             return
                         end
-                        if InCombatLockdown() then
+                        if hookKey == "objectives" and self.objectiveSecureGateArmed then
+                            self.lastReasons[hookKey] = "secure-onshow-gated"
+                            return
+                        end
+                        if InCombatLockdown() and not self:CanRefoldObjectivesInCombat(hookKey) then
                             if hookKey == "casts" and self.castGateArmed then
                                 -- Persist the failure even after regen clears
                                 -- pending flags; no false PASS after combat.
@@ -301,7 +358,15 @@ function NativeAccess:Refold(key, reason)
     if not self.desired or self.manualOpen[key] or not self.snapshots[key] then
         return true
     end
-    if InCombatLockdown() then
+    if key == "objectives" then
+        if not InCombatLockdown() then
+            self:SetObjectiveSecureGate(true)
+        elseif self.objectiveSecureGateArmed then
+            self.lastReasons[key] = "secure-gate-armed"
+            return true
+        end
+    end
+    if InCombatLockdown() and not self:CanRefoldObjectivesInCombat(key) then
         self.pendingRefolds[key] = true
         self.lastReasons[key] = "combat-deferred-refold"
         return false
@@ -350,6 +415,7 @@ function NativeAccess:Fold(key)
         self.lastReasons[key] = captureError
         return false
     end
+    if key == "objectives" then self:SetObjectiveSecureGate(true) end
     local ok, err = pcall(function()
         if key == "casts" then
             self.castGateAttempts = self.castGateAttempts + 1
@@ -362,6 +428,7 @@ function NativeAccess:Fold(key)
     if not ok then
         -- Attempt exact rollback after a partial Hide failure. Keep a
         -- restoration token armed if the emergency restore is rejected.
+        if key == "objectives" then self:SetObjectiveSecureGate(false) end
         local rollbackOK = pcall(function()
             if key == "casts" then
                 setNativeCastGate(snapshot, false)
@@ -495,6 +562,10 @@ function NativeAccess:GetDebugStatus()
     end
     return {
         moduleEnabled = self:IsEnabled(),
+        objectiveTrackerSecureGateArmed = self.objectiveSecureGateArmed == true,
+        objectiveTrackerReason = self.lastReasons.objectives or "not-attempted",
+        objectiveTrackerPending = self.pendingRefolds.objectives == true,
+        objectiveTrackerManualOpen = self.manualOpen.objectives == true,
         desired = self.desired,
         dockShown = self.dock:IsShown(),
         foldedDomains = folded,

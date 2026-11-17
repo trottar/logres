@@ -1,3 +1,38 @@
+## P0463 — Aura/activation/tracker exact-candidate audit (2026-11-16)
+
+Baseline main `b849955`; session 134 0.0.331-dev user regression FAIL.
+Inspected historical P0441/P0442/P0447/P0450, P0459/P0460, P0461/P0462,
+native refold and memory-size contracts before release. Reuse native aura
+engine, move only positively unprotected lists with opaque point restoration.
+Preserve accepted HP and fail-open stock fallback; no protected readback.
+R0 author audit REFUSED 324/326: CURRENT lost the historical exact
+P0454/P0455 visual-failure phrase and P0461 prohibited even a secondary
+aura-list reference. Restored the failure phrase; revised only that obsolete
+reference prohibition for the independently capability-gated layout helper.
+Native alpha/data/unit suppression restrictions remain. P0462 visual status
+assertion accepts the new client-unverified label. R1 audit also refused 324/326: restored P0456 historical CURRENT marker
+and completed removal of all three obsolete list-reference prohibitions.
+No user checkout writes.
+Seven relevant actual-source fixtures PASS. Full candidate suite, Lua syntax,
+canonical applier PREWRITE/POSTWRITE, refusal and rollback must pass before
+delivery; measured results recorded below. Client visuals remain UNVERIFIED.
+
+### Release audit results
+
+Seven relevant actual-source fixtures PASS; all three new fixture files FAIL
+against unmodified P0462, detecting the missing behavior. Protected tracker
+post-handler is modeled from the public native wrapper contract; the model
+does not prove client trust/taint execution. Lua 5.1 syntax covers all runtime
+Lua. Full exact-candidate checker inventory is 326. Canonical applier audit
+requires PREWRITE/POSTWRITE 326/326, exact payload/manifest/cleanup/diff hygiene,
+simulated wrong-HEAD refusal and real dirty-source/hash/collision refusals.
+Injected POSTWRITE rejection restores all fixture bytes and leaves no manifest.
+All applier writes use isolated scratch trees/private fixture indexes. Actual
+user HEAD, refs, index bytes and tracked status are checked unchanged.
+Final package is rebuilt and this complete audit repeated before delivery.
+Client visuals, protected aura-list availability and secure execution remain
+UNVERIFIED. No commit/push or runtime deployment by assistant.
+
 ## P0462 guarded author audit (2026-11-16)
 
 Authority: GitHub `main` `56861f56919f45f43499a6726f31f074d6c2a744`,

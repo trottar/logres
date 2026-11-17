@@ -52,7 +52,9 @@ assert 'function Native.SetScreenTargetWorldOwned(state, worldOwned)' in n
 assert 'state.screenTargetWorldAlpha' in n
 secondary=h.split('function HUD:ClaimNativeSecondaryEnemyDecor(slot, anchor)',1)[1].split('function HUD:RefreshSecondaryOwnerCount()',1)[0]
 assert 'local candidates = {name, health}' in secondary
-for forbidden in ('"AurasFrame"', '"DebuffListFrame"', '"BuffListFrame"', 'SetUnit('):
+# P0463 may resolve native aura-list references for independently gated,
+# reversible placement. Native data/unit/alpha suppression remain forbidden.
+for forbidden in ('SetUnit(', 'SetAlpha(', 'GetAuraDataByIndex(', 'GetChildren('):
     assert forbidden not in secondary,forbidden
 assert 'worldEnemyAuraPresentationOwner = "Blizzard-nameplate"' in a
 assert 'worldEnemyNativeVisibilityProof = "unobserved"' in a

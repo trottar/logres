@@ -1,13 +1,9 @@
-# P0462: P0461 main `56861f5`, Forever `0.0.330-dev` session 133.
-#13659 aura VISUAL FAIL (native icons crowd accepted P0460 HP/name);
-#13661 OFF native restore scoped PASS; #13663 ON-in-combat refusal.
-Source/deployed/capture matched; no auto recovery in P0461.
-P0462 requests ON pending OOC with single regen attempt, OFF cancel,
-and pending-alpha restore gate. Selected 100%, secondary 50%, owner
-and ordinary removal identity unchanged. Stock aura lists remain: no
-proved safe independent renderer or layout; L-028 OPEN, L-011 PARTIAL.
-R0 author 307/325 REFUSED; R1 contract gates are
-in audit/receipt. Client activation and auras UNVERIFIED.
+# P0463: `b849955` session 134 #13743/#13745/#13748 regression.
+Unprotected native aura layout; cached plate replay/prebuilt ON;
+tracker secure OOC gate + safe refold. P0460 HP retained; client UNVERIFIED.
+
+# P0462: pending ON implemented, aura layout deferred; latest user FAIL.
+Native tracker visible #13745; actual NPC QuestFrame not shown.
 
 # P0461: prior main `edf37197`, session 132 #13580 P0460 HP PASS.
 Native nameplate aura fallback VISUAL FAIL in #13659; keep selected/

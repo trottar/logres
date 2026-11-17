@@ -21,7 +21,9 @@ assert 'C_Timer.' not in setcode and 'C_Timer.' not in events
 assert 'GetChildren(' not in setcode and 'SetParent(' not in setcode
 assert 'worldEnemyActivationState' in h
 assert 'worldEnemyActivationState' in cmd
-assert 'worldEnemyAuraVisualStatus = "stock-crowding-P0461-unresolved"' in a
+# P0463 adds gated layout; neither status claims visual acceptance.
+assert ('worldEnemyAuraVisualStatus = "stock-crowding-P0461-unresolved"' in a
+        or 'worldEnemyAuraVisualStatus = "gated-native-layout-client-unverified"' in a)
 assert 'worldEnemyNativeLanes = nil' in a
 assert 'P0461' in (R/'docs/memory/investigations/ISSUE_LEDGER.md').read_text()
 assert '#13659' in (R/'docs/memory/evidence/P0462_WORLD_ENEMY_PENDING_AND_AURA_BLOCKER.md').read_text()

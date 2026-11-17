@@ -310,6 +310,12 @@ function Logres:CaptureBugIncident()
     -- this journal stores only its sanitized, scalar diagnostics.
     -- P0440: event-time nameplate evidence survives target changes and the
     -- post-combat screenshot; only the probe's owned scalar latches are saved.
+    incident.snapshot.nativeAccess = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("NativeAccess"):GetDebugStatus()
+    end), {"objectiveTrackerReason", "objectiveTrackerPending", "objectiveTrackerManualOpen",
+        "objectiveTrackerSecureGateArmed",
+        "nativeShows", "showRefolds", "combatShowDeferrals", "lastNativeShow",
+        "refoldFailures", "lastRefoldEvent"})
     incident.snapshot.nameplateLifecycle = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("WorldTargetProbe"):GetDebugStatus()
     end), {"lifecycleEventFrameReady", "lifecycleNameplateAddedRegistered",
@@ -344,6 +350,8 @@ function Logres:CaptureBugIncident()
         return self:GetModule("HUD"):GetDebugStatus()
     end), {"worldEnemyLiveRequested", "worldEnemyLiveVisible",
         "worldEnemyLiveLastReason", "worldEnemyLiveAttachments",
+        "worldEnemyAuraLayoutReason", "worldEnemyAuraLayoutClaims",
+        "worldEnemyAuraLayoutRestores", "worldEnemyAuraLayoutRefusals",
         "worldEnemyLiveCombatAttaches", "worldEnemyLiveFailures",
         "worldEnemyLiveDetaches", "worldEnemyLiveRemovalResult",
         "worldEnemyLiveObservedTokenResolutions", "worldEnemyLiveUnknownTokenQueries",

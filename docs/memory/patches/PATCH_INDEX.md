@@ -1,3 +1,9 @@
+## P0463 — Aura layout, observed activation and tracker repair
+
+Baseline `b849955961944b9b62a879b360c6f27612686370`, runtime 0.0.332-dev.
+Source tests and full canonical suite; client UNVERIFIED. L-028/L-048 OPEN.
+Evidence: `docs/memory/evidence/P0463_AURA_ACTIVATION_TRACKER_REPAIR.md`.
+
 ## P0462 — COMBAT-ON DRAFT; NOT A RELEASE (2026-11-16)
 
 Main `56861f5` P0461. Report Bug #13659 aura visual FAIL; #13661

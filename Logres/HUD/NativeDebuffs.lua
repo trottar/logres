@@ -82,6 +82,91 @@ local function placeStockPlayerHarmful(state, active)
     state.stockPlacementReason = "stock-player-lane-requested"
 end
 
+-- P0463: native AuraContainer keeps membership and restricted payloads.
+-- Logres owns only reversible positions of positively unprotected lists.
+-- Point values are opaque restoration tokens, never compared or formatted.
+local function layoutRegionReady(region)
+    if not ordinary(region) or region == nil then return false end
+    local checked, ready = pcall(function()
+        for _, method in ipairs({"IsProtected", "IsForbidden", "GetNumPoints",
+            "GetPoint", "ClearAllPoints", "SetPoint"}) do
+            if type(region[method]) ~= "function" then return false end
+        end
+        local pOK, protected = pcall(region.IsProtected, region)
+        local fOK, forbidden = pcall(region.IsForbidden, region)
+        return pOK and fOK and ordinary(protected) and protected == false
+            and ordinary(forbidden) and forbidden == false
+    end)
+    return checked and ready == true
+end
+
+Native.nameplateLayoutClaims = 0
+Native.nameplateLayoutRestores = 0
+Native.nameplateLayoutRefusals = 0
+
+function Native.RestoreNameplateAuraLayout(claim)
+    if not claim then return true end
+    local success = true
+    for _, entry in ipairs(claim) do
+        if not layoutRegionReady(entry.region) then
+            success = false
+        else
+            local restored = pcall(function()
+                entry.region:ClearAllPoints()
+                for _, point in ipairs(entry.points) do
+                    entry.region:SetPoint(point[1], point[2], point[3], point[4], point[5])
+                end
+            end)
+            if not restored then success = false end
+        end
+    end
+    if success then Native.nameplateLayoutRestores = Native.nameplateLayoutRestores + 1 end
+    return success
+end
+
+function Native.ClaimNameplateAuraLayout(harmful, helpful, parent)
+    -- Do not inspect native children, visibility, aura contents or alpha.
+    if not layoutRegionReady(harmful) or not layoutRegionReady(helpful) then
+        Native.nameplateLayoutRefusals = Native.nameplateLayoutRefusals + 1
+        return nil, false, "native-aura-layout-unavailable"
+    end
+    local claim = {}
+    for _, region in ipairs({harmful, helpful}) do
+        local counted, count = pcall(region.GetNumPoints, region)
+        if not counted or not ordinary(count) or type(count) ~= "number"
+            or count < 0 or count > 8 or count ~= math.floor(count) then
+            Native.nameplateLayoutRefusals = Native.nameplateLayoutRefusals + 1
+            return nil, false, "native-aura-points-unavailable"
+        end
+        local points = {}
+        for index = 1, count do
+            local ok, p, relative, rp, x, y = pcall(region.GetPoint, region, index)
+            if not ok then
+                Native.nameplateLayoutRefusals = Native.nameplateLayoutRefusals + 1
+                return nil, false, "native-aura-point-capture-refused"
+            end
+            points[index] = {p, relative, rp, x, y}
+        end
+        claim[#claim + 1] = {region = region, points = points}
+    end
+    -- Capture BOTH lists completely before moving either one.
+    local placed = pcall(function()
+        harmful:ClearAllPoints()
+        harmful:SetPoint("RIGHT", parent, "LEFT", -25, 0)
+        helpful:ClearAllPoints()
+        helpful:SetPoint("LEFT", parent, "RIGHT", 25, 0)
+    end)
+    if not placed then
+        Native.nameplateLayoutRefusals = Native.nameplateLayoutRefusals + 1
+        if Native.RestoreNameplateAuraLayout(claim) then
+            return nil, false, "native-aura-layout-refused-restored"
+        end
+        return claim, false, "native-aura-layout-restore-pending"
+    end
+    Native.nameplateLayoutClaims = Native.nameplateLayoutClaims + 1
+    return claim, true, "native-aura-lists-in-logres-lanes"
+end
+
 local harmfulStyle = (Logres.Theme and Logres.Theme.nativeHarmfulAuras) or {}
 local ICON = harmfulStyle.iconSize or 25
 local GAP = harmfulStyle.gap or 3

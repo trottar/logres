@@ -11,20 +11,19 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0462** candidate on verified P0461 main `56861f5691` /
-`0.0.330-dev`. Forever session 133 #13659 aura **VISUAL FAIL**:
-Blizzard icons crowd name/HP; #13661 World Enemy OFF native restore
-scoped PASS; #13663 combat ON `enable-requires-ooc`. 40 restricted
-index skips are not forty auras. P0462 implements one safe regen ON
-attempt and OFF cancellation; visual/runtime acceptance UNVERIFIED.
-P0460 selected full size and secondary 50%/50% HP PASS;
-identity/removal/geometry unchanged. Stock aura lists remain available:
-no proved safe replacement placement, so L-028 OPEN; L-011 PARTIAL.
-P0425 visual PASS; P0442/P0443 native overlap/matte FAIL;
-P0449 icons PASS; P0450 duplicates FAIL;
-P0454/P0455 secondary 50/50 VISUAL FAIL; P0456 suspension;
-P0457 selected PASS; P0458/P0459 visual FAIL; P0460 HP PASS.
-P0461 aura FAIL. See P0462 evidence and release audit.
+**P0463** on verified P0462 main `b849955`, 0.0.331-dev session 134
+#13743/#13745/#13748 user regression FAIL. Selected later returns;
+secondary attachments 0; objective tracker visible during combat.
+P0463: reversible unprotected native aura-list placement at +/-25;
+reconcile cached ADD tokens on activation; reuse prebuilt pool in combat;
+ON cancels unexecuted OFF; tracker secure OOC gate plus unprotected fallback.
+Native aura data/membership remains Blizzard-owned. Unsafe/protected
+layout or unavailable tracker gate stays fallback/deferred.
+P0460 HP/nameplates PASS scoped; P0457 selected PASS; P0461 aura FAIL;
+P0454/P0455 secondary 50/50 VISUAL FAIL; P0458/P0459 FAIL.
+P0456 suspension is historical. P0425 visual PASS;
+P0442/P0443 overlap/matte FAIL; P0449 icons PASS; P0450 duplicates FAIL.
+L-011 PARTIAL, L-028/L-048 OPEN; P0463 client UNVERIFIED.
 
 ## Verified State
 
@@ -66,13 +65,12 @@ P0461 aura FAIL. See P0462 evidence and release audit.
 
 ## Next Action
 
-P0462 Forever: after guarded deployment and `/reload`, observe World
-Enemy ON in combat, one out-of-combat activation event, OFF cancel,
-selected/secondary nameplate continuity, native click/cast and stock
-restoration. Report Bug only after natural gameplay. Aura stock icons
-still crowd HP; preserve aura information and investigate safe native
-layout/Blizzard engine rendering before suppressing or moving them.
-P0461 aura visual FAIL and L-028 OPEN are not a visual PASS.
+Apply/push/deploy P0463. Normal gameplay: selected/secondary HP stays
+accepted; native aura lists flank bars without reparenting or data reads.
+Prebuilt ON works in combat; first setup remains pending OOC; OFF cancels
+pending ON and ON cancels unexecuted OFF. Secure gate handles protected tracker.
+Report Bug captures layout claims/refusals and tracker ownership reason;
+no extra panel checklist. Client layout/taint remains UNVERIFIED.
 
 ## Success Criteria
 
@@ -82,6 +80,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0463_AURA_ACTIVATION_TRACKER_REPAIR.md
 - docs/memory/evidence/P0453_SECONDARY_THREAT_SOURCE_ISOLATION.md
 - docs/memory/evidence/P0451_SECONDARY_THREAT_QUALIFICATION.md
 - docs/memory/evidence/P0450_WORLD_AURA_OWNERSHIP_HANDOFF.md

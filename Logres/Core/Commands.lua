@@ -3390,6 +3390,9 @@ function Logres:HandleLiveWorldEnemyCommand(argument)
             tostring(state.worldEnemyDisablePending),
             tostring(state.worldEnemyEnableAttempts),
             tostring(state.worldEnemyEnableLastResult)))
+        emit(string.format("World Enemy aura layout: claims=%s restores=%s refusals=%s last=%s",
+            tostring(state.worldEnemyAuraLayoutClaims), tostring(state.worldEnemyAuraLayoutRestores),
+            tostring(state.worldEnemyAuraLayoutRefusals), tostring(state.worldEnemyAuraLayoutReason)))
         emit(string.format(
             "World Enemy: layout=%s detaches=%s last removal=%s; native interaction retained",
             tostring(state.worldEnemyLiveLayout),

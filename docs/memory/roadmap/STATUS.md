@@ -1,3 +1,14 @@
+## P0463 — Aura layout and activation/tracker repair (2026-11-16)
+
+Verified P0462 main `b849955`, source/deploy/capture 0.0.331-dev;
+session 134 #13743/#13745/#13748. Native plates persist while ON pending;
+selected returns later, secondary 0 attachments. #13745 shows the native
+ObjectiveTracker, not an NPC QuestFrame. P0463 adds gated reversible native
+aura-list +/-25 placement, observed-token replay/prebuilt combat resume,
+pending OFF cancellation, OOC secure tracker gate and unprotected refold.
+Unsafe/unavailable capabilities still fail open/defer. P0460 HP/identity retained;
+L-011 PARTIAL, L-028/L-048 OPEN. Client visual acceptance UNVERIFIED.
+
 ## P0462 — Pending World Enemy activation and aura visual blocker (2026-11-16)
 
 Main P0461 `56861f5`, Forever 0.0.330-dev session 133 #13659
