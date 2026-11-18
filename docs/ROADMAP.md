@@ -1,3 +1,17 @@
+## P0486 — Preserve ordinary Classic quest flags (2026-11-18)
+
+P0485 main `4de7567`/tree `a7ce0a0` verified. Forever session169
+0.0.352-dev #17365–#17371 FAIL: Dughan NPC240 quest35
+`conditional-quest-flags`, native0, model0, rendered0. The old model
+vetoed all nonzero questFlags including Classic SHARABLE 8; no
+independent client read of exact numeric field. P0486 allows only
+known informational flags (1/2/4/8/32/64/256/512); repeatable,
+unavailable, unknown, malformed and `specialFlags` still veto. Keep
+completion/active/prereq/chain/current-player checks and stock fallback,
+all compass 2/3- and 3/4yd behavior unchanged. P0485 gameplay FAIL,
+L-030 OPEN/PARTIAL, P0486 client UNVERIFIED. Evidence:
+`docs/memory/evidence/P0486_INFORMATIONAL_QUEST_FLAGS.md`.
+
 ## P0485 — Correct missing optional QuestieDB fields and Report Bug eligibility detail (2026-11-18)
 
 P0484 main `3277132` verified/tree `8254cac`; Forever session168

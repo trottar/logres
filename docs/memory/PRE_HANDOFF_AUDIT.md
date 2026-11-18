@@ -1,3 +1,24 @@
+## P0486 — L-030 quest flags source/evidence boundary (2026-11-18)
+
+Verified main P0485 `4de75674a7b32377c2b46e054c3486cda27654b3`
+(tree `a7ce0a0a97de15e54a219471917ec3a57b07bba2`). Forever
+#17365–#17371 0.0.352-dev P0485 FAIL: NPC240 quest35 rejected
+`conditional-quest-flags`, no quest icon, native0. Classic source
+reports quest35 SHAREABLE flag8. P0485 fixture used nil instead of
+realistic nonzero flag, hiding the veto. P0486 allows only documented
+non-gating bits; preserves all prior current-state, secret and source
+boundaries. New fixture tests both allowed combinations and forbidden
+DAILY/UNAVAILABLE/unknown bits against actual source. Existing P0476–
+P0485 negative records, visual and fallback contracts remain.
+
+PREWRITE/POSTWRITE all checkers, Lua actual-source, manifest, ZIP diff,
+refusal/rollback and SHA are release gates. Do not declare WoW PASS.
+Initial P0486 evidence-literal checker REFUSED, then version-policy
+REFUSED on a hard-coded `0.0.353-dev` checker assertion; corrected both
+without changing runtime behavior. Frozen source complete audit
+348/348 PASS, actual-source P0486/P0485 fixture PASS, syntax parity PASS.
+Await transactional package suite; Forever remains UNVERIFIED.
+
 ## P0485 — L-030 sparse record false-negative audit (2026-11-18)
 
 Verified P0484 main `3277132`, session168 #17282–#17286 deployed

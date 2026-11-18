@@ -11,9 +11,10 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0485** L-030: P0484 Forever #17282–#17286 FAIL, Dughan quest35
-missing, native0/DB9/excluded8/shown0. P0484 mishandled optional nil;
-fixture invented zeros; Report Bug omitted eligibility reason.
+**P0486** L-030: P0485 Forever #17365–#17371 FAIL: quest35
+`conditional-quest-flags`; SHARABLE8 is not gating. Allow safe
+informational bits; daily/unknown veto, WoW UNVERIFIED.
+**P0485** P0484/P0483 quest FAIL retained.
 **P0484** FAIL; **P0483** turn PARTIAL; **P0482** est2/3/native3/4.
 P0476 floor, P0477 hide, P0478 VISUAL FAIL,
 P0479 FAIL retained.
@@ -33,15 +34,15 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
   combat29/targeting4; 0 failures/secret. P0439 OOC DEFERRED,
   P0437 visual PASS; no qualified threat/production attachment.
 
-- P0422 moved the pet-action bar in error; P0423 restored it and V8 was visually accepted.
+- P0422 pet-bar move FAIL; P0423 restored; V8 visual PASS.
 
 - P0420 `bd55e34` H.2 outline observed; P0421 V6 translated 15 owned
   regions from `LOGRES_SCREEN_MAP_REFINEMENTS_P0421.json`. P0416/P0418/P0419
   semantic-anchor/layout contracts retained; no Blizzard controls moved.
-- P0417 `bc91448`: pet stock hidden/Logres actions work; L-008 OPEN for combat/Edit Mode/fallback.
+- P0417 `bc91448`: pet actions work; L-008 OPEN for combat/Edit Mode/fallback.
 - P0418 V5 archive; V6 retains native fallback.
 
-- P0381 gameplay OPEN; P0383 quest18 TURNED_IN; L-005 PARTIAL,
+- P0381 OPEN; P0383 quest18 TURNED_IN; L-005 PARTIAL,
   L-001/L-002 OPEN; P0384 aligned; P0385 observed; P0386 UNVERIFIED.
 
 - P0379 `285be528` 249 STATIC; 0.0.264-dev no claim. L-002 native, L-005 FAIL. R0/R1 refused; P0378 screenshots inferred.
@@ -67,7 +68,7 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 
 ## Next Action
 
-P0485 sparse quest35/current-eligibility and false-positive Forever test.
+P0486 quest35 shareable flag and false-positive Forever test.
 L-030 OPEN/PARTIAL, L-035 PARTIAL/OPEN, L-002 OPEN; retain failures.
 
 ## Success Criteria
@@ -78,6 +79,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0486_INFORMATIONAL_QUEST_FLAGS.md
 - docs/memory/evidence/P0485_SPARSE_QUEST_ELIGIBILITY.md
 - docs/memory/evidence/P0484_QUEST_ELIGIBILITY_FALLBACK.md
 - docs/memory/roadmap/POST_P0474_WORKSTREAMS.md

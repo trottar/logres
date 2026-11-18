@@ -1,3 +1,12 @@
+## P0486 — Ordinary Classic quest flags are not offer gates (2026-11-18)
+
+P0485 main `4de7567`/tree `a7ce0a0`. Forever session169
+0.0.352-dev quest35 Dughan FAIL `conditional-quest-flags`. P0486
+explicit allowlist of informational bits including SHARABLE 8, preserve
+other current eligibility and native/secret/fallback controls. Actual
+source + historical checker/guarded package validation REQUIRED, WoW
+UNVERIFIED, L-030 OPEN. `P0486_INFORMATIONAL_QUEST_FLAGS.md`.
+
 ## P0485 — Correct missing optional QuestieDB fields and Report Bug eligibility detail (2026-11-18)
 
 P0484 main `3277132` verified/tree `8254cac`; Forever session168

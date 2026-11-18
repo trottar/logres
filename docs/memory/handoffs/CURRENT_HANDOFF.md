@@ -1,4 +1,5 @@
-# P0485: sparse DB fields; P0484 FAIL.
+# P0486: P0485 q35 FAIL; ordinary flags not availability.
+# P0485: sparse DB fields; client FAIL.
 # P0484: quest35 FAIL.
 # P0483: quest FAIL; turn PARTIAL.
 # P0482: est2/3 PARTIAL.
@@ -26,8 +27,7 @@ Native tracker visible #13745; actual NPC QuestFrame not shown.
 Native nameplate aura fallback VISUAL FAIL in #13659; keep selected/
 secondary geometry and identity. P0449 icons PASS, P0450 duplicate FAIL.
 
-# P0460: P0459 `0cbc8cc`/tree `64af7ead` verified. Forever
-#13499 0.0.328-dev VISUAL FAIL after brief success: selected 4/4
+# P0460: P0459 verified. #13499 VISUAL FAIL: selected 4/4
 and secondary 3/3 restores, last selected `unknown-attached-unit`.
 P0459 target-query owner lost nameplate identity, so any other REMOVE
 hid selected. P0460 caches ADD epochs; ignores unrelated REMOVE; restores
@@ -62,7 +62,7 @@ L-011/L-028 OPEN; details in P0448 evidence.
 
 **P0428 Chat workflow in CURRENT; P0412/P0411/R0 refusals, P0410,
 P0409/P0408/P0407/P0406/P0405/P0404 PASS, P0403 L-001, P0402;
-P0401 PASS, P0400/P0399 FAIL; P0396–P0392 merchant; P0391 trainer;
+P0401 PASS, P0400/P0399 FAIL; P0396–P0392; P0391 trainer;
 P0390, P0389, P0388 L-027, P0387, P0384 `c1c77e2` 254 STATIC;
 P0383 `cc783a0` quest18 PASS scoped; P0382 Continue; L-040:**
 P0379 `285be528` 249 STATIC; #2399 no input dispatch;

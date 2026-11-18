@@ -32,7 +32,7 @@ assert 'row.providerEligible == true' in C
 assert 'nativeCurrentQuestOffers[row.questID] == true' in C
 for frag in ('C_Timer','SetCVar(','UnitPosition(','HideUIPanel('):
  assert frag not in N,frag
-assert read('docs/memory/handoffs/CURRENT_HANDOFF.md').startswith('# P0485:')
+assert read('docs/memory/handoffs/CURRENT_HANDOFF.md').startswith('# P0486:')
 assert '**P0485**' in read('docs/memory/CURRENT.md')
 assert 'P0484 FAIL on this case' in read('docs/memory/evidence/P0485_SPARSE_QUEST_ELIGIBILITY.md')
 boot=re.search(r'^Logres.VERSION = "([^"]+)"$',read('Logres/Core/Bootstrap.lua'),re.M)

@@ -24,7 +24,7 @@ for bad in ('floor unknown','Services at map location','"~" .. tostring',
             'self.focusedMarkerKind = "service-map-only"'):
     assert bad not in C,bad
 assert '"serviceNearBearingHeld"' in D
-assert H.startswith('# P0485:') and '# P0480:' in H and '# P0479:' in H and '# P0478:' in H
+assert H.startswith('# P0486:') and '# P0480:' in H and '# P0479:' in H and '# P0478:' in H
 assert '| L-031 |' in L and '| L-035 |' in L
 assert all(x in E for x in ('16561','16569','P0478 VISUAL FAIL'))
 assert re.search(r'0\.0\.\d+-dev',E)

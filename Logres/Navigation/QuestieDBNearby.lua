@@ -244,10 +244,23 @@ local function independentlyEligible(questID)
     end
     local flags, flagsKnown = optionalNumber("specialFlags")
     if not flagsKnown or flags ~= 0 then return false, "conditional-special-flags" end
-    -- A genuinely absent flag is an absent restriction; a present nonzero
-    -- flag still needs independent native corroboration.
+    -- QuestFlags encode ordinary quest *features* as well as restrictions.
+    -- Common Classic bits such as SHARABLE (8) are not proof of a conditional
+    -- offer and must not exclude a presently eligible quest. Deny any bit
+    -- whose ordinary, non-eligibility meaning has not been corroborated,
+    -- including recurring (daily/weekly), unavailable, and auto-accept flags.
     local questFlags, questFlagsKnown = optionalNumber("questFlags")
-    if not questFlagsKnown or questFlags ~= 0 then return false, "conditional-quest-flags" end
+    if not questFlagsKnown then return false, "conditional-quest-flags" end
+    if questFlags < 0 or questFlags ~= math.floor(questFlags) then
+        return false, "conditional-quest-flags"
+    end
+    local remainingFlags = questFlags
+    for _, bit in ipairs({1, 2, 4, 8, 32, 64, 256, 512}) do
+        if math.floor(questFlags / bit) % 2 == 1 then
+            remainingFlags = remainingFlags - bit
+        end
+    end
+    if remainingFlags ~= 0 then return false, "conditional-quest-flags" end
     return true, "player-requirements-satisfied"
 end
 
