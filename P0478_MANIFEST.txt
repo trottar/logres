@@ -1,0 +1,32 @@
+P0478 L-035 restore qualified map-only NPC focus without false floor distance
+Verified baseline: 2c5de81351e59c33538e4246af2494a4ad9ce582
+Candidate runtime version: 0.0.345-dev
+PREWRITE: 340/340 STATIC PASS
+POSTWRITE: 340/340 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Navigation/Compass.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0478_MAP_ONLY_COMPASS_FOCUS.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0478_MAP_ONLY_COMPASS_FOCUS.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0376_reward_tooltip_near_compass_contract.py
+tools/check_p0476_npc_flash_near_markers_contract.py
+tools/check_p0477_vertical_npc_proof_contract.py
+tools/check_p0478_map_only_compass_contract.py
+tools/test_p0476_npc_near_center.lua
+tools/test_p0478_map_only_label.lua
+P0478_MANIFEST.txt

@@ -1,4 +1,5 @@
-# P0477: L-035 #16399 multi-floor false 2yd; live NPC proof gate.
+# P0478: L-035 map-only; P0477 FAIL.
+# P0477: #16399 2D false 2yd.
 # P0476: 3/4yd NPC snap visual FAIL; L-002 flash OPEN.
 # P0475: L-037 PARTIAL; P0474 PASS.
 # P0474: P0473 #16018 FAIL; options next.

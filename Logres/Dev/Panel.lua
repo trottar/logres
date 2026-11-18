@@ -436,7 +436,9 @@ function Logres:CaptureBugIncident()
     incident.snapshot.compassNearNPC = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("Compass"):GetDebugStatus()
     end), {"serviceNearCenteredCandidates", "serviceNearUnverifiedHidden",
-        "providerNearUnverifiedHidden", "dbServiceCandidateCount",
+        "providerNearUnverifiedHidden", "serviceNearMapOnlyCandidates",
+        "serviceNearMapOnlyShown", "providerNearMapOnlyCandidates",
+        "serviceNearMapFallbackShown", "dbServiceCandidateCount",
         "dbServiceCandidateShown", "poiCollisionHiddenCount",
         "focusedMarkerKind", "focusedMarkerDistanceYards"})
     incident.snapshot.questPresentation = pickTraceStatus(ownedTraceStatus(function()

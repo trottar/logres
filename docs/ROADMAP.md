@@ -1,3 +1,13 @@
+## P0478 — Correct P0477 projected-near NPC disappearance (2026-11-17)
+
+P0477 `2c5de81` pushed, Forever #16476–#16482 visual FAIL:
+P0477 unverified near NPCs withheld 0/0/1/3; final focus blank.
+Keep uncertain provider bearings as dim map-only candidates, no numeric
+floor claim, no unverified center snap. If none can focus, show generic
+floor-unknown information only. P0476 floor false-positive also FAIL.
+L-035 OPEN; live correction UNVERIFIED. L-002 flash independent OPEN.
+See P0478 evidence; then D-048 native AddOns settings.
+
 ## P0477 — L-035 projected NPC floor ambiguity (2026-11-17)
 
 P0476 `033fffd` verified; Forever 0.0.343-dev session158 #16399 has

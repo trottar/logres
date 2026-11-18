@@ -23,13 +23,16 @@ for token in ('local function ordinaryFocusedDistance(distance)',
               'local previousNearQuest = self.nearQuestCenterKeys or {}',
               'local nearQuestCenterKeys = {}',
               'local questLinked = role=="quest" or',
-              'local centered = questLinked and (distance<=3 or (wasNear and distance<4))',
+              'local centered = questLinked and not uncertainNearNPC',
+              'and (distance<=3 or (wasNear and distance<4))',
               'if centered then relative=0 end',
               'self.nearQuestCenterKeys = nearQuestCenterKeys',
               'reserveMarkerBearing(candidate.x, markerWidth, occupied)',
               'glyph:SetPoint("CENTER", self.frame, "CENTER", candidate.x, TAPE_Y)'):
     need(token in C,'source-safe near-center path missing: '+token)
-need('"~" .. tostring(math.floor(yards + 0.5))' not in C,'old approximation tilde retained')
+native_label = C[C.index('local function showFocusedMarkerLabel('):C.index('local function showProviderMapLabel(')]
+need('"~" .. tostring(math.floor(yards + 0.5))' not in native_label,
+     'accepted exact native quest label must not become approximate')
 need('if not cap or distance>cap then return end' in C,'zero-yard center path missing')
 
 # Real item metadata is plain, checked, and read-only. View never reaches native claim.

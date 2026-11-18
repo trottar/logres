@@ -11,13 +11,13 @@ E=read('docs/memory/evidence/P0476_NPC_FLASH_AND_NEAR_MARKERS.md')
 LEDGER=read('docs/memory/investigations/ISSUE_LEDGER.md')
 CURRENT=read('docs/memory/CURRENT.md')
 HANDOFF=read('docs/memory/handoffs/CURRENT_HANDOFF.md')
-for token in ('local centered = questLinked and (distance<=3 or (wasNear and distance<4))',
+for token in ('local centered = questLinked and not uncertainNearNPC',
     'local serviceNPC = role == "service"',
     'and not isSecret(row.npcID)',
     'type(row.npcID) == "number" and row.npcID > 0',
     'if serviceNPC and liveProof',
-    'if providerNPC and distance < 4 and not liveProof then',
-    'self.serviceNearUnverifiedHidden = self.serviceNearUnverifiedHidden + 1',
+    'local uncertainNearNPC = providerNPC and distance < 4 and not liveProof',
+    'self.serviceNearMapOnlyCandidates = self.serviceNearMapOnlyCandidates + 1',
     'if centered then nearQuestCenterKeys[nearKey] = true end',
     'self.serviceNearCenteredCandidates = self.serviceNearCenteredCandidates + 1',
     'serviceNearCenteredCandidates = self.serviceNearCenteredCandidates'):

@@ -1,3 +1,15 @@
+## P0478 — L-035 retain map-only NPC focus without false floor certainty (2026-11-17)
+
+P0477 `2c5de81` verified; Forever session159 #16476–#16482 shows
+unverified near NPC hide progression 0/0/1/3 and blank final focus.
+P0477 visual FAIL; P0476 #16399 false 2yd floor FAIL retained.
+Retain unverified 2D provider bearings as dim, qualified map-only;
+never 3/4yd snap without live proximity. Near names say floor unknown;
+when all projected bearings cannot focus, show generic non-directional
+floor-unknown caption. No false 3D yards; native quests unchanged.
+L-035 OPEN, client P0478 UNVERIFIED. L-002 popup still OPEN/unknown.
+See `docs/memory/evidence/P0478_MAP_ONLY_COMPASS_FOCUS.md`.
+
 ## P0477 — L-035 projected NPC floor ambiguity (2026-11-17)
 
 P0476 `033fffd` verified; Forever 0.0.343-dev session158 #16399 has

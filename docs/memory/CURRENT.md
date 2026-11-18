@@ -11,10 +11,11 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0477** P0476 `033fffd`: L-035 #16399 false 2yd NPC focus
-on another floor (3 centered 2D candidates); require live NPC proof
-or withhold projected near marker. Client UNVERIFIED. P0476 visual
-FAIL retained; L-002 popup owner UNKNOWN, diagnostics only.
+**P0478** P0477 `2c5de81`: L-035 #16476–16482
+P0477 near-NPC hide FAIL (0/0/1/3 withheld);
+P0476 #16399 floor false 2yd FAIL. Keep map-only
+bearings; live-only 3/4yd snap. WoW UNVERIFIED.
+L-002 popup UNKNOWN; no suppression.
 P0473 FAIL, P0474 PASS scoped; L-037 PARTIAL. Old issues dormant.
 Popup owner UNKNOWN; no new Blizzard suppression.
 Preserve world HP/aura/50-50, chat SHOW, quest/stock fallback.
@@ -65,8 +66,8 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 
 ## Next Action
 
-After P0477 push: verify same-floor and stacked-floor NPC markers;
-inspect hidden counter. L-002 flash if natural; then AddOns options.
+After P0478 push: test map-only NPC focus at stacked floors; inspect
+candidate/fallback counts. L-002 only if natural; then options.
 No runtime PASS from static/source tests.
 
 ## Success Criteria
