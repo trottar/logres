@@ -1,0 +1,32 @@
+P0479 L-031/L-035 restore compass visual contract and near-service stable bearing
+Verified baseline: 71c12adcfa32bc7d781d129a1fb9be43345084ab
+Candidate runtime version: 0.0.346-dev
+PREWRITE: 341/341 STATIC PASS
+POSTWRITE: 341/341 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Navigation/Compass.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0479_COMPASS_VISUAL_RECOVERY.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0479_COMPASS_VISUAL_RECOVERY.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0338_focused_compass_yards_contract.py
+tools/check_p0477_vertical_npc_proof_contract.py
+tools/check_p0478_map_only_compass_contract.py
+tools/check_p0479_compass_visual_recovery_contract.py
+tools/test_p0476_npc_near_center.lua
+tools/test_p0478_map_only_label.lua
+P0479_MANIFEST.txt

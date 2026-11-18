@@ -1,3 +1,15 @@
+## P0479 — Compass user-rejected approximation captions (2026-11-17)
+
+Baseline GitHub `main` P0478 `71c12ad` verified and exact tree
+reconstructed. User screenshot bundle #16561–#16569 rejects P0478
+approx tildes/floor captions/dimming; L-031/L-035 OPEN. Runtime scope
+only compass labels, planar-bearing continuity and read-only Report Bug;
+no stock UI mutation or native quest/auras changes. Candidate static,
+source fixtures, exact ZIP installer PREWRITE/POSTWRITE, refusal guards,
+rollback, manifest/staged bytes and `git diff --check` are release gates;
+WoW runtime UNVERIFIED. R0 full audit 339/341: checker-version pin and
+historical P0338 helper-count assertion refused; R1 only fixes checkers.
+
 ## P0478 — L-035 screenshot-film driven map-only focus recovery (2026-11-17)
 
 Verified P0477 GitHub main `2c5de81351e59c33538e4246af2494a4ad9ce582`, tree `a71fdca26a1f047101d9fbd55f82f0dcadb60fcf`; local exact reconstructed commit/tree match. Follow-up Forever 0.0.344-dev session159 screenshots #16476–#16482 show P0477 progressive near-NPC withholding and blank last focus. P0476 #16399 false floor-2yd is independent preceding FAIL; both retained in L-035. Code removes only P0477 early return, adds qualified map-only candidate/label/fallback/owned diagnostics, no native UI, nameplate, combat, or quest action changes. Actual-source Lua fixture covers angle, live-only snap, secret, map-only labels. Legacy P0476/P0477 static contracts adjusted to require corrected policy instead of a known failed invariant. **R0 full audit 339/340 PASS:** P0376 historical checker hard-pinned the original unguarded `local centered = questLinked and (...)` line, despite unchanged native quest snap semantics. R1 checker requires `questLinked and not uncertainNearNPC` with the unchanged 3/4-yard threshold and scopes the historic no-tilde assertion to the original native quest label (new provider map estimates are intentionally approximate). This is an assistant-side candidate contract failure, not a WoW runtime result. Full R1 audit and ZIP PREWRITE/POSTWRITE/refusal/rollback/staged parity required; client P0478 UNVERIFIED.

@@ -1,4 +1,5 @@
-# P0478: L-035 map-only; P0477 FAIL.
+# P0479: L-035 P0478 VISUAL FAIL; restore no-tilde compass.
+# P0478: map-only/caption rejected; P0477 hide FAIL.
 # P0477: #16399 2D false 2yd.
 # P0476: 3/4yd NPC snap visual FAIL; L-002 flash OPEN.
 # P0475: L-037 PARTIAL; P0474 PASS.
@@ -57,8 +58,8 @@ P0409/P0408/P0407/P0406/P0405/P0404 PASS, P0403 L-001, P0402;
 P0401 PASS, P0400/P0399 FAIL; P0396–P0392 merchant; P0391 trainer;
 P0390, P0389, P0388 L-027, P0387, P0384 `c1c77e2` 254 STATIC;
 P0383 `cc783a0` quest18 PASS scoped; P0382 Continue; L-040:**
-P0379 `285be528` 249 STATIC; #2399 no input dispatch; L-005
-FAIL/PARTIAL, L-002 Continue native OPEN; L-039 UNKNOWN.
+P0379 `285be528` 249 STATIC; #2399 no input dispatch;
+L-005 PARTIAL, L-002 native OPEN; L-039 UNKNOWN.
 P0381 R0 PREWRITE REFUSED P0241 (77/251) on protected quest handoff;
 P0380 R0–R4 history retained; P0379 R0, P0379 R1 PREWRITE REFUSED;
 no writes. See CURRENT/P0379 evidence for precise negative results.
@@ -82,7 +83,7 @@ P0359 `6ec4b5a` 230/230 STATIC, WoW UNVERIFIED. Read-only D-026 TargetFrame chec
 
 # P0359 — D-026 PlayerFrame diagnostic seam; CURRENT.md authoritative
 
-P0359 moved only read-only PlayerFrame diagnostics to the controller; native/secure behavior unchanged. Baseline P0358 R1 229 STATIC, client UNVERIFIED. P0321 gate, L-019 and L-022/L-027/L-028/L-031 unresolved; full history in evidence.
+P0359 moved read-only PlayerFrame diagnostics; native unchanged. P0358 R1 229 STATIC, WoW UNVERIFIED; P0321 gate, L-019/L-022/L-027/L-028/L-031 unresolved; see evidence.
 
 # P0358 — D.3 Quiet Mode diagnostic; CURRENT.md authoritative
 

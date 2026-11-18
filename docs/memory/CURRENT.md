@@ -11,10 +11,10 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0478** P0477 `2c5de81`: L-035 #16476–16482
-P0477 near-NPC hide FAIL (0/0/1/3 withheld);
-P0476 #16399 floor false 2yd FAIL. Keep map-only
-bearings; live-only 3/4yd snap. WoW UNVERIFIED.
+**P0479** P0478 `71c12ad`: L-035 VISUAL FAIL;
+#16561–#16569 tildes/floor text rejected. Restore
+compass style/bearing (WoW UNVERIFIED).
+P0477 hide FAIL; P0476 #16399 2yd false floor FAIL.
 L-002 popup UNKNOWN; no suppression.
 P0473 FAIL, P0474 PASS scoped; L-037 PARTIAL. Old issues dormant.
 Popup owner UNKNOWN; no new Blizzard suppression.
@@ -66,8 +66,8 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 
 ## Next Action
 
-After P0478 push: test map-only NPC focus at stacked floors; inspect
-candidate/fallback counts. L-002 only if natural; then options.
+After P0479 push: verify no-tilde NPC labels and stable near
+bearing on multi-floor site; L-035 OPEN, L-002 incidental.
 No runtime PASS from static/source tests.
 
 ## Success Criteria

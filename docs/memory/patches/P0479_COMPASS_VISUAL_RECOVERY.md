@@ -1,0 +1,3 @@
+# P0479 — Restore accepted compass typography and stabilized uncertain bearing
+
+P0478 committed `71c12ad` but rejected by in-client user at Forever #16561–#16569: `~` labels/floor-unknown captions and dimming violated accepted compass style, and navigation was not fixed. Source-level remedy removes those strings and generic fallback, preserves known identity/role, verified center only, and holds last ordinary map bearing inside 4yd for unverified service NPCs. No 3D floor claim, no other UI changes. Live validation pending. See `docs/memory/evidence/P0479_COMPASS_VISUAL_RECOVERY.md`. L-031 label regression and L-035 remain OPEN until tested; P0476/P0477/P0478 negative evidence preserved.

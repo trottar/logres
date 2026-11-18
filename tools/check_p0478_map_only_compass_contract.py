@@ -14,12 +14,9 @@ for tok in ('local uncertainNearNPC = providerNPC and distance < 4 and not liveP
             'mapOnly=providerNPC, liveProof=liveProof, uncertainNear=uncertainNearNPC',
             'self.providerNearMapOnlyCandidates = self.providerNearMapOnlyCandidates + 1',
             'self.serviceNearMapOnlyCandidates = self.serviceNearMapOnlyCandidates + 1',
-            'elseif uncertainNearServiceCandidates > 0 then',
-            'self.focusedMarkerKind = "service-map-only"',
             'self.focusedMarkerDistanceAvailable = false',
             'showProviderMapLabel(self.availableQuestPoiFocus,',
-            '"near on map (floor unknown)"',
-            '"Services at map location - floor unknown"',
+            'label:SetText(name)',
             'serviceNearMapOnlyShown = self.serviceNearMapOnlyShown',
             'serviceNearMapFallbackShown = self.serviceNearMapFallbackShown == true'):
     assert tok in C,tok
@@ -29,7 +26,7 @@ assert 'self.serviceNearUnverifiedHidden = self.serviceNearUnverifiedHidden + 1'
 for tok in ('"serviceNearMapOnlyCandidates"','"serviceNearMapOnlyShown"',
             '"serviceNearMapFallbackShown"'):
     assert tok in D,tok
-assert H.startswith('# P0478:') and '# P0477:' in H
+assert H.startswith('# P0479:') and '# P0478:' in H and '# P0477:' in H
 assert '16476' in E and '16482' in E and 'P0477' in E
 assert '| L-035 |' in I and 'P0477' in I and 'P0478' in I
 for forb in ('UnitPosition(', 'ClosestUnitPosition(', 'C_Timer.', 'HideUIPanel('):

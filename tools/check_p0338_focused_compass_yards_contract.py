@@ -58,8 +58,8 @@ for item in ('isSecret(distance)', 'type(distance) ~= "number"','distance ~= dis
              'label:SetText(name .. " - " .. text)', 'label:SetAlpha(fade * fade)',
              'label:Show()', 'return yards'):
     need(item in helper,'missing focused distance guard/renderer: '+item)
-need(C.count('showFocusedMarkerLabel(')==3,
-     'the same helper must serve one definition, live focus and art preview')
+need(C.count('showFocusedMarkerLabel(')==4,
+     'the same helper must serve definition, live focus, art preview and provider reuse')
 preview=C[C.index('function Compass:UpdateArtworkPreview()'):C.index('function Compass:ClearAvailableQuestPOIs')]
 # Role fixtures live in OnInitialize, not UpdateArtworkPreview. R0's
 # incorrectly sliced assertion caused the eighth PREWRITE refusal despite

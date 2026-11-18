@@ -1,3 +1,4 @@
+| P0479 | 2026-11-17 | PREPARED — P0478 VISUAL FAIL, WoW UNVERIFIED | Restore no-tilde/service-name compass; remove generic floor caption/dimming, hold last ordinary bearing <4yd without false 3D claim; L-031/L-035 OPEN. |
 | P0478 | 2026-11-17 | PREPARED — L-035 P0477 floor-aware map-only recovery, WoW UNVERIFIED | P0477 `2c5de81` verified, #16476–#16482 prior visual FAIL (near candidate 0/0/1/3 withheld); map-only qualified bearings, fallback caption, no new native UI suppression; P0476 2yd false positive retained. |
 ## P0477 — L-035 projected NPC floor ambiguity (2026-11-17)
 

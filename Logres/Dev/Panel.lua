@@ -438,7 +438,7 @@ function Logres:CaptureBugIncident()
     end), {"serviceNearCenteredCandidates", "serviceNearUnverifiedHidden",
         "providerNearUnverifiedHidden", "serviceNearMapOnlyCandidates",
         "serviceNearMapOnlyShown", "providerNearMapOnlyCandidates",
-        "serviceNearMapFallbackShown", "dbServiceCandidateCount",
+        "serviceNearMapFallbackShown", "serviceNearBearingHeld", "dbServiceCandidateCount",
         "dbServiceCandidateShown", "poiCollisionHiddenCount",
         "focusedMarkerKind", "focusedMarkerDistanceYards"})
     incident.snapshot.questPresentation = pickTraceStatus(ownedTraceStatus(function()

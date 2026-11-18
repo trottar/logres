@@ -195,27 +195,18 @@ local function showFocusedMarkerLabel(label, name, distance, magnitude)
     return yards
 end
 
--- P0478: provider coordinates give planar map separation, not a measured
--- three-dimensional NPC distance. Keep explicit uncertainty in the caption.
--- A fallback can report map-level activity but never assert a particular
--- NPC's bearing, floor or distance when none can be verified.
+-- Provider coordinates are horizontal-only. Keep the accepted label style;
+-- withhold an unproven point-blank yard number rather than changing the
+-- entire compass vocabulary or appending an approximation prefix.
 local function showProviderMapLabel(label, name, distance, magnitude, liveProof)
     local yards = ordinaryFocusedDistance(distance)
-    local description
-    if liveProof then
-        description = yards and ("~" .. tostring(math.floor(yards + 0.5)) .. " yd on map")
-            or "map distance unavailable"
-    elseif yards and yards < 4 then
-        description = "near on map (floor unknown)"
-    else
-        description = yards and ("~" .. tostring(math.floor(yards + 0.5))
-            .. " yd on map (floor unknown)") or "map position (floor unknown)"
+    if liveProof or (yards and yards >= 4) then
+        return showFocusedMarkerLabel(label, name, yards, magnitude)
     end
-    label:SetText(name .. " - " .. description)
+    label:SetText(name)
     local fade = 1 - math.min(8, math.abs(magnitude)) / 8
     label:SetAlpha(fade * fade)
     label:Show()
-    -- This is not a verified 3D distance, even with live range evidence.
     return nil
 end
 
@@ -407,6 +398,9 @@ local Compass = Logres:RegisterModule("Compass", {
         self.serviceNearMapOnlyShown = 0
         self.providerNearMapOnlyCandidates = 0
         self.serviceNearMapFallbackShown = false
+        self.serviceNearBearings = {}
+        self.serviceBearingMapID = nil
+        self.serviceNearBearingHeld = 0
         self.availableQuestPoiReason = "initialize"
         self.focusedMarkerKind = nil
         self.focusedMarkerDistanceAvailable = false
@@ -635,6 +629,8 @@ local Compass = Logres:RegisterModule("Compass", {
         self.artworkPreview = false
         self:ClearWaypointPresentation("module-disabled")
         self:ClearPresentation("module-disabled")
+        self.serviceNearBearings = {}
+        self.serviceBearingMapID = nil
     end,
 })
 
@@ -679,6 +675,7 @@ function Compass:ClearAvailableQuestPOIs(reason)
     self.serviceNearMapOnlyShown = 0
     self.providerNearMapOnlyCandidates = 0
     self.serviceNearMapFallbackShown = false
+    self.serviceNearBearingHeld = 0
     self.availableQuestPoiReason = reason or "source-unavailable"
     self.dbNearbyStatus = "unavailable"
     self.dbNearbyCount = 0
@@ -771,6 +768,12 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     end
     local previousNearQuest = self.nearQuestCenterKeys or {}
     local nearQuestCenterKeys = {}
+    -- Hold only an already-observed provider world bearing inside the
+    -- unreliable 4-yard planar radius, never a live unit token or elevation.
+    local priorServiceBearings = self.serviceBearingMapID == mapID
+        and (self.serviceNearBearings or {}) or {}
+    local nextServiceBearings = {}
+    self.serviceNearBearingHeld = 0
     -- Read only ordinary, live unit identity/range; no retained unit tokens.
     local nearbyLiveNPCIDs = readNearbyNPCIDs()
     self.serviceNearCenteredCandidates = 0
@@ -781,7 +784,6 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     self.providerNearMapOnlyCandidates = 0
     self.serviceNearMapFallbackShown = false
     local seenQuest={}
-    local uncertainNearServiceCandidates = 0
     local function add(row,role,key)
         if type(row)~="table" then return end
         local dx,dy
@@ -821,7 +823,6 @@ function Compass:RefreshAvailableQuestPOIs(reason)
             self.providerNearMapOnlyCandidates = self.providerNearMapOnlyCandidates + 1
             if serviceNPC then
                 self.serviceNearMapOnlyCandidates = self.serviceNearMapOnlyCandidates + 1
-                uncertainNearServiceCandidates = uncertainNearServiceCandidates + 1
             end
         end
         local centered = questLinked and not uncertainNearNPC
@@ -833,6 +834,14 @@ function Compass:RefreshAvailableQuestPOIs(reason)
         end
         if centered then nearQuestCenterKeys[nearKey] = true end
         local bearing=(math.deg(math.atan2(dx,-dy))+360)%360
+        if serviceNPC and uncertainNearNPC then
+            local held = priorServiceBearings[nearKey]
+            if type(held) == "number" and held >= 0 and held < 360 then
+                bearing = held
+                self.serviceNearBearingHeld = self.serviceNearBearingHeld + 1
+            end
+            nextServiceBearings[nearKey] = bearing
+        end
         local relative=normalizeRelativeDegrees(bearing-self.headingDegrees)
         if centered then relative=0 end
         local magnitude=math.abs(relative)
@@ -924,8 +933,10 @@ function Compass:RefreshAvailableQuestPOIs(reason)
             end
         end
     end
-    -- Replace, do not accumulate, per-refresh near-center history.
+    -- Replace, do not accumulate, per-refresh near-center/bearing history.
     self.nearQuestCenterKeys = nearQuestCenterKeys
+    self.serviceNearBearings = nextServiceBearings
+    self.serviceBearingMapID = mapID
     local function nearestFirst(a,b)
         if a.potential ~= b.potential then return b.potential == true end
         if a.distance==b.distance then return a.sortKey < b.sortKey end
@@ -991,8 +1002,7 @@ function Compass:RefreshAvailableQuestPOIs(reason)
                 end
                 glyph:SetAlpha((roleStyle.alpha or 0.90)
                     * edgeFadeForMagnitude(candidate.magnitude)
-                    * (candidate.potential and 0.55 or 1)
-                    * (candidate.uncertainNear and 0.65 or 1))
+                    * (candidate.potential and 0.55 or 1))
                 glyph:Show()
                 if role=="quest" then self.questDestinationShown=self.questDestinationShown+1
                 elseif role=="tracking" then self.trackingShown=self.trackingShown+1
@@ -1042,17 +1052,6 @@ function Compass:RefreshAvailableQuestPOIs(reason)
         self.focusedMarkerKind = closestFocus.kind
         self.focusedMarkerDistanceAvailable = focusedYards ~= nil
         self.focusedMarkerDistanceYards = focusedYards
-    elseif uncertainNearServiceCandidates > 0 then
-        -- Non-directional fallback when every uncertain NPC bearing is behind
-        -- the player or clipped by collision/declutter. Never focus one NPC
-        -- arbitrarily or call its projected distance the true distance.
-        self.availableQuestPoiFocus:SetText("Services at map location - floor unknown")
-        self.availableQuestPoiFocus:SetAlpha(0.65)
-        self.availableQuestPoiFocus:Show()
-        self.serviceNearMapFallbackShown = true
-        self.focusedMarkerKind = "service-map-only"
-        self.focusedMarkerDistanceAvailable = false
-        self.focusedMarkerDistanceYards = nil
     end
 end
 
@@ -1689,6 +1688,7 @@ function Compass:GetDebugStatus()
         serviceNearMapOnlyShown = self.serviceNearMapOnlyShown,
         providerNearMapOnlyCandidates = self.providerNearMapOnlyCandidates,
         serviceNearMapFallbackShown = self.serviceNearMapFallbackShown == true,
+        serviceNearBearingHeld = self.serviceNearBearingHeld,
         availableQuestPoiReason = self.availableQuestPoiReason,
         dbNearbyStatus = self.dbNearbyStatus,
         dbNearbyCount = self.dbNearbyCount,

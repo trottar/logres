@@ -1,3 +1,13 @@
+## P0479 — Restore compass visual contract after P0478 user FAIL (2026-11-17)
+
+P0478 `71c12ad` verified, client 0.0.345-dev #16561–#16569 VISUAL FAIL:
+unrequested tildes / floor-unknown captions, dimming, ineffective navigation.
+Restore existing identity/role/yards style; never invent <4yd provider distance
+without live proof. Keep ordinary service bearing (hold last direction inside
+4yd, keyed/map-scoped) without false centering, generic label or floor claim.
+L-031/L-035 OPEN; P0479 runtime UNVERIFIED. L-002 popup still OPEN.
+See `docs/memory/evidence/P0479_COMPASS_VISUAL_RECOVERY.md`.
+
 ## P0478 — Correct P0477 projected-near NPC disappearance (2026-11-17)
 
 P0477 `2c5de81` pushed, Forever #16476–#16482 visual FAIL:

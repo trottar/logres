@@ -19,6 +19,7 @@ local VISIBLE_HALF_ANGLE = 90
 math.atan2 = math.atan2 or function(y,x) return math.atan(y,x) end
 local chunk = "return function(self, row, role, prior)\n" .. [[
     local source = {mapWidth=100, mapHeight=100}
+    local mapID=1
     local px,py = 0,0
     local radius = 50
     local localPOIs,majorQuests,tracked,services={},{},{},{}
@@ -31,7 +32,8 @@ local chunk = "return function(self, row, role, prior)\n" .. [[
     return visible,nearQuestCenterKeys,self.serviceNearCenteredCandidates,
            #localPOIs,#services,self.serviceNearUnverifiedHidden,
            self.providerNearUnverifiedHidden,self.serviceNearMapOnlyCandidates,
-           services[1],self.providerNearMapOnlyCandidates
+           services[1],self.providerNearMapOnlyCandidates,
+           self.serviceNearBearingHeld
 end
 ]]
 local runner, err = load(chunk, "P0476_compass_actual_source", "t", {
@@ -71,6 +73,15 @@ assert(found==true and count==0 and services==1 and mapOnlyCount==1
     "unverified forward NPC retains a qualified bearing but must never sticky-snap")
 found, cache, count = service(3.5, nil, 17)
 assert(found==nil and count==0,"3-4yd must not center without live proof")
+local priorBearing = { ["service:service17"] = 0 }
+local heldFound, _, centeredCount, _, _, _, _, _, heldCandidate, _, held =
+    addActual({serviceBearingMapID=1, serviceNearBearings=priorBearing},
+        {potential=true, dxYards=0, dyYards=2, npcID=17,
+         serviceKind="vendor", name="Vendor"}, "service", nil)
+assert(heldFound==true and centeredCount==0 and held==1
+    and heldCandidate.magnitude==0 and heldCandidate.x==0,
+    "unverified near service must hold last ordinary bearing, never snap")
+
 found, cache, count = service(2, nil, nil)
 assert(found==nil and count==0,"unknown service identity is not eligible")
 found, cache, count = service(2, nil, "SECRET")
