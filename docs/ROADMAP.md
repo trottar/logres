@@ -26,6 +26,25 @@ improvement PARTIAL and L-002 OPEN; P0483–P0485 negative history kept.
 No runtime code/version change; no WoW redeploy required.
 Evidence: `docs/memory/evidence/P0487_QUEST_MARKER_RUNTIME_PASS.md`.
 
+## P0488 — L-054 restore Logres player buffs on restriction release (2026-11-18)
+
+P0487 main `8d2c525` verified. Forever session172 0.0.353-dev
+#17676 Logres player buffs root hidden/0 icons after 40 secret skips,
+combat=false following ADDON_RESTRICTION_STATE_CHANGED; #17678
+rebuff causes six Logres icons/zero secret skips. PlayerHelpfulAuras
+previously listened only to UNIT_AURA/world-entry, so after a combat
+restricted scan it could remain hidden until a later unrelated aura event.
+P0488 triggers one out-of-combat refresh on the observed restriction
+transition, then reconciles addon-owned coverage with the native BuffFrame
+owner. Incomplete scans and explicit stock access remain fail-open; no
+Blizzard presentation read, polling, timer or reassertion. Actual-source
+fixture PASS is not client PASS; L-054 OPEN.
+Same export shows NPC261 quest37 marker/eligibility #17718–#17727,
+quest37 accepted #17747, quest52 accepted #17759, and one
+already-active/complete candidate excluded #17760. L-030 PARTIAL;
+second scoped positive, broader false-positive coverage unproven.
+See `docs/memory/evidence/P0488_PLAYER_BUFF_RESTRICTION_RECOVERY.md`.
+
 ## P0485 — Correct missing optional QuestieDB fields and Report Bug eligibility detail (2026-11-18)
 
 P0484 main `3277132` verified/tree `8254cac`; Forever session168

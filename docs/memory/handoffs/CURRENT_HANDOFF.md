@@ -1,4 +1,7 @@
-# P0486: q35 scoped PASS; P0487 docs.
+# P0486: q35 scoped PASS; P0487 docs verified.
+# P0488: L-054 post-combat buff secret40/root0, rebuff six.
+# Release-event rescan/native reconciliation, WoW UNVERIFIED.
+# L-030 NPC261/q37 PASS scoped; false positives OPEN.
 # P0487: quest35 PASS; L-030 PARTIAL.
 # P0485: sparse DB fields; client FAIL.
 # P0484: quest35 FAIL.
@@ -17,7 +20,7 @@
 # P0465: Sheet04 accepted.
 # P0464: per-unit transaction retained.
 
-# P0463: `b849955` session 134 #13743/#13745/#13748 regression.
+# P0463: #13743/#13745/#13748 regression.
 Unprotected native aura layout; cached plate replay/prebuilt ON;
 tracker secure OOC gate + safe refold. P0460 HP retained; client UNVERIFIED.
 
@@ -28,12 +31,10 @@ Native tracker visible #13745; actual NPC QuestFrame not shown.
 Native nameplate aura fallback VISUAL FAIL in #13659; keep selected/
 secondary geometry and identity. P0449 icons PASS, P0450 duplicate FAIL.
 
-# P0460: P0459 verified. #13499 VISUAL FAIL: selected 4/4
-and secondary 3/3 restores, last selected `unknown-attached-unit`.
-P0459 target-query owner lost nameplate identity, so any other REMOVE
-hid selected. P0460 caches ADD epochs; ignores unrelated REMOVE; restores
-matching/unknown/unsafe/reused/OFF owners. Selected 100%, 50% hostile secondary,
-native cast/aura/click unchanged. L-011/L-028 OPEN; WoW UNVERIFIED.
+# P0460: #13499 selected 4/4, secondary 3/3 restored;
+P0459 unknown owner removed selected. P0460 ADD-epoch identity
+preservation; selected100%, hostile secondary50% native fallback.
+L-011/L-028 OPEN; WoW UNVERIFIED.
 
 # P0459: P0458 #13250 VISUAL FAIL on threat 0/1; P0459 skins
 hostile nonselected independent of threat. #13499 regression P0460.

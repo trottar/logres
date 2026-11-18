@@ -19,6 +19,34 @@ without changing runtime behavior. Frozen source complete audit
 348/348 PASS, actual-source P0486/P0485 fixture PASS, syntax parity PASS.
 Await transactional package suite; Forever remains UNVERIFIED.
 
+## P0488 — restriction-release buff recovery audit (2026-11-18)
+
+Verified P0487 main `8d2c525b93bb2542591a5fe43a4e85b97231d6d5`,
+tree `7739657ba0236c079790101da622a40a096c69b1`, reconstructed
+byte-for-byte from verified P0481 baseline plus P0482–P0487 final
+payloads and manifests; local `git write-tree` exactly matches remote.
+Read ledger L-051/L-052 and created L-054, session172 #17676/#17678
+screen captures and owned incident fields before change. Failure is
+post-restriction no UNIT_AURA source refresh after 40 secret skips;
+ordinary rebuff restores six icons. P0488 adds only an event-based
+out-of-combat source refresh followed by existing stock BUFFS-owner
+reconciliation. No silent forced stock hiding or coverage claim when
+secret/incomplete; no timers or broad hooks. Actual-source secret-first
+fixture includes held restricted, completed refresh, native event order,
+manual stock access and no rebuff cases. Previous P0468 and
+P0137 secret/native presentation contracts remain unchanged.
+
+All historical static checkers plus P0488, Lua source fixture, syntax,
+exact file diff, packaged candidate PREWRITE/POSTWRITE, SHA,
+wrong baseline/dirty tree/tamper/collision refusal and injected-failure
+rollback are release gates. No in-client validation yet: L-054 OPEN.
+
+First full suite execution windows stopped at 50 and 75 checks due to
+execution limits, not a checker failure. Resumable candidate audit
+completed **349/349 STATIC PASS**. P0488/P0468 actual-source Lua
+fixtures, memory-health, version policy and diff hygiene PASS. No
+client claim; transactional ZIP tests remain a release gate.
+
 ## P0487 — P0486 Forever scoped PASS, docs-only pre-handoff audit (2026-11-18)
 
 Confirmed GitHub `main` P0486 `2c425251821ea983a033eb6cbf2d4b399eace500`

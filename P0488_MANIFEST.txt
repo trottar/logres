@@ -1,0 +1,27 @@
+P0488 Recover player buffs after restriction release without rebuff
+Verified baseline: 8d2c525b93bb2542591a5fe43a4e85b97231d6d5
+Candidate runtime version: 0.0.354-dev
+PREWRITE: 349/349 STATIC PASS
+POSTWRITE: 349/349 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/HUD/PlayerHelpfulAuras.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0488_PLAYER_BUFF_RESTRICTION_RECOVERY.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0488_player_buff_recovery_contract.py
+tools/test_p0488_player_buff_recovery.lua
+P0488_MANIFEST.txt

@@ -1,3 +1,15 @@
+## P0488 — L-054 player buff release recovery; L-030 second quest success (2026-11-18)
+
+Verified P0487 `8d2c525`; Forever 0.0.353-dev session172 #17676
+40 secret skips/player buffs root hidden after combat release;
+#17678 root restored with six ordinary icons after rebuff. P0488
+refreshes only on ADDON_RESTRICTION_STATE_CHANGED out of combat, then
+reconciles the existing native BUFFS owner; incomplete scans preserve
+stock fallback. Actual-source tests are not client PASS; L-054 OPEN.
+Same session #17718–#17727 NPC261 quest37 visible/qualified; #17760
+active/completed candidate excluded. L-030 second scoped PASS, remains
+PARTIAL for broader false positives. See P0488 evidence.
+
 ## P0453 basic/detailed threat source isolation (2026-11-11)
 
 P0452 main `e96506e`, Forever #12124 P0451: 14 threat samples,
@@ -222,3 +234,4 @@ Verified P0401 main bcb7353. Forever incident 6641 confirms the readable flight 
 
 | L-052 | Player buff expansion overlaps action buttons | OPEN | P0468 user image 884d80a4 shows wrapped player buffs descending into right action grid. P0469 makes only PlayerHelpfulAuras row stride positive, preserving first-row LEFT anchor and capacity. | Source fixture PASS required; client upward growth/overlap UNVERIFIED. L-051 coverage remains separate. | docs/memory/evidence/P0469_PANEL_CHAT_ACCESS.md |
 | L-053 | Status Aura Preview displays orphan target lanes with screen frame OFF | OPEN | User image 3ddeb721 on0.0.336-dev shows synthetic target aura groups while screen frame disabled. P0469 empties only synthetic target rows when explicit screenSpaceEnemyFrameEnabled=false. | Preview policy/source fixture required; live/native/world aura fallback unchanged; client UNVERIFIED. | docs/memory/evidence/P0469_PANEL_CHAT_ACCESS.md |
+| L-054 | Player buffs remain in stock Blizzard presentation after combat-restricted secret snapshot until rebuff | OPEN | Forever session172 P0487/P0486 runtime0.0.353-dev #17676: rootHidden/0 visible/40 secret skips despite combat=false, stock-looking screenshot; #17678 rebuff restored Logres 6 icons/0 secrets. Journal #17675 leaves combat via ADDON_RESTRICTION_STATE_CHANGED, PlayerHelpfulAuras lacked restriction-release refresh. P0488 event-driven rescan + native owner reconciliation candidate, no polling/secret reads. | Source test coverage is not WoW PASS; stock fallback required during unknown/secret data. Test ordinary combat release without rebuff and manual BUFFS, no new user combat contrivance. | docs/memory/evidence/P0488_PLAYER_BUFF_RESTRICTION_RECOVERY.md |

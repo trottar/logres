@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-11-16
+as_of: 2026-11-18
 project: logres
 ---
 
@@ -11,9 +11,10 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0486** main `2c42525`, Forever #17450–#17482:
-quest35 marker1/eligible1/native0, user PASS scoped.
-**P0487** docs-only; L-030 PARTIAL, false-positive variants open.
+**P0486** quest35 scoped PASS; **P0487** docs PASS.
+**P0488** L-054: post-combat buffs secret40/root0 #17676;
+rebuff restores6 #17678; restriction-release refresh UNVERIFIED.
+L-030 second NPC261 quest37 PASS scoped; false positives open.
 **P0485** FAIL retained.
 **P0484** FAIL; **P0483** turn PARTIAL; **P0482** est2/3/native3/4.
 P0476 floor, P0477 hide, P0478 VISUAL FAIL,
@@ -49,14 +50,14 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 
 - P0370 240 STATIC no-pet PASS; P0367, P0357 P0358 P0359; historic checks remain. L-001/L-002/L-005 FAIL.
 - P0352 223, P0351 222, P0350 221 STATIC; client UNVERIFIED.
-- P0349 R1 `4e59c8f2f03daf30b630fb15e3e14d5f38cc8da6` 220/220 STATIC; R0 REFUSED, WoW UNVERIFIED.
-- P0348 `4b7481d731d5f90e214b285bc7cce16ec826176f` 219/219 STATIC; D-048 model OFFLINE ONLY.
+- P0349 R1 220 STATIC; R0 REFUSED, WoW UNVERIFIED.
+- P0348 219 STATIC; D-048 model OFFLINE ONLY.
 - P0347 R1 `b94beb47` 218 STATIC; R0 REFUSED, WoW UNVERIFIED.
 - P0346 `26370095` 217 STATIC; WoW UNVERIFIED.
 - P0345 `626b220` 216/216 STATIC; target aura client UNVERIFIED.
 - P0344 `e44f66ba` 215/215 STATIC; L-027 owner UNVERIFIED.
 - P0343 R1 `ef4d9604` 214/214 STATIC; R0 REFUSED before writes, L-022 OPEN.
-- P0342 R2 `be3be5e80cf65cf1bf6d261b84b573f1f1effca2` 213/213 STATIC; R0/R1 PREWRITE REFUSED; L-028 OPEN.
+- P0342 R2 213 STATIC; R0/R1 PREWRITE REFUSED; L-028 OPEN.
 - P0341 R1 `fb3b2658` 212/212 STATIC; R0 historical-version checker REFUSED before writes; WoW UNVERIFIED.
 - P0338 R1 `342cab97` 209/209; P0337 R1 `cfdc07af` 208/208. PREWRITE failures recorded; L-031 remains deferred.
 - P0340 prefreeze; P0336/P0335/P0334 R3/P0333/P0332/P0331/P0330/P0329: 207–200 STATIC. See PATCH_INDEX.
@@ -64,11 +65,11 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 - D-048 independent live domain selectors and saved migration do not exist: schema 3 still stores `immersionEnabled` and `activeQuestEnabled`. D-046 preview-first and D-047 frozen Camera/DynamicCam remain required. Native UI and protected/secret fallbacks stay usable.
 - L-020–L-032 are tracked user reports; runtime gates apply. L-028 duplicated/missing target debuffs remains OPEN; L-022 focused quest artifact requires screenshot, L-027 Blizzard transient popup requires `/fstack` owner evidence. L-019 license unresolved, release blocked.
 
-- Historical markers retained for continuity; status/evidence in PATCH_INDEX and ISSUE_LEDGER: P0368, P0369, P0426, P0427, L-004, L-021, L-025, L-029, L-033, L-034, L-035, L-037, L-038, L-039, L-040, P0241, P0373, P0374, P0376, P0380, P0382, P0387, P0388, P0389, P0390, P0391–P0397, P0402, P0405–P0408, P0410, P0411, P0413–P0415.
+- History retained in PATCH_INDEX/ISSUE_LEDGER: P0368, P0369, P0426, P0427, L-004, L-021, L-025, L-029, L-033, L-034, L-035, L-037, L-038, L-039, L-040, P0241, P0373, P0374, P0376, P0380, P0382, P0387, P0388, P0389, P0390, P0391–P0397, P0402, P0405–P0408, P0410, P0411, P0413–P0415.
 
 ## Next Action
 
-Test L-030 other quest NPCs/future/completed. P0486 q35 PASS;
+P0488 L-054 post-combat recovery; L-030 false-positive quests.
 L-035/L-002 OPEN. Previous failures retained.
 
 ## Success Criteria
@@ -80,6 +81,7 @@ Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret re
 
 ## Relevant References
 - docs/memory/evidence/P0487_QUEST_MARKER_RUNTIME_PASS.md
+- docs/memory/evidence/P0488_PLAYER_BUFF_RESTRICTION_RECOVERY.md
 - docs/memory/evidence/P0486_INFORMATIONAL_QUEST_FLAGS.md
 - docs/memory/evidence/P0485_SPARSE_QUEST_ELIGIBILITY.md
 - docs/memory/evidence/P0484_QUEST_ELIGIBILITY_FALLBACK.md

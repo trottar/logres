@@ -286,7 +286,11 @@ function Logres:CaptureBugIncident()
         "nativeScreenTargetEnabled", "nativeScreenTargetPending", "targetShown", "targetHelpfulShown", "targetHarmfulShown"})
     incident.snapshot.playerHelpful = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("PlayerHelpfulAuras"):GetDebugStatus()
-    end), {"rootShown", "visibleCount", "lastPresentationReason", "secretSkipCount"})
+    end), {"rootShown", "visibleCount", "lastPresentationReason", "secretSkipCount",
+        "coverageReady", "lastRefreshReason", "restrictionRegistered",
+        "restrictionRecoveryCount", "restrictionReconcileCount",
+        "restrictionReconcileFailures", "restrictionRecoveryLastReason",
+        "restrictionRecoveryLastCoverage"})
     -- P0379: snapshot Logres-owned button input chain and geometry only.
     incident.snapshot.completionInput = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("QuestDialogue"):GetDebugStatus().completionInput

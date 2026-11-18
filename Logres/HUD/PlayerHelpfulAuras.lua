@@ -445,6 +445,13 @@ function HelpfulAuras:GetDebugStatus()
             self.unitAuraRegistered == true,
         worldRegistered =
             self.worldRegistered == true,
+        restrictionRegistered = self.restrictionRegistered == true,
+        restrictionRecoveryCount = self.restrictionRecoveryCount or 0,
+        restrictionReconcileCount = self.restrictionReconcileCount or 0,
+        restrictionReconcileFailures = self.restrictionReconcileFailures or 0,
+        restrictionRecoveryLastReason = self.restrictionRecoveryLastReason,
+        restrictionRecoveryLastCoverage =
+            self.restrictionRecoveryLastCoverage == true,
         refreshCount =
             self.refreshCount or 0,
         previewCount =
@@ -484,6 +491,11 @@ function HelpfulAuras:OnInitialize()
     self.previewCount = 0
     self.unitAuraEvents = 0
     self.worldEvents = 0
+    self.restrictionRecoveryCount = 0
+    self.restrictionReconcileCount = 0
+    self.restrictionReconcileFailures = 0
+    self.restrictionRecoveryLastReason = "not-observed"
+    self.restrictionRecoveryLastCoverage = false
     self.lastSecretSkipCount = 0
     self.lastSecretFieldCount = 0
     self.lastFailureCount = 0
@@ -673,9 +685,57 @@ function HelpfulAuras:OnInitialize()
         eventFrame,
         "PLAYER_ENTERING_WORLD"
     )
+    -- Same native restriction transition already observed by Logres State.
+    -- Event-driven recovery only: no timers, polling or OnUpdate hooks.
+    self.restrictionRegistered = pcall(
+        eventFrame.RegisterEvent,
+        eventFrame,
+        "ADDON_RESTRICTION_STATE_CHANGED"
+    )
 
     eventFrame:SetScript("OnEvent", function(_, event)
         if self.moduleEnabled ~= true then
+            return
+        end
+
+        if event == "ADDON_RESTRICTION_STATE_CHANGED" then
+            -- On Forever a combat-restricted UNIT_AURA can make all 40
+            -- helpful indices secret. No later UNIT_AURA is guaranteed at
+            -- restriction release: the old empty/incomplete snapshot then
+            -- persists until the player happens to rebuff.
+            -- Only retry after restrictions lift; never inspect secret data.
+            if InCombatLockdown() then
+                return
+            end
+            self.restrictionRecoveryCount =
+                self.restrictionRecoveryCount + 1
+            local _, refreshReason = self:Refresh("restriction-release")
+            self.restrictionRecoveryLastReason = refreshReason
+            self.restrictionRecoveryLastCoverage =
+                self.lastCoverageReady == true
+
+            -- Reconcile the stock BUFFS owner after (not before) our
+            -- ordinary coverage decision, independent of event order.
+            -- Incomplete coverage must fail open to stock; never suppress
+            -- Blizzard merely because the Logres art exists.
+            local ownerOK, native = pcall(
+                Logres.GetModule, Logres, "NativeSurfaceReplacement"
+            )
+            if ownerOK and native and native:IsEnabled()
+                and type(native.Reconcile) == "function"
+            then
+                local ok = pcall(
+                    native.Reconcile, native,
+                    "player-helpful-restriction-release"
+                )
+                if ok then
+                    self.restrictionReconcileCount =
+                        self.restrictionReconcileCount + 1
+                else
+                    self.restrictionReconcileFailures =
+                        self.restrictionReconcileFailures + 1
+                end
+            end
             return
         end
 
