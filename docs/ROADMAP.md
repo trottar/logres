@@ -1,3 +1,14 @@
+## P0480 — Passive native NPC proof for requested 3/4yd snap (2026-11-18)
+
+P0479 main `7f6f2a2` verified. User reports P0479 no untargeted
+3yd NPC centering, L-035 remains OPEN. Source had only npc/target/mouseover
+proof; include softinteract and event-observed nameplateN without targeting,
+CVars or new timers. Preserve no-tilde/no-floor-text P0479 appearance,
+P0476 false floor, P0477 hide, P0478 visual regressions. Native identity and
+broad range check plus <=3yd map threshold; unknown still map-only.
+No general 3D floor solver. P0480 WoW UNVERIFIED. L-002 independent.
+See `docs/memory/evidence/P0480_PASSIVE_NPC_PROXIMITY.md`.
+
 ## P0479 — Restore compass visual contract after P0478 user FAIL (2026-11-17)
 
 P0478 `71c12ad` verified, client 0.0.345-dev #16561–#16569 VISUAL FAIL:

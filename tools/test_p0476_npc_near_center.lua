@@ -26,7 +26,7 @@ local chunk = "return function(self, row, role, prior)\n" .. [[
     self.nearQuestCenterKeys = prior or {}
     self.liveNearbyNPCIDs = self.liveNearbyNPCIDs or {}
     self.headingDegrees=0
-    local function readNearbyNPCIDs() return self.liveNearbyNPCIDs or {} end
+    local function readNearbyNPCIDs() return self.liveNearbyNPCIDs or {}, self.liveNearbyProofSources or {} end
 ]] .. sourceBlock .. [[
     local visible = add(row,role,"service17")
     return visible,nearQuestCenterKeys,self.serviceNearCenteredCandidates,

@@ -1,0 +1,33 @@
+P0480 L-035 passive softinteract and nameplate NPC 3/4-yard center evidence
+Verified baseline: 7f6f2a2e4938bd01bdc7ffac71e0ce85691abfed
+Candidate runtime version: 0.0.347-dev
+PREWRITE: 342/342 STATIC PASS
+POSTWRITE: 342/342 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Navigation/Compass.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0480_PASSIVE_NPC_PROXIMITY.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0480_PASSIVE_NPC_PROXIMITY.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0477_vertical_npc_proof_contract.py
+tools/check_p0478_map_only_compass_contract.py
+tools/check_p0479_compass_visual_recovery_contract.py
+tools/check_p0480_passive_npc_proximity_contract.py
+tools/test_p0476_npc_near_center.lua
+tools/test_p0477_live_npc_proof.lua
+tools/test_p0480_passive_npc_near.lua
+P0480_MANIFEST.txt

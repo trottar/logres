@@ -1,10 +1,11 @@
-# P0479: L-035 P0478 VISUAL FAIL; restore no-tilde compass.
-# P0478: map-only/caption rejected; P0477 hide FAIL.
-# P0477: #16399 2D false 2yd.
-# P0476: 3/4yd NPC snap visual FAIL; L-002 flash OPEN.
+# P0480: L-035 targetless 3yd; P0479 FAIL.
+# P0479: L-035 P0478 VISUAL FAIL; no tildes.
+# P0478: map-only FAIL; P0477 hide FAIL.
+# P0477: #16399 false-floor 2yd.
+# P0476: NPC snap FAIL; L-002 flash OPEN.
 # P0475: L-037 PARTIAL; P0474 PASS.
-# P0474: P0473 #16018 FAIL; options next.
-# P0468: L-051 four-column; P0467 d14a25a UNVERIFIED.
+# P0474: P0473 #16018 FAIL.
+# P0468: L-051 auras; runtime UNVERIFIED.
 # P0466: defaults/names PASS; variants unverified.
 # P0465: Sheet04 accepted.
 # P0464: per-unit transaction retained; evidence in P0464.

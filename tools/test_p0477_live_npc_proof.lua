@@ -16,12 +16,13 @@ local fakeAPI = {
     end,
 }
 local env = {
-    _G = fakeAPI, type=type, ipairs=ipairs, pcall=pcall,
+    _G = fakeAPI, type=type, ipairs=ipairs, pairs=pairs, pcall=pcall,
     isSecret=isSecret, string=string, tonumber=tonumber,
 }
 local chunk, err = load(body,"P0477_readNearbyNPCIDs_actual_source","t",env)
 assert(chunk, err)
 local read = chunk()
+local function none() local ids = read(); return next(ids) == nil end
 local function clear()
     for k in pairs(guid) do guid[k]=nil end
     for k in pairs(distance) do distance[k]=nil end
@@ -34,10 +35,10 @@ guid.npc = "Creature-0-123-456-789-17-abcdef"; distance.npc = false
 assert(read()[17] == nil, "same NPC across floors but out of range cannot qualify")
 clear()
 guid.npc = "SECRET"; distance.npc = true
-assert(next(read()) == nil, "secret GUID cannot be inspected")
+assert(none(), "secret GUID cannot be inspected")
 clear()
 guid.npc = "Player-1234-5678"; distance.npc = true
-assert(next(read()) == nil, "player GUID not an NPC")
+assert(none(), "player GUID not an NPC")
 clear()
 guid.npc = "Creature-0-123-456-789-999-abcdef"; distance.npc = true
 assert(read()[17] == nil and read()[999] == true, "different ID must not match")
@@ -47,10 +48,10 @@ assert(read()[17] == true, "mouseover ID with range proof qualifies")
 clear()
 fakeAPI.InCombatLockdown = function() return true end
 guid.npc = "Creature-0-123-456-789-17-abcdef"
-assert(next(read()) == nil, "combat lockdown must skip native range API")
+assert(none(), "combat lockdown must skip native range API")
 fakeAPI.InCombatLockdown = function() return false end
 clear()
 fakeAPI.CheckInteractDistance = function() error("protected in combat") end
 guid.npc = "Creature-0-123-456-789-17-abcdef"
-assert(next(read()) == nil, "protected range refusal must fail safely")
+assert(none(), "protected range refusal must fail safely")
 print("P0477 actual-source GUID/range proof: ordinary/missing/secret/denied PASS")

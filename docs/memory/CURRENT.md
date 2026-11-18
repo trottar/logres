@@ -11,13 +11,11 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0479** P0478 `71c12ad`: L-035 VISUAL FAIL;
-#16561–#16569 tildes/floor text rejected. Restore
-compass style/bearing (WoW UNVERIFIED).
-P0477 hide FAIL; P0476 #16399 2yd false floor FAIL.
-L-002 popup UNKNOWN; no suppression.
-P0473 FAIL, P0474 PASS scoped; L-037 PARTIAL. Old issues dormant.
-Popup owner UNKNOWN; no new Blizzard suppression.
+**P0480** P0479 `7f6f2a2` verified; L-035 untargeted
+3yd NPC snap still FAIL. P0478 VISUAL FAIL; P0477 hide FAIL;
+P0476 false-floor 2yd FAIL. P0480 softinteract/nameplate proof,
+<=3yd snap, <4yd hold; WoW UNVERIFIED. L-002 popup OPEN.
+P0473 FAIL; P0474 scoped PASS; L-037 PARTIAL.
 Preserve world HP/aura/50-50, chat SHOW, quest/stock fallback.
 P0460 HP PASS; P0461 aura FAIL; P0457 selected PASS;
 P0454/P0455 secondary 50/50 VISUAL FAIL; P0456 suspended.
@@ -66,9 +64,10 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 
 ## Next Action
 
-After P0479 push: verify no-tilde NPC labels and stable near
-bearing on multi-floor site; L-035 OPEN, L-002 incidental.
-No runtime PASS from static/source tests.
+After P0480 push, verify the NPC compass snaps without a hard target
+where Forever exposes `softinteract` or nameplates, without user-facing
+approximation symbols or false upstairs/downstairs proximity. L-035
+OPEN until client result. L-002 popup independent.
 
 ## Success Criteria
 

@@ -131,37 +131,56 @@ local function isSecret(value)
     return ok and result or false
 end
 
--- P0477: map/provider NPC spawns contain X/Y but no elevation. A unit token
--- matching the provider NPC template and passing the native proximity check
--- provides optional live evidence. Absence/secret/refusal proves NOTHING;
--- nearby 2D-only projected NPC markers must not claim point-blank proximity.
--- Never cache a unit token or a raw GUID, and never inspect Blizzard UI state.
+-- P0480: ordinary native unit tokens can establish live NPC presence without
+-- selecting a target. Nameplate tokens are observed by lifecycle events only;
+-- no global nameplate/soft-target settings are changed by Logres. Never store
+-- a raw GUID or use secret-capable values as table keys.
+local visibleNameplateUnits = {}
+
+-- The provider still has only X/Y. A live, matching template ID with an
+-- ordinary native range result permits the existing 3/4yd center hysteresis,
+-- but does NOT provide a verified exact 3D distance or floor. Missing or
+-- restricted native data remains map-only, not an automatic center claim.
 local function readNearbyNPCIDs()
-    local ids = {}
+    local ids, proofSources = {}, {}
     local getGUID, inRange = _G.UnitGUID, _G.CheckInteractDistance
     local combatGate = _G.InCombatLockdown
     if type(getGUID) ~= "function" or type(inRange) ~= "function"
-        or type(combatGate) ~= "function" then return ids end
-    -- CheckInteractDistance is combat-restricted in this client family.
+        or type(combatGate) ~= "function" then return ids, proofSources end
+    -- Retain P0477's conservative restricted-call combat gate.
     local lockOK, locked = pcall(combatGate)
-    if not lockOK or isSecret(locked) or locked ~= false then return ids end
-    for _, unit in ipairs({"npc", "target", "mouseover"}) do
+    if not lockOK or isSecret(locked) or locked ~= false then
+        return ids, proofSources
+    end
+    local function consider(unit, source)
         local guidOK, guid = pcall(getGUID, unit)
         if guidOK and not isSecret(guid) and type(guid) == "string" then
-            -- Creature GUID has a stable NPC template ID even if spawn/layer
-            -- portions are obfuscated. Other GUID families do not qualify.
             local raw = string.match(guid,
                 "^Creature%-[^%-]+%-[^%-]+%-[^%-]+%-[^%-]+%-(%d+)%-")
             local id = raw and tonumber(raw)
             if id and id > 0 then
                 local rangeOK, close = pcall(inRange, unit, 3)
                 if rangeOK and not isSecret(close) and close == true then
+                    if not ids[id] then proofSources[id] = source end
                     ids[id] = true
                 end
             end
         end
     end
-    return ids
+    -- softinteract is a native proximity-selected NPC without a hard target.
+    -- It is optional and depends on the user's existing client settings.
+    for _, unit in ipairs({"softinteract", "npc", "mouseover", "target"}) do
+        consider(unit, unit)
+    end
+    -- Only event-observed nameplates; avoid an unconditional 40-token sweep
+    -- on the existing 0.15s compass update. Neither nameplates nor unit
+    -- identity reads are forced when the client has not exposed a token.
+    if type(visibleNameplateUnits) == "table" then
+        for unit in pairs(visibleNameplateUnits) do
+            consider(unit, "nameplate")
+        end
+    end
+    return ids, proofSources
 end
 
 -- A focus label may format only already-sanitized, same-map yard values.
@@ -392,6 +411,10 @@ local Compass = Logres:RegisterModule("Compass", {
         self.availableQuestPoiShown = 0
         self.availableQuestPoiCandidates = 0
         self.serviceNearCenteredCandidates = 0
+        self.serviceNearProofSoftInteract = 0
+        self.serviceNearProofNameplate = 0
+        self.serviceNearProofOther = 0
+        self.nameplateEventRegistered = false
         self.serviceNearUnverifiedHidden = 0
         self.providerNearUnverifiedHidden = 0
         self.serviceNearMapOnlyCandidates = 0
@@ -603,6 +626,25 @@ local Compass = Logres:RegisterModule("Compass", {
 
         self.waypointEventFrame = waypointEventFrame
 
+        -- Read-only lifecycle; do not inspect or mutate Blizzard nameplates.
+        local nameplateFrame = CreateFrame("Frame")
+        local addedOK = pcall(nameplateFrame.RegisterEvent,
+            nameplateFrame, "NAME_PLATE_UNIT_ADDED")
+        local removedOK = pcall(nameplateFrame.RegisterEvent,
+            nameplateFrame, "NAME_PLATE_UNIT_REMOVED")
+        self.nameplateEventRegistered = addedOK and removedOK
+        nameplateFrame:SetScript("OnEvent", function(_, event, unit)
+            if isSecret(unit) or type(unit) ~= "string" then return end
+            local index = tonumber(string.match(unit, "^nameplate(%d+)$"))
+            if not index or index < 1 or index > 40 then return end
+            if event == "NAME_PLATE_UNIT_ADDED" then
+                visibleNameplateUnits[unit] = true
+            elseif event == "NAME_PLATE_UNIT_REMOVED" then
+                visibleNameplateUnits[unit] = nil
+            end
+        end)
+        self.nameplateEventFrame = nameplateFrame
+
         self.onUpdateHandler = function(_, elapsed)
             self:OnUpdate(elapsed)
         end
@@ -669,6 +711,9 @@ function Compass:ClearAvailableQuestPOIs(reason)
     self.availableQuestPoiShown = 0
     self.availableQuestPoiCandidates = 0
     self.serviceNearCenteredCandidates = 0
+    self.serviceNearProofSoftInteract = 0
+    self.serviceNearProofNameplate = 0
+    self.serviceNearProofOther = 0
     self.serviceNearUnverifiedHidden = 0
     self.providerNearUnverifiedHidden = 0
     self.serviceNearMapOnlyCandidates = 0
@@ -775,8 +820,11 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     local nextServiceBearings = {}
     self.serviceNearBearingHeld = 0
     -- Read only ordinary, live unit identity/range; no retained unit tokens.
-    local nearbyLiveNPCIDs = readNearbyNPCIDs()
+    local nearbyLiveNPCIDs, nearbyProofSources = readNearbyNPCIDs()
     self.serviceNearCenteredCandidates = 0
+    self.serviceNearProofSoftInteract = 0
+    self.serviceNearProofNameplate = 0
+    self.serviceNearProofOther = 0
     self.serviceNearUnverifiedHidden = 0
     self.providerNearUnverifiedHidden = 0
     self.serviceNearMapOnlyCandidates = 0
@@ -831,6 +879,14 @@ function Compass:RefreshAvailableQuestPOIs(reason)
             and (distance<=3 or (wasNear and distance<4)) then
             centered = true
             self.serviceNearCenteredCandidates = self.serviceNearCenteredCandidates + 1
+            local proof = nearbyProofSources[row.npcID]
+            if proof == "softinteract" then
+                self.serviceNearProofSoftInteract = self.serviceNearProofSoftInteract + 1
+            elseif proof == "nameplate" then
+                self.serviceNearProofNameplate = self.serviceNearProofNameplate + 1
+            else
+                self.serviceNearProofOther = self.serviceNearProofOther + 1
+            end
         end
         if centered then nearQuestCenterKeys[nearKey] = true end
         local bearing=(math.deg(math.atan2(dx,-dy))+360)%360
@@ -1682,6 +1738,10 @@ function Compass:GetDebugStatus()
         availableQuestPoiShown = self.availableQuestPoiShown,
         availableQuestPoiCandidates = self.availableQuestPoiCandidates,
         serviceNearCenteredCandidates = self.serviceNearCenteredCandidates,
+        serviceNearProofSoftInteract = self.serviceNearProofSoftInteract,
+        serviceNearProofNameplate = self.serviceNearProofNameplate,
+        serviceNearProofOther = self.serviceNearProofOther,
+        nameplateEventRegistered = self.nameplateEventRegistered == true,
         serviceNearUnverifiedHidden = self.serviceNearUnverifiedHidden,
         providerNearUnverifiedHidden = self.providerNearUnverifiedHidden,
         serviceNearMapOnlyCandidates = self.serviceNearMapOnlyCandidates,

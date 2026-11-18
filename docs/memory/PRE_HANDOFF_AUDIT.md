@@ -1,3 +1,18 @@
+## P0480 — Passive native NPC proximity (2026-11-18)
+
+Verified GitHub P0479 `7f6f2a2` tree `9ea76d4`. User reports P0479 still
+not centering untargeted NPCs within 3 yards. P0477 proof source list had
+no softinteract/nameplate, so P0479 retained original 3/4yd threshold but
+could not trigger it in this use case. Add bounded event-observed nameplate
+and native softinteract to ordinary-range proof, while preserving no-tilde
+visual rule. API cannot enumerate every NPC or prove exact Z; no CVar edits,
+new OnUpdate, protected reads, secret inspections or native handoff changes.
+R0 audit 263/342: CURRENT/HANDOFF over byte budgets; shortened R1.
+Candidate requires historical full static suite, Lua actual-source tests,
+installer refusal/rollback and exact PREWRITE/POSTWRITE, manifest, ZIP parity,
+git diff hygiene. Client P0480 UNVERIFIED. Any candidate checker failures
+must be appended here as negative results.
+
 ## P0479 — Compass user-rejected approximation captions (2026-11-17)
 
 Baseline GitHub `main` P0478 `71c12ad` verified and exact tree
