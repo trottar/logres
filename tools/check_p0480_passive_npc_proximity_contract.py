@@ -15,7 +15,7 @@ for token in ('local visibleNameplateUnits = {}',
               'not isSecret(guid)', 'not isSecret(close)',
               'local lockOK, locked = pcall(combatGate)',
               'pcall(inRange, unit, 3)',
-              'local nearbyLiveNPCIDs, nearbyProofSources = readNearbyNPCIDs()',
+              'local nearbyLiveNPCIDs, nearbyProofSources, nearbyRefusedNPCIDs = readNearbyNPCIDs()',
               'if serviceNPC and liveProof',
               'distance<=3 or (wasNear and distance<4)',
               'self.serviceNearProofSoftInteract',
@@ -37,7 +37,7 @@ for banned in ('SetCVar(', 'TargetUnit(', 'InteractUnit(', 'ClosestUnitPosition(
 for name in ('"serviceNearProofSoftInteract"','"serviceNearProofNameplate"',
              '"serviceNearProofOther"','"nameplateEventRegistered"'):
     assert name in D, name
-assert H.startswith('# P0480:') and '# P0479:' in H
+assert H.startswith('# P0481:') and '# P0480:' in H and '# P0479:' in H
 assert 'L-035' in I and 'P0480' in I and 'P0479' in I
 for x in ('P0476','P0477','P0478','P0479','P0480','softinteract','nameplate'):
     assert x in E,x

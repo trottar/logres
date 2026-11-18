@@ -142,15 +142,15 @@ local visibleNameplateUnits = {}
 -- but does NOT provide a verified exact 3D distance or floor. Missing or
 -- restricted native data remains map-only, not an automatic center claim.
 local function readNearbyNPCIDs()
-    local ids, proofSources = {}, {}
+    local ids, proofSources, refused = {}, {}, {}
     local getGUID, inRange = _G.UnitGUID, _G.CheckInteractDistance
     local combatGate = _G.InCombatLockdown
     if type(getGUID) ~= "function" or type(inRange) ~= "function"
-        or type(combatGate) ~= "function" then return ids, proofSources end
+        or type(combatGate) ~= "function" then return ids, proofSources, refused end
     -- Retain P0477's conservative restricted-call combat gate.
     local lockOK, locked = pcall(combatGate)
     if not lockOK or isSecret(locked) or locked ~= false then
-        return ids, proofSources
+        return ids, proofSources, refused
     end
     local function consider(unit, source)
         local guidOK, guid = pcall(getGUID, unit)
@@ -163,6 +163,9 @@ local function readNearbyNPCIDs()
                 if rangeOK and not isSecret(close) and close == true then
                     if not ids[id] then proofSources[id] = source end
                     ids[id] = true
+                    refused[id] = nil
+                elseif rangeOK and not isSecret(close) and close == false and not ids[id] then
+                    refused[id] = true
                 end
             end
         end
@@ -180,7 +183,36 @@ local function readNearbyNPCIDs()
             consider(unit, "nameplate")
         end
     end
-    return ids, proofSources
+    return ids, proofSources, refused
+end
+
+-- P0481: one probable arrival, distinct from native range/floor proof.
+-- Inputs are ordinary addon-owned candidates; no Blizzard state is queried.
+local function chooseNPCArrivalLock(candidates, previous, mapID)
+    local held, best
+    for _, item in ipairs(candidates) do
+        if item.arrivalKey and not item.arrivalRejected and type(item.name) == "string" and item.name ~= ""
+            and type(item.distance) == "number" and item.distance >= 0 then
+            if previous and previous.mapID == mapID
+                and previous.key == item.arrivalKey and item.distance < 4 then
+                held = item
+            end
+            if item.distance <= 3 and (item.liveProof == true or item.arrivalMagnitude <= 8) then
+                if not best or (item.liveProof == true and best.liveProof ~= true)
+                    or (item.liveProof == best.liveProof and (
+                        item.distance < best.distance or (item.distance == best.distance
+                            and item.arrivalKey < best.arrivalKey))) then
+                    best = item
+                end
+            end
+        end
+    end
+    local selected = held or best
+    if not selected then return nil, nil, previous and "released" or "none" end
+    local source = held and previous.source
+        or selected.liveProof == true and "native" or "compass-estimate"
+    return selected, {key=selected.arrivalKey, mapID=mapID, source=source,
+        npcID=selected.npcID}, held and "held" or "acquired"
 end
 
 -- A focus label may format only already-sanitized, same-map yard values.
@@ -708,6 +740,13 @@ end
 -- consumes only ordinary, addon-owned snapshots; a heading/POI marker is
 -- never reconstructed from Blizzard secret/protected view-state objects.
 function Compass:ClearAvailableQuestPOIs(reason)
+    self.npcArrivalLock = nil
+    self.npcArrivalLockActive = false
+    self.npcArrivalLockSource = "none"
+    self.npcArrivalLockTransition = reason or "cleared"
+    self.npcArrivalLockNPCID = nil
+    self.npcArrivalLockMapDistanceYards = nil
+    self.npcArrivalLockRendered = false
     self.availableQuestPoiShown = 0
     self.availableQuestPoiCandidates = 0
     self.serviceNearCenteredCandidates = 0
@@ -753,6 +792,7 @@ function Compass:ClearAvailableQuestPOIs(reason)
 end
 
 function Compass:RefreshAvailableQuestPOIs(reason)
+    local previousNPCArrival = self.npcArrivalLock
     self:ClearAvailableQuestPOIs("source-unavailable")
     if not self.policyEligible or not self.presentationActive
         or type(self.headingDegrees) ~= "number"
@@ -820,7 +860,8 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     local nextServiceBearings = {}
     self.serviceNearBearingHeld = 0
     -- Read only ordinary, live unit identity/range; no retained unit tokens.
-    local nearbyLiveNPCIDs, nearbyProofSources = readNearbyNPCIDs()
+    local nearbyLiveNPCIDs, nearbyProofSources, nearbyRefusedNPCIDs = readNearbyNPCIDs()
+    nearbyRefusedNPCIDs = nearbyRefusedNPCIDs or {}
     self.serviceNearCenteredCandidates = 0
     self.serviceNearProofSoftInteract = 0
     self.serviceNearProofNameplate = 0
@@ -890,6 +931,7 @@ function Compass:RefreshAvailableQuestPOIs(reason)
         end
         if centered then nearQuestCenterKeys[nearKey] = true end
         local bearing=(math.deg(math.atan2(dx,-dy))+360)%360
+        local arrivalMagnitude = math.abs(normalizeRelativeDegrees(bearing-self.headingDegrees))
         if serviceNPC and uncertainNearNPC then
             local held = priorServiceBearings[nearKey]
             if type(held) == "number" and held >= 0 and held < 360 then
@@ -901,7 +943,14 @@ function Compass:RefreshAvailableQuestPOIs(reason)
         local relative=normalizeRelativeDegrees(bearing-self.headingDegrees)
         if centered then relative=0 end
         local magnitude=math.abs(relative)
-        if magnitude>VISIBLE_HALF_ANGLE then return end
+        if magnitude>VISIBLE_HALF_ANGLE then
+            -- A prior lock survives facing changes only for its exact spawn.
+            local priorKey = providerNPC and not isSecret(row.sourceX) and not isSecret(row.sourceY)
+                and type(row.sourceX) == "number" and type(row.sourceY) == "number"
+                and nearKey .. ":" .. tostring(row.sourceX) .. ":" .. tostring(row.sourceY)
+            if not (previousNPCArrival and previousNPCArrival.mapID == mapID
+                and previousNPCArrival.key == priorKey and distance < 4) then return end
+        end
         local serviceStyle = role=="service" and SERVICE_MARKER_STYLE[row.serviceKind] or nil
         if role=="service" and not serviceStyle then return end
         local identityRole = serviceStyle and serviceStyle.role
@@ -912,7 +961,19 @@ function Compass:RefreshAvailableQuestPOIs(reason)
             name=focusedIdentity(row.name, identityRole),
             potential=row.potential == true, sortKey=tostring(key),
             mapOnly=providerNPC, liveProof=liveProof, uncertainNear=uncertainNearNPC,
+            arrivalMagnitude=arrivalMagnitude,
             kind=role, serviceKind=role=="service" and row.serviceKind or nil}
+        -- Only real provider spawn coordinates form an arrival identity.
+        -- Unknown/secret/missing source positions do not acquire a latch.
+        if providerNPC and not isSecret(row.sourceX) and not isSecret(row.sourceY)
+            and type(row.sourceX) == "number" and type(row.sourceY) == "number"
+            and row.sourceX >= 0 and row.sourceX <= 1
+            and row.sourceY >= 0 and row.sourceY <= 1 then
+            candidate.arrivalKey = nearKey .. ":" .. tostring(row.sourceX)
+                .. ":" .. tostring(row.sourceY)
+            candidate.npcID = row.npcID
+            candidate.arrivalRejected = nearbyRefusedNPCIDs[row.npcID] == true and not liveProof
+        end
         if role=="quest" then majorQuests[#majorQuests+1]=candidate
         elseif role=="tracking" then tracked[#tracked+1]=candidate
         elseif role=="service" then services[#services+1]=candidate
@@ -989,11 +1050,39 @@ function Compass:RefreshAvailableQuestPOIs(reason)
             end
         end
     end
+    -- P0481: select once after gathering, so provider order cannot steal focus.
+    local arrivalCandidates = {}
+    for _, pool in ipairs({services, localPOIs}) do
+        for _, item in ipairs(pool) do arrivalCandidates[#arrivalCandidates + 1] = item end
+    end
+    local arrival, lock, transition = chooseNPCArrivalLock(
+        arrivalCandidates, previousNPCArrival, mapID)
+    self.npcArrivalLock = lock
+    self.npcArrivalLockActive = lock ~= nil
+    self.npcArrivalLockSource = lock and lock.source or "none"
+    self.npcArrivalLockTransition = transition
+    self.npcArrivalLockNPCID = lock and lock.npcID or nil
+    self.npcArrivalLockMapDistanceYards = arrival and arrival.distance or nil
+    if arrival then
+        arrival.relative, arrival.magnitude, arrival.x = 0, 0, 0
+        arrival.arrivalLocked = true
+        -- First within its existing family; native quest/waypoint priority stays.
+        for _, pool in ipairs({services, localPOIs}) do
+            for index, item in ipairs(pool) do
+                if item == arrival then
+                    table.remove(pool, index)
+                    table.insert(pool, 1, item)
+                    break
+                end
+            end
+        end
+    end
     -- Replace, do not accumulate, per-refresh near-center/bearing history.
     self.nearQuestCenterKeys = nearQuestCenterKeys
     self.serviceNearBearings = nextServiceBearings
     self.serviceBearingMapID = mapID
     local function nearestFirst(a,b)
+        if a.arrivalLocked ~= b.arrivalLocked then return a.arrivalLocked == true end
         if a.potential ~= b.potential then return b.potential == true end
         if a.distance==b.distance then return a.sortKey < b.sortKey end
         return a.distance < b.distance
@@ -1071,9 +1160,15 @@ function Compass:RefreshAvailableQuestPOIs(reason)
                     self.availableQuestPoiShown=self.availableQuestPoiShown+1
                     if candidate.potential then self.dbCandidateShown=self.dbCandidateShown+1 end
                 end
-                if candidate.magnitude<=focusDegrees and type(candidate.name)=="string"
-                    and (not closestFocus or candidate.distance<closestFocus.distance) then
-                    closestFocus=candidate
+                if candidate.arrivalLocked then
+                    self.npcArrivalLockRendered = true
+                    if type(candidate.name) == "string" then closestFocus = candidate end
+                elseif not closestFocus or not closestFocus.arrivalLocked then
+                    -- Original nearest-marker behavior outside an arrival lock.
+                    if candidate.magnitude<=focusDegrees and type(candidate.name)=="string"
+                        and (not closestFocus or candidate.distance<closestFocus.distance) then
+                        closestFocus=candidate
+                    end
                 end
             end
         end
@@ -1737,6 +1832,12 @@ function Compass:GetDebugStatus()
         artworkPreviewShown = self.artworkPreviewShown == true,
         availableQuestPoiShown = self.availableQuestPoiShown,
         availableQuestPoiCandidates = self.availableQuestPoiCandidates,
+        npcArrivalLockActive = self.npcArrivalLockActive == true,
+        npcArrivalLockSource = self.npcArrivalLockSource or "none",
+        npcArrivalLockTransition = self.npcArrivalLockTransition or "none",
+        npcArrivalLockNPCID = self.npcArrivalLockNPCID,
+        npcArrivalLockMapDistanceYards = self.npcArrivalLockMapDistanceYards,
+        npcArrivalLockRendered = self.npcArrivalLockRendered == true,
         serviceNearCenteredCandidates = self.serviceNearCenteredCandidates,
         serviceNearProofSoftInteract = self.serviceNearProofSoftInteract,
         serviceNearProofNameplate = self.serviceNearProofNameplate,

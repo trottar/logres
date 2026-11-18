@@ -381,6 +381,7 @@ function Nearby:GetNearbyRows(map, px, py, width, height)
         if dist <= LOCAL_RADIUS_YARDS then
             hits[#hits + 1] = {
                 dxYards = dx, dyYards = dy, name = item.name,
+                    sourceX = item.x, sourceY = item.y,
                 npcID = item.npcID, questID = item.questID,
                 distanceYards = dist, potential = true,
             }
@@ -410,6 +411,7 @@ function Nearby:GetNearbyRows(map, px, py, width, height)
             if dist <= LOCAL_RADIUS_YARDS then
                 serviceHits[#serviceHits + 1] = {
                     dxYards = dx, dyYards = dy, name = item.name,
+                    sourceX = item.x, sourceY = item.y,
                     npcID = item.npcID, serviceKind = item.serviceKind,
                     distanceYards = dist, potential = true,
                 }

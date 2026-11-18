@@ -1,4 +1,5 @@
-# P0480: L-035 targetless 3yd; P0479 FAIL.
+# P0481: L-035 one-NPC probable3/4yd lock; UNVERIFIED.
+# P0480: passive proof; P0479 FAIL.
 # P0479: L-035 P0478 VISUAL FAIL; no tildes.
 # P0478: map-only FAIL; P0477 hide FAIL.
 # P0477: #16399 false-floor 2yd.
@@ -6,9 +7,9 @@
 # P0475: L-037 PARTIAL; P0474 PASS.
 # P0474: P0473 #16018 FAIL.
 # P0468: L-051 auras; runtime UNVERIFIED.
-# P0466: defaults/names PASS; variants unverified.
+# P0466: names/defaults scoped PASS.
 # P0465: Sheet04 accepted.
-# P0464: per-unit transaction retained; evidence in P0464.
+# P0464: per-unit transaction retained.
 
 # P0463: `b849955` session 134 #13743/#13745/#13748 regression.
 Unprotected native aura layout; cached plate replay/prebuilt ON;

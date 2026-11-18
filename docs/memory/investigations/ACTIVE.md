@@ -1,3 +1,12 @@
+## P0481 — One probable NPC arrival lock and Chat rollover (2026-11-18)
+
+P0480 `037de4b` verified, session162 #16721–#16743 partial/janky user result.
+L-035 OPEN: all12 native snaps0. User permits probable3yd arrival: native
+support or central compass alignment acquires one named source-spawn lock;
+hold to4yd despite facing/token changes. Separate estimate/native telemetry,
+no fake floor/close yards, no new polling/CVars. 0.0.348-dev UNVERIFIED.
+See `docs/memory/evidence/P0481_NPC_ARRIVAL_LOCK.md`; fresh Chat kit after push.
+
 ## P0480 — Passive native NPC proof for requested 3/4yd snap (2026-11-18)
 
 P0479 main `7f6f2a2` verified. User reports P0479 no untargeted

@@ -11,10 +11,10 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0480** P0479 `7f6f2a2` verified; L-035 untargeted
-3yd NPC snap still FAIL. P0478 VISUAL FAIL; P0477 hide FAIL;
-P0476 false-floor 2yd FAIL. P0480 softinteract/nameplate proof,
-<=3yd snap, <4yd hold; WoW UNVERIFIED. L-002 popup OPEN.
+**P0481** L-035 probable one-NPC3/4yd lock; P0480 main037de4b partial.
+Session162 native snaps0; client UNVERIFIED. P0476 false-floor2yd FAIL,
+P0477 hide FAIL, P0478 VISUAL FAIL, P0479 functional FAIL retained.
+L-002 popup OPEN.
 P0473 FAIL; P0474 scoped PASS; L-037 PARTIAL.
 Preserve world HP/aura/50-50, chat SHOW, quest/stock fallback.
 P0460 HP PASS; P0461 aura FAIL; P0457 selected PASS;
@@ -64,10 +64,9 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 
 ## Next Action
 
-After P0480 push, verify the NPC compass snaps without a hard target
-where Forever exposes `softinteract` or nameplates, without user-facing
-approximation symbols or false upstairs/downstairs proximity. L-035
-OPEN until client result. L-002 popup independent.
+After P0481 push export fresh Chat kit with current HEAD/source.
+Discuss next fixes without recreating this investigation. L-035 needs
+client lock/hold/release validation; L-002 remains independent OPEN.
 
 ## Success Criteria
 
@@ -77,6 +76,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0481_NPC_ARRIVAL_LOCK.md
 - docs/memory/roadmap/POST_P0474_WORKSTREAMS.md
 - docs/memory/evidence/P0471_TARGET_FACTION_CREST.md
 - docs/memory/evidence/P0467_CHAT_WORKFLOW_AUDIT.md

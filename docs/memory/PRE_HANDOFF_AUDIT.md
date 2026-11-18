@@ -1,3 +1,13 @@
+## P0481 — Probable NPC arrival lock
+
+P0480 `037de4b` verified. Twelve current images individually inspected;
+zero native snaps. L-035/user accepts probable arrival: explicit new policy,
+not proof that P0476 floor failure is solved. Existing source/secret/popup,
+visual/provider/3-4yd contracts reviewed. Add pure lock selection, exact
+spawn identity, sticky focus and owned diagnostics; no new runtime sampler.
+Full candidate/source fixtures, syntax/diff and canonical refusal/rollback
+mandatory; client UNVERIFIED. Fresh deterministic Chat kit after push.
+
 ## P0480 — Passive native NPC proximity (2026-11-18)
 
 Verified GitHub P0479 `7f6f2a2` tree `9ea76d4`. User reports P0479 still
@@ -1198,3 +1208,8 @@ required on the final bytes; client UNVERIFIED.
 P0470 first candidate333/333 STATIC PASS; source review added target-only
 combat pending ownership preservation, covered by actual-source fixture.
 Final full suite/package audit repeated on delivered bytes; WoW UNVERIFIED.
+
+Corrected candidate343/343 STATIC PASS, actual complete-refresh arrival and
+four historical source fixtures PASS, version-policy PASS. Final bytes receive
+canonical PREWRITE/POSTWRITE, refusal/rollback, Lua5.1 syntax and diff audit;
+delivered receipt records those results. WoW runtime remains UNVERIFIED.
