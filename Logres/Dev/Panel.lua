@@ -435,7 +435,8 @@ function Logres:CaptureBugIncident()
     -- P0476: only addon-owned compass candidate/centering state is sampled.
     incident.snapshot.compassNearNPC = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("Compass"):GetDebugStatus()
-    end), {"serviceNearCenteredCandidates", "dbServiceCandidateCount",
+    end), {"serviceNearCenteredCandidates", "serviceNearUnverifiedHidden",
+        "providerNearUnverifiedHidden", "dbServiceCandidateCount",
         "dbServiceCandidateShown", "poiCollisionHiddenCount",
         "focusedMarkerKind", "focusedMarkerDistanceYards"})
     incident.snapshot.questPresentation = pickTraceStatus(ownedTraceStatus(function()

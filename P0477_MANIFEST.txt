@@ -1,0 +1,30 @@
+P0477 L-035 source-verified NPC proximity; multi-floor map ambiguity guard
+Verified baseline: 033fffd1cf58192c8257d00f9c066ed395b0cf17
+Candidate runtime version: 0.0.344-dev
+PREWRITE: 339/339 STATIC PASS
+POSTWRITE: 339/339 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Navigation/Compass.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0477_VERTICAL_NPC_GUARD.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0477_VERTICAL_NPC_GUARD.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0476_npc_flash_near_markers_contract.py
+tools/check_p0477_vertical_npc_proof_contract.py
+tools/test_p0476_npc_near_center.lua
+tools/test_p0477_live_npc_proof.lua
+P0477_MANIFEST.txt

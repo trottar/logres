@@ -1,3 +1,15 @@
+## P0477 — L-035 projected NPC floor ambiguity (2026-11-17)
+
+P0476 `033fffd` verified; Forever 0.0.343-dev session158 #16399 has
+3 service centers, 2 service glyphs, and 2.23yd focused NPC on a
+multi-floor location (user reports above/below false proximity).
+QuestieDB has no verified Z. Gate provider NPC near<4yd on ordinary
+live template ID and `CheckInteractDistance` proof; omit ambiguous
+near-floor glyph and label. Preserve native quest map, manual waypoint,
+Compass 3/4yd verified-only hysteresis and all stock NPC controls.
+L-035 OPEN / P0476 visual FAIL; P0477 client UNVERIFIED. L-002 OPEN.
+See `docs/memory/evidence/P0477_VERTICAL_NPC_GUARD.md`.
+
 ## P0476 — Active bug stabilization (2026-11-17)
 
 P0475 `6447b50` verified. L-035: quest-linked markers already <=3yd center,

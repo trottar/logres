@@ -1,3 +1,22 @@
+## P0477 — Correct P0476 2D-near NPC floor false positives (2026-11-17)
+
+Verified P0476 main `033fffd` / tree `4b4658c` against reconstructed
+byte-exact Git index (matching GitHub). Reviewed L-035/L-002 ledger and
+P0476 evidence. Real Forever session158 incident16399 disproves
+unconditional provider NPC centering: three candidate snaps and named 2yd
+focus with multi-floor NPC stacking. Provider has X/Y only, no Z.
+Candidate preserves native quest/waypoint and all stock UI. Add conditional
+live NPC template-ID/range proof for projected NPC at <4yd **only
+outside combat**, else hide misleading near glyph/label and report
+addon-owned counters. No new polling,
+protected frame readback or native mutation. P0476 checker/fixture must be
+updated to enforce corrected behavior instead of reasserting the failed
+assumption. First full candidate suite **339/339 STATIC PASS** (six checker workers),
+including both actual-source Lua fixtures and history/version/memory guards;
+no failures observed in that run. Independent ZIP/installer/rollback and
+final exact-candidate rerun still required before handoff. Runtime P0477
+UNVERIFIED.
+
 ## P0476 — L-035 identified service NPC 3/4yd and L-002 handoff provenance (2026-11-17)
 
 Verified P0475 main `6447b501ecfc6ca20a75f1655732e3bf3f7ca494`,

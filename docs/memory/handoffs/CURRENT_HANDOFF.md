@@ -1,10 +1,11 @@
-# P0476: L-035 NPC 3/4yd; L-002 flash; `6447b50`.
-# P0475: L-037 PARTIAL; P0474 user PASS.
+# P0477: L-035 #16399 multi-floor false 2yd; live NPC proof gate.
+# P0476: 3/4yd NPC snap visual FAIL; L-002 flash OPEN.
+# P0475: L-037 PARTIAL; P0474 PASS.
 # P0474: P0473 #16018 FAIL; options next.
-# P0468: L-051 four-column auras; P0467 d14a25a baseline, WoW UNVERIFIED.
-# P0466: defaults/names accepted; recovery variants unverified.
-# P0465: accepted Sheet04/native text.
-# P0464: per-unit transaction retained; source evidence in P0464 record.
+# P0468: L-051 four-column; P0467 d14a25a UNVERIFIED.
+# P0466: defaults/names PASS; variants unverified.
+# P0465: Sheet04 accepted.
+# P0464: per-unit transaction retained; evidence in P0464.
 
 # P0463: `b849955` session 134 #13743/#13745/#13748 regression.
 Unprotected native aura layout; cached plate replay/prebuilt ON;

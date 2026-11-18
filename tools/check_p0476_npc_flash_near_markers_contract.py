@@ -15,7 +15,9 @@ for token in ('local centered = questLinked and (distance<=3 or (wasNear and dis
     'local serviceNPC = role == "service"',
     'and not isSecret(row.npcID)',
     'type(row.npcID) == "number" and row.npcID > 0',
-    'if serviceNPC and (distance<=3 or (wasNear and distance<4)) then',
+    'if serviceNPC and liveProof',
+    'if providerNPC and distance < 4 and not liveProof then',
+    'self.serviceNearUnverifiedHidden = self.serviceNearUnverifiedHidden + 1',
     'if centered then nearQuestCenterKeys[nearKey] = true end',
     'self.serviceNearCenteredCandidates = self.serviceNearCenteredCandidates + 1',
     'serviceNearCenteredCandidates = self.serviceNearCenteredCandidates'):
@@ -39,7 +41,9 @@ assert 'nativeHandoffPending' in P[P.index('incident.snapshot.questPresentation'
 assert 'incident.snapshot.compassNearNPC' in P and '"serviceNearCenteredCandidates"' in P
 assert 'L-002' in LEDGER and 'L-035' in LEDGER and 'OPEN' in LEDGER
 assert 'No Blizzard frame' in E and 'WoW Forever' in E
-assert HANDOFF.startswith('# P0476:') and '# P0474:' in HANDOFF
+assert re.search(r'\*\*P(\d+)\*\*',CURRENT)
+active=re.search(r'\*\*P(\d+)\*\*',CURRENT).group(1)
+assert HANDOFF.startswith('# P'+active+':') and '# P0476:' in HANDOFF and '# P0474:' in HANDOFF
 assert len(CURRENT.encode())<9800 and len(HANDOFF.encode())<8000
 b=re.search(r'^Logres.VERSION = "(0\.0\.\d+-dev)"$',read('Logres/Core/Bootstrap.lua'),re.M)
 t=re.search(r'^## Version: (0\.0\.\d+-dev)$',read('Logres/Logres.toc'),re.M)

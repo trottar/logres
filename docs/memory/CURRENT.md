@@ -11,9 +11,11 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0476** P0475 `6447b50`: L-035 3/4yd NPC; L-002 flash
-read-only diagnostics, WoW UNVERIFIED. P0473 FAIL, P0474 PASS scoped;
-L-037 PARTIAL. Old issues dormant, not resolved by silence.
+**P0477** P0476 `033fffd`: L-035 #16399 false 2yd NPC focus
+on another floor (3 centered 2D candidates); require live NPC proof
+or withhold projected near marker. Client UNVERIFIED. P0476 visual
+FAIL retained; L-002 popup owner UNKNOWN, diagnostics only.
+P0473 FAIL, P0474 PASS scoped; L-037 PARTIAL. Old issues dormant.
 Popup owner UNKNOWN; no new Blizzard suppression.
 Preserve world HP/aura/50-50, chat SHOW, quest/stock fallback.
 P0460 HP PASS; P0461 aura FAIL; P0457 selected PASS;
@@ -63,8 +65,8 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 
 ## Next Action
 
-After P0476 push: test service-NPC snap within3/hold3-4/release4yd;
-record Report Bug if brief NPC popup recurs naturally. Then options.
+After P0477 push: verify same-floor and stacked-floor NPC markers;
+inspect hidden counter. L-002 flash if natural; then AddOns options.
 No runtime PASS from static/source tests.
 
 ## Success Criteria

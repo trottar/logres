@@ -131,6 +131,39 @@ local function isSecret(value)
     return ok and result or false
 end
 
+-- P0477: map/provider NPC spawns contain X/Y but no elevation. A unit token
+-- matching the provider NPC template and passing the native proximity check
+-- provides optional live evidence. Absence/secret/refusal proves NOTHING;
+-- nearby 2D-only projected NPC markers must not claim point-blank proximity.
+-- Never cache a unit token or a raw GUID, and never inspect Blizzard UI state.
+local function readNearbyNPCIDs()
+    local ids = {}
+    local getGUID, inRange = _G.UnitGUID, _G.CheckInteractDistance
+    local combatGate = _G.InCombatLockdown
+    if type(getGUID) ~= "function" or type(inRange) ~= "function"
+        or type(combatGate) ~= "function" then return ids end
+    -- CheckInteractDistance is combat-restricted in this client family.
+    local lockOK, locked = pcall(combatGate)
+    if not lockOK or isSecret(locked) or locked ~= false then return ids end
+    for _, unit in ipairs({"npc", "target", "mouseover"}) do
+        local guidOK, guid = pcall(getGUID, unit)
+        if guidOK and not isSecret(guid) and type(guid) == "string" then
+            -- Creature GUID has a stable NPC template ID even if spawn/layer
+            -- portions are obfuscated. Other GUID families do not qualify.
+            local raw = string.match(guid,
+                "^Creature%-[^%-]+%-[^%-]+%-[^%-]+%-[^%-]+%-(%d+)%-")
+            local id = raw and tonumber(raw)
+            if id and id > 0 then
+                local rangeOK, close = pcall(inRange, unit, 3)
+                if rangeOK and not isSecret(close) and close == true then
+                    ids[id] = true
+                end
+            end
+        end
+    end
+    return ids
+end
+
 -- A focus label may format only already-sanitized, same-map yard values.
 -- An unknown map basis never becomes an estimated or fabricated number.
 local function ordinaryFocusedDistance(distance)
@@ -344,6 +377,8 @@ local Compass = Logres:RegisterModule("Compass", {
         self.availableQuestPoiShown = 0
         self.availableQuestPoiCandidates = 0
         self.serviceNearCenteredCandidates = 0
+        self.serviceNearUnverifiedHidden = 0
+        self.providerNearUnverifiedHidden = 0
         self.availableQuestPoiReason = "initialize"
         self.focusedMarkerKind = nil
         self.focusedMarkerDistanceAvailable = false
@@ -610,6 +645,8 @@ function Compass:ClearAvailableQuestPOIs(reason)
     self.availableQuestPoiShown = 0
     self.availableQuestPoiCandidates = 0
     self.serviceNearCenteredCandidates = 0
+    self.serviceNearUnverifiedHidden = 0
+    self.providerNearUnverifiedHidden = 0
     self.availableQuestPoiReason = reason or "source-unavailable"
     self.dbNearbyStatus = "unavailable"
     self.dbNearbyCount = 0
@@ -702,7 +739,11 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     end
     local previousNearQuest = self.nearQuestCenterKeys or {}
     local nearQuestCenterKeys = {}
+    -- Read only ordinary, live unit identity/range; no retained unit tokens.
+    local nearbyLiveNPCIDs = readNearbyNPCIDs()
     self.serviceNearCenteredCandidates = 0
+    self.serviceNearUnverifiedHidden = 0
+    self.providerNearUnverifiedHidden = 0
     local seenQuest={}
     local function add(row,role,key)
         if type(row)~="table" then return end
@@ -722,19 +763,29 @@ function Compass:RefreshAvailableQuestPOIs(reason)
         local cap=row.potential == true and 50
             or (radius and (role=="quest" and radius*8 or radius))
         if not cap or distance>cap then return end
-        -- Only quest-linked map markers snap; native services keep bearings.
-        -- Release at 4yd to avoid oscillation around the 3yd threshold.
+        -- Native quest/POI markers retain their accepted 3/4yd hysteresis.
+        -- QuestieDB NPC spawn positions are planar. A 2D radius cannot prove
+        -- the NPC isn't on another floor, even when it reads 0-3 yards.
         local questLinked = role=="quest" or (type(row.questID)=="number" and row.questID>0)
         local nearKey = tostring(role) .. ":" .. tostring(key)
         local wasNear = previousNearQuest[nearKey] == true
-        local centered = questLinked and (distance<=3 or (wasNear and distance<4))
-        -- L-035: source-identified service NPCs use the same 3/4-yard
-        -- hysteresis as quest-linked markers. Do not alter generic POIs,
-        -- tracking, manual waypoints or unknown/secret NPC identities.
         local serviceNPC = role == "service"
             and not isSecret(row.npcID)
             and type(row.npcID) == "number" and row.npcID > 0
-        if serviceNPC and (distance<=3 or (wasNear and distance<4)) then
+        local providerNPC = row.potential == true
+            and not isSecret(row.npcID)
+            and type(row.npcID) == "number" and row.npcID > 0
+        local liveProof = providerNPC and nearbyLiveNPCIDs[row.npcID] == true
+        if providerNPC and distance < 4 and not liveProof then
+            self.providerNearUnverifiedHidden = self.providerNearUnverifiedHidden + 1
+            if serviceNPC then
+                self.serviceNearUnverifiedHidden = self.serviceNearUnverifiedHidden + 1
+            end
+            return -- No arbitrary bearing/false 2yd focus for another floor.
+        end
+        local centered = questLinked and (distance<=3 or (wasNear and distance<4))
+        if serviceNPC and liveProof
+            and (distance<=3 or (wasNear and distance<4)) then
             centered = true
             self.serviceNearCenteredCandidates = self.serviceNearCenteredCandidates + 1
         end
@@ -1566,6 +1617,8 @@ function Compass:GetDebugStatus()
         availableQuestPoiShown = self.availableQuestPoiShown,
         availableQuestPoiCandidates = self.availableQuestPoiCandidates,
         serviceNearCenteredCandidates = self.serviceNearCenteredCandidates,
+        serviceNearUnverifiedHidden = self.serviceNearUnverifiedHidden,
+        providerNearUnverifiedHidden = self.providerNearUnverifiedHidden,
         availableQuestPoiReason = self.availableQuestPoiReason,
         dbNearbyStatus = self.dbNearbyStatus,
         dbNearbyCount = self.dbNearbyCount,

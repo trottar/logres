@@ -23,11 +23,14 @@ local chunk = "return function(self, row, role, prior)\n" .. [[
     local radius = 50
     local localPOIs,majorQuests,tracked,services={},{},{},{}
     self.nearQuestCenterKeys = prior or {}
+    self.liveNearbyNPCIDs = self.liveNearbyNPCIDs or {}
     self.headingDegrees=0
+    local function readNearbyNPCIDs() return self.liveNearbyNPCIDs or {} end
 ]] .. sourceBlock .. [[
     local visible = add(row,role,"service17")
     return visible,nearQuestCenterKeys,self.serviceNearCenteredCandidates,
-           #localPOIs,#services
+           #localPOIs,#services,self.serviceNearUnverifiedHidden,
+           self.providerNearUnverifiedHidden
 end
 ]]
 local runner, err = load(chunk, "P0476_compass_actual_source", "t", {
@@ -39,20 +42,24 @@ local runner, err = load(chunk, "P0476_compass_actual_source", "t", {
 })
 assert(runner, err)
 local addActual=runner()
-local function service(distance, prior, npcID)
-    return addActual({}, {potential=true, dxYards=0, dyYards=distance,
+local function service(distance, prior, npcID, proven)
+    return addActual({liveNearbyNPCIDs=proven or {}}, {potential=true, dxYards=0, dyYards=distance,
         npcID=npcID, serviceKind="vendor", name="Vendor"},
         "service", prior)
 end
-local found, cache, count, pois, services = service(2, nil, 17)
+local found, cache, count, pois, services = service(2, nil, 17, {[17]=true})
 assert(found==true and cache["service:service17"]==true and count==1 and services==1 and pois==0,
     "<=3yd known service NPC must center and show")
-found, cache, count = service(3.5, cache, 17)
+found, cache, count = service(3.5, cache, 17, {[17]=true})
 assert(found==true and cache["service:service17"]==true and count==1,
     "3-4yd known service NPC must retain prior center")
-found, cache, count = service(4.0, cache, 17)
+found, cache, count = service(4.0, cache, 17, {[17]=true})
 assert(found==nil and cache["service:service17"]==nil and count==0,
     ">=4yd must resume ordinary bearing and disappear if behind")
+local hidden, allHidden
+found, cache, count, pois, services, hidden, allHidden = service(2, nil, 17)
+assert(found==nil and count==0 and services==0 and hidden==1 and allHidden==1,
+    "2D-only service must not center or claim a wrong-floor NPC")
 found, cache, count = service(3.5, nil, 17)
 assert(found==nil and count==0,"3-4yd must not center without prior centered state")
 found, cache, count = service(2, nil, nil)
@@ -66,4 +73,9 @@ assert(found==true and cache["poi:service17"]==true and count==0 and pois==1,
 found, cache, count = addActual({}, {potential=true,dxYards=0,dyYards=2,
     name="Generic POI"},"poi",nil)
 assert(found==nil and count==0,"generic POI must retain ordinary bearing")
-print("P0476 actual Compass source: <=3 snap, 3-4 hold, >=4 release; unknown/secret/POI/quest PASS")
+found, cache, count, pois, services, hidden, allHidden = addActual({},
+    {potential=true, dxYards=0,dyYards=2,npcID=78,
+     questID=78,name="Quest NPC above"},"poi",nil)
+assert(found==nil and pois==0 and allHidden==1,
+    "2D-only quest-giver NPC cannot pretend another floor is nearby")
+print("P0476/P0477 Compass actual source: live-proof snap/hold/release; 2D-only floor ambiguity PASS")
