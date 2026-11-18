@@ -11,8 +11,9 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0482** L-035 estimate2/3yd; native3/4yd unchanged.
-P0481 main51bf50d user-positive/sticky #16826 at3.70yd; client UNVERIFIED.
+**P0483** L-030 quest native-gated multiID/dual role, L-035 fast turn.
+**P0482** main3bc6d19 user-positive/PARTIAL; session165 Dughan missing.
+Keep estimated2/3yd, native3/4yd; no historic-only quest markers.
 P0476 false-floor2yd FAIL, P0477 hide FAIL, P0478 VISUAL FAIL,
 P0479 functional FAIL retained.
 L-002 popup OPEN.
@@ -65,8 +66,8 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 
 ## Next Action
 
-P0482 estimate2/3yd client lock/hold/release validation, then issue triage.
-Preserve P0481 and session162; L-035 OPEN, L-002 independently OPEN.
+P0483 client quest/no-false-positive and rapid-turn validation.
+L-030 PARTIAL, L-035 OPEN, L-002 OPEN; preserve prior failures.
 
 ## Success Criteria
 

@@ -22,7 +22,7 @@ for s in ('npcArrivalLockActive','npcArrivalLockSource','npcArrivalLockTransitio
  assert s+' =' in C and '"'+s+'"' in D,s
 for bad in ('SetCVar(', 'UnitPosition(', 'ClosestUnitPosition(', 'C_Timer.', 'Services at map location','floor unknown','"~" .. tostring'):
  assert bad not in C,bad
-assert read('docs/memory/handoffs/CURRENT_HANDOFF.md').startswith('# P0482:')
+assert read('docs/memory/handoffs/CURRENT_HANDOFF.md').startswith('# P0483:')
 assert '# P0481:' in read('docs/memory/handoffs/CURRENT_HANDOFF.md')
 assert 'L-035' in read('docs/memory/evidence/P0481_NPC_ARRIVAL_LOCK.md')
 assert 'P0481' in read('docs/memory/investigations/ISSUE_LEDGER.md')

@@ -6,6 +6,7 @@ local Nearby = Logres:RegisterModule("QuestieDBNearby", { autoEnable = true })
 local LOCAL_RADIUS_YARDS = 50
 local IDS_PER_FRAME = 96
 local MAX_SPAWNS_PER_NPC = 32
+local MAX_QUEST_IDS_PER_NPC = 32
 local MAX_CACHED_SPAWNS = 1024
 local MAX_NEARBY = 8
 local MAX_MAP_PARENT_DEPTH = 12
@@ -226,6 +227,7 @@ function Nearby:StartIndex(reason)
     self.scanned = 0
     self.zoneNPCs = 0
     self.questNPCs = 0
+    self.questIDTruncated = false
     self.truncated = false
     self.rows = {}
     self.serviceRows = {}
@@ -255,7 +257,21 @@ function Nearby:ScanChunk()
             self.zoneNPCs = self.zoneNPCs + 1
             local quests = ordinary(read(npc.questStarts, id), "table")
             local startQuestID = quests and number(quests[1])
-            if startQuestID then self.questNPCs = self.questNPCs + 1 end
+            local questIDs, questSeen = {}, {}
+            if quests then
+                for qi = 1, MAX_QUEST_IDS_PER_NPC do
+                    local qid = number(quests[qi])
+                    if qid == nil then break end
+                    if qid > 0 and qid == math.floor(qid) and not questSeen[qid] then
+                        questSeen[qid] = true
+                        questIDs[#questIDs + 1] = qid
+                    end
+                end
+                if ordinary(quests[MAX_QUEST_IDS_PER_NPC + 1]) ~= nil then
+                    self.questIDTruncated = true
+                end
+            end
+            if #questIDs > 0 then self.questNPCs = self.questNPCs + 1 end
 
             -- A service is a service regardless of the NPC's quest history.
             -- Only the optional v4 capability uses npcFlags; v1 quest indexing
@@ -274,7 +290,7 @@ function Nearby:ScanChunk()
                 end
             end
 
-            if startQuestID or serviceKind then
+            if #questIDs > 0 or serviceKind then
                 local spawns = ordinary(read(npc.spawns, id), "table")
                 local here = spawns and ordinary(spawns[self.areaID], "table")
                 if here then
@@ -284,14 +300,16 @@ function Nearby:ScanChunk()
                         if not row then break end
                         local x, y = number(row[1]), number(row[2])
                         if x and y and x >= 0 and x <= 100 and y >= 0 and y <= 100 then
-                            -- Dual-role NPCs appear as their service type,
-                            -- never as duplicate possible quest-giver glyphs.
-                            if startQuestID and not serviceKind then
+                            -- Quest and service histories coexist in the index;
+                            -- only the compass's native offer gate may promote
+                            -- a historical quest row into an active glyph.
+                            if #questIDs > 0 then
                                 if #self.rows < MAX_CACHED_SPAWNS then
                                     self.rows[#self.rows + 1] = {
                                         x = x / 100, y = y / 100,
                                         npcID = id, name = name,
-                                        questID = startQuestID, potential = true,
+                                        questID = questIDs[1], questIDs = questIDs,
+                                        potential = true,
                                     }
                                 else
                                     self.truncated = true
@@ -315,7 +333,7 @@ function Nearby:ScanChunk()
                         end
                     end
                     if ordinary(here[MAX_SPAWNS_PER_NPC + 1], "table") then
-                        if startQuestID and not serviceKind then self.truncated = true end
+                        if #questIDs > 0 then self.truncated = true end
                         if serviceKind then self.serviceTruncated = true end
                     end
                 end
@@ -346,7 +364,7 @@ local function readVector(value)
     return number(x), number(y)
 end
 
-function Nearby:GetNearbyRows(map, px, py, width, height)
+function Nearby:GetNearbyRows(map, px, py, width, height, currentQuestOffers)
     self.serviceNearby = 0
     self.serviceNearbyKinds = 0
     if not self.complete or not self.mapID then return {}, self.state end
@@ -383,6 +401,7 @@ function Nearby:GetNearbyRows(map, px, py, width, height)
                 dxYards = dx, dyYards = dy, name = item.name,
                     sourceX = item.x, sourceY = item.y,
                 npcID = item.npcID, questID = item.questID,
+                questIDs = item.questIDs,
                 distanceYards = dist, potential = true,
             }
         end
@@ -393,12 +412,35 @@ function Nearby:GetNearbyRows(map, px, py, width, height)
     end)
     self.nearbyCount = #hits
     local unique, seen = {}, {}
-    for i = 1, #hits do
-        local row = hits[i]
-        if not seen[row.npcID] then
-            seen[row.npcID] = true
-            unique[#unique + 1] = row
-            if #unique >= MAX_NEARBY then break end
+    -- Preserve the original eight-NPC cap, but prevent eight *historical*
+    -- NPCs from excluding a farther/currently native-confirmed giver.
+    if type(currentQuestOffers) == "table" then
+        for i=1,#hits do
+            local row = hits[i]
+            if not seen[row.npcID] then
+                local ids = row.questIDs
+                if type(ids) == "table" then
+                    for qi=1,math.min(#ids,MAX_QUEST_IDS_PER_NPC) do
+                        local id = ids[qi]
+                        if type(id) == "number" and currentQuestOffers[id] == true then
+                            seen[row.npcID] = true
+                            unique[#unique + 1] = row
+                            break
+                        end
+                    end
+                end
+                if #unique >= MAX_NEARBY then break end
+            end
+        end
+    end
+    if #unique < MAX_NEARBY then
+        for i = 1, #hits do
+            local row = hits[i]
+            if not seen[row.npcID] then
+                seen[row.npcID] = true
+                unique[#unique + 1] = row
+                if #unique >= MAX_NEARBY then break end
+            end
         end
     end
     local serviceHits = {}
@@ -457,6 +499,7 @@ function Nearby:GetDebugStatus()
         complete = self.complete == true, scanned = self.scanned or 0,
         ids = self.idCount or 0, zoneNPCs = self.zoneNPCs or 0,
         questNPCs = self.questNPCs or 0, spawns = #self.rows,
+        questIDTruncated = self.questIDTruncated == true,
         nearby = self.nearbyCount or 0, truncated = self.truncated == true,
         radius = LOCAL_RADIUS_YARDS,
         serviceEnabled = self.serviceEnabled == true,

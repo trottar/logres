@@ -1,5 +1,6 @@
-# P0482: est2/3; native3/4; UNVERIFIED.
-# P0481: positive; sticky.
+# P0483: quests/turn; UNVERIFIED.
+# P0482: est2/3 partial.
+# P0481: old.
 # P0480: passive proof; P0479 FAIL.
 # P0479: L-035 P0478 VISUAL FAIL; no tildes.
 # P0478: map-only FAIL; P0477 hide FAIL.

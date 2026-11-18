@@ -1,3 +1,16 @@
+## P0483 — Native-backed quest giver source completeness / fast-turn recovery (2026-11-18)
+
+P0482 main `3bc6d19` verified, Forever session165 0.0.349-dev: user
+accepts 2/3yd NPC improvement PARTIAL, reports rapid-turn missed NPC and
+live Marshal Dughan yellow ! without compass quest marker, L-035/L-030.
+QuestieDB first-ID and dual-role omission repaired only under existing
+native current-offer gate; historical-only false positives stay excluded.
+Existing 0.05s heading samples cover bounded fast-turn cone crossing;
+no new polling, 2/3yd estimated and 3/4yd native unchanged. Report Bug
+exposes missing-source diagnostics; native-unreported offers remain OPEN.
+Prior P0337 and P0476–P0482 failures retained. Client P0483 UNVERIFIED.
+See `docs/memory/evidence/P0483_QUEST_GIVER_AND_ROTATION.md`.
+
 ## P0482 — Narrow estimated NPC arrival hysteresis (2026-11-18)
 
 Verified P0481 main `51bf50d`; user reports estimated lock works nicely

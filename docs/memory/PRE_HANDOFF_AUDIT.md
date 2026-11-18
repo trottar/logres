@@ -1,3 +1,32 @@
+## P0483 — L-030/L-035 native-gated quest and fast-turn audit (2026-11-18)
+
+GitHub main P0482 `3bc6d19b8e5254e208c212d6cb6e159ffebc66fb`
+(tree `41258b21bcee6f4371a17a14bd427370102c0f31`),
+local exact Compass, QuestieDBNearby, ledger, P0337 checker blob SHA checked.
+Reviewed P0337 historical-only false positives and P0476–P0482 positive/
+negative runtime evidence. Session165 Marshal Dughan quest marker missing,
+quest greeting available; root cause not proved for this particular NPC.
+Only native-correlated historical rows may be promoted, and no new passive
+quest API or polling is introduced. P0482 estimate/native thresholds stay.
+P0483 source fixtures and full 345-check exact-candidate audit, Lua syntax,
+version-policy, diff hygiene, guarded ZIP/applier PREWRITE/POSTWRITE,
+refusal/rollback, staged-byte parity and hash are release hard gates.
+Static success is not client PASS; L-030 PARTIAL, L-035 OPEN.
+
+**Assistant R0 source-audit failure:** 337/345 PASS, eight historical
+contracts REFUSED. P0235 pinned the superseded service-only quest index;
+P0476 fixture extracted `add()` without its normal full-module bindings,
+so new `ipairs`/heading-offer locals were unavailable; P0482 CURRENT marker
+was omitted. No user checkout files or Git refs changed. Corrected with a
+numeric heading loop, scope-safe addon-owned native-offer snapshot, the
+updated bounded-index historical assertion, and restored P0482 marker.
+R1 independent 345/345 STATIC PASS on that revision. Subsequently the
+P0483 candidate added native-confirmed quest priority *within* the original
+eight-NPC cap; R2 independently passed all 345/345 static checkers on that final runtime
+revision. The published archive and generated applier require independent
+PREWRITE/POSTWRITE, refusal/rollback and byte-parity checks before delivery.
+
+
 ## P0482 — Estimate-only 2/3yd lock; release gate (2026-11-18)
 
 Baseline GitHub main `51bf50dd2c6d6d0ab57dbf91db52d1af2440f106`, tree

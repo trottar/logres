@@ -28,7 +28,7 @@ for token in ('"serviceNearMapOnlyCandidates"','"providerNearMapOnlyCandidates"'
     assert token in D,token
 assert 'L-035' in L and 'P0476' in L and '16399' in L
 assert 'no verified elevation' in E and 'P0476' in E
-assert H.startswith('# P0482:') and '# P0480:' in H and '# P0479:' in H and '# P0478:' in H and '# P0477:' in H and '# P0476:' in H
+assert H.startswith('# P0483:') and '# P0480:' in H and '# P0479:' in H and '# P0478:' in H and '# P0477:' in H and '# P0476:' in H
 bootstrap=re.search(r'^Logres.VERSION = "(0\.0\.\d+-dev)"$',(R/'Logres/Core/Bootstrap.lua').read_text(),re.M)
 toc=re.search(r'^## Version: (0\.0\.\d+-dev)$',(R/'Logres/Logres.toc').read_text(),re.M)
 assert bootstrap and toc and bootstrap.group(1)==toc.group(1)

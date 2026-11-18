@@ -417,6 +417,8 @@ local Compass = Logres:RegisterModule("Compass", {
         self.facingAvailable = false
         self.presentationActive = false
         self.headingDegrees = nil
+    self.arrivalHeadingSamples = {}
+    self.arrivalHeadingMapID = nil
 
         self.waypointAPIAvailable = false
         self.waypointEventRegistered = false
@@ -776,6 +778,11 @@ function Compass:ClearAvailableQuestPOIs(reason)
     self.dbServiceCandidateShown = 0
     self.poiSizeShown = 0
     self.dbHistoricalQuestExcluded = 0
+    self.dbNativeOfferCount = 0
+    self.nativeCurrentQuestOffers = nil
+    self.dbConfirmedQuestCandidates = 0
+    self.dbDualRoleServiceSuppressed = 0
+    self.npcArrivalRotationRecovered = false
     self.poiCollisionHiddenCount = 0
     self.poiSizeMin = nil
     self.poiSizeMax = nil
@@ -858,7 +865,17 @@ function Compass:RefreshAvailableQuestPOIs(reason)
             nativeCurrentQuestOffers[row.questID] = true
         end
     end
+    for _ in pairs(nativeCurrentQuestOffers) do
+        self.dbNativeOfferCount = (self.dbNativeOfferCount or 0) + 1
+    end
+    self.nativeCurrentQuestOffers = nativeCurrentQuestOffers
     local previousNearQuest = self.nearQuestCenterKeys or {}
+    -- A map transition cannot reuse headings from the prior zone. Retain
+    -- this local inside the provider-candidate decision scope.
+    local arrivalHeadings = self.arrivalHeadingMapID == mapID
+        and (self.arrivalHeadingSamples or {}) or {}
+    self.arrivalHeadingMapID = mapID
+    self.arrivalHeadingSamples = {self.headingDegrees}
     local nearQuestCenterKeys = {}
     -- Hold only an already-observed provider world bearing inside the
     -- unreliable 4-yard planar radius, never a live unit token or elevation.
@@ -879,6 +896,9 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     self.serviceNearMapOnlyShown = 0
     self.providerNearMapOnlyCandidates = 0
     self.serviceNearMapFallbackShown = false
+    self.dbConfirmedQuestCandidates = 0
+    self.dbDualRoleServiceSuppressed = 0
+    self.npcArrivalRotationRecovered = false
     local seenQuest={}
     local function add(row,role,key)
         if type(row)~="table" then return end
@@ -939,6 +959,31 @@ function Compass:RefreshAvailableQuestPOIs(reason)
         if centered then nearQuestCenterKeys[nearKey] = true end
         local bearing=(math.deg(math.atan2(dx,-dy))+360)%360
         local arrivalMagnitude = math.abs(normalizeRelativeDegrees(bearing-self.headingDegrees))
+        local rotationRecovered = false
+        if providerNPC and not liveProof and distance <= 2 then
+            -- All angles are addon-owned samples; bounded sweeps only. Never
+            -- use a hidden frame state, assumed floor or previous zone.
+            local lastHeading
+            for sampleIndex=1,#arrivalHeadings do
+                local sample = arrivalHeadings[sampleIndex]
+                if type(sample) == "number" then
+                    local sampled = math.abs(normalizeRelativeDegrees(bearing - sample))
+                    if sampled <= 8 and sampled < arrivalMagnitude then
+                        arrivalMagnitude, rotationRecovered = sampled, true
+                    end
+                    if lastHeading then
+                        local swept = normalizeRelativeDegrees(sample - lastHeading)
+                        local from = normalizeRelativeDegrees(bearing - lastHeading)
+                        if math.abs(swept) <= 60 and math.abs(swept) > 8
+                            and ((swept > 0 and from >= 0 and from <= swept)
+                                or (swept < 0 and from <= 0 and from >= swept)) then
+                            arrivalMagnitude, rotationRecovered = 0, true
+                        end
+                    end
+                    lastHeading = sample
+                end
+            end
+        end
         if serviceNPC and uncertainNearNPC then
             local held = priorServiceBearings[nearKey]
             if type(held) == "number" and held >= 0 and held < 360 then
@@ -970,7 +1015,10 @@ function Compass:RefreshAvailableQuestPOIs(reason)
             name=focusedIdentity(row.name, identityRole),
             potential=row.potential == true, sortKey=tostring(key),
             mapOnly=providerNPC, liveProof=liveProof, uncertainNear=uncertainNearNPC,
-            arrivalMagnitude=arrivalMagnitude,
+            arrivalMagnitude=arrivalMagnitude, rotationRecovered=rotationRecovered,
+            currentQuestOffer=role=="poi" and type(row.questID)=="number"
+                and type(self.nativeCurrentQuestOffers)=="table"
+                and self.nativeCurrentQuestOffers[row.questID]==true,
             kind=role, serviceKind=role=="service" and row.serviceKind or nil}
         -- Only real provider spawn coordinates form an arrival identity.
         -- Unknown/secret/missing source positions do not acquire a latch.
@@ -1030,23 +1078,31 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     -- historical QuestieDB candidate in the finite eight-glyph pool.
     local db = Logres:GetModule("QuestieDBNearby")
     if db and db.moduleEnabled == true and type(db.GetNearbyRows) == "function" then
-        local dbRows, dbStatus, serviceRows = db:GetNearbyRows(mapID,px,py,source.mapWidth,source.mapHeight)
+        local dbRows, dbStatus, serviceRows = db:GetNearbyRows(mapID,px,py,source.mapWidth,source.mapHeight,nativeCurrentQuestOffers)
         self.dbNearbyStatus = dbStatus
         self.dbServiceStatus = db.serviceStatus or "unavailable"
-        if type(serviceRows) == "table" then
-            for index=1,#serviceRows do
-                local row=serviceRows[index]
-                if type(row)=="table" and type(row.npcID)=="number" then
-                    add(row,"service","service"..tostring(row.npcID))
-                end
-            end
-        end
+        local confirmedQuestNPCs = {}
         if type(dbRows) == "table" then
             self.dbNearbyCount = #dbRows
             for index=1,#dbRows do
                 local row=dbRows[index]
                 if type(row) == "table" and type(row.npcID)=="number" then
+                    local firstConfirmed, unseenConfirmed
+                    if type(row.questIDs) == "table" then
+                        for qi=1,math.min(#row.questIDs,32) do
+                            local qid = row.questIDs[qi]
+                            if type(qid)=="number" and nativeCurrentQuestOffers[qid] == true then
+                                if not firstConfirmed then firstConfirmed = qid end
+                                if not seenQuest[qid] then unseenConfirmed = qid; break end
+                            end
+                        end
+                    end
+                    -- The row is Logres-owned per-refresh data, never the
+                    -- QuestieDB provider's read-only source table.
+                    row.questID = unseenConfirmed or firstConfirmed or row.questID
                     if nativeCurrentQuestOffers[row.questID] == true then
+                        confirmedQuestNPCs[row.npcID] = true
+                        self.dbConfirmedQuestCandidates = self.dbConfirmedQuestCandidates + 1
                         if not seenQuest[row.questID]
                             and add(row,"poi","db"..tostring(row.npcID)) then
                             seenQuest[row.questID]=true
@@ -1054,6 +1110,18 @@ function Compass:RefreshAvailableQuestPOIs(reason)
                     else
                         -- Historical candidate does not prove a current offer.
                         self.dbHistoricalQuestExcluded = self.dbHistoricalQuestExcluded + 1
+                    end
+                end
+            end
+        end
+        if type(serviceRows) == "table" then
+            for index=1,#serviceRows do
+                local row=serviceRows[index]
+                if type(row)=="table" and type(row.npcID)=="number" then
+                    if confirmedQuestNPCs[row.npcID] then
+                        self.dbDualRoleServiceSuppressed = self.dbDualRoleServiceSuppressed + 1
+                    else
+                        add(row,"service","service"..tostring(row.npcID))
                     end
                 end
             end
@@ -1075,6 +1143,7 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     if arrival then
         arrival.relative, arrival.magnitude, arrival.x = 0, 0, 0
         arrival.arrivalLocked = true
+        self.npcArrivalRotationRecovered = arrival.rotationRecovered == true
         -- First within its existing family; native quest/waypoint priority stays.
         for _, pool in ipairs({services, localPOIs}) do
             for index, item in ipairs(pool) do
@@ -1171,7 +1240,11 @@ function Compass:RefreshAvailableQuestPOIs(reason)
                 end
                 if candidate.arrivalLocked then
                     self.npcArrivalLockRendered = true
-                    if type(candidate.name) == "string" then closestFocus = candidate end
+                    if type(candidate.name) == "string"
+                        and not (closestFocus and closestFocus.currentQuestOffer == true
+                            and candidate.currentQuestOffer ~= true) then
+                        closestFocus = candidate
+                    end
                 elseif not closestFocus or not closestFocus.arrivalLocked then
                     -- Original nearest-marker behavior outside an arrival lock.
                     if candidate.magnitude<=focusDegrees and type(candidate.name)=="string"
@@ -1287,6 +1360,8 @@ function Compass:ClearPresentation(reason, errorText)
     self.facingAvailable = false
     self.presentationActive = false
     self.headingDegrees = nil
+    self.arrivalHeadingSamples = {}
+    self.arrivalHeadingMapID = nil
     self.waypointRelativeDegrees = nil
     self.lastReason = reason or "unavailable"
     self.lastError = errorText
@@ -1762,6 +1837,12 @@ function Compass:RefreshHeading(reason)
     self.facingAvailable = true
     self.presentationActive = true
     self.headingDegrees = headingDegrees
+    -- Reuse the existing 0.05s heading cadence to avoid skipping a nearby
+    -- NPC while the 0.15s marker sampler waits. Only ordinary headings.
+    local samples = self.arrivalHeadingSamples or {}
+    samples[#samples + 1] = headingDegrees
+    if #samples > 4 then table.remove(samples, 1) end
+    self.arrivalHeadingSamples = samples
     self.lastReason = reason or "heading-refresh"
     self.lastError = nil
 
@@ -1864,6 +1945,10 @@ function Compass:GetDebugStatus()
         dbNearbyCount = self.dbNearbyCount,
         dbCandidateShown = self.dbCandidateShown,
         dbHistoricalQuestExcluded = self.dbHistoricalQuestExcluded,
+        dbNativeOfferCount = self.dbNativeOfferCount,
+        dbConfirmedQuestCandidates = self.dbConfirmedQuestCandidates,
+        dbDualRoleServiceSuppressed = self.dbDualRoleServiceSuppressed,
+        npcArrivalRotationRecovered = self.npcArrivalRotationRecovered == true,
         dbServiceStatus = self.dbServiceStatus,
         dbServiceCandidateCount = self.dbServiceCandidateCount,
         dbServiceCandidateShown = self.dbServiceCandidateShown,

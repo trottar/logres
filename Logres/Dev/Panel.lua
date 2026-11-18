@@ -443,7 +443,22 @@ function Logres:CaptureBugIncident()
         "serviceNearProofSoftInteract", "serviceNearProofNameplate",
         "serviceNearProofOther", "nameplateEventRegistered",
         "dbServiceCandidateShown", "poiCollisionHiddenCount",
+        "dbNearbyCount", "dbHistoricalQuestExcluded", "dbNativeOfferCount",
+        "dbConfirmedQuestCandidates", "dbDualRoleServiceSuppressed",
+        "npcArrivalRotationRecovered", "availableQuestPoiShown",
         "focusedMarkerKind", "focusedMarkerDistanceYards"})
+    -- Read only existing Logres-owned source snapshots. These distinguish a
+    -- missing native current offer from a provider index/collision gap.
+    incident.snapshot.questCompassSources = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("NavigationSourceProbe"):GetDebugStatus()
+    end), {"availableQuestAPIAvailable", "availableQuestReason", "availableQuestScanned",
+        "availableQuestNearby", "questMapStatus", "questMapScanned", "questMapNearby",
+        "nativeForceStatus", "nativeTaskStatus", "nativeHubStatus", "nativeOfferNearby",
+        "questLineRequestStatus", "questLineRequestAttemptCount", "currentMapID"})
+    incident.snapshot.questCompassDB = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("QuestieDBNearby"):GetDebugStatus()
+    end), {"state", "map", "area", "zoneNPCs", "questNPCs", "spawns",
+        "nearby", "truncated", "questIDTruncated", "serviceNearby", "serviceStatus"})
     incident.snapshot.questPresentation = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("QuestDialogue"):GetDebugStatus()
     end), {"rootShown", "presentationShown", "lastPresentationReason",
