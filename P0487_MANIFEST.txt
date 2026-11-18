@@ -1,0 +1,23 @@
+P0487 Docs-only Quest-Giver Runtime PASS Evidence
+Expected baseline: 2c425251821ea983a033eb6cbf2d4b399eace500
+Runtime version: UNCHANGED (0.0.353-dev)
+P0486 quest35 client scope: PASS (session170 #17450-#17482)
+L-030: PARTIAL, broader false-positive/future quest coverage OPEN
+Independent source candidate: 348/348 STATIC PASS
+PREWRITE/POSTWRITE: 3/3 SCOPED PASS
+git diff --check: PASS
+WoW redeploy: NOT REQUIRED (docs-only)
+Commit/push performed: NO
+
+Changed paths:
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0487_QUEST_MARKER_RUNTIME_PASS.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+P0487_MANIFEST.txt

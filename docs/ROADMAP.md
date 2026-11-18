@@ -12,6 +12,20 @@ all compass 2/3- and 3/4yd behavior unchanged. P0485 gameplay FAIL,
 L-030 OPEN/PARTIAL, P0486 client UNVERIFIED. Evidence:
 `docs/memory/evidence/P0486_INFORMATIONAL_QUEST_FLAGS.md`.
 
+## P0487 — L-030 scoped Forever PASS (docs-only; 2026-11-18)
+
+P0486 main `2c42525` verified. Source/deployed/captured `0.0.353-dev`,
+Forever session170 #17450/#17457/#17470/#17475/#17478/#17480/#17482:
+QuestieDB eligibility1 (NPC240 quest35), available marker1, historical
+excluded7, native offers0. #17457 greeting available1; #17470 quest35
+live offer captured. User reports "Worked nicely"; screenshot match to
+incident is inferred by mtime. P0486 quest35 false-negative is a scoped
+runtime PASS, not a general fix. L-030 PARTIAL: future/completed, other
+quest-giver and conditional gating remain untested. L-035 user rotation
+improvement PARTIAL and L-002 OPEN; P0483–P0485 negative history kept.
+No runtime code/version change; no WoW redeploy required.
+Evidence: `docs/memory/evidence/P0487_QUEST_MARKER_RUNTIME_PASS.md`.
+
 ## P0485 — Correct missing optional QuestieDB fields and Report Bug eligibility detail (2026-11-18)
 
 P0484 main `3277132` verified/tree `8254cac`; Forever session168

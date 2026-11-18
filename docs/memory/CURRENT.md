@@ -11,10 +11,10 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0486** L-030: P0485 Forever #17365–#17371 FAIL: quest35
-`conditional-quest-flags`; SHARABLE8 is not gating. Allow safe
-informational bits; daily/unknown veto, WoW UNVERIFIED.
-**P0485** P0484/P0483 quest FAIL retained.
+**P0486** main `2c42525`, Forever #17450–#17482:
+quest35 marker1/eligible1/native0, user PASS scoped.
+**P0487** docs-only; L-030 PARTIAL, false-positive variants open.
+**P0485** FAIL retained.
 **P0484** FAIL; **P0483** turn PARTIAL; **P0482** est2/3/native3/4.
 P0476 floor, P0477 hide, P0478 VISUAL FAIL,
 P0479 FAIL retained.
@@ -68,8 +68,8 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 
 ## Next Action
 
-P0486 quest35 shareable flag and false-positive Forever test.
-L-030 OPEN/PARTIAL, L-035 PARTIAL/OPEN, L-002 OPEN; retain failures.
+Test L-030 other quest NPCs/future/completed. P0486 q35 PASS;
+L-035/L-002 OPEN. Previous failures retained.
 
 ## Success Criteria
 
@@ -79,6 +79,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0487_QUEST_MARKER_RUNTIME_PASS.md
 - docs/memory/evidence/P0486_INFORMATIONAL_QUEST_FLAGS.md
 - docs/memory/evidence/P0485_SPARSE_QUEST_ELIGIBILITY.md
 - docs/memory/evidence/P0484_QUEST_ELIGIBILITY_FALLBACK.md

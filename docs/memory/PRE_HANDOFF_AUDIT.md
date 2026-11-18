@@ -19,6 +19,35 @@ without changing runtime behavior. Frozen source complete audit
 348/348 PASS, actual-source P0486/P0485 fixture PASS, syntax parity PASS.
 Await transactional package suite; Forever remains UNVERIFIED.
 
+## P0487 — P0486 Forever scoped PASS, docs-only pre-handoff audit (2026-11-18)
+
+Confirmed GitHub `main` P0486 `2c425251821ea983a033eb6cbf2d4b399eace500`
+(tree `2747284339458b651260389f1243023b37860133`) and exact
+Git blob parity for all ten existing documentation paths being edited.
+Read L-030 ledger first, P0486 evidence, client Report Bug ZIP and
+incident diagnostics. Session170 #17450–#17482 establishes quest35
+eligible1/rendered1/native0, screenshot inference and Logres offer
+quest35; no comprehensive false-positive PASS. P0483–P0485 failures
+retained. P0487 changes documents only; no Lua, TOC or checkers.
+Initial full audit **291/348 FAIL** only on legacy CURRENT/HANDOFF
+byte budgets and active-patch heading continuity: P0487 was put first
+while existing historical contracts require P0486 active. Compacted
+CURRENT to 9,794 bytes and HANDOFF to 7,989 bytes, retained P0486
+as active/first in CURRENT and HANDOFF. Second audit **343/348 FAIL**:
+roadmap/ACTIVE/STATUS/PATCH_INDEX P0487 heading appeared ahead of
+P0486; moved docs-only P0487 below P0486. No Lua, TOC, historical
+checker, or gameplay behavior changed to bypass tests.
+Corrected full source audit **348/348 STATIC PASS** (historical
+contracts preserved), `check_memory_health.py` PASS with no warnings,
+version policy PASS, and updated roadmap-order/handoff contracts PASS.
+Package tests on verified SHA-256 payload: guarded wrong HEAD, dirty
+tracked state, tamper and collision refusal all PASS; injected POSTWRITE
+failure restores ten patch-owned files and leaves no manifest; canonical
+scoped docs applier PREWRITE **3/3**, POSTWRITE **3/3**, manifest,
+byte parity and payload cleanup PASS. Final source bytes are re-audited
+after recording this receipt. No runtime code, WoW redeploy or generic
+quest/future false-positive validation performed; L-030 stays PARTIAL.
+
 ## P0485 — L-030 sparse record false-negative audit (2026-11-18)
 
 Verified P0484 main `3277132`, session168 #17282–#17286 deployed

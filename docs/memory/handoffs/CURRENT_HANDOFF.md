@@ -1,4 +1,5 @@
-# P0486: P0485 q35 FAIL; ordinary flags not availability.
+# P0486: q35 scoped PASS; P0487 docs.
+# P0487: quest35 PASS; L-030 PARTIAL.
 # P0485: sparse DB fields; client FAIL.
 # P0484: quest35 FAIL.
 # P0483: quest FAIL; turn PARTIAL.

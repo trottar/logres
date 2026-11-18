@@ -7,6 +7,17 @@ other current eligibility and native/secret/fallback controls. Actual
 source + historical checker/guarded package validation REQUIRED, WoW
 UNVERIFIED, L-030 OPEN. `P0486_INFORMATIONAL_QUEST_FLAGS.md`.
 
+## P0487 — P0486 quest35 Forever scoped PASS evidence (2026-11-18)
+
+Docs-only checkpoint against verified main `2c42525`: session170
+`0.0.353-dev` #17450–#17482 reports NPC240 quest35 eligible1,
+available marker1, seven historical candidates excluded, native offers0;
+quest35 native Logres offer captured and user confirms visual result.
+L-030 stays PARTIAL pending other actual/future/completed quest tests;
+L-035 PARTIAL and L-002 OPEN; P0483–P0485 failures retained.
+No source/runtime version change and no WoW redeployment.
+See `docs/memory/evidence/P0487_QUEST_MARKER_RUNTIME_PASS.md`.
+
 ## P0485 — Correct missing optional QuestieDB fields and Report Bug eligibility detail (2026-11-18)
 
 P0484 main `3277132` verified/tree `8254cac`; Forever session168
