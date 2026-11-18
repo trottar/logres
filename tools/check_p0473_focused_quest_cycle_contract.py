@@ -9,7 +9,7 @@ T=read('Logres/Logres.toc');B=read('Logres/Core/Bootstrap.lua')
 X=ET.parse(R/'Logres/Bindings.xml').getroot()
 assert X.tag=='Bindings' and len(X)==1
 binding=X[0]
-assert binding.tag=='Binding' and binding.attrib=={'name':'LOGRES_NEXT_FOCUSED_QUEST','header':'LOGRES'}
+assert binding.tag=='Binding' and binding.attrib=={'name':'LOGRES_NEXT_FOCUSED_QUEST','header':'LOGRES','category':'ADDONS'}
 assert (binding.text or '').strip()=='Logres_NextFocusedQuest()'
 assert 'Bindings.xml' not in T, 'native client loads binding XML automatically'
 assert len([s for s in T.splitlines() if s.endswith('.lua')])==96

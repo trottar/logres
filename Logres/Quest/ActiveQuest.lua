@@ -578,7 +578,12 @@ function ActiveQuest:Render(snapshot, reason)
         and colorValue("complete")
         or colorValue("ambient")
 
-    local cycleIDs = not snapshot.preview and progress:ReadCycleQuestIDs()
+    local cycleIDs, listReason
+    if not snapshot.preview then
+        cycleIDs, listReason = progress:ReadCycleQuestIDs()
+    end
+    self.lastCycleListReason = listReason or "preview"
+    self.cycleZeroRowsSkipped = progress.cycleZeroRowsSkipped or 0
     self.cycleCandidateCount = cycleIDs and #cycleIDs or 0
     if self.cycleCandidateCount >= 2 then
         self.cycleButton:Show()
@@ -899,6 +904,8 @@ function ActiveQuest:GetDebugStatus()
         previewMode = self.previewMode,
         cycleButtonReady = self.cycleButton ~= nil,
         cycleCandidateCount = self.cycleCandidateCount,
+        cycleZeroRowsSkipped = self.cycleZeroRowsSkipped,
+        lastCycleListReason = self.lastCycleListReason,
         cycleAttempts = self.cycleAttempts,
         lastCycleResult = self.lastCycleResult,
         lastCycleQuestID = self.lastCycleQuestID,
@@ -965,6 +972,8 @@ function ActiveQuest:OnInitialize()
     self.lastError = nil
     self.displayRows = {}
     self.cycleCandidateCount = 0
+    self.cycleZeroRowsSkipped = 0
+    self.lastCycleListReason = "not-read"
     self.cycleAttempts = 0
     self.lastCycleResult = "not-requested"
     self.lastCycleQuestID = nil

@@ -1,3 +1,25 @@
+## P0474 — L-037 quest cycle header correction (2026-11-17)
+
+P0473 `0679b09`/tree `ab73a726` verified; #16018 Forever 0.0.341-dev
+user FAIL. Read historical F.6, P0473, P0126/P0343 and version policy
+before change; P0473 actual-source fixture converted header0 to nil.
+Corrected fixture reproduces refusal on unmodified source. P0474 skips
+numeric0/nil only, keeps secret/invalid/cap safety and no unsolicited
+supertrack mutation; adds category ADDONS to existing binding, leaves
+unassigned. New checker and source fixtures required. Complete exact
+candidate static suite, Lua parse, canonical ZIP PREWRITE/POSTWRITE,
+refusal/rollback/manifest/hash/staged parity REQUIRED before handoff;
+no WoW PASS. Initial R0 independent audit REFUSED 335/337: P0448/P0449
+require handoff opening exactly `# P0474:`; R0 used `# P0474 L-037:`.
+Corrected handoff; no runtime code changed. R1 independent full exact
+candidate 337/337 STATIC PASS (12 workers, all real checkers). The
+P0473 actual-source fixture using numeric0 fails against original P0473
+and passes P0474; nil/negative/secret/refusal/preview/OFF variants PASS.
+Changed runtime Lua syntax parse under texlua Lua5.3 PASS; no client
+runtime or Lua5.1 result claimed. Release canonical builder plus
+installer PREWRITE/POSTWRITE, refusal, rollback, manifest/diff and staged
+ZIP parity are a hard handoff gate; final release only after PASS.
+
 ## P0473 — Focused quest cycling candidate (2026-11-17)
 
 Exact GitHub P0472 main `79bfc5a` and tree `96712192` verified against local staged author candidate. Historical P0126/P0343 Active Quest and F.6 objective source contracts reviewed before changes; native quest mutation was previously prohibited. Only explicit focus mutation now permitted within one named Progress method; existing safety gates retained. Initial 336/336 checker pass and actual-source focus fixture PASS. Then added read-only Report Bug cycle counters, reset count when hidden, and source-enabled guard. Corrected exact candidate passed 336/336 checkers independently (10 parallel workers), 15 actual-source Lua fixtures, all three changed Lua parses under texlua (Lua 5.3), XML and runtime-version policy. Full canonical ZIP PREWRITE/POSTWRITE/rollback/refusal/manifest checks still required. No Lua 5.1 interpreter or WoW Forever execution; no gameplay PASS. Client UNVERIFIED.

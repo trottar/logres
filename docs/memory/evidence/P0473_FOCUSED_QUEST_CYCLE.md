@@ -25,3 +25,11 @@ Test in Forever with two accepted quests: panel right-chevron changes focus and 
 ## Audit
 
 Final full candidate checker/fixture/transactional ZIP results must be recorded in PRE_HANDOFF_AUDIT before delivery. WoW runtime UNVERIFIED.
+
+## Post-deployment failure, P0474 follow-up
+
+2026-11-17 Forever 0.0.341-dev session155 #16018: user VISUAL FAIL,
+button absent, 16 attempts `cycle-quest-invalid`, zero cycle candidates.
+P0473 fixture normalized native header0 to nil and missed failure. Binding
+category AddOns claim unproven: XML lacked category attribute. P0474 corrects
+both, L-037 OPEN; no retrospective change to historical STATIC PASS.

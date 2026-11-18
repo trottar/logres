@@ -338,12 +338,16 @@ function Progress:ReadCycleQuestIDs()
     end
 
     local ids, seen = {}, {}
+    self.cycleZeroRowsSkipped = 0
     for index = 1, count do
         local readOK, questID = pcall(C_QuestLog.GetQuestIDForLogIndex, index)
         if not readOK then return nil, "cycle-quest-read-failed" end
         if isSecret(questID) then return nil, "cycle-quest-secret" end
-        -- Header rows return nil. Anything else must be a complete ordinary ID.
-        if questID ~= nil then
+        -- Forever can return numeric 0 for quest-log headers; other clients
+        -- return nil. Neither is a quest, and neither should abort cycling.
+        if questID == 0 then
+            self.cycleZeroRowsSkipped = self.cycleZeroRowsSkipped + 1
+        elseif questID ~= nil then
             if type(questID) ~= "number" or questID <= 0
                 or questID % 1 ~= 0 then
                 return nil, "cycle-quest-invalid"

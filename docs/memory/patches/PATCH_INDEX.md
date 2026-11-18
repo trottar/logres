@@ -1,3 +1,10 @@
+## P0474 — Quest cycle header zero and ADDONS category repair (2026-11-17)
+
+P0473 `0679b09` Forever 0.0.341-dev #16018 VISUAL FAIL, 16 failed cycle
+attempts, candidate0, invalid header source. P0474 skips zero quest-log
+headers and categorizes keybind; exact-source tests/static/installer audit
+recorded in PRE_HANDOFF_AUDIT. L-037 OPEN, client UNVERIFIED.
+
 ## P0473 — Focused quest cycle (2026-11-17)
 
 Verified P0472 main `79bfc5a`; user reports default Chat SHOW PASS scoped. Add native focus Next chevron and user-assignable keybinding, guarded log enumeration/secret rejection, native supertrack write only on explicit action; retains all other owners, no saved watch mutation. Runtime UNVERIFIED; see P0473 evidence.

@@ -1,3 +1,13 @@
+## P0474 — L-037 Forever quest-cycle failure (2026-11-17)
+
+P0473 main `0679b09` source/deploy/capture 0.0.341-dev, session155
+incident16018: quest focus76 shown, Next absent; cycle candidate0, attempts16,
+reason `cycle-quest-invalid`. Exact P0473 fixture wrongly converted header0
+into nil, hiding real client mismatch. P0474 accepts nil/zero header sentinels,
+retains invalid/secret fail-open and adds `ADDONS` keybinding category and
+read-only list reason/zero count. User runtime PASS still REQUIRED; no changes
+to quest watch/claim, compass source or existing UI ownership. See P0474 evidence.
+
 ## P0473 — Focused quest cycle (2026-11-17)
 
 Verified P0472 main `79bfc5a`; user reports default Chat SHOW PASS scoped. Add native focus Next chevron and user-assignable keybinding, guarded log enumeration/secret rejection, native supertrack write only on explicit action; retains all other owners, no saved watch mutation. Runtime UNVERIFIED; see P0473 evidence.

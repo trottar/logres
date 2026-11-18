@@ -195,6 +195,7 @@ function Logres:CaptureBugIncident()
         return self:GetModule("ActiveQuest"):GetDebugStatus()
     end), {"presentationShown", "lastQuestID", "previewMode",
         "cycleButtonReady", "cycleCandidateCount", "cycleAttempts",
+        "cycleZeroRowsSkipped", "lastCycleListReason",
         "lastCycleResult", "lastCycleQuestID"})
     incident.snapshot.preferences = pickTraceStatus(ownedTraceStatus(function()
         return self:GetPreferences()

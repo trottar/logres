@@ -10,10 +10,10 @@ function L:RegisterModule(name, options)
 end
 function L:GetModule(name) return assert(modules[name], name) end
 local secret = {secret=true}
-local entries = {0, 101, 202, 303, 202}
+local entries = {0, 101, 0, 202, 303, 202}
 local focused, selected = 101, 0
 local calls, refused, lag = {}, false, false
-local countSecret, indexSecret = false, false
+local countSecret, indexSecret, nilHeader = false, false, false
 local env = {
     issecretvalue = function(value) return value == secret end,
     C_QuestLog = {
@@ -22,7 +22,7 @@ local env = {
         end,
         GetQuestIDForLogIndex = function(index)
             if indexSecret and index == 3 then return secret end
-            if entries[index] == 0 then return nil end
+            if nilHeader and index == 3 then return nil end
             return entries[index]
         end,
         GetSelectedQuest = function() return selected end,
@@ -47,6 +47,10 @@ local refreshes=0
 function A:Refresh() refreshes=refreshes+1;return true end
 local ids,reason=P:ReadCycleQuestIDs()
 assert(reason=="cycle-log-ready" and #ids==3 and ids[1]==101 and ids[2]==202 and ids[3]==303)
+assert(P.cycleZeroRowsSkipped==2, "Forever header zero values not skipped")
+nilHeader=true;ids,reason=P:ReadCycleQuestIDs()
+assert(reason=="cycle-log-ready" and #ids==3 and P.cycleZeroRowsSkipped==1)
+nilHeader=false
 assert(A:CycleFocusedQuest("button") and focused==202 and A.lastCycleQuestID==202)
 assert(A:CycleFocusedQuest("button") and focused==303)
 assert(A:CycleFocusedQuest("button") and focused==101,"last-to-first wrap")
@@ -64,6 +68,10 @@ entries={101};focused=101
 local before=#calls
 local ok,why=A:CycleFocusedQuest("button")
 assert(not ok and why=="cycle-no-alternative" and #calls==before)
+entries={101,202,303};focused=101
+entries={101,-3,202};before=#calls
+ok,why=A:CycleFocusedQuest("button")
+assert(not ok and why=="cycle-quest-invalid" and #calls==before)
 entries={101,202,303};focused=101
 indexSecret=true;before=#calls
 ok,why=A:CycleFocusedQuest("button")

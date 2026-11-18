@@ -11,9 +11,10 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0473** Focused-quest Next button/bind candidate on verified P0472
-`79bfc5a`. P0472 Chat SHOW user PASS; P0471 crest UNVERIFIED.
-Preserve HP/auras/50-50/UP, native quest fallback. P0473 client UNVERIFIED.
+**P0474** L-037 P0473 Forever 0.0.341-dev #16018 FAIL: no cycle button,
+candidates0/attempts16/`cycle-quest-invalid`. Fix 0 header rows and bind
+ADDONS category; Chat SHOW PASS, crest UNVERIFIED.
+Preserve HP/aura/50-50/UP, quest fallback. P0474 client UNVERIFIED.
 Recovery/taint unverified. P0467 JSON roundtrip PASS.
 P0464 position PASS/style FAIL; P0463 GetPoint FAIL retained.
 P0460 HP/nameplates PASS scoped; P0457 selected PASS; P0461 aura FAIL;
@@ -62,8 +63,8 @@ L-011 PARTIAL; L-028 full safety and L-048 OPEN.
 
 ## Next Action
 
-Validate P0473 focused quest Next button and unassigned native keybind:
-normal multi-quest, single quest, preview, OFF, native focus/compass.
+Validate P0474 quest Next/button/binding: multi/single quest, preview,
+OFF, focus/compass. P0473 FAIL retained.
 P0471 crest restoration still unverified; diagnostics on actual issues.
 L-051: max4/scan6/self-cast baseline; four-column grid, WoW UNVERIFIED. Preserve accepted enemy UI.
 

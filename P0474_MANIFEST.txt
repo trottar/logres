@@ -1,0 +1,32 @@
+P0474 L-037 quest cycle header and keybinding category repair
+Verified baseline: 0679b097417a2dc851da233675baa7bf0f1015b5
+Candidate runtime version: 0.0.342-dev
+PREWRITE: 337/337 STATIC PASS
+POSTWRITE: 337/337 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Bindings.xml
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Quest/ActiveQuest.lua
+Logres/Quest/Progress.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0473_FOCUSED_QUEST_CYCLE.md
+docs/memory/evidence/P0474_QUEST_CYCLE_HEADER_REPAIR.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0474_QUEST_CYCLE_HEADER_REPAIR.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0473_focused_quest_cycle_contract.py
+tools/check_p0474_quest_cycle_header_contract.py
+tools/test_p0473_quest_cycle.lua
+P0474_MANIFEST.txt
