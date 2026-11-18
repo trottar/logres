@@ -26,7 +26,7 @@ assert 'self.serviceNearUnverifiedHidden = self.serviceNearUnverifiedHidden + 1'
 for tok in ('"serviceNearMapOnlyCandidates"','"serviceNearMapOnlyShown"',
             '"serviceNearMapFallbackShown"'):
     assert tok in D,tok
-assert H.startswith('# P0484:') and '# P0480:' in H and '# P0479:' in H and '# P0478:' in H and '# P0477:' in H
+assert H.startswith('# P0485:') and '# P0480:' in H and '# P0479:' in H and '# P0478:' in H and '# P0477:' in H
 assert '16476' in E and '16482' in E and 'P0477' in E
 assert '| L-035 |' in I and 'P0477' in I and 'P0478' in I
 for forb in ('UnitPosition(', 'ClosestUnitPosition(', 'C_Timer.', 'HideUIPanel('):

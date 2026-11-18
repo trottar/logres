@@ -1,3 +1,20 @@
+## P0485 — Correct missing optional QuestieDB fields and Report Bug eligibility detail (2026-11-18)
+
+P0484 main `3277132` verified/tree `8254cac`; Forever session168
+0.0.351-dev #17282/#17284/#17286 FAIL: Dughan quest35 unmarked;
+QuestieDB nearby9 (eight selected), native offers0, model-qualified0,
+historical excluded8. P0484 wrongly treats sparse optional field nil
+as missing required data; actual-source fixture filled missing optional
+numeric fields with synthetic zero, hiding defect. P0485 allows only
+successful ordinary nil as an absent restriction, still rejects failed,
+secret or nonzero conditional fields; empty arrays mean no prerequisite.
+Adds existing eligibility counters and first/nearest reason to actual
+Report Bug incident snapshots. No change to compass rotation/2-3 or
+native 3-4yd, service, quest rendering, interaction or native fallback.
+P0484 FAIL retained; P0485 Forever UNVERIFIED, L-030 OPEN/PARTIAL.
+See `docs/memory/evidence/P0485_SPARSE_QUEST_ELIGIBILITY.md`.
+
+
 ## P0484 — L-030 independent QuestieDB quest eligibility (2026-11-18)
 
 Verified P0483 main `24245ce` / tree `1724dcb`; Forever 0.0.350-dev

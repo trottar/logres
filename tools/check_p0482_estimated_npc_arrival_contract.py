@@ -25,7 +25,7 @@ for bad in ('UnitGUID', 'CheckInteractDistance', 'C_Timer', 'UnitPosition', 'Set
  assert bad not in H,bad
 for bad in ('"~" .. tostring','floor unknown','Services at map location','ClosestUnitPosition('):
  assert bad not in C,bad
-assert read('docs/memory/handoffs/CURRENT_HANDOFF.md').startswith('# P0484:')
+assert read('docs/memory/handoffs/CURRENT_HANDOFF.md').startswith('# P0485:')
 assert '# P0481:' in read('docs/memory/handoffs/CURRENT_HANDOFF.md')
 assert '**P0482**' in read('docs/memory/CURRENT.md')
 assert '| L-035 |' in read('docs/memory/investigations/ISSUE_LEDGER.md')

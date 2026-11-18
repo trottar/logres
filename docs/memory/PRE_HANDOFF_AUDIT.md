@@ -1,3 +1,18 @@
+## P0485 — L-030 sparse record false-negative audit (2026-11-18)
+
+Verified P0484 main `3277132`, session168 #17282–#17286 deployed
+0.0.351-dev failure. P0484 tests manufactured default zero for omitted
+numeric fields; no sparse QuestieDB record was tested. P0485 uses a
+tri-state optional getter and adds incident eligibility diagnostics, retaining
+secret/unknown vetoes. New actual-source sparse fixture covers nil/empty,
+failed/secret optional value, current/complete, level/race/class/prereq,
+native priority and finite candidate limit. First independent audit **344/347 FAIL**: P0482/P0483/P0484
+historical checkers required bold markers in CURRENT, omitted during
+compaction. Reinstated those markers; no runtime/test relaxation.
+Full static and transactional PREWRITE/POSTWRITE validation must precede
+release. No WoW PASS.
+
+
 ## P0484 — L-030 quest35 native-source gap; conservative eligibility audit (2026-11-18)
 
 GitHub main P0483 verified `24245ce`/tree `1724dcb`; session167

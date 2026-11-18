@@ -97,7 +97,9 @@ end
 
 local function checkIDArray(ids, predicate, mode)
     if ids == nil then return true end
-    if type(ids) ~= "table" or #ids > 32 or #ids == 0 then return false end
+    if type(ids) ~= "table" or #ids > 32 then return false end
+    -- An ordinary empty relationship list imposes no restriction.
+    if #ids == 0 then return true end
     local found = false
     for i=1,#ids do
         local id = validQuestID(ids[i])
@@ -127,17 +129,33 @@ local function independentlyEligible(questID)
     if onQuest or completed then return false, "already-active-or-complete" end
     local level = number(read(_G.UnitLevel, "player"))
     if not level or level <= 0 then return false, "player-level-unavailable" end
-    local requiredLevel = number(read(db.Get, questID, "requiredLevel"))
-    local maxLevel = number(read(db.Get, questID, "requiredMaxLevel"))
-    if not requiredLevel or not maxLevel then return false, "level-data-unavailable" end
+    -- QuestieDB has sparse optional fields. A successful, ordinary nil is an
+    -- absent restriction, while a failed call or secret-capable result is
+    -- UNKNOWN and must not authorize a quest marker.
+    local function fact(key)
+        local ok, value = pcall(db.Get, questID, key)
+        if not ok or type(issecretvalue) ~= "function" then return nil, false end
+        local classified, secret = pcall(issecretvalue, value)
+        if not classified or secret ~= false then return nil, false end
+        return value, true
+    end
+    local function optionalNumber(key)
+        local value, known = fact(key)
+        if not known then return nil, false end
+        if value == nil then return 0, true end
+        return number(value), number(value) ~= nil
+    end
+    local requiredLevel, requiredKnown = optionalNumber("requiredLevel")
+    local maxLevel, maxKnown = optionalNumber("requiredMaxLevel")
+    if not requiredKnown or not maxKnown then return false, "level-data-unavailable" end
     if (requiredLevel > 0 and level < requiredLevel)
         or (maxLevel > 0 and level > maxLevel) then
         return false, "level-requirement"
     end
 
-    local function fact(key) return read(db.Get, questID, key) end
-    local races, classes = number(fact("requiredRaces")), number(fact("requiredClasses"))
-    if races == nil or classes == nil then return false, "mask-data-unavailable" end
+    local races, racesKnown = optionalNumber("requiredRaces")
+    local classes, classesKnown = optionalNumber("requiredClasses")
+    if not racesKnown or not classesKnown then return false, "mask-data-unavailable" end
     if races > 0 then
         if read(lib.RequireContract, 3) ~= true then return false, "race-contract-unavailable" end
         local e = ordinary(lib.Enum, "table")
@@ -171,11 +189,15 @@ local function independentlyEligible(questID)
         if active == nil or done == nil then return nil end
         return active or done
     end
-    if not checkIDArray(fact("preQuestGroup"), completedQuest, "all")
-        or not checkIDArray(fact("preQuestSingle"), completedQuest, "any") then
+    local group, groupKnown = fact("preQuestGroup")
+    local single, singleKnown = fact("preQuestSingle")
+    if not groupKnown or not singleKnown then return false, "prerequisite-read-unavailable" end
+    if not checkIDArray(group, completedQuest, "all")
+        or not checkIDArray(single, completedQuest, "any") then
         return false, "missing-prerequisite"
     end
-    local exclusives = fact("exclusiveTo")
+    local exclusives, exclusiveKnown = fact("exclusiveTo")
+    if not exclusiveKnown then return false, "exclusive-read-unavailable" end
     if exclusives ~= nil and not checkIDArray(exclusives, function(id)
         local active = activeOrCompletedQuest(id)
         if active == nil then return nil end
@@ -189,8 +211,8 @@ local function independentlyEligible(questID)
         {"disabledByQuest", activeQuest, true},
         {"breadcrumbForQuestId", activeOrCompletedQuest, true},
     }) do
-        local value = number(fact(spec[1]))
-        if value == nil then return false, "chain-data-unavailable" end
+        local value, known = optionalNumber(spec[1])
+        if not known then return false, "chain-data-unavailable" end
         if value ~= 0 then
             if not validQuestID(value) then return false, "invalid-chain-id" end
             local state = spec[2](value)
@@ -203,21 +225,29 @@ local function independentlyEligible(questID)
     -- No general quest marker can be asserted from their historical data.
     for _, name in ipairs({"requiredSkill", "requiredMinRep", "requiredMaxRep",
         "requiredRanks"}) do
-        if fact(name) ~= nil then return false, "conditional-" .. name end
+        local value, known = fact(name)
+        if not known then return false, "conditional-read-" .. name end
+        if value ~= nil then
+            -- An explicitly empty ranks list is also unrestricted; other
+            -- populated conditional requirements are not modeled here.
+            if name ~= "requiredRanks" or type(value) ~= "table"
+                or #value ~= 0 then
+                return false, "conditional-" .. name
+            end
+        end
     end
     for _, name in ipairs({"requiredSpell", "requiredSpecialization"}) do
-        local value = number(fact(name))
-        if value == nil or value ~= 0 then
+        local value, known = optionalNumber(name)
+        if not known or value ~= 0 then
             return false, "conditional-" .. name
         end
     end
-    local flags = number(fact("specialFlags"))
-    if flags == nil or flags ~= 0 then return false, "conditional-special-flags" end
-    -- Repeatable/daily/weekly/monthly or event/phase restrictions are not
-    -- implied available from historical data. Standard numeric quest flags
-    -- require explicit native corroboration when nonzero.
-    local questFlags = number(fact("questFlags"))
-    if questFlags == nil or questFlags ~= 0 then return false, "conditional-quest-flags" end
+    local flags, flagsKnown = optionalNumber("specialFlags")
+    if not flagsKnown or flags ~= 0 then return false, "conditional-special-flags" end
+    -- A genuinely absent flag is an absent restriction; a present nonzero
+    -- flag still needs independent native corroboration.
+    local questFlags, questFlagsKnown = optionalNumber("questFlags")
+    if not questFlagsKnown or questFlags ~= 0 then return false, "conditional-quest-flags" end
     return true, "player-requirements-satisfied"
 end
 
@@ -561,6 +591,11 @@ function Nearby:GetNearbyRows(map, px, py, width, height, currentQuestOffers)
     self.questEligibilityLastReason = "none"
     self.questEligibilityLastQuestID = nil
     self.questEligibilityLastNPCID = nil
+    self.questEligibilityClosestRejectedNPCID = nil
+    self.questEligibilityClosestRejectedQuestID = nil
+    self.questEligibilityClosestRejectedReason = "none"
+    self.questEligibilityFirstQualifiedNPCID = nil
+    self.questEligibilityFirstQualifiedQuestID = nil
     if not self.complete or not self.mapID then return {}, self.state end
     -- A map transition invalidates old-zone presentation immediately, even
     -- before the registered map event has built the next zone's index.
@@ -643,6 +678,11 @@ function Nearby:GetNearbyRows(map, px, py, width, height, currentQuestOffers)
                         self.questEligibilityLastReason = reason
                         self.questEligibilityLastQuestID = id
                         self.questEligibilityLastNPCID = row.npcID
+                        if not allowed and self.questEligibilityClosestRejectedNPCID == nil then
+                            self.questEligibilityClosestRejectedNPCID = row.npcID
+                            self.questEligibilityClosestRejectedQuestID = id
+                            self.questEligibilityClosestRejectedReason = reason
+                        end
                         if allowed then confirmed = id; break end
                     end
                 end
@@ -652,6 +692,10 @@ function Nearby:GetNearbyRows(map, px, py, width, height, currentQuestOffers)
                     seen[row.npcID] = true
                     unique[#unique + 1] = row
                     self.questEligibilityQualifiedNPCs = self.questEligibilityQualifiedNPCs + 1
+                    if self.questEligibilityFirstQualifiedNPCID == nil then
+                        self.questEligibilityFirstQualifiedNPCID = row.npcID
+                        self.questEligibilityFirstQualifiedQuestID = confirmed
+                    end
                     if #unique >= MAX_NEARBY then break end
                 else
                     self.questEligibilityRejectedNPCs = self.questEligibilityRejectedNPCs + 1
@@ -736,6 +780,11 @@ function Nearby:GetDebugStatus()
         eligibilityLastReason = self.questEligibilityLastReason or "none",
         eligibilityLastQuestID = self.questEligibilityLastQuestID,
         eligibilityLastNPCID = self.questEligibilityLastNPCID,
+        eligibilityClosestRejectedNPCID = self.questEligibilityClosestRejectedNPCID,
+        eligibilityClosestRejectedQuestID = self.questEligibilityClosestRejectedQuestID,
+        eligibilityClosestRejectedReason = self.questEligibilityClosestRejectedReason,
+        eligibilityFirstQualifiedNPCID = self.questEligibilityFirstQualifiedNPCID,
+        eligibilityFirstQualifiedQuestID = self.questEligibilityFirstQualifiedQuestID,
         eligibilityLastInvalidation = self.questEligibilityLastInvalidation,
 
         nearby = self.nearbyCount or 0, truncated = self.truncated == true,

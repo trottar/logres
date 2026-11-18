@@ -1,12 +1,13 @@
-# P0484: quest35 model; UNVERIFIED.
-# P0483: quest FAIL/turn PARTIAL.
+# P0485: sparse DB fields; P0484 FAIL.
+# P0484: quest35 FAIL.
+# P0483: quest FAIL; turn PARTIAL.
 # P0482: est2/3 PARTIAL.
 # P0481:
-# P0480: no passive proof.
+# P0480: passive proof absent.
 # P0479: no tildes.
 # P0478: map-only FAIL; P0477 hide FAIL.
 # P0477: #16399 false-floor 2yd.
-# P0476: NPC snap FAIL; L-002 flash OPEN.
+# P0476: snap FAIL; L-002 OPEN.
 # P0475: L-037 PARTIAL; P0474 PASS.
 # P0474: P0473 #16018 FAIL.
 # P0468: L-051 auras; UNVERIFIED.
@@ -56,7 +57,7 @@ unverified. Preserve restore, click/cast/CC. L-011/L-028 OPEN.
 
 # P0448: Ledger first: docs/memory/investigations/ISSUE_LEDGER.md
 
-P0447 HP PASS, auras missing. P0448 source scan Forever FAIL;
+P0447 HP PASS; P0448 aura FAIL;
 L-011/L-028 OPEN; details in P0448 evidence.
 
 **P0428 Chat workflow in CURRENT; P0412/P0411/R0 refusals, P0410,

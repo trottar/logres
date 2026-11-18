@@ -47,7 +47,7 @@ assert '"dbEligibilityQuestCandidates"' in D
 for unwanted in ('C_Timer','SetCVar(','UnitPosition(','SetUserWaypoint(','GetNamePlateForUnit(', 'HideUIPanel('):
  assert unwanted not in N,unwanted
 assert '**P0484**' in read('docs/memory/CURRENT.md')
-assert read('docs/memory/handoffs/CURRENT_HANDOFF.md').startswith('# P0484:')
+assert read('docs/memory/handoffs/CURRENT_HANDOFF.md').startswith('# P0485:')
 assert '| L-030 |' in read('docs/memory/investigations/ISSUE_LEDGER.md')
 assert 'P0484' in read('docs/memory/PRE_HANDOFF_AUDIT.md')
 version=re.search(r'^Logres.VERSION = "([^"]+)"$',read('Logres/Core/Bootstrap.lua'),re.M)

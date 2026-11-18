@@ -458,7 +458,13 @@ function Logres:CaptureBugIncident()
     incident.snapshot.questCompassDB = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("QuestieDBNearby"):GetDebugStatus()
     end), {"state", "map", "area", "zoneNPCs", "questNPCs", "spawns",
-        "nearby", "truncated", "questIDTruncated", "serviceNearby", "serviceStatus"})
+        "nearby", "truncated", "questIDTruncated", "serviceNearby", "serviceStatus",
+        "eligibilityQualified", "eligibilityRejected", "eligibilityLimited",
+        "eligibilityChecks", "eligibilityCache", "eligibilityLastReason",
+        "eligibilityLastQuestID", "eligibilityLastNPCID", "eligibilityLastInvalidation",
+        "eligibilityClosestRejectedNPCID", "eligibilityClosestRejectedQuestID",
+        "eligibilityClosestRejectedReason", "eligibilityFirstQualifiedNPCID",
+        "eligibilityFirstQualifiedQuestID"})
     incident.snapshot.questPresentation = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("QuestDialogue"):GetDebugStatus()
     end), {"rootShown", "presentationShown", "lastPresentationReason",

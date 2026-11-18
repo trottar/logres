@@ -11,12 +11,13 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0484** L-030 quest35 absent #17198, native offers0/DB6;
-**P0483** main24245ce rotation better PARTIAL, quest FAIL. Add gated
-player eligibility, never historical-only. **P0482** est2/3, native3/4.
-P0476 false-floor2yd FAIL, P0477 hide FAIL, P0478 VISUAL FAIL,
-P0479 functional FAIL retained.
-L-002 popup OPEN.
+**P0485** L-030: P0484 Forever #17282–#17286 FAIL, Dughan quest35
+missing, native0/DB9/excluded8/shown0. P0484 mishandled optional nil;
+fixture invented zeros; Report Bug omitted eligibility reason.
+**P0484** FAIL; **P0483** turn PARTIAL; **P0482** est2/3/native3/4.
+P0476 floor, P0477 hide, P0478 VISUAL FAIL,
+P0479 FAIL retained.
+L-002 OPEN.
 P0473 FAIL; P0474 scoped PASS; L-037 PARTIAL.
 Preserve world HP/aura/50-50, chat SHOW, quest/stock fallback.
 P0460 HP PASS; P0461 aura FAIL; P0457 selected PASS;
@@ -28,10 +29,9 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 
 ## Verified State
 
-- P0440 main `bec4038`: Forever #11161 0.0.311-dev read-only nameplate
-  anchor target=12, secondary=17, combat=29, hostile player targeting=4;
-  failures/secret=0. P0439 OOC trial DEFERRED; P0437 visual PASS.
-  No safe production attachment/confirmed threat proof.
+- P0440 main `bec4038`: #11161 nameplate target12/secondary17/
+  combat29/targeting4; 0 failures/secret. P0439 OOC DEFERRED,
+  P0437 visual PASS; no qualified threat/production attachment.
 
 - P0422 moved the pet-action bar in error; P0423 restored it and V8 was visually accepted.
 
@@ -41,7 +41,8 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 - P0417 `bc91448`: pet stock hidden/Logres actions work; L-008 OPEN for combat/Edit Mode/fallback.
 - P0418 V5 archive; V6 retains native fallback.
 
-- P0381 integrated gameplay OPEN; P0383 quest18 TURNED_IN, L-005 PARTIAL, L-001/L-002 OPEN; P0384 quest21 hover aligned; P0385 observed, P0386 UNVERIFIED. Details in evidence.
+- P0381 gameplay OPEN; P0383 quest18 TURNED_IN; L-005 PARTIAL,
+  L-001/L-002 OPEN; P0384 aligned; P0385 observed; P0386 UNVERIFIED.
 
 - P0379 `285be528` 249 STATIC; 0.0.264-dev no claim. L-002 native, L-005 FAIL. R0/R1 refused; P0378 screenshots inferred.
 
@@ -66,8 +67,8 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 
 ## Next Action
 
-P0484 quest35 and false-positive Forever validation. L-030 PARTIAL,
-L-035 PARTIAL/OPEN, L-002 OPEN; retain all prior failures.
+P0485 sparse quest35/current-eligibility and false-positive Forever test.
+L-030 OPEN/PARTIAL, L-035 PARTIAL/OPEN, L-002 OPEN; retain failures.
 
 ## Success Criteria
 
@@ -77,6 +78,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0485_SPARSE_QUEST_ELIGIBILITY.md
 - docs/memory/evidence/P0484_QUEST_ELIGIBILITY_FALLBACK.md
 - docs/memory/roadmap/POST_P0474_WORKSTREAMS.md
 - docs/memory/evidence/P0471_TARGET_FACTION_CREST.md
