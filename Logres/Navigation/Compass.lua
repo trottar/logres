@@ -781,6 +781,7 @@ function Compass:ClearAvailableQuestPOIs(reason)
     self.dbNativeOfferCount = 0
     self.nativeCurrentQuestOffers = nil
     self.dbConfirmedQuestCandidates = 0
+    self.dbEligibilityQuestCandidates = 0
     self.dbDualRoleServiceSuppressed = 0
     self.npcArrivalRotationRecovered = false
     self.poiCollisionHiddenCount = 0
@@ -897,6 +898,7 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     self.providerNearMapOnlyCandidates = 0
     self.serviceNearMapFallbackShown = false
     self.dbConfirmedQuestCandidates = 0
+    self.dbEligibilityQuestCandidates = 0
     self.dbDualRoleServiceSuppressed = 0
     self.npcArrivalRotationRecovered = false
     local seenQuest={}
@@ -1018,7 +1020,8 @@ function Compass:RefreshAvailableQuestPOIs(reason)
             arrivalMagnitude=arrivalMagnitude, rotationRecovered=rotationRecovered,
             currentQuestOffer=role=="poi" and type(row.questID)=="number"
                 and type(self.nativeCurrentQuestOffers)=="table"
-                and self.nativeCurrentQuestOffers[row.questID]==true,
+                and self.nativeCurrentQuestOffers[row.questID]==true
+                or row.providerEligible == true,
             kind=role, serviceKind=role=="service" and row.serviceKind or nil}
         -- Only real provider spawn coordinates form an arrival identity.
         -- Unknown/secret/missing source positions do not acquire a latch.
@@ -1107,8 +1110,17 @@ function Compass:RefreshAvailableQuestPOIs(reason)
                             and add(row,"poi","db"..tostring(row.npcID)) then
                             seenQuest[row.questID]=true
                         end
+                    elseif row.providerEligible == true and type(row.questID)=="number"
+                        and row.questID > 0 then
+                        -- Independently checked player-state requirements;
+                        -- do not relabel this as a native map offer.
+                        confirmedQuestNPCs[row.npcID] = true
+                        self.dbEligibilityQuestCandidates = self.dbEligibilityQuestCandidates + 1
+                        if not seenQuest[row.questID]
+                            and add(row,"poi","eligible"..tostring(row.npcID)) then
+                            seenQuest[row.questID]=true
+                        end
                     else
-                        -- Historical candidate does not prove a current offer.
                         self.dbHistoricalQuestExcluded = self.dbHistoricalQuestExcluded + 1
                     end
                 end
@@ -1947,6 +1959,7 @@ function Compass:GetDebugStatus()
         dbHistoricalQuestExcluded = self.dbHistoricalQuestExcluded,
         dbNativeOfferCount = self.dbNativeOfferCount,
         dbConfirmedQuestCandidates = self.dbConfirmedQuestCandidates,
+        dbEligibilityQuestCandidates = self.dbEligibilityQuestCandidates,
         dbDualRoleServiceSuppressed = self.dbDualRoleServiceSuppressed,
         npcArrivalRotationRecovered = self.npcArrivalRotationRecovered == true,
         dbServiceStatus = self.dbServiceStatus,

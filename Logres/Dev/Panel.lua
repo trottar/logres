@@ -444,7 +444,7 @@ function Logres:CaptureBugIncident()
         "serviceNearProofOther", "nameplateEventRegistered",
         "dbServiceCandidateShown", "poiCollisionHiddenCount",
         "dbNearbyCount", "dbHistoricalQuestExcluded", "dbNativeOfferCount",
-        "dbConfirmedQuestCandidates", "dbDualRoleServiceSuppressed",
+        "dbConfirmedQuestCandidates", "dbEligibilityQuestCandidates", "dbDualRoleServiceSuppressed",
         "npcArrivalRotationRecovered", "availableQuestPoiShown",
         "focusedMarkerKind", "focusedMarkerDistanceYards"})
     -- Read only existing Logres-owned source snapshots. These distinguish a

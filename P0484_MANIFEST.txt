@@ -1,0 +1,35 @@
+P0484 Independent current-player quest eligibility without historical-only markers
+Verified baseline: 24245ce60707580a5bd85a43512c1388c9675336
+Candidate runtime version: 0.0.351-dev
+PREWRITE: 346/346 STATIC PASS
+POSTWRITE: 346/346 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Navigation/Compass.lua
+Logres/Navigation/QuestieDBNearby.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0484_QUEST_ELIGIBILITY_FALLBACK.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0477_vertical_npc_proof_contract.py
+tools/check_p0478_map_only_compass_contract.py
+tools/check_p0479_compass_visual_recovery_contract.py
+tools/check_p0480_passive_npc_proximity_contract.py
+tools/check_p0481_npc_arrival_contract.py
+tools/check_p0482_estimated_npc_arrival_contract.py
+tools/check_p0483_quest_coverage_rotation_contract.py
+tools/check_p0484_quest_eligibility_contract.py
+tools/test_p0484_quest_eligibility.lua
+P0484_MANIFEST.txt

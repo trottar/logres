@@ -7,6 +7,8 @@ local LOCAL_RADIUS_YARDS = 50
 local IDS_PER_FRAME = 96
 local MAX_SPAWNS_PER_NPC = 32
 local MAX_QUEST_IDS_PER_NPC = 32
+local MAX_QUEST_ELIGIBILITY_CHECKS_PER_REFRESH = 16
+local MAX_QUEST_ELIGIBILITY_CACHE = 2048
 local MAX_CACHED_SPAWNS = 1024
 local MAX_NEARBY = 8
 local MAX_MAP_PARENT_DEPTH = 12
@@ -59,6 +61,191 @@ local function read(fn, ...)
     if type(fn) ~= "function" then return nil end
     local ok, value = pcall(fn, ...)
     return ok and ordinary(value) or nil
+end
+
+-- P0484: independent, deliberately conservative quest eligibility. QuestieDB
+-- describes historical quest records; these checks use current *player* facts.
+-- Conditional data that Logres cannot prove still fails closed. No 3D NPC
+-- inference, protected widget inspection, hidden quest API or ticker.
+local function validQuestID(id)
+    id = number(id)
+    return id and id > 0 and id == math.floor(id) and id or nil
+end
+
+local function readBoolean(fn, ...)
+    if type(fn) ~= "function" then return nil end
+    local ok, result = pcall(fn, ...)
+    if not ok then return nil end
+    -- Unlike the provider's nonboolean read helper, false is a real result.
+    return ordinary(result, "boolean")
+end
+
+local function questState(questID)
+    local log = _G.C_QuestLog
+    if not log or type(log.IsOnQuest) ~= "function"
+        or type(log.IsQuestFlaggedCompleted) ~= "function" then
+        return nil, nil
+    end
+    return readBoolean(log.IsOnQuest, questID),
+        readBoolean(log.IsQuestFlaggedCompleted, questID)
+end
+
+local function containsBit(mask, bit)
+    return number(mask) and number(bit) and bit > 0
+        and math.floor(mask / bit) % 2 == 1
+end
+
+local function checkIDArray(ids, predicate, mode)
+    if ids == nil then return true end
+    if type(ids) ~= "table" or #ids > 32 or #ids == 0 then return false end
+    local found = false
+    for i=1,#ids do
+        local id = validQuestID(ids[i])
+        if not id then return false end
+        local value = predicate(id)
+        if value == nil then return false end
+        if mode == "all" and not value then return false end
+        if value then found = true end
+    end
+    return mode == "all" or found
+end
+
+local function independentlyEligible(questID)
+    local db = ordinary(_G.QuestDB, "table")
+    local lib = ordinary(_G.LibQuestieDB, "table")
+    if not db or type(db.Get) ~= "function" or not lib
+        or type(lib.RequireContract) ~= "function" then
+        return false, "quest-data-unavailable"
+    end
+    if not read(db.Get, questID, "name") then
+        return false, "quest-record-missing"
+    end
+    local onQuest, completed = questState(questID)
+    if onQuest == nil or completed == nil then
+        return false, "native-quest-status-unavailable"
+    end
+    if onQuest or completed then return false, "already-active-or-complete" end
+    local level = number(read(_G.UnitLevel, "player"))
+    if not level or level <= 0 then return false, "player-level-unavailable" end
+    local requiredLevel = number(read(db.Get, questID, "requiredLevel"))
+    local maxLevel = number(read(db.Get, questID, "requiredMaxLevel"))
+    if not requiredLevel or not maxLevel then return false, "level-data-unavailable" end
+    if (requiredLevel > 0 and level < requiredLevel)
+        or (maxLevel > 0 and level > maxLevel) then
+        return false, "level-requirement"
+    end
+
+    local function fact(key) return read(db.Get, questID, key) end
+    local races, classes = number(fact("requiredRaces")), number(fact("requiredClasses"))
+    if races == nil or classes == nil then return false, "mask-data-unavailable" end
+    if races > 0 then
+        if read(lib.RequireContract, 3) ~= true then return false, "race-contract-unavailable" end
+        local e = ordinary(lib.Enum, "table")
+        local masks = e and ordinary(e.raceMaskById, "table")
+        local ok, _, _, rawID = pcall(_G.UnitRace, "player")
+        local id = ok and number(rawID) or nil
+        local bit = masks and id and number(masks[id])
+        if not bit then return false, "race-unavailable" end
+        if not containsBit(races, bit) then return false, "wrong-race" end
+    end
+    if classes > 0 then
+        if read(lib.RequireContract, 4) ~= true then return false, "class-contract-unavailable" end
+        local e = ordinary(lib.Enum, "table")
+        local classKeys = e and ordinary(e.classKeys, "table")
+        local ok, _, rawToken = pcall(_G.UnitClass, "player")
+        local token = ok and ordinary(rawToken, "string") or nil
+        local bit = classKeys and token and number(classKeys[token])
+        if not bit then return false, "class-unavailable" end
+        if not containsBit(classes, bit) then return false, "wrong-class" end
+    end
+    local function completedQuest(id)
+        local _, done = questState(id)
+        return done
+    end
+    local function activeQuest(id)
+        local active = questState(id)
+        return active
+    end
+    local function activeOrCompletedQuest(id)
+        local active, done = questState(id)
+        if active == nil or done == nil then return nil end
+        return active or done
+    end
+    if not checkIDArray(fact("preQuestGroup"), completedQuest, "all")
+        or not checkIDArray(fact("preQuestSingle"), completedQuest, "any") then
+        return false, "missing-prerequisite"
+    end
+    local exclusives = fact("exclusiveTo")
+    if exclusives ~= nil and not checkIDArray(exclusives, function(id)
+        local active = activeOrCompletedQuest(id)
+        if active == nil then return nil end
+        return not active
+    end, "all") then return false, "exclusive-quest-state" end
+    for _, spec in ipairs({
+        {"parentQuest", activeQuest, false},
+        {"nextQuestInChain", activeOrCompletedQuest, true},
+        {"availableUntilCompleted", completedQuest, true},
+        {"availableStartingWith", activeOrCompletedQuest, false},
+        {"disabledByQuest", activeQuest, true},
+        {"breadcrumbForQuestId", activeOrCompletedQuest, true},
+    }) do
+        local value = number(fact(spec[1]))
+        if value == nil then return false, "chain-data-unavailable" end
+        if value ~= 0 then
+            if not validQuestID(value) then return false, "invalid-chain-id" end
+            local state = spec[2](value)
+            if state == nil or state == spec[3] then
+                return false, "chain-condition-" .. spec[1]
+            end
+        end
+    end
+    -- These requirements need additional verified player/session context.
+    -- No general quest marker can be asserted from their historical data.
+    for _, name in ipairs({"requiredSkill", "requiredMinRep", "requiredMaxRep",
+        "requiredRanks"}) do
+        if fact(name) ~= nil then return false, "conditional-" .. name end
+    end
+    for _, name in ipairs({"requiredSpell", "requiredSpecialization"}) do
+        local value = number(fact(name))
+        if value == nil or value ~= 0 then
+            return false, "conditional-" .. name
+        end
+    end
+    local flags = number(fact("specialFlags"))
+    if flags == nil or flags ~= 0 then return false, "conditional-special-flags" end
+    -- Repeatable/daily/weekly/monthly or event/phase restrictions are not
+    -- implied available from historical data. Standard numeric quest flags
+    -- require explicit native corroboration when nonzero.
+    local questFlags = number(fact("questFlags"))
+    if questFlags == nil or questFlags ~= 0 then return false, "conditional-quest-flags" end
+    return true, "player-requirements-satisfied"
+end
+
+function Nearby:InvalidateEligibility(reason)
+    self.questEligibilityCache = {}
+    self.questEligibilityCacheCount = 0
+    self.questEligibilityLastInvalidation = reason or "initialize"
+end
+
+function Nearby:EligibilityForQuest(questID)
+    questID = validQuestID(questID)
+    if not questID then return false, "invalid-quest-id" end
+    if type(self.questEligibilityCache) ~= "table" then
+        self:InvalidateEligibility("implicit")
+    end
+    self.questEligibilityChecksThisRefresh = self.questEligibilityChecksThisRefresh or 0
+    local cached = self.questEligibilityCache[questID]
+    if cached then return cached[1], cached[2] end
+    if self.questEligibilityChecksThisRefresh >= MAX_QUEST_ELIGIBILITY_CHECKS_PER_REFRESH
+        or self.questEligibilityCacheCount >= MAX_QUEST_ELIGIBILITY_CACHE then
+        self.questEligibilityLimited = true
+        return false, "bounded-check-limit"
+    end
+    self.questEligibilityChecksThisRefresh = self.questEligibilityChecksThisRefresh + 1
+    local allowed, reason = independentlyEligible(questID)
+    self.questEligibilityCache[questID] = {allowed, reason}
+    self.questEligibilityCacheCount = self.questEligibilityCacheCount + 1
+    return allowed, reason
 end
 
 -- QuestieDB publishes canonical Forever UiMapID -> AreaID data as a Lua
@@ -367,6 +554,13 @@ end
 function Nearby:GetNearbyRows(map, px, py, width, height, currentQuestOffers)
     self.serviceNearby = 0
     self.serviceNearbyKinds = 0
+    self.questEligibilityChecksThisRefresh = 0
+    self.questEligibilityQualifiedNPCs = 0
+    self.questEligibilityRejectedNPCs = 0
+    self.questEligibilityLimited = false
+    self.questEligibilityLastReason = "none"
+    self.questEligibilityLastQuestID = nil
+    self.questEligibilityLastNPCID = nil
     if not self.complete or not self.mapID then return {}, self.state end
     -- A map transition invalidates old-zone presentation immediately, even
     -- before the registered map event has built the next zone's index.
@@ -433,6 +627,40 @@ function Nearby:GetNearbyRows(map, px, py, width, height, currentQuestOffers)
             end
         end
     end
+    -- Native positions/offer matches win first. For native-feed gaps, a
+    -- separate player-state eligibility check may promote a QuestieDB NPC,
+    -- but database history alone remains insufficient.
+    if #unique < MAX_NEARBY then
+        for i = 1, #hits do
+            local row = hits[i]
+            if not seen[row.npcID] then
+                local ids = row.questIDs
+                local confirmed
+                if type(ids) == "table" then
+                    for qi=1,math.min(#ids,MAX_QUEST_IDS_PER_NPC) do
+                        local id = ids[qi]
+                        local allowed, reason = self:EligibilityForQuest(id)
+                        self.questEligibilityLastReason = reason
+                        self.questEligibilityLastQuestID = id
+                        self.questEligibilityLastNPCID = row.npcID
+                        if allowed then confirmed = id; break end
+                    end
+                end
+                if confirmed then
+                    row.questID = confirmed
+                    row.providerEligible = true
+                    seen[row.npcID] = true
+                    unique[#unique + 1] = row
+                    self.questEligibilityQualifiedNPCs = self.questEligibilityQualifiedNPCs + 1
+                    if #unique >= MAX_NEARBY then break end
+                else
+                    self.questEligibilityRejectedNPCs = self.questEligibilityRejectedNPCs + 1
+                end
+            end
+        end
+    end
+    -- Preserve the original discovery/diagnostic pool even when eligibility
+    -- cannot be evaluated: Compass will continue to exclude unproven quests.
     if #unique < MAX_NEARBY then
         for i = 1, #hits do
             local row = hits[i]
@@ -500,6 +728,16 @@ function Nearby:GetDebugStatus()
         ids = self.idCount or 0, zoneNPCs = self.zoneNPCs or 0,
         questNPCs = self.questNPCs or 0, spawns = #self.rows,
         questIDTruncated = self.questIDTruncated == true,
+        eligibilityQualified = self.questEligibilityQualifiedNPCs or 0,
+        eligibilityRejected = self.questEligibilityRejectedNPCs or 0,
+        eligibilityLimited = self.questEligibilityLimited == true,
+        eligibilityCache = self.questEligibilityCacheCount or 0,
+        eligibilityChecks = self.questEligibilityChecksThisRefresh or 0,
+        eligibilityLastReason = self.questEligibilityLastReason or "none",
+        eligibilityLastQuestID = self.questEligibilityLastQuestID,
+        eligibilityLastNPCID = self.questEligibilityLastNPCID,
+        eligibilityLastInvalidation = self.questEligibilityLastInvalidation,
+
         nearby = self.nearbyCount or 0, truncated = self.truncated == true,
         radius = LOCAL_RADIUS_YARDS,
         serviceEnabled = self.serviceEnabled == true,
@@ -524,6 +762,7 @@ function Nearby:OnInitialize()
     self.moduleEnabled = false
     self.rows = {}
     self.state = "not-started"
+    self:InvalidateEligibility("initialize")
     self.serviceRows = {}
     self.serviceStatus = "not-started"
     self.serviceEnabled = false
@@ -532,8 +771,17 @@ function Nearby:OnInitialize()
     self.frame:RegisterEvent("PLAYER_ENTERING_WORLD")
     self.frame:RegisterEvent("PLAYER_MAP_CHANGED")
     self.frame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+    for _, event in ipairs({"QUEST_LOG_UPDATE", "QUEST_ACCEPTED", "QUEST_REMOVED",
+        "QUEST_TURNED_IN", "PLAYER_LEVEL_UP", "UPDATE_FACTION",
+        "SKILL_LINES_CHANGED", "SPELLS_CHANGED"}) do
+        self.frame:RegisterEvent(event)
+    end
     self.frame:SetScript("OnEvent", function(_, event)
-        if self.moduleEnabled then self:StartIndex(event) end
+        self:InvalidateEligibility(event)
+        if self.moduleEnabled and (event == "PLAYER_ENTERING_WORLD"
+            or event == "PLAYER_MAP_CHANGED" or event == "ZONE_CHANGED_NEW_AREA") then
+            self:StartIndex(event)
+        end
     end)
 end
 
@@ -543,6 +791,7 @@ function Nearby:OnEnable()
 end
 
 function Nearby:OnDisable()
+    self:InvalidateEligibility("disabled")
     self.moduleEnabled = false
     self:StopIndex()
     self.complete = false

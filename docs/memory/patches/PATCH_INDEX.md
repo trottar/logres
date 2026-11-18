@@ -1,3 +1,22 @@
+## P0484 — L-030 independent QuestieDB quest eligibility (2026-11-18)
+
+Verified P0483 main `24245ce` / tree `1724dcb`; Forever 0.0.350-dev
+session167 #17170–#17198: user reports rotation better (L-035 PARTIAL),
+Marshal Dughan's **Further Concerns**, quest35, visibly available in
+Logres greeting but absent from compass. Snapshot: native nearby offers0,
+QuestieDB nearby6, historical exclusion6, provider quest eligible0. The
+P0483 native-only gate therefore remains a confirmed false negative.
+P0484 adds an independent, bounded QuestieDB/current-player requirement
+path (not history-only): completion/active, level, race/class, prereq,
+exclusive, chain and unsupported-conditional vetoes. Native current offers
+retain priority and old source; service and stock fallback retained.
+No added tickers, marker radius or distance/rotation changes; eligibility
+cache invalidates on native quest/player events. Fail closed on unreadable
+or secret-capable requirements; this is conservative approximation, not
+server-authoritative quest availability. L-030 OPEN/PARTIAL until Forever
+quest35 and false-positive regression PASS; L-035 remains OPEN/PARTIAL.
+Evidence: `docs/memory/evidence/P0484_QUEST_ELIGIBILITY_FALLBACK.md`.
+
 ## P0483 — Native-backed quest giver source completeness / fast-turn recovery (2026-11-18)
 
 P0482 main `3bc6d19` verified, Forever session165 0.0.349-dev: user

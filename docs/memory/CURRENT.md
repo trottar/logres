@@ -11,9 +11,9 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0483** L-030 quest native-gated multiID/dual role, L-035 fast turn.
-**P0482** main3bc6d19 user-positive/PARTIAL; session165 Dughan missing.
-Keep estimated2/3yd, native3/4yd; no historic-only quest markers.
+**P0484** L-030 quest35 absent #17198, native offers0/DB6;
+**P0483** main24245ce rotation better PARTIAL, quest FAIL. Add gated
+player eligibility, never historical-only. **P0482** est2/3, native3/4.
 P0476 false-floor2yd FAIL, P0477 hide FAIL, P0478 VISUAL FAIL,
 P0479 functional FAIL retained.
 L-002 popup OPEN.
@@ -66,8 +66,8 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 
 ## Next Action
 
-P0483 client quest/no-false-positive and rapid-turn validation.
-L-030 PARTIAL, L-035 OPEN, L-002 OPEN; preserve prior failures.
+P0484 quest35 and false-positive Forever validation. L-030 PARTIAL,
+L-035 PARTIAL/OPEN, L-002 OPEN; retain all prior failures.
 
 ## Success Criteria
 
@@ -77,7 +77,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
-- docs/memory/evidence/P0481_NPC_ARRIVAL_LOCK.md
+- docs/memory/evidence/P0484_QUEST_ELIGIBILITY_FALLBACK.md
 - docs/memory/roadmap/POST_P0474_WORKSTREAMS.md
 - docs/memory/evidence/P0471_TARGET_FACTION_CREST.md
 - docs/memory/evidence/P0467_CHAT_WORKFLOW_AUDIT.md

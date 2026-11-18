@@ -1,3 +1,27 @@
+## P0484 — L-030 quest35 native-source gap; conservative eligibility audit (2026-11-18)
+
+GitHub main P0483 verified `24245ce`/tree `1724dcb`; session167
+0.0.350-dev #17170–#17198 quest35 visible in greeting but compass
+native offers0, QuestieDB nearby6, historical excluded6. Reopened L-030.
+Reviewed P0337 historical false positives, P0483 source, QuestieDB's
+public API/questMeta schema, P0481/82 lock invariants, safe source/nonsecret
+rules and existing marker pools before changing code. No new user quest
+interaction requirement and no Blizzard UI suppression. Existing QuestieDB
+questStart X/Y remains historical; only an independently satisfied current
+player-state model can promote a row, still lower precedence than native.
+
+Assistant R0: old `read()` helper loses an ordinary Boolean `false`;
+quest status checks would silently reject all eligible quests. Replaced
+with a dedicated `readBoolean` and retested both false/true/secret. The
+first edit script stopped on a nonunique Compass anchor, leaving only
+candidate-local partial changes; repaired before any release/checkpoint.
+Initial source audit: **346/346 STATIC PASS**, P0484/P0483/P0481 actual-
+source Lua fixtures PASS, Lua parse PASS, version policy PASS and
+`git diff --check` PASS. The `texlua -e` CLI invocation was invalid;
+a standalone parse fixture was used instead. Frozen-candidate ZIP and
+transactional PREWRITE/POSTWRITE tests remain mandatory before handoff.
+No user checkout or GitHub writes. Static is not WoW PASS. See P0484 evidence.
+
 ## P0483 — L-030/L-035 native-gated quest and fast-turn audit (2026-11-18)
 
 GitHub main P0482 `3bc6d19b8e5254e208c212d6cb6e159ffebc66fb`

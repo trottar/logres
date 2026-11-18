@@ -1,8 +1,9 @@
-# P0483: quests/turn; UNVERIFIED.
-# P0482: est2/3 partial.
-# P0481: old.
-# P0480: passive proof; P0479 FAIL.
-# P0479: L-035 P0478 VISUAL FAIL; no tildes.
+# P0484: quest35 model; UNVERIFIED.
+# P0483: quest FAIL/turn PARTIAL.
+# P0482: est2/3 PARTIAL.
+# P0481:
+# P0480: no passive proof.
+# P0479: no tildes.
 # P0478: map-only FAIL; P0477 hide FAIL.
 # P0477: #16399 false-floor 2yd.
 # P0476: NPC snap FAIL; L-002 flash OPEN.

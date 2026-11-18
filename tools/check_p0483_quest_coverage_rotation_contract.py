@@ -22,7 +22,7 @@ for frag in ('incident.snapshot.questCompassSources', 'incident.snapshot.questCo
  assert frag in D,frag
 for banned in ('C_Timer','SetCVar','UnitPosition(','GetNamePlateForUnit(','GetQuestReward(', 'IsQuestAvailable('):
  assert banned not in C,banned
-assert read('docs/memory/handoffs/CURRENT_HANDOFF.md').startswith('# P0483:')
+assert read('docs/memory/handoffs/CURRENT_HANDOFF.md').startswith('# P0484:')
 assert '**P0483**' in read('docs/memory/CURRENT.md')
 assert '| L-030 |' in read('docs/memory/investigations/ISSUE_LEDGER.md')
 assert 'P0483' in A
