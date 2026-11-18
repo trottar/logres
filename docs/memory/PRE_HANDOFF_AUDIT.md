@@ -1,3 +1,21 @@
+## P0489 — Action + pet opacity and protected target deferral (2026-11-18)
+
+Verified P0488 main `56fd671`/tree `81491bf`. Context world/PvP/
+instance OOC positive opacity from C.4/D-028 superseded by explicit
+user request; historical secure ownership and paging preserved.
+Targeting death event automation refused due protected APIs; manual
+user hardware action only. L-054 buff intermittent unresolved.
+P0489 actual-source Lua fixture PASS; world/PvP/instance/combat,
+pet alpha, 48 side plus 10 pet feedback frames, disable recovery.
+First candidate audit 333/350 FAIL: 17 historical failures from an
+incorrect new checkpoint-first marker or noncanonical issue status;
+none was an action/pet Lua check. Corrected the first marker and ledger
+status without weakening protected/secure behavior. Repeated complete
+candidate audit **350/350 STATIC PASS**, memory/version/diff hygiene PASS.
+Final ZIP, transactional PREWRITE/POSTWRITE, baseline/refusal/rollback
+and SHA are independent remaining release gates. WoW UNVERIFIED.
+See `P0489_ACTION_BAR_ALPHA_POLICY.md`.
+
 ## P0486 — L-030 quest flags source/evidence boundary (2026-11-18)
 
 Verified main P0485 `4de75674a7b32377c2b46e054c3486cda27654b3`

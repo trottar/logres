@@ -3,18 +3,18 @@ local _, Logres = ...
 local ALPHA_POLICY = {
     world = {
         primary = 1.00,
-        secondary = 0.45,
-        utility = 0.20,
+        secondary = 0.00,
+        utility = 0.00,
     },
     pvp = {
         primary = 1.00,
-        secondary = 0.75,
-        utility = 0.40,
+        secondary = 0.00,
+        utility = 0.00,
     },
     instance = {
         primary = 1.00,
-        secondary = 0.70,
-        utility = 0.45,
+        secondary = 0.00,
+        utility = 0.00,
     },
     combat = {
         primary = 1.00,
@@ -27,8 +27,10 @@ local Context = Logres:RegisterModule("ActionContext", {
     OnInitialize = function(self)
         self.policyName = "world"
         self.primaryAlpha = 1
-        self.secondaryAlpha = 0.45
-        self.utilityAlpha = 0.20
+        self.secondaryAlpha = 0.00
+        self.utilityAlpha = 0.00
+        self.petAlpha = 0.00
+        self.feedbackFramesUpdated = 0
     end,
 
     OnEnable = function(self)
@@ -40,8 +42,8 @@ local Context = Logres:RegisterModule("ActionContext", {
     end,
 
     OnDisable = function(self)
-        -- Restore proof-layout emphasis when disabled.
-        self:ApplyPolicy("world")
+        -- Disabling contextual fading restores usable visible action art.
+        self:ApplyPolicy("combat")
     end,
 })
 
@@ -68,12 +70,30 @@ function Context:ApplyPolicy(policyName)
     local sides = Logres:GetModule("SecondaryUtilityActions")
 
     primary.cluster:SetAlpha(policy.primary)
+    local feedbackUpdated = 0
     for _, source in ipairs({"secondary", "utility", "bar4", "bar5"}) do
         local role = Logres.Layout.GetActionBarSpec(source).role
         -- Context is presentation-only; never change secure action attributes.
         sides.clusters[source].frame:SetAlpha(policy[role])
+        -- Keybind plates and pressed/activation feedback live under UIParent,
+        -- outside the cluster. Fade those addon-owned visuals as well or
+        -- apparently empty bars leave floating key labels on screen.
+        for _, button in ipairs(sides.clusters[source].buttons) do
+            local feedback = button.activationFeedbackFrame
+            if feedback then
+                feedback:SetAlpha(policy[role])
+                feedbackUpdated = feedbackUpdated + 1
+            end
+        end
     end
 
+    local pet = Logres:GetModule("PetActionExecutionProbe")
+    if pet and type(pet.ApplyContextOpacity) == "function" then
+        pet:ApplyContextOpacity(policy.secondary)
+    end
+
+    self.feedbackFramesUpdated = feedbackUpdated
+    self.petAlpha = policy.secondary
     self.policyName = policyName
     self.primaryAlpha = policy.primary
     self.secondaryAlpha = policy.secondary
@@ -91,6 +111,8 @@ function Context:GetDebugStatus()
         primaryAlpha = self.primaryAlpha,
         secondaryAlpha = self.secondaryAlpha,
         utilityAlpha = self.utilityAlpha,
+        petAlpha = self.petAlpha,
+        feedbackFramesUpdated = self.feedbackFramesUpdated,
         alphaZeroUsed =
             self.primaryAlpha == 0
             or self.secondaryAlpha == 0

@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+"""P0489 exact ownership/alpha policy; targeting is deferred protected work."""
+from pathlib import Path
+import re, subprocess
+R=Path(__file__).resolve().parents[1]
+c=(R/'Logres/Actions/Context.lua').read_text()
+p=(R/'Logres/HUD/PetActionExecutionProbe.lua').read_text()
+a=(R/'Logres/Core/Commands.lua').read_text()
+t=(R/'Logres/Logres.toc').read_text()
+b=(R/'Logres/Core/Bootstrap.lua').read_text()
+assert c.count('secondary = 0.00,')==3 and c.count('utility = 0.00,')==3
+assert c.count('primary = 1.00,')==4
+assert 'secondary = 1.00,\n        utility = 0.75,' in c
+assert 'sides.clusters[source].frame:SetAlpha(policy[role])' in c
+assert 'feedback:SetAlpha(policy[role])' in c
+assert 'pet:ApplyContextOpacity(policy.secondary)' in c
+assert 'self:ApplyPolicy("combat")' in c
+assert 'petAlpha = self.petAlpha' in c
+assert 'feedbackFramesUpdated = self.feedbackFramesUpdated' in c
+assert 'function Probe:ApplyContextOpacity(alpha)' in p
+assert 'self.cluster:SetAlpha(alpha)' in p
+assert 'button.activationFeedbackFrame:SetAlpha(alpha)' in p
+assert 'self:ApplyContextOpacity(self.contextAlpha)' in p
+assert 'self.contextFeedbackCount = updated' in p
+assert a.count('secondary = 0.00,')==3 and a.count('utility = 0.00,')==3
+assert 'actionDebug.petAlpha == expectedAlpha.secondary' in a
+assert 'contextDebug.petAlpha == contextDebug.secondaryAlpha' in a
+assert re.search(r'## Version: (\S+)',t).group(1)==re.search(r'Logres.VERSION = "(.*?)"',b).group(1)
+for forbidden in ('TargetNearestEnemy(', 'ClearTarget(', 'TargetUnit(', 'C_Timer.', 'OnUpdate', 'SetAttribute(', 'SetBinding(', 'SaveBindings(', 'PetActionBar:Hide('):
+    assert forbidden not in c and forbidden not in p, 'forbidden mutation '+forbidden
+assert 'P0489' in (R/'docs/memory/CURRENT.md').read_text()
+assert 'L-055' in (R/'docs/memory/investigations/ISSUE_LEDGER.md').read_text()
+assert 'L-056' in (R/'docs/memory/investigations/ISSUE_LEDGER.md').read_text()
+assert 'P0489_ACTION_BAR_ALPHA_POLICY.md' in (R/'docs/memory/patches/PATCH_INDEX.md').read_text()
+print('P0489 action/pet opacity policy contract: PASS')

@@ -1,8 +1,7 @@
-# P0486: q35 scoped PASS; P0487 docs verified.
-# P0488: L-054 post-combat buff secret40/root0, rebuff six.
-# Release-event rescan/native reconciliation, WoW UNVERIFIED.
-# L-030 NPC261/q37 PASS scoped; false positives OPEN.
-# P0487: quest35 PASS; L-030 PARTIAL.
+# P0486: q35 PASS; P0487 docs verified; L-030 PARTIAL.
+# P0489: OOC sides/pet0 primary1; combat pet=secondary1.
+# Combat utility/bar5=.75; target death BLOCKED protected.
+# P0488: L-054 buff recovery UNVERIFIED; L-030 partial.
 # P0485: sparse DB fields; client FAIL.
 # P0484: quest35 FAIL.
 # P0483: quest FAIL; turn PARTIAL.

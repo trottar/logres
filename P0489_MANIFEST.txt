@@ -1,0 +1,30 @@
+P0489 Fade nonprimary and pet action bars out of combat
+Verified baseline: 56fd6711025ad3fe8fa032b9da28c15cfb72fa4e
+Candidate runtime version: 0.0.355-dev
+PREWRITE: 350/350 STATIC PASS
+POSTWRITE: 350/350 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Actions/Context.lua
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/HUD/PetActionExecutionProbe.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0489_ACTION_BAR_ALPHA_POLICY.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_action_context_contract.py
+tools/check_context_policy_contract.py
+tools/check_p0489_action_fade_contract.py
+tools/test_p0489_action_fade.lua
+P0489_MANIFEST.txt

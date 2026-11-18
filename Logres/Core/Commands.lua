@@ -403,9 +403,11 @@ local function runActionCheck()
         and contextStatus.enabled == true
         and contextDebug.moduleEnabled == true
         and contextDebug.primaryAlpha > 0
-        and contextDebug.secondaryAlpha > 0
-        and contextDebug.utilityAlpha > 0
-        and contextDebug.alphaZeroUsed == false
+        and contextDebug.secondaryAlpha >= 0
+        and contextDebug.utilityAlpha >= 0
+        and contextDebug.petAlpha == contextDebug.secondaryAlpha
+        and contextDebug.alphaZeroUsed ==
+            (contextDebug.secondaryAlpha == 0 or contextDebug.utilityAlpha == 0)
         and primaryDebug.stockBarsSuppressed == false
         and sideDebug.stockBarsSuppressed == false
 
@@ -1484,18 +1486,18 @@ end
 local CONTEXT_POLICY_ALPHA = {
     world = {
         primary = 1.00,
-        secondary = 0.45,
-        utility = 0.20,
+        secondary = 0.00,
+        utility = 0.00,
     },
     pvp = {
         primary = 1.00,
-        secondary = 0.75,
-        utility = 0.40,
+        secondary = 0.00,
+        utility = 0.00,
     },
     instance = {
         primary = 1.00,
-        secondary = 0.70,
-        utility = 0.45,
+        secondary = 0.00,
+        utility = 0.00,
     },
     combat = {
         primary = 1.00,
@@ -1623,7 +1625,9 @@ local function runContextPolicyCheck()
         and actionDebug.primaryAlpha == expectedAlpha.primary
         and actionDebug.secondaryAlpha == expectedAlpha.secondary
         and actionDebug.utilityAlpha == expectedAlpha.utility
-        and actionDebug.alphaZeroUsed == false
+        and actionDebug.petAlpha == expectedAlpha.secondary
+        and actionDebug.alphaZeroUsed ==
+            (expectedAlpha.secondary == 0 or expectedAlpha.utility == 0)
 
     local errorsClear =
         controllerDebug.actionReplacementError == nil

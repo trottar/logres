@@ -11,10 +11,10 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0486** quest35 scoped PASS; **P0487** docs PASS.
-**P0488** L-054: post-combat buffs secret40/root0 #17676;
-rebuff restores6 #17678; restriction-release refresh UNVERIFIED.
-L-030 second NPC261 quest37 PASS scoped; false positives open.
+**P0486** quest35 PASS; **P0487** docs PASS.
+**P0489** side/pet OOC0, primary1; combat roles retained;
+auto-death targeting BLOCKED protected; client UNVERIFIED.
+**P0488** L-054 OPEN; L-030 NPC261/q37 PASS scoped.
 **P0485** FAIL retained.
 **P0484** FAIL; **P0483** turn PARTIAL; **P0482** est2/3/native3/4.
 P0476 floor, P0477 hide, P0478 VISUAL FAIL,
@@ -69,8 +69,8 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 
 ## Next Action
 
-P0488 L-054 post-combat recovery; L-030 false-positive quests.
-L-035/L-002 OPEN. Previous failures retained.
+P0489 L-055 bar fade live test; L-056 protected targeting deferred.
+P0488 L-054 observe; L-030 false positives open. L-035/L-002 OPEN.
 
 ## Success Criteria
 
@@ -80,6 +80,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0489_ACTION_BAR_ALPHA_POLICY.md
 - docs/memory/evidence/P0487_QUEST_MARKER_RUNTIME_PASS.md
 - docs/memory/evidence/P0488_PLAYER_BUFF_RESTRICTION_RECOVERY.md
 - docs/memory/evidence/P0486_INFORMATIONAL_QUEST_FLAGS.md

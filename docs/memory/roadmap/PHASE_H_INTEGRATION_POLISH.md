@@ -45,6 +45,22 @@ already-active/complete candidate excluded #17760. L-030 PARTIAL;
 second scoped positive, broader false-positive coverage unproven.
 See `docs/memory/evidence/P0488_PLAYER_BUFF_RESTRICTION_RECOVERY.md`.
 
+
+## P0489 — Contextual action/pet alpha0 and protected targeting boundary (2026-11-18)
+
+P0488 main `56fd671` tree `81491bf` verified. User requests
+secondary/utility/Bar4/Bar5/pet action opacity0 outside combat with
+primary1, pet alpha equal to secondary in combat. P0489 changes only
+Logres addon-owned alpha and 58 external feedback plates, keeps combat
+role values, source bindings, stock/native pet controls and secure
+execution. L-055 OPEN until live test. Automatic clear/death retarget
+L-056 BLOCKED: protected APIs require a genuine player keypress and
+cannot select only already-engaged enemies from an insecure event.
+No target mutation implemented. P0488 L-054 remains OPEN, with the
+user monitoring two intermittent prior occurrences. All visual and
+runtime additions CLIENT UNVERIFIED until Forever test. See
+`docs/memory/evidence/P0489_ACTION_BAR_ALPHA_POLICY.md`.
+
 ## P0485 — Correct missing optional QuestieDB fields and Report Bug eligibility detail (2026-11-18)
 
 P0484 main `3277132` verified/tree `8254cac`; Forever session168

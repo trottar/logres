@@ -342,6 +342,28 @@ function Probe:CaptureFollowup(event)
     end
 end
 
+-- Only addon-owned presentation receives contextual alpha. This does not
+-- touch stock PetActionBar, secure attributes, bindings, or click routing.
+-- Child feedback frames are siblings under UIParent, not cluster children.
+function Probe:ApplyContextOpacity(alpha)
+    if type(alpha) ~= "number" or alpha < 0 or alpha > 1 then
+        return false
+    end
+    self.contextAlpha = alpha
+    if self.cluster then
+        self.cluster:SetAlpha(alpha)
+    end
+    local updated = 0
+    for _, button in ipairs(self.buttons or {}) do
+        if button.activationFeedbackFrame then
+            button.activationFeedbackFrame:SetAlpha(alpha)
+            updated = updated + 1
+        end
+    end
+    self.contextFeedbackCount = updated
+    return true
+end
+
 function Probe:ApplyLayout()
     if InCombatLockdown() then
         return false
@@ -426,6 +448,7 @@ function Probe:Arm()
     self.armed = true
     self.lastArmReason = "armed"
     self.cluster:Show()
+    self:ApplyContextOpacity(self.contextAlpha)
     self:RefreshBindingLabels()
     -- P0211: signal the *actual* secure-probe readiness transition.
     -- Event delivery order at initial login need not match module order;
@@ -520,6 +543,8 @@ function Probe:GetDebugStatus()
         visible = self.cluster and self.cluster:IsShown() or false,
         layoutAnchor = self.layoutAnchor,
         armCount = self.armCount,
+        contextAlpha = self.contextAlpha,
+        contextFeedbackCount = self.contextFeedbackCount,
         attemptCount = self.attemptCount,
         clickCount = self.clickCount,
         lastClickedSlot = self.lastClickedSlot,
@@ -608,6 +633,8 @@ Probe.OnInitialize = function(self)
     self.secretSkipCount = 0
     self.lastFailure = nil
     self.lastSecret = nil
+    self.contextAlpha = 0
+    self.contextFeedbackCount = 0
     self.petHasActionBar = nil
     self.petBarState = nil
     self.occupiedCount = 0
@@ -622,7 +649,7 @@ Probe.OnInitialize = function(self)
         ROWS,
         0,
         0,
-        1
+        0
     )
     self.cluster = cluster
     self:ApplyLayout()
