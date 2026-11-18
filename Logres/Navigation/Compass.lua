@@ -343,6 +343,7 @@ local Compass = Logres:RegisterModule("Compass", {
         self.artworkPreviewShown = false
         self.availableQuestPoiShown = 0
         self.availableQuestPoiCandidates = 0
+        self.serviceNearCenteredCandidates = 0
         self.availableQuestPoiReason = "initialize"
         self.focusedMarkerKind = nil
         self.focusedMarkerDistanceAvailable = false
@@ -608,6 +609,7 @@ end
 function Compass:ClearAvailableQuestPOIs(reason)
     self.availableQuestPoiShown = 0
     self.availableQuestPoiCandidates = 0
+    self.serviceNearCenteredCandidates = 0
     self.availableQuestPoiReason = reason or "source-unavailable"
     self.dbNearbyStatus = "unavailable"
     self.dbNearbyCount = 0
@@ -700,6 +702,7 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     end
     local previousNearQuest = self.nearQuestCenterKeys or {}
     local nearQuestCenterKeys = {}
+    self.serviceNearCenteredCandidates = 0
     local seenQuest={}
     local function add(row,role,key)
         if type(row)~="table" then return end
@@ -725,6 +728,16 @@ function Compass:RefreshAvailableQuestPOIs(reason)
         local nearKey = tostring(role) .. ":" .. tostring(key)
         local wasNear = previousNearQuest[nearKey] == true
         local centered = questLinked and (distance<=3 or (wasNear and distance<4))
+        -- L-035: source-identified service NPCs use the same 3/4-yard
+        -- hysteresis as quest-linked markers. Do not alter generic POIs,
+        -- tracking, manual waypoints or unknown/secret NPC identities.
+        local serviceNPC = role == "service"
+            and not isSecret(row.npcID)
+            and type(row.npcID) == "number" and row.npcID > 0
+        if serviceNPC and (distance<=3 or (wasNear and distance<4)) then
+            centered = true
+            self.serviceNearCenteredCandidates = self.serviceNearCenteredCandidates + 1
+        end
         if centered then nearQuestCenterKeys[nearKey] = true end
         local bearing=(math.deg(math.atan2(dx,-dy))+360)%360
         local relative=normalizeRelativeDegrees(bearing-self.headingDegrees)
@@ -1552,6 +1565,7 @@ function Compass:GetDebugStatus()
         artworkPreviewShown = self.artworkPreviewShown == true,
         availableQuestPoiShown = self.availableQuestPoiShown,
         availableQuestPoiCandidates = self.availableQuestPoiCandidates,
+        serviceNearCenteredCandidates = self.serviceNearCenteredCandidates,
         availableQuestPoiReason = self.availableQuestPoiReason,
         dbNearbyStatus = self.dbNearbyStatus,
         dbNearbyCount = self.dbNearbyCount,

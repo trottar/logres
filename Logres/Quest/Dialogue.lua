@@ -537,18 +537,26 @@ function Dialogue:EndNativeQuestHandoff(reason, expected)
         ok = called and restored == true
     end
     if ok then self.nativeQuestHandoff = nil end
+    self.nativeHandoffRestoreCount = (self.nativeHandoffRestoreCount or 0) + 1
+    self.lastNativeHandoffReason = reason
+    self.lastNativeHandoffResult = ok and "restored" or "restore-failed"
     Logres:TraceEvent("quest", "native-handoff-restored",
         {reason = reason, result = ok and "restored" or "restore-failed"})
     return ok
 end
 
 function Dialogue:BeginNativeQuestHandoff(reason)
+    self.lastNativeHandoffReason = reason
     if not self.immersionEnabled or not self.timerAvailable or self.nativeQuestHandoff then
+        self.lastNativeHandoffResult = "not-eligible"
         return nil
     end
     local module = Logres:GetModule("QuestOfferStockSuppression")
     local captured, snapshot = pcall(module.CaptureOfferPresentation, module)
-    if not captured or not snapshot or not module:CanBridgeVisual(snapshot) then return nil end
+    if not captured or not snapshot or not module:CanBridgeVisual(snapshot) then
+        self.lastNativeHandoffResult = "capture-or-bridge-unavailable"
+        return nil
+    end
     local handoff = {module = module, snapshot = snapshot}
     self.nativeQuestHandoff = handoff
     if not pcall(module.SuppressOfferPresentation, module, snapshot) then
@@ -567,6 +575,8 @@ function Dialogue:BeginNativeQuestHandoff(reason)
         self:EndNativeQuestHandoff("handoff-timer-unavailable", handoff)
         return nil
     end
+    self.nativeHandoffHeldCount = (self.nativeHandoffHeldCount or 0) + 1
+    self.lastNativeHandoffResult = "held"
     Logres:TraceEvent("quest", "native-handoff-held", {reason = reason})
     return handoff
 end
@@ -2366,6 +2376,13 @@ function Dialogue:GetDebugStatus()
             self.stockOfferSuppressionApplied == true,
         lastStockOfferSuppressionResult =
             self.lastStockOfferSuppressionResult,
+        -- P0476: only Logres-owned bridge and fallback state is observed;
+        -- never inspect protected Blizzard QuestFrame presentation state.
+        nativeHandoffPending = self.nativeQuestHandoff ~= nil,
+        nativeHandoffHeldCount = self.nativeHandoffHeldCount,
+        nativeHandoffRestoreCount = self.nativeHandoffRestoreCount,
+        lastNativeHandoffReason = self.lastNativeHandoffReason,
+        lastNativeHandoffResult = self.lastNativeHandoffResult,
 
         pageCount = #self.pages,
         currentPage = self.currentPage,
@@ -2476,6 +2493,10 @@ function Dialogue:OnInitialize()
     self.lastOfferActionError = nil
     self.stockOfferSuppressionApplied = false
     self.lastStockOfferSuppressionResult = "initialize"
+    self.nativeHandoffHeldCount = 0
+    self.nativeHandoffRestoreCount = 0
+    self.lastNativeHandoffReason = "initialize"
+    self.lastNativeHandoffResult = "initialize"
 
     self.pages = {}
     self.currentPage = 0

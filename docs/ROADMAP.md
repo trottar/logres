@@ -1,3 +1,14 @@
+## P0476 — Active bug stabilization (2026-11-17)
+
+P0475 `6447b50` verified. L-035: quest-linked markers already <=3yd center,
+3–4yd hold, >=4yd release; identified service NPC markers did not. Apply
+same rule without changing other navigation. L-002: brief intermittent
+native NPC flash, owner unverified; record addon-owned quest handoff state
+with Report Bug only, native interactions untouched. Client UNVERIFIED.
+Other earlier issues are dormant pending recurrence, not resolved.
+Next: native AddOns options (D-048) after scoped validation.
+See `docs/memory/evidence/P0476_NPC_FLASH_AND_NEAR_MARKERS.md`.
+
 ## P0475 — Stabilization and polish intake (2026-11-17)
 
 P0474 `e476b90` user-positive quest cycle scoped; L-037 PARTIAL, prior

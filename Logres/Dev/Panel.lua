@@ -432,12 +432,23 @@ function Logres:CaptureBugIncident()
         "lastCombatEvent", "lastCombatPositiveEvent", "lastCombatAnchorPresent",
         "lastCombatFallback", "lastCombatAttachmentState",
         "lastOutOfCombatEvent"})
+    -- P0476: only addon-owned compass candidate/centering state is sampled.
+    incident.snapshot.compassNearNPC = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("Compass"):GetDebugStatus()
+    end), {"serviceNearCenteredCandidates", "dbServiceCandidateCount",
+        "dbServiceCandidateShown", "poiCollisionHiddenCount",
+        "focusedMarkerKind", "focusedMarkerDistanceYards"})
     incident.snapshot.questPresentation = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("QuestDialogue"):GetDebugStatus()
     end), {"rootShown", "presentationShown", "lastPresentationReason",
         "rootShowCount", "rootHideCount", "lastQuestID",
         "turninEventCount", "lastTurninQuestID",
-        "questTurnedInRegistered"})
+        "questTurnedInRegistered", "nativeHandoffPending",
+        "nativeHandoffHeldCount", "nativeHandoffRestoreCount",
+        "lastNativeHandoffReason", "lastNativeHandoffResult",
+        "stockOfferSuppressionApplied", "lastStockOfferSuppressionResult",
+        "progressActive", "progressOwned", "completionActive",
+        "completionFallbackActive"})
     journal.incidents[#journal.incidents + 1] = incident
     if #journal.incidents > JOURNAL_INCIDENTS then table.remove(journal.incidents, 1) end
     -- Record the marker even if a prior screenshot is still in flight.

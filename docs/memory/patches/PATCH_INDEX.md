@@ -1,3 +1,10 @@
+## P0476 — NPC near-center and handoff provenance (2026-11-17)
+
+Verified baseline P0475 `6447b50`, runtime candidate 0.0.343-dev.
+Quest-linked 3/4yd unchanged, safe identified service NPCs gain identical
+sticky center. L-002 gains addon-only handoff diagnostics, not stock flash
+suppression. L-035/L-002 OPEN until actual Forever test. See evidence.
+
 ## P0475 — Backlog memory sync (2026-11-17)
 
 P0474 `e476b90` quest-cycle user-positive scoped, L-037 PARTIAL.

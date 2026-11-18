@@ -1,5 +1,6 @@
-# P0475: backlog sync; L-037 PARTIAL; P0474 `e476b90` user PASS.
-# P0474: P0473 #16018 FAIL retained; next bug triage -> options.
+# P0476: L-035 NPC 3/4yd; L-002 flash; `6447b50`.
+# P0475: L-037 PARTIAL; P0474 user PASS.
+# P0474: P0473 #16018 FAIL; options next.
 # P0468: L-051 four-column auras; P0467 d14a25a baseline, WoW UNVERIFIED.
 # P0466: defaults/names accepted; recovery variants unverified.
 # P0465: accepted Sheet04/native text.

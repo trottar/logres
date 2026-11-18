@@ -1,0 +1,29 @@
+P0476 L-035 service NPC near-centering and L-002 handoff provenance
+Verified baseline: 6447b501ecfc6ca20a75f1655732e3bf3f7ca494
+Candidate runtime version: 0.0.343-dev
+PREWRITE: 338/338 STATIC PASS
+POSTWRITE: 338/338 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Navigation/Compass.lua
+Logres/Quest/Dialogue.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0476_NPC_FLASH_AND_NEAR_MARKERS.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0476_NPC_FLASH_AND_NEAR_MARKERS.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0476_npc_flash_near_markers_contract.py
+tools/test_p0476_npc_near_center.lua
+P0476_MANIFEST.txt

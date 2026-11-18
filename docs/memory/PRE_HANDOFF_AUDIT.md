@@ -1,3 +1,36 @@
+## P0476 — L-035 identified service NPC 3/4yd and L-002 handoff provenance (2026-11-17)
+
+Verified P0475 main `6447b501ecfc6ca20a75f1655732e3bf3f7ca494`,
+tree `2c21f42affb66d7e06f1f3122cdf109a992cd5e7` by byte-exact
+reconstruction from the earlier verified handoff and sequential P0472–P0475
+payloads plus committed manifests (Git tree SHA match). Inspected D-048,
+ISSUE_LEDGER L-001/L-002/L-034/L-035/L-043, P0376 compass hysteresis,
+P0389 quest handoff evidence, stock preservation and the P0376 checker.
+
+Changed only source-identified service NPC centering at <=3yd with <4yd
+hysteresis, original quest-linked rule untouched; add Logres-owned quest
+handoff counters/outcomes and Report Bug snapshot. No native presentation
+frame readback/hook/suppression, new polling, quest claim or stock API write.
+The actual-source Lua fixture passes known service 2yd/3.5yd/4yd, unknown,
+secret, generic POI and quest-linked cases. Changed Lua parse and all
+337 prior historical checkers remain mandatory.
+
+**Assistant negative R0:** preliminary full run 336/338 PASS, REFUSED
+P0456 and P0473 contracts because the shortened CURRENT omitted their
+exact historical markers. R1 restores literal `P0454/P0455 secondary
+50/50 VISUAL FAIL`, `P0456` and `P0473` without changing runtime source.
+Historical targeted checks subsequently PASS. **R1 full audit 335/338**:
+P0436/P0437/P0438 REFUSED because condensed CURRENT also lost exact
+`P0425 visual PASS` marker. R2 restores that historic acceptance string.
+No runtime changes from these audit corrections. Independent R2 full
+candidate audit **338/338 STATIC PASS** (six checker processes; no failures).
+The exact Compass source Lua 3/4yd fixture PASS; changed Lua syntax parses
+under texlua. Source and Bootstrap/TOC version parity pass. Wrong HEAD,
+dirty checkout, tampered ZIP payload and new-file collision REFUSED with
+unchanged patch-owned bytes. Injected POSTWRITE failure rolled all owned
+files back and left no manifest. Final ZIP applier PREWRITE/POSTWRITE,
+full staged byte parity and SHA remain release gates. WoW runtime UNVERIFIED.
+
 ## P0475 — Docs-only backlog sync (2026-11-17)
 
 Verified P0474 `e476b90`/tree `e50c3e0` using the exact Git index

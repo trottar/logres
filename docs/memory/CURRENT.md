@@ -11,17 +11,17 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0475** docs-only backlog sync; P0474 `e476b90` user "Works great"
-(L-037 PARTIAL; individual variants unverified); P0473 #16018 FAIL
-retained. Next: issue-ledger triage; D-048 independent AddOns options;
-loot/profession notices; tooltips. See `POST_P0474_WORKSTREAMS.md`.
-No runtime changes. Preserve HP/aura/50-50, chat SHOW, stock fallback.
-P0460 HP/nameplates PASS scoped; P0457 selected PASS; P0461 aura FAIL;
-P0454/P0455 secondary 50/50 VISUAL FAIL; P0458/P0459 FAIL.
-P0425 visual PASS; P0442/P0443 overlap/matte FAIL; P0449 icons PASS;
-P0450 duplicates FAIL. P0456 trial suspended; P0463 GetPoint FAIL;
-P0464 position PASS/style FAIL; P0467 JSON PASS.
-L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 crest unverified.
+**P0476** P0475 `6447b50`: L-035 3/4yd NPC; L-002 flash
+read-only diagnostics, WoW UNVERIFIED. P0473 FAIL, P0474 PASS scoped;
+L-037 PARTIAL. Old issues dormant, not resolved by silence.
+Popup owner UNKNOWN; no new Blizzard suppression.
+Preserve world HP/aura/50-50, chat SHOW, quest/stock fallback.
+P0460 HP PASS; P0461 aura FAIL; P0457 selected PASS;
+P0454/P0455 secondary 50/50 VISUAL FAIL; P0456 suspended.
+P0458/P0459 FAIL.
+P0425 visual PASS; P0442/P0443 overlap FAIL; P0449 aura PASS;
+P0450 duplicate FAIL; P0463 GetPoint FAIL; P0464 style FAIL.
+L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 
 ## Verified State
 
@@ -63,9 +63,9 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 crest unverified.
 
 ## Next Action
 
-After P0475 push: issue-ledger triage and bounded stabilization batch,
-then D-048 AddOns options, loot/skills notifications, and tooltips.
-No client PASS from docs-only work.
+After P0476 push: test service-NPC snap within3/hold3-4/release4yd;
+record Report Bug if brief NPC popup recurs naturally. Then options.
+No runtime PASS from static/source tests.
 
 ## Success Criteria
 

@@ -1,3 +1,16 @@
+## P0476 — NPC compass 3/4-yard centering and native handoff evidence (2026-11-17)
+
+P0475 main `6447b50` verified. User prioritizes only two active symptoms:
+intermittent ~1s Blizzard window during NPC interactions (L-002; owner
+UNKNOWN) and close NPC compass bearing flipping behind/offset (L-035).
+Existing quest markers snap <=3yd, hold <4yd; service NPCs did not.
+Extend only source-identified service NPCs with ordinary npcID; preserve
+quest, POI, tracking, waypoint, source and native fallbacks. Record only
+addon-owned handoff counters/reasons in Report Bug; NO native-frame probes,
+no suppression/claim mutations. Client UNVERIFIED, no issue closed.
+Prior issues remain in ledger, dormant unless they recur. Next D-048
+AddOns options after scoped client test. See P0476 evidence.
+
 ## P0475 — Post-P0474 backlog sync (2026-11-17)
 
 P0474 pushed `e476b90`; user says quest cycling "Works great" (scoped
