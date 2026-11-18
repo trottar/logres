@@ -1,0 +1,24 @@
+P0475 Backlog memory sync and active handoff contract
+Verified baseline: e476b9046e7fc45ad14a8924ca2d0aa1837231dd
+Candidate runtime version: 0.0.342-dev
+PREWRITE: 337/337 STATIC PASS
+POSTWRITE: 337/337 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: NO RUNTIME FILES CHANGED
+Commit/push performed: NO
+
+Changed paths:
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0475_BACKLOG_SYNC.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0475_BACKLOG_SYNC.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/POST_P0474_WORKSTREAMS.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0474_quest_cycle_header_contract.py
+P0475_MANIFEST.txt

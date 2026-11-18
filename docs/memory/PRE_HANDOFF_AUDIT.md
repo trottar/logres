@@ -1,3 +1,24 @@
+## P0475 — Docs-only backlog sync (2026-11-17)
+
+Verified P0474 `e476b90`/tree `e50c3e0` using the exact Git index
+source match. Reviewed AGENTS, CURRENT, D-048, settings/preferences and
+issues L-014/L-018/L-027/L-037/L-038. Memory-only scope. The P0473
+Forever FAIL remains distinct from P0474 scoped user acceptance; no
+individual control acceptance or new runtime test implied. Initial independent R0 run: **320/337 PASS, 17 REFUSED** because the
+condensed CURRENT removed historical P0425/P0442/P0454/P0461 markers and
+the handoff no longer started `# P0474:` / contained P0473. This was a
+documentation regression in the assistant candidate only, never applied.
+R1 restored the historical anchors but yielded 335/337 PASS: older
+P0448/P0449 contracts correctly require handoff to start with the active
+CURRENT patch ID, while the P0474 checker still hard-pinned `# P0474:`.
+R2 updates only the P0474 **static** checker to follow the active
+CURRENT phase, retain `# P0474:` history and advance `# P0475:` handoff.
+Historical quest source/binding assertions remain. Independent exact
+R2 source audit: **337/337 STATIC PASS** (12 concurrent checker processes),
+13 text paths staged byte-for-byte by the canonical guarded diff validator.
+ZIP/applier PREWRITE/POSTWRITE acceptance remains a delivery gate; its
+results are in the generated P0475 manifest. No WoW redeploy.
+
 ## P0474 — L-037 quest cycle header correction (2026-11-17)
 
 P0473 `0679b09`/tree `ab73a726` verified; #16018 Forever 0.0.341-dev

@@ -1,3 +1,11 @@
+## P0475 — Post-P0474 backlog sync (2026-11-17)
+
+P0474 pushed `e476b90`; user says quest cycling "Works great" (scoped
+positive; L-037 PARTIAL, P0473 FAIL retained). Docs-only intake: reconcile
+existing issue ledger before fixes, then D-048 native AddOns options,
+short-lived loot/profession notifications, and tooltips. Source/fallback
+and client behavior unchanged; see `POST_P0474_WORKSTREAMS.md`.
+
 ## P0474 — L-037 Forever quest-cycle failure (2026-11-17)
 
 P0473 main `0679b09` source/deploy/capture 0.0.341-dev, session155

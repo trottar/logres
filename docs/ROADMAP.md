@@ -1,3 +1,10 @@
+## P0475 — Stabilization and polish intake (2026-11-17)
+
+P0474 `e476b90` user-positive quest cycle scoped; L-037 PARTIAL, prior
+P0473 FAIL retained. Docs-only. Prioritize existing L-ID bug triage,
+independent AddOns options (D-048), loot/profession ephemeral notices,
+then tooltips. Canonical scope: `docs/memory/roadmap/POST_P0474_WORKSTREAMS.md`.
+
 ## P0474 — L-037 Forever quest-cycle failure (2026-11-17)
 
 P0473 main `0679b09` source/deploy/capture 0.0.341-dev, session155

@@ -18,7 +18,16 @@ a=(R/'Logres/Quest/ActiveQuest.lua').read_text()
 for token in ('lastCycleListReason =','cycleZeroRowsSkipped =','self.cycleButton:Show()','self.cycleButton:Hide()'):
  assert token in a,token
 assert 'L-037' in (R/'docs/memory/investigations/ISSUE_LEDGER.md').read_text()
-assert (R/'docs/memory/handoffs/CURRENT_HANDOFF.md').read_text().startswith('# P0474:')
+# Historical P0474 safety remains mandatory, but the active handoff
+# must advance together with CURRENT instead of pinning P0474 forever.
+import re
+current = (R/'docs/memory/CURRENT.md').read_text()
+work = current.split('\n## Current Work Item\n', 1)[1].split('\n## ', 1)[0]
+active = re.search(r'(?m)^\*\*(P[0-9]{4})\*\*(?:\s|$)', work)
+assert active
+handoff = (R/'docs/memory/handoffs/CURRENT_HANDOFF.md').read_text()
+assert handoff.startswith('# ' + active.group(1) + ':')
+assert '# P0474:' in handoff
 assert 'P0474' in (R/'docs/memory/evidence/P0474_QUEST_CYCLE_HEADER_REPAIR.md').read_text()
 lua=os.environ.get('LOGRES_LUA') or shutil.which('texlua') or shutil.which('lua')
 if lua:

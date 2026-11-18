@@ -11,17 +11,17 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0474** L-037 P0473 Forever 0.0.341-dev #16018 FAIL: no cycle button,
-candidates0/attempts16/`cycle-quest-invalid`. Fix 0 header rows and bind
-ADDONS category; Chat SHOW PASS, crest UNVERIFIED.
-Preserve HP/aura/50-50/UP, quest fallback. P0474 client UNVERIFIED.
-Recovery/taint unverified. P0467 JSON roundtrip PASS.
-P0464 position PASS/style FAIL; P0463 GetPoint FAIL retained.
+**P0475** docs-only backlog sync; P0474 `e476b90` user "Works great"
+(L-037 PARTIAL; individual variants unverified); P0473 #16018 FAIL
+retained. Next: issue-ledger triage; D-048 independent AddOns options;
+loot/profession notices; tooltips. See `POST_P0474_WORKSTREAMS.md`.
+No runtime changes. Preserve HP/aura/50-50, chat SHOW, stock fallback.
 P0460 HP/nameplates PASS scoped; P0457 selected PASS; P0461 aura FAIL;
 P0454/P0455 secondary 50/50 VISUAL FAIL; P0458/P0459 FAIL.
-P0456 suspension is historical. P0425 visual PASS;
-P0442/P0443 overlap/matte FAIL; P0449 icons PASS; P0450 duplicates FAIL.
-L-011 PARTIAL; L-028 full safety and L-048 OPEN.
+P0425 visual PASS; P0442/P0443 overlap/matte FAIL; P0449 icons PASS;
+P0450 duplicates FAIL. P0456 trial suspended; P0463 GetPoint FAIL;
+P0464 position PASS/style FAIL; P0467 JSON PASS.
+L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 crest unverified.
 
 ## Verified State
 
@@ -63,10 +63,9 @@ L-011 PARTIAL; L-028 full safety and L-048 OPEN.
 
 ## Next Action
 
-Validate P0474 quest Next/button/binding: multi/single quest, preview,
-OFF, focus/compass. P0473 FAIL retained.
-P0471 crest restoration still unverified; diagnostics on actual issues.
-L-051: max4/scan6/self-cast baseline; four-column grid, WoW UNVERIFIED. Preserve accepted enemy UI.
+After P0475 push: issue-ledger triage and bounded stabilization batch,
+then D-048 AddOns options, loot/skills notifications, and tooltips.
+No client PASS from docs-only work.
 
 ## Success Criteria
 
@@ -76,6 +75,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/roadmap/POST_P0474_WORKSTREAMS.md
 - docs/memory/evidence/P0471_TARGET_FACTION_CREST.md
 - docs/memory/evidence/P0467_CHAT_WORKFLOW_AUDIT.md
 - docs/memory/evidence/P0466_IMMERSIVE_NAME_DEFAULTS.md
