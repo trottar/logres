@@ -1,0 +1,31 @@
+P0482 Estimated NPC arrival 2/3 yards; native 3/4 unchanged
+Verified baseline: 51bf50dd2c6d6d0ab57dbf91db52d1af2440f106
+Candidate runtime version: 0.0.349-dev
+PREWRITE: 344/344 STATIC PASS
+POSTWRITE: 344/344 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Logres.toc
+Logres/Navigation/Compass.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0482_ESTIMATED_NPC_ARRIVAL_HYSTERESIS.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0477_vertical_npc_proof_contract.py
+tools/check_p0478_map_only_compass_contract.py
+tools/check_p0479_compass_visual_recovery_contract.py
+tools/check_p0480_passive_npc_proximity_contract.py
+tools/check_p0481_npc_arrival_contract.py
+tools/check_p0482_estimated_npc_arrival_contract.py
+tools/test_p0481_npc_arrival.lua
+P0482_MANIFEST.txt

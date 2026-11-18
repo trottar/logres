@@ -1,4 +1,5 @@
-# P0481: L-035 one-NPC probable3/4yd lock; UNVERIFIED.
+# P0482: est2/3; native3/4; UNVERIFIED.
+# P0481: positive; sticky.
 # P0480: passive proof; P0479 FAIL.
 # P0479: L-035 P0478 VISUAL FAIL; no tildes.
 # P0478: map-only FAIL; P0477 hide FAIL.
@@ -6,7 +7,7 @@
 # P0476: NPC snap FAIL; L-002 flash OPEN.
 # P0475: L-037 PARTIAL; P0474 PASS.
 # P0474: P0473 #16018 FAIL.
-# P0468: L-051 auras; runtime UNVERIFIED.
+# P0468: L-051 auras; UNVERIFIED.
 # P0466: names/defaults scoped PASS.
 # P0465: Sheet04 accepted.
 # P0464: per-unit transaction retained.
@@ -42,6 +43,7 @@ Prior P0454/P0455/P0458 failures preserved; no blanket suppression.
 
 # P0453: #12124 14 threat samples, 12 secret; read-only,
 no render. P0450 selected PASS scoped; OFF/taint open.
+
 
 # P0451: history.
 

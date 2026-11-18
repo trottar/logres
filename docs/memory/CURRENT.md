@@ -11,9 +11,10 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0481** L-035 probable one-NPC3/4yd lock; P0480 main037de4b partial.
-Session162 native snaps0; client UNVERIFIED. P0476 false-floor2yd FAIL,
-P0477 hide FAIL, P0478 VISUAL FAIL, P0479 functional FAIL retained.
+**P0482** L-035 estimate2/3yd; native3/4yd unchanged.
+P0481 main51bf50d user-positive/sticky #16826 at3.70yd; client UNVERIFIED.
+P0476 false-floor2yd FAIL, P0477 hide FAIL, P0478 VISUAL FAIL,
+P0479 functional FAIL retained.
 L-002 popup OPEN.
 P0473 FAIL; P0474 scoped PASS; L-037 PARTIAL.
 Preserve world HP/aura/50-50, chat SHOW, quest/stock fallback.
@@ -64,9 +65,8 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 
 ## Next Action
 
-After P0481 push export fresh Chat kit with current HEAD/source.
-Discuss next fixes without recreating this investigation. L-035 needs
-client lock/hold/release validation; L-002 remains independent OPEN.
+P0482 estimate2/3yd client lock/hold/release validation, then issue triage.
+Preserve P0481 and session162; L-035 OPEN, L-002 independently OPEN.
 
 ## Success Criteria
 

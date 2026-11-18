@@ -186,19 +186,24 @@ local function readNearbyNPCIDs()
     return ids, proofSources, refused
 end
 
--- P0481: one probable arrival, distinct from native range/floor proof.
--- Inputs are ordinary addon-owned candidates; no Blizzard state is queried.
+-- P0482: probable compass-only arrival uses 2/3yd hysteresis; native
+-- confirmed arrival retains 3/4yd. Both are planar map-distance policies,
+-- never an assertion of actual 3D proximity or floor. No client reads here.
 local function chooseNPCArrivalLock(candidates, previous, mapID)
     local held, best
+    local holdLimit = previous and previous.source == "native" and 4 or 3
     for _, item in ipairs(candidates) do
         if item.arrivalKey and not item.arrivalRejected and type(item.name) == "string" and item.name ~= ""
             and type(item.distance) == "number" and item.distance >= 0 then
             if previous and previous.mapID == mapID
-                and previous.key == item.arrivalKey and item.distance < 4 then
+                and previous.key == item.arrivalKey and item.distance < holdLimit then
                 held = item
             end
-            if item.distance <= 3 and (item.liveProof == true or item.arrivalMagnitude <= 8) then
-                if not best or (item.liveProof == true and best.liveProof ~= true)
+            local nativeArrival = item.liveProof == true
+            local canAcquire = (nativeArrival and item.distance <= 3)
+                or (not nativeArrival and item.distance <= 2 and item.arrivalMagnitude <= 8)
+            if canAcquire then
+                if not best or (nativeArrival and best.liveProof ~= true)
                     or (item.liveProof == best.liveProof and (
                         item.distance < best.distance or (item.distance == best.distance
                             and item.arrivalKey < best.arrivalKey))) then
@@ -209,8 +214,10 @@ local function chooseNPCArrivalLock(candidates, previous, mapID)
     end
     local selected = held or best
     if not selected then return nil, nil, previous and "released" or "none" end
-    local source = held and previous.source
-        or selected.liveProof == true and "native" or "compass-estimate"
+    -- A fresh positive native observation can promote an already-held
+    -- estimate, but losing the token does not demote a native lock.
+    local source = selected.liveProof == true and "native"
+        or held and previous.source or "compass-estimate"
     return selected, {key=selected.arrivalKey, mapID=mapID, source=source,
         npcID=selected.npcID}, held and "held" or "acquired"
 end
@@ -948,8 +955,10 @@ function Compass:RefreshAvailableQuestPOIs(reason)
             local priorKey = providerNPC and not isSecret(row.sourceX) and not isSecret(row.sourceY)
                 and type(row.sourceX) == "number" and type(row.sourceY) == "number"
                 and nearKey .. ":" .. tostring(row.sourceX) .. ":" .. tostring(row.sourceY)
+            local priorHoldLimit = previousNPCArrival
+                and previousNPCArrival.source == "native" and 4 or 3
             if not (previousNPCArrival and previousNPCArrival.mapID == mapID
-                and previousNPCArrival.key == priorKey and distance < 4) then return end
+                and previousNPCArrival.key == priorKey and distance < priorHoldLimit) then return end
         end
         local serviceStyle = role=="service" and SERVICE_MARKER_STYLE[row.serviceKind] or nil
         if role=="service" and not serviceStyle then return end

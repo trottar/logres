@@ -1,3 +1,12 @@
+## P0482 — Narrow estimated NPC arrival hysteresis (2026-11-18)
+
+Verified P0481 main `51bf50d`; user reports estimated lock works nicely
+but sticks near other NPCs. Session163 #16826 held NPC3935 at3.70yd,
+native proof0. Estimate acquire<=2yd/hold<3yd; native retains3/4yd.
+No live floor claim or changed visuals/interaction. L-035 OPEN;
+P0476–P0480 failures and session162 evidence retained. Client UNVERIFIED.
+See `docs/memory/evidence/P0482_ESTIMATED_NPC_ARRIVAL_HYSTERESIS.md`.
+
 ## P0481 — One probable NPC arrival lock and Chat rollover (2026-11-18)
 
 P0480 `037de4b` verified, session162 #16721–#16743 partial/janky user result.

@@ -1,3 +1,31 @@
+## P0482 — Estimate-only 2/3yd lock; release gate (2026-11-18)
+
+Baseline GitHub main `51bf50dd2c6d6d0ab57dbf91db52d1af2440f106`, tree
+`d1405fcfb348796455cc4684bab3b55600f0a8ff`; author-kit baseline
+verified before editing. L-035 session163 #16826 estimated lock at3.70yd,
+prior session162/P0476–P0480 failure history preserved. Reviewed P0476–
+P0481 historical compass contracts and exact-source fixture, owner/fallback
+and protected restrictions. Native 3/4yd and quest 3/4yd remain; only
+compass-estimated 2/3yd lock and its back-facing continuation narrow.
+No new API/hook/timer, source reads or appearance changes. Version bump
+Bootstrap/TOC parity required; no static PASS equals client PASS.
+
+**R0 assistant candidate failure:** first full 344-check run passed 342;
+P0450/P0451 historic handoff source contracts REFUSED because an overly
+aggressive handoff byte-budget reduction removed the literal `# P0451:`
+marker. No tracked/user Git files were changed; restored the marker
+without altering runtime behavior. R1 all-check rerun required.
+ R1 independent exact-source
+**344/344 STATIC PASS**, 12-checker parallel execution, 0 failures.
+P0481/P0482 actual-source Lua fixture and legacy P0476–P0480 fixtures
+PASS. Static version policy and memory health PASS.
+
+
+Release must verify exact post-transform candidate all checkers, Lua
+syntax/source fixture, diff hygiene, ZIP/hash, canonical PREWRITE/POSTWRITE,
+wrong baseline/dirty/collision/tamper refusal, rollback and manifest.
+Results recorded in the package receipt and user handoff; client UNVERIFIED.
+
 ## P0481 — Probable NPC arrival lock
 
 P0480 `037de4b` verified. Twelve current images individually inspected;
