@@ -12,9 +12,9 @@ p = (R / 'Logres/HUD/PetActionExecutionProbe.lua').read_text()
 b = (R / 'Logres/Core/Bootstrap.lua').read_text()
 t = (R / 'Logres/Logres.toc').read_text()
 
-assert c.count('primary = 0.50,') == 3 and c.count('primary = 1.00,') == 1
+assert c.count('primary = 0.00,') == 3 and c.count('primary = 1.00,') == 1
 assert c.count('secondary = 0.00,') == 3 and c.count('utility = 0.00,') == 3
-assert 'secondary = 1.00,\n        utility = 0.75,' in c
+assert 'secondary = 0.85,\n        utility = 0.75,' in c
 for required in (
     'function Context:InstallHoverHooks()',
     'button:HookScript("OnEnter", function()',
@@ -25,14 +25,15 @@ for required in (
     'function Context:SetHovered(source, hovered)',
     'if self.hoverEffectsEnabled ~= true then',
     'function Context:ResolvedAlpha(policyName, role, source)',
-    'return ALPHA_POLICY.combat[role]',
+    'return ALPHA_POLICY.combat[alphaRole]',
     'primary.cluster:SetAlpha(primaryAlpha)',
     'feedback:SetAlpha(primaryAlpha)',
     'sides.clusters[source].frame:SetAlpha(alpha)',
     'feedback:SetAlpha(alpha)',
-    'pet:ApplyContextOpacity(petAlpha)',
+    'pet:ApplyContextOpacity(petAlpha, locked == true)',
     'self.hoverEffectsEnabled = false',
     'self:ApplyPolicy("combat")',
+    'driver:SetAttribute("_onstate-logrescombat", COMBAT_ALPHA_SNIPPET)',
     'hoveredPet = self.hovered.pet == true',
     'hoverHookCount = self.hoverHookCount',
 ):
@@ -42,10 +43,10 @@ assert 'actionDebug.bar4Alpha == expectedBar4' in a
 assert 'actionDebug.bar5Alpha == expectedBar5' in a
 assert 'actionDebug.petAlpha == expectedPet' in a
 assert 'contextDebug.petAlpha >= 0' in a
-assert 'function Probe:ApplyContextOpacity(alpha)' in p
+assert 'function Probe:ApplyContextOpacity(alpha, feedbackOnly)' in p
 assert re.search(r'Logres.VERSION = "(.*?)"', b).group(1) == re.search(r'^## Version: (.*?)$', t, re.M).group(1)
 for forbidden in (
-    'SetAttribute(', 'SetBinding(', 'SaveBindings(', 'TargetNearestEnemy(',
+    'SetBinding(', 'SaveBindings(', 'TargetNearestEnemy(',
     'ClearTarget(', 'TargetUnit(', 'C_Timer.', 'OnUpdate',
     'GetMouseFocus(', 'GetMouseFoci(', 'GetCursorPosition(', 'PetActionBar:Hide(',
 ):
@@ -60,3 +61,5 @@ if engine:
 else:
     print('P0490 actual-source Lua hover fixture DEFERRED: no interpreter')
 print('P0490 hover policy / protected-input contract: PASS')
+
+assert 'button:SetAttribute(' not in c and 'cluster:SetAttribute(' not in c

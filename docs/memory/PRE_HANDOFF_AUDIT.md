@@ -1,3 +1,36 @@
+## P0491 — L-055 secure combat alpha / all-zero rest audit (2026-11-18)
+
+User refinement during package audit: secondary and pet alpha 0.85 on
+hover/combat and 0 OOC. Bar4 remains 1 on hover/combat. Original
+P0491 package PREWRITE/POSTWRITE was interrupted as SUPERSEDED when the
+request arrived; new 352-check audit and package tests are required on
+new exact bytes before delivery. The corrected 85% source candidate
+passed 352/352 STATIC independently; packaged applier gates still required.
+No runtime PASS asserted.
+
+
+Verified P0490 `054056b` exact Git tree `cdbe9bc` in isolated
+reconstruction. Actual-source P0489/P0490/P0491 Lua tests reproduce
+protected-parent combat write refusal and verify secure-driver recovery,
+hover, feedback and fail-open. No new clickable or native UI owners.
+Historical contracts updated only for superseded primary OOC0 and
+explicit secure-driver setup; C.4, D-028, P0416, P0489, P0490 remain.
+Initial complete candidate audit 298/352 FAIL: 54 older checkers all
+rejected CURRENT.md byte length 9871 >=9800. Trimmed the new active
+summary to 9791 bytes without removing old markers; second full
+suite 352/352 PASS. A new held-hover/late-driver test then FAILED:
+secure `rest` clobbered OOC hover. Removed driver rest writes; combat
+transition remains secure, OOC/hover remains ordinary. All suites must
+be repeated against the corrected final bytes. Third complete candidate
+source audit **352/352 PASS**, including actual-source simulated lockdown,
+held hover across a late `rest` driver event, P0489/P0490 fixtures,
+C.4/P0416/D-028/historical and version policies. No test failures on
+the corrected runtime candidate. Complete packaged PREWRITE/POSTWRITE,
+rollback and ZIP parity are still separate hard gates.
+Complete candidate suite, packaged PREWRITE/POSTWRITE, refusal, rollback,
+diff hygiene and ZIP parity are hard release gates. No
+WoW runtime PASS is claimed; P0490 combat FAIL preserved in L-055.
+
 ## P0490 — L-055 primary rest alpha and existing-button hover audit (2026-11-18)
 
 P0489 main `fc821c3`/tree `face80a` reconstructed exactly from the

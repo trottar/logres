@@ -74,6 +74,23 @@ WoW hover hit testing, combat/click/stock fallback UNVERIFIED; L-055 OPEN.
 L-054 buff intermittent OPEN and L-056 protected death-target BLOCKED.
 Evidence: `docs/memory/evidence/P0490_ACTION_MOUSEOVER_OPACITY.md`.
 
+## P0491 — L-055 secure combat alpha and all-zero rest (2026-11-18)
+
+P0490 main `054056b`/tree `cdbe9bc` verified; user reports hover works
+but combat restoration FAIL. Latest #17981 incident OOC (no direct
+in-combat trace), generic protected-action warning not attributed.
+P0491 keeps existing hover and secure click routing, makes all OOC
+rest alpha0, uses preconfigured secure combat driver for six roots
+and skips insecure root writes in lockdown; pet/primary/side feedback
+kept in sync. User refinement: secondary/pet hover/combat 85%,
+rest0; primary/Bar4 100%, utility/Bar5 75%. Fail-open on driver
+absence/disable, with deferred
+regen teardown. Actual-source simulated protected-root tests and all
+historic contracts REQUIRED; live Forever UNVERIFIED, L-055 OPEN.
+Interactive quest-item HUD request is future-only in
+`POST_P0474_WORKSTREAMS.md`, not implemented here.
+Evidence: `docs/memory/evidence/P0491_SECURE_ACTION_COMBAT_REVEAL.md`.
+
 ## P0485 — Correct missing optional QuestieDB fields and Report Bug eligibility detail (2026-11-18)
 
 P0484 main `3277132` verified/tree `8254cac`; Forever session168

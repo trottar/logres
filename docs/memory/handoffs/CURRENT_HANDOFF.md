@@ -1,6 +1,8 @@
 # P0486: q35 PASS; P0487 docs; L-030 PARTIAL.
-# P0490 L-055: P0489 OOC PASS; primary OOC.5, hover combat.
-# Pet/side0 rest, hovered1; utility/bar5 hover.75.
+# P0490 L-055: hover PASS, combat reveal FAIL.
+# P0491: secure combat driver; hover retained.
+# P0491: OOC0; hover/combat main/Bar4=1, side/pet=.85, others=.75.
+# WoW UNVERIFIED; utility/bar5 combat.75.
 # P0488 L-054 OPEN; L-056 target BLOCKED protected.
 # P0485: sparse DB fields; client FAIL.
 # P0484: quest35 FAIL.

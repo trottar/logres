@@ -2,8 +2,12 @@
 local path = arg[0]:gsub('tools/test_p0490_action_hover.lua$', '')
 local modules, state = {}, {combat=false,pvpFlagged=false,context='world'}
 local function widget()
-    local o = {alpha=1, visible=false, scripts={}, hooks={}}
+    local o = {alpha=1, visible=false, scripts={}, hooks={}, refs={}, attrs={}}
     return setmetatable(o, {__index=function(self, k)
+        if k=='SetFrameRef' then return function(self,key,value) self.refs[key]=value end end
+        if k=='GetFrameRef' then return function(self,key) return self.refs[key] end end
+        if k=='SetAttribute' then return function(self,key,value) self.attrs[key]=value end end
+        if k=='GetAttribute' then return function(self,key) return self.attrs[key] end end
         if k=='SetAlpha' then return function(self,a) self.alpha=a end end
         if k=='Show' then return function(self) self.visible=true end end
         if k=='Hide' then return function(self) self.visible=false end end
@@ -16,6 +20,22 @@ end
 UIParent=widget()
 function CreateFrame() return widget() end
 function InCombatLockdown() return state.combat end
+local secureDriver
+function RegisterStateDriver(driver,id,condition)
+    driver.stateDriver=id
+    driver.secureSnippet=assert(load('return function(self,stateid,newstate)\n'..driver.attrs['_onstate-'..id]..'\nend'))()
+    secureDriver=driver
+    driver.secureSnippet(driver,id,state.combat and 'combat' or 'rest')
+end
+function UnregisterStateDriver(driver,id)
+    assert(driver.stateDriver==id)
+    driver.stateDriver=nil
+    secureDriver=nil
+end
+local function secureTransition(mode)
+    assert(secureDriver and secureDriver.secureSnippet,'registered combat driver')
+    secureDriver.secureSnippet(secureDriver,secureDriver.stateDriver,mode)
+end
 local Logres={Layout={GetActionBarSpec=function(key)
     local roles={secondary='secondary',utility='utility',bar4='secondary',bar5='utility'}
     return {role=assert(roles[key])}
@@ -66,11 +86,11 @@ local function expect(name,primaryAlpha,second,utility)
         assert(b.activationFeedbackFrame.alpha==primaryAlpha,'primary feedback')
     end
     assert(sides.clusters.secondary.frame.alpha==second,'secondary')
-    assert(sides.clusters.bar4.frame.alpha==second,'bar4')
+    assert(sides.clusters.bar4.frame.alpha==(name=='combat' and 1 or 0),'bar4')
     assert(sides.clusters.utility.frame.alpha==utility,'utility')
     assert(sides.clusters.bar5.frame.alpha==utility,'bar5')
     for key, cluster in pairs(sides.clusters) do
-        local want=(key=='secondary' or key=='bar4') and second or utility
+        local want=key=='bar4' and (name=='combat' and 1 or 0) or (key=='secondary' and second or utility)
         for _, b in ipairs(cluster.buttons) do
             assert(b.activationFeedbackFrame.alpha==want,'feedback '..key)
         end
@@ -84,15 +104,15 @@ local function expect(name,primaryAlpha,second,utility)
     assert(context.feedbackFramesUpdated==60,'feedback count')
     assert(context:GetDebugStatus().alphaZeroUsed==(second==0 or utility==0),'alpha-zero debug')
 end
-expect('world',0.5,0,0)
+expect('world',0,0,0)
 state={combat=false,pvpFlagged=true,context='world'};context.onState(state)
-expect('pvp',0.5,0,0)
+expect('pvp',0,0,0)
 state={combat=false,pvpFlagged=false,context='instance'};context.onState(state)
-expect('instance',0.5,0,0)
-state={combat=true,pvpFlagged=false,context='world'};context.onState(state)
-expect('combat',1,1,0.75)
-state={combat=false,pvpFlagged=false,context='world'};context.onState(state)
-expect('world',0.5,0,0)
+expect('instance',0,0,0)
+state={combat=true,pvpFlagged=false,context='world'};context.onState(state);secureTransition('combat')
+expect('combat',1,0.85,0.75)
+state={combat=false,pvpFlagged=false,context='world'};context.onState(state);secureTransition('rest')
+expect('world',0,0,0)
 -- Exactly 70 existing secure buttons supply hover; no overlay is created.
 local function enter(button)
     assert(button.hooks.OnEnter and #button.hooks.OnEnter==1,'enter hook')
@@ -121,9 +141,9 @@ local function expectCluster(source, want, other)
 end
 enter(primary.buttons[1]);expectCluster('primary',1);expectCluster('secondary',0)
 assert(context:GetDebugStatus().hoveredPrimary)
-leave(primary.buttons[1]);expectCluster('primary',0.5)
+leave(primary.buttons[1]);expectCluster('primary',0)
 assert(not context:GetDebugStatus().hoveredPrimary)
-enter(sides.clusters.secondary.buttons[1]);expectCluster('secondary',1,'bar4');expectCluster('pet',0)
+enter(sides.clusters.secondary.buttons[1]);expectCluster('secondary',0.85,'bar4');expectCluster('pet',0)
 leave(sides.clusters.secondary.buttons[1]);expectCluster('secondary',0)
 enter(sides.clusters.utility.buttons[1]);expectCluster('utility',0.75,'bar5')
 leave(sides.clusters.utility.buttons[1]);expectCluster('utility',0)
@@ -131,30 +151,30 @@ enter(sides.clusters.bar4.buttons[1]);expectCluster('bar4',1,'secondary')
 leave(sides.clusters.bar4.buttons[1]);expectCluster('bar4',0)
 enter(sides.clusters.bar5.buttons[1]);expectCluster('bar5',0.75,'utility')
 leave(sides.clusters.bar5.buttons[1]);expectCluster('bar5',0)
-enter(pet.buttons[1]);expectCluster('pet',1,'secondary')
-assert(context.petAlpha==1 and context:GetDebugStatus().hoveredPet)
+enter(pet.buttons[1]);expectCluster('pet',0.85,'secondary')
+assert(context.petAlpha==0.85 and context:GetDebugStatus().hoveredPet)
 leave(pet.buttons[1]);expectCluster('pet',0)
 -- Hover persists over a state change and resolves to the combat policy.
 enter(primary.buttons[1])
 state={combat=false,pvpFlagged=true,context='world'};context.onState(state)
 expectCluster('primary',1)
-leave(primary.buttons[1]);expectCluster('primary',0.5)
+leave(primary.buttons[1]);expectCluster('primary',0)
 enter(sides.clusters.utility.buttons[1]);expectCluster('utility',0.75)
-state={combat=true,pvpFlagged=false,context='world'};context.onState(state)
-expect('combat',1,1,0.75)
-leave(sides.clusters.utility.buttons[1]);expect('combat',1,1,0.75)
-state={combat=false,pvpFlagged=false,context='world'};context.onState(state)
-expect('world',0.5,0,0)
+state={combat=true,pvpFlagged=false,context='world'};context.onState(state);secureTransition('combat')
+expect('combat',1,0.85,0.75)
+leave(sides.clusters.utility.buttons[1]);expect('combat',1,0.85,0.75)
+state={combat=false,pvpFlagged=false,context='world'};context.onState(state);secureTransition('rest')
+expect('world',0,0,0)
 -- Disable restores visible combat policy; old hooks may not dim again.
-enter(pet.buttons[2]);expectCluster('pet',1)
-context:OnDisable();expect('combat',1,1,0.75)
-leave(pet.buttons[2]);expect('combat',1,1,0.75)
-enter(primary.buttons[2]);expect('combat',1,1,0.75)
+enter(pet.buttons[2]);expectCluster('pet',0.85)
+context:OnDisable();expect('combat',1,0.85,0.75)
+leave(pet.buttons[2]);expect('combat',1,0.85,0.75)
+enter(primary.buttons[2]);expect('combat',1,0.85,0.75)
 -- Re-enable does not duplicate secure button hooks and dims again.
-context:OnEnable();expect('world',0.5,0,0)
+context:OnEnable();expect('world',0,0,0)
 assert(context.hoverHookCount==70,'no duplicate hooks')
 assert(#primary.buttons[2].hooks.OnEnter==1,'no duplicate primary hook')
-enter(pet.buttons[3]);expectCluster('pet',1,'secondary')
+enter(pet.buttons[3]);expectCluster('pet',0.85,'secondary')
 leave(pet.buttons[3]);expectCluster('pet',0)
 assert(context.hoverEnterCount >= 8 and context.hoverLeaveCount >= 8,'event counts')
 assert(context:GetDebugStatus().hoverHooksInstalled,'diagnostics')

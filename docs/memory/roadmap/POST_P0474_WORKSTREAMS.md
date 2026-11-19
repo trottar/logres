@@ -81,6 +81,18 @@ prior runtime verification still required. Prefer an owned presentation
 adapter or selective cosmetic skin over replacing protected/native tooltip
 interaction, and fail open where metadata is unavailable or secret.
 
+## Workstream 5 — Interactive quest-use items in the HUD (deferred)
+
+User 2026-11-18 screenshot proposes usable quest-item icons in the indicated
+upper HUD/quest context. This is a **future presentation/input feature**,
+not an item-use permission or a P0491 runtime task. Investigate ordinary
+quest-log objective/item identity, item counts, usable inventory slots,
+secure user-initiated item actions and cooldown/tooltip fidelity; present
+only supported current quest items with fail-open bag access and without
+protected combat scripting or secret payload inspection. Require a separate
+visual preview and WoW interaction validation before native item surfaces
+are hidden. Keep this behind L-055 combat-safety work.
+
 ## Stage gates and non-goals
 
 For each workstream: narrow design/owner map -> fixture/previews -> explicit

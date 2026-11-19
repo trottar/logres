@@ -148,8 +148,7 @@ need('primary.cluster:SetAlpha(primaryAlpha)' in context and
      'sides.clusters[source].frame:SetAlpha(alpha)' in context and
      'self:ResolvedAlpha(policyName, role, source)' in context,
      "role-based context alpha not applied to all source clusters")
-need(all(x not in context for x in ('.frame:Hide(', '.frame:Show(', 'SetAlpha(0)',
-                                     'SetBinding(', 'UseAction(')),
+need(all(x not in context for x in ('.frame:Hide(', '.frame:Show(', 'SetAlpha(0)',                                      'SetBinding(', 'UseAction(')),
      "context introduced action/visibility/binding mutation")
 need(len([line for line in toc.splitlines() if line.endswith('.lua')]) == 96,
      "original 96 Lua TOC entries changed")

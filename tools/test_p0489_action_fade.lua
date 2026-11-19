@@ -2,8 +2,12 @@
 local path = arg[0]:gsub('tools/test_p0489_action_fade.lua$', '')
 local modules, state = {}, {combat=false,pvpFlagged=false,context='world'}
 local function widget()
-    local o = {alpha=1, visible=false, scripts={}, hooks={}}
+    local o = {alpha=1, visible=false, scripts={}, hooks={}, refs={}, attrs={}}
     return setmetatable(o, {__index=function(self, k)
+        if k=='SetFrameRef' then return function(self,key,value) self.refs[key]=value end end
+        if k=='GetFrameRef' then return function(self,key) return self.refs[key] end end
+        if k=='SetAttribute' then return function(self,key,value) self.attrs[key]=value end end
+        if k=='GetAttribute' then return function(self,key) return self.attrs[key] end end
         if k=='SetAlpha' then return function(self,a) self.alpha=a end end
         if k=='Show' then return function(self) self.visible=true end end
         if k=='Hide' then return function(self) self.visible=false end end
@@ -16,6 +20,22 @@ end
 UIParent=widget()
 function CreateFrame() return widget() end
 function InCombatLockdown() return state.combat end
+local secureDriver
+function RegisterStateDriver(driver,id,condition)
+    driver.stateDriver=id
+    driver.secureSnippet=assert(load('return function(self,stateid,newstate)\n'..driver.attrs['_onstate-'..id]..'\nend'))()
+    secureDriver=driver
+    driver.secureSnippet(driver,id,state.combat and 'combat' or 'rest')
+end
+function UnregisterStateDriver(driver,id)
+    assert(driver.stateDriver==id)
+    driver.stateDriver=nil
+    secureDriver=nil
+end
+local function secureTransition(mode)
+    assert(secureDriver and secureDriver.secureSnippet,'registered combat driver')
+    secureDriver.secureSnippet(secureDriver,secureDriver.stateDriver,mode)
+end
 local Logres={Layout={GetActionBarSpec=function(key)
     local roles={secondary='secondary',utility='utility',bar4='secondary',bar5='utility'}
     return {role=assert(roles[key])}
@@ -66,11 +86,11 @@ local function expect(name,primaryAlpha,second,utility)
         assert(b.activationFeedbackFrame.alpha==primaryAlpha,'primary feedback')
     end
     assert(sides.clusters.secondary.frame.alpha==second,'secondary')
-    assert(sides.clusters.bar4.frame.alpha==second,'bar4')
+    assert(sides.clusters.bar4.frame.alpha==(name=='combat' and 1 or 0),'bar4')
     assert(sides.clusters.utility.frame.alpha==utility,'utility')
     assert(sides.clusters.bar5.frame.alpha==utility,'bar5')
     for key, cluster in pairs(sides.clusters) do
-        local want=(key=='secondary' or key=='bar4') and second or utility
+        local want=key=='bar4' and (name=='combat' and 1 or 0) or (key=='secondary' and second or utility)
         for _, b in ipairs(cluster.buttons) do
             assert(b.activationFeedbackFrame.alpha==want,'feedback '..key)
         end
@@ -84,14 +104,14 @@ local function expect(name,primaryAlpha,second,utility)
     assert(context.feedbackFramesUpdated==60,'feedback count')
     assert(context:GetDebugStatus().alphaZeroUsed==(second==0 or utility==0),'alpha-zero debug')
 end
-expect('world',0.5,0,0)
+expect('world',0,0,0)
 state={combat=false,pvpFlagged=true,context='world'};context.onState(state)
-expect('pvp',0.5,0,0)
+expect('pvp',0,0,0)
 state={combat=false,pvpFlagged=false,context='instance'};context.onState(state)
-expect('instance',0.5,0,0)
-state={combat=true,pvpFlagged=false,context='world'};context.onState(state)
-expect('combat',1,1,0.75)
-state={combat=false,pvpFlagged=false,context='world'};context.onState(state)
-expect('world',0.5,0,0)
-context:OnDisable();expect('combat',1,1,0.75)
+expect('instance',0,0,0)
+state={combat=true,pvpFlagged=false,context='world'};context.onState(state);secureTransition('combat')
+expect('combat',1,0.85,0.75)
+state={combat=false,pvpFlagged=false,context='world'};context.onState(state);secureTransition('rest')
+expect('world',0,0,0)
+context:OnDisable();expect('combat',1,0.85,0.75)
 print('P0489 actual-source world/PvP/instance/combat/pet/feedback: PASS')

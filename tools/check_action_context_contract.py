@@ -29,12 +29,12 @@ if CONTEXT.is_file():
         "primary.cluster:SetAlpha(primaryAlpha)",
         'Logres.Layout.GetActionBarSpec(source).role',
         'sides.clusters[source].frame:SetAlpha(alpha)',
-        "primary = 0.50",
+        "primary = 0.00",
         "primary = 1.00",
         "secondary = 0.00",
         "secondary = 0.00",
         "secondary = 0.00",
-        "secondary = 1.00",
+        "secondary = 0.85",
         "utility = 0.00",
         "utility = 0.00",
         "utility = 0.00",
@@ -50,7 +50,6 @@ if CONTEXT.is_file():
         ".frame:Hide(",
         ".frame:Show(",
         "SetAlpha(0)",
-        "SetAlpha(0.0)",
     ):
         if fragment in source:
             errors.append(

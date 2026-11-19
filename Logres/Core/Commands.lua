@@ -1491,24 +1491,25 @@ end
 
 local CONTEXT_POLICY_ALPHA = {
     world = {
-        primary = 0.50,
+        primary = 0.00,
         secondary = 0.00,
         utility = 0.00,
     },
     pvp = {
-        primary = 0.50,
+        primary = 0.00,
         secondary = 0.00,
         utility = 0.00,
     },
     instance = {
-        primary = 0.50,
+        primary = 0.00,
         secondary = 0.00,
         utility = 0.00,
     },
     combat = {
         primary = 1.00,
-        secondary = 1.00,
+        secondary = 0.85,
         utility = 0.75,
+        bar4 = 1.00,
     },
 }
 
@@ -1634,12 +1635,12 @@ local function runContextPolicyCheck()
         if expectedActionPolicy ~= "combat" and hovered == true then
             return combatAlpha[role]
         end
-        return expectedAlpha[role]
+        return expectedAlpha[role] or expectedAlpha.secondary
     end
     local expectedPrimary = expectedHoveredAlpha("primary", actionDebug.hoveredPrimary)
     local expectedSecondary = expectedHoveredAlpha("secondary", actionDebug.hoveredSecondary)
     local expectedUtility = expectedHoveredAlpha("utility", actionDebug.hoveredUtility)
-    local expectedBar4 = expectedHoveredAlpha("secondary", actionDebug.hoveredBar4)
+    local expectedBar4 = expectedHoveredAlpha("bar4", actionDebug.hoveredBar4)
     local expectedBar5 = expectedHoveredAlpha("utility", actionDebug.hoveredBar5)
     local expectedPet = expectedHoveredAlpha("secondary", actionDebug.hoveredPet)
 

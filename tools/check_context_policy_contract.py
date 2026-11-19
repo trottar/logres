@@ -81,7 +81,7 @@ if CONTEXT.is_file():
         "if state.pvpFlagged then",
         'if state.context == "instance" then',
         'return "world"',
-        "primary = 0.50",
+        "primary = 0.00",
         "primary = 1.00",
         "secondary = 0.00",
         "utility = 0.00",
@@ -89,7 +89,7 @@ if CONTEXT.is_file():
         "utility = 0.00",
         "secondary = 0.00",
         "utility = 0.00",
-        "secondary = 1.00",
+        "secondary = 0.85",
         "utility = 0.75",
     ]
 

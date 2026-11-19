@@ -1,0 +1,36 @@
+P0491 Secure combat action opacity and zero resting bars
+Verified baseline: 054056ba87bc7611191a80bab9f022f3ee04da10
+Candidate runtime version: 0.0.357-dev
+PREWRITE: 352/352 STATIC PASS
+POSTWRITE: 352/352 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Actions/Context.lua
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/HUD/PetActionExecutionProbe.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0491_SECURE_ACTION_COMBAT_REVEAL.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/POST_P0474_WORKSTREAMS.md
+docs/memory/roadmap/STATUS.md
+tools/check_action_context_contract.py
+tools/check_context_policy_contract.py
+tools/check_p0416_five_bar_layout_contract.py
+tools/check_p0489_action_fade_contract.py
+tools/check_p0490_action_hover_contract.py
+tools/check_p0491_secure_combat_alpha_contract.py
+tools/test_p0489_action_fade.lua
+tools/test_p0490_action_hover.lua
+tools/test_p0491_secure_combat_alpha.lua
+P0491_MANIFEST.txt

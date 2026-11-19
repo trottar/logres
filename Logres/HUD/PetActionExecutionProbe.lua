@@ -345,12 +345,14 @@ end
 -- Only addon-owned presentation receives contextual alpha. This does not
 -- touch stock PetActionBar, secure attributes, bindings, or click routing.
 -- Child feedback frames are siblings under UIParent, not cluster children.
-function Probe:ApplyContextOpacity(alpha)
+function Probe:ApplyContextOpacity(alpha, feedbackOnly)
     if type(alpha) ~= "number" or alpha < 0 or alpha > 1 then
         return false
     end
     self.contextAlpha = alpha
-    if self.cluster then
+    -- The combat state driver owns protected cluster alpha during lockdown.
+    -- These UIParent sibling feedback frames are safe to update separately.
+    if self.cluster and feedbackOnly ~= true then
         self.cluster:SetAlpha(alpha)
     end
     local updated = 0

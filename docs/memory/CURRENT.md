@@ -11,9 +11,9 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0486** quest35 PASS; **P0487** docs PASS.
-**P0489** OOC fade user PASS scoped; pet/combat UNVERIFIED.
-**P0490** primary OOC.5, hover combat alpha; L-055 OPEN.
+**P0486** q35 PASS; P0487 docs PASS.
+P0489 OOC PASS; P0490 hover PASS/combat FAIL.
+**P0491** all OOC0; secondary/pet hover/combat.85; L-055 OPEN.
 L-056 death-target BLOCKED.
 **P0488** L-054 OPEN; L-030 NPC261/q37 PASS scoped.
 **P0485** FAIL retained.
@@ -67,7 +67,7 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 
 ## Next Action
 
-P0490 L-055 hover/primary live test; L-056 blocked.
+P0491 L-055 combat reveal/OOC0 live test; L-056 blocked.
 P0488 L-054 observe; L-030 false positives open. L-035/L-002 OPEN.
 
 ## Success Criteria
@@ -78,6 +78,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0491_SECURE_ACTION_COMBAT_REVEAL.md
 - docs/memory/evidence/P0490_ACTION_MOUSEOVER_OPACITY.md
 - docs/memory/evidence/P0489_ACTION_BAR_ALPHA_POLICY.md
 - docs/memory/evidence/P0487_QUEST_MARKER_RUNTIME_PASS.md
