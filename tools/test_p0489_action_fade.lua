@@ -2,12 +2,13 @@
 local path = arg[0]:gsub('tools/test_p0489_action_fade.lua$', '')
 local modules, state = {}, {combat=false,pvpFlagged=false,context='world'}
 local function widget()
-    local o = {alpha=1, visible=false, scripts={}}
+    local o = {alpha=1, visible=false, scripts={}, hooks={}}
     return setmetatable(o, {__index=function(self, k)
         if k=='SetAlpha' then return function(self,a) self.alpha=a end end
         if k=='Show' then return function(self) self.visible=true end end
         if k=='Hide' then return function(self) self.visible=false end end
         if k=='SetScript' then return function(self,k,fn) self.scripts[k]=fn end end
+        if k=='HookScript' then return function(self,k,fn) self.hooks[k]=self.hooks[k] or {};table.insert(self.hooks[k],fn) end end
         if k=='CreateTexture' or k=='CreateFontString' then return function() return widget() end end
         return function() return true end
     end})
@@ -33,7 +34,6 @@ Logres.ActionButton={
     Create=function(_,parent,...)
         local button=widget()
         button.activationFeedbackFrame=widget()
-        function button:HookScript() end
         return button
     end,
     SetHotkeyLabel=function()end,
@@ -43,11 +43,16 @@ assert(loadfile(path..'Logres/Actions/Context.lua'))('Logres', Logres)
 local pet=modules.PetActionExecutionProbe
 pet:OnInitialize()
 assert(#pet.buttons==10)
-local primary={cluster=widget()}
+local primary={cluster=widget(),buttons={}}
+for i=1,12 do
+    local b=widget();b.activationFeedbackFrame=widget();primary.buttons[i]=b
+end
 local sides={clusters={}}
 for _, key in ipairs({'secondary','utility','bar4','bar5'}) do
     local cluster={frame=widget(),buttons={}}
-    for i=1,12 do cluster.buttons[i]={activationFeedbackFrame=widget()} end
+    for i=1,12 do
+        local b=widget();b.activationFeedbackFrame=widget();cluster.buttons[i]=b
+    end
     sides.clusters[key]=cluster
 end
 modules.PrimaryActions=primary
@@ -57,6 +62,9 @@ context:OnInitialize();context:OnEnable()
 local function expect(name,primaryAlpha,second,utility)
     assert(context.policyName==name,context.policyName)
     assert(primary.cluster.alpha==primaryAlpha,'primary')
+    for _,b in ipairs(primary.buttons) do
+        assert(b.activationFeedbackFrame.alpha==primaryAlpha,'primary feedback')
+    end
     assert(sides.clusters.secondary.frame.alpha==second,'secondary')
     assert(sides.clusters.bar4.frame.alpha==second,'bar4')
     assert(sides.clusters.utility.frame.alpha==utility,'utility')
@@ -73,17 +81,17 @@ local function expect(name,primaryAlpha,second,utility)
     end
     assert(context.petAlpha==second,'context pet debug')
     assert(pet.contextFeedbackCount==10,'pet count')
-    assert(context.feedbackFramesUpdated==48,'feedback count')
+    assert(context.feedbackFramesUpdated==60,'feedback count')
     assert(context:GetDebugStatus().alphaZeroUsed==(second==0 or utility==0),'alpha-zero debug')
 end
-expect('world',1,0,0)
+expect('world',0.5,0,0)
 state={combat=false,pvpFlagged=true,context='world'};context.onState(state)
-expect('pvp',1,0,0)
+expect('pvp',0.5,0,0)
 state={combat=false,pvpFlagged=false,context='instance'};context.onState(state)
-expect('instance',1,0,0)
+expect('instance',0.5,0,0)
 state={combat=true,pvpFlagged=false,context='world'};context.onState(state)
 expect('combat',1,1,0.75)
 state={combat=false,pvpFlagged=false,context='world'};context.onState(state)
-expect('world',1,0,0)
+expect('world',0.5,0,0)
 context:OnDisable();expect('combat',1,1,0.75)
 print('P0489 actual-source world/PvP/instance/combat/pet/feedback: PASS')

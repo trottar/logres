@@ -1,7 +1,7 @@
-# P0486: q35 PASS; P0487 docs verified; L-030 PARTIAL.
-# P0489: OOC sides/pet0 primary1; combat pet=secondary1.
-# Combat utility/bar5=.75; target death BLOCKED protected.
-# P0488: L-054 buff recovery UNVERIFIED; L-030 partial.
+# P0486: q35 PASS; P0487 docs; L-030 PARTIAL.
+# P0490 L-055: P0489 OOC PASS; primary OOC.5, hover combat.
+# Pet/side0 rest, hovered1; utility/bar5 hover.75.
+# P0488 L-054 OPEN; L-056 target BLOCKED protected.
 # P0485: sparse DB fields; client FAIL.
 # P0484: quest35 FAIL.
 # P0483: quest FAIL; turn PARTIAL.

@@ -405,9 +405,15 @@ local function runActionCheck()
         and contextDebug.primaryAlpha > 0
         and contextDebug.secondaryAlpha >= 0
         and contextDebug.utilityAlpha >= 0
-        and contextDebug.petAlpha == contextDebug.secondaryAlpha
+        and contextDebug.petAlpha >= 0
+        and contextDebug.petAlpha <= 1
         and contextDebug.alphaZeroUsed ==
-            (contextDebug.secondaryAlpha == 0 or contextDebug.utilityAlpha == 0)
+            (contextDebug.primaryAlpha == 0
+                or contextDebug.secondaryAlpha == 0
+                or contextDebug.utilityAlpha == 0
+                or contextDebug.bar4Alpha == 0
+                or contextDebug.bar5Alpha == 0
+                or contextDebug.petAlpha == 0)
         and primaryDebug.stockBarsSuppressed == false
         and sideDebug.stockBarsSuppressed == false
 
@@ -1485,17 +1491,17 @@ end
 
 local CONTEXT_POLICY_ALPHA = {
     world = {
-        primary = 1.00,
+        primary = 0.50,
         secondary = 0.00,
         utility = 0.00,
     },
     pvp = {
-        primary = 1.00,
+        primary = 0.50,
         secondary = 0.00,
         utility = 0.00,
     },
     instance = {
-        primary = 1.00,
+        primary = 0.50,
         secondary = 0.00,
         utility = 0.00,
     },
@@ -1620,14 +1626,35 @@ local function runContextPolicyCheck()
             controllerDebug.targetFrameSuppressionPending
         )
 
+    -- Hover is addon-owned input provenance, not Blizzard presentation
+    -- readback. Evaluate the current applied alpha against the resting
+    -- context and its per-cluster combat-level mouseover override.
+    local combatAlpha = CONTEXT_POLICY_ALPHA.combat
+    local function expectedHoveredAlpha(role, hovered)
+        if expectedActionPolicy ~= "combat" and hovered == true then
+            return combatAlpha[role]
+        end
+        return expectedAlpha[role]
+    end
+    local expectedPrimary = expectedHoveredAlpha("primary", actionDebug.hoveredPrimary)
+    local expectedSecondary = expectedHoveredAlpha("secondary", actionDebug.hoveredSecondary)
+    local expectedUtility = expectedHoveredAlpha("utility", actionDebug.hoveredUtility)
+    local expectedBar4 = expectedHoveredAlpha("secondary", actionDebug.hoveredBar4)
+    local expectedBar5 = expectedHoveredAlpha("utility", actionDebug.hoveredBar5)
+    local expectedPet = expectedHoveredAlpha("secondary", actionDebug.hoveredPet)
+
     local actionPolicyOK =
         actionDebug.policyName == expectedActionPolicy
-        and actionDebug.primaryAlpha == expectedAlpha.primary
-        and actionDebug.secondaryAlpha == expectedAlpha.secondary
-        and actionDebug.utilityAlpha == expectedAlpha.utility
-        and actionDebug.petAlpha == expectedAlpha.secondary
+        and actionDebug.primaryAlpha == expectedPrimary
+        and actionDebug.secondaryAlpha == expectedSecondary
+        and actionDebug.utilityAlpha == expectedUtility
+        and actionDebug.bar4Alpha == expectedBar4
+        and actionDebug.bar5Alpha == expectedBar5
+        and actionDebug.petAlpha == expectedPet
         and actionDebug.alphaZeroUsed ==
-            (expectedAlpha.secondary == 0 or expectedAlpha.utility == 0)
+            (expectedPrimary == 0 or expectedSecondary == 0
+                or expectedUtility == 0 or expectedBar4 == 0
+                or expectedBar5 == 0 or expectedPet == 0)
 
     local errorsClear =
         controllerDebug.actionReplacementError == nil

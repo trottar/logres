@@ -1,0 +1,32 @@
+P0490 Primary half-opacity and hover-reveal action/pet bars
+Verified baseline: fc821c35250cab7705cbd99019201c610c58750b
+Candidate runtime version: 0.0.356-dev
+PREWRITE: 351/351 STATIC PASS
+POSTWRITE: 351/351 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Actions/Context.lua
+Logres/Core/Bootstrap.lua
+Logres/Core/Commands.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0490_ACTION_MOUSEOVER_OPACITY.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_action_context_contract.py
+tools/check_context_policy_contract.py
+tools/check_p0416_five_bar_layout_contract.py
+tools/check_p0489_action_fade_contract.py
+tools/check_p0490_action_hover_contract.py
+tools/test_p0489_action_fade.lua
+tools/test_p0490_action_hover.lua
+P0490_MANIFEST.txt

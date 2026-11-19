@@ -1,3 +1,40 @@
+## P0490 — L-055 primary rest alpha and existing-button hover audit (2026-11-18)
+
+P0489 main `fc821c3`/tree `face80a` reconstructed exactly from the
+P0481 author baseline plus P0482–P0489 verified checkpoint payloads
+and manifests; clean isolated Git tree matches remote, including modes.
+User reports P0489 OOC fade looks good, scoped visual PASS. P0490
+alters only addon-owned action/pet opacity, with secure-button HookScript
+OnEnter/OnLeave; no new mouse hit rectangles, timers, targeting,
+secure attributes/bindings or Blizzard presentation queries.
+
+P0489 actual-source fixture updated to the new 0.5 primary rest and
+60 primary+side sibling feedback frames; dedicated P0490 fixture
+simulates individual hover, pet independence, combat, disable/re-enable.
+C.4, D-028, P0416 and P0489 alpha-history checkers updated only for
+new per-cluster value derivation; all layout, protected, source role,
+stock fallback, version and secure-action constraints remain.
+
+The first full audit **316/351 FAILED**: 21 historic P0350-family
+checkers required explicit P0350/51/52 markers in CURRENT and 14 later
+checkers required the literal `# P0486:` leading handoff prefix. The
+docs-only compaction was erroneous; restored both and reran targeted
+memory/version/P0350/P0416/P0486 checker contracts successfully.
+The corrected candidate passed **351/351 STATIC** on a complete
+independent second run. P0489/P0490 actual-source Lua fixtures, version,
+CURRENT/HANDOFF integrity and history passed; no checker failures in that
+run. A first isolated packaged PREWRITE/POSTWRITE passed 351/351 and rollback;
+canonical `verify-zip` then refused an extra SPEC key `baseline_tree`.
+This packaging-only schema failure must be corrected by retaining the
+tree guard as a standalone constant and rebuilding the release ZIP.
+Corrected exact-byte PREWRITE/POSTWRITE and staged verification remain
+mandatory. This is no runtime PASS.
+
+Release requires complete checker candidate audit and packaged ZIP
+PREWRITE/POSTWRITE, wrong-baseline/dirty/tamper/collision refusal,
+rollback, manifest, exact SHA and client DEFERRED declaration.
+No client P0490 PASS; L-055 OPEN pending actual mouseover result.
+
 ## P0489 — Action + pet opacity and protected target deferral (2026-11-18)
 
 Verified P0488 main `56fd671`/tree `81491bf`. Context world/PvP/

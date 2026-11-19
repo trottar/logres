@@ -53,6 +53,15 @@ user monitoring two intermittent prior occurrences. All visual and
 runtime additions CLIENT UNVERIFIED until Forever test. See
 `docs/memory/evidence/P0489_ACTION_BAR_ALPHA_POLICY.md`.
 
+## P0490 — Hover-reveal action clusters, primary resting 50% (2026-11-18)
+
+P0489 main `fc821c3` verified, user OOC visual PASS scoped. P0490
+changes primary OOC to0.5, uses existing secure-button hover callbacks
+to restore the hovered addon-owned cluster to combat alpha, including
+pet and external feedback plates. P0489 nonprimary rest alpha0 remains.
+No protected/native actions or click overlay, L-055 OPEN until gameplay.
+See `P0490_ACTION_MOUSEOVER_OPACITY.md`.
+
 ## P0485 — Correct missing optional QuestieDB fields and Report Bug eligibility detail (2026-11-18)
 
 P0484 main `3277132` verified/tree `8254cac`; Forever session168

@@ -143,9 +143,10 @@ for key, slots, binding in (
              "action-slot or stock binding map changed: " + key + " " + fragment)
 need("ActionButton.Create(\n            config.buttonPrefix .. index,\n            frame,\n            index,\n            columns" in sides,
      "side secure button grid is no longer rendered from the source role")
-need('primary.cluster:SetAlpha(policy.primary)' in context and
+need('primary.cluster:SetAlpha(primaryAlpha)' in context and
      'Logres.Layout.GetActionBarSpec(source).role' in context and
-     'sides.clusters[source].frame:SetAlpha(policy[role])' in context,
+     'sides.clusters[source].frame:SetAlpha(alpha)' in context and
+     'self:ResolvedAlpha(policyName, role, source)' in context,
      "role-based context alpha not applied to all source clusters")
 need(all(x not in context for x in ('.frame:Hide(', '.frame:Show(', 'SetAlpha(0)',
                                      'SetBinding(', 'UseAction(')),
@@ -157,7 +158,7 @@ need('Action_Bars' not in toc and "LayoutProfile.lua" not in toc,
 need('for token in (\'Logres.Layout.GetActionBarSpec("primary")\'' in
      read('tools/check_h2_unified_placement_contract.py'),
      "P0195 historic contract migration absent")
-need('sides.clusters[source].frame:SetAlpha(policy[role])' in
+need('sides.clusters[source].frame:SetAlpha(alpha)' in
      read('tools/check_action_context_contract.py'),
      "C.4 historic alpha contract migration absent")
 for path in (

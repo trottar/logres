@@ -9,11 +9,11 @@ a=(R/'Logres/Core/Commands.lua').read_text()
 t=(R/'Logres/Logres.toc').read_text()
 b=(R/'Logres/Core/Bootstrap.lua').read_text()
 assert c.count('secondary = 0.00,')==3 and c.count('utility = 0.00,')==3
-assert c.count('primary = 1.00,')==4
+assert c.count('primary = 0.50,')==3 and c.count('primary = 1.00,')==1
 assert 'secondary = 1.00,\n        utility = 0.75,' in c
-assert 'sides.clusters[source].frame:SetAlpha(policy[role])' in c
-assert 'feedback:SetAlpha(policy[role])' in c
-assert 'pet:ApplyContextOpacity(policy.secondary)' in c
+assert 'sides.clusters[source].frame:SetAlpha(alpha)' in c
+assert 'feedback:SetAlpha(alpha)' in c and 'feedback:SetAlpha(primaryAlpha)' in c
+assert 'pet:ApplyContextOpacity(petAlpha)' in c
 assert 'self:ApplyPolicy("combat")' in c
 assert 'petAlpha = self.petAlpha' in c
 assert 'feedbackFramesUpdated = self.feedbackFramesUpdated' in c
@@ -22,9 +22,10 @@ assert 'self.cluster:SetAlpha(alpha)' in p
 assert 'button.activationFeedbackFrame:SetAlpha(alpha)' in p
 assert 'self:ApplyContextOpacity(self.contextAlpha)' in p
 assert 'self.contextFeedbackCount = updated' in p
+assert a.count('primary = 0.50,')==3 and a.count('primary = 1.00,')==1
 assert a.count('secondary = 0.00,')==3 and a.count('utility = 0.00,')==3
-assert 'actionDebug.petAlpha == expectedAlpha.secondary' in a
-assert 'contextDebug.petAlpha == contextDebug.secondaryAlpha' in a
+assert 'actionDebug.petAlpha == expectedPet' in a
+assert 'contextDebug.petAlpha <= 1' in a
 assert re.search(r'## Version: (\S+)',t).group(1)==re.search(r'Logres.VERSION = "(.*?)"',b).group(1)
 for forbidden in ('TargetNearestEnemy(', 'ClearTarget(', 'TargetUnit(', 'C_Timer.', 'OnUpdate', 'SetAttribute(', 'SetBinding(', 'SaveBindings(', 'PetActionBar:Hide('):
     assert forbidden not in c and forbidden not in p, 'forbidden mutation '+forbidden

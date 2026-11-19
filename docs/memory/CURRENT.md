@@ -12,8 +12,9 @@ Alpha blocked. D-046/D-047/D-048.
 ## Current Work Item
 
 **P0486** quest35 PASS; **P0487** docs PASS.
-**P0489** side/pet OOC0, primary1; combat roles retained;
-auto-death targeting BLOCKED protected; client UNVERIFIED.
+**P0489** OOC fade user PASS scoped; pet/combat UNVERIFIED.
+**P0490** primary OOC.5, hover combat alpha; L-055 OPEN.
+L-056 death-target BLOCKED.
 **P0488** L-054 OPEN; L-030 NPC261/q37 PASS scoped.
 **P0485** FAIL retained.
 **P0484** FAIL; **P0483** turn PARTIAL; **P0482** est2/3/native3/4.
@@ -49,12 +50,9 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 - P0379 `285be528` 249 STATIC; 0.0.264-dev no claim. L-002 native, L-005 FAIL. R0/R1 refused; P0378 screenshots inferred.
 
 - P0370 240 STATIC no-pet PASS; P0367, P0357 P0358 P0359; historic checks remain. L-001/L-002/L-005 FAIL.
-- P0352 223, P0351 222, P0350 221 STATIC; client UNVERIFIED.
-- P0349 R1 220 STATIC; R0 REFUSED, WoW UNVERIFIED.
-- P0348 219 STATIC; D-048 model OFFLINE ONLY.
-- P0347 R1 `b94beb47` 218 STATIC; R0 REFUSED, WoW UNVERIFIED.
-- P0346 `26370095` 217 STATIC; WoW UNVERIFIED.
-- P0345 `626b220` 216/216 STATIC; target aura client UNVERIFIED.
+- P0352 223, P0351 222, P0350 221, P0349 R1 220 (R0 REFUSED),
+  P0348 219 D-048 OFFLINE, P0347 R1 `b94beb47` 218 (R0 REFUSED),
+  P0346 `26370095` 217, P0345 `626b220` 216 STATIC; client UNVERIFIED.
 - P0344 `e44f66ba` 215/215 STATIC; L-027 owner UNVERIFIED.
 - P0343 R1 `ef4d9604` 214/214 STATIC; R0 REFUSED before writes, L-022 OPEN.
 - P0342 R2 213 STATIC; R0/R1 PREWRITE REFUSED; L-028 OPEN.
@@ -69,7 +67,7 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 
 ## Next Action
 
-P0489 L-055 bar fade live test; L-056 protected targeting deferred.
+P0490 L-055 hover/primary live test; L-056 blocked.
 P0488 L-054 observe; L-030 false positives open. L-035/L-002 OPEN.
 
 ## Success Criteria
@@ -80,6 +78,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0490_ACTION_MOUSEOVER_OPACITY.md
 - docs/memory/evidence/P0489_ACTION_BAR_ALPHA_POLICY.md
 - docs/memory/evidence/P0487_QUEST_MARKER_RUNTIME_PASS.md
 - docs/memory/evidence/P0488_PLAYER_BUFF_RESTRICTION_RECOVERY.md

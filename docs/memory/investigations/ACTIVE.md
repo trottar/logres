@@ -61,6 +61,19 @@ user monitoring two intermittent prior occurrences. All visual and
 runtime additions CLIENT UNVERIFIED until Forever test. See
 `docs/memory/evidence/P0489_ACTION_BAR_ALPHA_POLICY.md`.
 
+## P0490 — Resting primary half-opacity and per-cluster hover reveal (2026-11-18)
+
+Verified P0489 main `fc821c3`/tree `face80a`; user reports existing
+nonprimary OOC fade visually good (L-055 scoped PASS, combat/pet pending).
+P0490 primary OOC0.5, combat1; existing addon-owned action/pet buttons
+provide OnEnter/OnLeave hover, restoring each hovered cluster to combat
+alpha (primary1, secondary/bar4/pet1, utility/bar5 0.75). Fades sibling
+feedback, no invisible overlay, polling, protected targeting, native bar
+or secure attribute changes. Historical role/paging contracts retained.
+WoW hover hit testing, combat/click/stock fallback UNVERIFIED; L-055 OPEN.
+L-054 buff intermittent OPEN and L-056 protected death-target BLOCKED.
+Evidence: `docs/memory/evidence/P0490_ACTION_MOUSEOVER_OPACITY.md`.
+
 ## P0485 — Correct missing optional QuestieDB fields and Report Bug eligibility detail (2026-11-18)
 
 P0484 main `3277132` verified/tree `8254cac`; Forever session168
