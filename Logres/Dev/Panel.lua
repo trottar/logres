@@ -306,6 +306,12 @@ function Logres:CaptureBugIncident()
         "restrictionRecoveryCount", "restrictionReconcileCount",
         "restrictionReconcileFailures", "restrictionRecoveryLastReason",
         "restrictionRecoveryLastCoverage"})
+    -- P0495: addon-owned secure BUFFS fallback state, no native readback.
+    incident.snapshot.buffCombatFallback = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("NativeSurfaceReplacement"):GetDebugStatus()
+    end), {"buffCombatFallbackArmed", "buffCombatFallbackArmCount",
+        "buffCombatFallbackDisarmCount", "buffCombatFallbackFailures",
+        "buffCombatFallbackLastResult"})
     -- P0379: snapshot Logres-owned button input chain and geometry only.
     incident.snapshot.completionInput = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("QuestDialogue"):GetDebugStatus().completionInput

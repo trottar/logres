@@ -1,0 +1,28 @@
+P0495 Preserve native player buffs through combat-restricted aura scans
+Verified baseline: fd0e4677d235d17eef5f12d5ce169de098e4a94c
+Candidate runtime version: 0.0.361-dev
+PREWRITE: 356/356 STATIC PASS
+POSTWRITE: 356/356 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/HUD/PlayerHelpfulAuras.lua
+Logres/Immersion/NativeSurfaceReplacement.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0495_PLAYER_BUFF_COMBAT_FALLBACK.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0495_player_buff_combat_fallback_contract.py
+tools/test_p0488_player_buff_recovery.lua
+P0495_MANIFEST.txt

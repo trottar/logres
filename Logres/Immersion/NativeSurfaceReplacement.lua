@@ -185,6 +185,16 @@ function Native:Restore(key)
         return true
     end
     if InCombatLockdown() then self.pending = true return false end
+    if key == "playerBuffs" then
+        local fallback = Logres.NativePlayerBuffCombatFallback
+        -- Stop the addon-owned secure combat policy BEFORE restoring native
+        -- Blizzard ownership, including explicit BUFFS/manual access.
+        if not fallback or not fallback:Disarm() then
+            self.failures = self.failures + 1
+            self.lastError = "stock-buff-secure-disarm-failed"
+            return false
+        end
+    end
     self.restoring[key] = true
     local ok = pcall(snapshot.frame.SetShown, snapshot.frame, snapshot.shown)
     self.restoring[key] = nil
@@ -211,8 +221,25 @@ function Native:Fold(key)
     local captured, shown = pcall(frame.IsShown, frame)
     if not captured then return false end
     local snapshot = {frame = frame, shown = shown}
+    if key == "playerBuffs" then
+        -- A complete ordinary scan is insufficient for ownership during
+        -- combat: all 40 indices can become secret. Never hide Blizzard
+        -- BUFFS without an already-registered secure combat show path.
+        local fallback = Logres.NativePlayerBuffCombatFallback
+        if not fallback or not fallback:Arm(frame) then
+            -- In case registration partially changed stock presentation,
+            -- restore only the opaque native visibility token we captured.
+            pcall(frame.SetShown, frame, shown)
+            self.lastError = "stock-buff-secure-fallback-unavailable"
+            return false
+        end
+    end
     local ok = pcall(frame.Hide, frame)
     if not ok then
+        if key == "playerBuffs" then
+            local fallback = Logres.NativePlayerBuffCombatFallback
+            if fallback then fallback:Disarm() end
+        end
         pcall(frame.SetShown, frame, shown)
         self.failures = self.failures + 1
         self.lastError = "stock-fold-failed:" .. key
@@ -368,6 +395,16 @@ function Native:GetDebugStatus()
         petActionRecoveryRefolds = self.petActionRecoveryRefolds,
         petActionDeferredRefold = self.petActionDeferredRefold,
         petActionLastContext = self.petActionLastContext,
+        buffCombatFallbackArmed = Logres.NativePlayerBuffCombatFallback
+            and Logres.NativePlayerBuffCombatFallback.armed == true or false,
+        buffCombatFallbackArmCount = Logres.NativePlayerBuffCombatFallback
+            and Logres.NativePlayerBuffCombatFallback.armCount or 0,
+        buffCombatFallbackDisarmCount = Logres.NativePlayerBuffCombatFallback
+            and Logres.NativePlayerBuffCombatFallback.disarmCount or 0,
+        buffCombatFallbackFailures = Logres.NativePlayerBuffCombatFallback
+            and Logres.NativePlayerBuffCombatFallback.failures or 0,
+        buffCombatFallbackLastResult = Logres.NativePlayerBuffCombatFallback
+            and Logres.NativePlayerBuffCombatFallback.lastResult or "unavailable",
     }
 end
 

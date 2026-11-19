@@ -1360,3 +1360,10 @@ feedback/press/flash stays independent. Historic P0118 alpha-isolation
 tradeoff and generic addon warning stay OPEN/UNVERIFIED, no polling,
 secure bindings or native controls changed. See
 `docs/memory/evidence/P0494_KEYBIND_BUTTON_OWNER.md`.
+
+## P0495 — Secure native player-buff combat fallback
+
+`docs/memory/evidence/P0495_PLAYER_BUFF_COMBAT_FALLBACK.md` — P0494
+main `fd0e467` verified; L-054 session179 #18521 combat 40 secret,
+#18524 OOC seven ordinary; prearmed addon-owned secure native BUFFS
+combat fallback candidate, client UNVERIFIED. No stock/aura secret reads.

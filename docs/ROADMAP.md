@@ -2319,3 +2319,15 @@ feedback/press/flash stays independent. Historic P0118 alpha-isolation
 tradeoff and generic addon warning stay OPEN/UNVERIFIED, no polling,
 secure bindings or native controls changed. See
 `docs/memory/evidence/P0494_KEYBIND_BUTTON_OWNER.md`.
+
+## P0495 — L-054 combat-restricted player buffs (2026-11-19)
+
+P0494 main `fd0e467` verified. Forever session179 v0.0.360-dev #18521
+combat=true, helpful root hidden/0 icons/40 secrets; #18524 postcombat
+root shown/7 icons/0 secrets, restriction-release. Player confirms
+vanish in combat and return after; P0488 postcombat recovery works scoped.
+P0495 prearms an addon-owned secure BUFFS combat visibility
+fallback before native fold; missing setup fails open and manual access
+unregisters before restoring stock. No stale-icon cache or combat-time
+insecure native mutations. Runtime acceptance remains UNVERIFIED;
+L-054 OPEN. Evidence: `docs/memory/evidence/P0495_PLAYER_BUFF_COMBAT_FALLBACK.md`.

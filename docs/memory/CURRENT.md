@@ -15,7 +15,7 @@ Alpha blocked. D-046/D-047/D-048.
 P0489 PASS; P0490 hover PASS/combat FAIL.
 P0491 OOC0/side85; P0492 fade improved; P0493 sibling; P0494 keybind owner; L-055 OPEN.
 L-056 target BLOCKED.
-**P0488** L-054 OPEN; L-030 NPC261/q37 PASS scoped.
+**P0488** L-054/P0495 combat candidate OPEN; L-030 q37 PASS.
 **P0485** FAIL retained.
 **P0484** FAIL; **P0483** turn PARTIAL; **P0482** est2/3/native3/4.
 P0476 floor; P0477 hide; P0478 VISUAL FAIL,
@@ -68,7 +68,7 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 UNVERIFIED.
 ## Next Action
 
 P0494 L-055 key labels/alpha-isolation visual gate; L-056 blocked.
-P0488 L-054 observe; L-030 false positives open. L-035/L-002 OPEN.
+P0495 L-054 client gate; L-030 open. L-035/L-002 OPEN.
 
 ## Success Criteria
 

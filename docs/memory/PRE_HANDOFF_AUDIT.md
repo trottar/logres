@@ -1629,3 +1629,35 @@ execution; static PASS is not WoW runtime PASS.
 - Client result **UNVERIFIED**. In particular, utility .75 tag legibility,
   pet/click execution, P0118-equivalent visual quality and the generic
   addon action warning source have no new runtime proof. L-055 OPEN.
+
+## P0495 candidate audit (2026-11-19)
+
+P0494 main `fd0e467` tree `d603863` verified. #18521/#18524
+show combat player buffs missing and P0488 recovery working. P0196
+native contract forbids RegisterStateDriver in Native module; preserved
+by an explicit addon-owned secure helper in PlayerHelpfulAuras, not a
+Blizzard frame visibility driver. Secret preflight and native opaque
+restore path kept. Full static suite, exact-candidate rollback/tamper,
+manifest, diff audit and new actual-source fixture must PASS before handoff.
+Client behavior and taint/protected actions UNVERIFIED; L-054 OPEN.
+
+P0495 candidate pre-release R0 changed the TOC inventory from 96 to 97 and
+exceeded CURRENT/HANDOFF summary budgets. Existing historical checkers
+REFUSED; not a runtime failure. R1 keeps the secure helper in the already
+loaded PlayerHelpfulAuras owner, leaves NativeSurfaceReplacement free of
+the forbidden RegisterStateDriver call, and shortens only active-memory
+summaries. R1 preserves 96/96 loaded Lua sources and 356/356 STATIC PASS
+(95 seconds, 0 errors). The P0488/P0495 actual-source test checks native
+combat visibility with guarded secure dispatch, restriction recovery,
+manual BUFFS disarm and missing-driver fail-open. No in-client PASS is
+claimed. ZIP parity/rollback and SHA are separately audited before handoff.
+
+P0495 finalized audit: 17 changed payload files, P0494 exact baseline
+matching verified remote source blobs. 356/356 historical static checks
+PASS on full candidate (first complete 95s, audit-bearing candidate 101s),
+including P0488/P0495 actual-source secure combat + missing-driver
+fixture. Four changed production Lua files parse; no candidate diff
+whitespace issues. ZIP 17/17 payload parity, rollback restoration,
+payload-tamper refusal, wrong-HEAD and wrong-tree refusal PASS.
+A final 356-checker run on this complete audit-bearing package is
+required and is distinct from WoW acceptance. L-054 remains OPEN.

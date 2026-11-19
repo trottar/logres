@@ -2,9 +2,10 @@
 -- without a new UNIT_AURA when ADDON_RESTRICTION_STATE_CHANGED clears.
 local path = arg[0]:gsub('tools/test_p0488_player_buff_recovery.lua$', '')
 local frames, modules = {}, {}
+local secureDispatch = false
 local combat, restricted, buffs = false, false, 6
 local function object()
-    local o = { visible = false, handlers = {}, events = {} }
+    local o = { visible = false, handlers = {}, events = {}, refs = {}, attrs = {} }
     return setmetatable(o, {__index = function(self, key)
         if key == 'CreateTexture' or key == 'CreateFontString' then
             return function() return object() end
@@ -24,14 +25,27 @@ local function object()
         if key == 'UnregisterAllEvents' then
             return function(self) self.events = {} end
         end
+        if key == 'SetFrameRef' then
+            return function(self, name, frame) self.refs = self.refs or {}; self.refs[name]=frame end
+        end
+        if key == 'GetFrameRef' then return function(self, name) return self.refs[name] end end
+        if key == 'SetAttribute' then
+            return function(self,name,value) self.attrs=self.attrs or {};self.attrs[name]=value end
+        end
         if key == 'SetShown' then
             return function(self, shown) self.visible = shown end
         end
         if key == 'Show' then
-            return function(self) self.visible = true end
+            return function(self)
+                if self == BuffFrame and combat then assert(secureDispatch, 'native combat Show must be secure') end
+                self.visible = true
+            end
         end
         if key == 'Hide' then
-            return function(self) self.visible = false end
+            return function(self)
+                if self == BuffFrame and combat then assert(secureDispatch, 'native combat Hide must be secure') end
+                self.visible = false
+            end
         end
         if key == 'IsShown' then
             return function(self) return self.visible end
@@ -49,6 +63,26 @@ function CreateFrame() local o = object(); frames[#frames+1] = o; return o end
 UIParent = object()
 BuffFrame = object(); BuffFrame.visible = true
 function InCombatLockdown() return combat end
+local buffDriver
+function RegisterStateDriver(driver, state, condition)
+    assert(state == 'logresbuffcombat' and condition == '[combat] combat; rest')
+    driver.callback = assert(load('return function(self,stateid,newstate)\n'..
+        driver.attrs['_onstate-'..state]..'\nend'))()
+    buffDriver = driver
+    secureDispatch=true
+    driver.callback(driver,state,'rest')
+    secureDispatch=false
+end
+function UnregisterStateDriver(driver,state)
+    assert(buffDriver == driver and state == 'logresbuffcombat')
+    buffDriver=nil
+end
+local function secureTransition(value)
+    assert(buffDriver and buffDriver.callback)
+    secureDispatch=true
+    buffDriver.callback(buffDriver,'logresbuffcombat',value)
+    secureDispatch=false
+end
 function issecretvalue(value) return false end
 C_Secrets = { ShouldUnitAuraIndexBeSecret = function(unit, idx, filter)
     assert(unit == 'player' and filter == 'HELPFUL')
@@ -89,12 +123,15 @@ assert(helpful.root.visible and helpful.visibleCount==6 and helpful.lastCoverage
 assert(native.snapshots.playerBuffs and not BuffFrame.visible)
 -- Enter combat and lose all 40 secret-restricted source indices.
 combat=true;restricted=true
+secureTransition('combat')
 helpfulFrame.handlers.OnEvent(nil,'UNIT_AURA')
+assert(BuffFrame.visible, 'secure combat entry must reveal native stock buffs')
 assert(not helpful.root.visible and helpful.visibleCount==0)
 assert(helpful.lastSecretSkipCount==40 and not helpful.lastCoverageReady)
 assert(native.snapshots.playerBuffs)
 -- Combat release arrives before ordinary aura data becomes readable.
 combat=false
+secureTransition('rest')
 native:Reconcile('PLAYER_REGEN_ENABLED')
 assert(BuffFrame.visible and not native.snapshots.playerBuffs)
 helpfulFrame.handlers.OnEvent(nil,'ADDON_RESTRICTION_STATE_CHANGED')
@@ -116,13 +153,23 @@ assert(dbg.restrictionReconcileFailures==0)
 assert(dbg.restrictionRecoveryLastCoverage and dbg.lastRefreshReason=='restriction-release')
 -- A transition during combat may not force a recovery or fold stock.
 combat=true;restricted=true
+secureTransition('combat')
 helpfulFrame.handlers.OnEvent(nil,'ADDON_RESTRICTION_STATE_CHANGED')
 assert(helpful.restrictionRecoveryCount==first+1)
 -- Native access by choice remains respected on ordinary recovery.
 combat=false;restricted=false
+secureTransition('rest')
 native.manual.playerBuffs=true
 native:Reconcile('manual-open')
 assert(BuffFrame.visible)
 helpfulFrame.handlers.OnEvent(nil,'ADDON_RESTRICTION_STATE_CHANGED')
 assert(helpful.root.visible and BuffFrame.visible and not native.snapshots.playerBuffs)
-print('P0488 actual-source player helpful restriction release and native fallback PASS')
+assert(not native.snapshots.playerBuffs, 'manual BUFFS must disarm secure fallback')
+-- Missing driver capability must fail open to stock rather than folding it.
+native.manual.playerBuffs = false
+RegisterStateDriver = nil
+native:Reconcile('unavailable-secure-fallback')
+assert(BuffFrame.visible and not native.snapshots.playerBuffs,
+    'native buffs must remain usable when secure state driver is unavailable')
+assert(native.lastError == 'stock-buff-secure-fallback-unavailable')
+print('P0488/P0495 actual-source player buffs secure fallback/recovery PASS')

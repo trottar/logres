@@ -828,3 +828,86 @@ function HelpfulAuras:RunDevHelpfulAuraCheck(emit)
         tostring(debugStatus.scanExhausted)
     ))
 end
+
+-- P0495: the stock player-buff fallback has a secure, prearmed combat
+-- visibility path while an ordinary complete Logres grid owns the resting
+-- presentation. No addon reads native aura payloads or protected visibility.
+-- Never install a native state-visibility driver on BuffFrame itself.
+local Fallback = {armed = false, armCount = 0, disarmCount = 0,
+    failures = 0, lastResult = "not-armed"}
+Logres.NativePlayerBuffCombatFallback = Fallback
+
+local STATE = "logresbuffcombat"
+local SNIPPET = [[
+    local buffs = self:GetFrameRef("stockBuffs")
+    if buffs then
+        if newstate == "combat" then
+            buffs:Show()
+        elseif newstate == "rest" then
+            buffs:Hide()
+        end
+    end
+]]
+
+function Fallback:Arm(stock)
+    if self.armed then return true end
+    if InCombatLockdown() or not stock
+        or type(RegisterStateDriver) ~= "function"
+        or type(UnregisterStateDriver) ~= "function"
+    then
+        self.lastResult = "secure-driver-unavailable"
+        return false
+    end
+    local driver = self.driver
+    if not driver then
+        local ok, created = pcall(CreateFrame,
+            "Frame", "LogresPlayerBuffCombatFallback", UIParent,
+            "SecureHandlerStateTemplate")
+        if not ok or not created then
+            self.failures = self.failures + 1
+            self.lastResult = "secure-driver-create-failed"
+            return false
+        end
+        driver = created
+        self.driver = driver
+    end
+    local ok = pcall(function()
+        driver:SetFrameRef("stockBuffs", stock)
+        driver:SetAttribute("_onstate-" .. STATE, SNIPPET)
+        RegisterStateDriver(driver, STATE, "[combat] combat; rest")
+    end)
+    if not ok then
+        pcall(UnregisterStateDriver, driver, STATE)
+        self.failures = self.failures + 1
+        self.lastResult = "secure-driver-register-failed"
+        return false
+    end
+    self.armed = true
+    self.armCount = self.armCount + 1
+    self.lastResult = "armed"
+    return true
+end
+
+function Fallback:Disarm()
+    if not self.armed then return true end
+    if InCombatLockdown() or type(UnregisterStateDriver) ~= "function" then
+        self.lastResult = "disarm-deferred"
+        return false
+    end
+    local ok = pcall(UnregisterStateDriver, self.driver, STATE)
+    if not ok then
+        self.failures = self.failures + 1
+        self.lastResult = "secure-driver-unregister-failed"
+        return false
+    end
+    self.armed = false
+    self.disarmCount = self.disarmCount + 1
+    self.lastResult = "disarmed"
+    return true
+end
+
+function Fallback:GetDebugStatus()
+    return {armed = self.armed == true,
+        armCount = self.armCount, disarmCount = self.disarmCount,
+        failures = self.failures, lastResult = self.lastResult}
+end
