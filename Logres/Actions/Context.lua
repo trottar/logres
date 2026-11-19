@@ -42,20 +42,27 @@ local Context = Logres:RegisterModule("ActionContext", {
         self.secureDriverLastResult = "not-attempted"
         self.protectedRootSkips = 0
         self.pendingDisableReconcile = false
+        self.postCombatReconciles = 0
+        self.postCombatHoverRepairs = 0
+        self.postCombatHoverUnknown = 0
+        self.postCombatLastResult = "not-attempted"
         self.disableEventFrame = CreateFrame("Frame")
         self.disableEventFrame:SetScript("OnEvent", function(_, event)
-            if event == "PLAYER_REGEN_ENABLED"
-                and self.pendingDisableReconcile == true
-                and not (InCombatLockdown and InCombatLockdown())
-            then
+            if event ~= "PLAYER_REGEN_ENABLED"
+                or (InCombatLockdown and InCombatLockdown()) then return end
+            if self.pendingDisableReconcile == true then
                 self:FinishPendingDisable()
+            elseif self.hoverEffectsEnabled == true and self:IsEnabled() then
+                self:ReconcileAfterCombat()
             end
         end)
     end,
 
     OnEnable = function(self)
         self.pendingDisableReconcile = false
-        self.disableEventFrame:UnregisterEvent("PLAYER_REGEN_ENABLED")
+        -- Active modules also need an OOC recovery event. A state callback
+        -- can run before secure combat lockdown actually lifts.
+        self.disableEventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
         self.hoverEffectsEnabled = true
         self:InstallHoverHooks()
         self:InstallCombatDriver()
@@ -246,6 +253,88 @@ function Context:SetHovered(source, hovered)
     end
 end
 
+-- Only run this read on Logres-owned button objects after lockdown ends.
+-- IsMouseOver can be unavailable or secret-capable; never branch on the
+-- returned value unless issecretvalue has explicitly cleared it.
+local function ReadOwnedMouseOver(button)
+    if not button or type(button.IsMouseOver) ~= "function" then return nil end
+    local ok, value = pcall(button.IsMouseOver, button)
+    if not ok or type(issecretvalue) ~= "function" then return nil end
+    local classified, secret = pcall(issecretvalue, value)
+    if not classified or secret ~= false then return nil end
+    if type(value) ~= "boolean" then return nil end
+    return value
+end
+
+-- Existing button hooks are the primary hover source. One time at combat
+-- exit, independently reconcile missed OnLeave events without polling or
+-- consulting Blizzard mouse-focus/visual state. Unknown inputs are kept.
+function Context:ReconcileOwnedHover()
+    local primary = Logres:GetModule("PrimaryActions")
+    local sides = Logres:GetModule("SecondaryUtilityActions")
+    local pet = Logres:GetModule("PetActionExecutionProbe")
+    local sources = {
+        { key = "primary", buttons = primary and primary.buttons },
+        { key = "secondary", buttons = sides and sides.clusters.secondary.buttons },
+        { key = "utility", buttons = sides and sides.clusters.utility.buttons },
+        { key = "bar4", buttons = sides and sides.clusters.bar4.buttons },
+        { key = "bar5", buttons = sides and sides.clusters.bar5.buttons },
+        { key = "pet", buttons = pet and pet.buttons },
+    }
+    for _, group in ipairs(sources) do
+        local count, known, over = 0, 0, false
+        for _, button in ipairs(group.buttons or {}) do
+            count = count + 1
+            local value = ReadOwnedMouseOver(button)
+            if value ~= nil then
+                known = known + 1
+                if value == true then over = true end
+            end
+        end
+        if over or (count > 0 and known == count) then
+            if self.hovered[group.key] ~= over then
+                self.hovered[group.key] = over
+                self.postCombatHoverRepairs = self.postCombatHoverRepairs + 1
+            end
+        else
+            self.postCombatHoverUnknown = self.postCombatHoverUnknown + 1
+        end
+    end
+end
+
+-- PLAYER_REGEN_ENABLED explicitly supplies the missing post-lockdown owner.
+-- Treat this event as out-of-combat even if the state publisher has not
+-- delivered its matching snapshot yet. The secure driver rest branch stays
+-- inert, preserving a genuinely held hover in either delivery order.
+function Context:ReconcileAfterCombat()
+    if InCombatLockdown and InCombatLockdown() then
+        self.postCombatLastResult = "lockdown-deferred"
+        return false
+    end
+    self:ReconcileOwnedHover()
+    local state = Logres:GetState()
+    local policy = state.pvpFlagged and "pvp"
+        or (state.context == "instance" and "instance") or "world"
+    self:ApplyPolicy(policy)
+    self.postCombatReconciles = self.postCombatReconciles + 1
+    self.postCombatLastResult = self.secureDriverReady and "rest-applied"
+        or "visible-fail-open"
+    return true
+end
+
+-- GetAlpha is read-only and only queries addon-created roots OOC. Do not
+-- read native Blizzard frames or inspect a secret-capable return value.
+local function ReadOwnedAlpha(frame)
+    if (InCombatLockdown and InCombatLockdown())
+        or not frame or type(frame.GetAlpha) ~= "function" then return nil end
+    local ok, value = pcall(frame.GetAlpha, frame)
+    if not ok or type(issecretvalue) ~= "function" then return nil end
+    local classified, secret = pcall(issecretvalue, value)
+    if not classified or secret ~= false then return nil end
+    if type(value) ~= "number" or value < 0 or value > 1 then return nil end
+    return value
+end
+
 function Context:ResolvedAlpha(policyName, role, source)
     local policy = ALPHA_POLICY[policyName] or ALPHA_POLICY.world
     -- Bar 4 still inherits the secondary *rest* role, but keeps its
@@ -333,6 +422,10 @@ function Context:ApplyState(state)
 end
 
 function Context:GetDebugStatus()
+    local primary = Logres:GetModule("PrimaryActions")
+    local sides = Logres:GetModule("SecondaryUtilityActions")
+    local pet = Logres:GetModule("PetActionExecutionProbe")
+    local clusters = sides and sides.clusters or {}
     return {
         moduleEnabled = self:IsEnabled(),
         policyName = self.policyName,
@@ -355,6 +448,16 @@ function Context:GetDebugStatus()
         secureDriverReady = self.secureDriverReady == true,
         secureDriverLastResult = self.secureDriverLastResult,
         protectedRootSkips = self.protectedRootSkips,
+        postCombatReconciles = self.postCombatReconciles,
+        postCombatHoverRepairs = self.postCombatHoverRepairs,
+        postCombatHoverUnknown = self.postCombatHoverUnknown,
+        postCombatLastResult = self.postCombatLastResult,
+        ownedPrimaryActualAlpha = ReadOwnedAlpha(primary and primary.cluster),
+        ownedSecondaryActualAlpha = ReadOwnedAlpha(clusters.secondary and clusters.secondary.frame),
+        ownedUtilityActualAlpha = ReadOwnedAlpha(clusters.utility and clusters.utility.frame),
+        ownedBar4ActualAlpha = ReadOwnedAlpha(clusters.bar4 and clusters.bar4.frame),
+        ownedBar5ActualAlpha = ReadOwnedAlpha(clusters.bar5 and clusters.bar5.frame),
+        ownedPetActualAlpha = ReadOwnedAlpha(pet and pet.cluster),
         pendingDisableReconcile = self.pendingDisableReconcile,
         feedbackFramesUpdated = self.feedbackFramesUpdated,
         alphaZeroUsed =

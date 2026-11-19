@@ -191,6 +191,21 @@ function Logres:CaptureBugIncident()
     end), {"revision", "context", "combat", "pvpFlagged", "inInstance",
         "instanceType", "mounted", "resting", "onTaxi", "interacting",
         "interactionType", "changedBy"})
+    -- P0492 L-055: read existing addon-owned policy/hover counters and
+    -- ordinary OOC alphas. No root mutation, native UI or mouse-focus read.
+    incident.snapshot.actionContext = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("ActionContext"):GetDebugStatus()
+    end), {"moduleEnabled", "policyName", "primaryAlpha", "secondaryAlpha",
+        "utilityAlpha", "bar4Alpha", "bar5Alpha", "petAlpha",
+        "ownedPrimaryActualAlpha", "ownedSecondaryActualAlpha",
+        "ownedUtilityActualAlpha", "ownedBar4ActualAlpha",
+        "ownedBar5ActualAlpha", "ownedPetActualAlpha",
+        "hoveredPrimary", "hoveredSecondary", "hoveredUtility",
+        "hoveredBar4", "hoveredBar5", "hoveredPet",
+        "hoverEnterCount", "hoverLeaveCount", "secureDriverReady",
+        "secureDriverLastResult", "protectedRootSkips",
+        "postCombatReconciles", "postCombatHoverRepairs",
+        "postCombatHoverUnknown", "postCombatLastResult"})
     incident.snapshot.activeQuest = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("ActiveQuest"):GetDebugStatus()
     end), {"presentationShown", "lastQuestID", "previewMode",

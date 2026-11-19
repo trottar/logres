@@ -74,6 +74,19 @@ WoW hover hit testing, combat/click/stock fallback UNVERIFIED; L-055 OPEN.
 L-054 buff intermittent OPEN and L-056 protected death-target BLOCKED.
 Evidence: `docs/memory/evidence/P0490_ACTION_MOUSEOVER_OPACITY.md`.
 
+## P0492 — L-055 post-combat fade reconciliation (2026-11-18)
+
+P0491 main `3f57904` verified. Forever 0.0.357-dev session176
+#18277 combat bars visible; #18280 faded OOC; #18282 visible again OOC
+19s later. User reports consistent combat reveal but inconsistent fade.
+P0491 overall FAIL retained, L-055 OPEN. P0492 adds explicit one-shot
+PLAYER_REGEN_ENABLED rest alpha and safe addon-owned hover reconciliation;
+Report Bug records requested/actual OOC alpha, hover and secure driver.
+No timers, polling, new click surfaces, native presentation or binding edits.
+P0489/P0490 positives and all six combat/hover percentages remain intact.
+Static and in-client gates separate; P0492 WoW UNVERIFIED.
+Evidence: `docs/memory/evidence/P0492_ACTION_FADE_POSTCOMBAT.md`.
+
 ## P0491 — L-055 secure combat alpha and all-zero rest (2026-11-18)
 
 P0490 main `054056b`/tree `cdbe9bc` verified; user reports hover works

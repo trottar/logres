@@ -1,0 +1,27 @@
+P0492 Post-combat action fade recovery and owned diagnostic snapshot
+Verified baseline: 3f579042972f1e7f2419dcecc47e5467dd39b9f3
+Candidate runtime version: 0.0.358-dev
+PREWRITE: 353/353 STATIC PASS
+POSTWRITE: 353/353 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Actions/Context.lua
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0492_ACTION_FADE_POSTCOMBAT.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0492_action_fade_recovery_contract.py
+tools/test_p0492_postcombat_reconcile.lua
+P0492_MANIFEST.txt

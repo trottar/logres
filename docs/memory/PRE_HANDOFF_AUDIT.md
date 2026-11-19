@@ -1,3 +1,42 @@
+## P0492 — L-055 post-combat fade and incident evidence audit (2026-11-18)
+
+Verified P0491 GitHub main `3f579042972f`/tree `9c14b663b0`.
+Recovered its exact committed source from P0490 archive + P0491 applied
+payload; selected remote blob hashes agree. Local 0.0.357-dev session176
+#18277 combat reveals, #18280 OOC faded, #18282 OOC bars reappear;
+user directly reports intermittent non-fade. P0491 remains L-055 OPEN,
+prior P0489 fade/P0490 hover scoped positives retained. P0492 changes
+only Context one-shot PLAYER_REGEN_ENABLED recovery, guarded Logres-owned
+mouse-state sampling at the recovery event, and read-only actionContext
+Report Bug fields, plus 0.0.358-dev version and durable memory/checks.
+Secure driver `rest` remains inert so the P0491 held-hover regression
+is not reintroduced; state and pet/stock/routing owners untouched.
+
+Historical source and API audit: C.4, D-028, P0416, P0489, P0490,
+P0491, secure-driver and version policy read before implementation;
+no Blizzard mouse-focus, native protected visuals, timers, OnUpdate,
+additional hit regions, or action/pet binding writes. New P0492 actual
+source Lua fixture covers missed state callback, combat-exit regen,
+stale and held hover, secret/unavailable mouse, driver unavailable and
+pending-disable fail-open. First exact candidate full audit 349/353
+FAILED: P0436/P0437/P0438 and P0456 require literal CURRENT historical
+markers `P0425 visual PASS` and `P0454/P0455 secondary 50/50 VISUAL
+FAIL`; assistant summary compaction removed them. The corrected
+CURRENT restores both markers; all four named checkers PASS on direct
+rerun. This was an assistant audit/documentation failure, not WoW.
+
+Corrected exact post-transform candidate: **353/353 STATIC PASS**,
+including all historical checkers, P0489/P0490/P0491/P0492 actual-source
+Lua fixtures, memory and checker-version policy. Local package dry run:
+16/16 payload SHA-256 parity, baseline source-hash checks, exact shadow
+transformation, `git diff --no-index --check`, rollback restoration and
+tamper refusal PASS. The inherited P0491 applier transaction and
+P0492 verified HEAD/tree guards are retained. Final ZIP integrity and
+exact candidate audit are rechecked after this audit note. The user's
+actual checkout must independently run packaged PREWRITE/POSTWRITE and
+`git diff --check` before commit. No WoW runtime PASS is asserted;
+P0491 failure and all historical L-055 results remain preserved.
+
 ## P0491 — L-055 secure combat alpha / all-zero rest audit (2026-11-18)
 
 User refinement during package audit: secondary and pet alpha 0.85 on

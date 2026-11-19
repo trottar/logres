@@ -11,14 +11,14 @@ Alpha blocked. D-046/D-047/D-048.
 
 ## Current Work Item
 
-**P0486** q35 PASS; P0487 docs PASS.
-P0489 OOC PASS; P0490 hover PASS/combat FAIL.
-**P0491** all OOC0; secondary/pet hover/combat.85; L-055 OPEN.
-L-056 death-target BLOCKED.
+**P0486** q35 PASS; P0487 PASS.
+P0489 PASS; P0490 hover PASS/combat FAIL.
+P0491 OOC0/side85; P0492 regen; L-055 OPEN (#18282).
+L-056 target BLOCKED.
 **P0488** L-054 OPEN; L-030 NPC261/q37 PASS scoped.
 **P0485** FAIL retained.
 **P0484** FAIL; **P0483** turn PARTIAL; **P0482** est2/3/native3/4.
-P0476 floor, P0477 hide, P0478 VISUAL FAIL,
+P0476 floor; P0477 hide; P0478 VISUAL FAIL,
 P0479 FAIL retained.
 L-002 OPEN.
 P0473 FAIL; P0474 scoped PASS; L-037 PARTIAL.
@@ -26,9 +26,9 @@ Preserve world HP/aura/50-50, chat SHOW, quest/stock fallback.
 P0460 HP PASS; P0461 aura FAIL; P0457 selected PASS;
 P0454/P0455 secondary 50/50 VISUAL FAIL; P0456 suspended.
 P0458/P0459 FAIL.
-P0425 visual PASS; P0442/P0443 overlap FAIL; P0449 aura PASS;
-P0450 duplicate FAIL; P0463 GetPoint FAIL; P0464 style FAIL.
-L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
+P0425 visual PASS; P0442/P0443 FAIL; P0449 aura PASS;
+P0450 duplicate FAIL; P0463 FAIL; P0464 style FAIL.
+L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 UNVERIFIED.
 
 ## Verified State
 
@@ -67,7 +67,7 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 unverified.
 
 ## Next Action
 
-P0491 L-055 combat reveal/OOC0 live test; L-056 blocked.
+P0492 L-055 fade client gate; L-056 blocked.
 P0488 L-054 observe; L-030 false positives open. L-035/L-002 OPEN.
 
 ## Success Criteria
@@ -78,6 +78,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0492_ACTION_FADE_POSTCOMBAT.md
 - docs/memory/evidence/P0491_SECURE_ACTION_COMBAT_REVEAL.md
 - docs/memory/evidence/P0490_ACTION_MOUSEOVER_OPACITY.md
 - docs/memory/evidence/P0489_ACTION_BAR_ALPHA_POLICY.md
