@@ -2430,3 +2430,17 @@ fallback before native fold; missing setup fails open and manual access
 unregisters before restoring stock. No stale-icon cache or combat-time
 insecure native mutations. Runtime acceptance remains UNVERIFIED;
 L-054 OPEN. Evidence: `docs/memory/evidence/P0495_PLAYER_BUFF_COMBAT_FALLBACK.md`.
+
+## P0496 — Native helpful combat continuity and world cast handoff (2026-11-19)
+
+P0495 main `768bb54` verified; session180 `0.0.361-dev` #18605 combat
+buffs 0/40 restricted, native secure fallback *armed* but no visible
+coverage; #18610/#18614 seven buffs after combat. **P0495 FAIL**, prior
+brief user PASS rescinded. Cast icon mismatch and unwanted progress bars
+reported on selected world nameplate; native bar source visually
+inconclusive. P0496 precreates a Blizzard-managed HELPFUL AuraContainer
+outside lockdown; stock may fold only when native mirror and ordinary
+coverage are ready. Reuses existing world `enemyCastCue` and guarded
+optional unprotected native `CastBarsContainer` alpha token. No poll,
+secret read or unsafe stock suppression. L-054/L-057 OPEN and client
+UNVERIFIED. Evidence: `docs/memory/evidence/P0496_NATIVE_BUFF_AND_WORLD_CAST.md`.

@@ -1367,3 +1367,10 @@ secure bindings or native controls changed. See
 main `fd0e467` verified; L-054 session179 #18521 combat 40 secret,
 #18524 OOC seven ordinary; prearmed addon-owned secure native BUFFS
 combat fallback candidate, client UNVERIFIED. No stock/aura secret reads.
+
+## P0496 — Native player helpful combat continuity + cast cue world handoff
+
+`docs/memory/evidence/P0496_NATIVE_BUFF_AND_WORLD_CAST.md` — verified P0495
+`768bb54`, session180 #18605 combat P0495 FAIL, #18610/#18614
+OOC recovery PASS; precreated native HELPFUL renderer, stock-first gate,
+selected-world cast cue and guarded native cast strip; CLIENT UNVERIFIED.

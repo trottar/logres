@@ -924,6 +924,10 @@ function HUD:GetDebugStatus()
         worldEnemyNativeRestoreCount = self.worldEnemyNativeRestoreCount or 0,
         worldEnemyNativeRestoreFailures = self.worldEnemyNativeRestoreFailures or 0,
         worldEnemyNativeLastResult = self.worldEnemyNativeLastResult,
+        worldEnemyCastCueOwner = self.worldEnemyLiveVisible and "world" or "screen",
+        worldEnemyNativeCastEligible = self.worldEnemyNativeCast ~= nil,
+        worldEnemyNativeCastDimmed = self.worldEnemyNativeCast ~= nil
+            and self.worldEnemyNativeCast.dimmed == true,
         worldEnemyNativeAuraOwner = self.worldEnemyNativeAuraOwned
             and "Logres-world" or "Blizzard",
         worldEnemyNativeAuraLastResult = self.worldEnemyNativeAuraLastResult,
@@ -1284,6 +1288,24 @@ local function nativeDecorField(parent, field)
     return value
 end
 
+function HUD:HideWorldNativeCastStrip()
+    local entry = self.worldEnemyNativeCast
+    if not entry or entry.dimmed then return false end
+    if not safeNativeDecor(entry.region) then return false end
+    local ok = pcall(entry.region.SetAlpha, entry.region, 0)
+    if ok then entry.dimmed = true end
+    return ok
+end
+
+function HUD:RestoreWorldNativeCastStrip()
+    local entry = self.worldEnemyNativeCast
+    if not entry or not entry.dimmed then return true end
+    -- Original alpha is an opaque restoration token only.
+    local ok = pcall(entry.region.SetAlpha, entry.region, entry.original)
+    if ok then entry.dimmed = false end
+    return ok
+end
+
 function HUD:RestoreNativeEnemyDecor()
     if Logres.NativeDebuffs and Logres.NativeDebuffs.ReleaseWorldAuraOwner
         and not Logres.NativeDebuffs.ReleaseWorldAuraOwner(self.worldEnemyAuraOwner) then
@@ -1294,6 +1316,16 @@ function HUD:RestoreNativeEnemyDecor()
         layoutRestored = Logres.NativeDebuffs.RestoreNameplateAuraLayout(
             self.worldEnemyAuraLayoutClaim)
         if layoutRestored then self.worldEnemyAuraLayoutClaim = nil end
+    end
+    -- Restore the optional native cast strip even if ordinary name/health
+    -- decoration has no active claim. Never inspect saved alpha tokens.
+    if self.worldEnemyNativeCast then
+        local entry = self.worldEnemyNativeCast
+        if pcall(entry.region.SetAlpha, entry.region, entry.original) then
+            self.worldEnemyNativeCast = nil
+        else
+            layoutRestored = false
+        end
     end
     local claim = self.worldEnemyNativeClaim
     if not claim then return layoutRestored end
@@ -1366,6 +1398,18 @@ function HUD:ClaimNativeEnemyDecor(anchor)
     end
     -- Every restoration token is captured before the first mutation.
     self.worldEnemyNativeClaim = claim
+    -- Optional native cast presentation: do not touch it until an actual
+    -- target cast event has activated our world-space replacement cue.
+    -- Unknown/protected cast surfaces remain stock-owned and visible.
+    self.worldEnemyNativeCast = nil
+    local castRegion = nativeDecorField(unitFrame, "CastBarsContainer")
+    if castRegion and safeNativeDecor(castRegion)
+        and self.worldEnemyLiveFrame and self.worldEnemyLiveFrame.enemyCastCue then
+        local captured, original = pcall(castRegion.GetAlpha, castRegion)
+        if captured then
+            self.worldEnemyNativeCast = {region=castRegion, original=original}
+        end
+    end
     for index = 1, #claim do
         local region = claim[index].region
         if not pcall(region.SetAlpha, region, 0) then
@@ -1845,6 +1889,9 @@ function HUD:HideLiveWorldEnemy(reason)
         self.worldEnemyLiveLastDetachReason = reason or "hidden"
     end
     self.worldEnemyLiveVisible = false
+    if self.worldEnemyLiveFrame and self.worldEnemyLiveFrame.enemyCastCue then
+        hideCastCue(self.worldEnemyLiveFrame.enemyCastCue, true)
+    end
     -- Restore the addon-owned screen aura copy on every detach/failure/OFF.
     -- Its native aura container remains active; only its alpha was handed
     -- off, and a refused restore remains an explicit diagnostic failure.
@@ -2073,6 +2120,7 @@ function HUD:RefreshLiveWorldEnemy(event, eventUnit)
     -- Only after Show succeeds may the world copy replace screen-space
     -- presentation. Native nameplate visuals, casts and click owners remain.
     self.targetFrame:Show() -- Preserve its independent cast cue child.
+    hideCastCue(self.targetCastCue, true)
     self.targetNameText:Hide()
     self.targetHealthBar:Hide()
     -- Preserve the cast cue and the entire Blizzard target/plate input.
@@ -2285,6 +2333,7 @@ function HUD:OnInitialize()
     self.worldEnemyScreenHandoffs = 0
     self.worldEnemyScreenFallbackRefreshes = 0
     self.worldEnemyNativeClaim = nil
+    self.worldEnemyNativeCast = nil
     self.worldEnemyNativeTransfers = 0
     self.worldEnemyNativeRestoreCount = 0
     self.worldEnemyNativeRestoreFailures = 0
@@ -2715,15 +2764,31 @@ function HUD:OnInitialize()
 
     local targetCastEventFrame = CreateFrame("Frame")
     targetCastEventFrame:SetScript("OnEvent", function(_, event)
+        local worldCue = self.worldEnemyLiveVisible
+            and self.worldEnemyLiveFrame
+            and self.worldEnemyLiveFrame.enemyCastCue or nil
         if event == "PLAYER_TARGET_CHANGED" then
             hideCastCue(self.targetCastCue, true)
+            if worldCue then hideCastCue(worldCue, true) end
+            self:RestoreWorldNativeCastStrip()
             return
         end
 
         -- Target spellcast payload fields may be secret on Forever.
         -- The frame is unit-filtered for "target", so Logres consumes only
         -- the ordinary event type and never inspects castGUID/spellID/etc.
-        handleCastEvent(self.targetCastCue, event, "target")
+        if worldCue then
+            hideCastCue(self.targetCastCue, true)
+            handleCastEvent(worldCue, event, "target")
+            if event == "UNIT_SPELLCAST_START"
+                or event == "UNIT_SPELLCAST_CHANNEL_START" then
+                self:HideWorldNativeCastStrip()
+            else
+                self:RestoreWorldNativeCastStrip()
+            end
+        else
+            handleCastEvent(self.targetCastCue, event, "target")
+        end
     end)
 
     self.playerCastEventFrame = playerCastEventFrame

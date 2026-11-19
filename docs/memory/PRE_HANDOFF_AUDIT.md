@@ -1661,3 +1661,43 @@ whitespace issues. ZIP 17/17 payload parity, rollback restoration,
 payload-tamper refusal, wrong-HEAD and wrong-tree refusal PASS.
 A final 356-checker run on this complete audit-bearing package is
 required and is distinct from WoW acceptance. L-054 remains OPEN.
+
+## P0496 candidate pre-handoff (2026-11-19)
+
+P0495 main `768bb54`/tree `8fd3e84` verified. Session180 #18605
+confirms P0495 secure helper *armed* did not guarantee buff visibility;
+#18610/#18614 recovery. Cast bar observed by user; screenshot does not
+prove active native cast-bar extent. P0488/P0495 prior secure-mirror
+fixture was an insufficient contract for native client visibility. New
+source candidate uses native AuraContainer render owner and status gate;
+world cast cue is routed on existing target-cast events with strictly
+optional native strip alpha gate and opaque restore. No protected stock
+mutation without positive evidence. Initial focused source tests pass;
+complete checker suite, Lua syntax, diff hygiene, exact candidate ZIP
+parity/rollback and negative controls must pass before handoff.
+Runtime remains UNVERIFIED; L-054/L-057 OPEN.
+
+P0496 corrected-candidate audit receipt: verified all 17 modified baseline
+blobs against the P0495 GitHub tree (`8fd3e84`) by `git hash-object`;
+new files have no baseline blobs. Targeted P0137/P0331/P0374/P0342/
+P0446/P0481/P0488/P0495/P0496 invariants pass. Full suite of **357/357**
+`tools/check_*.py` contracts passed in seven bounded audit batches of
+50/50/50/50/50/50/57 (zero failures). P0496 actual-source Lua mirror
+fixture and P0488/P0495 source recovery fixture PASS. Initial audit
+failed P0331 (duplicate stratum token), CURRENT 9800-byte contract,
+malformed L-054 table row, P0446 literal cue child comment and P0481
+handoff marker. All were corrected without weakening historical checks.
+The single long unbounded checker run timed out partway through; it
+was not counted PASS. ZIP-integrity, rollback/refusal, diff hygiene and
+full exact-final checker recheck are distinct handoff gates. WoW combat
+visibility/cast suppression **UNVERIFIED**.
+
+P0496 independent ZIP receipt: preliminary `P0496_NATIVE_BUFF_WORLD_CAST.zip`
+contained 20 exact post-transform files and 357 historical checkers.
+20/20 payload SHA/parity, 20/20 shadow-write and rollback restoration,
+wrong HEAD/tree refusal, deliberate payload tamper refusal, and diff
+whitespace hygiene PASS. The inherited transactional applier checks clean
+tracked checkout, complete source hash baseline, PREWRITE and POSTWRITE
+full suites and writes P0496_MANIFEST.txt only on success. User applier
+and WoW client were not executed. Final audit-bearing payload is rebuilt
+and checker revalidation required before delivery.

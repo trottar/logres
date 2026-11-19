@@ -305,7 +305,8 @@ function Logres:CaptureBugIncident()
         "coverageReady", "lastRefreshReason", "restrictionRegistered",
         "restrictionRecoveryCount", "restrictionReconcileCount",
         "restrictionReconcileFailures", "restrictionRecoveryLastReason",
-        "restrictionRecoveryLastCoverage"})
+        "restrictionRecoveryLastCoverage", "nativeHelpfulActive",
+        "nativeHelpfulLastResult", "nativeHelpfulAttempts"})
     -- P0495: addon-owned secure BUFFS fallback state, no native readback.
     incident.snapshot.buffCombatFallback = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("NativeSurfaceReplacement"):GetDebugStatus()
@@ -404,6 +405,8 @@ function Logres:CaptureBugIncident()
         "worldEnemyLivePresentation", "worldEnemyNativeVisualOwner",
         "worldEnemyNativeTransfers", "worldEnemyNativeRestoreCount",
         "worldEnemyNativeRestoreFailures", "worldEnemyNativeLastResult",
+        "worldEnemyCastCueOwner", "worldEnemyNativeCastEligible",
+        "worldEnemyNativeCastDimmed",
         "worldEnemyNativeAuraOwner", "worldEnemyNativeAuraLastResult",
         "worldEnemyNativeAuraTransfers", "worldEnemyNativeAuraRestores",
         "worldEnemySecondaryEnabled", "enemyFallbackPreserved",

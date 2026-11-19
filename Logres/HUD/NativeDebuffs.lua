@@ -322,6 +322,66 @@ function Native.Create()
     return { frames = frames, active = false }, nil
 end
 
+-- P0496: player helpful auras are restricted to secret payloads in combat.
+-- Keep a precreated Blizzard-managed HELPFUL AuraContainer alive across the
+-- transition. The native engine, not addon Lua, owns icons/membership then.
+-- The legacy ordinary Lua grid remains available for preview and fallback.
+function Native.CreatePlayerHelpfulMirror()
+    if type(InCombatLockdown) ~= "function" or InCombatLockdown() then
+        return nil, "player-helpful-combat-deferred"
+    end
+    if not nativeReady() then return nil, "player-helpful-native-unavailable" end
+    local auraStyle = (Logres.Theme and Logres.Theme.playerHelpfulAuras) or {}
+    local iconSize, gap = auraStyle.iconSize or 36, auraStyle.gap or 7
+    local width = 4 * iconSize + 3 * gap
+    local frame
+    local ok = pcall(function()
+        frame = CreateFrame("AuraContainer", "LogresNativePlayerHelpfulGrid",
+            UIParent, "CustomAuraContainerTemplate")
+        frame:Hide()
+        frame:SetSize(width, 10 * iconSize + 9 * gap)
+        frame:ClearAllPoints()
+        frame:SetPoint("LEFT", UIParent, "CENTER",
+            auraStyle.x or 118, auraStyle.y or -118)
+        Logres.Layout.Bind(frame, "passiveStatus", "LEFT", "CENTER")
+        frame:SetFlowLayoutAnchorPoint("BOTTOMLEFT")
+        frame:SetFlowLayoutGrowthDirection(
+            AnchorUtil.FlowDirection.Right, AnchorUtil.FlowDirection.Up)
+        frame:SetFlowLayoutMaximumLineSize(width)
+        frame:SetFrameStrata("LOW")
+        frame:EnableMouse(false)
+        frame:AddAuraGroup("LogresPlayerHelpful", "HELPFUL", {
+            maxFrameCount = 40,
+            layout = {elementWidth = iconSize, elementHeight = iconSize,
+                elementSpacing = gap},
+            initializeFrame = function(button)
+                button:SetSize(iconSize, iconSize)
+                local icon = button:CreateTexture(nil, "ARTWORK")
+                local inset = auraStyle.iconInset or 4
+                icon:SetPoint("TOPLEFT", button, "TOPLEFT", inset, -inset)
+                icon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -inset, inset)
+                button:SetIcon(icon)
+                local border = button:CreateTexture(nil, "OVERLAY")
+                border:SetAllPoints(button)
+                border:SetTexture((auraStyle.assets and auraStyle.assets.frame)
+                    or "Interface\\Buttons\\UI-Quickslot2")
+            end,
+        })
+        frame:SetUnit("player")
+        frame:SetEnabled(true)
+        frame:UpdateAllAuras()
+        frame:Show()
+    end)
+    if not ok then
+        if frame then
+            pcall(frame.SetEnabled, frame, false)
+            pcall(frame.Hide, frame)
+        end
+        return nil, "player-helpful-native-setup-refused"
+    end
+    return frame, "player-helpful-native-active"
+end
+
 -- Exact P0183 player/target renderer stays unchanged above. A separate
 -- world implementation avoids changing its historical protected fallback.
 local function createWorldContainer(parent, filter, point, relative, x, y)

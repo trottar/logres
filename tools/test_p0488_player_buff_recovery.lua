@@ -110,6 +110,12 @@ function Logres:GetPreferences() return {immersionEnabled = true} end
 function Logres:GetPreference(name) assert(name=='immersionEnabled');return true end
 function Logres:ToggleDevPanel() end
 function Logres:RegisterEvent() end
+-- P0496: mock the existing native AuraContainer owner as a continuously
+-- Blizzard-driven source, independent of addon Lua secret payload scans.
+local nativeGrid = object()
+nativeGrid.visible = true
+Logres.NativeDebuffs = {CreatePlayerHelpfulMirror=function()
+    return nativeGrid, "player-helpful-native-active" end}
 assert(loadfile(path..'Logres/HUD/PlayerHelpfulAuras.lua'))('Logres',Logres)
 assert(loadfile(path..'Logres/Immersion/NativeSurfaceReplacement.lua'))('Logres',Logres)
 local helpful,native = modules.PlayerHelpfulAuras,modules.NativeSurfaceReplacement
@@ -119,7 +125,8 @@ local helpfulFrame=helpful.eventFrame
 assert(helpfulFrame.events.ADDON_RESTRICTION_STATE_CHANGED)
 assert(helpful.restrictionRegistered)
 -- Starting from a complete out-of-combat buff display, native is folded.
-assert(helpful.root.visible and helpful.visibleCount==6 and helpful.lastCoverageReady)
+assert(not helpful.root.visible and nativeGrid.visible and helpful.nativeHelpfulActive
+    and helpful.visibleCount==6 and helpful.lastCoverageReady)
 assert(native.snapshots.playerBuffs and not BuffFrame.visible)
 -- Enter combat and lose all 40 secret-restricted source indices.
 combat=true;restricted=true
@@ -142,7 +149,8 @@ local first=helpful.restrictionRecoveryCount
 -- Restricted state fully releases, but NO new UNIT_AURA is sent.
 restricted=false
 helpfulFrame.handlers.OnEvent(nil,'ADDON_RESTRICTION_STATE_CHANGED')
-assert(helpful.visibleCount==6 and helpful.root.visible and helpful.lastCoverageReady,
+assert(helpful.visibleCount==6 and not helpful.root.visible
+    and nativeGrid.visible and helpful.lastCoverageReady,
     'ordinary buffs must reappear without a rebuff')
 assert(native.snapshots.playerBuffs and not BuffFrame.visible,
     'stock BUFFS should re-fold only after complete coverage')
@@ -163,7 +171,7 @@ native.manual.playerBuffs=true
 native:Reconcile('manual-open')
 assert(BuffFrame.visible)
 helpfulFrame.handlers.OnEvent(nil,'ADDON_RESTRICTION_STATE_CHANGED')
-assert(helpful.root.visible and BuffFrame.visible and not native.snapshots.playerBuffs)
+assert(nativeGrid.visible and BuffFrame.visible and not native.snapshots.playerBuffs)
 assert(not native.snapshots.playerBuffs, 'manual BUFFS must disarm secure fallback')
 -- Missing driver capability must fail open to stock rather than folding it.
 native.manual.playerBuffs = false

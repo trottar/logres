@@ -93,6 +93,7 @@ function Native:Ready(key)
         return helpful and helpful.moduleEnabled == true
             and helpful.root ~= nil and helpful.slots ~= nil
             and helpful.lastCoverageReady == true
+            and helpful.nativeHelpfulActive == true
             and type(Logres.ToggleDevPanel) == "function"
     end
     if key == "targetAuras" then

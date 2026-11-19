@@ -1,8 +1,8 @@
 # P0486: q35 PASS; P0487 docs; L-030 PARTIAL.
 # P0490 hover PASS/combat FAIL; P0491 reveal PASS/fade FAIL.
-# P0492 fade improved; P0493 sibling, P0494 tag child, UNVERIFIED.
-# OOC0; hover/combat primary/Bar4=1, side/pet=.85, utility/Bar5=.75.
-# L-054/P0495 BUFFS combat UNVERIFIED.
+# P0492 fade; P0493 sibling, P0494 tags.
+# OOC0; combat main/Bar4=1, side/pet=.85, utility/Bar5=.75.
+# L-054 P0495 combat FAIL; P0496 native; L-057 world cast OPEN.
 # L-056 BLOCKED protected.
 # P0485: sparse DB client FAIL.
 # P0484: quest35 FAIL.

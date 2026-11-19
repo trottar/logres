@@ -13,9 +13,9 @@ Alpha blocked. D-046/D-047/D-048.
 
 **P0486** q35 PASS; P0487 PASS.
 P0489 PASS; P0490 hover PASS/combat FAIL.
-P0491 OOC0/side85; P0492 fade improved; P0493 sibling; P0494 keybind owner; L-055 OPEN.
+P0491 OOC0/side85; P0492 fade; P0493 sibling; P0494 tags; L-055 OPEN.
 L-056 target BLOCKED.
-**P0488** L-054/P0495 combat candidate OPEN; L-030 q37 PASS.
+**P0488** L-054 P0495 FAIL; P0496 native candidate OPEN; L-057 cast OPEN. L-030 q37 PASS.
 **P0485** FAIL retained.
 **P0484** FAIL; **P0483** turn PARTIAL; **P0482** est2/3/native3/4.
 P0476 floor; P0477 hide; P0478 VISUAL FAIL,
@@ -34,15 +34,14 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 UNVERIFIED.
 
 - P0440 main `bec4038`: #11161 nameplate target12/secondary17/
   combat29/targeting4; 0 failures/secret. P0439 OOC DEFERRED,
-  P0437 visual PASS; no qualified threat/production attachment.
+  P0437 visual PASS; production attachment unproven.
 
-- P0422 pet-bar move FAIL; P0423 restored; V8 visual PASS.
+- P0422 FAIL; P0423 restored; V8 visual PASS.
 
-- P0420 `bd55e34` H.2 outline observed; P0421 V6 translated 15 owned
-  regions from `LOGRES_SCREEN_MAP_REFINEMENTS_P0421.json`. P0416/P0418/P0419
-  semantic-anchor/layout contracts retained; no Blizzard controls moved.
-- P0417 `bc91448`: pet actions work; L-008 OPEN for combat/Edit Mode/fallback.
-- P0418 V5 archive; V6 retains native fallback.
+- P0420 `bd55e34` H.2; P0421 V6 translated 15 owned regions.
+  P0416/P0418/P0419 layout retained; native untouched.
+- P0417 `bc91448`: pet works; L-008 combat/Edit Mode OPEN.
+- P0418 V5; V6 native fallback.
 
 - P0381 OPEN; P0383 quest18 TURNED_IN; L-005 PARTIAL,
   L-001/L-002 OPEN; P0384 aligned; P0385 observed; P0386 UNVERIFIED.
@@ -68,7 +67,7 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 UNVERIFIED.
 ## Next Action
 
 P0494 L-055 key labels/alpha-isolation visual gate; L-056 blocked.
-P0495 L-054 client gate; L-030 open. L-035/L-002 OPEN.
+P0496 L-054 native buff/L-057 cast client gate; L-030 open. L-035/L-002 OPEN.
 
 ## Success Criteria
 
@@ -78,6 +77,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0496_NATIVE_BUFF_AND_WORLD_CAST.md
 - docs/memory/evidence/P0494_KEYBIND_BUTTON_OWNER.md
 - docs/memory/evidence/P0493_SECURE_KEYBIND_ALPHA.md
 - docs/memory/evidence/P0492_ACTION_FADE_POSTCOMBAT.md

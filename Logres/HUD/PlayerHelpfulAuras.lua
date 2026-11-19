@@ -323,6 +323,7 @@ function HelpfulAuras:RenderSnapshot(snapshot, reason)
     local shouldShow =
         preferences.immersionEnabled == true
         and visible > 0
+        and (self.nativeHelpfulActive ~= true or self.previewEnabled == true)
 
     if shouldShow then
         self.root:Show()
@@ -352,6 +353,11 @@ end
 
 function HelpfulAuras:SetPreviewEnabled(enabled)
     self.previewEnabled = enabled == true
+    if self.nativeHelpfulActive and self.nativeHelpfulFrame
+        and not InCombatLockdown() then
+        pcall(self.nativeHelpfulFrame.SetShown, self.nativeHelpfulFrame,
+            not self.previewEnabled and Logres:GetPreferences().immersionEnabled == true)
+    end
 
     if self.previewEnabled then
         self.previewCount = self.previewCount + 1
@@ -405,6 +411,13 @@ function HelpfulAuras:Refresh(reason)
 end
 
 function HelpfulAuras:ApplyPreferences(preferences)
+    if self.nativeHelpfulActive and self.nativeHelpfulFrame
+        and not InCombatLockdown() then
+        -- Only addon-owned native mirror presentation is adjusted here.
+        -- NativeSurfaceReplacement owns stock restoration independently.
+        pcall(self.nativeHelpfulFrame.SetShown, self.nativeHelpfulFrame,
+            preferences.immersionEnabled == true and not self.previewEnabled)
+    end
     if preferences.immersionEnabled ~= true then
         self:HidePresentation("immersion-off")
         return
@@ -475,6 +488,9 @@ function HelpfulAuras:GetDebugStatus()
         sourceAvailable =
             sourceAvailable() == true,
         coverageReady = self.lastCoverageReady == true,
+        nativeHelpfulActive = self.nativeHelpfulActive == true,
+        nativeHelpfulLastResult = self.nativeHelpfulLastResult,
+        nativeHelpfulAttempts = self.nativeHelpfulAttempts or 0,
         scanExhausted = self.lastScanExhausted == true,
         filter = FILTER,
     }
@@ -502,6 +518,9 @@ function HelpfulAuras:OnInitialize()
     self.lastError = nil
     self.lastRefreshReason = "initialize"
     self.lastPresentationReason = "initialize"
+    self.nativeHelpfulActive = false
+    self.nativeHelpfulLastResult = "not-prepared"
+    self.nativeHelpfulAttempts = 0
 
     local iconSize = styleValue("iconSize")
     local gap = styleValue("gap")
@@ -707,6 +726,10 @@ function HelpfulAuras:OnInitialize()
             if InCombatLockdown() then
                 return
             end
+            -- Retry a deferred native mirror setup only after lockdown.
+            if not self.nativeHelpfulActive then
+                self:PrepareNativeHelpful()
+            end
             self.restrictionRecoveryCount =
                 self.restrictionRecoveryCount + 1
             local _, refreshReason = self:Refresh("restriction-release")
@@ -754,8 +777,29 @@ function HelpfulAuras:OnInitialize()
     self.eventFrame = eventFrame
 end
 
+function HelpfulAuras:PrepareNativeHelpful()
+    if self.nativeHelpfulActive then return true end
+    self.nativeHelpfulAttempts = self.nativeHelpfulAttempts + 1
+    local native = Logres.NativeDebuffs
+    if not native or type(native.CreatePlayerHelpfulMirror) ~= "function" then
+        self.nativeHelpfulLastResult = "native-owner-unavailable"
+        return false
+    end
+    local frame, reason = native.CreatePlayerHelpfulMirror()
+    self.nativeHelpfulLastResult = reason
+    if frame then
+        self.nativeHelpfulFrame = frame
+        self.nativeHelpfulActive = true
+        return true
+    end
+    return false
+end
+
 function HelpfulAuras:OnEnable()
     self.moduleEnabled = true
+    -- A native HELPFUL renderer is prepared outside combat before stock
+    -- suppression. It continues rendering during secret-only combat scans.
+    self:PrepareNativeHelpful()
 
     self:SubscribePreferences(function(preferences)
         self:ApplyPreferences(preferences)
@@ -765,6 +809,19 @@ function HelpfulAuras:OnEnable()
 end
 
 function HelpfulAuras:OnDisable()
+    -- Fail open: stock owner restores its captured visibility first.
+    -- Native container is not disabled under lockdown, where its Blizzard
+    -- implementation remains the only usable player aura source.
+    if self.nativeHelpfulFrame and not InCombatLockdown() then
+        local owner = Logres:GetModule("NativeSurfaceReplacement")
+        local restored = owner and owner:IsEnabled()
+            and owner:Restore("playerBuffs")
+        if restored then
+            pcall(self.nativeHelpfulFrame.SetEnabled, self.nativeHelpfulFrame, false)
+            pcall(self.nativeHelpfulFrame.Hide, self.nativeHelpfulFrame)
+            self.nativeHelpfulActive = false
+        end
+    end
     self.moduleEnabled = false
     self.previewEnabled = false
     self:HidePresentation("module-disabled")
@@ -785,9 +842,10 @@ function HelpfulAuras:RunDevHelpfulAuraCheck(emit)
         and debugStatus.visibleCount > 0
 
     local visibilityCoherent =
-        debugStatus.rootShown == expectedShown
-        and debugStatus.presentationShown
-            == expectedShown
+        (debugStatus.nativeHelpfulActive == true
+            and not debugStatus.previewEnabled and not debugStatus.rootShown)
+        or (debugStatus.rootShown == expectedShown
+            and debugStatus.presentationShown == expectedShown)
 
     local passed =
         status.initialized == true
