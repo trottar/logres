@@ -41,6 +41,7 @@ local Context = Logres:RegisterModule("ActionContext", {
         self.secureDriverReady = false
         self.secureDriverLastResult = "not-attempted"
         self.protectedRootSkips = 0
+        self.secureFeedbackRefs = 0
         self.pendingDisableReconcile = false
         self.postCombatReconciles = 0
         self.postCombatHoverRepairs = 0
@@ -140,6 +141,25 @@ local COMBAT_ALPHA_SNIPPET = [[
         if bar4 then bar4:SetAlpha(1) end
         if bar5 then bar5:SetAlpha(0.75) end
         if pet then pet:SetAlpha(0.85) end
+        -- Logres keybind plates are UIParent siblings, not children of
+        -- the secure action roots. Mirror the combat alpha on their owned
+        -- feedback frames in the SAME secure state transition.
+        for index = 1, 12 do
+            local a = self:GetFrameRef("primaryFeedback" .. index)
+            if a then a:SetAlpha(1) end
+            local b = self:GetFrameRef("secondaryFeedback" .. index)
+            if b then b:SetAlpha(0.85) end
+            local c = self:GetFrameRef("utilityFeedback" .. index)
+            if c then c:SetAlpha(0.75) end
+            local d = self:GetFrameRef("bar4Feedback" .. index)
+            if d then d:SetAlpha(1) end
+            local e = self:GetFrameRef("bar5Feedback" .. index)
+            if e then e:SetAlpha(0.75) end
+        end
+        for index = 1, 10 do
+            local feedback = self:GetFrameRef("petFeedback" .. index)
+            if feedback then feedback:SetAlpha(0.85) end
+        end
     end
 ]]
 
@@ -180,6 +200,24 @@ function Context:InstallCombatDriver()
             driver:SetFrameRef(source, sides.clusters[source].frame)
         end
         driver:SetFrameRef("pet", pet.cluster)
+        local feedbackCount = 0
+        -- Pre-register only Logres-owned feedback siblings while OOC.
+        -- The restricted combat script never creates or queries UI frames.
+        local function bindFeedback(source, buttons)
+            for index, button in ipairs(buttons or {}) do
+                local feedback = button and button.activationFeedbackFrame
+                if feedback then
+                    driver:SetFrameRef(source .. "Feedback" .. index, feedback)
+                    feedbackCount = feedbackCount + 1
+                end
+            end
+        end
+        bindFeedback("primary", primary.buttons)
+        for _, source in ipairs({"secondary", "utility", "bar4", "bar5"}) do
+            bindFeedback(source, sides.clusters[source].buttons)
+        end
+        bindFeedback("pet", pet.buttons)
+        self.secureFeedbackRefs = feedbackCount
         driver:SetAttribute("_onstate-logrescombat", COMBAT_ALPHA_SNIPPET)
         RegisterStateDriver(driver, "logrescombat", "[combat] combat; rest")
     end)
@@ -354,6 +392,12 @@ function Context:ApplyPolicy(policyName)
         policyName = "combat"
     end
     local locked = InCombatLockdown and InCombatLockdown()
+    -- In lockdown, the secure driver owns combat alpha; a late/stale
+    -- noncombat state callback must not re-dim separate keybind plates.
+    -- If driver setup failed, retain the existing visible fail-open path.
+    if locked and self.secureDriverReady == true then
+        policyName = "combat"
+    end
     local primary = Logres:GetModule("PrimaryActions")
     local sides = Logres:GetModule("SecondaryUtilityActions")
     local primaryAlpha = self:ResolvedAlpha(policyName, "primary", "primary")
@@ -446,6 +490,7 @@ function Context:GetDebugStatus()
         hoverEnterCount = self.hoverEnterCount,
         hoverLeaveCount = self.hoverLeaveCount,
         secureDriverReady = self.secureDriverReady == true,
+        secureFeedbackRefs = self.secureFeedbackRefs,
         secureDriverLastResult = self.secureDriverLastResult,
         protectedRootSkips = self.protectedRootSkips,
         postCombatReconciles = self.postCombatReconciles,

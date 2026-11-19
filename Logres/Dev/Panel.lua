@@ -203,7 +203,7 @@ function Logres:CaptureBugIncident()
         "hoveredPrimary", "hoveredSecondary", "hoveredUtility",
         "hoveredBar4", "hoveredBar5", "hoveredPet",
         "hoverEnterCount", "hoverLeaveCount", "secureDriverReady",
-        "secureDriverLastResult", "protectedRootSkips",
+        "secureFeedbackRefs", "secureDriverLastResult", "protectedRootSkips",
         "postCombatReconciles", "postCombatHoverRepairs",
         "postCombatHoverUnknown", "postCombatLastResult"})
     incident.snapshot.activeQuest = pickTraceStatus(ownedTraceStatus(function()

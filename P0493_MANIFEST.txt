@@ -1,0 +1,27 @@
+P0493 Secure combat action-keybind plate alpha recovery
+Verified baseline: 478cac8a945fb09b66e1fc903aef433fff0a30dd
+Candidate runtime version: 0.0.359-dev
+PREWRITE: 354/354 STATIC PASS
+POSTWRITE: 354/354 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Actions/Context.lua
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0493_SECURE_KEYBIND_ALPHA.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0493_secure_feedback_alpha_contract.py
+tools/test_p0493_secure_feedback_alpha.lua
+P0493_MANIFEST.txt

@@ -62,6 +62,20 @@ pet and external feedback plates. P0489 nonprimary rest alpha0 remains.
 No protected/native actions or click overlay, L-055 OPEN until gameplay.
 See `P0490_ACTION_MOUSEOVER_OPACITY.md`.
 
+## P0493 — L-055 combat key labels on feedback siblings (2026-11-19)
+
+P0492 main `478cac8` verified. Session177 0.0.358-dev #18360 OOC
+root alpha0 but buttons pictured without text; #18363/#18365 combat
+keybind text present. User confirms P0492 fade improvement but intermittent
+combat key-label absence; exact failing combat frame UNREPRODUCED.
+Secure action-root alpha and UIParent sibling feedback alpha are separate
+owners. P0493 pre-registers the 70 Logres feedback frames and mirrors their
+alpha in existing secure combat state transition. A locked stale state
+callback cannot re-dim keybind plates. No polling/native binding changes.
+All OOC rest0, hover/combat alpha100/85/75, native fallback and
+historical failures retained. Runtime acceptance UNVERIFIED, L-055 OPEN.
+Evidence `docs/memory/evidence/P0493_SECURE_KEYBIND_ALPHA.md`.
+
 ## P0492 — L-055 post-combat fade reconciliation (2026-11-18)
 
 P0491 main `3f57904` verified. Forever 0.0.357-dev session176

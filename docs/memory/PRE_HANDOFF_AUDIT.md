@@ -1514,3 +1514,75 @@ Corrected candidate343/343 STATIC PASS, actual complete-refresh arrival and
 four historical source fixtures PASS, version-policy PASS. Final bytes receive
 canonical PREWRITE/POSTWRITE, refusal/rollback, Lua5.1 syntax and diff audit;
 delivered receipt records those results. WoW runtime remains UNVERIFIED.
+
+## P0493 initial candidate audit (2026-11-19)
+
+Verified main P0492 `478cac8` / tree `cfdf7ee`; imported P0492 full
+shadow candidate and validated current Blob IDs against main. Historical
+contracts P0489/P0490/P0491/P0492 and protected UI rules consulted before
+implementation. No new click/stock surface, no polling and no keybind
+routing change. Source hypothesis: 70 UIParent sibling key plates absent
+from secure action-alpha state driver. The new fixture intentionally models
+an omitted ordinary state callback and a stale lockdown callback.
+All final checker, syntax, ZIP/manifest and transactional audits must be
+run on this exact candidate before delivering the ZIP. Client key-label
+runtime failure remains intermittent and unverified in captured combat.
+
+## P0493 final corrected candidate audit (2026-11-19)
+
+Authority: GitHub P0492 main `478cac8a945fb09b66e1fc903aef433fff0a30dd`,
+tree `cfdf7ee7eb5fdfee3e2e9cef38d3b09b1c15de2d`, verified read-only.
+The complete P0492 source shadow was retained from the previous exact-candidate
+audit. All 13 changed preexisting file Git blob SHAs were rechecked against
+remote P0492; all match. 16 payload files comprise Context, Bootstrap,
+Panel, TOC, five roadmap/active records, CURRENT/handoff/ledger/patch index,
+this audit, one new evidence record and one new checker/actual-source Lua fixture.
+No source files were added to the WoW TOC. Existing 96 Lua addon source files,
+all settings, action execution, pet clicks and stock fallback remain unchanged
+except the scoped ActionContext secure state handler and its owned diagnostic.
+
+Negative candidate preflight retained: first full suite 298/354 passed,
+56/354 refused due 9800-byte CURRENT.md maintenance cap. Trimming redundant
+archival CURRENT references restored the bound. Second full suite 344/354
+passed; ten older P0477–P0486 contracts pinned P0486 as the first active
+heading/handoff line. Rather than relaxing these old contracts or modifying
+unrelated historical checkers, the final candidate preserves that P0486
+heading/order and records P0493 in the active next action, evidence, ledger
+and patch index. Result: third full-source suite 354/354 PASS on
+corrected candidate. The final audit doc update is followed by another
+full exact-candidate suite before ZIP release.
+
+Actual-source fixture passes 70/70 precreated feedback frame refs, a secure
+combat transition with a deliberately missing normal state callback, a
+stale locked `world` callback that must not re-dim plates, and postcombat
+rest0 recovery. Historical P0489, P0490, P0491, P0492 behavior fixtures
+pass. New fixture intentionally FAILS on unmodified P0492 at the expected
+missing `secureFeedbackRefs` assertion. This is evidence of scoped test
+sensitivity, not WoW runtime acceptance.
+
+Changed source files Context.lua, Bootstrap.lua, Dev/Panel.lua and the new
+Lua fixture parse successfully with local `texlua`. A broader unmodified
+96-file Lua sweep refuses the existing `TrainerLiveTrial.lua:620` escape
+`\B` under this Lua parser; the file has identical bytes in the verified
+P0492 baseline and was NOT changed. Do not claim all-addon Lua syntax PASS
+from that sweep. Python applier/checker compile passes. All 16 candidate
+payloads pass LF/trailing-space/newline and exact diff hygiene.
+
+Actual ZIP preview tests (before release): all 16 payload SHA-256 values,
+archive safety/CRC and exact-file parity PASS; original-source snapshot
+validation PASS; tampered payload REFUSED; 16/16 staged bytes exactly equal
+the audited candidate; transactional rollback restores all 16 source bytes
+or removes newly added files; wrong simulated HEAD REFUSED before writes.
+No full WSL Git checkout with the real remote HEAD was available in this
+sandbox; the canonical user applier will independently run complete
+PREWRITE and POSTWRITE checkers and `git diff --check`. The ZIP must be
+reconstructed and rechecked after this audit update. No remote mutation,
+commit, ref movement or push was performed by the assistant.
+
+Forever client verification remains required. Session177 snapshots show
+combat labels present #18363/#18365 and OOC labels absent #18360; they
+DO NOT reproduce a missing-label combat frame. L-055 remains
+OPEN/INTERMITTENT/UNREPRODUCED for that specific symptom; source-supported
+secure feedback alpha is the narrow hypothesis under test. No native
+presentation, protected/secret query, polling, broad hooks, or binding
+routing change. If the issue persists, use in-combat Report Bug capture.
