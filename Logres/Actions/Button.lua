@@ -283,7 +283,9 @@ button:HookScript("PostClick", function(current)
     ActionButton.Pulse(current)
 end)
 
-    local hotkeyPlateBorder = feedbackFrame:CreateTexture(nil, "OVERLAY")
+    -- P0494: keybind metadata shares the action button's secure visibility.
+    -- Keep activation/press feedback on its independent UIParent sibling.
+    local hotkeyPlateBorder = button:CreateTexture(nil, "OVERLAY")
     hotkeyPlateBorder:SetPoint(
         "TOPRIGHT",
         button,
@@ -301,7 +303,7 @@ end)
     hotkeyPlateBorder:SetDrawLayer("OVERLAY", 0)
     hotkeyPlateBorder:Hide()
 
-    local hotkeyPlateFill = feedbackFrame:CreateTexture(nil, "OVERLAY")
+    local hotkeyPlateFill = button:CreateTexture(nil, "OVERLAY")
     hotkeyPlateFill:SetPoint(
         "TOPLEFT",
         hotkeyPlateBorder,
@@ -325,7 +327,7 @@ end)
     hotkeyPlateFill:SetDrawLayer("OVERLAY", 1)
     hotkeyPlateFill:Hide()
 
-    local hotkeyText = feedbackFrame:CreateFontString(
+    local hotkeyText = button:CreateFontString(
         nil,
         "OVERLAY",
         "GameFontHighlightSmall"

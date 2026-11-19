@@ -1586,3 +1586,46 @@ OPEN/INTERMITTENT/UNREPRODUCED for that specific symptom; source-supported
 secure feedback alpha is the narrow hypothesis under test. No native
 presentation, protected/secret query, polling, broad hooks, or binding
 routing change. If the issue persists, use in-combat Report Bug capture.
+
+## P0494 candidate ownership audit (2026-11-19)
+
+Verified GitHub main P0493 `d3c6578` tree `757cf11`; issue L-055
+OPEN/INTERMITTENT. P0118 R4 alpha-isolation is deliberate historical
+risk, not quietly suppressed. P0494 intentionally revises only the
+metadata parent at combat/hover 1/.85/.75 while retaining the isolated
+activation sibling and button geometry. P0118 checker is migrated to
+assert button parentage and retain black fill, bronze edge, compact
+modifiers and draw-order. P0331/P0493 old scopes retain feedback and
+secure refs. Exact-candidate full checker results to be appended after
+execution; static PASS is not WoW runtime PASS.
+
+### P0494 completed assistant-side exact-candidate checks
+
+- Verified remote P0493 main `d3c65789d6b02058e1b1d7ac97a0d8381d01d137`,
+  tree `757cf11a8e6ac1bd9e4970d3995055b5c4b86b23`. Local P0493
+  source hashes for Button, Context, version, plate checker and CURRENT
+  matched remote GitHub blobs. P0494 applier checks HEAD, tree, source
+  hashes and clean tracked state before preparing writes.
+- Candidate actual-source Lua fixture PASS: button owns metadata border,
+  fill and font; UIParent sibling still owns flash/pressed; P0118 0/1/2
+  draw levels, compact `c-Q`, empty-label hiding retained. Historical
+  P0491/P0492/P0493 actual-source fixtures PASS, including secure refs70.
+  Negative control: the new fixture run against unmodified P0493 fails
+  at `plate border must inherit action alpha` as expected.
+- Complete first candidate checker suite PASS **355/355** (94.6 s),
+  with **zero observed static failures** in that run; historical P0118
+  checker deliberately updated, P0331 layering and P0493 driver retained.
+  Three changed production Lua files parsed via `texlua`/`loadfile`.
+  Earlier script construction had a stale handoff-memory text anchor:
+  it REFUSED before package creation; exact current P0493 text was read
+  and the builder corrected. This was a candidate preparation error,
+  not a game runtime result.
+- Preliminary 19-file ZIP self-integrity PASS; independent inspection
+  reproduced 19/19 staged bytes, then rolled back 19/19 without residue.
+  Deliberate payload tamper, wrong HEAD and wrong Git tree all REFUSED.
+  Exact prepared diff whitespace/conflict hygiene checked. No GitHub
+  write, commit, branch or push was attempted. A final recheck of the
+  completed audit-bearing ZIP is required before user handoff.
+- Client result **UNVERIFIED**. In particular, utility .75 tag legibility,
+  pet/click execution, P0118-equivalent visual quality and the generic
+  addon action warning source have no new runtime proof. L-055 OPEN.

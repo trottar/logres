@@ -141,9 +141,9 @@ local COMBAT_ALPHA_SNIPPET = [[
         if bar4 then bar4:SetAlpha(1) end
         if bar5 then bar5:SetAlpha(0.75) end
         if pet then pet:SetAlpha(0.85) end
-        -- Logres keybind plates are UIParent siblings, not children of
-        -- the secure action roots. Mirror the combat alpha on their owned
-        -- feedback frames in the SAME secure state transition.
+        -- Only activation feedback remains on UIParent siblings. Keybind
+        -- regions now inherit secure action-button visibility directly.
+        -- Mirror activation feedback in the same secure transition.
         for index = 1, 12 do
             local a = self:GetFrameRef("primaryFeedback" .. index)
             if a then a:SetAlpha(1) end
@@ -393,7 +393,7 @@ function Context:ApplyPolicy(policyName)
     end
     local locked = InCombatLockdown and InCombatLockdown()
     -- In lockdown, the secure driver owns combat alpha; a late/stale
-    -- noncombat state callback must not re-dim separate keybind plates.
+    -- noncombat state callback must not re-dim activation feedback.
     -- If driver setup failed, retain the existing visible fail-open path.
     if locked and self.secureDriverReady == true then
         policyName = "combat"
@@ -408,8 +408,8 @@ function Context:ApplyPolicy(policyName)
         self.protectedRootSkips = self.protectedRootSkips + 1
     end
     local feedbackUpdated = 0
-    -- Primary feedback plates are unprotected UIParent siblings and
-    -- must follow their action role even while root alpha is secure-owned.
+    -- Primary activation feedback is an unprotected UIParent sibling and
+    -- follows its role while button-owned keybinds inherit root alpha.
     for _, button in ipairs(primary.buttons or {}) do
         local feedback = button.activationFeedbackFrame
         if feedback then
@@ -428,7 +428,7 @@ function Context:ApplyPolicy(policyName)
         else
             self.protectedRootSkips = self.protectedRootSkips + 1
         end
-        -- Feedback/keybind siblings live under UIParent, not clusters.
+        -- Activation-feedback siblings live under UIParent, not clusters.
         for _, button in ipairs(sides.clusters[source].buttons) do
             local feedback = button.activationFeedbackFrame
             if feedback then

@@ -30,15 +30,23 @@ if THEME.is_file():
 
 if BUTTON.is_file():
     source = BUTTON.read_text(encoding="utf-8")
+    # P0118 R4/R5 visual policy was intentional alpha isolation. P0494
+    # deliberately migrates only metadata under the action button after
+    # combat/hover alphas were raised to 0.75+, retaining activation siblings.
+    for forbidden in ("local hotkeyPlateBorder = feedbackFrame:CreateTexture",
+                      "local hotkeyPlateFill = feedbackFrame:CreateTexture",
+                      "local hotkeyText = feedbackFrame:CreateFontString"):
+        if forbidden in source:
+            errors.append(f"Button.lua retains obsolete metadata owner: {forbidden}")
     for fragment in (
         "local hotkeyStyle = actionStyle.hotkeyPlate or {}",
-        "local hotkeyPlateBorder = feedbackFrame:CreateTexture",
-        "local hotkeyPlateFill = feedbackFrame:CreateTexture",
+        "local hotkeyPlateBorder = button:CreateTexture",
+        "local hotkeyPlateFill = button:CreateTexture",
         "local function normalizeHotkeyLabel(label)",
         'text = text:gsub("SHIFT%-", "s-")',
         'text = text:gsub("CTRL%-", "c-")',
         'text = text:gsub("ALT%-", "a-")',
-        "local hotkeyText = feedbackFrame:CreateFontString",
+        "local hotkeyText = button:CreateFontString",
         "function ActionButton.SetHotkeyLabel(button, label)",
         "button.hotkeyText:GetStringWidth()",
         "button.hotkeyPlateBorder:SetWidth(plateWidth)",

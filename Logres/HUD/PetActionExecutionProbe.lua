@@ -117,8 +117,8 @@ local function safePetBindingLabel(slot)
 end
 
 function Probe:RefreshBindingLabels()
-    -- Hotkey plates use an addon-owned feedback frame outside the secure
-    -- cluster; hiding pet buttons alone cannot hide those plates.
+    -- Keybind metadata inherits the secure pet button, while activation
+    -- feedback remains UIParent-owned and follows contextual opacity.
     -- Only addon-owned, already secret-checked availability is inspected.
     local showLabels = self.moduleEnabled == true
         and self.armed == true
@@ -344,7 +344,7 @@ end
 
 -- Only addon-owned presentation receives contextual alpha. This does not
 -- touch stock PetActionBar, secure attributes, bindings, or click routing.
--- Child feedback frames are siblings under UIParent, not cluster children.
+-- Activation feedback frames are siblings under UIParent, not cluster children.
 function Probe:ApplyContextOpacity(alpha, feedbackOnly)
     if type(alpha) ~= "number" or alpha < 0 or alpha > 1 then
         return false

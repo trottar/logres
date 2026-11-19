@@ -537,3 +537,30 @@ P0118 R5 establishes explicit draw sublevels for the keybind metadata plate on
 the shared feedback frame: border at sublevel 0, black inset fill at sublevel
 1, and key text at sublevel 2. This prevents the solid bronze border quad from
 obscuring the intended black inset.
+
+## P0494 — Keybind ownership migration for secure combat visibility (2026-11-19)
+
+P0118 R4/R5 alpha-isolation and its earlier `.45`/`.20` visual failure
+remain authoritative historical evidence. The new contextual action
+policy has all six roots at 0 outside combat, but combat/hover alpha of
+1 for primary/Bar4, .85 for secondary/pet, and .75 for utility/Bar5.
+P0493 secure-mirrored all 70 UIParent feedback siblings, but the user
+continued to report intermittent keybind absence with visible action art
+(Forever session178 #18442 was captured just before a recorded combat
+transition, so the exact in-combat failure is not client-proven).
+
+P0494 intentionally migrates **only** hotkey border, fill, and text to
+regions created on the existing secure action button. They now inherit
+exactly the button/cluster secure alpha. The UIParent feedback frame,
+pressed overlay and activation animation are kept independent, including
+P0493's 70 secure feedback references. No new protected child Frame,
+binding ownership, action slot, paging rule, native fallback, or timer.
+
+This supersedes P0118 R4's alpha-isolated keybind owner only at current
+higher combat/hover role alphas. It does **not** erase R4's legibility
+failure or claim visual parity in WoW. P0494 must pass the Phase C Action
+Check, pet keybind/activation click checks, combat-entry simultaneous
+keybind/button reveal, rest0 and hover checks, utility .75 legibility,
+and zero taint/protected-action errors before L-055 can close. Source
+contract is `tools/check_p0494_keybind_owner_contract.py`; full evidence
+is `docs/memory/evidence/P0494_KEYBIND_BUTTON_OWNER.md`.

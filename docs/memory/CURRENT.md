@@ -13,7 +13,7 @@ Alpha blocked. D-046/D-047/D-048.
 
 **P0486** q35 PASS; P0487 PASS.
 P0489 PASS; P0490 hover PASS/combat FAIL.
-P0491 OOC0/side85; P0492 fade improved; P0493 hotkey alpha; L-055 OPEN.
+P0491 OOC0/side85; P0492 fade improved; P0493 sibling; P0494 keybind owner; L-055 OPEN.
 L-056 target BLOCKED.
 **P0488** L-054 OPEN; L-030 NPC261/q37 PASS scoped.
 **P0485** FAIL retained.
@@ -67,7 +67,7 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 UNVERIFIED.
 
 ## Next Action
 
-P0493 L-055 key labels/secure feedback client gate; L-056 blocked.
+P0494 L-055 key labels/alpha-isolation visual gate; L-056 blocked.
 P0488 L-054 observe; L-030 false positives open. L-035/L-002 OPEN.
 
 ## Success Criteria
@@ -78,6 +78,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0494_KEYBIND_BUTTON_OWNER.md
 - docs/memory/evidence/P0493_SECURE_KEYBIND_ALPHA.md
 - docs/memory/evidence/P0492_ACTION_FADE_POSTCOMBAT.md
 - docs/memory/evidence/P0491_SECURE_ACTION_COMBAT_REVEAL.md

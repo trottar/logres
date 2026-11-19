@@ -2394,3 +2394,16 @@ GitHub `main` P0218 `157e09c` verified; user corrects assistant's premature trea
 ## P0220 — Available unaccepted quests as local compass POIs (2026-10-16)
 
 P0219 `63a7557` pushed and `0.0.128-dev` loadCount 290 Phase E Compass Art ON/OFF and Compass Check passed. Navigation Source Probe: map 1432, radius 133.33 yards, 23 tracking categories/4 active, no positioned AreaPOIs, no quest waypoint and zero reported failures. User extends D-037 local POI semantics to **nearby available but unaccepted quests**, separate from accepted/current quest major destinations. Forever 1.60.1 documents `C_QuestLine.GetAvailableQuestLines(mapID)` with quest-line x/y, name and questID; it is NOT an exhaustive quest-giver database. P0220 candidate (`0.0.129-dev`) adds optional, bounded (24), secret-gated read-only available quest-line capture with `C_QuestLog.IsOnQuest`/`IsQuestFlaggedCompleted` eligibility and ordinary view-radius checks. The live compass may render *only* ordinary, eligible, same-map, within-radius quest-line coordinates as tiny sheet-12 local POIs, with a source-backed name near exact center. No fabricated markers, new polling, or minimap hiding. Source population/accuracy/runtime safety remain UNVERIFIED. See `docs/memory/evidence/P0220_COMPASS_AVAILABLE_QUEST_POI_SOURCE.md`.
+
+## P0494 — Keybind metadata action-button ownership (2026-11-19)
+
+Verified P0493 main `d3c6578`. Forever session178 `0.0.359-dev`
+#18442 icons without labels despite requested OOC0 (lockdown true),
+combat transition journaled later; in-combat missing-tag snapshot absent.
+P0118 R4 isolation solved .45/.20 unreadability, but current combat/
+hover roles are 1/.85/.75. Deliberate P0494 moves only hotkey regions
+to secure action button (shared reveal with icons); UIParent activation
+feedback/press/flash stays independent. Historic P0118 alpha-isolation
+tradeoff and generic addon warning stay OPEN/UNVERIFIED, no polling,
+secure bindings or native controls changed. See
+`docs/memory/evidence/P0494_KEYBIND_BUTTON_OWNER.md`.

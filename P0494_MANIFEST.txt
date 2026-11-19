@@ -1,0 +1,30 @@
+P0494 Keybind metadata shares secure action-button visibility
+Verified baseline: d3c65789d6b02058e1b1d7ac97a0d8381d01d137
+Candidate runtime version: 0.0.360-dev
+PREWRITE: 355/355 STATIC PASS
+POSTWRITE: 355/355 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Actions/Button.lua
+Logres/Actions/Context.lua
+Logres/Core/Bootstrap.lua
+Logres/HUD/PetActionExecutionProbe.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/architecture/ACTION_CLUSTERS.md
+docs/memory/evidence/P0494_KEYBIND_BUTTON_OWNER.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_action_keybind_plate_contract.py
+tools/check_p0494_keybind_owner_contract.py
+tools/test_p0494_keybind_button_owner.lua
+P0494_MANIFEST.txt

@@ -1347,3 +1347,16 @@ This index is initially maintained manually. If patch volume grows, replace manu
 | P0276 R2 | 2026-10-20 | PREPARED / WoW UNVERIFIED | R1 refusal on dirty P0275 worktree: support exact prior R0 candidate only, preserve unrelated files; same R1 opt-in trainer skin/panel tests; full WSL and WoW gates pending. |
 | P0276 R3 | 2026-10-20 | PREPARED / WSL & WoW UNVERIFIED | R2 prewrite failed checker 109/144 on contradictory stale secret-order assertion; fixed source/checker parity and aggregate failure reports. R1/R2 assistant failures preserved. |
 | P0276 R4 | 2026-10-20 | PREPARED / WSL & WoW UNVERIFIED | R3 PREWRITE 1/144 checker failure: CURRENT_HANDOFF.md lacked CURRENT.md; repair generated reference + preflight, no runtime changes, preserve failures. |
+
+## P0494 — Keybind metadata action-button ownership (2026-11-19)
+
+Verified P0493 main `d3c6578`. Forever session178 `0.0.359-dev`
+#18442 icons without labels despite requested OOC0 (lockdown true),
+combat transition journaled later; in-combat missing-tag snapshot absent.
+P0118 R4 isolation solved .45/.20 unreadability, but current combat/
+hover roles are 1/.85/.75. Deliberate P0494 moves only hotkey regions
+to secure action button (shared reveal with icons); UIParent activation
+feedback/press/flash stays independent. Historic P0118 alpha-isolation
+tradeoff and generic addon warning stay OPEN/UNVERIFIED, no polling,
+secure bindings or native controls changed. See
+`docs/memory/evidence/P0494_KEYBIND_BUTTON_OWNER.md`.
