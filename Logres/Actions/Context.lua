@@ -42,6 +42,10 @@ local Context = Logres:RegisterModule("ActionContext", {
         self.secureDriverLastResult = "not-attempted"
         self.protectedRootSkips = 0
         self.secureFeedbackRefs = 0
+        self.secureRootDriverFrames = {}
+        self.secureRootDriversByKey = {}
+        self.secureRootDriverCount = 0
+        self.secureRootDriverLastResult = "not-attempted"
         self.pendingDisableReconcile = false
         self.postCombatReconciles = 0
         self.postCombatHoverRepairs = 0
@@ -57,6 +61,10 @@ local Context = Logres:RegisterModule("ActionContext", {
         self.disableEventFrame:SetScript("OnEvent", function(_, event)
             if event == "PLAYER_REGEN_DISABLED" then
                 if not self:IsEnabled() then return end
+                -- P0499: Player combat entry is authoritative before the
+                -- eventual shared-state UNIT_AURA snapshot. The restricted
+                -- driver still owns protected cluster alpha in lockdown.
+                self:ApplyPolicy("combat")
                 self.combatEnteredEvents = self.combatEnteredEvents + 1
                 self.combatEventLastPolicy = self.policyName or "none"
                 self.combatEventLastDriver = self.secureDriverLastResult or "none"
@@ -126,6 +134,13 @@ function Context:FinishPendingDisable()
     self.pendingDisableReconcile = false
     self.disableEventFrame:UnregisterEvent("PLAYER_REGEN_ENABLED")
     self.disableEventFrame:UnregisterEvent("PLAYER_REGEN_DISABLED")
+    -- Releasing the per-cluster handlers is OOC-only, before the shared
+    -- feedback driver. No protected teardown occurs in lockdown.
+    for _, root in ipairs(self.secureRootDriverFrames or {}) do
+        UnregisterStateDriver(root, "logresbar")
+    end
+    self.secureRootDriverFrames = {}
+    self.secureRootDriverCount = 0
     if self.secureDriverReady and self.combatDriver then
         UnregisterStateDriver(self.combatDriver, "logrescombat")
         self.secureDriverReady = false
@@ -230,6 +245,42 @@ function Context:InstallCombatDriver()
             driver:SetFrameRef(source, sides.clusters[source].frame)
         end
         driver:SetFrameRef("pet", pet.cluster)
+        -- P0499: six separate secure owners, each with one addon-owned
+        -- cluster reference. The original cluster constructor, action
+        -- buttons, geometry and hover ownership remain unchanged.
+        -- Each restricted callback is independent of the 70-feedback loop.
+        local roots = {
+            {"primary", primary.cluster, "1"},
+            {"secondary", sides.clusters.secondary.frame, "0.85"},
+            {"utility", sides.clusters.utility.frame, "0.75"},
+            {"bar4", sides.clusters.bar4.frame, "1"},
+            {"bar5", sides.clusters.bar5.frame, "0.75"},
+            {"pet", pet.cluster, "0.85"},
+        }
+        self.secureRootDriverFrames = {}
+        for _, entry in ipairs(roots) do
+            local key, root, alpha = entry[1], entry[2], entry[3]
+            -- Reuse the named driver after module disable/re-enable.
+            local rootDriver = self.secureRootDriversByKey[key]
+            if not rootDriver then
+                rootDriver = CreateFrame("Frame",
+                    "LogresActionAlphaRootDriver" .. key, UIParent,
+                    "SecureHandlerStateTemplate")
+                self.secureRootDriversByKey[key] = rootDriver
+            end
+            rootDriver:SetFrameRef("cluster", root)
+            -- This marker covers only the current driver registration.
+            rootDriver:SetAttribute("logresCombatAck", false)
+            rootDriver:SetAttribute("_onstate-logresbar",
+                'if newstate == "combat" then ' ..
+                'local cluster = self:GetFrameRef("cluster"); ' ..
+                'if cluster then cluster:SetAlpha(' .. alpha ..
+                '); self:SetAttribute("logresCombatAck", true) end end')
+            -- Retain every attempted driver for transactional rollback.
+            self.secureRootDriverFrames[#self.secureRootDriverFrames + 1] = rootDriver
+            RegisterStateDriver(rootDriver, "logresbar", "[combat] combat; rest")
+        end
+        self.secureRootDriverCount = #self.secureRootDriverFrames
         local feedbackCount = 0
         -- Pre-register only Logres-owned feedback siblings while OOC.
         -- The restricted combat script never creates or queries UI frames.
@@ -251,6 +302,20 @@ function Context:InstallCombatDriver()
         driver:SetAttribute("_onstate-logrescombat", COMBAT_ALPHA_SNIPPET)
         RegisterStateDriver(driver, "logrescombat", "[combat] combat; rest")
     end)
+    if not ok then
+        -- A partial secure setup must not strand some bars faded.
+        -- The ordinary fail-open policy leaves all action roots visible.
+        for _, root in ipairs(self.secureRootDriverFrames or {}) do
+            pcall(UnregisterStateDriver, root, "logresbar")
+        end
+        self.secureRootDriverFrames = {}
+        self.secureRootDriverCount = 0
+        if self.combatDriver then
+            pcall(UnregisterStateDriver, self.combatDriver, "logrescombat")
+        end
+    end
+    self.secureRootDriverLastResult = ok and "six-registered"
+        or ("registration-failed:" .. tostring(err))
     self.secureDriverReady = ok
     self.secureDriverLastResult = ok and "registered" or ("registration-failed:" .. tostring(err))
     return ok
@@ -495,11 +560,30 @@ function Context:ApplyState(state)
     self:ApplyPolicy(self:ResolvePolicyName(state))
 end
 
+-- Read only addon-owned completion tokens, never native presentation state.
+-- The token is sampled only outside lockdown, with explicit secret rejection.
+local function ReadOwnedCombatAck(root)
+    if (InCombatLockdown and InCombatLockdown())
+        or not root or type(root.GetAttribute) ~= "function"
+        or type(issecretvalue) ~= "function" then return nil end
+    local ok, value = pcall(root.GetAttribute, root, "logresCombatAck")
+    if not ok then return nil end
+    local classified, secret = pcall(issecretvalue, value)
+    if not classified or secret ~= false then return nil end
+    return value == true
+end
+
 function Context:GetDebugStatus()
     local primary = Logres:GetModule("PrimaryActions")
     local sides = Logres:GetModule("SecondaryUtilityActions")
     local pet = Logres:GetModule("PetActionExecutionProbe")
     local clusters = sides and sides.clusters or {}
+    local secureRootAckCount = 0
+    for _, root in ipairs(self.secureRootDriverFrames or {}) do
+        if ReadOwnedCombatAck(root) == true then
+            secureRootAckCount = secureRootAckCount + 1
+        end
+    end
     return {
         moduleEnabled = self:IsEnabled(),
         policyName = self.policyName,
@@ -521,6 +605,9 @@ function Context:GetDebugStatus()
         hoverLeaveCount = self.hoverLeaveCount,
         secureDriverReady = self.secureDriverReady == true,
         secureFeedbackRefs = self.secureFeedbackRefs,
+        secureRootDriverCount = self.secureRootDriverCount,
+        secureRootDriverLastResult = self.secureRootDriverLastResult,
+        secureRootAckCount = secureRootAckCount,
         secureDriverLastResult = self.secureDriverLastResult,
         combatEnteredEvents = self.combatEnteredEvents,
         combatLeftEvents = self.combatLeftEvents,

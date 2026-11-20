@@ -117,6 +117,47 @@ local function expect(name,primaryAlpha,second,utility)
     assert(context:GetDebugStatus().alphaZeroUsed==(second==0 or utility==0),'alpha-zero debug')
 end
 expect('world',0,0,0)
+-- P0499: the secure owner of each cluster independently runs its own
+-- restricted state handler; the shared 70-feedback driver is not required
+-- to restore root icons. Model a lost shared-driver transition.
+assert(context.secureRootDriverCount == 6, 'six independent cluster owners')
+local rootAlphas = {
+    {primary.cluster, 1},
+    {sides.clusters.secondary.frame, 0.85},
+    {sides.clusters.utility.frame, 0.75},
+    {sides.clusters.bar4.frame, 1},
+    {sides.clusters.bar5.frame, 0.75},
+    {pet.cluster, 0.85},
+}
+state={combat=true,pvpFlagged=false,context='world'}
+secureDispatch=true
+for i, entry in ipairs(rootAlphas) do
+    local root, value = entry[1], entry[2]
+    local rootDriver = context.secureRootDriverFrames[i]
+    assert(rootDriver.secureSnippet and rootDriver.stateDriver == 'logresbar')
+    assert(rootDriver.refs.cluster == root, 'one cluster per root driver')
+    rootDriver.secureSnippet(rootDriver, 'logresbar', 'combat')
+    assert(root.alpha == value and rootDriver.attrs.logresCombatAck == true,
+        'independent secure root combat alpha')
+end
+secureDispatch=false
+state={combat=false,pvpFlagged=false,context='world'};context.onState(state)
+expect('world',0,0,0)
+-- Delayed shared publisher must not leave ordinary addon action policy
+-- in rest after PLAYER_REGEN_DISABLED. Secure roots are never touched
+-- by ordinary Lua once lockdown is active.
+local originalLockdown = InCombatLockdown
+InCombatLockdown=function() return true end
+context.disableEventFrame.scripts.OnEvent(context.disableEventFrame,'PLAYER_REGEN_DISABLED')
+assert(context.policyName == 'combat', 'event owns immediate policy')
+assert(primary.cluster.alpha == 0 and pet.cluster.alpha == 0,
+    'no insecure protected cluster mutation during lockdown')
+assert(primary.buttons[1].activationFeedbackFrame.alpha == 1,
+    'ordinary sibling feedback follows combat immediately')
+assert(context.combatEventLastPolicy == 'combat', 'transition recorded')
+InCombatLockdown=originalLockdown
+context.onState(state)
+expect('world',0,0,0)
 assert(context.secureDriverReady and context.secureDriverLastResult=='registered', 'preconfigured driver')
 assert(secureDriver and secureDriver.attrs['_onstate-logrescombat'], 'restricted snippet')
 state={combat=false,pvpFlagged=true,context='world'};context.onState(state)
@@ -193,8 +234,15 @@ enter(pet.buttons[2]);expectCluster('pet',0.85)
 context:OnDisable();expect('combat',1,0.85,0.75)
 leave(pet.buttons[2]);expect('combat',1,0.85,0.75)
 enter(primary.buttons[2]);expect('combat',1,0.85,0.75)
--- Re-enable does not duplicate secure button hooks and dims again.
+-- Re-enable does not duplicate secure button hooks or named root drivers.
+local savedRootDrivers = {}
+for key, driver in pairs(context.secureRootDriversByKey) do
+    savedRootDrivers[key] = driver
+end
 context:OnEnable();expect('world',0,0,0)
+for key, driver in pairs(context.secureRootDriversByKey) do
+    assert(driver == savedRootDrivers[key], 'named secure root reused')
+end
 assert(context.hoverHookCount==70,'no duplicate hooks')
 assert(#primary.buttons[2].hooks.OnEnter==1,'no duplicate primary hook')
 enter(pet.buttons[3]);expectCluster('pet',0.85,'secondary')

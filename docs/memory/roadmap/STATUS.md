@@ -12,6 +12,15 @@ all compass 2/3- and 3/4yd behavior unchanged. P0485 gameplay FAIL,
 L-030 OPEN/PARTIAL, P0486 client UNVERIFIED. Evidence:
 `docs/memory/evidence/P0486_INFORMATIONAL_QUEST_FLAGS.md`.
 
+## P0499 — L-055 secure action-root combat isolation (2026-11-20)
+
+Forever P0498 session184 #19127, #19139/#19143/#19149 again show
+missing combat bars despite registered shared driver; shared world
+state/policy may lag. P0499 candidate adds six per-cluster restricted
+combat alpha owners and immediate addon policy on regen-disabled;
+existing feedback driver, OOC0/hover, claim and keybinds unchanged.
+Runtime client UNVERIFIED, L-055 OPEN. See P0499 evidence.
+
 ## P0487 — L-030 scoped Forever PASS (docs-only; 2026-11-18)
 
 P0486 main `2c42525` verified. Source/deployed/captured `0.0.353-dev`,

@@ -207,6 +207,7 @@ function Logres:CaptureBugIncident()
         "postCombatReconciles", "postCombatHoverRepairs",
         "postCombatHoverUnknown", "postCombatLastResult",
         "combatEnteredEvents", "combatLeftEvents", "combatEventLastPolicy",
+        "secureRootDriverCount", "secureRootDriverLastResult", "secureRootAckCount",
         "combatEventLastDriver"})
     incident.snapshot.activeQuest = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("ActiveQuest"):GetDebugStatus()

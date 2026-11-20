@@ -3,7 +3,7 @@
 # P0492 fade; P0493 sibling, P0494 tags.
 # OOC0; combat main/Bar4=1, side/pet=.85, utility/Bar5=.75.
 # P0497 visual PASS scoped; P0498 L-002 stage bridge UNVERIFIED.
-# L-055 intermittent combat bars, P0498 telemetry only.
+# L-055 P0499 direct secure roots; runtime OPEN.
 # L-056 BLOCKED protected.
 # P0485: sparse DB client FAIL.
 # P0484: quest35 FAIL.

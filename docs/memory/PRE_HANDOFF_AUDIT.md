@@ -1,3 +1,82 @@
+## P0499 — L-055 secure action-root combat isolation audit (2026-11-20)
+
+**P0499 R0 user-applier PREWRITE refusals (2026-11-20):** The first run
+completed 359/360 checks and refused at P0499's contract because the
+user WSL lacked a Lua interpreter. After the user installed Lua 5.4,
+the next attempt reached 358/360 and refused on
+`check_p0463_regression_repair_contract.py` and
+`check_p0470_target_policy_contract.py`. Both invoked the unchanged
+`test_p0460_selected_removal_source.lua`, whose extracted P0460 HUD
+fixture no longer supplied the `hideCastCue` local that P0496 added to
+`RefreshLiveWorldEnemy()`. Exact failure: `HUD-selected:166: attempt to
+call a nil value (global 'hideCastCue')`. These are real PREWRITE failures;
+the prior 360/360 assistant-side result did not exercise this Lua 5.4
+path. The transaction made no tracked writes. R1 repairs the fixture
+with an asserted addon-owned target cast cue stub and verifies the
+selected-world takeover hides that cue; runtime HUD code is unchanged.
+Do not count this repaired source fixture as WoW runtime validation.
+
+R1 full corrected candidate audit: **360/360 Python historical checkers
+PASS** with Lua fixture execution enabled using the system
+`liblua5.4` test runner. The explicit P0460 extracted-source fixture,
+P0463 and P0470 checkers all PASS. The runner uses real Lua 5.4
+engine semantics; no checker was disabled or changed. All modified
+production bytes remain identical to the R0 package. The candidate
+archive must still pass exact payload hashes, rollback and baseline
+refusal, followed by a complete exact-ZIP rerun. Runtime WoW behavior
+is UNVERIFIED.
+
+Baseline authority: GitHub main P0498 `40b020100373d4782ed312b0eff2c12075b46dbb`, tree
+`bf4938b4674b91dd341aec93982a88d61c1dc88f`; all 14 modified
+baseline source blob IDs independently matched the remote tree via
+`git hash-object` on the reconstructed P0498 baseline. The final
+candidate version is `0.0.365-dev` (Bootstrap and TOC in agreement).
+The user-provided P0498 Forever session184 `0.0.364-dev` #19127 and
+#19139/#19143/#19149 screenshots show repeated missing combat bars;
+central driver registered but restricted SetAlpha execution UNPROVEN;
+shared action policy could remain world/zero after combat entry.
+L-055 reopened as REPRODUCED and remains OPEN. P0498's claim/quest
+bridge, stock fallbacks, action bindings and original hover are unchanged.
+
+P0499 adds six independent out-of-combat precreated one-root
+`SecureHandlerStateTemplate` drivers while preserving the original
+`ActionButton.CreateCluster` constructor and existing central 70-feedback
+driver. One existing regen-disabled callback immediately requests the
+combat policy but skips protected root writes during lockdown. Direct
+restricted root-driver combat SetAlpha and OOC-only addon-owned ack
+sampling are covered by the expanded actual-source P0491 fixture and
+P0499 new contract. No timers, OnUpdate, native state inspection, secret
+comparison, binding changes, or periodic reassertion were introduced.
+
+**Pre-release failures retained:** the initial secure-cluster-template
+prototype changed the historical P0216 cluster constructor signature;
+`check_h3_completion_resource_focus_contract.py` FAILED and the
+interrupted initial 360-check run was NOT PASS. The corrected candidate
+keeps the old constructor and moves six secure state handlers to
+independent owner frames. A release-review follow-up also caught that named state drivers must
+be cached across module disable/re-enable; P0499 now reuses all six
+original named frames and resets their acknowledgement markers on
+re-registration. Expanded actual-source fixture checks identity reuse.
+A first compressed CURRENT summary also
+dropped an older P0492 marker; the P0492 contract FAILED in a targeted
+check. Restored the exact historical marker within the strict
+CURRENT <9800 and HANDOFF <8000 byte limits. Neither checker was
+weakened. Two interrupted parallel full runs produced no complete
+result and were not counted as PASS. The final corrected candidate was
+then independently checked in a four-worker bounded audit:
+**360/360 HISTORICAL STATIC PASS** in 173.1 seconds, no failures,
+assistant-local audit log (not committed).
+P0499 isolated direct-driver fixture, historic P0489–P0493 action
+fixtures, P0381, P0498, memory and P0216 checks passed. Real WoW
+combat verification is NOT part of these results. P0499 user applier
+must repeat the full 360-check PREWRITE and POSTWRITE audit plus diff,
+rollback and tamper-refusal safeguards before it reports PASS.
+
+WoW acceptance is **UNVERIFIED**: confirm alpha 1/.85/.75 combat
+without hovering and OOC0 with hover; no protected/taint errors;
+validate addon-owned root driver ack after combat, and keep L-055 OPEN
+if the bars still disappear or driver acknowledgement is incomplete.
+
 ## P0498 — L-002 verified Progress→Completion bridge; L-055 combat event evidence (2026-11-20)
 
 Authority: GitHub main P0497 `4a3437ce2716ce6f449e6299640034f565571cdc`, tree

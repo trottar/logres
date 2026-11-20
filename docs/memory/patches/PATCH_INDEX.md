@@ -1,3 +1,18 @@
+## P0499 — Independent combat alpha roots (2026-11-20)
+
+Main P0498 `40b0201` verified. L-055 P0498 session184 #19127 and
+#19139/#19143/#19149 recurrent in-combat missing bars, registered
+central driver with unproven execution and delayed world policy. Add
+six direct secure root handlers plus immediate combat-event requested
+policy; preserve central feedback, hover, secure actions and OOC alpha0.
+OOC-only acknowledgement and transactional fail-open; actual-source and
+historical tests required. L-055 remains OPEN until in-client PASS.
+See `docs/memory/evidence/P0499_COMBAT_BAR_DIRECT_ROOT_DRIVERS.md`.
+R0 PREWRITE REFUSED twice with zero tracked writes: Lua unavailable
+(359/360), then Lua 5.4 exposed an outdated P0460 HUD selected-removal
+fixture missing P0496 `hideCastCue` (358/360, P0463/P0470). R1 repairs
+only that fixture, preserving P0499 runtime bytes and all checks.
+
 ## P0498 — Quest stage handoff and action event evidence (2026-11-20)
 
 Main P0497 `4a3437ce2716`. L-002: guarded ordinary same-quest

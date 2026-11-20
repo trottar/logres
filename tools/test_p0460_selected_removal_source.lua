@@ -14,7 +14,7 @@ local source=read("Logres/HUD/HUD.lua")
 local probeSource=read("Logres/HUD/WorldTargetProbe.lua")
 local roles={nameplate1=true,nameplate2=false,nameplate3=false}
 local unsafe=false
-local counters={attach=0,restore=0,hide=0,update=0,secondaryOff=0}
+local counters={attach=0,restore=0,hide=0,update=0,secondaryOff=0,castHides=0}
 local anchor={}
 local probe={}
 function probe:OrdinaryEventNameplateToken(unit)
@@ -52,7 +52,8 @@ local HUD={worldEnemyLiveRequested=false,worldEnemyLiveFrame=frame,
     worldEnemyLiveUnknownTokenQueries=0,worldEnemyLiveIgnoredOtherRemovals=0,
     worldEnemyScreenHandoffs=0,worldEnemyLiveFailures=0,
     worldEnemySecondaryEpochs={},worldEnemySecondaryTrialArmed=true,
-    targetFrame=widget(),targetNameText=widget(),targetHealthBar=widget()}
+    targetFrame=widget(),targetNameText=widget(),targetHealthBar=widget(),
+    targetCastCue=widget()}
 function HUD:UpdateLiveWorldEnemyValues()counters.update=counters.update+1;return true end
 function HUD:ClaimNativeEnemyDecor(_)
     assert(not self.worldEnemyNativeClaim)
@@ -91,7 +92,17 @@ function logres:GetModule(name)
     return nil
 end
 HUD.BindEnemyWorldAuras=function()return "aura-not-prepared" end
-local env={HUD=HUD,Logres=logres,
+-- P0499 R1: the P0496 selected-world handoff also hides its own screen
+-- cast cue. This fixture extracts only the selected-world methods, so
+-- provide the existing addon-owned cue helper as a strict test double.
+-- Do not read or mutate Blizzard cast/presentation state.
+local function mockHideCastCue(cue, force)
+    assert(cue == HUD.targetCastCue and force == true,
+        "selected-world handoff must hide only the owned screen cast cue")
+    cue:Hide()
+    counters.castHides=counters.castHides+1
+end
+local env={HUD=HUD,Logres=logres,hideCastCue=mockHideCastCue,
     ordinaryOutOfCombat=function()return true end,
     ordinaryInCombat=function()return false end,
     ordinaryOwnedUnprotected=function()return true end,
@@ -117,6 +128,8 @@ assert(HUD:RefreshLiveWorldEnemy("manual"))
 assert(active() and HUD.worldEnemyLiveAnchorUnit=="nameplate1")
 assert(HUD.worldEnemyLiveAnchorEpoch==HUD.worldEnemyObservedNameplateEpochs.nameplate1)
 assert(counters.attach==1 and counters.restore==0)
+assert(counters.castHides==1 and HUD.targetCastCue.shown==false,
+    "selected-world attach must perform the owned screen cast handoff")
 -- Critical P0459 regression: removal of another enemy cannot restore
 -- the selected native plate; no claim, anchor or screen handoff changes.
 event("NAME_PLATE_UNIT_REMOVED","nameplate2")

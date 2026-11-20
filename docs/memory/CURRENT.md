@@ -13,7 +13,7 @@ Alpha blocked. D-046/D-047/D-048.
 
 **P0486** q35 PASS; P0487 PASS.
 P0489 PASS; P0490 hover PASS/combat FAIL.
-P0491–P0494 bars; P0498 event trace; L-055 INTERMITTENT OPEN.
+P0491 P0492 P0493 P0494; P0499 L-055 REPRODUCED OPEN.
 L-056 BLOCKED.
 **P0488** L-054 P0497 layout PASS; L-057 cast-above PASS scoped. L-030 q37 PASS.
 **P0485** FAIL retained.
@@ -66,7 +66,7 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 UNVERIFIED.
 
 ## Next Action
 
-P0494 L-055 key labels/alpha-isolation visual gate; L-056 blocked.
+P0499 L-055 six secure roots + regen sync client gate; L-056 blocked.
 P0497 visual user PASS; P0498 L-002 quest bridge client gate; L-055 event trace OPEN.
 
 ## Success Criteria
@@ -82,7 +82,7 @@ Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret re
 - docs/memory/evidence/P0496_NATIVE_BUFF_AND_WORLD_CAST.md
 - docs/memory/evidence/P0494_KEYBIND_BUTTON_OWNER.md
 - docs/memory/evidence/P0493_SECURE_KEYBIND_ALPHA.md
-- docs/memory/evidence/P0492_ACTION_FADE_POSTCOMBAT.md
+- docs/memory/evidence/P0499_COMBAT_BAR_DIRECT_ROOT_DRIVERS.md
 - docs/memory/evidence/P0491_SECURE_ACTION_COMBAT_REVEAL.md
 - docs/memory/evidence/P0490_ACTION_MOUSEOVER_OPACITY.md
 - docs/memory/evidence/P0489_ACTION_BAR_ALPHA_POLICY.md

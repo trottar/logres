@@ -1,0 +1,29 @@
+P0499 R1: independent secure combat alpha owners with corrected historical HUD cast fixture
+Verified baseline: 40b020100373d4782ed312b0eff2c12075b46dbb
+Candidate runtime version: 0.0.365-dev
+PREWRITE: 360/360 STATIC PASS
+POSTWRITE: 360/360 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Actions/Context.lua
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0499_COMBAT_BAR_DIRECT_ROOT_DRIVERS.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0499_direct_cluster_combat_contract.py
+tools/test_p0460_selected_removal_source.lua
+tools/test_p0491_secure_combat_alpha.lua
+tools/test_p0499_cluster_template.lua
+P0499_MANIFEST.txt
