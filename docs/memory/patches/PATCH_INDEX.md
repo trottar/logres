@@ -1374,3 +1374,13 @@ combat fallback candidate, client UNVERIFIED. No stock/aura secret reads.
 `768bb54`, session180 #18605 combat P0495 FAIL, #18610/#18614
 OOC recovery PASS; precreated native HELPFUL renderer, stock-first gate,
 selected-world cast cue and guarded native cast strip; CLIENT UNVERIFIED.
+
+## P0497 — Restore HELPFUL first-row placement and clear enemy cast icon
+
+Verified P0496 `df6bae8`; 0.0.363-dev. Existing aura native engine
+and combat-source continuity retained; mirror anchored to old passiveStatus
+first-row midpoint rather than center of ten-row maximum container.
+World cast cue moves above selected nameplate (10px gap). Historical
+contract check revised with stronger anchor assertion, new P0497 geometry
+contract and actual-source fixture, evidence/ledger/handoff synchronized.
+Runtime placement and taint UNVERIFIED until client. No Git write by assistant.

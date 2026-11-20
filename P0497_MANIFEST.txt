@@ -1,0 +1,29 @@
+P0497 Restore player helpful first-row placement and move world cast above nameplate
+Verified baseline: df6bae8e8d60a25ed75f2b810731c88ac042df65
+Candidate runtime version: 0.0.363-dev
+PREWRITE: 358/358 STATIC PASS
+POSTWRITE: 358/358 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/HUD/HUD.lua
+Logres/HUD/NativeDebuffs.lua
+Logres/HUD/PlayerHelpfulAuras.lua
+Logres/Logres.toc
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0497_AURA_ANCHOR_WORLD_CAST_PLACEMENT.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0496_native_buff_world_cast_contract.py
+tools/check_p0497_aura_anchor_world_cast_contract.py
+tools/test_p0496_native_helpful_mirror.lua
+P0497_MANIFEST.txt

@@ -1027,7 +1027,8 @@ local function buildEnemyDisplayFixture(parent, fixtureName, label, percent)
     bar.status:SetValue(percent)
     bar.percentText:SetFormattedText("%.0f%%", percent)
     local cue = createCastCue(frame, nil)
-    cue:SetPoint("TOP", frame, "BOTTOM", 0, -6)
+    -- World-space cue belongs above the nameplate, not over the enemy.
+    cue:SetPoint("BOTTOM", frame, "TOP", 0, 10)
     frame.enemyNameText = nameText
     frame.enemyHealthBar = bar
     frame.enemyHealthText = bar.percentText

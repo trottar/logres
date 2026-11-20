@@ -16,6 +16,7 @@ local function object(kind)
         if key=='SetEnabled' then return function(self,b)self.enabled=b end end
         if key=='UpdateAllAuras' then return function(self)self.updates=(rawget(self,"updates") or 0)+1 end end
         if key=='AddAuraGroup' then return function(self,n,f,d)self.group={name=n,filter=f,config=d} end end
+        if key=='SetPoint' then return function(self,...)self.point={...} end end
         if key=='SetFrameStrata' then return function(self,strata)self.strata=strata end end
         if key=='SetFlowLayoutMaximumLineSize' then return function(self,v)self.maxLine=v end end
         return function()end
@@ -55,9 +56,16 @@ local helpful=modules.PlayerHelpfulAuras
 helpful:OnInitialize(); helpful:OnEnable()
 local native=helpful.nativeHelpfulFrame
 assert(native and helpful.nativeHelpfulActive, 'native mirror not prepared')
+local missing,missingReason=Logres.NativeDebuffs.CreatePlayerHelpfulMirror()
+assert(missing==nil and missingReason=='player-helpful-anchor-unavailable',
+    'missing placement owner must fail open')
 assert(native.group and native.group.filter=='HELPFUL' and native.group.config.maxFrameCount==40)
 assert(native.unit=='player' and native.enabled and native.shown and native.updates>0)
-assert(native.layoutKey=='passiveStatus' and native.strata=='LOW' and native.maxLine==4*36+3*7)
+assert(helpful.root.layoutKey=='passiveStatus' and rawget(native,'layoutKey')==nil)
+assert(native.point and native.point[1]=='BOTTOMLEFT' and native.point[2]==helpful.root
+    and native.point[3]=='LEFT' and native.point[4]==0 and native.point[5]==-18,
+    'first native icon must follow original player helpful first-row anchor')
+assert(native.strata=='LOW' and native.maxLine==4*36+3*7)
 assert(helpful.visibleCount==7 and not helpful.root.shown,'ordinary Lua rendering must not duplicate native')
 combat=true;restricted=true
 helpful.eventFrame.handlers.OnEvent(nil,'UNIT_AURA')
@@ -74,6 +82,6 @@ assert(native.shown and not helpful.root.shown, 'preview exit restores native so
 -- Fail-open on absent client template/Blizzard dependency; never declare ready.
 C_AddOns.IsAddOnLoaded=function() return false end
 C_AddOns.LoadAddOn=function()return false end
-local frame,reason=Logres.NativeDebuffs.CreatePlayerHelpfulMirror()
+local frame,reason=Logres.NativeDebuffs.CreatePlayerHelpfulMirror(helpful.root)
 assert(frame==nil and reason=='player-helpful-native-unavailable')
 print('P0496 actual-source HELPFUL native mirror/restriction/preview PASS')

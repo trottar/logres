@@ -326,7 +326,8 @@ end
 -- Keep a precreated Blizzard-managed HELPFUL AuraContainer alive across the
 -- transition. The native engine, not addon Lua, owns icons/membership then.
 -- The legacy ordinary Lua grid remains available for preview and fallback.
-function Native.CreatePlayerHelpfulMirror()
+function Native.CreatePlayerHelpfulMirror(anchor)
+    if not anchor then return nil, "player-helpful-anchor-unavailable" end
     if type(InCombatLockdown) ~= "function" or InCombatLockdown() then
         return nil, "player-helpful-combat-deferred"
     end
@@ -341,9 +342,11 @@ function Native.CreatePlayerHelpfulMirror()
         frame:Hide()
         frame:SetSize(width, 10 * iconSize + 9 * gap)
         frame:ClearAllPoints()
-        frame:SetPoint("LEFT", UIParent, "CENTER",
-            auraStyle.x or 118, auraStyle.y or -118)
-        Logres.Layout.Bind(frame, "passiveStatus", "LEFT", "CENTER")
+        -- Anchor the native FIRST icon, not the center of a ten-row
+        -- preallocated container. The legacy root owns passiveStatus
+        -- projection and its LEFT midpoint is the approved first icon.
+        -- Its shown/hidden state is independent of this UIParent child.
+        frame:SetPoint("BOTTOMLEFT", anchor, "LEFT", 0, -iconSize / 2)
         frame:SetFlowLayoutAnchorPoint("BOTTOMLEFT")
         frame:SetFlowLayoutGrowthDirection(
             AnchorUtil.FlowDirection.Right, AnchorUtil.FlowDirection.Up)

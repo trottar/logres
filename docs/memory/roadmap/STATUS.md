@@ -2444,3 +2444,20 @@ coverage are ready. Reuses existing world `enemyCastCue` and guarded
 optional unprotected native `CastBarsContainer` alpha token. No poll,
 secret read or unsafe stock suppression. L-054/L-057 OPEN and client
 UNVERIFIED. Evidence: `docs/memory/evidence/P0496_NATIVE_BUFF_AND_WORLD_CAST.md`.
+
+## P0497 — Player aura first-row anchor and world cast icon clearance (2026-11-19)
+
+P0496 main `df6bae8` verified. User confirms native buff continuity and
+world cast operation but rejects visual placement: former HELPFUL first
+row shifted into bottom-right action controls; world cast icon overlaps
+selected NPC. Forever 0.0.362-dev session181 #18691 combat native
+HELPFUL active, 40 secret indices, world cast owner/dim true; #18694
+post-combat native active, seven ordinary buffs, world cue owner/dim true.
+Screenshot match inferred by export mtime. P0497 native HELPFUL mirror
+anchors its BOTTOMLEFT first row to the previous `passiveStatus` root
+LEFT midpoint, rather than independently centering the full 10-row
+container. Selected-world 24px cast glyph moves above the nameplate
+by 10px, screen cue and cast source untouched. No secret inspection,
+secure behavior, source routing or native UI suppression change.
+User client visual approval and protected/taint safety are UNVERIFIED;
+L-054/L-057 remain OPEN. Evidence: `docs/memory/evidence/P0497_AURA_ANCHOR_WORLD_CAST_PLACEMENT.md`.

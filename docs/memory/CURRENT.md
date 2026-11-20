@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-11-18
+as_of: 2026-11-19
 project: logres
 ---
 
@@ -15,7 +15,7 @@ Alpha blocked. D-046/D-047/D-048.
 P0489 PASS; P0490 hover PASS/combat FAIL.
 P0491 OOC0/side85; P0492 fade; P0493 sibling; P0494 tags; L-055 OPEN.
 L-056 target BLOCKED.
-**P0488** L-054 P0495 FAIL; P0496 native candidate OPEN; L-057 cast OPEN. L-030 q37 PASS.
+**P0488** L-054 P0496 combat works/placement FAIL; P0497 OPEN. L-057 cue overlap. L-030 q37 PASS.
 **P0485** FAIL retained.
 **P0484** FAIL; **P0483** turn PARTIAL; **P0482** est2/3/native3/4.
 P0476 floor; P0477 hide; P0478 VISUAL FAIL,
@@ -67,7 +67,7 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 UNVERIFIED.
 ## Next Action
 
 P0494 L-055 key labels/alpha-isolation visual gate; L-056 blocked.
-P0496 L-054 native buff/L-057 cast client gate; L-030 open. L-035/L-002 OPEN.
+P0497 L-054 buff anchor/L-057 cast-above client gate; L-030/L-002 OPEN.
 
 ## Success Criteria
 
@@ -77,6 +77,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0497_AURA_ANCHOR_WORLD_CAST_PLACEMENT.md
 - docs/memory/evidence/P0496_NATIVE_BUFF_AND_WORLD_CAST.md
 - docs/memory/evidence/P0494_KEYBIND_BUTTON_OWNER.md
 - docs/memory/evidence/P0493_SECURE_KEYBIND_ALPHA.md

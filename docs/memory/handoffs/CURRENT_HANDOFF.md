@@ -2,7 +2,7 @@
 # P0490 hover PASS/combat FAIL; P0491 reveal PASS/fade FAIL.
 # P0492 fade; P0493 sibling, P0494 tags.
 # OOC0; combat main/Bar4=1, side/pet=.85, utility/Bar5=.75.
-# L-054 P0495 combat FAIL; P0496 native; L-057 world cast OPEN.
+# P0497: L-054 native works/position FAIL; L-057 cast above OPEN.
 # L-056 BLOCKED protected.
 # P0485: sparse DB client FAIL.
 # P0484: quest35 FAIL.

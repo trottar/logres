@@ -785,7 +785,7 @@ function HelpfulAuras:PrepareNativeHelpful()
         self.nativeHelpfulLastResult = "native-owner-unavailable"
         return false
     end
-    local frame, reason = native.CreatePlayerHelpfulMirror()
+    local frame, reason = native.CreatePlayerHelpfulMirror(self.root)
     self.nativeHelpfulLastResult = reason
     if frame then
         self.nativeHelpfulFrame = frame

@@ -1701,3 +1701,38 @@ tracked checkout, complete source hash baseline, PREWRITE and POSTWRITE
 full suites and writes P0496_MANIFEST.txt only on success. User applier
 and WoW client were not executed. Final audit-bearing payload is rebuilt
 and checker revalidation required before delivery.
+
+## P0497 — Correct native player-buff placement and selected-world cast overlap (2026-11-19)
+
+GitHub main P0496 `df6bae8`, tree `c36b823` verified; screenshot/diagnostic
+#18691/#18694 v0.0.362-dev show native aura owner works while 10-row
+container's LEFT center anchor shifts first icons toward bottom action
+bar; user rejects overlap and below-NPC cast icon. P0497 only changes
+native mirror layout point ownership, world fixture cue position, focused
+fixture/static checker, version and durable memory. Historical P0496
+checker is revised to *strengthen* the first-row geometry test while
+preserving all native safety/cast assertions. Changed existing production
+code and 96 loaded file inventory unchanged apart from those two points.
+No combat-time Blizzard frame mutation, polling, secret-aura inspection,
+protected cast-state changes, or native action controls added.
+
+Final exact-candidate checks, archive parity, rollback and SHA receipt
+must be recorded only after they pass. Client runtime still UNVERIFIED.
+
+P0497 pre-final candidate audit receipt: GitHub P0496 baseline
+`df6bae8e`, tree `c36b823` verified; 16 existing changed source
+blobs checked against GitHub and P0496 shipped payload; two new files
+have no prior baseline. All **358/358 historical Python static contracts**
+PASS sequentially with zero failures (first full source audit).
+P0496 actual-source native aura and P0488 recovery fixtures PASS.
+Native HELPFUL first-row anchor fixture now also asserts missing-anchor
+fail-open, native OOC/combat continuity, and independent preview.
+`check_memory_health.py` PASS 0 errors/0 warnings.
+`git diff --no-index --check` on reconstructed P0496 baseline and
+P0497 candidate PASS (only expected path differences, no whitespace
+errors). Preliminary guarded ZIP payload parity (18/18), stage/rollback,
+wrong HEAD and tampered-source/payload refusal PASS. New native frame
+is still a Blizzard-managed data consumer: no Lua secret reads or new
+protected native writes. All client visual behavior UNVERIFIED pending
+WoW test; L-054 and L-057 remain OPEN. Exact-final payload recheck
+will follow archive rebuild with this receipt.

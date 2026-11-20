@@ -8,16 +8,16 @@ N=(R/'Logres/HUD/NativeDebuffs.lua').read_text()
 F=(R/'Logres/Immersion/NativeSurfaceReplacement.lua').read_text()
 U=(R/'Logres/HUD/HUD.lua').read_text()
 P=(R/'Logres/Dev/Panel.lua').read_text()
-for frag in ('function Native.CreatePlayerHelpfulMirror()',
+for frag in ('function Native.CreatePlayerHelpfulMirror(anchor)',
              'CreateFrame("AuraContainer", "LogresNativePlayerHelpfulGrid"',
              '"CustomAuraContainerTemplate"',
              'frame:AddAuraGroup("LogresPlayerHelpful", "HELPFUL"',
              'frame:SetUnit("player")','frame:SetEnabled(true)',
              'frame:UpdateAllAuras()', 'frame:Show()',
-             'Logres.Layout.Bind(frame, "passiveStatus", "LEFT", "CENTER")'):
+             'frame:SetPoint("BOTTOMLEFT", anchor, "LEFT", 0, -iconSize / 2)'):
     assert frag in N, frag
 for frag in ('function HelpfulAuras:PrepareNativeHelpful()',
-             'native.CreatePlayerHelpfulMirror()',
+             'native.CreatePlayerHelpfulMirror(self.root)',
              'self.nativeHelpfulActive = true',
              'and (self.nativeHelpfulActive ~= true or self.previewEnabled == true)',
              'if not self.nativeHelpfulActive then',
