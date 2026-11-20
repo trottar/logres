@@ -118,6 +118,14 @@ Interactive quest-item HUD request is future-only in
 `POST_P0474_WORKSTREAMS.md`, not implemented here.
 Evidence: `docs/memory/evidence/P0491_SECURE_ACTION_COMBAT_REVEAL.md`.
 
+## P0498 — Quest stage handoff and action event evidence (2026-11-20)
+
+Main P0497 `4a3437ce2716`. L-002: guarded ordinary same-quest
+Progress→Completion native-restoration token transfer; native claim
+restoration unchanged; unsupported/changed protected state fails open.
+L-055: one-only combat-bar report; read-only combat transition counters,
+no polling or visual mutation. See P0498 evidence. WoW UNVERIFIED.
+
 ## P0485 — Correct missing optional QuestieDB fields and Report Bug eligibility detail (2026-11-18)
 
 P0484 main `3277132` verified/tree `8254cac`; Forever session168

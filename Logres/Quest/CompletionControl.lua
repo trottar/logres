@@ -150,6 +150,7 @@ function Control:Restore(reason)
 end
 
 function Control:Activate()
+    local progressBridge = self.dialogue.progressCompletionBridge
     if self.applied then return true, "applied" end
     self.actionRoot:Hide()
     local supported, reason, choiceCount = self:Gate()
@@ -167,12 +168,27 @@ function Control:Activate()
         self.lastReason = "stock-restoration-unavailable"
         return false, self.lastReason
     end
-    local captureOK, snapshot, captureReason = pcall(
-        module.CaptureOfferPresentation, module
-    )
-    if not captureOK or not snapshot or not snapshot.mouseFrames then
-        self.lastReason = captureReason or "stock-capture-unavailable"
-        return false, self.lastReason
+    -- A verified progress-to-completion bridge already suppressed the
+    -- EXACT same native subtree and carries its original restoration token.
+    -- For other stages, capture and suppress stock as before.
+    local snapshot, captureReason
+    if progressBridge then
+        if progressBridge.module ~= module
+            or progressBridge.questID ~= self.dialogue.lastQuestID
+            or type(progressBridge.snapshot) ~= "table" then
+            self.lastReason = "progress-bridge-identity-changed"
+            return false, self.lastReason
+        end
+        snapshot = progressBridge.snapshot
+    else
+        local captureOK
+        captureOK, snapshot, captureReason = pcall(
+            module.CaptureOfferPresentation, module
+        )
+        if not captureOK or not snapshot or not snapshot.mouseFrames then
+            self.lastReason = captureReason or "stock-capture-unavailable"
+            return false, self.lastReason
+        end
     end
     -- Do not suppress any potentially protected frame, even outside combat.
     for i = 1, #snapshot.mouseFrames do
@@ -189,7 +205,8 @@ function Control:Activate()
     end
     self.stockModule = module
     self.snapshot = snapshot
-    local suppressOK = pcall(module.SuppressOfferPresentation, module, snapshot)
+    local suppressOK = progressBridge ~= nil
+        or pcall(module.SuppressOfferPresentation, module, snapshot)
     if not suppressOK then
         self.applied = true  -- force restoration of any partial mutation
         self:Restore("suppression-failed")

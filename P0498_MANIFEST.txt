@@ -1,0 +1,29 @@
+P0498 Verified progress-to-completion native handoff with read-only action combat telemetry
+Verified baseline: 4a3437ce2716ce6f449e6299640034f565571cdc
+Candidate runtime version: 0.0.364-dev
+PREWRITE: 359/359 STATIC PASS
+POSTWRITE: 359/359 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Actions/Context.lua
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Quest/CompletionControl.lua
+Logres/Quest/Dialogue.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0498_QUEST_STAGE_BRIDGE_AND_ACTION_EVENTS.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0498_stage_bridge_action_events_contract.py
+tools/test_p0498_quest_bridge.lua
+P0498_MANIFEST.txt

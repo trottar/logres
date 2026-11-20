@@ -581,6 +581,99 @@ function Dialogue:BeginNativeQuestHandoff(reason)
     return handoff
 end
 
+-- P0498: Blizzard emits QUEST_FINISHED before QUEST_COMPLETE in the
+-- observed native Continue handoff. Retain an ORIGINAL, pre-suppression
+-- restoration token only for an owned Continue already in flight; no new
+-- visual or mouse owner is created. Release it on timeout/unrelated events.
+function Dialogue:BeginProgressCompletionBridge()
+    if not self.progressOwned or not self.progressContinuePending
+        or not self.progressStockModule or not self.progressStockSnapshot
+        or not self.timerAvailable then return nil, "not-pending-progress" end
+    -- This token was read and guarded during the progress stage, not read
+    -- from a potentially secret value while QUEST_FINISHED is dispatching.
+    local questID = self.lastQuestID
+    if type(questID) ~= "number" or questID <= 0
+        or questID ~= questID or questID == math.huge then
+        return nil, "progress-identity-unavailable"
+    end
+    local module, snapshot = self.progressStockModule, self.progressStockSnapshot
+    local gateOK, eligible = pcall(module.CanBridgeVisual, module, snapshot)
+    if not gateOK or eligible ~= true then
+        return nil, "bridge-protection-unavailable"
+    end
+    local bridge = {module = module, snapshot = snapshot, questID = questID}
+    -- One short fail-open release: no polling or repeated reassertion.
+    -- The current native subtree is validated only at QUEST_COMPLETE,
+    -- after the client's stage transition has populated it.
+    local scheduled = pcall(C_Timer.After, 0.05, function()
+        if self.progressCompletionBridge == bridge then
+            self:EndProgressCompletionBridge("bridge-abandoned")
+        end
+    end)
+    if not scheduled then return nil, "bridge-timer-unavailable" end
+    self.progressCompletionBridge = bridge
+    self.progressStockModule = nil
+    self.progressStockSnapshot = nil
+    self.progressOwned = false
+    self.progressContinuePending = false
+    self.progressBridgeHeldCount = (self.progressBridgeHeldCount or 0) + 1
+    Logres:TraceEvent("quest", "progress-completion-bridge-held",
+        {questID = questID, result = "pending-next-stage"})
+    return bridge, "held"
+end
+
+function Dialogue:ValidateProgressCompletionBridge(bridge)
+    if not bridge or self.progressCompletionBridge ~= bridge then
+        return false, "bridge-no-longer-owned"
+    end
+    local questID, idError = readQuestID()
+    if idError or questID ~= bridge.questID then
+        return false, "progress-quest-changed"
+    end
+    local module, snapshot = bridge.module, bridge.snapshot
+    local gateOK, eligible = pcall(module.CanBridgeVisual, module, snapshot)
+    if not gateOK or eligible ~= true then
+        return false, "bridge-protection-unavailable"
+    end
+    -- Capture is READ-ONLY; the captured native alpha at this point is
+    -- suppressed and must NEVER replace our original restoration token.
+    local captureOK, current = pcall(module.CaptureOfferPresentation, module)
+    if not captureOK or not current or type(current.mouseFrames) ~= "table"
+        or current.frame ~= snapshot.frame
+        or #current.mouseFrames ~= #snapshot.mouseFrames then
+        return false, "bridge-subtree-changed"
+    end
+    for index = 1, #snapshot.mouseFrames do
+        if current.mouseFrames[index].frame ~= snapshot.mouseFrames[index].frame then
+            return false, "bridge-child-changed"
+        end
+    end
+    return true, "same-quest-subtree-verified"
+end
+
+function Dialogue:EndProgressCompletionBridge(reason, adopted)
+    local bridge = self.progressCompletionBridge
+    if not bridge then return true, "no-bridge" end
+    self.progressCompletionBridge = nil
+    if adopted == true then
+        self.progressBridgeAdoptedCount = (self.progressBridgeAdoptedCount or 0) + 1
+        Logres:TraceEvent("quest", "progress-completion-bridge-adopted",
+            {questID = bridge.questID})
+        return true, "adopted"
+    end
+    local ok = pcall(bridge.module.RestoreOfferPresentation,
+        bridge.module, bridge.snapshot)
+    if not ok then
+        local called, restored = pcall(bridge.module.EmergencyRestoreOfferPresentation,
+            bridge.module, bridge.snapshot)
+        ok = called and restored == true
+    end
+    self.progressBridgeRestoreCount = (self.progressBridgeRestoreCount or 0) + 1
+    Logres:TraceEvent("quest", "progress-completion-bridge-restored",
+        {reason = reason or "fallback", result = ok and "restored" or "restore-failed"})
+    return ok, ok and "restored" or "restore-failed"
+end
+
 function Dialogue:ProgressGate()
     if not self.moduleEnabled or not self.immersionEnabled
         or not self.progressActive or not self.presentationShown
@@ -743,8 +836,8 @@ function Dialogue:HandleProgressContinue()
             {result = "native-call-failed"})
         return false, "native-call-failed"
     end
-    -- QUEST_FINISHED or QUEST_COMPLETE restores the native snapshot on the
-    -- ordinary ClearActiveDetail path before releasing replacement input.
+    -- QUEST_FINISHED restores stock; a verified same-quest QUEST_COMPLETE
+    -- may transfer the original snapshot into its guarded completion owner.
     -- A single bounded fallback handles a native call without either event;
     -- no OnUpdate or repeated polling, no permanent hidden stock controls.
     local scheduled = pcall(C_Timer.After, 1.5, function()
@@ -1497,6 +1590,22 @@ function Dialogue:HandleQuestComplete()
     if not self.restoringCompletion then
         self.completeEventCount = self.completeEventCount + 1
     end
+    local bridge = self.progressCompletionBridge
+    if not self.restoringCompletion then
+        -- The usual path was held at QUEST_FINISHED; handle clients which
+        -- go directly from an owned Continue to QUEST_COMPLETE as well.
+        if not bridge then bridge = self:BeginProgressCompletionBridge() end
+        if bridge then
+            local valid, why = self:ValidateProgressCompletionBridge(bridge)
+            if not valid then
+                self:EndProgressCompletionBridge(why)
+                bridge = nil
+            end
+        end
+    elseif bridge then
+        self:EndProgressCompletionBridge("preference-representation")
+        bridge = nil
+    end
     self:ClearActiveDetail("QUEST_COMPLETE")
     self.lastCompletionEnterMap = nil
     self.lastCompletionDownMap = nil
@@ -1506,6 +1615,7 @@ function Dialogue:HandleQuestComplete()
         self.completionSkippedCount = self.completionSkippedCount + 1
         self.lastCompletionReason = reason or "completion-unavailable"
         self.lastCompletionSecret = secret == true
+        self:EndProgressCompletionBridge("completion-unavailable")
         Logres:TraceEvent("quest", "completion-unavailable",
             {reason = reason or "source-unavailable"})
         return
@@ -1526,6 +1636,7 @@ function Dialogue:HandleQuestComplete()
     if not self.immersionEnabled then
         self.suppressedCount = self.suppressedCount + 1
         self.lastCompletionReason = "immersion-off"
+        self:EndProgressCompletionBridge("immersion-off")
         return
     end
 
@@ -1563,6 +1674,11 @@ function Dialogue:HandleQuestComplete()
             self.acceptButton:Hide()
             self.declineButton:Hide()
             local applied, controlReason = self.completionControl:Activate()
+            -- On adoption the completion controller owns the ORIGINAL
+            -- pre-progress stock snapshot. On failure release native input
+            -- before exposing the explicit stock fallback.
+            self:EndProgressCompletionBridge(
+                controlReason or "completion-gate", applied and bridge ~= nil)
             self.completionFallbackActive = not applied
             Logres:TraceEvent("quest",
                 applied and "completion-owned" or "completion-stock-fallback",
@@ -1642,6 +1758,8 @@ function Dialogue:HandleQuestComplete()
         self.completionSkippedCount = self.completionSkippedCount + 1
         self.lastCompletionReason = state or "presentation-unavailable"
     end
+    -- Includes the no-controller branch; never strand a held snapshot.
+    self:EndProgressCompletionBridge("completion-presentation-exit")
     self.lastCompletionSecret = false
 end
 
@@ -2380,6 +2498,10 @@ function Dialogue:GetDebugStatus()
         -- never inspect protected Blizzard QuestFrame presentation state.
         nativeHandoffPending = self.nativeQuestHandoff ~= nil,
         nativeHandoffHeldCount = self.nativeHandoffHeldCount,
+        progressBridgeHeldCount = self.progressBridgeHeldCount,
+        progressBridgeAdoptedCount = self.progressBridgeAdoptedCount,
+        progressBridgeRestoreCount = self.progressBridgeRestoreCount,
+        progressBridgePending = self.progressCompletionBridge ~= nil,
         nativeHandoffRestoreCount = self.nativeHandoffRestoreCount,
         lastNativeHandoffReason = self.lastNativeHandoffReason,
         lastNativeHandoffResult = self.lastNativeHandoffResult,
@@ -2495,6 +2617,10 @@ function Dialogue:OnInitialize()
     self.lastStockOfferSuppressionResult = "initialize"
     self.nativeHandoffHeldCount = 0
     self.nativeHandoffRestoreCount = 0
+    self.progressCompletionBridge = nil
+    self.progressBridgeHeldCount = 0
+    self.progressBridgeAdoptedCount = 0
+    self.progressBridgeRestoreCount = 0
     self.lastNativeHandoffReason = "initialize"
     self.lastNativeHandoffResult = "initialize"
 
@@ -2944,6 +3070,14 @@ function Dialogue:OnInitialize()
                 return
             end
 
+            -- A pending Progress→Completion bridge belongs to ONLY the
+            -- next QUEST_COMPLETE. Any different lifecycle event releases
+            -- Blizzard input before selecting that event's presentation.
+            if self.progressCompletionBridge and event ~= "QUEST_COMPLETE"
+                and event ~= "GET_ITEM_INFO_RECEIVED"
+                and event ~= "ITEM_DATA_LOAD_RESULT" then
+                self:EndProgressCompletionBridge("different-event:" .. event)
+            end
             if (event == "QUEST_GREETING" or event == "QUEST_DETAIL"
                 or event == "QUEST_PROGRESS" or event == "QUEST_COMPLETE"
                 or event == "PLAYER_ENTERING_WORLD")
@@ -3057,6 +3191,10 @@ function Dialogue:OnInitialize()
             if event == "QUEST_FINISHED" then
                 self.finishedEventCount =
                     self.finishedEventCount + 1
+                -- Logres's former ClearActiveDetail restored native alpha
+                -- here before the next QUEST_COMPLETE could claim the UI.
+                -- Arm only when the user invoked owned Continue.
+                self:BeginProgressCompletionBridge()
                 self:ClearActiveDetail(
                     "QUEST_FINISHED"
                 )
@@ -3092,6 +3230,7 @@ function Dialogue:OnEnable()
 end
 
 function Dialogue:OnDisable()
+    self:EndProgressCompletionBridge("dialogue-disabled")
     self:EndNativeQuestHandoff("dialogue-disabled")
     self.moduleEnabled = false
     self.pendingAcceptedOfferQuestID = nil

@@ -205,7 +205,9 @@ function Logres:CaptureBugIncident()
         "hoverEnterCount", "hoverLeaveCount", "secureDriverReady",
         "secureFeedbackRefs", "secureDriverLastResult", "protectedRootSkips",
         "postCombatReconciles", "postCombatHoverRepairs",
-        "postCombatHoverUnknown", "postCombatLastResult"})
+        "postCombatHoverUnknown", "postCombatLastResult",
+        "combatEnteredEvents", "combatLeftEvents", "combatEventLastPolicy",
+        "combatEventLastDriver"})
     incident.snapshot.activeQuest = pickTraceStatus(ownedTraceStatus(function()
         return self:GetModule("ActiveQuest"):GetDebugStatus()
     end), {"presentationShown", "lastQuestID", "previewMode",
@@ -500,6 +502,8 @@ function Logres:CaptureBugIncident()
         "turninEventCount", "lastTurninQuestID",
         "questTurnedInRegistered", "nativeHandoffPending",
         "nativeHandoffHeldCount", "nativeHandoffRestoreCount",
+        "progressBridgeHeldCount", "progressBridgeAdoptedCount",
+        "progressBridgeRestoreCount", "progressBridgePending",
         "lastNativeHandoffReason", "lastNativeHandoffResult",
         "stockOfferSuppressionApplied", "lastStockOfferSuppressionResult",
         "progressActive", "progressOwned", "completionActive",

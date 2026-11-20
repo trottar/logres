@@ -13,21 +13,21 @@ Alpha blocked. D-046/D-047/D-048.
 
 **P0486** q35 PASS; P0487 PASS.
 P0489 PASS; P0490 hover PASS/combat FAIL.
-P0491 OOC0/side85; P0492 fade; P0493 sibling; P0494 tags; L-055 OPEN.
-L-056 target BLOCKED.
-**P0488** L-054 P0496 combat works/placement FAIL; P0497 OPEN. L-057 cue overlap. L-030 q37 PASS.
+P0491–P0494 bars; P0498 event trace; L-055 INTERMITTENT OPEN.
+L-056 BLOCKED.
+**P0488** L-054 P0497 layout PASS; L-057 cast-above PASS scoped. L-030 q37 PASS.
 **P0485** FAIL retained.
 **P0484** FAIL; **P0483** turn PARTIAL; **P0482** est2/3/native3/4.
-P0476 floor; P0477 hide; P0478 VISUAL FAIL,
+P0476–P0478 VISUAL FAIL,
 P0479 FAIL retained.
 L-002 OPEN.
 P0473 FAIL; P0474 scoped PASS; L-037 PARTIAL.
 Preserve world HP/aura/50-50, chat SHOW, quest/stock fallback.
-P0460 HP PASS; P0461 aura FAIL; P0457 selected PASS;
-P0454/P0455 secondary 50/50 VISUAL FAIL; P0456 suspended.
+P0460 HP PASS; P0461 aura FAIL; P0457 PASS;
+P0454/P0455 secondary 50/50 VISUAL FAIL; P0456 held.
 P0458/P0459 FAIL.
 P0425 visual PASS; P0442/P0443 FAIL; P0449 aura PASS;
-P0450 duplicate FAIL; P0463 FAIL; P0464 style FAIL.
+P0450 duplicate FAIL; P0463/64 FAIL.
 L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 UNVERIFIED.
 
 ## Verified State
@@ -67,7 +67,7 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 UNVERIFIED.
 ## Next Action
 
 P0494 L-055 key labels/alpha-isolation visual gate; L-056 blocked.
-P0497 L-054 buff anchor/L-057 cast-above client gate; L-030/L-002 OPEN.
+P0497 visual user PASS; P0498 L-002 quest bridge client gate; L-055 event trace OPEN.
 
 ## Success Criteria
 
@@ -77,6 +77,7 @@ P0409 R1 user PASS. P0404 layout PASS; P0403 unverified.
 Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret reads.
 
 ## Relevant References
+- docs/memory/evidence/P0498_QUEST_STAGE_BRIDGE_AND_ACTION_EVENTS.md
 - docs/memory/evidence/P0497_AURA_ANCHOR_WORLD_CAST_PLACEMENT.md
 - docs/memory/evidence/P0496_NATIVE_BUFF_AND_WORLD_CAST.md
 - docs/memory/evidence/P0494_KEYBIND_BUTTON_OWNER.md

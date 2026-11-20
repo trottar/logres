@@ -1,3 +1,11 @@
+## P0498 — Quest stage handoff and action event evidence (2026-11-20)
+
+Main P0497 `4a3437ce2716`. L-002: guarded ordinary same-quest
+Progress→Completion native-restoration token transfer; native claim
+restoration unchanged; unsupported/changed protected state fails open.
+L-055: one-only combat-bar report; read-only combat transition counters,
+no polling or visual mutation. See P0498 evidence. WoW UNVERIFIED.
+
 ## P0486 — Ordinary Classic quest flags are not offer gates (2026-11-18)
 
 P0485 main `4de7567`/tree `a7ce0a0`. Forever session169

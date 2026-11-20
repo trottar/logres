@@ -1,3 +1,68 @@
+## P0498 — L-002 verified Progress→Completion bridge; L-055 combat event evidence (2026-11-20)
+
+Authority: GitHub main P0497 `4a3437ce2716ce6f449e6299640034f565571cdc`, tree
+`ed9809900238cdb6cbe19e9803a2b06179708d05`. All modified baseline
+source blobs verified against that remote tree; unchanged stock claim
+restore-first invariants P0251/P0377 and P0382, P0389/P0390, D-048,
+action C.4 and memory budgets read before patch.
+
+Observed: Forever P0497 session183 quest88 #18896–#18905 progress
+Continue / QUEST_FINISHED / QUEST_COMPLETE native restore precedes
+completion-owned within same second. User reports subsecond stock flash;
+timestamp does not prove which pixel displayed. Claim #18917 restore-
+before-handler and #18918 held confirmed; claim behavior deliberately
+unchanged. Single unrepeatable combat bars absence: #18858/#18860
+`ActionContext.policyName=combat`, snapshot `state.combat=false`; no
+causal attribution. L-002 OPEN, L-055 OPEN/INTERMITTENT/UNREPRODUCED.
+
+P0498 proposal: copy no protected state or secret values, transfer only
+the exact ordinary pre-progress native restoration token over matching
+same-quest same-child-subtree Progress→Completion. Existing native claim
+handler gets restored native mouse+alpha before invocation; unsupported
+or changed state fails open. One-shot 0.05s abandoned-transfer release;
+no OnUpdate/polling or native root Hide. P0498 ActionContext adds only
+regen transition counts/ordinary owner policy+driver diagnostics, and
+DevPanel incident selects them and the quest bridge outcome counters.
+
+Assistant test evidence: actual-source `tools/test_p0498_quest_bridge.lua`
+PASS: successful token adoption without restore gap, full
+`HandleQuestComplete()` event orchestration, native claim full restore,
+quest mismatch, changed subtree refusal, unsupported completion,
+abandoned transfer timer fallback. Changed Lua parsed with texlua; memory
+health initially PASS. Negative checkers explicitly preserved:
+(a) initial `check_checker_version_policy` failed a hard-coded runtime
+version in new checker; replaced with Bootstrap/TOC parity, targeted PASS;
+(b) initial `check_p0381_integrated_gameplay_contract.py` rejected new
+P0498 heading ahead of required `P0486` in four roadmap files;
+restored `P0486` top and inserted P0498 note behind it, targeted PASS;
+(c) initial complete historical run 358/359 FAILED at
+`check_p0459_hostile_plate_skin_contract.py` after over-trimming CURRENT
+`P0459`; restored marker within byte budget, targeted PASS. (d) the first parallel complete corrected-candidate run was 356/359,
+with P0491/P0492/P0493 actual-source fixtures failing because their
+standalone Logres mock intentionally had no developer-panel `TraceEvent`.
+P0498 now gates optional journal calls on the journal method being
+available; the addon-owned regen counters and incident snapshot fields
+remain active. All three named historical checks PASS on targeted rerun.
+(e) review of the exact live session183 event order exposed a deeper
+functional error in the initial candidate: it armed the progress
+bridge inside QUEST_COMPLETE, but QUEST_FINISHED had already restored
+native presentation. That unshipped candidate could not cover the
+reported flash. Reworked to arm on QUEST_FINISHED and validate/transfer
+only on QUEST_COMPLETE, with mismatch/unrelated-event/timeout fail-open;
+actual-source fixture now tests the observed two-event sequence.
+None of these failures was an in-game result; no contract was weakened.
+
+Corrected full 359-check historical audit: **359/359 STATIC PASS**
+(five-worker isolated subprocess audit, 2026-11-20). Changed-source Lua
+syntax and the actual-source P0498 bridge/claim fixture PASS. No static
+errors remain after the recorded failed candidates and corrections.
+Exact ZIP payload integrity: **18/18 hashes and candidate bytes PASS**;
+transactional rollback, payload tamper, wrong HEAD/tree baseline
+refusal: **PASS**. These tests were independently repeated against the
+final archive before handoff; the full historical checker suite was
+also rerun on the extracted final payload. No Git commit or push.
+WoW client runtime: **UNVERIFIED**. Do not mark L-002 or L-055 PASS.
+
 ## P0492 — L-055 post-combat fade and incident evidence audit (2026-11-18)
 
 Verified P0491 GitHub main `3f579042972f`/tree `9c14b663b0`.

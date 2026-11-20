@@ -47,10 +47,38 @@ local Context = Logres:RegisterModule("ActionContext", {
         self.postCombatHoverRepairs = 0
         self.postCombatHoverUnknown = 0
         self.postCombatLastResult = "not-attempted"
+        -- Read-only transition evidence; no protected frame attributes,
+        -- native state, or secure snippets are inspected or modified.
+        self.combatEnteredEvents = 0
+        self.combatLeftEvents = 0
+        self.combatEventLastPolicy = "none"
+        self.combatEventLastDriver = "none"
         self.disableEventFrame = CreateFrame("Frame")
         self.disableEventFrame:SetScript("OnEvent", function(_, event)
+            if event == "PLAYER_REGEN_DISABLED" then
+                if not self:IsEnabled() then return end
+                self.combatEnteredEvents = self.combatEnteredEvents + 1
+                self.combatEventLastPolicy = self.policyName or "none"
+                self.combatEventLastDriver = self.secureDriverLastResult or "none"
+                if type(Logres.TraceEvent) == "function" then
+                    Logres:TraceEvent("action", "combat-enter-observed", {
+                        result = self.combatEventLastPolicy,
+                        reason = self.combatEventLastDriver,
+                    })
+                end
+                return
+            end
             if event ~= "PLAYER_REGEN_ENABLED"
                 or (InCombatLockdown and InCombatLockdown()) then return end
+            self.combatLeftEvents = self.combatLeftEvents + 1
+            self.combatEventLastPolicy = self.policyName or "none"
+            self.combatEventLastDriver = self.secureDriverLastResult or "none"
+            if type(Logres.TraceEvent) == "function" then
+                Logres:TraceEvent("action", "combat-exit-observed", {
+                    result = self.combatEventLastPolicy,
+                    reason = self.combatEventLastDriver,
+                })
+            end
             if self.pendingDisableReconcile == true then
                 self:FinishPendingDisable()
             elseif self.hoverEffectsEnabled == true and self:IsEnabled() then
@@ -64,6 +92,7 @@ local Context = Logres:RegisterModule("ActionContext", {
         -- Active modules also need an OOC recovery event. A state callback
         -- can run before secure combat lockdown actually lifts.
         self.disableEventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+        self.disableEventFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
         self.hoverEffectsEnabled = true
         self:InstallHoverHooks()
         self:InstallCombatDriver()
@@ -96,6 +125,7 @@ function Context:FinishPendingDisable()
     end
     self.pendingDisableReconcile = false
     self.disableEventFrame:UnregisterEvent("PLAYER_REGEN_ENABLED")
+    self.disableEventFrame:UnregisterEvent("PLAYER_REGEN_DISABLED")
     if self.secureDriverReady and self.combatDriver then
         UnregisterStateDriver(self.combatDriver, "logrescombat")
         self.secureDriverReady = false
@@ -492,6 +522,10 @@ function Context:GetDebugStatus()
         secureDriverReady = self.secureDriverReady == true,
         secureFeedbackRefs = self.secureFeedbackRefs,
         secureDriverLastResult = self.secureDriverLastResult,
+        combatEnteredEvents = self.combatEnteredEvents,
+        combatLeftEvents = self.combatLeftEvents,
+        combatEventLastPolicy = self.combatEventLastPolicy,
+        combatEventLastDriver = self.combatEventLastDriver,
         protectedRootSkips = self.protectedRootSkips,
         postCombatReconciles = self.postCombatReconciles,
         postCombatHoverRepairs = self.postCombatHoverRepairs,

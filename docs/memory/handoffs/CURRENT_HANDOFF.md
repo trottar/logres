@@ -2,7 +2,8 @@
 # P0490 hover PASS/combat FAIL; P0491 reveal PASS/fade FAIL.
 # P0492 fade; P0493 sibling, P0494 tags.
 # OOC0; combat main/Bar4=1, side/pet=.85, utility/Bar5=.75.
-# P0497: L-054 native works/position FAIL; L-057 cast above OPEN.
+# P0497 visual PASS scoped; P0498 L-002 stage bridge UNVERIFIED.
+# L-055 intermittent combat bars, P0498 telemetry only.
 # L-056 BLOCKED protected.
 # P0485: sparse DB client FAIL.
 # P0484: quest35 FAIL.
@@ -70,7 +71,7 @@ P0390, P0389, P0388 L-027, P0387, P0384 `c1c77e2` 254 STATIC;
 P0383 `cc783a0` quest18 PASS scoped; P0382 Continue; L-040:**
 P0379 `285be528` 249 STATIC; #2399 no input dispatch;
 L-005 PARTIAL, L-002 native OPEN; L-039 UNKNOWN.
-P0381 R0 PREWRITE REFUSED P0241 (77/251) on protected quest handoff;
+P0381 R0 REFUSED P0241;
 P0380 R0–R4 history retained; P0379 R0, P0379 R1 PREWRITE REFUSED;
 no writes. See CURRENT/P0379 evidence for precise negative results.
 
