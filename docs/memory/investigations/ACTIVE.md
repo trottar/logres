@@ -12,6 +12,21 @@ all compass 2/3- and 3/4yd behavior unchanged. P0485 gameplay FAIL,
 L-030 OPEN/PARTIAL, P0486 client UNVERIFIED. Evidence:
 `docs/memory/evidence/P0486_INFORMATIONAL_QUEST_FLAGS.md`.
 
+## P0501 — L-002 guarded dynamic Progress → Completion ownership (2026-11-20)
+
+P0500 main `e3eb5a7` verified. Forever session186 Quest83 event #19422
+`bridge-subtree-changed` and #19481 `bridge-child-changed` showed P0498
+rejecting changed native descendants before a successfully owned completion.
+P0501 keeps the original opaque root alpha and original child mouse tokens;
+when the same-quest subtree changes, separately captures and protection-gates
+all current children, merges identity-unique restoration tokens (max 512),
+then suppresses the current child set before the Logres completion controller
+adopts it. On any unsupported/changed/unsafe state it restores the union,
+including newly created native click regions; reward claim still restores
+stock before dispatch. No polling, protected or secret inspection, or
+Blizzard root hiding. L-002 OPEN: client transition/claim flash unverified.
+Corpse L-058, bags L-059 and action L-055 unchanged. See evidence P0501.
+
 ## P0500 — L-058 corpse compass and L-059 bag-slot access (2026-11-20)
 
 P0499 main `c5f0aad` verified; user sees stable combat bars in current

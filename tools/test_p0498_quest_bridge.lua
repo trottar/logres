@@ -40,13 +40,28 @@ local snap={frame=native,alpha=native.alpha,mouseFrames={
 }}
 local suppressed,captured,restored=0,0,0
 local changedChild=false
+local changedFrame=frame()
+changedFrame.IsProtected=function() return true end
+local stageChildren=nil
 local stock={}
-function stock:CanBridgeVisual(_)return true end
+function stock:CanBridgeVisual(snapshot)
+    for _,entry in ipairs(snapshot.mouseFrames) do
+        if entry.frame:IsProtected() then return false end
+    end
+    return true
+end
 function stock:CaptureOfferPresentation()
     captured=captured+1
-    return {frame=native,mouseFrames={
-        {frame=native},{frame=changedChild and frame() or child}
-    }}
+    local entries={{frame=native,mouseEnabled=native.mouse}}
+    if stageChildren then
+        for _,f in ipairs(stageChildren) do
+            entries[#entries+1]={frame=f,mouseEnabled=f.mouse}
+        end
+    else
+        local f=changedChild and changedFrame or child
+        entries[#entries+1]={frame=f,mouseEnabled=f.mouse}
+    end
+    return {frame=native,alpha=native.alpha,mouseFrames=entries}
 end
 function stock:SuppressOfferPresentation(s)
     suppressed=suppressed+1
@@ -112,10 +127,60 @@ d=makeDialogue()
 bridge=d:BeginProgressCompletionBridge()
 assert(bridge and native.alpha==0)
 local allowed,reason=d:ValidateProgressCompletionBridge(bridge)
-assert(not allowed and reason=='bridge-child-changed')
+assert(not allowed and reason=='bridge-changed-child-unsafe')
 assert(d:EndProgressCompletionBridge('changed-subtree'))
 assert(native.alpha==0.61 and native.mouse and child.mouse)
 changedChild=false
+-- P0501: safe dynamic completion children can be adopted; original opaque
+-- alpha/mouse tokens survive, new child mouse state is captured before
+-- its input is disabled, and all controls are restored before claim.
+local extra=frame()
+local successCount=0
+stageChildren={child,extra}
+d=makeDialogue()
+bridge=d:BeginProgressCompletionBridge()
+assert(bridge and native.alpha==0 and child.mouse==false and extra.mouse==true)
+allowed,reason=d:ValidateProgressCompletionBridge(bridge)
+assert(allowed and reason=='same-quest-subtree-rebased' and extra.mouse==false)
+assert(bridge.snapshot.alpha==snap.alpha and #bridge.snapshot.mouseFrames==3)
+assert(bridge.snapshot.mouseFrames[2].mouseEnabled==true
+    and bridge.snapshot.mouseFrames[3].mouseEnabled==true)
+control=Control.New(d,frame())
+control.Gate=function()return true,'supported',0 end
+assert(control:Activate())
+assert(control.snapshot==bridge.snapshot)
+assert(d:EndProgressCompletionBridge('adopted',true))
+QuestRewardCompleteButton_OnClick=function()
+    assert(native.alpha==0.61 and child.mouse==true and extra.mouse==true)
+    successCount=successCount+1
+end
+assert(control:Click() and successCount==1)
+-- Child replacement (equal count but different identities) is also supported
+-- when the replacement is ordinary and fully nonprotected.
+local replacement=frame()
+stageChildren={replacement}
+d=makeDialogue();bridge=d:BeginProgressCompletionBridge()
+allowed,reason=d:ValidateProgressCompletionBridge(bridge)
+assert(allowed and reason=='same-quest-subtree-rebased')
+assert(replacement.mouse==false and #bridge.snapshot.mouseFrames==3)
+assert(d:EndProgressCompletionBridge('cancelled'))
+assert(replacement.mouse==true and child.mouse==true and native.alpha==0.61)
+-- A changed subtree that cannot be suppressed must restore the merged
+-- snapshot, not leave a newly created invisible mouse target behind.
+local interrupted=frame()
+stageChildren={child,interrupted}
+d=makeDialogue();bridge=d:BeginProgressCompletionBridge()
+local suppress=stock.SuppressOfferPresentation
+stock.SuppressOfferPresentation=function(self,s)
+    s.mouseFrames[#s.mouseFrames].frame:EnableMouse(false)
+    error('injected suppression failure')
+end
+allowed,reason=d:ValidateProgressCompletionBridge(bridge)
+assert(not allowed and reason=='bridge-rebase-suppress-failed')
+assert(d:EndProgressCompletionBridge(reason))
+assert(interrupted.mouse and child.mouse and native.mouse and native.alpha==0.61)
+stock.SuppressOfferPresentation=suppress
+stageChildren=nil
 -- If the completion gate rejects, restore pre-progress stock first.
 d=makeDialogue()
 bridge=d:BeginProgressCompletionBridge()

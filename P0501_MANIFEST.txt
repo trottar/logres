@@ -1,0 +1,27 @@
+P0501 guarded quest stage dynamic child rebase
+Verified baseline: e3eb5a7887858e6146fef184e5018fb368dd4fb8
+Candidate runtime version: 0.0.367-dev
+PREWRITE: 362/362 STATIC PASS
+POSTWRITE: 362/362 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Quest/Dialogue.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0501_QUEST_STAGE_DYNAMIC_CHILD_REBASE.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0501_dynamic_quest_bridge_contract.py
+tools/test_p0498_quest_bridge.lua
+P0501_MANIFEST.txt

@@ -513,6 +513,7 @@ function Logres:CaptureBugIncident()
         "nativeHandoffHeldCount", "nativeHandoffRestoreCount",
         "progressBridgeHeldCount", "progressBridgeAdoptedCount",
         "progressBridgeRestoreCount", "progressBridgePending",
+        "progressBridgeRebaseCount", "progressBridgeNewChildCount",
         "lastNativeHandoffReason", "lastNativeHandoffResult",
         "stockOfferSuppressionApplied", "lastStockOfferSuppressionResult",
         "progressActive", "progressOwned", "completionActive",

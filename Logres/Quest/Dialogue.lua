@@ -639,16 +639,72 @@ function Dialogue:ValidateProgressCompletionBridge(bridge)
     -- suppressed and must NEVER replace our original restoration token.
     local captureOK, current = pcall(module.CaptureOfferPresentation, module)
     if not captureOK or not current or type(current.mouseFrames) ~= "table"
-        or current.frame ~= snapshot.frame
-        or #current.mouseFrames ~= #snapshot.mouseFrames then
-        return false, "bridge-subtree-changed"
+        or current.frame ~= snapshot.frame then
+        return false, "bridge-subtree-unavailable"
     end
-    for index = 1, #snapshot.mouseFrames do
-        if current.mouseFrames[index].frame ~= snapshot.mouseFrames[index].frame then
-            return false, "bridge-child-changed"
+    -- Native Progress and Completion can legitimately have different child
+    -- populations. Retain the fast identity path, but do not expose stock
+    -- merely because a new, ordinary nonprotected child appeared.
+    local changed = current.frame ~= snapshot.frame
+        or #current.mouseFrames ~= #snapshot.mouseFrames
+    if not changed then
+        for index = 1, #snapshot.mouseFrames do
+            if current.mouseFrames[index].frame ~= snapshot.mouseFrames[index].frame then
+                changed = true
+                break
+            end
         end
     end
-    return true, "same-quest-subtree-verified"
+    if not changed then return true, "same-quest-subtree-verified" end
+
+    -- Rebase only under the same quest, with two independently verified
+    -- complete snapshots. Preserve the ORIGINAL opaque root alpha and each
+    -- original mouse token; acquire new mouse tokens only from newly
+    -- discovered children. Never inspect or compare captured alpha.
+    local safeOK, safe = pcall(module.CanBridgeVisual, module, current)
+    if not safeOK or safe ~= true then
+        return false, "bridge-changed-child-unsafe"
+    end
+    local merged, seen = {}, {}
+    for index = 1, #snapshot.mouseFrames do
+        local entry = snapshot.mouseFrames[index]
+        if not entry or not entry.frame or seen[entry.frame] then
+            return false, "bridge-original-snapshot-invalid"
+        end
+        seen[entry.frame] = true
+        merged[#merged + 1] = entry
+    end
+    local added = 0
+    for index = 1, #current.mouseFrames do
+        local entry = current.mouseFrames[index]
+        if not entry or not entry.frame then
+            return false, "bridge-new-snapshot-invalid"
+        end
+        if not seen[entry.frame] then
+            seen[entry.frame] = true
+            merged[#merged + 1] = entry
+            added = added + 1
+            if #merged > 512 then
+                return false, "bridge-merged-subtree-too-large"
+            end
+        end
+    end
+    -- Commit the restoration union BEFORE the second suppression attempt.
+    -- A partial failure must restore BOTH old and newly created children.
+    bridge.snapshot = {
+        frame = snapshot.frame,
+        alpha = snapshot.alpha,
+        mouseFrames = merged,
+    }
+    local suppressed = pcall(module.SuppressOfferPresentation, module, current)
+    if not suppressed then
+        return false, "bridge-rebase-suppress-failed"
+    end
+    self.progressBridgeRebaseCount = (self.progressBridgeRebaseCount or 0) + 1
+    self.progressBridgeNewChildCount = (self.progressBridgeNewChildCount or 0) + added
+    Logres:TraceEvent("quest", "progress-completion-bridge-rebased",
+        {questID = bridge.questID, added = added})
+    return true, "same-quest-subtree-rebased"
 end
 
 function Dialogue:EndProgressCompletionBridge(reason, adopted)
@@ -2501,6 +2557,8 @@ function Dialogue:GetDebugStatus()
         progressBridgeHeldCount = self.progressBridgeHeldCount,
         progressBridgeAdoptedCount = self.progressBridgeAdoptedCount,
         progressBridgeRestoreCount = self.progressBridgeRestoreCount,
+        progressBridgeRebaseCount = self.progressBridgeRebaseCount,
+        progressBridgeNewChildCount = self.progressBridgeNewChildCount,
         progressBridgePending = self.progressCompletionBridge ~= nil,
         nativeHandoffRestoreCount = self.nativeHandoffRestoreCount,
         lastNativeHandoffReason = self.lastNativeHandoffReason,
@@ -2621,6 +2679,8 @@ function Dialogue:OnInitialize()
     self.progressBridgeHeldCount = 0
     self.progressBridgeAdoptedCount = 0
     self.progressBridgeRestoreCount = 0
+    self.progressBridgeRebaseCount = 0
+    self.progressBridgeNewChildCount = 0
     self.lastNativeHandoffReason = "initialize"
     self.lastNativeHandoffResult = "initialize"
 

@@ -21,7 +21,7 @@ L-056 BLOCKED.
 **P0484** FAIL; **P0483** turn PARTIAL; **P0482** est2/3/native3/4.
 P0476–P0478 VISUAL FAIL,
 P0479 FAIL retained.
-L-002 OPEN.
+L-002 P0501 dynamic-child bridge OPEN.
 P0473 FAIL; P0474 scoped PASS; L-037 PARTIAL.
 Preserve world HP/aura/50-50, chat SHOW, quest/stock fallback.
 P0460 HP PASS; P0461 aura FAIL; P0457 PASS;
@@ -67,7 +67,7 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 UNVERIFIED.
 
 P0499 L-055 scoped PASS, monitor; L-056 blocked.
 P0500 L-058 corpse ghost/revival client gate; L-059 bags deferred.
-P0497 visual user PASS; P0498 L-002 quest bridge client gate; L-055 event trace OPEN.
+P0497 visual PASS; P0501 L-002 bridge rebase client gate; L-055 event trace OPEN.
 
 ## Success Criteria
 

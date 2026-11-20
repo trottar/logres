@@ -1,3 +1,22 @@
+## P0501 — L-002 Quest stage dynamic child rebase audit (2026-11-20)
+
+Main P0500 `e3eb5a7887858e6146fef184e5018fb368dd4fb8`
+(tree `d4fb5794b4f94d54178bc8f70672f7e73e229d04`) verified;
+actual-source P0498 and P0501 focused fixtures initially passed.
+Candidate adds a bounded, independently protection-checked union of native
+mouse children while retaining original pre-suppression alpha/input tokens.
+The preexisting exact-identity checker initially FAILED because its
+syntactic guard required an `or #current.mouseFrames` fragment; the
+source was corrected to preserve that guard without weakening policy.
+Full corrected candidate **362/362 historical Python checkers PASS**
+(including the Lua source tests), no failed contracts. Verified Lua parse of
+changed runtime and source-bound fixture; version parity and memory health
+PASS. First extracted-ZIP (2276 candidate files) independently passed **362/362**
+with Lua fixtures enabled. 16/16 payload checksums and byte parity,
+transactional rollback, tamper refusal, and wrong-P0500-HEAD refusal passed.
+Rebundled exact-final ZIP with this audit result is independently required
+to pass **362/362** before delivery; no WoW runtime claim. L-002 OPEN.
+
 ## P0500 — Corpse compass / bag-slot backlog (2026-11-20)
 
 Baseline GitHub main P0499 `c5f0aad8bcac8d152b5fc2cc95dfe771cf8b06a3`

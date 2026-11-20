@@ -1417,3 +1417,7 @@ World cast cue moves above selected nameplate (10px gap). Historical
 contract check revised with stronger anchor assertion, new P0497 geometry
 contract and actual-source fixture, evidence/ledger/handoff synchronized.
 Runtime placement and taint UNVERIFIED until client. No Git write by assistant.
+
+## P0501 — Guarded quest stage subtree rebase (2026-11-20)
+
+P0500 main `e3eb5a7` verified. L-002 two Quest83 bridge fallback traces despite subsequent completion-owned. Preserve original root alpha and prior input tokens; validate new children nonprotected, merge bounded restoration tokens, and disable newly introduced input only while a verified completion is immediately taking ownership. Full stock restore on partial failure and before native claim. Lua contract and client validation required; L-002 OPEN. See `docs/memory/evidence/P0501_QUEST_STAGE_DYNAMIC_CHILD_REBASE.md`.

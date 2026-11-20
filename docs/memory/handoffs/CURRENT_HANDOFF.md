@@ -2,7 +2,7 @@
 # P0490 hover PASS/combat FAIL; P0491 reveal PASS/fade FAIL.
 # P0492 fade; P0493 sibling, P0494 tags.
 # OOC0; combat main/Bar4=1, side/pet=.85, utility/Bar5=.75.
-# P0497 visual PASS scoped; P0498 L-002 stage bridge UNVERIFIED.
+# P0497 PASS; P0501 L-002 dynamic quest child rebase UNVERIFIED.
 # P0499 L-055 scoped PASS/monitor; P0500 L-058 corpse OPEN, L-059 bag DEFERRED.
 # L-056 BLOCKED protected.
 # P0485: sparse DB client FAIL.
