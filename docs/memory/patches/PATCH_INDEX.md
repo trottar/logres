@@ -1,3 +1,13 @@
+## P0500 — Corpse compass and bag equipment backlog (2026-11-20)
+
+Verified P0499 main `c5f0aad` and user scoped action-bar positive;
+L-055 under observation. L-058: compass adds guarded death-only corpse
+position from native map API, prioritized visible tombstone/edge cue,
+optional map-derived distance; no Blizzard tracking/waypoint writes.
+L-059: bag-slot equipment requires Immersion OFF, follow-up deferred
+pending safe native access owner. Runtime unverified. See
+`docs/memory/evidence/P0500_CORPSE_COMPASS_AND_BAG_BACKLOG.md`.
+
 ## P0499 — Independent combat alpha roots (2026-11-20)
 
 Main P0498 `40b0201` verified. L-055 P0498 session184 #19127 and

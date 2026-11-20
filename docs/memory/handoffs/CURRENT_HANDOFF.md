@@ -3,7 +3,7 @@
 # P0492 fade; P0493 sibling, P0494 tags.
 # OOC0; combat main/Bar4=1, side/pet=.85, utility/Bar5=.75.
 # P0497 visual PASS scoped; P0498 L-002 stage bridge UNVERIFIED.
-# L-055 P0499 direct secure roots; runtime OPEN.
+# P0499 L-055 scoped PASS/monitor; P0500 L-058 corpse OPEN, L-059 bag DEFERRED.
 # L-056 BLOCKED protected.
 # P0485: sparse DB client FAIL.
 # P0484: quest35 FAIL.
@@ -18,13 +18,12 @@
 # P0475: L-037 PARTIAL; P0474 PASS.
 # P0474: P0473 #16018 FAIL.
 # P0468: L-051 auras; UNVERIFIED.
-# P0466: names/defaults scoped PASS.
+# P0466: names/defaults PASS scoped.
 # P0465: Sheet04 accepted.
 # P0464: per-unit transaction retained.
 
 # P0463: #13743/#13745/#13748 regression.
-Unprotected native aura layout; cached plate replay/prebuilt ON;
-tracker secure OOC gate + safe refold. P0460 HP retained; client UNVERIFIED.
+Native aura layout; cached replay/OOC secure gate/refold. P0460 HP retained; client UNVERIFIED.
 
 # P0462: pending ON implemented, aura layout deferred; latest user FAIL.
 Native tracker visible #13745; actual NPC QuestFrame not shown.

@@ -1,0 +1,27 @@
+P0500 corpse compass direction and bag equipment follow-up
+Verified baseline: c5f0aad8bcac8d152b5fc2cc95dfe771cf8b06a3
+Candidate runtime version: 0.0.366-dev
+PREWRITE: 361/361 STATIC PASS
+POSTWRITE: 361/361 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Navigation/Compass.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0500_CORPSE_COMPASS_AND_BAG_BACKLOG.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0500_corpse_compass_contract.py
+tools/test_p0500_corpse_compass.lua
+P0500_MANIFEST.txt

@@ -478,6 +478,14 @@ function Logres:CaptureBugIncident()
         "dbConfirmedQuestCandidates", "dbEligibilityQuestCandidates", "dbDualRoleServiceSuppressed",
         "npcArrivalRotationRecovered", "availableQuestPoiShown",
         "focusedMarkerKind", "focusedMarkerDistanceYards"})
+    -- Corpse direction is an addon-owned derived map sample, never a read of
+    -- native map-pin presentation or a replacement for Blizzard corpse access.
+    incident.snapshot.compassCorpse = pickTraceStatus(ownedTraceStatus(function()
+        return self:GetModule("Compass"):GetDebugStatus()
+    end), {"corpseAPIAvailable", "corpseEventRegistered", "corpseSourcePresent",
+        "corpseMarkerShown", "corpseBearingDegrees", "corpseRelativeDegrees",
+        "corpseMapID", "corpseDistanceYards", "corpseEdgeCued",
+        "corpseSampleCount", "corpseSecretDeferrals", "lastCorpseReason"})
     -- Read only existing Logres-owned source snapshots. These distinguish a
     -- missing native current offer from a provider index/collision gap.
     incident.snapshot.questCompassSources = pickTraceStatus(ownedTraceStatus(function()

@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-11-19
+as_of: 2026-11-20
 project: logres
 ---
 
@@ -13,7 +13,8 @@ Alpha blocked. D-046/D-047/D-048.
 
 **P0486** q35 PASS; P0487 PASS.
 P0489 PASS; P0490 hover PASS/combat FAIL.
-P0491 P0492 P0493 P0494; P0499 L-055 REPRODUCED OPEN.
+P0491 P0492 P0493 P0494; P0499 L-055 scoped PASS, monitor.
+P0500 corpse L-058 OPEN; bags L-059 DEFERRED.
 L-056 BLOCKED.
 **P0488** L-054 P0497 layout PASS; L-057 cast-above PASS scoped. L-030 q37 PASS.
 **P0485** FAIL retained.
@@ -32,15 +33,13 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 UNVERIFIED.
 
 ## Verified State
 
-- P0440 main `bec4038`: #11161 nameplate target12/secondary17/
-  combat29/targeting4; 0 failures/secret. P0439 OOC DEFERRED,
-  P0437 visual PASS; production attachment unproven.
+- P0440 `bec4038` #11161 target12/secondary17/combat29/targeting4; zero errors. P0439 deferred, P0437 visual PASS; attachment unproven.
 
-- P0422 FAIL; P0423 restored; V8 visual PASS.
+- P0422 FAIL; P0423 V8 visual PASS.
 
 - P0420 `bd55e34` H.2; P0421 V6 translated 15 owned regions.
   P0416/P0418/P0419 layout retained; native untouched.
-- P0417 `bc91448`: pet works; L-008 combat/Edit Mode OPEN.
+- P0417 `bc91448` pet works; L-008 OPEN.
 - P0418 V5; V6 native fallback.
 
 - P0381 OPEN; P0383 quest18 TURNED_IN; L-005 PARTIAL,
@@ -48,25 +47,26 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 UNVERIFIED.
 
 - P0379 `285be528` 249 STATIC; 0.0.264-dev no claim. L-002 native, L-005 FAIL. R0/R1 refused; P0378 screenshots inferred.
 
-- P0370 240 STATIC no-pet PASS; P0367, P0357 P0358 P0359; historic checks remain. L-001/L-002/L-005 FAIL.
+- P0370 240 STATIC PASS; P0367, P0357 P0358 P0359; L-001/L-002/L-005 FAIL.
 - P0352 223, P0351 222, P0350 221, P0349 R1 220 (R0 REFUSED),
   P0348 219 D-048 OFFLINE, P0347 R1 `b94beb47` 218 (R0 REFUSED),
   P0346 `26370095` 217, P0345 `626b220` 216 STATIC; client UNVERIFIED.
-- P0344 `e44f66ba` 215/215 STATIC; L-027 owner UNVERIFIED.
+- P0344 `e44f66ba` 215 STATIC; L-027 UNVERIFIED.
 - P0343 R1 `ef4d9604` 214/214 STATIC; R0 REFUSED before writes, L-022 OPEN.
 - P0342 R2 213 STATIC; R0/R1 PREWRITE REFUSED; L-028 OPEN.
 - P0341 R1 `fb3b2658` 212/212 STATIC; R0 historical-version checker REFUSED before writes; WoW UNVERIFIED.
 - P0338 R1 `342cab97` 209/209; P0337 R1 `cfdc07af` 208/208. PREWRITE failures recorded; L-031 remains deferred.
 - P0340 prefreeze; P0336/P0335/P0334 R3/P0333/P0332/P0331/P0330/P0329: 207–200 STATIC. See PATCH_INDEX.
-- P0328 alpha runbook; P0317/P0318/P0319/P0320 gossip observations; P0321 `9a180c8` parking UNVERIFIED. P0322/P0323/P0324/P0325 D-048 inert models; P0326/P0327 merchant/flight models only. Stock UI/quest 237 kept.
-- D-048 independent live domain selectors and saved migration do not exist: schema 3 still stores `immersionEnabled` and `activeQuestEnabled`. D-046 preview-first and D-047 frozen Camera/DynamicCam remain required. Native UI and protected/secret fallbacks stay usable.
+- P0328 alpha; P0317/P0318/P0319/P0320 gossip; P0321 `9a180c8` parking UNVERIFIED. P0322/P0323/P0324/P0325 D-048 inert; P0326/P0327 merchant/flight; stock quest237 retained.
+- D-048 live selectors/migration absent: schema3 `immersionEnabled`/`activeQuestEnabled`. D-046 preview-first; D-047 Camera frozen. Native protected/secret fallbacks retained.
 - L-020–L-032 are tracked user reports; runtime gates apply. L-028 duplicated/missing target debuffs remains OPEN; L-022 focused quest artifact requires screenshot, L-027 Blizzard transient popup requires `/fstack` owner evidence. L-019 license unresolved, release blocked.
 
 - History retained in PATCH_INDEX/ISSUE_LEDGER: P0368, P0369, P0426, P0427, L-004, L-021, L-025, L-029, L-033, L-034, L-035, L-037, L-038, L-039, L-040, P0241, P0373, P0374, P0376, P0380, P0382, P0387, P0388, P0389, P0390, P0391–P0397, P0402, P0405–P0408, P0410, P0411, P0413–P0415.
 
 ## Next Action
 
-P0499 L-055 six secure roots + regen sync client gate; L-056 blocked.
+P0499 L-055 scoped PASS, monitor; L-056 blocked.
+P0500 L-058 corpse ghost/revival client gate; L-059 bags deferred.
 P0497 visual user PASS; P0498 L-002 quest bridge client gate; L-055 event trace OPEN.
 
 ## Success Criteria
@@ -82,6 +82,7 @@ Preserve P0321/P0329, camera, secure actions, quest 237. No polling or secret re
 - docs/memory/evidence/P0496_NATIVE_BUFF_AND_WORLD_CAST.md
 - docs/memory/evidence/P0494_KEYBIND_BUTTON_OWNER.md
 - docs/memory/evidence/P0493_SECURE_KEYBIND_ALPHA.md
+- docs/memory/evidence/P0500_CORPSE_COMPASS_AND_BAG_BACKLOG.md
 - docs/memory/evidence/P0499_COMBAT_BAR_DIRECT_ROOT_DRIVERS.md
 - docs/memory/evidence/P0491_SECURE_ACTION_COMBAT_REVEAL.md
 - docs/memory/evidence/P0490_ACTION_MOUSEOVER_OPACITY.md

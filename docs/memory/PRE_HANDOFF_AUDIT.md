@@ -1,3 +1,42 @@
+## P0500 — Corpse compass / bag-slot backlog (2026-11-20)
+
+Baseline GitHub main P0499 `c5f0aad8bcac8d152b5fc2cc95dfe771cf8b06a3`
+(tree `e44f21e1e3e63263fa9e1567e83a7e8f1559d1ca`) verified.
+P0499 client user reports action bars working well, no repeated error in
+current play; scoped positive only, L-055 remains under observation.
+L-058 corpse-marker runtime **UNVERIFIED**, L-059 bag-slot deferred.
+
+**First candidate audit FAILED 44/361 historical contracts**, all due to
+CURRENT.md/HANDOFF.md over-budget summaries, invalid `OPEN / DEFERRED`
+issue ledger status, and removal of the required `# P0478:` handoff
+marker while compressing. None was a reported compass-source failure.
+The canonical status is `OPEN`, with deferred implementation documented
+separately. Corrected both memory budgets and restored exact historic
+markers; affected targeted checks PASS. Preserve this failure record.
+
+P0500 changes only compass ordinary death/map source, addon-owned marker,
+read-only bug diagnostics, version parity, durable memory, source contract,
+and Lua fixture. Preserve standing limitations: no native map pin/input
+mutation, no player exact HP, no extra OnUpdate or external spell data.
+Corrected candidate with valid budgets/status and restored historical
+handoff markers then passed **361/361 historical Python checkers** with
+Lua fixture execution enabled (first complete clean rerun). A subsequent
+safety review tightened corpse values to require positive ordinary
+classification. Focused Lua/contract tests passed after this tightening;
+The packaging smoke test first failed because its synthetic baseline
+omitted new-path parent directories; a second attempt used the staging
+root rather than the applier's configured root for rollback. Both were
+**assistant test-harness errors**, not runtime or P0500 applier defects.
+The corrected harness confirmed 16/16 ZIP payload checksum/parity,
+16/16 rollback, tamper refusal and wrong-HEAD refusal. Preserve these
+negative results. Full exact-ZIP checker run is required before delivery.
+
+Require full historical Python checker suite including Lua fixtures,
+changed-source Lua parse, source blob parity, ZIP transactional guard,
+rollback/tamper/wrong-head refusal, and diff hygiene; actual tests must
+be recorded here only after execution. In-client ghost visibility is not
+implied by source tests.
+
 ## P0499 — L-055 secure action-root combat isolation audit (2026-11-20)
 
 **P0499 R0 user-applier PREWRITE refusals (2026-11-20):** The first run

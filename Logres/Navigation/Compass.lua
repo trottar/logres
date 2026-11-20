@@ -83,6 +83,9 @@ local INTERCARDINAL_LABEL_GAP = intercardinalTickStyle.labelGap or 3
 local MANUAL_WIDTH = manualWaypointStyle.width or 12
 local MANUAL_HEIGHT = manualWaypointStyle.height or 20
 local MANUAL_ALPHA = manualWaypointStyle.alpha or 0.95
+-- A separate death-only, read-only navigation source; no user waypoint edits.
+local CORPSE_WIDTH, CORPSE_HEIGHT, CORPSE_ALPHA = 18, 22, 0.96
+local CORPSE_EDGE_MARGIN = 7
 local MANUAL_FOCUS_ANGLE = manualWaypointStyle.focusAngle or 8
 local MANUAL_FOCUS_SCALE = manualWaypointStyle.focusScale or 1.07
 local MANUAL_DEPTH_CLOSE_RADIUS_FACTOR =
@@ -440,6 +443,19 @@ local Compass = Logres:RegisterModule("Compass", {
         self.waypointDepthScale = 1
         self.waypointRenderScale = nil
         self.waypointElapsed = 0
+        self.corpseAPIAvailable = false
+        self.corpseEventRegistered = false
+        self.corpseSourcePresent = false
+        self.corpseMarkerShown = false
+        self.corpseBearingDegrees = nil
+        self.corpseRelativeDegrees = nil
+        self.corpseMapID = nil
+        self.corpseDistanceYards = nil
+        self.corpseEdgeCued = false
+        self.corpseMarkerOffset = nil
+        self.corpseSampleCount = 0
+        self.corpseSecretDeferrals = 0
+        self.lastCorpseReason = "initialize"
         self.lastWaypointDistanceReason = "initialize"
         self.lastWaypointDistanceError = nil
         self.lastWaypointDepthReason = "initialize"
@@ -510,10 +526,25 @@ local Compass = Logres:RegisterModule("Compass", {
         waypointMarker:SetAlpha(MANUAL_ALPHA)
         waypointMarker:Hide()
 
+        local corpseMarker = frame:CreateTexture(nil, "OVERLAY")
+        corpseMarker:SetSize(CORPSE_WIDTH, CORPSE_HEIGHT)
+        local atlasOK = false
+        if type(corpseMarker.SetAtlas) == "function" then
+            atlasOK = pcall(corpseMarker.SetAtlas, corpseMarker,
+                "Navigation-Tombstone-Icon")
+        end
+        if not atlasOK then
+            corpseMarker:SetTexture(compassAssets.manualWaypoint)
+            corpseMarker:SetVertexColor(0.77, 0.82, 0.94, 1)
+        end
+        corpseMarker:SetAlpha(CORPSE_ALPHA)
+        corpseMarker:Hide()
+
         self.frame = frame
         self.baseline = baseline
         self.centerMarker = center
         self.waypointMarker = waypointMarker
+        self.corpseMarker = corpseMarker
         -- Three inert role glyphs: no invented world positions. The same
         -- tape reservation helper places these and all live candidate roles.
         self.artworkPreviewMarkers = {}
@@ -667,6 +698,23 @@ local Compass = Logres:RegisterModule("Compass", {
 
         self.waypointEventFrame = waypointEventFrame
 
+        -- Death events only resample the addon-owned corpse cue. Ghost travel
+        -- otherwise shares the existing 0.15s compass destination sampler.
+        local corpseEventFrame = CreateFrame("Frame")
+        local corpseRegistered = true
+        for _, event in ipairs({"PLAYER_DEAD", "PLAYER_ALIVE",
+                "PLAYER_UNGHOST", "PLAYER_ENTERING_WORLD"}) do
+            local ok = pcall(corpseEventFrame.RegisterEvent, corpseEventFrame, event)
+            corpseRegistered = corpseRegistered and ok
+        end
+        self.corpseEventRegistered = corpseRegistered
+        corpseEventFrame:SetScript("OnEvent", function(_, event)
+            if not self.moduleEnabled or not self.policyEligible then return end
+            self:RefreshCorpseBearing(event)
+            self:RefreshAvailableQuestPOIs(event)
+        end)
+        self.corpseEventFrame = corpseEventFrame
+
         -- Read-only lifecycle; do not inspect or mutate Blizzard nameplates.
         local nameplateFrame = CreateFrame("Frame")
         local addedOK = pcall(nameplateFrame.RegisterEvent,
@@ -711,6 +759,7 @@ local Compass = Logres:RegisterModule("Compass", {
         self:SetUpdateActive(false)
         self.artworkPreview = false
         self:ClearWaypointPresentation("module-disabled")
+        self:ClearCorpsePresentation("module-disabled")
         self:ClearPresentation("module-disabled")
         self.serviceNearBearings = {}
         self.serviceBearingMapID = nil
@@ -1187,6 +1236,9 @@ function Compass:RefreshAvailableQuestPOIs(reason)
     self.trackingCandidates=#tracked
     self.availableQuestPoiReason="ordinary-positioned-candidates"
     local occupied = {}
+    if self.corpseMarkerShown and type(self.corpseMarkerOffset) == "number" then
+        reserveMarkerBearing(self.corpseMarkerOffset, CORPSE_WIDTH, occupied)
+    end
     if self.waypointMarkerShown and type(self.waypointRelativeDegrees) == "number" then
         local waypointWidth = MANUAL_WIDTH * (self.waypointRenderScale or 1)
         reserveMarkerBearing(self.waypointRelativeDegrees * PIXELS_PER_DEGREE,
@@ -1284,6 +1336,16 @@ function Compass:RefreshAvailableQuestPOIs(reason)
             distance = self.waypointDistanceAvailable and self.waypointDistanceYards or nil,
         }
     end
+    -- In corpse-recovery mode the body is the only priority focus when the
+    -- player is facing it; ordinary quest/POI focus remains otherwise.
+    if self.corpseMarkerShown and type(self.corpseRelativeDegrees) == "number"
+        and math.abs(self.corpseRelativeDegrees) <= focusDegrees then
+        closestFocus = {
+            name = "Your body [corpse]", kind = "corpse",
+            magnitude = math.abs(self.corpseRelativeDegrees),
+            distance = self.corpseDistanceYards,
+        }
+    end
     if closestFocus then
         local focusedYards
         if closestFocus.mapOnly then
@@ -1368,6 +1430,27 @@ function Compass:ClearWaypointPresentation(reason, errorText)
     self:SetWaypointMarkerShown(false)
 end
 
+function Compass:SetCorpseMarkerShown(shown)
+    self.corpseMarkerShown = shown == true
+    if self.corpseMarkerShown then
+        self.corpseMarker:Show()
+    else
+        self.corpseMarker:Hide()
+    end
+end
+
+function Compass:ClearCorpsePresentation(reason)
+    self.corpseSourcePresent = false
+    self.corpseBearingDegrees = nil
+    self.corpseRelativeDegrees = nil
+    self.corpseMapID = nil
+    self.corpseDistanceYards = nil
+    self.corpseEdgeCued = false
+    self.corpseMarkerOffset = nil
+    self.lastCorpseReason = reason or "corpse-unavailable"
+    self:SetCorpseMarkerShown(false)
+end
+
 function Compass:ClearPresentation(reason, errorText)
     self.facingAvailable = false
     self.presentationActive = false
@@ -1378,6 +1461,7 @@ function Compass:ClearPresentation(reason, errorText)
     self.lastReason = reason or "unavailable"
     self.lastError = errorText
     self:SetWaypointMarkerShown(false)
+    self:ClearCorpsePresentation(reason or "presentation-unavailable")
     self:ClearAvailableQuestPOIs("presentation-unavailable")
     self:UpdateArtworkPreview()
     self.frame:Hide()
@@ -1632,6 +1716,32 @@ function Compass:UpdateWaypointMarker()
     self:SetWaypointMarkerShown(true)
 end
 
+function Compass:UpdateCorpseMarker()
+    self:SetCorpseMarkerShown(false)
+    self.corpseRelativeDegrees = nil
+    self.corpseEdgeCued = false
+    self.corpseMarkerOffset = nil
+    if not self.presentationActive or not self.corpseSourcePresent
+        or type(self.headingDegrees) ~= "number"
+        or type(self.corpseBearingDegrees) ~= "number" then return end
+
+    local relative = normalizeRelativeDegrees(
+        self.corpseBearingDegrees - self.headingDegrees)
+    local clipped = math.abs(relative) > VISIBLE_HALF_ANGLE - CORPSE_EDGE_MARGIN
+    -- An off-tape body uses an explicit edge cue, not an invented bearing.
+    local displayed = clamp(relative,
+        -VISIBLE_HALF_ANGLE + CORPSE_EDGE_MARGIN,
+        VISIBLE_HALF_ANGLE - CORPSE_EDGE_MARGIN)
+    local x = displayed * PIXELS_PER_DEGREE
+    self.corpseRelativeDegrees = relative
+    self.corpseEdgeCued = clipped
+    self.corpseMarkerOffset = x
+    self.corpseMarker:ClearAllPoints()
+    self.corpseMarker:SetPoint("BOTTOM", self.frame, "CENTER", x, TAPE_Y)
+    self.corpseMarker:SetAlpha(clipped and 0.74 or CORPSE_ALPHA)
+    self:SetCorpseMarkerShown(true)
+end
+
 function Compass:RefreshWaypointBearing(reason)
     self.waypointAPIAvailable =
         C_Map ~= nil
@@ -1801,6 +1911,104 @@ function Compass:RefreshWaypointBearing(reason)
     return true
 end
 
+-- Death/map API outputs are secret-capable. Only a positively classified
+-- ordinary result may be inspected, compared or formatted in addon Lua.
+local function corpseValueOrdinary(value)
+    if type(issecretvalue) ~= "function" then return false end
+    local ok, secret = pcall(issecretvalue, value)
+    return ok and secret == false
+end
+
+-- The Blizzard world map is the authority for the corpse's current
+-- location. No last-known corpse point, user waypoint, or map pin is created.
+function Compass:RefreshCorpseBearing(reason)
+    self.corpseSampleCount = self.corpseSampleCount + 1
+    self.corpseAPIAvailable = type(C_DeathInfo) == "table"
+        and type(C_DeathInfo.GetCorpseMapPosition) == "function"
+    if not self.policyEligible then
+        self:ClearCorpsePresentation("policy-ineligible")
+        return false
+    end
+    if type(issecretvalue) ~= "function"
+        or type(UnitIsDeadOrGhost) ~= "function" then
+        self:ClearCorpsePresentation("death-state-api-unavailable")
+        return false
+    end
+    local deadOK, isDead = pcall(UnitIsDeadOrGhost, "player")
+    if not deadOK or not corpseValueOrdinary(isDead)
+        or type(isDead) ~= "boolean" then
+        self.corpseSecretDeferrals = self.corpseSecretDeferrals + 1
+        self:ClearCorpsePresentation("death-state-unreadable")
+        return false
+    end
+    if not isDead then
+        self:ClearCorpsePresentation("player-alive")
+        return true
+    end
+    if not self.corpseAPIAvailable or not C_Map
+        or type(C_Map.GetBestMapForUnit) ~= "function"
+        or type(C_Map.GetPlayerMapPosition) ~= "function"
+        or type(math.atan2) ~= "function" then
+        self:ClearCorpsePresentation("corpse-api-unavailable")
+        return false
+    end
+    local mapOK, mapID = pcall(C_Map.GetBestMapForUnit, "player")
+    if not mapOK or not corpseValueOrdinary(mapID)
+        or type(mapID) ~= "number"
+        or mapID <= 0 or mapID ~= math.floor(mapID) then
+        self:ClearCorpsePresentation("corpse-map-unavailable")
+        return false
+    end
+    local playerOK, playerPosition = pcall(C_Map.GetPlayerMapPosition,
+        mapID, "player")
+    local corpseOK, corpsePosition = pcall(
+        C_DeathInfo.GetCorpseMapPosition, mapID)
+    if not playerOK or not corpseOK then
+        self:ClearCorpsePresentation("corpse-position-call-failed")
+        return false
+    end
+    if not corpseValueOrdinary(playerPosition)
+        or not corpseValueOrdinary(corpsePosition) then
+        self.corpseSecretDeferrals = self.corpseSecretDeferrals + 1
+        self:ClearCorpsePresentation("corpse-position-unreadable")
+        return false
+    end
+    local sourceOK, px, py, sourceError = pcall(readVectorXY, playerPosition)
+    local targetOK, cx, cy, targetError = pcall(readVectorXY, corpsePosition)
+    if not sourceOK or not targetOK or sourceError or targetError then
+        self:ClearCorpsePresentation("corpse-position-unavailable")
+        return false
+    end
+    for _, component in ipairs({px, py, cx, cy}) do
+        if not corpseValueOrdinary(component)
+            or type(component) ~= "number" or component ~= component
+            or component < 0 or component > 1 then
+            self:ClearCorpsePresentation("corpse-coordinates-invalid")
+            return false
+        end
+    end
+    local dx, dy = cx - px, cy - py
+    self.corpseBearingDegrees =
+        (math.deg(math.atan2(dx, -dy)) + 360) % 360
+    self.corpseSourcePresent = true
+    self.corpseMapID = mapID
+    self.corpseDistanceYards = nil
+    if type(C_Map.GetMapWorldSize) == "function" then
+        local sizeOK, width, height = pcall(C_Map.GetMapWorldSize, mapID)
+        if sizeOK and corpseValueOrdinary(width)
+            and corpseValueOrdinary(height)
+            and type(width) == "number" and type(height) == "number"
+            and width > 0 and height > 0
+            and width < 10000000 and height < 10000000 then
+            self.corpseDistanceYards =
+                math.sqrt((dx * width)^2 + (dy * height)^2)
+        end
+    end
+    self.lastCorpseReason = reason or "corpse-refresh"
+    self:UpdateCorpseMarker()
+    return true
+end
+
 function Compass:RefreshHeading(reason)
     if not self.policyEligible then
         self:ClearPresentation(reason or "policy-ineligible")
@@ -1859,6 +2067,7 @@ function Compass:RefreshHeading(reason)
     self.lastError = nil
 
     self:UpdateWaypointMarker()
+    self:UpdateCorpseMarker()
     self.frame:Show()
     self:UpdateArtworkPreview()
     return true
@@ -1900,6 +2109,7 @@ function Compass:ReconcilePolicy(reason)
     self:SetUpdateActive(true)
     self:RefreshHeading(reason or "policy")
     self:RefreshWaypointBearing(reason or "policy")
+    self:RefreshCorpseBearing(reason or "policy")
     self:RefreshAvailableQuestPOIs(reason or "policy")
 end
 
@@ -1920,6 +2130,7 @@ function Compass:OnUpdate(elapsed)
         self.waypointElapsed =
             self.waypointElapsed % WAYPOINT_UPDATE_INTERVAL
         self:RefreshWaypointBearing("onupdate")
+        self:RefreshCorpseBearing("onupdate")
         self:RefreshAvailableQuestPOIs("onupdate")
     end
 end
@@ -1992,6 +2203,18 @@ function Compass:GetDebugStatus()
         presentationActive = self.presentationActive == true,
         headingDegrees = self.headingDegrees,
 
+        corpseAPIAvailable = self.corpseAPIAvailable == true,
+        corpseEventRegistered = self.corpseEventRegistered == true,
+        corpseSourcePresent = self.corpseSourcePresent == true,
+        corpseMarkerShown = self.corpseMarkerShown == true,
+        corpseBearingDegrees = self.corpseBearingDegrees,
+        corpseRelativeDegrees = self.corpseRelativeDegrees,
+        corpseMapID = self.corpseMapID,
+        corpseDistanceYards = self.corpseDistanceYards,
+        corpseEdgeCued = self.corpseEdgeCued == true,
+        corpseSampleCount = self.corpseSampleCount,
+        corpseSecretDeferrals = self.corpseSecretDeferrals,
+        lastCorpseReason = self.lastCorpseReason,
         waypointAPIAvailable = self.waypointAPIAvailable == true,
         waypointEventRegistered = self.waypointEventRegistered == true,
         waypointSourcePresent = self.waypointSourcePresent == true,

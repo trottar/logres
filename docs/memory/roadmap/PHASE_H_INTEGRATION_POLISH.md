@@ -12,6 +12,16 @@ all compass 2/3- and 3/4yd behavior unchanged. P0485 gameplay FAIL,
 L-030 OPEN/PARTIAL, P0486 client UNVERIFIED. Evidence:
 `docs/memory/evidence/P0486_INFORMATIONAL_QUEST_FLAGS.md`.
 
+## P0500 — L-058 corpse compass and L-059 bag-slot access (2026-11-20)
+
+P0499 main `c5f0aad` verified; user sees stable combat bars in current
+play (L-055 scoped positive, still under observation). P0500 adds the
+corpse as an ordinary native map-position source while dead/ghost,
+with compass-priority tombstone and edge cue, no stock/map mutations;
+L-058 live unverified. L-059 new bags require Immersion OFF to reach
+native equipment slots: defer until safe native slot access investigated.
+See `docs/memory/evidence/P0500_CORPSE_COMPASS_AND_BAG_BACKLOG.md`.
+
 ## P0499 — L-055 secure action-root combat isolation (2026-11-20)
 
 Forever P0498 session184 #19127, #19139/#19143/#19149 again show
