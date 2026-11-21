@@ -12,6 +12,10 @@ all compass 2/3- and 3/4yd behavior unchanged. P0485 gameplay FAIL,
 L-030 OPEN/PARTIAL, P0486 client UNVERIFIED. Evidence:
 `docs/memory/evidence/P0486_INFORMATIONAL_QUEST_FLAGS.md`.
 
+## P0503 — Audit NPC handoff flash without broad native suppression (2026-11-21)
+
+P0502 main `07f98c56` verified. User reports camera behavior good. Forever session189 #20395 `native-choice-handoff` restores GossipFrame before a service choice, then GOSSIP_CLOSED #20399 about 0.174s before/at interactionType7 #20400; screenshot20401 captures the correct Logres trainer after the reported fleeting popup, not its pixel identity. L-001 OPEN. P0503 candidate optionally holds only the already parked unprotected gossip root through one validated native option, with a bounded one-shot timeout, authoritative new-page/service events, and immediate fail-open recovery. Quest/Continue/claim, trainer/merchant/flight/registrar service transaction owners, camera, native stock and unsupported fallback remain unchanged. L-001 client UNVERIFIED. See P0503 evidence.
+
 ## P0501 — L-002 guarded dynamic Progress → Completion ownership (2026-11-20)
 
 P0500 main `e3eb5a7` verified. Forever session186 Quest83 event #19422

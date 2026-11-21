@@ -1,3 +1,9 @@
+## P0503 — L-001 transient native gossip option handoff audit (2026-11-21)
+
+Release logistics: initial P0503 Chat author-receipt ZIP REFUSED before writes due to reconstructed author kit missing tracked `P0502_MANIFEST.txt`. P0503 R1 reissues the same bounded handoff via the separate canonical guarded payload route with apply-time exact baseline and source checks. See evidence for negative result; no WoW PASS claimed.
+
+P0502 main `07f98c56` verified; user reports camera pacing/visit quality scoped PASS. Forever 0.0.368 session189 #20395 unparked GossipFrame **before** native option; #20399 CLOSED 0.174s later; #20400 class trainer. Flash before #20401 screenshot not pixel-identified; L-001 OPEN. P0503 holds only direct validated gossip option root parking for a single event-or-0.8s handoff, preserving restore-first for quest/unsupported paths and all native services. Legacy test-contract updates retain original safety gates. Lua source fixture and complete candidate audit required; client UNVERIFIED. Evidence: `docs/memory/evidence/P0503_NPC_INTERACTION_HANDOFF_AUDIT.md`.
+
 ## P0502 — L-036 NPC camera visit continuity and slower movement (2026-11-21)
 
 P0501 main `04431587` verified. Bounded quest/gossip close grace guards consecutive prompt handoff while explicit interruption releases; fixed-duration camera motion becomes 1/0.65 longer and continuous rotation speed 0.65, without changing camera targets or sampling. P0502 is client UNVERIFIED; L-036 OPEN. See `docs/memory/evidence/P0502_CAMERA_VISIT_PACE.md`.

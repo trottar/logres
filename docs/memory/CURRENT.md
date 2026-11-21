@@ -14,7 +14,7 @@ Alpha blocked. D-046/D-047/D-048.
 **P0486** q35 PASS; P0487 PASS.
 P0489 PASS; P0490 hover PASS/combat FAIL.
 P0491 P0492 P0493 P0494; P0499 L-055 scoped PASS, monitor.
-P0500 corpse OPEN/bags deferred; P0502 L-036 camera UNVERIFIED.
+P0500 corpse OPEN/bags deferred; P0502 L-036 scoped PASS; P0503 L-001 bridge UNVERIFIED.
 L-056 BLOCKED.
 **P0488** L-054 P0497 layout PASS; L-057 cast-above PASS scoped. L-030 q37 PASS.
 **P0485** FAIL retained.
@@ -65,9 +65,9 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 UNVERIFIED.
 
 ## Next Action
 
-P0499 L-055 scoped PASS, monitor; L-056 blocked.
-P0500 L-058 corpse ghost/revival client gate; L-059 bags deferred.
-P0497 visual PASS; P0501 L-002 bridge rebase client gate; L-055 event trace OPEN.
+P0499 L-055 monitor; L-056 blocked.
+P0500 L-058 client gate; L-059 deferred.
+P0497 PASS; P0501 L-002 client gate; L-055 OPEN.
 
 ## Success Criteria
 

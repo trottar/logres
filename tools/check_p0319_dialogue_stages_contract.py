@@ -21,7 +21,7 @@ for token in ('function Live.TryShow(reason)', 'Logres.NPCGossipSource.Sample()'
               'last = "no-displayable-gossip-stage"',
               'Logres:RegisterEvent("GOSSIP_SHOW"',
               'Logres:RegisterEvent("GOSSIP_CLOSED"',
-              'function Live.OnNativeChoice()'):
+              'function Live.OnNativeChoice(ticket)'):
     need(token in live, 'live stage handling missing: '+token)
 need('if not node or not node.options or #node.options == 0 then' not in live,
      'legacy choice-count-only live presentation gate persists')

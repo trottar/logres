@@ -527,6 +527,27 @@ local function nativeProgressFlag(frame, name)
     return ok and ordinaryProgress(value) and value == true
 end
 
+-- P0503: the native gossip source remains SHOWN and parked for one validated
+-- user option click while Blizzard exchanges it for the next service/page.
+-- This is an optional bounded fail-open lease, never a new update driver.
+function Dialogue:ScheduleGossipOptionHandoff(ticket)
+    if not self.moduleEnabled or not self.immersionEnabled
+        or not self.optionSession or self.optionSession.liveReadOnly ~= true
+        or self.optionSession.questGreeting == true
+        or type(ticket) ~= "number" or ticket < 1
+        or not ordinaryProgress(C_Timer)
+        or not ordinaryProgress(C_Timer.After)
+        or type(C_Timer.After) ~= "function" then
+        return false
+    end
+    return pcall(C_Timer.After, 0.8, function()
+        local presenter = Logres.NPCGossipPresentation
+        if presenter and type(presenter.OnChoiceHandoffTimeout) == "function" then
+            presenter.OnChoiceHandoffTimeout(ticket)
+        end
+    end)
+end
+
 function Dialogue:EndNativeQuestHandoff(reason, expected)
     local handoff = self.nativeQuestHandoff
     if not handoff or (expected and handoff ~= expected) then return true end
@@ -990,6 +1011,12 @@ function Dialogue:HidePresentation(reason)
     -- Restore native progress mouse ownership before dismissing replacement.
     if not self:RestoreProgressStock(reason or "progress-hidden") then
         return false, "progress-restoration-pending"
+    end
+    -- All external/immersion exits still hand native stock back immediately;
+    -- a pending gossip option lease cannot survive dismissal of this owner.
+    if Logres.NPCGossipPresentation
+        and Logres.NPCGossipPresentation.CancelChoiceHandoff then
+        Logres.NPCGossipPresentation.CancelChoiceHandoff(reason or "dialogue-hidden")
     end
     -- Other dialogue/immersion callbacks can independently dismiss the view.
     -- Do not leave its SHOWN native source stranded offscreen on those exits.

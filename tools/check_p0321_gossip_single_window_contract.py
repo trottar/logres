@@ -44,13 +44,13 @@ need('if not complete(model) then' in p and 'if parked then Parking.Restore(' in
     'partial staged menu must restore stock')
 need('Logres.NPCGossipStockParking.TryPark(model)' in l and
      'Logres.NPCGossipStockParking.RequestExit(' in l and
-     'function Live.BeforeNativeChoice()' in l and
+     'function Live.BeforeNativeChoice(kind)' in l and
      'function Live.Goodbye()' in l and
      'function Live.OnStockRestored()' in l,
      'live lifecycle not wired to native parking')
-need('Logres.NPCGossipPresentation.BeforeNativeChoice()' in g and
+need('Logres.NPCGossipPresentation.BeforeNativeChoice("gossip-option")' in g and
      'Logres.NPCGossipPresentation.BeforeNativeChoice()' in q,
-     'native option/quest actions must first restore stock')
+     'guarded gossip option holds only with fallback; quest must restore stock first')
 need('Logres.NPCGossipPresentation.Goodbye()' in s and
      'if self.liveReadOnly then' in s, 'live Goodbye must use native-safe exit')
 need('function Dialogue:HidePresentation(reason)' in d and

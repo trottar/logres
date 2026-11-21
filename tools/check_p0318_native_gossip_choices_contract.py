@@ -41,7 +41,7 @@ need('Logres.NPCGossipChoice.Activate(self.model, index)' in session and
      'Logres.NPCGossipChoice.CanSelect()' in session,
      'separate gameplay controller not wired from option view')
 need('nativeActions = actions.attempts' in live and
-     'function Live.OnNativeChoice()' in live,
+     'function Live.OnNativeChoice(ticket)' in live,
      'live audit and exit must show native actions accurately')
 need('nativeActions = actions.attempts' in legacy,
      'P0317 historical contract must migrate to actual native action audit')

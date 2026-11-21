@@ -3,16 +3,16 @@
 # P0492 fade; P0493 sibling, P0494 tags.
 # OOC0; combat main/Bar4=1, side/pet=.85, utility/Bar5=.75.
 # P0497 PASS; P0501 L-002 dynamic quest child rebase UNVERIFIED.
-# P0499 L-055 PASS monitor; P0500 corpse OPEN/bags deferred; P0502 L-036 UNVERIFIED.
+# P0499 PASS; P0500 corpse OPEN/bags deferred; P0502 L-036 scoped PASS; P0503 L-001 bridge UNVERIFIED.
 # L-056 BLOCKED protected.
 # P0485: sparse DB client FAIL.
 # P0484: quest35 FAIL.
 # P0483: quest FAIL; turn PARTIAL.
 # P0482: est2/3 PARTIAL.
 # P0481:
-# P0480: passive proof absent.
+# P0480: unproven.
 # P0479: no tildes.
-# P0478: map-only FAIL; P0477 hide FAIL.
+# P0478: FAIL; P0477 FAIL.
 # P0477: #16399 false-floor 2yd.
 # P0476: snap FAIL; L-002 OPEN.
 # P0475: L-037 PARTIAL; P0474 PASS.

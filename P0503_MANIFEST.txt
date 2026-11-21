@@ -1,0 +1,30 @@
+P0503 Guard NPC gossip-to-service handoffs against native frame flashes
+Verified baseline: 07f98c56acba726af3ccf5c4a1e00c080372e046
+Candidate runtime version: 0.0.369-dev
+PREWRITE: 364/364 STATIC PASS
+POSTWRITE: 364/364 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Logres.toc
+Logres/Quest/Dialogue.lua
+Logres/Quest/NPCGossipChoice.lua
+Logres/Quest/NPCGossipPresentation.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/evidence/P0503_NPC_INTERACTION_HANDOFF_AUDIT.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0318_native_gossip_choices_contract.py
+tools/check_p0319_dialogue_stages_contract.py
+tools/check_p0321_gossip_single_window_contract.py
+tools/check_p0503_gossip_handoff_contract.py
+tools/test_p0503_gossip_handoff.lua
+P0503_MANIFEST.txt
