@@ -115,7 +115,27 @@ open();r0=restore;allowTimer=false;requireParked=false
 local success=Logres.NPCGossipChoice.Activate(model,1)
 assert(success and not park and restore==r0+1 and not d.presentationShown)
 allowTimer=true;requireParked=true
--- Quest links do not opt in: default caller restores prior to native use.
+-- Validated current quest links also retain the parked native source until
+-- an authoritative quest stage appears; a transient interaction HIDE must not
+-- restore the old GossipFrame before QUEST_DETAIL owns the next panel.
+open();r0=restore
+local ready,questTicket=Logres.NPCGossipPresentation.BeforeNativeChoice("quest-link")
+assert(ready and type(questTicket)=="number" and park and restore==r0)
+events.GOSSIP_CLOSED()
+events.PLAYER_INTERACTION_MANAGER_FRAME_HIDE()
+assert(park and restore==r0,"quest-link released stock during native transition")
+events.QUEST_DETAIL()
+assert(not park and restore==r0+1,"quest stage did not restore native source")
+scheduled[#scheduled]()
+assert(restore==r0+1,"stale quest handoff timeout must be inert")
+-- No quest stage: one bounded timeout restores the original native surface.
+open();r0=restore
+ready,questTicket=Logres.NPCGossipPresentation.BeforeNativeChoice("quest-link")
+assert(ready and questTicket and park)
+events.GOSSIP_CLOSED();events.PLAYER_INTERACTION_MANAGER_FRAME_HIDE()
+scheduled[#scheduled]()
+assert(not park and restore==r0+1)
+-- An unsupported caller retains the restore-first fallback.
 open();r0=restore
 local before,ticket=Logres.NPCGossipPresentation.BeforeNativeChoice()
 assert(before and ticket==nil and not park and restore==r0+1)

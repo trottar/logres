@@ -49,8 +49,8 @@ need('Logres.NPCGossipStockParking.TryPark(model)' in l and
      'function Live.OnStockRestored()' in l,
      'live lifecycle not wired to native parking')
 need('Logres.NPCGossipPresentation.BeforeNativeChoice("gossip-option")' in g and
-     'Logres.NPCGossipPresentation.BeforeNativeChoice()' in q,
-     'guarded gossip option holds only with fallback; quest must restore stock first')
+     'Logres.NPCGossipPresentation.BeforeNativeChoice("quest-link")' in q,
+     'guarded user selection must have bounded native fallback')
 need('Logres.NPCGossipPresentation.Goodbye()' in s and
      'if self.liveReadOnly then' in s, 'live Goodbye must use native-safe exit')
 need('function Dialogue:HidePresentation(reason)' in d and

@@ -1431,3 +1431,12 @@ Runtime placement and taint UNVERIFIED until client. No Git write by assistant.
 ## P0501 — Guarded quest stage subtree rebase (2026-11-20)
 
 P0500 main `e3eb5a7` verified. L-002 two Quest83 bridge fallback traces despite subsequent completion-owned. Preserve original root alpha and prior input tokens; validate new children nonprotected, merge bounded restoration tokens, and disable newly introduced input only while a verified completion is immediately taking ownership. Full stock restore on partial failure and before native claim. Lua contract and client validation required; L-002 OPEN. See `docs/memory/evidence/P0501_QUEST_STAGE_DYNAMIC_CHILD_REBASE.md`.
+
+## P0504 — Validated quest-link transition and native no-offer compass gate (2026-11-21)
+
+P0503 R1 verified pushed baseline `325f4dc`; P0503 R2 old-baseline
+draft **not released**. P0504 0.0.370-dev: extend guarded gossip lease to
+quest links and record exact-NPC observed native zero-offer to gate only
+DB-inferred quest markers. Full native transaction fallback and P0502 camera
+unchanged. L-001/L-002/L-030 client UNVERIFIED.
+`docs/memory/evidence/P0504_QUEST_HANDOFF_AND_FALSE_QUEST_GIVER.md`.

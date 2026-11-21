@@ -1938,3 +1938,37 @@ is still a Blizzard-managed data consumer: no Lua secret reads or new
 protected native writes. All client visual behavior UNVERIFIED pending
 WoW test; L-054 and L-057 remain OPEN. Exact-final payload recheck
 will follow archive rebuild with this receipt.
+
+## P0504 — Exact-candidate quest handoff / false quest giver / flight intake (2026-11-21)
+
+Repo authority: GitHub `main` P0503 `325f4dc14c440b18cf27cfddabd97d00c18a06c9`
+verified before candidate construction; P0503 pushed while a P0502-targeted
+P0503 R2 draft was running, so that old-baseline draft was **not released**.
+Candidate rebuilt on P0503 tracked baseline including P0503_MANIFEST.txt,
+with cross-checked Git blob SHA for actual changed owners, documentation and
+inherited P0503 fixture. Version 0.0.370-dev; P0502 camera and P0503 trainer
+service handoff unchanged.
+
+Narrow evidence: P0502 Forever #20865 12:05:37 had a reported brief Blizzard
+quest popup after #20852 gossip restore before quest link; #20897 12:06:11
+shows Sergeant De Vries NPC955 as quest-giver with no native offer per user.
+Quest remedy holds already parked gossip across directly validated quest-link
+native dispatch until next authoritative stage or one-shot fallback; compass
+remedy gates DB-inferred candidates only after same NPC native no-offer
+observation, never native-confirmed quest offers. No polling/protected
+inspection/foreign frame suppression. New second quest popup has no distinct
+report; L-002 still OPEN. New flight path UI concern L-004 is not supported by
+a live flight activation in supplied diagnostics (`hostResult=not-attempted`):
+recorded for targeted evidence, with no speculative flight code mutation.
+
+Initial P0504 working candidate (without flight-intake ledger and this audit)
+completed 365/365 historical STATIC contracts; ZIP was not handed off. The
+final audit-bearing candidate MUST pass the entire 365 checker suite afresh,
+changed Lua parse, diff hygiene, changed-byte ZIP readback, and baseline/payload
+guards before release. WoW quest, compass, service and flight behavior remains
+UNVERIFIED beyond the user's explicitly scoped P0502 gameplay feedback.
+
+P0504 R1 preflight refusal (not released): new flight-intake handoff summary
+was 8016 bytes, exceeding 8000 byte guard. The source/debug candidate
+never ran the full checks in that attempt; no Git/worktree user edits.
+Summary compressed without altering runtime logic; rerun final gate.

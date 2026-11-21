@@ -8,9 +8,9 @@ local enabled, pending, active = true, false, false
 local opens, deferrals, closes = 0, 0, 0
 local last = "awaiting-gossip"
 local lastKind = "none"
--- P0503: a validated gossip option may open a Blizzard-owned service. Keep
--- GossipFrame parked only across that one direct click's bounded handoff;
--- quest choices, unsupported actions and ordinary exits still restore first.
+-- P0504: validated gossip options AND current quest links can transition
+-- across native stages while their original GossipFrame remains parked.
+-- Unsupported/stale clicks, scheduler failures and explicit exits restore stock.
 local choiceTicket, choiceSerial = nil, 0
 local choiceHolds, choiceTimeouts, choiceFailures = 0, 0, 0
 local choiceOutcome = "idle"
@@ -125,12 +125,12 @@ function Live.GetAudit()
     }
 end
 
--- Quest links and unsupported paths MUST restore stock before invoking a
--- native action. Only a directly validated gossip option can hold the already
--- parked unprotected GossipFrame, and only with an armed one-shot fallback.
+-- Only validated direct user selections can hold the already parked,
+-- unprotected GossipFrame: gossip options or current quest links.
+-- Unsupported/unscheduled calls always restore stock before native dispatch.
 function Live.BeforeNativeChoice(kind)
     if choiceTicket ~= nil then return false, "choice-handoff-pending" end
-    if kind == "gossip-option" and active
+    if (kind == "gossip-option" or kind == "quest-link") and active
         and Logres.NPCGossipStockParking.IsParked() then
         local d = dialogue()
         choiceSerial = choiceSerial + 1
@@ -242,6 +242,12 @@ Logres:RegisterEvent("GOSSIP_CLOSED", function()
     hide("gossip-closed")
 end)
 Logres:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE", function()
+    -- Gossip may close before a quest detail or a service opens. Its source
+    -- stays parked until a native next-stage event or the bounded timeout.
+    if choiceTicket ~= nil then
+        choiceOutcome = "interaction-hidden-awaiting-branch"
+        return
+    end
     if pending or active then hide("interaction-hidden") end
 end)
 for _, event in ipairs({"QUEST_DETAIL", "QUEST_PROGRESS", "QUEST_COMPLETE",

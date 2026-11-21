@@ -264,7 +264,61 @@ local function independentlyEligible(questID)
     return true, "player-requirements-satisfied"
 end
 
+-- P0504: exact NPC *observed* without native available offers. This is
+-- a temporary negative fact about this player/session, never a QuestieDB
+-- history edit. All progression/zone invalidations reopen eligibility.
+local function currentOrdinaryNPCID()
+    if type(_G.UnitGUID) ~= "function" then return nil end
+    local guid = read(_G.UnitGUID, "npc")
+    guid = ordinary(guid, "string")
+    if not guid then return nil end
+    local raw = guid:match("^Creature%-[^%-]+%-[^%-]+%-[^%-]+%-[^%-]+%-(%d+)%-")
+    local id = raw and tonumber(raw)
+    return id and id > 0 and id == math.floor(id) and id or nil
+end
+
+function Nearby:ObserveNativeAvailableQuests(event)
+    if not self.moduleEnabled then return end
+    local id = currentOrdinaryNPCID()
+    if not id then return end
+    local absent
+    if event == "GOSSIP_SHOW" then
+        local api = ordinary(_G.C_GossipInfo, "table")
+        local fn = api and api.GetAvailableQuests
+        if type(fn) == "function" then
+            local ok, rows = pcall(fn)
+            rows = ok and ordinary(rows, "table") or nil
+            if rows then
+                local okFirst, first = pcall(function() return rows[1] end)
+                if okFirst and ordinary(first) ~= nil then
+                    absent = false
+                elseif okFirst and first == nil then
+                    absent = true
+                end
+            end
+        end
+    elseif event == "QUEST_GREETING" then
+        local fn = _G.GetNumAvailableQuests
+        if type(fn) == "function" then
+            local ok, value = pcall(fn)
+            value = ok and number(value) or nil
+            if value and value >= 0 and value <= 24
+                and value == math.floor(value) then
+                absent = value == 0
+            end
+        end
+    end
+    if absent == nil then return end
+    self.observedNoOfferNPCIDs = self.observedNoOfferNPCIDs or {}
+    self.observedNoOfferNPCIDs[id] = absent or nil
+    self.observedNoOfferLastNPCID = id
+    self.observedNoOfferLastReason = absent and event .. "-no-offers"
+        or event .. "-has-offers"
+end
+
 function Nearby:InvalidateEligibility(reason)
+    self.observedNoOfferNPCIDs = {}
+    self.observedNoOfferLastReason = "invalidated-" .. tostring(reason or "unknown")
     self.questEligibilityCache = {}
     self.questEligibilityCacheCount = 0
     self.questEligibilityLastInvalidation = reason or "initialize"
@@ -684,7 +738,9 @@ function Nearby:GetNearbyRows(map, px, py, width, height, currentQuestOffers)
             if not seen[row.npcID] then
                 local ids = row.questIDs
                 local confirmed
-                if type(ids) == "table" then
+                local observedNoOffer = self.observedNoOfferNPCIDs
+                    and self.observedNoOfferNPCIDs[row.npcID] == true
+                if not observedNoOffer and type(ids) == "table" then
                     for qi=1,math.min(#ids,MAX_QUEST_IDS_PER_NPC) do
                         local id = ids[qi]
                         local allowed, reason = self:EligibilityForQuest(id)
@@ -712,6 +768,10 @@ function Nearby:GetNearbyRows(map, px, py, width, height, currentQuestOffers)
                     if #unique >= MAX_NEARBY then break end
                 else
                     self.questEligibilityRejectedNPCs = self.questEligibilityRejectedNPCs + 1
+                    if observedNoOffer then
+                        self.questEligibilityLastReason = "native-visit-no-offers"
+                        self.questEligibilityLastNPCID = row.npcID
+                    end
                 end
             end
         end
@@ -799,6 +859,8 @@ function Nearby:GetDebugStatus()
         eligibilityFirstQualifiedNPCID = self.questEligibilityFirstQualifiedNPCID,
         eligibilityFirstQualifiedQuestID = self.questEligibilityFirstQualifiedQuestID,
         eligibilityLastInvalidation = self.questEligibilityLastInvalidation,
+        observedNoOfferLastNPCID = self.observedNoOfferLastNPCID,
+        observedNoOfferLastReason = self.observedNoOfferLastReason,
 
         nearby = self.nearbyCount or 0, truncated = self.truncated == true,
         radius = LOCAL_RADIUS_YARDS,
@@ -833,12 +895,18 @@ function Nearby:OnInitialize()
     self.frame:RegisterEvent("PLAYER_ENTERING_WORLD")
     self.frame:RegisterEvent("PLAYER_MAP_CHANGED")
     self.frame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+    self.frame:RegisterEvent("GOSSIP_SHOW")
+    self.frame:RegisterEvent("QUEST_GREETING")
     for _, event in ipairs({"QUEST_LOG_UPDATE", "QUEST_ACCEPTED", "QUEST_REMOVED",
         "QUEST_TURNED_IN", "PLAYER_LEVEL_UP", "UPDATE_FACTION",
         "SKILL_LINES_CHANGED", "SPELLS_CHANGED"}) do
         self.frame:RegisterEvent(event)
     end
     self.frame:SetScript("OnEvent", function(_, event)
+        if event == "GOSSIP_SHOW" or event == "QUEST_GREETING" then
+            self:ObserveNativeAvailableQuests(event)
+            return
+        end
         self:InvalidateEligibility(event)
         if self.moduleEnabled and (event == "PLAYER_ENTERING_WORLD"
             or event == "PLAYER_MAP_CHANGED" or event == "ZONE_CHANGED_NEW_AREA") then

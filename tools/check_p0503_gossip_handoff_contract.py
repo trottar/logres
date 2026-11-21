@@ -19,7 +19,7 @@ boot = read("Logres/Core/Bootstrap.lua")
 
 for token in (
     "function Live.BeforeNativeChoice(kind)",
-    'kind == "gossip-option" and active',
+    '(kind == "gossip-option" or kind == "quest-link") and active',
     "Logres.NPCGossipStockParking.IsParked()",
     "d:ScheduleGossipOptionHandoff(ticket)",
     'Logres.NPCGossipStockParking.RequestExit("native-choice-handoff")',
@@ -47,9 +47,10 @@ for token in (
 ):
     assert token in choice, f"missing verified native click/rollback: {token}"
 assert choice.index('BeforeNativeChoice("gossip-option")') < choice.index('pcall(fn, chosen.gossipOptionID)')
-assert 'BeforeNativeChoice()' in quest and 'pcall(fn, chosen.questID)' in quest
-assert quest.index('BeforeNativeChoice()') < quest.index('pcall(fn, chosen.questID)')
+assert 'BeforeNativeChoice("quest-link")' in quest and 'pcall(fn, chosen.questID)' in quest
+assert quest.index('BeforeNativeChoice("quest-link")') < quest.index('pcall(fn, chosen.questID)')
 assert 'Greeting.Restore("native-quest-selected")' in quest  # QuestFrame greeting unchanged
+assert 'Logres.NPCGossipPresentation.OnNativeChoiceFailed(ticket)' in quest
 assert 'function Dialogue:ScheduleGossipOptionHandoff(ticket)' in dialogue
 assert 'return pcall(C_Timer.After, 0.8, function()' in dialogue
 assert 'not ordinaryProgress(C_Timer.After)' in dialogue

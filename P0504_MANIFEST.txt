@@ -1,0 +1,31 @@
+P0504 Guard quest handoff and observed no-offer quest giver markers
+Verified baseline: 325f4dc14c440b18cf27cfddabd97d00c18a06c9
+Candidate runtime version: 0.0.370-dev
+PREWRITE: 365/365 STATIC PASS
+POSTWRITE: 365/365 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Logres.toc
+Logres/Navigation/QuestieDBNearby.lua
+Logres/Quest/NPCGossipPresentation.lua
+Logres/Quest/NPCGossipQuestChoice.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0504_QUEST_HANDOFF_AND_FALSE_QUEST_GIVER.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0321_gossip_single_window_contract.py
+tools/check_p0503_gossip_handoff_contract.py
+tools/check_p0504_quest_compass_contract.py
+tools/test_p0486_quest_flags.lua
+tools/test_p0503_gossip_handoff.lua
+P0504_MANIFEST.txt

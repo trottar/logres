@@ -2496,3 +2496,11 @@ by 10px, screen cue and cast source untouched. No secret inspection,
 secure behavior, source routing or native UI suppression change.
 User client visual approval and protected/taint safety are UNVERIFIED;
 L-054/L-057 remain OPEN. Evidence: `docs/memory/evidence/P0497_AURA_ANCHOR_WORLD_CAST_PLACEMENT.md`.
+
+## P0504 — Source-gated quest and compass incident repair (2026-11-21)
+
+P0503 is pushed (main `325f4dc`); reported P0502 user incident #20865
+quest flash and #20897 Sergeant De Vries false quest marker. P0504 retains
+P0503 service and P0502 camera behavior, adds one-shot validated quest-link
+continuity and exact-NPC observed no-offer suppression of DB-only candidate.
+L-002/L-030 remain client UNVERIFIED; see P0504 evidence.

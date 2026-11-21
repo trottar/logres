@@ -89,15 +89,18 @@ function Quest.Activate(model, index)
             return deny("quest-or-gossip-row-changed")
         end
     end
-    local restored = Logres.NPCGossipPresentation.BeforeNativeChoice()
-    if not restored then return deny("native-quest-restore-deferred") end
+    local ready, ticket = Logres.NPCGossipPresentation.BeforeNativeChoice("quest-link")
+    if not ready then return deny("native-quest-restore-deferred") end
     attempts = attempts + 1
     local ok = pcall(fn, chosen.questID)
-    if not ok then return deny("native-quest-open-failed") end
+    if not ok then
+        Logres.NPCGossipPresentation.OnNativeChoiceFailed(ticket)
+        return deny("native-quest-open-failed")
+    end
     issued = issued + 1
     last = "native-quest-detail-requested"
     if Logres.NPCGossipPresentation and Logres.NPCGossipPresentation.OnNativeChoice then
-        Logres.NPCGossipPresentation.OnNativeChoice()
+        Logres.NPCGossipPresentation.OnNativeChoice(ticket)
     end
     return true, last
 end

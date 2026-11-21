@@ -154,6 +154,45 @@ assert(#rows==8 and rows[1].npcID==240 and rows[1].providerEligible==true
 assert(Nearby.questEligibilityQualifiedNPCs==1 and Nearby.questEligibilityRejectedNPCs==9)
 local report=Nearby:GetDebugStatus()
 assert(report.eligibilityQualified==1 and report.eligibilityCache>0)
+-- P0503 R2: actual, ordinary zero-offer observation for the *exact* NPC
+-- temporarily vetoes DB-only eligibility while preserving native override.
+-- A missing/secret API result is not proof of no offers.
+env.UnitGUID=function(unit)
+ assert(unit=="npc")
+ return "Creature-0-0-0-0-240-00000000"
+end
+env.C_GossipInfo={GetAvailableQuests=function()return {} end}
+Nearby.frame.OnEvent(nil,"GOSSIP_SHOW")
+assert(Nearby.observedNoOfferNPCIDs[240]==true)
+rows=Nearby:GetNearbyRows(1,0,0,100,100,{})
+assert(Nearby.questEligibilityQualifiedNPCs==0
+ and Nearby.questEligibilityLastReason=="native-visit-no-offers",
+ "observed no-offer NPC incorrectly retained historical quest marker")
+assert(Nearby:GetDebugStatus().observedNoOfferLastNPCID==240)
+rows=Nearby:GetNearbyRows(1,0,0,100,100,{[35]=true})
+assert(rows[1].npcID==240,"native confirmed offer must override no-offer observation")
+Nearby.frame.OnEvent(nil,"QUEST_LOG_UPDATE")
+assert(Nearby.observedNoOfferNPCIDs[240]==nil,
+ "quest-log change must release observed no-offer veto")
+rows=Nearby:GetNearbyRows(1,0,0,100,100,{})
+assert(rows[1].npcID==240 and rows[1].providerEligible==true,
+ "player progression did not restore independent model")
+env.C_GossipInfo.GetAvailableQuests=function()error("unknown gossip")end
+Nearby.frame.OnEvent(nil,"GOSSIP_SHOW")
+assert(Nearby.observedNoOfferNPCIDs[240]==nil,
+ "failed native observation incorrectly suppressed marker")
+env.GetNumAvailableQuests=function()return 0 end
+Nearby.frame.OnEvent(nil,"QUEST_GREETING")
+assert(Nearby.observedNoOfferNPCIDs[240]==true,
+ "ordinary zero-offer QuestFrame greeting must gate same NPC")
+env.GetNumAvailableQuests=function()return 1 end
+Nearby.frame.OnEvent(nil,"QUEST_GREETING")
+assert(Nearby.observedNoOfferNPCIDs[240]==nil,
+ "new actual native offer must clear temporary veto")
+env.UnitGUID=function()return secret end
+Nearby.frame.OnEvent(nil,"QUEST_GREETING")
+assert(Nearby.observedNoOfferNPCIDs[240]==nil,
+ "secret NPC identity cannot authorize a negative marker")
 -- Explicit native source stays authoritative even if metadata is conditional.
 Nearby.rows[11]={npcID=500,name='Native',questID=62,questIDs={62},x=.32,y=0}
 rows=Nearby:GetNearbyRows(1,0,0,100,100,{[62]=true})
