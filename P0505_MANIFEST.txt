@@ -1,0 +1,25 @@
+P0505 Contain the flight map and sidebar inside their dedicated shell
+Verified baseline: 6e4ea974c14c1bca94be26ecdf302faf1fc8b932
+Candidate runtime version: 0.0.371-dev
+PREWRITE: 366/366 STATIC PASS
+POSTWRITE: 366/366 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Logres.toc
+Logres/Quest/FlightWindow.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0505_FLIGHT_PANEL_BOUNDS.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0505_flight_panel_bounds_contract.py
+P0505_MANIFEST.txt

@@ -12,6 +12,16 @@ all compass 2/3- and 3/4yd behavior unchanged. P0485 gameplay FAIL,
 L-030 OPEN/PARTIAL, P0486 client UNVERIFIED. Evidence:
 `docs/memory/evidence/P0486_INFORMATIONAL_QUEST_FLAGS.md`.
 
+## P0505 — Flight-map shell bounds (2026-11-21)
+
+P0504 main `6e4ea974` verified. L-004 Forever screenshots show native taxi map
+x279+580=859 and y100+580=680 exceeding 820x660 shell despite
+`hostResult=centered`. P0505 flight-only 900x720 shell restores
+40px map/sidebar footer and 41px right inset while preserving native
+580-square map, 20-child pin/route ownership and normal stock fallback.
+Viewport guard uses the new flight bounds. In-game layout and route
+transactions UNVERIFIED. See P0505 flight evidence; L-004 PARTIAL.
+
 ## P0502 — L-036 NPC camera visit continuity (2026-11-21)
 
 P0501 main `04431587` verified. Scoped camera approval after an hour of user-reported stable gameplay. P0502 candidate delays only native quest/gossip stage-close camera reconciliation for the existing bounded camera motion driver for 0.45s, while ongoing prompt shows cancel the release and context interruptions still apply. All camera motion durations are 1/0.65 longer; continuous rotation angular speed is 0.65, while targets, angles, sampling, coexistence and native UI remain unchanged. L-036 OPEN until Forever back-to-back same-NPC/close/interruption regression; static PASS not yet claimed. See P0502 evidence.

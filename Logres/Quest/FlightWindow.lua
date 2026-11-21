@@ -131,8 +131,18 @@ do
 end
 local hostResult = "not-attempted"
 local config = Logres.PanelConfigs.trainer
-local visual, palette = config.preview, config.landscape.palette
+-- P0505: the native 580-square taxi map must fit inside the flight-only shell.
+-- Keep its original size and pin/route anchors; enlarge only addon-owned art.
+local visual = {width = 900, height = 720, point = config.preview.point,
+    relativePoint = config.preview.relativePoint, x = config.preview.x,
+    y = config.preview.y, strata = config.preview.strata}
+local palette = config.landscape.palette
 local mapX, mapY, mapSize = 279, 100, 580
+local function flightFits()
+    local width, height = chrome.read(UIParent, "GetWidth"), chrome.read(UIParent, "GetHeight")
+    return type(width) == "number" and width >= visual.width
+        and type(height) == "number" and height >= visual.height + math.abs(visual.y)
+end
 local live, preview, visit, stockOnly
 local result, opens, restores = "idle", 0, 0
 local lastState, lastFare
@@ -646,7 +656,7 @@ end
 local function apply(root)
     if live or not visit or stockOnly or not inContext(Logres:GetState()) or not chrome.unlocked()
         or not chrome.mutable(root) or chrome.read(root, "IsShown") ~= true then return end
-    if not chrome.fits() then result = "stock-small-viewport"; return end
+    if not flightFits() then result = "stock-small-viewport"; return end
     local map, routeMap = chrome.member(root, "InsetBg"), chrome.member(_G, "TaxiRouteMap")
     if not map or not routeMap or chrome.read(map, "GetParent") ~= root
         or chrome.read(routeMap, "GetParent") ~= root then
@@ -797,7 +807,7 @@ Logres:RegisterEvent("PLAYER_MONEY", function()
     if live and not live.pending and not live.requested then refreshRoutes(live) end
 end)
 Logres:RegisterEvent("DISPLAY_SIZE_CHANGED", function()
-    if live and not chrome.fits() then
+    if live and not flightFits() then
         restore("stock-small-viewport")
     elseif live and not (live.centered and host.MatchesScale(live.art, live.routeMap, live.hostedPins)
         or not live.centered and matchesParentScale(live.root)) then

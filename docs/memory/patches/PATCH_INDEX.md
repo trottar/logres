@@ -1,3 +1,12 @@
+## P0505 — Flight-only map and sidebar containment (2026-11-21)
+
+P0504 main `6e4ea974` verified. L-004 screenshot evidence: native 580-square
+map at (279,100) overran trainer-sized flight shell (820x660) on right/bottom.
+P0505 raises only flight art to 900x720 and guards viewport fit; map, native
+pins, fares, interaction and camera untouched. Client route and layout
+verification pending; historical P0404 PASS remains scoped, not overwritten.
+Evidence: `docs/memory/evidence/P0505_FLIGHT_PANEL_BOUNDS.md`.
+
 ## P0503 — L-001 transient native gossip option handoff audit (2026-11-21)
 
 Release logistics: initial P0503 Chat author-receipt ZIP REFUSED before writes due to reconstructed author kit missing tracked `P0502_MANIFEST.txt`. P0503 R1 reissues the same bounded handoff via the separate canonical guarded payload route with apply-time exact baseline and source checks. See evidence for negative result; no WoW PASS claimed.

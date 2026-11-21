@@ -12,6 +12,16 @@ all compass 2/3- and 3/4yd behavior unchanged. P0485 gameplay FAIL,
 L-030 OPEN/PARTIAL, P0486 client UNVERIFIED. Evidence:
 `docs/memory/evidence/P0486_INFORMATIONAL_QUEST_FLAGS.md`.
 
+## P0505 — Flight-map shell bounds (2026-11-21)
+
+P0504 main `6e4ea974` verified. L-004 Forever screenshots show native taxi map
+x279+580=859 and y100+580=680 exceeding 820x660 shell despite
+`hostResult=centered`. P0505 flight-only 900x720 shell restores
+40px map/sidebar footer and 41px right inset while preserving native
+580-square map, 20-child pin/route ownership and normal stock fallback.
+Viewport guard uses the new flight bounds. In-game layout and route
+transactions UNVERIFIED. See P0505 flight evidence; L-004 PARTIAL.
+
 ## P0503 — Audit NPC handoff flash without broad native suppression (2026-11-21)
 
 P0502 main `07f98c56` verified. User reports camera behavior good. Forever session189 #20395 `native-choice-handoff` restores GossipFrame before a service choice, then GOSSIP_CLOSED #20399 about 0.174s before/at interactionType7 #20400; screenshot20401 captures the correct Logres trainer after the reported fleeting popup, not its pixel identity. L-001 OPEN. P0503 candidate optionally holds only the already parked unprotected gossip root through one validated native option, with a bounded one-shot timeout, authoritative new-page/service events, and immediate fail-open recovery. Quest/Continue/claim, trainer/merchant/flight/registrar service transaction owners, camera, native stock and unsupported fallback remain unchanged. L-001 client UNVERIFIED. See P0503 evidence.

@@ -1,3 +1,24 @@
+## P0505 — L-004 flight map containment audit (2026-11-21)
+
+GitHub main P0504 `6e4ea974c14c1bca94be26ecdf302faf1fc8b932`
+verified before changes, with actual P0504-manifest and version0.0.370-dev
+in reconstructed baseline. Forever `0.0.370-dev` flight screenshots
+12:37:27/13:05:54 and incident21941 show map outside painted shell despite
+`hostResult=centered` and `scaleMatched=true`. Source arithmetic: map ends
+x859/y680, host width820/height660, sidebar ends y680. Narrow P0505
+flight-only 900x720 shell leaves map inset41/40; native 580x580 map,
+route lines, native pin adoption, click scripts and fare controls unchanged.
+New ordinary UIParent viewport guard fails open to stock when insufficient.
+First candidate static sweep FAILED 361/366: five legacy checker contracts
+P0381/P0408/P0443/P0448/P0449 rejected the P0505 heading prepended above
+the CURRENT P0486 active checkpoint. Kept failure; corrected documentation
+section ordering without weakening any checker, then required complete rerun.
+Historical P0404 input contract, P0399 route guard and P0398 scale guard
+must remain PASS. Full exact-candidate static suite and ZIP prewrite/postwrite
+safety audit required before release; static PASS is not Forever PASS.
+In-game route clicks, Goodbye, protected/combat and unknown parent shape
+remain UNVERIFIED; L-004 PARTIAL. No client success claimed.
+
 ## P0501 — L-002 Quest stage dynamic child rebase audit (2026-11-20)
 
 Main P0500 `e3eb5a7887858e6146fef184e5018fb368dd4fb8`

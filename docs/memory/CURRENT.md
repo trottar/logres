@@ -14,7 +14,7 @@ Alpha blocked. D-046/D-047/D-048.
 **P0486** q35 PASS; P0487 PASS.
 P0489 PASS; P0490 hover PASS/combat FAIL.
 P0491 P0492 P0493 P0494; P0499 L-055 scoped PASS, monitor.
-P0500 corpse OPEN/bags deferred; P0502 L-036 scoped PASS; P0504 L-002/030 trial UNVERIFIED. L-004 new flight UI report, cause unverified.
+P0500 corpse OPEN/bags deferred; P0502 L-036 scoped PASS; P0504 L-002/030 UNVERIFIED. P0505 L-004 flight fit trial UNVERIFIED.
 L-056 BLOCKED.
 **P0488** L-054 P0497 layout PASS; L-057 cast-above PASS scoped. L-030 q37 PASS.
 **P0485** FAIL retained.
