@@ -1,0 +1,28 @@
+P0508 Restore distinct quest-giver gold and subdued service art without changing compass shape or size
+Verified baseline: aacf09d2dfce60d842c879cf57f548d764c2af8a
+Candidate runtime version: 0.0.373-dev
+PREWRITE: 368/368 STATIC PASS
+POSTWRITE: 368/368 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Logres.toc
+Logres/Media/Compass/compass_local_poi_quest.tga
+Logres/Media/Compass/compass_local_poi_service.tga
+Logres/Media/Theme.lua
+Logres/Navigation/Compass.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0508_COMPASS_PALETTE_CONTRAST.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0508_compass_palette_contrast_contract.py
+P0508_MANIFEST.txt

@@ -11,6 +11,26 @@ claimed. Exact docs candidate and ZIP integrity/checker audit
 recorded in the external build receipt; install-time full checks
 are required.
 
+## P0508 — L-060 gold contrast recovery (2026-11-21)
+
+Baseline remote P0507 `aacf09d2dfce60d842c879cf57f548d764c2af8a`
+verified. Source/deployed/captured 0.0.372-dev session199 matches; user
+reports P0507 visual FAIL. Quest2/service3 shown; timestamps are inferred.
+Source art tinted over dark brown plus provider alpha=.55 explains weak
+contrast. Pixel-identical original alpha and dimensions on the two new
+RGB-only texture variants; render geometry, source/quest roles and
+uncertainty alpha unchanged. Initial new focused asset checker FAILED
+because it treated the 26-byte standard TGA footer as image pixels;
+corrected it to check only the declared 36x36 RGBA region. An initial
+git diff --check also refused one trailing space in P0508 evidence;
+corrected it before the final suite. No runtime change in either fix.
+No changes were made to source art or alpha. First complete 368/368 historical
+checker sweep PASSED (Lua source fixtures enabled via liblua5.4 shim),
+changed runtime Lua 5.4 syntax compilation PASS, and 13/13 modified
+baseline source blob IDs matched verified GitHub main P0507. Final
+exact audit-bearing candidate and ZIP parity must be rechecked.
+Static checks are NOT a client visual PASS. See P0508 evidence.
+
 ## P0505 — L-004 flight map containment audit (2026-11-21)
 
 GitHub main P0504 `6e4ea974c14c1bca94be26ecdf302faf1fc8b932`

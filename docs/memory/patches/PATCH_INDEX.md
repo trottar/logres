@@ -1,3 +1,16 @@
+## P0508 — L-060 visibility fix after P0507 visual FAIL (2026-11-21)
+
+Verified P0507 `aacf09d` on main. Forever 0.0.372-dev session199
+#22267/#22269 screenshots show quest and service markers; user reports
+no meaningful distinction after P0507 (visual FAIL). Original 36px POI
+art is brown: P0507 multiplicative tints cannot make bright gold.
+P0508 adds gold+muted RGB remasters with pixel-exact original alpha,
+reuses existing 9px shape, role tint, uncertainty alpha, position,
+source and quest filters; chooses texture afresh on pooled reuse.
+No eligibility, native-frame or protected-state changes. In-client
+contrast UNVERIFIED; L-060 OPEN. Evidence:
+`docs/memory/evidence/P0508_COMPASS_PALETTE_CONTRAST.md`.
+
 ## P0507 — L-060 restrained compass marker color hierarchy (2026-11-21)
 
 P0506 main `d726645` verified. The local 9x9 POI art serves quest

@@ -414,6 +414,8 @@ theme.compass = {
         manualWaypoint = MEDIA_ROOT .. "Compass\\compass_manual_waypoint.tga",
         questDestination = MEDIA_ROOT .. "Compass\\compass_quest_destination.tga",
         localPOI = MEDIA_ROOT .. "Compass\\compass_local_poi.tga",
+        questGiverPOI = MEDIA_ROOT .. "Compass\\compass_local_poi_quest.tga",
+        servicePOI = MEDIA_ROOT .. "Compass\\compass_local_poi_service.tga",
         tracking = MEDIA_ROOT .. "Compass\\compass_tracking.tga",
     },
 }

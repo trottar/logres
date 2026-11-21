@@ -1274,6 +1274,18 @@ function Compass:RefreshAvailableQuestPOIs(reason)
             else
                 rendered = rendered + 1
                 local glyph = pool[rendered]
+                -- P0508: the old brown art multiplied away P0507's gold tint.
+                -- Swap only addon-owned RGB art; both new sprites carry the
+                -- original source alpha mask, so shape and bounds are identical.
+                -- Select on every reuse to prevent a pooled quest/service tint
+                -- leaking into a later marker of the other category.
+                if role == "service" then
+                    glyph:SetTexture(compassAssets.servicePOI or compassAssets.localPOI)
+                elseif role == "poi" and candidate.questGiver then
+                    glyph:SetTexture(compassAssets.questGiverPOI or compassAssets.localPOI)
+                elseif role == "poi" then
+                    glyph:SetTexture(compassAssets.localPOI)
+                end
                 glyph:ClearAllPoints()
                 glyph:SetPoint("CENTER", self.frame, "CENTER", candidate.x, TAPE_Y)
                 if role == "quest" then
