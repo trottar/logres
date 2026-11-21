@@ -1,0 +1,26 @@
+P0507 Color-rank quest giver and service compass POIs without geometry changes
+Verified baseline: d7266456ddca93693589c944985366cbeb6310b0
+Candidate runtime version: 0.0.372-dev
+PREWRITE: 367/367 STATIC PASS
+POSTWRITE: 367/367 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Logres.toc
+Logres/Media/Theme.lua
+Logres/Navigation/Compass.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0507_COMPASS_QUEST_SERVICE_PALETTE.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0507_compass_palette_contract.py
+P0507_MANIFEST.txt

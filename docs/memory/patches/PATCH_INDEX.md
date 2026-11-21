@@ -1,3 +1,13 @@
+## P0507 — L-060 restrained compass marker color hierarchy (2026-11-21)
+
+P0506 main `d726645` verified. The local 9x9 POI art serves quest
+and service rows. Add gold only to quest-linked POIs; nonquest POIs
+neutral; 16 service colors softened within their current hue family.
+No size, shape, bearing, alpha, focus, source, eligibility, or
+native UI changes. Scoped static palette/legacy checks required;
+WoW contrast and distinction remain UNVERIFIED. Evidence:
+`docs/memory/evidence/P0507_COMPASS_QUEST_SERVICE_PALETTE.md`.
+
 ## P0506 — L-030 quest eligibility exceptions (docs only; 2026-11-21)
 
 P0505 main `3bf5a2c` verified. Source audit found existing level,

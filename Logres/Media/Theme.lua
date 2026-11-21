@@ -378,6 +378,10 @@ theme.compass = {
 
     questDestination = { width = 10, height = 18, alpha = 0.96 },
     localPOI = { width = 9, height = 9, alpha = 0.90 },
+    poiPalette = {
+        questGiver = { 1.00, 0.86, 0.42 },
+        other = { 0.62, 0.63, 0.60 },
+    },
     tracking = { width = 4, height = 5, alpha = 0.86 },
     manualWaypoint = {
         width = 12,

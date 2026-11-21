@@ -14,7 +14,9 @@ Alpha blocked. D-046/D-047/D-048.
 **P0486** q35 PASS; P0487 PASS.
 P0489 PASS; P0490 hover PASS/combat FAIL.
 P0491 P0492 P0493 P0494; P0499 L-055 scoped PASS, monitor.
-P0500 corpse OPEN/bags deferred; P0502 L-036 scoped PASS; P0504 L-002/030 trial. P0505 flight visual PASS (user). P0506 L-030 item-trigger exceptions accepted; PARTIAL.
+P0500 corpse/bags backlog; P0502 camera PASS; P0504 L-002/030 trial.
+P0505 flight visual PASS; P0506 L-030 exceptions PARTIAL.
+P0507 L-060 quest gold/service muted; WoW UNVERIFIED.
 L-056 BLOCKED.
 **P0488** L-054 P0497 layout PASS; L-057 cast-above PASS scoped. L-030 q37 PASS.
 **P0485** FAIL retained.

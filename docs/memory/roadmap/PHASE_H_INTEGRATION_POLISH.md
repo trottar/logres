@@ -12,6 +12,16 @@ all compass 2/3- and 3/4yd behavior unchanged. P0485 gameplay FAIL,
 L-030 OPEN/PARTIAL, P0486 client UNVERIFIED. Evidence:
 `docs/memory/evidence/P0486_INFORMATIONAL_QUEST_FLAGS.md`.
 
+## P0507 — L-060 restrained compass marker color hierarchy (2026-11-21)
+
+P0506 main `d726645` verified. The local 9x9 POI art serves quest
+and service rows. Add gold only to quest-linked POIs; nonquest POIs
+neutral; 16 service colors softened within their current hue family.
+No size, shape, bearing, alpha, focus, source, eligibility, or
+native UI changes. Scoped static palette/legacy checks required;
+WoW contrast and distinction remain UNVERIFIED. Evidence:
+`docs/memory/evidence/P0507_COMPASS_QUEST_SERVICE_PALETTE.md`.
+
 ## P0505 — Flight-map shell bounds (2026-11-21)
 
 P0504 main `6e4ea974` verified. L-004 Forever screenshots show native taxi map

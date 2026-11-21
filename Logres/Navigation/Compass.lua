@@ -16,25 +16,30 @@ local intercardinalTickStyle = tickStyle.intercardinal or {}
 local manualWaypointStyle = compassStyle.manualWaypoint or {}
 local questStyle = compassStyle.questDestination or {}
 local poiStyle = compassStyle.localPOI or {}
+-- A color-only hierarchy for the existing 9x9 POI texture.
+-- Quest-giver gold requires a quest-linked row, never service history alone.
+local poiPalette = compassStyle.poiPalette or {}
+local questGiverTint = poiPalette.questGiver or { 1.00, 0.86, 0.42 }
+local otherPoiTint = poiPalette.other or { 0.62, 0.63, 0.60 }
 local trackingStyle = compassStyle.tracking or {}
 -- These are only possible historical service sites, not live tracking blips.
 local SERVICE_MARKER_STYLE = {
-    flight = { role = "flight", r = 0.52, g = 0.79, b = 0.98 },
-    inn = { role = "inn", r = 0.97, g = 0.75, b = 0.44 },
-    repair = { role = "repair", r = 0.70, g = 0.83, b = 0.71 },
-    vendor = { role = "vendor", r = 0.84, g = 0.80, b = 0.60 },
-    trainer = { role = "profession", r = 0.72, g = 0.68, b = 0.96 },
-    banker = { role = "banker", r = 0.94, g = 0.84, b = 0.43 },
-    auction = { role = "auction", r = 0.96, g = 0.69, b = 0.63 },
-    stable = { role = "stable", r = 0.64, g = 0.87, b = 0.66 },
-    battle = { role = "battleground", r = 0.93, g = 0.58, b = 0.59 },
-    healer = { role = "spirit healer", r = 0.70, g = 0.92, b = 0.91 },
-    guide = { role = "spirit guide", r = 0.56, g = 0.85, b = 0.93 },
-    tabard = { role = "tabard", r = 0.88, g = 0.66, b = 0.87 },
-    petition = { role = "petition", r = 0.75, g = 0.79, b = 0.64 },
-    barber = { role = "barber", r = 0.92, g = 0.65, b = 0.85 },
-    reforge = { role = "reforge", r = 0.66, g = 0.75, b = 0.95 },
-    transmog = { role = "transmog", r = 0.73, g = 0.64, b = 0.97 },
+    flight = { role = "flight", r = 0.52, g = 0.66, b = 0.72 },
+    inn = { role = "inn", r = 0.72, g = 0.62, b = 0.48 },
+    repair = { role = "repair", r = 0.56, g = 0.64, b = 0.56 },
+    vendor = { role = "vendor", r = 0.66, g = 0.63, b = 0.51 },
+    trainer = { role = "profession", r = 0.59, g = 0.55, b = 0.69 },
+    banker = { role = "banker", r = 0.72, g = 0.65, b = 0.47 },
+    auction = { role = "auction", r = 0.70, g = 0.53, b = 0.51 },
+    stable = { role = "stable", r = 0.53, g = 0.65, b = 0.55 },
+    battle = { role = "battleground", r = 0.68, g = 0.50, b = 0.51 },
+    healer = { role = "spirit healer", r = 0.57, g = 0.69, b = 0.68 },
+    guide = { role = "spirit guide", r = 0.52, g = 0.66, b = 0.69 },
+    tabard = { role = "tabard", r = 0.67, g = 0.54, b = 0.66 },
+    petition = { role = "petition", r = 0.59, g = 0.62, b = 0.53 },
+    barber = { role = "barber", r = 0.68, g = 0.53, b = 0.64 },
+    reforge = { role = "reforge", r = 0.55, g = 0.61, b = 0.70 },
+    transmog = { role = "transmog", r = 0.59, g = 0.54, b = 0.71 },
 }
 
 -- Local POI size conveys distance, unlike the separate long-range quest lane.
@@ -1071,7 +1076,8 @@ function Compass:RefreshAvailableQuestPOIs(reason)
                 and type(self.nativeCurrentQuestOffers)=="table"
                 and self.nativeCurrentQuestOffers[row.questID]==true
                 or row.providerEligible == true,
-            kind=role, serviceKind=role=="service" and row.serviceKind or nil}
+            kind=role, serviceKind=role=="service" and row.serviceKind or nil,
+            questGiver=role=="poi" and questLinked}
         -- Only real provider spawn coordinates form an arrival identity.
         -- Unknown/secret/missing source positions do not acquire a latch.
         if providerNPC and not isSecret(row.sourceX) and not isSecret(row.sourceY)
@@ -1286,6 +1292,9 @@ function Compass:RefreshAvailableQuestPOIs(reason)
                 if role == "service" then
                     local style = SERVICE_MARKER_STYLE[candidate.serviceKind]
                     glyph:SetVertexColor(style.r, style.g, style.b, 1)
+                elseif role == "poi" then
+                    local tint = candidate.questGiver and questGiverTint or otherPoiTint
+                    glyph:SetVertexColor(tint[1], tint[2], tint[3], 1)
                 end
                 glyph:SetAlpha((roleStyle.alpha or 0.90)
                     * edgeFadeForMagnitude(candidate.magnitude)
