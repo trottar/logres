@@ -1,3 +1,15 @@
+## P0506 — L-030 quest eligibility exceptions (docs only; 2026-11-21)
+
+P0505 main `3bf5a2c` verified. Source audit found existing level,
+class/race, player quest-state, prerequisite/exclusion/chain and
+conservative conditional gates. QuestieDB does not guarantee
+offer-time possession or server event/phase eligibility. P0502
+NPC955 quest91738 false-positive remains possible pre-interaction;
+P0504 exact-NPC observed-no-offer gate retained. User accepts such
+exceptional triggers; no runtime change or general blacklist.
+L-030 PARTIAL. Evidence:
+`docs/memory/evidence/P0506_QUEST_ELIGIBILITY_EXCEPTIONS.md`.
+
 ## P0505 — Flight-only map and sidebar containment (2026-11-21)
 
 P0504 main `6e4ea974` verified. L-004 screenshot evidence: native 580-square

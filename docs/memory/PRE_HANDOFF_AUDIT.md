@@ -1,3 +1,16 @@
+## P0506 — L-030 eligibility exception docs-only audit (2026-11-21)
+
+Remote main P0505 `3bf5a2cb0bd085e9ebfb1909d07711f9633d5ad0`
+verified. Reviewed the exact present `QuestieDBNearby` independent
+eligibility model, P0485/P0486 negative and positive evidence,
+P0504 observed-no-offer behavior and QuestieDB public quest metadata.
+No generic pre-offer item/event/phase requirement is safely
+available. User accepts exceptional quests; no runtime source,
+checker, API, protected state or provider changes. No WoW PASS
+claimed. Exact docs candidate and ZIP integrity/checker audit
+recorded in the external build receipt; install-time full checks
+are required.
+
 ## P0505 — L-004 flight map containment audit (2026-11-21)
 
 GitHub main P0504 `6e4ea974c14c1bca94be26ecdf302faf1fc8b932`

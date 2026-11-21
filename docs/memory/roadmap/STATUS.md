@@ -12,6 +12,16 @@ all compass 2/3- and 3/4yd behavior unchanged. P0485 gameplay FAIL,
 L-030 OPEN/PARTIAL, P0486 client UNVERIFIED. Evidence:
 `docs/memory/evidence/P0486_INFORMATIONAL_QUEST_FLAGS.md`.
 
+## P0506 — L-030 item-gated quest boundary (2026-11-21)
+
+Verified P0505 main `3bf5a2c`. Existing character eligibility
+checks cover level/class/race/state/chain and known conditional
+flags. QuestieDB has no universal authoritative offer-time
+inventory/event/phase flag; q91738 NPC955 false-positive may remain
+until P0504 observes native zero offers. User accepts rare such
+exceptions. No generic inventory or calendar veto, no runtime
+change; L-030 PARTIAL. See P0506 evidence.
+
 ## P0505 — Flight-map shell bounds (2026-11-21)
 
 P0504 main `6e4ea974` verified. L-004 Forever screenshots show native taxi map
