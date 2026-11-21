@@ -12,6 +12,10 @@ all compass 2/3- and 3/4yd behavior unchanged. P0485 gameplay FAIL,
 L-030 OPEN/PARTIAL, P0486 client UNVERIFIED. Evidence:
 `docs/memory/evidence/P0486_INFORMATIONAL_QUEST_FLAGS.md`.
 
+## P0502 — L-036 NPC camera visit continuity (2026-11-21)
+
+P0501 main `04431587` verified. Scoped camera approval after an hour of user-reported stable gameplay. P0502 candidate delays only native quest/gossip stage-close camera reconciliation for the existing bounded camera motion driver for 0.45s, while ongoing prompt shows cancel the release and context interruptions still apply. All camera motion durations are 1/0.65 longer; continuous rotation angular speed is 0.65, while targets, angles, sampling, coexistence and native UI remain unchanged. L-036 OPEN until Forever back-to-back same-NPC/close/interruption regression; static PASS not yet claimed. See P0502 evidence.
+
 ## P0501 — L-002 guarded dynamic Progress → Completion ownership (2026-11-20)
 
 P0500 main `e3eb5a7` verified. Forever session186 Quest83 event #19422

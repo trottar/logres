@@ -3,7 +3,7 @@
 # P0492 fade; P0493 sibling, P0494 tags.
 # OOC0; combat main/Bar4=1, side/pet=.85, utility/Bar5=.75.
 # P0497 PASS; P0501 L-002 dynamic quest child rebase UNVERIFIED.
-# P0499 L-055 scoped PASS/monitor; P0500 L-058 corpse OPEN, L-059 bag DEFERRED.
+# P0499 L-055 PASS monitor; P0500 corpse OPEN/bags deferred; P0502 L-036 UNVERIFIED.
 # L-056 BLOCKED protected.
 # P0485: sparse DB client FAIL.
 # P0484: quest35 FAIL.

@@ -9,6 +9,8 @@ local INTERACTION_TARGET = 5
 local FISHING_TARGET = 50
 local GATHERING_TARGET = 5
 
+-- Motion durations, not frame sampling or NPC event timing, implement 35% slower travel.
+local CAMERA_MOTION_DURATION_SCALE = 1 / 0.65
 local TRANSITION_DURATION = 2.5
 local TAXI_TRANSITION_DURATION = 5
 local TELEPORT_TRANSITION_DURATION = 5
@@ -142,25 +144,23 @@ local function transitionDurationForContext(
     context,
     teleportDuration
 )
+    local duration = TRANSITION_DURATION
     if context == "taxi" then
-        return TAXI_TRANSITION_DURATION
-    end
-    if context == "teleport" then
+        duration = TAXI_TRANSITION_DURATION
+    elseif context == "teleport" then
         if type(teleportDuration) == "number" and teleportDuration > 0 then
-            return teleportDuration
+            duration = teleportDuration
+        else
+            duration = TELEPORT_TRANSITION_DURATION
         end
-        return TELEPORT_TRANSITION_DURATION
-    end
-    if context == "fishing" then
-        return FISHING_TRANSITION_DURATION
-    end
-    if context == "gathering" then
-        return GATHERING_TRANSITION_DURATION
-    end
-    if context == "afk" then
+    elseif context == "fishing" then
+        duration = FISHING_TRANSITION_DURATION
+    elseif context == "gathering" then
+        duration = GATHERING_TRANSITION_DURATION
+    elseif context == "afk" then
         return 0
     end
-    return TRANSITION_DURATION
+    return duration * CAMERA_MOTION_DURATION_SCALE
 end
 
 local function readBoolean(func, ...)
@@ -395,6 +395,8 @@ local Controller = Logres:RegisterModule("CameraWorldCombat", {
         self.fishingHoldUntil = nil
         self.fishingHoldSatisfied = false
         self.lastFishingHoldRemaining = nil
+        self.npcHandoffPending = false
+        self.npcHandoffUntil = nil
         self:StopTransition("module-disabled", false)
 
         if self.reactiveZoom then
@@ -650,6 +652,9 @@ function Controller:StopTransition(reason, countAsStop)
     self.transitionStartTime = nil
     self.transitionEasingName = nil
     self:SetAnimationActive(self.fishingHoldUntil ~= nil)
+    if self.npcHandoffUntil ~= nil then
+        self:SetAnimationActive(true)
+    end
     self.lastStopReason = reason
 
     if wasActive and countAsStop ~= false then
@@ -717,6 +722,8 @@ function Controller:Relinquish(reason, blocked)
     self.fishingHoldUntil = nil
     self.fishingHoldSatisfied = false
     self.lastFishingHoldRemaining = nil
+    self.npcHandoffPending = false
+    self.npcHandoffUntil = nil
     self:StopTransition(reason, self.transitionActive)
 
     if self.reactiveZoom then
@@ -1363,6 +1370,13 @@ end
 function Controller:OnUpdate()
     local now = GetTime()
 
+    if self.npcHandoffUntil ~= nil and now >= self.npcHandoffUntil then
+        self.npcHandoffUntil = nil
+        self.npcHandoffPending = false
+        self:Reconcile("npc-handoff-expired")
+        now = GetTime()
+    end
+
     if self.fishingHoldUntil ~= nil then
         local remaining = self.fishingHoldUntil - now
         if remaining > 0 then
@@ -1377,7 +1391,7 @@ function Controller:OnUpdate()
     end
 
     if not self.transitionActive then
-        if self.fishingHoldUntil == nil then
+        if self.fishingHoldUntil == nil and self.npcHandoffUntil == nil then
             self:SetAnimationActive(false)
         end
         return
@@ -1699,6 +1713,41 @@ function Controller:Reconcile(reason)
 
     context, contextReason = self:ResolveContextDelay(context, contextReason)
 
+    -- QUEST_FINISHED/GOSSIP_CLOSED can briefly precede another page during
+    -- the same visit. Keep the existing camera move until the next supported
+    -- interaction or a single bounded release check; never mask interruptions.
+    if self.npcHandoffPending then
+        if context == "interaction"
+            and (reason == "QUEST_FINISHED" or reason == "GOSSIP_CLOSED")
+        then
+            self.lastAction = "npc-visit-stage-close"
+            return true, "npc-visit-stage-close"
+        elseif context == "interaction" then
+            self.npcHandoffPending = false
+            self.npcHandoffUntil = nil
+        elseif reason == "npc-handoff-expired" then
+            self.npcHandoffPending = false
+            self.npcHandoffUntil = nil
+        elseif context == "combat"
+            or context == "taxi"
+            or context == "teleport"
+            or context == "gathering"
+            or context == "fishing"
+            or reason == "PLAYER_ENTERING_WORLD"
+            or reason == "PLAYER_TARGET_CHANGED"
+            or reason == "PLAYER_REGEN_DISABLED"
+            or reason == "ADDON_RESTRICTION_STATE_CHANGED"
+        then
+            -- Explicit context interruption overrides the transient visit.
+            self.npcHandoffPending = false
+            self.npcHandoffUntil = nil
+        else
+            -- A non-camera quest/state event may arrive between native pages.
+            self.lastAction = "npc-visit-continuity"
+            return true, "npc-visit-continuity"
+        end
+    end
+
     if context == "none" then
         self:Relinquish(contextReason, false)
         return true, contextReason
@@ -2017,6 +2066,17 @@ local function reconcileFromEvent(event, ...)
         if loadedAddon ~= "DynamicCam" then
             return
         end
+    end
+
+    -- A bounded handoff covers native close -> next quest/gossip show.
+    if (event == "QUEST_FINISHED" or event == "GOSSIP_CLOSED")
+        and Controller.selectedContext == "interaction"
+    then
+        -- Reuse the existing finite camera motion driver, already used for
+        -- fishing exit hold; no timer, new event listener or new update loop.
+        Controller.npcHandoffPending = true
+        Controller.npcHandoffUntil = GetTime() + 0.45
+        Controller:SetAnimationActive(true)
     end
 
     Controller:Reconcile(event)

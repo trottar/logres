@@ -7,6 +7,7 @@ local SOURCE_LIBCAMERA_COMMIT =
 
 local NOMINAL_FRAME_INTERVAL = 1 / 60
 local ZOOM_EPSILON = 0.01
+local CAMERA_CONTINUOUS_ROTATION_SPEED_SCALE = 0.65
 
 local STANDARD_FIXED_CVARS = {
     cameraZoomSpeed = 15.5,
@@ -990,7 +991,7 @@ function Behavior:StartRotation(
 
     if rotation.kind == "continuous" then
         return self:StartContinuousYaw(
-            rotation.speed,
+            rotation.speed * CAMERA_CONTINUOUS_ROTATION_SPEED_SCALE,
             duration
         )
     end

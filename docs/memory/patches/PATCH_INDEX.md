@@ -1,3 +1,7 @@
+## P0502 — L-036 NPC camera visit continuity and slower movement (2026-11-21)
+
+P0501 main `04431587` verified. Bounded quest/gossip close grace guards consecutive prompt handoff while explicit interruption releases; fixed-duration camera motion becomes 1/0.65 longer and continuous rotation speed 0.65, without changing camera targets or sampling. P0502 is client UNVERIFIED; L-036 OPEN. See `docs/memory/evidence/P0502_CAMERA_VISIT_PACE.md`.
+
 ## P0500 — Corpse compass and bag equipment backlog (2026-11-20)
 
 Verified P0499 main `c5f0aad` and user scoped action-bar positive;
