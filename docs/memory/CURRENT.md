@@ -16,7 +16,7 @@ P0489 PASS; P0490 hover PASS/combat FAIL.
 P0491 P0492 P0493 P0494; P0499 L-055 scoped PASS, monitor.
 P0500 corpse/bags backlog; P0502 camera PASS; P0504 L-002/030 trial.
 P0505 flight visual PASS; P0506 L-030 exceptions PARTIAL.
-P0507 L-060 FAIL; P0508 RGB-art trial UNVERIFIED.
+P0507 FAIL; P0508 clearer; P0509 lunar UNVERIFIED.
 L-056 BLOCKED.
 **P0488** L-054 P0497 layout PASS; L-057 cast-above PASS scoped. L-030 q37 PASS.
 **P0485** FAIL retained.

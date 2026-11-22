@@ -11,6 +11,17 @@ No eligibility, native-frame or protected-state changes. In-client
 contrast UNVERIFIED; L-060 OPEN. Evidence:
 `docs/memory/evidence/P0508_COMPASS_PALETTE_CONTRAST.md`.
 
+
+## P0509 — L-030 Lunar Festival event eligibility gate (2026-11-21)
+
+Forever 0.0.373-dev incident #22357: Lunar Emissary NPC15892 quest8870
+shown `[quest]` in November without a native offer; provider categorizes
+quest as -366 (Lunar Festival). P0509 read-only same-day realm calendar
+holiday check on DB-only lunar eligibility, native offer first; unknown
+calendar excludes DB inference, and quest35 preserved. Static candidate,
+Forever runtime UNVERIFIED; L-030 PARTIAL. Evidence:
+`docs/memory/evidence/P0509_LUNAR_QUEST_EVENT_GATE.md`.
+
 ## P0507 — L-060 restrained compass marker color hierarchy (2026-11-21)
 
 P0506 main `d726645` verified. The local 9x9 POI art serves quest

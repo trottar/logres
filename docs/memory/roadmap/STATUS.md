@@ -12,6 +12,17 @@ all compass 2/3- and 3/4yd behavior unchanged. P0485 gameplay FAIL,
 L-030 OPEN/PARTIAL, P0486 client UNVERIFIED. Evidence:
 `docs/memory/evidence/P0486_INFORMATIONAL_QUEST_FLAGS.md`.
 
+
+## P0509 — L-030 Lunar Festival event eligibility gate (2026-11-21)
+
+Forever 0.0.373-dev incident #22357: Lunar Emissary NPC15892 quest8870
+shown `[quest]` in November without a native offer; provider categorizes
+quest as -366 (Lunar Festival). P0509 read-only same-day realm calendar
+holiday check on DB-only lunar eligibility, native offer first; unknown
+calendar excludes DB inference, and quest35 preserved. Static candidate,
+Forever runtime UNVERIFIED; L-030 PARTIAL. Evidence:
+`docs/memory/evidence/P0509_LUNAR_QUEST_EVENT_GATE.md`.
+
 ## P0508 — L-060 visibility fix after P0507 visual FAIL (2026-11-21)
 
 Verified P0507 `aacf09d` on main. Forever 0.0.372-dev session199

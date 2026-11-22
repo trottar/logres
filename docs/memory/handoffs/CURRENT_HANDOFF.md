@@ -4,12 +4,13 @@
 # OOC0; combat main/Bar4=1, side/pet=.85, utility/Bar5=.75.
 # P0497 PASS; P0501 L-002 dynamic quest child rebase UNVERIFIED.
 # P0499 PASS; P0500 corpse/bags open; P0502 camera PASS;
-# P0505 flight PASS; P0506 exceptions; P0507 L-060 FAIL; P0508 trial.
+# P0505 flight PASS; P0506 exceptions; P0507 FAIL; P0508 clearer.
+# P0509 lunar event gate test pending; L-030 PARTIAL.
 # L-056 BLOCKED protected.
-# P0485: sparse DB client FAIL.
-# P0484: quest35 FAIL.
-# P0483: quest FAIL; turn PARTIAL.
-# P0482: est2/3 PARTIAL.
+# P0485 FAIL.
+# P0484 FAIL.
+# P0483 PARTIAL.
+# P0482 PARTIAL.
 # P0481:
 # P0480: unproven.
 # P0479: no tildes.

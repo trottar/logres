@@ -1,0 +1,26 @@
+P0509 Gate QuestieDB-only Lunar Festival quest markers on current realm calendar holiday
+Verified baseline: 6ce984feb07708352e1680efadaee1f21de62a27
+Candidate runtime version: 0.0.374-dev
+PREWRITE: 369/369 STATIC PASS
+POSTWRITE: 369/369 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Logres.toc
+Logres/Navigation/QuestieDBNearby.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0509_LUNAR_QUEST_EVENT_GATE.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0509_lunar_event_gate_contract.py
+tools/test_p0509_lunar_event_gate.lua
+P0509_MANIFEST.txt

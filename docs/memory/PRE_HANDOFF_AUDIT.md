@@ -11,6 +11,26 @@ claimed. Exact docs candidate and ZIP integrity/checker audit
 recorded in the external build receipt; install-time full checks
 are required.
 
+
+## P0509 Lunar quest event classification — candidate prehandoff (2026-11-21)
+
+Baseline P0508 `6ce984feb07708352e1680efadaee1f21de62a27`
+verified on GitHub; 12 edited source/memory files matched blob SHA-1.
+Forever session200 incident22357 confirms DB-inferred quest8870 marker
+without native offer. Scoped hypothesis: QuestieDB `zoneOrSort=-366`
+identifies Lunar Festival, but the independent eligibility path does not
+check a current realm holiday. P0509 tests only that category against
+`C_DateAndTime` / read-only `C_Calendar` with explicit API/secret deferrals;
+native-current offer always wins. Quest35 and all non-lunar categories
+remain on the old eligibility model. Offline actual-source fixture and all
+historical static checkers are mandatory. The first full candidate
+encountered historic size limits (CURRENT 9866 >9799, handoff 8000 >7999),
+not source regressions. Corrected summary 9787/7992 bytes passed the
+complete 369/369 checker suite; Lua 5.4 fixture checks November inactive,
+positive calendar event, secret/missing calendar, quest35, and native
+override. Diff whitespace + exact ZIP final rerun remain mandatory.
+No runtime client PASS claimed.
+
 ## P0508 — L-060 gold contrast recovery (2026-11-21)
 
 Baseline remote P0507 `aacf09d2dfce60d842c879cf57f548d764c2af8a`

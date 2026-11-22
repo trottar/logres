@@ -112,6 +112,44 @@ local function checkIDArray(ids, predicate, mode)
     return mode == "all" or found
 end
 
+-- P0509: a QuestieDB category is an event *classification*, not evidence
+-- that the holiday is happening now. Only this independently identified
+-- Lunar Festival category is gated; other categories keep prior behavior.
+-- Read the realm's calendar, never the host clock or a guessed annual date.
+local function lunarFestivalCalendarActive()
+    local clock = ordinary(_G.C_DateAndTime, "table")
+    local cal = ordinary(_G.C_Calendar, "table")
+    if not clock or not cal or type(clock.GetCurrentCalendarTime) ~= "function"
+        or type(cal.GetNumDayEvents) ~= "function"
+        or type(cal.GetDayEvent) ~= "function" then
+        return nil, "lunar-calendar-unavailable"
+    end
+    local now = read(clock.GetCurrentCalendarTime)
+    now = ordinary(now, "table")
+    local day = now and number(now.monthDay)
+    if not day or day ~= math.floor(day) or day < 1 or day > 31 then
+        return nil, "lunar-date-unavailable"
+    end
+    local n = read(cal.GetNumDayEvents, 0, day)
+    n = number(n)
+    if not n or n < 0 or n > 64 or n ~= math.floor(n) then
+        return nil, "lunar-calendar-incomplete"
+    end
+    for index = 1, n do
+        local event = ordinary(read(cal.GetDayEvent, 0, day, index), "table")
+        if not event then return nil, "lunar-calendar-incomplete" end
+        local eventType = ordinary(event.calendarType, "string")
+        local eventID = number(event.eventID)
+        local title = ordinary(event.title, "string")
+        -- Calendar event 327 is Lunar Festival; title is a fallback for
+        -- clients that do not publish the event ID (English client only).
+        if eventType == "HOLIDAY" and (eventID == 327 or title == "Lunar Festival") then
+            return true, "lunar-holiday-active"
+        end
+    end
+    return false, "lunar-holiday-inactive"
+end
+
 local function independentlyEligible(questID)
     local db = ordinary(_G.QuestDB, "table")
     local lib = ordinary(_G.LibQuestieDB, "table")
@@ -261,6 +299,14 @@ local function independentlyEligible(questID)
         end
     end
     if remainingFlags ~= 0 then return false, "conditional-quest-flags" end
+    local category, categoryKnown = optionalNumber("zoneOrSort")
+    if not categoryKnown then return false, "quest-category-unavailable" end
+    if category == -366 then
+        -- Never infer an event offer from a historical quest record.
+        -- GetNearbyRows still promotes an ordinary current native offer first.
+        local active, reason = lunarFestivalCalendarActive()
+        if active ~= true then return false, reason end
+    end
     return true, "player-requirements-satisfied"
 end
 
@@ -899,7 +945,8 @@ function Nearby:OnInitialize()
     self.frame:RegisterEvent("QUEST_GREETING")
     for _, event in ipairs({"QUEST_LOG_UPDATE", "QUEST_ACCEPTED", "QUEST_REMOVED",
         "QUEST_TURNED_IN", "PLAYER_LEVEL_UP", "UPDATE_FACTION",
-        "SKILL_LINES_CHANGED", "SPELLS_CHANGED"}) do
+        "SKILL_LINES_CHANGED", "SPELLS_CHANGED",
+        "CALENDAR_UPDATE_EVENT_LIST"}) do
         self.frame:RegisterEvent(event)
     end
     self.frame:SetScript("OnEvent", function(_, event)
