@@ -1,3 +1,14 @@
+## P0513 — L-005 unfinished NPC quest progress (2026-11-23)
+
+Verified P0512 `0963499b`, tree `10e9b733`. Forever #23224 q92742
+native-only `progress-not-completable`: Logres displayed then dismissed.
+Separate guarded read-only progress panel for ordinary disabled Continue;
+required item/money text, exact optional bag counts, explicit native view
+and restore-before-Goodbye. Unknown/protected/changed data fail open;
+ready Continue and completion bridge unchanged. P0512 trainer scoped
+positive; L-061 missing stats OPEN, no guessed item mapping. P0510/11
+natural test PENDING; P0513 client UNVERIFIED. See P0513 evidence.
+
 ## P0512 — Trainer item facts in selected lesson (2026-11-23)
 
 P0511 `80813b22` main verified. New `GetTrainerServiceItemLink` source

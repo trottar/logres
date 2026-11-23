@@ -516,7 +516,7 @@ function Logres:CaptureBugIncident()
         "progressBridgeRebaseCount", "progressBridgeNewChildCount",
         "lastNativeHandoffReason", "lastNativeHandoffResult",
         "stockOfferSuppressionApplied", "lastStockOfferSuppressionResult",
-        "progressActive", "progressOwned", "completionActive",
+        "progressActive", "progressOwned", "progressReadOnly", "lastProgressReason", "completionActive",
         "completionFallbackActive"})
     journal.incidents[#journal.incidents + 1] = incident
     if #journal.incidents > JOURNAL_INCIDENTS then table.remove(journal.incidents, 1) end

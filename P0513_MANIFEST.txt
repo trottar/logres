@@ -1,0 +1,25 @@
+P0513 Present incomplete quest progress and required items safely
+Verified baseline: 0963499b0ce2ab7d7ce7af1dacf96321d0162d95
+Candidate runtime version: 0.0.378-dev
+PREWRITE: 373/373 STATIC PASS
+POSTWRITE: 373/373 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Dev/Panel.lua
+Logres/Logres.toc
+Logres/Quest/Dialogue.lua
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0513_INCOMPLETE_QUEST_PROGRESS.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0513_INCOMPLETE_QUEST_PROGRESS.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0513_incomplete_progress_contract.py
+tools/test_p0513_incomplete_progress.lua
+P0513_MANIFEST.txt

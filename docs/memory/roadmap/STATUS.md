@@ -13,6 +13,17 @@ L-030 OPEN/PARTIAL, P0486 client UNVERIFIED. Evidence:
 `docs/memory/evidence/P0486_INFORMATIONAL_QUEST_FLAGS.md`.
 
 
+## P0513 — L-005 incomplete quest dialogue (2026-11-23)
+
+P0512 main `0963499b` verified. Forever session207 #23224 q92742 native
+progress visual FAIL; confirmed source `progress-not-completable` branch.
+P0513 guarded Logres read-only progress requirements with safe stock view,
+restore-before-close and unchanged ready Continue. Client UNVERIFIED.
+P0512 trainer preview PARTIAL, missing recipes L-061 OPEN; L-033 purchase
+scope unchanged. Pending P0510/P0511 natural gates remain PENDING.
+Evidence: `docs/memory/evidence/P0513_INCOMPLETE_QUEST_PROGRESS.md`.
+
+
 ## P0511 — L-022/L-039 tracker divider and objective wrapping (2026-11-23)
 
 Verified P0510 R1 `5b40770`. User screenshot shows center diamond artifact

@@ -16,7 +16,7 @@ P0489 PASS; P0490 hover PASS/combat FAIL.
 P0491 P0492 P0493 P0494; P0499 L-055 scoped PASS, monitor.
 P0500 backlog; P0502 camera PASS; P0504 L-002/030 trial.
 P0505 flight visual PASS; P0506 L-030 exceptions PARTIAL.
-P0510/P0511 trials; P0512 trainer item preview UNVERIFIED.
+P0510/11 PENDING; P0512 PARTIAL; P0513 L-005 UNVERIFIED.
 L-056 BLOCKED.
 **P0488** L-054 P0497 layout PASS; L-057 cast-above PASS scoped. L-030 q37 PASS.
 **P0485** FAIL retained.
@@ -25,7 +25,7 @@ P0476–P0478 FAIL,
 P0479 FAIL retained.
 L-002 P0501 dynamic-child bridge OPEN.
 P0473 FAIL; P0474 scoped PASS; L-037 PARTIAL.
-Preserve world HP/aura/50-50, chat SHOW, quest/stock fallback.
+Preserve HP/aura/50-50, chat SHOW, stock fallback.
 P0460 HP PASS; P0461 aura FAIL; P0457 PASS;
 P0454/P0455 secondary 50/50 VISUAL FAIL; P0456 held.
 P0458/P0459 FAIL.
@@ -67,9 +67,9 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 UNVERIFIED.
 
 ## Next Action
 
-P0499 L-055 monitor; L-056 blocked.
-P0500 L-058 client gate; L-059 deferred; P0510 L-030 test.
-P0497 PASS; P0501 L-002 client gate; L-055 OPEN.
+P0513 #23224 quest gate; L-061 stats OPEN.
+P0510/11 PENDING; L-055 monitor; L-056 blocked; L-058 gate; L-059 deferred.
+P0497 PASS; P0501 L-002 OPEN.
 
 ## Success Criteria
 

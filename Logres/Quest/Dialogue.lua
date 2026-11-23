@@ -517,14 +517,21 @@ local function nativeProgressFrame(name)
     return frame
 end
 
-local function nativeProgressFlag(frame, name)
-    if not frame then return false end
+local function nativeProgressBoolean(frame, name)
+    if not frame then return nil end
     local found, method = pcall(function() return frame[name] end)
     if not found or not ordinaryProgress(method) or type(method) ~= "function" then
-        return false
+        return nil
     end
     local ok, value = pcall(method, frame)
-    return ok and ordinaryProgress(value) and value == true
+    if not ok or not ordinaryProgress(value) or type(value) ~= "boolean" then
+        return nil
+    end
+    return value
+end
+
+local function nativeProgressFlag(frame, name)
+    return nativeProgressBoolean(frame, name) == true
 end
 
 -- P0503: the native gossip source remains SHOWN and parked for one validated
@@ -788,9 +795,52 @@ function Dialogue:ProgressGate()
     return true, "progress-supported"
 end
 
+-- P0513: incomplete progress is not a supported Continue transaction.
+-- Require explicit ordinary false and a disabled native Continue; unknown
+-- state, required data or protection falls back to the complete stock UI.
+function Dialogue:IncompleteProgressGate()
+    if not self.moduleEnabled or not self.immersionEnabled
+        or not self.progressActive or not self.presentationShown
+        or self.lastPresentationReason ~= "QUEST_PROGRESS" then
+        return false, "inactive-progress"
+    end
+    if not self.eventRegistration or self.eventRegistration.QUEST_LOG_UPDATE ~= true
+        or self.eventRegistration.PLAYER_REGEN_DISABLED ~= true then
+        return false, "incomplete-progress-events-unavailable"
+    end
+    if type(InCombatLockdown) ~= "function" or type(GetQuestID) ~= "function"
+        or type(IsQuestCompletable) ~= "function" then
+        return false, "incomplete-progress-api-unavailable"
+    end
+    local combatOK, combat = pcall(InCombatLockdown)
+    if not combatOK or not ordinaryProgress(combat) or combat ~= false then
+        return false, "combat-or-secret"
+    end
+    local idOK, id = pcall(GetQuestID)
+    if not idOK or not ordinaryProgress(id) or type(id) ~= "number"
+        or id <= 0 or id ~= self.lastQuestID then
+        return false, "progress-identity-changed"
+    end
+    local readyOK, ready = pcall(IsQuestCompletable)
+    if not readyOK or not ordinaryProgress(ready) or ready ~= false then
+        return false, "incomplete-progress-readiness-changed"
+    end
+    if not nativeProgressFlag(nativeProgressFrame("QuestFrame"), "IsShown")
+        or not nativeProgressFlag(nativeProgressFrame("QuestFrameProgressPanel"), "IsShown")
+        or not nativeProgressFlag(nativeProgressFrame("QuestFrameCompleteButton"), "IsShown")
+        or nativeProgressBoolean(nativeProgressFrame("QuestFrameCompleteButton"), "IsEnabled") ~= false then
+        return false, "incomplete-native-continue-not-disabled"
+    end
+    return true, "incomplete-progress-supported"
+end
+
 function Dialogue:RestoreProgressStock(reason)
-    self.offerActionRoot:Hide()
+    -- Keep the read-only fallback action available until stock is restored.
+    if not self.progressReadOnly then self.offerActionRoot:Hide() end
     if not self.progressOwned then
+        self.progressReadOnly = false
+        self.progressReadOnlyBody = nil
+        self.progressReadOnlyTitle = nil
         self.progressContinuePending = false
         return true, "stock-owned"
     end
@@ -805,12 +855,16 @@ function Dialogue:RestoreProgressStock(reason)
     if not ok then
         Logres:TraceEvent("quest", "progress-restore-failed",
             {reason = reason or "unknown"})
-        self:SetOfferActionFeedback("Native Continue unavailable. Try /reload.")
+        self:SetOfferActionFeedback("Native quest controls unavailable. Try /reload.")
         return false, "progress-stock-restoration-failed"
     end
+    self.offerActionRoot:Hide()
     self.progressOwned = false
     self.progressStockModule = nil
     self.progressStockSnapshot = nil
+    self.progressReadOnly = false
+    self.progressReadOnlyBody = nil
+    self.progressReadOnlyTitle = nil
     self.progressContinuePending = false
     Logres:TraceEvent("quest", "progress-restored",
         {reason = reason or "stock-restored"})
@@ -833,15 +887,21 @@ function Dialogue:UpdateProgressPagePresentation()
         return
     end
     self.declineButton:Hide()
-    self.acceptButton.label:SetText("Continue")
+    if self.progressReadOnly then
+        -- Existing completion-style side rail prevents the pager crossing
+        -- the new centered fallback button on a multi-page requirement list.
+        self.pageIndicator:ClearAllPoints()
+        self.pageIndicator:SetPoint("BOTTOMRIGHT", self.root, "BOTTOMRIGHT", -115, 17)
+        self.acceptButton.label:SetText("View in Blizzard")
+    else
+        self.acceptButton.label:SetText("Continue")
+    end
     self.acceptButton:Show()
     self.offerActionRoot:EnableMouse(true)
     self.offerActionRoot:Show()
 end
 
-function Dialogue:ActivateProgressContinue()
-    local eligible, reason = self:ProgressGate()
-    if not eligible then return false, reason end
+function Dialogue:CaptureProgressStock()
     local ok, module = pcall(Logres.GetModule, Logres, "QuestOfferStockSuppression")
     if not ok or not module
         or type(module.CaptureOfferPresentation) ~= "function"
@@ -874,6 +934,10 @@ function Dialogue:ActivateProgressContinue()
         local restored = self:RestoreProgressStock("progress-suppress-rollback")
         return false, restored and "progress-suppress-failed" or "progress-rollback-failed"
     end
+    return true, "progress-stock-captured"
+end
+
+function Dialogue:PositionProgressAction()
     Dialogue.PositionCompletionActionVisual(self)
     local level = readOwnedFrameValue(self.root, "GetFrameLevel")
     if level then self.offerActionRoot:SetFrameLevel(level + 8) end
@@ -881,11 +945,42 @@ function Dialogue:ActivateProgressContinue()
     self.acceptButton:ClearAllPoints()
     self.acceptButton:SetPoint("CENTER", self.offerActionRoot, "CENTER", 0, 9)
     self:UpdateProgressPagePresentation()
+end
+
+function Dialogue:ActivateProgressContinue()
+    local eligible, reason = self:ProgressGate()
+    if not eligible then return false, reason end
+    local captured, captureReason = self:CaptureProgressStock()
+    if not captured then return false, captureReason end
+    self:PositionProgressAction()
     Logres:TraceEvent("quest", "progress-owned", {questID = self.lastQuestID})
     return true, "progress-owned"
 end
 
+function Dialogue:ActivateIncompleteProgress(title, body)
+    local eligible, reason = self:IncompleteProgressGate()
+    if not eligible then return false, reason end
+    local captured, captureReason = self:CaptureProgressStock()
+    if not captured then return false, captureReason end
+    self.progressReadOnly = true
+    self.progressReadOnlyTitle = title
+    self.progressReadOnlyBody = body
+    self:PositionProgressAction()
+    Logres:TraceEvent("quest", "incomplete-progress-owned", {questID = self.lastQuestID})
+    return true, "incomplete-progress-owned"
+end
+
 function Dialogue:HandleProgressContinue()
+    -- The shared button is an explicit native-view fallback, never a
+    -- Continue dispatch, for an unfinished quest. Restore stock first.
+    if self.progressReadOnly then
+        if not self.progressOwned or not self.progressActive then
+            return false, "incomplete-progress-not-owned"
+        end
+        Logres:TraceEvent("quest", "incomplete-progress-native-requested",
+            {questID = self.lastQuestID})
+        return self:HidePresentation("incomplete-progress-native-requested")
+    end
     if self.progressContinuePending then
         return false, "transition-already-requested"
     end
@@ -1093,6 +1188,17 @@ function Dialogue:Goodbye()
     if self.optionSession and self.optionSession.active then
         return self.optionSession:Goodbye()
     end
+    if self.progressReadOnly and self.progressOwned then
+        local eligible = self:IncompleteProgressGate()
+        if not self:HidePresentation("incomplete-progress-goodbye") then
+            return false, "progress-restoration-pending"
+        end
+        if eligible and ordinaryProgress(CloseQuest) and type(CloseQuest) == "function" then
+            local closed = pcall(CloseQuest)
+            if closed then return true, "native-close-requested" end
+        end
+        return true, "native-goodbye-available"
+    end
     self:HidePresentation("goodbye")
     return true, "closed"
 end
@@ -1206,10 +1312,96 @@ function Dialogue:ReadProgress()
     return { questID = questID, title = title, body = body }, nil, false
 end
 
+-- P0513: ordinary required-item and required-money source, not rewards.
+-- No fabricated zero for missing/secret values. Bag counts are optional,
+-- strictly item-ID-backed supplemental facts, not turn-in eligibility.
+local function incompleteNumber(fn, maximum, ...)
+    if not ordinaryProgress(fn) or type(fn) ~= "function" then return nil end
+    local ok, value = pcall(fn, ...)
+    if not ok or not ordinaryProgress(value) or type(value) ~= "number"
+        or value ~= value or value < 0 or value > maximum
+        or value ~= math.floor(value) then return nil end
+    return value
+end
+
+function Dialogue:ReadIncompleteProgress(progress)
+    if not ordinaryProgress(IsQuestCompletable) or type(IsQuestCompletable) ~= "function" then
+        return nil, "incomplete-readiness-unavailable"
+    end
+    local readyOK, ready = pcall(IsQuestCompletable)
+    if not readyOK or not ordinaryProgress(ready) or ready ~= false then
+        return nil, "incomplete-readiness-not-false"
+    end
+    if not ordinaryProgress(progress.title) or not ordinaryProgress(progress.body) then
+        return nil, "incomplete-text-secret"
+    end
+    local count = incompleteNumber(GetNumQuestItems, 24)
+    local money = incompleteNumber(GetQuestMoneyToGet, 1000000000000)
+    if count == nil or money == nil then return nil, "incomplete-requirements-unavailable" end
+    local requirements = {}
+    if count > 0 then
+        if not ordinaryProgress(GetQuestItemInfo) or type(GetQuestItemInfo) ~= "function" then
+            return nil, "incomplete-items-unavailable"
+        end
+        for index = 1, count do
+            local ok, name, _, quantity, _, _, itemID = pcall(GetQuestItemInfo, "required", index)
+            if not ok or not ordinaryProgress(name) or type(name) ~= "string"
+                or name == "" or #name > 256 or not ordinaryProgress(quantity)
+                or type(quantity) ~= "number" or quantity ~= quantity or quantity < 1
+                or quantity > 9999 or quantity ~= math.floor(quantity) then
+                return nil, "incomplete-item-row-unavailable"
+            end
+            local line = tostring(quantity) .. " x " .. name
+            if ordinaryProgress(itemID) and type(itemID) == "number"
+                and itemID == itemID and itemID > 0 and itemID <= 10000000
+                and itemID == math.floor(itemID) then
+                local bags = incompleteNumber(GetItemCount, 10000000, itemID, false, false)
+                if bags ~= nil then line = line .. " (bags: " .. tostring(bags) .. ")" end
+            end
+            requirements[#requirements + 1] = line
+        end
+    end
+    local body = progress.body .. "\n\nQuest in progress. Not ready to turn in."
+    if #requirements > 0 then
+        body = body .. "\n\nRequired items: " .. table.concat(requirements, "; ") .. "."
+    end
+    if money > 0 then
+        local gold = math.floor(money / 10000)
+        local silver = math.floor(money / 100) % 100
+        local copper = money % 100
+        body = body .. "\n\nRequired money: " .. gold .. "g " .. silver .. "s " .. copper .. "c."
+    end
+    return body, "incomplete-requirements-read"
+end
+
+function Dialogue:CheckIncompleteProgressChanged(event)
+    if not self.progressOwned or not self.progressReadOnly then return end
+    local allowed, reason = self:IncompleteProgressGate()
+    local progress, body
+    if allowed then
+        progress = self:ReadProgress()
+        if progress and progress.questID == self.lastQuestID then
+            body = self:ReadIncompleteProgress(progress)
+        end
+    end
+    if allowed and progress and body and progress.title == self.progressReadOnlyTitle
+        and body == self.progressReadOnlyBody then return end
+    -- Do not repark stock or refresh a potentially changed native subtree.
+    -- A meaningful source change, combat entry or uncertain identity returns
+    -- full Blizzard controls; a later intentional visit can own a fresh stage.
+    local restored = self:HidePresentation("incomplete-progress-changed")
+    self.lastProgressReason = allowed and "incomplete-source-changed" or reason
+    Logres:TraceEvent("quest", "incomplete-progress-stock-fallback",
+        {reason = self.lastProgressReason, source = event,
+         result = restored and "restored" or "restore-failed"})
+end
+
 function Dialogue:HandleQuestProgress()
     self.progressEventCount = self.progressEventCount + 1
     -- Drop previous offer identity/actions before inspecting another lifecycle stage.
     self:ClearActiveDetail("QUEST_PROGRESS")
+    -- Never replace an owner whose restoration failed.
+    if self.progressOwned then return end
     local progress, reason, secret = self:ReadProgress()
     if not progress then
         self.progressSkippedCount = self.progressSkippedCount + 1
@@ -1231,17 +1423,30 @@ function Dialogue:HandleQuestProgress()
         return
     end
 
+    local incompleteBody, incompleteReason = self:ReadIncompleteProgress(progress)
+    if incompleteBody then progress.body = incompleteBody end
     local shown, state = self:PresentText(
         progress.title, progress.body, "", "QUEST_PROGRESS",
         false, false, false
     )
     if shown and state == "shown" then
         self.progressActive = true
-        local owned, progressReason = self:ActivateProgressContinue()
+        local resolvedOwned, resolvedReason
+        if incompleteBody then
+            resolvedOwned, resolvedReason = self:ActivateIncompleteProgress(progress.title, incompleteBody)
+        else
+            local owned, progressReason = self:ActivateProgressContinue()
+            resolvedOwned, resolvedReason = owned, progressReason
+            if progressReason == "progress-not-completable" then
+                resolvedReason = incompleteReason or progressReason
+            end
+        end
+        local owned, progressReason = resolvedOwned, resolvedReason
         if owned then
             self.progressShownCount = self.progressShownCount + 1
             self.presentationCount = self.presentationCount + 1
-            self.lastProgressReason = "logres-continue-owned"
+            self.lastProgressReason = self.progressReadOnly
+                and "logres-incomplete-progress-owned" or "logres-continue-owned"
         else
             -- Unsupported stages get only usable Blizzard progress controls.
             if self:HidePresentation("progress-stock-owned") then
@@ -2038,6 +2243,11 @@ function Dialogue:PresentText(
         return false, "timer-unavailable"
     end
 
+    if self.progressReadOnly and self.progressOwned then
+        if not self:RestoreProgressStock("new-presentation") then
+            return false, "progress-restoration-pending"
+        end
+    end
     if self.completionControl then
         self.completionControl:Restore("new-presentation")
     end
@@ -2516,7 +2726,9 @@ function Dialogue:GetDebugStatus()
         lastCompletionReason = self.lastCompletionReason,
         lastCompletionSecret = self.lastCompletionSecret == true,
         progressActive = self.progressActive == true,
+        progressOwned = self.progressOwned == true,
         lastProgressReason = self.lastProgressReason,
+        progressReadOnly = self.progressReadOnly == true,
         lastProgressSecret = self.lastProgressSecret == true,
 
         detailEventCount =
@@ -2664,6 +2876,9 @@ function Dialogue:OnInitialize()
     self.lastCompletionSecret = false
     self.progressActive = false
     self.progressOwned = false
+    self.progressReadOnly = false
+    self.progressReadOnlyTitle = nil
+    self.progressReadOnlyBody = nil
     self.progressStockModule = nil
     self.progressStockSnapshot = nil
     self.progressContinuePending = false
@@ -3134,6 +3349,11 @@ function Dialogue:OnInitialize()
         "QUEST_FINISHED",
         "QUEST_TURNED_IN",
         "PLAYER_ENTERING_WORLD",
+        "QUEST_LOG_UPDATE",
+        "QUEST_ITEM_UPDATE",
+        "BAG_UPDATE_DELAYED",
+        "PLAYER_MONEY",
+        "PLAYER_REGEN_DISABLED",
     }
 
     self.eventRegistration = {}
@@ -3154,6 +3374,13 @@ function Dialogue:OnInitialize()
         "OnEvent",
         function(_, event, ...)
             if not self.moduleEnabled then
+                return
+            end
+
+            if event == "QUEST_LOG_UPDATE" or event == "QUEST_ITEM_UPDATE"
+                or event == "BAG_UPDATE_DELAYED" or event == "PLAYER_MONEY"
+                or event == "PLAYER_REGEN_DISABLED" then
+                self:CheckIncompleteProgressChanged(event)
                 return
             end
 

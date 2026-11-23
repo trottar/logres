@@ -1,3 +1,24 @@
+## P0513 — exact-candidate incomplete progress audit (2026-11-23)
+
+Verified P0512 main `0963499b0ce2ab7d7ce7af1dacf96321d0162d95`,
+`10e9b733bce64b38d124df2903d8e4b59f663fa2`; reconstructed full tracked
+baseline tree matches. L-005 incident #23224 corroborates intended
+incomplete-progress stock fallback, not lost event. Existing historical
+Continue/claim and protected/secret restoration contracts audited; no
+historical checker weakened. Initial CURRENT size 9815 refused by P0374;
+compacted within the historical 9799-byte bound before final suite. No
+user files were written. New actual-source fixture exercises native
+snapshot, item names/quantities/optional bag counts/money, read-only action,
+restore-before-close, unknown/protected and changed source, and prior ready
+Continue handoff. Candidate full static check suite and syntax, byte/diff
+hygiene, ZIP payload readback, unexpected-HEAD and tamper refusal and
+isolated rollback checks are release gates. First full sweep: 368/373; five historical checkpoint-order checks
+refused a new leading STATUS heading. Restored P0486 active checkpoint
+heading and retained P0513 history below it; no checker weakened.
+Final results are bound to
+the release receipt; Forever runtime UNVERIFIED. P0512 preview partial,
+L-061 missing recipes OPEN and P0510/11 natural tests PENDING.
+
 ## P0512 — trainer item preview exact-source candidate (2026-11-23)
 
 Verified GitHub main P0511 `80813b22ad90aa1c0c0e8f0add0161ef553eceac`,
