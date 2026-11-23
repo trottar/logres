@@ -112,42 +112,96 @@ local function checkIDArray(ids, predicate, mode)
     return mode == "all" or found
 end
 
--- P0509: a QuestieDB category is an event *classification*, not evidence
--- that the holiday is happening now. Only this independently identified
--- Lunar Festival category is gated; other categories keep prior behavior.
--- Read the realm's calendar, never the host clock or a guessed annual date.
-local function lunarFestivalCalendarActive()
+-- P0510: every *distinctly classified* QuestSort holiday is checked by the
+-- realm calendar. QuestSort -22 is only "Seasonal": it does not identify
+-- which holiday, so a DB-only offer cannot be inferred from any active event.
+-- Nonseasonal records are unaffected and observed native offers remain first.
+-- Titles are the only portable current-day calendar identity on our Forever
+-- source path; numeric eventID values disagree among game implementations.
+local HOLIDAY_QUEST_SORT = {
+    [-21] = "hallows-end", [-41] = "day-of-the-dead",
+    [-364] = "darkmoon-faire", [-366] = "lunar-festival",
+    [-369] = "midsummer", [-370] = "brewfest",
+    [-374] = "noblegarden", [-375] = "pilgrims-bounty",
+    [-376] = "love-is-in-the-air", [-378] = "childrens-week",
+}
+local HOLIDAY_BY_TITLE = {
+    hallowsend = "hallows-end", dayofthedead = "day-of-the-dead",
+    darkmoonfaire = "darkmoon-faire",
+    darkmoonfaireelwynn = "darkmoon-faire",
+    darkmoonfairemulgore = "darkmoon-faire",
+    darkmoonfaireterokkar = "darkmoon-faire",
+    darkmoonfaireterokkarforest = "darkmoon-faire",
+    lunarfestival = "lunar-festival",
+    midsummer = "midsummer", midsummerfirefestival = "midsummer",
+    brewfest = "brewfest", noblegarden = "noblegarden",
+    pilgrimsbounty = "pilgrims-bounty", loveisintheair = "love-is-in-the-air",
+    childrensweek = "childrens-week",
+    -- The following holidays have no distinct QuestSort in our provider.
+    -- They must not satisfy a *different* holiday's category.
+    feastofwinterveil = "winter-veil", winterveil = "winter-veil",
+    harvestfestival = "harvest-festival",
+    worldofwarcraftanniversary = "anniversary", wowanniversary = "anniversary",
+}
+local function holidayTitleKey(title)
+    title = ordinary(title, "string")
+    if not title or #title > 128 then return nil end
+    -- Only supported English aliases are accepted: no guesses from a
+    -- different HOLIDAY record or an arbitrary user calendar entry.
+    local simple = title:lower():gsub("[^%a%d]", "")
+    local name = HOLIDAY_BY_TITLE[simple]
+    if name then return name end
+    return nil
+end
+
+local function calendarHolidayActive(required)
     local clock = ordinary(_G.C_DateAndTime, "table")
     local cal = ordinary(_G.C_Calendar, "table")
     if not clock or not cal or type(clock.GetCurrentCalendarTime) ~= "function"
         or type(cal.GetNumDayEvents) ~= "function"
         or type(cal.GetDayEvent) ~= "function" then
-        return nil, "lunar-calendar-unavailable"
+        return nil, "holiday-calendar-unavailable"
     end
-    local now = read(clock.GetCurrentCalendarTime)
-    now = ordinary(now, "table")
+    local now = ordinary(read(clock.GetCurrentCalendarTime), "table")
     local day = now and number(now.monthDay)
     if not day or day ~= math.floor(day) or day < 1 or day > 31 then
-        return nil, "lunar-date-unavailable"
+        return nil, "holiday-date-unavailable"
     end
-    local n = read(cal.GetNumDayEvents, 0, day)
-    n = number(n)
+    local n = number(read(cal.GetNumDayEvents, 0, day))
     if not n or n < 0 or n > 64 or n ~= math.floor(n) then
-        return nil, "lunar-calendar-incomplete"
+        return nil, "holiday-calendar-incomplete"
     end
     for index = 1, n do
         local event = ordinary(read(cal.GetDayEvent, 0, day, index), "table")
-        if not event then return nil, "lunar-calendar-incomplete" end
+        if not event then return nil, "holiday-calendar-incomplete" end
         local eventType = ordinary(event.calendarType, "string")
-        local eventID = number(event.eventID)
-        local title = ordinary(event.title, "string")
-        -- Calendar event 327 is Lunar Festival; title is a fallback for
-        -- clients that do not publish the event ID (English client only).
-        if eventType == "HOLIDAY" and (eventID == 327 or title == "Lunar Festival") then
-            return true, "lunar-holiday-active"
+        if not eventType then return nil, "holiday-calendar-incomplete" end
+        if eventType == "HOLIDAY" then
+            local title = ordinary(event.title, "string")
+            if not title then return nil, "holiday-calendar-incomplete" end
+            if holidayTitleKey(title) == required then
+                return true, "holiday-active:" .. required
+            end
         end
     end
-    return false, "lunar-holiday-inactive"
+    return false, "holiday-inactive:" .. required
+end
+
+-- A day change must not retain yesterday's eligibility from the bounded
+-- per-quest cache. This is sampled only when that cache is consulted; no
+-- added timer or Blizzard calendar mutation is required.
+local function calendarDayKey()
+    local clock = ordinary(_G.C_DateAndTime, "table")
+    local now = clock and ordinary(read(clock.GetCurrentCalendarTime), "table")
+    local year = now and number(now.year)
+    local month = now and number(now.month)
+    local day = now and number(now.monthDay)
+    if not year or year < 2000 or year > 9999 or year ~= math.floor(year)
+        or not month or month < 1 or month > 12 or month ~= math.floor(month)
+        or not day or day < 1 or day > 31 or day ~= math.floor(day) then
+        return nil
+    end
+    return year * 10000 + month * 100 + day
 end
 
 local function independentlyEligible(questID)
@@ -301,11 +355,17 @@ local function independentlyEligible(questID)
     if remainingFlags ~= 0 then return false, "conditional-quest-flags" end
     local category, categoryKnown = optionalNumber("zoneOrSort")
     if not categoryKnown then return false, "quest-category-unavailable" end
-    if category == -366 then
-        -- Never infer an event offer from a historical quest record.
-        -- GetNearbyRows still promotes an ordinary current native offer first.
-        local active, reason = lunarFestivalCalendarActive()
+    local requiredHoliday = HOLIDAY_QUEST_SORT[category]
+    if requiredHoliday then
+        -- A current-day matching holiday is required for DB-only inference.
+        -- GetNearbyRows promotes ordinary native offers before this path.
+        local active, reason = calendarHolidayActive(requiredHoliday)
         if active ~= true then return false, reason end
+    elseif category == -22 then
+        -- "Seasonal" alone does not say which holiday. Requiring only any
+        -- active holiday could show Winter Veil during Lunar Festival.
+        -- Keep native current-offer priority rather than guessing.
+        return false, "seasonal-holiday-identity-unknown"
     end
     return true, "player-requirements-satisfied"
 end
@@ -373,6 +433,12 @@ end
 function Nearby:EligibilityForQuest(questID)
     questID = validQuestID(questID)
     if not questID then return false, "invalid-quest-id" end
+    local today = calendarDayKey()
+    if today and self.questEligibilityCalendarDay
+        and today ~= self.questEligibilityCalendarDay then
+        self:InvalidateEligibility("calendar-day-changed")
+    end
+    if today then self.questEligibilityCalendarDay = today end
     if type(self.questEligibilityCache) ~= "table" then
         self:InvalidateEligibility("implicit")
     end

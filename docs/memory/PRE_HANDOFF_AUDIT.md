@@ -2054,3 +2054,63 @@ Authority: verified GitHub `main` P0506 `d7266456ddca93693589c944985366cbeb6310b
 Candidate: RGB-only palette and a derived quest-linked POI flag, version parity, distinct L-060 and evidence. No `C_Map` or QuestieDB gating edits, no protected or secret accesses, no extra tickers. New checker validates exact tint separation, category palette, unchanged dimensions, source/focus contracts. The full historical checker suite, Lua syntax, checker-version policy, memory-health, exact candidate readback/ZIP hash and transactional apply refusal are required before release. Client visual approval remains UNVERIFIED.
 
 P0507 preflight receipts: 11 changed preexisting source/document blob SHAs were independently compared with remote `main` and matched; `P0506_MANIFEST.txt` SHA `a54fc208cfc9c47381f983c32fa8cfcc4894f7d8` matched remote. The first local editor pass refused a nonexistent mid-file L-060 ledger anchor (the ledger is an append-only table after its narrative); no final file was released. The first palette checker overconstrained a luminance delta (`0.13`) and rejected the intended muted flight hue; numerical threshold corrected to `0.10`, with all 16 hues still checked. The first handoff recap was 8005 bytes versus the 8000-byte hard guard; compacted to 7992 bytes before full testing. No historical checker was weakened. The first exact-candidate suite then passed **367/367 STATIC**, `check_checker_version_policy.py` PASS, `check_memory_health.py` PASS with zero warnings, `git apply --check --whitespace=error-all` PASS, and ZIP byte readback 15/15 PASS. The final audit-bearing archive must re-run the same full suite; P0507 client visual quality remains UNVERIFIED.
+
+## P0510 — L-030 all-distinct holiday quest gate audit (2026-11-22)
+
+P0509 `b7552e8` verified on GitHub `main` before rebuilding the source.
+QuestieDB/Trinity QuestSort sources confirm ten distinct holiday sorts,
+while generic Seasonal -22 lacks a particular holiday identity. Published
+numeric calendar IDs conflict (P0509's 327 Lunar vs Brewfest), so numeric
+ID-only admission is removed. Runtime gates use read-only current-day
+HOLIDAY title matching, with cached day rollover invalidation and native
+current-offer precedence; no timers, calendar writes, or blanket suppression
+of normal categories. Existing P0509 historical checker and fixture are
+strengthened to retain Lunar regression coverage under the generalized
+logic. Unknown/localized/generic classification remains an explicit
+conservative limitation rather than a claim of full realm knowledge.
+
+First local focused P0510 checker refused missing evidence file during
+source-only construction; corrected before release, no repository user edits.
+Complete 370-checker suite, Lua syntax/version checks, exact payload archive
+hashing, git diff whitespace, guarded transactional applier and remote
+baseline verification are required. Record verified results after running.
+
+P0510 historical audit negative and corrective: initial full source
+candidate yielded **365/370**, five documentation-heading failures because
+the new P0510 section was prepended ahead of the active P0486 checkpoint.
+Affected P0381/P0408/P0443/P0448/P0449 contracts remained unchanged; move
+the new section under P0486 rather than weakening those checks. All five
+then passed individually. Corrected full **370/370 static PASS** using
+existing Python checkers (including the two Lua source fixtures via
+`texlua`), version-policy PASS and memory-health zero warnings. Changed
+file whitespace 17/17 clean. GitHub baseline P0509 `b7552e8` verified;
+14 changed original blobs matched remote Git SHA. No in-game behavior
+was inferred from static checks. Final receipt-bearing candidate must
+still be rerun and archived with exact SHA/readback.
+
+A following 370/370 check run overlapped a final tightening of Darkmoon
+Faire title matching (explicit location variants only, not open prefixes),
+so that result is not treated as an exact-final byte audit. A final stable
+source/checker/document candidate is reaudited separately before ZIP handoff.
+
+## P0510 R1 — Correct exact checker inventory after user refusal (2026-11-22)
+
+The user's signed P0510 ZIP extracted cleanly, then refused PREWRITE with
+`checker list differs from the packaged candidate`. GitHub `main` remained
+at P0509 `b7552e8`; no tracked writes occurred. The original helper's
+370-name list incorrectly substituted the untracked, synthetic
+`check_p0503_r2_quest_compass_contract.py` for real tracked
+`check_p0502_camera_visit_pace_contract.py`. Thus the original assistant
+370/370 declaration was not the complete authoritative historical suite.
+P0510_R1 replaces that item and retains the explicit exact-list assertion;
+P0502 camera behavior remains untouched. See P0510 evidence for root cause.
+The original P0510 refusal remains FAILED (packaging); R1 candidate requires
+full exact-byte static, Lua, git-diff and archive readback checks before
+release. WoW client testing remains UNVERIFIED.
+
+Corrected-source suite: 370/370 historical checks PASS after replacing
+the synthetic P0503_R2 checker with the GitHub-tracked P0502 camera
+checker. The check-name inventory matches GitHub P0509 + P0510 exactly
+(370 entries; FNV64 cd72d828cd7145a3). Corrected candidate has no
+observed static test failures; exact-final archive/payload revalidation
+remains the release gate. Client remains UNVERIFIED.

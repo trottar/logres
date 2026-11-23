@@ -42,7 +42,7 @@ local function eligible(id)
  return Nearby:EligibilityForQuest(id)
 end
 local allowed,why=eligible(8870)
-assert(not allowed and why=='lunar-holiday-inactive',tostring(why))
+assert(not allowed and why=='holiday-inactive:lunar-festival',tostring(why))
 assert(eligible(35),'nonseasonal quest35 rejected with empty calendar')
 assert(eligible(333),'nonseasonal q333 rejected with empty calendar')
 -- An unrelated HOLIDAY and a user-authored matching title are not proof.
@@ -50,11 +50,11 @@ events={{calendarType='HOLIDAY',eventID=999,title='Other'},
  {calendarType='PLAYER',eventID=327,title='Lunar Festival'}}
 Nearby.frame.OnEvent(nil,'CALENDAR_UPDATE_EVENT_LIST')
 allowed,why=eligible(8870)
-assert(not allowed and why=='lunar-holiday-inactive',tostring(why))
--- Realm-local holiday record changes authorization without source data edits.
-events={{calendarType='HOLIDAY',eventID=327,title='Localized title'}}
+assert(not allowed and why=='holiday-inactive:lunar-festival',tostring(why))
+-- Realm-local holiday title changes authorization without source data edits.
+events={{calendarType='HOLIDAY',eventID=327,title='Lunar Festival'}}
 Nearby.frame.OnEvent(nil,'CALENDAR_UPDATE_EVENT_LIST')
-assert(eligible(8870),'live holiday event ID should authorize lunar quest')
+assert(eligible(8870),'matching Lunar Festival holiday title must authorize quest')
 events={{calendarType='HOLIDAY',title='Lunar Festival'}}
 Nearby.frame.OnEvent(nil,'CALENDAR_UPDATE_EVENT_LIST')
 assert(eligible(8870),'event title fallback should authorize lunar quest')
@@ -62,16 +62,16 @@ assert(eligible(8870),'event title fallback should authorize lunar quest')
 function env.C_Calendar.GetNumDayEvents()return secret end
 Nearby.frame.OnEvent(nil,'CALENDAR_UPDATE_EVENT_LIST')
 allowed,why=eligible(8870)
-assert(not allowed and why=='lunar-calendar-incomplete',tostring(why))
+assert(not allowed and why=='holiday-calendar-incomplete',tostring(why))
 env.C_Calendar.GetNumDayEvents=function()return 1 end
 env.C_Calendar.GetDayEvent=function()return secret end
 Nearby.frame.OnEvent(nil,'CALENDAR_UPDATE_EVENT_LIST')
 allowed,why=eligible(8870)
-assert(not allowed and why=='lunar-calendar-incomplete',tostring(why))
+assert(not allowed and why=='holiday-calendar-incomplete',tostring(why))
 env.C_Calendar=nil
 Nearby.frame.OnEvent(nil,'CALENDAR_UPDATE_EVENT_LIST')
 allowed,why=eligible(8870)
-assert(not allowed and why=='lunar-calendar-unavailable',tostring(why))
+assert(not allowed and why=='holiday-calendar-unavailable',tostring(why))
 assert(eligible(35),'quest35 must not depend on C_Calendar availability')
 -- A native current quest offer is authoritative even without calendar data.
 Nearby.complete=true;Nearby.moduleEnabled=true;Nearby.mapID=1453;Nearby.areaID=1519
@@ -84,4 +84,4 @@ assert(#rows==1 and not rows[1].providerEligible,
 rows=Nearby:GetNearbyRows(1453,0,0,100,100,{[8870]=true})
 assert(rows[1].npcID==15892 and Nearby.questEligibilityQualifiedNPCs==0,
  'native current offer must outrank inactive/unknown calendar')
-print('P0509 actual-source PASS: Lunar Nov veto, active event, unrelated event, unknown/secret, cached invalidation, q35, native offer')
+print('P0509 historical source PASS: Lunar Nov veto, matching title, unrelated event, unknown/secret, cache invalidation, q35, native offer')

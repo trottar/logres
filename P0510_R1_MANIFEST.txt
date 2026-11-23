@@ -1,0 +1,28 @@
+P0510_R1 General holiday quest eligibility, repaired historical checker inventory
+Verified baseline: b7552e8d5105ed2370663cc0721987ba7a348735
+Candidate runtime version: 0.0.375-dev
+PREWRITE: 370/370 STATIC PASS
+POSTWRITE: 370/370 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Logres.toc
+Logres/Navigation/QuestieDBNearby.lua
+docs/ROADMAP.md
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0510_HOLIDAY_QUEST_ELIGIBILITY.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ACTIVE.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/PHASE_H_INTEGRATION_POLISH.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0509_lunar_event_gate_contract.py
+tools/check_p0510_all_holidays_contract.py
+tools/test_p0509_lunar_event_gate.lua
+tools/test_p0510_all_holidays.lua
+P0510_R1_MANIFEST.txt

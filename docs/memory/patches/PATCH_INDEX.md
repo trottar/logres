@@ -1,3 +1,16 @@
+## P0510 — L-030 generalized holiday eligibility (2026-11-22)
+
+P0509 `b7552e8` verified. User rejected Lunar-only patch as insufficient.
+P0510 checks ten independently classifiable holiday QuestSorts against
+realm-current HOLIDAY names, not ambiguous event IDs or hardcoded dates.
+Generic `-22` Seasonal lacks specific holiday identity; DB-only quest
+markers withheld until native offer, not accepted on any random holiday.
+Calendar/realm-day changes invalidate eligibility; ordinary quest35,
+quest333, native current offers and stock fallback preserved. English
+name matching and all generic-seasonal live availability remain limitations.
+Full source fixtures/static suite required; client UNVERIFIED, L-030 PARTIAL.
+Evidence: `docs/memory/evidence/P0510_HOLIDAY_QUEST_ELIGIBILITY.md`.
+
 ## P0508 — L-060 visibility fix after P0507 visual FAIL (2026-11-21)
 
 Verified P0507 `aacf09d` on main. Forever 0.0.372-dev session199

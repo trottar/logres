@@ -1,6 +1,6 @@
 ---
 memory_schema: 1
-as_of: 2026-11-20
+as_of: 2026-11-22
 project: logres
 ---
 
@@ -16,7 +16,7 @@ P0489 PASS; P0490 hover PASS/combat FAIL.
 P0491 P0492 P0493 P0494; P0499 L-055 scoped PASS, monitor.
 P0500 corpse/bags backlog; P0502 camera PASS; P0504 L-002/030 trial.
 P0505 flight visual PASS; P0506 L-030 exceptions PARTIAL.
-P0507 FAIL; P0508 clearer; P0509 lunar UNVERIFIED.
+P0508 clearer; P0510 events UNVERIFIED.
 L-056 BLOCKED.
 **P0488** L-054 P0497 layout PASS; L-057 cast-above PASS scoped. L-030 q37 PASS.
 **P0485** FAIL retained.
@@ -68,7 +68,7 @@ L-011 PARTIAL; L-028/L-048 OPEN; L-019 BLOCKED; P0471 UNVERIFIED.
 ## Next Action
 
 P0499 L-055 monitor; L-056 blocked.
-P0500 L-058 client gate; L-059 deferred.
+P0500 L-058 client gate; L-059 deferred; P0510 L-030 test.
 P0497 PASS; P0501 L-002 client gate; L-055 OPEN.
 
 ## Success Criteria

@@ -13,6 +13,19 @@ L-030 OPEN/PARTIAL, P0486 client UNVERIFIED. Evidence:
 `docs/memory/evidence/P0486_INFORMATIONAL_QUEST_FLAGS.md`.
 
 
+## P0510 — L-030 generalized holiday eligibility (2026-11-22)
+
+P0509 `b7552e8` verified. User rejected Lunar-only patch as insufficient.
+P0510 checks ten independently classifiable holiday QuestSorts against
+realm-current HOLIDAY names, not ambiguous event IDs or hardcoded dates.
+Generic `-22` Seasonal lacks specific holiday identity; DB-only quest
+markers withheld until native offer, not accepted on any random holiday.
+Calendar/realm-day changes invalidate eligibility; ordinary quest35,
+quest333, native current offers and stock fallback preserved. English
+name matching and all generic-seasonal live availability remain limitations.
+Full source fixtures/static suite required; client UNVERIFIED, L-030 PARTIAL.
+Evidence: `docs/memory/evidence/P0510_HOLIDAY_QUEST_ELIGIBILITY.md`.
+
 ## P0509 — L-030 Lunar Festival event eligibility gate (2026-11-21)
 
 Forever 0.0.373-dev incident #22357: Lunar Emissary NPC15892 quest8870
