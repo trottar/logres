@@ -1,0 +1,24 @@
+P0511 Plain active-quest divider and five-line adaptive objective rows; L-030 observation retained
+Verified baseline: 5b4077079f86f106df01cb02255d61533e4c0670
+Candidate runtime version: 0.0.376-dev
+PREWRITE: 371/371 STATIC PASS
+POSTWRITE: 371/371 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Logres.toc
+Logres/Media/Quest/active_quest_divider_plain.tga
+Logres/Media/Theme.lua
+Logres/Quest/ActiveQuest.lua
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0511_TRACKER_DIVIDER_WRAP.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0511_quest_tracker_wrap_contract.py
+tools/test_p0511_tracker_wrap.lua
+P0511_MANIFEST.txt

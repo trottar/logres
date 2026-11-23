@@ -1,6 +1,9 @@
 local _, Logres = ...
 
 local MAX_OBJECTIVES = 8
+local MAX_OBJECTIVE_LINES = 5
+local OBJECTIVE_LINE_HEIGHT = 16
+local MAX_OBJECTIVE_TEXT_HEIGHT = MAX_OBJECTIVE_LINES * OBJECTIVE_LINE_HEIGHT + 2
 local PREVIEW_NORMAL = "normal"
 local PREVIEW_COMPLETE = "complete"
 
@@ -655,6 +658,9 @@ function ActiveQuest:Render(snapshot, reason)
 
     local visibleCount =
         math.min(#snapshot.rows, MAX_OBJECTIVES)
+    local minRowHeight = styleValue("rowHeight")
+    local rowGap = styleValue("rowGap")
+    local rowOffset = 0
 
     for index = 1, MAX_OBJECTIVES do
         local visual = self.rows[index]
@@ -676,7 +682,34 @@ function ActiveQuest:Render(snapshot, reason)
             local binary = not isSecret(row.required) and row.required == 1
                 and not isSecret(row.finished) and type(row.finished) == "boolean"
             if binary then label = label .. (finished and " · Done" or " · Pending") end
+            -- Reset the bound before measuring: an old one-line constraint
+            -- would cause WoW to ellipsize before GetStringHeight can see wrap.
+            local maxTextHeight = MAX_OBJECTIVE_TEXT_HEIGHT
+            if type(visual.label.GetLineHeight) == "function" then
+                local lineHeight = visual.label:GetLineHeight()
+                if not isSecret(lineHeight) and type(lineHeight) == "number"
+                    and lineHeight > 0 then
+                    maxTextHeight = math.min(MAX_OBJECTIVE_TEXT_HEIGHT,
+                        math.ceil(MAX_OBJECTIVE_LINES * lineHeight + 2))
+                end
+            end
+            visual.label:SetHeight(maxTextHeight)
             visual.label:SetText(label)
+            local measured = visual.label:GetStringHeight()
+            local textHeight = maxTextHeight
+            if not isSecret(measured) and type(measured) == "number"
+                and measured > 0 then
+                textHeight = math.min(maxTextHeight,
+                    math.max(OBJECTIVE_LINE_HEIGHT, math.ceil(measured + 2)))
+            end
+            visual.label:SetHeight(textHeight)
+            -- Reserve the same progress/footer gap used by the compact row.
+            local actualRowHeight = math.max(minRowHeight, textHeight + 24)
+            visual.hit:ClearAllPoints()
+            visual.hit:SetPoint("TOP", self.root, "TOP", 0,
+                -styleValue("headerHeight") - rowOffset)
+            visual.hit:SetHeight(actualRowHeight)
+            rowOffset = rowOffset + actualRowHeight + rowGap
             visual.label:SetTextColor(
                 objectiveColor[1],
                 objectiveColor[2],
@@ -723,15 +756,7 @@ function ActiveQuest:Render(snapshot, reason)
         end
     end
 
-    local rowHeight = styleValue("rowHeight")
-    local rowGap = styleValue("rowGap")
-    local rowsHeight = 0
-
-    if visibleCount > 0 then
-        rowsHeight =
-            visibleCount * rowHeight
-            + (visibleCount - 1) * rowGap
-    end
+    local rowsHeight = visibleCount > 0 and rowOffset - rowGap or 0
 
     local totalHeight = math.max(
         styleValue("minHeight"),
@@ -1083,7 +1108,8 @@ function ActiveQuest:OnInitialize()
     divider:SetSize(styleValue("width") - 28, 16)
     divider:SetPoint("TOP", root, "TOP", 0, -69)
     divider:SetTexture(
-        activeAssets.divider
+        activeAssets.dividerPlain
+            or activeAssets.divider
             or "Interface\\Buttons\\WHITE8x8"
     )
 
@@ -1155,10 +1181,13 @@ function ActiveQuest:OnInitialize()
         label:SetWidth(
             styleValue("objectiveTextWidth")
         )
-        label:SetHeight(16)
+        label:SetHeight(MAX_OBJECTIVE_TEXT_HEIGHT)
         label:SetJustifyH("LEFT")
         label:SetJustifyV("TOP")
-        label:SetWordWrap(false)
+        label:SetWordWrap(true)
+        if type(label.SetMaxLines) == "function" then
+            label:SetMaxLines(MAX_OBJECTIVE_LINES)
+        end
         label:SetShadowColor(0, 0, 0, 0.85)
         label:SetShadowOffset(1, -1)
         label:Hide()

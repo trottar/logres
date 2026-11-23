@@ -12,6 +12,10 @@ recorded in the external build receipt; install-time full checks
 are required.
 
 
+## P0511 — tracker wrap and divider candidate (2026-11-23)
+
+Verified GitHub main P0510 R1 `5b4077079f86f106df01cb02255d61533e4c0670`. Exact code/assets compared to baseline source. One new binary TGA changes only the center while the approved divider and its SHA remain unchanged. Existing L-022 and L-039 tracker issues and unconfirmed L-030 observations are retained. Initial and refined candidates each passed 371/371 static checks (bounded full sweeps); actual-source Lua layout fixture PASS; new checker uses stdlib TGA readback. First builder CURRENT-anchor and checker-string-escape refusals corrected before handoff. Exact-final 371/371 PASS in four bounded batches; Lua5.4 syntax and actual-source fixture PASS; baseline blob IDs, archive readback, tamper refusal, mock rollback and diff hygiene PASS. WoW runtime UNVERIFIED.
+
 ## P0509 Lunar quest event classification — candidate prehandoff (2026-11-21)
 
 Baseline P0508 `6ce984feb07708352e1680efadaee1f21de62a27`

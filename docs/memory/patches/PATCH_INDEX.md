@@ -1,3 +1,12 @@
+## P0511 — L-022/L-039 tracker divider and objective wrapping (2026-11-23)
+
+Verified P0510 R1 `5b40770`. User screenshot shows center diamond artifact
+and one-line objective truncation. New plain divider texture retains original
+approved asset; five-line wrapped labels measure their height and move row
+hit regions, progress bars and panel height. In-game UNVERIFIED, L-022 and
+L-039 OPEN. Two new quest compass no-giver reports lack identities; L-030
+PARTIAL, no suppressive change. See P0511 evidence.
+
 ## P0510 — L-030 generalized holiday eligibility (2026-11-22)
 
 P0509 `b7552e8` verified. User rejected Lunar-only patch as insufficient.

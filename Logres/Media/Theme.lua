@@ -333,6 +333,7 @@ theme.activeQuest = {
     assets = {
         panel = MEDIA_ROOT .. "Quest\\active_quest_panel.tga",
         divider = MEDIA_ROOT .. "Quest\\active_quest_divider.tga",
+        dividerPlain = MEDIA_ROOT .. "Quest\\active_quest_divider_plain.tga",
         glyph = MEDIA_ROOT .. "Quest\\active_quest_glyph.tga",
     },
 }
