@@ -5,7 +5,7 @@
 # P0497 PASS; P0501 L-002 rebase UNVERIFIED.
 # P0499 PASS; P0500 backlog; P0502 camera PASS;
 # P0505 flight PASS; P0506 exceptions; P0507 FAIL; P0508 clearer.
-# P0510/11 pending; P0512 PARTIAL; P0513 L-005 UNVERIFIED.
+# P0510/11 pending; P0512 PARTIAL; P0513 visual PASS; P0514 footer pending.
 # L-056 BLOCKED protected.
 # P0485 FAIL.
 # P0484 FAIL.

@@ -1,0 +1,24 @@
+P0514 Remove unfinished quest native-view footer
+Verified baseline: 7f0812d9fc451319e248f1ba8853a47afaa0f692
+Candidate runtime version: 0.0.379-dev
+PREWRITE: 373/373 STATIC PASS
+POSTWRITE: 373/373 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Logres.toc
+Logres/Quest/Dialogue.lua
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0514_INCOMPLETE_PROGRESS_FOOTER.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/investigations/ISSUE_LEDGER.md
+docs/memory/patches/P0514_INCOMPLETE_PROGRESS_FOOTER.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0513_incomplete_progress_contract.py
+tools/test_p0513_incomplete_progress.lua
+P0514_MANIFEST.txt

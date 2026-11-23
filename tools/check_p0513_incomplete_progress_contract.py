@@ -15,11 +15,17 @@ assert 'id ~= self.lastQuestID' in read_only
 for token in ('incompleteNumber(GetNumQuestItems, 24)', 'incompleteNumber(GetQuestMoneyToGet', 'pcall(GetQuestItemInfo, "required", index)', 'ordinaryProgress(name)', 'ordinaryProgress(quantity)', 'ordinaryProgress(itemID)', 'incompleteNumber(GetItemCount, 10000000, itemID, false, false)', '"incomplete-item-row-unavailable"', 'Quest in progress. Not ready to turn in.', 'self:HidePresentation("incomplete-progress-changed")'):
     assert token in source, token
 assert 'self:CaptureProgressStock()' in d[d.index('function Dialogue:ActivateIncompleteProgress('):d.index('function Dialogue:HandleProgressContinue()')]
-assert 'self:HidePresentation("incomplete-progress-native-requested")' in handler
-assert handler.index('if self.progressReadOnly then') < handler.index('self:HidePresentation("incomplete-progress-native-requested")') < handler.index('local called = pcall(_G.QuestProgressCompleteButton_OnClick)')
+# P0514 supersedes the manual stock-view action; the read-only gate must
+# still precede every native Continue dispatch.
+assert 'return false, "incomplete-progress-read-only"' in handler
+assert handler.index('if self.progressReadOnly then') < handler.index('return false, "incomplete-progress-read-only"') < handler.index('local called = pcall(_G.QuestProgressCompleteButton_OnClick)')
 assert handler.count('pcall(_G.QuestProgressCompleteButton_OnClick)')==1
 assert bye.index('self:HidePresentation("incomplete-progress-goodbye")') < bye.index('pcall(CloseQuest)')
-assert 'self.acceptButton.label:SetText("View in Blizzard")' in d
+page=d[d.index('function Dialogue:UpdateProgressPagePresentation()'):d.index('function Dialogue:CaptureProgressStock()')]
+read_only_page=page[page.index('if self.progressReadOnly then'):page.index('self.acceptButton.label:SetText("Continue")')]
+for token in ('self.acceptButton:Hide()', 'self.offerActionRoot:Hide()', 'self.offerActionRoot:EnableMouse(false)', 'return'):
+    assert token in read_only_page, token
+assert 'View in Blizzard' not in page
 assert 'self.progressReadOnly = false' in d and 'self:CheckIncompleteProgressChanged(event)' in d
 assert 'SetScript("OnUpdate"' not in d
 assert 'GetQuestReward(' not in source and 'pcall(CompleteQuest)' not in d

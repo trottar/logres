@@ -1,3 +1,15 @@
+## P0514 — L-005 unfinished quest footer removal (2026-11-23)
+
+Verified P0513 main `7f0812d9`, tree `6cb1366f`. User screenshot
+Forever 0.0.378-dev build 71037 shows Testing the Wells NPC narrative,
+not-ready text, three required items and Goodbye in Logres: P0513
+scoped visual PASS. User requests removal of View in Blizzard.
+P0514 hides the read-only footer and its mouse region on all pages,
+rejects read-only Continue dispatch, retains normal pager, automatic
+stock fallback and restore-before-Goodbye. Ready Continue unchanged.
+L-005 PARTIAL; P0514 runtime UNVERIFIED. L-061 OPEN; P0510/11 pending.
+Evidence: `docs/memory/evidence/P0514_INCOMPLETE_PROGRESS_FOOTER.md`.
+
 ## P0513 — L-005 unfinished NPC quest progress (2026-11-23)
 
 Verified P0512 `0963499b`, tree `10e9b733`. Forever #23224 q92742

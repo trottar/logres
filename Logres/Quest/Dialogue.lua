@@ -835,7 +835,7 @@ function Dialogue:IncompleteProgressGate()
 end
 
 function Dialogue:RestoreProgressStock(reason)
-    -- Keep the read-only fallback action available until stock is restored.
+    -- Keep the read-only narrative available until stock is restored.
     if not self.progressReadOnly then self.offerActionRoot:Hide() end
     if not self.progressOwned then
         self.progressReadOnly = false
@@ -888,14 +888,14 @@ function Dialogue:UpdateProgressPagePresentation()
     end
     self.declineButton:Hide()
     if self.progressReadOnly then
-        -- Existing completion-style side rail prevents the pager crossing
-        -- the new centered fallback button on a multi-page requirement list.
-        self.pageIndicator:ClearAllPoints()
-        self.pageIndicator:SetPoint("BOTTOMRIGHT", self.root, "BOTTOMRIGHT", -115, 17)
-        self.acceptButton.label:SetText("View in Blizzard")
-    else
-        self.acceptButton.label:SetText("Continue")
+        -- P0514: unfinished quests are narrative-only. The normal pager
+        -- remains centered; no footer action or invisible input region.
+        self.acceptButton:Hide()
+        self.offerActionRoot:Hide()
+        self.offerActionRoot:EnableMouse(false)
+        return
     end
+    self.acceptButton.label:SetText("Continue")
     self.acceptButton:Show()
     self.offerActionRoot:EnableMouse(true)
     self.offerActionRoot:Show()
@@ -965,21 +965,16 @@ function Dialogue:ActivateIncompleteProgress(title, body)
     self.progressReadOnly = true
     self.progressReadOnlyTitle = title
     self.progressReadOnlyBody = body
-    self:PositionProgressAction()
+    self:UpdateProgressPagePresentation()
     Logres:TraceEvent("quest", "incomplete-progress-owned", {questID = self.lastQuestID})
     return true, "incomplete-progress-owned"
 end
 
 function Dialogue:HandleProgressContinue()
-    -- The shared button is an explicit native-view fallback, never a
-    -- Continue dispatch, for an unfinished quest. Restore stock first.
+    -- P0514: no manual footer action for an unfinished quest. Automatic
+    -- fail-open restoration and Goodbye remain separate from Continue.
     if self.progressReadOnly then
-        if not self.progressOwned or not self.progressActive then
-            return false, "incomplete-progress-not-owned"
-        end
-        Logres:TraceEvent("quest", "incomplete-progress-native-requested",
-            {questID = self.lastQuestID})
-        return self:HidePresentation("incomplete-progress-native-requested")
+        return false, "incomplete-progress-read-only"
     end
     if self.progressContinuePending then
         return false, "transition-already-requested"
