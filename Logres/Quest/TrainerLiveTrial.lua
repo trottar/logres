@@ -136,6 +136,7 @@ function Trial.FromSnapshot(report)
                 sourceName=hasName and native.name or nil,
                 sourceRank=type(native.rank) == "string" and native.rank or "",
                 sourceTextureID=native.textureID,
+                sourceItemLink=native.itemLink,
                 sourceRequiredLevel=native.requiredLevel,
                 sourceSkillRequirement=bounded(native.skillRequirement, 42) and native.skillRequirement or nil,
                 sourceSkillRank=type(native.skillRank) == "number" and native.skillRank or nil,
@@ -343,6 +344,27 @@ local function refreshBrowse()
             model.trainLabel = "Stock Train"
         end
     end
+    -- Selected-lesson detail is always derived from a copied service index.
+    -- No training or Blizzard selection is dispatched by this read-only view.
+    if chosen then
+        local description = bounded(chosen.description, 260) and chosen.description
+            or "No additional description supplied by this trainer."
+        local link, id = nil, nil
+        local preview = Logres.NPCTrainerItemPreview
+        if preview and chosen.sourceItemLink then
+            local detail, status, exactID = preview.Summarize(chosen.sourceItemLink)
+            if detail and bounded(detail, 300) then
+                description = detail
+                link, id = chosen.sourceItemLink, exactID
+            end
+            if status == "loading" and exactID and not browse.itemRequests[exactID] then
+                browse.itemRequests[exactID] = true
+                preview.Request(exactID)
+            end
+        end
+        model.selected = {name=chosen.name, requirement=chosen.requirement,
+            description=description, icon=chosen.icon, itemLink=link, itemID=id}
+    end
     if browse.trainingPending and not browse.trainingPending.confirmation then
         model.trainEnabled = false
         model.trainLabel = "Training requested"
@@ -383,6 +405,17 @@ local function refreshBrowse()
     end
     return true
 end
+
+-- Only a matching client item-data completion may refresh the exact selected
+-- link; stale completions after another selection or trainer close do nothing.
+Logres:RegisterEvent("ITEM_DATA_LOAD_RESULT", function(_, item, success)
+    if not browse or not active or not active:IsShown()
+        or not ordinaryInput(item) or not ordinaryInput(success)
+        or type(item) ~= "number" or success ~= true then return end
+    local selected = browse.model.selected
+    if not selected or selected.itemID ~= item then return end
+    refreshBrowse()
+end)
 
 Logres:RegisterEvent("PLAYER_MONEY", function()
     if not browse or not active or not active:IsShown() then return end
@@ -473,7 +506,7 @@ local function attachBrowseControls(root, model, controls)
     end
     browse = {model=model, controls=controls, offset=1, availableOnly=false,
         defaultServiceIndex=initiallySelected, selectedServiceIndex=initiallySelected,
-        rowHits={}, searchQuery="",
+        rowHits={}, itemRequests={}, searchQuery="",
         localChoiceConfirmed=false}
     -- These children alone receive pointer input; the underlying approved
     -- landscape and all Blizzard controls remain without Logres actions.
@@ -617,7 +650,7 @@ local function attachBrowseControls(root, model, controls)
     rail:SetFrameLevel(wheel:GetFrameLevel() + 4)
     rail:SetMinMaxValues(1, 1)
     rail:SetValueStep(1)
-    rail:SetThumbTexture("Interface\Buttons\WHITE8x8")
+    rail:SetThumbTexture("Interface\\Buttons\\WHITE8x8")
     local thumb = rail:GetThumbTexture()
     thumb:SetVertexColor(0.82, 0.59, 0.25, 0.95)
     thumb:SetSize(8, 24)
@@ -639,6 +672,22 @@ local function attachBrowseControls(root, model, controls)
     end)
     browse.scrollSlider = rail
     browse.scrollThumb = thumb
+    if controls.detail and controls.detail.hover then
+        local detailHit = controls.detail.hover
+        detailHit:EnableMouse(true)
+        detailHit:SetScript("OnEnter", function(self)
+            if active ~= root or not browse then return end
+            local chosen = browse.model.selected
+            if chosen and chosen.itemLink and Logres.NPCTrainerItemPreview then
+                Logres.NPCTrainerItemPreview.ShowTooltip(self, chosen.itemLink)
+            end
+        end)
+        detailHit:SetScript("OnLeave", function()
+            if Logres.NPCTrainerItemPreview then
+                Logres.NPCTrainerItemPreview.HideTooltip()
+            end
+        end)
+    end
     -- Draw only over the seven named catalogue rows. Each region handles
     -- wheel input too, so the existing list scroll is not lost on hover.
     for i = 1, panel.landscape.maxRows do

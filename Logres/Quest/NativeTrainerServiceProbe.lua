@@ -164,6 +164,13 @@ local function snapshotForeverRow(infoFn, costFn, skillFn, descriptionFn, index)
         end
         local description, knownDescription = scalar(descriptionFn, index)
         if knownDescription then row.description = safeText(description, 260) end
+        -- GetTrainerServiceItemLink is indexed by this exact native service,
+        -- not by an independently inferred spell or display-list position.
+        local itemLink, linkKnown = scalar(api("GetTrainerServiceItemLink"), index)
+        if linkKnown and Logres.NPCTrainerItemPreview
+            and Logres.NPCTrainerItemPreview.ItemID(itemLink) then
+            row.itemLink = itemLink
+        end
     end
     return row
 end
@@ -234,6 +241,132 @@ function Probe.Read()
     report.status="read-only-service-sample"
     if bad > 0 then report.status="service-row-shape-deferred" end
     return report
+end
+
+-- P0512: separate read-only item-detail adapter, co-located with the
+-- read-only native trainer service probe to retain the approved Lua inventory.
+local Preview = {}
+Logres.NPCTrainerItemPreview = Preview
+
+local function field(owner, key)
+    if not ordinary(owner) or (type(owner) ~= "table"
+        and type(owner) ~= "userdata") then return nil end
+    local ok, value = pcall(function() return owner[key] end)
+    if ok and ordinary(value) then return value end
+end
+
+local function method(owner, key)
+    local fn = field(owner, key)
+    if type(fn) == "function" then return fn end
+end
+
+local function itemID(link)
+    if not ordinary(link) or type(link) ~= "string" or #link > 550 then return nil end
+    local raw = link:match("|Hitem:(%d+):") or link:match("|Hitem:(%d+)|h")
+        or link:match("^item:(%d+):") or link:match("^item:(%d+)$")
+    if not raw then return nil end
+    local id = tonumber(raw)
+    if id and id > 0 and id <= 100000000 and id == math.floor(id) then
+        return id
+    end
+end
+
+function Preview.ItemID(link)
+    return itemID(link)
+end
+
+local function sanitized(value)
+    if not ordinary(value) or type(value) ~= "string" then return nil end
+    if #value == 0 or #value > 220 then return nil end
+    local text = value:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", "")
+        :gsub("[%c]", " ")
+    if #text == 0 or #text > 85 then return nil end
+    return text
+end
+
+-- Report "loading" only when this client exposes an event-backed load API.
+local function unavailableItemData(id)
+    if method(field(_G, "C_Item"), "RequestLoadItemDataByID") then
+        return "Crafted item stats loading; hover for full item tooltip.", "loading", id
+    end
+    return "Crafted item stats unavailable; hover for full item tooltip.", "unavailable", id
+end
+
+-- The client's tooltip facts are the only statistic source. Exclude the
+-- item-name header and non-stat sell-price/footer; preserve actual source text.
+function Preview.Summarize(link)
+    local id = itemID(link)
+    if not id then return nil, "no-exact-item", nil end
+    local tooltipAPI = field(_G, "C_TooltipInfo")
+    local get = method(tooltipAPI, "GetHyperlink")
+    if not get then
+        return "Crafted item stats unavailable in this client; hover for item tooltip.",
+            "api-unavailable", id
+    end
+    local ok, tooltip = pcall(get, link)
+    if not ok or not ordinary(tooltip) or type(tooltip) ~= "table" then
+        return unavailableItemData(id)
+    end
+    local lines = field(tooltip, "lines")
+    if type(lines) ~= "table" then
+        return unavailableItemData(id)
+    end
+    local rendered, total = {}, 0
+    for i = 2, math.min(#lines, 18) do
+        local line = lines[i]
+        if ordinary(line) and type(line) == "table" then
+            local left = sanitized(field(line, "leftText"))
+            local right = sanitized(field(line, "rightText"))
+            if left and not left:match("^[Ss]ell [Pp]rice")
+                and not left:match("^Binds ") and not left:match("^Soulbound$") then
+                local combined = left
+                if right and right ~= left and #left + #right < 87 then
+                    combined = left .. "  " .. right
+                end
+                total = total + 1
+                if #rendered < 3 then rendered[#rendered + 1] = combined end
+            end
+        end
+    end
+    if total == 0 then
+        return unavailableItemData(id)
+    end
+    if total > 3 then rendered[#rendered + 1] = "Hover for complete item stats." end
+    return table.concat(rendered, "\n"), "ready", id
+end
+
+-- Triggered once per item per trainer visit, never from an OnUpdate/poll loop.
+function Preview.Request(id)
+    if type(id) ~= "number" or id < 1 or id > 100000000
+        or id ~= math.floor(id) then return false end
+    local item = field(_G, "C_Item")
+    local fn = method(item, "RequestLoadItemDataByID")
+    if not fn then return false end
+    return pcall(fn, id)
+end
+
+-- Native tooltip for full facts, shown only by deliberate hover over the
+-- addon-owned detail text. No Blizzard frame is hidden, reparented or parked.
+function Preview.ShowTooltip(owner, link)
+    if not itemID(link) or not ordinary(owner) then return false end
+    local tooltip = field(_G, "GameTooltip")
+    if not ordinary(tooltip) then return false end
+    local setOwner = method(tooltip, "SetOwner")
+    local setLink = method(tooltip, "SetHyperlink")
+    local show = method(tooltip, "Show")
+    if not setOwner or not setLink or not show then return false end
+    local ok = pcall(function()
+        setOwner(tooltip, owner, "ANCHOR_RIGHT")
+        setLink(tooltip, link)
+        show(tooltip)
+    end)
+    return ok
+end
+
+function Preview.HideTooltip()
+    local tooltip = field(_G, "GameTooltip")
+    local hide = method(tooltip, "Hide")
+    if hide then pcall(hide, tooltip) end
 end
 
 return Probe

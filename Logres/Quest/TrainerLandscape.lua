@@ -337,8 +337,10 @@ function Landscape.Render(owner, model)
         local selectedDescription = text(selected, view.selected.description, 6, 73, 460, 63,
             "GameFontHighlight", p.body)
         if view.localBrowse then
+            local detailHover = frame(selected, 6, 73, 460, 63)
             liveControls.detail = {icon=selectedImage, name=selectedName,
-                requirement=selectedRequirement, description=selectedDescription}
+                requirement=selectedRequirement, description=selectedDescription,
+                hover=detailHover}
         end
 
         text(owner, "Reagents", g.reagents.x, g.reagents.y,

@@ -1,0 +1,25 @@
+P0512 Display source-linked crafted item stats in trainer detail
+Verified baseline: 80813b22ad90aa1c0c0e8f0add0161ef553eceac
+Candidate runtime version: 0.0.377-dev
+PREWRITE: 372/372 STATIC PASS
+POSTWRITE: 372/372 STATIC PASS
+git diff --check: PASS
+WoW Forever runtime: UNVERIFIED
+Commit/push performed: NO
+
+Changed paths:
+Logres/Core/Bootstrap.lua
+Logres/Logres.toc
+Logres/Quest/NativeTrainerServiceProbe.lua
+Logres/Quest/TrainerLandscape.lua
+Logres/Quest/TrainerLiveTrial.lua
+docs/memory/CURRENT.md
+docs/memory/PRE_HANDOFF_AUDIT.md
+docs/memory/evidence/P0512_TRAINER_CRAFTED_ITEM_PREVIEW.md
+docs/memory/handoffs/CURRENT_HANDOFF.md
+docs/memory/patches/P0512_TRAINER_ITEM_PREVIEW.md
+docs/memory/patches/PATCH_INDEX.md
+docs/memory/roadmap/STATUS.md
+tools/check_p0512_trainer_item_preview_contract.py
+tools/p0512_trainer_item_preview_fixture.lua
+P0512_MANIFEST.txt

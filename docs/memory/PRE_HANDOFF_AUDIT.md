@@ -1,3 +1,19 @@
+## P0512 — trainer item preview exact-source candidate (2026-11-23)
+
+Verified GitHub main P0511 `80813b22ad90aa1c0c0e8f0add0161ef553eceac`,
+tree `f0a4d36e4f6350eaa10ee0a2e0656b92917e189e`. User-supplied
+author kit matched baseline; only explicit allowlist text paths are
+patched. This candidate must pass all current historical checkers,
+source-bound tooltip fixture, source Lua compilation and `git diff --check`
+before ZIP release. The ZIP applier independently enforces expected
+HEAD, clean tracked state, exact baseline per-file content, payload
+hashes, full before/after checks and atomic restoration on postwrite
+failure. Neither static checks nor this audit establish Forever PASS.
+Initial candidate STATIC REFUSED on P0285/P0291/P0292 and historical
+96-module inventory; corrected without altering those checkers. Final
+full-suite verdict is bound to the release receipt, not a WoW claim.
+Earlier natural-occurrence observation remains PENDING, camera frozen.
+
 ## P0506 — L-030 eligibility exception docs-only audit (2026-11-21)
 
 Remote main P0505 `3bf5a2cb0bd085e9ebfb1909d07711f9633d5ad0`

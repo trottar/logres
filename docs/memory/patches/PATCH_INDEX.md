@@ -1,3 +1,13 @@
+## P0512 — Trainer item facts in selected lesson (2026-11-23)
+
+P0511 `80813b22` main verified. New `GetTrainerServiceItemLink` source
+copy and guarded tooltip-data summary place client item stats in the
+existing selected-lesson text box, with full native tooltip on hover.
+Uncached data refreshes only on matching item-load result; missing
+item link keeps native description. Shared renderer, native stock and
+Train transaction unchanged. Static candidate audit required; Forever
+UNVERIFIED; prior unrelated natural test PENDING. See P0512 evidence.
+
 ## P0511 — L-022/L-039 tracker divider and objective wrapping (2026-11-23)
 
 Verified P0510 R1 `5b40770`. User screenshot shows center diamond artifact

@@ -14,14 +14,14 @@ Alpha blocked. D-046/D-047/D-048.
 **P0486** q35 PASS; P0487 PASS.
 P0489 PASS; P0490 hover PASS/combat FAIL.
 P0491 P0492 P0493 P0494; P0499 L-055 scoped PASS, monitor.
-P0500 corpse/bags backlog; P0502 camera PASS; P0504 L-002/030 trial.
+P0500 backlog; P0502 camera PASS; P0504 L-002/030 trial.
 P0505 flight visual PASS; P0506 L-030 exceptions PARTIAL.
-P0510 events trial; P0511 tracker trial.
+P0510/P0511 trials; P0512 trainer item preview UNVERIFIED.
 L-056 BLOCKED.
 **P0488** L-054 P0497 layout PASS; L-057 cast-above PASS scoped. L-030 q37 PASS.
 **P0485** FAIL retained.
 **P0484** FAIL; **P0483** turn PARTIAL; **P0482** est2/3/native3/4.
-P0476–P0478 VISUAL FAIL,
+P0476–P0478 FAIL,
 P0479 FAIL retained.
 L-002 P0501 dynamic-child bridge OPEN.
 P0473 FAIL; P0474 scoped PASS; L-037 PARTIAL.

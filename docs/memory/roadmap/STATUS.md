@@ -22,6 +22,13 @@ hit regions, progress bars and panel height. In-game UNVERIFIED, L-022 and
 L-039 OPEN. Two new quest compass no-giver reports lack identities; L-030
 PARTIAL, no suppressive change. See P0511 evidence.
 
+## P0512 — Trainer selected-lesson crafted-item details (2026-11-23)
+
+Main P0511 `80813b22` verified. Source-indexed item link, guarded native
+tooltip summary, same detail renderer/hover, event-only cache refresh.
+Stock fallback and training/purchase remain unchanged. Client UNVERIFIED,
+L-033 OPEN; previously pending natural test still PENDING. P0512 evidence.
+
 ## P0510 — L-030 generalized holiday eligibility (2026-11-22)
 
 P0509 `b7552e8` verified. User rejected Lunar-only patch as insufficient.
